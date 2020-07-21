@@ -839,3 +839,118 @@ Processing by Api::V1::UsersController#index as HTML
 Completed 200 OK in 73ms (Views: 56.4ms | ActiveRecord: 15.2ms | Allocations: 15123)
 
 
+  [1m[35m (1.5ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (11.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started GET "/" for 172.20.0.1 at 2020-07-21 09:22:00 +0000
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (3.1ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /usr/local/bundle/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /usr/local/bundle/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb (Duration: 8.1ms | Allocations: 294)
+Completed 200 OK in 14ms (Views: 11.0ms | ActiveRecord: 0.0ms | Allocations: 1530)
+
+
+Started GET "/favicon.ico" for 172.20.0.1 at 2020-07-21 09:22:00 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/favicon.ico"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/api/v1/users" for 172.20.0.1 at 2020-07-21 09:22:08 +0000
+Processing by Api::V1::UsersController#index as HTML
+  [1m[36mUser Load (1.7ms)[0m  [1m[34mSELECT `users`.* FROM `users`[0m
+  ↳ app/controllers/api/v1/users_controller.rb:4:in `index'
+Completed 200 OK in 63ms (Views: 53.6ms | ActiveRecord: 8.6ms | Allocations: 15183)
+
+
+Started GET "/api/v1/user" for 172.20.0.1 at 2020-07-21 09:22:33 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/api/v1/user"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/api/auth" for 172.20.0.1 at 2020-07-21 09:26:48 +0000
+Processing by Api::Auth::RegistrationsController#create as */*
+  Parameters: {"name"=>"admin2", "email"=>"admin2@nutfes.com", "role_id"=>1, "user_detail_id"=>2, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "registration"=>{"name"=>"admin2", "email"=>"admin2@nutfes.com", "role_id"=>1, "user_detail_id"=>2, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+DEPRECATION WARNING: Uniqueness validator will no longer enforce case sensitive comparison in Rails 6.1. To continue case sensitive comparison on the :email attribute in User model, pass `case_sensitive: true` option explicitly to the uniqueness validator. (called from block in build_relation at /usr/local/bundle/gems/activerecord-6.0.3.2/lib/active_record/validations/uniqueness.rb:64)
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (1.3ms)[0m  [1m[34mSELECT 1 AS one FROM `users` WHERE `users`.`email` = BINARY 'admin2@nutfes.com' AND `users`.`provider` = 'email' LIMIT 1[0m
+  [1m[36mUser Create (2.1ms)[0m  [1m[32mINSERT INTO `users` (`uid`, `encrypted_password`, `name`, `email`, `role_id`, `user_detail_id`, `created_at`, `updated_at`) VALUES ('admin2@nutfes.com', '$2a$12$Q2Z19IGxMLOORnA/vlQEnOceUlFtbmEN..Nj0C3spGolRdXn.47IS', 'admin2', 'admin2@nutfes.com', 1, 2, '2020-07-21 09:26:48.658934', '2020-07-21 09:26:48.658934')[0m
+  [1m[35m (5.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"reYKrRYztujX5lEtUY18Mg\":{\"token\":\"$2a$10$5wbP/REIVYeEHnui9Hru5OzRcIcIMD3YmNVcqnYa4QeIAe3uTC.Li\",\"expiry\":1596533208}}', `users`.`updated_at` = '2020-07-21 09:26:48.751476' WHERE `users`.`id` = 2[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 439ms (Views: 0.5ms | ActiveRecord: 17.6ms | Allocations: 18738)
+
+
+Started POST "/api/auth/sign_in" for 172.20.0.1 at 2020-07-21 09:30:30 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin2@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin2@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin2@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.3ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"reYKrRYztujX5lEtUY18Mg\":{\"token\":\"$2a$10$5wbP/REIVYeEHnui9Hru5OzRcIcIMD3YmNVcqnYa4QeIAe3uTC.Li\",\"expiry\":1596533208},\"91lWL5qUdWsYTB8DL3i7UQ\":{\"token\":\"$2a$10$SOUh.HPC.uqbusO0q1K13ez2YuCduDEud7NwmSVSRSXPrOnEfNHAK\",\"expiry\":1596533430}}', `users`.`updated_at` = '2020-07-21 09:30:30.510315' WHERE `users`.`id` = 2[0m
+  [1m[35m (17.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.7ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 1, `users`.`current_sign_in_at` = '2020-07-21 09:30:30', `users`.`last_sign_in_at` = '2020-07-21 09:30:30', `users`.`current_sign_in_ip` = '172.20.0.1', `users`.`last_sign_in_ip` = '172.20.0.1', `users`.`updated_at` = '2020-07-21 09:30:30.538282' WHERE `users`.`id` = 2[0m
+  [1m[35m (6.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 424ms (Views: 0.3ms | ActiveRecord: 28.2ms | Allocations: 11889)
+
+
+  [1m[35m (1.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started GET "/api/v1/users" for 172.20.0.1 at 2020-07-21 09:31:37 +0000
+Processing by Api::V1::UsersController#index as HTML
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users`[0m
+  ↳ app/controllers/api/v1/users_controller.rb:4:in `index'
+Completed 200 OK in 6ms (Views: 4.3ms | ActiveRecord: 0.9ms | Allocations: 1424)
+
+

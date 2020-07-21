@@ -1,19 +1,29 @@
 <template>
   <div>
-  <v-dialog
-    v-model="show"
-    width="500px"
-    height="500px"
-    data-app
-  >
-    <v-card>
-      <v-card-title>Sign Up</v-card-title>
-      <v-divider/>
-      <v-card-text>
-        Sign Up
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+ <template>
+  <v-row justify="center">
+    <v-dialog v-model="show" max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">SIGN UP</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-text-field label="NAME" v-model="name" required></v-text-field>
+            <v-text-field label="EMAIL" v-model="email" required></v-text-field>
+            <v-text-field label="PASSWORD" v-model="password" required></v-text-field>
+            <v-text-field label="PASSWORD CONFIRMATION" v-model="password_confirmation" required></v-text-field>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template> 
   </div>
 </template>
 
