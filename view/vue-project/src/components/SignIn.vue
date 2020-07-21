@@ -1,20 +1,17 @@
 <template>
-  <div>
   <v-dialog
     v-model="show"
     width="500px"
     height="500px"
-    data-app
   >
     <v-card>
-      <v-card-title>Sign Up</v-card-title>
+      <v-card-title>Sign In</v-card-title>
       <v-divider/>
       <v-card-text>
-        Sign Up
+        Sign In
       </v-card-text>
     </v-card>
   </v-dialog>
-  </div>
 </template>
 
 <script>
@@ -29,7 +26,7 @@ export default {
     open () {
       this.show = true
     }
-  },
-  
+  }
 }
 </script>
+
