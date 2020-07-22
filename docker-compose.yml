@@ -25,6 +25,7 @@ services:
 
   view:
     build: ./view
+    command: npm install
     command: npm run serve
     ports:
       - "8080:8080"
