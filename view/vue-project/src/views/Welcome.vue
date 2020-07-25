@@ -24,9 +24,6 @@ export default {
     Signup,
     Signin
   },
-  data: () => ({
-    dialog: false,
-  }),
   methods: {
     onClickSignUp() {
       this.$refs.signup.open();
