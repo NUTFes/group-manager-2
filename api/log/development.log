@@ -3968,3 +3968,1524 @@ puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
 puma (4.3.5) lib/puma/server.rb:472:in `process_client'
 puma (4.3.5) lib/puma/server.rb:328:in `block in run'
 puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/api/v1/users/show" for 172.27.0.1 at 2020-07-25 02:03:09 +0000
+  [1m[35m (5.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (16.5ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Api::V1::UsersController#show as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 12ms (Views: 0.5ms | ActiveRecord: 0.0ms | Allocations: 5926)
+
+
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:03:42 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:07:03 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:07:24 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:12:20 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/api/auth/sign_in" for 172.27.0.1 at 2020-07-25 02:12:41 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (44.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 153ms (Views: 0.4ms | ActiveRecord: 58.1ms | Allocations: 15874)
+
+
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:13:01 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/api/v1/users/show" for 172.27.0.1 at 2020-07-25 02:20:47 +0000
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by Api::V1::UsersController#show as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 145)
+
+
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:20:54 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:30:10 +0000
+  [1m[35m (2.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/api/auth/sign_in" for 172.27.0.1 at 2020-07-25 02:30:44 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (2.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 12ms (Views: 0.7ms | ActiveRecord: 2.2ms | Allocations: 1621)
+
+
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:30:52 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:33:17 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:35:08 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/api/auth/sign_in" for 172.27.0.1 at 2020-07-25 02:35:24 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 13ms (Views: 0.7ms | ActiveRecord: 1.7ms | Allocations: 1629)
+
+
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 02:35:29 +0000
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started OPTIONS "/api/v1/users/index" for 172.27.0.1 at 2020-07-25 03:07:34 +0000
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  
+ActionController::RoutingError (No route matches [OPTIONS] "/api/v1/users/index"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/api/auth/sign_in" for 172.27.0.1 at 2020-07-25 08:34:51 +0000
+  [1m[35m (1.4ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.4ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 7ms (Views: 0.3ms | ActiveRecord: 1.4ms | Allocations: 1678)
+
+
+Started POST "/api/auth/sign_in" for 172.27.0.1 at 2020-07-25 08:40:07 +0000
+  [1m[35m (1.3ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 11ms (Views: 0.8ms | ActiveRecord: 1.6ms | Allocations: 1621)
+
+
+Started GET "/" for 172.29.0.1 at 2020-07-25 08:51:32 +0000
+  [1m[35m (1.1ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (12.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /usr/local/bundle/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /usr/local/bundle/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb (Duration: 13.3ms | Allocations: 294)
+Completed 200 OK in 24ms (Views: 17.3ms | ActiveRecord: 0.0ms | Allocations: 1530)
+
+
+Started POST "/api/auth/sign_in" for 172.29.0.1 at 2020-07-25 08:51:51 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (15.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 85ms (Views: 0.3ms | ActiveRecord: 25.0ms | Allocations: 21584)
+
+
+Started POST "/api/auth/sign_in" for 172.29.0.1 at 2020-07-25 08:52:20 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 9ms (Views: 0.5ms | ActiveRecord: 1.2ms | Allocations: 1643)
+
+
+  [1m[35m (1.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (2.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started POST "/api/auth" for 172.29.0.1 at 2020-07-25 08:58:59 +0000
+  [1m[35m (0.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by Api::Auth::RegistrationsController#create as HTML
+  Parameters: {"name"=>"admin5", "email"=>"admin5@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}
+Completed 422 Unprocessable Entity in 601ms (Views: 0.6ms | ActiveRecord: 0.0ms | Allocations: 848)
+
+
+Started POST "/api/auth/sign_in" for 172.29.0.1 at 2020-07-25 09:01:40 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 17ms (Views: 0.4ms | ActiveRecord: 1.6ms | Allocations: 1643)
+
+
+Started POST "/api/auth/sign_in" for 172.30.0.1 at 2020-07-25 09:03:16 +0000
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (8.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (6.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 90ms (Views: 0.6ms | ActiveRecord: 18.5ms | Allocations: 21575)
+
+
+Started GET "/api/auth/sign_in" for 172.30.0.1 at 2020-07-25 09:07:12 +0000
+Processing by DeviseTokenAuth::SessionsController#new as */*
+Completed 405 Method Not Allowed in 2ms (Views: 0.5ms | ActiveRecord: 0.0ms | Allocations: 133)
+
+
+Started GET "/api/auth/sign_in" for 172.30.0.1 at 2020-07-25 09:21:39 +0000
+  [1m[35m (0.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by DeviseTokenAuth::SessionsController#new as */*
+Completed 405 Method Not Allowed in 2ms (Views: 0.9ms | ActiveRecord: 0.0ms | Allocations: 126)
+
+
+Started GET "/api/auth/sign_in" for 172.31.0.1 at 2020-07-25 09:26:53 +0000
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (16.4ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#new as */*
+Completed 405 Method Not Allowed in 7ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 5931)
+
+
+Started POST "/api/auth/sign_in" for 172.31.0.1 at 2020-07-25 09:30:02 +0000
+Error occurred while parsing request parameters.
+Contents:
+
+email:admin@nutfes.com,
+  
+ActionDispatch::Http::Parameters::ParseError (783: unexpected token at 'email:admin@nutfes.com,'):
+  
+actionpack (6.0.3.2) lib/action_dispatch/http/parameters.rb:114:in `rescue in parse_formatted_parameters'
+actionpack (6.0.3.2) lib/action_dispatch/http/parameters.rb:110:in `parse_formatted_parameters'
+actionpack (6.0.3.2) lib/action_dispatch/http/request.rb:389:in `block in POST'
+rack (2.2.3) lib/rack/request.rb:69:in `fetch'
+rack (2.2.3) lib/rack/request.rb:69:in `fetch_header'
+actionpack (6.0.3.2) lib/action_dispatch/http/request.rb:388:in `POST'
+actionpack (6.0.3.2) lib/action_dispatch/http/parameters.rb:55:in `parameters'
+actionpack (6.0.3.2) lib/action_controller/metal/params_wrapper.rb:278:in `_wrapper_enabled?'
+actionpack (6.0.3.2) lib/action_controller/metal/params_wrapper.rb:244:in `process_action'
+activerecord (6.0.3.2) lib/active_record/railties/controller_runtime.rb:27:in `process_action'
+actionpack (6.0.3.2) lib/abstract_controller/base.rb:136:in `process'
+actionview (6.0.3.2) lib/action_view/rendering.rb:39:in `process'
+actionpack (6.0.3.2) lib/action_controller/metal.rb:190:in `dispatch'
+actionpack (6.0.3.2) lib/action_controller/metal.rb:254:in `dispatch'
+actionpack (6.0.3.2) lib/action_dispatch/routing/route_set.rb:50:in `dispatch'
+actionpack (6.0.3.2) lib/action_dispatch/routing/route_set.rb:33:in `serve'
+actionpack (6.0.3.2) lib/action_dispatch/routing/mapper.rb:18:in `block in <class:Constraints>'
+actionpack (6.0.3.2) lib/action_dispatch/routing/mapper.rb:48:in `serve'
+actionpack (6.0.3.2) lib/action_dispatch/journey/router.rb:49:in `block in serve'
+actionpack (6.0.3.2) lib/action_dispatch/journey/router.rb:32:in `each'
+actionpack (6.0.3.2) lib/action_dispatch/journey/router.rb:32:in `serve'
+actionpack (6.0.3.2) lib/action_dispatch/routing/route_set.rb:834:in `call'
+warden (1.2.8) lib/warden/manager.rb:36:in `block in call'
+warden (1.2.8) lib/warden/manager.rb:34:in `catch'
+warden (1.2.8) lib/warden/manager.rb:34:in `call'
+rack (2.2.3) lib/rack/etag.rb:27:in `call'
+rack (2.2.3) lib/rack/conditional_get.rb:40:in `call'
+rack (2.2.3) lib/rack/head.rb:12:in `call'
+activerecord (6.0.3.2) lib/active_record/migration.rb:567:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/callbacks.rb:27:in `block in call'
+activesupport (6.0.3.2) lib/active_support/callbacks.rb:101:in `run_callbacks'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/callbacks.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/actionable_exceptions.rb:17:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:32:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+rack-cors (1.1.1) lib/rack/cors.rb:100:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Error occurred while parsing request parameters.
+Contents:
+
+email:admin@nutfes.com,
+Started POST "/api/auth/sign_in" for 172.31.0.1 at 2020-07-25 09:32:33 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (15.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+[31mUnpermitted parameter: :session[0m
+Completed 401 Unauthorized in 111ms (Views: 0.2ms | ActiveRecord: 26.4ms | Allocations: 17042)
+
+
+Started POST "/api/auth/sign_in" for 172.31.0.1 at 2020-07-25 09:33:47 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+[31mUnpermitted parameter: :session[0m
+Completed 401 Unauthorized in 12ms (Views: 0.5ms | ActiveRecord: 0.9ms | Allocations: 1716)
+
+
+Started POST "/api/auth/sign_in" for 172.31.0.1 at 2020-07-25 09:35:55 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+[31mUnpermitted parameter: :session[0m
+Completed 401 Unauthorized in 6ms (Views: 0.2ms | ActiveRecord: 1.0ms | Allocations: 1716)
+
+
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (16.2ms)[0m  [1m[34mSELECT `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Started POST "/api/auth/sign_in" for 172.31.0.1 at 2020-07-25 09:39:08 +0000
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 80ms (Views: 0.7ms | ActiveRecord: 8.4ms | Allocations: 14371)
+
+
+Started POST "/api/auth/sign_in" for 192.168.16.1 at 2020-07-25 09:41:33 +0000
+  [1m[35m (0.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (22.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (15.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 77ms (Views: 0.4ms | ActiveRecord: 35.1ms | Allocations: 21575)
+
+
+Started POST "/api/auth/sign_in" for 192.168.16.1 at 2020-07-25 09:41:46 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+[31mUnpermitted parameter: :session[0m
+Completed 401 Unauthorized in 11ms (Views: 0.3ms | ActiveRecord: 1.6ms | Allocations: 1732)
+
+
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.3ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (37.0ms)[0m  [1m[35mDROP INDEX `index_users_on_confirmation_token` ON `users`[0m
+  [1m[35m (29.6ms)[0m  [1m[35mDROP INDEX `index_users_on_reset_password_token` ON `users`[0m
+  [1m[35m (25.8ms)[0m  [1m[35mDROP INDEX `index_users_on_uid_and_provider` ON `users`[0m
+  [1m[35m (26.1ms)[0m  [1m[35mDROP INDEX `index_users_on_email` ON `users`[0m
+  [1m[35m (31.6ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[36mprimary::SchemaMigration Destroy (7.4ms)[0m  [1m[31mDELETE FROM `schema_migrations` WHERE `schema_migrations`.`version` = '20200720152841'[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (1.1ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.5ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (54.2ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (35.5ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (37.3ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_uid_and_provider`  ON `users` (`uid`, `provider`) [0m
+  [1m[35m (35.8ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_confirmation_token`  ON `users` (`confirmation_token`) [0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (1.1ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (12.3ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (5.6ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE DATABASE `myapp_development` DEFAULT CHARACTER SET `utf8mb4`[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE DATABASE `myapp_test` DEFAULT CHARACTER SET `utf8mb4`[0m
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (43.0ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[35m (5.0ms)[0m  [1m[35mDROP TABLE `user`[0m
+  [1m[35m (3.7ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.2ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (72.9ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (30.3ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (26.7ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_uid_and_provider`  ON `users` (`uid`, `provider`) [0m
+  [1m[35m (36.4ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_confirmation_token`  ON `users` (`confirmation_token`) [0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (1.3ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (4.5ms)[0m  [1m[35mDROP TABLE `confirmation_tokens`[0m
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.1ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (1.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (54.6ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[35m (1.4ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (50.6ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (36.2ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (30.0ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_uid_and_provider`  ON `users` (`uid`, `provider`) [0m
+  [1m[35m (31.2ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_confirmation_token`  ON `users` (`confirmation_token`) [0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (39.2ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[35m (3.8ms)[0m  [1m[35mDROP TABLE `confirmation_tokens`[0m
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (59.8ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (34.9ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (30.6ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_uid_and_provider`  ON `users` (`uid`, `provider`) [0m
+  [1m[35m (31.9ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_confirmation_token`  ON `users` (`confirmation_token`) [0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `confirmation_token` varchar(255), `confirmed_at` datetime, `confirmation_sent_at` datetime, `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (44.5ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (57.8ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `confirmation_token` varchar(255), `confirmed_at` datetime, `confirmation_sent_at` datetime, `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (37.4ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (32.5ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_uid_and_provider`  ON `users` (`uid`, `provider`) [0m
+  [1m[35m (31.6ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (54.7ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_confirmation_token`  ON `users` (`confirmation_token`) [0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mprimary::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO `schema_migrations` (`version`) VALUES ('20200720152841')[0m
+  [1m[35m (6.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.1ms)[0m  [1m[34mSELECT `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Started POST "/api/auth/sign_in" for 192.168.32.1 at 2020-07-25 10:01:28 +0000
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 27ms (Views: 0.3ms | ActiveRecord: 8.0ms | Allocations: 9140)
+
+
+Started POST "/api/auth/sign_in" for 192.168.32.1 at 2020-07-25 10:02:29 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 10ms (Views: 0.3ms | ActiveRecord: 1.0ms | Allocations: 1586)
+
+
+Started POST "/api/auth/sign_in" for 192.168.48.1 at 2020-07-25 10:04:44 +0000
+  [1m[35m (1.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (13.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (6.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 52ms (Views: 0.3ms | ActiveRecord: 30.8ms | Allocations: 9141)
+
+
+Started POST "/api/auth/sign_in" for 192.168.48.1 at 2020-07-25 10:05:29 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 10ms (Views: 1.0ms | ActiveRecord: 1.1ms | Allocations: 1527)
+
+
+Started GET "/api/auth/sign_in" for 192.168.80.1 at 2020-07-25 18:45:57 +0000
+  [1m[35m (0.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (19.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#new as */*
+Completed 405 Method Not Allowed in 13ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 5931)
+
+
+Started POST "/api/auth/sign_in" for 192.168.80.1 at 2020-07-25 18:52:38 +0000
+  [1m[35m (1.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (16.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 44ms (Views: 0.3ms | ActiveRecord: 32.0ms | Allocations: 3465)
+
+
+Started POST "/api/auth/sign_in" for 192.168.80.1 at 2020-07-25 19:02:38 +0000
+  [1m[35m (1.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 8ms (Views: 0.5ms | ActiveRecord: 1.3ms | Allocations: 1513)
+
+
+Started GET "/api/v1/users/show" for 192.168.80.1 at 2020-07-25 19:03:58 +0000
+Processing by Api::V1::UsersController#show as */*
+  Parameters: {"user"=>{}}
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 8ms (Views: 0.3ms | ActiveRecord: 1.8ms | Allocations: 1681)
+
+
+Started POST "/api/auth/sign_in" for 192.168.80.1 at 2020-07-25 19:05:55 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 10ms (Views: 0.3ms | ActiveRecord: 1.3ms | Allocations: 1528)
+
+
+Started POST "/api/auth/sign_in" for 192.168.80.1 at 2020-07-25 19:07:15 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 9ms (Views: 0.3ms | ActiveRecord: 1.3ms | Allocations: 1515)
+
+
+Started GET "/api/auth/sign_in" for 192.168.128.1 at 2020-07-25 19:27:59 +0000
+  [1m[35m (1.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (17.4ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#new as */*
+Completed 405 Method Not Allowed in 9ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 5931)
+
+
+Started POST "/api/auth/sign_in" for 192.168.240.1 at 2020-07-26 13:08:57 +0000
+  [1m[35m (1.5ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (18.1ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (8.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+Completed 401 Unauthorized in 45ms (Views: 0.6ms | ActiveRecord: 20.0ms | Allocations: 9080)
+
+
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started POST "/api/auth" for 192.168.240.1 at 2020-07-26 13:11:51 +0000
+Processing by Api::Auth::RegistrationsController#create as HTML
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}
+Completed 422 Unprocessable Entity in 315ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 12613)
+
+
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started POST "/api/auth" for 192.168.240.1 at 2020-07-26 13:14:02 +0000
+Processing by Api::Auth::RegistrationsController#create as */*
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "role_id"=>1, "user_detail_id"=>1, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "registration"=>{"name"=>"admin", "email"=>"admin@nutfes.com", "role_id"=>1, "user_detail_id"=>1, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+Completed 422 Unprocessable Entity in 313ms (Views: 0.9ms | ActiveRecord: 0.0ms | Allocations: 788)
+
+
+  [1m[35m (0.9ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.5ms)[0m  [1m[34mSELECT `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (0.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (1.1ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (33.5ms)[0m  [1m[35mDROP INDEX `index_users_on_confirmation_token` ON `users`[0m
+  [1m[35m (27.6ms)[0m  [1m[35mDROP INDEX `index_users_on_reset_password_token` ON `users`[0m
+  [1m[35m (51.9ms)[0m  [1m[35mDROP INDEX `index_users_on_uid_and_provider` ON `users`[0m
+  [1m[35m (44.6ms)[0m  [1m[35mDROP INDEX `index_users_on_email` ON `users`[0m
+  [1m[35m (39.3ms)[0m  [1m[35mDROP TABLE `users`[0m
+  [1m[36mprimary::SchemaMigration Destroy (4.2ms)[0m  [1m[31mDELETE FROM `schema_migrations` WHERE `schema_migrations`.`version` = '20200720152841'[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT GET_LOCK('7864839756650184315', 0)[0m
+  [1m[35m (1.1ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Migrating to DeviseTokenAuthCreateUsers (20200720152841)
+  [1m[35m (53.2ms)[0m  [1m[35mCREATE TABLE `users` (`id` bigint NOT NULL AUTO_INCREMENT PRIMARY KEY, `provider` varchar(255) DEFAULT 'email' NOT NULL, `uid` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `allow_password_change` tinyint(1) DEFAULT FALSE, `remember_created_at` datetime, `sign_in_count` int DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `confirmation_token` varchar(255), `confirmed_at` datetime, `confirmation_sent_at` datetime, `unconfirmed_email` varchar(255), `name` varchar(255), `email` varchar(255), `role_id` int, `user_detail_id` int, `tokens` text, `created_at` datetime(6) NOT NULL, `updated_at` datetime(6) NOT NULL)[0m
+  [1m[35m (28.3ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_email`  ON `users` (`email`) [0m
+  [1m[35m (34.7ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_uid_and_provider`  ON `users` (`uid`, `provider`) [0m
+  [1m[35m (25.5ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_reset_password_token`  ON `users` (`reset_password_token`) [0m
+  [1m[35m (34.2ms)[0m  [1m[35mCREATE UNIQUE INDEX `index_users_on_confirmation_token`  ON `users` (`confirmation_token`) [0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mprimary::SchemaMigration Create (1.2ms)[0m  [1m[32mINSERT INTO `schema_migrations` (`version`) VALUES ('20200720152841')[0m
+  [1m[35m (6.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.0ms)[0m  [1m[34mSELECT `ar_internal_metadata`.* FROM `ar_internal_metadata` WHERE `ar_internal_metadata`.`key` = 'environment' LIMIT 1[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT RELEASE_LOCK('7864839756650184315')[0m
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Started POST "/api/auth" for 192.168.240.1 at 2020-07-26 13:18:42 +0000
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Api::Auth::RegistrationsController#create as */*
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "role_id"=>1, "user_detail_id"=>1, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "registration"=>{"name"=>"admin", "email"=>"admin@nutfes.com", "role_id"=>1, "user_detail_id"=>1, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+Completed 422 Unprocessable Entity in 333ms (Views: 0.6ms | ActiveRecord: 6.5ms | Allocations: 13465)
+
+
+Started GET "/" for 172.19.0.1 at 2020-07-26 13:22:02 +0000
+  [1m[35m (1.2ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (8.2ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering /usr/local/bundle/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered /usr/local/bundle/gems/railties-6.0.3.2/lib/rails/templates/rails/welcome/index.html.erb (Duration: 8.5ms | Allocations: 294)
+Completed 200 OK in 16ms (Views: 12.0ms | ActiveRecord: 0.0ms | Allocations: 1530)
+
+
+  [1m[35m (0.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (3.5ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started POST "/api/auth" for 172.19.0.1 at 2020-07-26 13:23:07 +0000
+Processing by Api::Auth::RegistrationsController#create as */*
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "role_id"=>1, "user_detail_id"=>1, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "registration"=>{"name"=>"admin", "email"=>"admin@nutfes.com", "role_id"=>1, "user_detail_id"=>1, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+Completed 422 Unprocessable Entity in 327ms (Views: 0.5ms | ActiveRecord: 10.5ms | Allocations: 20485)
+
+
+Started POST "/api/auth" for 172.19.0.1 at 2020-07-26 13:25:35 +0000
+Processing by Api::Auth::RegistrationsController#create as */*
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "registration"=>{"name"=>"admin", "email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+Completed 422 Unprocessable Entity in 277ms (Views: 0.7ms | ActiveRecord: 0.0ms | Allocations: 735)
+
+
+Started POST "/api/auth" for 172.19.0.1 at 2020-07-26 13:26:55 +0000
+Processing by Api::Auth::RegistrationsController#create as HTML
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}
+Completed 422 Unprocessable Entity in 280ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 636)
+
+
+Started POST "/api/auth" for 172.19.0.1 at 2020-07-26 13:29:58 +0000
+Processing by Api::Auth::RegistrationsController#create as */*
+  Parameters: {"name"=>"admin", "email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "registration"=>{"name"=>"admin", "email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+[31mUnpermitted parameter: :registration[0m
+DEPRECATION WARNING: Uniqueness validator will no longer enforce case sensitive comparison in Rails 6.1. To continue case sensitive comparison on the :email attribute in User model, pass `case_sensitive: true` option explicitly to the uniqueness validator. (called from block in build_relation at /usr/local/bundle/gems/activerecord-6.0.3.2/lib/active_record/validations/uniqueness.rb:64)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (0.8ms)[0m  [1m[34mSELECT 1 AS one FROM `users` WHERE `users`.`email` = BINARY 'admin@nutfes.com' AND `users`.`provider` = 'email' LIMIT 1[0m
+  [1m[36mUser Create (1.0ms)[0m  [1m[32mINSERT INTO `users` (`uid`, `encrypted_password`, `name`, `email`, `created_at`, `updated_at`) VALUES ('admin@nutfes.com', '$2a$12$9mafnFiJFP7JEAUzlSSVL.aY250HMviqRLPYnGD/P.r.gfOVJyXi6', 'admin', 'admin@nutfes.com', '2020-07-26 13:29:58.500645', '2020-07-26 13:29:58.500645')[0m
+  [1m[35m (4.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.3ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798}}', `users`.`updated_at` = '2020-07-26 13:29:58.588107' WHERE `users`.`id` = 1[0m
+  [1m[35m (4.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 428ms (Views: 0.5ms | ActiveRecord: 21.3ms | Allocations: 25577)
+
+
+  [1m[35m (1.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 13:30:51 +0000
+Processing by DeviseTokenAuth::SessionsController#create as */*
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]", "session"=>{"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}}
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+[31mUnpermitted parameter: :session[0m
+[31mUnpermitted parameter: :session[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851}}', `users`.`updated_at` = '2020-07-26 13:30:51.652942' WHERE `users`.`id` = 1[0m
+  [1m[35m (12.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.3ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 1, `users`.`current_sign_in_at` = '2020-07-26 13:30:51', `users`.`last_sign_in_at` = '2020-07-26 13:30:51', `users`.`current_sign_in_ip` = '172.19.0.1', `users`.`last_sign_in_ip` = '172.19.0.1', `users`.`updated_at` = '2020-07-26 13:30:51.691891' WHERE `users`.`id` = 1[0m
+  [1m[35m (9.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 411ms (Views: 0.4ms | ActiveRecord: 27.1ms | Allocations: 11937)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:33:05 +0000
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 199)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 13:33:22 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003}}', `users`.`updated_at` = '2020-07-26 13:33:23.269705' WHERE `users`.`id` = 1[0m
+  [1m[35m (6.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 2, `users`.`current_sign_in_at` = '2020-07-26 13:33:23', `users`.`updated_at` = '2020-07-26 13:33:23.285855' WHERE `users`.`id` = 1[0m
+  [1m[35m (3.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 443ms (Views: 0.3ms | ActiveRecord: 20.5ms | Allocations: 24644)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:33:50 +0000
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 145)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:33:52 +0000
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 3ms (Views: 1.2ms | ActiveRecord: 0.0ms | Allocations: 146)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:33:53 +0000
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.2ms | ActiveRecord: 0.0ms | Allocations: 145)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:33:53 +0000
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 145)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:33:53 +0000
+Processing by Api::V1::UsersController#index as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.2ms | ActiveRecord: 0.0ms | Allocations: 145)
+
+
+Started GET "/api/v1/users/show" for 172.19.0.1 at 2020-07-26 13:33:58 +0000
+Processing by Api::V1::UsersController#show as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 2ms (Views: 0.2ms | ActiveRecord: 0.0ms | Allocations: 145)
+
+
+Started GET "/api/v1/users/show" for 172.19.0.1 at 2020-07-26 13:35:01 +0000
+Processing by Api::V1::UsersController#show as HTML
+Completed 200 OK in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 186)
+
+
+Started GET "/api/v1/users/index" for 172.19.0.1 at 2020-07-26 13:36:05 +0000
+Processing by Api::V1::UsersController#index as */*
+  Parameters: {"user"=>{}}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users`[0m
+  ↳ app/controllers/api/v1/users_controller.rb:5:in `index'
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 221ms (Views: 4.6ms | ActiveRecord: 12.5ms | Allocations: 15491)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 13:40:49 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450}}', `users`.`updated_at` = '2020-07-26 13:40:50.299896' WHERE `users`.`id` = 1[0m
+  [1m[35m (6.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.0ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 3, `users`.`current_sign_in_at` = '2020-07-26 13:40:50', `users`.`last_sign_in_at` = '2020-07-26 13:33:23', `users`.`updated_at` = '2020-07-26 13:40:50.318861' WHERE `users`.`id` = 1[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 401ms (Views: 0.8ms | ActiveRecord: 16.6ms | Allocations: 12085)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 13:58:54 +0000
+  [1m[35m (0.6ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534}}', `users`.`updated_at` = '2020-07-26 13:58:54.825410' WHERE `users`.`id` = 1[0m
+  [1m[35m (17.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 4, `users`.`current_sign_in_at` = '2020-07-26 13:58:54', `users`.`last_sign_in_at` = '2020-07-26 13:40:50', `users`.`updated_at` = '2020-07-26 13:58:54.853897' WHERE `users`.`id` = 1[0m
+  [1m[35m (4.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 423ms (Views: 0.3ms | ActiveRecord: 26.7ms | Allocations: 11661)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 14:02:50 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770}}', `users`.`updated_at` = '2020-07-26 14:02:50.450730' WHERE `users`.`id` = 1[0m
+  [1m[35m (8.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.4ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 5, `users`.`current_sign_in_at` = '2020-07-26 14:02:50', `users`.`last_sign_in_at` = '2020-07-26 13:58:54', `users`.`updated_at` = '2020-07-26 14:02:50.470241' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 420ms (Views: 0.2ms | ActiveRecord: 19.2ms | Allocations: 11727)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 14:06:56 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017}}', `users`.`updated_at` = '2020-07-26 14:06:57.043844' WHERE `users`.`id` = 1[0m
+  [1m[35m (6.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 6, `users`.`current_sign_in_at` = '2020-07-26 14:06:57', `users`.`last_sign_in_at` = '2020-07-26 14:02:50', `users`.`updated_at` = '2020-07-26 14:06:57.059196' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 389ms (Views: 0.3ms | ActiveRecord: 17.0ms | Allocations: 11782)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 14:11:38 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298}}', `users`.`updated_at` = '2020-07-26 14:11:38.465630' WHERE `users`.`id` = 1[0m
+  [1m[35m (17.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.0ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 7, `users`.`current_sign_in_at` = '2020-07-26 14:11:38', `users`.`last_sign_in_at` = '2020-07-26 14:06:57', `users`.`updated_at` = '2020-07-26 14:11:38.494432' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 403ms (Views: 0.3ms | ActiveRecord: 28.1ms | Allocations: 11822)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 14:12:07 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.5ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328}}', `users`.`updated_at` = '2020-07-26 14:12:08.043658' WHERE `users`.`id` = 1[0m
+  [1m[35m (44.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 8, `users`.`current_sign_in_at` = '2020-07-26 14:12:08', `users`.`last_sign_in_at` = '2020-07-26 14:11:38', `users`.`updated_at` = '2020-07-26 14:12:08.099431' WHERE `users`.`id` = 1[0m
+  [1m[35m (6.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 418ms (Views: 0.3ms | ActiveRecord: 56.0ms | Allocations: 11873)
+
+
+Started POST "/api/auth/sign_in" for 172.19.0.1 at 2020-07-26 14:14:06 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Jal4L2Msgx-mBnUJZCbXGw\":{\"token\":\"$2a$10$6pVI4vxWB4toNOhmrFoNwOJCa9gMyWZnIHwMMc0fUNzMgnLI5Q.EG\",\"expiry\":1596979798},\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446}}', `users`.`updated_at` = '2020-07-26 14:14:06.750125' WHERE `users`.`id` = 1[0m
+  [1m[35m (16.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.0ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 9, `users`.`current_sign_in_at` = '2020-07-26 14:14:06', `users`.`last_sign_in_at` = '2020-07-26 14:12:08', `users`.`updated_at` = '2020-07-26 14:14:06.777759' WHERE `users`.`id` = 1[0m
+  [1m[35m (6.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 434ms (Views: 0.3ms | ActiveRecord: 27.0ms | Allocations: 11919)
+
+
+Started POST "/api/auth/sign_in" for 172.20.0.1 at 2020-07-26 14:27:12 +0000
+  [1m[35m (1.4ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (20.8ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (3.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"rVEzBabyg4t81pjY6zLEsA\":{\"token\":\"$2a$10$ovuFtkfLsxfb0VYCoPE43eLb7L/PRVWX3gH.fp4tQor3Oub1FvTbu\",\"expiry\":1596979851},\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233}}', `users`.`updated_at` = '2020-07-26 14:27:13.076590' WHERE `users`.`id` = 1[0m
+  [1m[35m (9.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (2.0ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 10, `users`.`current_sign_in_at` = '2020-07-26 14:27:13', `users`.`last_sign_in_at` = '2020-07-26 14:14:06', `users`.`current_sign_in_ip` = '172.20.0.1', `users`.`updated_at` = '2020-07-26 14:27:13.099754' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 472ms (Views: 1.0ms | ActiveRecord: 36.4ms | Allocations: 27262)
+
+
+Started POST "/api/auth/sign_in" for 172.21.0.1 at 2020-07-26 14:29:23 +0000
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (8.5ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (4.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"7q1uK2eB_hHxT9tNPnw0jQ\":{\"token\":\"$2a$10$y4Kbf.corxWjY.z.fG5xXe4qTy2eGRwuclg2K1I9NNIx9QGrMCTVO\",\"expiry\":1596980003},\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364}}', `users`.`updated_at` = '2020-07-26 14:29:24.210480' WHERE `users`.`id` = 1[0m
+  [1m[35m (13.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 11, `users`.`current_sign_in_at` = '2020-07-26 14:29:24', `users`.`last_sign_in_at` = '2020-07-26 14:27:13', `users`.`current_sign_in_ip` = '172.21.0.1', `users`.`last_sign_in_ip` = '172.20.0.1', `users`.`updated_at` = '2020-07-26 14:29:24.235451' WHERE `users`.`id` = 1[0m
+  [1m[35m (11.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 442ms (Views: 0.3ms | ActiveRecord: 42.2ms | Allocations: 27273)
+
+
+Started POST "/api/auth/sign_in" for 172.21.0.1 at 2020-07-26 14:30:44 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"gRvLQscRVqJj0J1sppYwQw\":{\"token\":\"$2a$10$r93wFtluj1W/KlQ9Hyrz9uXeFmtSAy./Oe4PJVrdLG3sFSqx54sXa\",\"expiry\":1596980450},\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444}}', `users`.`updated_at` = '2020-07-26 14:30:44.735100' WHERE `users`.`id` = 1[0m
+  [1m[35m (21.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.0ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 12, `users`.`current_sign_in_at` = '2020-07-26 14:30:44', `users`.`last_sign_in_at` = '2020-07-26 14:29:24', `users`.`last_sign_in_ip` = '172.21.0.1', `users`.`updated_at` = '2020-07-26 14:30:44.771189' WHERE `users`.`id` = 1[0m
+  [1m[35m (8.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 430ms (Views: 0.4ms | ActiveRecord: 33.7ms | Allocations: 12149)
+
+
+Started POST "/api/auth/sign_in" for 172.22.0.1 at 2020-07-26 14:43:18 +0000
+  [1m[35m (1.0ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (8.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (7.4ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.5ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"KCmAKN5d1nyLFII1mwyKXg\":{\"token\":\"$2a$10$svQzBnUFy6wYvl0JHxSTqeeXdQGbahHggvljrp8/iGN9mJQxuZWUa\",\"expiry\":1596981534},\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198}}', `users`.`updated_at` = '2020-07-26 14:43:18.611529' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 13, `users`.`current_sign_in_at` = '2020-07-26 14:43:18', `users`.`last_sign_in_at` = '2020-07-26 14:30:44', `users`.`current_sign_in_ip` = '172.22.0.1', `users`.`updated_at` = '2020-07-26 14:43:18.630748' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 450ms (Views: 0.3ms | ActiveRecord: 30.4ms | Allocations: 27263)
+
+
+Started POST "/api/auth/sign_in" for 172.22.0.1 at 2020-07-26 14:44:37 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"SmCrev2jV5KKxo2QgOF4_w\":{\"token\":\"$2a$10$BIReQYF4wv7Ck5f2X66cQey5R13GJDTecbIoxYUt7WeT92erHnpcW\",\"expiry\":1596981770},\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198},\"gK6IoYo16d26gab_14FHFA\":{\"token\":\"$2a$10$uHMuYFNmIGgKyc4QQoWUnu1EgQJlHPHgjl.F7vmFLxWsD6.GKSd36\",\"expiry\":1596984277}}', `users`.`updated_at` = '2020-07-26 14:44:37.605172' WHERE `users`.`id` = 1[0m
+  [1m[35m (17.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 14, `users`.`current_sign_in_at` = '2020-07-26 14:44:37', `users`.`last_sign_in_at` = '2020-07-26 14:43:18', `users`.`last_sign_in_ip` = '172.22.0.1', `users`.`updated_at` = '2020-07-26 14:44:37.634388' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 399ms (Views: 0.3ms | ActiveRecord: 27.0ms | Allocations: 12162)
+
+
+Started GET "/api/v1/users/index" for 172.22.0.1 at 2020-07-26 14:44:54 +0000
+Processing by Api::V1::UsersController#index as HTML
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.4ms)[0m  [1m[34mSELECT `users`.* FROM `users`[0m
+  ↳ app/controllers/api/v1/users_controller.rb:5:in `index'
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 104ms (Views: 4.6ms | ActiveRecord: 3.8ms | Allocations: 4073)
+
+
+Started POST "/api/auth/sign_in" for 172.22.0.1 at 2020-07-26 14:49:24 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"WqBg5ZC4qknh8WZWr_urWQ\":{\"token\":\"$2a$10$WrrgkeZwD/zwj5PLB2XW1uYj.SiiPTBvbzVbHyaTODqiQN4WOT6Im\",\"expiry\":1596982017},\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198},\"gK6IoYo16d26gab_14FHFA\":{\"token\":\"$2a$10$uHMuYFNmIGgKyc4QQoWUnu1EgQJlHPHgjl.F7vmFLxWsD6.GKSd36\",\"expiry\":1596984277},\"jqAKZa1k2tiuIPerPXVJ9w\":{\"token\":\"$2a$10$YrKHWRzqkYHSaqt2RMuIQecC7JFc98cKeRwu.V7ysQU2p6xa687ou\",\"expiry\":1596984564}}', `users`.`updated_at` = '2020-07-26 14:49:24.877925' WHERE `users`.`id` = 1[0m
+  [1m[35m (11.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 15, `users`.`current_sign_in_at` = '2020-07-26 14:49:24', `users`.`last_sign_in_at` = '2020-07-26 14:44:37', `users`.`updated_at` = '2020-07-26 14:49:24.899273' WHERE `users`.`id` = 1[0m
+  [1m[35m (4.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 385ms (Views: 0.2ms | ActiveRecord: 20.1ms | Allocations: 12143)
+
+
+Started GET "/api/v1/users/index" for 172.22.0.1 at 2020-07-26 14:50:38 +0000
+Processing by Api::V1::UsersController#index as HTML
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (5.6ms)[0m  [1m[34mSELECT `users`.* FROM `users`[0m
+  ↳ app/controllers/api/v1/users_controller.rb:5:in `index'
+  [1m[36mUser Load (3.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 114ms (Views: 7.2ms | ActiveRecord: 10.4ms | Allocations: 3865)
+
+
+Started POST "/api/auth" for 172.22.0.1 at 2020-07-26 14:51:08 +0000
+Processing by Api::Auth::RegistrationsController#create as HTML
+  Parameters: {"name"=>"admin2", "email"=>"admin2@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}
+DEPRECATION WARNING: Uniqueness validator will no longer enforce case sensitive comparison in Rails 6.1. To continue case sensitive comparison on the :email attribute in User model, pass `case_sensitive: true` option explicitly to the uniqueness validator. (called from block in build_relation at /usr/local/bundle/gems/activerecord-6.0.3.2/lib/active_record/validations/uniqueness.rb:64)
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM `users` WHERE `users`.`email` = BINARY 'admin2@nutfes.com' AND `users`.`provider` = 'email' LIMIT 1[0m
+  [1m[36mUser Create (1.1ms)[0m  [1m[32mINSERT INTO `users` (`uid`, `encrypted_password`, `name`, `email`, `created_at`, `updated_at`) VALUES ('admin2@nutfes.com', '$2a$12$bp6nLpRPCVZ.RBtNgWjsHOXm7CUz66pHZKxfxp.hnLhVDowXO1pHW', 'admin2', 'admin2@nutfes.com', '2020-07-26 14:51:09.133397', '2020-07-26 14:51:09.133397')[0m
+  [1m[35m (17.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Z_s89fetDnBkILgwECiSfw\":{\"token\":\"$2a$10$wzdBrn5Sp/aVW.rpqewIHO84coWMs5RfwJy5xaO3D61qakqm2QaAu\",\"expiry\":1596984669}}', `users`.`updated_at` = '2020-07-26 14:51:09.222130' WHERE `users`.`id` = 2[0m
+  [1m[35m (6.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 427ms (Views: 0.3ms | ActiveRecord: 29.4ms | Allocations: 17742)
+
+
+Started POST "/api/auth/sign_in" for 172.22.0.1 at 2020-07-26 14:51:34 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin2@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin2@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.0ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Z_s89fetDnBkILgwECiSfw\":{\"token\":\"$2a$10$wzdBrn5Sp/aVW.rpqewIHO84coWMs5RfwJy5xaO3D61qakqm2QaAu\",\"expiry\":1596984669},\"OMad0SqZs8fvs4I02eEfvg\":{\"token\":\"$2a$10$aIps7soskYNJoKJN9.3whOcAUV2yg6SuUVOhervT4owew/PNzwo4a\",\"expiry\":1596984695}}', `users`.`updated_at` = '2020-07-26 14:51:35.125130' WHERE `users`.`id` = 2[0m
+  [1m[35m (17.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 1, `users`.`current_sign_in_at` = '2020-07-26 14:51:35', `users`.`last_sign_in_at` = '2020-07-26 14:51:35', `users`.`current_sign_in_ip` = '172.22.0.1', `users`.`last_sign_in_ip` = '172.22.0.1', `users`.`updated_at` = '2020-07-26 14:51:35.151977' WHERE `users`.`id` = 2[0m
+  [1m[35m (5.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 418ms (Views: 9.4ms | ActiveRecord: 28.8ms | Allocations: 11545)
+
+
+Started GET "/api/v1/users/index" for 172.22.0.1 at 2020-07-26 14:51:42 +0000
+Processing by Api::V1::UsersController#index as HTML
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin2@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users`[0m
+  ↳ app/controllers/api/v1/users_controller.rb:5:in `index'
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 95ms (Views: 4.7ms | ActiveRecord: 3.5ms | Allocations: 4023)
+
+
+Started GET "/api/v1/users/show" for 172.22.0.1 at 2020-07-26 14:52:14 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin2@nutfes.com' LIMIT 1[0m
+  ↳ app/controllers/api/v1/users_controller.rb:9:in `show'
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 11ms (Views: 0.3ms | ActiveRecord: 3.1ms | Allocations: 2146)
+
+
+Started GET "/api/v1/users/show" for 172.22.0.1 at 2020-07-26 14:52:18 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin2@nutfes.com' LIMIT 1[0m
+  ↳ app/controllers/api/v1/users_controller.rb:9:in `show'
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 11ms (Views: 0.2ms | ActiveRecord: 2.5ms | Allocations: 2147)
+
+
+Started GET "/api/v1/users/show" for 172.22.0.1 at 2020-07-26 14:54:16 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"show"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = NULL LIMIT 1[0m
+  ↳ app/controllers/api/v1/users_controller.rb:9:in `show'
+Completed 404 Not Found in 20ms (ActiveRecord: 9.8ms | Allocations: 1991)
+
+
+  
+ActiveRecord::RecordNotFound (Couldn't find User with 'id'=show):
+  
+app/controllers/api/v1/users_controller.rb:9:in `show'
+Started GET "/api/v1/users/show" for 172.22.0.1 at 2020-07-26 14:54:36 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"show"}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin2@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = NULL LIMIT 1[0m
+  ↳ app/controllers/api/v1/users_controller.rb:9:in `show'
+Completed 404 Not Found in 172ms (ActiveRecord: 11.8ms | Allocations: 14853)
+
+
+  
+ActiveRecord::RecordNotFound (Couldn't find User with 'id'=show):
+  
+app/controllers/api/v1/users_controller.rb:9:in `show'
+Started GET "/api/v1/users/sh" for 172.23.0.1 at 2020-07-26 14:56:05 +0000
+  [1m[35m (1.3ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (21.2ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"sh"}
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 11ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 5936)
+
+
+Started GET "/api/v1/users/sh" for 172.23.0.1 at 2020-07-26 14:56:05 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"sh"}
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 2ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 146)
+
+
+Started GET "/api/v1/users/sh" for 172.23.0.1 at 2020-07-26 14:56:07 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"sh"}
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 146)
+
+
+Started GET "/api/v1/users/sh" for 172.23.0.1 at 2020-07-26 14:56:08 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"sh"}
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 1ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 146)
+
+
+Started GET "/a" for 172.23.0.1 at 2020-07-26 14:56:11 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/a"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+rack-cors (1.1.1) lib/rack/cors.rb:100:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started POST "/api/auth/sign_in" for 172.23.0.1 at 2020-07-26 14:56:50 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (6.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.6ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"t0536Y6MZxFkhsnj1iG6ow\":{\"token\":\"$2a$10$TV0mVkceh8jK4iEptYdOW.HV/DesDPFTYx4HM083s4GMJwfQbaNOS\",\"expiry\":1596982298},\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198},\"gK6IoYo16d26gab_14FHFA\":{\"token\":\"$2a$10$uHMuYFNmIGgKyc4QQoWUnu1EgQJlHPHgjl.F7vmFLxWsD6.GKSd36\",\"expiry\":1596984277},\"jqAKZa1k2tiuIPerPXVJ9w\":{\"token\":\"$2a$10$YrKHWRzqkYHSaqt2RMuIQecC7JFc98cKeRwu.V7ysQU2p6xa687ou\",\"expiry\":1596984564},\"gVkjFZ9JvPFYNQTniUhPmw\":{\"token\":\"$2a$10$f796YsWZKfvxzmC0Jjs8JuFWWhLACjrSPbOm7bwbxnnvy.O00VFzC\",\"expiry\":1596985011}}', `users`.`updated_at` = '2020-07-26 14:56:51.035075' WHERE `users`.`id` = 1[0m
+  [1m[35m (16.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 16, `users`.`current_sign_in_at` = '2020-07-26 14:56:51', `users`.`last_sign_in_at` = '2020-07-26 14:49:24', `users`.`current_sign_in_ip` = '172.23.0.1', `users`.`updated_at` = '2020-07-26 14:56:51.063344' WHERE `users`.`id` = 1[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 470ms (Views: 0.3ms | ActiveRecord: 40.9ms | Allocations: 27282)
+
+
+Started GET "/api/v1/users/2" for 172.23.0.1 at 2020-07-26 14:56:58 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+  ↳ app/controllers/api/v1/users_controller.rb:9:in `show'
+  [1m[36mUser Load (1.1ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 96ms (Views: 1.2ms | ActiveRecord: 3.9ms | Allocations: 3834)
+
+
+Started GET "/api/v1/users/2" for 172.23.0.1 at 2020-07-26 14:59:18 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+Completed 500 Internal Server Error in 384ms (ActiveRecord: 8.9ms | Allocations: 89727)
+
+
+  
+NameError (undefined local variable or method `current_user' for #<Api::V1::UsersController:0x000055c3a60b9360>
+Did you mean?  current_api_user):
+  
+app/controllers/api/v1/users_controller.rb:10:in `show'
+Started POST "/api/auth/sign_in" for 172.23.0.1 at 2020-07-26 14:59:30 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (2.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.9ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"DgxYIUUReBJxjCHxUKkwaQ\":{\"token\":\"$2a$10$1swgD1EuNIrU5HkjNFIJ7OqmIzQZUJ5.a61diWSq7I708XadEiuby\",\"expiry\":1596982328},\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198},\"gK6IoYo16d26gab_14FHFA\":{\"token\":\"$2a$10$uHMuYFNmIGgKyc4QQoWUnu1EgQJlHPHgjl.F7vmFLxWsD6.GKSd36\",\"expiry\":1596984277},\"jqAKZa1k2tiuIPerPXVJ9w\":{\"token\":\"$2a$10$YrKHWRzqkYHSaqt2RMuIQecC7JFc98cKeRwu.V7ysQU2p6xa687ou\",\"expiry\":1596984564},\"gVkjFZ9JvPFYNQTniUhPmw\":{\"token\":\"$2a$10$f796YsWZKfvxzmC0Jjs8JuFWWhLACjrSPbOm7bwbxnnvy.O00VFzC\",\"expiry\":1596985011},\"l18O8z-KpJBUavMYPRO8mg\":{\"token\":\"$2a$10$3GKcRXuTNDy3hwcKSgNceuMQC6VPfQPih.sRoC/2/Ue/exne5A66u\",\"expiry\":1596985171}}', `users`.`updated_at` = '2020-07-26 14:59:31.260015' WHERE `users`.`id` = 1[0m
+  [1m[35m (6.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 17, `users`.`current_sign_in_at` = '2020-07-26 14:59:31', `users`.`last_sign_in_at` = '2020-07-26 14:56:51', `users`.`last_sign_in_ip` = '172.23.0.1', `users`.`updated_at` = '2020-07-26 14:59:31.278328' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.7ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 393ms (Views: 0.4ms | ActiveRecord: 17.2ms | Allocations: 12598)
+
+
+Started GET "/api/v1/users/2" for 172.23.0.1 at 2020-07-26 14:59:35 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+Completed 500 Internal Server Error in 425ms (ActiveRecord: 1.2ms | Allocations: 76918)
+
+
+  
+NameError (undefined local variable or method `current_user' for #<Api::V1::UsersController:0x000055c3a6281e90>
+Did you mean?  current_api_user):
+  
+app/controllers/api/v1/users_controller.rb:10:in `show'
+Started GET "/api/v1/users/show" for 172.23.0.1 at 2020-07-26 15:00:16 +0000
+Processing by Api::V1::UsersController#show as HTML
+  Parameters: {"id"=>"show"}
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+Completed 500 Internal Server Error in 170ms (ActiveRecord: 1.2ms | Allocations: 76894)
+
+
+  
+NameError (undefined local variable or method `current_user' for #<Api::V1::UsersController:0x000055c3a5f7a8f0>
+Did you mean?  current_api_user):
+  
+app/controllers/api/v1/users_controller.rb:10:in `show'
+Started GET "/api/v1/users/show" for 172.23.0.1 at 2020-07-26 15:00:40 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+Completed 500 Internal Server Error in 478ms (ActiveRecord: 8.6ms | Allocations: 89693)
+
+
+  
+NameError (undefined local variable or method `current_user' for #<Api::V1::UsersController:0x000055c3a6370e28>
+Did you mean?  current_api_user):
+  
+app/controllers/api/v1/users_controller.rb:10:in `show'
+Started POST "/api/auth/sign_in" for 172.23.0.1 at 2020-07-26 15:00:52 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"ytJQ7j08ajizH-y2bTpnUg\":{\"token\":\"$2a$10$NuawgKzfdcg4yNjvqwojHOcZjSk3mkYycUcH54zxyG0jouC7Hwm4q\",\"expiry\":1596982446},\"gwLQmQcj6_mxa34DowRx1g\":{\"token\":\"$2a$10$mhmMugBGrb2VL9INVQT08ucW8lnCHi8szg2TI5wB/lji8NxTPT5dG\",\"expiry\":1596983233},\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198},\"gK6IoYo16d26gab_14FHFA\":{\"token\":\"$2a$10$uHMuYFNmIGgKyc4QQoWUnu1EgQJlHPHgjl.F7vmFLxWsD6.GKSd36\",\"expiry\":1596984277},\"jqAKZa1k2tiuIPerPXVJ9w\":{\"token\":\"$2a$10$YrKHWRzqkYHSaqt2RMuIQecC7JFc98cKeRwu.V7ysQU2p6xa687ou\",\"expiry\":1596984564},\"gVkjFZ9JvPFYNQTniUhPmw\":{\"token\":\"$2a$10$f796YsWZKfvxzmC0Jjs8JuFWWhLACjrSPbOm7bwbxnnvy.O00VFzC\",\"expiry\":1596985011},\"l18O8z-KpJBUavMYPRO8mg\":{\"token\":\"$2a$10$3GKcRXuTNDy3hwcKSgNceuMQC6VPfQPih.sRoC/2/Ue/exne5A66u\",\"expiry\":1596985171},\"Fc2D_0Gz7i50hXTpKdYHwA\":{\"token\":\"$2a$10$mpSQPOzSXzdtMZBCcTjEguT.xkkw8MkPkC28Blbsim0X/vS8nEKi2\",\"expiry\":1596985253}}', `users`.`updated_at` = '2020-07-26 15:00:53.233762' WHERE `users`.`id` = 1[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (0.8ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 18, `users`.`current_sign_in_at` = '2020-07-26 15:00:53', `users`.`last_sign_in_at` = '2020-07-26 14:59:31', `users`.`updated_at` = '2020-07-26 15:00:53.250105' WHERE `users`.`id` = 1[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 390ms (Views: 0.5ms | ActiveRecord: 14.3ms | Allocations: 12554)
+
+
+Started GET "/api/v1/users/show" for 172.23.0.1 at 2020-07-26 15:00:57 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+Completed 500 Internal Server Error in 352ms (ActiveRecord: 1.2ms | Allocations: 76907)
+
+
+  
+NameError (undefined local variable or method `current_user' for #<Api::V1::UsersController:0x000055c3a5d11410>
+Did you mean?  current_api_user):
+  
+app/controllers/api/v1/users_controller.rb:10:in `show'
+Started GET "/api/v1/users/show" for 172.23.0.1 at 2020-07-26 15:01:52 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.0ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 162ms (Views: 2.1ms | ActiveRecord: 11.1ms | Allocations: 15729)
+
+
+Started POST "/api/auth/sign_in" for 172.23.0.1 at 2020-07-26 15:02:08 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin2@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin2@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"Z_s89fetDnBkILgwECiSfw\":{\"token\":\"$2a$10$wzdBrn5Sp/aVW.rpqewIHO84coWMs5RfwJy5xaO3D61qakqm2QaAu\",\"expiry\":1596984669},\"OMad0SqZs8fvs4I02eEfvg\":{\"token\":\"$2a$10$aIps7soskYNJoKJN9.3whOcAUV2yg6SuUVOhervT4owew/PNzwo4a\",\"expiry\":1596984695},\"ACQqhpL4ThScx1dvyYYx6w\":{\"token\":\"$2a$10$W9NSiecypAM0PEWrm9UHNe/adM8djwCroZl36h2J5Z92DjsFmH.qy\",\"expiry\":1596985328}}', `users`.`updated_at` = '2020-07-26 15:02:08.934933' WHERE `users`.`id` = 2[0m
+  [1m[35m (16.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.1ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 2, `users`.`current_sign_in_at` = '2020-07-26 15:02:08', `users`.`current_sign_in_ip` = '172.23.0.1', `users`.`updated_at` = '2020-07-26 15:02:08.963878' WHERE `users`.`id` = 2[0m
+  [1m[35m (4.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (0.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 417ms (Views: 0.5ms | ActiveRecord: 26.1ms | Allocations: 12015)
+
+
+Started GET "/api/v1/users/show" for 172.23.0.1 at 2020-07-26 15:02:13 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (1.2ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin2@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.3ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 2 LIMIT 1[0m
+Completed 200 OK in 101ms (Views: 0.8ms | ActiveRecord: 2.6ms | Allocations: 2855)
+
+
+Started GET "/api/v1/users" for 172.23.0.1 at 2020-07-26 15:02:45 +0000
+  
+ActionController::RoutingError (No route matches [GET] "/api/v1/users"):
+  
+actionpack (6.0.3.2) lib/action_dispatch/middleware/debug_exceptions.rb:36:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/show_exceptions.rb:33:in `call'
+railties (6.0.3.2) lib/rails/rack/logger.rb:37:in `call_app'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `block in call'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `block in tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:28:in `tagged'
+activesupport (6.0.3.2) lib/active_support/tagged_logging.rb:80:in `tagged'
+railties (6.0.3.2) lib/rails/rack/logger.rb:26:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/remote_ip.rb:81:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/request_id.rb:27:in `call'
+rack (2.2.3) lib/rack/runtime.rb:22:in `call'
+activesupport (6.0.3.2) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/static.rb:126:in `call'
+rack (2.2.3) lib/rack/sendfile.rb:110:in `call'
+actionpack (6.0.3.2) lib/action_dispatch/middleware/host_authorization.rb:82:in `call'
+rack-cors (1.1.1) lib/rack/cors.rb:100:in `call'
+railties (6.0.3.2) lib/rails/engine.rb:527:in `call'
+puma (4.3.5) lib/puma/configuration.rb:228:in `call'
+puma (4.3.5) lib/puma/server.rb:713:in `handle_request'
+puma (4.3.5) lib/puma/server.rb:472:in `process_client'
+puma (4.3.5) lib/puma/server.rb:328:in `block in run'
+puma (4.3.5) lib/puma/thread_pool.rb:134:in `block in spawn_thread'
+Started GET "/api/v1/users/show" for 172.23.0.1 at 2020-07-26 15:02:47 +0000
+Processing by Api::V1::UsersController#show as HTML
+Filter chain halted as :authenticate_api_user! rendered or redirected
+Completed 401 Unauthorized in 10ms (Views: 0.4ms | ActiveRecord: 0.0ms | Allocations: 155)
+
+
