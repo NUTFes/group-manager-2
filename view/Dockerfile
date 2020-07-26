@@ -8,3 +8,4 @@ CMD ["/bin/ash"]
 
 COPY ./vue-project/package*.json /app/
 RUN npm install
+RUN npm --save axios
