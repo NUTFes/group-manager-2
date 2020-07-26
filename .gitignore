@@ -1,8 +1,7 @@
-./view/vue-project/node_modules/.cache/
+./view/vue-project/node_modules
 ./api/tmp/cache/
 .DS_Store
 ./view/dist
-./view/vue-project/node_modules
 
 # Log files
 ./view/npm-debug.log*
