@@ -3,6 +3,10 @@
     <h1>My Page</h1>
     {{ users }}
     {{ data }}
+    <div class="text-center">
+      <v-btn rounded color="#033" dark @click="signOut">Sign Out</v-btn>
+    </div>
+
   </div>
 </template>
 
@@ -17,6 +21,20 @@ export default {
         localStorage.getItem('uid')
       ],
       users: []
+    }
+  },
+  methods: {
+    signOut: function() {
+      axios.delete('http://localhost/api/auth/sign_out', {
+        headers: { 
+          "Content-Type": "application/json", 
+          "access-token": localStorage.getItem('access-token'),
+          "client": localStorage.getItem('client'),
+          "uid": localStorage.getItem('uid')
+        }
+      }).then(
+        this.$router.push('/')
+        )
     }
   },
   mounted() {

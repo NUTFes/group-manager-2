@@ -46,14 +46,11 @@ export default {
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       axios.post(url, params).then(
         (response) => {
-          console.log(response)
-          console.log(response.headers['access-token'])
-          console.log(response.headers['client'])
-          console.log(response.headers['uid'])
           localStorage.setItem('access-token', response.headers['access-token'])
           localStorage.setItem('client', response.headers['client'])
           localStorage.setItem('uid', response.headers['uid'])
           localStorage.setItem('token-type', response.headers['token-type'])
+          this.$router.push('MyPage')
         },
         (error) => {
           return error
