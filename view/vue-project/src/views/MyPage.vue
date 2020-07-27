@@ -34,6 +34,9 @@ export default {
         }
       }).then(
         this.$router.push('/')
+        localStorage.removeItem('access-token')
+        localStorage.removeItem('client')
+        localStorage.removeItem('uid')
         )
     }
   },
