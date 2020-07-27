@@ -33,9 +33,9 @@ export default {
           "uid": localStorage.getItem('uid')
         }
       }).then(
-        this.$router.push('/')
-        localStorage.removeItem('access-token')
-        localStorage.removeItem('client')
+        this.$router.push('/'),
+        localStorage.removeItem('access-token'),
+        localStorage.removeItem('client'),
         localStorage.removeItem('uid')
         )
     }
