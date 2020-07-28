@@ -5915,3 +5915,42 @@ Processing by Api::V1::UsersController#show as HTML
 Completed 200 OK in 130ms (Views: 3.9ms | ActiveRecord: 4.0ms | Allocations: 3017)
 
 
+Started GET "/api/v1/users/show" for 172.21.0.1 at 2020-07-28 13:16:03 +0000
+  [1m[35m (2.7ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (56.6ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (10.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin10@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 8 LIMIT 1[0m
+Completed 200 OK in 243ms (Views: 1.9ms | ActiveRecord: 37.5ms | Allocations: 17288)
+
+
+Started DELETE "/api/auth/sign_out" for 172.21.0.1 at 2020-07-28 13:16:06 +0000
+Processing by DeviseTokenAuth::SessionsController#destroy as HTML
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin10@nutfes.com' LIMIT 1[0m
+  [1m[35m (1.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (8.2ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = NULL, `users`.`updated_at` = '2020-07-28 13:16:06.798873' WHERE `users`.`id` = 8[0m
+  [1m[35m (50.5ms)[0m  [1m[35mCOMMIT[0m
+Completed 200 OK in 108ms (Views: 0.7ms | ActiveRecord: 61.5ms | Allocations: 6413)
+
+
+Started POST "/api/auth/sign_in" for 172.21.0.1 at 2020-07-28 13:16:18 +0000
+Processing by DeviseTokenAuth::SessionsController#create as HTML
+  Parameters: {"email"=>"admin@nutfes.com", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE (BINARY email = 'admin@nutfes.com' AND provider= 'email') ORDER BY `users`.`id` ASC LIMIT 1[0m
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.6ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"888MjV73UIKqQb6Ji32ZaA\":{\"token\":\"$2a$10$EYI/L.9sM7wvxfKLdW5m7Oac/OWlYqUfEEFJUtQkbdKmzqhOfXmvG\",\"expiry\":1596983364},\"kkXdBwwFNKhl6rjqxF-oBw\":{\"token\":\"$2a$10$hArvWlcXtchPm6VsBVYhsuThnmlWK.97wktqSDgdoCEWXb48pr/Jq\",\"expiry\":1596983444},\"Q0l77nJ0VHo4cYQYdhzSBg\":{\"token\":\"$2a$10$xJS7kQ/ETfnetHOKeFJSdeL.BjUlxdvOEsIenp/aLglx7jWollGxG\",\"expiry\":1596984198},\"gK6IoYo16d26gab_14FHFA\":{\"token\":\"$2a$10$uHMuYFNmIGgKyc4QQoWUnu1EgQJlHPHgjl.F7vmFLxWsD6.GKSd36\",\"expiry\":1596984277},\"jqAKZa1k2tiuIPerPXVJ9w\":{\"token\":\"$2a$10$YrKHWRzqkYHSaqt2RMuIQecC7JFc98cKeRwu.V7ysQU2p6xa687ou\",\"expiry\":1596984564},\"gVkjFZ9JvPFYNQTniUhPmw\":{\"token\":\"$2a$10$f796YsWZKfvxzmC0Jjs8JuFWWhLACjrSPbOm7bwbxnnvy.O00VFzC\",\"expiry\":1596985011},\"l18O8z-KpJBUavMYPRO8mg\":{\"token\":\"$2a$10$3GKcRXuTNDy3hwcKSgNceuMQC6VPfQPih.sRoC/2/Ue/exne5A66u\",\"expiry\":1596985171},\"Fc2D_0Gz7i50hXTpKdYHwA\":{\"token\":\"$2a$10$mpSQPOzSXzdtMZBCcTjEguT.xkkw8MkPkC28Blbsim0X/vS8nEKi2\",\"expiry\":1596985253},\"arYgbV8Il5VrKNpNyHxU9w\":{\"token\":\"$2a$10$rxrISAZds91wyHXdHJ/LkOQCke0HdBNlJ5OsnSCBWBO7vNOC1CJA.\",\"expiry\":1597151778}}', `users`.`updated_at` = '2020-07-28 13:16:18.841760' WHERE `users`.`id` = 1[0m
+  [1m[35m (52.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (1.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.5ms)[0m  [1m[33mUPDATE `users` SET `users`.`sign_in_count` = 25, `users`.`current_sign_in_at` = '2020-07-28 13:16:18', `users`.`last_sign_in_at` = '2020-07-27 02:06:44', `users`.`current_sign_in_ip` = '172.21.0.1', `users`.`last_sign_in_ip` = '172.19.0.1', `users`.`updated_at` = '2020-07-28 13:16:18.912328' WHERE `users`.`id` = 1[0m
+  [1m[35m (10.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 794ms (Views: 0.7ms | ActiveRecord: 70.8ms | Allocations: 12439)
+
+
+Started GET "/api/v1/users/show" for 172.21.0.1 at 2020-07-28 13:16:19 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (2.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.8ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 1 LIMIT 1[0m
+Completed 200 OK in 157ms (Views: 1.7ms | ActiveRecord: 4.3ms | Allocations: 2914)
+
+
