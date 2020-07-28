@@ -5889,3 +5889,29 @@ Processing by Api::V1::UsersController#show as HTML
 Completed 200 OK in 74ms (Views: 0.6ms | ActiveRecord: 3.2ms | Allocations: 2823)
 
 
+  [1m[35m (1.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[36mUser Load (17.9ms)[0m  [1m[34mSELECT `users`.* FROM `users` LIMIT 11[0m
+Started POST "/api/auth" for 172.20.0.1 at 2020-07-28 12:59:40 +0000
+  [1m[35m (1.8ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (40.7ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Api::Auth::RegistrationsController#create as HTML
+  Parameters: {"name"=>"admin10", "email"=>"admin10@nutfes.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}
+DEPRECATION WARNING: Uniqueness validator will no longer enforce case sensitive comparison in Rails 6.1. To continue case sensitive comparison on the :email attribute in User model, pass `case_sensitive: true` option explicitly to the uniqueness validator. (called from block in build_relation at /usr/local/bundle/gems/activerecord-6.0.3.2/lib/active_record/validations/uniqueness.rb:64)
+  [1m[35m (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Exists? (2.9ms)[0m  [1m[34mSELECT 1 AS one FROM `users` WHERE `users`.`email` = BINARY 'admin10@nutfes.com' AND `users`.`provider` = 'email' LIMIT 1[0m
+  [1m[36mUser Create (1.9ms)[0m  [1m[32mINSERT INTO `users` (`uid`, `encrypted_password`, `name`, `email`, `created_at`, `updated_at`) VALUES ('admin10@nutfes.com', '$2a$12$q9l7N0oGo5/3J.u89XUiZ.6Wi9Q9Z84u.MonQHiV6OHsgWAoZSGcm', 'admin10', 'admin10@nutfes.com', '2020-07-28 12:59:41.485240', '2020-07-28 12:59:41.485240')[0m
+  [1m[35m (45.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mUser Update (1.3ms)[0m  [1m[33mUPDATE `users` SET `users`.`tokens` = '{\"BoQGou-SSVdvR-vfweGz6Q\":{\"token\":\"$2a$10$Ubr3IZY5ZWtg/2uSkAkEAuU5C3hctn2wFoS4NrpC207zhAGtNE9ky\",\"expiry\":1597150781}}', `users`.`updated_at` = '2020-07-28 12:59:41.693163' WHERE `users`.`id` = 8[0m
+  [1m[35m (9.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mUser Load (1.5ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 8 LIMIT 1[0m
+Completed 200 OK in 995ms (Views: 0.6ms | ActiveRecord: 75.5ms | Allocations: 41070)
+
+
+Started GET "/api/v1/users/show" for 172.20.0.1 at 2020-07-28 12:59:41 +0000
+Processing by Api::V1::UsersController#show as HTML
+  [1m[36mUser Load (2.4ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`uid` = 'admin10@nutfes.com' LIMIT 1[0m
+  [1m[36mUser Load (1.6ms)[0m  [1m[34mSELECT `users`.* FROM `users` WHERE `users`.`id` = 8 LIMIT 1[0m
+Completed 200 OK in 130ms (Views: 3.9ms | ActiveRecord: 4.0ms | Allocations: 3017)
+
+
