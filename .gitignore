@@ -1,1 +1,18 @@
-./view/vue-project/node_modules/.cache/
+./view/vue-project/node_modules/
+./api/tmp/cache/
+.DS_Store
+./view/dist
+
+# Log files
+./view/npm-debug.log*
+./view/yarn-debug.log*
+./view/yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
