@@ -1,5 +1,6 @@
 /view/vue-project/node_modules
-/api/tmp/cache
+/api/log
+/api/tmp
 .DS_Store
 /view/dist
 
