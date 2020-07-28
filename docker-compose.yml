@@ -16,16 +16,15 @@ services:
     volumes:
       - ./api:/myapp
     ports:
-      - "3000:3000"
+      - "80:3000"
     depends_on:
       - db
     stdin_open: true
     tty: true
-    command: bundle exec rails server -b 0.0.0.0
+    # command: bundle exec rails server -b 0.0.0.0
 
   view:
     build: ./view
-    command: npm install
     command: npm run serve
     ports:
       - "8080:8080"
