@@ -41,7 +41,7 @@ export default {
       this.show = true
     },
     signUp: function() {
-      const url = 'http://localhost/api/auth'
+      const url = process.env.VUE_APP_URL + '/api/auth'
       var params = new URLSearchParams();
       params.append('name', this.name);
       params.append('email', this.email);
