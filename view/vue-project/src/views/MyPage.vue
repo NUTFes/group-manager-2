@@ -25,7 +25,8 @@ export default {
   },
   methods: {
     signOut: function() {
-      axios.delete('http://localhost/api/auth/sign_out', {
+      const url = process.env.VUE_APP_URL + '/api/auth/sign_out'
+      axios.delete(url, {
         headers: { 
           "Content-Type": "application/json", 
           "access-token": localStorage.getItem('access-token'),
@@ -41,7 +42,7 @@ export default {
     }
   },
   mounted() {
-    const url = 'http://localhost/api/v1/users/show'
+    const url = process.env.VUE_APP_URL + '/api/v1/users/show'
     axios.get(url, {
       headers: { 
         "Content-Type": "application/json", 

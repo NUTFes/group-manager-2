@@ -39,7 +39,7 @@ export default {
       this.show = true
     },
     signIn: function() {
-      const url = 'http://localhost/api/auth/sign_in'
+      const url = process.env.VUE_APP_URL + '/api/auth/sign_in'
       var params = new URLSearchParams();
       params.append('email', this.email);
       params.append('password', this.password);

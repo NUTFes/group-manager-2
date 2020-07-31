@@ -32,6 +32,8 @@ services:
       - ./view:/app
     stdin_open: true
     tty: true
+    environment:
+      - VUE_APP_URL=http://localhost
 
 volumes:
   mysql-data:
