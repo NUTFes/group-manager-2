@@ -1,7 +1,8 @@
 
 export default {
   server: {
-    host: process.env.VUE_APP_URL
+    host: process.env.VUE_APP_URL,
+    port: 8081
   },
   /*
   ** Nuxt rendering mode

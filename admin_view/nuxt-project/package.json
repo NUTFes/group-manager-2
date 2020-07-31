@@ -4,7 +4,8 @@
   "private": true,
   "config": {
     "nuxt":{
-      "host":"process.env.VUE_APP_URL"
+      "host":"process.env.VUE_APP_URL",
+      "port":"8081"
     }
   },
   "scripts": {
