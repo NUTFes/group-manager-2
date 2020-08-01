@@ -1,16 +1,7 @@
 # group-manager-2
 参加団体管理アプリ ver2.0
 
-# 環境
-- 初回  
-`docker-compose build`  
-`docker-compose up`  
-- 初回以降  
-`docker-compose up`  
-
-## もしかしたらこれいるかも
-ディレクトリをgroup-manager-2の下で  
-`sudo chown -R <user-name> group-manager-2`
+https://github.com/NUTFes/group-manager-2/wiki/git-clone-%E3%82%92%E3%81%97%E3%81%9F%E3%82%89
 
 ## バージョン
 ### api
