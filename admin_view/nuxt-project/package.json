@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "config": {
-    "nuxt":{
-      "host":"process.env.VUE_APP_URL",
-      "port":"8081"
+    "nuxt": {
+      "host": "process.env.VUE_APP_URL",
+      "port": "8081"
     }
   },
   "scripts": {
