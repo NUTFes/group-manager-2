@@ -10,6 +10,10 @@ module Api
         params.permit(:name, :email, :role_id, :user_detail_id)
       end
 
+      def after_sign_up_path_for(resources)
+        "/api/v1/users/show"
+      end
+
     end
   end
 end
