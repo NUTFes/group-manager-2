@@ -8,7 +8,7 @@ class Api::V1::UsersController < ApplicationController
   end
   
   def show
-    @user = current_api_user.id
+    @user = current_api_user
     render json: { data: @user }
   end
 end

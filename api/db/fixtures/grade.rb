@@ -11,8 +11,8 @@ Grade.seed( :id,
   { id: 10, name: 'GD1[イノベ1年]' },
   { id: 11, name: 'GD2[イノベ2年]' },
   { id: 12, name: 'GD3[イノベ3年]' },
-  { id: 13, name: 'GD3[イノベ4年]' },
-  { id: 14, name: 'GD3[イノベ5年]' },
+  { id: 13, name: 'GD4[イノベ4年]' },
+  { id: 14, name: 'GD4[イノベ5年]' },
   { id: 15, name: 'その他' },
 )
 

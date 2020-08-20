@@ -18,7 +18,7 @@ class UserDetailsController < ApplicationController
     @user_detail = UserDetail.new(user_detail_params)
 
     if @user_detail.save
-      render :show, status: :created, location: @user_detail
+      render json: @user_detail
     else
       render json: @user_detail.errors, status: :unprocessable_entity
     end
@@ -48,6 +48,7 @@ class UserDetailsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_detail_params
-      params.require(:user_detail).permit(:tel, :grade_id, :department_id, :user_id)
+      # params.require(:user_detail).permit(:tel, :grade_id, :department_id, :user_id)
+      params.permit(:tel, :grade_id, :department_id, :user_id)
     end
 end
