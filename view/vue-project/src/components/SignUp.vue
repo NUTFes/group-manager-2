@@ -40,6 +40,7 @@ export default {
     open () {
       this.show = true
     },
+  /**
     signUp: function() {
       const url = process.env.VUE_APP_URL + '/api/auth'
       var params = new URLSearchParams();
@@ -57,6 +58,35 @@ export default {
           this.$router.push('MyPage')
         }
       )
+    }
+  **/
+    signUp: function() {
+      this.$store.dispatch(
+        'users/create',
+        {
+          'user': {
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          }
+        }
+      )
+    }
+  },
+  computed: {
+    token() {
+      return this.$store.users.accesstoken
+    },
+  },
+  created: function() {
+    if (this.$store.state.users.accesstoken) {
+      this.$router.push('MyPage')
+    }
+  },
+  watch: {
+    accesstoken (newAccesstoken) {
+      this.$router.push('MyPage')
     }
   }
 }
