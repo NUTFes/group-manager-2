@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 import About from '../views/About.vue'
 import MyPage from '../views/MyPage.vue'
+import RegisterUserDetail from '../views/RegisterUserDetail.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,14 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: MyPage
+  },
+  {
+    path: '/register_user_detail',
+    name: 'RegisterUserDetail',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: RegisterUserDetail
   },
 ]
 

@@ -21,8 +21,19 @@ services:
       - db
     stdin_open: true
     tty: true
-    # command: bundle exec rails server -b 0.0.0.0
 
+  admin_api:
+    build: ./api
+    command: bundle exec rails server -b 0.0.0.0
+    volumes:
+      - ./admin_api:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+    
   view:
     build: ./view
     command: npm run serve
@@ -32,6 +43,20 @@ services:
       - ./view:/app
     stdin_open: true
     tty: true
+    environment:
+      - VUE_APP_URL=http://localhost
+
+  admin_view:
+    build: ./admin_view
+    command: npm run dev
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./admin_view:/app
+    stdin_open: true
+    tty: true
+    environment:
+      - VUE_APP_URL=0.0.0.0
 
 volumes:
   mysql-data:

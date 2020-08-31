@@ -41,10 +41,11 @@ export default {
       this.show = true
     },
     signUp: function() {
-      const url = 'http://localhost/api/auth'
+      const url = process.env.VUE_APP_URL + '/api/auth'
       var params = new URLSearchParams();
       params.append('name', this.name);
       params.append('email', this.email);
+      params.append('role_id', 3); // デフォルトはuser権限
       params.append('password', this.password);
       params.append('password_confirmation', this.password_confirmation);
       axios.defaults.headers.common['Content-Type'] = 'application/json';
