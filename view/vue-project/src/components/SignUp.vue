@@ -5,14 +5,14 @@
     <v-dialog v-model="show" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">SIGN UP</span>
+          <span class="headline">Sign Up</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field label="NAME" v-model="name" required></v-text-field>
-            <v-text-field label="EMAIL" v-model="email" required></v-text-field>
-            <v-text-field label="PASSWORD" v-model="password" type="password" required></v-text-field>
-            <v-text-field label="PASSWORD CONFIRMATION" v-model="password_confirmation" type="password" required></v-text-field>
+            <v-text-field label="Name" v-model="name" required></v-text-field>
+            <v-text-field label="Email" v-model="email" required></v-text-field>
+            <v-text-field label="Password" v-model="password" type="password" required></v-text-field>
+            <v-text-field label="Password Confirmation" v-model="password_confirmation" type="password" required></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>

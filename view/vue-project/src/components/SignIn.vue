@@ -5,12 +5,12 @@
     <v-dialog v-model="show" max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">SIGN IN</span>
+          <span class="headline">Sign In</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field label="EMAIL" v-model="email" required></v-text-field>
-            <v-text-field label="PASSWORD" v-model="password" type="password" required></v-text-field>
+            <v-text-field label="Email" v-model="email" required></v-text-field>
+            <v-text-field label="Password" v-model="password" type="password" required></v-text-field>
           </v-container>
         </v-card-text>
         <v-card-actions>
