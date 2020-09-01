@@ -65,9 +65,10 @@ export default {
       this.$store.dispatch(
         'users/create',
         {
-          'user': {
+          'data': {
             name: this.name,
             email: this.email,
+            role_id: 3,
             password: this.password,
             password_confirmation: this.password_confirmation
           }
@@ -80,7 +81,7 @@ export default {
       return this.$store.users.accesstoken
     },
   },
-  created: function() {
+/*  created: function() {
     if (this.$store.state.users.accesstoken) {
       this.$router.push('MyPage')
     }
@@ -90,5 +91,6 @@ export default {
       this.$router.push('MyPage')
     }
   }
+*****/
 }
 </script>

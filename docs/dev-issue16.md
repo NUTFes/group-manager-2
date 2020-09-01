@@ -142,7 +142,7 @@ postというactionにurlを指定してdispatchをしたものをcommitをす�
 ```
 async request ({dispatch, rootState}, {method, url, data}) {
 	const headers = {}
-	headers['Content-Type'] = 'aplication/json';
+	headers['Content-Type'] = 'application/json';
 	
 	const options = {
 		method,
@@ -175,11 +175,89 @@ axiosのメソッドを指定し、requestというactionをdispatchしたもの
 
 
 
+### SignUp.vue
+
+```
+export default {
+  name: 'SignUp',
+  data () {
+    return {
+      show: false,
+    }
+  },
+  methods: {
+    open () {
+      this.show = true
+    },
+    signUp: function() {
+      this.$store.dispatch(
+        'users/create',
+        {
+          'user': {
+            name: this.name,
+            email: this.email,
+            role_id: 3,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          }
+        }
+      )
+    }
+  },
+  computed: {
+    token() {
+      return this.$store.users.accesstoken
+    },
+  },
+  created: function() {
+    if (this.$store.state.users.accesstoken) {
+      this.$router.push('MyPage')
+    }
+  },
+  watch: {
+    accesstoken (newAccesstoken) {
+      this.$router.push('MyPage')
+    }
+  }
+}
+```
+
+
+
+
+
 これでできた、と思ったらエラー
 
 
 
 ` unknown action type: post`とのことなので
+
+`users/post`に変更とかしてみたら
+
+422 (Unprocessable Entity)が出た。
+
+
+
+CSRF tokenで問題があるかもしれない
+
+
+
+また、`RAILS/log/development.log`によると
+
+```
+Started POST "/api/auth" for 172.20.0.1 at 2020-08-28 11:14:49 +0000
+  [1m[35m (8.1ms)[0m  [1m[35mSET NAMES utf8mb4,  @@SESSION.sql_mode = CONCAT(CONCAT(@@sql_mode, ',STRICT_ALL_TABLES'), ',NO_AUTO_VALUE_ON_ZERO'),  @@SESSION.sql_auto_is_null = 0, @@SESSION.wait_timeout = 2147483[0m
+  [1m[35m (10.9ms)[0m  [1m[34mSELECT `schema_migrations`.`version` FROM `schema_migrations` ORDER BY `schema_migrations`.`version` ASC[0m
+Processing by Api::Auth::RegistrationsController#create as HTML
+  Parameters: {"data"=>{"name"=>"mashimo", "email"=>"mashimo@nutfes.com", "role_id"=>3, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "registration"=>{"data"=>{"name"=>"mashimo", "email"=>"mashimo@nutfes.com", "role_id"=>3, "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}}
+[31mUnpermitted parameters: :data, :registration[0m
+Filter chain halted as :validate_sign_up_params rendered or redirected
+Completed 422 Unprocessable Entity in 11ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 6073) 
+```
+
+
+
+validateが悪さをしているみたいだが？？？
 
 # 参考サイト
 
