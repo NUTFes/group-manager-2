@@ -21,18 +21,6 @@ services:
       - db
     stdin_open: true
     tty: true
-
-  admin_api:
-    build: ./api
-    command: bundle exec rails server -b 0.0.0.0
-    volumes:
-      - ./admin_api:/myapp
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    stdin_open: true
-    tty: true
     
   view:
     build: ./view
