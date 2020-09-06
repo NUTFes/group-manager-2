@@ -1,5 +1,3 @@
-<template>
-  <div>
  <template>
   <v-row justify="center">
     <v-dialog v-model="show" max-width="600px">
@@ -21,8 +19,6 @@
       </v-card>
     </v-dialog>
   </v-row>
-</template> 
-  </div>
 </template>
 
 <script>
