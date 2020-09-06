@@ -1,6 +1,6 @@
  <template>
   <v-row justify="center">
-    <v-dialog v-model="show" max-width="600px">
+    <v-dialog v-model="show" max-width="600px" dark>
       <v-card>
         <v-card-title>
           <span class="headline">ログイン</span>
@@ -14,7 +14,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="show = false">キャンセル</v-btn>
-          <v-btn color="blue darken-1" text @click="signIn">ログイン</v-btn>
+          <v-btn color="blue darken-1" @click="signIn">ログイン</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
