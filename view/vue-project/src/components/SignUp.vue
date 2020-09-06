@@ -26,7 +26,7 @@
                 label="Password"
                 ref="password"
                 v-model="password"
-                :append-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.requied, rules.min]"
                 :type="show_pass ? 'password' : 'text'"
                 hint="8 characters"

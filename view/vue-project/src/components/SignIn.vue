@@ -19,7 +19,7 @@
                 label="パスワード"
                 v-model="password"
                 ref="password"
-                :append-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.required, rules.min]"
                 :type="show_pass ? 'password' : 'text'"
                 hint="8 characters"
