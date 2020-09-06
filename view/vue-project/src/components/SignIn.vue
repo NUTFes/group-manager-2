@@ -80,7 +80,7 @@ export default {
         if (!this.form[f]) this.formHasErrors = true
         this.$refs[f].validate(true)
       })
-      if (this.formHasErrors) return 'Can`t Sing In'
+      if (!this.formHasErrors) return 'Can`t Sing In'
 
       const url = process.env.VUE_APP_URL + '/api/auth/sign_in'
       var params = new URLSearchParams();
