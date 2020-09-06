@@ -7,8 +7,25 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field label="メールアドレス" v-model="email" required></v-text-field>
-            <v-text-field label="パスワード" v-model="password" type="password" required></v-text-field>
+            <v-form  ref="test_form">
+              <v-text-field
+                label="メールアドレス"
+                v-model="email"
+                :rules="[rules.requied]"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="パスワード"
+                v-model="password"
+                :append-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
+                :rules="[rules.required, rules.min]"
+                :type="show_pass ? 'password' : 'text'"
+                hint="8 characters"
+                counter
+                @click:append="show_pass = !show_pass"
+                required
+              ></v-text-field>
+            </v-form>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -24,10 +41,15 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'SignUp',
+  name: 'SignIn',
   data () {
     return {
-      show: false
+      show: false,
+      show_pass: true,
+      rules: {
+        requied: value => !!value || 'Required.',
+        min: v => v.length >= 8 || 'Min 8 characters',
+      },
     }
   },
   methods: {
