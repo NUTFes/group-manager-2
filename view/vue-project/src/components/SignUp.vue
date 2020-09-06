@@ -3,27 +3,27 @@
     <v-dialog v-model="show" max-width="600px" dark>
       <v-card>
         <v-card-title>
-          <span class="headline">Sign Up</span>
+          <span class="headline">新規登録</span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form">
               <v-text-field
-                label="Name"
+                label="フルネーム"
                 ref="name"
                 v-model="name"
                 :rules="[rules.requied]"
                 required
               ></v-text-field>
               <v-text-field
-                label="Email"
+                label="メールアドレス"
                 ref="email"
                 v-model="email"
                 :rules="[rules.requied]"
                 required
               ></v-text-field>
               <v-text-field
-                label="Password"
+                label="パスワード"
                 ref="password"
                 v-model="password"
                 :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
@@ -35,7 +35,7 @@
                 required
               ></v-text-field>
               <v-text-field
-                label="Password Confirmation"
+                label="パスワードの再入力"
                 ref="password_confirmation"
                 v-model="password_confirmation"
                 :append-icon="show_pass_confirmation ? 'mdi-eye' : 'mdi-eye-off'"
@@ -70,9 +70,9 @@ export default {
       show_pass_confirmation: true,
       formHasErrors: false,
       rules: {
-        requied: value => !!value || 'Required.',
-        min: v => v.length >= 8 || 'Min 8 characters',
-        match: v => v === this.password || 'chigau yo~',
+        requied: value => !!value || '入力してください',
+        min: v => v.length >= 8 || '８文字未満です',
+        match: v => v === this.password || 'パスワードと再確認パスワードが一致していません',
       },
     }
   },
