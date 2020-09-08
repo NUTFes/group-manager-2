@@ -1,0 +1,2 @@
+class StageCommonOption < ApplicationRecord
+end
