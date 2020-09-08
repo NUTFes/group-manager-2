@@ -1,5 +1,8 @@
 GroupCategory.seed( :id,
-  { id: 1, name: 'sample1' },
-  { id: 2, name: 'sample2' },
-  { id: 3, name: 'sample3' },
+  { id: 1, name: '模擬店(食品販売)' },
+  { id: 2, name: '模擬店(物品販売)' },
+  { id: 3, name: 'ステージ企画' },
+  { id: 4, name: '展示・体験' },
+  { id: 5, name: 'その他' },
+  { id: 6, name: '研究室公開' }
 )
