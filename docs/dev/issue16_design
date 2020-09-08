@@ -1,0 +1,106 @@
+# デザインの原則
+
+今回は[このページ](https://popinsight.jp/blog/?p=4113)に従って作成することとする。
+
+また、背景色は灰色、パーツは黒、文字は白とする。
+
+
+
+# 行うことをまとめる
+
+- Sign Up, Cancelボタンはわかりやすいように囲う
+- Sign Upだけわかりやすいような色にする
+- パスワードにvalidateを設定
+- パスワードが違った場合にtext-fieldを赤で囲って強調するような何かを配置、text-fieldの下に間違っている警告文を出す
+- パスワードのlabelの下にvalidateの表示
+- textfieldをもっと小さくしてもいい
+- 日本語統一
+
+- カラーコード
+  - ボタン青 #033
+  - 背景黒 #
+  - 文字白 #
+
+
+
+# 解説
+
+## validate
+
+validateを適用させるためにはformである必要がある。
+
+```
+<v-form ref="form">
+	<v-text-field
+		label="メール"
+		ref="email"
+		v-model="email"
+		:rules="[rules.requied, rules.min]"
+		required
+	></v-text-field>
+</v-form>
+```
+
+とすることでformと認識されるようになる。
+
+また、`this.$refs[form]`でそれぞれのvalidateを関数によって制御できる。
+
+| 関数              | 動作                                                         |
+| ----------------- | :----------------------------------------------------------- |
+| validate()        | バリデーションチェックをする。通過した場合は`true`を返す。`false`を返すときはエラー表示もする。 |
+| resetValidation() | バリデーションチェックをリセットする。返り値はなし。         |
+| reset()           | すべての入力内容を初期値に戻す。バリデーションチェックもリセットする。返り値はなし。 |
+
+
+
+`<script>`
+
+```
+data () {
+	return {
+		rules: {
+			requied: value => !!value || 'Required.',
+			min: v => v.length >= 8 || 'Min 8 characters',
+		}
+	}
+}
+```
+
+
+
+`:rules` から呼び出すとバリデーションの設定ができる。
+
+## パスワードの可視化
+
+ボタンを作成してtypeをpasswordとtextで変更すればよい。
+
+`<template>`
+
+```
+<v-text-field
+	label="パスワード"
+	v-model="password"
+	:append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
+	:type="show_pass ? 'password' : 'text'"
+	hint: "8文字以上にしてください"
+	counter
+	@click:append="show_pass = !show_pass"
+></v-text-field>
+```
+
+`<script>`
+
+```
+data () {
+	return {
+		show_pass: true,
+	}
+}
+```
+
+`show_pass` :切り替えのためのshow
+
+`:append-icon`:ボタンのアイコン指定
+
+`:type`: passwordとtextのtype切り替え
+
