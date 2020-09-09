@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :power_orders
   resources :groups
   resources :user_details
   namespace 'api' do
