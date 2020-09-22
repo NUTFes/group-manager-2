@@ -1,0 +1,2 @@
+class EmployeeCategory < ApplicationRecord
+end
