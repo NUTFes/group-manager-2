@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :sub_reps
   resources :power_orders
   resources :groups
   resources :user_details
