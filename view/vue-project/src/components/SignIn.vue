@@ -1,44 +1,87 @@
-<template>
-  <div>
  <template>
   <v-row justify="center">
-    <v-dialog v-model="show" max-width="600px">
+    <v-dialog v-model="show" max-width="600px" dark>
       <v-card>
         <v-card-title>
-          <span class="headline">SIGN IN</span>
+          <span class="headline">ログイン</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field label="EMAIL" v-model="email" required></v-text-field>
-            <v-text-field label="PASSWORD" v-model="password" type="password" required></v-text-field>
+            <v-form  ref="form">
+              <v-text-field
+                label="メールアドレス"
+                ref="email"
+                v-model="email"
+                :rules="[rules.requied]"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="パスワード"
+                v-model="password"
+                ref="password"
+                :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
+                :rules="[rules.required, rules.min]"
+                :type="show_pass ? 'password' : 'text'"
+                hint="8 characters"
+                counter
+                @click:append="show_pass = !show_pass"
+                required
+              ></v-text-field>
+            </v-form>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="signIn">Sign In</v-btn>
+          <v-btn color="blue darken-1" text @click="cancel">キャンセル</v-btn>
+          <v-btn color="blue darken-1" @click="submit">ログイン</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </v-row>
-</template> 
-  </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-  name: 'SignUp',
+  name: 'SignIn',
   data () {
     return {
-      show: false
+      show: false,
+      show_pass: true,
+      formHasErrors: false,
+      rules: {
+        requied: value => !!value || '入力してください',
+        min: v => v.length >= 8 || '８文字未満です',
+      },
+    }
+  },
+  computed: {
+    form () {
+      return {
+        email: null,
+        password: null,
+      }
     }
   },
   methods: {
-    open () {
+    open: function() {
       this.show = true
     },
-    signIn: function() {
+    cancel: function() {
+      Object.keys(this.form).forEach(f => {
+        this.$refs[f].reset()
+      })
+      this.show = false
+    },
+    submit: function() {
+      this.formHasErrors = false
+
+      Object.keys(this.form).forEach(f => {
+        if (!this.form[f]) this.formHasErrors = true
+        this.$refs[f].validate(true)
+      })
+      if (!this.formHasErrors) return 'Can`t Sing In'
+
       const url = process.env.VUE_APP_URL + '/api/auth/sign_in'
       var params = new URLSearchParams();
       params.append('email', this.email);
