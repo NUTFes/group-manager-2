@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :assign_group_places
   resources :place_orders
   resources :groups
   resources :user_details
