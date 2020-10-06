@@ -1,0 +1,3 @@
+class PlaceOrder < ApplicationRecord
+    belongs_to :group
+end
