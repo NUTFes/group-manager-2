@@ -45,12 +45,8 @@
 
 <script>
 import axios from 'axios'
-import Signup from './SignUp'
 export default {
   name: 'SignIn',
-  components: {
-    Signup
-  },
   data () {
     return {
       show_pass: true,
@@ -69,7 +65,6 @@ export default {
       }
     }
   },
-  props: ['clickSignup'],
   computed: {
     form () {
       return {
@@ -114,7 +109,7 @@ export default {
           this.$router.push('MyPage')
         },
         (error) => {
-          this.message = 'login ni sippai simasita'
+          this.message = 'ログインに失敗しました。' + error
           return error
         }
       )},
