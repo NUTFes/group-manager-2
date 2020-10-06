@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :place_allow_lists
   resources :assign_group_places
   resources :place_orders
   resources :groups
