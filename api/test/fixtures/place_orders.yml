@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_id: 1
+  first: 1
+  second: 1
+  third: 1
+  remark: MyText
+
+two:
+  group_id: 1
+  first: 1
+  second: 1
+  third: 1
+  remark: MyText
