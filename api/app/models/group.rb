@@ -6,4 +6,5 @@ class Group < ApplicationRecord
     has_many :power_orders
     has_one :sub_rep
     has_many :employees
+    has_one :place_order
 end
