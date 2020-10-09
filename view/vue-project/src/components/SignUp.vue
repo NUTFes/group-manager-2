@@ -1,6 +1,7 @@
  <template>
   <v-row justify="center">
-    <v-dialog v-model="show" max-width="600px" dark>
+    <v-col cols="1"></v-col>
+    <v-col cols="10">
       <v-card>
         <v-card-title>
           <span class="headline">新規登録</span>
@@ -19,7 +20,7 @@
                 label="メールアドレス"
                 ref="email"
                 v-model="email"
-                :rules="[rules.requied]"
+                :rules="[rules.requied, rules.email]"
                 required
               ></v-text-field>
               <v-text-field
@@ -29,7 +30,7 @@
                 :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.requied, rules.min]"
                 :type="show_pass ? 'password' : 'text'"
-                hint="8 characters"
+                hint="8文字以上"
                 counter
                 @click:append="show_pass = !show_pass"
                 required
@@ -41,7 +42,7 @@
                 :append-icon="show_pass_confirmation ? 'mdi-eye' : 'mdi-eye-off'"
                 :rules="[rules.requied, rules.min, rules.match]"
                 :type="show_pass_confirmation ? 'password' : 'text'"
-                hint="8 characters"
+                hint="8文字以上"
                 counter
                 @click:append="show_pass_confirmation = !show_pass_confirmation"
                 required
@@ -51,11 +52,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="cancel">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="submit">Sign Up</v-btn>
+          <v-btn color="blue darken-1" text @click="cancel">キャンセル</v-btn>
+          <v-btn color="blue darken-1" @click="submit">登録</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-col>
+    <v-col cols="1"></v-col>
   </v-row>
 </template>
 
@@ -65,7 +67,6 @@ export default {
   name: 'SignUp',
   data () {
     return {
-      show: false,
       show_pass: true,
       show_pass_confirmation: true,
       formHasErrors: false,
@@ -73,6 +74,10 @@ export default {
         requied: value => !!value || '入力してください',
         min: v => v.length >= 8 || '８文字未満です',
         match: v => v === this.password || 'パスワードと再確認パスワードが一致していません',
+        email: v => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(v) || '適切なメールアドレスではありません'
+        },
       },
     }
   },

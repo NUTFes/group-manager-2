@@ -1,43 +1,46 @@
  <template>
-  <v-row justify="center">
-    <v-dialog v-model="show" max-width="600px" dark>
-      <v-card>
-        <v-card-title>
-          <span class="headline">ログイン</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-form  ref="form">
-              <v-text-field
-                label="メールアドレス"
-                ref="email"
-                v-model="email"
-                :rules="[rules.requied]"
-                required
-              ></v-text-field>
-              <v-text-field
-                label="パスワード"
-                v-model="password"
-                ref="password"
-                :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
-                :rules="[rules.required, rules.min]"
-                :type="show_pass ? 'password' : 'text'"
-                hint="8 characters"
-                counter
-                @click:append="show_pass = !show_pass"
-                required
-              ></v-text-field>
-            </v-form>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="cancel">キャンセル</v-btn>
-          <v-btn color="blue darken-1" @click="submit">ログイン</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+    <v-row justify="center">
+      <v-col cols="1"></v-col>
+      <v-col cols="10">
+        <v-card>
+          <v-card-title>
+            <span class="headline">ログイン</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form  ref="form">
+                <p v-bind:style="warnStyle"> {{ getMessage }} </p>
+                <v-text-field
+                  label="メールアドレス"
+                  ref="email"
+                  v-model="email"
+                  :rules="[rules.requied, rules.email]"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  label="パスワード"
+                  v-model="password"
+                  ref="password"
+                  :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
+                  :rules="[rules.required, rules.min]"
+                  :type="show_pass ? 'password' : 'text'"
+                  hint="8文字以上"
+                  counter
+                  @click:append="show_pass = !show_pass"
+                  required
+                ></v-text-field>
+              </v-form>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="cancel">キャンセル</v-btn>
+            <v-btn color="blue darken-1" @click="submit">ログイン</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <v-col cols="1"></v-col>
+    </v-row>
 </template>
 
 <script>
@@ -46,13 +49,20 @@ export default {
   name: 'SignIn',
   data () {
     return {
-      show: false,
       show_pass: true,
       formHasErrors: false,
       rules: {
         requied: value => !!value || '入力してください',
         min: v => v.length >= 8 || '８文字未満です',
+        email: v => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(v) || '適切なメールアドレスではありません。'
+        }
       },
+      message: '',
+      warnStyle: {
+        color: 'red',
+      }
     }
   },
   computed: {
@@ -61,6 +71,9 @@ export default {
         email: null,
         password: null,
       }
+    },
+    getMessage () {
+      return this.message
     }
   },
   methods: {
@@ -96,12 +109,12 @@ export default {
           this.$router.push('MyPage')
         },
         (error) => {
+          this.message = 'ログインに失敗しました。' + error
           return error
         }
-        )
-      this.show = false
-    }
+      )},
   }
 }
+
 </script>
 
