@@ -39,7 +39,7 @@
                 label="パスワードの再入力"
                 ref="password_confirmation"
                 v-model="password_confirmation"
-                :append-icon="show_pass_confirmation ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.requied, rules.min, rules.match]"
                 :type="show_pass_confirmation ? 'password' : 'text'"
                 hint="8文字以上"
