@@ -1,18 +1,54 @@
 <template>
   <div>
-    <h1>My Page</h1>
-    {{ users }}
-    {{ data }}
-    <div class="text-center">
-      <v-btn rounded color="#033" dark @click="signOut">Sign Out</v-btn>
-    </div>
+      <Header/>
+
+      <v-navigation-drawer 
+        app
+        right
+        temporary
+        v-model="drawer"
+      >
+        <UserNav/>
+      </v-navigation-drawer>
+
+      <!-- Sizes your content based upon application components -->
+      <v-main>
+        <News/>
+
+        <Regist/>
+      </v-main>
+
+      <v-sheet
+        absolute
+        color = "grey darken-1"
+        align = "center"
+        justify ="center"
+        class = "white--text"
+        height = "100"
+      >
+      <v-row align = "center">
+        <v-col class = "overline font-weight-thin">技大祭実行委員会</v-col>
+      </v-row>
+      </v-sheet>
 
   </div>
 </template>
 
 <script>
+import Header from '../components/Header.vue'
+import UserNav from '../components/UserNav.vue'
+import News from '../components/News.vue'
+import Regist from '../components/Regist.vue'
+import Footer from '../components/Footer.vue'
 import axios from 'axios'
 export default {
+  components: {
+    Header, 
+    News,
+    Regist,
+    UserNav,
+    Footer
+　},
   data () {
     return {
       data: [
