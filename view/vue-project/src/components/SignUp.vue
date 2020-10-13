@@ -9,6 +9,8 @@
         <v-card-text>
           <v-container>
             <v-form ref="form">
+              <p v-bind:style="warnStyle" v-html="getMessage"></p>
+
               <v-text-field
                 label="フルネーム"
                 ref="name"
@@ -39,7 +41,7 @@
                 label="パスワードの再入力"
                 ref="password_confirmation"
                 v-model="password_confirmation"
-                :append-icon="show_pass_confirmation ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'"
                 :rules="[rules.requied, rules.min, rules.match]"
                 :type="show_pass_confirmation ? 'password' : 'text'"
                 hint="8文字以上"
@@ -63,6 +65,7 @@
 
 <script>
 import axios from 'axios'
+import colors from 'vuetify/lib/util/colors'
 export default {
   name: 'SignUp',
   data () {
@@ -79,6 +82,10 @@ export default {
           return pattern.test(v) || '適切なメールアドレスではありません'
         },
       },
+      message: '',
+      warnStyle: {
+        color: '#F44336'
+      }
     }
   },
   computed: {
@@ -89,6 +96,9 @@ export default {
         password: null,
         password_confirmation: null,
       }
+    },
+    getMessage () {
+      return this.message
     }
   },
   methods: {
@@ -126,6 +136,10 @@ export default {
           localStorage.setItem('uid', response.headers['uid'])
           localStorage.setItem('token-type', response.headers['token-type'])
           this.$router.push('MyPage')
+        },
+        (error) => {
+          this.message = '登録に失敗しました。<br>Failed to SignUp'
+          return error
         }
       )
     }

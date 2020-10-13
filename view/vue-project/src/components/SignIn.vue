@@ -9,7 +9,7 @@
           <v-card-text>
             <v-container>
               <v-form  ref="form">
-                <p v-bind:style="warnStyle"> {{ getMessage }} </p>
+                <p v-bind:style="warnStyle" v-html="getMessage"></p>
                 <v-text-field
                   label="メールアドレス"
                   ref="email"
@@ -45,6 +45,7 @@
 
 <script>
 import axios from 'axios'
+import colors from 'vuetify/lib/util/colors'
 export default {
   name: 'SignIn',
   data () {
@@ -61,7 +62,7 @@ export default {
       },
       message: '',
       warnStyle: {
-        color: 'red',
+        color: '#F44336'
       }
     }
   },
@@ -109,7 +110,7 @@ export default {
           this.$router.push('MyPage')
         },
         (error) => {
-          this.message = 'ログインに失敗しました。' + error
+          this.message = 'ログインに失敗しました。<br>Failed to SignIn'
           return error
         }
       )},
