@@ -5,11 +5,13 @@ class SubRepsController < ApplicationController
   # GET /sub_reps.json
   def index
     @sub_reps = SubRep.all
+    render json: @sub_reps
   end
 
   # GET /sub_reps/1
   # GET /sub_reps/1.json
   def show
+    render json: @sub_rep
   end
 
   # POST /sub_reps
