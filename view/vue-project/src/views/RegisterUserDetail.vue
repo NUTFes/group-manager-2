@@ -1,56 +1,111 @@
 <template>
-  <div>
-    <h1>ユーザーの詳細を登録</h1>
-    <p>{{ user.id }}</p>
-    <template>
-      <v-form>
-        <v-container>
-          <v-text-field
-            label="TEL"
-            single-line
-            v-model="tel"
-            ></v-text-field>
-        </v-container>
-      </v-form>
-      <template>
-        <v-row >
-          <v-col cols="8">
-            <v-select
-              v-model.number="department_id"
-              :items="departments"
-              :menu-props="{ top: true, offsetY: true }"
-              label="学科"
-              item-text="name"
-              item-value="id"
-              ></v-select>
-          </v-col>
-        </v-row>
-        <v-row >
-          <v-col cols="8">
-            <v-select
-              v-model.number="grade_id"
-              :items="grades"
-              :menu-props="{ top: true, offsetY: true }"
-              label="学年"
-              item-text="name"
-              item-value="id"
-              ></v-select>
-          </v-col>
-        </v-row>
-      </template>
-        <v-btn large color="primary" @click="register">登録</v-btn>
-    </template>
-  </div>
+  <v-form>
+    <v-container align="center">
+      <v-row>
+        <v-col cols="1"></v-col>
+        <v-col cols="10">
+          <v-card>
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <br>
+                  <h1>ユーザーの詳細を登録</h1>
+                <!--  <p>{{ student_id }}</p> -->
+                <br>
+                <v-row>
+                  <v-col cols="2"></v-col>
+                  <v-col cols="8">
+                    <v-text-field
+                      label="学籍番号８桁"
+                      background-color="white"
+                      outlined
+                      v-model="student_id"
+                      hint="お持ちでない方：0を8桁入力"
+                      :rules="[rules.min, rules.over]"
+                      counter="8"
+                      filled
+                      clearable
+                    ></v-text-field>
+                    <v-text-field
+                        label="TEL"
+                        background-color="white"
+                        outlined
+                        v-model="tel"
+                        counter="11"
+                        hint="ハイフンなしで半角入力"
+                        persistent-hint
+                        filled
+                        clearable
+                    ></v-text-field>
+                    <v-select
+                      v-model.number="department_id"
+                      :items="departments"
+                      :menu-props="{ top: true, offsetY: true }"
+                      label="学科"
+                      item-text="name"
+                      item-value="id"
+                      outlined
+                      clearable
+                    ></v-select>
+                    <v-select
+                      v-model.number="grade_id"
+                      :items="grades"
+                      :menu-props="{ top: true, offsetY: true }"
+                      label="学年"
+                      item-text="name"
+                      item-value="id"
+                      outlined
+                      clearable
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="2"></v-col>
+                </v-row>
+                  <v-row>
+                    <v-col cols="2"></v-col>
+                    <v-col cols="8">
+                      <v-card-actions>
+                        <v-btn large color="white" @click="reset">削除</v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn large color="primary" @click="register">登録</v-btn>
+                      </v-card-actions>
+                    </v-col>
+                    <v-col cols="2"></v-col>
+                  </v-row>
+                  <br>
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col cols="1"></v-col>
+      </v-row>
+    </v-container>
+  </v-form>
 </template>
+
+<style>
+h1{
+  text-align: center;
+  color: purple;
+}
+</style>
 
 <script>
 import axios from 'axios'
 export default {
   data () {
     return {
+      student_id: [],
+      tel: [],
       user: [],
-      department: [ this.department_id ],
-      grade: [ this.grade_id ],
+      department_id: [],
+      grade_id: [],
+
+      rules:{
+        min: v => v.length >= 8 || '8桁かどうかを確認してください',
+        over: v => v.length <= 8 || '8桁かどうかを確認してください',
+      },
+
       departments:[
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
@@ -90,13 +145,16 @@ export default {
         { name: "GD5[イノベ5年]", id: 14 },
         { name: "その他", id: 15 }
       ]
-  }
+    }
+
   },
+
   methods: {
     register: function() {
       const url = process.env.VUE_APP_URL + '/user_details'
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       var params = new URLSearchParams();
+      params.append('student_id', this.student_id);
       params.append('tel', this.tel);
       params.append('department_id', this.department_id);
       params.append('grade_id', this.grade_id);
@@ -109,8 +167,16 @@ export default {
           return error
         }
         )
-    }
+    },
+
+    reset: function(){
+      this.student_id = ''
+      this.tel = ''
+      this.department_id = ''
+      this.grade_id = ''
+    },
   },
+
   mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
     axios.get(url, {
