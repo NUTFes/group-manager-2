@@ -91,4 +91,7 @@ v-sheet{
   background-color: rgba(255,255,255,0.5) !important;
   border-color: white !important;
 }
+.img {
+  size: '5px'
+}
 </style>
