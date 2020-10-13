@@ -5,11 +5,13 @@ class AssignGroupPlacesController < ApplicationController
   # GET /assign_group_places.json
   def index
     @assign_group_places = AssignGroupPlace.all
+    render json: @assign_group_places
   end
 
   # GET /assign_group_places/1
   # GET /assign_group_places/1.json
   def show
+    render json: @assign_group_place
   end
 
   # POST /assign_group_places

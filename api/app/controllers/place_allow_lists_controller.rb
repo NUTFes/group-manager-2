@@ -5,11 +5,13 @@ class PlaceAllowListsController < ApplicationController
   # GET /place_allow_lists.json
   def index
     @place_allow_lists = PlaceAllowList.all
+    render json: @place_allow_lists
   end
 
   # GET /place_allow_lists/1
   # GET /place_allow_lists/1.json
   def show
+    render json: @place_allow_list
   end
 
   # POST /place_allow_lists

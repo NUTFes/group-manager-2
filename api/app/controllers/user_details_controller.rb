@@ -5,11 +5,13 @@ class UserDetailsController < ApplicationController
   # GET /user_details.json
   def index
     @user_details = UserDetail.all
+    render json: @user_details
   end
 
   # GET /user_details/1
   # GET /user_details/1.json
   def show
+    render json: @user_detail
   end
 
   # POST /user_details

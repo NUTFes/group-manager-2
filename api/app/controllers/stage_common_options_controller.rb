@@ -5,11 +5,13 @@ class StageCommonOptionsController < ApplicationController
   # GET /stage_common_options.json
   def index
     @stage_common_options = StageCommonOption.all
+    render json: @stage_common_options
   end
 
   # GET /stage_common_options/1
   # GET /stage_common_options/1.json
   def show
+    render json: @stage_common_option
   end
 
   # POST /stage_common_options

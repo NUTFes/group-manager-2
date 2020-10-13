@@ -5,11 +5,13 @@ class PowerOrdersController < ApplicationController
   # GET /power_orders.json
   def index
     @power_orders = PowerOrder.all
+    render json: @power_orders
   end
 
   # GET /power_orders/1
   # GET /power_orders/1.json
   def show
+    render json: @power_order
   end
 
   # POST /power_orders
