@@ -51,6 +51,6 @@ class UserDetailsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def user_detail_params
       # params.require(:user_detail).permit(:tel, :grade_id, :department_id, :user_id)
-      params.permit(:tel, :grade_id, :department_id, :user_id)
+      params.permit(:tel, :grade_id, :department_id, :user_id, :student_id)
     end
 end

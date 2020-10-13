@@ -10,7 +10,6 @@
               <v-col cols="10">
                 <br>
                   <h1>ユーザーの詳細を登録</h1>
-                <!--  <p>{{ student_id }}</p> -->
                 <br>
                 <v-row>
                   <v-col cols="2"></v-col>
