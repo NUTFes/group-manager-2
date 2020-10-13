@@ -49,7 +49,7 @@ class SubRepsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-   def sub_rep_params
+    def sub_rep_params
       # params.require(:sub_rep).permit(:group_id, :name, :department_id, :grade_id, :tel, :email)
       params.permit(:group_id, :name, :department_id, :grade_id, :tel, :email) 
     end
