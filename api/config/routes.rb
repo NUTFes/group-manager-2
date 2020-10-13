@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :employees
+  resources :sub_reps
+  resources :power_orders
+  resources :place_allow_lists
+  resources :assign_group_places
+  resources :place_orders
+  resources :stage_common_options
   resources :groups
   resources :user_details
   namespace 'api' do

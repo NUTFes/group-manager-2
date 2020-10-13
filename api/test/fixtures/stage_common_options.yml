@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_id: 1
+  own_equipment: false
+  bgm: false
+  camera_permission: false
+  loud_sound: false
+  stage_content: MyText
+
+two:
+  group_id: 1
+  own_equipment: false
+  bgm: false
+  camera_permission: false
+  loud_sound: false
+  stage_content: MyText
