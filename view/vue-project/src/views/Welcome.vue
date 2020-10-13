@@ -1,5 +1,20 @@
 <template>
   <div class="background" id="container">
+      <v-app-bar
+        color = "grey darken-1"
+        height = "90"
+      >
+      <v-row align="center">
+        <v-col cols="3"  class = "title white--text">参加団体管理アプリ</v-col>
+        <v-col cols="6" align="center">
+          <v-img 
+          height="70"
+          width ="70"
+          src = "../assets/40th_nutfes_logo_white.png"
+        ></v-img>
+        </v-col>
+      </v-row>
+      </v-app-bar>
      <div>
       <br><br><br>
       <div class="text-label">
@@ -41,14 +56,14 @@
 </template>
 
 <script>
-import IconImage from "../assets/logo.png"
+import IconImage from "../assets/40th_nutfes_logo_black.png"
 import Signup from '../components/SignUp.vue'
 import Signin from '../components/SignIn.vue'
 export default {
   name: "Welcome",
   components: {
     Signup,
-    Signin
+    Signin,
   },
   data() {
     return {
@@ -91,7 +106,8 @@ v-sheet{
   background-color: rgba(255,255,255,0.5) !important;
   border-color: white !important;
 }
-.img {
-  size: '5px'
+img {
+  width: 600px;
+  height: 600px;
 }
 </style>
