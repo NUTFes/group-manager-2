@@ -32,7 +32,7 @@
         <v-col cols="1"></v-col>
         <v-col cols="5">
           <div class="text-center">
-            <img :src="iconImage">
+            <v-img :src="iconImage"></v-img>
           </div>
         </v-col>
         <v-col cols="5">
@@ -105,9 +105,5 @@ v-sheet{
 .card-color {
   background-color: rgba(255,255,255,0.5) !important;
   border-color: white !important;
-}
-img {
-  width: 600px;
-  height: 600px;
 }
 </style>
