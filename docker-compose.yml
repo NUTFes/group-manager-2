@@ -34,6 +34,17 @@ services:
     environment:
       - VUE_APP_URL=http://localhost
 
+  admin_view:
+    build: ./admin_view
+    ports:
+      - 8000:8000
+    command: npm run dev
+    volumes:
+      - ./admin_view:/app
+    tty: true
+    environment:
+      - VUE_APP_URL=http://localhost
+
 volumes:
   mysql-data:
     driver: local
