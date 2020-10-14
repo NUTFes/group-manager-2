@@ -1,16 +1,19 @@
 <template>
       <v-app-bar
+        app
         color = "grey darken-1"
         height = "90"
       >
       <v-row align="center">
-        <v-col cols="3"  class = "title white--text">参加団体管理アプリ</v-col>
+        <v-col cols="3"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
         <v-col cols="6" align="center">
-          <v-img 
-          height="70"
-          width ="70"
-          src = "../assets/40th_nutfes_logo_white.png"
-        ></v-img>
+          <router-link to="/">
+            <v-img 
+            height="70"
+            width ="70"
+            src = "../assets/40th_nutfes_logo_white.png"
+          ></v-img>
+          </router-link>
         </v-col>
         <v-col cols="3" align="right">
           <v-chip

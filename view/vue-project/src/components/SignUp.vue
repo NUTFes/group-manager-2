@@ -48,20 +48,29 @@
                 counter
                 @click:append="show_pass_confirmation = !show_pass_confirmation"
                 required
-              ></v-text-field>
+                ></v-text-field>
             </v-form>
           </v-container>
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="cancel">キャンセル</v-btn>
-          <v-btn color="blue darken-1" @click="submit">登録</v-btn>
-        </v-card-actions>
+        <v-row>
+          <v-col>
+            <v-card-actions>
+              <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-card-actions>
+              <v-btn color="blue darken-1" text block dark @click="cancel">キャンセル</v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
       </v-card>
     </v-col>
     <v-col cols="1"></v-col>
   </v-row>
-</template>
+ </template>
 
 <script>
 import axios from 'axios'

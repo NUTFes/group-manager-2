@@ -1,5 +1,5 @@
 <template>
-  <v-app id="app">
+  <v-app>
     <v-main>
       <router-view/>
         <Footer/>
@@ -29,6 +29,6 @@ export default {
 
 <style>
 #app{
-  background-color: #FFFFFF;
+  background-color: #f5f7fa;
 }
 </style>
