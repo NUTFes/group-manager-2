@@ -35,7 +35,7 @@
         <v-row>
           <v-col>
             <v-card-actions>
-              <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
+              <v-btn color="blue darken-1" block dark @click="submit">ログイン</v-btn>
             </v-card-actions>
           </v-col>
         </v-row>
