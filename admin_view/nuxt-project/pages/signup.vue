@@ -5,7 +5,7 @@
         <v-container>
           <v-row justify="center">
             <p cols="12" class="mt-3 display-1 grey--text">
-              ログイン
+              新規登録
             </p>
           </v-row>
           <v-row justify="center">
