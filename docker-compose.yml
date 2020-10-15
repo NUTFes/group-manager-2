@@ -37,7 +37,7 @@ services:
   admin_view:
     build: ./admin_view
     ports:
-      - 8000:8000
+      - "8000:8000"
     command: npm run dev
     volumes:
       - ./admin_view:/app
