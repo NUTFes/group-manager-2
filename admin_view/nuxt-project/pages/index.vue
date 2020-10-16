@@ -1,89 +1,88 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div class="mt-3">
+    <v-app-bar
+      app
+      >
+      <v-container>
+        <v-row>
+          <v-col cols="2"></v-col>
+          <v-col cols="8">
+            <v-toolbar-title>参加団体管理アプリ管理者画面</v-toolbar-title>
+          </v-col>
+          <v-col cols="2"></v-col>
+        </v-row>
+      </v-container>
+    </v-app-bar>
+    <v-card class="mt-5 mx-auto" max-width="600">
+      <v-form ref="form" v-model="valid" lazy-validation>
+        <v-container>
+          <v-row justify="center">
+            <p cols="12" class="mt-3 display-1 grey--text">
+            ログイン
+            </p>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="12" md="10" sm="10">
+              <v-text-field
+                v-model="email"
+                label="Eメールアドレス"
+                />
+                <p class="caption mb-0" />
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="12" md="10" sm="10">
+              <v-text-field
+                v-model="password"
+                type="password"
+                label="パスワード"
+                />
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="12" md="10" sm="10">
+              <v-btn
+                block
+                class="mr-4 blue white--text"
+                @click="loginWithAuthModule"
+                >
+                ログイン
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-form>
+    </v-card>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
+  data () {
+    return {
+      password: '',
+      email: ''
+    }
+  },
+  methods: {
+    async loginWithAuthModule () {
+      await this.$auth.loginWith('local', {
+        data: {
+          email: this.email,
+          password: this.password
+        }
+      })
+        .then((response) => {
+          localStorage.setItem('access-token', response.headers['access-token'])
+          localStorage.setItem('client', response.headers.client)
+          localStorage.setItem('uid', response.headers.uid)
+          localStorage.setItem('token-type', response.headers['token-type'])
+          return response
+        },
+        (error) => {
+          return error
+        })
+    }
   }
 }
 </script>

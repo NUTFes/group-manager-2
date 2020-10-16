@@ -7,13 +7,6 @@
     "_name": "_7f52cd64"
   },
   {
-    "name": "login",
-    "path": "/login",
-    "component": "/app/nuxt-project/pages/login.vue",
-    "chunkName": "pages/login",
-    "_name": "_5b6fbd5d"
-  },
-  {
     "name": "mypage",
     "path": "/mypage",
     "component": "/app/nuxt-project/pages/mypage.vue",

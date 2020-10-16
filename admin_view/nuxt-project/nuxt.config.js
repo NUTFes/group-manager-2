@@ -7,8 +7,8 @@ export default {
         port: 8000
   },
   head: {
-    titleTemplate: '%s - nuxt-project',
-    title: 'nuxt-project',
+    titleTemplate: '参加団体管理アプリ-管理者ページ',
+    title: '管理者ページ',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -49,8 +49,8 @@ export default {
 
   auth: {
     redirect: {
-      login: '/login',
-      logout: '/login',
+      login: '/',
+      logout: '/',
       callback: false,
       home: '/mypage'
     },

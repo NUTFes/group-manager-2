@@ -32,7 +32,7 @@ export default {
     News,
     Regist,
     UserNav,
-　},
+  },
   data () {
     return {
       data: [
