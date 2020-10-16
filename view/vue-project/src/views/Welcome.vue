@@ -7,8 +7,9 @@
         height = "90"
         >
         <v-row align="center">
-          <v-col cols="3"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
-          <v-col cols="6" align="center">
+          <v-col cols="2"></v-col>
+          <v-col cols="2"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
+          <v-col cols="4" align="center">
             <router-link to="/">
               <v-img 
                          height="70"
@@ -17,13 +18,36 @@
                          ></v-img>
             </router-link>
           </v-col>
+          <v-col cols="2" align="right">
+            <v-chip
+              v-if="this.show===true"
+              color="white"
+              label
+              link
+              outlined
+              @click="toggle_show"
+              >
+              ログイン
+            </v-chip>
+            <v-chip
+              v-if="this.show===false"
+              color="white"
+              label
+              link
+              outlined
+              @click="toggle_show"
+              >
+              新規登録
+            </v-chip>
+      </v-col>
+      <v-col cols="2"></v-col>
         </v-row>
       </v-app-bar>
       <div>
         <br><br><br>
         <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="5">
+          <v-col cols="2"></v-col>
+          <v-col cols="4">
             <div class="text-center">
         <div class="text-label">
           <v-container>
@@ -37,7 +61,7 @@
         </div>
             </div>
           </v-col>
-          <v-col cols="5">
+          <v-col cols="4">
             <v-card class="card-color">
               <br>
               <div class="text-center" v-show="show">
@@ -51,7 +75,7 @@
               <br>
             </v-card>
           </v-col>
-          <v-col cols="1"></v-col>
+          <v-col cols="2"></v-col>
         </v-row>
       </div>
     </div>
@@ -99,7 +123,7 @@ v-sheet{
 .background{
  background-image: url("~@/assets/welcome.png");
  background-size: cover;
- min-height: 100vh;
+ min-height: 80vh;
  background-position: center center;
 }
 

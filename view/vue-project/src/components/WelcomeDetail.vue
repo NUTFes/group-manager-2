@@ -3,7 +3,7 @@
     <v-conteiner>
       <v-row>
         <v-col align="center">
-          <v-img src="@/assets/40th_nutfes_logo_black.png" width="600" height="600"></v-img>
+          <v-img src="@/assets/40th_nutfes_logo_black.png" width="500" height="500"></v-img>
         </v-col>
       </v-row>
       <v-row>
@@ -12,8 +12,8 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="1"></v-col>
-        <v-col cols="10">
+        <v-col cols="2"></v-col>
+        <v-col cols="8">
           <v-row>
             <v-col cols="6">
               <h1>模擬店</h1>
@@ -51,7 +51,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="1"></v-col>
+        <v-col cols="2"></v-col>
       </v-row>
     </v-conteiner>
   </div>
@@ -67,30 +67,4 @@ export default {
 </script>
 
 <style>
-h1 {
-  overflow: hidden;
-  text-align: center;
-}
-h1 span {
-  position: relative;
-  display: inline-block;
-  margin: 0 2.5em;
-  padding: 0 1em;
-  text-align: left;
-}
-h1 span::before,
-h1 span::after {
-  position: absolute;
-  top: 50%;
-  content: '';
-  width: 400%;
-  height: 1px;
-  background-color: #ccc;
-}
-h1 span::before {
-  right: 100%;
-}
-h1 span::after {
-  left: 100%;
-}
 </style>
