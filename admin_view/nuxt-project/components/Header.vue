@@ -28,8 +28,9 @@
       v-model="drawer"
       absolute
       temporary
+      color="#37474F"
       >
-      <v-list-item>
+      <v-list-item dark>
         <v-list-item-avatar>
           <v-icon>mdi-account-circle-outline</v-icon>
         </v-list-item-avatar>
@@ -46,7 +47,9 @@
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          link
+          :to="item.click"
+          color="#A9B6BD"
+          dark
           >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -57,6 +60,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <v-list-item dark @click="logout">
+        <v-list-item-content>
+          <v-list-item-title>ログアウト</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
   </div>
 </template>
@@ -68,14 +77,14 @@ export default {
     return {
       drawer: null,
       items: [
-        { title: 'マイページ', icon: 'mdi-account-circle' },
-        { title: 'ユーザー一覧', icon: 'mdi-account-multiple' },
-        { title: '参加団体一覧', icon: 'mdi-account-group' },
-        { title: '企画名一覧', icon: 'mdi-unfold-more-vertical ' },
-        { title: '貸し出し物品一覧', icon: 'mdi-database' },
-        { title: '物品申請一覧', icon: 'mdi-cube' },
-        { title: '電力申請一覧', icon: 'mdi-flash' },
-        { title: 'ステージ申請一覧', icon: 'mdi-map-marker-radius' },
+        { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
+        { title: 'ユーザー一覧', icon: 'mdi-account-multiple', click: '/groups' },
+        { title: '参加団体一覧', icon: 'mdi-account-group', click: '/groups' },
+        { title: '企画名一覧', icon: 'mdi-unfold-more-vertical', click: '/groups' },
+        { title: '貸し出し物品一覧', icon: 'mdi-database', click: '/groups' },
+        { title: '物品申請一覧', icon: 'mdi-cube', click: '/groups' },
+        { title: '電力申請一覧', icon: 'mdi-flash', click: '/groups' },
+        { title: 'ステージ申請一覧', icon: 'mdi-map-marker-radius', click: '/groups' },
       ],
       user: []
     }
@@ -93,6 +102,11 @@ export default {
       .then(response => {
         this.user = response.data.data
       })
+  },
+  methods: {
+    logout() {
+      this.$auth.logout()
+    }
   }
 }
 </script>

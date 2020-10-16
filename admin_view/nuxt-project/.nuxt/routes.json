@@ -1,5 +1,12 @@
 [
   {
+    "name": "groups",
+    "path": "/groups",
+    "component": "/app/nuxt-project/pages/groups.vue",
+    "chunkName": "pages/groups",
+    "_name": "_6a60f3e0"
+  },
+  {
     "name": "inspire",
     "path": "/inspire",
     "component": "/app/nuxt-project/pages/inspire.vue",
