@@ -6,6 +6,8 @@ import scrollBehavior from './router.scrollBehavior.js'
 const _6a60f3e0 = () => interopDefault(import('../pages/groups.vue' /* webpackChunkName: "pages/groups" */))
 const _7f52cd64 = () => interopDefault(import('../pages/inspire.vue' /* webpackChunkName: "pages/inspire" */))
 const _6faa4a12 = () => interopDefault(import('../pages/mypage.vue' /* webpackChunkName: "pages/mypage" */))
+const _56ce3ea1 = () => interopDefault(import('../pages/print.vue' /* webpackChunkName: "pages/print" */))
+const _2aa33390 = () => interopDefault(import('../pages/regist_user_detail.vue' /* webpackChunkName: "pages/regist_user_detail" */))
 const _5ee1db54 = () => interopDefault(import('../pages/signup.vue' /* webpackChunkName: "pages/signup" */))
 const _dc6fcb74 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
@@ -37,6 +39,14 @@ export const routerOptions = {
     path: "/mypage",
     component: _6faa4a12,
     name: "mypage"
+  }, {
+    path: "/print",
+    component: _56ce3ea1,
+    name: "print"
+  }, {
+    path: "/regist_user_detail",
+    component: _2aa33390,
+    name: "regist_user_detail"
   }, {
     path: "/signup",
     component: _5ee1db54,

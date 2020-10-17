@@ -87,7 +87,7 @@ export default {
           localStorage.setItem('client', response.headers['client'])
           localStorage.setItem('uid', response.headers['uid'])
           localStorage.setItem('token-type', response.headers['token-type'])
-          this.$router.push('mypage')
+          this.$router.push('regist_user_detail')
         }
       )
     }
