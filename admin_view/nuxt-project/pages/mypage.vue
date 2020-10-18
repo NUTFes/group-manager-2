@@ -2,30 +2,25 @@
   <div>
     <Header/>
       <v-container>
-        <v-row>
-          <v-col cols="2"></v-col>
-          <v-col cols="8">
-            <v-card>
-              <v-container>
-                <v-row>
-                  <v-col>
-                    <v-card-title><v-icon>mdi-account</v-icon>{{ user.name }}</v-card-title>
-                  </v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col>
-                    <v-card-text><v-icon>mdi-email</v-icon>{{ user.email }}</v-card-text>
-                    <v-card-text><v-icon>mdi-email</v-icon>{{ role }}</v-card-text>
-                    <v-card-text><v-icon>mdi-email</v-icon>{{ department }}</v-card-text>
-                    <v-card-text><v-icon>mdi-email</v-icon>{{ grade }}</v-card-text>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card>
-          </v-col>
-          <v-col cols="2"></v-col>
-        </v-row>
+        <v-card>
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-card-title><v-icon>mdi-account</v-icon>{{ user.name }}</v-card-title>
+              </v-col>
+            </v-row>
+            <v-divider></v-divider>
+            <v-row>
+              <v-col>
+                <v-card-text><v-icon>mdi-email</v-icon>{{ user.email }}</v-card-text>
+                <v-card-text><v-icon>mdi-email</v-icon>{{ role }}</v-card-text>
+                <v-card-text><v-icon>mdi-email</v-icon>{{ department }}</v-card-text>
+                <v-card-text><v-icon>mdi-email</v-icon>{{ grade }}</v-card-text>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+        </v-col>
       </v-container>
   </div>
 </template>

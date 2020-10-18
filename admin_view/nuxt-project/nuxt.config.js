@@ -82,7 +82,8 @@ export default {
           success: colors.green.accent3
         },
         light: {
-          background: "#C9D9E0"
+          // background: "#CFD8DC"
+          background: "#EEEEEE"
         }
       }
     }

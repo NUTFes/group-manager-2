@@ -1,17 +1,7 @@
 <template>
   <div class="mt-3">
-    <v-app-bar
-      app
-      >
-      <v-container>
-        <v-row>
-          <v-col cols="2"></v-col>
-          <v-col cols="8">
-            <v-toolbar-title>参加団体管理アプリ管理者画面</v-toolbar-title>
-          </v-col>
-          <v-col cols="2"></v-col>
-        </v-row>
-      </v-container>
+    <v-app-bar app dark dense color="#424242">
+      <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
     </v-app-bar>
     <v-card class="mt-5 mx-auto" max-width="600">
       <v-form ref="form" v-model="valid" lazy-validation>
@@ -47,6 +37,14 @@
                 @click="loginWithAuthModule"
                 >
                 ログイン
+              </v-btn>
+                <br>
+              <v-btn
+                block
+                outlined 
+                href="/signup"
+                >
+                新規登録はこちら
               </v-btn>
             </v-col>
           </v-row>

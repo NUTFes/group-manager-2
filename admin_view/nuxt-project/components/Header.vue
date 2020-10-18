@@ -1,28 +1,17 @@
 <template>
   <div>
-    <v-app-bar
-      app
-      >
-      <v-container>
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="1">
-            <v-btn
-              dark
-              color="black"
-              text
-              @click.stop="drawer = !drawer"
-              >
-              <v-icon dark>mdi-format-list-bulleted</v-icon>
-            </v-btn>
-          </v-col>
-          <v-col cols="6">
-            <v-toolbar-title>参加団体管理アプリ管理者画面</v-toolbar-title>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="2"></v-col>
-        </v-row>
-      </v-container>
+    <v-app-bar app dark dense color="#424242">
+      <v-btn
+        dark
+        text
+        @click.stop="drawer = !drawer"
+        >
+        <v-icon dark>mdi-format-list-bulleted</v-icon>
+      </v-btn>
+      </v-col>
+      <v-col cols="6">
+        <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
+      </v-col>
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"

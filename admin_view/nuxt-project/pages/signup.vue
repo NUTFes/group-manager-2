@@ -1,5 +1,8 @@
 <template>
   <div class="mt-3">
+    <v-app-bar app dark dense color="#424242">
+      <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
+    </v-app-bar>
     <v-card class="mt-5 mx-auto" max-width="600">
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-container>
@@ -52,6 +55,14 @@
                 @click="signup"
               >
                 新規登録
+              </v-btn>
+                <br>
+              <v-btn
+                block
+                outlined 
+                href="/"
+                >
+                ログインはこちら
               </v-btn>
             </v-col>
           </v-row>

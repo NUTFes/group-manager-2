@@ -66,11 +66,11 @@ export default {
     },
     fetchData() {
       document.title = 'タイトルをいい感じに設定する'
-      setTimeout(() => {
-        this.$nextTick(() => {
-          this.handlePrint()
-        })
-      })
+      // setTimeout(() => {
+      //   this.$nextTick(() => {
+      //     this.handlePrint()
+      //   })
+      // })
     },
     handlePrint() {
       window.print()
