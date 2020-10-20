@@ -18,22 +18,13 @@ class UserDetailsController < ApplicationController
   # POST /user_details.json
   def create
     @user_detail = UserDetail.new(user_detail_params)
-
-    if @user_detail.save
-      render json: @user_detail
-    else
-      render json: @user_detail.errors, status: :unprocessable_entity
-    end
+    @user_detail.save
   end
 
   # PATCH/PUT /user_details/1
   # PATCH/PUT /user_details/1.json
   def update
-    if @user_detail.update(user_detail_params)
-      render :show, status: :ok, location: @user_detail
-    else
-      render json: @user_detail.errors, status: :unprocessable_entity
-    end
+    @user_detail.update(user_detail_params)
   end
 
   # DELETE /user_details/1
@@ -50,7 +41,6 @@ class UserDetailsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_detail_params
-      # params.require(:user_detail).permit(:tel, :grade_id, :department_id, :user_id)
       params.permit(:tel, :grade_id, :department_id, :user_id, :student_id)
     end
 end

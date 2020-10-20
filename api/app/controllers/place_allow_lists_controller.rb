@@ -18,22 +18,13 @@ class PlaceAllowListsController < ApplicationController
   # POST /place_allow_lists.json
   def create
     @place_allow_list = PlaceAllowList.new(place_allow_list_params)
-
-    if @place_allow_list.save
-      render :show, status: :created, location: @place_allow_list
-    else
-      render json: @place_allow_list.errors, status: :unprocessable_entity
-    end
+    @place_allow_list.save
   end
 
   # PATCH/PUT /place_allow_lists/1
   # PATCH/PUT /place_allow_lists/1.json
   def update
-    if @place_allow_list.update(place_allow_list_params)
-      render :show, status: :ok, location: @place_allow_list
-    else
-      render json: @place_allow_list.errors, status: :unprocessable_entity
-    end
+    @place_allow_list.update(place_allow_list_params)
   end
 
   # DELETE /place_allow_lists/1
@@ -50,7 +41,6 @@ class PlaceAllowListsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def place_allow_list_params
-      # params.require(:place_allow_list).permit(:place_id, :group_category_id, :enable)
       params.permit(:place_id, :group_category_id, :enable)
     end
 end
