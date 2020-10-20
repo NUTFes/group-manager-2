@@ -18,7 +18,7 @@ class AssignGroupPlacesController < ApplicationController
   # POST /assign_group_places.json
   def create
     @assign_group_place = AssignGroupPlace.new(assign_group_place_params)
-    @assign_group_plave.save
+    @assign_group_place.save
   end
 
   # PATCH/PUT /assign_group_places/1
