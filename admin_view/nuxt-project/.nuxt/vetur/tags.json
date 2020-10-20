@@ -1,4 +1,10 @@
 {
+  "Header": {
+    "description": "Auto imported from components/Header.vue"
+  },
+  "LazyHeader": {
+    "description": "Auto imported from components/Header.vue"
+  },
   "Logo": {
     "description": "Auto imported from components/Logo.vue"
   },
