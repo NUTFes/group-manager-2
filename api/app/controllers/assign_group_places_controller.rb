@@ -50,6 +50,7 @@ class AssignGroupPlacesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assign_group_place_params
-      params.require(:assign_group_place).permit(:place_order_id, :place_id)
+      # params.require(:assign_group_place).permit(:place_order_id, :place_id)
+      params.permit(:place_order_id, :place_id)
     end
 end

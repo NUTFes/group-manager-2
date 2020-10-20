@@ -50,6 +50,7 @@ class PlaceAllowListsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def place_allow_list_params
-      params.require(:place_allow_list).permit(:place_id, :group_category_id, :enable)
+      # params.require(:place_allow_list).permit(:place_id, :group_category_id, :enable)
+      params.permit(:place_id, :group_category_id, :enable)
     end
 end

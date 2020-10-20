@@ -1,54 +1,99 @@
 <template>
-  <div class="background" id="container">
-     <div>
-      <br><br><br>
-      <div class="text-label">
-        <v-container>
-          <v-row>
-          <v-col cols="3"></v-col>
-          <v-col cols="6">
-            <v-sheet>NUT festival<br>~飛翔~</v-sheet>
+  <div>
+    <div class="background" id="container">
+      <v-app-bar
+        app
+        color = "grey darken-1"
+        height = "90"
+        >
+        <v-row align="center">
+          <v-col cols="2"></v-col>
+          <v-col cols="2"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
+          <v-col cols="4" align="center">
+            <router-link to="/">
+              <v-img 
+                         height="70"
+                         width ="70"
+                         src = "../assets/40th_nutfes_logo_white.png"
+                         ></v-img>
+            </router-link>
           </v-col>
-          <v-col cols="3"></v-col>
-          </v-row>
-        </v-container>
+          <v-col cols="2" align="right">
+            <v-chip
+              v-if="this.show===true"
+              color="white"
+              label
+              link
+              outlined
+              @click="toggle_show"
+              >
+              ログイン
+            </v-chip>
+            <v-chip
+              v-if="this.show===false"
+              color="white"
+              label
+              link
+              outlined
+              @click="toggle_show"
+              >
+              新規登録
+            </v-chip>
+      </v-col>
+      <v-col cols="2"></v-col>
+        </v-row>
+      </v-app-bar>
+      <div>
+        <br><br><br>
+        <v-row>
+          <v-col cols="2"></v-col>
+          <v-col cols="4">
+            <div class="text-center">
+        <div class="text-label">
+          <v-container>
+            <v-row>
+              <v-col>
+                <br><br><br>
+                <v-sheet>NUT festival<br>~飛翔~</v-sheet>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+            </div>
+          </v-col>
+          <v-col cols="4">
+            <v-card class="card-color">
+              <br>
+              <div class="text-center" v-show="show">
+                <Signup />
+                <a @click="toggle_show">ログインはこちら</a>
+              </div>
+              <div class="text-center" v-show="!show">
+                <Signin />
+                <a @click="toggle_show">新規登録はこちら</a>
+              </div>
+              <br>
+            </v-card>
+          </v-col>
+          <v-col cols="2"></v-col>
+        </v-row>
       </div>
-      <v-row>
-        <v-col cols="1"></v-col>
-        <v-col cols="5">
-          <div class="text-center">
-            <img :src="iconImage">
-          </div>
-        </v-col>
-        <v-col cols="5">
-          <v-card class="card-color">
-            <br>
-            <div class="text-center" v-show="show">
-              <Signup />
-              <a @click="toggle_show">ログインはこちら</a>
-            </div>
-            <div class="text-center" v-show="!show">
-              <Signin />
-              <a @click="toggle_show">新規登録はこちら</a>
-            </div>
-            <br>
-          </v-card>
-        </v-col>
-        <v-col cols="1"></v-col>
-      </v-row>
     </div>
+    <WelcomeDetail/>
   </div>
 </template>
 
 <script>
-import IconImage from "../assets/logo.png"
+import IconImage from "../assets/40th_nutfes_logo_black.png"
 import Signup from '../components/SignUp.vue'
 import Signin from '../components/SignIn.vue'
+import WelcomeDetail from '@/components/WelcomeDetail.vue'
 export default {
   name: "Welcome",
   components: {
     Signup,
-    Signin
+    Signin,
+    WelcomeDetail
   },
   data() {
     return {
@@ -78,7 +123,7 @@ v-sheet{
 .background{
  background-image: url("~@/assets/welcome.png");
  background-size: cover;
- min-height: 100vh;
+ min-height: 80vh;
  background-position: center center;
 }
 
@@ -90,8 +135,5 @@ v-sheet{
 .card-color {
   background-color: rgba(255,255,255,0.5) !important;
   border-color: white !important;
-}
-.img {
-  size: '5px'
 }
 </style>

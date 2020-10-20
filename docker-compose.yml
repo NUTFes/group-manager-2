@@ -2,6 +2,7 @@ version: '3'
 services:
   db:
     image: mysql:8.0
+    container_name: 'GM2-DB'
     environment:
       MYSQL_ROOT_PASSWORD: password
     ports:
@@ -13,6 +14,7 @@ services:
   api:
     build: ./api
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    container_name: 'GM2-API'
     volumes:
       - ./api:/myapp
     ports:
@@ -25,11 +27,24 @@ services:
   view:
     build: ./view
     command: npm run serve
+    container_name: 'GM2-VIEW'
     ports:
       - "8080:8080"
     volumes:
       - ./view:/app
     stdin_open: true
+    tty: true
+    environment:
+      - VUE_APP_URL=http://localhost
+
+  admin_view:
+    build: ./admin_view
+    container_name: 'GM2-ADMIN-VIEW'
+    ports:
+      - "8000:8000"
+    command: npm run dev
+    volumes:
+      - ./admin_view:/app
     tty: true
     environment:
       - VUE_APP_URL=http://localhost

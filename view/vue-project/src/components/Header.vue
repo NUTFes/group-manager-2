@@ -1,28 +1,33 @@
 <template>
-      <v-app-bar
-        color = "grey darken-1"
-        height = "90"
-      >
-      <v-row align="center">
-        <v-col cols="3"  class = "title white--text">参加団体管理アプリ</v-col>
-        <v-col cols="6" align="center">
+  <v-app-bar
+    app
+    color = "grey darken-1"
+    height = "90"
+    >
+    <v-row align="center">
+      <v-col cols="2"></v-col>
+      <v-col cols="2"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
+      <v-col cols="4" align="center">
+        <router-link to="/">
           <v-img 
-          height="70"
-          width ="70"
-          src = "../assets/40th_nutfes_logo_white.png"
-        ></v-img>
-        </v-col>
-        <v-col cols="3" align="right">
-          <v-chip
-            color="white"
-            label
-            link
-            outlined
+                     height="70"
+                     width ="70"
+                     src = "../assets/40th_nutfes_logo_white.png"
+                     ></v-img>
+        </router-link>
+      </v-col>
+      <v-col cols="2" align="right">
+        <v-chip
+          color="white"
+          label
+          link
+          outlined
           >
-            {{ users.name }}
-          </v-chip>
-        </v-col>
-        </v-row>
+          {{ users.name }}
+        </v-chip>
+      </v-col>
+      <v-col cols="2"></v-col>
+    </v-row>
       </v-app-bar>
 </template>
 

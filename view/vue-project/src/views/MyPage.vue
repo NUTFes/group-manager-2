@@ -17,20 +17,6 @@
 
         <Regist/>
       </v-main>
-
-      <v-sheet
-        absolute
-        color = "grey darken-1"
-        align = "center"
-        justify ="center"
-        class = "white--text"
-        height = "100"
-      >
-      <v-row align = "center">
-        <v-col class = "overline font-weight-thin">技大祭実行委員会</v-col>
-      </v-row>
-      </v-sheet>
-
   </div>
 </template>
 
@@ -39,7 +25,6 @@ import Header from '../components/Header.vue'
 import UserNav from '../components/UserNav.vue'
 import News from '../components/News.vue'
 import Regist from '../components/Regist.vue'
-import Footer from '../components/Footer.vue'
 import axios from 'axios'
 export default {
   components: {
@@ -47,8 +32,7 @@ export default {
     News,
     Regist,
     UserNav,
-    Footer
-　},
+  },
   data () {
     return {
       data: [
