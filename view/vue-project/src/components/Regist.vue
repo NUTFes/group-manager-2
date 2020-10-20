@@ -1,7 +1,7 @@
 <template>
   <v-row>
-    <v-col cols="1"></v-col>
-    <v-col cols="10">
+    <v-col cols="2"></v-col>
+    <v-col cols="8">
       <v-card
         class = "mx-auto"
         color = "white"
@@ -52,7 +52,7 @@
         </v-list>
       </v-card>
     </v-col>
-    <v-col cols="1"></v-col>
+    <v-col cols="2"></v-col>
   </v-row>
 </template>
 
