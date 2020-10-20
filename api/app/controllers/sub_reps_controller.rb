@@ -18,12 +18,13 @@ class SubRepsController < ApplicationController
   # POST /sub_reps.json
   def create
     @sub_rep = SubRep.new(sub_rep_params)
+    @sub_rep.save
 
-    if @sub_rep.save
-      render :show, status: :created, location: @sub_rep
-    else
-      render json: @sub_rep.errors, status: :unprocessable_entity
-    end
+    # if @sub_rep.save
+    #   render :show, status: :created, location: @sub_rep
+    # else
+    #   render json: @sub_rep.errors, status: :unprocessable_entity
+    # end
   end
 
   # PATCH/PUT /sub_reps/1
@@ -50,6 +51,6 @@ class SubRepsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def sub_rep_params
-      params.require(:sub_rep).permit(:group_id, :name, :department_id, :grade_id, :tel, :email)
+      params.permit(:group_id, :name, :department_id, :grade_id, :tel, :email, :student_id)
     end
 end
