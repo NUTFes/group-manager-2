@@ -3,6 +3,7 @@ PowerOrder.seed( :id,
                 item: "nutfes-sample",
                 power: 0,
                 manufacturer: "nutfes",
-                model: "nutfes"
+                model: "nutfes",
+                item_url: "https://nutfes.net"
     }
 )
