@@ -108,3 +108,5 @@ typings/
 .eslintcache
 
 # Optional REPL history
+.description.lsi
+
