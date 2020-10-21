@@ -109,4 +109,4 @@ typings/
 
 # Optional REPL history
 .description.lsi
-
+.nuxt/
