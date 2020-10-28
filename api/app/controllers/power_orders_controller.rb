@@ -18,22 +18,13 @@ class PowerOrdersController < ApplicationController
   # POST /power_orders.json
   def create
     @power_order = PowerOrder.new(power_order_params)
-
-    if @power_order.save
-      render :show, status: :created, location: @power_order
-    else
-      render json: @power_order.errors, status: :unprocessable_entity
-    end
+    @power_order.save
   end
 
   # PATCH/PUT /power_orders/1
   # PATCH/PUT /power_orders/1.json
   def update
-    if @power_order.update(power_order_params)
-      render :show, status: :ok, location: @power_order
-    else
-      render json: @power_order.errors, status: :unprocessable_entity
-    end
+    @power_order.update(power_order_params)
   end
 
   # DELETE /power_orders/1
@@ -50,7 +41,6 @@ class PowerOrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def power_order_params
-      #params.require(:power_order).permit(:group_id, :item, :power, :manufacture, :model)
-      params.permit(:group_id, :item, :power, :manufacture, :model)
+      params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
     end
 end

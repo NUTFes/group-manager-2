@@ -18,22 +18,13 @@ class EmployeesController < ApplicationController
   # POST /employees.json
   def create
     @employee = Employee.new(employee_params)
-
-    if @employee.save
-      render :show, status: :created, location: @employee
-    else
-      render json: @employee.errors, status: :unprocessable_entity
-    end
+    @employee.save
   end
 
   # PATCH/PUT /employees/1
   # PATCH/PUT /employees/1.json
   def update
-    if @employee.update(employee_params)
-      render :show, status: :ok, location: @employee
-    else
-      render json: @employee.errors, status: :unprocessable_entity
-    end
+    @employee.update(employee_params)
   end
 
   # DELETE /employees/1
@@ -50,7 +41,6 @@ class EmployeesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def employee_params
-      # params.require(:employee).permit(:group_id, :name, :student_id, :employee_category_id)
       params.permit(:group_id, :name, :student_id, :employee_category_id)
     end
 end
