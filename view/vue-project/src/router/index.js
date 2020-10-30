@@ -5,6 +5,7 @@ import Welcome from '../views/Welcome.vue'
 import About from '../views/About.vue'
 import MyPage from '../views/MyPage.vue'
 import RegisterUserDetail from '../views/RegisterUserDetail.vue'
+import RegistSubRep from '../views/RegistSubRep.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,14 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: RegisterUserDetail
+  },
+  {
+    path: '/regist_sub_rep',
+    name: 'RegistSubRep',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: RegistSubRep
   },
 ]
 
