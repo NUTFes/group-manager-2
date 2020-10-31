@@ -18,22 +18,13 @@ class AssignGroupPlacesController < ApplicationController
   # POST /assign_group_places.json
   def create
     @assign_group_place = AssignGroupPlace.new(assign_group_place_params)
-
-    if @assign_group_place.save
-      render :show, status: :created, location: @assign_group_place
-    else
-      render json: @assign_group_place.errors, status: :unprocessable_entity
-    end
+    @assign_group_place.save
   end
 
   # PATCH/PUT /assign_group_places/1
   # PATCH/PUT /assign_group_places/1.json
   def update
-    if @assign_group_place.update(assign_group_place_params)
-      render :show, status: :ok, location: @assign_group_place
-    else
-      render json: @assign_group_place.errors, status: :unprocessable_entity
-    end
+    @assign_group_place.update(assign_group_place_params)
   end
 
   # DELETE /assign_group_places/1
@@ -50,7 +41,6 @@ class AssignGroupPlacesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assign_group_place_params
-      # params.require(:assign_group_place).permit(:place_order_id, :place_id)
       params.permit(:place_order_id, :place_id)
     end
 end

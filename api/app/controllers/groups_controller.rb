@@ -18,22 +18,13 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = Group.new(group_params)
-
-    if @group.save
-      render :show, status: :created, location: @group
-    else
-      render json: @group.errors, status: :unprocessable_entity
-    end
+    @group.save
   end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
-    if @group.update(group_params)
-      render :show, status: :ok, location: @group
-    else
-      render json: @group.errors, status: :unprocessable_entity
-    end
+    @group.update(group_params)
   end
 
   # DELETE /groups/1
@@ -50,7 +41,6 @@ class GroupsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def group_params
-      # params.require(:group).permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id)
       params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id)
     end
 end
