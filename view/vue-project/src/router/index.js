@@ -6,6 +6,7 @@ import About from '../views/About.vue'
 import MyPage from '../views/MyPage.vue'
 import RegisterUserDetail from '../views/RegisterUserDetail.vue'
 import RegistSubRep from '../views/RegistSubRep.vue'
+import RegisterGroup from '../views/RegisterGroup.vue'
 
 Vue.use(VueRouter)
 
@@ -18,34 +19,27 @@ Vue.use(VueRouter)
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: About
   },
   {
     path: '/mypage',
     name: 'MyPage',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: MyPage
   },
   {
     path: '/register_user_detail',
     name: 'RegisterUserDetail',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: RegisterUserDetail
   },
   {
     path: '/regist_sub_rep',
     name: 'RegistSubRep',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: RegistSubRep
+  },
+  {
+    path: '/register_group',
+    name: 'RegisterGroup',
+    component: RegisterGroup
   },
 ]
 
