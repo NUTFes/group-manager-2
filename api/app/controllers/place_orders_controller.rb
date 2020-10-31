@@ -18,22 +18,13 @@ class PlaceOrdersController < ApplicationController
   # POST /place_orders.json
   def create
     @place_order = PlaceOrder.new(place_order_params)
-
-    if @place_order.save
-      render :show, status: :created, location: @place_order
-    else
-      render json: @place_order.errors, status: :unprocessable_entity
-    end
+    @place_order.save
   end
 
   # PATCH/PUT /place_orders/1
   # PATCH/PUT /place_orders/1.json
   def update
-    if @place_order.update(place_order_params)
-      render :show, status: :ok, location: @place_order
-    else
-      render json: @place_order.errors, status: :unprocessable_entity
-    end
+    @place_order.update(place_order_params)
   end
 
   # DELETE /place_orders/1
@@ -50,7 +41,6 @@ class PlaceOrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def place_order_params
-      # params.require(:place_order).permit(:group_id, :first, :second, :third, :remark)
       params.permit(:group_id, :first, :second, :third, :remark)
     end
 end

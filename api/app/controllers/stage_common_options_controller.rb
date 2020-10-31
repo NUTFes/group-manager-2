@@ -18,22 +18,13 @@ class StageCommonOptionsController < ApplicationController
   # POST /stage_common_options.json
   def create
     @stage_common_option = StageCommonOption.new(stage_common_option_params)
-
-    if @stage_common_option.save
-      render :show, status: :created, location: @stage_common_option
-    else
-      render json: @stage_common_option.errors, status: :unprocessable_entity
-    end
+    @stage_common_option.save
   end
 
   # PATCH/PUT /stage_common_options/1
   # PATCH/PUT /stage_common_options/1.json
   def update
-    if @stage_common_option.update(stage_common_option_params)
-      render :show, status: :ok, location: @stage_common_option
-    else
-      render json: @stage_common_option.errors, status: :unprocessable_entity
-    end
+    @stage_common_option.update(stage_common_option_params)
   end
 
   # DELETE /stage_common_options/1
@@ -50,7 +41,6 @@ class StageCommonOptionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def stage_common_option_params
-      #params.require(:stage_common_option).permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound, :stage_content)
       params.permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound, :stage_content)
     end
 end
