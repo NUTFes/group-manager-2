@@ -16,8 +16,10 @@
                 <div v-if="user.role_id == 1"><v-chip color="red" text-color="white">developer</v-chip></div>
                 <div v-if="user.role_id == 2"><v-chip color="green" text-color="white">manager</v-chip></div>
                 <div v-if="user.role_id == 3"><v-chip color="blue" text-color="white">user</v-chip></div>
+                <v-card-text>学籍番号：{{ detail.student_id }}</v-card-text>
                 <v-card-text>学年：{{ grade }}</v-card-text>
                 <v-card-text>課程：{{ department }}</v-card-text>
+                <v-card-text>電話番号：{{ detail.tel }}</v-card-text>
                 <v-card-text>登録日時：{{ user.created_at | format-date }}</v-card-text>
                 <v-card-text>編集日時：{{ user.updated_at | format-date }}</v-card-text>
               </v-col>
@@ -43,6 +45,7 @@ export default {
       role: [],
       grade: [],
       department: [],
+      detail: [],
     }
   },
   mounted() {
@@ -58,6 +61,7 @@ export default {
         this.role = response.data.role
         this.grade = response.data.grade
         this.department = response.data.department
+        this.detail = response.data.detail
       })
   }
 }
