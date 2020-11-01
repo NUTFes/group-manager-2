@@ -25,7 +25,10 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    { src: '~/plugins/axios.js', ssr: false }
+    { 
+      src: '~/plugins/axios.js', ssr: false,
+      src: '~/plugins/fileter.js', ssr: false,
+    },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -36,11 +39,11 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
-
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
+    ['@nuxtjs/moment', ['ja']],
   ],
 
   axios: {
