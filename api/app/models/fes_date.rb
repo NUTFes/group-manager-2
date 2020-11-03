@@ -1,0 +1,2 @@
+class FesDate < ApplicationRecord
+end
