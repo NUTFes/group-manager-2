@@ -9,6 +9,8 @@ const _6faa4a12 = () => interopDefault(import('../pages/mypage.vue' /* webpackCh
 const _56ce3ea1 = () => interopDefault(import('../pages/print.vue' /* webpackChunkName: "pages/print" */))
 const _2aa33390 = () => interopDefault(import('../pages/regist_user_detail.vue' /* webpackChunkName: "pages/regist_user_detail" */))
 const _5ee1db54 = () => interopDefault(import('../pages/signup.vue' /* webpackChunkName: "pages/signup" */))
+const _123c2dff = () => interopDefault(import('../pages/users/index.vue' /* webpackChunkName: "pages/users/index" */))
+const _42a8b7b2 = () => interopDefault(import('../pages/users/_id.vue' /* webpackChunkName: "pages/users/_id" */))
 const _dc6fcb74 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 // TODO: remove in Nuxt 3
@@ -51,6 +53,14 @@ export const routerOptions = {
     path: "/signup",
     component: _5ee1db54,
     name: "signup"
+  }, {
+    path: "/users",
+    component: _123c2dff,
+    name: "users"
+  }, {
+    path: "/users/:id",
+    component: _42a8b7b2,
+    name: "users-id"
   }, {
     path: "/",
     component: _dc6fcb74,

@@ -67,7 +67,7 @@ export default {
       drawer: null,
       items: [
         { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
-        { title: 'ユーザー一覧', icon: 'mdi-account-multiple', click: '/groups' },
+        { title: 'ユーザー一覧', icon: 'mdi-account-multiple', click: '/users' },
         { title: '参加団体一覧', icon: 'mdi-account-group', click: '/groups' },
         { title: '企画名一覧', icon: 'mdi-unfold-more-vertical', click: '/groups' },
         { title: '貸し出し物品一覧', icon: 'mdi-database', click: '/groups' },
