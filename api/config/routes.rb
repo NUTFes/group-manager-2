@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       get "users/show" => "users#show"
       get "users/show_user_detail/:id" => "users#show_user_detail"
       get "users/get_user_detail" => "users#get_user_detail"
+      get "current_user/groups" => "current_user_api#get_groups"
     end
   end
   namespace :api do
