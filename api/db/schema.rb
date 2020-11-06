@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_03_081819) do
+ActiveRecord::Schema.define(version: 2020_11_06_070551) do
 
   create_table "assign_group_places", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
@@ -126,6 +126,23 @@ ActiveRecord::Schema.define(version: 2020_11_03_081819) do
     t.boolean "camera_permission"
     t.boolean "loud_sound"
     t.text "stage_content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "stage_orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "group_id"
+    t.boolean "is_sunny"
+    t.integer "fes_date_id"
+    t.integer "stage_first"
+    t.integer "stage_second"
+    t.string "use_time_interval"
+    t.string "prepare_time_interval"
+    t.string "cleanup_time_interval"
+    t.string "prepare_start_time"
+    t.string "performance_start_time"
+    t.string "performance_end_time"
+    t.string "cleanup_end_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

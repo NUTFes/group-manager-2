@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :stage_orders
   resources :employees
   resources :sub_reps
   resources :power_orders
