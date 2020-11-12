@@ -3,63 +3,54 @@
     "name": "groups",
     "path": "/groups",
     "component": "/app/nuxt-project/pages/groups.vue",
-    "chunkName": "pages/groups",
-    "_name": "_6a60f3e0"
+    "chunkName": "pages/groups"
   },
   {
     "name": "inspire",
     "path": "/inspire",
     "component": "/app/nuxt-project/pages/inspire.vue",
-    "chunkName": "pages/inspire",
-    "_name": "_7f52cd64"
+    "chunkName": "pages/inspire"
   },
   {
     "name": "mypage",
     "path": "/mypage",
     "component": "/app/nuxt-project/pages/mypage.vue",
-    "chunkName": "pages/mypage",
-    "_name": "_6faa4a12"
+    "chunkName": "pages/mypage"
   },
   {
     "name": "print",
     "path": "/print",
     "component": "/app/nuxt-project/pages/print.vue",
-    "chunkName": "pages/print",
-    "_name": "_56ce3ea1"
+    "chunkName": "pages/print"
   },
   {
     "name": "regist_user_detail",
     "path": "/regist_user_detail",
     "component": "/app/nuxt-project/pages/regist_user_detail.vue",
-    "chunkName": "pages/regist_user_detail",
-    "_name": "_2aa33390"
+    "chunkName": "pages/regist_user_detail"
   },
   {
     "name": "signup",
     "path": "/signup",
     "component": "/app/nuxt-project/pages/signup.vue",
-    "chunkName": "pages/signup",
-    "_name": "_5ee1db54"
+    "chunkName": "pages/signup"
   },
   {
     "name": "users",
     "path": "/users",
     "component": "/app/nuxt-project/pages/users/index.vue",
-    "chunkName": "pages/users/index",
-    "_name": "_123c2dff"
+    "chunkName": "pages/users/index"
   },
   {
     "name": "users-id",
     "path": "/users/:id",
     "component": "/app/nuxt-project/pages/users/_id.vue",
-    "chunkName": "pages/users/_id",
-    "_name": "_42a8b7b2"
+    "chunkName": "pages/users/_id"
   },
   {
     "name": "index",
     "path": "/",
     "component": "/app/nuxt-project/pages/index.vue",
-    "chunkName": "pages/index",
-    "_name": "_dc6fcb74"
+    "chunkName": "pages/index"
   }
 ]
