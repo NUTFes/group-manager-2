@@ -5,33 +5,26 @@ class AssignStagesController < ApplicationController
   # GET /assign_stages.json
   def index
     @assign_stages = AssignStage.all
+    render json: @assign_stages
   end
 
   # GET /assign_stages/1
   # GET /assign_stages/1.json
   def show
+    render json: @assign_stage
   end
 
   # POST /assign_stages
   # POST /assign_stages.json
   def create
     @assign_stage = AssignStage.new(assign_stage_params)
-
-    if @assign_stage.save
-      render :show, status: :created, location: @assign_stage
-    else
-      render json: @assign_stage.errors, status: :unprocessable_entity
-    end
+    @assign_stage.save
   end
 
   # PATCH/PUT /assign_stages/1
   # PATCH/PUT /assign_stages/1.json
   def update
-    if @assign_stage.update(assign_stage_params)
-      render :show, status: :ok, location: @assign_stage
-    else
-      render json: @assign_stage.errors, status: :unprocessable_entity
-    end
+    @assign_stage.update(assign_stage_params)
   end
 
   # DELETE /assign_stages/1
@@ -48,6 +41,6 @@ class AssignStagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assign_stage_params
-      params.require(:assign_stage).permit(:stage_order_id, :stage_id, :time_point_start, :time_point_end)
+      params.permit(:stage_order_id, :stage_id, :time_point_start, :time_point_end)
     end
 end
