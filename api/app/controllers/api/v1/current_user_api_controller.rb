@@ -28,8 +28,8 @@ class Api::V1::CurrentUserApiController < ApplicationController
   end
 
   def get_groups_place_allow_list
-    #@user = current_api_user
-    @user = User.find(1)
+    @user = current_api_user
+    #@user = User.find(1)
     @groups = @user.groups
     data = []
     set  = []
