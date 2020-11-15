@@ -1,7 +1,7 @@
 PlaceAllowList.seed( :id,
     { id: 1 ,   place_id: 1 ,
                 group_category_id: 1 ,
-                enable: false 
+                enable: true 
     },
     { id: 2 ,   place_id: 1 ,
                 group_category_id: 2 ,
@@ -25,7 +25,7 @@ PlaceAllowList.seed( :id,
     },
     { id: 7 ,   place_id: 2 ,
                 group_category_id: 1 ,
-                enable: false 
+                enable: true 
     },
     { id: 8 ,   place_id: 2 ,
                 group_category_id: 2 ,
@@ -53,7 +53,7 @@ PlaceAllowList.seed( :id,
     },
     { id: 14 ,  place_id: 3 ,
                 group_category_id: 2 ,
-                enable: false 
+                enable: true
     },
     { id: 15 ,  place_id: 3 ,
                 group_category_id: 3 ,
