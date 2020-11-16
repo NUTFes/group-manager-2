@@ -42,6 +42,20 @@
     "_name": "_5ee1db54"
   },
   {
+    "name": "users",
+    "path": "/users",
+    "component": "/app/nuxt-project/pages/users/index.vue",
+    "chunkName": "pages/users/index",
+    "_name": "_123c2dff"
+  },
+  {
+    "name": "users-id",
+    "path": "/users/:id",
+    "component": "/app/nuxt-project/pages/users/_id.vue",
+    "chunkName": "pages/users/_id",
+    "_name": "_42a8b7b2"
+  },
+  {
     "name": "index",
     "path": "/",
     "component": "/app/nuxt-project/pages/index.vue",
