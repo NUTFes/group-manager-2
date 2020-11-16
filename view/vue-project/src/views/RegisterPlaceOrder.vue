@@ -31,7 +31,7 @@
                     ref="first"
                     v-model="firstId"
                     :rules="[rules.required]"
-                    :items="first"
+                    :items="placeList"
                     :menu-props="{
                       top: true,
                       offsetY: true,
@@ -45,7 +45,7 @@
                     ref="second"
                     v-model="secondId"
                     :rules="[rules.required]"
-                    :items="second"
+                    :items="placeList"
                     :menu-props="{
                       top: true,
                       offsetY: true,
@@ -59,7 +59,7 @@
                     ref="third"
                     v-model="thirdId"
                     :rules="[rules.required]"
-                    :items="third"
+                    :items="placeList"
                     :menu-props="{
                       top: true,
                       offsetY: true,
@@ -95,6 +95,9 @@
 
 <script>
 
+// 電力登録をUIで増やして一気に登録させないようにする。
+// MyPageでエラー吐かせる。
+
 import axios from 'axios'
 export default {
   data () {
@@ -104,9 +107,11 @@ export default {
         max: value => value <= 1000 || '大きすぎます',
       },
       group: [],
-      first: [],
-      second: [],
-      third: [],
+      placeList: [
+        {
+          // allowlistから引っ張ってくる
+        }
+      ],
     }
     },
     computed: {
