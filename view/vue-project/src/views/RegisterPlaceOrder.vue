@@ -16,6 +16,7 @@
                     label="団体"
                     ref="group"
                     v-model="groupId"
+                    @input="handleSelect"
                     :rules="[rules.required]"
                     :items="group"
                     :menu-props="{
@@ -31,13 +32,13 @@
                     ref="first"
                     v-model="firstId"
                     :rules="[rules.required]"
-                    :items="placeList"
+                    :items="this.placeList[getIndex()]['place_list']"
                     :menu-props="{
                       top: true,
                       offsetY: true,
                     }"
-                    item-text="name"
-                    item-value="id"
+                    item-text="place"
+                    item-value="place_id"
                     outlined
                   ></v-select>
                   <v-select
@@ -45,13 +46,13 @@
                     ref="second"
                     v-model="secondId"
                     :rules="[rules.required]"
-                    :items="placeList"
+                    :items="this.placeList[getIndex()]['place_list']"
                     :menu-props="{
                       top: true,
                       offsetY: true,
                     }"
-                    item-text="name"
-                    item-value="id"
+                    item-text="place"
+                    item-value="place_id"
                     outlined
                   ></v-select>
                   <v-select
@@ -59,13 +60,13 @@
                     ref="third"
                     v-model="thirdId"
                     :rules="[rules.required]"
-                    :items="placeList"
+                    :items="this.placeList[getIndex()]['place_list']"
                     :menu-props="{
                       top: true,
                       offsetY: true,
                     }"
-                    item-text="name"
-                    item-value="id"
+                    item-text="place"
+                    item-value="place_id"
                     outlined
                   ></v-select>
                   <v-text-field
@@ -79,6 +80,7 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
+              {{this.groupId}}
               <v-card-action>
                 <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
                 <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
@@ -107,23 +109,15 @@ export default {
         max: value => value <= 1000 || '大きすぎます',
       },
       group: [],
-      placeList: [
-        {
-          // allowlistから引っ張ってくる
-        }
-      ],
-    }
-    },
-    computed: {
-    form () {
-      return {
-        firstId: null,
+      placeList: [],
+              firstId: null,
         secondId: null,
         thirdId: null,
         remark: null,
         groupId: null
-      }
-    },
+    }
+  },
+  computed: {
   },
   methods: {
     cancel: function() {
@@ -153,8 +147,20 @@ export default {
         }
       )
     },
+    handleSelect: function(){
+      console.log('aaaaaa')
+    },
+      getIndex: function(){
+        console.log('getIndex',this.placeList.length)
+        for(let i=0; i<this.placeList.length;i++){
+          console.log(this.placeList[i])
+          if(this.placeList[i]['group_id'] === this.groupId){
+            return i;
+          }
+        }
+        return 0;
+      },
   },
-
   mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
     axios.get(url, {
@@ -188,7 +194,27 @@ export default {
         for(let i=0;i<response.data.length;i++){
           this.group.push(response.data[i])
         }
-        console.log(this.group)
+        console.log('group: ',this.group)
+      },
+      (error) => {
+        console.error(error)
+        return error;
+      }
+    )
+    const placeUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups/places'
+    axios.get(placeUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+        "uid": localStorage.getItem('uid')
+      }
+    }).then(
+      (response) => {
+        for(let i=0;i<response.data.length;i++){
+          this.placeList.push(response.data[i])
+        }
+        console.log('place: ',this.placeList)
       },
       (error) => {
         console.error(error)

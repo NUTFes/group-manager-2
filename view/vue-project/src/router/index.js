@@ -7,6 +7,7 @@ import MyPage from '../views/MyPage.vue'
 import RegisterUserDetail from '../views/RegisterUserDetail.vue'
 import RegistSubRep from '../views/RegistSubRep.vue'
 import RegisterGroup from '../views/RegisterGroup.vue'
+import RegisterPlaceOrder from '../views/RegisterPlaceOrder.vue'
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,11 @@ Vue.use(VueRouter)
     path: '/register_group',
     name: 'RegisterGroup',
     component: RegisterGroup
+  },
+  {
+    path: '/register_place_order',
+    name: 'RegisterPlaceOrder',
+    component: RegisterPlaceOrder
   },
 ]
 
