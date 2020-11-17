@@ -18,26 +18,8 @@
                     <template v-slot:default>
                       <thead>
                         <tr>
-                          <th class="text-center">
-                            ID
-                          </th>
-                          <th class="text-center">
-                            名前
-                          </th>
-                          <th class="text-center">
-                            メールアドレス
-                          </th>
-                          <th class="text-center">
-                            権限
-                          </th>
-                          <th class="text-center">
-                            作成日時
-                          </th>
-                          <th class="text-center">
-                            編集日時
-                          </th>
-                          <th class="text-center">
-                            操作
+                          <th v-for="(header, i) in headers" :key="i" class="text-center">
+                            {{ header.text }}
                           </th>
                         </tr>
                       </thead>
@@ -81,6 +63,29 @@ export default {
   data() {
     return {
       users: [],
+      headers: [
+        {
+          text: 'ID'
+        },
+        {
+          text: '名前'
+        },
+        {
+          text: 'メールアドレス'
+        },
+        {
+          text: '権限'
+        },
+        {
+          text: '作成日時'
+        },
+        {
+          text: '編集日時'
+        },
+        {
+          text: '操作'
+        },
+      ],
     }
   },
   mounted() {
