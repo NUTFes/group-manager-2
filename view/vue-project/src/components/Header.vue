@@ -4,10 +4,11 @@
       app
       color = "grey darken-1"
       height = "90"
+      dark
     >
       <v-row align="center">
       <v-col cols="2"></v-col>
-      <v-col cols="2"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
+      <v-col cols="2"><v-btn text depressed class="title ma-2" to="/">参加団体管理アプリ</v-btn></v-col>
       <v-col cols="4" align="center">
         <router-link to="/">
           <v-img 
