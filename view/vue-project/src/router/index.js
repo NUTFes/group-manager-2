@@ -7,6 +7,7 @@ import MyPage from '../views/MyPage.vue'
 import RegisterUserDetail from '../views/RegisterUserDetail.vue'
 import RegistSubRep from '../views/RegistSubRep.vue'
 import RegisterGroup from '../views/RegisterGroup.vue'
+import RegisterPowerOrder from '../views/RegisterPowerOrder.vue'
 
 Vue.use(VueRouter)
 
@@ -41,6 +42,11 @@ Vue.use(VueRouter)
     name: 'RegisterGroup',
     component: RegisterGroup
   },
+  {
+    path: '/register_power_order',
+    name: 'RegisterPowerOrder',
+    component: RegisterPowerOrder
+  }
 ]
 
 const router = new VueRouter({
