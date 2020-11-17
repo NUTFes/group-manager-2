@@ -40,13 +40,14 @@
       temporary
       color="grey darken-1"
     >
-    <v-list-item-avatar>
-      <v-icon>mdi-account-circle-outline</v-icon>
+    <v-list-item dark>
+      <v-list-item-avatar>
+        <v-icon>mdi-account-circle-outline</v-icon>
       </v-list-item-avatar>
-
-     <v-list-item-content>
-      <v-list-item-title>{{ users.name }}</v-list-item-title>
-     </v-list-item-content>
+      <v-list-item-content>
+        <v-list-item-title>{{ users.name }}</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
     
      <v-divider></v-divider>
 
