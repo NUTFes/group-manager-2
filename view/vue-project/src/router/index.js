@@ -8,6 +8,7 @@ import RegisterUserDetail from '../views/RegisterUserDetail.vue'
 import RegistSubRep from '../views/RegistSubRep.vue'
 import RegisterGroup from '../views/RegisterGroup.vue'
 import RegisterPlaceOrder from '../views/RegisterPlaceOrder.vue'
+import RegisterPowerOrder from '../views/RegisterPowerOrder.vue'
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,11 @@ Vue.use(VueRouter)
     path: '/register_place_order',
     name: 'RegisterPlaceOrder',
     component: RegisterPlaceOrder
+  },
+  {
+    path: '/register_power_order',
+    name: 'RegisterPowerOrder',
+    component: RegisterPowerOrder
   },
 ]
 
