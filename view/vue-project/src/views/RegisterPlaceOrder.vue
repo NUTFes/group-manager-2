@@ -16,7 +16,6 @@
                     label="団体"
                     ref="group"
                     v-model="groupId"
-                    @input="handleSelect"
                     :rules="[rules.required]"
                     :items="group"
                     :menu-props="{
@@ -80,7 +79,6 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
-              {{this.groupId}}
               <v-card-action>
                 <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
                 <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
@@ -110,11 +108,11 @@ export default {
       },
       group: [],
       placeList: [],
-              firstId: null,
-        secondId: null,
-        thirdId: null,
-        remark: null,
-        groupId: null
+      firstId: null,
+      secondId: null,
+      thirdId: null,
+      remark: null,
+      groupId: null
     }
   },
   computed: {
@@ -147,19 +145,16 @@ export default {
         }
       )
     },
-    handleSelect: function(){
-      console.log('aaaaaa')
-    },
-      getIndex: function(){
-        console.log('getIndex',this.placeList.length)
-        for(let i=0; i<this.placeList.length;i++){
-          console.log(this.placeList[i])
-          if(this.placeList[i]['group_id'] === this.groupId){
-            return i;
-          }
+    getIndex: function(){
+      console.log('getIndex',this.placeList.length)
+      for(let i=0; i<this.placeList.length;i++){
+        console.log(this.placeList[i])
+        if(this.placeList[i]['group_id'] === this.groupId){
+          return i;
         }
-        return 0;
-      },
+      }
+      return 0;
+    },
   },
   mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
