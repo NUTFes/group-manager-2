@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :food_products
   resources :assign_stages
   resources :stage_orders
   resources :employees
