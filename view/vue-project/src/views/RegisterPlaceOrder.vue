@@ -72,7 +72,6 @@
                     label="備考"
                     ref="remark"
                     v-model="remark"
-                    :rules="[rules.required]"
                     text
                     outlined
                     required
