@@ -50,9 +50,9 @@
                           <td>{{ user.id }}</td>
                           <td>{{ user.name }}</td>
                           <td>{{ user.email }}</td>
-                          <td v-if="user.role_id == 1"><v-chip color="red" text-color="white">developer</v-chip></td>
-                          <td v-if="user.role_id == 2"><v-chip color="green" text-color="white">manager</v-chip></td>
-                          <td v-if="user.role_id == 3"><v-chip color="blue" text-color="white">user</v-chip></td>
+                          <td v-if="user.role_id == 1"><v-chip color="red" text-color="white" small>developer</v-chip></td>
+                          <td v-if="user.role_id == 2"><v-chip color="green" text-color="white" small>manager</v-chip></td>
+                          <td v-if="user.role_id == 3"><v-chip color="blue" text-color="white" small>user</v-chip></td>
                           <td>{{ user.created_at | format-date }}</td>
                           <td>{{ user.updated_at | format-date}}</td>
                           <td><v-btn dense rounded text color="#01579B" :to="{name:'users-id', params:{id: user.id}}">詳細</v-btn></td>
