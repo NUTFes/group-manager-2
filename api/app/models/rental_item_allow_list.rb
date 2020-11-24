@@ -1,0 +1,2 @@
+class RentalItemAllowList < ApplicationRecord
+end
