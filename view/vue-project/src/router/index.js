@@ -7,6 +7,10 @@ import MyPage from '../views/MyPage.vue'
 import RegisterUserDetail from '../views/RegisterUserDetail.vue'
 import RegistSubRep from '../views/RegistSubRep.vue'
 import RegisterGroup from '../views/RegisterGroup.vue'
+import User from '../views/User.vue'
+import Venue from '../views/Venue.vue'
+import Group from '../views/Group.vue'
+import Power from '../views/Power.vue'
 
 Vue.use(VueRouter)
 
@@ -27,19 +31,24 @@ Vue.use(VueRouter)
     component: MyPage
   },
   {
-    path: '/register_user_detail',
-    name: 'RegisterUserDetail',
-    component: RegisterUserDetail
+    path: '/user',
+    name: 'User',
+    component: User
   },
   {
-    path: '/regist_sub_rep',
-    name: 'RegistSubRep',
-    component: RegistSubRep
+    path: '/group',
+    name: 'Group',
+    component: Group
+  }, 
+  {
+    path: '/venue',
+    name: 'Venue',
+    component: Venue
   },
   {
-    path: '/register_group',
-    name: 'RegisterGroup',
-    component: RegisterGroup
+    path: '/power',
+    name: 'Power',
+    component: Power
   },
 ]
 
