@@ -6,9 +6,8 @@
       height = "90"
       dark
     >
-      <v-row align="center">
-      <v-col cols="2"></v-col>
-      <v-col cols="2"><v-btn text depressed class="title ma-2" to="/">参加団体管理アプリ</v-btn></v-col>
+      <v-row align="center" justify="center">
+      <v-col cols="3"><v-btn text class="title ma-2" @click="$router.push('mypage')">参加団体管理アプリ</v-btn></v-col>
       <v-col cols="4" align="center">
         <router-link to="/">
           <v-img 
@@ -18,7 +17,7 @@
                      ></v-img>
         </router-link>
       </v-col>
-      <v-col cols="2" align="right">
+      <v-col cols="3" align="right">
         <v-chip
           color="white"
           label
@@ -29,35 +28,60 @@
           {{ users.name }}
         </v-chip>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
     </v-app-bar>
 
     <v-navigation-drawer
       v-model="drawer"
+      dark
       right
       app
       temporary
       color="grey darken-1"
     >
-    <v-list-item-avatar>
-      <v-icon>mdi-account-circle-outline</v-icon>
+    <v-list-item>
+      <v-list-item-avatar>
+        <v-icon>mdi-account-circle-outline</v-icon>
       </v-list-item-avatar>
-
-     <v-list-item-content>
-      <v-list-item-title>{{ users.name }}</v-list-item-title>
-     </v-list-item-content>
+      <v-list-item-content>
+        <v-list-item-title>{{ users.name }}</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
     
-     <v-divider></v-divider>
+    <v-divider></v-divider>
 
-     </v-list>
-  
-      <v-list-item dark @click="signOut">
+    </v-list>
+    <v-list dense>
+      <v-list-item @click="$router.push('/user_detail')">
+        <v-list-item-content>
+          <v-list-item-title>ユーザー詳細登録</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item @click="$router.push('/group')">
+        <v-list-item-content>
+          <v-list-item-title>団体登録</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item @click="$router.push('/place')">
+        <v-list-item-content>
+          <v-list-item-title>会場申請</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item @click="$router.push('/power')">
+        <v-list-item-content>
+          <v-list-item-title>電力申請</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+    <v-divider></v-divider>
+      <v-list-item @click="signOut">
+        <v-list-item-avatar>
+          <v-icon>mdi-logout</v-icon>
+        </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>ログアウト</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-
     </v-navigation-drawer>
   </div>    
 </template>

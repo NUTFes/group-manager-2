@@ -3,11 +3,12 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 import About from '../views/About.vue'
-import MyPage from '../views/MyPage.vue'
-import RegisterUserDetail from '../views/RegisterUserDetail.vue'
-import RegistSubRep from '../views/RegistSubRep.vue'
-import RegisterGroup from '../views/RegisterGroup.vue'
-import RegisterPowerOrder from '../views/RegisterPowerOrder.vue'
+import MyPage from '../views/mypage.vue'
+import UserDetail from '../views/user_detail.vue'
+import Place from '../views/place.vue'
+import Group from '../views/group.vue'
+import Power from '../views/power.vue'
+import SubRep from '../views/sub_rep.vue'
 
 Vue.use(VueRouter)
 
@@ -28,25 +29,30 @@ Vue.use(VueRouter)
     component: MyPage
   },
   {
-    path: '/register_user_detail',
-    name: 'RegisterUserDetail',
-    component: RegisterUserDetail
+    path: '/user_detail',
+    name: 'UserDetail',
+    component: UserDetail
   },
   {
-    path: '/regist_sub_rep',
-    name: 'RegistSubRep',
-    component: RegistSubRep
+    path: '/group',
+    name: 'Group',
+    component: Group
+  }, 
+  {
+    path: '/place',
+    name: 'Place',
+    component: Place
   },
   {
-    path: '/register_group',
-    name: 'RegisterGroup',
-    component: RegisterGroup
+    path: '/power',
+    name: 'Power',
+    component: Power
   },
   {
-    path: '/register_power_order',
-    name: 'RegisterPowerOrder',
-    component: RegisterPowerOrder
-  }
+    path: '/sub_rep',
+    name: 'SubRep',
+    component: SubRep
+  },
 ]
 
 const router = new VueRouter({

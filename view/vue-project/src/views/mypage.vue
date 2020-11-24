@@ -2,27 +2,15 @@
   <div>
       <Header/>
 
-      <v-navigation-drawer 
-        app
-        right
-        temporary
-        v-model="drawer"
-      >
-        <UserNav/>
-      </v-navigation-drawer>
-
       <!-- Sizes your content based upon application components -->
-      <v-main>
         <News/>
 
         <Regist/>
-      </v-main>
   </div>
 </template>
 
 <script>
 import Header from '../components/Header.vue'
-import UserNav from '../components/UserNav.vue'
 import News from '../components/News.vue'
 import Regist from '../components/Regist.vue'
 import axios from 'axios'
@@ -31,7 +19,6 @@ export default {
     Header, 
     News,
     Regist,
-    UserNav,
   },
   data () {
     return {
