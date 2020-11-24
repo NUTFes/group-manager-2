@@ -7,4 +7,5 @@ class Group < ApplicationRecord
     has_one :sub_rep
     has_many :employees
     has_one :place_order
+    has_one :stage_order
 end

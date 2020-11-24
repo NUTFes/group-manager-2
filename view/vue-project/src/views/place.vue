@@ -93,8 +93,10 @@
 </template>
 
 <script>
+
 // 電力登録をUIで増やして一気に登録させないようにする。
 // MyPageでエラー吐かせる。
+
 import axios from 'axios'
 export default {
   data () {
@@ -120,6 +122,7 @@ export default {
     },
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
+
       const url = process.env.VUE_APP_URL + '/place_orders'
       let params = new URLSearchParams();
       params.append('group_id', this.groupId);
@@ -127,6 +130,8 @@ export default {
       params.append('second', this.secondId);
       params.append('third', this.thirdId);
       params.append('remark', this.remark);
+
+
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       axios.post(url, params).then(
         (response) => {
@@ -212,4 +217,5 @@ export default {
     )
   },
 }
+
 </script>

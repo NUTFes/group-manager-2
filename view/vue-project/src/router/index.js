@@ -5,10 +5,10 @@ import Welcome from '../views/Welcome.vue'
 import About from '../views/About.vue'
 import MyPage from '../views/mypage.vue'
 import UserDetail from '../views/user_detail.vue'
+import SubRep from '../views/sub_rep.vue'
 import Place from '../views/place.vue'
 import Group from '../views/group.vue'
 import Power from '../views/power.vue'
-import SubRep from '../views/sub_rep.vue'
 
 Vue.use(VueRouter)
 
