@@ -8,4 +8,5 @@ class Group < ApplicationRecord
     has_many :employees
     has_one :place_order
     has_one :stage_order
+    has_many :food_products
 end
