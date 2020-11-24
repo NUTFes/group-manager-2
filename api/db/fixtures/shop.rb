@@ -1,220 +1,142 @@
 Shop.seed( :id,
     { id: 1 ,   name: 'アピタ長岡店' ,
-                kana: 'あぴた ながおかてん' ,
                 tel: '0258-29-6111' ,
-                time_weekdays: '09:00 - 21:00' ,
-                time_sat: '09:00 - 21:00' ,
-                time_sun: '09:00 - 21:00' ,
-                time_holidays: '09:00 - 21:00'
+                opening_hours: '09:00 - 21:00' ,
+                address: '新潟県長岡市千秋 2丁目 278 リバーサイド千秋 1F'
     },
     { id: 2 ,   name: 'イオン長岡店' ,
-                kana: 'いおん ながおかてん' ,
                 tel: '0258-28-0880' , 
-                time_weekdays: '07:00 - 22:00' ,
-                time_sat: '07:00 - 22:00' ,
-                time_sun: '07:00 - 22:00' ,
-                time_holidays: '07:00 - 22:00'
+                opening_hours: '07:00 - 22:00' ,
+                address: '新潟県長岡市古正寺 1-249-1'
     },
     { id: 3 ,   name: 'ウオロク 北山店' ,
-                kana: 'うおろく きたやまてん' ,
                 tel: '0258-25-8333' ,
-                time_weekdays: '09:00 - 22:00' ,
-                time_sat: '09:00 - 22:00' ,
-                time_sun: '09:00 - 22:00' ,
-                time_holidays: '09:00 - 22:00'
+                opening_hours: '09:00 - 22:00' ,
+                address: '新潟県長岡市北山 3 丁目 5-1'
     },
     { id: 4 ,   name: 'ウオロク 長岡店' ,
-                kana: 'うおろく ながおかてん' ,
                 tel: '0258-38-8800' ,
-                time_weekdays: '09:00 - 24:00' ,
-                time_sat: '09:00 - 24:00' ,
-                time_sun: '09:00 - 24:00' ,
-                time_holidays: '09:00 - 24:00'
+                opening_hours: '09:00 - 24:00' ,
+                address: '新潟県長岡市日赤町 2丁目 6-1'
     },
     { id: 5 ,   name: 'カトウ食材' ,
-                kana: 'かとうしょくざい' ,
                 tel: '0258-46-1170' ,
-                time_weekdays: '05:00 - 18:00' ,
-                time_sat: '05:00 - 18:00' 
+                opening_hours: '05:00 - 18:00' ,
+                address: '新潟県長岡市新産 1丁目 1-16'
     },
     { id: 6 ,   name: '業務スーパー 中沢店' ,
-                kana: 'ぎょうむすーぱー なかざわてん' ,
                 tel: '0258-38-8200' ,
-                time_weekdays: '09:00 - 20:00' ,
-                time_sat: '09:00 - 20:00' ,
-                time_sun: '09:00 - 20:00' ,
-                time_holidays: '09:00 - 20:00'
+                opening_hours: '09:00 - 20:00' ,
+                address: '新潟県長岡市美沢 3丁目 86−9'
     },
     { id: 7 ,   name: 'サンマート' ,
-                kana: 'さんまーと' ,
                 tel: '0258-28-1488' ,
-                time_weekdays: '10:00 - 20:00' ,
-                time_sat: '10:00 - 20:00' ,
-                time_sun: '10:00 - 20:00' ,
-                time_holidays: '10:00 - 20:00'
+                opening_hours: '10:00 - 20:00' ,
+                address: '新潟県長岡市北山 4丁目 37-3'
     },
     { id: 8 ,   name: 'スーパーセンタームサシ' ,
-                kana: 'すーぱーせんたーむさし' ,
                 tel: '0258-27-6345' ,
-                time_weekdays: '07:00 - 19:30' ,
-                time_sat: '07:00 - 19:30' ,
-                time_sun: '09:30 - 19:30' ,
-                time_holidays: '07:00 - 19:30'
+                opening_hours: '07:00 - 19:30' ,
+                address: '新潟県長岡市古正寺町字中割 64'
     },
     { id: 9 ,   name: 'チャレンジャー 北長岡店' ,
-                kana: 'ちゃれんじゃー きたながおかてん' ,
                 tel: '0258-88-0050' ,
-                time_weekdays: '09:00 - 21:00' ,
-                time_sat: '09:00 - 21:00' ,
-                time_sun: '09:00 - 21:00' ,
-                time_holidays: '09:00 - 21:00'
+                opening_hours: '09:00 - 21:00' ,
+                address: '新潟県長岡市城岡 1-1-10'
     },
     { id: 10,   name: 'ドン・キホーテ 長岡インター店' ,
-                kana: 'どんきほーて ながおかいんたーてん' ,
                 tel: '0258-46-0311' ,
-                time_weekdays: '00:00 - 03:00 10:00 - 24:00' ,
-                time_sat: '00:00 - 03:00 10:00 - 24:00' ,
-                time_sun: '00:00 - 03:00 10:00 - 24:00' ,
-                time_holidays: '00:00 - 03:00 10:00 - 24:00'
+                opening_hours: '00:00 - 03:00 10:00 - 24:00' ,
+                address: '新潟県長岡市福山町 1078'
     },
     { id: 11,   name: 'ナルス 大島店' ,
-                kana: 'なるす おおしまてん' ,
                 tel: '0258-20-5800' ,
-                time_weekdays: '09:00 - 22:00' ,
-                time_sat: '09:00 - 22:00' ,
-                time_sun: '09:00 - 22:00' ,
-                time_holidays: '09:00 - 22:00'
+                opening_hours: '09:00 - 22:00' ,
+                address: ''
     },
     { id: 12,   name: 'なんじゃ村' ,
-                kana: 'なんじゃむら' ,
                 tel: '0258-22-5511' ,
-                time_weekdays: '10:00 - 20:00' ,
-                time_sat: '10:00 - 20:00' ,
-                time_sun: '10:00 - 20:00' ,
-                time_holidays: '10:00 - 20:00'
+                opening_hours: '10:00 - 20:00' ,
+                address: '新潟県長岡市喜多町 398−1'
     },
     { id: 13,   name: '原信 今朝白店' ,
-                kana: 'はらしん けさじろてん' ,
                 tel: '0258-39-1311' ,
-                time_weekdays: '00:00 - 24:00' ,
-                time_sat: '00:00 - 24:00' ,
-                time_sun: '00:00 - 24:00' ,
-                time_holidays: '00:00 - 24:00' 
+                opening_hours: '00:00 - 24:00' ,
+                address: '新潟県長岡市今朝白 2丁目 5'
     },
     { id: 14,   name: '原信 古正寺店' ,
-                kana: 'はらしん こしょうじてん' ,
                 tel: '0258-28-5590' ,
-                time_weekdays: '00:00 - 24:00' ,
-                time_sat: '00:00 - 24:00' ,
-                time_sun: '00:00 - 24:00' ,
-                time_holidays: '00:00 - 24:00'
+                opening_hours: '00:00 - 24:00' ,
+                address: '新潟県長岡市古正寺町 20-1'
     },
     { id: 15,   name: '原信 関原店' ,
-                kana: 'はらしん せきはらてん' ,
                 tel: '0258-46-6585' ,
-                time_weekdays: '09:00 - 22:00' ,
-                time_sat: '09:00 - 22:00' ,
-                time_sun: '09:00 - 22:00' ,
-                time_holidays: '09:00 - 22:00'
+                opening_hours: '09:00 - 22:00' ,
+                address: '新潟県長岡市関原町 1丁目 957-1'
     },
     { id: 16,   name: '原信 寺島店' ,
-                kana: 'はらしん てらじまてん' ,
                 tel: '0258-28-5868' ,
-                time_weekdays: '07:00 - 24:00' ,
-                time_sat: '07:00 - 24:00' ,
-                time_sun: '07:00 - 24:00' ,
-                time_holidays: '07:00 - 24:00'
+                opening_hours: '07:00 - 24:00' ,
+                address: '新潟県長岡市寺島町 7-1'
     },
     { id: 17,   name: '原信 来迎寺店' ,
-                kana: 'はらしん らいこうじてん' ,
                 tel: '0258-92-2090' , 
-                time_weekdays: '09:00 - 23:00' ,
-                time_sat: '09:00 - 23:00' ,
-                time_sun: '09:00 - 23:00' ,
-                time_holidays: '09:00 - 23:00'
+                opening_hours: '09:00 - 23:00' ,
+                address: '新潟県長岡市浦 610'
     },
     { id: 18,   name: 'PLANT-5 見附店' ,
-                kana: 'ぷらんと みつけてん' ,
                 tel: '0258-61-4400' , 
-                time_weekdays: '09:00 - 22:00' ,
-                time_sat: '09:00 - 22:00' ,
-                time_sun: '09:00 - 22:00' ,
-                time_holidays: '09:00 - 22:00'
+                opening_hours: '09:00 - 22:00' ,
+                address: '新潟県見附市上新田町 725-1'
     },
     { id: 19,   name: '三和園茶舗' ,
-                kana: 'みわえんちゃほ' ,
                 tel: '0258-32-1105' ,
-                time_weekdays: '08:00 - 18:00' ,
-                time_sat: '08:00 - 18:00' ,
-                time_holidays: '08:00 - 18:00' 
+                opening_hours: '08:00 - 18:00' ,
+                address: '新潟県長岡市千手 3丁目 7-8'
     },
     { id: 20,   name: '大和屋 本店' ,
-                kana: 'やまとや ほんてん' ,
                 tel: '0258-35-3533' ,
-                time_weekdays: '09:00 - 17:30' ,
-                time_sat: '09:00 - 17:30' ,
-                time_sun: '09:00 - 17:30' ,
-                time_holidays: '09:00 - 17:30'
+                opening_hours: '09:00 - 17:30' ,
+                address: '新潟県長岡市柳原町 3-3'
     },
     { id: 21,   name: 'やまや' ,
-                kana: 'やまや' ,
                 tel: '0258-22-5066' ,
-                time_weekdays: '09:00 - 21:00' ,
-                time_sat: '09:00 - 21:00' ,
-                time_sun: '09:00 - 21:00' ,
-                time_holidays: '09:00 - 21:00'
+                opening_hours: '09:00 - 21:00' ,
+                address: '新潟県長岡市大島新町 4-892'
     },
     { id: 22,   name: 'リカードコミュニケーション おぐまや' ,
-                kana: 'りかーどこみゅにけーしょん おぐまや' ,
                 tel: '0258-27-0709' ,
-                time_weekdays: '08:00 - 20:00' ,
-                time_sat: '08:00 - 20:00' ,
-                time_holidays: '08:00 - 20:00' 
+                opening_hours: '08:00 - 20:00' ,
+                address: '新潟県長岡市蓮潟 4-6-14'
     },
     { id: 23,   name: '良食生活館 きたまち店' ,
-                kana: 'りょうしょくせいかつかん きたまちてん' ,
                 tel: '0258-28-2855' ,
-                time_weekdays: '10:00 - 22:00' ,
-                time_sat: '10:00 - 22:00' ,
-                time_sun: '10:00 - 22:00' ,
-                time_holidays: '10:00 - 22:00'
+                opening_hours: '10:00 - 22:00' ,
+                address: '新潟県長岡市喜多町字下川原 1000-1'
     },
     { id: 24,   name: '山ス流通サービス株式会社' ,
-                kana: 'やますりゅうつうさーびす かぶしきがいしゃ' ,
                 tel: '0258-27-4638' ,
-                time_weekdays: '08:00 - 16:30' ,
-                time_sat: '08:00 - 16:30' 
+                opening_hours: '08:00 - 16:30' ,
+                address: '新潟県長岡市喜多町 1015'
     },
     { id: 25,   name: '菜加' ,
-                kana: 'さいか' ,
                 tel: '0258-89-2669' ,
-                time_weekdays: '08:00 - 18:00' ,
-                time_sat: '08:00 - 18:00' ,
-                time_sun: '08:00 - 18:00' ,
-                time_holidays: '09:00 - 17:30'
+                opening_hours: '08:00 - 18:00' ,
+                address: '新潟県東川口 1939'
     },
     { id: 26,   name: 'ひらせい 長岡ニュータウン店' ,
-                kana: 'ひらせい ながおかにゅーたうんてん' ,
                 tel: '0258-47-8889' ,
-                time_weekdays: '09:30 - 20:00' ,
-                time_sat: '09:30 - 20:00' ,
-                time_sun: '09:30 - 20:00' ,
-                time_holidays: '09:30 - 20:00'
+                opening_hours: '09:30 - 20:00' ,
+                address: '新潟県長岡市青葉台 1丁目甲 120-17'
     },
     { id: 27,   name: '紅屋重正' ,
-                kana: 'べにやしげまさ' ,
                 tel: '0258-32-1456' ,
-                time_weekdays: '09:00 - 17:30' ,
-                time_sat: '09:00 - 17:30' ,
-                time_sun: '09:00 - 17:30' ,
-                time_holidays: '09:00 - 17:30'
+                opening_hours: '09:00 - 17:30' ,
+                address: '新潟県長岡市表町 1丁目 10 番地 35'
     },
     { id: 28,   name: 'ダイレックス喜多町店' ,
-                kana: 'だいれっくす きたまちてん' ,
                 tel: '0258-94-5896' ,
-                time_weekdays: '09:00 - 22:00' ,
-                time_sat: '09:00 - 22:00' ,
-                time_sun: '09:00 - 22:00' ,
-                time_holidays: '09:00 - 22:00'
+                opening_hours: '09:00 - 22:00' ,
+                address: '新潟県長岡市喜多町土地区画整理事業内 4 街区 3'
     }
 )
