@@ -15,7 +15,7 @@
         <v-col cols = "8"></v-col>
         <v-col cols = "2" align = "right">    
           <v-btn
-            class="button font-weight-midium"
+            class="mx-2 font-weight-midium"
             text
             color="pink lighten-2"
           >
