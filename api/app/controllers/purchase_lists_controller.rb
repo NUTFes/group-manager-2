@@ -5,33 +5,26 @@ class PurchaseListsController < ApplicationController
   # GET /purchase_lists.json
   def index
     @purchase_lists = PurchaseList.all
+    render json: @purchase_lists
   end
 
   # GET /purchase_lists/1
   # GET /purchase_lists/1.json
   def show
+    render json: @purchase_list
   end
 
   # POST /purchase_lists
   # POST /purchase_lists.json
   def create
     @purchase_list = PurchaseList.new(purchase_list_params)
-
-    if @purchase_list.save
-      render :show, status: :created, location: @purchase_list
-    else
-      render json: @purchase_list.errors, status: :unprocessable_entity
-    end
+    @purchase_list.save
   end
 
   # PATCH/PUT /purchase_lists/1
   # PATCH/PUT /purchase_lists/1.json
   def update
-    if @purchase_list.update(purchase_list_params)
-      render :show, status: :ok, location: @purchase_list
-    else
-      render json: @purchase_list.errors, status: :unprocessable_entity
-    end
+    @purchase_list.update(purchase_list_params)
   end
 
   # DELETE /purchase_lists/1
@@ -48,6 +41,6 @@ class PurchaseListsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def purchase_list_params
-      params.require(:purchase_list).permit(:food_product_id, :shop_id, :fes_date_id, :items, :is_fresh)
+      params.permit(:food_product_id, :shop_id, :fes_date_id, :items, :is_fresh)
     end
 end

@@ -5,33 +5,26 @@ class FoodProductsController < ApplicationController
   # GET /food_products.json
   def index
     @food_products = FoodProduct.all
+    render json: @food_products
   end
 
   # GET /food_products/1
   # GET /food_products/1.json
   def show
+    render json: @food_product
   end
 
   # POST /food_products
   # POST /food_products.json
   def create
     @food_product = FoodProduct.new(food_product_params)
-
-    if @food_product.save
-      render :show, status: :created, location: @food_product
-    else
-      render json: @food_product.errors, status: :unprocessable_entity
-    end
+    @food_product.save
   end
 
   # PATCH/PUT /food_products/1
   # PATCH/PUT /food_products/1.json
   def update
-    if @food_product.update(food_product_params)
-      render :show, status: :ok, location: @food_product
-    else
-      render json: @food_product.errors, status: :unprocessable_entity
-    end
+    @food_product.update(food_product_params)
   end
 
   # DELETE /food_products/1
@@ -48,6 +41,6 @@ class FoodProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def food_product_params
-      params.require(:food_product).permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num)
+      params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num)
     end
 end
