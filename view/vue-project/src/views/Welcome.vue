@@ -3,25 +3,28 @@
     <div class="background" id="container">
       <v-app-bar
         app
-        color = "grey darken-1"
-        height = "90"
+        color = "#FAFAFA"
+        height = "70"
         >
-        <v-row align="center">
-          <v-col cols="2"></v-col>
-          <v-col cols="2"><v-btn text class = "title white--text" to="/mypage">参加団体管理アプリ</v-btn></v-col>
-          <v-col cols="4" align="center">
-            <router-link to="/">
-              <v-img 
-                         height="70"
-                         width ="70"
-                         src = "../assets/40th_nutfes_logo_white.png"
-                         ></v-img>
-            </router-link>
-          </v-col>
+      <v-row>
+        <v-col cols=2></v-col>
+        <v-col cols=2>
+          <router-link to="/mypage">
+            <v-img
+              class="logo"
+              :src="logoImage"
+              >
+            </v-img>
+          </router-link>
+        </v-col>
+      <v-spacer></v-spacer>
+      <v-col><v-btn text color="black">参加団体管理アプリとは</v-btn></v-col>
+      <v-col><v-btn text color="black">初めての方へ</v-btn></v-col>
+      <v-col><v-btn text color="black">よくあるご質問</v-btn></v-col>
           <v-col cols="2" align="right">
             <v-chip
               v-if="this.show===true"
-              color="white"
+              color="black"
               label
               link
               outlined
@@ -31,7 +34,7 @@
             </v-chip>
             <v-chip
               v-if="this.show===false"
-              color="white"
+              color="black"
               label
               link
               outlined
@@ -53,8 +56,7 @@
           <v-container>
             <v-row>
               <v-col>
-                <br><br><br>
-                <v-sheet>NUT festival<br>~飛翔~</v-sheet>
+                <v-img :src="topImage"></v-img>
               </v-col>
             </v-row>
           </v-container>
@@ -87,6 +89,8 @@
 import IconImage from "../assets/40th_nutfes_logo_black.png"
 import Signup from '../components/SignUp.vue'
 import Signin from '../components/SignIn.vue'
+import logo from '@/assets/logo.svg'
+import topImage from '@/assets/top.svg'
 import WelcomeDetail from '@/components/WelcomeDetail.vue'
 export default {
   name: "Welcome",
@@ -99,6 +103,8 @@ export default {
     return {
       show: true,
       iconImage: IconImage,
+      logoImage: logo,
+      topImage: topImage,
     }
   },
   methods: {
@@ -135,5 +141,8 @@ v-sheet{
 .card-color {
   background-color: rgba(255,255,255,0.5) !important;
   border-color: white !important;
+}
+.logo {
+  fill: #FFFFFF;
 }
 </style>

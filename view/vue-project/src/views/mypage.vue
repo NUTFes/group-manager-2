@@ -1,21 +1,31 @@
 <template>
   <div>
       <Header/>
+        <UserInfo/>
 
       <!-- Sizes your content based upon application components -->
         <News/>
-
-        <Regist/>
+        <div
+          v-for="(regist, i) in regist_info"
+          :key="i"
+          >
+        <Regist
+          :num="i"
+          :regist="regist"
+        />
+        </div>
   </div>
 </template>
 
 <script>
-import Header from '../components/Header.vue'
-import News from '../components/News.vue'
-import Regist from '../components/Regist.vue'
+import Header from '@/components/Header.vue'
+import UserInfo from '@/components/UserInfo.vue'
+import News from '@/components/News.vue'
+import Regist from '@/components/Regist.vue'
 import axios from 'axios'
 export default {
   components: {
+    UserInfo,
     Header, 
     News,
     Regist,
@@ -27,7 +37,8 @@ export default {
         localStorage.getItem('client'),
         localStorage.getItem('uid')
       ],
-      users: []
+      users: [],
+      regist_info: []
     }
   },
   methods: {
@@ -61,6 +72,19 @@ export default {
     )
       .then(response => {
         this.users = response
+      })
+    const regist_info_url = process.env.VUE_APP_URL + '/api/v1/current_user/regist_info'
+    axios.get(regist_info_url, {
+      headers: { 
+        "Content-Type": "application/json", 
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+        "uid": localStorage.getItem('uid')
+      }
+    }
+    )
+      .then(response => {
+        this.regist_info = response.data
       })
   }
 }

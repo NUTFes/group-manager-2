@@ -6,6 +6,7 @@
         class = "mx-auto"
         color = "white"
         height = "310"
+        flat
       >
       <v-row 
         align="center"

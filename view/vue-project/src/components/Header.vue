@@ -2,32 +2,36 @@
   <div>
     <v-app-bar
       app
-      color = "grey darken-1"
-      height = "90"
+      color = #FAFAFA
+      height = "70"
       dark
     >
-      <v-row align="center" justify="center">
-      <v-col cols="3"><v-btn text class="title ma-2" @click="$router.push('mypage')">参加団体管理アプリ</v-btn></v-col>
-      <v-col cols="4" align="center">
-        <router-link to="/">
-          <v-img 
-                     height="70"
-                     width ="70"
-                     src = "../assets/40th_nutfes_logo_white.png"
-                     ></v-img>
-        </router-link>
-      </v-col>
-      <v-col cols="3" align="right">
-        <v-chip
-          color="white"
+      <v-row>
+        <v-col cols=2></v-col>
+        <v-col cols=2>
+          <router-link to="/mypage">
+            <v-img
+              :src="logoImage"
+              >
+            </v-img>
+          </router-link>
+        </v-col>
+      <v-spacer></v-spacer>
+      <v-col><v-btn text color="black" block>初めての方へ</v-btn></v-col>
+      <v-col><v-btn text color="black" block>参加団体管理アプリとは</v-btn></v-col>
+      <v-col><v-btn text color="black" block>よくあるご質問</v-btn></v-col>
+      <v-col cols=2>
+        <v-btn
+          color="black"
           label
           link
           outlined
           @click.stop="drawer = !drawer"
         >
           {{ users.name }}
-        </v-chip>
+        </v-btn>
       </v-col>
+        <v-col cols=1></v-col>
     </v-row>
     </v-app-bar>
 
@@ -55,6 +59,11 @@
       <v-list-item @click="$router.push('/user_detail')">
         <v-list-item-content>
           <v-list-item-title>ユーザー詳細登録</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item @click="$router.push('/sub_rep')">
+        <v-list-item-content>
+          <v-list-item-title>副代表登録</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-list-item @click="$router.push('/group')">
@@ -88,6 +97,7 @@
 
 <script>
   import axios from 'axios'
+  import logo from '@/assets/logo.svg'
   export default {
     data () {
     return {
@@ -97,7 +107,8 @@
         localStorage.getItem('client'),
         localStorage.getItem('uid')
       ],
-      users: []
+      users: [],
+      logoImage: logo
       }
     },
     mounted() {

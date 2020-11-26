@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get "users/get_user_detail" => "users#get_user_detail"
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
+      get "current_user/regist_info" => "current_user_api#get_regist_info"
     end
   end
   namespace :api do

@@ -1,91 +1,105 @@
 <template>
-    <v-form>
-        <v-container>
+  <v-form>
+    <v-container>
+      <v-row>
+        <v-col cols="2"></v-col>
+        <v-col cols="8">
+          <v-card>
             <v-row>
-                <v-col cols="2"></v-col>
-                <v-col cols="8">
-                    <v-card>
-                        <v-row>
-                            <v-col cols="2"></v-col>
-                            <v-col cols="8">
-                                <h1>副代表の詳細登録画面</h1>
+              <v-col cols="2"></v-col>
+              <v-col cols="8">
+                <h1>副代表の詳細登録画面</h1>
+                
+                <v-select
+                  label="団体"
+                  ref="group"
+                  v-model="group_id"
+                  :rules="[rules.required]"
+                  :items="group"
+                  :menu-props="{
+                    top: true,
+                    offsetY: true,
+                  }"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                ></v-select>
+                <v-text-field
+                  label="名前"
+                  background-color="white"
+                  v-model="name"
+                  clearable
+                  ></v-text-field>
 
-                                <v-text-field
-                                label="名前"
-                                background-color="white"
-                                v-model="name"
-                                clearable
-                                ></v-text-field>
+                <v-text-field
+                  label="学籍番号"
+                  background-color="white"
+                  v-model="student_id"
+                  :rules="[rules.min1, rules.over1]"
+                  hint="お持ちでない方：0を8桁入力"
+                  persistent-hint
+                  item-text="name"
+                  item-value="id"
+                  counter="8"
+                  clearable
+                  ></v-text-field>
 
-                                <v-text-field
-                                label="学籍番号"
-                                background-color="white"
-                                v-model="student_id"
-                                :rules="[rules.min1, rules.over1]"
-                                hint="お持ちでない方：0を8桁入力"
-                                persistent-hint
-                                item-text="name"
-                                item-value="id"
-                                counter="8"
-                                clearable
-                                ></v-text-field>
+                <v-select
+                  label="学科"
+                  v-model.number="department_id"
+                  :items="departments"
+                  :menu-props="{ top: true, offsetY: true }"
+                  item-text="name"
+                  item-value="id"
+                  clearable
+                  ></v-select>
 
-                                <v-select
-                                label="学科"
-                                v-model.number="department_id"
-                                :items="departments"
-                                :menu-props="{ top: true, offsetY: true }"
-                                item-text="name"
-                                item-value="id"
-                                clearable
-                                ></v-select>
+                <v-select
+                  label="学年"
+                  v-model.number="grade_id"
+                  :items="grades"
+                  :menu-props="{ top: true, offsetY: true }"
+                  item-text="name"
+                  item-value="id"
+                  clearable
+                  ></v-select>
 
-                                <v-select
-                                label="学年"
-                                v-model.number="grade_id"
-                                :items="grades"
-                                :menu-props="{ top: true, offsetY: true }"
-                                item-text="name"
-                                item-value="id"
-                                clearable
-                                ></v-select>
+                <v-text-field
+                  label="TEL"
+                  background-color="white"
+                  v-model="tel"
+                  :rules="[rules.min2, rules.over2]"
+                  hint="ハイフンなしで半角入力"
+                  persistent-hint
+                  counter="11"
+                  clearable
+                  ></v-text-field>
 
-                                <v-text-field
-                                label="TEL"
-                                background-color="white"
-                                v-model="tel"
-                                :rules="[rules.min2, rules.over2]"
-                                hint="ハイフンなしで半角入力"
-                                persistent-hint
-                                counter="11"
-                                clearable
-                                ></v-text-field>
-
-                                <v-text-field
-                                label="EMAIL"
-                                background-color="white"
-                                v-model="email"
-                                clearable
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="2"></v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="2"></v-col>
-                            <v-col cols="8">
-                                <v-card-action>
-                                    <v-btn text color="blue darken-1" @click="reset">削除</v-btn>
-                                    <v-btn color="blue darken-1" @click="register">登録</v-btn>
-                                </v-card-action>
-                            </v-col>
-                            <v-col cols="2"></v-col>
-                        </v-row>
-                    </v-card>
-                </v-col>
-                <v-col cols="2"></v-col>
+                <v-text-field
+                  label="EMAIL"
+                  background-color="white"
+                  v-model="email"
+                  clearable
+                  ></v-text-field>
+              </v-col>
+              <v-col cols="2"></v-col>
             </v-row>
-        </v-container>
-    </v-form>
+            <v-row>
+              <v-col cols="2"></v-col>
+              <v-col cols="8">
+                <v-card-action>
+                  <v-btn text color="blue darken-1" @click="reset">削除</v-btn>
+                  <v-btn color="blue darken-1" @click="register">登録</v-btn>
+                </v-card-action>
+              </v-col>
+              <v-col cols="2"></v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col cols="2"></v-col>
+      </v-row>
+    </v-container>
+  </v-form>
 </template>
 
 <style>
@@ -99,6 +113,7 @@ import axios from 'axios'
 export default {
     data () {
         return{
+            group: [],
             group_id: [],
             name: [],
             student_id: [],
@@ -165,7 +180,7 @@ export default {
         axios.defaults.headers.common['Content-Type'] = 'application/json';
         var params = new URLSearchParams();
         // params.append('group_id', this.group_id);
-        params.append('group_id', 1);
+        params.append('group_id', this.group_id);
         params.append('name', this.name);
         params.append('student_id', this.student_id);
         params.append('department_id', this.department_id);
@@ -194,19 +209,39 @@ export default {
     },
 
     mounted(){
-        const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-        axios.get(url, {
-            headers: { 
-                "Content-Type": "application/json", 
-                "access-token": localStorage.getItem('access-token'),
-                "client": localStorage.getItem('client'),
-                "uid": localStorage.getItem('uid')
-            } 
+      const url = process.env.VUE_APP_URL + '/api/v1/users/show'
+      axios.get(url, {
+          headers: { 
+              "Content-Type": "application/json", 
+              "access-token": localStorage.getItem('access-token'),
+              "client": localStorage.getItem('client'),
+              "uid": localStorage.getItem('uid')
+          } 
+      }
+      )
+    .then(response => {
+      this.user = response.data.data
+    })
+    const groupUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups'
+    axios.get(groupUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+        "uid": localStorage.getItem('uid')
+      }
+    }).then(
+      (response) => {
+        for(let i=0;i<response.data.length;i++){
+          this.group.push(response.data[i])
         }
-        )
-      .then(response => {
-        this.user = response.data.data
-      })
+        console.log('group: ',this.group)
+      },
+      (error) => {
+        console.error(error)
+        return error;
+      }
+    )
     },
 
 }
