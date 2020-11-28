@@ -4,27 +4,9 @@
     <v-col cols="8">
       <v-card
         class = "mx-auto"
-        color = "white"
-        height = "310"
-        flat
+        outlined
       >
-      <v-row 
-        align="center"
-        justify="space-around"
-      >
-        <v-col cols = "2"><v-card-title class = "title font-weight-bold">お知らせ</v-card-title></v-col>
-        <v-col cols = "8"></v-col>
-        <v-col cols = "2" align = "right">    
-          <v-btn
-            class="mx-2 font-weight-midium"
-            text
-            color="pink lighten-2"
-          >
-          ▶︎more
-          </v-btn>
-        </v-col>
-        </v-row>
-        <v-divider class="mx-4"></v-divider>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon>mdi-information-outline</v-icon><b>お知らせ</b></v-card-title>
         <v-list>
           <v-list-item 
           v-for = "item in items"

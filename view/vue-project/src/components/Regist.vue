@@ -5,101 +5,98 @@
       >
       <v-card
         class = "mx-auto"
-        color = "white"
-        flat
+        outlined
       >
-      <v-card-title>登録情報  {{ num + 1 }}</v-card-title>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><b>登録情報  {{ num + 1 }}</b></v-card-title>
         <v-divider class="mx-4"></v-divider>
         <v-row>
           <v-col>
-            <v-tabs
-              dark
-              grow
-              background-color="white"
-              v-model="tab"
-              >
-              <v-tabs-slider color="black"></v-tabs-slider>
+            <v-tabs vertical color="#E040FB">
               <v-tab
                 :value="tab-1"
-              >
-              <h4 style="color:black;">団体情報</h4>
+                >
+                <h4 style="color:#333333;">団体情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-2"
-              >
-                <h4 style="color:black">代表情報</h4>
+                >
+                <h4 style="color:#333333">代表情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-3"
               >
-                <h4 style="color:black">会場申請情報</h4>
+                <h4 style="color:#333333">会場申請情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-4"
               >
-                <h4 style="color:black">電力申請情報</h4>
+                <h4 style="color:#333333">電力申請情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-5"
               >
-                <h4 style="color:black">物品申請情報</h4>
+                <h4 style="color:#333333">物品申請情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-6"
               >
-                <h4 style="color:black">ステージ利用申請情報</h4>
+                <h4 style="color:#333333">ステージ利用申請情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-7"
               >
-                <h4 style="color:black">従業員情報</h4>
+                <h4 style="color:#333333">従業員情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-8"
               >
-                <h4 style="color:black">販売食品情報</h4>
+                <h4 style="color:#333333">販売食品情報</h4>
               </v-tab>
 
               <v-tab
                 :value="tab-9"
               >
-                <h4 style="color:black">購入品情報</h4>
+                <h4 style="color:#333333">購入品情報</h4>
               </v-tab>
-            </v-tabs>
-            <v-tabs-items
-              v-model="tab"
-              >
-              <!-- 団体情報 -->
-              <v-tab-item>
+              <v-tab-item
+                >
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
-                    <br>
-                    <table>
-                      <tr>
-                        <th>団体名</th>
-                        <td>{{ regist.group.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>企画名</th>
-                        <td>{{ regist.group.project_name }}</td>
-                      </tr>
-                      <tr>
-                        <th>活動内容</th>
-                        <td>{{ regist.group.activity }}</td>
-                      </tr>
-                      <tr>
-                        <th>カテゴリー</th>
-                        <td>{{ regist.group.group_category_id }}</td>
-                      </tr>
-                    </table>
+                    <v-card
+                      flat
+                      >
+                      <v-card-title style="color:#333333; font-size:25px"><b>団体情報</b></v-card-title>
+                        <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>団体名</v-list-item-content>
+                          <v-list-item-content>{{ regist.group.name }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>企画名</v-list-item-content>
+                          <v-list-item-content>{{ regist.group.project_name }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>カテゴリー</v-list-item-content>
+                          <v-list-item-content>{{ regist.group.group_category_id }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>活動内容</v-list-item-content>
+                          <v-list-item-content>{{ regist.group.activity }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
@@ -110,17 +107,22 @@
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
-                    <br>
-                    <table>
-                      <tr>
-                        <th>代表名</th>
-                        <td>{{ user.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>副代表名</th>
-                        <td>{{ regist.sub_rep.name }}</td>
-                      </tr>
-                    </table>
+                    <v-card flat>
+                      <v-card-title  style="color:#333333; font-size:25px"><b>代表情報</b></v-card-title>
+                      <hr>
+
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>代表名</v-list-item-content>
+                          <v-list-item-content>{{ user.name }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>副代表</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.name }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
@@ -131,25 +133,31 @@
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
-                    <br>
-                    <table>
-                      <tr>
-                        <th>第1志望</th>
-                        <td>{{ regist.place_order.first }}</td>
-                      </tr>
-                      <tr>
-                        <th>第2志望</th>
-                        <td>{{ regist.place_order.second }}</td>
-                      </tr>
-                      <tr>
-                        <th>第3志望</th>
-                        <td>{{ regist.place_order.third }}</td>
-                      </tr>
-                      <tr>
-                        <th>備考</th>
-                        <td>{{ regist.place_order.remark }}</td>
-                      </tr>
-                    </table>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>会場申請情報</b></v-card-title>
+                      <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>第1志望</v-list-item-content>
+                          <v-list-item-content>{{ regist.place_order.first }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>第2志望</v-list-item-content>
+                          <v-list-item-content>{{ regist.place_order.second }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>第3志望</v-list-item-content>
+                          <v-list-item-content>{{ regist.place_order.third }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>備考</v-list-item-content>
+                          <v-list-item-content>{{ regist.place_order.remark }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
@@ -163,31 +171,36 @@
                   >
                   <v-col cols=1></v-col>
                   <v-col>
-                    <v-card-text>製品  {{i+1}}</v-card-text>
-                    <v-divider class="mx-4"></v-divider>
-                    <br>
-                    <table>
-                      <tr>
-                        <th>製品名</th>
-                        <td>{{ power_order.item }}</td>
-                      </tr>
-                      <tr>
-                        <th>電力量</th>
-                        <td>{{ power_order.power }}</td>
-                      </tr>
-                      <tr>
-                        <th>メーカー</th>
-                        <td>{{ power_order.manufacturer }}</td>
-                      </tr>
-                      <tr>
-                        <th>型番</th>
-                        <td>{{ power_order.model }}</td>
-                      </tr>
-                      <tr>
-                        <th>URL</th>
-                        <td>{{ power_order.item_url }}</td>
-                      </tr>
-                    </table>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>製品 {{ i+1 }}</b></v-card-title>
+                      <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>製品名</v-list-item-content>
+                          <v-list-item-content>{{ power_order.item }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>電力量</v-list-item-content>
+                          <v-list-item-content>{{ power_order.power }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>メーカー</v-list-item-content>
+                          <v-list-item-content>{{ power_order.manufacturer }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>型番</v-list-item-content>
+                          <v-list-item-content>{{ power_order.model }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>URL</v-list-item-content>
+                          <v-list-item-content>{{ power_order.item_url }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
@@ -195,7 +208,16 @@
 
               <!-- 物品申請情報 -->
               <v-tab-item>
-                <h1>物品申請情報</h1>
+                <v-row>
+                  <v-col cols=1></v-col>
+                  <v-col>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>物品申請情報</b></v-card-title>
+                      <hr>
+                    </v-card>
+                  </v-col>
+                  <v-col cols=1></v-col>
+                </v-row>
               </v-tab-item>
 
               <!-- ステージ利用申請情報 -->
@@ -203,7 +225,11 @@
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
-                    <v-card-text>{{ regist.stage_order }}</v-card-text>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>ステージ利用申請情報</b></v-card-title>
+                      <hr>
+                      <v-card-text>{{ regist.stage_order }}</v-card-text>
+                    </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
@@ -217,18 +243,21 @@
                   >
                   <v-col cols=1></v-col>
                   <v-col>
-                    <v-card-text>従業員  {{i+1}}</v-card-text>
-                    <v-divider class="mx-4"></v-divider>
-                    <table>
-                      <tr>
-                        <th>名前</th>
-                        <td>{{ employee.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>学籍番号</th>
-                        <td>{{ employee.student_id }}</td>
-                      </tr>
-                    </table>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>従業員 {{ i+1 }}</b></v-card-title>
+                      <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>名前</v-list-item-content>
+                          <v-list-item-content>{{ employee.name }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>学籍番号</v-list-item-content>
+                          <v-list-item-content>{{ employee.name }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
@@ -236,15 +265,32 @@
 
               <!-- 販売食品情報 -->
               <v-tab-item>
-                <h1>販売食品情報</h1>
+                <v-row>
+                  <v-col cols=1></v-col>
+                  <v-col>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>販売食品情報</b></v-card-title>
+                      <hr>
+                    </v-card>
+                  </v-col>
+                  <v-col cols=1></v-col>
+                </v-row>
               </v-tab-item>
 
               <!-- 購入品情報 -->
               <v-tab-item>
-                <h1>購入品情報</h1>
+                <v-row>
+                  <v-col cols=1></v-col>
+                  <v-col>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px"><b>購入品情報</b></v-card-title>
+                      <hr>
+                    </v-card>
+                  </v-col>
+                  <v-col cols=1></v-col>
+                </v-row>
               </v-tab-item>
-
-            </v-tabs-items>
+            </v-tabs>
           </v-col>
         </v-row>
       </v-card>
@@ -288,48 +334,48 @@
     }
   }
 </script>
-<style>
-table{
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table tr{
-  border-bottom: solid 2px white;
-}
-
-table tr:last-child{
-  border-bottom: none;
-}
-
-table th{
-  position: relative;
-  text-align: left;
-  width: 30%;
-  background-color: #52c2d0;
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-}
-
-table th:after{
-  display: block;
-  content: "";
-  width: 0px;
-  height: 0px;
-  position: absolute;
-  top:calc(50% - 10px);
-  right:-10px;
-  border-left: 10px solid #52c2d0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-}
-
-table td{
-  text-align: left;
-  width: 70%;
-  text-align: center;
-  background-color: #eee;
-  padding: 10px 0;
-}
-</style>
+<!-- <style> -->
+<!-- table{ -->
+<!--   width: 100%; -->
+<!--   border-collapse: collapse; -->
+<!-- } -->
+<!--  -->
+<!-- table tr{ -->
+<!--   border-bottom: solid 2px white; -->
+<!-- } -->
+<!--  -->
+<!-- table tr:last-child{ -->
+<!--   border-bottom: none; -->
+<!-- } -->
+<!--  -->
+<!-- table th{ -->
+<!--   position: relative; -->
+<!--   text-align: left; -->
+<!--   width: 30%; -->
+<!--   background-color: #52c2d0; -->
+<!--   color: white; -->
+<!--   text-align: center; -->
+<!--   padding: 10px 0; -->
+<!-- } -->
+<!--  -->
+<!-- table th:after{ -->
+<!--   display: block; -->
+<!--   content: ""; -->
+<!--   width: 0px; -->
+<!--   height: 0px; -->
+<!--   position: absolute; -->
+<!--   top:calc(50% - 10px); -->
+<!--   right:-10px; -->
+<!--   border-left: 10px solid #52c2d0; -->
+<!--   border-top: 10px solid transparent; -->
+<!--   border-bottom: 10px solid transparent; -->
+<!-- } -->
+<!--  -->
+<!-- table td{ -->
+<!--   text-align: left; -->
+<!--   width: 70%; -->
+<!--   text-align: center; -->
+<!--   background-color: #eee; -->
+<!--   padding: 10px 0; -->
+<!-- } -->
+<!-- </style> -->
