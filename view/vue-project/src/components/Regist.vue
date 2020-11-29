@@ -14,56 +14,65 @@
             <v-tabs vertical color="#E040FB">
               <v-tab
                 :value="tab-1"
+                class="font-weight-bold"
                 >
-                <h4 style="color:#333333;">団体情報</h4>
+                団体情報
               </v-tab>
 
               <v-tab
                 :value="tab-2"
+                class="font-weight-bold"
                 >
-                <h4 style="color:#333333">代表情報</h4>
+                代表情報
               </v-tab>
 
               <v-tab
                 :value="tab-3"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">会場申請情報</h4>
+                会場申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-4"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">電力申請情報</h4>
+                電力申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-5"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">物品申請情報</h4>
+                物品申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-6"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">ステージ利用申請情報</h4>
+                ステージ利用申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-7"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">従業員情報</h4>
+                従業員情報
               </v-tab>
 
               <v-tab
                 :value="tab-8"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">販売食品情報</h4>
+                販売食品情報
               </v-tab>
 
               <v-tab
                 :value="tab-9"
+                class="font-weight-bold"
               >
-                <h4 style="color:#333333">購入品情報</h4>
+                購入品情報
               </v-tab>
               <v-tab-item
                 >
@@ -80,17 +89,17 @@
                           <v-list-item-content>団体名</v-list-item-content>
                           <v-list-item-content>{{ regist.group.name }}</v-list-item-content>
                         </v-list-item>
-                      <v-divider></v-divider>
+                        <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>企画名</v-list-item-content>
                           <v-list-item-content>{{ regist.group.project_name }}</v-list-item-content>
                         </v-list-item>
-                      <v-divider></v-divider>
+                        <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>カテゴリー</v-list-item-content>
                           <v-list-item-content>{{ regist.group.group_category_id }}</v-list-item-content>
                         </v-list-item>
-                      <v-divider></v-divider>
+                        <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>活動内容</v-list-item-content>
                           <v-list-item-content>{{ regist.group.activity }}</v-list-item-content>
@@ -99,6 +108,14 @@
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="9"></v-col>
+                  <v-col cols="2">
+                    <v-btn block outlined color="purple accent-2" @click="openGroupDisplay">編集</v-btn>
+                    <Group ref="groupDlg"></Group>
+                  </v-col>
+                  <v-col cols="1"></v-col>
                 </v-row>
               </v-tab-item>
 
@@ -301,10 +318,15 @@
 
 <script>
   import axios from 'axios'
+  import Group from '@/components/group.vue'
   export default {
     props: {
       num: String,
       regist: String,
+      dialog: false,
+    },
+    components: {
+      Group
     },
     data () {
     return {
@@ -331,51 +353,11 @@
         .then(response => {
           this.user = response.data.data
         })
+    },
+    methods: {
+      openGroupDisplay() {
+        this.$refs.groupDlg.isDisplay = true
+      }
     }
   }
 </script>
-<!-- <style> -->
-<!-- table{ -->
-<!--   width: 100%; -->
-<!--   border-collapse: collapse; -->
-<!-- } -->
-<!--  -->
-<!-- table tr{ -->
-<!--   border-bottom: solid 2px white; -->
-<!-- } -->
-<!--  -->
-<!-- table tr:last-child{ -->
-<!--   border-bottom: none; -->
-<!-- } -->
-<!--  -->
-<!-- table th{ -->
-<!--   position: relative; -->
-<!--   text-align: left; -->
-<!--   width: 30%; -->
-<!--   background-color: #52c2d0; -->
-<!--   color: white; -->
-<!--   text-align: center; -->
-<!--   padding: 10px 0; -->
-<!-- } -->
-<!--  -->
-<!-- table th:after{ -->
-<!--   display: block; -->
-<!--   content: ""; -->
-<!--   width: 0px; -->
-<!--   height: 0px; -->
-<!--   position: absolute; -->
-<!--   top:calc(50% - 10px); -->
-<!--   right:-10px; -->
-<!--   border-left: 10px solid #52c2d0; -->
-<!--   border-top: 10px solid transparent; -->
-<!--   border-bottom: 10px solid transparent; -->
-<!-- } -->
-<!--  -->
-<!-- table td{ -->
-<!--   text-align: left; -->
-<!--   width: 70%; -->
-<!--   text-align: center; -->
-<!--   background-color: #eee; -->
-<!--   padding: 10px 0; -->
-<!-- } -->
-<!-- </style> -->
