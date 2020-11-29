@@ -2,7 +2,9 @@
   <div>
     <Header/>
       <v-container>
-        <v-card>
+        <v-card
+          class="mx-auto"
+        >
           <v-container>
             <v-row justify="end" align="center">
               <v-col>
@@ -15,12 +17,59 @@
               </v-col>           
             </v-row>
             <v-divider></v-divider>
+            <table border="0">
+              <tr>
+                <td class="font-weight-bold">学籍番号</td><td>{{ detail.student_id }}</td>
+              </tr>
+             <tr>
+                <td>学年:</td><td>{{ detail.student_id }}</td>
+              </tr>
+             <tr>
+                <tb>課程:</tb><tb>{{ detail.student_id }}</tb>
+              </tr>
+             <tr>
+                <tb>電話番号:</tb><tb>{{ detail.student_id }}</tb>
+              </tr>
+             <tr>
+                <tb>編集日時:</tb><tb>{{ detail.student_id }}</tb>
+              </tr>
+            </table>
+            <v-simple-table>
+              <template v-slot:default>
+                <tbody>
+                  <tr>
+                    <th>学籍番号：</th>
+                    <td>{{ detail.student_id }}</td>
+                  </tr>
+                  <tr>
+                    <th>学年：</th>
+                    <td>{{ grade }}</td>
+                  </tr>
+                  <tr>
+                    <th>課程：</th>
+                    <td>{{ department }}</td>
+                  </tr>
+                  <tr>
+                    <th>電話番号：</th>
+                    <td>{{ detail.tel }}</td>
+                  </tr>
+                  <tr>
+                    <th>登録日時：</th>
+                    <td>{{ user.created_at | format-date }}</td>
+                  </tr>
+                  <tr>
+                    <th>編集日時：</th>
+                    <td>{{ user.updated_at | format-date }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
             <v-list>
               <v-list-item>
                 <v-list-item-content>学籍番号：</v-list-item-content>
                 <v-list-item-content class="align-end">{{ detail.student_id }}</v-list-item-content>
               </v-list-item>
-                  <v-list-item>学年：</v-list-content>{{ grade }}</v-list-content></v-list-item>
+              <v-list-item><v-list-item-title>学年：</v-list-item-title></v-list-content>{{ grade }}</v-list-content></v-list-item>
                   <v-list-item>課程：</v-list-content>{{ department }}</v-list-content></v-list-item>
                   <v-list-item>電話番号：</v-list-content>{{ detail.tel }}</v-list-content></v-list-item>
                   <v-list-item>登録日時：</v-list-content>{{ user.created_at | format-date }}</v-list-content></v-list-item>
