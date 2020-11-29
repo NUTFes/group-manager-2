@@ -9,11 +9,29 @@
           v-for="(regist, i) in regist_info"
           :key="i"
           >
-        <Regist
-          :num="i"
-          :regist="regist"
-        />
+          <Regist
+            :num="i"
+            :regist="regist"
+          />
         </div>
+        <br>
+        <div style="text-align:center">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs  }">
+              <v-btn 
+                class="mx-2" fab dark color="purple accent-2"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                to="/regist"
+              >
+                <v-icon dark>mdi-plus</v-icon>
+              </v-btn>
+            </template>
+            <span>参加団体を追加する</span>
+          </v-tooltip>
+        </div>
+        <br>
   </div>
 </template>
 

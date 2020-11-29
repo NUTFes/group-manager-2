@@ -6,7 +6,7 @@
         class = "mx-auto"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><b>ユーザー情報</b></v-card-title>  
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-account-circle</v-icon><b>ユーザー情報</b></v-card-title>  
       <v-row>
         <v-col>
           <v-card-text>
@@ -46,4 +46,3 @@
     },
   }
 </script>
-

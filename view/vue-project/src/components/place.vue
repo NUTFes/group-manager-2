@@ -2,7 +2,7 @@
   <v-dialog v-model="isDisplay" persistent width="1200">
     <v-card flat>
       <v-card-title style="background-color:#ECEFF1; font-size:30px">
-        <v-icon>mdi-information-outline</v-icon><b>会場登録</b>
+        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon><b>会場登録</b>
         <v-spacer></v-spacer>
         <v-btn text @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>

@@ -6,7 +6,7 @@
         class = "mx-auto"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon>mdi-information-outline</v-icon><b>お知らせ</b></v-card-title>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-bell</v-icon><b>お知らせ</b></v-card-title>
         <v-list>
           <v-list-item 
           v-for = "item in items"

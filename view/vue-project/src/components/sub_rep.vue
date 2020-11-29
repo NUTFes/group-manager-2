@@ -2,7 +2,7 @@
   <v-dialog v-model="isDisplay" persistent width="1200">
     <v-card flat>
       <v-card-title style="background-color:#ECEFF1; font-size:30px">
-        <v-icon>mdi-information-outline</v-icon><b>副代表</b>
+        <v-icon class="pr-3" size="35">mdi-account</v-icon><b>副代表</b>
         <v-spacer></v-spacer>
         <v-btn text @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>
@@ -11,8 +11,6 @@
           <v-row>
             <v-col cols="2"></v-col>
             <v-col cols="8">
-              <h1>副代表の詳細登録画面</h1>
-
               <v-select
                 label="団体"
                 ref="group"

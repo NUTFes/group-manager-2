@@ -7,72 +7,72 @@
         class = "mx-auto"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><b>登録情報  {{ num + 1 }}</b></v-card-title>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報  {{ num + 1 }}</b></v-card-title>
         <v-divider class="mx-4"></v-divider>
         <v-row>
           <v-col>
             <v-tabs vertical color="#E040FB">
               <v-tab
                 :value="tab-1"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
                 >
-                団体情報
+                <v-icon class="pr-2">mdi-account-group</v-icon>団体情報
               </v-tab>
 
               <v-tab
                 :value="tab-2"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
                 >
-                代表情報
+                <v-icon class="pr-2">mdi-account-multiple</v-icon>代表情報
               </v-tab>
 
               <v-tab
                 :value="tab-3"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                会場申請情報
+                <v-icon class="pr-2">mdi-map-marker</v-icon>会場申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-4"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                電力申請情報
+                <v-icon class="pr-2">mdi-power-plug</v-icon>電力申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-5"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                物品申請情報
+                <v-icon class="pr-2">mdi-table-chair</v-icon>物品申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-6"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                ステージ利用申請情報
+                <v-icon class="pr-2">mdi-microphone-variant</v-icon>ステージ利用申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-7"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                従業員情報
+                <v-icon class="pr-2">mdi-account</v-icon>従業員情報
               </v-tab>
 
               <v-tab
                 :value="tab-8"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                販売食品情報
+                <v-icon class="pr-2">mdi-baguette</v-icon>販売食品情報
               </v-tab>
 
               <v-tab
                 :value="tab-9"
-                class="font-weight-bold"
+                class="font-weight-bold justify-start"
               >
-                購入品情報
+                <v-icon class="pr-2">mdi-cart</v-icon>購入品情報
               </v-tab>
               <v-tab-item
                 >
@@ -82,7 +82,12 @@
                     <v-card
                       flat
                       >
-                      <v-card-title style="color:#333333; font-size:25px"><b>団体情報</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <Group ref="groupDlg"></Group>
+                      </v-card-title>
                         <hr>
                       <v-list>
                         <v-list-item>
@@ -109,14 +114,6 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
-                <v-row>
-                  <v-col cols="9"></v-col>
-                  <v-col cols="2">
-                    <v-btn block outlined color="purple accent-2" @click="openGroupDisplay">編集</v-btn>
-                    <Group ref="groupDlg"></Group>
-                  </v-col>
-                  <v-col cols="1"></v-col>
-                </v-row>
               </v-tab-item>
 
               <!-- 代表情報 -->
@@ -125,7 +122,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title  style="color:#333333; font-size:25px"><b>代表情報</b></v-card-title>
+                      <v-card-title  style="color:#333333; font-size:25px">
+                      <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>代表情報</b>
+                      <v-spacer></v-spacer>
+                      <v-btn text @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      <SubRep ref="subRepDlg"></SubRep>
+                      </v-card-title>
                       <hr>
 
                       <v-list>
@@ -143,14 +145,6 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
-                <v-row>
-                  <v-col cols="9"></v-col>
-                  <v-col cols="2">
-                    <v-btn block outlined color="purple accent-2" @click="openSubRepDisplay">編集</v-btn>
-                    <SubRep ref="subRepDlg"></SubRep>
-                  </v-col>
-                  <v-col cols="1"></v-col>
-                </v-row>
               </v-tab-item>
 
               <!-- 会場申請情報 -->
@@ -159,7 +153,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>会場申請情報</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <Place ref="placeDlg"></Place>
+                      </v-card-title>
                       <hr>
                       <v-list>
                         <v-list-item>
@@ -186,14 +185,6 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
-                <v-row>
-                  <v-col cols="9"></v-col>
-                  <v-col cols="2">
-                    <v-btn block outlined color="purple accent-2" @click="openPlaceDisplay">編集</v-btn>
-                    <Place ref="placeDlg"></Place>
-                  </v-col>
-                  <v-col cols="1"></v-col>
-                </v-row>
               </v-tab-item>
 
               <!-- 電力申請情報 -->
@@ -205,7 +196,11 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>製品 {{ i+1 }}</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
                       <hr>
                       <v-list>
                         <v-list-item>
@@ -245,7 +240,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>物品申請情報</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
+                        <b>物品申請情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
                       <hr>
                     </v-card>
                   </v-col>
@@ -259,7 +259,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>ステージ利用申請情報</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
+                        <b>ステージ利用申請情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
                       <hr>
                       <v-card-text>{{ regist.stage_order }}</v-card-text>
                     </v-card>
@@ -277,7 +282,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>従業員 {{ i+1 }}</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-account</v-icon>
+                        <b>従業員 {{ i+1 }}</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
                       <hr>
                       <v-list>
                         <v-list-item>
@@ -293,8 +303,6 @@
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
-                    <v-btn block outlined color="purple accent-2" @click="openPlaceDisplay">編集</v-btn>
-                    <Place ref="subPlaceDlg"></Place>
                 </v-row>
               </v-tab-item>
 
@@ -304,7 +312,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>販売食品情報</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
+                        <b>販売食品情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
                       <hr>
                     </v-card>
                   </v-col>
@@ -318,7 +331,12 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px"><b>購入品情報</b></v-card-title>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-cart</v-icon>
+                        <b>購入品情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
                       <hr>
                     </v-card>
                   </v-col>
