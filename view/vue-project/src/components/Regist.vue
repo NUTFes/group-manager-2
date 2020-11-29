@@ -143,6 +143,14 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <v-row>
+                  <v-col cols="9"></v-col>
+                  <v-col cols="2">
+                    <v-btn block outlined color="purple accent-2" @click="openSubRepDisplay">編集</v-btn>
+                    <SubRep ref="subRepDlg"></SubRep>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
               </v-tab-item>
 
               <!-- 会場申請情報 -->
@@ -177,6 +185,14 @@
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="9"></v-col>
+                  <v-col cols="2">
+                    <v-btn block outlined color="purple accent-2" @click="openPlaceDisplay">編集</v-btn>
+                    <Place ref="placeDlg"></Place>
+                  </v-col>
+                  <v-col cols="1"></v-col>
                 </v-row>
               </v-tab-item>
 
@@ -277,6 +293,8 @@
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
+                    <v-btn block outlined color="purple accent-2" @click="openPlaceDisplay">編集</v-btn>
+                    <Place ref="subPlaceDlg"></Place>
                 </v-row>
               </v-tab-item>
 
@@ -319,14 +337,20 @@
 <script>
   import axios from 'axios'
   import Group from '@/components/group.vue'
+  import SubRep from '@/components/sub_rep.vue'
+  import Power from '@/components/power.vue'
+  import Place from '@/components/place.vue'
+
   export default {
     props: {
       num: String,
       regist: String,
-      dialog: false,
     },
     components: {
-      Group
+      Group,
+      SubRep,
+      Power,
+      Place
     },
     data () {
     return {
@@ -357,7 +381,16 @@
     methods: {
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
-      }
+      },
+      openSubRepDisplay() {
+        this.$refs.subRepDlg.isDisplay = true
+      },
+      openPlaceDisplay() {
+        this.$refs.placeDlg.isDisplay = true
+      },
+      openPowerDisplay() {
+        this.$refs.powerDlg.isDisplay = true
+      },
     }
   }
 </script>
