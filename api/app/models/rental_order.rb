@@ -1,0 +1,2 @@
+class RentalOrder < ApplicationRecord
+end
