@@ -1,0 +1,2 @@
+class RentableItem < ApplicationRecord
+end
