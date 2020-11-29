@@ -5,33 +5,26 @@ class StockerItemsController < ApplicationController
   # GET /stocker_items.json
   def index
     @stocker_items = StockerItem.all
+    render json: @stocker_items
   end
 
   # GET /stocker_items/1
   # GET /stocker_items/1.json
   def show
+    render json: @stocker_item
   end
 
   # POST /stocker_items
   # POST /stocker_items.json
   def create
     @stocker_item = StockerItem.new(stocker_item_params)
-
-    if @stocker_item.save
-      render :show, status: :created, location: @stocker_item
-    else
-      render json: @stocker_item.errors, status: :unprocessable_entity
-    end
+    @stocker_item.save
   end
 
   # PATCH/PUT /stocker_items/1
   # PATCH/PUT /stocker_items/1.json
   def update
-    if @stocker_item.update(stocker_item_params)
-      render :show, status: :ok, location: @stocker_item
-    else
-      render json: @stocker_item.errors, status: :unprocessable_entity
-    end
+    @stocker_item.update(stocker_item_params)
   end
 
   # DELETE /stocker_items/1
@@ -48,6 +41,6 @@ class StockerItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def stocker_item_params
-      params.require(:stocker_item).permit(:rental_item_id, :stocker_place_id, :fes_year_id, :num)
+      params.permit(:rental_item_id, :stocker_place_id, :fes_year_id, :num)
     end
 end

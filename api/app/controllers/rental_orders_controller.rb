@@ -5,33 +5,26 @@ class RentalOrdersController < ApplicationController
   # GET /rental_orders.json
   def index
     @rental_orders = RentalOrder.all
+    render json: @rental_orders
   end
 
   # GET /rental_orders/1
   # GET /rental_orders/1.json
   def show
+    render json: @rental_order
   end
 
   # POST /rental_orders
   # POST /rental_orders.json
   def create
     @rental_order = RentalOrder.new(rental_order_params)
-
-    if @rental_order.save
-      render :show, status: :created, location: @rental_order
-    else
-      render json: @rental_order.errors, status: :unprocessable_entity
-    end
+    @rental_order.save
   end
 
   # PATCH/PUT /rental_orders/1
   # PATCH/PUT /rental_orders/1.json
   def update
-    if @rental_order.update(rental_order_params)
-      render :show, status: :ok, location: @rental_order
-    else
-      render json: @rental_order.errors, status: :unprocessable_entity
-    end
+    @rental_order.update(rental_order_params)
   end
 
   # DELETE /rental_orders/1
@@ -48,6 +41,6 @@ class RentalOrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def rental_order_params
-      params.require(:rental_order).permit(:group_id, :rental_item_id, :num)
+      params.permit(:group_id, :rental_item_id, :num)
     end
 end

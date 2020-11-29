@@ -5,33 +5,26 @@ class AssignRentalItemsController < ApplicationController
   # GET /assign_rental_items.json
   def index
     @assign_rental_items = AssignRentalItem.all
+    render json: @assign_rental_items
   end
 
   # GET /assign_rental_items/1
   # GET /assign_rental_items/1.json
   def show
+    render json: @assign_rental_item
   end
 
   # POST /assign_rental_items
   # POST /assign_rental_items.json
   def create
     @assign_rental_item = AssignRentalItem.new(assign_rental_item_params)
-
-    if @assign_rental_item.save
-      render :show, status: :created, location: @assign_rental_item
-    else
-      render json: @assign_rental_item.errors, status: :unprocessable_entity
-    end
+    @assign_rental_item.save
   end
 
   # PATCH/PUT /assign_rental_items/1
   # PATCH/PUT /assign_rental_items/1.json
   def update
-    if @assign_rental_item.update(assign_rental_item_params)
-      render :show, status: :ok, location: @assign_rental_item
-    else
-      render json: @assign_rental_item.errors, status: :unprocessable_entity
-    end
+    @assign_rental_item.update(assign_rental_item_params)
   end
 
   # DELETE /assign_rental_items/1
@@ -48,6 +41,6 @@ class AssignRentalItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assign_rental_item_params
-      params.require(:assign_rental_item).permit(:rental_order_id, :rentable_item_id, :num)
+      params.permit(:rental_order_id, :rentable_item_id, :num)
     end
 end
