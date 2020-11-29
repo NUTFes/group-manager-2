@@ -37,7 +37,6 @@
                             編集日時
                           </th>
                           <th class="text-center">
-                            操作
                           </th>
                         </tr>
                       </thead>
@@ -45,6 +44,7 @@
                         <tr
                           class="text-center"
                           v-for="user in users"
+                          @click="$router.push({name:'users-id', params:{id: user.id}})"
                           :key="user.id"
                           >
                           <td>{{ user.id }}</td>
@@ -55,7 +55,7 @@
                           <td v-if="user.role_id == 3"><v-chip color="blue" text-color="white" small>user</v-chip></td>
                           <td>{{ user.created_at | format-date }}</td>
                           <td>{{ user.updated_at | format-date}}</td>
-                          <td><v-btn dense rounded text color="#01579B" :to="{name:'users-id', params:{id: user.id}}">詳細</v-btn></td>
+                          <td><v-icon color="#E91E63">mdi-eye</v-icon></td>
                         </tr>
                       </tbody>
                     </template>
