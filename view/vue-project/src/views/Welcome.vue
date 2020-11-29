@@ -8,8 +8,8 @@
         >
       <v-row>
         <v-col cols=2></v-col>
-        <v-col cols=2>
-          <router-link to="/mypage">
+        <v-col>
+          <router-link to="/">
             <v-img
               class="logo"
               :src="logoImage"
@@ -21,7 +21,7 @@
       <v-col><v-btn text block color="black">参加団体管理アプリとは</v-btn></v-col>
       <v-col><v-btn text block color="black">初めての方へ</v-btn></v-col>
       <v-col><v-btn text block color="black">よくあるご質問</v-btn></v-col>
-          <v-col cols="2" align="right">
+          <v-col align="right">
             <v-chip
               v-if="this.show===true"
               color="black"
