@@ -19,19 +19,22 @@
             <v-divider></v-divider>
             <table border="0">
               <tr>
-                <td class="font-weight-bold">学籍番号</td><td>{{ detail.student_id }}</td>
+                <th class="font-weight-bold">学籍番号</th><td>{{ detail.student_id }}</td>
               </tr>
-             <tr>
-                <td>学年:</td><td>{{ detail.student_id }}</td>
+              <tr>
+                <th class="font-weight-bold">学年</th><td>{{ grade }}</td>
               </tr>
-             <tr>
-                <tb>課程:</tb><tb>{{ detail.student_id }}</tb>
+              <tr>
+                <th class="font-weight-bold">課程</th><td>{{ department }}</td>
               </tr>
-             <tr>
-                <tb>電話番号:</tb><tb>{{ detail.student_id }}</tb>
+              <tr>
+                <td class="font-weight-bold">電話番号</td><td>{{ detail.tel }}</td>
               </tr>
-             <tr>
-                <tb>編集日時:</tb><tb>{{ detail.student_id }}</tb>
+              <tr>
+                <td class="font-weight-bold">登録日時</td><td>{{ user.created_at | format-date }}</td>
+              </tr>
+              <tr>
+                <td class="font-weight-bold">編集日時</td><td>{{ user.created_at | format-date }}</td>
               </tr>
             </table>
             <v-simple-table>
@@ -116,3 +119,32 @@
   }
 }
 </script>
+
+<style>
+table{
+  width: 100%;
+}
+
+table th{
+  position: relative;
+  text-align: left;
+  width: 15%;
+}
+
+table th:after{
+  display: block;
+  content: "";
+  width: 30px;
+  height: 2px;
+  background-color: #333;
+  position: absolute;
+  top:calc(50% - 1px);
+  right:20px;
+}
+
+table td{
+  text-align: left;
+  width: 85%;
+}
+</style>
+

@@ -60,7 +60,7 @@
                       </tbody>
                     </template>
                   </v-simple-table>
-</template>
+                </template>
               </v-col>
             </v-row>
           </v-container>
