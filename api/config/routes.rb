@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :assign_rental_items
   resources :rentable_items
   resources :stocker_items
   resources :rental_orders
