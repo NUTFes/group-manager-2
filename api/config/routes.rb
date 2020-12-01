@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :news
   resources :purchase_lists
   resources :food_products
   resources :assign_stages
