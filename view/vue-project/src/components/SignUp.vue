@@ -144,7 +144,7 @@ export default {
           localStorage.setItem('client', response.headers['client'])
           localStorage.setItem('uid', response.headers['uid'])
           localStorage.setItem('token-type', response.headers['token-type'])
-          this.$router.push('register_user_detail')
+          this.$router.push('user_detail')
         },
         (error) => {
           this.message = '登録に失敗しました。<br>Failed to SignUp'

@@ -171,7 +171,7 @@ export default {
       params.append('user_id', this.user.id);
       axios.post(url, params).then(
         (response) => {
-          this.$router.push('regist')
+          this.$router.push('mypage')
         },
         (error) => {
           return error

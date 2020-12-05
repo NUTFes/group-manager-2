@@ -1,105 +1,104 @@
 <template>
-  <v-form>
-    <v-container>
-      <v-row>
-        <v-col cols="2"></v-col>
-        <v-col cols="8">
-          <v-card>
-            <v-row>
-              <v-col cols="2"></v-col>
-              <v-col cols="8">
-                <h1>副代表の詳細登録画面</h1>
-                
-                <v-select
-                  label="団体"
-                  ref="group"
-                  v-model="group_id"
-                  :rules="[rules.required]"
-                  :items="group"
-                  :menu-props="{
-                    top: true,
-                    offsetY: true,
-                  }"
-                  item-text="name"
-                  item-value="id"
-                  outlined
+  <v-dialog v-model="isDisplay" persistent width="1200">
+    <v-card flat>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px">
+        <v-icon class="pr-3" size="35">mdi-account</v-icon><b>副代表</b>
+        <v-spacer></v-spacer>
+        <v-btn text @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
+      </v-card-title>
+      <v-form>
+        <v-container>
+          <v-row>
+            <v-col cols="2"></v-col>
+            <v-col cols="8">
+              <v-select
+                label="団体"
+                ref="group"
+                v-model="group_id"
+                :rules="[rules.required]"
+                :items="group"
+                :menu-props="{
+                               top: true,
+                               offsetY: true,
+                               }"
+                item-text="name"
+                item-value="id"
+                outlined
                 ></v-select>
-                <v-text-field
-                  label="名前"
-                  background-color="white"
-                  v-model="name"
-                  clearable
-                  ></v-text-field>
+              <v-text-field
+                label="名前"
+                background-color="white"
+                v-model="name"
+                clearable
+                ></v-text-field>
 
-                <v-text-field
-                  label="学籍番号"
-                  background-color="white"
-                  v-model="student_id"
-                  :rules="[rules.min1, rules.over1]"
-                  hint="お持ちでない方：0を8桁入力"
-                  persistent-hint
-                  item-text="name"
-                  item-value="id"
-                  counter="8"
-                  clearable
-                  ></v-text-field>
+              <v-text-field
+                label="学籍番号"
+                background-color="white"
+                v-model="student_id"
+                :rules="[rules.min1, rules.over1]"
+                hint="お持ちでない方：0を8桁入力"
+                persistent-hint
+                item-text="name"
+                item-value="id"
+                counter="8"
+                clearable
+                ></v-text-field>
 
-                <v-select
-                  label="学科"
-                  v-model.number="department_id"
-                  :items="departments"
-                  :menu-props="{ top: true, offsetY: true }"
-                  item-text="name"
-                  item-value="id"
-                  clearable
-                  ></v-select>
+              <v-select
+                label="学科"
+                v-model.number="department_id"
+                :items="departments"
+                :menu-props="{ top: true, offsetY: true }"
+                item-text="name"
+                item-value="id"
+                clearable
+                ></v-select>
 
-                <v-select
-                  label="学年"
-                  v-model.number="grade_id"
-                  :items="grades"
-                  :menu-props="{ top: true, offsetY: true }"
-                  item-text="name"
-                  item-value="id"
-                  clearable
-                  ></v-select>
+              <v-select
+                label="学年"
+                v-model.number="grade_id"
+                :items="grades"
+                :menu-props="{ top: true, offsetY: true }"
+                item-text="name"
+                item-value="id"
+                clearable
+                ></v-select>
 
-                <v-text-field
-                  label="TEL"
-                  background-color="white"
-                  v-model="tel"
-                  :rules="[rules.min2, rules.over2]"
-                  hint="ハイフンなしで半角入力"
-                  persistent-hint
-                  counter="11"
-                  clearable
-                  ></v-text-field>
+              <v-text-field
+                label="TEL"
+                background-color="white"
+                v-model="tel"
+                :rules="[rules.min2, rules.over2]"
+                hint="ハイフンなしで半角入力"
+                persistent-hint
+                counter="11"
+                clearable
+                ></v-text-field>
 
-                <v-text-field
-                  label="EMAIL"
-                  background-color="white"
-                  v-model="email"
-                  clearable
-                  ></v-text-field>
-              </v-col>
-              <v-col cols="2"></v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="2"></v-col>
-              <v-col cols="8">
-                <v-card-action>
-                  <v-btn text color="blue darken-1" @click="reset">削除</v-btn>
-                  <v-btn color="blue darken-1" @click="register">登録</v-btn>
-                </v-card-action>
-              </v-col>
-              <v-col cols="2"></v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-        <v-col cols="2"></v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+              <v-text-field
+                label="EMAIL"
+                background-color="white"
+                v-model="email"
+                clearable
+                ></v-text-field>
+            </v-col>
+            <v-col cols="2"></v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="2"></v-col>
+            <v-col cols="8">
+              <v-card-action>
+                <v-btn color="blue darken-1" block dark @click="register">登録</v-btn>
+                <v-btn text color="blue darken-1" text block @click="reset">リセット</v-btn>
+              </v-card-action>
+            </v-col>
+            <v-col cols="2"></v-col>
+          </v-row>
+        </v-container>
+      </v-form>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style>
@@ -113,6 +112,7 @@ import axios from 'axios'
 export default {
     data () {
         return{
+            isDisplay: false,
             group: [],
             group_id: [],
             name: [],
