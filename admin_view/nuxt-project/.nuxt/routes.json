@@ -21,6 +21,13 @@
     "_name": "_6faa4a12"
   },
   {
+    "name": "power",
+    "path": "/power",
+    "component": "/app/nuxt-project/pages/power.vue",
+    "chunkName": "pages/power",
+    "_name": "_176bae0e"
+  },
+  {
     "name": "print",
     "path": "/print",
     "component": "/app/nuxt-project/pages/print.vue",
