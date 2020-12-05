@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rental_item_id: 1
+  group_category_id: 1
+
+two:
+  rental_item_id: 1
+  group_category_id: 1

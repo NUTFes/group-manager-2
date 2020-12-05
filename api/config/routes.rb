@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   resources :news
   resources :purchase_lists
   resources :food_products
+  resources :assign_rental_items
+  resources :rentable_items
+  resources :stocker_items
+  resources :rental_orders
   resources :assign_stages
   resources :stage_orders
   resources :employees
