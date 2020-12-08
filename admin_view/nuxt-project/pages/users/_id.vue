@@ -11,74 +11,49 @@
                 <v-card-title class="font-weight-bold"><v-icon>mdi-account</v-icon>{{ user.name }}</v-card-title>
               </v-col>
               <v-col align="right" class="justify-center">
-                <div v-if="user.role_id == 1"><v-chip color="red" text-color="white" small>developer</v-chip></div>
-                <div v-if="user.role_id == 2"><v-chip color="green" text-color="white">manager</v-chip></div>
-                <div v-if="user.role_id == 3"><v-chip color="blue" text-color="white">user</v-chip></div>
+                <div v-if="user.role_id == 1"><v-chip color="red" text-color="white" small class="mx-3"><v-icon x-small>mdi-pencil</v-icon>developer</v-chip></div>
+                <div v-if="user.role_id == 2"><v-chip color="green" text-color="white" class="mx-3">manager</v-chip></div>
+                <div v-if="user.role_id == 3"><v-chip color="blue" text-color="white" class="mx-3">user</v-chip></div>
               </v-col>           
             </v-row>
             <v-divider></v-divider>
-            <table border="0">
-              <tr>
-                <th class="font-weight-bold">学籍番号</th><td>{{ detail.student_id }}</td>
-              </tr>
-              <tr>
-                <th class="font-weight-bold">学年</th><td>{{ grade }}</td>
-              </tr>
-              <tr>
-                <th class="font-weight-bold">課程</th><td>{{ department }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">電話番号</td><td>{{ detail.tel }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">登録日時</td><td>{{ user.created_at | format-date }}</td>
-              </tr>
-              <tr>
-                <td class="font-weight-bold">編集日時</td><td>{{ user.created_at | format-date }}</td>
-              </tr>
-            </table>
-            <v-simple-table>
+             <v-simple-table>
               <template v-slot:default>
                 <tbody>
                   <tr>
                     <th>学籍番号：</th>
-                    <td>{{ detail.student_id }}</td>
+                    <td class="caption">{{ detail.student_id }}</td>
+                    <td><v-icon>mdi-pencil</v-icon></td>
                   </tr>
                   <tr>
                     <th>学年：</th>
-                    <td>{{ grade }}</td>
+                    <td class="caption">{{ grade }}</td>
+                    <td><v-icon>mdi-pencil</v-icon></td>
                   </tr>
                   <tr>
                     <th>課程：</th>
-                    <td>{{ department }}</td>
+                    <td class="caption">{{ department }}</td>
+                    <td><v-icon>mdi-pencil</v-icon></td>
                   </tr>
                   <tr>
                     <th>電話番号：</th>
-                    <td>{{ detail.tel }}</td>
+                    <td class="caption">{{ detail.tel }}</td>
+                    <td><v-icon>mdi-pencil</v-icon></td>
                   </tr>
                   <tr>
                     <th>登録日時：</th>
-                    <td>{{ user.created_at | format-date }}</td>
+                    <td class="caption">{{ user.created_at | format-date }}</td>
+                    <td><v-icon>mdi-pencil</v-icon></td>
                   </tr>
                   <tr>
                     <th>編集日時：</th>
-                    <td>{{ user.updated_at | format-date }}</td>
+                    <td class="caption">{{ user.updated_at | format-date }}</td>
+                    <td><v-icon>mdi-pencil</v-icon></td>
                   </tr>
                 </tbody>
               </template>
             </v-simple-table>
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>学籍番号：</v-list-item-content>
-                <v-list-item-content class="align-end">{{ detail.student_id }}</v-list-item-content>
-              </v-list-item>
-              <v-list-item><v-list-item-title>学年：</v-list-item-title></v-list-content>{{ grade }}</v-list-content></v-list-item>
-                  <v-list-item>課程：</v-list-content>{{ department }}</v-list-content></v-list-item>
-                  <v-list-item>電話番号：</v-list-content>{{ detail.tel }}</v-list-content></v-list-item>
-                  <v-list-item>登録日時：</v-list-content>{{ user.created_at | format-date }}</v-list-content></v-list-item>
-                  <v-list-item>編集日時：</v-list-content>{{ user.updated_at | format-date }}</v-list-content></v-list-item>
-              </v-list>
-            </v-container>
+           </v-container>
           </v-card>
         </v-container>
     </div>
@@ -119,32 +94,4 @@
   }
 }
 </script>
-
-<style>
-table{
-  width: 100%;
-}
-
-table th{
-  position: relative;
-  text-align: left;
-  width: 15%;
-}
-
-table th:after{
-  display: block;
-  content: "";
-  width: 30px;
-  height: 2px;
-  background-color: #333;
-  position: absolute;
-  top:calc(50% - 1px);
-  right:20px;
-}
-
-table td{
-  text-align: left;
-  width: 85%;
-}
-</style>
-
+  
