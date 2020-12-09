@@ -56,6 +56,8 @@
                           <td>{{ user.created_at | format-date }}</td>
                           <td>{{ user.updated_at | format-date}}</td>
                           <td><v-icon color="#E91E63">mdi-eye</v-icon></td>
+                          <td v-if="currentUserRole == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
+                          <td v-if="currentUserRole == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
                         </tr>
                       </tbody>
                     </template>
@@ -81,9 +83,20 @@ export default {
   data() {
     return {
       users: [],
+      currentUserRole: "",
     }
   },
-  mounted() {
+  computed: {
+    currentUserRole() {
+      return this.$store.state.currentUserRole;
+    }
+  },
+  methods: {
+    getCurrentUserRole() {
+      this.$store.dispatch("getCurrentUserRoleAction");
+    }
+  },
+ mounted() {
     this.$axios.get('api/v1/users/index', {
       headers: { 
         "Content-Type": "application/json", 
