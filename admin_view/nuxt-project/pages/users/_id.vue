@@ -9,12 +9,12 @@
             <v-row justify="end" align="center">
               <v-col> 
                 <v-card-title class="font-weight-bold"><v-icon>mdi-account</v-icon>{{ user.name }}</v-card-title>
-                <div v-if="user.role_id == 1"><v-chip color="red" text-color="white" x-small class="mt-n8 mx-4"><v-icon x-small>mdi-pencil</v-icon>developer</v-chip></div>
-                <div v-if="user.role_id == 2"><v-chip color="green" text-color="white" class="mx-3">manager</v-chip></div>
-                <div v-if="user.role_id == 3"><v-chip color="blue" text-color="white" class="mx-3">user</v-chip></div>
+                <div v-if="user.role_id == 1"><v-chip color="red" text-color="white" x-small class="mt-n8 mx-4">developer</v-chip></div>
+                <div v-if="user.role_id == 2"><v-chip color="green" text-color="white" x-small class="mt-n8 mx-4">manager</v-chip></div>
+                <div v-if="user.role_id == 3"><v-chip color="blue" text-color="white" x-small class="mt-n8 mx-4">user</v-chip></div>
              </v-col>
               <v-col align="right">
-                <v-btn text><v-icon class="ma-5">mdi-pencil</v-icon></v-btn>
+                <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
               </v-col>
             </v-row>
             <v-divider></v-divider>
@@ -53,6 +53,17 @@
            </v-container>
           </v-card>
         </v-container>
+
+        <!-- modal window to edit -->
+        <v-dialog
+          v-model="dialog"
+        >
+          <v-card>
+            <v-card-title class="font-weight-bold"><v-icon>mdi-account</v-icon>{{ user.name }}</v-card-title>
+            <v-container>
+            </v-container>
+          </v-card>
+        </v-dialog>
     </div>
   </template>
 
@@ -72,7 +83,8 @@
         department: [],
         detail: [],
         expand: false,
-        currentUserRole: ""
+        currentUserRole: "",
+        dialog: false,
       }
     },
     computed: {
