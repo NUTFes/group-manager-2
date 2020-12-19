@@ -37,6 +37,8 @@
                             編集日時
                           </th>
                           <th class="text-center">
+                          <th v-for="(header, i) in headers" :key="i" class="text-center">
+                            {{ header.text }}
                           </th>
                         </tr>
                       </thead>
@@ -67,7 +69,6 @@
             </v-row>
           </v-container>
         </v-card>
-        </v-col>
       </v-container>
   </div>
 </template>
@@ -75,6 +76,7 @@
 <script>
 import Header from '~/components/Header.vue'
 import axios from 'axios'
+import { mapAction,  mapMutation } from 'vuex'
 
 export default {
   components: {
@@ -83,7 +85,7 @@ export default {
   data() {
     return {
       users: [],
-      currentUserRole: "",
+      currentUserRole: [],
     }
   },
   computed: {
@@ -94,7 +96,7 @@ export default {
   methods: {
     getCurrentUserRole() {
       this.$store.dispatch("getCurrentUserRoleAction");
-    }
+    },
   },
  mounted() {
     this.$axios.get('api/v1/users/index', {

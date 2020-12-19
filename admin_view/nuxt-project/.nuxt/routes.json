@@ -2,9 +2,9 @@
   {
     "name": "groups",
     "path": "/groups",
-    "component": "/app/nuxt-project/pages/groups.vue",
-    "chunkName": "pages/groups",
-    "_name": "_6a60f3e0"
+    "component": "/app/nuxt-project/pages/groups/index.vue",
+    "chunkName": "pages/groups/index",
+    "_name": "_18c34093"
   },
   {
     "name": "inspire",
@@ -19,6 +19,13 @@
     "component": "/app/nuxt-project/pages/mypage.vue",
     "chunkName": "pages/mypage",
     "_name": "_6faa4a12"
+  },
+  {
+    "name": "power",
+    "path": "/power",
+    "component": "/app/nuxt-project/pages/power.vue",
+    "chunkName": "pages/power",
+    "_name": "_176bae0e"
   },
   {
     "name": "print",
@@ -47,6 +54,13 @@
     "component": "/app/nuxt-project/pages/users/index.vue",
     "chunkName": "pages/users/index",
     "_name": "_123c2dff"
+  },
+  {
+    "name": "groups-id",
+    "path": "/groups/:id",
+    "component": "/app/nuxt-project/pages/groups/_id.vue",
+    "chunkName": "pages/groups/_id",
+    "_name": "_8183688a"
   },
   {
     "name": "users-id",

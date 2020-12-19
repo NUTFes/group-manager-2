@@ -3,13 +3,15 @@ import Router from 'vue-router'
 import { interopDefault } from './utils'
 import scrollBehavior from './router.scrollBehavior.js'
 
-const _6a60f3e0 = () => interopDefault(import('../pages/groups.vue' /* webpackChunkName: "pages/groups" */))
+const _18c34093 = () => interopDefault(import('../pages/groups/index.vue' /* webpackChunkName: "pages/groups/index" */))
 const _7f52cd64 = () => interopDefault(import('../pages/inspire.vue' /* webpackChunkName: "pages/inspire" */))
 const _6faa4a12 = () => interopDefault(import('../pages/mypage.vue' /* webpackChunkName: "pages/mypage" */))
+const _176bae0e = () => interopDefault(import('../pages/power.vue' /* webpackChunkName: "pages/power" */))
 const _56ce3ea1 = () => interopDefault(import('../pages/print.vue' /* webpackChunkName: "pages/print" */))
 const _2aa33390 = () => interopDefault(import('../pages/regist_user_detail.vue' /* webpackChunkName: "pages/regist_user_detail" */))
 const _5ee1db54 = () => interopDefault(import('../pages/signup.vue' /* webpackChunkName: "pages/signup" */))
 const _123c2dff = () => interopDefault(import('../pages/users/index.vue' /* webpackChunkName: "pages/users/index" */))
+const _8183688a = () => interopDefault(import('../pages/groups/_id.vue' /* webpackChunkName: "pages/groups/_id" */))
 const _42a8b7b2 = () => interopDefault(import('../pages/users/_id.vue' /* webpackChunkName: "pages/users/_id" */))
 const _dc6fcb74 = () => interopDefault(import('../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
@@ -31,7 +33,7 @@ export const routerOptions = {
 
   routes: [{
     path: "/groups",
-    component: _6a60f3e0,
+    component: _18c34093,
     name: "groups"
   }, {
     path: "/inspire",
@@ -41,6 +43,10 @@ export const routerOptions = {
     path: "/mypage",
     component: _6faa4a12,
     name: "mypage"
+  }, {
+    path: "/power",
+    component: _176bae0e,
+    name: "power"
   }, {
     path: "/print",
     component: _56ce3ea1,
@@ -57,6 +63,10 @@ export const routerOptions = {
     path: "/users",
     component: _123c2dff,
     name: "users"
+  }, {
+    path: "/groups/:id",
+    component: _8183688a,
+    name: "groups-id"
   }, {
     path: "/users/:id",
     component: _42a8b7b2,

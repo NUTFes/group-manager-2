@@ -21,7 +21,7 @@ const mutations = {
 const actions = {
   async getCurrentUserRoleAction({ commit }) {
     try {
-      const response = await $axios.$get(`${apiUrlBase}`);
+      const response = await axios.get(`${apiUrlBase}`);
       commit("getCurrentUserRole", response.data.data.user.role_id)
     }
     catch (e) {

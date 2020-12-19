@@ -70,6 +70,7 @@
   <script>
   import Header from '~/components/Header.vue'
   import axios from 'axios'
+  import { mapAction, mapGetters } from 'vuex'
 
   export default {
     components: {
@@ -83,7 +84,7 @@
         department: [],
         detail: [],
         expand: false,
-        currentUserRole: "",
+        currentUserRole: [],
         dialog: false,
       }
     },
