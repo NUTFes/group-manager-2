@@ -23,7 +23,7 @@
                 dark
                 v-bind="attrs"
                 v-on="on"
-                to="/regist"
+                to="/group"
               >
                 <v-icon dark>mdi-plus</v-icon>
               </v-btn>

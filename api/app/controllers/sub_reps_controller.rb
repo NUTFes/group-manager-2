@@ -19,12 +19,14 @@ class SubRepsController < ApplicationController
   def create
     @sub_rep = SubRep.new(sub_rep_params)
     @sub_rep.save
+    render json: @sub_rep
   end
 
   # PATCH/PUT /sub_reps/1
   # PATCH/PUT /sub_reps/1.json
   def update
     @sub_rep.update(sub_rep_params)
+    render json: @sub_rep
   end
 
   # DELETE /sub_reps/1

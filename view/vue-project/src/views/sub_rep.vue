@@ -179,7 +179,6 @@ export default {
         const url = process.env.VUE_APP_URL + '/sub_reps';
         axios.defaults.headers.common['Content-Type'] = 'application/json';
         var params = new URLSearchParams();
-        // params.append('group_id', this.group_id);
         params.append('group_id', this.group_id);
         params.append('name', this.name);
         params.append('student_id', this.student_id);

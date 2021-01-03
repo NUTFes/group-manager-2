@@ -19,12 +19,14 @@ class PlaceOrdersController < ApplicationController
   def create
     @place_order = PlaceOrder.new(place_order_params)
     @place_order.save
+    render json: @place_order
   end
 
   # PATCH/PUT /place_orders/1
   # PATCH/PUT /place_orders/1.json
   def update
     @place_order.update(place_order_params)
+    render json: @place_order
   end
 
   # DELETE /place_orders/1
