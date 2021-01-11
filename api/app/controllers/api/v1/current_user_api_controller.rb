@@ -54,4 +54,28 @@ class Api::V1::CurrentUserApiController < ApplicationController
     render json: data
   end
 
+  def get_regist_info
+    @user = current_api_user
+    @groups = @user.groups
+    regist_info = []
+    for group in @groups
+      sub_rep = group.sub_rep
+      place_order = group.place_order
+      stage_order = group.stage_order
+      power_orders = group.power_orders
+      employees = group.employees
+      food_products = group.food_products
+      regist_info << {
+        group: group,
+        sub_rep: sub_rep,
+        place_order: place_order,
+        stage_order: stage_order,
+        power_orders: power_orders,
+        employees: employees,
+        food_products: food_products,
+      }
+    end
+    render json: regist_info
+  end
+
 end
