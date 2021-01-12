@@ -354,10 +354,10 @@
 
 <script>
   import axios from 'axios'
-  import Group from '@/components/group.vue'
-  import SubRep from '@/components/sub_rep.vue'
-  import Power from '@/components/power.vue'
-  import Place from '@/components/place.vue'
+  import Group from '@/components/EditModal/group.vue'
+  import SubRep from '@/components/EditModal/sub_rep.vue'
+  import Power from '@/components/EditModal/power.vue'
+  import Place from '@/components/EditModal/place.vue'
 
   export default {
     props: {

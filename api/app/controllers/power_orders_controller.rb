@@ -19,12 +19,14 @@ class PowerOrdersController < ApplicationController
   def create
     @power_order = PowerOrder.new(power_order_params)
     @power_order.save
+    render json: @power_order
   end
 
   # PATCH/PUT /power_orders/1
   # PATCH/PUT /power_orders/1.json
   def update
     @power_order.update(power_order_params)
+    render json: @power_order
   end
 
   # DELETE /power_orders/1

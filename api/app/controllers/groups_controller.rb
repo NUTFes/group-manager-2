@@ -19,6 +19,7 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     @group.save
+    render json: @group
   end
 
   # PATCH/PUT /groups/1
