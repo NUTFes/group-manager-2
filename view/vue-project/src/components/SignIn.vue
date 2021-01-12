@@ -9,7 +9,6 @@
           <v-card-text>
             <v-container>
               <v-form  ref="form">
-                <p v-bind:style="warnStyle" v-html="getMessage"></p>
                 <v-text-field
                   label="メールアドレス"
                   ref="email"
