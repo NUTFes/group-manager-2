@@ -4,6 +4,7 @@
       <v-row>
       <v-col cols="1"></v-col>
       <v-col cols="10">
+        <v-card-text><router-link to="/users">ユーザー一覧</router-link> > {{ user.name }}</v-card-text>
         <v-card>
           <v-row>
             <v-col cols="1"></v-col>
@@ -57,6 +58,11 @@
           <v-col cols="1"></v-col>
         </v-row>
         </v-card>
+        <v-row>
+        <v-col>
+          <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ユーザー一覧に戻る</div></v-btn>
+        </v-col>
+        </v-row>
       </v-col>
       <v-col cols="1"></v-col>
       </v-row>
