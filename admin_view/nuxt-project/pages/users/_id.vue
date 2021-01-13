@@ -34,10 +34,6 @@
                     <td class="caption">{{ department }}</td>
                   </tr>
                   <tr>
-                    <th>所属団体：</th>
-                    <td class="caption">{{ department }}</td>
-                  </tr>
-                  <tr>
                     <th>電話番号：</th>
                     <td class="caption">{{ detail.tel }}</td>
                   </tr>
