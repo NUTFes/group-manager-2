@@ -4,6 +4,7 @@
       class="no_scroll"
       v-model="drawer"
       absolute
+      permanent
       color="#37474F"
       >
       <v-list-item dark>
