@@ -9,7 +9,7 @@ import SubRep from '../views/sub_rep.vue'
 import Place from '../views/place.vue'
 import Group from '../views/group.vue'
 import Power from '../views/power.vue'
-import Regist from '../views/regist.vue'
+import Regist from '../views/regist_shop.vue'
 
 Vue.use(VueRouter)
 
@@ -55,7 +55,7 @@ Vue.use(VueRouter)
     component: SubRep
   },
   {
-    path: '/regist',
+    path: '/regist_shop',
     name: 'Regist',
     component: Regist
   },

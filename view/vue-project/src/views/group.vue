@@ -1,15 +1,18 @@
 <template>
+  <div>
+    <Header/>
   <v-row justify="center">
     <v-col cols="2"></v-col>
     <v-col cols="8">
-      <v-card>
+      <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
             <v-col cols="2"></v-col>
             <v-col cols="8" align="center">
               <v-card-title class="justify-center">
-                <h1>団体登録</h1>
+                <h1 style="color:#333333">参加団体登録</h1>
               </v-card-title>
+              <v-divider></v-divider>
               <v-card-text>
                 <v-form ref="form">
                   <v-text-field
@@ -57,7 +60,7 @@
                 </v-form>
               </v-card-text>
               <v-card-action>
-                <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
+                <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
                 <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
               </v-card-action>
             </v-col>
@@ -68,12 +71,16 @@
     </v-col>
     <v-col cols="2"></v-col>
   </v-row>
+  </div>
 </template>
 
 <script>
-
 import axios from 'axios'
+import Header from '@/components/Header.vue'
 export default {
+  components: {
+    Header,
+  },
   data () {
     return {
       groupCategories: [
@@ -126,13 +133,13 @@ export default {
       params.append('user_id', this.user.id);
       params.append('group_category_id', this.groupCategoryId);
       params.append('fes_year_id', this.fesYearId);
-      console.log(this.groupName, this.projectName, this.activity, this.user.id, this.groupCategoryId, this.fesYearId)
 
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       axios.post(url, params).then(
         (response) => {
-          console.log('response:', response)
-          this.$router.push('MyPage')
+          console.log('response:', response.data.id)
+          localStorage.setItem('group_id', response.data.id)
+          this.$router.push('regist_shop')
         },
         (error) => {
           console.log('登録できませんでした')
@@ -154,8 +161,6 @@ export default {
     }).then(
       (response) => {
         this.user = response.data.data
-        console.log(this.user)
-        console.log(this.user.id)
       },
       (error) => {
         console.error(error)

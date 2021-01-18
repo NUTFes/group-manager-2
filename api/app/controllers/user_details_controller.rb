@@ -19,12 +19,14 @@ class UserDetailsController < ApplicationController
   def create
     @user_detail = UserDetail.new(user_detail_params)
     @user_detail.save
+    render json: @user_detail
   end
 
   # PATCH/PUT /user_details/1
   # PATCH/PUT /user_details/1.json
   def update
     @user_detail.update(user_detail_params)
+    render json: @user_detail
   end
 
   # DELETE /user_details/1

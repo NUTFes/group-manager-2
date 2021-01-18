@@ -12,7 +12,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <br>
-              <v-card-title><h2>ユーザーの詳細を登録</h2></v-card-title>
+              <v-card-title class="justify-center"><h1 style="color:#333333">ユーザーの詳細を登録</h1></v-card-title>
               <br>
               <v-row>
                 <v-col cols="2"></v-col>
@@ -171,7 +171,7 @@ export default {
       params.append('user_id', this.user.id);
       axios.post(url, params).then(
         (response) => {
-          this.$router.push('regist')
+          this.$router.push('group')
         },
         (error) => {
           return error
