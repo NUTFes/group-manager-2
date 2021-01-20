@@ -14,7 +14,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon>mdi-account-group</v-icon>参加団体一覧
+                    <v-icon>mdi-account-outline</v-icon>副代表一覧
                     <v-spacer></v-spacer>
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs  }">
@@ -24,7 +24,7 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            to="/groups/print"
+                            to="/sub_reps/print"
                           >
                           <v-icon dark>mdi-printer</v-icon>
                           </v-btn>
@@ -36,11 +36,11 @@
                   <template>
                     <v-data-table
                       :headers="headers"
-                      :items="groups"
+                      :items="sub_reps"
                       class="elevation-0 my-9"
                       @click:row="
                         (data) =>
-                        $router.push({ path: `/groups/${data.id}`})
+                        $router.push({ path: `/sub_reps/${data.id}`})
                         "
                     >
                       <template v-slot:item.created_at="{ item }">
@@ -73,22 +73,23 @@ export default {
   },
   data() {
     return {
-      groups: [],
+      sub_reps: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: 'USER_ID', value: 'user_id' },
-        { text: 'グループ名', value: 'name' },
-        { text: '企画名', value: 'project_name' },          
-        { text: '活動内容', value: 'activity' },
-        { text: 'グループカテゴリ', value: 'group_category_id' },
-        { text: '開催年', value: 'fes_year_id' },
+        { text: 'group_id', value: 'group_id' },
+        { text: '名前', value: 'name' },
+        { text: '学科', value: 'department_id' },
+        { text: '学年', value: 'grade_id' },
+        { text: '電話番号', value: 'tel' },
+        { text: 'メールアドレス', value: 'email' },
+        { text: '学籍番号', value: 'student_id' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/groups', {
+    this.$axios.get('sub_reps', {
       headers: { 
         "Content-Type": "application/json", 
         "access-token": localStorage.getItem('access-token'),
@@ -98,7 +99,7 @@ export default {
     }
     )
       .then(response => {
-        this.groups = response.data
+        this.sub_reps = response.data
       })
   },
 }

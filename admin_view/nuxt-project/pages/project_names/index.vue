@@ -14,7 +14,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon>mdi-account-group</v-icon>参加団体一覧
+                    <v-icon>mdi-unfold-more-vertical</v-icon>企画名一覧
                     <v-spacer></v-spacer>
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs  }">
@@ -24,7 +24,7 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            to="/groups/print"
+                            to="/users/print"
                           >
                           <v-icon dark>mdi-printer</v-icon>
                           </v-btn>
@@ -40,7 +40,7 @@
                       class="elevation-0 my-9"
                       @click:row="
                         (data) =>
-                        $router.push({ path: `/groups/${data.id}`})
+                        $router.push({name:'project_names-id' ,params:{id: data.id}})
                         "
                     >
                       <template v-slot:item.created_at="{ item }">
@@ -76,19 +76,15 @@ export default {
       groups: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: 'USER_ID', value: 'user_id' },
-        { text: 'グループ名', value: 'name' },
-        { text: '企画名', value: 'project_name' },          
-        { text: '活動内容', value: 'activity' },
-        { text: 'グループカテゴリ', value: 'group_category_id' },
-        { text: '開催年', value: 'fes_year_id' },
+        { text: '企画名', value: 'project_name' },
+        { text: '企画内容', value: 'activity' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/groups', {
+    this.$axios.get('groups', {
       headers: { 
         "Content-Type": "application/json", 
         "access-token": localStorage.getItem('access-token'),

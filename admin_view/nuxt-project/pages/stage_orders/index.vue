@@ -1,4 +1,4 @@
-<template>
+\<template>
   <div>
     <Header/>
       <v-row>
@@ -14,7 +14,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon>mdi-account-group</v-icon>参加団体一覧
+                    <v-icon>mdi-microphone-variant</v-icon>ステージ申請一覧
                     <v-spacer></v-spacer>
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs  }">
@@ -24,7 +24,7 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            to="/groups/print"
+                            to="/stage_orders/print"
                           >
                           <v-icon dark>mdi-printer</v-icon>
                           </v-btn>
@@ -36,11 +36,11 @@
                   <template>
                     <v-data-table
                       :headers="headers"
-                      :items="groups"
+                      :items="stage_orders"
                       class="elevation-0 my-9"
                       @click:row="
                         (data) =>
-                        $router.push({ path: `/groups/${data.id}`})
+                        $router.push({ path: `/stage_orders/${data.id}`})
                         "
                     >
                       <template v-slot:item.created_at="{ item }">
@@ -73,22 +73,22 @@ export default {
   },
   data() {
     return {
-      groups: [],
+      stage_orders: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: 'USER_ID', value: 'user_id' },
-        { text: 'グループ名', value: 'name' },
-        { text: '企画名', value: 'project_name' },          
-        { text: '活動内容', value: 'activity' },
-        { text: 'グループカテゴリ', value: 'group_category_id' },
-        { text: '開催年', value: 'fes_year_id' },
+        { text: 'group_id', value: 'group_id' },
+        { text: '晴れがいいか', value: 'is_sunny' },
+        { text: '開催日', value: 'fes_date_id' },
+        { text: '第一希望', value: 'stage_first' },
+        { text: '第二希望', value: 'stage_second' },
+        { text: '総合時間幅', value: 'use_time_interval' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/groups', {
+    this.$axios.get('stage_orders', {
       headers: { 
         "Content-Type": "application/json", 
         "access-token": localStorage.getItem('access-token'),
@@ -98,7 +98,7 @@ export default {
     }
     )
       .then(response => {
-        this.groups = response.data
+        this.stage_orders = response.data
       })
   },
 }
