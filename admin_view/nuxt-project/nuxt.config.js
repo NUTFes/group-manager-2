@@ -28,6 +28,7 @@ export default {
     { 
       src: '~/plugins/axios.js', ssr: false,
       src: '~/plugins/fileter.js', ssr: false,
+      src: '~/plugins/vfs_fonts.js', ssr: false
     },
   ],
 
@@ -101,5 +102,6 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
+    vendor: ['~/plugins/vfs_fonts.js']
   }
 }

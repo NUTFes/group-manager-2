@@ -1,30 +1,47 @@
 <template>
   <div>
     <Header/>
-        <v-row>
-          <v-col cols=2>
-            <Menu/>
-          </v-col>
-          <v-col cols=10>
-            <v-row>
+      <v-row>
+        <v-col cols=2>
+          <Menu/>
+        </v-col>
+        <v-col cols=10>
+          <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
-            <v-card>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3"><v-icon>mdi-account-multiple</v-icon>ユーザー一覧</v-card-title>
-                <hr class="mt-n3">
-
-                  <!-- Comment
-                  <v-data-table
-                    :headers="headers"
-                    :items="users"
-                    :items-per-page="5"
-                    class="elevation-1"
-                  ></v-data-table>
-                  -->
-                  <template>
+              <v-card>
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-title class="font-weight-bold mt-3">
+                      <v-icon>mdi-account-multiple</v-icon>ユーザー一覧
+                      <v-spacer></v-spacer>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="onDownloadPDFClickWithPDFMake()"
+                          >
+                          <v-icon dark>mdi-printer</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>印刷する</span>
+                      </v-tooltip>
+                    </v-card-title>
+                    <hr class="mt-n3">
+                    <!-- Comment
+                      <v-data-table
+                      :headers="headers"
+                      :items="users"
+                      :items-per-page="5"
+                      class="elevation-1"
+                      ></v-data-table>
+                    -->
+                    <template>
                       <v-simple-table class="my-9">
                         <template v-slot:default>
                           <thead>
@@ -46,9 +63,6 @@
                               </th>
                               <th class="text-center">
                                 編集日時
-                              </th>
-                              <th class="text-center">
-                              <th v-for="(header, i) in headers" :key="i" class="text-center">
                               </th>
                             </tr>
                           </thead>
@@ -76,18 +90,20 @@
                       </v-simple-table>
                     </template>
                   </v-col>
-                <v-col cols="1"></v-col>
-            </v-row>
-            </v-card>
+                  <v-col cols="1"></v-col>
+                </v-row>
+              </v-card>
             </v-col>
             <v-col cols="1"></v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+          </v-row>
+        </v-col>
+      </v-row>
   </div>
 </template>
 
 <script>
+import pdfMake from 'pdfmake/build/pdfmake'
+// import 'pdfmake/build/vfs_fonts.js'
 import Header from '~/components/Header.vue'
 import Menu from '~/components/Menu.vue'
 import axios from 'axios'
@@ -123,6 +139,75 @@ export default {
       .then(response => {
         this.users = response.data.data
       })
+  },
+  computed: {
+
+  },
+  methods: {
+    onDownloadPDFClickWithPDFMake() {
+      if (process.browser){
+        require('~/plugins/vfs_fonts')
+      }
+      // pdfMake.vfs = vfs.pdfMake.vfs
+      var user_list = []
+      // ユーザーの配列を作成
+      for(let i=0; i<this.users.length; i++){
+        console.log('aa')
+      } 
+      console.log(this.user_list)
+      pdfMake.fonts = {
+        GenShin: {
+          normal: 'GenShinGothic-Normal-Sub.ttf',
+          bold: 'GenShinGothic-Normal-Sub.ttf',
+          italics: 'GenShinGothic-Normal-Sub.ttf',
+          bolditalics: 'GenShinGothic-Normal-Sub.ttf',
+        },
+      };
+      const defaultStyle = 'GenShin';
+
+      // PDF出力する内容の定義
+      const docDefinition = {
+        content: [
+          {
+            text: 'ユーザー一覧',
+            style: 'header'
+          },
+          // {
+          //   text: 'サンプルです。',
+          //   style: 'subheader'
+          // },
+          // {
+          //   text: '※これはただのサンプルです。',
+          //   style: { color: 'red', fontSize: 10 },
+          // },
+          {
+            layout: 'lightHorizontalLines',
+            table: {
+              headerRows: 1,
+              widths: ['auto', '*', '*', '*'],
+              body: [
+                ['ID', '名前', 'メールアドレス', '権限'],
+                ['aa', 'bb', 'cc', 'dd']
+              ]
+            }
+          },
+        ],
+        defaultStyle: {
+          font: defaultStyle,
+        },
+        styles: {
+          header: {
+            fontSize: 30,
+          },
+          subheader: {
+            fontSize: 20,
+          },
+        },
+      };
+
+      // pdfMakeでのPDF出力
+      pdfMake.createPdf(docDefinition).download();
+    },
   }
 }
 </script>
