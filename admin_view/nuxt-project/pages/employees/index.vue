@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-account-multiple</v-icon>ユーザー一覧
+              <v-icon>mdi-account</v-icon>従業員一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -17,7 +17,7 @@
                           text
                           v-bind="attrs"
                           v-on="on"
-                          to="/users/print"
+                          to="/employees/print"
                           >
                           <v-icon dark>mdi-printer</v-icon>
                   </v-btn>
@@ -29,18 +29,13 @@
             <template>
               <v-data-table
                 :headers="headers"
-                :items="users"
+                :items="employees"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/users/${data.id}`})
+                            $router.push({ path: `/employees/${data.id}`})
                             "
                 >
-                <template v-slot:item.role_id="{ item }">
-                  <v-chip v-if="item.role_id == 1" color="red" text-color="white" small><v-icon class="mr-1">mdi-account-cog</v-icon>developer</v-chip>
-                  <v-chip v-if="item.role_id == 2" color="green" text-color="white" small><v-icon class="mr-1">mdi-account-tie</v-icon>manager</v-chip>
-                  <v-chip v-if="item.role_id == 3" color="blue" text-color="white" small><v-icon class="mr-1">mdi-account</v-icon>user</v-chip>
-                </template>
                 <template v-slot:item.created_at="{ item }">
                   {{ item.created_at | format-date }}
                 </template>
@@ -69,19 +64,19 @@ export default {
   },
   data() {
     return {
-      users: [],
+      employees: [],
       headers:[
         { text: 'ID', value: 'id' },
+        { text: 'group_id', value: 'group_id' },
         { text: '名前', value: 'name' },
-        { text: 'メールアドレス', value: 'email' },
-        { text: '権限', value: 'role_id' },
+        { text: '学籍番号', value: 'student_id' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('api/v1/users/index', {
+    this.$axios.get('/employees', {
       headers: { 
         "Content-Type": "application/json", 
         "access-token": localStorage.getItem('access-token'),
@@ -91,7 +86,7 @@ export default {
     }
     )
       .then(response => {
-        this.users = response.data.data
+        this.employees = response.data
       })
   },
 }

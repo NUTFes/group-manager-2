@@ -4,7 +4,7 @@
       <v-col cols="1"></v-col>
       <v-col cols="10">
         <v-card-text>
-          <router-link to="/users">ユーザー一覧</router-link> >
+          <router-link to="/item_orders">貸し出し物品一覧</router-link> >
           {{ user.name }}
         </v-card-text>
       </v-col>
@@ -125,8 +125,8 @@
     <v-row>
       <v-col cols=1></v-col>
       <v-col cols=10>
-        <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/item_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div style="color: #333333">貸し出し物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
