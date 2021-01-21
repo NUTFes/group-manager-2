@@ -5,9 +5,9 @@
         <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
       </v-col>
       <v-col cols="2">
-        <v-btn depressed href="/mypage" color="#424242">
-          <v-icon>mdi-account-circle</v-icon>
-          <v-card-text>{{ user.name }}</v-card-text>
+        <v-btn text to="/mypage" color="#424242">
+          <v-icon color="white">mdi-account-circle</v-icon>
+          <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>
       </v-col>
     </v-app-bar>
