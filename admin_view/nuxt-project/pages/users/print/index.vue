@@ -1,11 +1,24 @@
 <template>
   <div class="sheets">
     <div>
-      <v-btn type="primary" @click="handlePrint">印刷</v-btn>
-      ※PDFで保存したい場合は印刷ダイアログで「PDF保存」を指定してください
+      <Header/>
+        <v-row>
+          <v-col cols=2>
+            <Menu/>
+          </v-col>
+          <v-col cols=10>
+            <v-row>
+              <v-col>
+                <v-card-text><router-link to="/users">ユーザー一覧</router-link> > 印刷</v-card-text>
+                <v-btn rounded height="50" width="200" color="primary" @click="handlePrint"><v-icon class="mr-3">mdi-printer</v-icon>印刷する</v-btn>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
     </div>
+
     <div class="sheet">
-      <h2>帳票サンプル</h2>
+      <h2>ユーザー一覧</h2>
       <h3>テーブルを印刷する</h3>
       <v-simple-table dense>
         <template v-slot:default>
@@ -26,14 +39,23 @@
         </template>
       </v-simple-table>
     </div>
-    <div class="sheet">
-      <h3>改ページのテスト</h3>
-      2ページ目
+
+    <div>
+      <Header/>
+        <v-row>
+          <v-col cols=2></v-col>
+          <v-col cols=10>
+            <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ユーザー一覧に戻る</div></v-btn>
+          </v-col>
+        </v-row>
     </div>
   </div>
 </template>
 
 <script>
+import Header from '~/components/Header.vue'
+import Menu from '~/components/Menu.vue'
+
 export default {
   data() {
     return {
@@ -41,11 +63,12 @@ export default {
       users: null
     }
   },
-  created() {
-    this.getList()
+  components:{
+    Header,
+    Menu,
   },
   mounted() {
-    this.fetchData()
+    this.getList()
   },
   methods: {
     getList() {
@@ -53,24 +76,10 @@ export default {
         headers: { 
           "Content-Type": "application/json", 
         }
-      }
-      )
-        .then(response => {
-          this.users = response.data.data
-        })
-      // APIからデータ取得する想定
-      this.list = [
-        { id: 1, author: 'John Due', title: 'Hello, world' },
-        { id: 2, author: '太郎', title: 'あいうえお かきくけこ' }
-      ]
-    },
-    fetchData() {
-      document.title = 'タイトルをいい感じに設定する'
-      // setTimeout(() => {
-      //   this.$nextTick(() => {
-      //     this.handlePrint()
-      //   })
-      // })
+      })
+      .then(response => {
+        this.users = response.data.data
+      })
     },
     handlePrint() {
       window.print()
@@ -101,6 +110,7 @@ export default {
     padding: 5mm;
     background: white;
     box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    margin-left: 320px;
   }
 }
 </style>
