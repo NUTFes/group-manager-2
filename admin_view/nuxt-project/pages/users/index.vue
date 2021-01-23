@@ -69,14 +69,8 @@
 </template>
 
 <script>
-import pdfMake from 'pdfmake/build/pdfmake'
-import '../../plugins/vfs_fonts.js'
 import Header from '~/components/Header.vue'
 import Menu from '~/components/Menu.vue'
-if (process.browser) {
-  const vfs = require ('pdfmake/build/vfs_fonts.js')
-  console.log(vfs)
-}
 
 export default {
   components: {
@@ -110,61 +104,5 @@ export default {
         this.users = response.data.data
       })
   },
-  methods: {
-    onDownloadPDFClickWithPDFMake() {
-      pdfMake.fonts = {
-        GenShin: {
-          normal: 'GenShinGothic-Normal-Sub.ttf',
-          bold: 'GenShinGothic-Normal-Sub.ttf',
-          italics: 'GenShinGothic-Normal-Sub.ttf',
-          bolditalics: 'GenShinGothic-Normal-Sub.ttf',
-        },
-      };
-      const defaultStyle = 'GenShin';
-
-      // PDF出力する内容の定義
-      const docDefinition = {
-        content: [
-          {
-            text: 'ユーザー一覧',
-            style: 'header'
-          },
-          // {
-          //   text: 'サンプルです。',
-          //   style: 'subheader'
-          // },
-          // {
-          //   text: '※これはただのサンプルです。',
-          //   style: { color: 'red', fontSize: 10 },
-          // },
-          {
-            layout: 'lightHorizontalLines',
-            table: {
-              headerRows: 1,
-              widths: ['auto', '*', '*', '*'],
-              body: [
-                ['ID', '名前', 'メールアドレス', '権限'],
-                ['aa', 'bb', 'cc', 'dd']
-              ]
-            }
-          },
-        ],
-        defaultStyle: {
-          font: defaultStyle,
-        },
-        styles: {
-          header: {
-            fontSize: 30,
-          },
-          subheader: {
-            fontSize: 20,
-          },
-        },
-      };
-
-      // pdfMakeでのPDF出力
-      pdfMake.createPdf(docDefinition).download();
-    },
-  }
 }
 </script>
