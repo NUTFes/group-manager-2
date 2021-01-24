@@ -27,8 +27,7 @@ export default {
   plugins: [
     { 
       src: '~/plugins/axios.js', ssr: false,
-      src: '~/plugins/fileter.js', ssr: false,
-      src: '~/plugins/vfs_fonts.js', ssr: false
+      src: '~/plugins/fileter.js', ssr: false
     },
   ],
 
