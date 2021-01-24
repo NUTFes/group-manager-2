@@ -1,15 +1,15 @@
 <template>
   <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
-    <Header />
+    <Header v-if="print"/>
       <div class="pad-bottom">
         <v-row>
-          <v-col cols="2" v-if="main">
-            <Menu  />
+          <v-col cols="2" v-if="main && print">
+            <Menu/>
           </v-col>
           <v-col cols="10">
             <v-main>
               <transition mode='out-in'>
-                <nuxt/>
+              <nuxt />
               </transition>
             </v-main>
           </v-col>
@@ -17,6 +17,7 @@
       </div>
   </v-app>
 </template>
+
 <script>
 import Header from '~/components/Header.vue'
 import Menu from '~/components/Menu.vue'
@@ -28,12 +29,15 @@ export default {
   computed:{
     main(){
       return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail'
+    },
+    print(){
+      return this.$route.path !== '/users/print'
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .pad-bottom {
   padding-bottom: 150px;
 }
