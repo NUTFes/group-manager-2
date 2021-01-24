@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :rentable_items
   resources :stocker_items
   resources :rental_orders
+  resources :rental_items
   resources :assign_stages
   resources :stage_orders
   resources :employees
