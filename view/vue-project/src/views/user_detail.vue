@@ -1,6 +1,5 @@
 <template>
   <div>
-  <Header/>
   <v-container align="center">
     <v-row>
       <v-col cols="2"></v-col>
