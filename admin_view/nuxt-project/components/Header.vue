@@ -1,5 +1,6 @@
 <template>
   <div>
+    <v-row>
     <v-app-bar app dark dense color="#424242">
         <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -8,13 +9,17 @@
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>
     </v-app-bar>
+    </v-row>
   </div>
 </template>
 
 <script>
 import axios from 'axios' 
-
+import Menu from '../components/Menu.vue'
 export default {
+  components: {
+    Menu,
+  },
   data () {
     return {
       drawer: true,

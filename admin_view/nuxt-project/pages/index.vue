@@ -1,9 +1,5 @@
 <template>
   <v-container>
-    <v-app-bar app dark dense color="#424242">
-      <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
-    </v-app-bar>
-
     <v-row align="center">
       <v-col cols="12">
         <div class="pt-12" />

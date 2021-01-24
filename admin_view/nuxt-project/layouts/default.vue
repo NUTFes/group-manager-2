@@ -1,12 +1,20 @@
 <template>
   <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
     <Header />
-    <Menu v-if="main" />
-      <v-main>
-        <transition mode='out-in'>
-          <nuxt />
-        </transition>
-      </v-main>
+      <div class="pad-bottom">
+        <v-row>
+          <v-col cols="2" v-if="main">
+            <Menu  />
+          </v-col>
+          <v-col cols="10">
+            <v-main>
+              <transition mode='out-in'>
+                <nuxt/>
+              </transition>
+            </v-main>
+          </v-col>
+        </v-row>
+      </div>
   </v-app>
 </template>
 <script>
@@ -19,13 +27,16 @@ export default {
   },
   computed:{
     main(){
-      return this.$route.path !== '/'
+      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail'
     }
   }
 }
 </script>
 
 <style>
+.pad-bottom {
+  padding-bottom: 150px;
+}
 .v-enter {
   transform: translate(-100px, 0);
   opacity: 0;

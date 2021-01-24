@@ -1,12 +1,13 @@
 <template>
-  <div>
     <v-navigation-drawer
-      class="no_scroll"
       v-model="drawer"
       absolute
       permanent
       color="#37474F"
       >
+      <!-- ヘッダーと重ならないようにする -->
+      <v-list-item dark>
+      </v-list-item>
       <v-list-item dark>
         <v-list-item-icon>
           <v-icon>mdi-account-circle-outline</v-icon>
@@ -100,14 +101,5 @@ export default {
 </script>
 
  <style>
-.no_scroll{
-  overflow-y: scroll;
-  -ms-overflow-style: none;    /* IE、Edge用 */
-  scrollbar-width: none;    /* Firefox用 */
-}
-.no_scroll::-webkit-scrollbar {    /* Chrome、Safari用 */
-  display:none;
-}
-
 
 </style>
