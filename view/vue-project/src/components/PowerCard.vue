@@ -1,25 +1,11 @@
 <template>
-<v-card>
   <v-container class="justify-content-center">
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8" align="center">
+      <v-col cols="1"></v-col>
+      <v-col cols="10" align="center">
         <v-card-text>
+          {{ groupId }}
           <v-form ref="form">
-            <v-select
-              label="団体"
-              ref="group"
-              v-model="groupId"
-              :rules="[rules.required]"
-              :items="group"
-              :menu-props="{
-                top: true,
-                offsetY: true
-              }"
-              item-text="name"
-              item-value="id"
-              outlined
-            ></v-select>
             <v-text-field
               label="製品名"
               ref="item"
@@ -69,24 +55,16 @@
             ></v-text-field>
           </v-form>
         </v-card-text>
-        <v-card-action>
-          <v-btn color="blue darken-1" block @click="submit"
-            >登録</v-btn
-          >
-          <v-btn color="blue darken-1" text block @click="cancel"
-            >リセット</v-btn
-          >
-        </v-card-action>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="1"></v-col>
     </v-row>
   </v-container>
-</v-card>
 </template>
 
 <script>
 import axios from "axios";
 export default {
+  props: { groupId: Number },
   data() {
     return {
       rules: {
@@ -94,34 +72,33 @@ export default {
         max: value => value <= 1000 || "大きすぎます"
       },
       group: [],
-      valid: false,
+      valid: false
     };
   },
 
   computed: {
     form() {
       return {
-        item: '',
-        power: '',
-        manufacturer: '',
-        model: '',
-        itemUrl: '',
-        groupId: '',
+        item: "",
+        power: "",
+        manufacturer: "",
+        model: "",
+        itemUrl: ""
       };
     }
   },
   methods: {
-
     cancel() {
       this.$refs.form.reset();
     },
-    submit() {
-      if (!this.$refs.form.validate()){
+    validate() {
+      if (!this.$refs.form.validate()) {
         valid = false;
-        return;
+        return false;
       }
-      valid = true;
-
+      return true;
+    },
+    submit() {
       const url = process.env.VUE_APP_URL + "/power_orders";
       let params = new URLSearchParams();
       params.append("group_id", this.groupId);
@@ -135,7 +112,8 @@ export default {
       axios.post(url, params).then(
         response => {
           console.log("response:", response);
-          this.$router.push("MyPage");
+          //          this.$router.push("MyPage");
+          return "ok";
         },
         error => {
           console.log("登録できませんでした");

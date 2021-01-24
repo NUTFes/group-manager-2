@@ -192,19 +192,33 @@
                         label="登録製品数"
                       />
                       <v-stepper v-model="e2">
-                        <template v-for="powerStep in powerSteps">
-                          <v-stepper-step
-                            :key="`${powerStep}-step`"
-                            :complete="e2 > powerStep"
-                            :step="powerStep"
-                          >
-                            Step {{ n }}
-                          </v-stepper-step>
+                        <v-stepper-header>
+                          <template v-for="powerStep in powerSteps">
+                            <v-stepper-step
+                              :key="`${powerStep}-step`"
+                              :complete="e2 > powerStep"
+                              :step="powerStep"
+                            >
+                              {{ powerStep }}個目
+                            </v-stepper-step>
+
+                            <v-divider
+                              v-if="powerStep !== powerSteps"
+                              :key="powerStep"
+                            ></v-divider>
+                          </template>
+                        </v-stepper-header>
+                        <v-stepper-items>
                           <v-stepper-content
+                            v-for="powerStep in powerSteps"
                             :key="`${powerStep}-content`"
                             :step="powerStep"
                           >
-                            <PowerCard ref="child" :key="powerStep" />
+                            <PowerCard
+                              :groupId="groupId"
+                              ref="child"
+                              :key="powerStep"
+                            />
                             <v-btn
                               text
                               @click="e2 -= 1"
@@ -220,7 +234,7 @@
                               次へ
                             </v-btn>
                           </v-stepper-content>
-                        </template>
+                        </v-stepper-items>
                       </v-stepper>
                     </v-card-text>
                   </v-card>
@@ -394,23 +408,9 @@ export default {
         }
       );
       // 電力申請
-      const powerUrl = process.env.VUE_APP_URL + "/power_orders";
-      var powerParams = new URLSearchParams();
-      powerParams.append("group_id", this.groupId);
-      powerParams.append("item", this.powerItem);
-      powerParams.append("power", this.power);
-      powerParams.append("manufacturer", this.powerManufacturer);
-      powerParams.append("model", this.powerModel);
-      powerParams.append("item_url", this.powerItemUrl);
-      axios.post(powerUrl, powerParams).then(
-        response => {
-          console.log("電力申請");
-          // console.log(response)
-        },
-        error => {
-          return error;
-        }
-      );
+      for (let i = 0; i < this.powerSteps; i++) {
+        this.$refs.child[i].submit();
+      }
       this.$router.push("MyPage");
     },
     getIndex: function() {

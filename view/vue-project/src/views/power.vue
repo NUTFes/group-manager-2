@@ -9,26 +9,54 @@
           :items="[1, 2, 3, 4, 5]"
           label="登録製品数"
         ></v-select>
+        <v-select
+          label="団体"
+          ref="group"
+          v-model="groupId"
+          :rules="[rules.required]"
+          :items="group"
+          :menu-props="{
+            top: true,
+            offsetY: true
+          }"
+          item-text="name"
+          item-value="id"
+          outlined
+        ></v-select>
       </v-col>
       <v-col cols="5"></v-col>
     </v-row>
     <v-row>
       <v-col cols="2"></v-col>
       <v-col cols="8">
-        <v-stepper v-model="e1" :vertical="horizontal">
-          <template v-for="step in steps">
-            <v-stepper-step
-              :key="`${step}-step`"
-              :complete="e1 > step"
-              :step="step"
-              :editable="true"
-            >
-              Step {{ n }}
-            </v-stepper-step>
-            <v-stepper-content :key="`${step}-content`" :step="step">
-              <PowerCard ref="child" :key="step" />
-            </v-stepper-content>
-          </template>
+        <v-stepper v-model="e1" :vertical="true">
+          <v-stepper-header>
+            <template v-for="step in steps">
+              <v-stepper-step
+                :key="`${step}-step`"
+                :complete="e1 > step"
+                :step="step"
+                :editable="true"
+              >
+                {{ step }}個目
+              </v-stepper-step>
+              <v-divider v-if="step !== steps" :key="step" />
+            </template>
+          </v-stepper-header>
+          <v-stepper-items>
+            <template>
+              <v-stepper-content
+                v-for="step in steps"
+                :key="`${step}-content`"
+                :step="step"
+              >
+                <v-card>
+                  {{ groupId }}
+                  <PowerCard :groupId="groupId" ref="child" :key="step" />
+                </v-card>
+              </v-stepper-content>
+            </template>
+          </v-stepper-items>
         </v-stepper>
         <v-btn color="blue darken-1" block @click="all_submit">登録</v-btn>
       </v-col>
@@ -52,24 +80,13 @@ export default {
       },
       group: [],
       e1: 1,
-      steps: 2
+      steps: 2,
+      groupId: 0
     };
   },
   watch: {
     steps(val) {
       if (this.e1 > val) this.e1 = val;
-    }
-  },
-  computed: {
-    form() {
-      return {
-        item: [],
-        power: [],
-        manufacturer: [],
-        model: [],
-        itemUrl: [],
-        groupId: []
-      };
     }
   },
   methods: {
@@ -84,10 +101,23 @@ export default {
       }
     },
     all_submit: function() {
+      let valid = true;
       for (let i = 0; i < this.steps; i++) {
-        this.$refs.child[i].submit();
+        if (!this.$refs.child[i].validate) {
+          valid = false;
+        }
       }
-    },
+
+      if (!valid) {
+        console.log("cannot submit");
+        return;
+      }
+
+      for (let i = 0; i < this.steps; i++) {
+        let res = this.$refs.child[i].submit();
+      }
+      this.$router.push("MyPage");
+    }
   },
 
   mounted() {
