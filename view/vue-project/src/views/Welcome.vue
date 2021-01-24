@@ -1,51 +1,7 @@
 <template>
   <div>
     <div class="background" id="container">
-      <v-app-bar
-        app
-        color = "#FAFAFA"
-        height = "70"
-        >
-      <v-row>
-        <v-col cols=2></v-col>
-        <v-col>
-          <router-link to="/">
-            <v-img
-              class="logo"
-              :src="logoImage"
-              >
-            </v-img>
-          </router-link>
-        </v-col>
-      <v-spacer></v-spacer>
-      <v-col><v-btn text block color="black">参加団体管理アプリとは</v-btn></v-col>
-      <v-col><v-btn text block color="black">初めての方へ</v-btn></v-col>
-      <v-col><v-btn text block color="black">よくあるご質問</v-btn></v-col>
-          <v-col align="right">
-            <v-chip
-              v-if="this.show===true"
-              color="black"
-              label
-              link
-              outlined
-              @click="toggle_show"
-              >
-              ログイン
-            </v-chip>
-            <v-chip
-              v-if="this.show===false"
-              color="black"
-              label
-              link
-              outlined
-              @click="toggle_show"
-              >
-              新規登録
-            </v-chip>
-      </v-col>
-      <v-col cols="2"></v-col>
-        </v-row>
-      </v-app-bar>
+
       <div>
         <br><br><br>
         <v-row>
