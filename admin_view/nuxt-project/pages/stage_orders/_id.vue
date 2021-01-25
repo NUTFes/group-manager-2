@@ -1,17 +1,17 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10">
+      <v-col>
+        <div class="card">
         <v-card-text><router-link to="/stage_orders">ステージ申請一覧</router-link>>{{ stage_order.group_id }}</v-card-text>
+        </div>
       </v-col>
-      <v-col cols="1"></v-col>
     </v-row>
 
     <v-row>
-      <v-col cols=1></v-col>
-      <v-col cols=10>
-        <v-card>
+      <v-col>
+        <div class="card">
+        <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
@@ -93,16 +93,16 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <v-row>
-      <v-col cols=1></v-col>
-      <v-col cols=10>
+      <v-col>
+        <div class="card">
         <v-btn text color="white" to="/stage_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ステージ申請一覧に戻る</div></v-btn>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <!-- modal window to edit -->
@@ -216,4 +216,9 @@ import Menu from '~/components/Menu.vue'
     }
 }
 </script>
-  
+
+<style>
+.card {
+  padding-right: 5%
+}
+</style>

@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10">
-        <v-card>
+      <v-col>
+        <div class="card">
+        <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
@@ -49,8 +49,8 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
+        </div>
       </v-col>
-      <v-col cols="1"></v-col>
     </v-row>
   </div>
 </template>
@@ -96,3 +96,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.card {
+  padding-right: 20px
+}
+</style>
