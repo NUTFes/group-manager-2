@@ -73,7 +73,7 @@ export default {
       headers:[
         { text: 'ID', value: 'id' },
         { text: '名前', value: 'name' },
-        // { text: 'メールアドレス', value: 'email' },
+        { text: 'メールアドレス', value: 'email' },
         { text: '権限', value: 'role_id' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },

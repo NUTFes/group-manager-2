@@ -1,10 +1,8 @@
 <template>
   <v-container class="justify-content-center">
     <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10" align="center">
+      <v-col cols="12" align="center">
         <v-card-text>
-          {{ groupId }}
           <v-form ref="form">
             <v-text-field
               label="製品名"
@@ -56,7 +54,6 @@
           </v-form>
         </v-card-text>
       </v-col>
-      <v-col cols="1"></v-col>
     </v-row>
   </v-container>
 </template>

@@ -1,23 +1,25 @@
 <template>
   <div>
+    <v-row>
     <v-app-bar app dark dense color="#424242">
-      <v-col cols="10">
         <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
-      </v-col>
-      <v-col cols="2">
+        <v-spacer></v-spacer>
         <v-btn text to="/mypage" color="#424242">
           <v-icon color="white">mdi-account-circle</v-icon>
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>
-      </v-col>
     </v-app-bar>
+    </v-row>
   </div>
 </template>
 
 <script>
 import axios from 'axios' 
-
+import Menu from '../components/Menu.vue'
 export default {
+  components: {
+    Menu,
+  },
   data () {
     return {
       drawer: true,

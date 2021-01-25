@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="1"></v-col>
       <v-col cols="10">
-        <v-card-text><router-link to="/groups">参加団体一覧</router-link> > {{ group.name }}</v-card-text>
+        <v-card-text><router-link to="/project_names">企画名一覧</router-link> > {{ group.name }}</v-card-text>
         <v-card>
           <v-row>
             <v-col cols="1"></v-col>
@@ -68,8 +68,8 @@
 
     <v-row>
       <v-col cols=1></v-col>
-      <v-col cols=10>
-        <v-btn text color="white" to="/groups"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">参加団体一覧に戻る</div></v-btn>
+      <v-col cols=1o>
+        <v-btn text color="white" to="/project_names"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">企画名一覧に戻る</div></v-btn>
       </v-col>
       <v-col cols=1></v-col>
     </v-row>
@@ -85,26 +85,55 @@
           <v-col cols="8">
             <v-card-title class="font-weight-bold"><v-icon class="pa-2">mdi-pencil</v-icon>登録情報の編集</v-card-title>
             <v-text-field
-              label="グループ名"
+              label="氏名"
               background-color="white"
               outlined
-              v-model="name"
+              v-model="student_id"
+              filled
+              clearable
+              ></v-text-field>
+            <v-select
+              label="権限"
+              ref="groupCategory"
+              v-model="groupCategoryId"
+              :menu-props="{
+                             top: true,
+                             offsetY: true,
+                             }"
+              item-text="name"
+              item-value="id"
+              outlined
+              ></v-select>
+            <v-text-field
+              label="学籍番号８桁"
+              background-color="white"
+              outlined
+              v-model="student_id"
+              counter="8"
               filled
               clearable
               ></v-text-field>
             <v-text-field
-              label="企画名"
+              label="課程（専攻）"
               background-color="white"
               outlined
-              v-model="project_name"
+              v-model="student_id"
               filled
               clearable
               ></v-text-field>
             <v-text-field
-              label="企画内容"
+              label="団体"
               background-color="white"
               outlined
-              v-model="activity"
+              v-model="student_id"
+              filled
+              clearable
+              ></v-text-field>
+            <v-text-field
+              label="電話番号"
+              background-color="white"
+              outlined
+              v-model="student_id"
               filled
               clearable
               ></v-text-field>
@@ -120,7 +149,7 @@
 
   <script>
   import Header from '~/components/Header.vue'
-  import Menu from '~/components/Menu.vue'
+import Menu from '~/components/Menu.vue'
   import axios from 'axios'
   import { mapState } from 'vuex'
   
@@ -143,7 +172,7 @@
       }
     },
     mounted() {
-      const url = "/groups/" + this.$route.params.id;
+      const url = "groups/" + this.$route.params.id;
       this.$axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
@@ -152,8 +181,8 @@
       )
         .then(response => {
         this.group = response.data
-      })
-    }
+    })
+  }
 }
 </script>
   

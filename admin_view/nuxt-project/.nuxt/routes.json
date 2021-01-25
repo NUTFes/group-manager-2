@@ -1,79 +1,188 @@
 [
   {
+    "name": "employees",
+    "path": "/employees",
+    "component": "/app/nuxt-project/pages/employees/index.vue",
+    "chunkName": "pages/employees/index"
+  },
+  {
+    "name": "food_products",
+    "path": "/food_products",
+    "component": "/app/nuxt-project/pages/food_products/index.vue",
+    "chunkName": "pages/food_products/index"
+  },
+  {
+    "name": "goods_purchase",
+    "path": "/goods_purchase",
+    "component": "/app/nuxt-project/pages/goods_purchase/index.vue",
+    "chunkName": "pages/goods_purchase/index"
+  },
+  {
     "name": "groups",
     "path": "/groups",
     "component": "/app/nuxt-project/pages/groups/index.vue",
-    "chunkName": "pages/groups/index",
-    "_name": "_18c34093"
+    "chunkName": "pages/groups/index"
   },
   {
     "name": "inspire",
     "path": "/inspire",
     "component": "/app/nuxt-project/pages/inspire.vue",
-    "chunkName": "pages/inspire",
-    "_name": "_7f52cd64"
+    "chunkName": "pages/inspire"
+  },
+  {
+    "name": "item_orders",
+    "path": "/item_orders",
+    "component": "/app/nuxt-project/pages/item_orders/index.vue",
+    "chunkName": "pages/item_orders/index"
   },
   {
     "name": "mypage",
     "path": "/mypage",
     "component": "/app/nuxt-project/pages/mypage.vue",
-    "chunkName": "pages/mypage",
-    "_name": "_6faa4a12"
+    "chunkName": "pages/mypage"
+  },
+  {
+    "name": "place_orders",
+    "path": "/place_orders",
+    "component": "/app/nuxt-project/pages/place_orders/index.vue",
+    "chunkName": "pages/place_orders/index"
   },
   {
     "name": "power",
     "path": "/power",
     "component": "/app/nuxt-project/pages/power.vue",
-    "chunkName": "pages/power",
-    "_name": "_176bae0e"
+    "chunkName": "pages/power"
   },
   {
-    "name": "print",
-    "path": "/print",
-    "component": "/app/nuxt-project/pages/print.vue",
-    "chunkName": "pages/print",
-    "_name": "_56ce3ea1"
+    "name": "power_orders",
+    "path": "/power_orders",
+    "component": "/app/nuxt-project/pages/power_orders/index.vue",
+    "chunkName": "pages/power_orders/index"
+  },
+  {
+    "name": "project_names",
+    "path": "/project_names",
+    "component": "/app/nuxt-project/pages/project_names/index.vue",
+    "chunkName": "pages/project_names/index"
   },
   {
     "name": "regist_user_detail",
     "path": "/regist_user_detail",
     "component": "/app/nuxt-project/pages/regist_user_detail.vue",
-    "chunkName": "pages/regist_user_detail",
-    "_name": "_2aa33390"
+    "chunkName": "pages/regist_user_detail"
+  },
+  {
+    "name": "rental_items",
+    "path": "/rental_items",
+    "component": "/app/nuxt-project/pages/rental_items/index.vue",
+    "chunkName": "pages/rental_items/index"
   },
   {
     "name": "signup",
     "path": "/signup",
     "component": "/app/nuxt-project/pages/signup.vue",
-    "chunkName": "pages/signup",
-    "_name": "_5ee1db54"
+    "chunkName": "pages/signup"
+  },
+  {
+    "name": "stage_orders",
+    "path": "/stage_orders",
+    "component": "/app/nuxt-project/pages/stage_orders/index.vue",
+    "chunkName": "pages/stage_orders/index"
+  },
+  {
+    "name": "sub_reps",
+    "path": "/sub_reps",
+    "component": "/app/nuxt-project/pages/sub_reps/index.vue",
+    "chunkName": "pages/sub_reps/index"
   },
   {
     "name": "users",
     "path": "/users",
     "component": "/app/nuxt-project/pages/users/index.vue",
-    "chunkName": "pages/users/index",
-    "_name": "_123c2dff"
+    "chunkName": "pages/users/index"
+  },
+  {
+    "name": "users-print",
+    "path": "/users/print",
+    "component": "/app/nuxt-project/pages/users/print/index.vue",
+    "chunkName": "pages/users/print/index"
+  },
+  {
+    "name": "employees-id",
+    "path": "/employees/:id",
+    "component": "/app/nuxt-project/pages/employees/_id.vue",
+    "chunkName": "pages/employees/_id"
+  },
+  {
+    "name": "food_products-id",
+    "path": "/food_products/:id",
+    "component": "/app/nuxt-project/pages/food_products/_id.vue",
+    "chunkName": "pages/food_products/_id"
+  },
+  {
+    "name": "goods_purchase-id",
+    "path": "/goods_purchase/:id",
+    "component": "/app/nuxt-project/pages/goods_purchase/_id.vue",
+    "chunkName": "pages/goods_purchase/_id"
   },
   {
     "name": "groups-id",
     "path": "/groups/:id",
     "component": "/app/nuxt-project/pages/groups/_id.vue",
-    "chunkName": "pages/groups/_id",
-    "_name": "_8183688a"
+    "chunkName": "pages/groups/_id"
+  },
+  {
+    "name": "item_orders-id",
+    "path": "/item_orders/:id",
+    "component": "/app/nuxt-project/pages/item_orders/_id.vue",
+    "chunkName": "pages/item_orders/_id"
+  },
+  {
+    "name": "place_orders-id",
+    "path": "/place_orders/:id",
+    "component": "/app/nuxt-project/pages/place_orders/_id.vue",
+    "chunkName": "pages/place_orders/_id"
+  },
+  {
+    "name": "power_orders-id",
+    "path": "/power_orders/:id",
+    "component": "/app/nuxt-project/pages/power_orders/_id.vue",
+    "chunkName": "pages/power_orders/_id"
+  },
+  {
+    "name": "project_names-id",
+    "path": "/project_names/:id",
+    "component": "/app/nuxt-project/pages/project_names/_id.vue",
+    "chunkName": "pages/project_names/_id"
+  },
+  {
+    "name": "rental_items-id",
+    "path": "/rental_items/:id",
+    "component": "/app/nuxt-project/pages/rental_items/_id.vue",
+    "chunkName": "pages/rental_items/_id"
+  },
+  {
+    "name": "stage_orders-id",
+    "path": "/stage_orders/:id",
+    "component": "/app/nuxt-project/pages/stage_orders/_id.vue",
+    "chunkName": "pages/stage_orders/_id"
+  },
+  {
+    "name": "sub_reps-id",
+    "path": "/sub_reps/:id",
+    "component": "/app/nuxt-project/pages/sub_reps/_id.vue",
+    "chunkName": "pages/sub_reps/_id"
   },
   {
     "name": "users-id",
     "path": "/users/:id",
     "component": "/app/nuxt-project/pages/users/_id.vue",
-    "chunkName": "pages/users/_id",
-    "_name": "_42a8b7b2"
+    "chunkName": "pages/users/_id"
   },
   {
     "name": "index",
     "path": "/",
     "component": "/app/nuxt-project/pages/index.vue",
-    "chunkName": "pages/index",
-    "_name": "_dc6fcb74"
+    "chunkName": "pages/index"
   }
 ]

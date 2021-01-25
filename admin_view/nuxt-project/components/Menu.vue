@@ -1,12 +1,13 @@
 <template>
-  <div>
     <v-navigation-drawer
-      class="no_scroll"
       v-model="drawer"
       absolute
       permanent
       color="#37474F"
       >
+      <!-- ヘッダーと重ならないようにする -->
+      <v-list-item dark>
+      </v-list-item>
       <v-list-item dark>
         <v-list-item-icon>
           <v-icon>mdi-account-circle-outline</v-icon>
@@ -62,16 +63,17 @@ export default {
       items: [
         { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
         { title: 'ユーザー一覧', icon: 'mdi-account-multiple', click: '/users' },
+        { title: '副代表一覧', icon: 'mdi-account-outline', click: '/sub_reps' },
         { title: '参加団体一覧', icon: 'mdi-account-group', click: '/groups' },
-        { title: '企画名一覧', icon: 'mdi-unfold-more-vertical', click: '/groups' },
-        { title: 'ステージ申請一覧', icon: 'mdi-microphone-variant', click: '/groups' },
-        { title: '会場申請一覧', icon: 'mdi-map-marker', click: '/groups' },
-        { title: '電力申請一覧', icon: 'mdi-power-plug', click: '/groups' },
-        { title: '貸し出し物品一覧', icon: 'mdi-table-chair', click: '/groups' },
-        { title: '物品申請一覧', icon: 'mdi-cube', click: '/groups' },
-        { title: '従業員一覧', icon: 'mdi-account', click: '/groups' },
-        { title: '販売食品一覧', icon: 'mdi-baguette', click: '/groups' },
-        { title: '購入品一覧', icon: 'mdi-cart', click: '/groups' },
+        { title: '企画名一覧', icon: 'mdi-unfold-more-vertical', click: '/project_names' },
+        { title: 'ステージ申請一覧', icon: 'mdi-microphone-variant', click: '/stage_orders' },
+        { title: '会場申請一覧', icon: 'mdi-map-marker', click: '/place_orders' },
+        { title: '電力申請一覧', icon: 'mdi-power-plug', click: '/power_orders' },
+        { title: '貸し出し物品一覧', icon: 'mdi-table-chair', click: '/rental_items' },
+        { title: '物品申請一覧', icon: 'mdi-cube', click: '/item_orders' },
+        { title: '従業員一覧', icon: 'mdi-account', click: '/employees' },
+        { title: '販売食品一覧', icon: 'mdi-baguette', click: '/food_products' },
+        { title: '購入品一覧', icon: 'mdi-cart', click: '/goods_purchase' },
       ],
       user: []
     }
@@ -99,14 +101,5 @@ export default {
 </script>
 
  <style>
-.no_scroll{
-  overflow-y: scroll;
-  -ms-overflow-style: none;    /* IE、Edge用 */
-  scrollbar-width: none;    /* Firefox用 */
-}
-.no_scroll::-webkit-scrollbar {    /* Chrome、Safari用 */
-  display:none;
-}
-
 
 </style>

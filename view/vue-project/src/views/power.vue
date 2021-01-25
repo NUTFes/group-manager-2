@@ -8,6 +8,7 @@
           v-model="steps"
           :items="[1, 2, 3, 4, 5]"
           label="登録製品数"
+          outlined
         ></v-select>
         <v-select
           label="団体"
@@ -51,7 +52,6 @@
                 :step="step"
               >
                 <v-card>
-                  {{ groupId }}
                   <PowerCard :groupId="groupId" ref="child" :key="step" />
                 </v-card>
               </v-stepper-content>

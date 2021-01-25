@@ -1,27 +1,18 @@
 <template>
   <div>
-    <Header />
-    <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8">
-        <v-stepper v-model="e1" non-linear alt-labels>
-          <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2"
-              >副代表登録</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2"
-              >会場申請</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2"
-              >電力申請</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step step="4" color="purple accent-2"
-              >物品申請</v-stepper-step
-            >
-          </v-stepper-header>
+      <v-row>
+        <v-col cols="2"></v-col>
+        <v-col cols="8">
+          <v-stepper v-model="e1" non-linear alt-labels>
+            <v-stepper-header>
+              <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2">副代表登録</v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2">会場申請</v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2">電力申請</v-stepper-step>
+              <v-divider></v-divider>
+              <v-stepper-step step="4" color="purple accent-2">物品申請</v-stepper-step>
+            </v-stepper-header>
 
           <v-stepper-items>
             <!-- 副代表登録 -->
@@ -190,6 +181,7 @@
                         v-model="powerSteps"
                         :items="[1, 2, 3, 4, 5]"
                         label="登録製品数"
+                        outlined
                       />
                       <v-stepper v-model="e2">
                         <v-stepper-header>

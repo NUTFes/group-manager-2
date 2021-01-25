@@ -3,13 +3,19 @@
     <v-row>
       <v-col cols="1"></v-col>
       <v-col cols="10">
-        <v-card-text><router-link to="/groups">参加団体一覧</router-link> > {{ group.name }}</v-card-text>
+        <v-card-text><router-link to="/place_orders">会場申請一覧</router-link> >{{place_order.group_id}}</v-card-text>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols=1></v-col>
+      <v-col cols=10>
         <v-card>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
               <v-card-title class="font-weight-bold mt-3">
-                {{ group.name }}
+                group_id: {{place_order.group_id}}
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
               </v-card-title>
@@ -19,39 +25,35 @@
                   <tbody>
                     <tr>
                       <th>ID：</th>
-                      <td class="caption">{{ group.id }}</td>
+                      <td class="caption">{{ place_order.id }}</td>
                     </tr>
                     <tr>
-                      <th>user_id：</th>
-                      <td class="caption">{{ group.user_id }}</td>
+                      <th>group_id：</th>
+                      <td class="caption">{{ place_order.group_id }}</td>
                     </tr>
                     <tr>
-                      <th>グループ名：</th>
-                      <td class="caption">{{ group.name }}</td>
+                      <th>第一希望：</th>
+                      <td class="caption">{{ place_order.first }}</td>
                     </tr>
                     <tr>
-                      <th>企画名：</th>
-                      <td class="caption">{{ group.project_name }}</td>
+                      <th>第二希望：</th>
+                      <td class="caption">{{ place_order.second }}</td>
                     </tr>
                     <tr>
-                      <th>活動内容：</th>
-                      <td class="caption">{{ group.activity }}</td>
+                      <th>第三希望：</th>
+                      <td class="caption">{{ place_order.third }}</td>
                     </tr>
                     <tr>
-                      <th>グループカテゴリ：</th>
-                      <td class="caption">{{ group.group_category_id }}</td>
-                    </tr>
-                    <tr>
-                      <th>開催年：</th>
-                      <td class="caption">{{ group.fes_year_id }}</td>
+                      <th>備考：</th>
+                      <td class="caption">{{ place_order.remark }}</td>
                     </tr>
                     <tr>
                       <th>登録日時：</th>
-                      <td class="caption">{{ group.created_at | format-date }}</td>
+                      <td class="caption">{{ place_order.created_at | format-date }}</td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
-                      <td class="caption">{{ group.updated_at | format-date }}</td>
+                      <td class="caption">{{ place_order.updated_at | format-date }}</td>
                       <td v-if="rights == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
                       <td v-if="rights == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
                     </tr>
@@ -69,7 +71,7 @@
     <v-row>
       <v-col cols=1></v-col>
       <v-col cols=10>
-        <v-btn text color="white" to="/groups"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">参加団体一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/place_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">会場申請一覧に戻る</div></v-btn>
       </v-col>
       <v-col cols=1></v-col>
     </v-row>
@@ -85,26 +87,55 @@
           <v-col cols="8">
             <v-card-title class="font-weight-bold"><v-icon class="pa-2">mdi-pencil</v-icon>登録情報の編集</v-card-title>
             <v-text-field
-              label="グループ名"
+              label="氏名"
               background-color="white"
               outlined
-              v-model="name"
+              v-model="student_id"
+              filled
+              clearable
+              ></v-text-field>
+            <v-select
+              label="権限"
+              ref="groupCategory"
+              v-model="groupCategoryId"
+              :menu-props="{
+                             top: true,
+                             offsetY: true,
+                             }"
+              item-text="name"
+              item-value="id"
+              outlined
+              ></v-select>
+            <v-text-field
+              label="学籍番号８桁"
+              background-color="white"
+              outlined
+              v-model="student_id"
+              counter="8"
               filled
               clearable
               ></v-text-field>
             <v-text-field
-              label="企画名"
+              label="課程（専攻）"
               background-color="white"
               outlined
-              v-model="project_name"
+              v-model="student_id"
               filled
               clearable
               ></v-text-field>
             <v-text-field
-              label="企画内容"
+              label="団体"
               background-color="white"
               outlined
-              v-model="activity"
+              v-model="student_id"
+              filled
+              clearable
+              ></v-text-field>
+            <v-text-field
+              label="電話番号"
+              background-color="white"
+              outlined
+              v-model="student_id"
               filled
               clearable
               ></v-text-field>
@@ -120,7 +151,7 @@
 
   <script>
   import Header from '~/components/Header.vue'
-  import Menu from '~/components/Menu.vue'
+import Menu from '~/components/Menu.vue'
   import axios from 'axios'
   import { mapState } from 'vuex'
   
@@ -137,13 +168,13 @@
     },
     data() {
       return {
-        group: [],
+        place_order: [],
         expand: false,
         dialog: false,
       }
     },
     mounted() {
-      const url = "/groups/" + this.$route.params.id;
+      const url = "/place_orders/" + this.$route.params.id;
       this.$axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
@@ -151,7 +182,7 @@
       }
       )
         .then(response => {
-        this.group = response.data
+        this.place_order = response.data
       })
     }
 }

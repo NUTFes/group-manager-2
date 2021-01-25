@@ -1,9 +1,6 @@
 <template>
   <div>
-      <Header/>
-        <UserInfo/>
-
-      <!-- Sizes your content based upon application components -->
+				<UserInfo/>
         <News/>
         <div
           v-for="(regist, i) in regist_info"
