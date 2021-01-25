@@ -1,6 +1,6 @@
 <template>
   <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
-    <Header v-if="print"/>
+    <Header v-if="main"/>
       <div class="pad-bottom">
         <v-row>
           <v-col cols="2" v-if="main && print">
