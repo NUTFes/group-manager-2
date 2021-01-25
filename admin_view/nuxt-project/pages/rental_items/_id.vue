@@ -273,6 +273,7 @@ export default {
 
 <style>
 .card {
+  padding-left: 1%;
   padding-right: 5%
 }
 </style>

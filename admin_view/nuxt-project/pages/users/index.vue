@@ -99,6 +99,7 @@ export default {
 
 <style>
 .card {
-  padding-right: 5%
+  padding-left: 1%;
+  padding-right: 5%;
 }
 </style>
