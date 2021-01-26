@@ -11,6 +11,12 @@
   "LazyLogo": {
     "description": "Auto imported from components/Logo.vue"
   },
+  "Menu": {
+    "description": "Auto imported from components/Menu.vue"
+  },
+  "LazyMenu": {
+    "description": "Auto imported from components/Menu.vue"
+  },
   "VuetifyLogo": {
     "description": "Auto imported from components/VuetifyLogo.vue"
   },

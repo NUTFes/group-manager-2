@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10">
+      <v-col>
+        <div class="card">
         <v-card-text><router-link to="/project_names">企画名一覧</router-link> > {{ group.name }}</v-card-text>
-        <v-card>
+        <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
@@ -62,16 +62,16 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <v-row>
-      <v-col cols=1></v-col>
       <v-col cols=1o>
+        <div class="card">
         <v-btn text color="white" to="/project_names"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">企画名一覧に戻る</div></v-btn>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <!-- modal window to edit -->
@@ -186,3 +186,9 @@ import Menu from '~/components/Menu.vue'
 }
 </script>
   
+<style>
+.card {
+  padding-left: 1%;
+  padding-right: 5%
+}
+</style>
