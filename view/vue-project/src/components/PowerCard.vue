@@ -15,7 +15,7 @@
               required
             ></v-text-field>
             <v-text-field
-              label="電力量"
+              label="電力量（ワット）"
               ref="power"
               v-model="power"
               type="number"
