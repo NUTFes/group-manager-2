@@ -1,18 +1,26 @@
 <template>
   <div>
-      <v-row>
-        <v-col cols="2"></v-col>
-        <v-col cols="8">
-          <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
-            <v-stepper-header class="stepper">
-              <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2">副代表登録</v-stepper-step>
-              <v-divider></v-divider>
-              <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2">会場申請</v-stepper-step>
-              <v-divider></v-divider>
-              <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2">電力申請</v-stepper-step>
-              <v-divider></v-divider>
-              <v-stepper-step step="4" color="purple accent-2">物品申請</v-stepper-step>
-            </v-stepper-header>
+    <v-row>
+      <v-col cols="2"></v-col>
+      <v-col cols="8">
+        <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
+          <v-stepper-header class="stepper">
+            <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2"
+              >副代表登録</v-stepper-step
+            >
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2"
+              >会場申請</v-stepper-step
+            >
+            <v-divider></v-divider>
+            <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2"
+              >電力申請</v-stepper-step
+            >
+            <v-divider></v-divider>
+            <v-stepper-step step="4" color="purple accent-2"
+              >物品申請</v-stepper-step
+            >
+          </v-stepper-header>
 
           <v-stepper-items class="stepper">
             <!-- 副代表登録 -->
@@ -93,9 +101,16 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols=9></v-col>
+                <v-col cols="9"></v-col>
                 <v-col>
-                  <v-btn class="stepper" rounded height="50" width="170" color="primary" @click="e1 += 1">
+                  <v-btn
+                    class="stepper"
+                    rounded
+                    height="50"
+                    width="170"
+                    color="primary"
+                    @click="e1 += 1"
+                  >
                     次へ
                   </v-btn>
                 </v-col>
@@ -167,14 +182,21 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols=7></v-col>
-                <v-col cols=2>
+                <v-col cols="7"></v-col>
+                <v-col cols="2">
                   <v-btn text height="50" width="170" @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols=2>
-                  <v-btn class="stepper" rounded height="50" width="170" color="primary" @click="e1 += 1">
+                <v-col cols="2">
+                  <v-btn
+                    class="stepper"
+                    rounded
+                    height="50"
+                    width="170"
+                    color="primary"
+                    @click="e1 += 1"
+                  >
                     次へ
                   </v-btn>
                 </v-col>
@@ -225,30 +247,35 @@
                               :key="powerStep"
                             />
                             <v-row>
-                              <v-col cols=3>
+                              <v-col cols="4" />
+                              <v-col cols="4">
                                 <v-btn
-                                  width="160"
+                                  block
                                   height="50"
+                                  outlined
+                                  color="primary"
+                                  @click="e2 += 1"
+                                  v-show="powerSteps != powerStep"
+                                >
+                                  {{ powerStep + 1 }}個目の製品へ
+                                </v-btn>
+                              </v-col>
+                              <v-col cols="4" />
+                            </v-row>
+                            <v-row>
+                              <v-col cols="4" />
+                              <v-col cols="4">
+                                <v-btn
+                                  height="50"
+                                  block
                                   text
                                   @click="e2 -= 1"
                                   v-show="powerStep != 1"
-                                  >
+                                >
                                   戻る
                                 </v-btn>
                               </v-col>
-                              <v-col cols=6></v-col>
-                            <v-col cols=3>
-                                  <v-btn
-                                    width="160"
-                                    height="50"
-                                    outlined
-                                    color="primary"
-                                    @click="e2 += 1"
-                                    v-show="powerSteps != powerStep"
-                                    >
-                                    {{powerStep + 1}}個目の製品へ
-                                  </v-btn>
-                              </v-col>
+                              <v-col cols="4" />
                             </v-row>
                           </v-stepper-content>
                         </v-stepper-items>
@@ -260,14 +287,21 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols=7></v-col>
-                <v-col cols=2>
+                <v-col cols="7"></v-col>
+                <v-col cols="2">
                   <v-btn text height="50" width="170" @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols=2>
-                  <v-btn class="stepper" rounded height="50" width="170" color="primary" @click="e1 += 1">
+                <v-col cols="2">
+                  <v-btn
+                    class="stepper"
+                    rounded
+                    height="50"
+                    width="170"
+                    color="primary"
+                    @click="e1 += 1"
+                  >
                     次へ
                   </v-btn>
                 </v-col>
@@ -288,14 +322,22 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols=7></v-col>
-                <v-col cols=2>
+                <v-col cols="7"></v-col>
+                <v-col cols="2">
                   <v-btn text height="50" width="170" @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols=2>
-                  <v-btn class="stepper" dark rounded height="50" width="170" color="purple accent-2" @click="submit">
+                <v-col cols="2">
+                  <v-btn
+                    class="stepper"
+                    dark
+                    rounded
+                    height="50"
+                    width="170"
+                    color="purple accent-2"
+                    @click="submit"
+                  >
                     登録
                   </v-btn>
                 </v-col>
