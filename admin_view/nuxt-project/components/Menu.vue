@@ -26,7 +26,7 @@
           v-for="item in items"
           :key="item.title"
           :to="item.click"
-          color="#A9B6BD"
+          color="#81D4FA"
           dark
           >
           <v-list-item-icon>
