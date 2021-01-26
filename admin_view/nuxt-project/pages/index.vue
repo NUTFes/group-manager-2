@@ -1,8 +1,7 @@
 <template>
-  <v-container>
-    <v-row align="center">
-      <v-col cols="12">
-        <div class="pt-12" />
+    <v-row>
+      <v-col>
+        <div class="card">
         <v-card flat>
           <v-row align="center">
             <v-col cols="5">
@@ -93,9 +92,9 @@
             </v-col>
           </v-row>
         </v-card>
+        </div>
       </v-col>
     </v-row>
-  </v-container>
 </template>
 
 <script>
@@ -170,6 +169,9 @@ export default {
 </script>
 
 <style>
+.card {
+  padding-left: 20%;
+}
 .grey-title {
   color: #424242;
 }
