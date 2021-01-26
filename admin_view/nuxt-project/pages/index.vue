@@ -3,7 +3,7 @@
     <v-row align="center">
       <v-col cols="12">
         <div class="pt-12" />
-        <v-card>
+        <v-card flat>
           <v-row align="center">
             <v-col cols="5">
               <v-form ref="form" lazy-validation>
