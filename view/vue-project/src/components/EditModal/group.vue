@@ -1,10 +1,10 @@
 <template>
-  <v-dialog v-model="isDisplay" persistent width="1200">
+  <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color:#ECEFF1; font-size:30px">
-        <v-icon class="pr-3" size="35">mdi-account-group</v-icon><b>団体登録</b>
+        <v-icon class="pr-3" size="35">mdi-account-group</v-icon><b>団体の登録情報を修正する</b>
         <v-spacer></v-spacer>
-        <v-btn text @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn text fab @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>
       <v-container>
         <v-row>
@@ -15,17 +15,17 @@
                 label="団体名"
                 ref="groupName"
                 v-model="groupName"
-                :rules="[rules.required]"
                 text
                 outlined
-                required
+                :rules="[rules.required]"
+                default="groupName"
                 ></v-text-field>
               <v-select
                 label="カテゴリ"
                 ref="groupCategory"
                 v-model="groupCategoryId"
-                :rules="[rules.required]"
                 :items="groupCategories"
+                :rules="[rules.required]"
                 :menu-props="{
                                top: true,
                                offsetY: true,
@@ -38,27 +38,30 @@
                 label="活動内容"
                 ref="activity"
                 v-model="activity"
-                :rules="[rules.required]"
                 @keydown="adjustHeight"
+                :rules="[rules.required]"
                 text
                 outlined
-                required
                 ></v-textarea>
               <v-text-field
                 label="企画名"
                 ref="projectName"
-                v-model="projectName"
                 :rules="[rules.required]"
+                v-model="projectName"
                 text
                 outlined
-                required
                 ></v-text-field>
             </v-form>
-            <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
-            <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
             <br>
           </v-col>
           <v-col cols=2></v-col>
+        </v-row>
+        <v-row>
+          <v-col cols=4></v-col>
+            <v-col cols=4>
+            <v-btn color="blue darken-1" large block dark @click="edit">編集する</v-btn>
+            </v-col>
+            <v-col cols=4></v-col>
         </v-row>
       </v-container>
     </v-card>
@@ -69,6 +72,13 @@
 
 import axios from 'axios'
 export default {
+  props: {
+    groupId: Number,
+    groupName: String,
+    projectName: String,
+    groupCategoryId: String,
+    activity: String,
+  },
   data () {
     return {
       isDisplay: false,
@@ -111,27 +121,21 @@ export default {
     cancel: function() {
       this.$refs.form.reset();
     },
-    submit: function() {
+    edit: function() {
       if ( !this.$refs.form.validate() ) return;
 
-      const url = process.env.VUE_APP_URL + '/groups'
-      let params = new URLSearchParams();
-      params.append('name', this.groupName);
-      params.append('project_name', this.projectName);
-      params.append('activity', this.activity);
-      params.append('user_id', this.user.id);
-      params.append('group_category_id', this.groupCategoryId);
-      params.append('fes_year_id', this.fesYearId);
+      const url = process.env.VUE_APP_URL + '/groups' + '/' + this.groupId + '?' + 'name=' + this.groupName + '&project_name=' + this.projectName + '&group_category_id=' + this.groupCategoryId + '&activity=' + this.activity
       console.log(this.groupName, this.projectName, this.activity, this.user.id, this.groupCategoryId, this.fesYearId)
 
       axios.defaults.headers.common['Content-Type'] = 'application/json';
-      axios.post(url, params).then(
+      axios.put(url).then(
         (response) => {
           console.log('response:', response)
-          this.$router.push('MyPage')
+          this.isDisplay = false
+          this.$emit('openGroupSnackbar')
+          this.$emit('reload')
         },
         (error) => {
-          console.log('登録できませんでした')
           return error;
         }
       )

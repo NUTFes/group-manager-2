@@ -17,6 +17,21 @@
                             text
                             v-bind="attrs"
                             v-on="on"
+                            @click="reload"
+                            >
+                            <v-icon dark>mdi-reload</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>更新する</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
                             to="/users/print"
                             >
                             <v-icon dark>mdi-printer</v-icon>
@@ -94,6 +109,22 @@ export default {
         this.users = response.data.data
       })
   },
+  methods: {
+    reload: function() {
+      this.$axios.get('api/v1/users/index', {
+        headers: { 
+          "Content-Type": "application/json", 
+          "access-token": localStorage.getItem('access-token'),
+          "client": localStorage.getItem('client'),
+          "uid": localStorage.getItem('uid')
+        }
+      }
+      )
+        .then(response => {
+          this.users = response.data.data
+        })
+    }
+  }
 }
 </script>
 
