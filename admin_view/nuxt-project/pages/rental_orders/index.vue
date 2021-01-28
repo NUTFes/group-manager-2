@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-account</v-icon>従業員一覧
+              <v-icon>mdi-cube</v-icon>物品申請一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -17,7 +17,7 @@
                           text
                           v-bind="attrs"
                           v-on="on"
-                          to="/employees/print"
+                          to="/users/print"
                           >
                           <v-icon dark>mdi-printer</v-icon>
                   </v-btn>
@@ -29,11 +29,11 @@
             <template>
               <v-data-table
                 :headers="headers"
-                :items="employees"
+                :items="rental_orders"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/employees/${data.id}`})
+                            $router.push({ path: `/rental_orders/${data.id}`})
                             "
                 >
                 <template v-slot:item.created_at="{ item }">
@@ -64,19 +64,19 @@ export default {
   },
   data() {
     return {
-      employees: [],
+      rental_orders: [],
       headers:[
         { text: 'ID', value: 'id' },
         { text: 'group_id', value: 'group_id' },
-        { text: '名前', value: 'name' },
-        { text: '学籍番号', value: 'student_id' },
+        { text: '貸し出し物品', value: 'rental_item_id' },
+        { text: '個数', value: 'num' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/employees', {
+    this.$axios.get('/rental_orders', {
       headers: { 
         "Content-Type": "application/json", 
         "access-token": localStorage.getItem('access-token'),
@@ -86,7 +86,7 @@ export default {
     }
     )
       .then(response => {
-        this.employees = response.data
+        this.rental_orders = response.data
       })
   },
 }
@@ -95,6 +95,6 @@ export default {
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%;
+  padding-right: 5%
 }
 </style>
