@@ -1,6 +1,6 @@
 <template>
   <div>
-				<UserInfo/>
+    <UserInfo/>
         <News/>
         <div
           v-for="(regist, i) in regist_info"
@@ -9,6 +9,7 @@
           <Regist
             :num="i"
             :regist="regist"
+            @reload="reload()"
           />
         </div>
         <br>
@@ -72,6 +73,21 @@ export default {
         localStorage.removeItem('client'),
         localStorage.removeItem('uid')
         )
+    },
+    reload (){
+      const regist_info_url = process.env.VUE_APP_URL + '/api/v1/current_user/regist_info'
+      axios.get(regist_info_url, {
+        headers: { 
+          "Content-Type": "application/json", 
+          "access-token": localStorage.getItem('access-token'),
+          "client": localStorage.getItem('client'),
+          "uid": localStorage.getItem('uid')
+        }
+      }
+      )
+        .then(response => {
+          this.regist_info = response.data
+        })
     }
   },
   mounted() {

@@ -85,8 +85,24 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
-                        <Group ref="groupDlg"></Group>
+                        <v-btn text fab @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <Group ref="groupDlg"
+                          :groupId="regist.group.id"
+                          :groupName="regist.group.name"
+                          :projectName="regist.group.project_name"
+                          :groupCategoryId="regist.group.group_category_id"
+                          :activity="regist.group.activity"
+                          @reload="reload"
+                          @openGroupSnackbar="openGroupSnackbar"
+                               ></Group>
+                        <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="groupSnackbar"
+                          >
+                          参加団体情報を修正しました
+                        </v-snackbar>
                       </v-card-title>
                         <hr>
                       <v-list>
@@ -378,7 +394,8 @@
         localStorage.getItem('uid')
       ],
       user: [],
-      tab: 'tab-2'
+      tab: 'tab-2',
+      groupSnackbar: false
       }
     },
     mounted() {
@@ -397,6 +414,12 @@
         })
     },
     methods: {
+      reload() {
+        this.$emit('reload');
+      },
+      openGroupSnackbar() {
+        this.groupSnackbar = true
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },

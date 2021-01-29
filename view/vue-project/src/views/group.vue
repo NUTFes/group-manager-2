@@ -58,10 +58,16 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
+              <v-row>
+                <v-col cols=2></v-col>
+                  <v-col cols=8>
               <v-card-action>
-                <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
-                <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
+                <v-btn color="blue darken-1" block large dark @click="submit">登録</v-btn>
+                <v-btn color="blue darken-1" text block to="/MyPage">マイページに戻る</v-btn>
               </v-card-action>
+                  </v-col>
+                <v-col cols=2></v-col>
+              </v-row>
             </v-col>
             <v-col cols="2"></v-col>
           </v-row>

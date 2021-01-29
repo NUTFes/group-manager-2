@@ -26,6 +26,7 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1.json
   def update
     @group.update(group_params)
+    render json: @group
   end
 
   # DELETE /groups/1
