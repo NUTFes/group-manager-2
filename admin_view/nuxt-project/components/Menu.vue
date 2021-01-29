@@ -95,6 +95,10 @@ export default {
   methods: {
     logout() {
       this.$auth.logout()
+      localStorage.removeItem('access-token')
+      localStorage.removeItem('client')
+      localStorage.removeItem('uid')
+      this.$router.push('/')
     }
   }
 }

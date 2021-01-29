@@ -1,84 +1,74 @@
 <template>
   <div>
-    <v-container align="center">
-      <v-row>
-        <v-col cols="2"></v-col>
-        <v-col cols="8">
-          <v-card>
+    <v-row>
+      <v-col>
+        <div class="card">
+          <v-card class="mt-5 mx-auto " max-width="600" flat>
+            <v-row justify="center" style="padding-top:5%">
+              <p cols="12" class="mt-3 display-1">
+              詳細登録
+              </p>
+            </v-row>
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
-                <br>
-                <h1>ユーザーの詳細を登録</h1>
-                <br>
-                <v-row>
-                  <v-col cols="2"></v-col>
-                  <v-col cols="8">
-                    <v-text-field
-                      label="学籍番号８桁"
-                      background-color="white"
-                      outlined
-                      v-model="student_id"
-                      hint="お持ちでない方：0を8桁入力"
-                      :rules="[rules.min, rules.over]"
-                      counter="8"
-                      filled
-                      clearable
-                      ></v-text-field>
-                    <v-text-field
-                      label="TEL"
-                      background-color="white"
-                      outlined
-                      v-model="tel"
-                      counter="11"
-                      hint="ハイフンなしで半角入力"
-                      persistent-hint
-                      filled
-                      clearable
-                      ></v-text-field>
-                    <v-select
-                      v-model.number="department_id"
-                      :items="departments"
-                      :menu-props="{ top: true, offsetY: true }"
-                      label="学科"
-                      item-text="name"
-                      item-value="id"
-                      outlined
-                      clearable
-                      ></v-select>
-                    <v-select
-                      v-model.number="grade_id"
-                      :items="grades"
-                      :menu-props="{ top: true, offsetY: true }"
-                      label="学年"
-                      item-text="name"
-                      item-value="id"
-                      outlined
-                      clearable
-                      ></v-select>
-                  </v-col>
-                  <v-col cols="2"></v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="2"></v-col>
-                  <v-col cols="8">
-                    <v-card-actions>
-                      <v-btn large color="white" @click="reset">削除</v-btn>
-                      <v-spacer></v-spacer>
-                      <v-btn large color="primary" @click="register">登録</v-btn>
-                    </v-card-actions>
-                  </v-col>
-                  <v-col cols="2"></v-col>
-                </v-row>
-                <br>
+                <v-text-field
+                  label="学籍番号８桁"
+                  background-color="white"
+                  outlined
+                  v-model="student_id"
+                  hint="お持ちでない方：0を8桁入力"
+                  :rules="[rules.min, rules.over]"
+                  counter="8"
+                  clearable
+                  ></v-text-field>
+                <v-text-field
+                  label="TEL"
+                  background-color="white"
+                  outlined
+                  v-model="tel"
+                  counter="11"
+                  hint="ハイフンなしで半角入力"
+                  persistent-hint
+                  clearable
+                  ></v-text-field>
+                <v-select
+                  v-model.number="department_id"
+                  :items="departments"
+                  :menu-props="{ top: true, offsetY: true }"
+                  label="学科"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                  clearable
+                  ></v-select>
+                <v-select
+                  v-model.number="grade_id"
+                  :items="grades"
+                  :menu-props="{ top: true, offsetY: true }"
+                  label="学年"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                  clearable
+                  ></v-select>
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-actions>
+                  <v-btn flat large block dark color="blue" @click="register">登録</v-btn>
+                </v-card-actions>
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+            <br>
           </v-card>
-        </v-col>
-        <v-col cols="8"></v-col>
-      </v-row>
-    </v-container>
+        </div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -196,3 +186,9 @@ export default {
 }
 </script>
 
+<style scoped>
+.card {
+  padding-top: 5%;
+  padding-left: 20%;
+}
+</style>
