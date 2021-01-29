@@ -3,10 +3,7 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-card-text>
-            <router-link to="/users">ユーザー一覧</router-link> >
-            {{ user.name }}
-          </v-card-text>
+          <v-card-text><router-link to="/food_products">販売食品一覧</router-link> > {{ food_product.name }}</v-card-text>
         </div>
       </v-col>
     </v-row>
@@ -17,99 +14,46 @@
           <v-card flat>
             <v-row>
               <v-col cols="1"></v-col>
-              <v-col cols="10">
+              <v-col cols="10"> 
                 <v-card-title class="font-weight-bold mt-3">
-                  <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
-                  <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
-                  <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
-                  {{ user.name }}
+                  {{food_product.name}}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
-                <hr class="mt-n3" />
+                <hr class="mt-n3">
                 <v-simple-table class="my-9">
                   <template v-slot:default>
                     <tbody>
                       <tr>
-                        <th>学籍番号：</th>
-                        <td class="caption">{{ detail.student_id }}</td>
+                        <th>ID：</th>
+                        <td class="caption">{{ food_product.id }}</td>
                       </tr>
                       <tr>
-                        <th>学年：</th>
-                        <td class="caption">{{ grade }}</td>
+                        <th>group_id：</th>
+                        <td class="caption">{{ food_product.group_id }}</td>
                       </tr>
                       <tr>
-                        <th>課程：</th>
-                        <td class="caption">{{ department }}</td>
+                        <th>１日目の個数：</th>
+                        <td class="caption">{{ food_product.first_day_num }}</td>
                       </tr>
                       <tr>
-                        <th>電話番号：</th>
-                        <td class="caption">{{ detail.tel }}</td>
+                        <th>２日目の個数：</th>
+                        <td class="caption">{{ food_product.second_day_num }}</td>
+                      </tr>
+                      <tr>
+                        <th>調理の有無：</th>
+                        <td class="caption"> <v-chip v-if="food_product.is_cooking == true" color="red" text-color="white" small>する</v-chip></td>
+                        <td class="caption"><v-chip v-if="food_product.is_cooking == false" color="blue" text-color="white" small>しない</v-chip></td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
-                        <td class="caption">
-                          {{ user.created_at | format-date }}
-                        </td>
+                        <td class="caption">{{ food_product.created_at | format-date }}</td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
-                        <td class="caption">
-                          {{ user.updated_at | format-date }}
-                        </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
-      </v-col>
-    </v-row>
-
-    <v-row v-for="group in groups" :key="group.id">
-      <v-col>
-        <div class="card">
-          <v-card flat v-if="group.user_id === user.id">
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
-                  <v-icon>mdi-account-group</v-icon>
-                  参加団体情報
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>団体名：</th>
-                        <td class="caption">{{ group.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>企画名：</th>
-                        <td class="caption">{{ group.project_name }}</td>
-                      </tr>
-                      <tr>
-                        <th>活動内容：</th>
-                        <td class="caption">{{ group.activity }}</td>
-                      </tr>
-                      <tr>
-                        <th>グループカテゴリ：</th>
-                        <td class="caption">{{ group.group_category_id }}</td>
-                      </tr>
-                      <tr>
-                        <th>開催年：</th>
-                        <td class="caption">{{ group.fes_year_id }}</td>
+                        <td class="caption">{{ food_product.updated_at | format-date }}</td>
+                        <td v-if="rights == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
+                        <td v-if="rights == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
                       </tr>
                     </tbody>
                   </template>
@@ -123,23 +67,24 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/food_products"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">販売食品一覧に戻る</div></v-btn>
       </v-col>
-      <v-col></v-col>
     </v-row>
 
     </v-col>
     <v-col cols="1"></v-col>
     </v-row>
+
     <!-- modal window to edit -->
-    <v-dialog v-model="dialog" width="1200">
+    <v-dialog
+      v-model="dialog"
+      width="1200"
+      >
       <v-card>
         <v-row>
           <v-col cols="2"></v-col>
           <v-col cols="8">
-            <v-card-title class="font-weight-bold"
-                          ><v-icon class="pa-2">mdi-pencil</v-icon>登録情報の編集</v-card-title>
+            <v-card-title class="font-weight-bold"><v-icon class="pa-2">mdi-pencil</v-icon>登録情報の編集</v-card-title>
             <v-text-field
               label="氏名"
               background-color="white"
@@ -193,75 +138,54 @@
               filled
               clearable
               ></v-text-field>
-            <v-btn color="blue darken-1" block dark @click="submit"
-                   >登録</v-btn>
+            <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
             <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
           </v-col>
           <v-col cols="2"></v-col>
         </v-row>
       </v-card>
     </v-dialog>
-        </div>
+  </div>
 </template>
 
-<script>
-import Header from "~/components/Header.vue";
-import Menu from "~/components/Menu.vue";
-import axios from "axios";
-import { mapState } from "vuex";
-
-export default {
-  components: {
-    Header,
-    Menu,
-  },
-  fetch({ store }) {
-    store.dispatch("getRights");
-  },
-  computed: {
-    ...mapState(["rights"]),
-  },
-  data() {
-    return {
-      user: [],
-      role: [],
-      grade: [],
-      department: [],
-      detail: [],
-      groups: [],
-      expand: false,
-      dialog: false,
-    };
-  },
-  mounted() {
-    const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-    this.$axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.detail = response.data.detail;
-      })
-
-      this.$axios.get('groups/', {
-      headers: { 
-        "Content-Type": "application/json"
+  <script>
+  import Header from '~/components/Header.vue'
+import Menu from '~/components/Menu.vue'
+  import axios from 'axios'
+  import { mapState } from 'vuex'
+  
+  export default {
+    components: {
+      Header,
+      Menu,
+    },
+    fetch({ store }) {
+      store.dispatch('getRights')
+    },
+    computed: {
+      ...mapState(['rights'])
+    },
+    data() {
+      return {
+        food_product: [],
+        expand: false,
+        dialog: false,
       }
-    }
-    )
-      .then(response => {
-        this.groups = response.data
+    },
+    mounted() {
+      const url = "/food_products/" + this.$route.params.id;
+      this.$axios.get(url, {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }
+      )
+        .then(response => {
+        this.food_product = response.data
       })
-  }
+    }
 }
 </script>
-
 <style scoped>
   td{
     width: 70%;

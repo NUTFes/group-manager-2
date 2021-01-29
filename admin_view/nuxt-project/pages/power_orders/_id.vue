@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/power_orders">電力申請一覧</router-link>>{{ power_order.group_id }}</v-card-text>
+        <v-card-text><router-link to="/power_orders">電力申請一覧</router-link> > {{ power_order.item }}</v-card-text>
         </div>
       </v-col>
     </v-row>

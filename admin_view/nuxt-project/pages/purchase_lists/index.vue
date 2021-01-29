@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-account</v-icon>従業員一覧
+              <v-icon>mdi-cart</v-icon>購入品一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -17,7 +17,7 @@
                           text
                           v-bind="attrs"
                           v-on="on"
-                          to="/employees/print"
+                          to="/purchase_lists/print"
                           >
                           <v-icon dark>mdi-printer</v-icon>
                   </v-btn>
@@ -29,13 +29,17 @@
             <template>
               <v-data-table
                 :headers="headers"
-                :items="employees"
+                :items="purchase_lists"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/employees/${data.id}`})
+                            $router.push({ path: `/purchase_lists/${data.id}`})
                             "
                 >
+                <template v-slot:item.is_fresh="{ item }">
+                  <v-chip v-if="item.is_fresh == true" color="red" text-color="white" small>はい</v-chip>
+                  <v-chip v-if="item.is_fresh == false" color="blue" text-color="white" small>いいえ</v-chip>
+                </template>
                 <template v-slot:item.created_at="{ item }">
                   {{ item.created_at | format-date }}
                 </template>
@@ -64,19 +68,21 @@ export default {
   },
   data() {
     return {
-      employees: [],
+      purchase_lists: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '名前', value: 'name' },
-        { text: '学籍番号', value: 'student_id' },
+        { text: 'food_product_id', value: 'food_product_id' },
+        { text: '購入品', value: 'items' },
+        { text: '店名', value: 'shop_id' },
+        { text: '開催日', value: 'fes_date_id' },
+        { text: 'なまもの', value: 'is_fresh' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/employees', {
+    this.$axios.get('/purchase_lists', {
       headers: { 
         "Content-Type": "application/json", 
         "access-token": localStorage.getItem('access-token'),
@@ -86,7 +92,7 @@ export default {
     }
     )
       .then(response => {
-        this.employees = response.data
+        this.purchase_lists = response.data
       })
   },
 }
@@ -95,6 +101,6 @@ export default {
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%;
+  padding-right: 5%
 }
 </style>
