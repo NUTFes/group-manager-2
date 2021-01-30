@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10">
+      <v-col>
+        <div class="card">
         <v-card-text><router-link to="/sub_reps">副代表一覧</router-link> > {{ sub_rep.name }}</v-card-text>
-        <v-card>
+        <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
@@ -50,16 +50,16 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <v-row>
-      <v-col cols=1></v-col>
-      <v-col cols=10>
-        <v-btn text color="white" to="/sub_reps"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">副代表一覧に戻る</div></v-btn>
+      <v-col>
+        <div class="card">
+          <v-btn text color="white" to="/sub_reps"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">副代表一覧に戻る</div></v-btn>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <!-- modal window to edit -->
@@ -67,7 +67,7 @@
       v-model="dialog"
       width="1200"
       >
-      <v-card>
+      <v-card flat>
         <v-row>
           <v-col cols="2"></v-col>
           <v-col cols="8">
@@ -174,3 +174,9 @@ import Menu from '~/components/Menu.vue'
 }
 </script>
   
+<style>
+.card {
+  padding-left: 1%;
+  padding-right: 5%
+}
+</style>

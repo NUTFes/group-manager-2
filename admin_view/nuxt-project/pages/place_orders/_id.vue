@@ -1,16 +1,17 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10">
-        <v-card-text><router-link to="/place_orders">会場申請一覧</router-link> >{{place_order.group_id}}</v-card-text>
+      <v-col>
+        <div class="card">
+        <v-card-text><router-link to="/place_orders">会場申請一覧</router-link> > {{place_order.group_id}}</v-card-text>
+        </div>
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col cols=1></v-col>
-      <v-col cols=10>
-        <v-card>
+      <v-col>
+        <div class="card">
+        <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
@@ -64,16 +65,16 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <v-row>
-      <v-col cols=1></v-col>
-      <v-col cols=10>
+      <v-col>
+        <div class="card">
         <v-btn text color="white" to="/place_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">会場申請一覧に戻る</div></v-btn>
+        </div>
       </v-col>
-      <v-col cols=1></v-col>
     </v-row>
 
     <!-- modal window to edit -->
@@ -187,4 +188,10 @@ import Menu from '~/components/Menu.vue'
     }
 }
 </script>
+<style>
+.card {
+  padding-left: 1%;
+  padding-right: 5%
+}
+</style>
   

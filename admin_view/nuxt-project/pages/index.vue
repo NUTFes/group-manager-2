@@ -1,9 +1,8 @@
 <template>
-  <v-container>
-    <v-row align="center">
-      <v-col cols="12">
-        <div class="pt-12" />
-        <v-card>
+  <v-row>
+    <v-col>
+      <div class="login-card">
+        <v-card flat>
           <v-row align="center">
             <v-col cols="5">
               <v-form ref="form" lazy-validation>
@@ -11,7 +10,7 @@
                   <v-row justify="center">
                     <v-col cols="1"></v-col>
                     <p cols="10" class="mt-3 display-1 grey-title">
-                      ログイン
+                    ログイン
                     </p>
                     <p v-bind:style="warnStyle" v-html="getMessage"></p>
                   </v-row>
@@ -27,8 +26,8 @@
                         v-on:keyup.enter="loginWithAuthModule"
                         :rules="[rules.requied, rules.email]"
                         required
-                      />
-                      <p class="caption mb-0" />
+                        />
+                        <p class="caption mb-0" />
                     </v-col>
                   </v-row>
                   <v-row align="center" justify="center">
@@ -43,37 +42,37 @@
                         counter
                         v-on:keyup.enter="loginWithAuthModule"
                         v-bind:append-icon="
-                          show_pass ? 'mdi-eye-off' : 'mdi-eye'
-                        "
+                                             show_pass ? 'mdi-eye-off' : 'mdi-eye'
+                                             "
                         :rules="[rules.required, rules.min]"
                         v-bind:type="show_pass ? 'password' : 'text'"
                         @click:append="show_pass = !show_pass"
-                      />
+                        />
                     </v-col>
                   </v-row>
                   <v-row align="center" justify="center">
                     <v-col cols="1" />
-                    <v-col cols="10" md="10" sm="10">
-                      <v-btn
-                        block
-                        class="mr-4 blue white--text"
-                        @click="loginWithAuthModule"
-                      >
-                        ログイン
-                      </v-btn>
-                      <v-container>
-                        <v-row align="center" justify="center">
-                          <v-col cols="2" />
-                          <v-col cols="8">
-                            <nuxt-link class="text-center" to="/signup">
-                              新規登録はこちら
-                            </nuxt-link>
-                          </v-col>
-                          <v-col cols="2" />
-                        </v-row>
-                      </v-container>
-                    </v-col>
+                      <v-col cols="10" md="10" sm="10">
+                        <v-btn
+                          block
+                          class="mr-4 blue white--text"
+                          @click="loginWithAuthModule"
+                          >
+                          ログイン
+                        </v-btn>
+                      </v-col>
                   </v-row>
+                  <v-container>
+                    <v-row align="center" justify="center">
+                      <v-col cols="2" />
+                        <v-col cols="8">
+                          <nuxt-link class="text-center" to="/signup">
+                            新規登録はこちら
+                          </nuxt-link>
+                        </v-col>
+                        <v-col cols="2" />
+                    </v-row>
+                  </v-container>
                 </v-container>
               </v-form>
             </v-col>
@@ -84,7 +83,7 @@
                 max-height="600"
                 v-bind:src="image_src"
                 class="mt-n3 pt-n3 mb-n3 pb-n3"
-              >
+                >
                 <div class="inner">
                   <img width="80%" src="@/assets/logo_japanese.svg" />
                   <img width="80%" src="@/assets/logo_english.svg" />
@@ -93,9 +92,9 @@
             </v-col>
           </v-row>
         </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -169,7 +168,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.login-card {
+  padding-top: 5%;
+  padding-left: 20%;
+}
 .grey-title {
   color: #424242;
 }

@@ -26,7 +26,7 @@
           v-for="item in items"
           :key="item.title"
           :to="item.click"
-          color="#A9B6BD"
+          color="#81D4FA"
           dark
           >
           <v-list-item-icon>
@@ -69,11 +69,11 @@ export default {
         { title: 'ステージ申請一覧', icon: 'mdi-microphone-variant', click: '/stage_orders' },
         { title: '会場申請一覧', icon: 'mdi-map-marker', click: '/place_orders' },
         { title: '電力申請一覧', icon: 'mdi-power-plug', click: '/power_orders' },
+        { title: '物品申請一覧', icon: 'mdi-cube', click: '/rental_orders' },
         { title: '貸し出し物品一覧', icon: 'mdi-table-chair', click: '/rental_items' },
-        { title: '物品申請一覧', icon: 'mdi-cube', click: '/item_orders' },
         { title: '従業員一覧', icon: 'mdi-account', click: '/employees' },
         { title: '販売食品一覧', icon: 'mdi-baguette', click: '/food_products' },
-        { title: '購入品一覧', icon: 'mdi-cart', click: '/goods_purchase' },
+        { title: '購入品一覧', icon: 'mdi-cart', click: '/purchase_lists' },
       ],
       user: []
     }
@@ -95,6 +95,10 @@ export default {
   methods: {
     logout() {
       this.$auth.logout()
+      localStorage.removeItem('access-token')
+      localStorage.removeItem('client')
+      localStorage.removeItem('uid')
+      this.$router.push('/')
     }
   }
 }
