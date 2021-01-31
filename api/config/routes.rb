@@ -4,20 +4,26 @@ Rails.application.routes.draw do
   resources :food_products
   resources :assign_rental_items
   resources :rentable_items
+  resources :rental_items
+  resources :rental_item_allow_lists
   resources :stocker_items
+  resources :stocker_places
   resources :rental_orders
   resources :rental_items
   resources :assign_stages
   resources :stage_orders
+  resources :stages
   resources :employees
   resources :sub_reps
   resources :power_orders
   resources :place_allow_lists
+  resources :places
   resources :assign_group_places
   resources :place_orders
   resources :stage_common_options
   resources :groups
   resources :user_details
+  resources :shops
   namespace 'api' do
     namespace 'v1' do
       # resources :users

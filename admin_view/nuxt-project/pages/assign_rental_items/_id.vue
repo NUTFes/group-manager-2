@@ -4,8 +4,8 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/rental_items">物品一覧</router-link> >
-            {{ rental_item.name }}
+            <router-link to="/users">ユーザー一覧</router-link> >
+            {{ user.name }}
           </v-card-text>
         </div>
       </v-col>
@@ -19,7 +19,10 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  {{ rental_item.name }}
+                  <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
+                  <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
+                  <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
+                  {{ user.name }}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
@@ -28,30 +31,31 @@
                   <template v-slot:default>
                     <tbody>
                       <tr>
-                        <th>ID：</th>
-                        <td class="caption">{{ rental_item.id }}</td>
+                        <th>学籍番号：</th>
+                        <td class="caption">{{ detail.student_id }}</td>
                       </tr>
                       <tr>
-                        <th>名前：</th>
-                        <td class="caption">{{ rental_item.name }}</td>
+                        <th>学年：</th>
+                        <td class="caption">{{ grade }}</td>
                       </tr>
                       <tr>
-                        <th>貸出：</th>
-                        <td class="caption">
-                    <v-chip v-if="rental_item.is_rentable== true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
-                    <v-chip v-if="rental_item.is_rentable== false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
-                        </td>
+                        <th>課程：</th>
+                        <td class="caption">{{ department }}</td>
+                      </tr>
+                      <tr>
+                        <th>電話番号：</th>
+                        <td class="caption">{{ detail.tel }}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ rental_item.created_at | format-date }}
+                          {{ user.created_at | format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ rental_item.updated_at | format-date }}
+                          {{ user.updated_at | format-date }}
                         </td>
                         <td v-if="rights == 1">
                           <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -119,8 +123,8 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">物品一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -201,25 +205,58 @@
 </template>
 
 <script>
+import Header from "~/components/Header.vue";
+import Menu from "~/components/Menu.vue";
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
+  components: {
+    Header,
+    Menu,
+  },
+  fetch({ store }) {
+    store.dispatch("getRights");
+  },
+  computed: {
+    ...mapState(["rights"]),
+  },
   data() {
     return {
-      rental_item: [],
+      user: [],
+      role: [],
+      grade: [],
+      department: [],
+      detail: [],
+      groups: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-      this.$axios.get('rental_items/' + this.$route.params.id, {
+    const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
+    this.$axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.user = response.data.user;
+        this.role = response.data.role;
+        this.grade = response.data.grade;
+        this.department = response.data.department;
+        this.detail = response.data.detail;
+      })
+
+      this.$axios.get('groups/', {
       headers: { 
         "Content-Type": "application/json"
       }
     }
     )
       .then(response => {
-        this.rental_item = response.data
+        this.groups = response.data
       })
   }
 }

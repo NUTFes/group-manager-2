@@ -8,7 +8,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon>mdi-map-marker</v-icon>会場申請一覧
+                <v-icon>mdi-microphone-variant</v-icon>ステージ一覧
                 <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -18,7 +18,7 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            to="/users/print"
+                            to="/stage_orders/print"
                             >
                             <v-icon dark>mdi-printer</v-icon>
                     </v-btn>
@@ -30,13 +30,21 @@
               <template>
                 <v-data-table
                   :headers="headers"
-                  :items="place_orders"
+                  :items="stages"
                   class="elevation-0 my-9"
                   @click:row="
-                              (data) =>
-                              $router.push({ path: `/place_orders/${data.id}`})
-                              "
+                               (data) =>
+                               $router.push({ path: `/stages/${data.id}`})
+                               "
                   >
+                  <template v-slot:item.enable_sunny="{ item }">
+                    <v-chip v-if="item.enable_sunny == true" color="red" text-color="white" small>使用可能</v-chip>
+                    <v-chip v-if="item.enable_sunny == false" color="blue" text-color="white" small>使用不可能</v-chip>
+                  </template>
+                  <template v-slot:item.enable_rainy="{ item }">
+                    <v-chip v-if="item.enable_rainy == true" color="red" text-color="white" small>使用可能</v-chip>
+                    <v-chip v-if="item.enable_rainy == false" color="blue" text-color="white" small>使用不可能</v-chip>
+                  </template>
                   <template v-slot:item.created_at="{ item }">
                     {{ item.created_at | format-date }}
                   </template>
@@ -56,35 +64,29 @@
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
-      place_orders: [],
+      stages: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '第一希望', value: 'first' },
-        { text: '第二希望', value: 'second' },
-        { text: '第三希望', value: 'third' },
-        // { text: '備考', value: 'remark' },
+        { text: '名前', value: 'name' },
+        { text: '晴れ', value: 'enable_sunny' },
+        { text: '雨', value: 'enable_rainy' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-   this.$axios.get('place_orders', {
+    this.$axios.get('stages', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )
       .then(response => {
-        this.place_orders = response.data
+        this.stages = response.data
       })
   },
 }
