@@ -22,8 +22,10 @@ Rails.application.routes.draw do
   resources :place_orders
   resources :stage_common_options
   resources :groups
+  resources :group_categories
   resources :user_details
   resources :shops
+  resources :fes_years
   namespace 'api' do
     namespace 'v1' do
       # resources :users
