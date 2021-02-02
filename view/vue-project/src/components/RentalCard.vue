@@ -7,7 +7,7 @@
             label="物品"
             ref="rentalItem"
             v-model="item"
-            :items="itemCategories"
+            :items="itemList"
             :rules="rules.required"
             item-text="name"
             item-value="id"
@@ -48,6 +48,9 @@ export default {
         { id: 10, name: "テント"},
         { id: 11, name: "パーテーション足"},
       ],
+      itemList: [],
+      itemAllowList: [],
+      groupCategoryId: localStorage.getItem("group_category_id"),
       rules: {
         required: value => !!value || "入力してください"
       },
@@ -91,6 +94,30 @@ export default {
       );
     }
   },
-  mounted() {}
+  mounted() {
+    const allowListUrl = process.env.VUE_APP_URL + '/rental_item_allow_lists';
+    axios.get(allowListUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid")
+      }
+    })
+    .then(
+      response => {
+        for(let i=0; i<response.data.length; i++){
+          this.itemAllowList.push(response.data[i])
+          if (response.data[i].group_category_id == this.groupCategoryId) {
+            this.itemList.push(this.itemCategories[response.data[i].rental_item_id - 1]);
+            console.log(response.data[i].rental_item_id)
+          }
+        }
+        console.log(this.itemList)
+      }, error => {
+        console.error(error)
+      }
+    )
+  }
 }
 </script>

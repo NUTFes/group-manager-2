@@ -144,6 +144,7 @@ export default {
         (response) => {
           console.log('response:', response.data.id)
           localStorage.setItem('group_id', response.data.id)
+          localStorage.setItem('group_category_id', this.groupCategoryId)
           this.$router.push('regist_shop')
         },
         (error) => {
