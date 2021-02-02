@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-table-chair</v-icon>物品一覧
+              <v-icon>mdi-table-chair</v-icon>使用可能物品一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -29,17 +29,13 @@
             <template>
               <v-data-table
                 :headers="headers"
-                :items="rental_items"
+                :items="rental_item_allow_list"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/rental_items/${data.id}`})
+                            $router.push({ path: `/rental_item_allow_lists/${data.id}`})
                             "
                 >
-                  <template v-slot:item.is_rentable="{ item }">
-                    <v-chip v-if="item.is_rentable== true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
-                    <v-chip v-if="item.is_rentable== false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
-                  </template>
                 <template v-slot:item.created_at="{ item }">
                   {{ item.created_at | format-date }}
                 </template>
@@ -62,28 +58,25 @@
 export default {
   data() {
     return {
-      rental_items: [],
+      rental_item_allow_list: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: '名前', value: 'name' },
-        { text: '貸し出し', value: 'is_rentable' },
+        { text: '物品', value: 'rental_item_id' },
+        { text: 'グループカテゴリー', value: 'group_category_id' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/rental_items', {
+    this.$axios.get('/rental_item_allow_lists', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )
       .then(response => {
-        this.rental_items = response.data
+        this.rental_item_allow_list = response.data
       })
   },
 }

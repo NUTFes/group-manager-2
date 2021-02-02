@@ -1,15 +1,29 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
-        <div class="card">
+  <v-row>
+    <v-col>
+      <div class="card">
         <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon>mdi-map-marker</v-icon>会場申請一覧
+                <v-icon>mdi-account-multiple</v-icon>会場一覧
                 <v-spacer></v-spacer>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="reload"
+                            >
+                            <v-icon dark>mdi-reload</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>更新する</span>
+                </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
                     <v-btn 
@@ -30,12 +44,12 @@
               <template>
                 <v-data-table
                   :headers="headers"
-                  :items="place_orders"
+                  :items="places"
                   class="elevation-0 my-9"
                   @click:row="
-                              (data) =>
-                              $router.push({ path: `/place_orders/${data.id}`})
-                              "
+                               (data) =>
+                               $router.push({ path: `/places/${data.id}`})
+                               "
                   >
                   <template v-slot:item.created_at="{ item }">
                     {{ item.created_at | format-date }}
@@ -49,50 +63,54 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
-        </div>
-      </v-col>
-    </v-row>
+      </div>
+    </v-col>
+  </v-row>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
   data() {
     return {
-      place_orders: [],
+      places: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '第一希望', value: 'first' },
-        { text: '第二希望', value: 'second' },
-        { text: '第三希望', value: 'third' },
-        // { text: '備考', value: 'remark' },
+        { text: '名前', value: 'name' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-   this.$axios.get('place_orders', {
+    this.$axios.get('places', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
-    }
-    )
+    })
       .then(response => {
-        this.place_orders = response.data
+        this.places = response.data
       })
   },
+  methods: {
+    reload: function() {
+      this.$axios.get('places', {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }
+      )
+        .then(response => {
+          this.places = response.data
+        })
+    }
+  }
 }
 </script>
 
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%
+  padding-right: 5%;
 }
 </style>

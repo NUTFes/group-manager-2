@@ -4,8 +4,8 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/rental_items">物品一覧</router-link> >
-            {{ rental_item.name }}
+            <router-link to="/places">会場一覧</router-link> >
+            {{ place.name }}
           </v-card-text>
         </div>
       </v-col>
@@ -19,7 +19,7 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  {{ rental_item.name }}
+                  {{ place.name }}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
@@ -29,29 +29,18 @@
                     <tbody>
                       <tr>
                         <th>ID：</th>
-                        <td class="caption">{{ rental_item.id }}</td>
-                      </tr>
-                      <tr>
-                        <th>名前：</th>
-                        <td class="caption">{{ rental_item.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>貸出：</th>
-                        <td class="caption">
-                    <v-chip v-if="rental_item.is_rentable== true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
-                    <v-chip v-if="rental_item.is_rentable== false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
-                        </td>
+                        <td class="caption">{{ place.id }}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ rental_item.created_at | format-date }}
+                          {{ place.created_at | format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ rental_item.updated_at | format-date }}
+                          {{ place.updated_at | format-date }}
                         </td>
                         <td v-if="rights == 1">
                           <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -119,8 +108,8 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">物品一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/places"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div style="color: #333333">会場一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -202,24 +191,32 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
+  fetch({ store }) {
+    store.dispatch("getRights");
+  },
+  computed: {
+    ...mapState(["rights"]),
+  },
   data() {
     return {
-      rental_item: [],
+      place: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-      this.$axios.get('rental_items/' + this.$route.params.id, {
-      headers: { 
-        "Content-Type": "application/json"
-      }
-    }
-    )
-      .then(response => {
-        this.rental_item = response.data
+    const url = "places/" + this.$route.params.id;
+    this.$axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.place = response.data
       })
   }
 }

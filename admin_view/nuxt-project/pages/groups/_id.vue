@@ -23,7 +23,7 @@
                       </tr>
                       <tr>
                         <th>user_id：</th>
-                        <td class="caption">{{ group.user_id }}</td>
+                        <td class="caption">{{ user }}</td>
                       </tr>
                       <tr>
                         <th>グループ名：</th>
@@ -39,11 +39,18 @@
                       </tr>
                       <tr>
                         <th>グループカテゴリ：</th>
-                        <td class="caption">{{ group.group_category_id }}</td>
+                        <td>
+                          <v-chip v-if="group.group_category_id == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
+                          <v-chip v-if="group.group_category_id == 2" color="red lighten-1" text-color="white" small>{{ category[1] }}</v-chip>
+                          <v-chip v-if="group.group_category_id == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
+                          <v-chip v-if="group.group_category_id == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
+                          <v-chip v-if="group.group_category_id == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
+                          <v-chip v-if="group.group_category_id == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
+                        </td>
                       </tr>
                       <tr>
                         <th>開催年：</th>
-                        <td class="caption">{{ group.fes_year_id }}</td>
+                        <td class="caption">{{ years[group.fes_year_id] }}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -117,45 +124,82 @@
   </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-  import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        group: [],
-        expand: false,
-        dialog: false,
-      }
-    },
-    mounted() {
-      const url = "/groups/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.group = response.data
-      })
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      group: [],
+      user_id: [],
+      user: [],
+      group_category_id: [],
+      fes_year_id: [],
+      group_categories: [],
+      category: [],
+      fes_years: [],
+      years: [],
+      expand: false,
+      dialog: false,
     }
+  },
+  mounted() {
+    const url = "/groups/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    }
+    )
+      .then(response => {
+        this.group = response.data
+        this.user_id = response.data.user_id
+        this.group_category_id = response.data.group_category_id
+        this.fes_year_id = response.data.fes_year_id
+      })
+
+    const user_url = "api/v1/users/show_user_detail/" + this.$route.params.id;
+    this.$axios.get(user_url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        console.log(response)
+        this.user = response.data.user.name
+      })
+
+    const category_url = "group_categories" + this.group_category_id;
+    this.$axios.get(category_url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        console.log(response)
+        this.group_categories = response.data
+        for (let i = 0; i < this.group_categories.length; i++) {
+          this.category.push(this.group_categories[i]['name'])
+        }
+      })
+
+    const year_url = "fes_years" + this.fes_year_id;
+    this.$axios.get(year_url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        console.log(response)
+        this.fes_years = response.data
+        for (let i = 0; i < this.fes_years.length; i++) {
+          this.years.push(this.fes_years[i]['year_num'])
+        }
+      })
+  }
 }
 </script>
-  
+
 <style>
 .card {
   padding-left: 1%;

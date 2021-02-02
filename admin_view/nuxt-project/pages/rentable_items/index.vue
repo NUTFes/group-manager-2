@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-table-chair</v-icon>物品一覧
+              <v-icon>mdi-table-chair</v-icon>貸し出し物品一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -29,11 +29,11 @@
             <template>
               <v-data-table
                 :headers="headers"
-                :items="rental_items"
+                :items="rentable_items"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/rental_items/${data.id}`})
+                            $router.push({ path: `/rentable_items/${data.id}`})
                             "
                 >
                   <template v-slot:item.is_rentable="{ item }">
@@ -62,28 +62,26 @@
 export default {
   data() {
     return {
-      rental_items: [],
+      rentable_items: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: '名前', value: 'name' },
-        { text: '貸し出し', value: 'is_rentable' },
+        { text: '物品', value: 'stocker_item_id' },
+        { text: '在庫場所', value: 'stocker_place_id' },
+        { text: '最大数', value: 'max_num' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/rental_items', {
+    this.$axios.get('/rentable_items', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )
       .then(response => {
-        this.rental_items = response.data
+        this.rentable_items = response.data
       })
   },
 }

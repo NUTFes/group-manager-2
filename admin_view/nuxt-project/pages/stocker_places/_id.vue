@@ -4,8 +4,8 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/rental_items">物品一覧</router-link> >
-            {{ rental_item.name }}
+            <router-link to="/stocker_places">在庫場所一覧</router-link> >
+            {{ stocker_place.name }}
           </v-card-text>
         </div>
       </v-col>
@@ -19,7 +19,7 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  {{ rental_item.name }}
+                    {{ stocker_place.name }}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
@@ -29,83 +29,23 @@
                     <tbody>
                       <tr>
                         <th>ID：</th>
-                        <td class="caption">{{ rental_item.id }}</td>
+                        <td class="caption">{{ stocker_place.id }}</td>
                       </tr>
                       <tr>
                         <th>名前：</th>
-                        <td class="caption">{{ rental_item.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>貸出：</th>
-                        <td class="caption">
-                    <v-chip v-if="rental_item.is_rentable== true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
-                    <v-chip v-if="rental_item.is_rentable== false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
-                        </td>
+                        <td class="caption">{{ stocker_place.name }}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ rental_item.created_at | format-date }}
+                          {{ stocker_place.created_at | format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ rental_item.updated_at | format-date }}
+                          {{ stocker_place.updated_at | format-date }}
                         </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
-      </v-col>
-    </v-row>
-
-    <v-row v-for="group in groups" :key="group.id">
-      <v-col>
-        <div class="card">
-          <v-card flat v-if="group.user_id === user.id">
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
-                  <v-icon>mdi-account-group</v-icon>
-                  参加団体情報
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>団体名：</th>
-                        <td class="caption">{{ group.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>企画名：</th>
-                        <td class="caption">{{ group.project_name }}</td>
-                      </tr>
-                      <tr>
-                        <th>活動内容：</th>
-                        <td class="caption">{{ group.activity }}</td>
-                      </tr>
-                      <tr>
-                        <th>グループカテゴリ：</th>
-                        <td class="caption">{{ group.group_category_id }}</td>
-                      </tr>
-                      <tr>
-                        <th>開催年：</th>
-                        <td class="caption">{{ group.fes_year_id }}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -119,8 +59,8 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">物品一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/stocker_places"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div style="color: #333333">在庫場所一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -206,20 +146,21 @@ import axios from "axios";
 export default {
   data() {
     return {
-      rental_item: [],
+      stocker_place: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-      this.$axios.get('rental_items/' + this.$route.params.id, {
-      headers: { 
-        "Content-Type": "application/json"
-      }
-    }
-    )
-      .then(response => {
-        this.rental_item = response.data
+    const url = "stocker_places/" + this.$route.params.id;
+    this.$axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.stocker_place = response.data;
       })
   }
 }
