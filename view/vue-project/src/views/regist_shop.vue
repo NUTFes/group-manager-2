@@ -243,7 +243,7 @@
                           >
                             <PowerCard
                               :groupId="groupId"
-                              ref="child"
+                              ref="powerChild"
                               :key="powerStep"
                             />
                             <v-row>
@@ -316,7 +316,77 @@
                   <v-card class="mb-12" flat>
                     <v-card-title>物品登録</v-card-title>
                     <v-divider></v-divider>
-                    <v-card-text> </v-card-text>
+                    <v-card-text>
+                      <v-select
+                        v-model="rentalSteps"
+                        :items="[1, 2, 3, 4, 5, 6]"
+                        label="登録物品数"
+                        outlined />
+                      <v-stepper
+                        class="stepper"
+                        v-model="e3"
+                      >
+                        <v-stepper-header class="stepper">
+                          <template v-for="rentalStep in rentalSteps">
+                            <v-stepper-step
+                              :key="`${rentalStep}-step`"
+                              :complete="e3 > rentalStep"
+                              :step="rentalStep"
+                            >
+                              {{ rentalStep }}
+                            </v-stepper-step>
+                            <v-divider
+                              v-if="rentalStep !== rentalSteps"
+                              :key="rentalStep"></v-divider>
+                          </template>
+                        </v-stepper-header>
+                        <v-stepper-items>
+                          <v-stepper-content
+                            v-for="rentalStep in rentalSteps"
+                            :key="`${rentalStep}-content`"
+                            :step="rentalStep"
+                          >
+                            <RentalCard
+                              ref="rentalChild"
+                              :groupId="groupId"
+                              :key="rentalStep"
+                            />
+                            <v-row>
+                              <v-col cols="4" />
+                              <v-col cols="4">
+                                <v-btn
+                                  block
+                                  height="50"
+                                  outlined
+                                  color="primary"
+                                  @click="e3 += 1"
+                                  v-show="rentalSteps != rentalStep"
+                                >
+                                  {{ rentalStep + 1}}
+                                  個目の物品へ
+                                </v-btn>
+                              </v-col>
+                              <v-col cols="4" />
+                            </v-row>
+                            <v-row>
+                              <v-col cols="4" />
+                              <v-col cols="4">
+                                <v-btn
+                                  height="50"
+                                  block
+                                  text
+                                  @click="e3 -= 1"
+                                  v-show="rentalStep != 1"
+                                >
+                                  戻る
+                                </v-btn>
+                              </v-col>
+                              <v-col cols="4" />
+                            </v-row>
+                          </v-stepper-content>
+                        </v-stepper-items>
+                      </v-stepper>
+                    </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
@@ -355,15 +425,18 @@
 import axios from "axios";
 import Header from "@/components/Header.vue";
 import PowerCard from "../components/PowerCard";
+import RentalCard from "@/components/RentalCard";
 export default {
   components: {
     Header,
-    PowerCard
+    PowerCard,
+    RentalCard
   },
   data() {
     return {
       e1: 1,
       e2: 1,
+      e3: 1,
       rules: {
         required: value => !!value || "入力してください",
         min8: v => v.length >= 8 || "8桁かどうかを確認してください",
@@ -432,7 +505,10 @@ export default {
       power: [], // 電力量
       powerManufacturer: [], // メーカー
       powerModel: [], // 型番
-      powerItemUrl: [] // 製品URL
+      powerItemUrl: [], // 製品URL
+
+      // 物品申請
+      rentalSteps: 2,
     };
   },
   watch: {
@@ -444,6 +520,12 @@ export default {
   },
   methods: {
     submit: function() {
+
+      if (localStorage.getItem("group_category_id") == null) {
+        console.log("can't group_category_id");
+        return;
+      }
+
       // 副代表登録
       axios.defaults.headers.common["Content-Type"] = "application/json";
       const subRepUrl = process.env.VUE_APP_URL + "/sub_reps";
@@ -483,7 +565,12 @@ export default {
       );
       // 電力申請
       for (let i = 0; i < this.powerSteps; i++) {
-        this.$refs.child[i].submit();
+        this.$refs.powerChild[i].submit();
+      }
+
+      // 物品登録
+      for (let i = 0; i < this.rentalSteps; i++) {
+        this.$refs.rentalChild[i].submit();
       }
       this.$router.push("MyPage");
     },
