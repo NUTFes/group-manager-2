@@ -51,6 +51,17 @@
                               $router.push({ path: `/groups/${data.id}`})
                               "
                   >
+                  <template v-slot:item.group_category_id="{ item }">
+                    <v-chip v-if="item.group_category_id == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
+                    <v-chip v-if="item.group_category_id == 2" color="red lighten-1" text-color="white" small>{{ category[1] }}</v-chip>
+                    <v-chip v-if="item.group_category_id == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
+                    <v-chip v-if="item.group_category_id == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
+                    <v-chip v-if="item.group_category_id == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
+                    <v-chip v-if="item.group_category_id == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
+                  </template>
+                  <template v-slot:item.fes_year_id="{ item }">
+                    {{ years[item.fes_year_id] }}
+                  </template>
                   <template v-slot:item.created_at="{ item }">
                     {{ item.created_at | format-date }}
                   </template>
@@ -70,16 +81,14 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       groups: [],
+      group_categories: [],
+      category: [],
+      fes_years: [],
+      years: [],
       headers:[
         { text: 'ID', value: 'id' },
         // { text: 'USER_ID', value: 'user_id' },
@@ -101,10 +110,33 @@ export default {
         "client": localStorage.getItem('client'),
         "uid": localStorage.getItem('uid')
       }
-    }
-    )
+    })
       .then(response => {
         this.groups = response.data
+      })
+
+    this.$axios.get('/group_categories', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.group_categories = response.data
+        for (let i = 0; i < this.group_categories.length; i++) {
+          this.category.push(this.group_categories[i]['name'])
+        }
+      })
+
+    this.$axios.get('/fes_years', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.fes_years = response.data
+        for (let i = 0; i < this.fes_years.length; i++) {
+          this.years.push(this.fes_years[i]['year_num'])
+        }
       })
   },
   methods: {

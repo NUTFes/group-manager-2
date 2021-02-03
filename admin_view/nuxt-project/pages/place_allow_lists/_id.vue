@@ -4,8 +4,8 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/rental_items">物品一覧</router-link> >
-            {{ rental_item.name }}
+            <router-link to="/place_allow_lists">使用会場一覧</router-link> >
+            {{ place_allow_list.place_id }}
           </v-card-text>
         </div>
       </v-col>
@@ -19,7 +19,7 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  {{ rental_item.name }}
+                  {{ place_allow_list.place_id }}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
@@ -29,35 +29,33 @@
                     <tbody>
                       <tr>
                         <th>ID：</th>
-                        <td class="caption">{{ rental_item.id }}</td>
+                        <td class="caption">{{ place_allow_list.id }}</td>
                       </tr>
                       <tr>
-                        <th>名前：</th>
-                        <td class="caption">{{ rental_item.name }}</td>
+                        <th>場所：</th>
+                        <td class="caption">{{ place_allow_list.place_id }}</td>
                       </tr>
                       <tr>
-                        <th>貸出：</th>
+                        <th>グループカテゴリー：</th>
+                        <td class="caption">{{ place_allow_list.group_category_id }}</td>
+                      </tr>
+                      <tr>
+                        <th>使用：</th>
                         <td class="caption">
-                    <v-chip v-if="rental_item.is_rentable== true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
-                    <v-chip v-if="rental_item.is_rentable== false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
+                          <v-chip v-if="place_allow_list.enable == true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
+                          <v-chip v-if="place_allow_list.enable == false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
                         </td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ rental_item.created_at | format-date }}
+                          {{ place_allow_list.created_at | format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ rental_item.updated_at | format-date }}
-                        </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
+                          {{ place_allow_list.updated_at | format-date }}
                         </td>
                       </tr>
                     </tbody>
@@ -119,8 +117,8 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">物品一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/place_allow_lists"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div style="color: #333333">使用会場一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -206,20 +204,21 @@ import axios from "axios";
 export default {
   data() {
     return {
-      rental_item: [],
+      place_allow_list: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-      this.$axios.get('rental_items/' + this.$route.params.id, {
-      headers: { 
-        "Content-Type": "application/json"
-      }
-    }
-    )
-      .then(response => {
-        this.rental_item = response.data
+    const url = "place_allow_lists/" + this.$route.params.id;
+    this.$axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.place_allow_list = response.data;
       })
   }
 }
