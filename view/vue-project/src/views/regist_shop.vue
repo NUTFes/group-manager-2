@@ -520,6 +520,12 @@ export default {
   },
   methods: {
     submit: function() {
+
+      if (localStorage.getItem("group_category_id") == null) {
+        console.log("can't group_category_id");
+        return;
+      }
+
       // 副代表登録
       axios.defaults.headers.common["Content-Type"] = "application/json";
       const subRepUrl = process.env.VUE_APP_URL + "/sub_reps";
