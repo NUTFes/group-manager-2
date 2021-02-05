@@ -26,6 +26,15 @@ export default {
     Header,
     Menu,
   },
+  data() {
+    return {
+      flag:false,
+      user:[], 
+      content:[], 
+      memos: [],
+      users:[]
+    }
+  },
   computed:{
     main(){
       return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail' && this.$route.path !== '/users/print'
@@ -33,6 +42,55 @@ export default {
     print(){
       return this.$route.path !== '/users/print'
     }
+  },
+  mounted() {
+    this.$axios.get('api/v1/users/show', {
+      headers: { 
+        "Content-Type": "application/json", 
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+        "uid": localStorage.getItem('uid')
+      }
+    }).then(response => {
+        this.user = response.data.data
+      })
+
+    this.$axios.get('/memos', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    }).then(response => {
+        this.memos = response.data
+      })
+  },
+  methods: {
+    submit: function() {
+      this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
+      var params = new URLSearchParams();
+      params.append('content', this.content);
+      params.append('user_id', this.user.id);
+      this.$axios.post('/memos', params).then(
+        (response) => {
+          this.memos = response.data
+          this.content = []
+        },
+        (error) => {
+          return error
+        }
+        )
+    },
+    destroy: function(id) {
+      this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
+      var params = new URLSearchParams();
+      this.$axios.delete(`/memos/#{id}`, params).then(
+        (response) => {
+          this.memos = response.data
+        },
+        (error) => {
+          return error
+        }
+        )
+    },
   }
 }
 </script>
