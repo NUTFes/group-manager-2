@@ -11,7 +11,7 @@
         <v-btn
           color="pink"
           dark
-          @click.stop="drawer = !drawer"
+          @click="drawer = !drawer"
           style="box-shadow:none"
           >
           <v-icon class="mr-2">mdi-note</v-icon>
@@ -73,7 +73,7 @@ export default {
   },
   data () {
     return {
-      drawer: true,
+      drawer: false,
       items: [
         { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
       ],
