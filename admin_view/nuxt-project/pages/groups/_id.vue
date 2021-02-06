@@ -11,7 +11,7 @@
                 <v-card-title class="font-weight-bold mt-3">
                   {{ group.name }}
                   <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
+                  <v-btn text fab @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
                 <hr class="mt-n3">
                 <v-simple-table class="my-9">
@@ -94,7 +94,7 @@
               label="グループ名"
               background-color="white"
               outlined
-              v-model="name"
+              v-model="this.group.name"
               filled
               clearable
               ></v-text-field>
