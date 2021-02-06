@@ -11,7 +11,7 @@
                 <v-card-title class="font-weight-bold mt-3">
                   {{ group.name }}
                   <v-spacer></v-spacer>
-                  <v-btn text fab @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
+                  <v-btn text fab @click="dialog = true"><v-icon class="ma-5" color="#333333">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
                 <hr class="mt-n3">
                 <v-simple-table class="my-9">
@@ -59,8 +59,6 @@
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">{{ group.updated_at | format-date }}</td>
-                        <td v-if="rights == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
-                        <td v-if="rights == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
                       </tr>
                     </tbody>
                   </template>
@@ -94,15 +92,28 @@
               label="グループ名"
               background-color="white"
               outlined
-              v-model="this.group.name"
+              v-model="groupName"
               filled
               clearable
               ></v-text-field>
+              <v-select
+                label="カテゴリ"
+                v-model="groupCategoryId"
+                :items="groupCategories"
+                :rules="[rules.required]"
+                :menu-props="{
+                               top: true,
+                               offsetY: true,
+                               }"
+                item-text="name"
+                item-value="id"
+                outlined
+                ></v-select>
             <v-text-field
               label="企画名"
               background-color="white"
               outlined
-              v-model="project_name"
+              v-model="groupProjectName"
               filled
               clearable
               ></v-text-field>
@@ -110,14 +121,19 @@
               label="企画内容"
               background-color="white"
               outlined
-              v-model="activity"
+              v-model="groupActivity"
               filled
               clearable
               ></v-text-field>
-            <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
-            <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
           </v-col>
           <v-col cols="2"></v-col>
+        </v-row>
+        <v-row>
+          <v-col cols=3></v-col>
+          <v-col cols=6>
+            <v-btn color="blue darken-1" block large dark @click="edit">編集</v-btn>
+          </v-col>
+          <v-col cols=3></v-col>
         </v-row>
       </v-card>
     </v-dialog>
@@ -141,7 +157,38 @@ export default {
       years: [],
       expand: false,
       dialog: false,
+      groupName: [],
+      groupProjectName: [],
+      groupCategoryId: [],
+      groupActivity: [],
+      groupCategories: [
+      { id: 1, name: '模擬店(食品販売)' },
+      { id: 2, name: '模擬店(物品販売)' },
+      { id: 3, name: 'ステージ企画' },
+      { id: 4, name: '展示・体験' },
+      { id: 5, name: '研究室公開' },
+      { id: 6, name: 'その他' }
+      ],
+      rules: {
+      required: value => !!value || '入力してください',
+      },
     }
+  },
+  methods: {
+    edit: function() {
+    const edit_url = '/groups/' + this.group.id + '?' + 'name=' + this.groupName + '&project_name=' + this.groupProjectName + '&group_category_id=' + this.groupCategoryId + '&activity=' + this.groupActivity
+    this.$axios.put(edit_url , {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    }
+    )
+      .then(response => {
+        this.group = response.data
+        this.dialog = false
+      })
+    }
+
   },
   mounted() {
     const url = "/groups/" + this.$route.params.id;
@@ -153,6 +200,10 @@ export default {
     )
       .then(response => {
         this.group = response.data
+        this.groupName = response.data.name
+        this.groupProjectName = response.data.project_name
+        this.groupCategoryId = response.data.group_category_id
+        this.groupActivity = response.data.activity
         this.user_id = response.data.user_id
         this.group_category_id = response.data.group_category_id
         this.fes_year_id = response.data.fes_year_id
