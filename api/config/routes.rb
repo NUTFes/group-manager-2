@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :memos
   resources :news
   resources :purchase_lists
   resources :food_products
