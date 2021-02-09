@@ -1,37 +1,52 @@
 <template>
   <div>
-    <v-app-bar app color="#FAFAFA" height="70" dark>
-      <v-row>
-        <v-col cols="2"></v-col>
-        <v-col>
-          <router-link to="/mypage">
-            <v-img :src="logoImage"> </v-img>
-          </router-link>
-        </v-col>
-        <v-spacer></v-spacer>
-
-        <v-col cols="2">
-          <v-menu open-on-hover offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn color="black" dark v-bind="attrs" v-on="on" outlined>
-                {{ users.name }}
-              </v-btn>
-            </template>
-
-            <v-list>
-              <v-list-item @click="signOut">
-                <v-list-item-avatar>
-                  <v-icon>mdi-logout</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>ログアウト</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-col>
-        <v-col cols="1"></v-col>
-      </v-row>
+    <v-app-bar app color="#FAFAFA" dark>
+      <v-container>
+        <v-row>
+          <v-col cols="1"></v-col>
+          <v-col cols="1" align-self="center">
+            <router-link to="/mypage">
+              <v-img :src="logoImage"> </v-img>
+            </router-link>
+          </v-col>
+          <v-col cols="8"></v-col>
+          <v-col cols="1" align-self="center">
+            <v-menu open-on-hover offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn text color="#757575" dark v-bind="attrs" v-on="on">
+                  <v-icon large>mdi-account-circle-outline</v-icon>
+                  <v-icon>mdi-chevron-down</v-icon>
+                </v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <b>ユーザープロファイル</b>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <b>パーソナル設定</b>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item @click="signOut">
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      <v-icon class="pr-2" size="30">mdi-logout</v-icon
+                      ><b>ログアウト</b>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+      </v-container>
     </v-app-bar>
   </div>
 </template>
