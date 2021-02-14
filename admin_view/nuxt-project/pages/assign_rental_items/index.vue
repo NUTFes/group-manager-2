@@ -29,17 +29,13 @@
             <template>
               <v-data-table
                 :headers="headers"
-                :items="rentable_items"
+                :items="assign_rental_items"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
                             $router.push({ path: `/rental_items/${data.id}`})
                             "
                 >
-                  <template v-slot:item.is_rentable="{ item }">
-                    <v-chip v-if="item.is_rentable== true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
-                    <v-chip v-if="item.is_rentable== false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
-                  </template>
                 <template v-slot:item.created_at="{ item }">
                   {{ item.created_at | format-date }}
                 </template>
@@ -65,9 +61,10 @@ export default {
       assign_rental_items: [],
       headers:[
         { text: 'ID', value: 'id' },
-        { text: '物品', value: 'stocker_item_id' },
+        { text: '参加団体', value: 'group_id' },
+        { text: '物品', value: 'rental_item_id' },
+        { text: '個数', value: 'num' },
         { text: '在庫場所', value: 'stocker_place_id' },
-        { text: '最大数', value: 'max_num' },
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],

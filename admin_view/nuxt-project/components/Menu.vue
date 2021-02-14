@@ -79,6 +79,7 @@ export default {
         { title: '在庫物品一覧', icon: 'mdi-table-chair', click: '/stocker_items' },
         { title: '貸出可能物品一覧', icon: 'mdi-table-chair', click: '/rentable_items' },
         { title: '物品申請一覧', icon: 'mdi-cube', click: '/rental_orders' },
+        { title: '物品割り当て', icon: 'mdi-table-chair', click: '/assign_items' },
         { title: '割り当て物品一覧', icon: 'mdi-cube', click: '/assign_rental_items' },
         { title: '従業員一覧', icon: 'mdi-account', click: '/employees' },
         { title: '販売食品一覧', icon: 'mdi-baguette', click: '/food_products' },

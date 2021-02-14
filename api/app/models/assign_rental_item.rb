@@ -1,4 +1,5 @@
 class AssignRentalItem < ApplicationRecord
-    belongs_to :rental_order
-    belongs_to :rentable_item
+    belongs_to :group
+    belongs_to :rental_item
+    belongs_to :stocker_place
 end
