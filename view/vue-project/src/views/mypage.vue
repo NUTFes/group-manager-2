@@ -1,5 +1,6 @@
 <template>
   <div>
+    <DashBoard/>
     <UserInfo/>
         <News/>
         <div
@@ -35,12 +36,14 @@
 
 <script>
 import Header from '@/components/Header.vue'
+import DashBoard from '@/components/DashBoard.vue'
 import UserInfo from '@/components/UserInfo.vue'
 import News from '@/components/News.vue'
 import Regist from '@/components/Regist.vue'
 import axios from 'axios'
 export default {
   components: {
+    DashBoard,
     UserInfo,
     Header, 
     News,
