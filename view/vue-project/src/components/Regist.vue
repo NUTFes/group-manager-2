@@ -23,7 +23,7 @@
                 :value="tab-2"
                 class="font-weight-bold justify-start"
                 >
-                <v-icon class="pr-2">mdi-account-multiple</v-icon>代表情報
+                <v-icon class="pr-2">mdi-account-multiple</v-icon>副代表情報
               </v-tab>
 
               <v-tab
@@ -132,29 +132,33 @@
                 </v-row>
               </v-tab-item>
 
-              <!-- 代表情報 -->
+              <!--副代表情報 -->
               <v-tab-item>
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
                       <v-card-title  style="color:#333333; font-size:25px">
-                      <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>代表情報</b>
+                      <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
                       <v-btn text @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       <SubRep ref="subRepDlg"></SubRep>
                       </v-card-title>
                       <hr>
-
                       <v-list>
                         <v-list-item>
-                          <v-list-item-content>代表名</v-list-item-content>
-                          <v-list-item-content>{{ user.name }}</v-list-item-content>
-                        </v-list-item>
-                      <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>副代表</v-list-item-content>
+                          <v-list-item-content>氏名</v-list-item-content>
                           <v-list-item-content>{{ regist.sub_rep.name }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>学年</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.grade_id }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>学籍番号</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.student_id }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -263,6 +267,62 @@
                         <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>机</v-list-item-content>
+                          <v-list-item-content>{{ rental_orders }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>長机</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                          <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>木の椅子</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>パイプ椅子</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>パーテーション</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>掲示板</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>暗幕</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>マイク</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>椅子</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                     <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>テント</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>パーテーション脚</v-list-item-content>
+                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
@@ -282,7 +342,57 @@
                         <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
-                      <v-card-text>{{ regist.stage_order }}</v-card-text>
+                       <v-list>
+                        <v-list-item>
+                          <v-list-item-content>月日</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.fes_date_id }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>第1希望</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.stage_first }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>第2希望</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.stage_second }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>使用時間幅</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.use_time_interval }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>準備時間幅</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.prepare_time_interval }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>掃除時間幅</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.cleanup_time_interval }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>準備開始時刻</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.prepare_start_time }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>パフォーマンス開始時刻</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.performance_start_time }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>パフォーマンス終了時刻</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.performance_end_time }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>掃除終了時刻</v-list-item-content>
+                          <v-list-item-content>{{ regist.stage_order.cleanup_end_time }}</v-list-item-content>
+                        </v-list-item>
+                       </v-list>
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
@@ -324,7 +434,10 @@
 
               <!-- 販売食品情報 -->
               <v-tab-item>
-                <v-row>
+                <v-row
+                  v-for="(food_product, i) in regist.food_products"
+                  :key="i"
+                  >
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
@@ -335,6 +448,27 @@
                         <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>商品名</v-list-item-content>
+                          <v-list-item-content>{{ food_product.name }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>1日目の個数</v-list-item-content>
+                          <v-list-item-content>{{ food_product.first_day_num }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>2日目の個数</v-list-item-content>
+                          <v-list-item-content>{{ food_product.first_day_num }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>調理の有無</v-list-item-content>
+                          <v-list-item-content>{{ food_product.is_cooking }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
@@ -354,6 +488,12 @@
                         <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
+                      <v-list>
+                        <v-list-item>
+                          <v-list-item-content>製品名</v-list-item-content>
+                          <v-list-item-content>{{  }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>

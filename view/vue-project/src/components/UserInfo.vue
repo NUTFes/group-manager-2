@@ -9,9 +9,15 @@
       <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-account-circle</v-icon><b>ユーザー情報</b></v-card-title>  
       <v-row>
         <v-col>
-          <v-card-text>
-            <h3>{{ user.name }}  様</h3>
-            <h3>技大祭に参加していただき誠にありがとうございます。<br>登録情報の確認や変更が行えます。<br>入力締め切りはお守りいただくよう、よろしくお願いします。</h3>
+          <v-card-text class="font-weight-bold display-1">
+            {{ user.user.name }} 
+          </v-card-text>
+          <v-card-text class="font-weight-bold subtitle-1">
+            <v-icon class="mr-2">mdi-email</v-icon>{{ user.user.email }}<br>
+            <v-icon class="mr-2">mdi-account-outline</v-icon>{{ user.student_id}}<br>
+            <v-icon class="mr-2">mdi-school-outline</v-icon>{{ user.grade}}<br>
+            <v-icon class="mr-2">mdi-school</v-icon>{{ user.department}}<br>
+            <v-icon class="mr-2">mdi-phone</v-icon>{{ user.tel}}
           </v-card-text>
         </v-col>
       </v-row>
@@ -26,11 +32,11 @@
   export default {
     data () {
       return {
-        user: []
+        user: [],
       }
     },
     mounted() {
-      const url = process.env.VUE_APP_URL + '/api/v1/users/show'
+      const url = process.env.VUE_APP_URL + '/api/v1/users/get_user_detail'
       axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
@@ -41,7 +47,7 @@
       }
       )
         .then(response => {
-          this.user = response.data.data
+          this.user = response.data
         })
     },
   }

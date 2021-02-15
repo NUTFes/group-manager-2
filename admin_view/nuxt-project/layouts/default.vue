@@ -100,7 +100,7 @@ export default {
   padding-bottom: 150px;
 }
 .v-enter {
-  transform: translate(-100px, 0);
+  transform: translate(0px, 100px);
   opacity: 0;
 }
 .v-enter-to {
@@ -114,7 +114,7 @@ export default {
   opacity: 1;
 }
 .v-leave-to {
-  transform: translate(100px, 0);
+  transform: translate(0,-100px);
   opacity: 0;
 }
 .v-leave-active {
