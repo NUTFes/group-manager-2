@@ -393,7 +393,6 @@
                           <v-list-item-content>{{ regist.stage_order.cleanup_end_time }}</v-list-item-content>
                         </v-list-item>
                        </v-list>
-                      <v-card-text>{{ regist.stage_order }}</v-card-text>
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
