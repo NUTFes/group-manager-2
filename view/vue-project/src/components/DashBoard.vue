@@ -5,11 +5,11 @@
       <v-card elevation="0" color="#ECEFF1">
         <v-row align="center">
           <v-col cols=9>
-            <v-card-text class="font-weight-bold title">
-              {{ user.name }}  様
-              <br>技大祭に参加していただき誠にありがとうございます。
-              <br>登録情報の確認や変更が行えます。
-              <br>入力締め切りはお守りいただくよう、よろしくお願いします。
+            <v-card-text class="font-weight-bold display-1">
+              {{ user.name }} 
+            </v-card-text>
+            <v-card-text class="font-weight-bold subtitle-1">
+              {{ user.email }}
             </v-card-text>
           </v-col> 
           <v-col cols=3> 
