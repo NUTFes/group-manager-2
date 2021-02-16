@@ -10,6 +10,7 @@ import Place from '../views/place.vue'
 import Group from '../views/group.vue'
 import Power from '../views/power.vue'
 import Regist from '../views/regist_shop.vue'
+import Firstcustomer from '../views/FirstCustomer.vue'
 
 Vue.use(VueRouter)
 
@@ -59,7 +60,13 @@ Vue.use(VueRouter)
     name: 'Regist',
     component: Regist
   },
-]
+
+{
+path: '/firstcustomer',
+name: 'Firstcustomer',
+component: Firstcustomer
+},
+  ]
 
 const router = new VueRouter({
   mode: 'history',
