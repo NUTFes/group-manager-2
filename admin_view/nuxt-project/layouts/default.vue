@@ -8,7 +8,7 @@
           </v-col>
           <v-col cols="10">
             <v-main>
-              <transition mode='out-in'>
+              <transition mode='in-out'>
               <nuxt />
               </transition>
             </v-main>
@@ -100,24 +100,24 @@ export default {
   padding-bottom: 150px;
 }
 .v-enter {
-  transform: translate(0, 0, 100px);
-  opacity: 0;
+  transform: scale(0.1);
+  opacity: 0.1;
 }
 .v-enter-to {
   opacity: 1;
 }
 .v-enter-active {
-  transition: all 2s .3s ease;
+  transition: all .5s .1s ease;
 }
 .v-leave {
-  transform: translate(0, 0);
+  transform: scale(0.1) translate(0%,100%);
   opacity: 1;
 }
 .v-leave-to {
-  transform: translate(0, 0, 100px);
+  transform: scale(0.1) translate(0%,100%);
   opacity: 0;
 }
 .v-leave-active {
-  transition: all .5s 0s ease;
+  transition: all 5s 0s ease;
 }
 </style>
