@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/users">ユーザー一覧</router-link> >
-            {{ user.name }}
+              <div class="breadcrumbs">
+              <ul>
+                <li><div class="a"><router-link to="/users">ユーザー一覧</router-link></div></li>
+                <li><div class="a">{{ user.name }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>
@@ -209,7 +213,6 @@ import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
 import axios from "axios";
 import { mapState } from "vuex";
-
 export default {
   components: {
     Header,
@@ -248,7 +251,6 @@ export default {
         this.department = response.data.department;
         this.detail = response.data.detail;
       })
-
       this.$axios.get('groups/', {
       headers: { 
         "Content-Type": "application/json"
@@ -275,5 +277,60 @@ export default {
 .card {
   padding-left: 1%;
   padding-right: 5%
+}
+.v-application a {
+  color: #FFF;
+}
+.breadcrumbs {
+  text-align: center;
+}
+.breadcrumbs ul {
+  list-style: none;
+  display: flex;
+}
+.breadcrumbs ul li {
+  display: inline;
+}	
+.breadcrumbs ul li .a {
+  display: block;
+  position: relative;
+  height: 30px;
+  background: #999;
+  text-align: center;
+  padding: 5px 20px;
+  margin: 0 7px 0 0; 
+  font-size: 0.8125rem;
+  text-decoration: none;
+  color: #fff;
+}
+.breadcrumbs ul li .a:before {
+  content: "";  
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #EEE;
+  position: absolute; left: 0; top: 0;
+}
+.breadcrumbs ul li .a:after {
+  content: "";  
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #999;
+  position: absolute; right: -15px; top: 0;
+  z-index: 1;
+}
+.breadcrumbs ul li:first-child .a {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.breadcrumbs ul li:first-child .a:before {
+  display: none; 
+}
+.breadcrumbs ul li:last-child .a {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: #BF794E;
+}
+.breadcrumbs ul li:last-child .a:after {
+  display: none; 
 }
 </style>
