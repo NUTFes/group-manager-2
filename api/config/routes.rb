@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
-      # resources :users
       get "users/index" => "users#index"
       get "users/show" => "users#show"
       get "users/show_user_detail/:id" => "users#show_user_detail"
@@ -38,6 +37,10 @@ Rails.application.routes.draw do
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
+      get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
+      get "get_item_name" => "items_api#get_item_name"
+      get "get_assign_rental_item_for_stocker_place/:stocker_place_id" => "items_api#get_assign_rental_item_for_stocker_place"
+      get "get_group_name" => "groups_api#get_group_name"
     end
   end
   namespace :api do

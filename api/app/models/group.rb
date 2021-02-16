@@ -10,4 +10,5 @@ class Group < ApplicationRecord
     has_one :stage_order
     has_many :food_products
     has_many :rental_orders
+    has_many :assign_rental_items
 end

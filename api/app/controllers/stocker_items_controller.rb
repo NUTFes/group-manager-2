@@ -19,18 +19,23 @@ class StockerItemsController < ApplicationController
   def create
     @stocker_item = StockerItem.new(stocker_item_params)
     @stocker_item.save
+    # @stocker_items = StockerItem.all
+    # render json: @stocker_items
   end
 
   # PATCH/PUT /stocker_items/1
   # PATCH/PUT /stocker_items/1.json
   def update
     @stocker_item.update(stocker_item_params)
+    render json: @stocker_item
   end
 
   # DELETE /stocker_items/1
   # DELETE /stocker_items/1.json
   def destroy
     @stocker_item.destroy
+    @stocker_items = StockerItem.all
+    render json: @stocker_items
   end
 
   private

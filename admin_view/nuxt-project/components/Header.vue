@@ -11,7 +11,7 @@
         <v-btn
           color="pink"
           dark
-          @click="drawer = !drawer"
+          @click="open"
           style="box-shadow:none"
           >
           <v-icon class="mr-2">mdi-note</v-icon>
@@ -106,6 +106,16 @@ export default {
       })
   },
   methods: {
+    open: function() {
+      this.drawer = true
+      this.$axios.get('/memos', {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+          this.memos = response.data
+        })
+    },
     submit: function() {
       this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
       var params = new URLSearchParams();

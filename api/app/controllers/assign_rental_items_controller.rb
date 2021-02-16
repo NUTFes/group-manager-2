@@ -19,12 +19,14 @@ class AssignRentalItemsController < ApplicationController
   def create
     @assign_rental_item = AssignRentalItem.new(assign_rental_item_params)
     @assign_rental_item.save
+    render json: @assign_rental_item
   end
 
   # PATCH/PUT /assign_rental_items/1
   # PATCH/PUT /assign_rental_items/1.json
   def update
     @assign_rental_item.update(assign_rental_item_params)
+    render json: @assign_rental_item
   end
 
   # DELETE /assign_rental_items/1
@@ -41,6 +43,6 @@ class AssignRentalItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def assign_rental_item_params
-      params.permit(:rental_order_id, :rentable_item_id, :num)
+      params.permit(:group_id, :rental_item_id, :num, :stocker_place_id)
     end
 end
