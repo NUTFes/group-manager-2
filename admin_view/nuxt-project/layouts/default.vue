@@ -100,21 +100,21 @@ export default {
   padding-bottom: 150px;
 }
 .v-enter {
-  transform: translate(0px, 100px);
+  transform: translate(0, 0, 100px);
   opacity: 0;
 }
 .v-enter-to {
   opacity: 1;
 }
 .v-enter-active {
-  transition: all 1s 0s ease;
+  transition: all 2s .3s ease;
 }
 .v-leave {
   transform: translate(0, 0);
   opacity: 1;
 }
 .v-leave-to {
-  transform: translate(0,-100px);
+  transform: translate(0, 0, 100px);
   opacity: 0;
 }
 .v-leave-active {
