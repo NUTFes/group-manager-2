@@ -4,7 +4,7 @@
       <v-col v-for="stocker_place in stocker_places">
         <v-hover v-slot:default="{ hover }">
         <v-card 
-          width="300" height="120"
+          width="300" height="180"
           :elevation="hover ? 12 : 2"
           :class="{ 'on-hover': hover  }"
           :to="{
@@ -17,6 +17,16 @@
           <v-card-title>
             {{ stocker_place.name }}
           </v-card-title>
+          <v-divider/>
+          <v-card-text>
+            <v-chip small v-if="stocker_place.stock_item_status == 1" color="red"><div style="color:white">在庫登録：未着手</div></v-chip>
+            <v-chip small v-if="stocker_place.stock_item_status == 2" color="blue"><div style="color:white">在庫登録：入力中</div></v-chip>
+            <v-chip small v-if="stocker_place.stock_item_status == 3" color="green"><div style="color:white">在庫登録：完了</div></v-chip>
+            <br><br>
+            <v-chip small v-if="stocker_place.assign_item_status == 1" color="red"><div style="color:white">物品割り当て：未着手</div></v-chip>
+            <v-chip small v-if="stocker_place.assign_item_status == 2" color="blue"><div style="color:white">物品割り当て：入力中</div></v-chip>
+            <v-chip small v-if="stocker_place.assign_item_status == 3" color="green"><div style="color:white">物品割り当て：完了</div></v-chip>
+          </v-card-text>
         </v-card>
         </v-hover>
       </v-col>

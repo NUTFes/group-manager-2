@@ -21,7 +21,10 @@
                   <v-col cols=1></v-col>
                   <v-col cols=10>
                     <v-card-title>
-                      {{ stocker_place.name }} | 在庫情報
+                      在庫情報 | {{ stocker_place.name }} |
+                      <v-chip small v-if="stocker_place.stock_item_status == 1" color="red" class="ml-2" @click="stock_item_status_dialog = true"><div style="color:white">未着手</div></v-chip>
+                      <v-chip small v-if="stocker_place.stock_item_status == 2" color="blue" class="ml-2"><div style="color:white" @click="stock_item_status_dialog = true">入力中</div></v-chip>
+                      <v-chip small v-if="stocker_place.stock_item_status == 3" color="green" class="ml-2" @click="stock_item_status_dialog = true"><div style="color:white">完了</div></v-chip>
                       <v-spacer></v-spacer>
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs  }">
@@ -76,7 +79,10 @@
                   <v-col cols=1></v-col>
                   <v-col cols=10>
                     <v-card-title>
-                      {{ stocker_place.name }} | 割り当て情報
+                      割り当て情報 | {{ stocker_place.name }} |
+                      <v-chip small v-if="stocker_place.assign_item_status == 1" color="red" class="ml-2"><div style="color:white" @click="assign_item_status_dialog = true">未着手</div></v-chip>
+                      <v-chip small v-if="stocker_place.assign_item_status == 2" color="blue" class="ml-2"><div style="color:white" @click="assign_item_status_dialog = true">入力中</div></v-chip>
+                      <v-chip small v-if="stocker_place.assign_item_status == 3" color="green" class="ml-2" @click="assign_item_status_dialog = true"><div style="color:white">完了</div></v-chip>
                       <v-spacer></v-spacer>
                       <v-tooltip top>
                         <template v-slot:activator="{ on, attrs  }">
@@ -132,7 +138,93 @@
         </v-row>
       </v-col>
     </v-row>
-    
+
+    <!-- 在庫情報ステータス更新 -->
+    <v-dialog
+      v-model="stock_item_status_dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color:white">在庫ステータス更新</div>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols=1></v-col>
+            <v-col cols=10>
+              <v-form>
+                <v-select
+                  v-model="stock_item_status"
+                  label="ステータス"
+                  :items="status_name"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                  />
+              </v-form>
+            </v-col>
+            <v-col cols=1></v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="update_stock_status"
+            >
+            更新
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- 割り当て情報ステータス更新 -->
+    <v-dialog
+      v-model="assign_item_status_dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color:white">割り当てステータス更新</div>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols=1></v-col>
+            <v-col cols=10>
+              <v-form>
+                <v-select
+                  v-model="assign_item_status"
+                  label="ステータス"
+                  :items="status_name"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                  />
+              </v-form>
+            </v-col>
+            <v-col cols=1></v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="update_assign_status"
+            >
+            更新
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <!-- 在庫物品追加 -->
     <v-dialog
       v-model="stocker_dialog"
@@ -195,7 +287,7 @@
       >
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
-          <div style="color:white">編集する</div>
+          <div style="color:white">在庫物品を編集する</div>
         </v-card-title>
 
       <v-card-text>
@@ -398,6 +490,10 @@ export default{
       rental_item: [],
       assign_num: [],
       assign_items: [],
+      stock_item_status_dialog: false, 
+      assign_item_status_dialog: false, 
+      stock_item_status: [],
+      assign_item_status: [],
       stocker_items_headers:[
         { text: '物品', value: 'item' },
         { text: '個数', value: 'num' },
@@ -421,6 +517,11 @@ export default{
         item: '',
         num: '',
       },
+      status_name: [
+        { id: 1, name: '未着手' },
+        { id: 2, name: '入力中' },
+        { id: 3, name: '完了' },
+      ],
       rules: {
         required: value => !!value || "入力してください"
       },
@@ -435,6 +536,8 @@ export default{
       })
       .then((response) => {
         this.stocker_place = response.data;
+        this.stock_item_status = response.data.stock_item_status
+        this.assign_item_status = response.data.assign_item_status
       })
 
     this.$axios
@@ -500,6 +603,19 @@ export default{
         })
         .then((response) => {
           this.stocker_items = response.data;
+        })
+    },
+    stocker_place_reload: function(){
+      this.$axios
+        .get("stocker_places/" + this.$route.params.id, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.stocker_place = response.data;
+          this.stock_item_status = response.data.stock_item_status
+          this.assign_item_status = response.data.assign_item_status
         })
     },
     assign_reload: function() {
@@ -631,7 +747,6 @@ export default{
     },
     // 物品割り当ての削除
     delete_assign_item: function(item){
-      console.log(item.id)
       const delete_url = '/assign_rental_items/' + item.id
       this.$axios.delete(delete_url, {
         headers: {
@@ -641,8 +756,33 @@ export default{
         console.log(response)
         this.assign_reload()
       })
+   },
+    // 在庫ステータス更新
+    update_stock_status: function(){
+      const update_stock_url = '/stocker_places/' + this.stocker_place.id + '?stock_item_status=' + this.stock_item_status
+      this.$axios.put(update_stock_url, {
+        headers: {
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+        console.log(response)
+        this.stocker_place_reload()
+        this.stock_item_status_dialog = false
+      })
     },
-
+    // 割り当てステータス更新
+    update_assign_status: function(){
+      const update_assign_url = '/stocker_places/' + this.stocker_place.id + '?assign_item_status=' + this.assign_item_status
+      this.$axios.put(update_assign_url, {
+        headers: {
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+        console.log(response)
+        this.stocker_place_reload()
+        this.assign_item_status_dialog = false
+      })
+    }
   }
 }
 </script>

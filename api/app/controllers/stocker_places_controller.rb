@@ -17,10 +17,13 @@ class StockerPlacesController < ApplicationController
 
   def update
     @stocker_place.update(stocker_place_params)
+    render json: @stocker_place
   end
 
   def destroy
     @stocker_place.destroy
+    @stocker_places = StockerPlace.all
+    render json: @stocker_places
   end
 
   private
@@ -31,6 +34,6 @@ class StockerPlacesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def stocker_place_params
-      params.permit(:name)
+      params.permit(:name, :stock_item_status, :assign_item_status)
     end
 end
