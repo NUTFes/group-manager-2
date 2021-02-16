@@ -10,6 +10,7 @@ import Place from '../views/place.vue'
 import Group from '../views/group.vue'
 import Power from '../views/power.vue'
 import Regist from '../views/regist_shop.vue'
+import RegistSaleFoods from '../views/regist_sale_foods.vue'
 
 Vue.use(VueRouter)
 
@@ -59,6 +60,11 @@ Vue.use(VueRouter)
     name: 'Regist',
     component: Regist
   },
+  {
+    path: '/regist_sale_foods',
+    name: 'RegistSaleFoods',
+    component: RegistSaleFoods
+  }
 ]
 
 const router = new VueRouter({

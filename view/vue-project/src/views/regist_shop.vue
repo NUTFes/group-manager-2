@@ -5,26 +5,42 @@
       <v-col cols="8">
         <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
           <v-stepper-header class="stepper">
-            <v-stepper-step :complete="e1 > 1" step=1 color="purple accent-2"
+            <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2"
               >副代表登録</v-stepper-step
             >
             <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 2" step=2 color="purple accent-2"
-              >物品申請</v-stepper-step>
+            <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2"
+              >物品申請</v-stepper-step
+            >
             <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 3" step=3 color="purple accent-2"
-              >電力申請</v-stepper-step>
+            <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2"
+              >電力申請</v-stepper-step
+            >
             <v-divider></v-divider>
-            <v-stepper-step v-if="!isStage" :complete="e1 > 4" step=4 color="purple accent-2"
-              >会場申請</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step v-if="isStage" :complete="e1 > 4" step=4 color="purple accent-2"
-              >ステージ利用申請</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step v-if="isStage" :complete="e1 > 5" step=5 color="purple accent-2"
-              >ステージ利用詳細</v-stepper-step>
-            <v-divider></v-divider>
-            <v-stepper-step step=6 color="purple accent-2">登録</v-stepper-step>
+            <div v-if="isStage">
+              <v-stepper-step
+                :complete="e1 > 4"
+                step="4"
+                color="purple accent-2"
+                >ステージ利用申請</v-stepper-step
+              >
+              <v-divider></v-divider>
+              <v-stepper-step
+                :complete="e1 > 5"
+                step="5"
+                color="purple accent-2"
+                >ステージ利用詳細</v-stepper-step
+              >
+            </div>
+            <div v-else>
+              <v-stepper-step
+                v-if="!isStage"
+                :complete="e1 > 4"
+                step="4"
+                color="purple accent-2"
+                >会場申請</v-stepper-step
+              >
+            </div>
           </v-stepper-header>
 
           <v-stepper-items class="stepper">
@@ -123,7 +139,7 @@
             </v-stepper-content>
 
             <!-- 物品申請 -->
-            <v-stepper-content step=2>
+            <v-stepper-content step="2">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
@@ -135,11 +151,9 @@
                         v-model="rentalSteps"
                         :items="[1, 2, 3, 4, 5, 6]"
                         label="登録物品数"
-                        outlined />
-                      <v-stepper
-                        class="stepper"
-                        v-model="e3"
-                      >
+                        outlined
+                      />
+                      <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
                           <template v-for="rentalStep in rentalSteps">
                             <v-stepper-step
@@ -151,7 +165,8 @@
                             </v-stepper-step>
                             <v-divider
                               v-if="rentalStep !== rentalSteps"
-                              :key="rentalStep"></v-divider>
+                              :key="rentalStep"
+                            ></v-divider>
                           </template>
                         </v-stepper-header>
                         <v-stepper-items>
@@ -176,7 +191,7 @@
                                   @click="e3 += 1"
                                   v-show="rentalSteps != rentalStep"
                                 >
-                                  {{ rentalStep + 1}}
+                                  {{ rentalStep + 1 }}
                                   個目の物品へ
                                 </v-btn>
                               </v-col>
@@ -228,7 +243,7 @@
             </v-stepper-content>
 
             <!-- 電力申請 -->
-            <v-stepper-content step=3>
+            <v-stepper-content step="3">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
@@ -332,8 +347,8 @@
               </v-row>
             </v-stepper-content>
 
-                        <!-- 会場申請登録 -->
-            <v-stepper-content step=4>
+            <!-- 会場申請登録 -->
+            <v-stepper-content step="4">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col>
@@ -406,23 +421,24 @@
                 <v-col cols="2">
                   <v-btn
                     class="stepper"
+                    dark
                     rounded
                     height="50"
                     width="170"
-                    color="primary"
-                    @click="e1 += 1"
+                    color="purple accent-2"
+                    @click="saleSubmit"
                   >
-                    次へ
+                    登録
                   </v-btn>
                 </v-col>
               </v-row>
             </v-stepper-content>
 
             <!-- ステージ利用申請 -->
-            <v-stepper-content v-if="isStage" step=4>
+            <v-stepper-content v-if="isStage" step="4">
               <v-row>
-                <v-col cols=1></v-col>
-                <v-col cols=10>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
                   <v-card class="mb-12" flat>
                     <v-card-title>
                       ステージ利用申請
@@ -437,9 +453,9 @@
                     </v-card-text>
                   </v-card>
                 </v-col>
-                <v-col cols=1></v-col>
+                <v-col cols="1"></v-col>
               </v-row>
-              <v-row>
+                  <v-row>
                 <v-col cols="7"></v-col>
                 <v-col cols="2">
                   <v-btn text height="50" width="170" @click="e1 -= 1">
@@ -462,11 +478,11 @@
             </v-stepper-content>
 
             <!-- ステージ利用詳細 -->
-            <v-stepper-content v-if="isStage" step=5>
+            <v-stepper-content v-if="isStage" step="5">
               <v-row>
-                <v-col cols=1></v-col>
-                <v-col cols=10>
-                 <v-card class="mb-12" flat>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card class="mb-12" flat>
                     <v-card-title>
                       ステージ詳細申請
                     </v-card-title>
@@ -474,38 +490,15 @@
                     <v-card-text>
                       <StageCommonCard
                         :groupId="groupId"
-                        ref="stageOrderChild"
+                        ref="stageCommonChild"
                         :key="powerStep"
                       />
                     </v-card-text>
                   </v-card>
-                  </v-col>
-                <v-col cols=1></v-col>
+                </v-col>
+                <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
-                    戻る
-                  </v-btn>
-                </v-col>
-                <v-col cols="2">
-                  <v-btn
-                    class="stepper"
-                    rounded
-                    height="50"
-                    width="170"
-                    color="primary"
-                    @click="e1 += 1"
-                  >
-                    次へ
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-stepper-content>
-            <!-- 登録 -->
-            <v-stepper-content step=6>
-                            <v-row>
                 <v-col cols="7"></v-col>
                 <v-col cols="2">
                   <v-btn text height="50" width="170" @click="e1 -= 1">
@@ -520,7 +513,7 @@
                     height="50"
                     width="170"
                     color="purple accent-2"
-                    @click="submit"
+                    @click="stageSubmit"
                   >
                     登録
                   </v-btn>
@@ -529,7 +522,6 @@
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
-
       </v-col>
       <v-col cols="2"></v-col>
     </v-row>
@@ -628,7 +620,7 @@ export default {
       powerItemUrl: [], // 製品URL
 
       // 物品申請
-      rentalSteps: 2,
+      rentalSteps: 2
     };
   },
   watch: {
@@ -640,20 +632,14 @@ export default {
   },
   computed: {
     isStage: () => {
-      if (localStorage.getItem("group_category_id") == 3 ) {
-        return true
+      if (localStorage.getItem("group_category_id") == 3) {
+        return true;
       }
-      return false
+      return false;
     }
   },
   methods: {
-    submit: function() {
-
-      if (groupCategoryId == null) {
-        console.log("can't group_category_id");
-        return;
-      }
-
+    commonSubmit: function() {
       // 副代表登録
       axios.defaults.headers.common["Content-Type"] = "application/json";
       const subRepUrl = process.env.VUE_APP_URL + "/sub_reps";
@@ -674,6 +660,25 @@ export default {
           return error;
         }
       );
+
+      // 電力申請
+      for (let i = 0; i < this.powerSteps; i++) {
+        this.$refs.powerChild[i].submit();
+      }
+
+      // 物品登録
+      for (let i = 0; i < this.rentalSteps; i++) {
+        this.$refs.rentalChild[i].submit();
+      }
+    },
+    saleSubmit: function() {
+      if (groupCategoryId == null) {
+        console.log("can't group_category_id");
+        return;
+      }
+
+      this.commonSubmit();
+
       // 会場申請登録
       const placeUrl = process.env.VUE_APP_URL + "/place_orders";
       var placeParams = new URLSearchParams();
@@ -691,15 +696,16 @@ export default {
           return error;
         }
       );
-      // 電力申請
-      for (let i = 0; i < this.powerSteps; i++) {
-        this.$refs.powerChild[i].submit();
-      }
 
-      // 物品登録
-      for (let i = 0; i < this.rentalSteps; i++) {
-        this.$refs.rentalChild[i].submit();
-      }
+      this.$router.push("MyPage");
+    },
+    stageSubmit: function() {
+      this.commonSubmit();
+
+      this.$refs.stageChild.submit();
+
+      this.$refs.stageCommonChild.submit();
+
       this.$router.push("MyPage");
     },
     getIndex: function() {
