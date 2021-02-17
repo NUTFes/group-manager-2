@@ -18,7 +18,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-        <v-dialog v-model="dialog" v-if="currentNews" activator>
+        <v-dialog v-model="dialog" v-if="currentNews" activator max-width="1000">
           <v-card>
             <v-card-title class="headline grey lighten-2">
               <v-icon class="pr-2" size="40">mdi-bell-outline</v-icon>
