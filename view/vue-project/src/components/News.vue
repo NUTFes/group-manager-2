@@ -18,7 +18,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list>
-        <v-dialog v-model="dialog" v-if="currentNews" activator>
+        <v-dialog v-model="dialog" v-if="currentNews" activator max-width="1000">
           <v-card>
             <v-card-title class="headline grey lighten-2">
               <v-icon class="pr-2" size="40">mdi-bell-outline</v-icon>
@@ -38,8 +38,8 @@
               <v-col cols="2"></v-col>
             </v-row>
             <v-row>
-              <v-col cols="10"></v-col>
-              <v-col cols="2">
+              <v-col cols="8"></v-col>
+              <v-col cols="4">
                 <v-card-text>
                   作成日時:{{ currentNews.created_at | moment }}
                 </v-card-text>
