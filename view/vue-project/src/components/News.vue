@@ -24,7 +24,7 @@
               <v-icon class="pr-2" size="40">mdi-bell-outline</v-icon>
               {{ currentNews.title }}
               <v-spacer></v-spacer>
-              <v-btn text @click="dialog = false">
+              <v-btn text @click="dialog = false" fab>
                 <v-icon>mdi-close</v-icon>
               </v-btn>
             </v-card-title>
@@ -41,7 +41,8 @@
               <v-col cols="8"></v-col>
               <v-col cols="4">
                 <v-card-text>
-                  作成日時:{{ currentNews.created_at | moment }}
+                  {{ currentNews.created_at | moment }}<br>
+		  技大祭実行委員会
                 </v-card-text>
               </v-col>
             </v-row>
@@ -64,7 +65,7 @@ export default {
       news: null,
       dialog: false,
       currentNews: null,
-      times: 2,
+      times: 5,
     };
   },
 
