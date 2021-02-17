@@ -6,8 +6,8 @@
           <v-card-text>
               <div class="breadcrumbs">
               <ul>
-                <li><div class="a"><router-link to="/users">ユーザー一覧</router-link></div></li>
-                <li><div class="a">{{ user.name }}</div></li>
+                <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ user.name }}</div></li>
               </ul>
             </div>
           </v-card-text>
@@ -291,7 +291,7 @@ export default {
 .breadcrumbs ul li {
   display: inline;
 }	
-.breadcrumbs ul li .a {
+.breadcrumbs ul li .breadcrumbs-item {
   display: block;
   position: relative;
   height: 30px;
@@ -303,14 +303,14 @@ export default {
   text-decoration: none;
   color: #fff;
 }
-.breadcrumbs ul li .a:before {
+.breadcrumbs ul li .breadcrumbs-item:before {
   content: "";  
   border-top: 15px solid transparent;
   border-bottom: 15px solid transparent;
   border-left: 15px solid #EEE;
   position: absolute; left: 0; top: 0;
 }
-.breadcrumbs ul li .a:after {
+.breadcrumbs ul li .breadcrumbs-item:after {
   content: "";  
   border-top: 15px solid transparent;
   border-bottom: 15px solid transparent;
@@ -318,19 +318,19 @@ export default {
   position: absolute; right: -15px; top: 0;
   z-index: 1;
 }
-.breadcrumbs ul li:first-child .a {
+.breadcrumbs ul li:first-child .breadcrumbs-item {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
-.breadcrumbs ul li:first-child .a:before {
+.breadcrumbs ul li:first-child .breadcrumbs-item:before {
   display: none; 
 }
-.breadcrumbs ul li:last-child .a {
+.breadcrumbs ul li:last-child .breadcrumbs-item {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   background: #BF794E;
 }
-.breadcrumbs ul li:last-child .a:after {
+.breadcrumbs ul li:last-child .breadcrumbs-item:after {
   display: none; 
 }
 </style>
