@@ -38,8 +38,8 @@
               <v-col cols="2"></v-col>
             </v-row>
             <v-row>
-              <v-col cols="10"></v-col>
-              <v-col cols="2">
+              <v-col cols="8"></v-col>
+              <v-col cols="4">
                 <v-card-text>
                   作成日時:{{ currentNews.created_at | moment }}
                 </v-card-text>
