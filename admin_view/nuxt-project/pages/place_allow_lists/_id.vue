@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/place_allow_lists">使用会場一覧</router-link> >
-            {{ place_allow_list.place_id }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/place_allow_lists">使用会場一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ place_allow_list.place_id }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>

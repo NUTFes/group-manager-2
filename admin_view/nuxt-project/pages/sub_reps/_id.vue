@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/sub_reps">副代表一覧</router-link> > {{ sub_rep.name }}</v-card-text>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/sub_reps">副代表一覧</router-link></div></li> 
+              <li><div class="breadcrumbs-item">{{ sub_rep.name }}</div></li>
+            </ul>
+          </div>
+          </v-card-text>
         <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>

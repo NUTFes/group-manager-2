@@ -120,4 +120,56 @@ export default {
 .v-leave-active {
   transition: all 5s 0s ease;
 }
+.breadcrumbs {
+  text-align: center;
+}
+.breadcrumbs ul {
+  list-style: none;
+  display: flex;
+}
+.breadcrumbs ul li {
+  display: inline;
+}	
+.breadcrumbs ul li .breadcrumbs-item {
+  display: block;
+  position: relative;
+  height: 30px;
+  background: #999;
+  text-align: center;
+  padding: 5px 10px 5px 24px;
+  margin: 0 7px 0 0; 
+  font-size: 0.8125rem;
+  text-decoration: none;
+  color: #fff;
+}
+.breadcrumbs ul li .breadcrumbs-item:before {
+  content: "";  
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #EEE;
+  position: absolute; left: 0; top: 0;
+}
+.breadcrumbs ul li .breadcrumbs-item:after {
+  content: "";  
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #999;
+  position: absolute; right: -15px; top: 0;
+  z-index: 1;
+}
+.breadcrumbs ul li:first-child .breadcrumbs-item {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.breadcrumbs ul li:first-child .breadcrumbs-item:before {
+  display: none; 
+}
+.breadcrumbs ul li:last-child .breadcrumbs-item {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: #BF794E;
+}
+.breadcrumbs ul li:last-child .breadcrumbs-item:after {
+  display: none; 
+}
 </style>

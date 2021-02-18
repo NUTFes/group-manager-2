@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/purchase_lists">購入品一覧</router-link> >
-            {{ purchase.items }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/purchase_lists">購入品一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ purchase.items }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>

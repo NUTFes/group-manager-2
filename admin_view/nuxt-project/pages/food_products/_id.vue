@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-card-text><router-link to="/food_products">販売食品一覧</router-link> > {{ food_product.name }}</v-card-text>
+          <v-card-text>
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/food_products">販売食品一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ food_product.name }}</div></li>
+              </ul>
+            </div>
+          </v-card-text>
         </div>
       </v-col>
     </v-row>
