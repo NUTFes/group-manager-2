@@ -293,7 +293,7 @@ export default {
   height: 30px;
   background: #999;
   text-align: center;
-  padding: 5px 20px;
+  padding: 5px 10px 5px 24px;
   margin: 0 7px 0 0; 
   font-size: 0.8125rem;
   text-decoration: none;
