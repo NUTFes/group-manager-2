@@ -47,6 +47,10 @@
                         <td class="caption">{{ detail.tel }}</td>
                       </tr>
                       <tr>
+                        <th>メールアドレス：</th>
+                        <td class="caption">{{ user.email }}</td>
+                      </tr>
+                      <tr>
                         <th>登録日時：</th>
                         <td class="caption">
                           {{ user.created_at | format-date }}

@@ -3,13 +3,13 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/sub_reps">副代表一覧</router-link> > {{ sub_rep.name }}</v-card-text>
+        <v-card-text><router-link to="/sub_reps">副代表一覧</router-link> > {{ sub_rep.sub_rep.name }}</v-card-text>
         <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
               <v-card-title class="font-weight-bold mt-3">
-                {{ sub_rep.name }}
+                {{ sub_rep.sub_rep.name }}
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
               </v-card-title>
@@ -19,27 +19,27 @@
                   <tbody>
                     <tr>
                       <th>学籍番号：</th>
-                      <td class="caption">{{ sub_rep.student_id }}</td>
+                      <td class="caption">{{ sub_rep.sub_rep.student_id }}</td>
                     </tr>
                     <tr>
                       <th>学年：</th>
-                      <td class="caption">{{ sub_rep.grade_id }}</td>
+                      <td class="caption">{{ sub_rep.grade }}</td>
                     </tr>
                     <tr>
                       <th>課程：</th>
-                      <td class="caption">{{ sub_rep.department_id }}</td>
+                      <td class="caption">{{ sub_rep.department }}</td>
                     </tr>
                     <tr>
                       <th>電話番号：</th>
-                      <td class="caption">{{ sub_rep.tel }}</td>
+                      <td class="caption">{{ sub_rep.sub_rep.tel }}</td>
                     </tr>
                     <tr>
                       <th>登録日時：</th>
-                      <td class="caption">{{ sub_rep.created_at | format-date }}</td>
+                      <td class="caption">{{ sub_rep.sub_rep.created_at | format-date }}</td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
-                      <td class="caption">{{ sub_rep.updated_at | format-date }}</td>
+                      <td class="caption">{{ sub_rep.sub_rep.updated_at | format-date }}</td>
                       <td v-if="rights == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
                       <td v-if="rights == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
                     </tr>
@@ -136,22 +136,9 @@
 </template>
 
   <script>
-  import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
   import axios from 'axios'
-  import { mapState } from 'vuex'
   
   export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
     data() {
       return {
         sub_rep: [],
@@ -160,7 +147,7 @@ import Menu from '~/components/Menu.vue'
       }
     },
     mounted() {
-      const url = "/sub_reps/" + this.$route.params.id;
+      const url = "/api/v1/get_sub_rep_details/" + this.$route.params.id;
       this.$axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
