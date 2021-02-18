@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/places">会場一覧</router-link> >
-            {{ place.name }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/places">会場一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ place.name }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>

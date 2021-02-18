@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/rental_orders">物品申請一覧</router-link>  > {{rental_order.rental_item_id}} </v-card-text>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/rental_orders">物品申請一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{rental_order.rental_item_id}}</div></li>
+            </ul>
+          </div>
+        </v-card-text>
         </div>
       </v-col>
     </v-row>

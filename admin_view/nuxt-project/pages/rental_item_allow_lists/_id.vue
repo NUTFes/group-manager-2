@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/rental_item_allow_lists">使用可能物品一覧</router-link> >
-            {{ rental_item_allow_list.rental_item_id }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/rental_item_allow_lists">使用可能物品一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ rental_item_allow_list.rental_item_id }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>

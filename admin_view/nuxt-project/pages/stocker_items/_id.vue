@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/stocker_items">在庫物品一覧</router-link> >
-            {{ stocker_item.rental_item_id }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/stocker_items">在庫物品一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ stocker_item.rental_item_id }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>

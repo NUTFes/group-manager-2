@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/place_orders">会場申請一覧</router-link> > {{place_order.group_id}}</v-card-text>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/place_orders">会場申請一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{place_order.group_id}}</div></li>
+            </ul>
+          </div>
+        </v-card-text>
         </div>
       </v-col>
     </v-row>

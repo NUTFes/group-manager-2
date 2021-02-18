@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
         <v-card-text>
-          <router-link to="/employees">従業員一覧</router-link> > 
-          {{ employee.name }}
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/employees">従業員一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{ employee.name }}</div></li>
+            </ul>
+          </div>
         </v-card-text>
         </div>
       </v-col>
