@@ -43,7 +43,7 @@
               <v-dialog v-model="dialog" max-width="1000">
                 <v-card>
                   <v-card-title class="headkine grey lighten-2">
-                    <v-icon class="pr-2" size="40">mdi-bell-puls-outline</v-icon>
+                    <v-icon class="pr-2" size="40">mdi-bell-plus-outline</v-icon>
                     お知らせの追加 ​ <v-spacer></v-spacer>
                     <v-btn text @click="dialog = false" fab>
                       ​ <v-icon>mdi-close</v-icon>
@@ -72,6 +72,7 @@
                         label="内容"
                         background-color="white"
                         outlined
+                        height="100"
                         v-model="body"
                         clearable
                       >
@@ -169,6 +170,18 @@ export default {
       params.append("title", this.title);
       params.append("body", this.body);
       this.$axios.post('/news', params)
+    },
+    reload: function() {
+      this.$axios.get('/news', {
+      headers: { 
+        "Content-Type": "application/json", 
+        dialog: false,
+      },
+    }
+    )
+      .then(response => {
+        this.news = response.data
+      })
     }
   }
 }
