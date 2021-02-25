@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
       # ステージ申請周り
       get "get_stage_orders_details" => "stage_orders_api#get_stage_orders_details"
+      get "get_stage_order_details/:id" => "stage_orders_api#get_stage_order_details"
     end
   end
   namespace :api do
