@@ -34,7 +34,7 @@
                   class="elevation-0 my-9"
                   @click:row="
                                (data) =>
-                               $router.push({ path: `/power_orders/${data.id}`})
+                               $router.push({ path: `/power_orders/${data.power_order.id}`})
                                "
                   >
                   <template v-slot:item.created_at="{ item }">
@@ -56,36 +56,24 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       power_orders: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '製品', value: 'item' },
-        { text: '電力', value: 'power' },
-        // { text: 'メーカー', value: 'manufacturer' },
-        // { text: '型番', value: 'model' },
-        // { text: '製品URL', value: 'item_url' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'power_order.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '製品', value: 'power_order.item' },
+        { text: '電力', value: 'power_order.power' },
+        { text: '日時', value: 'power_order.created_at' },
+        { text: '編集日時', value: 'power_order.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('power_orders', {
+    this.$axios.get('/api/v1/get_power_orders', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )
