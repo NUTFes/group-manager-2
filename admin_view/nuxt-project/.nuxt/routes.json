@@ -14,13 +14,6 @@
     "_name": "_2b0ac3dc"
   },
   {
-    "name": "goods_purchase",
-    "path": "/goods_purchase",
-    "component": "/app/nuxt-project/pages/goods_purchase/index.vue",
-    "chunkName": "pages/goods_purchase/index",
-    "_name": "_c15af1ee"
-  },
-  {
     "name": "groups",
     "path": "/groups",
     "component": "/app/nuxt-project/pages/groups/index.vue",
@@ -33,13 +26,6 @@
     "component": "/app/nuxt-project/pages/inspire.vue",
     "chunkName": "pages/inspire",
     "_name": "_7f52cd64"
-  },
-  {
-    "name": "item_orders",
-    "path": "/item_orders",
-    "component": "/app/nuxt-project/pages/item_orders/index.vue",
-    "chunkName": "pages/item_orders/index",
-    "_name": "_03b4cd48"
   },
   {
     "name": "mypage",
@@ -77,6 +63,13 @@
     "_name": "_2c169a19"
   },
   {
+    "name": "purchase_lists",
+    "path": "/purchase_lists",
+    "component": "/app/nuxt-project/pages/purchase_lists/index.vue",
+    "chunkName": "pages/purchase_lists/index",
+    "_name": "_2fb4bc54"
+  },
+  {
     "name": "regist_user_detail",
     "path": "/regist_user_detail",
     "component": "/app/nuxt-project/pages/regist_user_detail.vue",
@@ -89,6 +82,13 @@
     "component": "/app/nuxt-project/pages/rental_items/index.vue",
     "chunkName": "pages/rental_items/index",
     "_name": "_66145138"
+  },
+  {
+    "name": "rental_orders",
+    "path": "/rental_orders",
+    "component": "/app/nuxt-project/pages/rental_orders/index.vue",
+    "chunkName": "pages/rental_orders/index",
+    "_name": "_16030857"
   },
   {
     "name": "signup",
@@ -140,25 +140,11 @@
     "_name": "_121fe578"
   },
   {
-    "name": "goods_purchase-id",
-    "path": "/goods_purchase/:id",
-    "component": "/app/nuxt-project/pages/goods_purchase/_id.vue",
-    "chunkName": "pages/goods_purchase/_id",
-    "_name": "_3ab8b7b1"
-  },
-  {
     "name": "groups-id",
     "path": "/groups/:id",
     "component": "/app/nuxt-project/pages/groups/_id.vue",
     "chunkName": "pages/groups/_id",
     "_name": "_8183688a"
-  },
-  {
-    "name": "item_orders-id",
-    "path": "/item_orders/:id",
-    "component": "/app/nuxt-project/pages/item_orders/_id.vue",
-    "chunkName": "pages/item_orders/_id",
-    "_name": "_072581b0"
   },
   {
     "name": "place_orders-id",
@@ -182,11 +168,25 @@
     "_name": "_04864ec1"
   },
   {
+    "name": "purchase_lists-id",
+    "path": "/purchase_lists/:id",
+    "component": "/app/nuxt-project/pages/purchase_lists/_id.vue",
+    "chunkName": "pages/purchase_lists/_id",
+    "_name": "_e183bc84"
+  },
+  {
     "name": "rental_items-id",
     "path": "/rental_items/:id",
     "component": "/app/nuxt-project/pages/rental_items/_id.vue",
     "chunkName": "pages/rental_items/_id",
     "_name": "_8bcb3a68"
+  },
+  {
+    "name": "rental_orders-id",
+    "path": "/rental_orders/:id",
+    "component": "/app/nuxt-project/pages/rental_orders/_id.vue",
+    "chunkName": "pages/rental_orders/_id",
+    "_name": "_3695347f"
   },
   {
     "name": "stage_orders-id",

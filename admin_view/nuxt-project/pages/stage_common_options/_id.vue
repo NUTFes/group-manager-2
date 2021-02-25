@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/stage_common_options">ステージオプション一覧</router-link> > {{ group }}</v-card-text>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/stage_common_options">ステージオプション一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{ stage_common_option.id }}</div></li>
+            </ul>
+          </div>
+        </v-card-text>
         </div>
       </v-col>
     </v-row>

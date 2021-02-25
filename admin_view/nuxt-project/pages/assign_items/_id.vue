@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/assign_items">物品割り当て</router-link> >
-            {{ stocker_place.name }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/assign_items">物品割り当て</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ stocker_place.name }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>

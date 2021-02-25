@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/project_names">企画名一覧</router-link> > {{ group.project_name }}</v-card-text>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/project_names">企画名一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{ group.project_name }}</div></li>
+            </ul>
+          </div>
+          </v-card-text>
         <v-card flat>
           <v-row>
             <v-col cols="1"></v-col>

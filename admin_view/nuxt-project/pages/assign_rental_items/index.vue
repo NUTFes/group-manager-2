@@ -33,7 +33,7 @@
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/rental_items/${data.id}`})
+                            $router.push({ path: `/assign_rental_items/${data.id}`})
                             "
                 >
                 <template v-slot:item.created_at="{ item }">

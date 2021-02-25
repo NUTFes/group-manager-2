@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/users">ユーザー一覧</router-link> >
-            {{ user.name }}
+              <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ user.name }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>
@@ -203,7 +207,6 @@ import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
 import axios from "axios";
 import { mapState } from "vuex";
-
 export default {
   components: {
     Header,
@@ -242,7 +245,6 @@ export default {
         this.department = response.data.department;
         this.detail = response.data.detail;
       })
-
       this.$axios.get('groups/', {
       headers: { 
         "Content-Type": "application/json"
@@ -269,5 +271,8 @@ export default {
 .card {
   padding-left: 1%;
   padding-right: 5%
+}
+.v-application a {
+  color: #FFF;
 }
 </style>
