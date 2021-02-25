@@ -23,7 +23,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
               <v-card-title class="font-weight-bold mt-3">
-                group_id: {{stage_order.group_id}}
+                {{ group }}
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
               </v-card-title>
@@ -36,24 +36,27 @@
                       <td class="caption">{{ stage_order.id }}</td>
                     </tr>
                     <tr>
-                      <th>group_id：</th>
-                      <td class="caption">{{ stage_order.group_id }}</td>
+                      <th>参加団体：</th>
+                      <td class="caption">{{ group }}</td>
                     </tr>
                     <tr>
                       <th>晴れを希望：</th>
-                      <td class="caption">{{ stage_order.is_sunny }}</td>
+                      <td class="caption">
+                        <v-chip v-if="stage_order.is_sunny == true" color="red" text-color="white" small>はい</v-chip>
+                        <v-chip v-if="stage_order.is_sunny == false" color="blue" text-color="white" small>いいえ</v-chip>
+                      </td>
                     </tr>
                     <tr>
-                      <th>希望日時：</th>
-                      <td class="caption">{{ stage_order.fes_date_id }}</td>
+                      <th>希望日：</th>
+                      <td class="caption">{{ fes_date.date }} - {{ fes_date.day }} - {{ fes_date.days_num }}日目</td>
                     </tr>
                     <tr>
                       <th>第一希望：</th>
-                      <td class="caption">{{ stage_order.stage_first }}</td>
+                      <td class="caption">{{ stage_first }}</td>
                     </tr>
                     <tr>
                       <th>第二希望：</th>
-                      <td class="caption">{{ stage_order.stage_second }}</td>
+                      <td class="caption">{{ stage_second }}</td>
                     </tr>
                     <tr>
                       <th>使用時間幅：</th>
@@ -185,42 +188,36 @@
   </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        stage_order: [],
-        expand: false,
-        dialog: false,
-      }
-    },
-    mounted() {
-      const url = "/stage_orders/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.stage_order = response.data
-      })
+<script>
+import axios from 'axios'
+export default {
+  data() {
+    return {
+      stage_order: [],
+      group: [],
+      fes_date: [],
+      stage_first: [],
+      stage_second: [],
+      expand: false,
+      dialog: false,
     }
+  },
+  mounted() {
+    const url = "/api/v1/get_stage_order_details/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    }
+    )
+      .then(response => {
+        this.stage_order = response.data.stage_order
+        this.group = response.data.group
+        this.fes_date = response.data.fes_date
+        this.stage_first = response.data.stage_first
+        this.stage_second = response.data.stage_second
+      })
+  }
 }
 </script>
 

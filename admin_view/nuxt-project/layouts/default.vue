@@ -100,14 +100,14 @@ export default {
   padding-bottom: 150px;
 }
 .v-enter {
-  transform: scale(0.1);
+  transform: scale(0.9);
   opacity: 0.1;
 }
 .v-enter-to {
   opacity: 1;
 }
 .v-enter-active {
-  transition: all .5s .1s ease;
+  transition: all 0.6s .1s ease;
 }
 .v-leave {
   transform: scale(0.1) translate(0%,100%);
@@ -119,6 +119,16 @@ export default {
 }
 .v-leave-active {
   transition: all 5s 0s ease;
+}
+// テーブルの奇数行をつける
+.v-data-table td {
+    background: #E0F2F1;
+}
+.v-data-table tr:nth-child(odd) td {
+    background: #fff;
+}
+.v-data-table tr:hover td {
+    background-color: #eee;
 }
 .breadcrumbs {
   text-align: center;

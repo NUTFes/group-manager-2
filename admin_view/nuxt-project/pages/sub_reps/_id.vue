@@ -30,11 +30,11 @@
                     </tr>
                     <tr>
                       <th>学年：</th>
-                      <td class="caption">{{ sub_rep.grade_id }}</td>
+                      <td class="caption">{{ grade }}</td>
                     </tr>
                     <tr>
                       <th>課程：</th>
-                      <td class="caption">{{ sub_rep.department_id }}</td>
+                      <td class="caption">{{ department }}</td>
                     </tr>
                     <tr>
                       <th>電話番号：</th>
@@ -143,31 +143,20 @@
 </template>
 
   <script>
-  import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
   import axios from 'axios'
-  import { mapState } from 'vuex'
   
   export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
     data() {
       return {
         sub_rep: [],
+        grade: [],
+        department: [],
         expand: false,
         dialog: false,
       }
     },
     mounted() {
-      const url = "/sub_reps/" + this.$route.params.id;
+      const url = "/api/v1/get_sub_rep_details/" + this.$route.params.id;
       this.$axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
@@ -175,7 +164,9 @@ import Menu from '~/components/Menu.vue'
       }
       )
         .then(response => {
-        this.sub_rep = response.data
+        this.sub_rep = response.data.sub_rep
+        this.grade = response.data.grade
+        this.department = response.data.department
       })
     }
 }

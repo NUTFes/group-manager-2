@@ -51,6 +51,10 @@
                         <td class="caption">{{ detail.tel }}</td>
                       </tr>
                       <tr>
+                        <th>メールアドレス：</th>
+                        <td class="caption">{{ user.email }}</td>
+                      </tr>
+                      <tr>
                         <th>登録日時：</th>
                         <td class="caption">
                           {{ user.created_at | format-date }}
@@ -60,12 +64,6 @@
                         <th>編集日時：</th>
                         <td class="caption">
                           {{ user.updated_at | format-date }}
-                        </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
                         </td>
                       </tr>
                     </tbody>
