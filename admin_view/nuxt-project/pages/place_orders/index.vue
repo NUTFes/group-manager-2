@@ -34,7 +34,7 @@
                   class="elevation-0 my-9"
                   @click:row="
                               (data) =>
-                              $router.push({ path: `/place_orders/${data.id}`})
+                              $router.push({ path: `/place_orders/${data.place_order.id}`})
                               "
                   >
                   <template v-slot:item.created_at="{ item }">
@@ -61,25 +61,34 @@ export default {
   data() {
     return {
       place_orders: [],
+      places: [],
+      place_list: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
+        { text: 'ID', value: 'place_order.id' },
+        { text: '参加団体', value: 'group' },
         { text: '第一希望', value: 'first' },
         { text: '第二希望', value: 'second' },
         { text: '第三希望', value: 'third' },
-        // { text: '備考', value: 'remark' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: '日時', value: 'place_order.created_at' },
+        { text: '編集日時', value: 'place_order.updated_at' },
       ],
     }
   },
   mounted() {
-   this.$axios.get('place_orders', {
+    this.$axios.get('/places', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
+      }
+    })
+      .then(response => {
+        this.places = response.data
+        for (let i = 0; i < this.places.length; i++) {
+          this.place_list.push(this.places[i]['name'])
+        }
+      })
+   this.$axios.get('/api/v1/get_place_orders', {
+      headers: { 
+        "Content-Type": "application/json", 
       }
     }
     )
