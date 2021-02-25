@@ -54,9 +54,15 @@ Rails.application.routes.draw do
       # ステージ申請周り
       get "get_stage_orders_details" => "stage_orders_api#get_stage_orders_details"
       get "get_stage_order_details/:id" => "stage_orders_api#get_stage_order_details"
-      # 使用会場一覧
+      # 使用会場周り
       get "get_place_allow_lists" => "place_allow_lists_api#get_place_allow_lists"
       get "get_place_allow_list/:id" => "place_allow_lists_api#get_place_allow_list"
+      # 会場申請周り
+      get "get_place_orders" => "place_orders_api#get_place_orders"
+      get "get_place_order/:id" => "place_orders_api#get_place_order"
+      # 電力申請周り
+      get "get_power_orders" => "power_orders_api#get_power_orders"
+      get "get_power_order/:id" => "power_orders_api#get_power_order"
     end
   end
   namespace :api do

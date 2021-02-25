@@ -37,7 +37,7 @@
                     </tr>
                     <tr>
                       <th>group_id：</th>
-                      <td class="caption">{{ power_order.group_id }}</td>
+                      <td class="caption">{{ group }}</td>
                     </tr>
                     <tr>
                       <th>製品：</th>
@@ -57,7 +57,7 @@
                     </tr>
                     <tr>
                       <th>製品URL：</th>
-                      <td class="caption">{{ power_order.item_url }}</td>
+                      <td class="caption"><a :href=power_order.item_url target="_blank">{{ power_order.item_url }}</a></td>
                     </tr>
                     <tr>
                       <th>登録日時：</th>
@@ -161,42 +161,31 @@
   </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        power_order: [],
-        expand: false,
-        dialog: false,
-      }
-    },
-    mounted() {
-      const url = "/power_orders/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.power_order = response.data
-      })
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      power_order: [],
+      expand: false,
+      dialog: false,
+      group: [],
     }
+  },
+  mounted() {
+    const url = "/api/v1/get_power_order/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    }
+    )
+      .then(response => {
+        this.power_order = response.data.power_order
+        this.group = response.data.group
+      })
+  }
 }
 </script>
 
