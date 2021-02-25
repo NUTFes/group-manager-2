@@ -62,7 +62,7 @@
                     >
                   <template v-slot:item.group_category.id="{ item }">
                     <v-chip v-if="item.group_category.id == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
-                    <v-chip v-if="item.group_category.id == 2" color="red lighten-1" text-color="white" small>{{ category[1] }}</v-chip>
+                    <v-chip v-if="item.group_category.id == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
                     <v-chip v-if="item.group_category.id == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
                     <v-chip v-if="item.group_category.id == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
                     <v-chip v-if="item.group_category.id == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
@@ -98,7 +98,6 @@ export default {
       place_allow_list: [],
       group_categories: [],
       category: [],
-      group_categories: [],
       headers:[
         { text: 'ID', value: 'place_allow_list.id' },
         { text: '場所', value: 'place' },

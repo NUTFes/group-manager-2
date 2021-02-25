@@ -14,7 +14,6 @@
         </div>
       </v-col>
     </v-row>
-
     <v-row>
       <v-col>
         <div class="card">
@@ -36,20 +35,20 @@
                       <td class="caption">{{ place_order.id }}</td>
                     </tr>
                     <tr>
-                      <th>group_id：</th>
-                      <td class="caption">{{ place_order.group_id }}</td>
+                      <th>参加団体：</th>
+                      <td class="caption">{{ group }}</td>
                     </tr>
                     <tr>
                       <th>第一希望：</th>
-                      <td class="caption">{{ place_order.first }}</td>
+                      <td class="caption">{{ first }}</td>
                     </tr>
                     <tr>
                       <th>第二希望：</th>
-                      <td class="caption">{{ place_order.second }}</td>
+                      <td class="caption">{{ second }}</td>
                     </tr>
                     <tr>
                       <th>第三希望：</th>
-                      <td class="caption">{{ place_order.third }}</td>
+                      <td class="caption">{{ third }}</td>
                     </tr>
                     <tr>
                       <th>備考：</th>
@@ -158,31 +157,35 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 import axios from 'axios'
-import { mapState } from 'vuex'
 
 export default {
-  components: {
-    Header,
-    Menu,
-  },
-  fetch({ store }) {
-    store.dispatch('getRights')
-  },
-  computed: {
-    ...mapState(['rights'])
-  },
   data() {
     return {
       place_order: [],
+      places: [],
+      place_list: [],
+      group: [],
+      first: [],
+      second: [],
+      third: [],
       expand: false,
       dialog: false,
     }
   },
   mounted() {
-    const url = "/place_orders/" + this.$route.params.id;
+    this.$axios.get('/places', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.places = response.data
+        for (let i = 0; i < this.places.length; i++) {
+          this.place_list.push(this.places[i]['name'])
+        }
+      })
+    const url = "/api/v1/get_place_order/" + this.$route.params.id;
     this.$axios.get(url, {
       headers: { 
         "Content-Type": "application/json", 
@@ -190,7 +193,11 @@ export default {
     }
     )
       .then(response => {
-        this.place_order = response.data
+        this.place_order = response.data.place_order
+        this.group = response.data.group
+        this.first = response.data.first
+        this.second = response.data.second
+        this.third = response.data.third
       })
   }
 }

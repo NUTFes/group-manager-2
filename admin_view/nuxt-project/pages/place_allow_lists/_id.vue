@@ -42,7 +42,7 @@
                         <th>グループカテゴリー：</th>
                         <td class="caption">
                           <v-chip v-if="group_category == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
-                          <v-chip v-if="group_category == 2" color="red lighten-1" text-color="white" small>{{ category[1] }}</v-chip>
+                          <v-chip v-if="group_category == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
                           <v-chip v-if="group_category == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
                           <v-chip v-if="group_category == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
                           <v-chip v-if="group_category == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
