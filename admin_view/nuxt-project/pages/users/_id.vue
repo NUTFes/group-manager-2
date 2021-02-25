@@ -61,12 +61,6 @@
                         <td class="caption">
                           {{ user.updated_at | format-date }}
                         </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
-                        </td>
                       </tr>
                     </tbody>
                   </template>

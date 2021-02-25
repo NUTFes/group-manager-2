@@ -120,4 +120,14 @@ export default {
 .v-leave-active {
   transition: all 5s 0s ease;
 }
+// テーブルの奇数行をつける
+.v-data-table td {
+    background: #E0F2F1;
+}
+.v-data-table tr:nth-child(odd) td {
+    background: #fff;
+}
+.v-data-table tr:hover td {
+    background-color: #eee;
+}
 </style>
