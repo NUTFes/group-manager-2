@@ -36,12 +36,12 @@
                       <td class="caption">{{ rental_order.id }}</td>
                     </tr>
                     <tr>
-                      <th>group_id：</th>
-                      <td class="caption">{{ rental_order.group_id }}</td>
+                      <th>参加団体：</th>
+                      <td class="caption">{{ group }}</td>
                     </tr>
                     <tr>
                       <th>貸し出し物品</th>
-                      <td class="caption">{{ rental_order.rental_item_id }}</td>
+                      <td class="caption">{{ item }}</td>
                     </tr>
                     <tr>
                       <th>個数</th>
@@ -118,42 +118,30 @@
   </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-  import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        rental_order: [],
-        expand: false,
-        dialog: false,
-      }
-    },
-    mounted() {
-      const url = "/rental_orders/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.rental_order = response.data
-      })
+<script>
+export default {
+  data() {
+    return {
+      rental_order: [],
+      group: [],
+      item: [],
+      expand: false,
+      dialog: false,
     }
+  },
+  mounted() {
+    const url = "/api/v1/get_rental_order/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.rental_order = response.data.rental_order
+        this.group = response.data.group
+        this.item = response.data.item
+      })
+  }
 }
 </script>
   
