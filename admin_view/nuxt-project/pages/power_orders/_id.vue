@@ -57,7 +57,7 @@
                     </tr>
                     <tr>
                       <th>製品URL：</th>
-                      <td class="caption"><a :href=power_order.item_url target="_blank">{{ power_order.item_url }}</a></td>
+                      <td class="caption"><a :href=power_order.item_url target="_blank"><font color="blue">{{ power_order.item_url }}</font></a></td>
                     </tr>
                     <tr>
                       <th>登録日時：</th>

@@ -37,11 +37,11 @@
                               $router.push({ path: `/place_orders/${data.place_order.id}`})
                               "
                   >
-                  <template v-slot:item.created_at="{ item }">
-                    {{ item.created_at | format-date }}
+                  <template v-slot:item.place_order.created_at="{ item }">
+                    {{ item.place_order.created_at | format-date }}
                   </template>
-                  <template v-slot:item.updated_at="{ item }">
-                    {{ item.updated_at | format-date }}
+                  <template v-slot:item.place_order.updated_at="{ item }">
+                    {{ item.place_order.updated_at | format-date }}
                   </template>
                 </v-data-table>                      
               </template>

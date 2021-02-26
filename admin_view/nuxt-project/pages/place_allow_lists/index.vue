@@ -72,11 +72,11 @@
                       <v-chip v-if="item.place_allow_list.enable == true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
                       <v-chip v-if="item.place_allow_list.enable == false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>
                     </template>
-                    <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | format-date }}
+                    <template v-slot:item.place_allow_list.created_at="{ item }">
+                      {{ item.place_allow_list.created_at | format-date }}
                     </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | format-date }}
+                    <template v-slot:item.place_allow_list.updated_at="{ item }">
+                      {{ item.place_allow_list.updated_at | format-date }}
                     </template>
                   </v-data-table>                      
                 </div>
