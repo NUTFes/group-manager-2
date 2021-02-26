@@ -4,8 +4,16 @@ class MemosController < ApplicationController
   # GET /memos
   # GET /memos.json
   def index
-    @memos = Memo.all.order(id: "DESC")
-    render json: @memos
+    @memos = Memo.all.order(id: "DESC").limit(100)
+    memo_list = []
+    for memo in @memos
+      user = memo.user.name
+      memo_list << {
+        memo: memo,
+        user: user
+      }
+    end
+    render json: memo_list
   end
 
   # GET /memos/1
