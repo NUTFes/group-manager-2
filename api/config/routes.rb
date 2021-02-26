@@ -78,6 +78,9 @@ Rails.application.routes.draw do
       # 従業員周り
       get "get_employees" => "employees_api#get_employees"
       get "get_employee/:id" => "employees_api#get_employee"
+      # 販売食品周り
+      get "get_food_products" => "food_products_api#get_food_products"
+      get "get_food_product/:id" => "food_products_api#get_food_product"
     end
   end
   namespace :api do

@@ -36,8 +36,8 @@
                         <td class="caption">{{ food_product.id }}</td>
                       </tr>
                       <tr>
-                        <th>group_id：</th>
-                        <td class="caption">{{ food_product.group_id }}</td>
+                        <th>参加団体：</th>
+                        <td class="caption">{{ group }}</td>
                       </tr>
                       <tr>
                         <th>１日目の個数：</th>
@@ -155,42 +155,29 @@
   </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        food_product: [],
-        expand: false,
-        dialog: false,
-      }
-    },
-    mounted() {
-      const url = "/food_products/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.food_product = response.data
-      })
+<script>
+export default {
+  data() {
+    return {
+      food_product: [],
+      group: [],
+      expand: false,
+      dialog: false,
     }
+  },
+  mounted() {
+    const url = "/api/v1/get_food_product/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    }
+    )
+      .then(response => {
+        this.food_product = response.data.food_product
+        this.group = response.data.group
+      })
+  }
 }
 </script>
 <style scoped>
