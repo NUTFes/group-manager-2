@@ -2,11 +2,15 @@
   <div>
     <v-row>
       <v-app-bar app dark dense color="#424242">
-        <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
+        <v-toolbar-title>参加団体管理アプリ-管理者ページ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn text to="/mypage" color="#424242">
           <v-icon color="white">mdi-account-circle</v-icon>
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
+        </v-btn>
+        <v-btn text @click="logout" color="#424242">
+          <v-icon color="white">mdi-exit-to-app</v-icon>
+          <v-card-text style="color:white">ログアウト</v-card-text>
         </v-btn>
         <v-btn
           color="pink"
@@ -143,6 +147,13 @@ export default {
         }
         )
     },
+    logout() {
+      this.$auth.logout()
+      localStorage.removeItem('access-token')
+      localStorage.removeItem('client')
+      localStorage.removeItem('uid')
+      this.$router.push('/')
+    }
   }
 }
 </script>

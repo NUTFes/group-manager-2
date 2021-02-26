@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <div class="text-center" v-if="stocker_places.length === 0">
+    <br><br>
+    <v-progress-circular
+      indeterminate
+      color="#009688"
+      ></v-progress-circular>
+    <br><br>
+  </div>
+  <div v-else>
     <v-row>
       <v-col v-for="stocker_place in stocker_places">
         <v-hover v-slot:default="{ hover }">
