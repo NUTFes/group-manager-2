@@ -284,6 +284,11 @@ export default {
           console.log(response)
           this.dialog = false;
           this.reload();
+          this.groupName = ''
+          this.projectName = ''
+          this.activity = ''
+          this.groupCategoryId = ''
+          this.fesYearId = ''
         }
       )
     },
