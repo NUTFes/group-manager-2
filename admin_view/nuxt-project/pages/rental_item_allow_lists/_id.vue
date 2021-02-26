@@ -75,7 +75,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/rental_item_allow_lists"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">使用可能物品一覧に戻る</div></v-btn>
+          <div class="back-button">使用可能物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>

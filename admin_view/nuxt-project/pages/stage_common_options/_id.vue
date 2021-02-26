@@ -88,7 +88,7 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-btn text color="white" to="/stage_common_options"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ステージオプション一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/stage_common_options"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">ステージオプション一覧に戻る</div></v-btn>
         </div>
       </v-col>
     </v-row>

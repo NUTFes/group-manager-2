@@ -65,7 +65,7 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/employees"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">従業員一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/employees"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">従業員一覧に戻る</div></v-btn>
       </v-col>
     </v-row>
 

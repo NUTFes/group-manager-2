@@ -130,6 +130,9 @@ export default {
 .v-data-table tr:hover td {
     background-color: #eee;
 }
+.v-application a {
+  color: #FFF;
+}
 .breadcrumbs {
   text-align: center;
 }
@@ -181,5 +184,16 @@ export default {
 }
 .breadcrumbs ul li:last-child .breadcrumbs-item:after {
   display: none; 
+}
+.back-button {
+  border-radius: 100vh;
+  display: block;
+  position: relative;
+  height: 27px;
+  background: #999;
+  text-align: center;
+  padding: 5px 10px;
+  font-size: 0.8125rem;
+  text-decoration: none;
 }
 </style>

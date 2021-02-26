@@ -126,7 +126,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
+          <div class="back-button">ユーザー一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -271,8 +271,5 @@ export default {
 .card {
   padding-left: 1%;
   padding-right: 5%
-}
-.v-application a {
-  color: #FFF;
 }
 </style>
