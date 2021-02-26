@@ -69,6 +69,9 @@ Rails.application.routes.draw do
       # 在庫物品周り
       get "get_stocker_items" => "stocker_items_api#get_stocker_items"
       get "get_stocker_item/:id" => "stocker_items_api#get_stocker_item"
+      # 物品申請周り
+      get "get_rental_orders" => "rental_orders_api#get_rental_orders"
+      get "get_rental_order/:id" => "rental_orders_api#get_rental_order"
     end
   end
   namespace :api do
