@@ -8,7 +8,22 @@
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
                 <v-icon>mdi-account-group</v-icon>参加団体一覧
-                <v-spacer></v-spacer>
+                <v-spacer></v-spacer>                
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="dialog=true"
+                            >
+                            <v-icon dark>mdi-account-multiple-plus</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>参加団体の追加</span>
+                </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
                     <v-btn 
@@ -40,6 +55,73 @@
                   <span>印刷する</span>
                 </v-tooltip>
               </v-card-title>
+              <v-dialog v-model="dialog" max-width="1000">
+                <v-card>
+                  <v-card-title class="headkine grey lighten-2">
+                    <v-icon class="pr-2" size="40">mdi-account-group</v-icon>
+                    参加団体の追加 ​ <v-spacer></v-spacer>
+                    <v-btn text @click="dialog = false" fab>
+                      ​ <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </v-card-title>
+                  <v-row>
+                    <v-col cols="1"></v-col>
+                    <v-col cols="10">
+                      <v-text-field
+                        class="body-1"
+                        label="団体名"
+                        v-model="groupName"
+                        background-color="white"
+                        outlined
+                        clearable
+                      >
+                      </v-text-field>
+                      <v-select
+                        label="カテゴリ"
+                        v-model="groupCategoryId"
+                        :items="groupCategories"
+                        item-text="name"
+                        item-value="id"
+                        outlined
+                      ></v-select>
+                      <v-textarea
+                        class="body-1"
+                        label="企画名"
+                        v-model="projectName"
+                        background-color="white"
+                        outlined
+                        height="100"
+                        clearable
+                      >
+                      </v-textarea>
+                      <v-text-field
+                        label="活動内容"
+                        v-model="activity"
+                        @keydown="adjustHeight"
+                        background-color="white"
+                        outlined
+                        clearable
+                      >
+                      </v-text-field>
+                      <v-card-actions>
+                        <v-btn
+                          flatk
+                          large
+                          block
+                          dark
+                          color="blue"
+                          @click="
+                            register();
+                          "
+                          >登録 ​
+                        </v-btn>
+                      </v-card-actions>
+                    </v-col>
+                    ​ <v-col cols="1"></v-col>
+                  </v-row>
+                  <br>
+                </v-card>
+              </v-dialog>
               <hr class="mt-n3">
               <template>
                 <v-data-table
@@ -77,7 +159,6 @@
       </div>
     </v-col>
   </v-row>
-  </div>
 </template>
 
 <script>
@@ -89,6 +170,21 @@ export default {
       category: [],
       fes_years: [],
       years: [],
+      groupName: [],
+      projectName: [],
+      activity: [],
+      groupCategoryId: [],
+      fesYearId: 1,
+      user: [],
+      dialog: false,
+      groupCategories: [
+      { id: 1, name: '模擬店(食品販売)' },
+      { id: 2, name: '模擬店(物品販売)' },
+      { id: 3, name: 'ステージ企画' },
+      { id: 4, name: '展示・体験' },
+      { id: 5, name: '研究室公開' },
+      { id: 6, name: 'その他' }
+      ],
       headers:[
         { text: 'ID', value: 'id' },
         // { text: 'USER_ID', value: 'user_id' },
@@ -103,12 +199,26 @@ export default {
     }
   },
   mounted() {
-    this.$axios.get('/groups', {
-      headers: { 
-        "Content-Type": "application/json", 
+      const url = '/api/v1/current_user/show'
+      this.$axios.get(url, {
+        headers:{
+        "Content-Type": "application/json",
         "access-token": localStorage.getItem('access-token'),
         "client": localStorage.getItem('client'),
         "uid": localStorage.getItem('uid')
+        }
+      }).then(
+        (response) => {
+          this.user = response.data.data
+        },
+        (error) => {
+          console.error(error)
+          return error;
+        }
+      )
+    this.$axios.get('/groups', {
+      headers: { 
+        "Content-Type": "application/json", 
       }
     })
       .then(response => {
@@ -141,19 +251,47 @@ export default {
   },
   methods: {
     reload: function() {
-    this.$axios.get('/groups', {
+      this.$axios.get('/groups', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
+      },
     }
     )
       .then(response => {
         this.groups = response.data
       })
-    }
+    },
+    adjustHeight(){
+      const textarea = this.$refs.activity
+      const resetHeight = new Promise(function(resolve) {
+        resolve(textarea.style.height = 'auto')
+      });
+      resetHeight.then(function(){
+        textarea.style.height = textarea.scrollHeight + 'px'
+      });
+    },
+    register: function() {
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      var params = new URLSearchParams();
+      params.append("user_id", this.user.id);
+      params.append("name", this.groupName);
+      params.append("project_name", this.projectName);
+      params.append('activity', this.activity);
+      params.append("group_category_id", this.groupCategoryId);
+      params.append("fes_year_id", this.fesYearId);
+      this.$axios.post('/groups', params).then(
+        (response) => {
+          console.log(response)
+          this.dialog = false;
+          this.reload();
+          this.groupName = ''
+          this.projectName = ''
+          this.activity = ''
+          this.groupCategoryId = ''
+          this.fesYearId = ''
+        }
+      )
+    },
   }
 }
 </script>
