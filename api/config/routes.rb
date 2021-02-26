@@ -66,6 +66,9 @@ Rails.application.routes.draw do
       # 使用可能物品周り
       get "get_rental_item_allow_lists" => "rental_item_allow_lists_api#get_rental_item_allow_lists"
       get "get_rental_item_allow_list/:id" => "rental_item_allow_lists_api#get_rental_item_allow_list"
+      # 在庫物品周り
+      get "get_stocker_items" => "stocker_items_api#get_stocker_items"
+      get "get_stocker_item/:id" => "stocker_items_api#get_stocker_item"
     end
   end
   namespace :api do
