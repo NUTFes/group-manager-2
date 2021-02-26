@@ -119,7 +119,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/assign_rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">割り当て物品一覧に戻る</div></v-btn>
+          <div class="back-button">割り当て物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>

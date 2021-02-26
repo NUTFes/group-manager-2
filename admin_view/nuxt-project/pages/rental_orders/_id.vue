@@ -70,7 +70,7 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/rental_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">物品申請一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/rental_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">物品申請一覧に戻る</div></v-btn>
       </v-col>
     </v-row>
 

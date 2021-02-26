@@ -143,6 +143,12 @@
       </v-col>
     </v-row>
 
+    <v-row>
+      <v-col>
+        <v-btn text color="white" to="/assign_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">在庫場所一覧に戻る</div></v-btn>
+      </v-col>
+    </v-row>
+
     <!-- 在庫情報ステータス更新 -->
     <v-dialog
       v-model="stock_item_status_dialog"

@@ -128,7 +128,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/place_allow_lists"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">使用会場一覧に戻る</div></v-btn>
+          <div class="back-button">使用会場一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>

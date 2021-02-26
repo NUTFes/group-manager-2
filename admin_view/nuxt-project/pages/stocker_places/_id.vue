@@ -64,7 +64,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/stocker_places"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">在庫場所一覧に戻る</div></v-btn>
+          <div class="back-button">在庫場所一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>

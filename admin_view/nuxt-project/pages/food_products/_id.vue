@@ -74,7 +74,7 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/food_products"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">販売食品一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/food_products"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">販売食品一覧に戻る</div></v-btn>
       </v-col>
     </v-row>
 
