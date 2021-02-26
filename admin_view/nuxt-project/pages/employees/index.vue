@@ -33,14 +33,14 @@
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/employees/${data.id}`})
+                            $router.push({ path: `/employees/${data.employee.id}`})
                             "
                 >
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
+                <template v-slot:item.employee.created_at="{ item }">
+                  {{ item.employee.created_at | format-date }}
                 </template>
                 <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
+                  {{ item.employee.updated_at | format-date }}
                 </template>
               </v-data-table>                      
             </template>
@@ -55,33 +55,24 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       employees: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '名前', value: 'name' },
-        { text: '学籍番号', value: 'student_id' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'employee.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '名前', value: 'employee.name' },
+        { text: '学籍番号', value: 'employee.student_id' },
+        { text: '日時', value: 'employee.created_at' },
+        { text: '編集日時', value: 'employee.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/employees', {
+    this.$axios.get('/api/v1/get_employees', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )
