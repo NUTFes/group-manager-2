@@ -72,6 +72,9 @@ Rails.application.routes.draw do
       # 物品申請周り
       get "get_rental_orders" => "rental_orders_api#get_rental_orders"
       get "get_rental_order/:id" => "rental_orders_api#get_rental_order"
+      # 割り当て物品周り
+      get "get_assign_rental_items" => "assign_rental_items_api#get_assign_rental_items"
+      get "get_assign_rental_item/:id" => "assign_rental_items_api#get_assign_rental_item"
     end
   end
   namespace :api do
