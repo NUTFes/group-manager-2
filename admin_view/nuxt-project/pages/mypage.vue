@@ -9,9 +9,9 @@
                 <v-col cols=1></v-col>
                 <v-col cols=10> 
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
-                    <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
-                    <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
+                    <v-icon v-if="user.role_id == 1" color="red" class="mr-5">mdi-account-cog</v-icon>
+                    <v-icon v-if="user.role_id == 2" color="green" class="mr-5">mdi-account-tie</v-icon>
+                    <v-icon v-if="user.role_id == 3" color="blue" class="mr-5">mdi-account</v-icon>
                     {{ user.name }}
                     <v-spacer></v-spacer>
                   </v-card-title>
