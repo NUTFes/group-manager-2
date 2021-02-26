@@ -33,14 +33,14 @@
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/stocker_items/${data.id}`})
+                            $router.push({ path: `/stocker_items/${data.stocker_item.id}`})
                             "
                 >
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
+                <template v-slot:item.stocker_item.created_at="{ item }">
+                  {{ item.stocker_item.created_at | format-date }}
                 </template>
                 <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
+                  {{ item.stocker_item.updated_at | format-date }}
                 </template>
               </v-data-table>                      
             </template>
@@ -60,17 +60,18 @@ export default {
     return {
       stocker_items: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: '物品', value: 'rental_item_id' },
-        { text: '場所', value: 'stocker_place_id' },
-        { text: '開催年', value: 'fes_year_id' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'stocker_item.id' },
+        { text: '場所', value: 'stocker_place' },
+        { text: '物品', value: 'item' },
+        { text: '個数', value: 'stocker_item.num' },
+        { text: '開催年', value: 'fes_year' },
+        { text: '日時', value: 'stocker_item.created_at' },
+        { text: '編集日時', value: 'stocker_item.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/stocker_items', {
+    this.$axios.get('/api/v1/get_stocker_items', {
       headers: { 
         "Content-Type": "application/json", 
       }
