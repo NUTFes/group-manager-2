@@ -128,7 +128,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
+          <div class="back-button">ユーザー一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -332,5 +332,17 @@ export default {
 }
 .breadcrumbs ul li:last-child .breadcrumbs-item:after {
   display: none; 
+}
+
+.back-button {
+  border-radius: 100vh;
+  display: block;
+  position: relative;
+  height: 27px;
+  background: #999;
+  text-align: center;
+  padding: 5px 10px;
+  font-size: 0.8125rem;
+  text-decoration: none;
 }
 </style>
