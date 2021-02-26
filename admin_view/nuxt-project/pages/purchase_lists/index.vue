@@ -33,18 +33,18 @@
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/purchase_lists/${data.id}`})
+                            $router.push({ path: `/purchase_lists/${data.purchase_list.id}`})
                             "
                 >
-                <template v-slot:item.is_fresh="{ item }">
-                  <v-chip v-if="item.is_fresh == true" color="red" text-color="white" small>はい</v-chip>
-                  <v-chip v-if="item.is_fresh == false" color="blue" text-color="white" small>いいえ</v-chip>
+                <template v-slot:item.purchase_list.is_fresh="{ item }">
+                  <v-chip v-if="item.purchase_list.is_fresh == true" color="red" text-color="white" small>はい</v-chip>
+                  <v-chip v-if="item.purchase_list.is_fresh == false" color="blue" text-color="white" small>いいえ</v-chip>
                 </template>
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
+                <template v-slot:item.purchase_list.created_at="{ item }">
+                  {{ item.purchase_list.created_at | format-date }}
                 </template>
-                <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
+                <template v-slot:item.purchase_list.updated_at="{ item }">
+                  {{ item.purchase_list.updated_at | format-date }}
                 </template>
               </v-data-table>                      
             </template>
@@ -59,35 +59,27 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       purchase_lists: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'food_product_id', value: 'food_product_id' },
-        { text: '購入品', value: 'items' },
-        { text: '店名', value: 'shop_id' },
-        { text: '開催日', value: 'fes_date_id' },
-        { text: 'なまもの', value: 'is_fresh' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'purchase_list.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '販売食品', value: 'food_product' },
+        { text: '購入品', value: 'purchase_list.items' },
+        { text: '店名', value: 'shop' },
+        { text: '開催日', value: 'fes_date.date' },
+        { text: 'なまもの', value: 'purchase_list.is_fresh' },
+        { text: '日時', value: 'purchase_list.created_at' },
+        { text: '編集日時', value: 'purchase_list.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/purchase_lists', {
+    this.$axios.get('/api/v1/get_purchase_lists', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )

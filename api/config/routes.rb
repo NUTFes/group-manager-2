@@ -81,6 +81,9 @@ Rails.application.routes.draw do
       # 販売食品周り
       get "get_food_products" => "food_products_api#get_food_products"
       get "get_food_product/:id" => "food_products_api#get_food_product"
+      # 購入品周り
+      get "get_purchase_lists" => "purchase_lists_api#get_purchase_lists"
+      get "get_purchase_list/:id" => "purchase_lists_api#get_purchase_list"
     end
   end
   namespace :api do
