@@ -35,8 +35,8 @@
                       <td class="caption">{{ employee.id }}</td>
                     </tr>
                     <tr>
-                      <th>グループ名：</th>
-                      <td class="caption">{{ employee.group_id }}</td>
+                      <th>参加団体：</th>
+                      <td class="caption">{{ group }}</td>
                     </tr>
                     <tr>
                       <th>学籍番号：</th>
@@ -114,54 +114,39 @@
         </v-row>
       </v-card>
     </v-dialog>
-        </div>
+  </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-  import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        employee: [],
-        expand: false,
-        dialog: false,
-      }
-    },
-    mounted() {
-      const url = "/employees/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.employee = response.data
-      })
+<script>
+export default {
+  data() {
+    return {
+      employee: [],
+      expand: false,
+      dialog: false,
     }
+  },
+  mounted() {
+    const url = "/api/v1/get_employee/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.employee = response.data.employee
+        this.group = response.data.group
+      })
+  }
 }
 </script>
 
 <style scoped>
-  td{
-    width: 70%;
-  }
-  th{
-    width: 30%;
+td{
+  width: 70%;
+}
+th{
+  width: 30%;
   }
 </style>  
 

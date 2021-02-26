@@ -75,6 +75,9 @@ Rails.application.routes.draw do
       # 割り当て物品周り
       get "get_assign_rental_items" => "assign_rental_items_api#get_assign_rental_items"
       get "get_assign_rental_item/:id" => "assign_rental_items_api#get_assign_rental_item"
+      # 従業員周り
+      get "get_employees" => "employees_api#get_employees"
+      get "get_employee/:id" => "employees_api#get_employee"
     end
   end
   namespace :api do
