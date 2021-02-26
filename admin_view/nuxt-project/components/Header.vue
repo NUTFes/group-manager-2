@@ -46,23 +46,33 @@
         </v-list-item>
 
         <v-divider></v-divider>
+        <div class="text-center" v-if="memos.length === 0">
+          <br><br>
+          <v-progress-circular
+            indeterminate
+            color="#009688"
+            ></v-progress-circular>
+          <br><br>
+        </div>
 
-        <v-list>
-          <v-list-item
-            dense
-            v-for="item in memos"
-            :key="item.id"
-            >
-            <v-list-item-content>
-              <v-list-title>{{ item.user_id }}</v-list-title>
-              <v-list-title>{{ item.content }}</v-list-title>
-              <br>
-              <br>
-              <v-list-title style="text-align:right">{{ item.created_at | format-date}}</v-list-title>
-              <v-divider/>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <div v-else>
+          <v-list>
+            <v-list-item
+              dense
+              v-for="item in memos"
+              :key="item.id"
+              >
+              <v-list-item-content>
+                <v-list-title>{{ item.user }}</v-list-title>
+                <v-list-title>{{ item.memo.content }}</v-list-title>
+                <br>
+                <br>
+                <v-list-title style="text-align:right">{{ item.memo.created_at | format-date}}</v-list-title>
+                <v-divider/>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
       </v-navigation-drawer>
     </v-row>
   </div>
