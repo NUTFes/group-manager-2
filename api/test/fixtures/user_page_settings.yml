@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  is_regist_group: false
+  is_regist_food_product: false
+  is_edit_group: false
+  is_edit_sub_rep: false
+  is_edit_place: false
+  is_edit_power_order: false
+  is_edit_rental_order: false
+  is_edit_stage_order: false
+  is_edit_employee: false
+  is_edit_food_product: false
+  is_edit_purchase_list: false
+
+two:
+  is_regist_group: false
+  is_regist_food_product: false
+  is_edit_group: false
+  is_edit_sub_rep: false
+  is_edit_place: false
+  is_edit_power_order: false
+  is_edit_rental_order: false
+  is_edit_stage_order: false
+  is_edit_employee: false
+  is_edit_food_product: false
+  is_edit_purchase_list: false
