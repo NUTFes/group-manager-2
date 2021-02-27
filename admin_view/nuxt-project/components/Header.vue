@@ -32,14 +32,14 @@
         >
         <v-list-item>
           <v-list-item-content>
-          <v-text-field
+          <v-textarea
             label="メモ"
             v-model="content"
             text
             outlined
             required
             height="100"
-            ></v-text-field>
+            ></v-textarea>
           <v-btn v-if="this.content.length===0" outlined color="blue darken-1" block large dark>投稿</v-btn>
           <v-btn v-else color="blue darken-1" block large dark @click="submit">投稿</v-btn>
           </v-list-item-content>
@@ -67,7 +67,7 @@
                 <v-list-title>{{ item.memo.content }}</v-list-title>
                 <br>
                 <br>
-                <v-list-title style="text-align:right">{{ item.memo.created_at | format-date}}</v-list-title>
+                <v-list-title style="text-align:right">{{ item.created_at | format-date}}</v-list-title>
                 <v-divider/>
               </v-list-item-content>
             </v-list-item>
@@ -88,9 +88,6 @@ export default {
   data () {
     return {
       drawer: false,
-      items: [
-        { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
-      ],
       user: [],
       content:[], 
       memos: [],
@@ -110,18 +107,9 @@ export default {
       .then(response => {
         this.user = response.data.data
       })
-
-    this.$axios.get('/memos', {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    }).then(response => {
-        this.memos = response.data
-      })
   },
   methods: {
     open: function() {
-      this.drawer = true
       this.$axios.get('/memos', {
         headers: { 
           "Content-Type": "application/json", 
@@ -129,6 +117,7 @@ export default {
       }).then(response => {
           this.memos = response.data
         })
+      this.drawer = true
     },
     submit: function() {
       this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -138,19 +127,7 @@ export default {
       this.$axios.post('/memos', params).then(
         (response) => {
           this.memos = response.data
-          this.content = []
-        },
-        (error) => {
-          return error
-        }
-        )
-    },
-    destroy: function(id) {
-      this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
-      var params = new URLSearchParams();
-      this.$axios.delete(`/memos/#{id}`, params).then(
-        (response) => {
-          this.memos = response.data
+          this.content = ''
         },
         (error) => {
           return error
