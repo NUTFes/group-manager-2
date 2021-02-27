@@ -243,7 +243,7 @@
     <!-- 編集成功SnackBar -->
     <v-snackbar
       v-model="success_snackbar"
-      color="green"
+      color="blue-grey"
       top
       elevation="24"
     >
@@ -251,7 +251,7 @@
 
       <template v-slot:action="{ attrs }">
         <v-btn
-          color="pink"
+          color="white"
           text
           v-bind="attrs"
           @click="snackbar = false"

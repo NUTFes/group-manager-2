@@ -9,14 +9,8 @@
               <v-card-title class="font-weight-bold mt-3">
                 <v-icon>mdi-cog</v-icon>設定
                 <v-spacer></v-spacer>
-              
-           
-               
               </v-card-title>
               <hr class="mt-n3">
-               
-
-
             </v-col>
             <v-col cols="1"></v-col>
           </v-row>
@@ -343,46 +337,40 @@
         <v-row>
           <v-col cols=8></v-col>
           <v-col cols=3>  
-          <div >
-                    <v-btn
-                      rounded
-                      color="indigo accent-2"
-                      dark
-                      @click="update"
-                      block
-                      
-                    >
-                    変更する
-                    </v-btn>
+            <div >
+              <v-btn
+                rounded
+                color="blue"
+                dark
+                @click="update"
+                block
+                >
+                変更する
+              </v-btn>
 
-                   <v-snackbar
-                   v-model="snackbar"
-                   :multi-line="multiLine"
-                   top
-    
-      
-                   >
-                   変更しました
-
-                  <template v-slot:action="{ attrs }">
-                  <v-btn
-                  color="red"
-                  text
-                  v-bind="attrs"
-                  @click="snackbar = false"
+                <v-snackbar
+                  v-model="snackbar"
+                  color="blue-grey"
+                  :multi-line="multiLine"
+                  top
+                  elevation="24"
                   >
-                  <v-icon>mdi-close</v-icon>
-                  </v-btn>
+                  変更しました
+                  <template v-slot:action="{ attrs }">
+                    <v-btn
+                      color="white"
+                      text
+                      v-bind="attrs"
+                      @click="snackbar = false"
+                      >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
                   </template>
-                  </v-snackbar>
-              </div>
+                </v-snackbar>
+            </div>
           </v-col>
           <v-col cols=1></v-col>
-          
-
         </v-row>
-
-
         </v-card>
       </div>
     </v-col>
