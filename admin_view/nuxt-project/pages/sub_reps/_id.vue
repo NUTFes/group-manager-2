@@ -192,8 +192,8 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="primary"
-          text
+          color="#78909C"
+          dark
           @click="edit"
           >
           編集する
@@ -222,19 +222,19 @@
         <v-spacer></v-spacer>
         <v-btn
           flat
-          color="blue"
-          dark
-          @click="delete_dialog = false"
-          >
-          いいえ
-        </v-btn>
-        <v-btn
-          flat
           color="red"
           dark
           @click="delete_yes"
           >
           はい
+        </v-btn>
+        <v-btn
+          flat
+          color="blue"
+          dark
+          @click="delete_dialog = false"
+          >
+          いいえ
         </v-btn>
       </v-card-actions>
       </v-card>
