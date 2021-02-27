@@ -14,7 +14,8 @@
           />
         </div>
         <br>
-        <div style="text-align:center">
+
+        <div style="text-align:center" v-if="isRegistGroup">
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs  }">
               <v-btn 
@@ -30,6 +31,7 @@
             <span>参加団体を追加する</span>
           </v-tooltip>
         </div>
+
         <br>
   </div>
 </template>
@@ -57,7 +59,8 @@ export default {
         localStorage.getItem('uid')
       ],
       users: [],
-      regist_info: []
+      regist_info: [],
+      isRegistGroup: []
     }
   },
   methods: {
@@ -107,6 +110,9 @@ export default {
       .then(response => {
         this.users = response
       })
+
+      
+
     const regist_info_url = process.env.VUE_APP_URL + '/api/v1/current_user/regist_info'
     axios.get(regist_info_url, {
       headers: { 
@@ -120,6 +126,25 @@ export default {
       .then(response => {
         this.regist_info = response.data
       })
+
+    
+
+    const settingurl = process.env.VUE_APP_URL + '/user_page_settings'
+    axios.get(settingurl, {
+      headers: { 
+        "Content-Type": "application/json", 
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+      }
+    }
+    )
+      .then(response => {
+        this.isRegistGroup = response.data[0].is_regist_group
+      console.log(response)
+      })
+
+ console.log(this.isRegistGroup)
+ 
   }
 }
 </script>
