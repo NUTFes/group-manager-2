@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :user_page_settings
   resources :memos
   resources :news
   resources :purchase_lists

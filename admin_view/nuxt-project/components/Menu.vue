@@ -86,6 +86,7 @@ export default {
         { title: '購入品一覧', icon: 'mdi-cart', click: '/purchase_lists' },
         { title: '店一覧', icon: 'mdi-cart', click: '/shops' },
         { title: 'お知らせ', icon: 'mdi-newspaper-variant', click: '/news' },
+        { title: '設定', icon: 'mdi-cog', click: '/user_page_setting' },
       ],
       user: []
     }
