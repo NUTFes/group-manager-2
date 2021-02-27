@@ -7,7 +7,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-account-group</v-icon>参加団体一覧
+                <v-icon class="mr-5">mdi-account-group</v-icon>参加団体申請一覧
                 <v-spacer></v-spacer>                
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">

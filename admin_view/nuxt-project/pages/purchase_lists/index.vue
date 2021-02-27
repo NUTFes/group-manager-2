@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-cart</v-icon>購入品一覧
+              <v-icon class="mr-5">mdi-cart</v-icon>購入品申請一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
