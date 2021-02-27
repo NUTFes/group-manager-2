@@ -121,13 +121,13 @@ export default {
   transition: all 5s 0s ease;
 }
 // テーブルの奇数行をつける
-.v-data-table td {
+.v-data-table tr {
     background: #E0F2F1;
 }
-.v-data-table tr:nth-child(odd) td {
+.v-data-table tr:nth-child(odd) {
     background: #fff;
 }
-.v-data-table tr:hover td {
+.v-data-table tr:hover {
     background-color: #eee;
 }
 .v-application a {
