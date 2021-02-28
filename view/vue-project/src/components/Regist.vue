@@ -101,7 +101,7 @@
                           color="purple accent-2"
                           v-model="groupSnackbar"
                           >
-                          参加団体情報を修正しました
+                          参加団体情報を更新しました
                         </v-snackbar>
                       </v-card-title>
                         <hr>
@@ -142,7 +142,25 @@
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
                       <v-btn v-if="isEditSubRep" text @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
-                      <SubRep ref="subRepDlg"></SubRep>
+                      <SubRep ref="subRepDlg"
+                          :groupId="regist.group.id"
+                          :name="regist.sub_rep.name"
+                          :studentId="regist.sub_rep.student_id"
+                          :gradeId="regist.sub_rep.grade_id"
+                          :departmentId="regist.sub_rep.department_id"
+                          :tel="regist.sub_rep.tel"
+                          :email="regist.sub_rep.email"
+                          @reload="reload"
+                          @openSubrepSnackbar="openSubrepSnackbar">
+                      </SubRep>
+                      <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="subrepSnackbar"
+                          >
+                          副代表情報を更新しました
+                        </v-snackbar>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -152,13 +170,28 @@
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
+                          <v-list-item-content>学籍番号</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.student_id }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>学科</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.department_id }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
                           <v-list-item-content>学年</v-list-item-content>
                           <v-list-item-content>{{ regist.sub_rep.grade_id }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>学籍番号</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.student_id }}</v-list-item-content>
+                          <v-list-item-content>TEL</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.tel }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>EMAIL</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.email }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -192,7 +225,7 @@
                           color="purple accent-2"
                           v-model="placeSnackbar"
                           >
-                          会場申請情報を修正しました
+                          会場申請情報を更新しました
                         </v-snackbar>
                       </v-card-title>
                       <hr>
@@ -553,6 +586,7 @@
       tab: 'tab-2',
       groupSnackbar: false,
       placeSnackbar: false,
+      subrepSnacbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -612,6 +646,9 @@
       },
       openPlaceSnackbar() {
         this.placeSnackbar = true
+      },
+      openSubrepSnackbar() {
+        this.subrepSnackbar = true
       },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
