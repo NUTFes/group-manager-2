@@ -13,11 +13,11 @@
             <v-card-text>
               <v-form ref="form">
                 <v-select
-                  label="団体"
-                  ref="group"
-                  v-model="groupId"
+                  label="第一希望場所"
+                  ref="first"
+                  v-model="firstId"
                   :rules="[rules.required]"
-                  :items="group"
+                  :items="this.placeList"
                   :menu-props="{
                                 top: true,
                                 offsetY: true,
@@ -27,31 +27,17 @@
                   outlined
                   ></v-select>
                 <v-select
-                  label="第一希望場所"
-                  ref="first"
-                  v-model="firstId"
-                  :rules="[rules.required]"
-                  :items="this.placeList[getIndex()]['place_list']"
-                  :menu-props="{
-                                top: true,
-                                offsetY: true,
-                                }"
-                  item-text="place"
-                  item-value="place_id"
-                  outlined
-                  ></v-select>
-                <v-select
                   label="第二希望場所"
                   ref="second"
                   v-model="secondId"
                   :rules="[rules.required]"
-                  :items="this.placeList[getIndex()]['place_list']"
+                  :items="this.placeList"
                   :menu-props="{
                                 top: true,
                                 offsetY: true,
                                 }"
-                  item-text="place"
-                  item-value="place_id"
+                  item-text="name"
+                  item-value="id"
                   outlined
                   ></v-select>
                 <v-select
@@ -59,13 +45,13 @@
                   ref="third"
                   v-model="thirdId"
                   :rules="[rules.required]"
-                  :items="this.placeList[getIndex()]['place_list']"
+                  :items="this.placeList"
                   :menu-props="{
                                 top: true,
                                 offsetY: true,
                                 }"
-                  item-text="place"
-                  item-value="place_id"
+                  item-text="name"
+                  item-value="id"
                   outlined
                   ></v-select>
                 <v-text-field
@@ -78,10 +64,13 @@
                   ></v-text-field>
               </v-form>
             </v-card-text>
-            <v-card-action>
-              <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
-              <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
-            </v-card-action>
+            <v-row>
+              <v-col cols=4></v-col>
+                <v-col cols=4>
+                <v-btn color="blue darken-1" large block dark @click="submit">編集する</v-btn>
+                </v-col>
+                <v-col cols=4></v-col>
+            </v-row>
           </v-col>
           <v-col cols="2"></v-col>
         </v-row>
@@ -97,6 +86,13 @@
 
 import axios from 'axios'
 export default {
+   props: {
+    groupId: Number,
+    firstId: Number,
+    secondId: Number,
+    thirdId: Number,
+    remark: String,
+  },
   data () {
     return {
       isDisplay: false,
@@ -104,38 +100,22 @@ export default {
         required: value => !!value || '入力してください',
         max: value => value <= 1000 || '大きすぎます',
       },
-      group: [],
       placeList: [],
-      firstId: null,
-      secondId: null,
-      thirdId: null,
-      remark: null,
-      groupId: null
     }
   },
-  computed: {
-  },
   methods: {
-    cancel: function() {
-      this.$refs.form.reset();
-    },
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
 
-      const url = process.env.VUE_APP_URL + '/place_orders'
-      let params = new URLSearchParams();
-      params.append('group_id', this.groupId);
-      params.append('first', this.firstId);
-      params.append('second', this.secondId);
-      params.append('third', this.thirdId);
-      params.append('remark', this.remark);
+      const url = process.env.VUE_APP_URL + '/place_orders' + '/' + this.groupId + '?' + 'first=' + this.firstId + '&second=' + this.secondId + '&third=' + this.thirdId + '&remark=' + this.remark
+      console.log(url)
 
-
-      axios.defaults.headers.common['Content-Type'] = 'application/json';
-      axios.post(url, params).then(
+      axios.put(url).then(
         (response) => {
           console.log('response:', response)
-          this.$router.push('MyPage')
+          this.isDisplay = false
+          this.$emit('openPlaceSnackbar')
+          this.$emit('reload')
         },
         (error) => {
           console.log('登録できませんでした')
@@ -143,71 +123,16 @@ export default {
         }
       )
     },
-    getIndex: function(){
-      console.log('getIndex',this.placeList.length)
-      for(let i=0; i<this.placeList.length;i++){
-        console.log(this.placeList[i])
-        if(this.placeList[i]['group_id'] === this.groupId){
-          return i;
-        }
-      }
-      return 0;
-    },
   },
   mounted() {
-    const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-    axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        this.user = response.data.data
-        console.log(this.user)
-        console.log(this.user.id)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
-    const groupUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups'
-    axios.get(groupUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        for(let i=0;i<response.data.length;i++){
-          this.group.push(response.data[i])
-        }
-        console.log('group: ',this.group)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
-    const placeUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups/places'
+    const placeUrl = process.env.VUE_APP_URL + '/places'
     axios.get(placeUrl, {
       headers: {
         "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }).then(
       (response) => {
-        for(let i=0;i<response.data.length;i++){
-          this.placeList.push(response.data[i])
-        }
-        console.log('place: ',this.placeList)
+        this.placeList = response.data
       },
       (error) => {
         console.error(error)
