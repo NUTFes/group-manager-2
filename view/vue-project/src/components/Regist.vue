@@ -173,7 +173,23 @@
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
                         <v-btn text @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
-                        <Place ref="placeDlg"></Place>
+                        <Place ref="placeDlg"
+                          :groupId="regist.group.id"
+                          :firstId="regist.place_order.first"
+                          :secondId="regist.place_order.second"
+                          :thirdId="regist.place_order.third"
+                          :remark="regist.place_order.remark"
+                          @reload="reload"
+                          @openPlaceSnackbar="openPlaceSnackbar"
+                          ></Place>
+                          <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="placeSnackbar"
+                          >
+                          会場申請情報を修正しました
+                        </v-snackbar>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -395,7 +411,8 @@
       ],
       user: [],
       tab: 'tab-2',
-      groupSnackbar: false
+      groupSnackbar: false,
+      placeSnackbar: false
       }
     },
     mounted() {
@@ -419,6 +436,9 @@
       },
       openGroupSnackbar() {
         this.groupSnackbar = true
+      },
+      openPlaceSnackbar() {
+        this.placeSnackbar = true
       },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
