@@ -552,7 +552,7 @@
       user: [],
       tab: 'tab-2',
       groupSnackbar: false,
-      placeSnackbar: false
+      placeSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
