@@ -141,7 +141,7 @@
                       <v-card-title  style="color:#333333; font-size:25px">
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
-                      <v-btn v-if="isEditSubRep" text @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      <v-btn v-if="isEditSubRep" text fab @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       <SubRep ref="subRepDlg"
                           :groupId="regist.group.id"
                           :name="regist.sub_rep.name"
@@ -209,7 +209,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPlace" text @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPlace" text fab @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                         <Place ref="placeDlg"
                           :groupId="regist.group.id"
                           :firstId="regist.place_order.first"
