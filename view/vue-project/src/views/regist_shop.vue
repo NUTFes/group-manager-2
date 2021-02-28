@@ -348,7 +348,7 @@
             </v-stepper-content>
 
             <!-- 会場申請登録 -->
-            <v-stepper-content step="4">
+            <v-stepper-content v-if="!isStage" step="4">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col>
@@ -448,7 +448,7 @@
                       <StageCard
                         :groupId="groupId"
                         ref="stageChild"
-                        :key="powerStep"
+                        :key="stageStep"
                       />
                     </v-card-text>
                   </v-card>
@@ -491,7 +491,7 @@
                       <StageCommonCard
                         :groupId="groupId"
                         ref="stageCommonChild"
-                        :key="powerStep"
+                        :key="stageCommonStep"
                       />
                     </v-card-text>
                   </v-card>
