@@ -41,13 +41,16 @@
                   <span>印刷する</span>
                 </v-tooltip>
               </v-card-title>
-              <v-dialog v-model="dialog" max-width="1000">
+              <v-dialog v-model="dialog" max-width="500">
                 <v-card>
-                  <v-card-title class="headkine grey lighten-2">
-                    <v-icon class="pr-2" size="40">mdi-account-outline</v-icon>
-                    副代表の追加 ​ <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab>
-                      ​ <v-icon>mdi-close</v-icon>
+                  <v-card-title class="headkine blue-grey darken-3">
+                    <v-icon class="ma-5" dark>mdi-account-outline</v-icon>
+                    <div style="color: white">
+                    副代表の追加  
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="dialog = false" fab dark>
+                      <v-icon>mdi-close</v-icon>
                     </v-btn>
                   </v-card-title>
                   <v-row>
