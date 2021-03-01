@@ -24,11 +24,32 @@
                 <v-card-title class="font-weight-bold mt-3">
                   {{ group.name }}
                   <v-spacer></v-spacer>
-                  <v-btn text fab @click="dialog = true"
-                    ><v-icon class="ma-5" color="#333333"
-                      >mdi-pencil</v-icon
-                    ></v-btn
-                  >
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs  }">
+                      <v-btn 
+                              text 
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="edit_dialog = true" 
+                              fab>
+                        <v-icon class="ma-5">mdi-pencil</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>編集</span>
+                  </v-tooltip>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs  }">
+                      <v-btn 
+                              text 
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="delete_dialog = true" 
+                      fab>
+                      <v-icon class="ma-5">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>削除</span>
+                </v-tooltip>
                 </v-card-title>
                 <hr class="mt-n3" />
                 <v-simple-table class="my-9">
@@ -139,13 +160,13 @@
     </v-row>
 
     <!-- modal window to edit -->
-    <v-dialog v-model="dialog" width="500">
+    <v-dialog v-model="edit_dialog" width="500">
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
             <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
           </div><v-spacer></v-spacer>
-          <v-btn text @click="dialog = false" fab dark>
+          <v-btn text @click="edit_dialog = false" fab dark>
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -202,6 +223,65 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- 削除ダイアログ -->
+    <v-dialog
+      v-model="delete_dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color:white">削除</div>
+        </v-card-title>
+
+      <v-card-title>
+        削除してよろしいですか？
+      </v-card-title>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          flat
+          color="red"
+          dark
+          @click="delete_yes"
+          >
+          はい
+        </v-btn>
+        <v-btn
+          flat
+          color="blue"
+          dark
+          @click="delete_dialog = false"
+          >
+          いいえ
+        </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog> 
+
+    <!-- 編集成功SnackBar -->
+    <v-snackbar
+      v-model="success_snackbar"
+      color="blue-grey"
+      top
+      elevation="24"
+    >
+      編集しました
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+        <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -226,6 +306,10 @@ export default {
       groupProjectName: [],
       groupCategoryId: [],
       groupActivity: [],
+      edit_dialog: false,
+      delete_dialog: false,
+      success_snackbar: false,
+      delete_snackbar: false,
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
         { id: 2, name: "模擬店(物品販売)" },
@@ -261,9 +345,12 @@ export default {
         })
         .then((response) => {
           this.group = response.data;
-          this.dialog = false;
+          this.edit_dialog = false;
         });
     },
+    delete_yes: function() {
+      this.$router.push('/groups')
+    }
   },
   mounted() {
     const url = "/groups/" + this.$route.params.id;
