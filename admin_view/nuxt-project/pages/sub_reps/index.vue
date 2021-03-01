@@ -81,6 +81,7 @@
                         :rules="[rules.min8, rules.over8]"
                         hint="お持ちでない方：0を8桁入力"
                         background-color="white"
+                        counter="8"
                         outlined
                         clearable
                       >
