@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-cube</v-icon>物品申請一覧
+              <v-icon class="mr-5">mdi-seat</v-icon>物品申請一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -27,6 +27,15 @@
             </v-card-title>
             <hr class="mt-n3">
             <template>
+                <div class="text-center" v-if="rental_orders.length === 0">
+                  <br><br>
+                  <v-progress-circular
+                    indeterminate
+                    color="#009688"
+                    ></v-progress-circular>
+                  <br><br>
+                </div>
+                <div v-else>
               <v-data-table
                 :headers="headers"
                 :items="rental_orders"
@@ -39,10 +48,11 @@
                 <template v-slot:item.rental_order.created_at="{ item }">
                   {{ item.rental_order.created_at | format-date }}
                 </template>
-                <template v-slot:item.updated_at="{ item }">
+                <template v-slot:item.rental_order.updated_at="{ item }">
                   {{ item.rental_order.updated_at | format-date }}
                 </template>
               </v-data-table>                      
+                </div>
             </template>
           </v-col>
           <v-col cols="1"></v-col>
@@ -64,8 +74,8 @@ export default {
         { text: '参加団体', value: 'group' },
         { text: '貸し出し物品', value: 'item' },
         { text: '個数', value: 'rental_order.num' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: '日時', value: 'rental_order.created_at' },
+        { text: '編集日時', value: 'rental_order.updated_at' },
       ],
     }
   },

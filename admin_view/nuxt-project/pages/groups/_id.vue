@@ -29,7 +29,7 @@
                         <td class="caption">{{ group.id }}</td>
                       </tr>
                       <tr>
-                        <th>user_id：</th>
+                        <th>ユーザー：</th>
                         <td class="caption">{{ user }}</td>
                       </tr>
                       <tr>

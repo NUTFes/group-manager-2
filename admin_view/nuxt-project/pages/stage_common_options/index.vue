@@ -8,7 +8,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon>mdi-microphone-variant</v-icon>ステージオプション一覧
+                <v-icon class="mr-5">mdi-text-to-speech</v-icon>ステージオプション申請一覧
                 <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -28,6 +28,15 @@
               </v-card-title>
               <hr class="mt-n3">
               <template>
+                <div class="text-center" v-if="stage_common_options.length === 0">
+                  <br><br>
+                  <v-progress-circular
+                    indeterminate
+                    color="#009688"
+                    ></v-progress-circular>
+                  <br><br>
+                </div>
+                <div v-else>
                 <v-data-table
                   :headers="headers"
                   :items="stage_common_options"
@@ -60,6 +69,7 @@
                     {{ item.stage_common_option.updated_at | format-date }}
                   </template>
                 </v-data-table>                      
+                </div>
               </template>
             </v-col>
             <v-col cols="1"></v-col>
