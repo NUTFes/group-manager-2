@@ -120,7 +120,13 @@
       >
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
-          <div style="color:white">編集</div>
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="edit_dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
 
       <v-card-text>
@@ -212,7 +218,13 @@
       >
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
-          <div style="color:white">削除</div>
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="delete_dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
 
       <v-card-title>
