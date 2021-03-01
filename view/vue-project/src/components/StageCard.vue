@@ -28,61 +28,45 @@
               clearable
               outlined
             ></v-select>
-            <v-text-field
+            <v-select
               label="第一希望場所"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
+              ref="stageFirst"
+              v-model.number="stageFirst"
+              :items="stageList"
+              :menu-props="{ top: false, offsetY: true }"
+              item-text="name"
+              item-value="id"
+              clearable
               outlined
               required
-            ></v-text-field>
-            <v-text-field
+            ></v-select>
+            <v-select
               label="第二希望場所"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
+              ref="stageSecond"
+              v-model.number="stageSecond"
+              :items="stageList"
+              :menu-props="{ top: false, offsetY: true }"
+              item-text="name"
+              item-value="id"
+              clearable
               outlined
               required
-            ></v-text-field>
-            <v-text-field
-              label="使用時間幅"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="準備時間幅"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="掃除時間幅"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="準備開始時刻"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <p>
+            ></v-select>
+            <p align="left">
+              準備開始時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="prepareStartTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
+            <p align="left">
               パフォーマンス開始時刻
               <vue-timepicker
                 input-class="timepicker"
@@ -94,31 +78,38 @@
                 hide-disable-minutes
                 advanced-keyboard
                 manual-input
-              ></vue-timepicker>
+              />
             </p>
 
-            <v-text-field
-              label="パフォーマンス終了時刻"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="掃除終了時刻"
-              ref="enableRainy"
-              v-model="enableRainy"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
+            <p align="left">
+              パフォーマンス終了時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="performanceFinishTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
+            <p align="left">
+              掃除終了時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="cleanupFinishTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
           </v-form>
-          {{ performanceStartTime }}
-          {{ performanceFinishTime }}
-          {{ useInterval }}
           <v-btn @click="submit"></v-btn>
         </v-card-text>
       </v-col>
@@ -134,8 +125,7 @@ import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
 export default {
   components: {
     "vue-timepicker": vueTimepicker,
-    VueTimepicker,
-    Datetime
+    VueTimepicker
   },
   props: { groupId: Number },
   data() {
@@ -168,27 +158,36 @@ export default {
         performanceStartTime: "",
         performanceFinishTime: "",
         cleanupFinishTime: "",
-        useInterval: "",
-        prepareInterval: "",
-        cleanupInterval: ""
       };
     },
-    calcUseInterval() {
+    useInterval() {
       let minute = this.performanceFinishTime.mm - this.performanceStartTime.mm;
       let hour =
         (this.performanceFinishTime.HH - this.performanceStartTime.HH) * 60;
-      this.useInterval = hour + minute;
+      return hour + minute;
     },
-    calcPrepareInterval() {
+    prepareInterval() {
       let minute = this.performanceStartTime.mm - this.prepareStartTime.mm;
       let hour = (this.performanceStartTime.HH - this.prepareStartTime.HH) * 60;
-      this.prepareInterval = hour + minute;
+      return hour + minute;
     },
-    calcCleanupInterval() {
+    cleanupInterval() {
       let minute = this.cleanupFinishTime.mm - this.performanceFinishTime.mm;
       let hour =
         (this.cleanupFinishTime.HH - this.performanceFinishTime.HH) * 60;
-      this.prepareInterval = hour + minute;
+      return hour + minute;
+    },
+    stringPrepareStartTime() {
+      return this.prepareStartTime.HH + ":" + this.prepareStartTime.mm
+    },
+    stringPerformanceStartTime() {
+      return this.performanceStartTime.HH + ":" + this.performanceStartTime.mm
+    },
+    stringPerformanceFinishTime() {
+      return this.performanceFinishTime.HH + ":" + this.performanceFinishTime.mm
+    },
+    stringCleanupFinishTime() {
+      return this.cleanupFinishTime.HH + ":" + this.cleanupFinishTime.mm
     }
   },
   methods: {
@@ -203,24 +202,20 @@ export default {
       return true;
     },
     submit() {
-      calcUseInterval;
-      calcPrepareInterval;
-      calcCleanupInterval;
-
       const url = process.env.VUE_APP_URL + "/stage_orders";
       let params = new URLSearchParams();
       params.append("group_id", this.groupId);
-      params.append("is_sunny", isSunny);
-      params.append("fes_date_id", fesDate);
-      params.append("stage_first", stageFirst);
-      params.append("stage_second", stageSecond);
-      params.append("use_time_interval", useInterval);
-      params.append("prepare_time_interval", prepareInterval);
-      params.append("cleanup_time_interval", cleanupInterval);
-      params.append("prepare_start_time", prepareStartTime);
-      params.append("performance_start_time", performanceStartTime);
-      params.append("performance_end_time", performanceEndTime);
-      params.append("cleanup_end_time", prepareStartTime);
+      params.append("is_sunny", this.isSunny);
+      params.append("fes_date_id", this.fesDate);
+      params.append("stage_first", this.stageFirst);
+      params.append("stage_second", this.stageSecond);
+      params.append("use_time_interval", this.useInterval);
+      params.append("prepare_time_interval", this.prepareInterval);
+      params.append("cleanup_time_interval", this.cleanupInterval);
+      params.append("prepare_start_time", this.stringPrepareStartTime);
+      params.append("performance_start_time", this.stringPerformanceStartTime);
+      params.append("performance_end_time", this.stringPerformanceFinishTime);
+      params.append("cleanup_end_time", this.stringCleanupFinishTime);
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
