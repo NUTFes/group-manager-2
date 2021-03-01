@@ -4,54 +4,66 @@
       <v-col cols="12" align="center">
         <v-card-text>
           <v-form ref="form">
-            <v-text-field
-              label="所持機器の使用"
-              ref="item"
-              v-model="item"
-              v-bind:value="n"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="音楽"
-              ref="power"
-              v-model="power"
-              type="number"
-              :rules="[rules.required, rules.max]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="撮影許可"
-              ref="manufacturer"
-              v-model="manufacturer"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="騒音"
-              ref="model"
-              v-model="model"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
+            <p align="left">
+              所持機器を使用するか
+              <v-btn-toggle
+                class="mb-12 ml-6"
+                v-model="ownEquipment"
+                ref="ownEquipment"
+                color="purple accent-2"
+              >
+                <v-btn value="true">YES</v-btn>
+                <v-btn value="false">NO</v-btn>
+              </v-btn-toggle>
+            </p>
+            <p align="left">
+              音楽を流すか
+              <v-btn-toggle
+                class="mb-12 ml-6"
+                v-model="bgm"
+                ref="bgm"
+                color="purple accent-2"
+              >
+                <v-btn value="true">YES</v-btn>
+                <v-btn value="false">NO</v-btn>
+              </v-btn-toggle>
+            </p>
+            <p align="left">
+              撮影の許可
+              <v-btn-toggle
+                class="mb-12 ml-6"
+                v-model="cameraPermission"
+                ref="cameraPermission"
+                color="purple accent-2"
+              >
+                <v-btn value="true">YES</v-btn>
+                <v-btn value="false">NO</v-btn>
+              </v-btn-toggle>
+            </p>
+            <p align="left">
+              騒音
+              <v-btn-toggle
+                class="mb-12 ml-6"
+                v-model="loudSound"
+                ref="loudSound"
+                color="purple accent-2"
+              >
+                <v-btn value="true">YES</v-btn>
+                <v-btn value="false">NO</v-btn>
+              </v-btn-toggle>
+            </p>
+
             <v-text-field
               label="ステージ内容"
-              ref="itemUrl"
-              v-model="itemUrl"
+              ref="stageContent"
+              v-model="stageContent"
               :rules="[rules.required]"
               text
               outlined
               required
             ></v-text-field>
           </v-form>
+          <v-btn @click="submit"></v-btn>
         </v-card-text>
       </v-col>
     </v-row>
@@ -65,8 +77,7 @@ export default {
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください",
-        max: value => value <= 1000 || "大きすぎます"
+        required: value => !!value || "入力してください"
       },
       group: [],
       valid: false
@@ -76,11 +87,11 @@ export default {
   computed: {
     form() {
       return {
-        item: "",
-        power: "",
-        manufacturer: "",
-        model: "",
-        itemUrl: ""
+        ownEquipment: "",
+        bgm: "",
+        cameraPermission: "",
+        loudSound: "",
+        stageContent: ""
       };
     }
   },
@@ -96,20 +107,19 @@ export default {
       return true;
     },
     submit() {
-      const url = process.env.VUE_APP_URL + "/power_orders";
+      const url = process.env.VUE_APP_URL + "/stage_common_options";
       let params = new URLSearchParams();
       params.append("group_id", this.groupId);
-      params.append("item", this.item);
-      params.append("power", this.power);
-      params.append("manufacturer", this.manufacturer);
-      params.append("model", this.model);
-      params.append("item_url", this.itemUrl);
+      params.append("own_equipment", this.ownEquipment);
+      params.append("bgm", this.bgm);
+      params.append("camera_permission", this.cameraPermission);
+      params.append("loud_sound", this.loudSound);
+      params.append("stage_content", this.stageContent);
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
         response => {
           console.log("response:", response);
-          //          this.$router.push("MyPage");
           return "ok";
         },
         error => {

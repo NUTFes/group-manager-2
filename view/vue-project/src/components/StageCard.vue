@@ -110,7 +110,6 @@
               />
             </p>
           </v-form>
-          <v-btn @click="submit"></v-btn>
         </v-card-text>
       </v-col>
     </v-row>
