@@ -6,14 +6,16 @@
           <v-form ref="form">
             <p align="left">
               天気
+              {{ isSunny }}
               <v-btn-toggle
-                class="mb-12 ml-6"
+                class="mb-6 ml-6"
                 v-model="isSunny"
                 ref="isSunny"
                 color="purple accent-2"
+                @change="changeIsSunny()"
               >
-                <v-btn value="true">晴れ</v-btn>
-                <v-btn value="false">雨</v-btn>
+                <v-btn value="0">晴れ</v-btn>
+                <v-btn value="1">雨</v-btn>
               </v-btn-toggle>
             </p>
             <v-select
@@ -32,7 +34,7 @@
               label="第一希望場所"
               ref="stageFirst"
               v-model.number="stageFirst"
-              :items="stageList"
+              :items="firstStageList"
               :menu-props="{ top: false, offsetY: true }"
               item-text="name"
               item-value="id"
@@ -44,7 +46,7 @@
               label="第二希望場所"
               ref="stageSecond"
               v-model.number="stageSecond"
-              :items="stageList"
+              :items="secondStageList"
               :menu-props="{ top: false, offsetY: true }"
               item-text="name"
               item-value="id"
@@ -139,26 +141,27 @@ export default {
         { name: "二日目", id: 3 }
       ],
       stageList: [
-        { name: "メインステージ", id: 1 },
-        { name: "サブステージ", id: 2 },
-        { name: "メインステージ", id: 3 }
-      ]
+        { name: "メインステージ", id: 1, isSelect: false },
+        { name: "サブステージ", id: 2, isSelect: false },
+        { name: "体育館", id: 3, isSelect: true },
+        { name: "マルチメディアセンター", id: 4, isSelect: true },
+        { name: "武道館", id: 5, isSelect: true },
+        { name: "希望なし", id: 6, isSelect: true }
+      ],
+      firstStageList: [],
+      secondStageList: [],
+      isSunny: "",
+      fesDate: "",
+      stageFirst: "",
+      stageSecond: "",
+      prepareStartTime: "",
+      performanceStartTime: "",
+      performanceFinishTime: "",
+      cleanupFinishTime: ""
     };
   },
 
   computed: {
-    form() {
-      return {
-        isSunny: true,
-        fesDate: "",
-        stageFirst: "",
-        stageSecond: "",
-        prepareStartTime: "",
-        performanceStartTime: "",
-        performanceFinishTime: "",
-        cleanupFinishTime: "",
-      };
-    },
     useInterval() {
       let minute = this.performanceFinishTime.mm - this.performanceStartTime.mm;
       let hour =
@@ -177,16 +180,34 @@ export default {
       return hour + minute;
     },
     stringPrepareStartTime() {
-      return this.prepareStartTime.HH + ":" + this.prepareStartTime.mm
+      return this.prepareStartTime.HH + ":" + this.prepareStartTime.mm;
     },
     stringPerformanceStartTime() {
-      return this.performanceStartTime.HH + ":" + this.performanceStartTime.mm
+      return this.performanceStartTime.HH + ":" + this.performanceStartTime.mm;
     },
     stringPerformanceFinishTime() {
-      return this.performanceFinishTime.HH + ":" + this.performanceFinishTime.mm
+      return (
+        this.performanceFinishTime.HH + ":" + this.performanceFinishTime.mm
+      );
     },
     stringCleanupFinishTime() {
-      return this.cleanupFinishTime.HH + ":" + this.cleanupFinishTime.mm
+      return this.cleanupFinishTime.HH + ":" + this.cleanupFinishTime.mm;
+    },
+    stageListIsSunny() {
+      let isSunny = Boolean(this.isSunny);
+      console.log(typeof isSunny);
+      if (isSunny) {
+        return this.stageList;
+      } else {
+        let stageList = [];
+        for (let i = 0; i < this.stageList.length; i++) {
+          if (this.stageList[i].isSelect) {
+            console.log(this.stageList[i]);
+            stageList.push(this.stageList[i]);
+          }
+        }
+        return stageList;
+      }
     }
   },
   methods: {
@@ -227,6 +248,11 @@ export default {
           return error;
         }
       );
+    },
+    changeIsSunny() {
+      console.log(typeof this.isSunny);
+      this.firstStageList = this.stageListIsSunny;
+      this.secondStageList = this.stageListIsSunny;
     }
   },
 

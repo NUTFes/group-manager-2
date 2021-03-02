@@ -7,7 +7,7 @@
             <p align="left">
               所持機器を使用するか
               <v-btn-toggle
-                class="mb-12 ml-6"
+                class="mb-6 ml-6"
                 v-model="ownEquipment"
                 ref="ownEquipment"
                 color="purple accent-2"
@@ -19,7 +19,7 @@
             <p align="left">
               音楽を流すか
               <v-btn-toggle
-                class="mb-12 ml-6"
+                class="mb-6 ml-6"
                 v-model="bgm"
                 ref="bgm"
                 color="purple accent-2"
@@ -31,7 +31,7 @@
             <p align="left">
               撮影の許可
               <v-btn-toggle
-                class="mb-12 ml-6"
+                class="mb-6 ml-6"
                 v-model="cameraPermission"
                 ref="cameraPermission"
                 color="purple accent-2"
@@ -43,7 +43,7 @@
             <p align="left">
               騒音
               <v-btn-toggle
-                class="mb-12 ml-6"
+                class="mb-6 ml-6"
                 v-model="loudSound"
                 ref="loudSound"
                 color="purple accent-2"
@@ -63,7 +63,6 @@
               required
             ></v-text-field>
           </v-form>
-          <v-btn @click="submit"></v-btn>
         </v-card-text>
       </v-col>
     </v-row>

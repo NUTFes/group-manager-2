@@ -26,4 +26,10 @@ class Api::V1::FoodProductsApiController < ApplicationController
     render json: food_products_list
   end
 
+  def get_group_food_product
+    # グループが持つ販売食品を取得する
+    @food_products = FoodProduct.where(group_id: params[:group_id])
+    render json: @food_products
+  end
+
 end

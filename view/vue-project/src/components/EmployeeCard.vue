@@ -6,9 +6,8 @@
           <v-form ref="form">
             <v-text-field
               label="名前"
-              ref="item"
-              v-model="item"
-              v-bind:value="n"
+              ref="name"
+              v-model="name"
               :rules="[rules.required]"
               text
               outlined
@@ -16,18 +15,9 @@
             ></v-text-field>
             <v-text-field
               label="学籍番号"
-              ref="power"
-              v-model="power"
+              ref="studentId"
+              v-model="studentId"
               type="number"
-              :rules="[rules.required, rules.max]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="従業員カテゴリ"
-              ref="manufacturer"
-              v-model="manufacturer"
               :rules="[rules.required]"
               text
               outlined
@@ -47,8 +37,7 @@ export default {
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください",
-        max: value => value <= 1000 || "大きすぎます"
+        required: value => !!value || "入力してください"
       },
       group: [],
       valid: false
@@ -58,11 +47,9 @@ export default {
   computed: {
     form() {
       return {
-        item: "",
-        power: "",
-        manufacturer: "",
-        model: "",
-        itemUrl: ""
+        name: "",
+        studentId: "",
+        employeeCategory: ""
       };
     }
   },
@@ -78,20 +65,17 @@ export default {
       return true;
     },
     submit() {
-      const url = process.env.VUE_APP_URL + "/power_orders";
+      const url = process.env.VUE_APP_URL + "/employees";
       let params = new URLSearchParams();
       params.append("group_id", this.groupId);
-      params.append("item", this.item);
-      params.append("power", this.power);
-      params.append("manufacturer", this.manufacturer);
-      params.append("model", this.model);
-      params.append("item_url", this.itemUrl);
+      params.append("name", this.name);
+      params.append("student_id", this.studentId);
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
+      params.forEach(element => console.log(element));
       axios.post(url, params).then(
         response => {
           console.log("response:", response);
-          //          this.$router.push("MyPage");
           return "ok";
         },
         error => {

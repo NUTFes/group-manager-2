@@ -6,9 +6,8 @@
           <v-form ref="form">
             <v-text-field
               label="名前"
-              ref="item"
-              v-model="item"
-              v-bind:value="n"
+              ref="name"
+              v-model="name"
               :rules="[rules.required]"
               text
               outlined
@@ -16,33 +15,38 @@
             ></v-text-field>
             <v-text-field
               label="一日目の個数"
-              ref="power"
-              v-model="power"
+              ref="firstDayNum"
+              v-model="firstDayNum"
               type="number"
               :rules="[rules.required, rules.max]"
-              text
               outlined
+              text
               required
             ></v-text-field>
             <v-text-field
               label="二日目の個数"
-              ref="manufacturer"
-              v-model="manufacturer"
+              ref="secondDayNum"
+              v-model="secondDayNum"
+              type="number"
               :rules="[rules.required]"
-              text
               outlined
+              text
               required
             ></v-text-field>
-            <v-text-field
-              label="調理するか"
-              ref="model"
-              v-model="model"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
+            <p align="left">
+              調理するか
+              <v-btn-toggle
+                class="mb-12 ml-6"
+                v-model="isCooking"
+                ref="isCooking"
+                color="purple accent-2"
+              >
+                <v-btn value="true">YES</v-btn>
+                <v-btn value="false">NO</v-btn>
+              </v-btn-toggle>
+            </p>
           </v-form>
+          <v-btn @click="submit"></v-btn>
         </v-card-text>
       </v-col>
     </v-row>
@@ -67,11 +71,10 @@ export default {
   computed: {
     form() {
       return {
-        item: "",
-        power: "",
-        manufacturer: "",
-        model: "",
-        itemUrl: ""
+        name: "",
+        firstDayNum: "",
+        secondDayNum: "",
+        isCooking: ""
       };
     }
   },
@@ -87,20 +90,18 @@ export default {
       return true;
     },
     submit() {
-      const url = process.env.VUE_APP_URL + "/power_orders";
+      const url = process.env.VUE_APP_URL + "/food_products";
       let params = new URLSearchParams();
       params.append("group_id", this.groupId);
-      params.append("item", this.item);
-      params.append("power", this.power);
-      params.append("manufacturer", this.manufacturer);
-      params.append("model", this.model);
-      params.append("item_url", this.itemUrl);
+      params.append("name", this.name);
+      params.append("first_day_num", this.firstDayNum);
+      params.append("second_day_num", this.secondDayNum);
+      params.append("is_cooking", this.isCooking);
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
         response => {
           console.log("response:", response);
-          //          this.$router.push("MyPage");
           return "ok";
         },
         error => {

@@ -212,6 +212,7 @@
                               </v-col>
                               <v-col cols="4" />
                             </v-row>
+                            <v-divider />
                           </v-stepper-content>
                         </v-stepper-items>
                       </v-stepper>
@@ -317,9 +318,9 @@
                               <v-col cols="4" />
                             </v-row>
                           </v-stepper-content>
+                          <v-divider />
                         </v-stepper-items>
                       </v-stepper>
-                      <v-divider></v-divider>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -451,11 +452,12 @@
                         :key="stageStep"
                       />
                     </v-card-text>
+                    <v-divider />
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
-                  <v-row>
+              <v-row>
                 <v-col cols="7"></v-col>
                 <v-col cols="2">
                   <v-btn text height="50" width="170" @click="e1 -= 1">
@@ -494,6 +496,7 @@
                         :key="stageCommonStep"
                       />
                     </v-card-text>
+                    <v-divider />
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
@@ -670,6 +673,8 @@ export default {
       for (let i = 0; i < this.rentalSteps; i++) {
         this.$refs.rentalChild[i].submit();
       }
+
+      this.$router.push("MyPage");
     },
     saleSubmit: function() {
       if (groupCategoryId == null) {
@@ -755,7 +760,7 @@ export default {
 };
 </script>
 
-<style>
+<style scooped>
 .stepper {
   box-shadow: none;
 }

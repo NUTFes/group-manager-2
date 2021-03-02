@@ -3,6 +3,7 @@
     <DashBoard/>
     <UserInfo/>
         <News/>
+        {{ regist_info }}
         <div
           v-for="(regist, i) in regist_info"
           :key="i"
