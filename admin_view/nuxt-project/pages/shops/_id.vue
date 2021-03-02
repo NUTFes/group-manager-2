@@ -65,7 +65,7 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-btn text color="white" to="/shops"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">店一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/shops"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">店一覧に戻る</div></v-btn>
         </div>
       </v-col>
     </v-row>

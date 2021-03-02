@@ -4,8 +4,16 @@ class MemosController < ApplicationController
   # GET /memos
   # GET /memos.json
   def index
-    @memos = Memo.all.order(id: "DESC")
-    render json: @memos
+    @memos = Memo.all.order(id: "DESC").limit(100)
+    memo_list = []
+    for memo in @memos
+      user = memo.user.name
+      memo_list << {
+        memo: memo,
+        user: user
+      }
+    end
+    render json: memo_list
   end
 
   # GET /memos/1
@@ -20,7 +28,16 @@ class MemosController < ApplicationController
     @memo = Memo.new(memo_params)
     @memo.save
     @memos = Memo.all.order(id: "DESC")
-    render json: @memos
+    memo_list = []
+    for memo in @memos
+      user = memo.user.name
+      memo_list << {
+        memo: memo,
+        user: user
+      }
+    end
+    render json: memo_list
+    # render json: @memos
   end
 
   # PATCH/PUT /memos/1
@@ -28,7 +45,16 @@ class MemosController < ApplicationController
   def update
     @memo.update(memo_params)
     @memos = Memo.all.order(id: "DESC")
-    render json: @memos
+    memo_list = []
+    for memo in @memos
+      user = memo.user.name
+      memo_list << {
+        memo: memo,
+        user: user
+      }
+    end
+    render json: memo_list
+    # render json: @memos
   end
 
   # DELETE /memos/1

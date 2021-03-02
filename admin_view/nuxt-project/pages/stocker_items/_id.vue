@@ -36,17 +36,20 @@
                         <td class="caption">{{ stocker_item.id }}</td>
                       </tr>
                       <tr>
-                        <th>名前：</th>
-                        <td class="caption">{{ stocker_item.rental_item_id }}</td>
+                        <th>物品：</th>
+                        <td class="caption">{{ item }}</td>
                       </tr>
                       <tr>
                         <th>場所：</th>
-                        <td class="caption">{{ stocker_item.stocker_place_id }}</td>
+                        <td class="caption">{{ stocker_place }}</td>
                       </tr>
                       <tr>
+                        <th>個数：</th>
+                        <td class="caption">{{ stocker_item.num }}</td>
+                      </tr>
                       <tr>
                         <th>開催年：</th>
-                        <td class="caption">{{ stocker_item.fes_year_id }}</td>
+                        <td class="caption">{{ fes_year }}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -73,7 +76,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/stocker_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">在庫物品一覧に戻る</div></v-btn>
+          <div class="back-button">在庫物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -160,12 +163,15 @@ export default {
   data() {
     return {
       stocker_item: [],
+      item: [],
+      stocker_place: [],
+      fes_year: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-    const url = "stocker_items/" + this.$route.params.id;
+    const url = "/api/v1/get_stocker_item/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -173,7 +179,10 @@ export default {
         },
       })
       .then((response) => {
-        this.stocker_item = response.data;
+        this.stocker_item = response.data.stocker_item;
+        this.item = response.data.item
+        this.stocker_place = response.data.stocker_place
+        this.fes_year = response.data.fes_year
       })
   }
 }

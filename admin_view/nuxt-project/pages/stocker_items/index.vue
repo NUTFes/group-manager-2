@@ -7,7 +7,7 @@
          <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-table-chair</v-icon>在庫物品一覧
+              <v-icon class="mr-5">mdi-table-chair</v-icon>在庫物品一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -27,22 +27,32 @@
             </v-card-title>
             <hr class="mt-n3">
             <template>
+                <div class="text-center" v-if="stocker_items.length === 0">
+                  <br><br>
+                  <v-progress-circular
+                    indeterminate
+                    color="#009688"
+                    ></v-progress-circular>
+                  <br><br>
+                </div>
+                <div v-else>
               <v-data-table
                 :headers="headers"
                 :items="stocker_items"
                 class="elevation-0 my-9"
                 @click:row="
                             (data) =>
-                            $router.push({ path: `/stocker_items/${data.id}`})
+                            $router.push({ path: `/stocker_items/${data.stocker_item.id}`})
                             "
                 >
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
+                <template v-slot:item.stocker_item.created_at="{ item }">
+                  {{ item.stocker_item.created_at | format-date }}
                 </template>
                 <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
+                  {{ item.stocker_item.updated_at | format-date }}
                 </template>
               </v-data-table>                      
+                </div>
             </template>
           </v-col>
           <v-col cols="1"></v-col>
@@ -60,17 +70,18 @@ export default {
     return {
       stocker_items: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: '物品', value: 'rental_item_id' },
-        { text: '場所', value: 'stocker_place_id' },
-        { text: '開催年', value: 'fes_year_id' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'stocker_item.id' },
+        { text: '場所', value: 'stocker_place' },
+        { text: '物品', value: 'item' },
+        { text: '個数', value: 'stocker_item.num' },
+        { text: '開催年', value: 'fes_year' },
+        { text: '日時', value: 'stocker_item.created_at' },
+        { text: '編集日時', value: 'stocker_item.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/stocker_items', {
+    this.$axios.get('/api/v1/get_stocker_items', {
       headers: { 
         "Content-Type": "application/json", 
       }

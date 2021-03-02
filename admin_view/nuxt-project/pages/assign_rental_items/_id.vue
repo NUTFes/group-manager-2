@@ -36,20 +36,20 @@
                         <td class="caption">{{ assign_rental_item.id }}</td>
                       </tr>
                       <tr>
-                        <th>group_id：</th>
-                        <td class="caption">{{ assign_rental_item.group_id }}</td>
+                        <th>参加団体：</th>
+                        <td class="caption">{{ group }}</td>
                       </tr>
                       <tr>
-                        <th>rental_item_id：</th>
-                        <td class="caption">{{ assign_rental_item.rental_item_id }}</td>
+                        <th>物品：</th>
+                        <td class="caption">{{ item }}</td>
                       </tr>
                       <tr>
-                        <th>num：</th>
+                        <th>個数：</th>
                         <td class="caption">{{ assign_rental_item.num }}</td>
                       </tr>
                       <tr>
-                        <th>stocker_place_id：</th>
-                        <td class="caption">{{ assign_rental_item.stocker_place_id }}</td>
+                        <th>在庫場所：</th>
+                        <td class="caption">{{ stocker_place }}</td>
                       </tr>
                       <tr>
                         <th>created_at：</th>
@@ -118,8 +118,8 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/assign_rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div class="back-button">割り当て物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -204,12 +204,15 @@ export default {
   data() {
     return {
       assign_rental_item: [],
+      group: [],
+      item: [],
+      stocker_place: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-    const url = "/assign_rental_items/" + this.$route.params.id;
+    const url = "/api/v1/get_assign_rental_item/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -217,7 +220,10 @@ export default {
         },
       })
       .then((response) => {
-        this.assign_rental_item = response.data;
+        this.assign_rental_item = response.data.assign_rental_item;
+        this.group = response.data.group;
+        this.item = response.data.item;
+        this.stocker_place = response.data.stocker_place;
       })
   }
 }

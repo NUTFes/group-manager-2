@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-account</v-icon>従業員一覧
+              <v-icon class="mr-5">mdi-account</v-icon>従業員申請一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -27,22 +27,32 @@
             </v-card-title>
             <hr class="mt-n3">
             <template>
-              <v-data-table
-                :headers="headers"
-                :items="employees"
-                class="elevation-0 my-9"
-                @click:row="
-                            (data) =>
-                            $router.push({ path: `/employees/${data.id}`})
-                            "
-                >
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
-                </template>
-                <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
-                </template>
-              </v-data-table>                      
+              <div class="text-center" v-if="employees.length === 0">
+                <br><br>
+                <v-progress-circular
+                  indeterminate
+                  color="#009688"
+                  ></v-progress-circular>
+                <br><br>
+              </div>
+              <div v-else>
+                <v-data-table
+                  :headers="headers"
+                  :items="employees"
+                  class="elevation-0 my-9"
+                  @click:row="
+                              (data) =>
+                              $router.push({ path: `/employees/${data.employee.id}`})
+                              "
+                  >
+                  <template v-slot:item.employee.created_at="{ item }">
+                    {{ item.employee.created_at | format-date }}
+                  </template>
+                  <template v-slot:item.updated_at="{ item }">
+                    {{ item.employee.updated_at | format-date }}
+                  </template>
+                </v-data-table>                      
+              </div>
             </template>
           </v-col>
           <v-col cols="1"></v-col>
@@ -55,33 +65,24 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       employees: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '名前', value: 'name' },
-        { text: '学籍番号', value: 'student_id' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'employee.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '名前', value: 'employee.name' },
+        { text: '学籍番号', value: 'employee.student_id' },
+        { text: '日時', value: 'employee.created_at' },
+        { text: '編集日時', value: 'employee.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/employees', {
+    this.$axios.get('/api/v1/get_employees', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )

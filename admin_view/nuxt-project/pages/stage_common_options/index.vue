@@ -8,7 +8,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon>mdi-microphone-variant</v-icon>ステージオプション一覧
+                <v-icon class="mr-5">mdi-text-to-speech</v-icon>ステージオプション申請一覧
                 <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -28,38 +28,48 @@
               </v-card-title>
               <hr class="mt-n3">
               <template>
+                <div class="text-center" v-if="stage_common_options.length === 0">
+                  <br><br>
+                  <v-progress-circular
+                    indeterminate
+                    color="#009688"
+                    ></v-progress-circular>
+                  <br><br>
+                </div>
+                <div v-else>
                 <v-data-table
                   :headers="headers"
                   :items="stage_common_options"
                   class="elevation-0 my-9"
                   @click:row="
                                (data) =>
-                               $router.push({ path: `/stage_common_options/${data.id}`})
+                               $router.push({ path: `/stage_common_options/${data.stage_common_option.id}`})
                                "
                   >
-                  <template v-slot:item.own_equipment="{ item }">
-                    <v-chip v-if="item.own_equipment == true" color="red" text-color="white" small>使用</v-chip>
-                    <v-chip v-if="item.own_equipment == false" color="blue" text-color="white" small>使用しない</v-chip>
+                  <template v-slot:item.stage_common_option.own_equipment="{ item }">
+                    <v-chip v-if="item.stage_common_option.own_equipment == true" color="red" text-color="white" small>使用</v-chip>
+                    <v-chip v-if="item.stage_common_option.own_equipment == false" color="blue" text-color="white" small>使用しない</v-chip>
                   </template>
-                  <template v-slot:item.bgm="{ item }">
-                    <v-chip v-if="item.bgm == true" color="red" text-color="white" small>使用</v-chip>
-                    <v-chip v-if="item.bgm == false" color="blue" text-color="white" small>使用しない</v-chip>
+                  <template v-slot:item.stage_common_option.bgm="{ item }">
+                    <v-chip v-if="item.stage_common_option.bgm == true" color="red" text-color="white" small>使用</v-chip>
+                    <v-chip v-if="item.stage_common_option.bgm == false" color="blue" text-color="white" small>使用しない</v-chip>
                   </template>
-                  <template v-slot:item.camera_permission="{ item }">
-                    <v-chip v-if="item.camera_permission == true" color="red" text-color="white" small>許可</v-chip>
-                    <v-chip v-if="item.camera_permission == false" color="blue" text-color="white" small>許可しない</v-chip>
+                  <template v-slot:item.stage_common_option.camera_permission="{ item }">
+                    <v-chip v-if="item.stage_common_option.camera_permission == true" color="red" text-color="white" small>許可</v-chip>
+                    <v-chip v-if="item.stage_common_option.camera_permission == false" color="blue" text-color="white" small>許可しない</v-chip>
                   </template>
-                  <template v-slot:item.loud_sound="{ item }">
-                    <v-chip v-if="item.loud_sound == true" color="red" text-color="white" small>出す</v-chip>
-                    <v-chip v-if="item.loud_sound == false" color="blue" text-color="white" small>出さない</v-chip>
+                  <template v-slot:item.stage_common_option.loud_sound="{ item }">
+                    <v-chip v-if="item.stage_common_option.loud_sound == true" color="red" text-color="white" small>出す</v-chip>
+                    <v-chip v-if="item.stage_common_option.loud_sound == false" color="blue" text-color="white" small>出さない</v-chip>
                   </template>
-                  <template v-slot:item.created_at="{ item }">
-                    {{ item.created_at | format-date }}
+                  <template v-slot:item.stage_common_option.created_at="{ item }">
+                    {{ item.stage_common_option.created_at | format-date }}
                   </template>
-                  <template v-slot:item.updated_at="{ item }">
-                    {{ item.updated_at | format-date }}
+                  <template v-slot:item.stage_common_option.updated_at="{ item }">
+                    {{ item.stage_common_option.updated_at | format-date }}
                   </template>
                 </v-data-table>                      
+                </div>
               </template>
             </v-col>
             <v-col cols="1"></v-col>
@@ -77,25 +87,23 @@ export default {
     return {
       stage_common_options: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '所持機器の使用', value: 'own_equipment' },
-        { text: '音楽をかける', value: 'bgm' },
-        { text: '撮影許可', value: 'camera_permission' },
-        { text: '大きな音', value: 'loud_sound' },
-        // { text: 'ステージ内容', value: 'stage_content' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'stage_common_option.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '所持機器の使用', value: 'stage_common_option.own_equipment' },
+        { text: '音楽をかける', value: 'stage_common_option.bgm' },
+        { text: '撮影許可', value: 'stage_common_option.camera_permission' },
+        { text: '大きな音', value: 'stage_common_option.loud_sound' },
+        { text: '日時', value: 'stage_common_option.created_at' },
+        { text: '編集日時', value: 'stage_common_option.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('stage_common_options', {
+    this.$axios.get('api/v1/get_stage_common_options_with_group', {
       headers: { 
         "Content-Type": "application/json", 
       }
-    }
-    )
+    })
       .then(response => {
         this.stage_common_options = response.data
       })

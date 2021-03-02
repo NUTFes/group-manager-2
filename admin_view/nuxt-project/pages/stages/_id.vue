@@ -71,7 +71,7 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-btn text color="white" to="/stages"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ステージ一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/stages"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">ステージ一覧に戻る</div></v-btn>
         </div>
       </v-col>
     </v-row>

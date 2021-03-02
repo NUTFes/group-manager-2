@@ -44,17 +44,27 @@
                         </td>
                       </tr>
                       <tr>
-                      <tr>
-                      <th>使用日：</th>
+                      <th>参加団体：</th>
                         <td class="caption">
-                          {{ purchase.fes_date_id }}
+                          {{ group }}
                         </td>
                       </tr>
                       <tr>
+                      <th>販売食品：</th>
+                        <td class="caption">
+                          {{ food_product }}
+                        </td>
+                      </tr>
+                      <tr>
+                      <th>使用日：</th>
+                      <td class="caption">
+                        {{ fes_date.date }} - {{ fes_date.day }} - {{ fes_date.days_num }}日目
+                      </td>
+                      </tr>
                       <tr>
                       <th>店：</th>
                         <td class="caption">
-                          {{ purchase.shop_id }}
+                          {{ shop }}
                         </td>
                       </tr>
                       <tr>
@@ -95,7 +105,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/purchase_lists"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">購入品一覧に戻る</div></v-btn>
+          <div class="back-button">購入品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -176,31 +186,20 @@
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
-import Menu from "~/components/Menu.vue";
-import axios from "axios";
-import { mapState } from "vuex";
-
 export default {
-  components: {
-    Header,
-    Menu,
-  },
-  fetch({ store }) {
-    store.dispatch("getRights");
-  },
-  computed: {
-    ...mapState(["rights"]),
-  },
   data() {
     return {
       purchase: [],
+      food_product: [],
+      group: [],
+      shop: [],
+      fes_date: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-    const url = "/purchase_lists/" + this.$route.params.id;
+    const url = "/api/v1/get_purchase_list/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -208,7 +207,11 @@ export default {
         },
       })
       .then((response) => {
-        this.purchase = response.data;
+        this.purchase = response.data.purchase_list
+        this.food_product = response.data.food_product
+        this.group = response.data.group
+        this.shop = response.data.shop
+        this.fes_date = response.data.fes_date
       })
   }
 }
