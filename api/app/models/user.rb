@@ -8,5 +8,5 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
   belongs_to :role
   has_one :user_detail, dependent: :destroy
-  has_many :groups
+  has_many :groups, dependent: :destroy
 end
