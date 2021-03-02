@@ -19,7 +19,7 @@
                       v-on="on"
                       @click="dialog = true"
                     >
-                      <v-icon dark>mdi-account-multiple-plus</v-icon>
+                      <v-icon dark>mdi-plus-circle-outline</v-icon>
                     </v-btn>
                   </template>
                   <span>参加団体の追加</span>
