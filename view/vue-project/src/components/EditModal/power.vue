@@ -1,34 +1,19 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
-      <v-card>
-        <v-container class="justify-content-center">
-          <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8" align="center">
-              <v-card-title class="justify-center">
-                <h1>電力登録</h1>
-              </v-card-title>
+  <v-dialog v-model="isDisplay" persistent width="1000">
+    <v-card flat>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px">
+        <v-icon class="pr-3" size="35">mdi-power-plug</v-icon><b>電力申請の登録情報を修正する</b>
+        <v-spacer></v-spacer>
+        <v-btn text fab @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
+      </v-card-title>
+      <v-container class="justify-content-center">
+        <v-row>
+          <v-col cols="2"></v-col>
+          <v-col cols="8" align="center">
               <v-card-text>
                 <v-form ref="form">
-                  <v-select
-                    label="団体"
-                    ref="group"
-                    v-model="groupId"
-                    :rules="[rules.required]"
-                    :items="group"
-                    :menu-props="{
-                      top: true,
-                      offsetY: true,
-                    }"
-                    item-text="name"
-                    item-value="id"
-                    outlined
-                  ></v-select>
                   <v-text-field
                     label="製品名"
-                    ref="item"
                     v-model="item"
                     :rules="[rules.required]"
                     text
@@ -37,18 +22,16 @@
                   ></v-text-field>
                   <v-text-field
                     label="電力量"
-                    ref="power"
                     v-model="power"
                     type="number"
                     :rules="[rules.required,
-                      rules.max]"
+                      rules.max,rules.min]"
                     text
                     outlined
                     required
                   ></v-text-field>
                   <v-text-field
                     label="メーカー"
-                    ref="manufacturer"
                     v-model="manufacturer"
                     :rules="[rules.required]"
                     text
@@ -57,7 +40,6 @@
                   ></v-text-field>
                   <v-text-field
                     label="型番"
-                    ref="model"
                     v-model="model"
                     :rules="[rules.required]"
                     text
@@ -66,8 +48,7 @@
                   ></v-text-field>
                   <v-text-field
                     label="製品URL"
-                    ref="itemUrl"
-                    v-model="itemUrl"
+                    v-model="url"
                     :rules="[rules.required]"
                     text
                     outlined
@@ -75,112 +56,73 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-card-action>
-                <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
-                <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
-              </v-card-action>
-            </v-col>
-            <v-col cols="2"></v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+                  <v-row>
+                    <v-col cols=4></v-col>
+                    <v-col cols=4>
+                    <v-btn color="blue darken-1" large block dark @click="submit">編集する</v-btn>
+                    </v-col>
+                    <v-col cols=4></v-col>
+                  </v-row>
+              </v-col>
+              <v-col cols="2"></v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+  </v-dialog>
 </template>
 
 <script>
-
 import axios from 'axios'
 export default {
+  props: {
+    groupId: Number,
+    item: String,
+    power: Number,
+    manufacturer: String,
+    model: String,
+    url: String,
+  },
   data () {
     return {
+      isDisplay: false,
+      groups: [],
       rules: {
         required: value => !!value || '入力してください',
         max: value => value <= 1000 || '大きすぎます',
+        min: value => value >= 0 || '小さすぎます',
       },
-      group: [],
     }
-    },
-    computed: {
-    form () {
-      return {
-        item: null,
-        power: null,
-        manufacturer: null,
-        model: null,
-        itemUrl: null,
-        groupId: null
-      }
-    },
   },
+
   methods: {
-    cancel: function() {
-      this.$refs.form.reset();
-    },
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
 
-      const url = process.env.VUE_APP_URL + '/power_orders'
-      let params = new URLSearchParams();
-      params.append('group_id', this.groupId);
-      params.append('item', this.item);
-      params.append('power', this.power);
-      params.append('manufacturer', this.manufacturer);
-      params.append('model', this.model);
-      params.append('item_url', this.itemUrl);
-
-      axios.defaults.headers.common['Content-Type'] = 'application/json';
-      axios.post(url, params).then(
+      const url = process.env.VUE_APP_URL + '/power_orders' + '/' + this.groupId + '?' + 'item=' + this.item + '&power=' + this.power + '&manufacturer=' + this.manufacturer + '&model=' + this.model + '&item_url=' + this.url
+      axios.put(url).then(
         (response) => {
-          console.log('response:', response)
-          this.$router.push('MyPage')
+          this.isDisplay = false
+          this.$emit('openPowerSnackbar')
+          this.$emit('reload')
         },
         (error) => {
-          console.log('登録できませんでした')
           return error;
         }
       )
-    },
+    }
   },
 
   mounted() {
-    const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-    axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        this.user = response.data.data
-        console.log(this.user)
-        console.log(this.user.id)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
-    const groupUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups'
+    const groupUrl = process.env.VUE_APP_URL + '/groups'
     axios.get(groupUrl, {
       headers: {
         "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }).then(
       (response) => {
-        for(let i=0;i<response.data.length;i++){
-          this.group.push(response.data[i])
-        }
-        console.log(this.group)
+        this.groups = response.data
       },
       (error) => {
-        console.error(error)
         return error;
       }
     )
