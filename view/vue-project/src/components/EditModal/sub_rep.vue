@@ -15,6 +15,7 @@
                 label="名前"
                 background-color="white"
                 v-model="name"
+                outlined
                 clearable
                 ></v-text-field>
 
@@ -28,6 +29,7 @@
                 item-text="name"
                 item-value="id"
                 counter="8"
+                outlined
                 clearable
                 ></v-text-field>
 
@@ -38,6 +40,7 @@
                 :menu-props="{ top: true, offsetY: true }"
                 item-text="name"
                 item-value="id"
+                outlined
                 clearable
                 ></v-select>
 
@@ -48,6 +51,7 @@
                 :menu-props="{ top: true, offsetY: true }"
                 item-text="name"
                 item-value="id"
+                outlined
                 clearable
                 ></v-select>
 
@@ -59,6 +63,7 @@
                 hint="ハイフンなしで半角入力"
                 persistent-hint
                 counter="11"
+                outlined
                 clearable
                 ></v-text-field>
 
@@ -66,6 +71,7 @@
                 label="EMAIL"
                 background-color="white"
                 v-model="email"
+                outlined
                 clearable
                 ></v-text-field>
             </v-col>
