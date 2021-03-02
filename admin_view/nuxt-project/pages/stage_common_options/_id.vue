@@ -22,8 +22,7 @@
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
-              <v-card-title class="font-weight-bold mt-3">
-                {{ stage_common_option.group_id }}
+              <v-card-title class="font-weight-bold mt-3">{{ group }}
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
               </v-card-title>
@@ -89,7 +88,7 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-btn text color="white" to="/stage_common_options"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ステージオプション一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/stage_common_options"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">ステージオプション一覧に戻る</div></v-btn>
         </div>
       </v-col>
     </v-row>
@@ -174,12 +173,13 @@ export default {
   data() {
     return {
       stage_common_option: [],
+      group: [],
       expand: false,
       dialog: false,
     }
   },
   mounted() {
-    const url = "/stage_common_options/" + this.$route.params.id;
+    const url = "/api/v1/get_stage_common_options_with_group/" + this.$route.params.id;
     this.$axios.get(url, {
       headers: { 
         "Content-Type": "application/json", 
@@ -187,7 +187,9 @@ export default {
     }
     )
       .then(response => {
-        this.stage_common_option = response.data
+        this.stage_common_option = response.data.stage_common_option
+        this.group = response.data.group
+        console.log(this.group)
       })
   }
 }

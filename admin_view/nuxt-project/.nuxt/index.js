@@ -17,6 +17,7 @@ import nuxt_plugin_plugin_8ae9aafc from 'nuxt_plugin_plugin_8ae9aafc' // Source:
 import nuxt_plugin_plugin_7e140ea8 from 'nuxt_plugin_plugin_7e140ea8' // Source: ./vuetify/plugin.js (mode: 'all')
 import nuxt_plugin_moment_b355c800 from 'nuxt_plugin_moment_b355c800' // Source: ./moment.js (mode: 'all')
 import nuxt_plugin_axios_dd70eed0 from 'nuxt_plugin_axios_dd70eed0' // Source: ./axios.js (mode: 'all')
+import nuxt_plugin_axios_5659d192 from 'nuxt_plugin_axios_5659d192' // Source: ../plugins/axios.js (mode: 'client')
 import nuxt_plugin_fileter_2d3aa2a8 from 'nuxt_plugin_fileter_2d3aa2a8' // Source: ../plugins/fileter.js (mode: 'client')
 import nuxt_plugin_plugin_97087858 from 'nuxt_plugin_plugin_97087858' // Source: ./auth/plugin.js (mode: 'all')
 
@@ -214,6 +215,10 @@ async function createApp(ssrContext, config = {}) {
 
   if (typeof nuxt_plugin_axios_dd70eed0 === 'function') {
     await nuxt_plugin_axios_dd70eed0(app.context, inject)
+  }
+
+  if (process.client && typeof nuxt_plugin_axios_5659d192 === 'function') {
+    await nuxt_plugin_axios_5659d192(app.context, inject)
   }
 
   if (process.client && typeof nuxt_plugin_fileter_2d3aa2a8 === 'function') {

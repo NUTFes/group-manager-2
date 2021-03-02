@@ -7,7 +7,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-cart</v-icon>購入品一覧
+              <v-icon class="mr-5">mdi-cart</v-icon>購入品申請一覧
               <v-spacer></v-spacer>
               <v-tooltip top>
                 <template v-slot:activator="{ on, attrs  }">
@@ -27,26 +27,36 @@
             </v-card-title>
             <hr class="mt-n3">
             <template>
-              <v-data-table
-                :headers="headers"
-                :items="purchase_lists"
-                class="elevation-0 my-9"
-                @click:row="
-                            (data) =>
-                            $router.push({ path: `/purchase_lists/${data.id}`})
-                            "
-                >
-                <template v-slot:item.is_fresh="{ item }">
-                  <v-chip v-if="item.is_fresh == true" color="red" text-color="white" small>はい</v-chip>
-                  <v-chip v-if="item.is_fresh == false" color="blue" text-color="white" small>いいえ</v-chip>
-                </template>
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
-                </template>
-                <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
-                </template>
-              </v-data-table>                      
+              <div class="text-center" v-if="purchase_lists.length === 0">
+                <br><br>
+                <v-progress-circular
+                  indeterminate
+                  color="#009688"
+                  ></v-progress-circular>
+                <br><br>
+              </div>
+              <div v-else>
+                <v-data-table
+                  :headers="headers"
+                  :items="purchase_lists"
+                  class="elevation-0 my-9"
+                  @click:row="
+                              (data) =>
+                              $router.push({ path: `/purchase_lists/${data.purchase_list.id}`})
+                              "
+                  >
+                  <template v-slot:item.purchase_list.is_fresh="{ item }">
+                    <v-chip v-if="item.purchase_list.is_fresh == true" color="red" text-color="white" small>はい</v-chip>
+                    <v-chip v-if="item.purchase_list.is_fresh == false" color="blue" text-color="white" small>いいえ</v-chip>
+                  </template>
+                  <template v-slot:item.purchase_list.created_at="{ item }">
+                    {{ item.purchase_list.created_at | format-date }}
+                  </template>
+                  <template v-slot:item.purchase_list.updated_at="{ item }">
+                    {{ item.purchase_list.updated_at | format-date }}
+                  </template>
+                </v-data-table>                      
+              </div>
             </template>
           </v-col>
           <v-col cols="1"></v-col>
@@ -59,35 +69,27 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       purchase_lists: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'food_product_id', value: 'food_product_id' },
-        { text: '購入品', value: 'items' },
-        { text: '店名', value: 'shop_id' },
-        { text: '開催日', value: 'fes_date_id' },
-        { text: 'なまもの', value: 'is_fresh' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'purchase_list.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '販売食品', value: 'food_product' },
+        { text: '購入品', value: 'purchase_list.items' },
+        { text: '店名', value: 'shop' },
+        { text: '開催日', value: 'fes_date.date' },
+        { text: 'なまもの', value: 'purchase_list.is_fresh' },
+        { text: '日時', value: 'purchase_list.created_at' },
+        { text: '編集日時', value: 'purchase_list.updated_at' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/purchase_lists', {
+    this.$axios.get('/api/v1/get_purchase_lists', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )

@@ -29,8 +29,8 @@
                       <td class="caption">{{ group.id }}</td>
                     </tr>
                     <tr>
-                      <th>user_id：</th>
-                      <td class="caption">{{ group.user_id }}</td>
+                      <th>ユーザー：</th>
+                      <td class="caption">{{ user }}</td>
                     </tr>
                     <tr>
                       <th>グループ名：</th>
@@ -46,11 +46,18 @@
                     </tr>
                     <tr>
                       <th>グループカテゴリ：</th>
-                      <td class="caption">{{ group.group_category_id }}</td>
+                      <td class="caption">
+                      <v-chip v-if="group.group_category_id == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
+                      <v-chip v-if="group.group_category_id == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
+                      <v-chip v-if="group.group_category_id == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
+                      <v-chip v-if="group.group_category_id == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
+                      <v-chip v-if="group.group_category_id == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
+                      <v-chip v-if="group.group_category_id == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
+                      </td>
                     </tr>
                     <tr>
                       <th>開催年：</th>
-                      <td class="caption">{{ group.fes_year_id }}</td>
+                      <td class="caption">{{ fes_year }}</td>
                     </tr>
                     <tr>
                       <th>登録日時：</th>
@@ -76,7 +83,7 @@
     <v-row>
       <v-col cols=1o>
         <div class="card">
-        <v-btn text color="white" to="/project_names"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">企画名一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/project_names"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">企画名一覧に戻る</div></v-btn>
         </div>
       </v-col>
     </v-row>
@@ -174,12 +181,16 @@ import Menu from '~/components/Menu.vue'
     data() {
       return {
         group: [],
+        user: [],
+        group_category_id: [],
+        fes_year: [],
+        category: [],
         expand: false,
         dialog: false,
       }
     },
     mounted() {
-      const url = "groups/" + this.$route.params.id;
+      const url = "api/v1/get_group_from_project_name/" + this.$route.params.id;
       this.$axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
@@ -187,8 +198,25 @@ import Menu from '~/components/Menu.vue'
       }
       )
         .then(response => {
-        this.group = response.data
+          this.group = response.data.group
+          this.user = response.data.user
+          this.group_category_id = response.data.group.group_category_id
+          this.fes_year = response.data.fes_year
+        })
+
+    const category_url = "group_categories" + this.group_category_id;
+    this.$axios.get(category_url, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
     })
+      .then(response => {
+        console.log(response)
+        this.group_categories = response.data
+        for (let i = 0; i < this.group_categories.length; i++) {
+          this.category.push(this.group_categories[i]['name'])
+        }
+      })
   }
 }
 </script>

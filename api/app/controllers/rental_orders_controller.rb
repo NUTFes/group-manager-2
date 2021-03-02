@@ -19,18 +19,22 @@ class RentalOrdersController < ApplicationController
   def create
     @rental_order = RentalOrder.new(rental_order_params)
     @rental_order.save
+    render json: @rental_order
   end
 
   # PATCH/PUT /rental_orders/1
   # PATCH/PUT /rental_orders/1.json
   def update
     @rental_order.update(rental_order_params)
+    render json: @rental_order
   end
 
   # DELETE /rental_orders/1
   # DELETE /rental_orders/1.json
   def destroy
     @rental_order.destroy
+    @rental_orders = RentalOrder.all
+    render json: @rental_orders
   end
 
   private

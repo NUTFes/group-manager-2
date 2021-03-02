@@ -37,11 +37,18 @@
                       </tr>
                       <tr>
                         <th>物品：</th>
-                        <td class="caption">{{ rental_item_allow_list.rental_item_id }}</td>
+                        <td class="caption">{{ item }}</td>
                       </tr>
                       <tr>
                         <th>グループカテゴリー：</th>
-                        <td class="caption">{{ rental_item_allow_list.group_category_id }}</td>
+                        <td class="caption">
+                          <v-chip v-if="group_category == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
+                          <v-chip v-if="group_category == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
+                          <v-chip v-if="group_category == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
+                          <v-chip v-if="group_category == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
+                          <v-chip v-if="group_category == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
+                          <v-chip v-if="group_category == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
+                        </td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -68,7 +75,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/rental_item_allow_lists"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">使用可能物品一覧に戻る</div></v-btn>
+          <div class="back-button">使用可能物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -155,12 +162,27 @@ export default {
   data() {
     return {
       rental_item_allow_list: [],
+      item: [],
+      group_category: [],
+      group_categories: [],
+      category: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-    const url = "rental_item_allow_lists/" + this.$route.params.id;
+    this.$axios.get('/group_categories', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.group_categories = response.data
+        for (let i = 0; i < this.group_categories.length; i++) {
+          this.category.push(this.group_categories[i]['name'])
+        }
+      })
+    const url = "/api/v1/get_rental_item_allow_list/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -168,7 +190,9 @@ export default {
         },
       })
       .then((response) => {
-        this.rental_item_allow_list = response.data
+        this.rental_item_allow_list = response.data.rental_item_allow_list
+        this.item = response.data.item
+        this.group_category = response.data.group_category.id
       })
   }
 }

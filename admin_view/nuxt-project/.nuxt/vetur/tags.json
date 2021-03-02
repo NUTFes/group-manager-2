@@ -5,6 +5,12 @@
   "LazyHeader": {
     "description": "Auto imported from components/Header.vue"
   },
+  "ItemOrders": {
+    "description": "Auto imported from components/ItemOrders.vue"
+  },
+  "LazyItemOrders": {
+    "description": "Auto imported from components/ItemOrders.vue"
+  },
   "Logo": {
     "description": "Auto imported from components/Logo.vue"
   },

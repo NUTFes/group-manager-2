@@ -7,14 +7,13 @@
             <div class="breadcrumbs">
               <ul>
                 <li><div class="breadcrumbs-item"><router-link to="/place_allow_lists">使用会場一覧</router-link></div></li>
-                <li><div class="breadcrumbs-item">{{ place_allow_list.place_id }}</div></li>
+                <li><div class="breadcrumbs-item">{{ place_allow_list.id }}</div></li>
               </ul>
             </div>
           </v-card-text>
         </div>
       </v-col>
     </v-row>
-
     <v-row>
       <v-col>
         <div class="card">
@@ -23,7 +22,7 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  {{ place_allow_list.place_id }}
+                  {{ place_allow_list.id }}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
@@ -37,11 +36,18 @@
                       </tr>
                       <tr>
                         <th>場所：</th>
-                        <td class="caption">{{ place_allow_list.place_id }}</td>
+                        <td class="caption">{{ place }}</td>
                       </tr>
                       <tr>
                         <th>グループカテゴリー：</th>
-                        <td class="caption">{{ place_allow_list.group_category_id }}</td>
+                        <td class="caption">
+                          <v-chip v-if="group_category == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
+                          <v-chip v-if="group_category == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
+                          <v-chip v-if="group_category == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
+                          <v-chip v-if="group_category == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
+                          <v-chip v-if="group_category == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
+                          <v-chip v-if="group_category == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
+                        </td>
                       </tr>
                       <tr>
                         <th>使用：</th>
@@ -122,7 +128,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/place_allow_lists"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">使用会場一覧に戻る</div></v-btn>
+          <div class="back-button">使用会場一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -209,12 +215,27 @@ export default {
   data() {
     return {
       place_allow_list: [],
+      place: [],
+      group_category: [],
+      category: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-    const url = "place_allow_lists/" + this.$route.params.id;
+    this.$axios.get('/group_categories', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.group_categories = response.data
+        for (let i = 0; i < this.group_categories.length; i++) {
+          this.category.push(this.group_categories[i]['name'])
+        }
+      })
+
+    const url = "/api/v1/get_place_allow_list/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -222,7 +243,9 @@ export default {
         },
       })
       .then((response) => {
-        this.place_allow_list = response.data;
+        this.place_allow_list = response.data.place_allow_list;
+        this.place = response.data.place;
+        this.group_category = response.data.group_category.id;
       })
   }
 }

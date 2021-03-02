@@ -100,14 +100,14 @@ export default {
   padding-bottom: 150px;
 }
 .v-enter {
-  transform: scale(0.1);
+  transform: scale(0.9);
   opacity: 0.1;
 }
 .v-enter-to {
   opacity: 1;
 }
 .v-enter-active {
-  transition: all .5s .1s ease;
+  transition: all 0.6s .1s ease;
 }
 .v-leave {
   transform: scale(0.1) translate(0%,100%);
@@ -119,6 +119,19 @@ export default {
 }
 .v-leave-active {
   transition: all 5s 0s ease;
+}
+// テーブルの奇数行をつける
+.v-data-table tr {
+    background: #E0F2F1;
+}
+.v-data-table tr:nth-child(odd) {
+    background: #fff;
+}
+.v-data-table tr:hover {
+    background-color: #eee;
+}
+.v-application a {
+  color: #FFF;
 }
 .breadcrumbs {
   text-align: center;
@@ -171,5 +184,16 @@ export default {
 }
 .breadcrumbs ul li:last-child .breadcrumbs-item:after {
   display: none; 
+}
+.back-button {
+  border-radius: 100vh;
+  display: block;
+  position: relative;
+  height: 27px;
+  background: #999;
+  text-align: center;
+  padding: 5px 10px;
+  font-size: 0.8125rem;
+  text-decoration: none;
 }
 </style>

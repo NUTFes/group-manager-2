@@ -27,20 +27,17 @@ export default {
     return {
       rental_orders: [],
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '貸し出し物品', value: 'rental_item_id' },
-        { text: '個数', value: 'num' },
+        { text: 'ID', value: 'rental_order.id' },
+        { text: '参加団体', value: 'group' },
+        { text: '貸し出し物品', value: 'item' },
+        { text: '個数', value: 'rental_order.num' },
       ],
     }
   },
   mounted() {
-    this.$axios.get('/rental_orders', {
+    this.$axios.get('/api/v1/get_rental_orders', {
       headers: { 
         "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
       }
     }
     )
