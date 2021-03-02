@@ -20,10 +20,25 @@
                             v-on="on"
                             @click="dialog=true"
                             >
-                            <v-icon dark>mdi-map-marker-plus</v-icon>
+                            <v-icon dark>mdi-plus-circle-outline</v-icon>
                     </v-btn>
                   </template>
                   <span>会場申請の追加</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="reload"
+                    >
+                      <v-icon dark>mdi-reload</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>更新する</span>
                 </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">

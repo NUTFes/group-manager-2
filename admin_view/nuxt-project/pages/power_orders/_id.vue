@@ -152,14 +152,6 @@
                 :rules="[rules.required]"
               ></v-text-field>
               <v-text-field
-                label="電力"
-                v-model="power"
-                clearable
-                outlined
-                type="number"
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-text-field
                 label="電力(ワット)"
                 v-model="power"
                 clearable
