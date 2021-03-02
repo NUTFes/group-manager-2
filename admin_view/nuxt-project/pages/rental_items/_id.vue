@@ -159,7 +159,6 @@
     </v-row>
 
     <!-- 編集ダイアログ -->
-
     <v-dialog
       v-model="edit_dialog"
       width="500"
@@ -191,6 +190,8 @@
                 label="貸出"
                 v-model="is_rentable"
                 :items="items_rentable"
+                item-text="label"
+                item-value="value"
                 text
                 outlined
                 />       
@@ -301,7 +302,10 @@ export default {
       rules: {
         required: value => !!value || '入力してください',
       },
-      items_rentable:[true,false]
+      items_rentable:[
+        {label:"使用可能",value:true},
+        {label:"使用不可能",value:false}
+      ]
     };
   },
   mounted() {
