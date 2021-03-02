@@ -127,6 +127,14 @@
         <v-row>
           <v-col>
             <v-form ref="form">
+              <v-text-field
+                label="名前"
+                v-model="name"
+                text
+                outlined
+                clearable
+                :rules="[rules.required]"
+                />
               <v-select
                 label="晴れ"
                 v-model="enable_sunny"
@@ -246,6 +254,7 @@ export default {
       edit_dialog: false,
       delete_dialog: false,
       id:[],
+      name:[],
       enable_sunny: [],
       enable_rainy: [],
       enable_items :[
@@ -268,6 +277,7 @@ export default {
       .then(response => {
         this.stage = response.data
         this.id = response.data.id
+        this.name = response.data.name
         this.enable_sunny = response.data.enable_sunny
         this.enable_rainy = response.data.enable_rainy
       })
@@ -284,6 +294,7 @@ export default {
       )
         .then(response => {
         this.stage = response.data
+        this.name = response.data.name
         this.id = response.data.id
         this.enable_sunny = response.data.enable_sunny
         this.enable_rainy = response.data.enable_rainy
@@ -293,7 +304,7 @@ export default {
       this.edit_dialog = true
     },
     edit: function() {
-      const edit_url = '/stages/' + this.id + '?enable_sunny=' + this.enable_sunny + '&enable_rainy=' + this.enable_rainy
+      const edit_url = '/stages/' + this.id + '?name=' +this.name + '&enable_sunny=' + this.enable_sunny + '&enable_rainy=' + this.enable_rainy
       console.log(edit_url)
       this.$axios.put(edit_url , {
         headers: { 
