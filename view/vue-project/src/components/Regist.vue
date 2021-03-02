@@ -268,7 +268,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -301,6 +301,25 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <Power ref="powerDlg"
+                          :id="this.power_order_id"
+                          :groupId="this.group_id"
+                          :item="this.item"
+                          :power="this.power"
+                          :manufacturer="this.manufacturer"
+                          :model="this.model"
+                          :url="this.url"
+                          @reload="reload"
+                          @openPowerSnackbar="openPowerSnackbar"
+                          ></Power>
+                          <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="powerSnackbar"
+                          >
+                          電力申請情報を更新しました
+                        </v-snackbar>
               </v-tab-item>
 
               <!-- 物品申請情報 -->
@@ -586,7 +605,8 @@
       tab: 'tab-2',
       groupSnackbar: false,
       placeSnackbar: false,
-      subrepSnacbar: false,
+      subrepSnackbar: false,
+      powerSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -595,7 +615,15 @@
       isEditStageOrder: [],
       isEditEmployee: [],
       isEditFoodProduct:[],
-      isEditPurchaseList: []
+      isEditPurchaseList: [],
+      // 電力申請用
+      power_order_id: [],
+      group_id: [],
+      item:[], 
+      manufacturer: [],
+      model:[], 
+      power: [],
+      url:[],
       }
     },
     mounted() {
@@ -650,6 +678,9 @@
       openSubrepSnackbar() {
         this.subrepSnackbar = true
       },
+      openPowerSnackbar() {
+        this.powerSnackbar = true
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -659,8 +690,16 @@
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
       },
-      openPowerDisplay() {
+      openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
+        this.power_order_id = id
+        this.group_id = group_id
+        this.item = item
+        this.power = power
+        this.manufacturer = manufacturer
+        this.model = model
+        this.url = url
         this.$refs.powerDlg.isDisplay = true
+        console.log(this.$refs.powerDlg.isDisplay)
       },
     }
   }
