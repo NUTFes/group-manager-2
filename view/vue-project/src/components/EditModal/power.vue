@@ -75,6 +75,7 @@
 import axios from 'axios'
 export default {
   props: {
+    id: Number,
     groupId: Number,
     item: String,
     power: Number,
@@ -98,7 +99,8 @@ export default {
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
 
-      const url = process.env.VUE_APP_URL + '/power_orders' + '/' + this.groupId + '?' + 'item=' + this.item + '&power=' + this.power + '&manufacturer=' + this.manufacturer + '&model=' + this.model + '&item_url=' + this.url
+      const url = process.env.VUE_APP_URL + '/power_orders' + '/' + this.id + '?group_id=' + this.groupId + '&item=' + this.item + '&power=' + this.power + '&manufacturer=' + this.manufacturer + '&model=' + this.model + '&item_url=' + this.url
+      console.log(url)
       axios.put(url).then(
         (response) => {
           this.isDisplay = false

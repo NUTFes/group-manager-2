@@ -268,7 +268,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -302,6 +302,7 @@
                   <v-col cols=1></v-col>
                 </v-row>
                 <Power ref="powerDlg"
+                          :id="this.power_order_id"
                           :groupId="this.group_id"
                           :item="this.item"
                           :power="this.power"
@@ -616,6 +617,7 @@
       isEditFoodProduct:[],
       isEditPurchaseList: [],
       // 電力申請用
+      power_order_id: [],
       group_id: [],
       item:[], 
       manufacturer: [],
@@ -688,7 +690,8 @@
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
       },
-      openPowerDisplay(group_id, item, power, manufacturer, model, url) {
+      openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
+        this.power_order_id = id
         this.group_id = group_id
         this.item = item
         this.power = power
