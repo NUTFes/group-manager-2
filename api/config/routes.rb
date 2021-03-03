@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       # 参加団体周り
       get "get_group_name" => "groups_api#get_group_name"
       get "get_group_from_project_name/:id" => "groups_api#get_group_from_project_name"
+      get "get_group/:id" => "groups_api#get_group"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"

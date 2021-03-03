@@ -30,7 +30,7 @@
                               text 
                               v-bind="attrs"
                               v-on="on"
-                              @click="edit_dialog = true" 
+                              @click="edit_dialog_open" 
                               fab>
                         <v-icon class="ma-5">mdi-pencil</v-icon>
                       </v-btn>
@@ -124,7 +124,7 @@
                       </tr>
                       <tr>
                         <th>開催年：</th>
-                        <td class="caption">{{ years[group.fes_year_id] }}</td>
+                        <td class="caption">{{ year }}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -211,6 +211,19 @@
                   filled
                   clearable
                 ></v-text-field>
+                <v-select
+                  label="開催年"
+                  v-model="fes_year_id"
+                  :items="year_list"
+                  :rules="[rules.required]"
+                  :menu-props="{
+                    top: true,
+                    offsetY: true,
+                  }"
+                  item-text="year_num"
+                  item-value="id"
+                  outlined
+                ></v-select>
               </v-form>
             </v-col>
           </v-row>
@@ -316,41 +329,70 @@ export default {
       delete_dialog: false,
       success_snackbar: false,
       delete_snackbar: false,
-      groupCategories: [
-        { id: 1, name: "模擬店(食品販売)" },
-        { id: 2, name: "模擬店(物品販売)" },
-        { id: 3, name: "ステージ企画" },
-        { id: 4, name: "展示・体験" },
-        { id: 5, name: "研究室公開" },
-        { id: 6, name: "その他" },
-      ],
+      year_list: [],
+      groupCategories: [],
       rules: {
         required: (value) => !!value || "入力してください",
       },
     };
   },
   methods: {
-    edit: function () {
-      const edit_url =
-        "/groups/" +
-        this.group.id +
-        "?" +
-        "name=" +
-        this.groupName +
-        "&project_name=" +
-        this.groupProjectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.groupActivity;
+    reload: function() {
+      const url = "api/v1/get_group/" + this.$route.params.id;
       this.$axios
-        .put(edit_url, {
+        .get(url, {
           headers: {
             "Content-Type": "application/json",
           },
         })
         .then((response) => {
-          this.group = response.data;
+          this.group = response.data.group;
+          this.groupName = response.data.group.name;
+          this.groupProjectName = response.data.group.project_name;
+          this.groupCategoryId = response.data.group.group_category_id;
+          this.groupActivity = response.data.group.activity;
+          this.user_id = response.data.group.user_id;
+          this.fes_year_id = response.data.group.fes_year_id;
+          this.user = response.data.user
+          this.year = response.data.fes_year
+        });
+    },
+    edit_dialog_open: function() {
+      const year_url = "/fes_years/"
+      this.$axios
+        .get(year_url, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.year_list = response.data
+        });
+      this.edit_dialog = true
+
+      const group_categories_url = "/group_categories/"
+      this.$axios
+        .get(group_categories_url, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.groupCategories = response.data
+        });
+      this.edit_dialog = true
+
+    },
+    edit: function () {
+      const edit_url = "/groups/" + this.group.id + "?name=" + this.groupName + "&project_name=" + this.groupProjectName + "&group_category_id=" + this.groupCategoryId + "&activity=" + this.groupActivity + "&fes_year_id=" + this.fes_year_id
+      this.$axios.put(edit_url, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log(response)
+          this.reload()
           this.edit_dialog = false;
         });
     },
@@ -359,7 +401,7 @@ export default {
     }
   },
   mounted() {
-    const url = "/groups/" + this.$route.params.id;
+    const url = "api/v1/get_group/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -367,29 +409,18 @@ export default {
         },
       })
       .then((response) => {
-        this.group = response.data;
-        this.groupName = response.data.name;
-        this.groupProjectName = response.data.project_name;
-        this.groupCategoryId = response.data.group_category_id;
-        this.groupActivity = response.data.activity;
-        this.user_id = response.data.user_id;
-        this.group_category_id = response.data.group_category_id;
-        this.fes_year_id = response.data.fes_year_id;
+        this.group = response.data.group;
+        this.groupName = response.data.group.name;
+        this.groupProjectName = response.data.group.project_name;
+        this.groupCategoryId = response.data.group.group_category_id;
+        this.groupActivity = response.data.group.activity;
+        this.user_id = response.data.group.user_id;
+        this.fes_year_id = response.data.group.fes_year_id;
+        this.user = response.data.user
+        this.year = response.data.fes_year
       });
 
-    const user_url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-    this.$axios
-      .get(user_url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.user = response.data.user.name;
-      });
-
-    const category_url = "group_categories" + this.group_category_id;
+    const category_url = "group_categories/"
     this.$axios
       .get(category_url, {
         headers: {
@@ -401,21 +432,6 @@ export default {
         this.group_categories = response.data;
         for (let i = 0; i < this.group_categories.length; i++) {
           this.category.push(this.group_categories[i]["name"]);
-        }
-      });
-
-    const year_url = "fes_years" + this.fes_year_id;
-    this.$axios
-      .get(year_url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.fes_years = response.data;
-        for (let i = 0; i < this.fes_years.length; i++) {
-          this.years.push(this.fes_years[i]["year_num"]);
         }
       });
   },
