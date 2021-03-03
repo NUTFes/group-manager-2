@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12">
+      <v-col>
         <div class="card">
           <v-card flat>
             <v-container>
@@ -78,30 +78,39 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'assign_items',
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    参加団体一覧
+                    <v-icon class="ma-1">mdi-cube</v-icon>
+                    物品割り当て
                     <v-spacer></v-spacer>
                   </v-card-title>
-                  <hr class="mt-n3" />
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
+                <v-col cols="4"></v-col>
+                <v-col cols="4">
+                  <v-progress-circular
+                    class="font-weight-bold display-3"
+                    :rotate="360"
+                    :size="200"
+                    :width="15"
+                    :value="groups_length"
+                    color="teal"
+                  >
+                    {{ rate }}
+                  </v-progress-circular>
                 </v-col>
-                <v-col cols="1"></v-col>
+                <v-col cols="4"></v-col>
               </v-row>
             </v-container>
           </v-card>
@@ -109,29 +118,27 @@
       </v-col>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'assign_items',
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    ステージ一覧
+                    <v-icon class="ma-1">mdi-printer</v-icon>
+                    書類
                     <v-spacer></v-spacer>
                   </v-card-title>
-                  <hr class="mt-n3" />
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
-                </v-col>
+                <v-col cols="10"> </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
             </v-container>
@@ -142,7 +149,12 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'assign_items',
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
@@ -173,7 +185,15 @@
       </v-col>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'assign_items-id',
+              params: {
+                id: 1,
+              },
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
@@ -204,7 +224,15 @@
       </v-col>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'assign_items-id',
+              params: {
+                id: 1,
+              },
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
@@ -241,6 +269,7 @@
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
 import axios from "axios";
+import colors from "vuetify/es5/util/colors";
 
 export default {
   components: {
@@ -253,9 +282,25 @@ export default {
       user_detail: [],
       role: [],
       grade: [],
-      datepart: [],
+      department: [],
       student_id: [],
       tel: [],
+      rate: [],
+      chartDataValues: [],
+      chartColors: [
+        colors.red.lighten1,
+        colors.blue.lighten1,
+        colors.yellow.lighten1,
+        colors.green.lighten1,
+      ],
+      chartLabels: ["red", "blue", "yellow", "green"],
+      chartOptions: {
+        maintainAspectRatio: false,
+        animation: {
+          duration: 1500,
+          easing: "easeInOutCubic",
+        },
+      },
     };
   },
   mounted() {
@@ -276,6 +321,45 @@ export default {
         this.student_id = response.data.student_id;
         this.tel = response.data.tel;
       });
+    this.randomizeData();
+    this.$axios
+      .get("api/v1/dashboard", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.groups_length = response.data.groups_length;
+        this.cate_1_length = response.data.cate_1_length;
+        this.cate_2_length = response.data.cate_2_length;
+        this.cate_3_length = response.data.cate_3_length;
+        this.cate_4_length = response.data.cate_4_length;
+        this.cate_5_length = response.data.cate_5_length;
+        this.cate_6_length = response.data.cate_6_length;
+      });
+    this.rate = int(this.groups_length) + 1;
+  },
+  computed: {
+    chartData() {
+      return {
+        datasets: [
+          {
+            data: this.chartDataValues,
+            backgroundColor: this.chartColors,
+          },
+        ],
+        labels: this.chartLabels,
+      };
+    },
+  },
+  methods: {
+    randomizeData: function () {
+      var data = [];
+      for (var i = 0; i < this.chartLabels.length; i++) {
+        data.push(Math.floor(Math.random() * 100));
+      }
+      this.chartDataValues = data;
+    },
   },
 };
 </script>
