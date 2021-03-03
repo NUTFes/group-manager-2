@@ -252,7 +252,6 @@ export default {
     };
   },
   mounted() {
-    console.log("mouted")
     this.$axios
       .get("/api/v1/get_groups", {
         headers: {
