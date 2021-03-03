@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       get "users/show" => "users#show"
       get "users/show_user_detail/:id" => "users#show_user_detail"
       get "users/get_user_detail" => "users#get_user_detail"
+      get "update_user/:id/:role_id" => "users#update"
       # 副代表周り
       get "get_sub_rep_details/:id" => "sub_rep_api#get_sub_rep_details"
       # 現在のユーザーについて
@@ -49,6 +50,7 @@ Rails.application.routes.draw do
       # 参加団体周り
       get "get_group_name" => "groups_api#get_group_name"
       get "get_group_from_project_name/:id" => "groups_api#get_group_from_project_name"
+      get "get_group/:id" => "groups_api#get_group"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
