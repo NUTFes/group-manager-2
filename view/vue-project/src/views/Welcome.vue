@@ -1,48 +1,104 @@
 <template>
   <div>
-    <br><br><br>
-    <h1>Welcome</h1>
-    <br>
-    <div class="text-center">
-      <v-btn rounded color="#033" dark @click="onClickSignUp">Sign Up</v-btn>
-      <Signup ref="signup"/> 
+    <div class="background" id="container">
+
+      <div>
+        <br><br><br>
+        <v-row>
+          <v-col cols="2"></v-col>
+          <v-col cols="4">
+            <div class="text-center">
+        <div class="text-label">
+          <v-container>
+            <v-row>
+              <v-col>
+                <v-img :src="topImage"></v-img>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+            </div>
+          </v-col>
+          <v-col cols="4">
+            <v-card class="card-color">
+              <br>
+              <div class="text-center" v-show="show">
+                <Signup />
+                <a @click="toggle_show">ログインはこちら</a>
+              </div>
+              <div class="text-center" v-show="!show">
+                <Signin />
+                <a @click="toggle_show">新規登録はこちら</a>
+              </div>
+              <br>
+            </v-card>
+          </v-col>
+          <v-col cols="2"></v-col>
+        </v-row>
+      </div>
     </div>
-    <br>
-    <div class="text-center">
-      <v-btn rounded color="#033" dark @click="onClickSignIn">Sign In</v-btn>
-      <Signin ref="signin"/> 
-    </div>
+    <WelcomeDetail/>
   </div>
 </template>
 
 <script>
+import IconImage from "../assets/40th_nutfes_logo_black.png"
 import Signup from '../components/SignUp.vue'
 import Signin from '../components/SignIn.vue'
+import logo from '@/assets/logo.svg'
+import topImage from '@/assets/top.svg'
+import WelcomeDetail from '@/components/WelcomeDetail.vue'
 export default {
   name: "Welcome",
   components: {
     Signup,
-    Signin
+    Signin,
+    WelcomeDetail
+  },
+  data() {
+    return {
+      show: true,
+      iconImage: IconImage,
+      logoImage: logo,
+      topImage: topImage,
+    }
   },
   methods: {
-    onClickSignUp() {
-      this.$refs.signup.open();
-    },
-    onClickSignIn() {
-      this.$refs.signin.open();
+    toggle_show() {
+      this.show = !this.show
     }
   }
 }
 </script>
 
+
 <style>
-h1 {
-  text-align: center;
-  font-family: "Monotype Corsiva";
-  color: #008b8b;
-  font-size: 80px;
+v-sheet{
+  color: black;
 }
-.text-center {
+
+.text-label{
+  opacity: 0.5;
   text-align: center;
+}
+
+.background{
+ background-image: url("~@/assets/welcome.png");
+ background-size: cover;
+ min-height: 80vh;
+ background-position: center center;
+}
+
+.text-label{
+  font-size: 45px;
+  text-align: center;
+}
+
+.card-color {
+  background-color: rgba(255,255,255,0.5) !important;
+  border-color: white !important;
+}
+.logo {
+  fill: #FFFFFF;
 }
 </style>

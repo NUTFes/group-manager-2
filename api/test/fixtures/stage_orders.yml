@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_id: 1
+  is_sunny: false
+  fes_date_id: 1
+  stage_first: 1
+  stage_second: 1
+  use_time_interval: MyString
+  prepare_time_interval: MyString
+  cleanup_time_interval: MyString
+  prepare_start_time: MyString
+  performance_start_time: MyString
+  performance_end_time: MyString
+  cleanup_end_time: MyString
+
+two:
+  group_id: 1
+  is_sunny: false
+  fes_date_id: 1
+  stage_first: 1
+  stage_second: 1
+  use_time_interval: MyString
+  prepare_time_interval: MyString
+  cleanup_time_interval: MyString
+  prepare_start_time: MyString
+  performance_start_time: MyString
+  performance_end_time: MyString
+  cleanup_end_time: MyString

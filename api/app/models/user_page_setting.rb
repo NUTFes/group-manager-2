@@ -1,0 +1,2 @@
+class UserPageSetting < ApplicationRecord
+end

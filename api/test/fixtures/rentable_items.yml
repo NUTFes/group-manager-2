@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  stocker_item_id: 1
+  stocker_place_id: 1
+  max_num: 1
+
+two:
+  stocker_item_id: 1
+  stocker_place_id: 1
+  max_num: 1

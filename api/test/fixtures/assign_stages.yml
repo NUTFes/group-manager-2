@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  stage_order_id: 1
+  stage_id: 1
+  time_point_start: MyString
+  time_point_end: MyString
+
+two:
+  stage_order_id: 1
+  stage_id: 1
+  time_point_start: MyString
+  time_point_end: MyString

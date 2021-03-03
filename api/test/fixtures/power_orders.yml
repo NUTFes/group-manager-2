@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_id: 1
+  item: MyString
+  power: 1
+  manufacture: MyString
+  model: MyString
+
+two:
+  group_id: 1
+  item: MyString
+  power: 1
+  manufacture: MyString
+  model: MyString

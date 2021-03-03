@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  food_product_id: 1
+  shop_id: 1
+  fes_date_id: 1
+  items: MyString
+  is_fresh: false
+
+two:
+  food_product_id: 1
+  shop_id: 1
+  fes_date_id: 1
+  items: MyString
+  is_fresh: false

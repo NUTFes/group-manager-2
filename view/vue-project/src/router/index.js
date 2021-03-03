@@ -3,7 +3,14 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Welcome from '../views/Welcome.vue'
 import About from '../views/About.vue'
-import MyPage from '../views/MyPage.vue'
+import MyPage from '../views/mypage.vue'
+import UserDetail from '../views/user_detail.vue'
+import SubRep from '../views/sub_rep.vue'
+import Place from '../views/place.vue'
+import Group from '../views/group.vue'
+import Power from '../views/power.vue'
+import Regist from '../views/regist_shop.vue'
+import Firstcustomer from '../views/FirstCustomer.vue'
 
 Vue.use(VueRouter)
 
@@ -16,25 +23,58 @@ Vue.use(VueRouter)
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: About
   },
   {
     path: '/mypage',
     name: 'MyPage',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: MyPage
   },
-]
+  {
+    path: '/user_detail',
+    name: 'UserDetail',
+    component: UserDetail
+  },
+  {
+    path: '/group',
+    name: 'Group',
+    component: Group
+  }, 
+  {
+    path: '/place',
+    name: 'Place',
+    component: Place
+  },
+  {
+    path: '/power',
+    name: 'Power',
+    component: Power
+  },
+  {
+    path: '/sub_rep',
+    name: 'SubRep',
+    component: SubRep
+  },
+  {
+    path: '/regist_shop',
+    name: 'Regist',
+    component: Regist
+  },
+
+{
+path: '/firstcustomer',
+name: 'Firstcustomer',
+component: Firstcustomer
+},
+  ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+      return { x: 0, y: 0 }
+    }
 })
 
 export default router

@@ -1,44 +1,109 @@
-<template>
-  <div>
  <template>
-  <v-row justify="center">
-    <v-dialog v-model="show" max-width="600px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">SIGN IN</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-text-field label="EMAIL" v-model="email" required></v-text-field>
-            <v-text-field label="PASSWORD" v-model="password" type="password" required></v-text-field>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="show = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="signIn">Sign In</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
-</template> 
-  </div>
+    <v-row justify="center">
+      <v-col cols="1"></v-col>
+      <v-col cols="10">
+        <v-card>
+          <v-card-title>
+            <span class="headline">ログイン</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-form  ref="form">
+                <v-text-field
+                  label="メールアドレス"
+                  ref="email"
+                  v-model="email"
+                  :rules="[rules.requied, rules.email]"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  label="パスワード"
+                  v-model="password"
+                  ref="password"
+                  :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
+                  :rules="[rules.required, rules.min]"
+                  :type="show_pass ? 'password' : 'text'"
+                  hint="8文字以上"
+                  counter
+                  @click:append="show_pass = !show_pass"
+                  required
+                ></v-text-field>
+              </v-form>
+            </v-container>
+          </v-card-text>
+        <v-row>
+          <v-col>
+            <v-card-actions>
+              <v-btn color="blue darken-1" block dark @click="submit">ログイン</v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-card-actions>
+              <v-btn color="blue darken-1" text block dark @click="cancel">キャンセル</v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
+       </v-card>
+      </v-col>
+      <v-col cols="1"></v-col>
+    </v-row>
 </template>
 
 <script>
 import axios from 'axios'
+import colors from 'vuetify/lib/util/colors'
 export default {
-  name: 'SignUp',
+  name: 'SignIn',
   data () {
     return {
-      show: false
+      show_pass: true,
+      formHasErrors: false,
+      rules: {
+        requied: value => !!value || '入力してください',
+        min: v => v.length >= 8 || '８文字未満です',
+        email: v => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(v) || '適切なメールアドレスではありません。'
+        }
+      },
+      message: '',
+      warnStyle: {
+        color: '#F44336'
+      }
+    }
+  },
+  computed: {
+    form () {
+      return {
+        email: null,
+        password: null,
+      }
+    },
+    getMessage () {
+      return this.message
     }
   },
   methods: {
-    open () {
+    open: function() {
       this.show = true
     },
-    signIn: function() {
+    cancel: function() {
+      Object.keys(this.form).forEach(f => {
+        this.$refs[f].reset()
+      })
+      this.show = false
+    },
+    submit: function() {
+      this.formHasErrors = false
+
+      Object.keys(this.form).forEach(f => {
+        if (!this.form[f]) this.formHasErrors = true
+        this.$refs[f].validate(true)
+      })
+      if (!this.formHasErrors) return 'Can`t Sing In'
+
       const url = process.env.VUE_APP_URL + '/api/auth/sign_in'
       var params = new URLSearchParams();
       params.append('email', this.email);
@@ -53,12 +118,12 @@ export default {
           this.$router.push('MyPage')
         },
         (error) => {
+          this.message = 'ログインに失敗しました。<br>Failed to SignIn'
           return error
         }
-        )
-      this.show = false
-    }
+      )},
   }
 }
+
 </script>
 
