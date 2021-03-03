@@ -12,6 +12,13 @@ class Api::V1::UsersController < ApplicationController
     render json: { data: @user }
   end
 
+  def update
+    @user = User.find(params[:id])
+    role_id = params[:role_id]
+    @user.update(role_id: role_id)
+    render json: @user
+  end
+
   def show_user_detail
     @user = User.find(params[:id])
     @role = @user.role.name
