@@ -414,6 +414,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/sub_reps/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/sub_reps')
     }
   }
