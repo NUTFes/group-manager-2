@@ -100,6 +100,7 @@
                           v-model="studentId"
                           :rules="[rules.min8, rules.over8]"
                           background-color="white"
+                          counter="8"
                           outlined
                           clearable
                         >
@@ -112,7 +113,7 @@
                             dark
                             color="blue"
                             @click="register()"
-                            >登録 ​
+                            >登録 
                           </v-btn>
                         </v-card-actions>
                       </v-form>
