@@ -28,6 +28,19 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: group_details
   end
 
+  def get_groups
+    groups = Group.all
+    group_list = []
+    for group in groups
+      fes_year = group.fes_year.year_num
+      group_list << {
+        group: group,
+        fes_year: fes_year
+      }
+    end
+    render json: group_list
+  end
+
   def get_group
     group = Group.find(params[:id])
     user = group.user.name

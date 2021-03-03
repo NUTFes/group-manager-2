@@ -17,7 +17,7 @@
                       text
                       v-bind="attrs"
                       v-on="on"
-                      @click="dialog = true"
+                      @click="open_add_dialog"
                     >
                       <v-icon dark>mdi-plus-circle-outline</v-icon>
                     </v-btn>
@@ -108,6 +108,14 @@
                             clearable
                           >
                           </v-text-field>
+                          <v-select
+                            label="開催年"
+                            v-model="fesYearId"
+                            :items="year_list"
+                            item-text="year_num"
+                            item-value="id"
+                            outlined
+                          ></v-select>
                           <v-card-actions>
                             <v-btn
                               flatk
@@ -142,61 +150,58 @@
                     :items="groups"
                     class="elevation-0 my-9"
                     @click:row="
-                      (data) => $router.push({ path: `/groups/${data.id}` })
+                      (data) => $router.push({ path: `/groups/${data.group.id}` })
                     "
                   >
-                    <template v-slot:item.group_category_id="{ item }">
+                    <template v-slot:item.group.group_category_id="{ item }">
                       <v-chip
-                        v-if="item.group_category_id == 1"
+                        v-if="item.group.group_category_id == 1"
                         color="red"
                         text-color="white"
                         small
                         >{{ category[0] }}</v-chip
                       >
                       <v-chip
-                        v-if="item.group_category_id == 2"
+                        v-if="item.group.group_category_id == 2"
                         color="pink"
                         text-color="white"
                         small
                         >{{ category[1] }}</v-chip
                       >
                       <v-chip
-                        v-if="item.group_category_id == 3"
+                        v-if="item.group.group_category_id == 3"
                         color="blue"
                         text-color="white"
                         small
                         >{{ category[2] }}</v-chip
                       >
                       <v-chip
-                        v-if="item.group_category_id == 4"
+                        v-if="item.group.group_category_id == 4"
                         color="green"
                         text-color="white"
                         small
                         >{{ category[3] }}</v-chip
                       >
                       <v-chip
-                        v-if="item.group_category_id == 5"
+                        v-if="item.group.group_category_id == 5"
                         color="orange"
                         text-color="white"
                         small
                         >{{ category[4] }}</v-chip
                       >
                       <v-chip
-                        v-if="item.group_category_id == 6"
+                        v-if="item.group.group_category_id == 6"
                         color="blue-gray"
                         text-color="white"
                         small
                         >{{ category[5] }}</v-chip
                       >
                     </template>
-                    <template v-slot:item.fes_year_id="{ item }">
-                      {{ years[item.fes_year_id] }}
+                    <template v-slot:item.group.created_at="{ item }">
+                      {{ item.group.created_at | format-date }}
                     </template>
-                    <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | (format - date) }}
-                    </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | (format - date) }}
+                    <template v-slot:item.group.updated_at="{ item }">
+                      {{ item.group.updated_at | format-date }}
                     </template>
                   </v-data-table>
                 </div>
@@ -223,7 +228,8 @@ export default {
       projectName: [],
       activity: [],
       groupCategoryId: [],
-      fesYearId: 1,
+      fesYearId: [],
+      year_list: [],
       user: [],
       dialog: false,
       groupCategories: [
@@ -235,40 +241,19 @@ export default {
         { id: 6, name: "その他" },
       ],
       headers: [
-        { text: "ID", value: "id" },
-        // { text: 'USER_ID', value: 'user_id' },
-        { text: "グループ名", value: "name" },
-        { text: "企画名", value: "project_name" },
-        // { text: '活動内容', value: 'activity' },
-        { text: "グループカテゴリ", value: "group_category_id" },
-        { text: "開催年", value: "fes_year_id" },
-        { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" },
+        { text: "ID", value: "group.id" },
+        { text: "グループ名", value: "group.name" },
+        { text: "企画名", value: "group.project_name" },
+        { text: "グループカテゴリ", value: "group.group_category_id" },
+        { text: "開催年", value: "fes_year" },
+        { text: "日時", value: "group.created_at" },
+        { text: "編集日時", value: "group.updated_at" },
       ],
     };
   },
   mounted() {
-    const url = "/api/v1/current_user/show";
     this.$axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then(
-        (response) => {
-          this.user = response.data.data;
-        },
-        (error) => {
-          console.error(error);
-          return error;
-        }
-      );
-    this.$axios
-      .get("/groups", {
+      .get("/api/v1/get_groups", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -304,9 +289,40 @@ export default {
       });
   },
   methods: {
+    open_add_dialog: function (){
+      const url = "/api/v1/current_user/show";
+      this.$axios
+        .get(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": localStorage.getItem("access-token"),
+            client: localStorage.getItem("client"),
+            uid: localStorage.getItem("uid"),
+          },
+        })
+        .then(
+          (response) => {
+            this.user = response.data.data;
+          },
+          (error) => {
+            console.error(error);
+            return error;
+          }
+        );
+    this.$axios
+      .get("/fes_years", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.year_list = response.data;
+      });
+    this.dialog = true
+    },
     reload: function () {
       this.$axios
-        .get("/groups", {
+        .get("/api/v1/get_groups", {
           headers: {
             "Content-Type": "application/json",
           },
