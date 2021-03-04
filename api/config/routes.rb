@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :group_categories
   resources :user_details
   resources :shops
+  resources :fes_dates
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
@@ -85,6 +86,7 @@ Rails.application.routes.draw do
       # 販売食品周り
       get "get_food_products" => "food_products_api#get_food_products"
       get "get_food_product/:id" => "food_products_api#get_food_product"
+      get "get_food_products_from_group/:id" => "food_products_api#get_food_products_from_group"
       # 購入品周り
       get "get_purchase_lists" => "purchase_lists_api#get_purchase_lists"
       get "get_purchase_list/:id" => "purchase_lists_api#get_purchase_list"

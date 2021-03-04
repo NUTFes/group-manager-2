@@ -26,4 +26,9 @@ class Api::V1::FoodProductsApiController < ApplicationController
     render json: food_products_list
   end
 
+  def get_food_products_from_group
+    food_products = FoodProduct.where(group_id:params[:id])
+    render json: food_products
+  end
+
 end
