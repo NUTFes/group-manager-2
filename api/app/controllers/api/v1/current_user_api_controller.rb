@@ -55,47 +55,151 @@ class Api::V1::CurrentUserApiController < ApplicationController
   end
 
   def get_regist_info
-    @user = current_api_user
+    #@user = current_api_user
+    @user = User.find(4)
     @groups = @user.groups
     regist_info = []
     for group in @groups
       group_category = group.group_category.name
-      sub_rep = group.sub_rep
-      place_order = group.place_order
-      first_place_order = Stage.find(group.place_order.first).name
-      second_place_order = Stage.find(group.place_order.second).name
-      third_place_order = Stage.find(group.place_order.third).name
-      stage_date = group.stage_order.fes_date.date
-      first_stage_order = Stage.find(group.stage_order.stage_first).name
-      second_stage_order = Stage.find(group.stage_order.stage_second).name
-      stage_order = group.stage_order
-      power_orders = group.power_orders
-      rental_orders = group.rental_orders
-      rental_orders_list = []
-      for rental_order in rental_orders
-        rental_orders_list << {
-          id: rental_order.id,
-          rental_item_id: rental_order.rental_item_id,
-          name: rental_order.rental_item.name,
-          num: rental_order.num
+      if !group.sub_rep.nil?
+        sub_rep = group.sub_rep
+      else
+        sub_rep = {
+          name: "-9999",
+          grade_id: "-9999",
+          student_id: "-9999",
         }
       end
-      employees = group.employees
-      food_products = group.food_products
-      purchase_lists_all = []
-      for food_product in food_products
-        purchase_lists = food_product.purchase_lists
-        for purchase_list in purchase_lists
-          purchase_lists_all << {
-            id: purchase_list.id,
-            food_product: purchase_list.food_product.name,
-            shop: purchase_list.shop.name,
-            fes_date: purchase_list.fes_date,
-            item: purchase_list.items,
-            is_fresh: purchase_list.is_fresh,
-          } 
+      #
+      if !group.place_order.nil?
+        place_order = group.place_order
+        first_place_order = Stage.find(group.place_order.first).name
+        second_place_order = Stage.find(group.place_order.second).name
+        third_place_order = Stage.find(group.place_order.third).name
+      else
+        first_place_order = "-9999"
+        second_place_order = "-9999"
+        third_place_order = "-9999"
+      end
+      #
+      if !group.stage_order.nil?
+        stage_date = group.stage_order.fes_date.date
+        first_stage_order = Stage&.find_by_id(group.stage_order&.stage_first)&.name
+        second_stage_order = Stage&.find_by_id(group.stage_order&.stage_second)&.name
+      else
+        first_stage_order = "-9999"
+        second_stage_order = "-9999"
+      end
+      #
+      if !group.stage_order.nil?
+        stage_date = group.stage_order.fes_date.date
+        stage_order = group.stage_order
+      else
+        stage_date = "-9999"
+        stage_order = [] 
+        stage_order = {
+          use_time_interval: "-9999",
+          prepare_time_interval: "-9999",
+          cleanup_time_interval: "-9999",
+          prepare_start_time: "-9999",
+          performance_start_time: "-9999",
+          performance_end_time: "-9999",
+          cleanup_end_time: "-9999",
+        }
+      end
+      #
+      if !group.power_orders.nil?
+        power_orders = group.power_orders
+      else
+        power_order = []
+        power_order = {
+          item: "-9999",
+          power: "-9999",
+          manufacturer: "-9999",
+          model: "-9999",
+          item_url: "-9999",
+        }
+        power_orders = [] 
+        power_orders << {
+          power_order: power_order,
+        }
+      end
+      #
+      if !group.rental_orders.nil?
+        rental_orders = group.rental_orders
+        for rental_order in rental_orders
+          rental_orders_list = []
+          rental_orders_list << {
+            id: rental_order.id,
+            rental_item_id: rental_order.rental_item_id,
+            name: rental_order.rental_item.name,
+            num: rental_order.num,
+          }
         end
-      end  
+      else
+        rental_orders_list = []
+        rental_orders_list << {
+          id: "-9999",
+          rental_item_id: "-9999",
+          name: "-9999",
+          num: "-9999",
+        }
+      end
+      #従業員リストを取得
+      if group.employees.length != 0
+        employees = group.employees
+      else
+        employees = []
+        employees << {
+          name: "-9999",
+          student_id: "-9999",
+        } 
+      end
+      if group.food_products.length != 0
+        food_products = group.food_products
+        purchase_lists_all = []
+        for food_product in food_products
+          purchase_lists = food_product.purchase_lists
+          if purchase_lists.length != 0
+            for purchase_list in purchase_lists
+              purchase_lists_all << {
+                id: purchase_list.id,
+                food_product: purchase_list.food_product.name,
+                shop: purchase_list.shop.name,
+                fes_date: purchase_list.fes_date.date,
+                item: purchase_list.items,
+                is_fresh: purchase_list.is_fresh,
+              } 
+            end
+          else
+            purchase_lists_all << {
+              id: "-9999",
+              food_product: "-9999",
+              shop: "-9999",
+              fes_date: "-9999",
+              item: "-9999",
+              is_fresh: "-9999",
+            }
+          end
+        end
+      else
+        food_products = []
+        food_products << {
+          name: "-9999",
+          first_day_num: "-9999",
+          second_day_num: "-9999",
+          is_cooking: "-9999",
+        }
+        purchase_lists_all = []
+        purchase_lists_all << {
+          id: "-9999",
+          food_product: "-9999",
+          shop: "-9999",
+          fes_date: "-9999",
+          item: "-9999",
+          is_fresh: "-9999",
+        }
+      end
       regist_info << {
         group: group,
         group_category: group_category,
@@ -104,10 +208,10 @@ class Api::V1::CurrentUserApiController < ApplicationController
         first_place_order: first_place_order, 
         second_place_order: second_place_order,
         third_place_order: third_place_order,
-        stage_date: stage_date,
         stage_order: stage_order,
         first_stage_order: first_stage_order,
         second_stage_order: second_stage_order,
+        stage_date: stage_date,
         power_orders: power_orders,
         rental_orders: rental_orders_list,
         employees: employees,
