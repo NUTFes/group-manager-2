@@ -358,6 +358,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/rental_items/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/rental_items')
     }
   }
