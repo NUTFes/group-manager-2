@@ -1,5 +1,5 @@
 class Api::V1::CurrentUserApiController < ApplicationController
-  # before_action :authenticate_api_user!
+  #  before_action :authenticate_api_user!
   
   def show
     @user = current_api_user
@@ -29,7 +29,6 @@ class Api::V1::CurrentUserApiController < ApplicationController
 
   def get_groups_place_allow_list
     @user = current_api_user
-    #@user = User.find(1)
     @groups = @user.groups
     data = []
     set  = []
@@ -55,12 +54,12 @@ class Api::V1::CurrentUserApiController < ApplicationController
   end
 
   def get_regist_info
-    #@user = current_api_user
-    @user = User.find(4)
+    @user = current_api_user
     @groups = @user.groups
     regist_info = []
     for group in @groups
       group_category = group.group_category.name
+      # 副代表情報を取得
       if !group.sub_rep.nil?
         sub_rep = group.sub_rep
       else
@@ -70,7 +69,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
           student_id: "-9999",
         }
       end
-      #
+      # 会場申請情報を取得
       if !group.place_order.nil?
         place_order = group.place_order
         first_place_order = Stage.find(group.place_order.first).name
@@ -81,20 +80,15 @@ class Api::V1::CurrentUserApiController < ApplicationController
         second_place_order = "-9999"
         third_place_order = "-9999"
       end
-      #
+      # ステージ情報を取得
       if !group.stage_order.nil?
         stage_date = group.stage_order.fes_date.date
         first_stage_order = Stage&.find_by_id(group.stage_order&.stage_first)&.name
         second_stage_order = Stage&.find_by_id(group.stage_order&.stage_second)&.name
+        stage_order = group.stage_order
       else
         first_stage_order = "-9999"
         second_stage_order = "-9999"
-      end
-      #
-      if !group.stage_order.nil?
-        stage_date = group.stage_order.fes_date.date
-        stage_order = group.stage_order
-      else
         stage_date = "-9999"
         stage_order = [] 
         stage_order = {
@@ -107,7 +101,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
           cleanup_end_time: "-9999",
         }
       end
-      #
+      # 電力申請情報を取得
       if !group.power_orders.nil?
         power_orders = group.power_orders
       else
@@ -124,7 +118,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
           power_order: power_order,
         }
       end
-      #
+      # 物品申請情報を取得
       if !group.rental_orders.nil?
         rental_orders = group.rental_orders
         for rental_order in rental_orders
@@ -145,7 +139,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
           num: "-9999",
         }
       end
-      #従業員リストを取得
+      # 従業員リストを取得
       if group.employees.length != 0
         employees = group.employees
       else
@@ -155,12 +149,15 @@ class Api::V1::CurrentUserApiController < ApplicationController
           student_id: "-9999",
         } 
       end
+      # 販売食品情報を取得
       if group.food_products.length != 0
         food_products = group.food_products
         purchase_lists_all = []
+        # 販売食品ごとの購入品情報のリストを取得
         for food_product in food_products
           purchase_lists = food_product.purchase_lists
           if purchase_lists.length != 0
+            # 購入品情報を取得
             for purchase_list in purchase_lists
               purchase_lists_all << {
                 id: purchase_list.id,
@@ -171,6 +168,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
                 is_fresh: purchase_list.is_fresh,
               } 
             end
+          # 販売食品情報はあるが，購入品情報が無い場合，欠損値のフラグを代入
           else
             purchase_lists_all << {
               id: "-9999",
@@ -182,6 +180,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
             }
           end
         end
+      # 販売食品が無い場合，販売食品と購入品に欠損値のフラグを代入
       else
         food_products = []
         food_products << {
@@ -202,16 +201,16 @@ class Api::V1::CurrentUserApiController < ApplicationController
       end
       regist_info << {
         group: group,
-        group_category: group_category,
+        group_category: group_category, # 団体のIDからカテゴリー名を復号
         sub_rep: sub_rep,
         place_order: place_order,
-        first_place_order: first_place_order, 
-        second_place_order: second_place_order,
-        third_place_order: third_place_order,
+        first_place_order: first_place_order,# 第一希望のIDからステージ名を復号
+        second_place_order: second_place_order, # 第二希望ステージのIDからステージ名を復号
+        third_place_order: third_place_order, # 第三希望ステージのIDからステージ名を復号
         stage_order: stage_order,
-        first_stage_order: first_stage_order,
-        second_stage_order: second_stage_order,
-        stage_date: stage_date,
+        first_stage_order: first_stage_order, # 第一希望ステージのIDからステージ名を復号
+        second_stage_order: second_stage_order, # 第二希望ステージのIDからステージ名を復号
+        stage_date: stage_date, # 日付のIDから日付を復号
         power_orders: power_orders,
         rental_orders: rental_orders_list,
         employees: employees,
