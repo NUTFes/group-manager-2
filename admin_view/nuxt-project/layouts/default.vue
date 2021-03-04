@@ -8,7 +8,7 @@
           </v-col>
           <v-col cols="10">
             <v-main>
-              <transition mode='out-in'>
+              <transition mode='in-out'>
               <nuxt />
               </transition>
             </v-main>
@@ -100,24 +100,100 @@ export default {
   padding-bottom: 150px;
 }
 .v-enter {
-  transform: translate(0px, 100px);
-  opacity: 0;
+  transform: scale(0.9);
+  opacity: 0.1;
 }
 .v-enter-to {
   opacity: 1;
 }
 .v-enter-active {
-  transition: all 1s 0s ease;
+  transition: all 0.6s .1s ease;
 }
 .v-leave {
-  transform: translate(0, 0);
+  transform: scale(0.1) translate(0%,100%);
   opacity: 1;
 }
 .v-leave-to {
-  transform: translate(0,-100px);
+  transform: scale(0.1) translate(0%,100%);
   opacity: 0;
 }
 .v-leave-active {
-  transition: all .5s 0s ease;
+  transition: all 5s 0s ease;
+}
+// テーブルの奇数行をつける
+.v-data-table tr {
+    background: #E0F2F1;
+}
+.v-data-table tr:nth-child(odd) {
+    background: #fff;
+}
+.v-data-table tr:hover {
+    background-color: #eee;
+}
+.v-application a {
+  color: #FFF;
+}
+.breadcrumbs {
+  text-align: center;
+}
+.breadcrumbs ul {
+  list-style: none;
+  display: flex;
+}
+.breadcrumbs ul li {
+  display: inline;
+}	
+.breadcrumbs ul li .breadcrumbs-item {
+  display: block;
+  position: relative;
+  height: 30px;
+  background: #999;
+  text-align: center;
+  padding: 5px 10px 5px 24px;
+  margin: 0 7px 0 0; 
+  font-size: 0.8125rem;
+  text-decoration: none;
+  color: #fff;
+}
+.breadcrumbs ul li .breadcrumbs-item:before {
+  content: "";  
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #EEE;
+  position: absolute; left: 0; top: 0;
+}
+.breadcrumbs ul li .breadcrumbs-item:after {
+  content: "";  
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid #999;
+  position: absolute; right: -15px; top: 0;
+  z-index: 1;
+}
+.breadcrumbs ul li:first-child .breadcrumbs-item {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.breadcrumbs ul li:first-child .breadcrumbs-item:before {
+  display: none; 
+}
+.breadcrumbs ul li:last-child .breadcrumbs-item {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: #BF794E;
+}
+.breadcrumbs ul li:last-child .breadcrumbs-item:after {
+  display: none; 
+}
+.back-button {
+  border-radius: 100vh;
+  display: block;
+  position: relative;
+  height: 27px;
+  background: #999;
+  text-align: center;
+  padding: 5px 10px;
+  font-size: 0.8125rem;
+  text-decoration: none;
 }
 </style>

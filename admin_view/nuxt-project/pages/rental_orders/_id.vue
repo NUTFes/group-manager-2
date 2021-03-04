@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text><router-link to="/rental_orders">物品申請一覧</router-link>  > {{rental_order.rental_item_id}} </v-card-text>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/rental_orders">物品申請一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{rental_order.rental_item_id}}</div></li>
+            </ul>
+          </div>
+        </v-card-text>
         </div>
       </v-col>
     </v-row>
@@ -18,7 +25,32 @@
               <v-card-title class="font-weight-bold mt-3">
                   {{rental_order.rental_item_id}}
                 <v-spacer></v-spacer>
-                <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                      text 
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="edit_dialog_open" 
+                      fab>
+                      <v-icon class="ma-5">mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>編集</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                      text 
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="delete_dialog = true" 
+                      fab>
+                      <v-icon class="ma-5">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>削除</span>
+                </v-tooltip>
               </v-card-title>
               <hr class="mt-n3">
               <v-simple-table class="my-9">
@@ -29,12 +61,12 @@
                       <td class="caption">{{ rental_order.id }}</td>
                     </tr>
                     <tr>
-                      <th>group_id：</th>
-                      <td class="caption">{{ rental_order.group_id }}</td>
+                      <th>参加団体：</th>
+                      <td class="caption">{{ group }}</td>
                     </tr>
                     <tr>
                       <th>貸し出し物品</th>
-                      <td class="caption">{{ rental_order.rental_item_id }}</td>
+                      <td class="caption">{{ item }}</td>
                     </tr>
                     <tr>
                       <th>個数</th>
@@ -63,90 +95,236 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/rental_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">物品申請一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/rental_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">物品申請一覧に戻る</div></v-btn>
       </v-col>
     </v-row>
 
-    <!-- modal window to edit -->
+    <!-- 編集ダイアログ -->
     <v-dialog
-      v-model="dialog"
-      width="1200"
+      v-model="edit_dialog"
+      width="500"
       >
       <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="edit_dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+
+      <v-card-text>
         <v-row>
-          <v-col cols="2"></v-col>
-          <v-col cols="8">
-            <v-card-title class="font-weight-bold"><v-icon class="pa-2">mdi-pencil</v-icon>登録情報の編集</v-card-title>
-            <v-text-field
-              label="グループ名"
-              background-color="white"
-              outlined
-              v-model="name"
-              filled
-              clearable
-              ></v-text-field>
-            <v-text-field
-              label="企画名"
-              background-color="white"
-              outlined
-              v-model="project_name"
-              filled
-              clearable
-              ></v-text-field>
-            <v-text-field
-              label="企画内容"
-              background-color="white"
-              outlined
-              v-model="activity"
-              filled
-              clearable
-              ></v-text-field>
-            <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
-            <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
+          <v-col>
+            <v-form ref="form">
+              <v-select
+                label="参加団体"
+                v-model="group_id"
+                :items="group_list"
+                item-text="name"
+                item-value="id"
+                text
+                outlined
+                clearable
+                :rules="[rules.required]"
+                />
+              <v-select
+                label="物品"
+                v-model="item_id"
+                :items="item_list"
+                item-text="name"
+                item-value="id"
+                text
+                outlined
+                clearable
+                :rules="[rules.required]"
+                />
+              <v-text-field
+                label="個数"
+                v-model="num"
+                :rules="[rules.required]"
+                type="number"
+                text
+                outlined
+                required
+              />
+            </v-form>
           </v-col>
-          <v-col cols="2"></v-col>
         </v-row>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="#78909C"
+          dark
+          @click="edit"
+          >
+          編集する
+        </v-btn>
+      </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> 
+
+    <!-- 削除ダイアログ -->
+    <v-dialog
+      v-model="delete_dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="delete_dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+
+      <v-card-title>
+        削除してよろしいですか？
+      </v-card-title>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          flat
+          color="red"
+          dark
+          @click="delete_yes"
+          >
+          はい
+        </v-btn>
+        <v-btn
+          flat
+          color="blue"
+          dark
+          @click="delete_dialog = false"
+          >
+          いいえ
+        </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog> 
+
+    <!-- 編集成功SnackBar -->
+    <v-snackbar
+      v-model="success_snackbar"
+      color="blue-grey"
+      top
+      elevation="24"
+    >
+      編集しました
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+        <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
-  <script>
-  import Header from '~/components/Header.vue'
-  import Menu from '~/components/Menu.vue'
-  import axios from 'axios'
-  import { mapState } from 'vuex'
-  
-  export default {
-    components: {
-      Header,
-      Menu,
-    },
-    fetch({ store }) {
-      store.dispatch('getRights')
-    },
-    computed: {
-      ...mapState(['rights'])
-    },
-    data() {
-      return {
-        rental_order: [],
-        expand: false,
-        dialog: false,
+<script>
+export default {
+  data() {
+    return {
+      rental_order: [],
+      group: [],
+      group_id: [],
+      group_list: [],
+      item_list: [],
+      item: [],
+      item_id: [],
+      num: [],
+      expand: false,
+      edit_dialog: false,
+      delete_dialog: false,
+      success_snackbar: false,
+      delete_snackbar: false,
+      rules: {
+        required: value => !!value || '入力してください',
+      },
+    }
+  },
+  mounted() {
+    const url = "/api/v1/get_rental_order/" + this.$route.params.id;
+    this.$axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
       }
-    },
-    mounted() {
-      const url = "/rental_orders/" + this.$route.params.id;
+    })
+      .then(response => {
+        this.rental_order = response.data.rental_order
+        this.group_id = response.data.rental_order.group_id
+        this.group = response.data.group
+        this.item = response.data.item
+        this.item_id = response.data.rental_order.rental_item_id
+        this.num = response.data.rental_order.num
+      })
+  },
+  methods: {
+    reload: function(){
+      const url = "/api/v1/get_rental_order/" + this.$route.params.id;
       this.$axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
         }
-      }
-      )
-        .then(response => {
-        this.rental_order = response.data
       })
+        .then(response => {
+          this.rental_order = response.data.rental_order
+          this.group_id = response.data.rental_order.group_id
+          this.group = response.data.group
+          this.item = response.data.item
+          this.item_id = response.data.rental_order.rental_item_id
+          this.num = response.data.rental_order.num
+        })
+    },
+    edit_dialog_open: function() {
+      this.$axios.get('/groups', {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+        this.group_list = response.data
+      })
+      this.$axios.get('/rental_items', {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+        this.item_list = response.data
+      })
+      this.edit_dialog = true
+    },
+    edit: function() {
+      const edit_url = '/rental_orders/' + this.rental_order.id + '?group_id=' + this.group_id + '&rental_item_id=' + this.item_id + '&num=' + this.num
+      this.$axios.put(edit_url , {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+        this.reload()
+        this.edit_dialog = false
+        this.success_snackbar = true
+      })
+    },
+    delete_yes: function() {
+      this.$router.push('/rental_orders')
     }
+  }
 }
 </script>
   

@@ -85,7 +85,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text fab @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditGroup" text fab @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
                         <Group ref="groupDlg"
                           :groupId="regist.group.id"
                           :groupName="regist.group.name"
@@ -101,7 +101,7 @@
                           color="purple accent-2"
                           v-model="groupSnackbar"
                           >
-                          参加団体情報を修正しました
+                          参加団体情報を更新しました
                         </v-snackbar>
                       </v-card-title>
                         <hr>
@@ -141,8 +141,26 @@
                       <v-card-title  style="color:#333333; font-size:25px">
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
-                      <v-btn text @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
-                      <SubRep ref="subRepDlg"></SubRep>
+                      <v-btn v-if="isEditSubRep" text fab @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      <SubRep ref="subRepDlg"
+                          :groupId="regist.group.id"
+                          :name="regist.sub_rep.name"
+                          :studentId="regist.sub_rep.student_id"
+                          :gradeId="regist.sub_rep.grade_id"
+                          :departmentId="regist.sub_rep.department_id"
+                          :tel="regist.sub_rep.tel"
+                          :email="regist.sub_rep.email"
+                          @reload="reload"
+                          @openSubrepSnackbar="openSubrepSnackbar">
+                      </SubRep>
+                      <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="subrepSnackbar"
+                          >
+                          副代表情報を更新しました
+                        </v-snackbar>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -152,13 +170,28 @@
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
+                          <v-list-item-content>学籍番号</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.student_id }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>学科</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.department_id }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
                           <v-list-item-content>学年</v-list-item-content>
                           <v-list-item-content>{{ regist.sub_rep.grade_id }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>学籍番号</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.student_id }}</v-list-item-content>
+                          <v-list-item-content>TEL</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.tel }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>EMAIL</v-list-item-content>
+                          <v-list-item-content>{{ regist.sub_rep.email }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -176,8 +209,24 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
-                        <Place ref="placeDlg"></Place>
+                        <v-btn v-if="isEditPlace" text fab @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <Place ref="placeDlg"
+                          :groupId="regist.group.id"
+                          :firstId="regist.place_order.first"
+                          :secondId="regist.place_order.second"
+                          :thirdId="regist.place_order.third"
+                          :remark="regist.place_order.remark"
+                          @reload="reload"
+                          @openPlaceSnackbar="openPlaceSnackbar"
+                          ></Place>
+                          <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="placeSnackbar"
+                          >
+                          会場申請情報を更新しました
+                        </v-snackbar>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -219,7 +268,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -252,6 +301,25 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <Power ref="powerDlg"
+                          :id="this.power_order_id"
+                          :groupId="this.group_id"
+                          :item="this.item"
+                          :power="this.power"
+                          :manufacturer="this.manufacturer"
+                          :model="this.model"
+                          :url="this.url"
+                          @reload="reload"
+                          @openPowerSnackbar="openPowerSnackbar"
+                          ></Power>
+                          <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="powerSnackbar"
+                          >
+                          電力申請情報を更新しました
+                        </v-snackbar>
               </v-tab-item>
 
               <!-- 物品申請情報 -->
@@ -264,7 +332,7 @@
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
                         <b>物品申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditRentalOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -339,7 +407,7 @@
                         <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditStageOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                        <v-list>
@@ -412,7 +480,7 @@
                         <v-icon class="pr-2" size="30">mdi-account</v-icon>
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditEmployee" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -445,7 +513,7 @@
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
                         <b>販売食品情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditFoodProduct" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -485,7 +553,7 @@
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPurchaseList" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -535,7 +603,27 @@
       ],
       user: [],
       tab: 'tab-2',
-      groupSnackbar: false
+      groupSnackbar: false,
+      placeSnackbar: false,
+      subrepSnackbar: false,
+      powerSnackbar: false,
+      isEditGroup: [],
+      isEditSubRep: [],
+      isEditPlace: [],
+      isEditPowerOrder: [],
+      isEditRentalOrder: [],
+      isEditStageOrder: [],
+      isEditEmployee: [],
+      isEditFoodProduct:[],
+      isEditPurchaseList: [],
+      // 電力申請用
+      power_order_id: [],
+      group_id: [],
+      item:[], 
+      manufacturer: [],
+      model:[], 
+      power: [],
+      url:[],
       }
     },
     mounted() {
@@ -552,6 +640,30 @@
         .then(response => {
           this.user = response.data.data
         })
+
+
+      const settingurl = process.env.VUE_APP_URL + '/user_page_settings'
+      axios.get(settingurl, {
+      headers: { 
+        "Content-Type": "application/json", 
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+      }
+    }
+    )
+      .then(response => {
+        this.isEditGroup = response.data[0].is_edit_group
+        this.isEditSubRep = response.data[0].is_edit_sub_rep
+        this.isEditPlace = response.data[0].is_edit_place
+        this.isEditPowerOrder = response.data[0].is_edit_power_order
+        this.isEditRentalOrder = response.data[0].is_edit_rental_order
+        this.isEditStageOrder = response.data[0].is_edit_stage_order
+        this.isEditEmployee = response.data[0].is_edit_employee
+        this.isEditFoodProduct = response.data[0].is_edit_food_product
+        this.isEditPurchaseList = response.data[0].is_edit_purchase_list
+      console.log(response)
+      })
+
     },
     methods: {
       reload() {
@@ -559,6 +671,15 @@
       },
       openGroupSnackbar() {
         this.groupSnackbar = true
+      },
+      openPlaceSnackbar() {
+        this.placeSnackbar = true
+      },
+      openSubrepSnackbar() {
+        this.subrepSnackbar = true
+      },
+      openPowerSnackbar() {
+        this.powerSnackbar = true
       },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
@@ -569,8 +690,16 @@
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
       },
-      openPowerDisplay() {
+      openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
+        this.power_order_id = id
+        this.group_id = group_id
+        this.item = item
+        this.power = power
+        this.manufacturer = manufacturer
+        this.model = model
+        this.url = url
         this.$refs.powerDlg.isDisplay = true
+        console.log(this.$refs.powerDlg.isDisplay)
       },
     }
   }

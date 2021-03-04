@@ -53,7 +53,8 @@ export default {
         localStorage.getItem("uid")
       ],
       users: [],
-      regist_info: []
+      regist_info: [],
+      isRegistGroup: []
     };
   },
   methods: {
@@ -94,8 +95,19 @@ export default {
   },
   mounted() {
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
+    axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid")
+      }
+    });
+
+    const regist_info_url =
+      process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
     axios
-      .get(url, {
+      .get(regist_info_url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
@@ -120,6 +132,22 @@ export default {
       .then(response => {
         this.regist_info = response.data;
       });
+
+    const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
+    axios
+      .get(settingurl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client")
+        }
+      })
+      .then(response => {
+        this.isRegistGroup = response.data[0].is_regist_group;
+        console.log(response);
+      });
+
+    console.log(this.isRegistGroup);
   }
 };
 </script>

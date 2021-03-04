@@ -7,7 +7,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon>mdi-account-multiple</v-icon>ユーザー一覧
+                  <v-icon class="mr-5">mdi-account-multiple</v-icon>ユーザー一覧
                 <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -42,6 +42,15 @@
               </v-card-title>
               <hr class="mt-n3">
               <template>
+                <div class="text-center" v-if="users.length === 0">
+                  <br><br>
+                  <v-progress-circular
+                    indeterminate
+                    color="#009688"
+                    ></v-progress-circular>
+                  <br><br>
+                </div>
+                <div v-else>
                 <v-data-table
                   :headers="headers"
                   :items="users"
@@ -63,6 +72,7 @@
                     {{ item.updated_at | format-date }}
                   </template>
                 </v-data-table>                      
+                </div>
               </template>
             </v-col>
             <v-col cols="1"></v-col>
@@ -75,13 +85,7 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       users: [],

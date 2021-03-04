@@ -11,7 +11,7 @@
             </v-card-text>
           </v-col> 
           <v-col cols=3> 
-            <v-list-item link to="/group" class="justify-end">初めての方へ</v-list-item>
+            <v-list-item link to="/Firstcustomer" class="justify-end">初めての方へ</v-list-item>
             <v-list-item link to="/group" class="justify-end">参加団体管理アプリとは</v-list-item>
             <v-list-item link to="/group" class="justify-end">よくあるご質問</v-list-item>
           </v-col>

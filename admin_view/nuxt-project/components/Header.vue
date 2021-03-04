@@ -2,16 +2,20 @@
   <div>
     <v-row>
       <v-app-bar app dark dense color="#424242">
-        <v-toolbar-title>Group-Manager Admin</v-toolbar-title>
+        <v-toolbar-title>参加団体管理アプリ-管理者ページ</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn text to="/mypage" color="#424242">
           <v-icon color="white">mdi-account-circle</v-icon>
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>
+        <v-btn text @click="logout" color="#424242">
+          <v-icon color="white">mdi-exit-to-app</v-icon>
+          <v-card-text style="color:white">ログアウト</v-card-text>
+        </v-btn>
         <v-btn
           color="pink"
           dark
-          @click="drawer = !drawer"
+          @click="open"
           style="box-shadow:none"
           >
           <v-icon class="mr-2">mdi-note</v-icon>
@@ -28,37 +32,47 @@
         >
         <v-list-item>
           <v-list-item-content>
-          <v-text-field
+          <v-textarea
             label="メモ"
             v-model="content"
             text
             outlined
             required
             height="100"
-            ></v-text-field>
+            ></v-textarea>
           <v-btn v-if="this.content.length===0" outlined color="blue darken-1" block large dark>投稿</v-btn>
           <v-btn v-else color="blue darken-1" block large dark @click="submit">投稿</v-btn>
           </v-list-item-content>
         </v-list-item>
 
         <v-divider></v-divider>
+        <div class="text-center" v-if="memos.length === 0">
+          <br><br>
+          <v-progress-circular
+            indeterminate
+            color="#009688"
+            ></v-progress-circular>
+          <br><br>
+        </div>
 
-        <v-list>
-          <v-list-item
-            dense
-            v-for="item in memos"
-            :key="item.id"
-            >
-            <v-list-item-content>
-              <v-list-title>{{ item.user_id }}</v-list-title>
-              <v-list-title>{{ item.content }}</v-list-title>
-              <br>
-              <br>
-              <v-list-title style="text-align:right">{{ item.created_at | format-date}}</v-list-title>
-              <v-divider/>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <div v-else>
+          <v-list>
+            <v-list-item
+              dense
+              v-for="item in memos"
+              :key="item.id"
+              >
+              <v-list-item-content>
+                <v-list-title>{{ item.user }}</v-list-title>
+                <v-list-title>{{ item.memo.content }}</v-list-title>
+                <br>
+                <br>
+                <v-list-title style="text-align:right">{{ item.created_at | format-date}}</v-list-title>
+                <v-divider/>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
       </v-navigation-drawer>
     </v-row>
   </div>
@@ -74,9 +88,6 @@ export default {
   data () {
     return {
       drawer: false,
-      items: [
-        { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
-      ],
       user: [],
       content:[], 
       memos: [],
@@ -96,16 +107,18 @@ export default {
       .then(response => {
         this.user = response.data.data
       })
-
-    this.$axios.get('/memos', {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    }).then(response => {
-        this.memos = response.data
-      })
   },
   methods: {
+    open: function() {
+      this.$axios.get('/memos', {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      }).then(response => {
+          this.memos = response.data
+        })
+      this.drawer = true
+    },
     submit: function() {
       this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
       var params = new URLSearchParams();
@@ -114,25 +127,20 @@ export default {
       this.$axios.post('/memos', params).then(
         (response) => {
           this.memos = response.data
-          this.content = []
+          this.content = ''
         },
         (error) => {
           return error
         }
         )
     },
-    destroy: function(id) {
-      this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
-      var params = new URLSearchParams();
-      this.$axios.delete(`/memos/#{id}`, params).then(
-        (response) => {
-          this.memos = response.data
-        },
-        (error) => {
-          return error
-        }
-        )
-    },
+    logout() {
+      this.$auth.logout()
+      localStorage.removeItem('access-token')
+      localStorage.removeItem('client')
+      localStorage.removeItem('uid')
+      this.$router.push('/')
+    }
   }
 }
 </script>

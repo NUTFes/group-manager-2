@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/users">ユーザー一覧</router-link> >
-            {{ user.name }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/assign_rental_items">割り当て物品一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ assign_rental_item.id }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>
@@ -19,10 +23,7 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
-                  <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
-                  <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
-                  {{ user.name }}
+                  {{ assign_rental_item.id }}
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
                 </v-card-title>
@@ -31,38 +32,32 @@
                   <template v-slot:default>
                     <tbody>
                       <tr>
-                        <th>学籍番号：</th>
-                        <td class="caption">{{ detail.student_id }}</td>
+                        <th>id：</th>
+                        <td class="caption">{{ assign_rental_item.id }}</td>
                       </tr>
                       <tr>
-                        <th>学年：</th>
-                        <td class="caption">{{ grade }}</td>
+                        <th>参加団体：</th>
+                        <td class="caption">{{ group }}</td>
                       </tr>
                       <tr>
-                        <th>課程：</th>
-                        <td class="caption">{{ department }}</td>
+                        <th>物品：</th>
+                        <td class="caption">{{ item }}</td>
                       </tr>
                       <tr>
-                        <th>電話番号：</th>
-                        <td class="caption">{{ detail.tel }}</td>
+                        <th>個数：</th>
+                        <td class="caption">{{ assign_rental_item.num }}</td>
                       </tr>
                       <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">
-                          {{ user.created_at | format-date }}
-                        </td>
+                        <th>在庫場所：</th>
+                        <td class="caption">{{ stocker_place }}</td>
                       </tr>
                       <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">
-                          {{ user.updated_at | format-date }}
-                        </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
-                        </td>
+                        <th>created_at：</th>
+                        <td class="caption">{{ assign_rental_item.created_at | format-date }}</td>
+                      </tr>
+                      <tr>
+                        <th>updated_at：</th>
+                        <td class="caption">{{ assign_rental_item.updated_at | format-date }}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -123,8 +118,8 @@
 
     <v-row>
       <v-col>
-        <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/assign_rental_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div class="back-button">割り当て物品一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>
@@ -205,36 +200,19 @@
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
-import Menu from "~/components/Menu.vue";
-import axios from "axios";
-import { mapState } from "vuex";
-
 export default {
-  components: {
-    Header,
-    Menu,
-  },
-  fetch({ store }) {
-    store.dispatch("getRights");
-  },
-  computed: {
-    ...mapState(["rights"]),
-  },
   data() {
     return {
-      user: [],
-      role: [],
-      grade: [],
-      department: [],
-      detail: [],
-      groups: [],
+      assign_rental_item: [],
+      group: [],
+      item: [],
+      stocker_place: [],
       expand: false,
       dialog: false,
     };
   },
   mounted() {
-    const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
+    const url = "/api/v1/get_assign_rental_item/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
@@ -242,21 +220,10 @@ export default {
         },
       })
       .then((response) => {
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.detail = response.data.detail;
-      })
-
-      this.$axios.get('groups/', {
-      headers: { 
-        "Content-Type": "application/json"
-      }
-    }
-    )
-      .then(response => {
-        this.groups = response.data
+        this.assign_rental_item = response.data.assign_rental_item;
+        this.group = response.data.group;
+        this.item = response.data.item;
+        this.stocker_place = response.data.stocker_place;
       })
   }
 }
