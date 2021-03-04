@@ -108,22 +108,26 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-content>団体名</v-list-item-content>
-                          <v-list-item-content>{{ regist.group.name }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.name == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.group.name }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>企画名</v-list-item-content>
-                          <v-list-item-content>{{ regist.group.project_name }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.group.project_name == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.group.project_name }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>カテゴリー</v-list-item-content>
-                          <v-list-item-content>{{ regist.group.group_category_id }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.group_category == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.group_category }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>活動内容</v-list-item-content>
-                          <v-list-item-content>{{ regist.group.activity }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.group.activity == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.group.activity }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -166,32 +170,38 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-content>氏名</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.name }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.name == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.sub_rep.name }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>学籍番号</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.student_id }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.student_id == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.sub_rep.student_id }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>学科</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.department_id }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.department_id == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.sub_rep.department_id }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>学年</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.grade_id }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.grade_id == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.sub_rep.grade_id }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>TEL</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.tel }}</v-list-item-content>
+                          <v-list-item-content>電話番号</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.tel == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.sub_rep.tel }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>EMAIL</v-list-item-content>
-                          <v-list-item-content>{{ regist.sub_rep.email }}</v-list-item-content>
+                          <v-list-item-content>メールアドレス</v-list-item-content>
+                          <v-list-item-content v-if="regist.sub_rep.email == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.sub_rep.email }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -229,25 +239,30 @@
                         </v-snackbar>
                       </v-card-title>
                       <hr>
-                      <v-list>
+                      <v-card-text v-if = "regist.first_place_order == -9999">未登録</v-card-text>
+                      <v-list v-else>
                         <v-list-item>
                           <v-list-item-content>第1志望</v-list-item-content>
-                          <v-list-item-content>{{ regist.place_order.first }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.first_place_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.first_place_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>第2志望</v-list-item-content>
-                          <v-list-item-content>{{ regist.place_order.second }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.second_place_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.second_place_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>第3志望</v-list-item-content>
-                          <v-list-item-content>{{ regist.place_order.third }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.third_place_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.third_place_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>備考</v-list-item-content>
-                          <v-list-item-content>{{ regist.place_order.remark }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.place_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.place_order.remark }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -274,27 +289,32 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-content>製品名</v-list-item-content>
-                          <v-list-item-content>{{ power_order.item }}</v-list-item-content>
+                          <v-list-item-content v-if="power_order.item == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ power_order.item }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>電力量</v-list-item-content>
-                          <v-list-item-content>{{ power_order.power }}</v-list-item-content>
+                          <v-list-item-content v-if="power_order.power == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ power_order.power }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>メーカー</v-list-item-content>
-                          <v-list-item-content>{{ power_order.manufacturer }}</v-list-item-content>
+                          <v-list-item-content v-if="power_order.manufacturer == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ power_order.manufacturer }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>型番</v-list-item-content>
-                          <v-list-item-content>{{ power_order.model }}</v-list-item-content>
+                          <v-list-item-content v-if="power_order.model == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ power_order.model }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>URL</v-list-item-content>
-                          <v-list-item-content>{{ power_order.item_url }}</v-list-item-content>
+                          <v-list-item-content v-if="power_order.item_url == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ power_order.item_url }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -324,71 +344,31 @@
 
               <!-- 物品申請情報 -->
               <v-tab-item>
-                <v-row>
+                <v-row
+                    v-for="(rental_order, i) in regist.rental_orders"
+                    :key="i"
+                  >
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
-                        <b>物品申請情報</b>
+                        <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditRentalOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
                         <v-list-item>
-                          <v-list-item-content>机</v-list-item-content>
-                          <v-list-item-content>{{ rental_orders }}</v-list-item-content>
+                          <v-list-item-content>物品名</v-list-item-content>
+                          <v-list-item-content v-if="rental_order.name == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ rental_order.name }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>長机</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                          <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>木の椅子</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>パイプ椅子</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>パーテーション</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>掲示板</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>暗幕</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>マイク</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>椅子</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                     <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>テント</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
-                        </v-list-item>
-                      <v-divider></v-divider>
-                        <v-list-item>
-                          <v-list-item-content>パーテーション脚</v-list-item-content>
-                          <v-list-item-content>{{ rentral_orders }}</v-list-item-content>
+                          <v-list-item-content>数量</v-list-item-content>
+                          <v-list-item-content v-if="rental_order.num == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ rental_order.num }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -413,52 +393,62 @@
                        <v-list>
                         <v-list-item>
                           <v-list-item-content>月日</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.fes_date_id }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_date == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_date }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>第1希望</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.stage_first }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.first_stage_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.first_stage_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>第2希望</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.stage_second }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.second_stage_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.second_stage_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>使用時間幅</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.use_time_interval }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.use_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.use_time_interval }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>準備時間幅</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.prepare_time_interval }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.prepare_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.prepare_time_interval }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>掃除時間幅</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.cleanup_time_interval }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.cleanup_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.cleanup_time_interval }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>準備開始時刻</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.prepare_start_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.prepare_start_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.prepare_start_time }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>パフォーマンス開始時刻</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.performance_start_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.performance_start_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.performance_start_time }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>パフォーマンス終了時刻</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.performance_end_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.performance_end_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.performance_end_time }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>掃除終了時刻</v-list-item-content>
-                          <v-list-item-content>{{ regist.stage_order.cleanup_end_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.cleanup_end_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.cleanup_end_time }}</v-list-item-content>
                         </v-list-item>
                        </v-list>
                     </v-card>
@@ -486,12 +476,14 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-content>名前</v-list-item-content>
-                          <v-list-item-content>{{ employee.name }}</v-list-item-content>
+                          <v-list-item-content v-if="employee.name == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ employee.name }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>学籍番号</v-list-item-content>
-                          <v-list-item-content>{{ employee.student_id }}</v-list-item-content>
+                          <v-list-item-content v-if="employee.student_id == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ employee.student_id }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -527,7 +519,7 @@
                     <v-card flat>
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
-                        <b>販売食品情報</b>
+                        <b>販売食品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditFoodproduct" text fab @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
@@ -535,22 +527,26 @@
                       <v-list>
                         <v-list-item>
                           <v-list-item-content>商品名</v-list-item-content>
-                          <v-list-item-content>{{ food_product.name }}</v-list-item-content>
+                          <v-list-item-content v-if="food_product.name == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ food_product.name }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>1日目の個数</v-list-item-content>
-                          <v-list-item-content>{{ food_product.first_day_num }}</v-list-item-content>
+                          <v-list-item-content v-if="food_product.first_day_num == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ food_product.first_day_num }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>2日目の個数</v-list-item-content>
-                          <v-list-item-content>{{ food_product.second_day_num }}</v-list-item-content>
+                          <v-list-item-content v-if="food_product.second_day_num == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ food_product.second_day_num }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>調理の有無</v-list-item-content>
-                          <v-list-item-content>{{ food_product.is_cooking }}</v-list-item-content>
+                          <v-list-item-content v-if="food_product.is_cooking == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ food_product.is_cooking }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -579,21 +575,50 @@
 
               <!-- 購入品情報 -->
               <v-tab-item>
-                <v-row>
+                <v-row
+                  v-for="(purchase_list, i) in regist.purchase_lists"
+                  :key="i"
+                  >
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
-                        <b>購入品情報</b>
+                        <b>購入品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditPurchaseList" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
                         <v-list-item>
-                          <v-list-item-content>製品名</v-list-item-content>
-                          <v-list-item-content>{{  }}</v-list-item-content>
+                          <v-list-item-content>購入品名</v-list-item-content>
+                          <v-list-item-content v-if="purchase_list.item == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ purchase_list.item }}</v-list-item-content>
+                          </v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>使用目的製品</v-list-item-content>
+                          <v-list-item-content v-if="purchase_list.food_product == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ purchase_list.food_product }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>生鮮食品の有無</v-list-item-content>
+                          <v-list-item-content v-if="purchase_list.is_fresh == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ purchase_list.is_fresh }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>購入店舗</v-list-item-content>
+                          <v-list-item-content v-if="purchase_list.shop == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ purchase_list.shop }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>使用日</v-list-item-content>
+                          <v-list-item-content v-if="purchase_list.fes_date == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ purchase_list.fes_date }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>

@@ -3,8 +3,16 @@
     <DashBoard />
     <UserInfo />
     <News />
-    <div v-for="(regist, i) in regist_info" :key="i">
-      <Regist :num="i" :regist="regist" @reload="reload()" />
+    <div v-if="this.regist_info.length === 0">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+    </div>
+    <div v-else>
+      <div v-for="(regist, i) in regist_info" :key="i">
+        <Regist :num="i" :regist="regist" @reload="reload()" />
+      </div>
     </div>
     <br />
     <div style="text-align:center">
@@ -77,18 +85,17 @@ export default {
         );
     },
     reload() {
-      const regist_info_url =
-        process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
-      axios
-        .get(regist_info_url, {
+      const regist_info_url = process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
+      axios.get(regist_info_url, {
           headers: {
             "Content-Type": "application/json",
             "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid")
+            "client": localStorage.getItem("client"),
+            "uid": localStorage.getItem("uid")
           }
         })
         .then(response => {
+          console.log(response)
           this.regist_info = response.data;
         });
     }
@@ -102,21 +109,25 @@ export default {
         client: localStorage.getItem("client"),
         uid: localStorage.getItem("uid")
       }
+    })
+    .then(response => {
+      this.users = response;
     });
 
-    const regist_info_url =
-      process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
+    const regist_info_url = process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
     axios
       .get(regist_info_url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid")
         }
       })
       .then(response => {
-        this.users = response;
+        console.log("aaaaaaaaaaa")
+        console.log(response)
+        this.regist_info = response.data;
       });
 
     const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
