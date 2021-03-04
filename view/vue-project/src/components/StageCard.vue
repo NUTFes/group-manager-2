@@ -6,7 +6,6 @@
           <v-form ref="form">
             <p align="left">
               天気
-              {{ isSunny }}
               <v-btn-toggle
                 class="mb-6 ml-6"
                 v-model="isSunny"
@@ -112,6 +111,7 @@
               />
             </p>
           </v-form>
+          <v-btn @click="submit"></v-btn>
         </v-card-text>
       </v-col>
     </v-row>
@@ -154,10 +154,10 @@ export default {
       fesDate: "",
       stageFirst: "",
       stageSecond: "",
-      prepareStartTime: "",
-      performanceStartTime: "",
-      performanceFinishTime: "",
-      cleanupFinishTime: ""
+      prepareStartTime: [],
+      performanceStartTime: [],
+      performanceFinishTime: [],
+      cleanupFinishTime: []
     };
   },
 
