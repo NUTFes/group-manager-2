@@ -118,20 +118,6 @@ export default {
       .then(response => {
         this.users = response;
       });
-    const regist_info_url =
-      process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
-    axios
-      .get(regist_info_url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
-      })
-      .then(response => {
-        this.regist_info = response.data;
-      });
 
     const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
     axios
