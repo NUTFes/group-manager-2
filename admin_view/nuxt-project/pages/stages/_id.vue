@@ -318,6 +318,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/stages/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/stages')
     }
   }

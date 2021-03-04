@@ -289,6 +289,8 @@
       })
     },
     delete_yes: function() {
+      const url = "/shops/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/shops')
     }
   }

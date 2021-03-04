@@ -400,6 +400,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/place_allow_lists/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/place_allow_lists')
     }
   }
