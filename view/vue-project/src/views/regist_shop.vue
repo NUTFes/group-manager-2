@@ -123,12 +123,12 @@
               </v-row>
               <v-row>
                 <v-col cols="9"></v-col>
-                <v-col>
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -222,18 +222,18 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -327,18 +327,18 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -413,19 +413,19 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     dark
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="purple accent-2"
                     @click="saleSubmit"
                   >
@@ -458,18 +458,18 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -502,19 +502,19 @@
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     dark
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="purple accent-2"
                     @click="stageSubmit"
                   >

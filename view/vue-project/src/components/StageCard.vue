@@ -12,10 +12,9 @@
                 v-model="isSunny"
                 ref="isSunny"
                 color="purple accent-2"
-                @change="changeIsSunny()"
               >
-                <v-btn value="0">晴れ</v-btn>
-                <v-btn value="1">雨</v-btn>
+                <v-btn value="true" @click="stageListIsSunny">晴れ</v-btn>
+                <v-btn value="false" @click="stageListIsRainy">雨</v-btn>
               </v-btn-toggle>
             </p>
             <v-select
@@ -41,6 +40,7 @@
               clearable
               outlined
               required
+              @change="selectSecondStageList"
             ></v-select>
             <v-select
               label="第二希望場所"
@@ -150,7 +150,7 @@ export default {
       ],
       firstStageList: [],
       secondStageList: [],
-      isSunny: "",
+      isSunny: true,
       fesDate: "",
       stageFirst: "",
       stageSecond: "",
@@ -192,22 +192,6 @@ export default {
     },
     stringCleanupFinishTime() {
       return this.cleanupFinishTime.HH + ":" + this.cleanupFinishTime.mm;
-    },
-    stageListIsSunny() {
-      let isSunny = Boolean(this.isSunny);
-      console.log(typeof isSunny);
-      if (isSunny) {
-        return this.stageList;
-      } else {
-        let stageList = [];
-        for (let i = 0; i < this.stageList.length; i++) {
-          if (this.stageList[i].isSelect) {
-            console.log(this.stageList[i]);
-            stageList.push(this.stageList[i]);
-          }
-        }
-        return stageList;
-      }
     }
   },
   methods: {
@@ -249,10 +233,28 @@ export default {
         }
       );
     },
-    changeIsSunny() {
-      console.log(typeof this.isSunny);
-      this.firstStageList = this.stageListIsSunny;
-      this.secondStageList = this.stageListIsSunny;
+    stageListIsSunny() {
+      this.firstStageList = this.stageList;
+      this.secondStageList = this.stageList;
+    },
+    stageListIsRainy() {
+      let stageList = [];
+      for (let i = 0; i < this.stageList.length; i++) {
+        if (this.stageList[i].isSelect) {
+          console.log(this.stageList[i]);
+          stageList.push(this.stageList[i]);
+        }
+      }
+      this.firstStageList = stageList;
+      this.secondStageList = stageList;
+    },
+    selectSecondStageList() {
+      this.secondStageList = [];
+      for (let i = 0; i < this.firstStageList.length; i++) {
+        if (this.firstStageList[i].id != this.stageFirst) {
+          this.secondStageList.push(this.firstStageList[i]);
+        }
+      }
     }
   },
 
