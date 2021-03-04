@@ -17,9 +17,10 @@
               label="学籍番号"
               ref="studentId"
               v-model="studentId"
-              type="number"
+              hint="お持ちでない方：0を8桁入力"
               :rules="[rules.required]"
               text
+              counter="8"
               outlined
               required
             ></v-text-field>

@@ -6,7 +6,7 @@
       <v-divider />
       <v-card-text>
         <v-select
-          v-model="employeeSteps"
+          v-model="purchaseSteps"
           :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
           label="購入品数"
           outlined
@@ -50,7 +50,7 @@
                     v-show="purchaseSteps != purchaseStep"
                   >
                     {{ purchaseStep + 1 }}
-                    人目へ
+                    つ目へ
                   </v-btn>
                 </v-col>
                 <v-col cols="2" />
@@ -109,7 +109,7 @@ export default {
   methods: {
     submit() {
       for (let i = 0; i < this.purchaseSteps; i++) {
-        this.$refs.puchaseChild[i].submit();
+        this.$refs.purchaseChild[i].submit();
       }
       this.$router.push("MyPage");
     }
