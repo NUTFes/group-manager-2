@@ -529,7 +529,7 @@
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
                         <b>販売食品情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditFoodProduct" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditFoodproduct" text fab @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -545,7 +545,7 @@
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>2日目の個数</v-list-item-content>
-                          <v-list-item-content>{{ food_product.first_day_num }}</v-list-item-content>
+                          <v-list-item-content>{{ food_product.second_day_num }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
@@ -557,6 +557,24 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                  <Foodproduct ref="foodproductDlg"
+                    :id = "this.food_product_id"
+                    :groupId = "this.group_id"
+                    :name = "this.name"
+                    :firstN = "this.first_day_num"
+                    :secondN = "this.second_day_num"
+                    :cooking = "this.is_cooking"
+                    @reload="reload"
+                    @openFoodproductSnackbar="openFoodproductSnackbar"
+                  ></Foodproduct>
+                  <v-snackbar
+                    top
+                    text
+                    color="purple accent-2"
+                    v-model="foodproductSnackbar"
+                    >
+                    販売食品情報を更新しました
+                  </v-snackbar>
               </v-tab-item>
 
               <!-- 購入品情報 -->
@@ -599,6 +617,7 @@
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
   import Employee from '@/components/EditModal/employee.vue'
+  import Foodproduct from '@/components/EditModal/foodproduct.vue'
 
   export default {
     props: {
@@ -610,7 +629,8 @@
       SubRep,
       Power,
       Place,
-      Employee
+      Employee,
+      Foodproduct
     },
     data () {
     return {
@@ -626,6 +646,7 @@
       subrepSnackbar: false,
       powerSnackbar: false,
       employeeSnackbar: false,
+      foodproductSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -633,7 +654,7 @@
       isEditRentalOrder: [],
       isEditStageOrder: [],
       isEditEmployee: [],
-      isEditFoodProduct:[],
+      isEditFoodproduct:[],
       isEditPurchaseList: [],
       // 電力申請用
       power_order_id: [],
@@ -647,6 +668,11 @@
       employee_id: [],
       name:[],
       student_id:[],      
+      //販売食品用
+      food_product_id: [],
+      is_cooking: [],
+      first_day_num: [],
+      second_day_num: [],
       }
     },
     mounted() {
@@ -664,29 +690,27 @@
           this.user = response.data.data
         })
 
-
       const settingurl = process.env.VUE_APP_URL + '/user_page_settings'
       axios.get(settingurl, {
-      headers: { 
-        "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
+        headers: { 
+          "Content-Type": "application/json", 
+          "access-token": localStorage.getItem('access-token'),
+          "client": localStorage.getItem('client'),
+        }
       }
-    }
-    )
-      .then(response => {
-        this.isEditGroup = response.data[0].is_edit_group
-        this.isEditSubRep = response.data[0].is_edit_sub_rep
-        this.isEditPlace = response.data[0].is_edit_place
-        this.isEditPowerOrder = response.data[0].is_edit_power_order
-        this.isEditRentalOrder = response.data[0].is_edit_rental_order
-        this.isEditStageOrder = response.data[0].is_edit_stage_order
-        this.isEditEmployee = response.data[0].is_edit_employee
-        this.isEditFoodProduct = response.data[0].is_edit_food_product
-        this.isEditPurchaseList = response.data[0].is_edit_purchase_list
-      console.log(response)
-      })
-
+      )
+        .then(response => {
+          this.isEditGroup = response.data[0].is_edit_group
+          this.isEditSubRep = response.data[0].is_edit_sub_rep
+          this.isEditPlace = response.data[0].is_edit_place
+          this.isEditPowerOrder = response.data[0].is_edit_power_order
+          this.isEditRentalOrder = response.data[0].is_edit_rental_order
+          this.isEditStageOrder = response.data[0].is_edit_stage_order
+          this.isEditEmployee = response.data[0].is_edit_employee
+          this.isEditFoodproduct = response.data[0].is_edit_food_product
+          this.isEditPurchaseList = response.data[0].is_edit_purchase_list
+          console.log(response)
+        })
     },
     methods: {
       reload() {
@@ -706,6 +730,9 @@
       },
       openEmployeeSnackbar() {
         this.employeeSnackbar = true
+      },
+      openFoodproductSnackbar() {
+        this.foodproductSnackbar = true
       },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
@@ -734,6 +761,15 @@
         this.student_id = student_id
         this.$refs.employeeDlg.isDisplay = true
       },
-    },
+      openFoodproductDisplay(id, group_id, name, first_day_num, second_day_num, is_cooking) {
+        this.food_product_id = id
+        this.group_id = group_id
+        this.name = name
+        this.first_day_num = first_day_num
+        this.second_day_num = second_day_num
+        this.is_cooking = is_cooking
+        this.$refs.foodproductDlg.isDisplay = true
+      },
+    }
   }
 </script>
