@@ -17,6 +17,21 @@
                             text
                             v-bind="attrs"
                             v-on="on"
+                            @click="dialog=true"
+                            >
+                            <v-icon dark>mdi-plus-circle-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>使用可能会場の追加</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
                             @click="reload"
                             >
                             <v-icon dark>mdi-reload</v-icon>
@@ -40,6 +55,71 @@
                   <span>印刷する</span>
                 </v-tooltip>
               </v-card-title>
+              
+              <v-dialog
+      v-model="dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-map-marker-check-outline</v-icon>
+            使用可能会場の追加
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+      </v-card-title>
+
+      <v-card-text>
+        <v-row>
+          <v-col>
+            <v-form ref="form">
+              <v-select
+                label="場所"
+                v-model="place_id"
+                :items="places"
+                item-text="name"
+                item-value="id"
+                outlined
+                />
+              <v-select
+                label="グループカテゴリ"
+                v-model="group_category_id"
+                :items="group_categories"
+                item-text="name"
+                item-value="id"
+                outlined
+                />   
+              <v-select
+                label="使用"
+                v-model="enable"
+                :items="enable_items"
+                item-text="label"
+                item-value="value"
+                outlined
+                />       
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+                            <v-card-actions>
+                              <v-btn
+                                flatk
+                                large
+                                block
+                                dark
+                                color="blue"
+                                @click="register()"
+                                >登録 ​
+                              </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog>
               <hr class="mt-n3">
               <template>
                 <div class="text-center" v-if="place_allow_list.length === 0">
@@ -88,16 +168,25 @@
       </div>
     </v-col>
   </v-row>
-  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      id: [],
       place_allow_list: [],
-      group_categories: [],
+      place_id: [],
+      places: [],
+      group_category_id: [],
       category: [],
+      enable: [],
+      expand: false,
+      dialog: false,
+      enable_items :[
+        {label:"使用可能",value:true},
+        {label:"使用不可能",value:false}
+      ],
       headers:[
         { text: 'ID', value: 'place_allow_list.id' },
         { text: '場所', value: 'place' },
@@ -109,6 +198,15 @@ export default {
     }
   },
   mounted() {
+    this.$axios
+        .get("/places", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.places = response.data;
+        });
     this.$axios.get('/group_categories', {
       headers: { 
         "Content-Type": "application/json", 
@@ -124,12 +222,39 @@ export default {
       headers: { 
         "Content-Type": "application/json", 
       }
-    }
-    )
+    })
       .then(response => {
         this.place_allow_list = response.data
       })
   },
+  methods: {
+    reload: function(){
+    this.$axios.get('/api/v1/get_place_allow_lists', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.place_allow_list = response.data
+      })
+    },
+
+    register: function () {
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      var params = new URLSearchParams();
+      params.append("place_id", this.place_id);
+      params.append("group_category_id", this.group_category_id);
+      params.append("enable", this.enable);
+      this.$axios.post("/place_allow_lists", params).then((response) => {
+        console.log(response);
+        this.dialog = false;
+        this.reload();
+        this.place_id = "";
+        this.group_category = "";
+        this.enable = "";
+      });
+    },
+  }
 }
 </script>
 

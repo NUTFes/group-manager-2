@@ -19,18 +19,22 @@ class PlaceAllowListsController < ApplicationController
   def create
     @place_allow_list = PlaceAllowList.new(place_allow_list_params)
     @place_allow_list.save
+    render json: @place_allow_list
   end
 
   # PATCH/PUT /place_allow_lists/1
   # PATCH/PUT /place_allow_lists/1.json
   def update
     @place_allow_list.update(place_allow_list_params)
+    render json: @place_allow_list
   end
 
   # DELETE /place_allow_lists/1
   # DELETE /place_allow_lists/1.json
   def destroy
     @place_allow_list.destroy
+    @place_allow_lists = PlaceAllowList.all
+    render json: @place_allow_lists
   end
 
   private
