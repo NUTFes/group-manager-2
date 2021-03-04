@@ -17,13 +17,19 @@
               >電力申請</v-stepper-step
             >
             <v-divider></v-divider>
-              <v-stepper-step
-                v-if="!isStage"
-                :complete="e1 > 4"
-                step="4"
-                color="purple accent-2"
-                >会場申請</v-stepper-step
-              >
+            <v-stepper-step
+              :complete="e1 > 4"
+              step="4"
+              color="purple accent-2"
+              >ステージ<br>利用申請</v-stepper-step
+            >
+            <v-divider></v-divider>
+            <v-stepper-step
+              :complete="e1 > 5"
+              step="5"
+              color="purple accent-2"
+              >ステージ<br>利用詳細</v-stepper-step
+            >
           </v-stepper-header>
 
           <v-stepper-items class="stepper">
@@ -331,66 +337,68 @@
               </v-row>
             </v-stepper-content>
 
-            <!-- 会場申請登録 -->
-            <v-stepper-content v-if="!isStage" step="4">
+            <!-- ステージ利用申請 -->
+            <v-stepper-content v-if="isStage" step="4">
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col>
+                <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>会場登録</v-card-title>
+                    <v-card-title>
+                      ステージ利用申請
+                    </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
-                      <v-select
-                        label="第一希望場所"
-                        v-model="placeFirstId"
-                        :rules="[rules.required]"
-                        :items="this.placeList[getIndex()]['place_list']"
-                        :menu-props="{
-                          top: true,
-                          offsetY: true
-                        }"
-                        item-text="place"
-                        item-value="place_id"
-                        outlined
-                      ></v-select>
-                      <v-select
-                        label="第二希望場所"
-                        ref="second"
-                        v-model="placeSecondId"
-                        :rules="[rules.required]"
-                        :items="this.placeList[getIndex()]['place_list']"
-                        :menu-props="{
-                          top: true,
-                          offsetY: true
-                        }"
-                        item-text="place"
-                        item-value="place_id"
-                        outlined
-                      ></v-select>
-                      <v-select
-                        label="第三希望場所"
-                        ref="third"
-                        v-model="placeThirdId"
-                        :rules="[rules.required]"
-                        :items="this.placeList[getIndex()]['place_list']"
-                        :menu-props="{
-                          top: true,
-                          offsetY: true
-                        }"
-                        item-text="place"
-                        item-value="place_id"
-                        outlined
-                      ></v-select>
-                      <v-text-field
-                        label="備考"
-                        v-model="placeRemark"
-                        height="150"
-                        text
-                        outlined
-                        required
-                      ></v-text-field>
-                      <v-divider></v-divider>
+                      <StageCard
+                        :groupId="groupId"
+                        ref="stageChild"
+                        :key="stageStep"
+                      />
                     </v-card-text>
+                    <v-divider />
+                  </v-card>
+                </v-col>
+                <v-col cols="1"></v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
+                    戻る
+                  </v-btn>
+                </v-col>
+                <v-col cols="3">
+                  <v-btn
+                    class="stepper"
+                    rounded
+                    height="50"
+                    block
+                    color="primary"
+                    @click="e1 += 1"
+                  >
+                    次へ
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-stepper-content>
+
+            <!-- ステージ利用詳細 -->
+            <v-stepper-content v-if="isStage" step="5">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card class="mb-12" flat>
+                    <v-card-title>
+                      ステージ詳細申請
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                      <StageCommonCard
+                        :groupId="groupId"
+                        ref="stageCommonChild"
+                        :key="stageCommonStep"
+                      />
+                    </v-card-text>
+                    <v-divider />
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
@@ -410,14 +418,13 @@
                     height="50"
                     block
                     color="purple accent-2"
-                    @click="saleSubmit"
+                    @click="stageSubmit"
                   >
                     登録
                   </v-btn>
                 </v-col>
               </v-row>
             </v-stepper-content>
-
           </v-stepper-items>
         </v-stepper>
       </v-col>
@@ -572,10 +579,11 @@ export default {
       this.$router.push("MyPage");
     },
     saleSubmit: function() {
-      if (this.groupCategoryId == null) {
+      if (groupCategoryId == null) {
         console.log("can't group_category_id");
         return;
       }
+
       this.commonSubmit();
 
       // 会場申請登録
@@ -595,6 +603,15 @@ export default {
           return error;
         }
       );
+
+      this.$router.push("MyPage");
+    },
+    stageSubmit: function() {
+      this.commonSubmit();
+
+      this.$refs.stageChild.submit();
+
+      this.$refs.stageCommonChild.submit();
 
       this.$router.push("MyPage");
     },
