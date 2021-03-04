@@ -370,6 +370,8 @@ export default {
         });
     },
     delete_yes: function () {
+      const url = "/place_orders/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push("/place_orders");
     },
   },

@@ -359,7 +359,9 @@ export default {
       })
     },
     delete_yes: function() {
-      this.$router.push('/power_orders')
+      const url = "/power_orders/" + this.$route.params.id;
+      this.$axios.delete(url)
+      this.$router.push("/power_orders")
     }
   }
 }

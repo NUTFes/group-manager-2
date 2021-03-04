@@ -322,7 +322,9 @@ export default {
       })
     },
     delete_yes: function() {
-      this.$router.push('/rental_orders')
+      const url = "/rental_orders/" + this.$route.params.id;
+      this.$axios.delete(url)
+      this.$router.push("/rental_orders")
     }
   }
 }
