@@ -480,7 +480,7 @@
                         <v-icon class="pr-2" size="30">mdi-account</v-icon>
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditEmployee" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditEmployee" text fab @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -491,14 +491,30 @@
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>学籍番号</v-list-item-content>
-                          <v-list-item-content>{{ employee.name }}</v-list-item-content>
+                          <v-list-item-content>{{ employee.student_id }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
-              </v-tab-item>
+                      <Employee ref="employeeDlg"
+                        :id="this.employee_id"
+                        :groupId="this.group_id"
+                        :studentId ="this.student_id"
+                        :name="this.name"
+                        @reload="reload"
+                        @openEmployeeSnackbar="openEmployeeSnackbar"
+                      ></Employee>
+                      <v-snackbar
+                        top
+                        text
+                        color="purple accent-2"
+                        v-model="employeeSnackbar"
+                        >
+                        従業員情報を更新しました
+                      </v-snackbar>
+          </v-tab-item>
 
               <!-- 販売食品情報 -->
               <v-tab-item>
@@ -582,6 +598,7 @@
   import SubRep from '@/components/EditModal/sub_rep.vue'
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
+  import Employee from '@/components/EditModal/employee.vue'
 
   export default {
     props: {
@@ -592,7 +609,8 @@
       Group,
       SubRep,
       Power,
-      Place
+      Place,
+      Employee
     },
     data () {
     return {
@@ -607,6 +625,7 @@
       placeSnackbar: false,
       subrepSnackbar: false,
       powerSnackbar: false,
+      employeeSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -624,6 +643,10 @@
       model:[], 
       power: [],
       url:[],
+      //従業員申請用
+      employee_id: [],
+      name:[],
+      student_id:[],      
       }
     },
     mounted() {
@@ -681,6 +704,9 @@
       openPowerSnackbar() {
         this.powerSnackbar = true
       },
+      openEmployeeSnackbar() {
+        this.employeeSnackbar = true
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -701,6 +727,13 @@
         this.$refs.powerDlg.isDisplay = true
         console.log(this.$refs.powerDlg.isDisplay)
       },
-    }
+      openEmployeeDisplay(id, group_id, name, student_id){
+        this.employee_id = id
+        this.group_id = group_id
+        this.name = name
+        this.student_id = student_id
+        this.$refs.employeeDlg.isDisplay = true
+      },
+    },
   }
 </script>
