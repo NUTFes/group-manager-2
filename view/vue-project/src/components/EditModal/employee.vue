@@ -22,6 +22,7 @@
                 label="学籍番号"
                 ref="studentId"
                 v-model="studentId"
+                counter="8"
                 text
                 outlined
                 ></v-text-field>
