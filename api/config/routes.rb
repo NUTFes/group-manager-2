@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
+      get "group_food_products/:group_id" => "food_products_api#get_group_food_product"
       # 物品周り 
       get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
       get "get_item_name" => "items_api#get_item_name"
