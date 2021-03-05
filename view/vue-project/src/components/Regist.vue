@@ -7,7 +7,7 @@
         class = "mx-auto"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報  {{ num + 1 }}</b></v-card-title>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報</b></v-card-title>
         <v-divider class="mx-4"></v-divider>
         <v-row>
           <v-col>
@@ -94,7 +94,7 @@
                           :activity="regist.group.activity"
                           @reload="reload"
                           @openGroupSnackbar="openGroupSnackbar"
-                               ></Group>
+                        ></Group>
                         <v-snackbar
                           top
                           text
@@ -375,6 +375,28 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                  <AddRentalOrder ref="AddRentalOrderDlg"
+                      :groupId="this.regist.group.id"
+                      @reload="reload"
+                      @openRentalOrderSnackbar="openRentalOrderSnackbar">
+                  </AddRentalOrder>
+                  <v-snackbar
+                      top
+                      text
+                      color="purple accent-2"
+                      v-model="rentalOrderSnackbar"
+                      >
+                      物品申請情報を更新しました
+                    </v-snackbar>
+                <v-container>
+                  <v-row>
+                    <v-col cols="10"></v-col>
+                    <v-col cols="1">
+                      <v-btn fab elevation="0" dark color="purple accent-2" @click="openAddRentalOrderDisplay"><v-icon>mdi-plus</v-icon></v-btn>
+                    </v-col>
+                    <v-col cols="1"></v-col>
+                  </v-row>
+                </v-container>
               </v-tab-item>
 
               <!-- ステージ利用申請情報 -->
@@ -643,6 +665,7 @@
   import Place from '@/components/EditModal/place.vue'
   import Employee from '@/components/EditModal/employee.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
+  import AddRentalOrder from '@/components/AddModal/rental_order.vue'
 
   export default {
     props: {
@@ -655,7 +678,8 @@
       Power,
       Place,
       Employee,
-      Foodproduct
+      Foodproduct,
+      AddRentalOrder
     },
     data () {
     return {
@@ -670,6 +694,7 @@
       placeSnackbar: false,
       subrepSnackbar: false,
       powerSnackbar: false,
+      rentalOrderSnackbar: false,
       employeeSnackbar: false,
       foodproductSnackbar: false,
       isEditGroup: [],
@@ -681,6 +706,10 @@
       isEditEmployee: [],
       isEditFoodproduct:[],
       isEditPurchaseList: [],
+      // 物品申請用
+      isAddRentalOrder: [],
+      num: [],
+
       // 電力申請用
       power_order_id: [],
       group_id: [],
@@ -734,6 +763,7 @@
           this.isEditEmployee = response.data[0].is_edit_employee
           this.isEditFoodproduct = response.data[0].is_edit_food_product
           this.isEditPurchaseList = response.data[0].is_edit_purchase_list
+          this.isAddRentalOrder = response.data[0].is_add_rental_order
           console.log(response)
         })
     },
@@ -767,6 +797,17 @@
       },
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
+      },
+      openRentalOrderSnackbar(){
+        console.log("open snackbar")
+      },
+      openAddRentalOrderDisplay(id, group_id, name, num) {
+        this.rental_order_id = id
+        this.group_id = group_id
+        this.name = name
+        this.num = num
+        this.$refs.AddRentalOrderDlg.isDisplay = true
+        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
       },
       openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
         this.power_order_id = id
