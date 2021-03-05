@@ -103,8 +103,8 @@ export default {
       axios.post(url,params).then(
         (response) => {
           this.isDisplay = false
-          this.$emit('openAddpowerSnackbar')
           this.$emit('reload')
+          this.$emit('openAddpowerSnackbar')
           this.item = []
           this.power = []
           this.manufacturer = []

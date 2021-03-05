@@ -368,14 +368,14 @@
                   >
                   電力申請情報を更新しました
                 </v-snackbar>
-                  <v-snackbar
-                    top
-                    text
-                    color="purple accent-2"
-                    v-model="addpowerSnackbar"
-                    >
-                    電力申請情報を追加しました
-                  </v-snackbar>
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="addpowerSnackbar"
+                  >
+                  電力申請情報を追加しました
+                </v-snackbar>
               </v-tab-item>
 
               <!-- 物品申請情報 -->
