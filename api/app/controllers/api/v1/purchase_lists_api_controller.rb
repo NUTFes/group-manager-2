@@ -25,12 +25,14 @@ class Api::V1::PurchaseListsApiController < ApplicationController
     purchase_list = PurchaseList.find(params[:id])
     purchase_lists = []
     food_product = purchase_list.food_product.name
+    group_id = purchase_list.food_product.group.id
     group = purchase_list.food_product.group.name
     shop = purchase_list.shop.name
     fes_date = purchase_list.fes_date
     purchase_lists = {
       purchase_list: purchase_list,
       food_product: food_product,
+      group_id: group_id,
       group: group,
       shop: shop,
       fes_date: fes_date,
