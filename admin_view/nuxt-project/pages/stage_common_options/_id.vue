@@ -391,6 +391,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/stage_common_options/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/stage_common_options')
     }
   }
