@@ -130,7 +130,7 @@
                               clearable
                             >
                             </v-select>
-                          <v-text-field
+                          <v-textarea
                             class="body-1"
                             label="ステージ内容"
                             v-model="stageContent"
@@ -138,7 +138,7 @@
                             outlined
                             clearable
                           >
-                          </v-text-field>
+                          </v-textarea>
                             <v-card-actions>
                               <v-btn
                                 flatk
