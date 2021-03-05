@@ -355,6 +355,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/food_products/" + this.$route.params.id;
+      this.$axios.delete(url)
       this.$router.push('/food_products')
     }
   }
