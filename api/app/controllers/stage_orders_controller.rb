@@ -19,18 +19,22 @@ class StageOrdersController < ApplicationController
   def create
     @stage_order = StageOrder.new(stage_order_params)
     @stage_order.save
+    render json: @stage_order 
   end
 
   # PATCH/PUT /stage_orders/1
   # PATCH/PUT /stage_orders/1.json
   def update
     @stage_order.update(stage_order_params)
+    render json: @stage_order 
   end
 
   # DELETE /stage_orders/1
   # DELETE /stage_orders/1.json
   def destroy
     @stage_order.destroy
+    @stage_orders = StageOrder.all
+    render json: @stage_orders
   end
 
   private

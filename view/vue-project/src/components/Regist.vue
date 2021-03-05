@@ -410,17 +410,17 @@
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>使用時間幅</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.use_time_interval == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.use_time_interval }}</v-list-item-content>
-                        </v-list-item>
-                      <v-divider></v-divider>
-                        <v-list-item>
                           <v-list-item-content>準備時間幅</v-list-item-content>
                           <v-list-item-content v-if="regist.stage_order.prepare_time_interval == -9999">未登録</v-list-item-content>
                           <v-list-item-content v-else>{{ regist.stage_order.prepare_time_interval }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>使用時間幅</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_order.use_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_order.use_time_interval }}</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>掃除時間幅</v-list-item-content>
                           <v-list-item-content v-if="regist.stage_order.cleanup_time_interval == -9999">未登録</v-list-item-content>

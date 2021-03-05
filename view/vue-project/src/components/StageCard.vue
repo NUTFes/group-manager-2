@@ -52,64 +52,110 @@
               clearable
               outlined
               required
-            ></v-select>
-            <p align="left">
-              準備開始時刻
-              <vue-timepicker
-                input-class="timepicker"
-                v-model="prepareStartTime"
-                format="HH:mm"
-                minute-interval="15"
-                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                hide-disable-hours
-                hide-disable-minutes
-                advanced-keyboard
-                manual-input
-              />
-            </p>
-            <p align="left">
-              パフォーマンス開始時刻
-              <vue-timepicker
-                input-class="timepicker"
-                v-model="performanceStartTime"
-                format="HH:mm"
-                minute-interval="15"
-                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                hide-disable-hours
-                hide-disable-minutes
-                advanced-keyboard
-                manual-input
-              />
-            </p>
+              ></v-select>
+            <v-radio-group
+              v-model="radio"
+              >
+              <v-radio
+                label="時間幅で申請"
+                :value=1
+                ></v-radio>
+              <v-radio
+                label="時刻で申請"
+                :value=2
+                ></v-radio>
+            </v-radio-group>
+              <div v-if="radio == 1">
+                <v-select
+                  label="準備時間幅"
+                  v-model="prepareInterval"
+                  :items="time_interval"
+                  :menu-props="{ top: false, offsetY: true }"
+                  clearable
+                  outlined
+                  required
+                  ></v-select>
+                <v-select
+                  label="使用時間幅"
+                  ref="stageSecond"
+                  v-model="useInterval"
+                  :items="time_interval"
+                  :menu-props="{ top: false, offsetY: true }"
+                  clearable
+                  outlined
+                  required
+                  ></v-select>
+                <v-select
+                  label="掃除時間幅"
+                  ref="stageSecond"
+                  v-model="cleanupInterval"
+                  :items="time_interval"
+                  :menu-props="{ top: false, offsetY: true }"
+                  clearable
+                  outlined
+                  required
+                  ></v-select>
+              </div>
+              <div v-if="radio == 2">
+                <p align="left">
+                準備開始時刻
+                <vue-timepicker
+                  input-class="timepicker"
+                  v-model="prepareStartTime"
+                  format="HH:mm"
+                  minute-interval="15"
+                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                  hide-disable-hours
+                  hide-disable-minutes
+                  advanced-keyboard
+                  manual-input
+                  />
+                </p>
 
-            <p align="left">
-              パフォーマンス終了時刻
-              <vue-timepicker
-                input-class="timepicker"
-                v-model="performanceFinishTime"
-                format="HH:mm"
-                minute-interval="15"
-                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                hide-disable-hours
-                hide-disable-minutes
-                advanced-keyboard
-                manual-input
-              />
-            </p>
-            <p align="left">
-              掃除終了時刻
-              <vue-timepicker
-                input-class="timepicker"
-                v-model="cleanupFinishTime"
-                format="HH:mm"
-                minute-interval="15"
-                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                hide-disable-hours
-                hide-disable-minutes
-                advanced-keyboard
-                manual-input
-              />
-            </p>
+                <p align="left">
+                パフォーマンス開始時刻
+                <vue-timepicker
+                  input-class="timepicker"
+                  v-model="performanceStartTime"
+                  format="HH:mm"
+                  minute-interval="15"
+                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                  hide-disable-hours
+                  hide-disable-minutes
+                  advanced-keyboard
+                  manual-input
+                  />
+                </p>
+
+                <p align="left">
+                パフォーマンス終了時刻
+                <vue-timepicker
+                  input-class="timepicker"
+                  v-model="performanceFinishTime"
+                  format="HH:mm"
+                  minute-interval="15"
+                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                  hide-disable-hours
+                  hide-disable-minutes
+                  advanced-keyboard
+                  manual-input
+                  />
+                </p>
+                <p align="left">
+                掃除終了時刻
+                <vue-timepicker
+                  input-class="timepicker"
+                  v-model="cleanupFinishTime"
+                  format="HH:mm"
+                  minute-interval="15"
+                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                  hide-disable-hours
+                  hide-disable-minutes
+                  advanced-keyboard
+                  manual-input
+                  />
+                </p>
+              </div>
           </v-form>
         </v-card-text>
       </v-col>
@@ -133,12 +179,14 @@ export default {
       rules: {
         required: value => !!value || "入力してください"
       },
+      radio: 1,
       group: [],
       valid: false,
       fesDateList: [
         { name: "一日目", id: 2 },
         { name: "二日目", id: 3 }
       ],
+      time_interval: ["5分", "10分", "15分", "20分", "25分", "30分", "35分", "40分", "45分", "50分", "55分", "60分", "65分", "70分", "75分", "80分", "90分", "95分", "100分", "105分", "110分", "115分", "120分"],
       stageList: [
         { name: "メインステージ", id: 1, isSelect: false },
         { name: "サブステージ", id: 2, isSelect: false },
@@ -153,6 +201,9 @@ export default {
       fesDate: "",
       stageFirst: "",
       stageSecond: "",
+      prepareInterval: [],
+      useInterval: [],
+      cleanupInterval: [],
       prepareStartTime: [],
       performanceStartTime: [],
       performanceFinishTime: [],
@@ -205,6 +256,39 @@ export default {
       return true;
     },
     submit() {
+      if (this.prepareInterval.length == 0){
+        this.prepareInterval = "-9999"
+      }
+      if (this.useInterval.length == 0){
+        this.useInterval = "-9999"
+      }
+      if (this.cleanupInterval.length == 0){
+        this.cleanupInterval = "-9999"
+      }
+      if (this.prepareStartTime.length == 0){
+        this.prepareStartTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.prepareStartTime.HH == "" && this.prepareStartTime.mm == ""){
+        this.prepareStartTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.performanceStartTime.length == 0){
+        this.performanceStartTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.performanceStartTime.HH == "" && this.performanceStartTime.mm == ""){
+        this.performanceStartTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.performanceFinishTime.length == 0){
+        this.performanceFinishTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.performanceFinishTime.HH == "" && this.performanceFinishTime.mm == ""){
+        this.performanceFinishTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.cleanupFinishTime.length == 0){
+        this.cleanupFinishTime = { "HH": "00", "mm": "00" }
+      }
+      if (this.cleanupFinishTime.HH == "" && this.cleanupFinishTime.mm == ""){
+        this.cleanupFinishTime = { "HH": "00", "mm": "00" }
+      }
       const url = process.env.VUE_APP_URL + "/stage_orders";
       let params = new URLSearchParams();
       params.append("group_id", this.groupId);
