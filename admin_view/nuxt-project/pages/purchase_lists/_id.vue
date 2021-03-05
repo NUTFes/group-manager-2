@@ -111,7 +111,7 @@
                           >
                           <v-chip
                             v-if="purchase.is_fresh == false"
-                            color="red"
+                            color="blue"
                             text-color="white"
                             small
                             >いいえ</v-chip
@@ -326,8 +326,8 @@ export default {
         { name: "ダイレックス 喜多町店", id: 28 }
       ],
       isFreshList: [
-        { name: "YES", bool: true },
-        { name: "NO", bool: false }
+        { name: "はい", bool: true },
+        { name: "いいえ", bool: false }
       ]
     };
   },
