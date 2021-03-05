@@ -25,31 +25,33 @@
                   {{ group.name }}
                   <v-spacer></v-spacer>
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs  }">
-                      <v-btn 
-                              text 
-                              v-bind="attrs"
-                              v-on="on"
-                              @click="edit_dialog_open" 
-                              fab>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="edit_dialog_open"
+                        fab
+                      >
                         <v-icon class="ma-5">mdi-pencil</v-icon>
                       </v-btn>
                     </template>
                     <span>編集</span>
                   </v-tooltip>
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs  }">
-                      <v-btn 
-                              text 
-                              v-bind="attrs"
-                              v-on="on"
-                              @click="delete_dialog = true" 
-                      fab>
-                      <v-icon class="ma-5">mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>削除</span>
-                </v-tooltip>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="delete_dialog = true"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>削除</span>
+                  </v-tooltip>
                 </v-card-title>
                 <hr class="mt-n3" />
                 <v-simple-table class="my-9">
@@ -165,9 +167,10 @@
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
             <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
-          </div><v-spacer></v-spacer>
+          </div>
+          <v-spacer></v-spacer>
           <v-btn text @click="edit_dialog = false" fab dark>
-            <v-icon>mdi-close</v-icon>
+            <v-icon class="ma-5">mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text>
@@ -189,7 +192,7 @@
                   :rules="[rules.required]"
                   :menu-props="{
                     top: true,
-                    offsetY: true,
+                    offsetY: true
                   }"
                   item-text="name"
                   item-value="id"
@@ -218,7 +221,7 @@
                   :rules="[rules.required]"
                   :menu-props="{
                     top: true,
-                    offsetY: true,
+                    offsetY: true
                   }"
                   item-text="year_num"
                   item-value="id"
@@ -238,10 +241,7 @@
     </v-dialog>
 
     <!-- 削除ダイアログ -->
-    <v-dialog
-      v-model="delete_dialog"
-      width="500"
-      >
+    <v-dialog v-model="delete_dialog" width="500">
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
@@ -253,51 +253,31 @@
           </v-btn>
         </v-card-title>
 
-      <v-card-title>
-        削除してよろしいですか？
-      </v-card-title>
+        <v-card-title>
+          削除してよろしいですか？
+        </v-card-title>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          flat
-          color="red"
-          dark
-          @click="delete_yes"
-          >
-          はい
-        </v-btn>
-        <v-btn
-          flat
-          color="blue"
-          dark
-          @click="delete_dialog = false"
-          >
-          いいえ
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat color="red" dark @click="delete_yes">
+            はい
+          </v-btn>
+          <v-btn flat color="blue" dark @click="delete_dialog = false">
+            いいえ
+          </v-btn>
+        </v-card-actions>
       </v-card>
-    </v-dialog> 
+    </v-dialog>
 
     <!-- 編集成功SnackBar -->
-    <v-snackbar
-      v-model="success_snackbar"
-      color="blue-grey"
-      top
-      elevation="24"
-    >
+    <v-snackbar v-model="success_snackbar" color="blue-grey" top elevation="24">
       編集しました
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="white"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-        <v-icon>mdi-close</v-icon>
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
@@ -332,8 +312,8 @@ export default {
       year_list: [],
       groupCategories: [],
       rules: {
-        required: (value) => !!value || "入力してください",
-      },
+        required: value => !!value || "入力してください"
+      }
     };
   },
   methods: {
@@ -342,10 +322,10 @@ export default {
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
+        .then(response => {
           this.group = response.data.group;
           this.groupName = response.data.group.name;
           this.groupProjectName = response.data.group.project_name;
@@ -353,53 +333,65 @@ export default {
           this.groupActivity = response.data.group.activity;
           this.user_id = response.data.group.user_id;
           this.fes_year_id = response.data.group.fes_year_id;
-          this.user = response.data.user
-          this.year = response.data.fes_year
+          this.user = response.data.user;
+          this.year = response.data.fes_year;
         });
     },
     edit_dialog_open: function() {
-      const year_url = "/fes_years/"
+      const year_url = "/fes_years/";
       this.$axios
         .get(year_url, {
           headers: {
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
-          this.year_list = response.data
+        .then(response => {
+          this.year_list = response.data;
         });
-      this.edit_dialog = true
+      this.edit_dialog = true;
 
-      const group_categories_url = "/group_categories/"
+      const group_categories_url = "/group_categories/";
       this.$axios
         .get(group_categories_url, {
           headers: {
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
-          this.groupCategories = response.data
+        .then(response => {
+          this.groupCategories = response.data;
         });
-      this.edit_dialog = true
-
+      this.edit_dialog = true;
     },
-    edit: function () {
-      const edit_url = "/groups/" + this.group.id + "?name=" + this.groupName + "&project_name=" + this.groupProjectName + "&group_category_id=" + this.groupCategoryId + "&activity=" + this.groupActivity + "&fes_year_id=" + this.fes_year_id
-      this.$axios.put(edit_url, {
+    edit: function() {
+      const edit_url =
+        "/groups/" +
+        this.group.id +
+        "?name=" +
+        this.groupName +
+        "&project_name=" +
+        this.groupProjectName +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&activity=" +
+        this.groupActivity +
+        "&fes_year_id=" +
+        this.fes_year_id;
+      this.$axios
+        .put(edit_url, {
           headers: {
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
-          console.log(response)
-          this.reload()
+        .then(response => {
+          console.log(response);
+          this.reload();
           this.edit_dialog = false;
         });
     },
     delete_yes: function() {
       const url = "/groups/" + this.$route.params.id;
-      this.$axios.delete(url)
-      this.$router.push('/groups')
+      this.$axios.delete(url);
+      this.$router.push("/groups");
     }
   },
   mounted() {
@@ -407,10 +399,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       })
-      .then((response) => {
+      .then(response => {
         this.group = response.data.group;
         this.groupName = response.data.group.name;
         this.groupProjectName = response.data.group.project_name;
@@ -418,25 +410,25 @@ export default {
         this.groupActivity = response.data.group.activity;
         this.user_id = response.data.group.user_id;
         this.fes_year_id = response.data.group.fes_year_id;
-        this.user = response.data.user
-        this.year = response.data.fes_year
+        this.user = response.data.user;
+        this.year = response.data.fes_year;
       });
 
-    const category_url = "group_categories/"
+    const category_url = "group_categories/";
     this.$axios
       .get(category_url, {
         headers: {
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         this.group_categories = response.data;
         for (let i = 0; i < this.group_categories.length; i++) {
           this.category.push(this.group_categories[i]["name"]);
         }
       });
-  },
+  }
 };
 </script>
 
