@@ -17,6 +17,21 @@
                             text
                             v-bind="attrs"
                             v-on="on"
+                            @click="dialog=true"
+                            >
+                            <v-icon dark>mdi-plus-circle-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>会場の追加</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
                             @click="reload"
                             >
                             <v-icon dark>mdi-reload</v-icon>
@@ -40,6 +55,52 @@
                   <span>印刷する</span>
                 </v-tooltip>
               </v-card-title>
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+              <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-map-marker-check-outline</v-icon>
+             会場の追加
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+      </v-card-title>
+
+      <v-card-text>
+        <v-row>
+          <v-col>
+            <v-form ref="form">
+              <v-text-field
+                label="場所名"
+                v-model="name"
+                outlined
+                clearable
+                />
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+                            <v-card-actions>
+                              <v-btn
+                                flatk
+                                large
+                                block
+                                dark
+                                color="blue"
+                                @click="register"
+                                >登録 ​
+                              </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog>
               <hr class="mt-n3">
               <template>
                 <div class="text-center" v-if="places.length === 0">
@@ -84,6 +145,8 @@ export default {
   data() {
     return {
       places: [],
+      dialog: false,
+      name: [],
       headers:[
         { text: 'ID', value: 'id' },
         { text: '名前', value: 'name' },
@@ -113,8 +176,18 @@ export default {
         .then(response => {
           this.places = response.data
         })
+    },
+    register: function () {
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      var params = new URLSearchParams();
+      params.append("name", this.name);
+      this.$axios.post("/places",params).then((response) => {
+        this.dialog = false;
+        this.reload();
+        this.name = "";
+      });
     }
-  }
+  },
 }
 </script>
 
