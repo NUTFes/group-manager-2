@@ -82,7 +82,6 @@ class Api::V1::CurrentUserApiController < ApplicationController
       # 会場申請情報を取得
       if !group.place_order.nil?
         place_order = group.place_order
-        p "aaa"
         p group.place_order.first
         first_place_order = Place.find(group.place_order.first).name
         p group.place_order.second

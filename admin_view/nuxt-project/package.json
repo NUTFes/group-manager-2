@@ -16,7 +16,8 @@
     "inject": "^1.0.0-beta2",
     "moment": "^2.29.1",
     "nuxt": "^2.14.6",
-    "pdfmake": "^0.1.70"
+    "pdfmake": "^0.1.70",
+    "vue2-timepicker": "^1.1.6"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2"

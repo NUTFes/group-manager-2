@@ -89,17 +89,16 @@
                             item-value="id"
                             outlined
                           ></v-select>
-                          <v-textarea
+                          <v-text-field
                             class="body-1"
                             label="企画名"
                             v-model="projectName"
                             background-color="white"
                             outlined
-                            height="100"
                             clearable
                           >
-                          </v-textarea>
-                          <v-text-field
+                          </v-text-field>
+                          <v-textarea
                             label="活動内容"
                             v-model="activity"
                             @keydown="adjustHeight"
@@ -107,7 +106,7 @@
                             outlined
                             clearable
                           >
-                          </v-text-field>
+                          </v-textarea>
                           <v-select
                             label="開催年"
                             v-model="fesYearId"
