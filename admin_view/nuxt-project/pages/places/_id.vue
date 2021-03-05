@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/places">会場一覧</router-link> >
-            {{ place.name }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/places">会場一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ place.name }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>
@@ -109,7 +113,7 @@
     <v-row>
       <v-col>
         <v-btn text color="white" to="/places"><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-          <div style="color: #333333">会場一覧に戻る</div></v-btn>
+          <div class="back-button">会場一覧に戻る</div></v-btn>
       </v-col>
       <v-col></v-col>
     </v-row>

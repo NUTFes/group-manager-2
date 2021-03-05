@@ -1,36 +1,71 @@
 <template>
-  <div>
-    <v-row>
-      <v-col v-for="stocker_place in stocker_places">
-        <v-hover v-slot:default="{ hover }">
-        <v-card 
-          width="300" height="180"
-          :elevation="hover ? 12 : 2"
-          :class="{ 'on-hover': hover  }"
-          :to="{
-              name:'assign_items-id',
-              params:{
-                  id:stocker_place.id
-              }
-          }"
-          >
-          <v-card-title>
-            {{ stocker_place.name }}
-          </v-card-title>
-          <v-divider/>
-          <v-card-text>
-            <v-chip small v-if="stocker_place.stock_item_status == 1" color="red"><div style="color:white">在庫登録：未着手</div></v-chip>
-            <v-chip small v-if="stocker_place.stock_item_status == 2" color="blue"><div style="color:white">在庫登録：入力中</div></v-chip>
-            <v-chip small v-if="stocker_place.stock_item_status == 3" color="green"><div style="color:white">在庫登録：完了</div></v-chip>
-            <br><br>
-            <v-chip small v-if="stocker_place.assign_item_status == 1" color="red"><div style="color:white">物品割り当て：未着手</div></v-chip>
-            <v-chip small v-if="stocker_place.assign_item_status == 2" color="blue"><div style="color:white">物品割り当て：入力中</div></v-chip>
-            <v-chip small v-if="stocker_place.assign_item_status == 3" color="green"><div style="color:white">物品割り当て：完了</div></v-chip>
-          </v-card-text>
-        </v-card>
-        </v-hover>
-      </v-col>
-    </v-row>
+  <div> 
+    <div class="card"> 
+      <v-row>
+        <v-col>
+          <v-card flat>
+            <v-row>
+              <v-col cols=1></v-col>
+              <v-col cols=10>
+                <v-card-title class="font-weight-bold mt-3">
+                  <v-icon class="mr-5">mdi-cube</v-icon>
+                  物品割り当て
+                </v-card-title>
+              <hr class="mt-n3">
+              <v-card-text>
+                STEP1．在庫場所を選択<br>
+                STEP2．在庫場所ごとに在庫登録<br>
+                STEP3．在庫場所ごとに在庫登録を確認して参加団体に物品を割り当て<br>
+                ステータス（未着手/入力中/完了）を随時変更してください
+              </v-card-text>
+              </v-col>
+              <v-col cols=1></v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </div>
+    <div class="text-center" v-if="stocker_places.length === 0">
+      <br><br>
+      <v-progress-circular
+        indeterminate
+        color="#009688"
+        ></v-progress-circular>
+      <br><br>
+    </div>
+    <div v-else style="padding-right:5%; padding-left:1%">
+      <v-row>
+        <v-col v-for="stocker_place in stocker_places">
+          <v-hover v-slot:default="{ hover }">
+            <v-card 
+                   width="275" height="180"
+                               :elevation="hover ? 6 : 2"
+                               :class="{ 'on-hover': hover  }"
+                               :to="{
+                                    name:'assign_items-id',
+                                    params:{
+                                    id:stocker_place.id
+                                    }
+                                    }"
+                               >
+                               <v-card-title>
+                                 {{ stocker_place.name }}
+                               </v-card-title>
+              <v-divider/>
+                <v-card-text>
+                  <v-chip small v-if="stocker_place.stock_item_status == 1" color="red"><div style="color:white">在庫登録：未着手</div></v-chip>
+                  <v-chip small v-if="stocker_place.stock_item_status == 2" color="blue"><div style="color:white">在庫登録：入力中</div></v-chip>
+                  <v-chip small v-if="stocker_place.stock_item_status == 3" color="green"><div style="color:white">在庫登録：完了</div></v-chip>
+                  <br><br>
+                  <v-chip small v-if="stocker_place.assign_item_status == 1" color="red"><div style="color:white">物品割り当て：未着手</div></v-chip>
+                  <v-chip small v-if="stocker_place.assign_item_status == 2" color="blue"><div style="color:white">物品割り当て：入力中</div></v-chip>
+                  <v-chip small v-if="stocker_place.assign_item_status == 3" color="green"><div style="color:white">物品割り当て：完了</div></v-chip>
+                </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 

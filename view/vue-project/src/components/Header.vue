@@ -13,7 +13,7 @@
             <v-menu
               open-on-hover
               offset-y
-              v-if="this.$route.path === '/MyPage'"
+              v-if="this.$route.path === '/MyPage' || this.$route.path === '/mypage'"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn text color="#757575" dark v-bind="attrs" v-on="on">

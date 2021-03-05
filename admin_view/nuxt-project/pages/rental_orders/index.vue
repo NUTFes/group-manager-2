@@ -2,99 +2,261 @@
   <v-row>
     <v-col>
       <div class="card">
-      <v-card flat>
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon>mdi-cube</v-icon>物品申請一覧
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs  }">
-                  <v-btn 
-                          class="mx-2" 
-                          fab 
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          to="/users/print"
+        <v-card flat>
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3">
+                <v-icon class="mr-5">mdi-seat</v-icon>物品申請一覧
+                <v-spacer></v-spacer>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="dialog = true"
+                    >
+                      <v-icon dark>mdi-plus-circle-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>物品の追加</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="reload"
+                    >
+                      <v-icon dark>mdi-reload</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>更新する</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      to="/users/print"
+                    >
+                      <v-icon dark>mdi-printer</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>印刷する</span>
+                </v-tooltip>
+              </v-card-title>
+
+              <v-dialog v-model="dialog" max-width="500">
+                <v-card>
+                  <v-card-title class="headline blue-grey darken-3">
+                    <div style="color: white">
+                      <v-icon class="ma-5" dark>mdi-account-group</v-icon
+                      >参加団体の追加
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="dialog = false" fab dark>
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <v-form ref="form">
+                          <v-select
+                            label="参加団体名"
+                            v-model="Group"
+                            :items="groups"
+                            :menu-props="{
+                              top: true,
+                              offsetY: true,
+                            }"
+                            item-text="name"
+                            item-value="id"
+                            outlined
+                          ></v-select>
+                          <v-select
+                            label="貸し出し物品"
+                            v-model="item_id"
+                            :items="item_list"
+                            item-text="name"
+                            item-value="id"
+                            text
+                            outlined
+                            clearable
+                            :rules="[rules.required]"
+                          />
+                          <v-text-field
+                            label="個数"
+                            v-model="num"
+                            background-color="white"
+                            outlined
+                            clearable
+                            type="number"
                           >
-                          <v-icon dark>mdi-printer</v-icon>
-                  </v-btn>
-                </template>
-                <span>印刷する</span>
-              </v-tooltip>
-            </v-card-title>
-            <hr class="mt-n3">
-            <template>
-              <v-data-table
-                :headers="headers"
-                :items="rental_orders"
-                class="elevation-0 my-9"
-                @click:row="
-                            (data) =>
-                            $router.push({ path: `/rental_orders/${data.id}`})
-                            "
-                >
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
-                </template>
-                <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
-                </template>
-              </v-data-table>                      
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
+                          </v-text-field>
+                          <v-card-actions>
+                            <v-btn
+                              flatk
+                              large
+                              block
+                              dark
+                              color="blue"
+                              @click="register()"
+                              >登録 ​
+                            </v-btn>
+                          </v-card-actions>
+                        </v-form>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                  <br />
+                </v-card>
+              </v-dialog>
+
+              <hr class="mt-n3" />
+              <template>
+                <div class="text-center" v-if="rental_orders.length === 0">
+                  <br /><br />
+                  <v-progress-circular
+                    indeterminate
+                    color="#009688"
+                  ></v-progress-circular>
+                  <br /><br />
+                </div>
+                <div v-else>
+                  <v-data-table
+                    :headers="headers"
+                    :items="rental_orders"
+                    class="elevation-0 my-9"
+                    @click:row="
+                      (data) =>
+                        $router.push({
+                          path: `/rental_orders/${data.rental_order.id}`,
+                        })
+                    "
+                  >
+                    <template v-slot:item.rental_order.created_at="{ item }">
+                      {{ item.rental_order.created_at | (format - date) }}
+                    </template>
+                    <template v-slot:item.rental_order.updated_at="{ item }">
+                      {{ item.rental_order.updated_at | (format - date) }}
+                    </template>
+                  </v-data-table>
+                </div>
+              </template>
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
+        </v-card>
       </div>
     </v-col>
   </v-row>
-  </div>
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
+      rules: {
+        required: (value) => !!value || "入力してください",
+      },
       rental_orders: [],
-      headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'group_id', value: 'group_id' },
-        { text: '貸し出し物品', value: 'rental_item_id' },
-        { text: '個数', value: 'num' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+      groups: [],
+      Group: [],
+      item_list: [],
+      item: [],
+      item_id: [],
+      num: [],
+      dialog: false,
+      headers: [
+        { text: "ID", value: "rental_order.id" },
+        { text: "参加団体", value: "group" },
+        { text: "貸し出し物品", value: "item" },
+        { text: "個数", value: "rental_order.num" },
+        { text: "日時", value: "rental_order.created_at" },
+        { text: "編集日時", value: "rental_order.updated_at" },
       ],
-    }
+    };
   },
   mounted() {
-    this.$axios.get('/rental_orders', {
-      headers: { 
-        "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }
-    )
-      .then(response => {
-        this.rental_orders = response.data
+    this.$axios
+      .get("/api/v1/get_rental_orders", {
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
+      .then((response) => {
+        this.rental_orders = response.data;
+        this.item_id = response.data.rental_item_id
+        this.num = response.data.num
+        console.log(response.data)
+      });
+      
+    this.$axios
+      .get("/groups", {
+        headers: {
+          "Content-Type": "applicatiokn/json",
+        },
+      })
+      .then((response) => {
+        this.groups = response.data;
+      });
+      
+    this.$axios
+      .get("/rental_items", {
+        headers: {
+          "Content-Type": "applicatiokn/json",
+        },
+      })
+      .then((response) => {
+        this.item_list = response.data;
+      });
   },
-}
+  methods: {
+    reload: function () {
+      this.$axios
+        .get("/api/v1/get_rental_orders", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.rental_orders = response.data;
+        });
+    },
+    register: function () {
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      var params = new URLSearchParams();
+      params.append("group_id", this.Group);
+      params.append("rental_item_id", this.item_id);
+      params.append("num", this.num);
+      this.$axios.post("/rental_orders", params).then((response) => {
+        console.log(response);
+        this.dialog = false;
+        this.reload();
+        this.Group = "";
+        this.item_id = "";
+        this.num = "";
+      });
+    },
+  },
+};
 </script>
 
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%
+  padding-right: 5%;
 }
 </style>

@@ -10,16 +10,20 @@
             >
             <v-divider></v-divider>
             <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2"
-              >会場申請</v-stepper-step
+              >物品申請</v-stepper-step
             >
             <v-divider></v-divider>
             <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2"
               >電力申請</v-stepper-step
             >
             <v-divider></v-divider>
-            <v-stepper-step step="4" color="purple accent-2"
-              >物品申請</v-stepper-step
-            >
+              <v-stepper-step
+                v-if="!isStage"
+                :complete="e1 > 4"
+                step="4"
+                color="purple accent-2"
+                >会場申請</v-stepper-step
+              >
           </v-stepper-header>
 
           <v-stepper-items class="stepper">
@@ -102,12 +106,12 @@
               </v-row>
               <v-row>
                 <v-col cols="9"></v-col>
-                <v-col>
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -117,83 +121,102 @@
               </v-row>
             </v-stepper-content>
 
-            <!-- 会場申請登録 -->
+            <!-- 物品申請 -->
             <v-stepper-content step="2">
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col>
+                <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>会場登録</v-card-title>
+                    <v-card-title>物品登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-select
-                        label="第一希望場所"
-                        v-model="placeFirstId"
-                        :rules="[rules.required]"
-                        :items="this.placeList[getIndex()]['place_list']"
-                        :menu-props="{
-                          top: true,
-                          offsetY: true
-                        }"
-                        item-text="place"
-                        item-value="place_id"
+                        v-model="rentalSteps"
+                        :items="[1, 2, 3, 4, 5, 6]"
+                        label="登録物品数"
                         outlined
-                      ></v-select>
-                      <v-select
-                        label="第二希望場所"
-                        ref="second"
-                        v-model="placeSecondId"
-                        :rules="[rules.required]"
-                        :items="this.placeList[getIndex()]['place_list']"
-                        :menu-props="{
-                          top: true,
-                          offsetY: true
-                        }"
-                        item-text="place"
-                        item-value="place_id"
-                        outlined
-                      ></v-select>
-                      <v-select
-                        label="第三希望場所"
-                        ref="third"
-                        v-model="placeThirdId"
-                        :rules="[rules.required]"
-                        :items="this.placeList[getIndex()]['place_list']"
-                        :menu-props="{
-                          top: true,
-                          offsetY: true
-                        }"
-                        item-text="place"
-                        item-value="place_id"
-                        outlined
-                      ></v-select>
-                      <v-text-field
-                        label="備考"
-                        v-model="placeRemark"
-                        height="150"
-                        text
-                        outlined
-                        required
-                      ></v-text-field>
-                      <v-divider></v-divider>
+                      />
+                      <v-stepper class="stepper" v-model="e3">
+                        <v-stepper-header class="stepper">
+                          <template v-for="rentalStep in rentalSteps">
+                            <v-stepper-step
+                              :key="`${rentalStep}-step`"
+                              :complete="e3 > rentalStep"
+                              :step="rentalStep"
+                            >
+                              {{ rentalStep }}
+                            </v-stepper-step>
+                            <v-divider
+                              v-if="rentalStep !== rentalSteps"
+                              :key="rentalStep"
+                            ></v-divider>
+                          </template>
+                        </v-stepper-header>
+                        <v-stepper-items>
+                          <v-stepper-content
+                            v-for="rentalStep in rentalSteps"
+                            :key="`${rentalStep}-content`"
+                            :step="rentalStep"
+                          >
+                            <RentalCard
+                              ref="rentalChild"
+                              :groupId="groupId"
+                              :key="rentalStep"
+                            />
+                            <v-row>
+                              <v-col cols="4" />
+                              <v-col cols="4">
+                                <v-btn
+                                  block
+                                  height="50"
+                                  outlined
+                                  color="primary"
+                                  @click="e3 += 1"
+                                  v-show="rentalSteps != rentalStep"
+                                >
+                                  {{ rentalStep + 1 }}
+                                  個目の物品へ
+                                </v-btn>
+                              </v-col>
+                              <v-col cols="4" />
+                            </v-row>
+                            <v-row>
+                              <v-col cols="4" />
+                              <v-col cols="4">
+                                <v-btn
+                                  height="50"
+                                  block
+                                  text
+                                  @click="e3 -= 1"
+                                  v-show="rentalStep != 1"
+                                >
+                                  戻る
+                                </v-btn>
+                              </v-col>
+                              <v-col cols="4" />
+                            </v-row>
+                            <v-divider />
+                          </v-stepper-content>
+                        </v-stepper-items>
+                      </v-stepper>
                     </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -278,27 +301,27 @@
                               <v-col cols="4" />
                             </v-row>
                           </v-stepper-content>
+                          <v-divider />
                         </v-stepper-items>
                       </v-stepper>
-                      <v-divider></v-divider>
                     </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="primary"
                     @click="e1 += 1"
                   >
@@ -308,111 +331,93 @@
               </v-row>
             </v-stepper-content>
 
-            <!-- 物品申請 -->
-            <v-stepper-content step="4">
+            <!-- 会場申請登録 -->
+            <v-stepper-content v-if="!isStage" step="4">
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10">
+                <v-col>
                   <v-card class="mb-12" flat>
-                    <v-card-title>物品登録</v-card-title>
+                    <v-card-title>会場登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-select
-                        v-model="rentalSteps"
-                        :items="[1, 2, 3, 4, 5, 6]"
-                        label="登録物品数"
-                        outlined />
-                      <v-stepper
-                        class="stepper"
-                        v-model="e3"
-                      >
-                        <v-stepper-header class="stepper">
-                          <template v-for="rentalStep in rentalSteps">
-                            <v-stepper-step
-                              :key="`${rentalStep}-step`"
-                              :complete="e3 > rentalStep"
-                              :step="rentalStep"
-                            >
-                              {{ rentalStep }}
-                            </v-stepper-step>
-                            <v-divider
-                              v-if="rentalStep !== rentalSteps"
-                              :key="rentalStep"></v-divider>
-                          </template>
-                        </v-stepper-header>
-                        <v-stepper-items>
-                          <v-stepper-content
-                            v-for="rentalStep in rentalSteps"
-                            :key="`${rentalStep}-content`"
-                            :step="rentalStep"
-                          >
-                            <RentalCard
-                              ref="rentalChild"
-                              :groupId="groupId"
-                              :key="rentalStep"
-                            />
-                            <v-row>
-                              <v-col cols="4" />
-                              <v-col cols="4">
-                                <v-btn
-                                  block
-                                  height="50"
-                                  outlined
-                                  color="primary"
-                                  @click="e3 += 1"
-                                  v-show="rentalSteps != rentalStep"
-                                >
-                                  {{ rentalStep + 1}}
-                                  個目の物品へ
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="4" />
-                            </v-row>
-                            <v-row>
-                              <v-col cols="4" />
-                              <v-col cols="4">
-                                <v-btn
-                                  height="50"
-                                  block
-                                  text
-                                  @click="e3 -= 1"
-                                  v-show="rentalStep != 1"
-                                >
-                                  戻る
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="4" />
-                            </v-row>
-                          </v-stepper-content>
-                        </v-stepper-items>
-                      </v-stepper>
+                        label="第一希望場所"
+                        v-model="placeFirstId"
+                        :rules="[rules.required]"
+                        :items="this.placeList[getIndex()]['place_list']"
+                        :menu-props="{
+                          top: true,
+                          offsetY: true
+                        }"
+                        item-text="place"
+                        item-value="place_id"
+                        outlined
+                      ></v-select>
+                      <v-select
+                        label="第二希望場所"
+                        ref="second"
+                        v-model="placeSecondId"
+                        :rules="[rules.required]"
+                        :items="this.placeList[getIndex()]['place_list']"
+                        :menu-props="{
+                          top: true,
+                          offsetY: true
+                        }"
+                        item-text="place"
+                        item-value="place_id"
+                        outlined
+                      ></v-select>
+                      <v-select
+                        label="第三希望場所"
+                        ref="third"
+                        v-model="placeThirdId"
+                        :rules="[rules.required]"
+                        :items="this.placeList[getIndex()]['place_list']"
+                        :menu-props="{
+                          top: true,
+                          offsetY: true
+                        }"
+                        item-text="place"
+                        item-value="place_id"
+                        outlined
+                      ></v-select>
+                      <v-text-field
+                        label="備考"
+                        v-model="placeRemark"
+                        height="150"
+                        text
+                        outlined
+                        required
+                      ></v-text-field>
+                      <v-divider></v-divider>
                     </v-card-text>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
-                <v-col cols="7"></v-col>
-                <v-col cols="2">
-                  <v-btn text height="50" width="170" @click="e1 -= 1">
+                <v-col cols="6"></v-col>
+                <v-col cols="3">
+                  <v-btn text height="50" block @click="e1 -= 1">
                     戻る
                   </v-btn>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="3">
                   <v-btn
                     class="stepper"
                     dark
                     rounded
                     height="50"
-                    width="170"
+                    block
                     color="purple accent-2"
-                    @click="submit"
+                    @click="saleSubmit"
                   >
                     登録
                   </v-btn>
                 </v-col>
               </v-row>
             </v-stepper-content>
+
           </v-stepper-items>
         </v-stepper>
       </v-col>
@@ -426,11 +431,15 @@ import axios from "axios";
 import Header from "@/components/Header.vue";
 import PowerCard from "../components/PowerCard";
 import RentalCard from "@/components/RentalCard";
+import StageCard from "@/components/StageCard";
+import StageCommonCard from "@/components/StageCommonCard";
 export default {
   components: {
     Header,
     PowerCard,
-    RentalCard
+    RentalCard,
+    StageCard,
+    StageCommonCard
   },
   data() {
     return {
@@ -446,6 +455,7 @@ export default {
         max: value => value <= 1000 || "大きすぎます"
       },
       groupId: localStorage.getItem("group_id"),
+      groupCategoryId: localStorage.getItem("group_category_id"),
       subRepName: [], // 副代表の名前
       subRepStudentId: [], // 副代表の学籍番号
       subRepDepartmentId: [], // 副代表の課程
@@ -508,7 +518,7 @@ export default {
       powerItemUrl: [], // 製品URL
 
       // 物品申請
-      rentalSteps: 2,
+      rentalSteps: 2
     };
   },
   watch: {
@@ -518,14 +528,16 @@ export default {
       }
     }
   },
-  methods: {
-    submit: function() {
-
-      if (localStorage.getItem("group_category_id") == null) {
-        console.log("can't group_category_id");
-        return;
+  computed: {
+    isStage: () => {
+      if (localStorage.getItem("group_category_id") == 3) {
+        return true;
       }
-
+      return false;
+    }
+  },
+  methods: {
+    commonSubmit: function() {
       // 副代表登録
       axios.defaults.headers.common["Content-Type"] = "application/json";
       const subRepUrl = process.env.VUE_APP_URL + "/sub_reps";
@@ -546,6 +558,26 @@ export default {
           return error;
         }
       );
+
+      // 電力申請
+      for (let i = 0; i < this.powerSteps; i++) {
+        this.$refs.powerChild[i].submit();
+      }
+
+      // 物品登録
+      for (let i = 0; i < this.rentalSteps; i++) {
+        this.$refs.rentalChild[i].submit();
+      }
+
+      this.$router.push("MyPage");
+    },
+    saleSubmit: function() {
+      if (this.groupCategoryId == null) {
+        console.log("can't group_category_id");
+        return;
+      }
+      this.commonSubmit();
+
       // 会場申請登録
       const placeUrl = process.env.VUE_APP_URL + "/place_orders";
       var placeParams = new URLSearchParams();
@@ -563,21 +595,11 @@ export default {
           return error;
         }
       );
-      // 電力申請
-      for (let i = 0; i < this.powerSteps; i++) {
-        this.$refs.powerChild[i].submit();
-      }
 
-      // 物品登録
-      for (let i = 0; i < this.rentalSteps; i++) {
-        this.$refs.rentalChild[i].submit();
-      }
       this.$router.push("MyPage");
     },
     getIndex: function() {
-      // console.log('getIndex',this.placeList.length)
       for (let i = 0; i < this.placeList.length; i++) {
-        // console.log(this.placeList[i])
         if (this.placeList[i]["group_id"] === this.groupId) {
           return i;
         }
@@ -623,7 +645,7 @@ export default {
 };
 </script>
 
-<style>
+<style scooped>
 .stepper {
   box-shadow: none;
 }

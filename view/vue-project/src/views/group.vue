@@ -145,7 +145,11 @@ export default {
           console.log('response:', response.data.id)
           localStorage.setItem('group_id', response.data.id)
           localStorage.setItem('group_category_id', this.groupCategoryId)
-          this.$router.push('regist_shop')
+          if (this.groupCategoryId == 3){
+            this.$router.push('regist_group')
+          }else {
+            this.$router.push('regist_shop')
+          }
         },
         (error) => {
           console.log('登録できませんでした')

@@ -1,67 +1,57 @@
 <template>
-  <v-dialog v-model="isDisplay" persistent width="1200">
+  <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color:#ECEFF1; font-size:30px">
         <v-icon class="pr-3" size="35">mdi-account</v-icon><b>副代表</b>
         <v-spacer></v-spacer>
-        <v-btn text @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn text fab @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>
       <v-form>
         <v-container>
           <v-row>
             <v-col cols="2"></v-col>
             <v-col cols="8">
-              <v-select
-                label="団体"
-                ref="group"
-                v-model="group_id"
-                :rules="[rules.required]"
-                :items="group"
-                :menu-props="{
-                               top: true,
-                               offsetY: true,
-                               }"
-                item-text="name"
-                item-value="id"
-                outlined
-                ></v-select>
               <v-text-field
                 label="名前"
                 background-color="white"
                 v-model="name"
+                outlined
                 clearable
                 ></v-text-field>
 
               <v-text-field
                 label="学籍番号"
                 background-color="white"
-                v-model="student_id"
+                v-model="studentId"
                 :rules="[rules.min1, rules.over1]"
                 hint="お持ちでない方：0を8桁入力"
                 persistent-hint
                 item-text="name"
                 item-value="id"
                 counter="8"
+                outlined
                 clearable
                 ></v-text-field>
 
               <v-select
                 label="学科"
-                v-model.number="department_id"
+                v-model="departmentId"
                 :items="departments"
                 :menu-props="{ top: true, offsetY: true }"
                 item-text="name"
                 item-value="id"
+                outlined
                 clearable
                 ></v-select>
 
               <v-select
                 label="学年"
-                v-model.number="grade_id"
+                v-model="gradeId"
                 :items="grades"
                 :menu-props="{ top: true, offsetY: true }"
                 item-text="name"
                 item-value="id"
+                outlined
                 clearable
                 ></v-select>
 
@@ -73,6 +63,7 @@
                 hint="ハイフンなしで半角入力"
                 persistent-hint
                 counter="11"
+                outlined
                 clearable
                 ></v-text-field>
 
@@ -80,20 +71,18 @@
                 label="EMAIL"
                 background-color="white"
                 v-model="email"
+                outlined
                 clearable
                 ></v-text-field>
             </v-col>
             <v-col cols="2"></v-col>
           </v-row>
           <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8">
-              <v-card-action>
-                <v-btn color="blue darken-1" block dark @click="register">登録</v-btn>
-                <v-btn text color="blue darken-1" text block @click="reset">リセット</v-btn>
-              </v-card-action>
+            <v-col cols=4></v-col>
+            <v-col cols=4>
+            <v-btn color="blue darken-1" large block dark @click="submit">編集する</v-btn>
             </v-col>
-            <v-col cols="2"></v-col>
+            <v-col cols=4></v-col>
           </v-row>
         </v-container>
       </v-form>
@@ -101,27 +90,21 @@
   </v-dialog>
 </template>
 
-<style>
-h1{
-    text-align: center;
-}
-</style>
-
 <script>
 import axios from 'axios'
 export default {
+  props: {
+    groupId: Number,
+    name: String,
+    studentId: Number,
+    gradeId: Number,
+    departmentId: Number,
+    tel: String,
+    email: String,
+  },
     data () {
         return{
             isDisplay: false,
-            group: [],
-            group_id: [],
-            name: [],
-            student_id: [],
-            department_id: [],
-            grade_id: [],
-            tel: [],
-            email: [],
-
             rules:{
                 min1: v => v.length >= 8 || '8桁かどうかを確認してください',
                 over1: v => v.length <= 8 || '8桁かどうかを確認してください',
@@ -175,74 +158,19 @@ export default {
     },
 
     methods: {
-        register: function() {
-        const url = process.env.VUE_APP_URL + '/sub_reps';
-        axios.defaults.headers.common['Content-Type'] = 'application/json';
-        var params = new URLSearchParams();
-        // params.append('group_id', this.group_id);
-        params.append('group_id', this.group_id);
-        params.append('name', this.name);
-        params.append('student_id', this.student_id);
-        params.append('department_id', this.department_id);
-        params.append('grade_id' , this.grade_id);
-        params.append('tel' , this.tel);
-        params.append('email' , this.email);
-        axios.post(url, params).then(
+        submit: function() {
+        const url = process.env.VUE_APP_URL + '/sub_reps' + '/' + this.groupId + '?' + 'name=' + this.name + '&grade_id=' + this.gradeId + '&department_id=' + this.departmentId + '&student_id=' + this.studentId + '&tel=' + this.tel + '&email=' + this.email ;
+        axios.put(url).then(
             (response) => {
-            this.$router.push('mypage')
+          this.isDisplay = false
+          this.$emit('openSubrepSnackbar')
+          this.$emit('reload')
             },
             (error) => {
             return error
             }
             )
         },
-
-        reset: function(){
-            this.student_id = ''
-            this.email = ''
-            this.group_id = ''
-            this.tel = ''
-            this.department_id = ''
-            this.grade_id = ''
-            this.name = ''
-        },
     },
-
-    mounted(){
-      const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-      axios.get(url, {
-          headers: { 
-              "Content-Type": "application/json", 
-              "access-token": localStorage.getItem('access-token'),
-              "client": localStorage.getItem('client'),
-              "uid": localStorage.getItem('uid')
-          } 
-      }
-      )
-    .then(response => {
-      this.user = response.data.data
-    })
-    const groupUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups'
-    axios.get(groupUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        for(let i=0;i<response.data.length;i++){
-          this.group.push(response.data[i])
-        }
-        console.log('group: ',this.group)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
-    },
-
 }
 </script>

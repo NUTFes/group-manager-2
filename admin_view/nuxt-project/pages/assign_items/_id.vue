@@ -4,8 +4,12 @@
       <v-col>
         <div class="card">
           <v-card-text>
-            <router-link to="/assign_items">物品割り当て</router-link> >
-            {{ stocker_place.name }}
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/assign_items">物品割り当て</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ stocker_place.name }}</div></li>
+              </ul>
+            </div>
           </v-card-text>
         </div>
       </v-col>
@@ -136,6 +140,12 @@
             <ItemOrders />
           </v-col>
         </v-row>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <v-btn text color="white" to="/assign_items"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">在庫場所一覧に戻る</div></v-btn>
       </v-col>
     </v-row>
 

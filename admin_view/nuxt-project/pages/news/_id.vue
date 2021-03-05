@@ -3,7 +3,14 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-card-text><router-link to="/news">お知らせ一覧</router-link> > {{ news.title }}</v-card-text>
+          <v-card-text>
+            <div class="breadcrumbs">
+              <ul>
+                <li><div class="breadcrumbs-item"><router-link to="/news">お知らせ一覧</router-link></div></li>
+                <li><div class="breadcrumbs-item">{{ news.title }}</div></li>
+              </ul>
+            </div>
+          </v-card-text>
           <v-card flat>
             <v-row>
               <v-col cols="1"></v-col>
@@ -50,7 +57,7 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-btn text color="white" to="/news"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">お知らせ一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/news"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">お知らせ一覧に戻る</div></v-btn>
         </div>
       </v-col>
     </v-row>
