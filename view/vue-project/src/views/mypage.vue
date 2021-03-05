@@ -15,24 +15,27 @@
         </div>
         <br>
 
-        <div style="text-align:center" v-if="isRegistGroup">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs  }">
-              <v-btn 
-                class="mx-2" fab dark color="purple accent-2"
-                dark
-                v-bind="attrs"
-                v-on="on"
-                to="/group"
-              >
-                <v-icon dark>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-            <span>参加団体を追加する</span>
-          </v-tooltip>
-        </div>
+          <div style="text-align:center" v-if="isRegistGroup">
+        <v-container>
+        <v-row>
+          <v-col cols="4"></v-col>
+          <v-col cols="4">
+                  <v-btn
+                    block dark color="purple accent-2"
+                    dark
+                    rounded
+                    elevation = "0"
+                    to="/group"
+                  >
+                  <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
+                  </v-btn>
+          </v-col>
+          <v-col cols="4"></v-col>
+        </v-row>
+        </v-container>
+          </div>
 
-        <br>
+      <br>
   </div>
 </template>
 

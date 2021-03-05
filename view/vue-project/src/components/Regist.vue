@@ -268,7 +268,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon>mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -301,6 +301,28 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <v-row>
+                  <v-col cols="10"></v-col>
+                  <v-col cols="1">
+                  <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn
+                      fab
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      color="purple accent-2"
+                      elevation="0"
+                      @click="openAddpowerDisplay()">
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </template>
+            <span>電力申請を追加する</span>
+          </v-tooltip>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+                <!--EditModal-->
                 <Power ref="powerDlg"
                           :id="this.power_order_id"
                           :groupId="this.group_id"
@@ -311,14 +333,28 @@
                           :url="this.url"
                           @reload="reload"
                           @openPowerSnackbar="openPowerSnackbar"
-                          ></Power>
-                          <v-snackbar
+                ></Power>
+                <!--AddModal-->
+                <Addpower ref="addpowerDlg"
+                          :groupId="this.regist.group.id"
+                        @reload="reload"
+                        @openAddpowerSnackbar="openAddpowerSnackbar"           
+                ></Addpower>
+                        <v-snackbar
                           top
                           text
                           color="purple accent-2"
                           v-model="powerSnackbar"
                           >
                           電力申請情報を更新しました
+                        </v-snackbar>
+                          <v-snackbar
+                          top
+                          text
+                          color="purple accent-2"
+                          v-model="addpowerSnackbar"
+                          >
+                          電力申請情報を追加しました
                         </v-snackbar>
               </v-tab-item>
 
@@ -582,6 +618,7 @@
   import SubRep from '@/components/EditModal/sub_rep.vue'
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
+  import Addpower from '@/components/AddModal/power.vue'
 
   export default {
     props: {
@@ -592,7 +629,8 @@
       Group,
       SubRep,
       Power,
-      Place
+      Place,
+      Addpower
     },
     data () {
     return {
@@ -607,6 +645,7 @@
       placeSnackbar: false,
       subrepSnackbar: false,
       powerSnackbar: false,
+      addpowerSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -681,6 +720,9 @@
       openPowerSnackbar() {
         this.powerSnackbar = true
       },
+      openAddpowerSnackbar() {
+        this.addPowerSnackbar = true
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -700,6 +742,9 @@
         this.url = url
         this.$refs.powerDlg.isDisplay = true
         console.log(this.$refs.powerDlg.isDisplay)
+      },
+      openAddpowerDisplay() {
+        this.$refs.addpowerDlg.isDisplay = true
       },
     }
   }
