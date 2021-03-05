@@ -42,6 +42,7 @@
                 :rules="[rules.required]"
                 text
                 outlined
+                clearable
                 ></v-textarea>
               <v-text-field
                 label="企画名"

@@ -283,7 +283,7 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon>mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -321,25 +321,61 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <v-row>
+                  <v-col cols="10"></v-col>
+                  <v-col cols="1">
+                  <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn
+                      fab
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      color="purple accent-2"
+                      elevation="0"
+                      @click="openAddpowerDisplay()">
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </template>
+            <span>電力申請を追加する</span>
+          </v-tooltip>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+                <!--EditModal-->
                 <Power ref="powerDlg"
-                          :id="this.power_order_id"
-                          :groupId="this.group_id"
-                          :item="this.item"
-                          :power="this.power"
-                          :manufacturer="this.manufacturer"
-                          :model="this.model"
-                          :url="this.url"
+                       :id="this.power_order_id"
+                       :groupId="this.group_id"
+                       :item="this.item"
+                       :power="this.power"
+                       :manufacturer="this.manufacturer"
+                       :model="this.model"
+                       :url="this.url"
+                       @reload="reload"
+                       @openPowerSnackbar="openPowerSnackbar"
+                       ></Power>
+                <!--AddModal-->
+                <Addpower ref="addpowerDlg"
+                          :groupId="this.regist.group.id"
                           @reload="reload"
-                          @openPowerSnackbar="openPowerSnackbar"
-                          ></Power>
-                          <v-snackbar
-                          top
-                          text
-                          color="purple accent-2"
-                          v-model="powerSnackbar"
-                          >
-                          電力申請情報を更新しました
-                        </v-snackbar>
+                          @openAddpowerSnackbar="openAddpowerSnackbar"           
+                          ></Addpower>
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="powerSnackbar"
+                  >
+                  電力申請情報を更新しました
+                </v-snackbar>
+                  <v-snackbar
+                    top
+                    text
+                    color="purple accent-2"
+                    v-model="addpowerSnackbar"
+                    >
+                    電力申請情報を追加しました
+                  </v-snackbar>
               </v-tab-item>
 
               <!-- 物品申請情報 -->
@@ -643,6 +679,7 @@
   import Place from '@/components/EditModal/place.vue'
   import Employee from '@/components/EditModal/employee.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
+  import Addpower from '@/components/AddModal/power.vue'
 
   export default {
     props: {
@@ -655,7 +692,8 @@
       Power,
       Place,
       Employee,
-      Foodproduct
+      Foodproduct,
+      Addpower
     },
     data () {
     return {
@@ -672,6 +710,7 @@
       powerSnackbar: false,
       employeeSnackbar: false,
       foodproductSnackbar: false,
+      addpowerSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -759,6 +798,9 @@
       openFoodproductSnackbar() {
         this.foodproductSnackbar = true
       },
+      openAddpowerSnackbar() {
+        this.addPowerSnackbar = true
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -794,6 +836,9 @@
         this.second_day_num = second_day_num
         this.is_cooking = is_cooking
         this.$refs.foodproductDlg.isDisplay = true
+      },
+      openAddpowerDisplay() {
+        this.$refs.addpowerDlg.isDisplay = true
       },
     }
   }

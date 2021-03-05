@@ -115,7 +115,6 @@ export default {
           console.log('response:', response)
           this.isDisplay = false
           this.$emit('openPlaceSnackbar')
-          this.$emit('reload')
         },
         (error) => {
           console.log('登録できませんでした')
