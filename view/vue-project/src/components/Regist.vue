@@ -665,7 +665,7 @@
   import Place from '@/components/EditModal/place.vue'
   import Employee from '@/components/EditModal/employee.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
-  import AddRentalOrder from '@/components/AddModal/rental_order.vue'
+  import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
 
   export default {
     props: {
