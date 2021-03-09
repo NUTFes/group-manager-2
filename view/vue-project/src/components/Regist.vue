@@ -391,7 +391,7 @@
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
                         <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditRentalOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditRentalOrder" text fab @click="openRentalorderDisplay(rental_order.id, rental_order.rental_item_id, rental_order.num)"><v-icon>mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -411,16 +411,28 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--Editmodal-->
+                <Rentalorder
+                ref="rentalorderDlg"
+                :id="this.rental_order_id"
+                :groupId="this.regist.group.id"
+                :itemId="this.rental_item_id"
+                :num="this.num"
+                @reload="reload"
+                @openRentalorderSnackbar="openRentalorderSnackbar"
+                >
+                </Rentalorder>
+                <!--AddModal-->
                   <AddRentalOrder ref="AddRentalOrderDlg"
                       :groupId="this.regist.group.id"
                       @reload="reload"
-                      @openRentalOrderSnackbar="openRentalOrderSnackbar">
+                      @openAddrentalorderSnackbar="openAddrentalorderSnackbar">
                   </AddRentalOrder>
                   <v-snackbar
                       top
                       text
                       color="purple accent-2"
-                      v-model="rentalOrderSnackbar"
+                      v-model="rentalorderSnackbar"
                       >
                       物品申請情報を更新しました
                     </v-snackbar>
@@ -428,7 +440,7 @@
                       top
                       text
                       color="purple accent-2"
-                      v-model="addRentalOrderSnackbar"
+                      v-model="AddrentalorderSnackbar"
                       >
                       物品申請情報を更新しました
                     </v-snackbar>
@@ -751,6 +763,7 @@
   import Place from '@/components/EditModal/place.vue'
   import Employee from '@/components/EditModal/employee.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
+  import Rentalorder from '@/components/EditModal/rental_order.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
   import Addemployee from '@/components/AddModal/employee.vue'
@@ -767,6 +780,7 @@
       Place,
       Employee,
       Foodproduct,
+      Rentalorder,
       Addpower,
       AddRentalOrder,
       Addemployee
@@ -799,6 +813,9 @@
       isEditEmployee: [],
       isEditFoodproduct:[],
       isEditPurchaseList: [],
+      // 物品申請編集用
+      rental_order_id: [],
+      rental_item_id: [],
       // 物品申請用
       isAddRentalOrder: [],
       num: [],
@@ -884,7 +901,10 @@
       openAddpowerSnackbar() {
         this.addPowerSnackbar = true
       },
-      openAddRentalOrderSnackbar(){
+      openRentalorderSnackbar(){
+        this.rentalorderSnackbar = true
+      },
+      openAddrentalorderSnackbar(){
         this.addRentalOrderSnackbar = true
       },
       openAddemployeeSnackbar() {
@@ -939,6 +959,12 @@
       },
       openAddemployeeDisplay() {
         this.$refs.addemployeeDlg.isDisplay = true
+      },
+      openRentalorderDisplay(id, rental_item_id, num){
+        this.rental_order_id = id
+        this.rental_item_id = rental_item_id
+        this.num = num
+        this.$refs.rentalorderDlg.isDisplay = true
       },
     }
   }
