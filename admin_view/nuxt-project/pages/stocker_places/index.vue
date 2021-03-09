@@ -2,13 +2,13 @@
   <v-row>
     <v-col>
       <div class="card">
-      <v-card flat>
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-home-map-marker</v-icon>在庫場所一覧
-              <v-spacer></v-spacer>
+        <v-card flat>
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3">
+                <v-icon class="mr-5">mdi-home-map-marker</v-icon>在庫場所一覧
+                <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
@@ -39,22 +39,22 @@
                   </template>
                   <span>更新する</span>
                 </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs  }">
-                  <v-btn 
-                          class="mx-2" 
-                          fab 
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          to="/users/print"
-                          >
-                          <v-icon dark>mdi-printer</v-icon>
-                  </v-btn>
-                </template>
-                <span>印刷する</span>
-              </v-tooltip>
-            </v-card-title>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      to="/users/print"
+                    >
+                      <v-icon dark>mdi-printer</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>印刷する</span>
+                </v-tooltip>
+              </v-card-title>
               <v-dialog v-model="dialog" max-width="500">
                 <v-card>
                   <v-card-title class="headline blue-grey darken-3">
@@ -100,50 +100,82 @@
                 </v-card>
               </v-dialog>
 
-            <hr class="mt-n3">
-            <template>
+              <hr class="mt-n3" />
+              <template>
                 <div class="text-center" v-if="stocker_places.length === 0">
-                  <br><br>
+                  <br /><br />
                   <v-progress-circular
                     indeterminate
                     color="#009688"
-                    ></v-progress-circular>
-                  <br><br>
+                  ></v-progress-circular>
+                  <br /><br />
                 </div>
                 <div v-else>
-              <v-data-table
-                :headers="headers"
-                :items="stocker_places"
-                class="elevation-0 my-9"
-                @click:row="
-                            (data) =>
-                            $router.push({ path: `/stocker_places/${data.id}`})
-                            "
-                >
-                <template v-slot:item.created_at="{ item }">
-                  {{ item.created_at | format-date }}
-                </template>
-                <template v-slot:item.updated_at="{ item }">
-                  {{ item.updated_at | format-date }}
-                </template>
-                <template v-slot:item.stock_item_status="{ item }">
-                  <v-chip v-if="item.stock_item_status == 1" color="red" text-color="white" small>未着手</v-chip>
-                  <v-chip v-if="item.stock_item_status == 2" color="blue" text-color="white" small>入力中</v-chip>
-                  <v-chip v-if="item.stock_item_status == 3" color="green" text-color="white" small>完了</v-chip>
-                </template>
-                <template v-slot:item.assign_item_status="{ item }">
-                  <v-chip small v-if="item.assign_item_status == 1" color="red"><div style="color:white">未着手</div></v-chip>
-                  <v-chip small v-if="item.assign_item_status  == 2" color="blue"><div style="color:white">入力中</div></v-chip>
-                  <v-chip small v-if="item.assign_item_status == 3" color="green"><div style="color:white">完了</div></v-chip>
-                </template>
-                  
-              </v-data-table>                      
+                  <v-data-table
+                    :headers="headers"
+                    :items="stocker_places"
+                    class="elevation-0 my-9"
+                    @click:row="
+                      (data) =>
+                        $router.push({ path: `/stocker_places/${data.id}` })
+                    "
+                  >
+                    <template v-slot:item.stock_item_status="{ item }">
+                      <v-chip
+                        v-if="item.stock_item_status == 1"
+                        color="red"
+                        text-color="white"
+                        small
+                        >未着手</v-chip
+                      >
+                      <v-chip
+                        v-if="item.stock_item_status == 2"
+                        color="blue"
+                        text-color="white"
+                        small
+                        >入力中</v-chip
+                      >
+                      <v-chip
+                        v-if="item.stock_item_status == 3"
+                        color="green"
+                        text-color="white"
+                        small
+                        >完了</v-chip
+                      >
+                    </template>
+                    <template v-slot:item.assign_item_status="{ item }">
+                      <v-chip
+                        small
+                        v-if="item.assign_item_status == 1"
+                        color="red"
+                        ><div style="color: white">未着手</div></v-chip
+                      >
+                      <v-chip
+                        small
+                        v-if="item.assign_item_status == 2"
+                        color="blue"
+                        ><div style="color: white">入力中</div></v-chip
+                      >
+                      <v-chip
+                        small
+                        v-if="item.assign_item_status == 3"
+                        color="green"
+                        ><div style="color: white">完了</div></v-chip
+                      >
+                    </template>
+                    <template v-slot:item.created_at="{ item }">
+                      {{ item.created_at | (format - date) }}
+                    </template>
+                    <template v-slot:item.updated_at="{ item }">
+                      {{ item.updated_at | (format - date) }}
+                    </template>
+                  </v-data-table>
                 </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
+              </template>
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
+        </v-card>
       </div>
     </v-col>
   </v-row>
@@ -156,26 +188,28 @@ export default {
       stocker_places: [],
       name: [],
       dialog: false,
-      headers:[
-        { text: 'ID', value: 'id' },
-        { text: '名前', value: 'name' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
-        { text: '在庫登録', value: 'stock_item_status' },
-        { text: '物品割り当て', value: 'assign_item_status' },
+      stock_item_status: 1,
+      assign_item_status: 1,
+      headers: [
+        { text: "ID", value: "id" },
+        { text: "名前", value: "name" },
+        { text: "在庫登録", value: "stock_item_status" },
+        { text: "物品割り当て", value: "assign_item_status" },
+        { text: "日時", value: "created_at" },
+        { text: "編集日時", value: "updated_at" },
       ],
-    }
+    };
   },
   mounted() {
-    this.$axios.get('/stocker_places', {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    }
-    )
-      .then(response => {
-        this.stocker_places = response.data
+    this.$axios
+      .get("/stocker_places", {
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
+      .then((response) => {
+        this.stocker_places = response.data;
+      });
   },
   methods: {
     reload: function () {
@@ -193,20 +227,24 @@ export default {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("name", this.name);
+      params.append("stock_item_status", this.stock_item_status);
+      params.append("assign_item_status", this.assign_item_status);
       this.$axios.post("/stocker_places", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
         this.name = "";
+        this.stock_item_status = "";
+        this.assign_item_status = "";
       });
     },
   },
-}
+};
 </script>
 
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%
+  padding-right: 5%;
 }
 </style>
