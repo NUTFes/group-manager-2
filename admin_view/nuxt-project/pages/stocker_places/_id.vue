@@ -69,6 +69,22 @@
                         <td class="caption">{{ stocker_place.name }}</td>
                       </tr>
                       <tr>
+                        <th>在庫登録：</th>
+                        <td class="caption">
+                          <v-chip v-if="stocker_place.stock_item_status == 1" color="red" text-color="white" small>未着手</v-chip>
+                          <v-chip v-if="stocker_place.stock_item_status == 2" color="blue" text-color="white" small>入力中</v-chip>
+                          <v-chip v-if="stocker_place.stock_item_status == 3" color="green" text-color="white" small>完了</v-chip>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>物品割り当て：</th>
+                        <td class="caption">
+                          <v-chip v-if="stocker_place.assign_item_status == 1" color="red" text-color="white" small>未着手</v-chip>
+                          <v-chip v-if="stocker_place.assign_item_status == 2" color="blue" text-color="white" small>入力中</v-chip>
+                          <v-chip v-if="stocker_place.assign_item_status == 3" color="green" text-color="white" small>完了</v-chip>
+                        </td>
+                      </tr>
+                      <tr>
                         <th>登録日時：</th>
                         <td class="caption">
                           {{ stocker_place.created_at | format-date }}
