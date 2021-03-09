@@ -119,7 +119,7 @@
                 outlined
                 :rules="[rules.required]"
                 />
-                <v-text-field
+                <v-textarea
                 label="内容"
                 v-model="body"
                 clearable
