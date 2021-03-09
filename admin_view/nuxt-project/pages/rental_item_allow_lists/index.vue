@@ -86,7 +86,7 @@
                             outlined
                           ></v-select>
                           <v-select
-                            label="参加団体名"
+                            label="グループカテゴリー"
                             v-model="groupCategoryId"
                             :items="group_categories"
                             :menu-props="{
@@ -189,12 +189,12 @@
                       v-slot:item.rental_item_allow_list.created_at="{ item }"
                     >
                       {{
-                        item.rental_item_allow_list.created_at | (format - date)
+                        item.rental_item_allow_list.created_at | format-date
                       }}
                     </template>
                     <template v-slot:item.updated_at="{ item }">
                       {{
-                        item.rental_item_allow_list.updated_at | (format - date)
+                        item.rental_item_allow_list.updated_at | format-date
                       }}
                     </template>
                   </v-data-table>
