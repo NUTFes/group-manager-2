@@ -13,10 +13,12 @@ class RentalItemsController < ApplicationController
   def create
     @rental_item = RentalItem.new(rental_item_params)
     @rental_item.save
+    render json: @rental_item
   end
 
   def update
     @rental_item.update(rental_item_params)
+    render json: @rental_item
   end
 
   def destroy
