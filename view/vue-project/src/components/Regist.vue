@@ -324,21 +324,21 @@
                 <v-row>
                   <v-col cols="10"></v-col>
                   <v-col cols="1">
-                  <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn
-                      fab
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      color="purple accent-2"
-                      elevation="0"
-                      @click="openAddpowerDisplay()">
-                      <v-icon>mdi-plus</v-icon>
-                    </v-btn>
-                  </template>
-            <span>電力申請を追加する</span>
-          </v-tooltip>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn
+                          fab
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          color="purple accent-2"
+                          elevation="0"
+                          @click="openAddpowerDisplay()">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>電力申請を追加する</span>
+                    </v-tooltip>
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
@@ -561,6 +561,28 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <v-row>
+                  <v-col cols="10"></v-col>
+                  <v-col cols="1">
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn
+                          fab
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          color="purple accent-2"
+                          elevation="0"
+                          @click="openAddemployeeDisplay()">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>従業員申請を追加する</span>
+                    </v-tooltip>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+                <!--EditModal-->
                       <Employee ref="employeeDlg"
                         :id="this.employee_id"
                         :groupId="this.group_id"
@@ -569,6 +591,12 @@
                         @reload="reload"
                         @openEmployeeSnackbar="openEmployeeSnackbar"
                       ></Employee>
+                <!--AddModal-->
+                <Addemployee ref="addemployeeDlg"
+                          :groupId="this.regist.group.id"
+                          @reload="reload"
+                          @openAddemployeeSnackbar="openAddemployeeSnackbar"           
+                          ></Addemployee>
                       <v-snackbar
                         top
                         text
@@ -577,6 +605,14 @@
                         >
                         従業員情報を更新しました
                       </v-snackbar>
+                  <v-snackbar
+                      top
+                      text
+                      color="purple accent-2"
+                      v-model="addemployeeSnackbar"
+                      >
+                      従業員情報を追加しました
+                    </v-snackbar>
           </v-tab-item>
 
               <!-- 販売食品情報 -->
@@ -624,6 +660,7 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--EditModal-->
                   <Foodproduct ref="foodproductDlg"
                     :id = "this.food_product_id"
                     :groupId = "this.group_id"
@@ -716,6 +753,7 @@
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
+  import Addemployee from '@/components/AddModal/employee.vue'
 
   export default {
     props: {
@@ -730,7 +768,8 @@
       Employee,
       Foodproduct,
       Addpower,
-      AddRentalOrder
+      AddRentalOrder,
+      Addemployee
     },
     data () {
     return {
@@ -750,6 +789,7 @@
       foodproductSnackbar: false,
       addpowerSnackbar: false,
       addRentalOrderSnackbar: false,
+      addEmployeeSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -762,7 +802,6 @@
       // 物品申請用
       isAddRentalOrder: [],
       num: [],
-
       // 電力申請用
       power_order_id: [],
       group_id: [],
@@ -848,6 +887,9 @@
       openAddRentalOrderSnackbar(){
         this.addRentalOrderSnackbar = true
       },
+      openAddemployeeSnackbar() {
+        this.addemployeeSnackbar = true
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -894,6 +936,9 @@
       },
       openAddpowerDisplay() {
         this.$refs.addpowerDlg.isDisplay = true
+      },
+      openAddemployeeDisplay() {
+        this.$refs.addemployeeDlg.isDisplay = true
       },
     }
   }
