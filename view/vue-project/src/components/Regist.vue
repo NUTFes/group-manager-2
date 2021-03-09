@@ -1,13 +1,10 @@
 <template>
-  <v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="8"
-      >
+  <div>
       <v-card
         class = "mx-auto"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報</b></v-card-title>
+      <v-card-title style="background-color:#ECEFF1;" class="title"><v-icon class="pr-2" size="30">mdi-information</v-icon><b>登録情報</b></v-card-title>
         <v-divider class="mx-4"></v-divider>
         <v-row>
           <v-col>
@@ -82,7 +79,7 @@
                     <v-card
                       flat
                       >
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditGroup" text fab @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
@@ -142,7 +139,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title  style="color:#333333; font-size:25px">
+                      <v-card-title  style="color:#333333;" class="title">
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
                       <v-btn v-if="isEditSubRep" text fab @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
@@ -216,7 +213,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditPlace" text fab @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
@@ -280,10 +277,15 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-btn 
+                          v-if="isEditPowerOrder" 
+                          text 
+                          fab 
+                          @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)">
+                          <v-icon>mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -325,7 +327,7 @@
                   <v-col cols="10"></v-col>
                   <v-col cols="1">
                   <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
+                  <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       fab
                       dark
@@ -337,8 +339,8 @@
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
                   </template>
-            <span>電力申請を追加する</span>
-          </v-tooltip>
+                  <span>電力申請を追加する</span>
+                  </v-tooltip>
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
@@ -387,7 +389,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
                         <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -411,41 +413,54 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
-                  <AddRentalOrder ref="AddRentalOrderDlg"
-                      :groupId="this.regist.group.id"
-                      @reload="reload"
-                      @openRentalOrderSnackbar="openRentalOrderSnackbar">
-                  </AddRentalOrder>
-                  <v-snackbar
-                      top
-                      text
-                      color="purple accent-2"
-                      v-model="rentalOrderSnackbar"
-                      >
-                      物品申請情報を更新しました
-                    </v-snackbar>
-                  <v-snackbar
-                      top
-                      text
-                      color="purple accent-2"
-                      v-model="addRentalOrderSnackbar"
-                      >
-                      物品申請情報を更新しました
-                    </v-snackbar>
-                <v-container>
+                <!-- 情報追加のためのボタン -->
+               <v-container>
                   <v-row>
                     <v-col cols="10"></v-col>
                     <v-col cols="1">
-                  <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                      <v-btn fab elevation="0" v-bind="attrs" v-on="on" dark color="purple accent-2" @click="openAddRentalOrderDisplay"><v-icon>mdi-plus</v-icon></v-btn>
-                  </template>
-            <span>電力申請を追加する</span>
-          </v-tooltip>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            fab 
+                            elevation="0" 
+                            v-bind="attrs" 
+                            v-on="on" 
+                            dark 
+                            color="purple accent-2" 
+                            @click="openAddRentalOrderDisplay"
+                            >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請を追加する</span>
+                      </v-tooltip>
                     </v-col>
                     <v-col cols="1"></v-col>
                   </v-row>
                 </v-container>
+                <!-- モーダルウィンドウコンポーネントを呼び出す -->
+                <AddRentalOrder ref="AddRentalOrderDlg"
+                    :groupId="this.regist.group.id"
+                    @reload="reload"
+                    @openRentalOrderSnackbar="openRentalOrderSnackbar">
+                </AddRentalOrder>
+                <!-- 情報を更新した場合スナックバーを表示する -->
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="rentalOrderSnackbar"
+                  >
+                  物品申請情報を更新しました
+                </v-snackbar>
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="addRentalOrderSnackbar"
+                  >
+                  物品申請情報を更新しました
+                </v-snackbar>
               </v-tab-item>
 
               <!-- ステージ利用申請情報 -->
@@ -454,7 +469,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
@@ -537,7 +552,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-account</v-icon>
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -561,6 +576,47 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!-- 情報追加のためのボタン -->
+                <v-container>
+                  <v-row>
+                    <v-col cols="10"></v-col>
+                    <v-col cols="1">
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            fab 
+                            elevation="0" 
+                            v-bind="attrs" 
+                            v-on="on" 
+                            dark 
+                            color="purple accent-2" 
+                            @click="openAddRentalOrderDisplay"
+                            >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請を追加する</span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-col cols="1"></v-col>
+                  </v-row>
+                </v-container>
+                <!-- モーダルウィンドウコンポーネントを呼び出す -->
+                <AddRentalOrder ref="AddRentalOrderDlg"
+                    :groupId="this.regist.group.id"
+                    @reload="reload"
+                    @openRentalOrderSnackbar="openRentalOrderSnackbar">
+                </AddRentalOrder>
+                <!-- 情報を更新した場合スナックバーを表示する -->
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="rentalOrderSnackbar"
+                  >
+                  物品申請情報を更新しました
+                </v-snackbar>
+
                       <Employee ref="employeeDlg"
                         :id="this.employee_id"
                         :groupId="this.group_id"
@@ -588,7 +644,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
                         <b>販売食品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -624,6 +680,47 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!-- 情報追加のためのボタン -->
+                <v-container>
+                  <v-row>
+                    <v-col cols="10"></v-col>
+                    <v-col cols="1">
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            fab 
+                            elevation="0" 
+                            v-bind="attrs" 
+                            v-on="on" 
+                            dark 
+                            color="purple accent-2" 
+                            @click="openAddRentalOrderDisplay"
+                            >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請を追加する</span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-col cols="1"></v-col>
+                  </v-row>
+                </v-container>
+                <!-- モーダルウィンドウコンポーネントを呼び出す -->
+                <AddRentalOrder ref="AddRentalOrderDlg"
+                    :groupId="this.regist.group.id"
+                    @reload="reload"
+                    @openRentalOrderSnackbar="openRentalOrderSnackbar">
+                </AddRentalOrder>
+                <!-- 情報を更新した場合スナックバーを表示する -->
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="rentalOrderSnackbar"
+                  >
+                  物品申請情報を更新しました
+                </v-snackbar>
+
                   <Foodproduct ref="foodproductDlg"
                     :id = "this.food_product_id"
                     :groupId = "this.group_id"
@@ -653,7 +750,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title style="color:#333333;" class="title">
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -696,14 +793,52 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!-- 情報追加のためのボタン -->
+                <v-container>
+                  <v-row>
+                    <v-col cols="10"></v-col>
+                    <v-col cols="1">
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            fab 
+                            elevation="0" 
+                            v-bind="attrs" 
+                            v-on="on" 
+                            dark 
+                            color="purple accent-2" 
+                            @click="openAddPurchaseListDisplay"
+                            >
+                            <v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>購入品を追加する</span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-col cols="1"></v-col>
+                  </v-row>
+                </v-container>
+                <!-- モーダルウィンドウコンポーネントを呼び出す -->
+                <AddPurchaseList ref="AddPurchaseListDlg"
+                    :groupId="this.regist.group.id"
+                    @reload="reload"
+                    @openPurchaseListSnackbar="openPurchaseListSnackbar">
+                </AddPurchaseList>
+                <!-- 情報を更新した場合スナックバーを表示する -->
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="PurchaseListSnackbar"
+                  >
+                  購入品情報を更新しました
+                </v-snackbar>
               </v-tab-item>
             </v-tabs>
           </v-col>
         </v-row>
       </v-card>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+  </div>
 </template>
 
 <script>
@@ -716,6 +851,8 @@
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
+  import AddFoodProduct from '@/components/AddModal/FoodProduct.vue'
+  import AddPurchaseList from '@/components/AddModal/PurchaseList.vue'
 
   export default {
     props: {
@@ -730,7 +867,8 @@
       Employee,
       Foodproduct,
       Addpower,
-      AddRentalOrder
+      AddRentalOrder,
+      AddPurchaseList
     },
     data () {
     return {
@@ -748,8 +886,8 @@
       rentalOrderSnackbar: false,
       employeeSnackbar: false,
       foodproductSnackbar: false,
+      purchaseListSnackbar: false,
       addpowerSnackbar: false,
-      addRentalOrderSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -759,7 +897,6 @@
       isEditEmployee: [],
       isEditFoodproduct:[],
       isEditPurchaseList: [],
-      // 物品申請用
       isAddRentalOrder: [],
       num: [],
 
@@ -816,8 +953,6 @@
           this.isEditEmployee = response.data[0].is_edit_employee
           this.isEditFoodproduct = response.data[0].is_edit_food_product
           this.isEditPurchaseList = response.data[0].is_edit_purchase_list
-          this.isAddRentalOrder = response.data[0].is_add_rental_order
-          console.log(response)
         })
     },
     methods: {
@@ -845,9 +980,6 @@
       openAddpowerSnackbar() {
         this.addPowerSnackbar = true
       },
-      openAddRentalOrderSnackbar(){
-        this.addRentalOrderSnackbar = true
-      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -857,13 +989,11 @@
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
       },
-      openAddRentalOrderDisplay(id, group_id, name, num) {
-        this.rental_order_id = id
-        this.group_id = group_id
-        this.name = name
-        this.num = num
+      openPurchaseListSnackbar(){
+        this.addRentalOrderSnackbar = true
+      },
+      openAddRentalOrderDisplay() {
         this.$refs.AddRentalOrderDlg.isDisplay = true
-        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
       },
       openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
         this.power_order_id = id
@@ -894,6 +1024,13 @@
       },
       openAddpowerDisplay() {
         this.$refs.addpowerDlg.isDisplay = true
+      },
+      openPurchaseListSnackbar(){
+        this.addRentalOrderSnackbar = true
+      },
+      openAddPurchaseListDisplay() {
+        this.$refs.AddPurchaseListDlg.isDisplay = true
+        console.log(this.$refs.AddPurchaseListDlg.isDisplay)
       },
     }
   }
