@@ -117,7 +117,7 @@ export default {
         console.log(response);
         this.isDisplay = false;
         this.$emit('reload')
-        this.$emit('openRentalOrderSnackbar')
+        this.$emit('openRentalorderSnackbar')
         this.Group = "";
         this.item_id = "";
         this.item_num = "";
