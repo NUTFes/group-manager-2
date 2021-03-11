@@ -12,6 +12,26 @@
     <div v-else>
       <div v-for="(regist, i) in regist_info" :key="i">
         <Regist :num="i" :regist="regist" @reload="reload()" />
+        <div style="text-align:center" v-if="isRegistGroup">
+          <v-container>
+            <v-row>
+              <v-col cols="4"></v-col>
+              <v-col cols="4">
+                <v-btn
+                  v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999"'
+                  block dark color="purple accent-2"
+                  dark
+                  rounded
+                  elevation = "0"
+                  @click="set_group_id(regist.group.id)"
+                  >
+                  <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>{{ regist.group.name }}の販売食品を追加する
+                </v-btn>
+              </v-col>
+              <v-col cols="4"></v-col>
+            </v-row>
+          </v-container>
+        </div>
       </div>
     </div>
     <br />
@@ -98,6 +118,10 @@ export default {
           console.log(response)
           this.regist_info = response.data;
         });
+    },
+    set_group_id: function(group_id){
+      localStorage.setItem("group_id", group_id)
+      this.$router.push('regist_food_booths')
     }
   },
   mounted() {
@@ -125,7 +149,6 @@ export default {
         }
       })
       .then(response => {
-        console.log("aaaaaaaaaaa")
         console.log(response)
         this.regist_info = response.data;
       });

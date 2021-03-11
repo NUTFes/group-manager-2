@@ -3,7 +3,7 @@
     <v-col cols="2"></v-col>
     <v-col cols="8">
       <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
-        <v-stepper-header>
+        <v-stepper-header class="stepper">
           <v-stepper-step :complete="e1 > 1" step="1"
             >従業員登録</v-stepper-step
           >
@@ -50,6 +50,7 @@
                           :key="`${employeeStep}-content`"
                           :step="employeeStep"
                         >
+                        {{ groupId }}
                           <EmployeeCard
                             :groupId="groupId"
                             ref="employeeChild"

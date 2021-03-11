@@ -80,6 +80,11 @@ export default {
   data () {
     return {
       isDisplay: false,
+      item: [],
+      power: [],
+      manufacturer: [],
+      model: [],
+      url: [],
       rules: {
         required: value => !!value || '入力してください',
         max: value => value <= 1000 || '大きすぎます',
@@ -90,7 +95,7 @@ export default {
 
   methods: {
     submit: function() {
-      const url = process.env.VUE_APP_URL + '/power_orders';
+      const post_url = process.env.VUE_APP_URL + '/power_orders';
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       var params = new URLSearchParams();
       params.append('group_id', this.groupId);
@@ -98,9 +103,9 @@ export default {
       params.append('power', this.power);
       params.append('manufacturer', this.manufacturer);
       params.append('model', this.model);
-      params.append('url', this.url);
+      params.append('item_url', this.url);
 
-      axios.post(url,params).then(
+      axios.post(post_url, params).then(
         (response) => {
           this.isDisplay = false
           this.$emit('reload')

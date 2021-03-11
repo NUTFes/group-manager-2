@@ -38,6 +38,8 @@
               <v-btn-toggle
                 class="mb-12 ml-6"
                 v-model="isCooking"
+                borderless
+                dense
                 ref="isCooking"
                 color="purple accent-2"
               >
