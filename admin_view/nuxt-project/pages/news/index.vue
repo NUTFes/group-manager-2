@@ -17,12 +17,12 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            @click="reload"
+                            @click="dialog=true"
                             >
-                            <v-icon dark>mdi-reload</v-icon>
+                            <v-icon dark>mdi-plus-circle-outline</v-icon>
                     </v-btn>
                   </template>
-                  <span>更新する</span>
+                  <span>お知らせの追加</span>
                 </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -32,21 +32,24 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            @click="dialog=true"
+                            @click="reload"
                             >
-                            <v-icon dark>mdi-bell-plus-outline</v-icon>
+                            <v-icon dark>mdi-reload</v-icon>
                     </v-btn>
                   </template>
-                  <span>お知らせの追加</span>
+                  <span>更新する</span>
                 </v-tooltip>
               </v-card-title>
-              <v-dialog v-model="dialog" max-width="1000">
+              <v-dialog v-model="dialog" max-width="500">
                 <v-card>
-                  <v-card-title class="headkine grey lighten-2">
-                    <v-icon class="pr-2" size="40">mdi-bell-plus-outline</v-icon>
-                    お知らせの追加 ​ <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab>
-                      ​ <v-icon>mdi-close</v-icon>
+                  <v-card-title class="headline blue-grey darken-3">
+                    <div style="color: white">
+                      <v-icon class="ma-5" dark>mdi-bell-plus-outline</v-icon>
+                      お知らせの追加 
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="dialog = false" fab dark>
+                      <v-icon>mdi-close</v-icon>
                     </v-btn>
                   </v-card-title>
                   <v-row>
@@ -67,7 +70,7 @@
                   <v-row>
                     ​ <v-col cols="1"></v-col>
                     <v-col cols="10">
-                      <v-text-field
+                      <v-textarea
                         class="body-1"
                         label="内容"
                         background-color="white"
@@ -75,8 +78,7 @@
                         height="100"
                         v-model="body"
                         clearable
-                      >
-                      </v-text-field>
+                     />
                     </v-col>
                     ​ <v-col cols="1"></v-col>
                   </v-row>
@@ -99,7 +101,7 @@
                         </v-btn>
                       </v-card-actions>
                     </v-col>
-                    ​ <v-col cols="1"></v-col>
+                    <v-col cols="1"></v-col>
                   </v-row>
                   <br>
                 </v-card>

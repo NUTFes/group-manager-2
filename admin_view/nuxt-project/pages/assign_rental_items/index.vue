@@ -17,7 +17,7 @@
                         text
                         v-bind="attrs"
                         v-on="on"
-                        @click="dialog=true"
+                        @click="openModal"
                       >
                         <v-icon dark>mdi-plus-circle-outline</v-icon>
                       </v-btn>
@@ -200,25 +200,19 @@ export default {
       .then(response => {
         this.assign_rental_items = response.data
       })
+  },
 
-    this.$axios
-      .get("/groups", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups = response.data;
-      })
+  methods: {
+    openModal: function() {
       this.$axios
-      .get("/places", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.places = response.data;
-      })
+        .get("/groups", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.groups = response.data;
+        })
       this.$axios
       .get("/rental_items", {
         headers: {
@@ -228,16 +222,17 @@ export default {
       .then((response) => {
         this.item_list = response.data;
       })
-  },
-
-  methods: {
-    openModal: function() {
-    
-
-      
+      this.$axios
+      .get("/stocker_places", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.places = response.data;
+      })
+      this.dialog = true
     },
-
-
 
     reload: function () {
       this.$axios

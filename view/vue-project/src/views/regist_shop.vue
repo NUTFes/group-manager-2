@@ -645,7 +645,7 @@ export default {
 };
 </script>
 
-<style scooped>
+<style>
 .stepper {
   box-shadow: none;
 }

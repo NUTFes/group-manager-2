@@ -62,6 +62,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
       # 副代表情報を取得
       if !group.sub_rep.nil?
         sub_rep = {
+          sub_rep: group.sub_rep,
           name: group.sub_rep.name,
           tel: group.sub_rep.tel,
           email: group.sub_rep.email,
@@ -71,6 +72,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
         }
       else
         sub_rep = {
+          sub_rep: "-9999",
           name: "-9999",
           tel: "-9999",
           email: "-9999",

@@ -8,6 +8,8 @@
               所持機器を使用するか
               <v-btn-toggle
                 class="mb-6 ml-6"
+                borderless
+                dense
                 v-model="ownEquipment"
                 ref="ownEquipment"
                 color="purple accent-2"
@@ -20,6 +22,8 @@
               音楽を流すか
               <v-btn-toggle
                 class="mb-6 ml-6"
+                borderless
+                dense
                 v-model="bgm"
                 ref="bgm"
                 color="purple accent-2"
@@ -32,6 +36,8 @@
               撮影の許可
               <v-btn-toggle
                 class="mb-6 ml-6"
+                borderless
+                dense
                 v-model="cameraPermission"
                 ref="cameraPermission"
                 color="purple accent-2"
@@ -44,6 +50,8 @@
               騒音
               <v-btn-toggle
                 class="mb-6 ml-6"
+                borderless
+                dense
                 v-model="loudSound"
                 ref="loudSound"
                 color="purple accent-2"
@@ -53,7 +61,7 @@
               </v-btn-toggle>
             </p>
 
-            <v-text-field
+            <v-textarea
               label="ステージ内容"
               ref="stageContent"
               v-model="stageContent"
@@ -61,7 +69,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            ></v-textarea>
           </v-form>
         </v-card-text>
       </v-col>

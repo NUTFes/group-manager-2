@@ -31,6 +31,8 @@
               <v-btn-toggle
                 class="mb-6 ml-6"
                 v-model="isFresh"
+                borderless
+                dense
                 ref="isFresh"
                 color="purple accent-2"
               >

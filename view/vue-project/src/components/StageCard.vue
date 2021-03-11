@@ -9,6 +9,8 @@
               <v-btn-toggle
                 class="mb-6 ml-6"
                 v-model="isSunny"
+                borderless
+                dense
                 ref="isSunny"
                 color="purple accent-2"
               >

@@ -67,7 +67,7 @@
                     </div>
                     <v-spacer></v-spacer>
                     <v-btn text @click="dialog = false" fab dark>
-                      ​ <v-icon>mdi-close</v-icon>
+                      <v-icon>mdi-close</v-icon>
                     </v-btn>
                   </v-card-title>
 

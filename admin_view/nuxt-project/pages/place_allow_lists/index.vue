@@ -55,71 +55,71 @@
                   <span>印刷する</span>
                 </v-tooltip>
               </v-card-title>
-              
+
               <v-dialog
-      v-model="dialog"
-      width="500"
-      >
-      <v-card>
-        <v-card-title class="headline blue-grey darken-3">
-          <div style="color: white">
-            <v-icon class="ma-5" dark>mdi-map-marker-check-outline</v-icon>
-            使用可能会場の追加
-          </div>
-          <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false" fab dark>
-            ​ <v-icon>mdi-close</v-icon>
-          </v-btn>
-      </v-card-title>
+                v-model="dialog"
+                width="500"
+                >
+                <v-card>
+                  <v-card-title class="headline blue-grey darken-3">
+                    <div style="color: white">
+                      <v-icon class="ma-5" dark>mdi-map-marker-check-outline</v-icon>
+                      使用可能会場の追加
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn text @click="dialog = false" fab dark>
+                      ​ <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </v-card-title>
 
-      <v-card-text>
-        <v-row>
-          <v-col>
-            <v-form ref="form">
-              <v-select
-                label="場所"
-                v-model="place_id"
-                :items="places"
-                item-text="name"
-                item-value="id"
-                outlined
-                />
-              <v-select
-                label="グループカテゴリ"
-                v-model="group_category_id"
-                :items="group_categories"
-                item-text="name"
-                item-value="id"
-                outlined
-                />   
-              <v-select
-                label="使用"
-                v-model="enable"
-                :items="enable_items"
-                item-text="label"
-                item-value="value"
-                outlined
-                />       
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-card-text>
+                  <v-card-text>
+                    <v-row>
+                      <v-col>
+                        <v-form ref="form">
+                          <v-select
+                            label="場所"
+                            v-model="place_id"
+                            :items="places"
+                            item-text="name"
+                            item-value="id"
+                            outlined
+                            />
+                            <v-select
+                              label="グループカテゴリ"
+                              v-model="group_category_id"
+                              :items="group_categories"
+                              item-text="name"
+                              item-value="id"
+                              outlined
+                              />   
+                              <v-select
+                                label="使用"
+                                v-model="enable"
+                                :items="enable_items"
+                                item-text="label"
+                                item-value="value"
+                                outlined
+                                />       
+                        </v-form>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
 
-      <v-divider></v-divider>
+                  <v-divider></v-divider>
 
-                            <v-card-actions>
-                              <v-btn
-                                flatk
-                                large
-                                block
-                                dark
-                                color="blue"
-                                @click="register()"
-                                >登録 ​
-                              </v-btn>
-      </v-card-actions>
-      </v-card>
-    </v-dialog>
+                  <v-card-actions>
+                    <v-btn
+                      flatk
+                      large
+                      block
+                      dark
+                      color="blue"
+                      @click="register()"
+                      >登録
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
               <hr class="mt-n3">
               <template>
                 <div class="text-center" v-if="place_allow_list.length === 0">
@@ -136,18 +136,18 @@
                     :items="place_allow_list"
                     class="elevation-0 my-9"
                     @click:row="
-                    (data) =>
-                    $router.push({ path: `/place_allow_lists/${data.place_allow_list.id}`})
-                    "
+                                (data) =>
+                                $router.push({ path: `/place_allow_lists/${data.place_allow_list.id}`})
+                                "
                     >
-                  <template v-slot:item.group_category.id="{ item }">
-                    <v-chip v-if="item.group_category.id == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
-                    <v-chip v-if="item.group_category.id == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
-                    <v-chip v-if="item.group_category.id == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
-                    <v-chip v-if="item.group_category.id == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
-                    <v-chip v-if="item.group_category.id == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
-                    <v-chip v-if="item.group_category.id == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
-                  </template>
+                    <template v-slot:item.group_category.id="{ item }">
+                      <v-chip v-if="item.group_category.id == 1" color="red" text-color="white" small>{{ category[0] }}</v-chip>
+                      <v-chip v-if="item.group_category.id == 2" color="pink" text-color="white" small>{{ category[1] }}</v-chip>
+                      <v-chip v-if="item.group_category.id == 3" color="blue" text-color="white" small>{{ category[2] }}</v-chip>
+                      <v-chip v-if="item.group_category.id == 4" color="green" text-color="white" small>{{ category[3] }}</v-chip>
+                      <v-chip v-if="item.group_category.id == 5" color="orange" text-color="white" small>{{ category[4] }}</v-chip>
+                      <v-chip v-if="item.group_category.id == 6" color="blue-gray" text-color="white" small>{{ category[5] }}</v-chip>
+                    </template>
                     <template v-slot:item.place_allow_list.enable="{ item }">
                       <v-chip v-if="item.place_allow_list.enable == true" color="red" text-color="white" small><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip>
                       <v-chip v-if="item.place_allow_list.enable == false" color="blue" text-color="white" small><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip>

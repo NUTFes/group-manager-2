@@ -114,6 +114,7 @@ export default {
         (response) => {
           console.log('response:', response)
           this.isDisplay = false
+          this.$emit('reload')
           this.$emit('openPlaceSnackbar')
         },
         (error) => {
