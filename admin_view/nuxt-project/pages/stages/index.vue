@@ -18,6 +18,36 @@
                             text
                             v-bind="attrs"
                             v-on="on"
+                            @click="dialog=true"
+                            >
+                            <v-icon dark>mdi-plus-circle-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>使用可能会場の追加</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="reload"
+                            >
+                            <v-icon dark>mdi-reload</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>更新する</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                    <v-btn 
+                            class="mx-2" 
+                            fab 
+                            text
+                            v-bind="attrs"
+                            v-on="on"
                             to="/stage_orders/print"
                             >
                             <v-icon dark>mdi-printer</v-icon>
@@ -26,6 +56,69 @@
                   <span>印刷する</span>
                 </v-tooltip>
               </v-card-title>
+
+ <v-dialog v-model="dialog" width="500">
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-map-marker-check-outline</v-icon>
+            ステージの追加
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+      </v-card-title>
+
+        <v-card-text>
+          <v-row>
+            <v-col>
+              <v-form ref="form">
+                <v-text-field
+                  label="名前"
+                  v-model="name"
+                  text
+                  clearable
+                  outlined
+                  :rules="[rules.required]"
+                  />
+                <v-select
+                  label="晴れ"
+                  v-model="enable_Sunny"
+                  :items="enable_items"
+                  item-text="label"
+                  item-value="value"
+                  outlined
+                  />   
+                <v-select
+                  label="雨"
+                  v-model="enable_Rainy"
+                  :items="enable_items"
+                  item-text="label"
+                  item-value="value"
+                  outlined
+                  />       
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+      <v-divider></v-divider>
+
+         <v-card-actions>
+            <v-btn
+              flatk
+              large
+              block
+              dark
+              color="blue"
+              @click="register()"
+            >登録 ​
+            </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog>
+
               <hr class="mt-n3">
               <template>
                 <div class="text-center" v-if="stages.length === 0">
@@ -78,6 +171,17 @@ export default {
   data() {
     return {
       stages: [],
+      enable_Sunny: [],
+      enable_Rainy: [],
+      name: [],
+      dialog: false,
+      rules: {
+        required: value => !!value || '入力してください',
+      },
+      enable_items :[
+        {label:"使用可能",value:true},
+        {label:"使用不可能",value:false}
+        ],
       headers:[
         { text: 'ID', value: 'id' },
         { text: '名前', value: 'name' },
@@ -86,7 +190,7 @@ export default {
         { text: '日時', value: 'created_at' },
         { text: '編集日時', value: 'updated_at' },
       ],
-    }
+    };
   },
   mounted() {
     this.$axios.get('stages', {
@@ -99,6 +203,34 @@ export default {
         this.stages = response.data
       })
   },
+  methods: {
+    reload: function(){
+    this.$axios.get('/stages', {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.stages = response.data
+      })
+    },
+
+    register: function () {
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      var params = new URLSearchParams();
+      params.append("name", this.name);
+      params.append("enable_sunny", this.enable_Sunny);
+      params.append("enable_rainy", this.enable_Rainy);
+      this.$axios.post("/stages", params).then((response) => {
+        console.log(response);
+        this.dialog = false;
+        this.reload();
+        this.name = "";
+        this.enable_Sunny = "";
+        this.enable_Rainy = "";
+      });
+    },
+  }
 }
 </script>
 
