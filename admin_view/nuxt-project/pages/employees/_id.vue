@@ -119,14 +119,6 @@
         <v-row>
           <v-col>
             <v-form ref="form">
-              <v-text-field
-                label="名前"
-                v-model="name"
-                text
-                outlined
-                clearable
-                :rules="[rules.required]"
-                />
               <v-select
                 label="参加団体"
                 v-model="group_id"
@@ -134,6 +126,14 @@
                 item-text="name"
                 item-value="id"
                 outlined
+                />
+              <v-text-field
+                label="名前"
+                v-model="name"
+                text
+                outlined
+                clearable
+                :rules="[rules.required]"
                 />
               <v-text-field
                 label="学籍番号"
