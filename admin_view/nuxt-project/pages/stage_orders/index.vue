@@ -166,63 +166,38 @@
                           </div>
 
                           <div v-if="radioGroup === 2">
-                            <p align="left">
-                            準備開始時刻
-                            <vue-timepicker
-                              input-class="timepicker"
+                            <v-select
+                              label="準備開始時刻"
                               v-model="prepareStartTime"
-                              format="HH:mm"
-                              minute-interval="15"
-                              :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                              hide-disable-hours
-                              hide-disable-minutes
-                              advanced-keyboard
-                              manual-input
+                              :items="time_range"
+                              text
+                              outlined
+                              clearable
                               />
-                            </p>
-                            <p align="left">
-                            パフォーマンス開始時刻
-                            <vue-timepicker
-                              input-class="timepicker"
+                            <v-select
+                              label="パフォーマンス開始時刻"
                               v-model="performanceStartTime"
-                              format="HH:mm"
-                              minute-interval="15"
-                              :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                              hide-disable-hours
-                              hide-disable-minutes
-                              advanced-keyboard
-                              manual-input
+                              :items="time_range"
+                              text
+                              outlined
+                              clearable
                               />
-                            </p>
-
-                            <p align="left">
-                            パフォーマンス終了時刻
-                            <vue-timepicker
-                              input-class="timepicker"
+                            <v-select
+                              label="パフォーマンス終了時刻"
                               v-model="performanceEndTime"
-                              format="HH:mm"
-                              minute-interval="15"
-                              :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                              hide-disable-hours
-                              hide-disable-minutes
-                              advanced-keyboard
-                              manual-input
+                              :items="time_range"
+                              text
+                              outlined
+                              clearable
                               />
-                            </p>
-                            <p align="left">
-                            掃除終了時刻
-                            <vue-timepicker
-                              input-class="timepicker"
+                            <v-select
+                              label="掃除終了時刻"
                               v-model="cleanupEndTime"
-                              format="HH:mm"
-                              minute-interval="15"
-                              :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                              hide-disable-hours
-                              hide-disable-minutes
-                              advanced-keyboard
-                              manual-input
+                              :items="time_range"
+                              text
+                              outlined
+                              clearable
                               />
-                            </p>
                           </div>
                           <v-card-actions>
                             <v-btn
@@ -232,7 +207,7 @@
                               dark
                               color="blue"
                               @click="register()"
-                              >登録 ​
+                              >登録
                             </v-btn>
                           </v-card-actions>
                         </v-form>
@@ -290,6 +265,7 @@
 import vueTimepicker from "vue2-timepicker/src/vue-timepicker";
 import "vue2-timepicker/dist/VueTimepicker.css";
 import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
+
 export default {
   components: {
     "vue-timepicker": vueTimepicker,
@@ -334,6 +310,9 @@ export default {
         {label:"雨",value:false}
       ],
       fes_date_list: [],
+      hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17"],
+      minute_range: ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"],
+      time_range: [],
       time_interval: ["5分", "10分", "15分", "20分", "25分", "30分", "35分", "40分", "45分", "50分", "55分", "60分", "65分", "70分", "75分", "80分", "90分", "95分", "100分", "105分", "110分", "115分", "120分"],
     }
   },
@@ -346,6 +325,7 @@ export default {
       .then(response => {
         this.stage_orders = response.data
       })
+    this.set_time_range()
   },
   computed: {
     useInterval() {
@@ -354,33 +334,15 @@ export default {
         (this.performanceEndTime.HH - this.performanceStartTime.HH) * 60;
       return hour + minute;
     },
-    prepareInterval() {
-      let minute = this.performanceStartTime.mm - this.prepareStartTime.mm;
-      let hour = (this.performanceStartTime.HH - this.prepareStartTime.HH) * 60;
-      return hour + minute;
-    },
-    cleanupInterval() {
-      let minute = this.cleanupEndTime.mm - this.performanceEndTime.mm;
-      let hour =
-        (this.cleanupEndTime.HH - this.performanceEndTime.HH) * 60;
-      return hour + minute;
-    },
-    stringPrepareStartTime() {
-      return this.prepareStartTime.HH + ":" + this.prepareStartTime.mm;
-    },
-    stringPerformanceStartTime() {
-      return this.performanceStartTime.HH + ":" + this.performanceStartTime.mm;
-    },
-    stringPerformanceEndTime() {
-      return (
-        this.performanceEndTime.HH + ":" + this.performanceEndTime.mm
-      );
-    },
-    stringCleanupEndTime() {
-      return this.cleanupEndTime.HH + ":" + this.cleanupEndTime.mm;
-    }
   },
   methods: {
+    set_time_range: function(){
+      for(var hour of this.hour_range){
+        for(var minute of this.minute_range){
+          this.time_range.push(hour+":"+minute)
+        }
+      }
+    },
     open_dialog: function(){
       this.$axios.get('/stages', {
         headers: { 
@@ -430,28 +392,28 @@ export default {
         this.cleanupTimeInterval = "-9999"
       }
       if (this.prepareStartTime.length == 0){
-        this.prepareStartTime = { "HH": "00", "mm": "00" }
+        this.prepareStartTime = "00:00"
       }
       if (this.prepareStartTime.HH == "" && this.prepareStartTime.mm == ""){
-        this.prepareStartTime = { "HH": "00", "mm": "00" }
+        this.prepareStartTime = "00:00"
       }
       if (this.performanceStartTime.length == 0){
-        this.performanceStartTime = { "HH": "00", "mm": "00" }
+        this.performanceStartTime = "00:00"
       }
       if (this.performanceStartTime.HH == "" && this.performanceStartTime.mm == ""){
-        this.performanceStartTime = { "HH": "00", "mm": "00" }
+        this.performanceStartTime = "00:00"
       }
       if (this.performanceEndTime.length == 0){
-        this.performanceEndTime = { "HH": "00", "mm": "00" }
+        this.performanceEndTime = "00:00"
       }
       if (this.performanceEndTime.HH == "" && this.performanceEndTime.mm == ""){
-        this.performanceEndTime = { "HH": "00", "mm": "00" }
+        this.performanceEndTime = "00:00"
       }
       if (this.cleanupEndTime.length == 0){
-        this.cleanupEndTime = { "HH": "00", "mm": "00" }
+        this.cleanupEndTime = "00:00"
       }
       if (this.cleanupEndTime.HH == "" && this.cleanupEndTime.mm == ""){
-        this.cleanupEndTime = { "HH": "00", "mm": "00" }
+        this.cleanupEndTime = "00:00"
       }
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
@@ -463,10 +425,10 @@ export default {
       params.append("use_time_interval", this.useTimeInterval);
       params.append("prepare_time_interval", this.prepareTimeInterval);
       params.append("cleanup_time_interval", this.cleanupTimeInterval);
-      params.append("prepare_start_time", this.stringPrepareStartTime);
-      params.append("performance_start_time", this.stringPerformanceStartTime);
-      params.append("performance_end_time", this.stringPerformanceEndTime);
-      params.append("cleanup_end_time", this.stringCleanupEndTime);
+      params.append("prepare_start_time", this.prepareStartTime);
+      params.append("performance_start_time", this.performanceStartTime);
+      params.append("performance_end_time", this.performanceEndTime);
+      params.append("cleanup_end_time", this.cleanupEndTime);
 
       this.$axios.post("/stage_orders", params).then((response) => {
         console.log(response);
