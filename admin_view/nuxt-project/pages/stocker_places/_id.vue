@@ -296,6 +296,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/stocker_places/" + this.$route.params.id;
+      this.$axios.delete(url);
       this.$router.push('/stocker_places')
     }
   }

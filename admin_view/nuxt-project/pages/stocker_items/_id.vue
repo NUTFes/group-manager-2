@@ -371,6 +371,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/stocker_items/" + this.$route.params.id;
+      this.$axios.delete(url);
       this.$router.push('/stocker_items')
     }
   }
