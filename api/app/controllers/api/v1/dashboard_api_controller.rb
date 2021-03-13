@@ -8,6 +8,19 @@ class Api::V1::DashboardApiController < ApplicationController
         cate_4_length = groups.where(group_category:4).length
         cate_5_length = groups.where(group_category:5).length
         cate_6_length = groups.where(group_category:6).length
+        all_length = StockerPlace.all.length
+        stock_item_status_1 = StockerPlace.where(stock_item_status:1).length
+        stock_item_status_2 = StockerPlace.where(stock_item_status:2).length
+        stock_item_status_3 = StockerPlace.where(stock_item_status:3).length
+        progress_stock_item_1 = (stock_item_status_1*100) / all_length
+        progress_stock_item_2 = (stock_item_status_2*100) / all_length
+        progress_stock_item_3 = (stock_item_status_3*100) / all_length
+        assign_item_status_1 = StockerPlace.where(assign_item_status:1).length
+        assign_item_status_2 = StockerPlace.where(assign_item_status:2).length
+        assign_item_status_3 = StockerPlace.where(assign_item_status:3).length
+        progress_assign_item_1 = (assign_item_status_1*100) / all_length
+        progress_assign_item_2 = (assign_item_status_2*100) / all_length
+        progress_assign_item_3 = (assign_item_status_3*100) / all_length
         group_data = {
             groups_length: groups_length,
             cate_1_length: cate_1_length,
@@ -15,7 +28,13 @@ class Api::V1::DashboardApiController < ApplicationController
             cate_3_length: cate_3_length,
             cate_4_length: cate_4_length,
             cate_5_length: cate_5_length,
-            cate_6_length: cate_6_length
+            cate_6_length: cate_6_length,
+            progress_stock_item_1: progress_stock_item_1,
+            progress_stock_item_2: progress_stock_item_2,
+            progress_stock_item_3: progress_stock_item_3,
+            progress_assign_item_1: progress_assign_item_1,
+            progress_assign_item_2: progress_assign_item_2,
+            progress_assign_item_3: progress_assign_item_3,
         } 
 
         render json: group_data

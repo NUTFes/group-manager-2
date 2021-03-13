@@ -96,22 +96,9 @@
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
-              <v-row>
-                <v-col cols="4"></v-col>
-                <v-col cols="4">
-                  <v-progress-circular
-                    class="font-weight-bold display-3"
-                    :rotate="360"
-                    :size="200"
-                    :width="15"
-                    :value="groups_length"
-                    color="teal"
-                  >
-                    {{ rate }}
-                  </v-progress-circular>
-                </v-col>
-                <v-col cols="4"></v-col>
-              </v-row>
+              <v-row
+                ><v-col><chart></chart></v-col
+              ></v-row>
             </v-container>
           </v-card>
         </div>
@@ -138,7 +125,7 @@
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10"> </v-col>
+                <v-col cols="10"></v-col>
                 <v-col cols="1"></v-col>
               </v-row>
             </v-container>
@@ -269,10 +256,11 @@
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
 import axios from "axios";
-import colors from "vuetify/es5/util/colors";
+import Chart from "./Chart_Stock";
 
 export default {
   components: {
+    Chart,
     Header,
     Menu,
   },
@@ -286,21 +274,7 @@ export default {
       student_id: [],
       tel: [],
       rate: [],
-      chartDataValues: [],
-      chartColors: [
-        colors.red.lighten1,
-        colors.blue.lighten1,
-        colors.yellow.lighten1,
-        colors.green.lighten1,
-      ],
-      chartLabels: ["red", "blue", "yellow", "green"],
-      chartOptions: {
-        maintainAspectRatio: false,
-        animation: {
-          duration: 1500,
-          easing: "easeInOutCubic",
-        },
-      },
+      groups_length: [],
     };
   },
   mounted() {
@@ -321,52 +295,6 @@ export default {
         this.student_id = response.data.student_id;
         this.tel = response.data.tel;
       });
-    this.randomizeData();
-    this.$axios
-      .get("api/v1/dashboard", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups_length = response.data.groups_length;
-        this.cate_1_length = response.data.cate_1_length;
-        this.cate_2_length = response.data.cate_2_length;
-        this.cate_3_length = response.data.cate_3_length;
-        this.cate_4_length = response.data.cate_4_length;
-        this.cate_5_length = response.data.cate_5_length;
-        this.cate_6_length = response.data.cate_6_length;
-      });
-    this.rate = int(this.groups_length) + 1;
-  },
-  computed: {
-    chartData() {
-      return {
-        datasets: [
-          {
-            data: this.chartDataValues,
-            backgroundColor: this.chartColors,
-          },
-        ],
-        labels: this.chartLabels,
-      };
-    },
-  },
-  methods: {
-    randomizeData: function () {
-      var data = [];
-      for (var i = 0; i < this.chartLabels.length; i++) {
-        data.push(Math.floor(Math.random() * 100));
-      }
-      this.chartDataValues = data;
-    },
   },
 };
 </script>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 20px;
-}
-</style>
