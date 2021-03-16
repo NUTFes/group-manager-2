@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
+      # ダッシュボード用API
+      get "dashboard" => "dashboard_api#get_dashboard_info"
       # ユーザー周りのAPI
       get "users/index" => "users#index"
       get "users/show" => "users#show"
