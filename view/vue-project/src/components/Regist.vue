@@ -51,25 +51,32 @@
                 :value="tab-6"
                 class="font-weight-bold justify-start"
               >
-                <v-icon class="pr-2">mdi-microphone-variant</v-icon>ステージ利用申請情報
+                <v-icon class="pr-2">mdi-microphone</v-icon>ステージ利用申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-7"
                 class="font-weight-bold justify-start"
               >
-                <v-icon class="pr-2">mdi-account</v-icon>従業員情報
+                <v-icon class="pr-2">mdi-microphone-plus</v-icon>ステージオプション申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-8"
                 class="font-weight-bold justify-start"
               >
-                <v-icon class="pr-2">mdi-baguette</v-icon>販売食品情報
+                <v-icon class="pr-2">mdi-account</v-icon>従業員情報
               </v-tab>
 
               <v-tab
                 :value="tab-9"
+                class="font-weight-bold justify-start"
+              >
+                <v-icon class="pr-2">mdi-baguette</v-icon>販売食品情報
+              </v-tab>
+
+              <v-tab
+                :value="tab-10"
                 class="font-weight-bold justify-start"
               >
                 <v-icon class="pr-2">mdi-cart</v-icon>購入品情報
@@ -467,7 +474,7 @@
                   <v-col>
                     <v-card flat>
                       <v-card-title style="color:#333333; font-size:25px">
-                        <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
+                        <v-icon class="pr-2" size="30">mdi-microphone</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditStageOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
@@ -540,6 +547,70 @@
                 </v-row>
               </v-tab-item>
 
+              <!-- ステージオプション申請情報 -->
+              <v-tab-item>
+                <v-row>
+                  <v-col cols=1></v-col>
+                  <v-col>
+                    <v-card flat>
+                      <v-card-title style="color:#333333; font-size:25px">
+                        <v-icon class="pr-2" size="30">mdi-microphone-plus</v-icon>
+                        <b>ステージオプション申請情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn v-if="isEditStageOrder" text fab @click="openStageOptionDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
+                      <hr>
+                       <v-list>
+                        <v-list-item>
+                          <v-list-item-content>所持機器の使用</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.own_equipment == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.own_equipment === true">使用</v-list-item-content>
+                          <v-list-item-content v-else>使用しない</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>音楽</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.bgm == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.bgm === true">使用</v-list-item-content>
+                          <v-list-item-content v-else>使用しない</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>撮影許可</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.camera_permission == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.camera_permission === true">許可</v-list-item-content>
+                          <v-list-item-content v-else>許可しない</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>騒音</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.loud_sound == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.loud_sound === true">出す</v-list-item-content>
+                          <v-list-item-content v-else>出さない</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>ステージ内容</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.stage_content == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_common_option.stage_content }}</v-list-item-content>
+                        </v-list-item>
+                       </v-list>
+                    </v-card>
+                  </v-col>
+                  <v-col cols=1></v-col>
+                </v-row>
+                <!--EditModal-->
+                <StageOption ref="StageOptionDlg"
+                      :id = "regist.stage_common_option.id"
+                      :groupId = "regist.stage_common_option.group_id"
+                      :ownEquipment = "regist.stage_common_option.own_equipment"
+                      :Bgm = "regist.stage_common_option.bgm"
+                      :cameraPermission = "regist.stage_common_option.camera_permission"
+                      :loudSound = "regist.stage_common_option.loud_sound"
+                      :stageContent = "regist.stage_common_option.stage_content"
+                      @reload="reload"
+                ></StageOption>
+              </v-tab-item>
               <!-- 従業員情報 -->
               <v-tab-item>
                 <v-row
@@ -762,6 +833,7 @@
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
   import Employee from '@/components/EditModal/employee.vue'
+  import StageOption from '@/components/EditModal/StageCommonOption.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Rentalorder from '@/components/EditModal/rental_order.vue'
   import Addpower from '@/components/AddModal/power.vue'
@@ -779,6 +851,7 @@
       Power,
       Place,
       Employee,
+      StageOption,
       Foodproduct,
       Rentalorder,
       Addpower,
@@ -827,6 +900,13 @@
       model:[], 
       power: [],
       url:[],
+      //ステージオプション申請用
+      stage_option_id: [],
+      own_equipment: [],
+      bgm: [],
+      camera_permission: [],
+      loud_sound: [],
+      stage_content: [],
       //従業員申請用
       employee_id: [],
       name:[],
@@ -937,6 +1017,16 @@
         this.url = url
         this.$refs.powerDlg.isDisplay = true
         console.log(this.$refs.powerDlg.isDisplay)
+      },
+      openStageOptionDisplay(id, group_id, own_equipment, bgm, camera_permission, loud_sound, stage_content) {
+        this.stage_option_id = id
+        this.group_id = group_id
+        this.own_equipment = own_equipment
+        this.bgm = bgm
+        this.camera_permission = camera_permission
+        this.loud_sound = loud_sound
+        this.stage_content = stage_content
+        this.$refs.StageOptionDlg.isDisplay = true
       },
       openEmployeeDisplay(id, group_id, name, student_id){
         this.employee_id = id

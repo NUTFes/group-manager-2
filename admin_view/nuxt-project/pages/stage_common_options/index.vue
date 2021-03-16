@@ -90,6 +90,7 @@
                               label="所持機器の使用"
                               v-model="ownEquipment"
                               :items="items_available"
+                              :menu-props="{ top: true, offsetY: true }"
                               item-text="label"
                               item-value="value"
                               background-color="white"
