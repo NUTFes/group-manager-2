@@ -745,7 +745,8 @@
                   >
                   <v-col cols=1></v-col>
                   <v-col>
-                    <v-card flat>
+                    <v-card v-if="purchase_list.food_product == -9999"></v-card>
+                    <v-card v-else flat>
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報{{ i+1 }}</b>
@@ -1050,7 +1051,6 @@
       },
       openAddPurchaseListDisplay() {
         this.$refs.AddPurchaseListDlg.isDisplay = true
-        console.log(this.$refs.AddPurchaseListDlg.isDisplay)
       },
       openPurchaseListSnackbar(){
         this.addRentalOrderSnackbar = true
