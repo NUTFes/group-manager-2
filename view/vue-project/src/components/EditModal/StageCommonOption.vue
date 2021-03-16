@@ -120,7 +120,7 @@ export default {
       ],
       photoAvailable: [
         { label: "許可", value: true },
-        { label: "禁止", value: false },
+        { label: "許可しない", value: false },
       ],
       loudAble: [
         { label: "出す", value: true },
