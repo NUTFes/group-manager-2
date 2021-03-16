@@ -117,6 +117,22 @@ class Api::V1::CurrentUserApiController < ApplicationController
           cleanup_end_time: "-9999",
         }
       end
+
+      # ステージオプション申請情報を取得
+      if !group.stage_common_option.nil?
+        stage_common_option = group.stage_common_option
+      else
+        stage_common_option = []
+        stage_common_option = {
+          own_equipment: "-9999",
+          bgm: "-9999",
+          camera_permission: "-9999",
+          loud_sound: "-9999",
+          stage_content: "-9999",
+        }
+      end
+
+
       # 電力申請情報を取得
       if !group.power_orders.nil?
         power_orders = group.power_orders
@@ -226,6 +242,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
         first_stage_order: first_stage_order, # 第一希望ステージのIDからステージ名を復号
         second_stage_order: second_stage_order, # 第二希望ステージのIDからステージ名を復号
         stage_date: stage_date, # 日付のIDから日付を復号
+        stage_common_option: stage_common_option,
         power_orders: power_orders,
         rental_orders: rental_orders_list,
         employees: employees,
