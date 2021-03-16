@@ -818,16 +818,18 @@
           </v-col>
         </v-row>
       </v-card>
+
+
       <!-- 削除ダイアログ(登録情報すべて) -->
       <v-dialog v-model="delete_dialog" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          <v-card-title style="background-color:#ECEFF1">
+            <div style="color: black">
+              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
             </div>
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog = false" fab dark>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn text @click="delete_dialog = false" fab black>
+              ​ <v-icon >mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -849,12 +851,12 @@
       <!-- 削除ダイアログ(電力申請) -->
       <v-dialog v-model="delete_dialog_power" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          <v-card-title style="background-color:#ECEFF1">
+            <div style="color: black">
+              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
             </div>
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_power = false" fab dark>
+            <v-btn text @click="delete_dialog_power = false" fab black>
               ​ <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
@@ -876,12 +878,12 @@
       <!-- 削除ダイアログ(物品申請) -->
       <v-dialog v-model="delete_dialog_item" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          <v-card-title style="background-color:#ECEFF1">
+            <div style="color: black">
+              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
             </div>
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_item = false" fab dark>
+            <v-btn text @click="delete_dialog_item = false" fab black>
               ​ <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
@@ -904,12 +906,12 @@
       <!-- 削除ダイアログ(従業員) -->
       <v-dialog v-model="delete_dialog_employee" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          <v-card-title style="background-color:#ECEFF1">
+            <div style="color: black">
+              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
             </div>
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_employee = false" fab dark>
+            <v-btn text @click="delete_dialog_employee = false" fab black>
               ​ <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
@@ -931,12 +933,12 @@
       <!-- 削除ダイアログ(販売食品) -->
       <v-dialog v-model="delete_dialog_food" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          <v-card-title style="background-color:#ECEFF1">
+            <div style="color: black">
+              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
             </div>
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_food = false" fab dark>
+            <v-btn text @click="delete_dialog_food = false" fab black>
               ​ <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
@@ -958,12 +960,12 @@
       <!-- 削除ダイアログ(購入品) -->
       <v-dialog v-model="delete_dialog_purchase" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+          <v-card-title style="background-color:#ECEFF1">
+            <div style="color: black">
+              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
             </div>
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_purchase = false" fab dark>
+            <v-btn text @click="delete_dialog_purchase = false" fab black>
               ​ <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
