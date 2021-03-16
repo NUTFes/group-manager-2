@@ -901,7 +901,7 @@
                               text
                               v-bind="attrs"
                               v-on="on"
-                              @click="oepn_delete_dialog_food(food_product.id)"
+                              @click="open_delete_dialog_food(food_product.id)"
                               fab
                               ><v-icon class="ma-5">mdi-delete</v-icon>
                             </v-btn>
@@ -1580,6 +1580,14 @@
         this.$refs.rentalorderDlg.isDisplay = true
       },
       openAddPurchaseListDisplay() {
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+          headers: { 
+            "Content-Type": "application/json", 
+          }
+        })
+          .then(response => {
+            this.$refs.AddPurchaseListDlg.food_products = response.data
+          })
         this.$refs.AddPurchaseListDlg.isDisplay = true
       },
       openPurchaseListSnackbar(){
@@ -1598,7 +1606,7 @@
         this.employee_id = id
         this.delete_dialog_employee = true
       },
-      oepn_delete_dialog_food(id){
+      open_delete_dialog_food(id){
         this.food_product_id = id
         this.delete_dialog_food = true
       },
