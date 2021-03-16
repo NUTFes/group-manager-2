@@ -901,7 +901,7 @@
                               text
                               v-bind="attrs"
                               v-on="on"
-                              @click="oepn_delete_dialog_food(food_product.id)"
+                              @click="open_delete_dialog_food(food_product.id)"
                               fab
                               ><v-icon class="ma-5">mdi-delete</v-icon>
                             </v-btn>
@@ -996,7 +996,8 @@
                   >
                   <v-col cols=1></v-col>
                   <v-col>
-                    <v-card flat>
+                    <v-card v-if="purchase_list.food_product == -9999"></v-card>
+                    <v-card v-else flat>
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報{{ i+1 }}</b>
@@ -1579,8 +1580,15 @@
         this.$refs.rentalorderDlg.isDisplay = true
       },
       openAddPurchaseListDisplay() {
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+          headers: { 
+            "Content-Type": "application/json", 
+          }
+        })
+          .then(response => {
+            this.$refs.AddPurchaseListDlg.food_products = response.data
+          })
         this.$refs.AddPurchaseListDlg.isDisplay = true
-        console.log(this.$refs.AddPurchaseListDlg.isDisplay)
       },
       openPurchaseListSnackbar(){
         this.addRentalOrderSnackbar = true
@@ -1598,7 +1606,7 @@
         this.employee_id = id
         this.delete_dialog_employee = true
       },
-      oepn_delete_dialog_food(id){
+      open_delete_dialog_food(id){
         this.food_product_id = id
         this.delete_dialog_food = true
       },
