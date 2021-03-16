@@ -108,14 +108,6 @@ export default {
     }
   },
   mounted(groupId) {
-    axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    })
-      .then(response => {
-        this.food_products = response.data
-      })
     axios.get(process.env.VUE_APP_URL + "/fes_dates", {
         headers: {
           "Content-Type": "application/json",
