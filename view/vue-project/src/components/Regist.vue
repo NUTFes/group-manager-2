@@ -587,7 +587,7 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            @click
+                            @click="openStageOrderDisplay()"
                             >
                             <v-icon　class="pr-2">mdi-pencil</v-icon>
                           </v-btn>
@@ -666,7 +666,7 @@
                   :id="this.regist.stage_order.id"
                   :groupId="this.regist.stage_order.group_id"
                   :isSunny="this.regist.stage_order.is_sunny"
-                  :fesDataId="this.regist.stage_order.fes_date_id"
+                  :fesDateId="this.regist.stage_order.fes_date_id"
                   :stageFirst="this.regist.stage_order.stage_first"
                   :stageSecond="this.regist.stage_order.stage_second"
                   :useTimeInterval="this.regist.stage_order.use_time_interval"
