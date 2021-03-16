@@ -354,7 +354,7 @@ export default {
         });
     },
     delete_yes() {
-      const url = "/api/v1/get_purchase_list/" + this.$route.params.id;
+      const url = "/purchase_lists/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/purchase_lists");
     },

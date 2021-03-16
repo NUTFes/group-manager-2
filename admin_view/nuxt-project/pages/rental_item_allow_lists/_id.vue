@@ -332,6 +332,8 @@ export default {
       })
     },
     delete_yes: function() {
+      const url = "/rental_item_allow_lists/" + this.$route.params.id;
+      this.$axios.delete(url);
       this.$router.push('/rental_item_allow_lists')
     }
   }
