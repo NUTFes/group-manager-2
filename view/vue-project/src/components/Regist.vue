@@ -1,8 +1,5 @@
 <template>
-  <v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="8"
-      >
+<div>
       <v-card
         class = "mx-auto"
         outlined
@@ -470,7 +467,7 @@
                         <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditStageOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditStageOrder" fab text @click="openStageOrderDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                        <v-list>
@@ -538,6 +535,25 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!-- Edit Modal -->
+                <StageOrder ref="stageOrderDlg"
+                  :id="this.regist.stage_order.id"
+                  :groupId="this.regist.stage_order.group_id"
+                  :isSunny="this.regist.stage_order.is_sunny"
+                  :fesDataId="this.regist.stage_order.fes_date_id"
+                  :stageFirst="this.regist.stage_order.stage_first"
+                  :stageSecond="this.regist.stage_order.stage_second"
+                  :useTimeInterval="this.regist.stage_order.use_time_interval"
+                  :prepareTimeInterval="this.regist.stage_order.prepare_time_interval"
+                  :cleanupTimeInterval="this.regist.stage_order.cleanup_time_interval"
+                  :prepareStartTime="this.regist.stage_order.prepare_start_time"
+                  :performanceStartTime="this.regist.stage_order.performance_start_time"
+                  :performanceEndTime="this.regist.stage_order.performance_end_time"
+                  :cleanupEndTime="this.regist.stage_order.cleanup_end_time"
+                  @reload="reload"
+                  @openEmployeeSnackbar="openStageOrderSnackbar"
+                />
+
               </v-tab-item>
 
               <!-- 従業員情報 -->
@@ -672,6 +688,34 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <v-row>
+                  <v-col cols="10"></v-col>
+                  <v-col cols="1">
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn
+                          fab
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          color="purple accent-2"
+                          elevation="0"
+                          @click="openAddFoodProductDisplay()">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>販売食品を追加する</span>
+                    </v-tooltip>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+
+              <!-- AddModal -->  
+              <AddFoodProduct ref="AddFoodProductDlg"
+                :groupId="this.regist.group.id"
+                @reload="reload"
+              >
+              </AddFoodProduct>
                 <!--EditModal-->
                   <Foodproduct ref="foodproductDlg"
                     :id = "this.food_product_id"
@@ -745,14 +789,38 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <v-row>
+                  <v-col cols="10"></v-col>
+                  <v-col cols="1">
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn
+                          fab
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          color="purple accent-2"
+                          elevation="0"
+                          @click="openAddPurchaseListDisplay()">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>購入品を追加する</span>
+                    </v-tooltip>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+                <!-- AddModal -->
+                <AddPurchaseList ref="AddPurchaseListDlg"
+                  :groupId="this.regist.group.id"
+                  @reload="reload"
+                />
               </v-tab-item>
             </v-tabs>
           </v-col>
         </v-row>
       </v-card>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+    </div>
 </template>
 
 <script>
@@ -761,12 +829,15 @@
   import SubRep from '@/components/EditModal/sub_rep.vue'
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
+  import StageOrder from '@/components/EditModal/stage_order.vue'
   import Employee from '@/components/EditModal/employee.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Rentalorder from '@/components/EditModal/rental_order.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
   import Addemployee from '@/components/AddModal/employee.vue'
+  import AddFoodProduct from '@/components/AddModal/FoodProduct.vue'
+  import AddPurchaseList from '@/components/AddModal/PurchaseList.vue'
 
   export default {
     props: {
@@ -778,12 +849,15 @@
       SubRep,
       Power,
       Place,
+      StageOrder,
       Employee,
       Foodproduct,
       Rentalorder,
       Addpower,
       AddRentalOrder,
-      Addemployee
+      Addemployee,
+      AddFoodProduct,
+      AddPurchaseList,
     },
     data () {
     return {
@@ -804,6 +878,7 @@
       addpowerSnackbar: false,
       addRentalOrderSnackbar: false,
       addEmployeeSnackbar: false,
+      addRentalOrderSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -910,8 +985,15 @@
       openAddemployeeSnackbar() {
         this.addemployeeSnackbar = true
       },
+      openAddFoodProductDisplay() {
+        this.$refs.AddFoodProductDlg.isDisplay = true
+        console.log(this.$refs.AddFoodProductDlg.isDisplay)
+      },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
+      },
+      openStageOrderDisplay() {
+        this.$refs.stageOrderDlg.isDisplay = true
       },
       openSubRepDisplay() {
         this.$refs.subRepDlg.isDisplay = true
@@ -965,6 +1047,13 @@
         this.rental_item_id = rental_item_id
         this.num = num
         this.$refs.rentalorderDlg.isDisplay = true
+      },
+      openAddPurchaseListDisplay() {
+        this.$refs.AddPurchaseListDlg.isDisplay = true
+        console.log(this.$refs.AddPurchaseListDlg.isDisplay)
+      },
+      openPurchaseListSnackbar(){
+        this.addRentalOrderSnackbar = true
       },
     }
   }
