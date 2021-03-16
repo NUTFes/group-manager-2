@@ -673,7 +673,8 @@
                       <v-list-item>
                         <v-list-item-content>調理の有無</v-list-item-content>
                         <v-list-item-content v-if="food_product.is_cooking == -9999">未登録</v-list-item-content>
-                        <v-list-item-content v-else>{{ food_product.is_cooking }}</v-list-item-content>
+                        <v-list-item-content v-else-if="food_product.is_cooking === true">調理する</v-list-item-content>
+                        <v-list-item-content v-else>調理しない</v-list-item-content>
                       </v-list-item>
                     </v-list>
                   </v-card>
@@ -694,32 +695,32 @@
                           v-on="on" 
                           dark 
                           color="purple accent-2" 
-                          @click="openAddRentalOrderDisplay"
+                          @click="openAddFoodProductDisplay"
                           >
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                       </template>
-                      <span>物品申請を追加する</span>
+                      <span>販売食品情報申請を追加する</span>
                     </v-tooltip>
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
               </v-container>
               <!-- モーダルウィンドウコンポーネントを呼び出す -->
-              <AddRentalOrder ref="AddRentalOrderDlg"
+              <AddFoodProduct ref="AddFoodProductDlg"
                   :groupId="this.regist.group.id"
                   @reload="reload"
-                  @openRentalOrderSnackbar="openRentalOrderSnackbar">
-              </AddRentalOrder>
-              <!-- 情報を更新した場合スナックバーを表示する -->
+              >
+              </AddFoodProduct>
+              <!-- 情報を更新した場合スナックバーを表示する
               <v-snackbar
                 top
                 text
                 color="purple accent-2"
-                v-model="rentalOrderSnackbar"
+                v-model="foodPSnackbar"
                 >
                 物品申請情報を更新しました
-              </v-snackbar>
+              </v-snackbar> -->
 
                 <Foodproduct ref="foodproductDlg"
                   :id = "this.food_product_id"
@@ -866,6 +867,7 @@
       Place,
       Employee,
       Foodproduct,
+      AddFoodProduct,
       Addpower,
       AddRentalOrder,
       AddPurchaseList
@@ -1021,6 +1023,10 @@
         this.second_day_num = second_day_num
         this.is_cooking = is_cooking
         this.$refs.foodproductDlg.isDisplay = true
+      },
+      openAddFoodProductDisplay() {
+        this.$refs.AddFoodProductDlg.isDisplay = true
+        console.log(this.$refs.AddFoodProductDlg.isDisplay)
       },
       openAddpowerDisplay() {
         this.$refs.addpowerDlg.isDisplay = true
