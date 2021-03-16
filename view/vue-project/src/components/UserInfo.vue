@@ -1,15 +1,14 @@
 <template>
-  <v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
-      <v-card
+  <div>
+    <v-card
         class = "mx-auto"
+        height = "700px"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-account-circle</v-icon><b>ユーザー情報</b></v-card-title>  
+      <v-card-title style="background-color:#ECEFF1;" class="title"><v-icon class="pr-2" size="30">mdi-account-circle</v-icon><b>ユーザー情報</b></v-card-title>  
       <v-row>
         <v-col>
-          <v-card-text class="font-weight-bold display-1">
+          <v-card-text class="font-weight-bold title">
             {{ user.user.name }} 
           </v-card-text>
           <v-card-text class="font-weight-bold subtitle-1">
@@ -21,10 +20,8 @@
           </v-card-text>
         </v-col>
       </v-row>
-      </v-card>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+    </v-card>
+  </div>
 </template>
 
 <script>

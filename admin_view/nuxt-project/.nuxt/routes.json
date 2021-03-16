@@ -196,6 +196,13 @@
     "_name": "_18296e94"
   },
   {
+    "name": "user_page_setting",
+    "path": "/user_page_setting",
+    "component": "/app/nuxt-project/pages/user_page_setting/index.vue",
+    "chunkName": "pages/user_page_setting/index",
+    "_name": "_1fbc60ea"
+  },
+  {
     "name": "users",
     "path": "/users",
     "component": "/app/nuxt-project/pages/users/index.vue",
