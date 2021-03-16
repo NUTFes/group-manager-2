@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="12">
+      <v-col>
         <div class="card">
           <v-card flat>
             <v-container>
@@ -78,155 +78,63 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'groups',
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    参加団体一覧
+                    <v-icon class="ma-1">mdi-account-group</v-icon>
+                    参加団体
                     <v-spacer></v-spacer>
                   </v-card-title>
-                  <hr class="mt-n3" />
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
+                <v-col cols="10"><chart1></chart1></v-col
+              ></v-row>
+              <v-col cols="1"></v-col>
             </v-container>
           </v-card>
         </div>
       </v-col>
       <v-col>
         <div class="card">
-          <v-card flat>
+          <v-card
+            flat
+            :to="{
+              name: 'assign_items',
+            }"
+          >
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    ステージ一覧
+                    <v-icon class="ma-1">mdi-cube</v-icon>
+                    物品割り当て
                     <v-spacer></v-spacer>
                   </v-card-title>
-                  <hr class="mt-n3" />
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <div class="card">
-          <v-card flat>
-            <v-container>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    会場一覧
-                    <v-spacer></v-spacer>
-                  </v-card-title>
-                  <hr class="mt-n3" />
-                </v-col>
+                <v-col cols="5">在庫情報</v-col>
+                <v-col cols="5">割り当て情報</v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-        </div>
-      </v-col>
-      <v-col>
-        <div class="card">
-          <v-card flat>
-            <v-container>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    物品一覧
-                    <v-spacer></v-spacer>
-                  </v-card-title>
-                  <hr class="mt-n3" />
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-            </v-container>
-          </v-card>
-        </div>
-      </v-col>
-      <v-col>
-        <div class="card">
-          <v-card flat>
-            <v-container>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card-title class="font-weight-bold mt-3">
-                    <v-icon color="red" class="ma-1">mdi-account-cog</v-icon>
-                    ユーザー一覧
-                    <v-spacer></v-spacer>
-                  </v-card-title>
-                  <hr class="mt-n3" />
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-row> </v-row>
-                  あ
-                  <v-divider></v-divider>
-                  あ
-                  <v-row> </v-row>
-                </v-col>
+                <v-col cols="5"><chart2></chart2></v-col>
+                <v-col cols="5"><chart3></chart3></v-col>
                 <v-col cols="1"></v-col>
               </v-row>
             </v-container>
@@ -241,9 +149,15 @@
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
 import axios from "axios";
+import Chart1 from "./Chart_Group";
+import Chart2 from "./Chart_Stock";
+import Chart3 from "./Chart_Assign";
 
 export default {
   components: {
+    Chart1,
+    Chart2,
+    Chart3,
     Header,
     Menu,
   },
@@ -253,9 +167,11 @@ export default {
       user_detail: [],
       role: [],
       grade: [],
-      datepart: [],
+      department: [],
       student_id: [],
       tel: [],
+      rate: [],
+      groups_length: [],
     };
   },
   mounted() {
@@ -279,10 +195,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 20px;
-}
-</style>
