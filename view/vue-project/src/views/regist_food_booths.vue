@@ -50,7 +50,6 @@
                           :key="`${employeeStep}-content`"
                           :step="employeeStep"
                         >
-                        {{ groupId }}
                           <EmployeeCard
                             :groupId="groupId"
                             ref="employeeChild"
