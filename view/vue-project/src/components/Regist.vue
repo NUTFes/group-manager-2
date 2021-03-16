@@ -470,7 +470,7 @@
                         <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditStageOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-btn v-if="isEditStageOrder" fab text @click="openStageOrderDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
                       </v-card-title>
                       <hr>
                        <v-list>
@@ -538,6 +538,25 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!-- Edit Modal -->
+                <StageOrder ref="stageOrderDlg"
+                  :id="this.regist.stage_order.id"
+                  :groupId="this.regist.stage_order.group_id"
+                  :isSunny="this.regist.stage_order.is_sunny"
+                  :fesDataId="this.regist.stage_order.fes_date_id"
+                  :stageFirst="this.regist.stage_order.stage_first"
+                  :stageSecond="this.regist.stage_order.stage_second"
+                  :useTimeInterval="this.regist.stage_order.use_time_interval"
+                  :prepareTimeInterval="this.regist.stage_order.prepare_time_interval"
+                  :cleanupTimeInterval="this.regist.stage_order.cleanup_time_interval"
+                  :prepareStartTime="this.regist.stage_order.prepare_start_time"
+                  :performanceStartTime="this.regist.stage_order.performance_start_time"
+                  :performanceEndTime="this.regist.stage_order.performance_end_time"
+                  :cleanupEndTime="this.regist.stage_order.cleanup_end_time"
+                  @reload="reload"
+                  @openEmployeeSnackbar="openStageOrderSnackbar"
+                />
+
               </v-tab-item>
 
               <!-- 従業員情報 -->
@@ -761,6 +780,7 @@
   import SubRep from '@/components/EditModal/sub_rep.vue'
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
+  import StageOrder from '@/components/EditModal/stage_order.vue'
   import Employee from '@/components/EditModal/employee.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Rentalorder from '@/components/EditModal/rental_order.vue'
@@ -778,6 +798,7 @@
       SubRep,
       Power,
       Place,
+      StageOrder,
       Employee,
       Foodproduct,
       Rentalorder,
@@ -912,6 +933,9 @@
       },
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
+      },
+      openStageOrderDisplay() {
+        this.$refs.stageOrderDlg.isDisplay = true
       },
       openSubRepDisplay() {
         this.$refs.subRepDlg.isDisplay = true

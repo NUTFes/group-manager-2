@@ -107,7 +107,6 @@ class Api::V1::CurrentUserApiController < ApplicationController
         first_stage_order = "-9999"
         second_stage_order = "-9999"
         stage_date = "-9999"
-        stage_order = [] 
         stage_order = {
           use_time_interval: "-9999",
           prepare_time_interval: "-9999",

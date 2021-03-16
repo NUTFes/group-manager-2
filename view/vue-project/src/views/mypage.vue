@@ -3,10 +3,10 @@
     <DashBoard />
     <UserInfo />
     <News />
-    <div v-if="this.regist_info.length === 0">
+    <div v-if="this.regist_info.length === 0" style="text-align:center">
       <v-progress-circular
         indeterminate
-        color="primary"
+        color="purple accent-2"
         ></v-progress-circular>
     </div>
     <div v-else>
