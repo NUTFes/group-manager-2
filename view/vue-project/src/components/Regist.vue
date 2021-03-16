@@ -85,7 +85,21 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditGroup" text fab @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditGroup" 
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openGroupDisplay"
+                              >
+                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>団体情報を編集する</span>
+                        </v-tooltip>
                         <Group ref="groupDlg"
                           :groupId="regist.group.id"
                           :groupName="regist.group.name"
@@ -145,7 +159,21 @@
                       <v-card-title  style="color:#333333; font-size:25px">
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
-                      <v-btn v-if="isEditSubRep" text fab @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditSubRep" 
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openSubRepDisplay"
+                            >
+                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>副代表情報を編集する</span>
+                      </v-tooltip>
                       <SubRep ref="subRepDlg"
                           :groupId="regist.group.id"
                           :name="regist.sub_rep.name"
@@ -219,7 +247,21 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPlace" text fab @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditPlace"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openPlaceDisplay"
+                            >
+                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>会場申請情報を編集する</span>
+                      </v-tooltip>
                         <Place ref="placeDlg"
                           :groupId="regist.group.id"
                           :firstId="regist.place_order.first"
@@ -283,7 +325,21 @@
                       <v-card-title style="color:#333333; font-size:25px">
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditPowerOrder"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"
+                            >
+                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>電力申請情報を編集する</span>
+                      </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -391,7 +447,21 @@
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
                         <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditRentalOrder" text fab @click="openRentalorderDisplay(rental_order.id, rental_order.rental_item_id, rental_order.num)"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditRentalOrder"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openRentalorderDisplay(rental_order.id, rental_order.rental_item_id, rental_order.num)"
+                            >
+                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請情報を編集する</span>
+                      </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -470,7 +540,21 @@
                         <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditStageOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditStageOrder"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click
+                            >
+                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>ステージ利用申請情報を編集する</span>
+                      </v-tooltip>
                       </v-card-title>
                       <hr>
                        <v-list>
@@ -553,7 +637,21 @@
                         <v-icon class="pr-2" size="30">mdi-account</v-icon>
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditEmployee" text fab @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditEmployee"
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"
+                              >
+                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>従業員情報を編集する</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -640,7 +738,21 @@
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
                         <b>販売食品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditFoodproduct" text fab @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditFoodproduct"
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"
+                              >
+                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>販売食品情報を編集する</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -706,7 +818,21 @@
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPurchaseList" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditPurchaseList"
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click
+                              >
+                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>購入品情報情報を編集する</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
