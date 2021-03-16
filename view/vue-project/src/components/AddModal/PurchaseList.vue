@@ -13,59 +13,58 @@
             <v-card-text>
               <v-form ref="form">
                 <v-select
-                    label="販売食品"
-                    v-model="foodProductId"
-                    :items="food_products"
-                    :menu-props="{
-                      top: true,
-                      offsetY: true,
-                    }"
-                    item-text="name"
-                    item-value="id"
-                    outlined
-                    ></v-select>
-                <v-text-field
-                    class="body-1"
-                    label="購入品"
-                    v-model="item"
-                    background-color="white"
-                    outlined
-                    clearable
-                    >
-                </v-text-field>
-                  <v-select
-                      label="なまもの"
-                      :items="isFresh"
-                      item-text="label"
-                      item-value="value"
-                      :menu-props="{
-                                   top: true,
-                                   offsetY: true,
-                                   }"
-                      outlined
-                      ></v-select>
-                  <v-select
-                      label="開催日"
-                      v-model="fesDateId"
-                      :items="fes_dates"
-                      item-text="date"
-                      item-value="id"
-                      outlined
-                      ></v-select>
-                  <v-select
-                      label="店"
-                      v-model="shopId"
-                      :items="shops"
-                      :menu-props="{
-                                   top: true,
-                                   offsetY: true,
-                                   }"
-                      item-text="name"
-                      item-value="id"
-                      outlined
-                      ></v-select>
+                  label="販売食品"
+                  v-model="foodProductId"
+                  :items="food_products"
+                  :menu-props="{
+                    top: true,
+                    offsetY: true,
+                  }"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                ></v-select>
+              <v-text-field
+                class="body-1"
+                label="購入品"
+                v-model="item"
+                background-color="white"
+                outlined
+                clearable
+              >
+              </v-text-field>
+                <v-select
+                  label="なまもの"
+                  :items="isFresh"
+                  item-text="label"
+                  item-value="value"
+                  :menu-props="{
+                    top: true,
+                    offsetY: true,
+                  }"
+                  outlined
+                ></v-select>
+                <v-select
+                  label="開催日"
+                  v-model="fesDateId"
+                  :items="fes_dates"
+                  item-text="date"
+                  item-value="id"
+                  outlined
+                ></v-select>
+                <v-select
+                  label="店"
+                  v-model="shopId"
+                  :items="shops"
+                  :menu-props="{
+                    top: true,
+                    offsetY: true,
+                  }"
+                  item-text="name"
+                  item-value="id"
+                  outlined
+                ></v-select>
               </v-form>
-
             </v-card-text>
             <v-row>
               <v-col cols=4></v-col>
@@ -90,12 +89,13 @@ export default {
   },
   data () {
     return {
-      isDisplay: true,
-      purchase_lists: [],
+      isDisplay: false,
       food_products: [],
+      purchase_lists: [],
       groups: [],
       fes_dates: [],
       shops: [],
+      Group: [],
       foodProductId: [],
       fesDateId: [],
       shopId: [],
@@ -104,23 +104,51 @@ export default {
         {label: 'はい', value: 'true'},
         {label: 'いいえ', value: 'false'}
       ],
+
     }
   },
+  mounted(groupId) {
+    axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
+      headers: { 
+        "Content-Type": "application/json", 
+      }
+    })
+      .then(response => {
+        this.food_products = response.data
+      })
+    axios.get(process.env.VUE_APP_URL + "/fes_dates", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.fes_dates = response.data;
+      })
+    axios.get(process.env.VUE_APP_URL + "/shops", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.shops = response.data;
+      })
+    },
+
   methods: {
     reload: function () {
-      axios.get(process.env.VUE_APP_URL + "/api/v1/get_purhcase_lists", {
+      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products", {
         headers: {
           "Content-Type": "application/json",
         },
       })
         .then((response) => {
-          this.purhcase_list = response.data;
+          this.purchase_lists = response.data;
         });
     },
     register: function () {
       axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
-      params.append("group_id", this.groupId);
+      params.append("group_id", this.Group);
       params.append("food_product_id", this.foodProductId);
       params.append("fes_date_id", this.fesDateId);
       params.append("shop_id", this.shopId);
@@ -130,7 +158,7 @@ export default {
         console.log(response);
         this.isDisplay = false;
         this.$emit('reload')
-        this.$emit('openPurchaseSnackbar')
+        this.Group = "";
         this.foodProductId = "";
         this.fesDateId = "";
         this.shopId = "";
@@ -138,6 +166,6 @@ export default {
         this.isFresh = "";
       });
     },
-  },
+  }
 }
-
+</script>
