@@ -579,7 +579,6 @@
                         <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
-
                         <v-tooltip top>
                         <template v-slot:activator="{ on, attrs  }">
                           <v-btn
@@ -588,7 +587,7 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            @click
+                            @click="openStageOrderDisplay()"
                             >
                             <v-icon　class="pr-2">mdi-pencil</v-icon>
                           </v-btn>
@@ -667,7 +666,7 @@
                   :id="this.regist.stage_order.id"
                   :groupId="this.regist.stage_order.group_id"
                   :isSunny="this.regist.stage_order.is_sunny"
-                  :fesDataId="this.regist.stage_order.fes_date_id"
+                  :fesDateId="this.regist.stage_order.fes_date_id"
                   :stageFirst="this.regist.stage_order.stage_first"
                   :stageSecond="this.regist.stage_order.stage_second"
                   :useTimeInterval="this.regist.stage_order.use_time_interval"
@@ -680,6 +679,7 @@
                   @reload="reload"
                   @openEmployeeSnackbar="openStageOrderSnackbar"
                 />
+
               </v-tab-item>
 
               <!-- 従業員情報 -->

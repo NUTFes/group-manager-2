@@ -53,16 +53,16 @@
                     </v-radio-group>
                     <div v-if="radioGroup === 1">
                       <v-select
-                        label="使用時間"
-                        v-model="useTimeInterval"
+                        label="準備時間"
+                        v-model="prepareTimeInterval"
                         :items="time_interval"
                         text
                         outlined
                         clearable
                         />
                         <v-select
-                          label="準備時間"
-                          v-model="prepareTimeInterval"
+                          label="使用時間"
+                          v-model="useTimeInterval"
                           :items="time_interval"
                           text
                           outlined
@@ -70,7 +70,7 @@
                           />
                           <v-select
                             label="掃除時間"
-                              v-model="cleanupTimeInterval"
+                            v-model="cleanupTimeInterval"
                             :items="time_interval"
                             text
                             outlined
@@ -119,10 +119,10 @@
         </v-row>
         <v-row>
           <v-col cols=4></v-col>
-            <v-col cols=4>
+          <v-col cols=4>
             <v-btn color="blue darken-1" large block dark @click="edit">編集する</v-btn>
-            </v-col>
-            <v-col cols=4></v-col>
+          </v-col>
+          <v-col cols=4></v-col>
         </v-row>
       </v-container>
     </v-card>
@@ -136,7 +136,7 @@ export default {
     id: Number,
     groupId: Number,
     isSunny: Boolean,
-    fesDataId: Number,
+    fesDateId: Number,
     stageFirst: Number,
     stageSecond: Number,
     useTimeInterval: String,
@@ -170,12 +170,13 @@ export default {
   },
   methods: {
     edit: function() {
-      if ( !this.$refs.form.validate() ) return;
-
-      const url = process.env.VUE_APP_URL + '/employees' + '/' + this.id + '?group_id=' + this.groupId + '&name=' + this.name + '&student_id=' + this.studentId
+      const url = process.env.VUE_APP_URL + '/stage_orders/' + this.id + '?group_id=' + this.groupId + '&is_sunny=' + this.isSunny + '&fes_date_id=' + this.fesDateId + '&stage_first=' + this.stageFirst + '&stage_second=' + this.stageSecond + '&use_time_interval=' + this.useTimeInterval + '&prepare_time_interval=' + this.prepareTimeInterval + '&cleanup_time_interval=' + this.cleanupTimeInterval + '&prepare_start_time=' + this.prepareStartTime + '&performance_start_time=' + this.performanceStartTime + '&performance_end_time=' + this.performanceEndTime + '&cleanup_end_time=' + this.cleanupEndTime
+      console.log(url)
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       axios.put(url).then(
         (response) => {
+          console.log("aaaaaaaaaaaaaa")
+          console.log(response)
           this.isDisplay = false
           this.$emit('openEmployeeSnackbar')
           this.$emit('reload')
