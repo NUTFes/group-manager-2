@@ -7,7 +7,23 @@
         class = "mx-auto"
         outlined
       >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報</b></v-card-title>
+      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報</b>
+        <v-spacer></v-spacer>  
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              text
+              v-bind="attrs"
+              v-on="on"
+              @click="open_delete_dialog(regist.group.id)"
+              fab
+              ><v-icon class="ma-5">mdi-delete</v-icon>
+            </v-btn>
+          </template>
+          <span>削除</span>
+        </v-tooltip>
+      </v-card-title>
+
         <v-divider class="mx-4"></v-divider>
         <v-row>
           <v-col>
@@ -74,8 +90,7 @@
               >
                 <v-icon class="pr-2">mdi-cart</v-icon>購入品情報
               </v-tab>
-              <v-tab-item
-                >
+              <v-tab-item>
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
@@ -284,6 +299,19 @@
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_power(power_order.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -392,6 +420,19 @@
                         <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditRentalOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_item(rental_order.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -542,6 +583,19 @@
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditEmployee" text fab @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_employee(employee.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -629,6 +683,19 @@
                         <b>販売食品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditFoodproduct" text fab @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="oepn_delete_dialog_food(food_product.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -695,6 +762,19 @@
                         <b>購入品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-btn v-if="isEditPurchaseList" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_purchase(purchase_list.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -738,10 +818,176 @@
           </v-col>
         </v-row>
       </v-card>
+      <!-- 削除ダイアログ(登録情報すべて) -->
+      <v-dialog v-model="delete_dialog" width="500">
+        <v-card>
+          <v-card-title class="headline blue-grey darken-3">
+            <div style="color: white">
+              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn text @click="delete_dialog = false" fab dark>
+              ​ <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="red" dark @click="delete_yes">
+              はい
+            </v-btn>
+            <v-btn flat color="blue" dark @click="delete_dialog = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(電力申請) -->
+      <v-dialog v-model="delete_dialog_power" width="500">
+        <v-card>
+          <v-card-title class="headline blue-grey darken-3">
+            <div style="color: white">
+              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn text @click="delete_dialog_power = false" fab dark>
+              ​ <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="red" dark @click="delete_yes_power">
+              はい
+            </v-btn>
+            <v-btn flat color="blue" dark @click="delete_dialog_power = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- 削除ダイアログ(物品申請) -->
+      <v-dialog v-model="delete_dialog_item" width="500">
+        <v-card>
+          <v-card-title class="headline blue-grey darken-3">
+            <div style="color: white">
+              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn text @click="delete_dialog_item = false" fab dark>
+              ​ <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="red" dark @click="delete_yes_item">
+              はい
+            </v-btn>
+            <v-btn flat color="blue" dark @click="delete_dialog_item = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(従業員) -->
+      <v-dialog v-model="delete_dialog_employee" width="500">
+        <v-card>
+          <v-card-title class="headline blue-grey darken-3">
+            <div style="color: white">
+              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn text @click="delete_dialog_employee = false" fab dark>
+              ​ <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="red" dark @click="delete_yes_employee">
+              はい
+            </v-btn>
+            <v-btn flat color="blue" dark @click="delete_dialog_employee = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- 削除ダイアログ(販売食品) -->
+      <v-dialog v-model="delete_dialog_food" width="500">
+        <v-card>
+          <v-card-title class="headline blue-grey darken-3">
+            <div style="color: white">
+              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn text @click="delete_dialog_food = false" fab dark>
+              ​ <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="red" dark @click="delete_yes_food">
+              はい
+            </v-btn>
+            <v-btn flat color="blue" dark @click="delete_dialog_food = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- 削除ダイアログ(購入品) -->
+      <v-dialog v-model="delete_dialog_purchase" width="500">
+        <v-card>
+          <v-card-title class="headline blue-grey darken-3">
+            <div style="color: white">
+              <v-icon class="ma-5" dark>mdi-delete</v-icon>削除
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn text @click="delete_dialog_purchase = false" fab dark>
+              ​ <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn flat color="red" dark @click="delete_yes_purchase">
+              はい
+            </v-btn>
+            <v-btn flat color="blue" dark @click="delete_dialog_purchase = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-col>
     <v-col cols="2"></v-col>
   </v-row>
 </template>
+
 
 <script>
   import axios from 'axios'
@@ -780,6 +1026,16 @@
       ],
       user: [],
       tab: 'tab-2',
+      delete_dialog: false,
+      delete_dialog_group: false,
+      delete_dialog_subrep: false,
+      delete_dialog_place: false,
+      delete_dialog_power: false,
+      delete_dialog_item: false,
+      delete_dialog_stage: false,
+      delete_dialog_employee: false,
+      delete_dialog_food: false,
+      delete_dialog_purchase: false,
       groupSnackbar: false,
       placeSnackbar: false,
       subrepSnackbar: false,
@@ -799,6 +1055,9 @@
       isEditEmployee: [],
       isEditFoodproduct:[],
       isEditPurchaseList: [],
+      //削除コマンド用
+      rental_order_id: [],
+      purchase_list_id: [],
       // 物品申請用
       isAddRentalOrder: [],
       num: [],
@@ -859,10 +1118,59 @@
           console.log(response)
         })
     },
+
     methods: {
+      //削除メソッド(団体すべて)
+      delete_yes() {
+      const url = process.env.VUE_APP_URL + "/groups/" + this.group_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog = false
+      },
+      //削除メソッド(電力申請)
+      delete_yes_power() {
+      const url = process.env.VUE_APP_URL + "/power_orders/" + this.power_order_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog_power = false
+      },
+      //削除メソッド(物品申請)
+      delete_yes_item() {
+      const url = process.env.VUE_APP_URL +  "/rental_orders/" + this.rental_order_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog_item = false
+      },
+      //削除メソッド(従業員申請)
+      delete_yes_employee() {
+      const url = process.env.VUE_APP_URL +  "/employees/" + this.employee_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog_employee = false
+      },
+      //削除メソッド(販売食品)
+      delete_yes_food() {
+        console.log("aaaaaaaaaa")
+      const url = process.env.VUE_APP_URL + "/food_products/" + this.food_product_id;
+      console.log(url)
+      axios.delete(url);      
+      this.reload()
+      this.delete_dialog_food = false
+      },
+      //削除メソッド(購入品)
+      delete_yes_purchase() {
+                console.log("aaaaaaaaaa")
+      const url = process.env.VUE_APP_URL + "/purchase_lists/" + this.purchase_list_id;
+            console.log(url)
+      axios.delete(url)      
+      this.reload()
+      this.delete_dialog_purchase = false
+      },
+
       reload() {
         this.$emit('reload');
       },
+      //編集後Snackbar
       openGroupSnackbar() {
         this.groupSnackbar = true
       },
@@ -881,6 +1189,7 @@
       openFoodproductSnackbar() {
         this.foodproductSnackbar = true
       },
+      //追加後Snackkbar
       openAddpowerSnackbar() {
         this.addPowerSnackbar = true
       },
@@ -890,6 +1199,7 @@
       openAddemployeeSnackbar() {
         this.addemployeeSnackbar = true
       },
+      //編集用コンポーネント
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
       },
@@ -898,14 +1208,6 @@
       },
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
-      },
-      openAddRentalOrderDisplay(id, group_id, name, num) {
-        this.rental_order_id = id
-        this.group_id = group_id
-        this.name = name
-        this.num = num
-        this.$refs.AddRentalOrderDlg.isDisplay = true
-        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
       },
       openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
         this.power_order_id = id
@@ -934,11 +1236,46 @@
         this.is_cooking = is_cooking
         this.$refs.foodproductDlg.isDisplay = true
       },
+      //追加用コンポーネント
+      openAddRentalOrderDisplay(id, group_id, name, num) {
+        this.rental_order_id = id
+        this.group_id = group_id
+        this.name = name
+        this.num = num
+        this.$refs.AddRentalOrderDlg.isDisplay = true
+        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
+      },
       openAddpowerDisplay() {
         this.$refs.addpowerDlg.isDisplay = true
       },
       openAddemployeeDisplay() {
         this.$refs.addemployeeDlg.isDisplay = true
+      },
+
+      //削除用ダイアログ
+      open_delete_dialog_power(id){
+        this.power_order_id = id
+        this.delete_dialog_power = true
+      },
+      open_delete_dialog_item(id){
+        this.rental_order_id = id
+        this.delete_dialog_item = true
+      },
+      open_delete_dialog_employee(id){
+        this.employee_id = id
+        this.delete_dialog_employee = true
+      },
+      oepn_delete_dialog_food(id){
+        this.food_product_id = id
+        this.delete_dialog_food = true
+      },
+      open_delete_dialog(id){
+        this.group_id = id
+        this.delete_dialog = true
+      },
+      open_delete_dialog_purchase(id){
+        this.purchase_list_id = id
+        this.delete_dialog_purchase = true
       },
     }
   }
