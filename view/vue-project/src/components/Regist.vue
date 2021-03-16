@@ -709,6 +709,7 @@
                             </v-btn>
                           </template>
                           <span>従業員情報を編集する</span>
+                        </v-tooltip>
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
@@ -822,6 +823,7 @@
                             </v-btn>
                           </template>
                           <span>販売食品情報を編集する</span>
+                        </v-tooltip>
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
@@ -942,6 +944,7 @@
                             </v-btn>
                           </template>
                           <span>購入品情報情報を編集する</span>
+                        </v-tooltip>
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
