@@ -1,10 +1,8 @@
 <template>
-  <v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
+  <div>
       <v-card class="mx-auto" outlined>
-        <v-card-title style="background-color: #eceff1; font-size: 30px">
-          <v-icon class="pr-2" size="40">mdi-bell</v-icon>
+        <v-card-title style="background-color: #eceff1;" class="title">
+          <v-icon class="pr-2" size="30">mdi-bell</v-icon>
           <b>お知らせ</b>
         </v-card-title>
 
@@ -49,9 +47,7 @@
           </v-card>
         </v-dialog>
       </v-card>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+    </div>
 </template>
 
 <script>
