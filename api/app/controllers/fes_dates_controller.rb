@@ -13,14 +13,18 @@ class FesDatesController < ApplicationController
     def create
       @fes_date = FesDate.new(fes_date_params)
       @fes_date.save
+      render json: @fes_date
     end
   
     def update
       @fes_date.update(fes_date_params)
+      render json: @fes_date
     end
   
     def destroy
       @fes_date.destroy
+      @fes_dates = FesDate.all
+      render json: @fes_dates
     end
   
     private
@@ -31,7 +35,7 @@ class FesDatesController < ApplicationController
   
       # Only allow a list of trusted parameters through.
       def fes_date_params
-        params.permit(:date_num)
+        params.permit(:days_num, :date, :day, :fes_year_id)
       end
   end
   

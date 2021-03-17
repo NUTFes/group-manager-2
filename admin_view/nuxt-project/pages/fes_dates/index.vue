@@ -7,7 +7,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-calendar-multiple</v-icon>開催年
+                <v-icon class="mr-5">mdi-calendar-multiple</v-icon>開催日
                 <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -17,12 +17,12 @@
                             text
                             v-bind="attrs"
                             v-on="on"
-                            @click="dialog=true"
+                            @click="openModal()"
                             >
                             <v-icon dark>mdi-plus-circle-outline</v-icon>
                     </v-btn>
                   </template>
-                  <span>開催年の追加</span>
+                  <span>開催日の追加</span>
                 </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -45,7 +45,7 @@
                   <v-card-title class="headline blue-grey darken-3">
                     <div style="color: white">
                       <v-icon class="ma-5" dark>mdi-calendar-multiple</v-icon>
-                      開催年の追加 
+                      開催日の追加 
                     </div>
                     <v-spacer></v-spacer>
                     <v-btn text @click="dialog = false" fab dark>
@@ -55,14 +55,44 @@
                   <v-row>
                     <v-col cols="1"></v-col>
                     <v-col cols="10">
-                      <v-text-field
+                      <v-select
                         class="body-1"
                         label="開催年"
                         background-color="white"
                         outlined
-                        v-model="year_num"
+                        v-model="fes_year_id"
+                        :items="fes_years"
+                        item-text="year_num"
+                        item-value="id"
                         clearable
-                        type="number"
+                      >
+                      </v-select>
+                      <v-select
+                        class="body-1"
+                        label="days_num"
+                        background-color="white"
+                        outlined
+                        v-model="days_num"
+                        :items="days_num_list"
+                        clearable
+                      >
+                      </v-select>
+                      <v-text-field
+                        class="body-1"
+                        label="開催日"
+                        background-color="white"
+                        outlined
+                        v-model="date"
+                        clearable
+                      >
+                      </v-text-field>
+                      <v-text-field
+                        class="body-1"
+                        label="曜日"
+                        background-color="white"
+                        outlined
+                        v-model="day"
+                        clearable
                       >
                       </v-text-field>
                     </v-col>
@@ -78,11 +108,7 @@
                           block
                           dark
                           color="blue"
-                          @click="
-                            register();
-                            dialog = false;
-                            reload;
-                          "
+                          @click="register()"
                           >登録
                         </v-btn>
                       </v-card-actions>
@@ -95,7 +121,7 @@
 
               <hr class="mt-n3">
               <template>
-                <div class="text-center" v-if="fes_years.length === 0">
+                <div class="text-center" v-if="fes_dates.length === 0">
                   <br><br>
                   <v-progress-circular
                     indeterminate
@@ -106,18 +132,18 @@
                 <div v-else>
                   <v-data-table
                     :headers="headers"
-                    :items="fes_years"
+                    :items="fes_dates"
                     class="elevation-0 my-9"
                     @click:row="
                                 (data) =>
-                                $router.push({ path: `/fes_years/${data.id}`})
+                                $router.push({ path: `/fes_dates/${data.fes_date.id}`})
                                 "
                     >
-                    <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | format-date }}
+                    <template v-slot:item.fes_date.created_at="{ item }">
+                      {{ item.fes_date.created_at | format-date }}
                     </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | format-date }}
+                    <template v-slot:item.fes_date.updated_at="{ item }">
+                      {{ item.fes_date.updated_at | format-date }}
                     </template>
                   </v-data-table>                      
                 </div>
@@ -136,49 +162,76 @@
 export default {
   data() {
     return {
+      fes_dates: [],
       fes_years: [],
-      year_num: [],
+      days_num: [],
+      date: [],
+      day: [],
+      fes_year_id: [],
       dialog:false,
       headers:[
-        { text: 'ID', value: 'id' },
-        { text: '開催年', value: 'year_num' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
+        { text: 'ID', value: 'fes_date.id' },
+        { text: '開催年', value: 'fes_year' },
+        { text: 'num', value: 'fes_date.days_num' },
+        { text: '開催日', value: 'fes_date.date' },
+        { text: '曜日', value: 'fes_date.day' },
+        { text: '日時', value: 'fes_date.created_at' },
+        { text: '編集日時', value: 'fes_date.updated_at' },
       ],
+      days_num_list: [0, 1, 2],
     }
   },
   mounted() {
-    this.$axios.get('/fes_years', {
+    this.$axios.get('/api/v1/get_fes_dates', {
       headers: { 
         "Content-Type": "application/json", 
       },
     }
     )
       .then(response => {
-        this.fes_years = response.data
+        this.fes_dates = response.data
       })
   },
 
   methods:{
+    openModal: function(){
+      this.$axios
+        .get("/fes_years", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.fes_years = response.data;
+        })
+      this.dialog = true
+    },
     reload: function() {
-      this.$axios.get('/fes_years', {
+      this.$axios.get('/api/v1/get_fes_dates', {
         headers: { 
           "Content-Type": "application/json", 
         },
       }
       )
         .then(response => {
-          this.fes_years = response.data
+          this.fes_dates = response.data
         })
     },
     register: function() {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
-      params.append("year_num", this.year_num);
-      this.$axios.post('/fes_years', params).then(response => {
+      params.append("days_num", this.year_num);
+      params.append("date", this.date);
+      params.append("day", this.day);
+      params.append("fes_year_id", this.fes_year_id);
+      this.$axios.post('/fes_dates', params).then(response => {
         this.reload()
+        this.dialog = false
       })
-      this.year_num = []
+      this.fes_year_id = []
+      this.days_num = []
+      this.date = []
+      this.day = []
     },
   }
 }
