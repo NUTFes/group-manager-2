@@ -129,6 +129,8 @@ export default {
         { title: '割り当て物品一覧', icon: 'mdi-cube-outline', click: '/assign_rental_items' },
         { title: 'ステージ一覧', icon: 'mdi-microphone-variant', click: '/stages' },
         { title: '店一覧', icon: 'mdi-cart-outline', click: '/shops' },
+        { title: '開催年', icon: 'mdi-calendar-blank-multiple', click: '/fes_years' },
+        { title: '開催日', icon: 'mdi-calendar-month', click: '/fes_dates' },
 
       ],
       // 申請系
@@ -170,7 +172,3 @@ export default {
   },
 }
 </script>
-
- <style>
-
-</style>
