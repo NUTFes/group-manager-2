@@ -6,7 +6,7 @@
           <v-col cols="2" v-if="main && print">
             <Menu/>
           </v-col>
-          <v-col cols="10">
+          <v-col cols=10>
             <v-main>
               <transition mode='in-out'>
               <nuxt />
@@ -195,5 +195,8 @@ export default {
   padding: 5px 10px;
   font-size: 0.8125rem;
   text-decoration: none;
+}
+.card {
+  padding-right: 5%
 }
 </style>

@@ -77,7 +77,7 @@
     </v-row>
     <v-row>
       <v-col>
-        <div class="card">
+        <div>
           <v-card
             flat
             :to="{
@@ -91,14 +91,16 @@
                   <v-card-title class="font-weight-bold mt-3">
                     <v-icon class="ma-1">mdi-account-group</v-icon>
                     参加団体
-                    <v-spacer></v-spacer>
                   </v-card-title>
+                  <v-divider></v-divider>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10"><chart1></chart1></v-col
+                <v-col cols="10">
+                    <chart1></chart1>
+                </v-col
               ></v-row>
               <v-col cols="1"></v-col>
             </v-container>
@@ -106,7 +108,37 @@
         </div>
       </v-col>
       <v-col>
-        <div class="card">
+        <div style="padding-right:10%">
+          <v-card 
+             flat
+             :to="{
+                  name: 'users'
+                  }"
+             >
+             <v-row>
+               <v-col cols=1></v-col>
+               <v-col cols=10>
+                 <v-card-title class="font-weight-bold mt-3">
+                   <v-icon class="ma-1">mdi-account-circle</v-icon>
+                   ユーザー数
+                 </v-card-title>
+                 <v-divider></v-divider>
+                 <v-row>
+                   <v-col cols=6>
+                     <br><br>
+                     <v-card-text><div style="font-size:100px; text-align:center">{{ dashboard_data.all_user_num }}</div><br><br><br><div style="font-size:20px; text-align:center">people</div></v-card-text>
+                   </v-col>
+                   <v-col cols=6>
+                     <v-card-text><v-chip color="red" text-color="white"><v-avatar left class="red darken-4">{{ dashboard_data.developer_num }}</v-avatar>developers</v-chip></v-card-text>
+                     <v-card-text><v-chip color="blue" text-color="white"><v-avatar left class="blue darken-4">{{ dashboard_data.manager_num }}</v-avatar>managers</v-chip></v-card-text>
+                     <v-card-text><v-chip color="green" text-color="white"><v-avatar left class="green darken-4">{{ dashboard_data.user_num }}</v-avatar>users</v-chip></v-card-text>
+                   </v-col>
+                 </v-row>
+               </v-col>
+               <v-col cols=1></v-col>
+             </v-row>
+          </v-card>
+          <br>
           <v-card
             flat
             :to="{
@@ -120,8 +152,8 @@
                   <v-card-title class="font-weight-bold mt-3">
                     <v-icon class="ma-1">mdi-cube</v-icon>
                     物品割り当て
-                    <v-spacer></v-spacer>
                   </v-card-title>
+                  <v-divider></v-divider>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
@@ -172,6 +204,7 @@ export default {
       tel: [],
       rate: [],
       groups_length: [],
+      dashboard_data: [],
     };
   },
   mounted() {
@@ -191,6 +224,15 @@ export default {
         this.department = response.data.department;
         this.student_id = response.data.student_id;
         this.tel = response.data.tel;
+      });
+    this.$axios
+      .get("api/v1/dashboard", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.dashboard_data = response.data;
       });
   },
 };

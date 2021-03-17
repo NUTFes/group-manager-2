@@ -115,7 +115,7 @@ export default {
       drawer: true,
       // マイページ系
       mypage_items: [
-        { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
+        { title: 'ダッシュボード', icon: 'mdi-view-dashboard', click: '/dashboard'},
       ],
       // 一覧系
       list_items: [

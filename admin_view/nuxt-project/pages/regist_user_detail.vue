@@ -153,7 +153,7 @@ export default {
       params.append('user_id', this.user.id);
       this.$axios.post('/user_details', params).then(
         (response) => {
-          this.$router.push('/mypage')
+          this.$router.push('/dashboard')
         },
         (error) => {
           return error
@@ -186,9 +186,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.card {
-  padding-top: 5%;
-  padding-left: 20%;
-}
-</style>

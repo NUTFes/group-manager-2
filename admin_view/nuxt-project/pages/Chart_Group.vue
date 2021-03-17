@@ -17,9 +17,8 @@ export default {
         ],
         datasets: [
           {
-            label: "Data One",
+            label: "参加団体数",
             data: [0, 0, 0, 0, 0, 0],
-            // data: [],
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",
@@ -40,6 +39,12 @@ export default {
                 display: true,
                 labelString: "団体数",
               },
+              ticks: {
+                min: 0,
+                max: 30,
+                fontSize: 14,
+                stepSize: 5  
+              },
             },
           ],
         },
@@ -47,23 +52,6 @@ export default {
     };
   },
   mounted() {
-    this.$axios
-      .get("api/v1/users/get_user_detail", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grad;
-        this.department = response.data.department;
-        this.student_id = response.data.student_id;
-        this.tel = response.data.tel;
-      });
     this.$axios
       .get("api/v1/dashboard", {
         headers: {

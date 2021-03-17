@@ -416,10 +416,3 @@ export default {
     width: 30%;
   }
 </style>  
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%
-}
-</style>
