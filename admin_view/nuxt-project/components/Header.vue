@@ -2,9 +2,9 @@
   <div>
     <v-row>
       <v-app-bar app dark dense color="#424242">
-        <v-toolbar-title>参加団体管理アプリ-管理者ページ</v-toolbar-title>
+        <v-toolbar-title><v-btn text to="/dashboard" color="#424242"><div style="color:white">参加団体管理アプリ-管理者ページ</div></v-btn></v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn text to="/mypage" color="#424242">
+        <v-btn text to="/dashboard" color="#424242">
           <v-icon color="white">mdi-account-circle</v-icon>
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>

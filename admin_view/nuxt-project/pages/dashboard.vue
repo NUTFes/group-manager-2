@@ -77,7 +77,7 @@
     </v-row>
     <v-row>
       <v-col>
-        <div class="card">
+        <div>
           <v-card
             flat
             :to="{
@@ -91,14 +91,16 @@
                   <v-card-title class="font-weight-bold mt-3">
                     <v-icon class="ma-1">mdi-account-group</v-icon>
                     参加団体
-                    <v-spacer></v-spacer>
                   </v-card-title>
+                  <v-divider></v-divider>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="1"></v-col>
-                <v-col cols="10"><chart1></chart1></v-col
+                <v-col cols="10">
+                    <chart1></chart1>
+                </v-col
               ></v-row>
               <v-col cols="1"></v-col>
             </v-container>
@@ -106,7 +108,7 @@
         </div>
       </v-col>
       <v-col>
-        <div class="card">
+        <div style="padding-right:10%">
           <v-card
             flat
             :to="{
@@ -120,8 +122,8 @@
                   <v-card-title class="font-weight-bold mt-3">
                     <v-icon class="ma-1">mdi-cube</v-icon>
                     物品割り当て
-                    <v-spacer></v-spacer>
                   </v-card-title>
+                  <v-divider></v-divider>
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
