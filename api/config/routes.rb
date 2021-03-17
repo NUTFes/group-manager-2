@@ -93,6 +93,9 @@ Rails.application.routes.draw do
       # 購入品周り
       get "get_purchase_lists" => "purchase_lists_api#get_purchase_lists"
       get "get_purchase_list/:id" => "purchase_lists_api#get_purchase_list"
+      # 開催日周り
+      get "get_fes_dates" => "fes_dates_api#get_fes_dates"
+      get "get_fes_date/:id" => "fes_dates_api#get_fes_date"
     end
   end
   namespace :api do
