@@ -3,12 +3,6 @@
     <v-row>
       <v-col cols=4></v-col>
       <v-col>
-        <v-card-text><router-link to="/users">ユーザー一覧</router-link> > 印刷</v-card-text>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols=4></v-col>
-      <v-col>
         <h1 style="color:#333333;">印刷プレビュー</h1>
       </v-col>
       <v-col cols=2></v-col>
@@ -16,7 +10,7 @@
     <v-row>
       <v-col cols=4></v-col>
       <v-col cols=3>
-        <v-btn rounded block color="blue" height="50" to="/users"><v-icon class="mr-3" style="color:white">mdi-arrow-left-bold</v-icon><div style="color:white">管理者ページに戻る</div></v-btn>
+        <v-btn rounded block color="blue" height="50" to="/print"><v-icon class="mr-3" style="color:white">mdi-arrow-left-bold</v-icon><div style="color:white">管理者画面に戻る</div></v-btn>
       </v-col>
       <v-col cols=3>
         <v-btn rounded block height="50" color="primary" @click="handlePrint"><v-icon class="mr-3">mdi-printer</v-icon>印刷する</v-btn>

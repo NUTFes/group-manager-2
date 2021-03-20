@@ -37,7 +37,7 @@ export default {
   },
   computed:{
     main(){
-      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail' && this.$route.path !== '/users/print'
+      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail' && this.$route.path !== '/print/users'
     },
     print(){
       return this.$route.path !== '/users/print'
