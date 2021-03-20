@@ -1010,7 +1010,7 @@
                               text
                               v-bind="attrs"
                               v-on="on"
-                              @click
+                              @click="openPurchaseListDisplay(purchase_list.id, purchase_list.item, purchase_list.food_product_id, purchase_list.shop_id, purchase_list.fes_date_id, purchase_list.is_fresh)"
                               >
                               <v-icon　class="pr-2">mdi-pencil</v-icon>
                             </v-btn>
@@ -1049,7 +1049,9 @@
                         <v-list-item>
                           <v-list-item-content>生鮮食品の有無</v-list-item-content>
                           <v-list-item-content v-if="purchase_list.is_fresh == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ purchase_list.is_fresh }}</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === true">有り</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === false">無し</v-list-item-content>
+                          <v-list-item-content v-else>その他</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
@@ -1089,7 +1091,19 @@
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
-                <!-- AddModal -->
+                <!-- EditModal -->
+                <!---->
+                <PurchaseList ref="PurchaseListDlg"
+                  :id="this.edit_purchase_list_id"
+                  :groupId="this.regist.group.id"
+                  :item="this.purchase_list_item"
+                  :shopId="this.shop_id"
+                  :fesDateId="this.fes_date_id"
+                  :foodProductId="this.purchase_food_product_id"
+                  :isFresh="this.is_fresh"
+                  @reload="reload"
+                />
+               <!-- AddModal -->
                 <AddPurchaseList ref="AddPurchaseListDlg"
                   :groupId="this.regist.group.id"
                   @reload="reload"
@@ -1164,7 +1178,7 @@
             </div>
             <v-spacer></v-spacer>
             <v-btn text @click="delete_dialog_item = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1282,6 +1296,7 @@
   import StageOption from '@/components/EditModal/StageCommonOption.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Rentalorder from '@/components/EditModal/rental_order.vue'
+  import PurchaseList from '@/components/EditModal/purchase_list.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
   import Addemployee from '@/components/AddModal/employee.vue'
@@ -1303,6 +1318,7 @@
       StageOption,
       Foodproduct,
       Rentalorder,
+      PurchaseList,
       Addpower,
       AddRentalOrder,
       Addemployee,
@@ -1380,6 +1396,13 @@
       is_cooking: [],
       first_day_num: [],
       second_day_num: [],
+      //購入品情報
+      edit_purchase_list_id: [], 
+      purchase_list_item: [], 
+      purchase_food_product_id: [], 
+      shop_id: [], 
+      fes_date_id: [], 
+      is_fresh: [],
       }
     },
     mounted() {
@@ -1452,7 +1475,6 @@
       },
       //削除メソッド(販売食品)
       delete_yes_food() {
-        console.log("aaaaaaaaaa")
       const url = process.env.VUE_APP_URL + "/food_products/" + this.food_product_id;
       console.log(url)
       axios.delete(url);      
@@ -1461,7 +1483,6 @@
       },
       //削除メソッド(購入品)
       delete_yes_purchase() {
-                console.log("aaaaaaaaaa")
       const url = process.env.VUE_APP_URL + "/purchase_lists/" + this.purchase_list_id;
             console.log(url)
       axios.delete(url)      
@@ -1578,6 +1599,23 @@
         this.rental_item_id = rental_item_id
         this.num = num
         this.$refs.rentalorderDlg.isDisplay = true
+      },
+      openPurchaseListDisplay(purchase_list_id, item, food_product_id, shop_id, fes_date_id, is_fresh) {
+        this.edit_purchase_list_id = purchase_list_id
+        this.purchase_list_item = item
+        this.purchase_food_product_id = food_product_id
+        this.shop_id = shop_id
+        this.fes_date_id = fes_date_id
+        this.is_fresh = is_fresh
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+          headers: { 
+            "Content-Type": "application/json", 
+          }
+        })
+          .then(response => {
+            this.$refs.PurchaseListDlg.food_products = response.data
+          })
+        this.$refs.PurchaseListDlg.isDisplay = true
       },
       openAddPurchaseListDisplay() {
         axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
