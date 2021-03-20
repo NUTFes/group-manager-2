@@ -196,4 +196,30 @@ export default {
   font-size: 0.8125rem;
   text-decoration: none;
 }
+
+.sticky-note {
+  width: max-content;
+  height: max-content;
+  margin-bottom: 1em;
+  overflow: hidden;
+  box-shadow: .25rem 0 .25rem hsla(0, 0%, 0%, .1);
+  background-image:
+    linear-gradient(90deg, hsla(0, 0%, 45%, .1) 2rem, hsla(0, 100%, 100%, 0) 2.5rem)
+  , linear-gradient(90deg, hsla(60, 100%, 85%, 1), hsla(60, 100%, 85%, 1));
+  line-height: 1.8;
+}
+
+.sticky-note hr {
+  border: none;
+}
+
+.sticky-note__item {
+  padding: 0 .25em 0 3em;
+}
+
+.sticky-note__date {
+  text-align: right;
+  padding-right: .5em;
+}
+
 </style>
