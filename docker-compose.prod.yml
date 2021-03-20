@@ -27,7 +27,6 @@ services:
     
   view:
     build: ./view
-    command: npm run serve
     container_name: 'GM2-VIEW'
     ports:
       - "8080:8080"
@@ -55,7 +54,6 @@ services:
 
   nginx:
     container_name: 'nginx'
-    ports:
     build: ./nginx
     volumes:
       - code_share:/var/www/public
