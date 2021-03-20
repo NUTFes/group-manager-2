@@ -53,6 +53,19 @@ services:
     environment:
       - VUE_APP_URL=http://localhost:3000
 
+  nginx:
+    container_name: 'nginx'
+    ports:
+    build: ./nginx
+    volumes:
+      - code_share:/var/www/public
+    ports:
+      - 80:80
+    depends_on:
+      - api
+      - view
+      - admin_view
+
 volumes:
   mysql-data:
     driver: local
