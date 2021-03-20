@@ -50,7 +50,7 @@ services:
       - ./admin_view:/app
     tty: true
     environment:
-      - VUE_APP_URL=http://localhost:3000
+      - VUE_APP_URL=http://133.125.44.106:3000
 
   nginx:
     container_name: 'nginx'
