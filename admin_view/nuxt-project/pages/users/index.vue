@@ -24,21 +24,6 @@
                   </template>
                   <span>更新する</span>
                 </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                            class="mx-2" 
-                            fab 
-                            text
-                            v-bind="attrs"
-                            v-on="on"
-                            to="/users/print"
-                            >
-                            <v-icon dark>mdi-printer</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>印刷する</span>
-                </v-tooltip>
               </v-card-title>
               <hr class="mt-n3">
               <template>

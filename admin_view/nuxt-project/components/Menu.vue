@@ -151,6 +151,7 @@ export default {
       operation_items: [
         { title: '物品割り当て', icon: 'mdi-cube', click: '/assign_items' },
         { title: 'お知らせ', icon: 'mdi-newspaper-variant', click: '/news' },
+        { title: '印刷', icon: 'mdi-printer', click: '/print' },
         { title: '設定', icon: 'mdi-cog', click: '/user_page_setting' },
       ],
       user: []
