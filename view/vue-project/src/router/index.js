@@ -88,7 +88,8 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
+  base: process.env.VUE_APP_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };
