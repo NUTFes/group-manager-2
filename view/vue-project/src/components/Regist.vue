@@ -932,6 +932,8 @@
                         <v-list-item>
                           <v-list-item-content>調理の有無</v-list-item-content>
                           <v-list-item-content v-if="food_product.is_cooking == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="food_product.is_cooking == true">調理する</v-list-item-content>
+                          <v-list-item-content v-else-if="food_product.is_cooking == false">調理しない</v-list-item-content>
                           <v-list-item-content v-else>{{ food_product.is_cooking }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
@@ -1047,10 +1049,10 @@
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>生鮮食品の有無</v-list-item-content>
+                          <v-list-item-content>生鮮食品</v-list-item-content>
                           <v-list-item-content v-if="purchase_list.is_fresh == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else-if="purchase_list.is_fresh === true">有り</v-list-item-content>
-                          <v-list-item-content v-else-if="purchase_list.is_fresh === false">無し</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === true">はい</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === false">いいえ</v-list-item-content>
                           <v-list-item-content v-else>その他</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
