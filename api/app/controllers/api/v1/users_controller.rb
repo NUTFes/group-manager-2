@@ -59,4 +59,26 @@ class Api::V1::UsersController < ApplicationController
 
     render json: user_detail
   end
+  def get_user_groups
+    @user = User.find(params[:id])
+    @groups = @user.groups
+    for group in @groups
+     id = group.id
+     user_id = group.user_id
+     name = group.name
+     project_name = group.project_name
+     activity = group.activity
+     category = group.group_category_id
+    end
+    user_groups = {
+     id: id,
+     user_id: user_id,
+     name: name,
+     project_name: project_name,
+     activity: activity,
+     category: category,
+    }
+    render json: user_groups
+   end
+
 end

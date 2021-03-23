@@ -37,6 +37,7 @@ Rails.application.routes.draw do
       get "users/index" => "users#index"
       get "users/show" => "users#show"
       get "users/show_user_detail/:id" => "users#show_user_detail"
+      get "users/get_user_groups/:id" => "users#get_user_groups"
       get "users/get_user_detail" => "users#get_user_detail"
       get "update_user/:id/:role_id" => "users#update"
       # 副代表周り

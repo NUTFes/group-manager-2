@@ -101,10 +101,16 @@
       </v-col>
     </v-row>
 
-    <v-row v-for="group in groups" :key="group.id">
+    <v-row>
       <v-col>
         <div class="card">
-          <v-card flat v-if="group.user_id === user.id">
+          <v-card flat
+              :to="{
+              name: 'groups-id',
+              params:{
+                id: spgroup.id
+              }
+            }">
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">{{data}}
@@ -120,23 +126,60 @@
                     <tbody>
                       <tr>
                         <th>団体名：</th>
-                        <td class="caption">{{ group.name }}</td>
+                        <td class="caption">{{ spgroup.name }}</td>
                       </tr>
                       <tr>
                         <th>企画名：</th>
-                        <td class="caption">{{ group.project_name }}</td>
+                        <td class="caption">{{ spgroup.project_name }}</td>
                       </tr>
                       <tr>
                         <th>活動内容：</th>
-                        <td class="caption">{{ group.activity }}</td>
+                        <td class="caption">{{ spgroup.activity }}</td>
                       </tr>
                       <tr>
                         <th>グループカテゴリ：</th>
-                        <td class="caption">{{ group.group_category_id }}</td>
+                        <td class="caption">
+                          <v-chip
+                            v-if="spgroup.category == 1"
+                            color="red"
+                            text-color="white"
+                            small
+                            >模擬店（食品販売）</v-chip>
+                          <v-chip
+                            v-if="spgroup.category == 2"
+                            color="pink"
+                            text-color="white"
+                            small
+                            >模擬店（物品販売）</v-chip>
+                          <v-chip
+                            v-if="spgroup.category == 3"
+                            color="blue"
+                            text-color="white"
+                            small
+                            >ステージ企画</v-chip>
+                          <v-chip
+                            v-if="spgroup.category == 4"
+                            color="green"
+                            text-color="white"
+                            small
+                            >展示・体験</v-chip>
+                          <v-chip
+                            v-if="spgroup.category == 5"
+                            color="orange"
+                            text-color="white"
+                            small
+                            >研究室紹介</v-chip>
+                          <v-chip
+                            v-if="spgroup.category == 6"
+                            color="blue-gray"
+                            text-color="white"
+                            small
+                            >その他</v-chip>
+                        </td>
                       </tr>
                       <tr>
                         <th>開催年：</th>
-                        <td class="caption">{{ group.fes_year_id }}</td>
+                        <td class="caption">{{fes_years.year_num}}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -297,7 +340,17 @@ export default {
       grade: [],
       department: [],
       detail: [],
-      groups: [],
+      spgroup:[],
+      group_categories:[],
+      fes_years:[],
+      groupCategories: [
+        { id: 1, name: "模擬店(食品販売)" },
+        { id: 2, name: "模擬店(物品販売)" },
+        { id: 3, name: "ステージ企画" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室公開" },
+        { id: 6, name: "その他" },
+      ],
       expand: false,
       edit_dialog: false,
       delete_dialog: false,
@@ -310,8 +363,7 @@ export default {
   },
   mounted() {
     const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-    this.$axios
-      .get(url, {
+    this.$axios.get(url, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -325,14 +377,26 @@ export default {
         this.department = response.data.department;
         this.detail = response.data.detail;
       })
-      this.$axios.get('groups/', {
-      headers: { 
-        "Content-Type": "application/json"
-      }
-    }
-    )
-      .then(response => {
-        this.groups = response.data
+      this.$axios
+      const year_url = "/fes_years/" + this.$route.params.id;
+      this.$axios.get(year_url , {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.fes_years = response.data;
+        });
+
+    const group_url = "api/v1/users/get_user_groups/" + this.$route.params.id;
+    this.$axios
+      .get(group_url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.spgroup = response.data 
       })
   },
   methods: {
