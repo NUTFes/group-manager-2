@@ -27,6 +27,16 @@ class Api::V1::UsersController < ApplicationController
     @student_id = @user.user_detail.student_id
     @tel = @user.user_detail.tel
     @detail = @user.user_detail
+    @user = User.find(params[:id])
+    @groups = @user.groups
+    for group in @groups
+     id = group.id
+     user_id = group.user_id
+     name = group.name
+     project_name = group.project_name
+     activity = group.activity
+     category = group.group_category
+    end
     user_detail = {
       user: @user,
       role: @role,
@@ -34,7 +44,13 @@ class Api::V1::UsersController < ApplicationController
       department: @department,
       student_id: @student_id,
       tel: @tel,
-      detail: @detail
+      detail: @detail,
+      id: id,
+      user_id: user_id,
+      name: name,
+      project_name: project_name,
+      activity: activity,
+      category: category,
     }
 
     render json: user_detail
@@ -59,26 +75,5 @@ class Api::V1::UsersController < ApplicationController
 
     render json: user_detail
   end
-  def get_user_groups
-    @user = User.find(params[:id])
-    @groups = @user.groups
-    for group in @groups
-     id = group.id
-     user_id = group.user_id
-     name = group.name
-     project_name = group.project_name
-     activity = group.activity
-     category = group.group_category_id
-    end
-    user_groups = {
-     id: id,
-     user_id: user_id,
-     name: name,
-     project_name: project_name,
-     activity: activity,
-     category: category,
-    }
-    render json: user_groups
-   end
 
 end

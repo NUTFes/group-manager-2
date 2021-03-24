@@ -26,7 +26,7 @@
                   <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
                   <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
                   <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
-                  {{ user.name }}
+                  {{ show.user.name }}
                   <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -61,23 +61,23 @@
                     <tbody>
                       <tr>
                         <th>学籍番号：</th>
-                        <td class="caption">{{ detail.student_id }}</td>
+                        <td class="caption">{{show.student_id}}</td>
                       </tr>
                       <tr>
                         <th>学年：</th>
-                        <td class="caption">{{ grade }}</td>
+                        <td class="caption">{{show.grade}}</td>
                       </tr>
                       <tr>
                         <th>課程：</th>
-                        <td class="caption">{{ department }}</td>
+                        <td class="caption">{{show.department}}</td>
                       </tr>
                       <tr>
                         <th>電話番号：</th>
-                        <td class="caption">{{ detail.tel }}</td>
+                        <td class="caption">{{show.tel}}</td>
                       </tr>
                       <tr>
                         <th>メールアドレス：</th>
-                        <td class="caption">{{ user.email }}</td>
+                        <td class="caption">{{show.user.uid}}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -108,7 +108,7 @@
               :to="{
               name: 'groups-id',
               params:{
-                id: spgroup.id
+                id: show.id
               }
             }">
             <v-row>
@@ -118,7 +118,7 @@
                   <v-icon>mdi-account-group</v-icon>
                   参加団体情報
                   <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
+                  <v-btn text @click="dialog = true"></v-btn>
                 </v-card-title>
                 <hr class="mt-n3" />
                 <v-simple-table class="my-9">
@@ -126,55 +126,19 @@
                     <tbody>
                       <tr>
                         <th>団体名：</th>
-                        <td class="caption">{{ spgroup.name }}</td>
+                        <td class="caption">{{show.name}}</td>
                       </tr>
                       <tr>
                         <th>企画名：</th>
-                        <td class="caption">{{ spgroup.project_name }}</td>
+                        <td class="caption">{{show.project_name}}</td>
                       </tr>
                       <tr>
                         <th>活動内容：</th>
-                        <td class="caption">{{ spgroup.activity }}</td>
+                        <td class="caption">{{show.activity}}</td>
                       </tr>
                       <tr>
                         <th>グループカテゴリ：</th>
-                        <td class="caption">
-                          <v-chip
-                            v-if="spgroup.category == 1"
-                            color="red"
-                            text-color="white"
-                            small
-                            >模擬店（食品販売）</v-chip>
-                          <v-chip
-                            v-if="spgroup.category == 2"
-                            color="pink"
-                            text-color="white"
-                            small
-                            >模擬店（物品販売）</v-chip>
-                          <v-chip
-                            v-if="spgroup.category == 3"
-                            color="blue"
-                            text-color="white"
-                            small
-                            >ステージ企画</v-chip>
-                          <v-chip
-                            v-if="spgroup.category == 4"
-                            color="green"
-                            text-color="white"
-                            small
-                            >展示・体験</v-chip>
-                          <v-chip
-                            v-if="spgroup.category == 5"
-                            color="orange"
-                            text-color="white"
-                            small
-                            >研究室紹介</v-chip>
-                          <v-chip
-                            v-if="spgroup.category == 6"
-                            color="blue-gray"
-                            text-color="white"
-                            small
-                            >その他</v-chip>
+                        <td class="caption">{{show.category.name}}
                         </td>
                       </tr>
                       <tr>
@@ -333,6 +297,7 @@ export default {
   },
   data() {
     return {
+      show: [],
       user: [],
       id: [],
       role_id: [],
@@ -343,14 +308,6 @@ export default {
       spgroup:[],
       group_categories:[],
       fes_years:[],
-      groupCategories: [
-        { id: 1, name: "模擬店(食品販売)" },
-        { id: 2, name: "模擬店(物品販売)" },
-        { id: 3, name: "ステージ企画" },
-        { id: 4, name: "展示・体験" },
-        { id: 5, name: "研究室公開" },
-        { id: 6, name: "その他" },
-      ],
       expand: false,
       edit_dialog: false,
       delete_dialog: false,
@@ -369,13 +326,7 @@ export default {
         },
       })
       .then((response) => {
-        this.id = response.data.user.id;
-        this.role_id = response.data.user.role_id;
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.detail = response.data.detail;
+        this.show = response.data
       })
       this.$axios
       const year_url = "/fes_years/" + this.$route.params.id;
@@ -387,17 +338,6 @@ export default {
       .then((response) => {
         this.fes_years = response.data;
         });
-
-    const group_url = "api/v1/users/get_user_groups/" + this.$route.params.id;
-    this.$axios
-      .get(group_url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.spgroup = response.data 
-      })
   },
   methods: {
     reload: function(){
