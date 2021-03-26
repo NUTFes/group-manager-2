@@ -7,7 +7,7 @@
               <div class="breadcrumbs">
               <ul>
                 <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
-                <li><div class="breadcrumbs-item">{{ user.name }}</div></li>
+                <li><div class="breadcrumbs-item">{{show.user_name}}</div></li>
               </ul>
             </div>
           </v-card-text>
@@ -26,7 +26,7 @@
                   <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
                   <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
                   <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
-                  {{ show.user.name }}
+                  {{show.user_name}}
                   <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -77,7 +77,7 @@
                       </tr>
                       <tr>
                         <th>メールアドレス：</th>
-                        <td class="caption">{{show.user.uid}}</td>
+                        <td class="caption">{{show.email}}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -138,7 +138,7 @@
                       </tr>
                       <tr>
                         <th>グループカテゴリ：</th>
-                        <td class="caption">{{show.category.name}}
+                        <td class="caption">{{show.category}}
                         </td>
                       </tr>
                       <tr>
@@ -340,25 +340,25 @@ export default {
         });
   },
   methods: {
-    reload: function(){
-      console.log("reload")
-      const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.id = response.data.user.id;
-        this.role_id = response.data.user.role_id;
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.detail = response.data.detail;
-        })
-    },
+    // reload: function(){
+    //   console.log("reload")
+    //   const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
+    //   this.$axios.get(url, {
+    //     headers: { 
+    //       "Content-Type": "application/json", 
+    //     }
+    //   }
+    //   )
+    //     .then(response => {
+    //     this.id = response.data.user.id;
+    //     this.role_id = response.data.user.role_id;
+    //     this.user = response.data.user;
+    //     this.role = response.data.role;
+    //     this.grade = response.data.grade;
+    //     this.department = response.data.department;
+    //     this.detail = response.data.detail;
+    //     })
+    // },
     edit_dialog_open: function() {
       this.edit_dialog = true
     },

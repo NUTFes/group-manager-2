@@ -21,33 +21,40 @@ class Api::V1::UsersController < ApplicationController
 
   def show_user_detail
     @user = User.find(params[:id])
-    @role = @user.role.name
-    @grade = @user.user_detail.grade.name
-    @department = @user.user_detail.department.name
-    @student_id = @user.user_detail.student_id
-    @tel = @user.user_detail.tel
-    @detail = @user.user_detail
-    @user = User.find(params[:id])
-    @groups = @user.groups
-    for group in @groups
+    role = @user.role.name
+    grade = @user.user_detail.grade.name
+    department = @user.user_detail.department.name
+    student_id = @user.user_detail.student_id
+    tel = @user.user_detail.tel
+    user_id = @user.id
+    user_provider = @user.provider
+    user_name = @user.name
+    email = @user.email
+    
+    
+    @group = @user.groups
+    for group in @group
      id = group.id
      user_id = group.user_id
-     name = group.name
+     group_name = group.name
      project_name = group.project_name
      activity = group.activity
-     category = group.group_category
+     category = group.group_category.name
     end
     user_detail = {
       user: @user,
-      role: @role,
-      grade: @grade,
-      department: @department,
-      student_id: @student_id,
-      tel: @tel,
-      detail: @detail,
+      user_id: user_id,
+      user_name: user_name,
+      user_provider: user_provider,
+      email: email,
+      role: role,
+      grade: grade,
+      department: department,
+      student_id: student_id,
+      tel: tel,
       id: id,
       user_id: user_id,
-      name: name,
+      group_name: group_name,
       project_name: project_name,
       activity: activity,
       category: category,
