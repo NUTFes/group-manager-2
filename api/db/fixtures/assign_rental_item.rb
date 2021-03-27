@@ -3,5 +3,5 @@ AssignRentalItem.seed( :id,
               rental_item_id: 1 ,
               num: 1,
               stocker_place_id: 1
-    }
+    },
 )
