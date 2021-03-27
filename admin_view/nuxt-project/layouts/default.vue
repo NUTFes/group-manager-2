@@ -1,6 +1,6 @@
 <template>
   <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
-    <Header v-if="main"/>
+    <Header v-if="main && print" />
       <div class="pad-bottom">
         <v-row>
           <v-col cols="2" v-if="main && print">
@@ -37,10 +37,10 @@ export default {
   },
   computed:{
     main(){
-      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail' && this.$route.path !== '/print/users'
+      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail'
     },
     print(){
-      return this.$route.path !== '/users/print'
+      return this.$route.path !== '/print/employees' && this.$route.path !== '/print/products' && this.$route.path !== '/print/items' && this.$route.path !== '/print/powers' && this.$route.path !== '/print/address'
     }
   },
   mounted() {

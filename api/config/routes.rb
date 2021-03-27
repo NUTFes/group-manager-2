@@ -96,6 +96,12 @@ Rails.application.routes.draw do
       # 開催日周り
       get "get_fes_dates" => "fes_dates_api#get_fes_dates"
       get "get_fes_date/:id" => "fes_dates_api#get_fes_date"
+      # 印刷ページ周り
+      get "get_print_employees" => "print_api#get_print_employees"
+      get "get_print_products" => "print_api#get_print_products"
+      get "get_print_items" => "print_api#get_print_items"
+      get "get_print_powers" => "print_api#get_print_powers"
+      get "get_print_address" => "print_api#get_print_address"
     end
   end
   namespace :api do
