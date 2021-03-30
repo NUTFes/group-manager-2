@@ -82,15 +82,17 @@ export default {
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
 
-      const url = process.env.VUE_APP_URL + '/api/auth/password'
-      axios.put(url, {
+      const url = process.env.VUE_APP_URL + '/api/v1/current_user/password_reset'
+
+      axios.post(url, {
           'password' : this.password,
           'password_confirmation' : this.password_confirmation
         }, {
           headers: {
-            "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid")
+            'Content-Type': 'application/json',
+            'access-token': localStorage.getItem('access-token'),
+            'client': localStorage.getItem('client'),
+            'uid': localStorage.getItem('uid')
           }
         }
       ).then(
