@@ -31,18 +31,20 @@ class Api::V1::UsersController < ApplicationController
     user_name = @user.name
     email = @user.email
     
-    
-    @group = @user.groups
-    for group in @group
-     id = group.id
-     user_id = group.user_id
-     group_name = group.name
-     project_name = group.project_name
-     activity = group.activity
-     category = group.group_category.name
+    @groups = @user.groups
+    groups = []
+    for group in @groups
+      group_data = []
+      group_data = {
+        group: group,
+        fes_year: group.fes_year.year_num,
+        category: group.group_category.name
+      }
+      groups << group_data
     end
     user_detail = {
       user: @user,
+      groups: groups,
       user_id: user_id,
       user_name: user_name,
       user_provider: user_provider,
@@ -52,12 +54,6 @@ class Api::V1::UsersController < ApplicationController
       department: department,
       student_id: student_id,
       tel: tel,
-      id: id,
-      user_id: user_id,
-      group_name: group_name,
-      project_name: project_name,
-      activity: activity,
-      category: category,
     }
 
     render json: user_detail

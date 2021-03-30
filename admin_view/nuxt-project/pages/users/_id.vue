@@ -101,14 +101,17 @@
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row
+    v-for="(group, i) in show.groups"
+    :key="i"
+    >
       <v-col>
         <div class="card">
           <v-card flat
               :to="{
               name: 'groups-id',
               params:{
-                id: show.id
+                id: group.group.id
               }
             }">
             <v-row>
@@ -126,24 +129,24 @@
                     <tbody>
                       <tr>
                         <th>団体名：</th>
-                        <td class="caption">{{show.name}}</td>
+                        <td class="caption">{{group.group.name}}</td>
                       </tr>
                       <tr>
                         <th>企画名：</th>
-                        <td class="caption">{{show.project_name}}</td>
+                        <td class="caption">{{group.group.project_name}}</td>
                       </tr>
                       <tr>
                         <th>活動内容：</th>
-                        <td class="caption">{{show.activity}}</td>
+                        <td class="caption">{{group.group.activity}}</td>
                       </tr>
                       <tr>
                         <th>グループカテゴリ：</th>
-                        <td class="caption">{{show.category}}
+                        <td class="caption">{{group.category}}
                         </td>
                       </tr>
                       <tr>
                         <th>開催年：</th>
-                        <td class="caption">{{fes_years.year_num}}</td>
+                        <td class="caption">{{group.fes_year}}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -328,37 +331,8 @@ export default {
       .then((response) => {
         this.show = response.data
       })
-      this.$axios
-      const year_url = "/fes_years/" + this.$route.params.id;
-      this.$axios.get(year_url , {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.fes_years = response.data;
-        });
   },
   methods: {
-    // reload: function(){
-    //   console.log("reload")
-    //   const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-    //   this.$axios.get(url, {
-    //     headers: { 
-    //       "Content-Type": "application/json", 
-    //     }
-    //   }
-    //   )
-    //     .then(response => {
-    //     this.id = response.data.user.id;
-    //     this.role_id = response.data.user.role_id;
-    //     this.user = response.data.user;
-    //     this.role = response.data.role;
-    //     this.grade = response.data.grade;
-    //     this.department = response.data.department;
-    //     this.detail = response.data.detail;
-    //     })
-    // },
     edit_dialog_open: function() {
       this.edit_dialog = true
     },
