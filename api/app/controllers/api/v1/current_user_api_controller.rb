@@ -259,4 +259,16 @@ class Api::V1::CurrentUserApiController < ApplicationController
     render json: regist_info
   end
 
+  def password_reset 
+    @user = current_api_user
+    @user.password = password_reset_params[:password]
+    @user.password_confirmation = password_reset_params[:password_confirmation]
+    @user.save!
+  end
+
+  private
+    # Only allow a list of trusted parameters through.
+    def password_reset_params
+      params.permit(:password, :password_confirmation)
+    end
 end
