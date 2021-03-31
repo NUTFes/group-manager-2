@@ -118,8 +118,8 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">{{data}}
                 <v-card-title class="font-weight-bold mt-3">
-                  <v-icon>mdi-account-group</v-icon>
-                  参加団体情報
+                  <v-icon class="mr-2">mdi-account-group</v-icon>
+                  申請参加団体情報
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = true"></v-btn>
                 </v-card-title>
