@@ -67,7 +67,7 @@
                       <v-col cols="2" />
                         <v-col cols="8">
                           <nuxt-link class="text-center" to="/signup">
-                            新規登録はこちら
+                            <div style="color:black">新規登録はこちら</div>
                           </nuxt-link>
                         </v-col>
                         <v-col cols="2" />
