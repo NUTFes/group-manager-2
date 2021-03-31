@@ -21,20 +21,39 @@ class Api::V1::UsersController < ApplicationController
 
   def show_user_detail
     @user = User.find(params[:id])
-    @role = @user.role.name
-    @grade = @user.user_detail.grade.name
-    @department = @user.user_detail.department.name
-    @student_id = @user.user_detail.student_id
-    @tel = @user.user_detail.tel
-    @detail = @user.user_detail
+    role = @user.role.name
+    grade = @user.user_detail.grade.name
+    department = @user.user_detail.department.name
+    student_id = @user.user_detail.student_id
+    tel = @user.user_detail.tel
+    user_id = @user.id
+    user_provider = @user.provider
+    user_name = @user.name
+    email = @user.email
+    
+    @groups = @user.groups
+    groups = []
+    for group in @groups
+      group_data = []
+      group_data = {
+        group: group,
+        fes_year: group.fes_year.year_num,
+        category: group.group_category.name
+      }
+      groups << group_data
+    end
     user_detail = {
       user: @user,
-      role: @role,
-      grade: @grade,
-      department: @department,
-      student_id: @student_id,
-      tel: @tel,
-      detail: @detail
+      groups: groups,
+      user_id: user_id,
+      user_name: user_name,
+      user_provider: user_provider,
+      email: email,
+      role: role,
+      grade: grade,
+      department: department,
+      student_id: student_id,
+      tel: tel,
     }
 
     render json: user_detail
@@ -59,4 +78,5 @@ class Api::V1::UsersController < ApplicationController
 
     render json: user_detail
   end
+
 end
