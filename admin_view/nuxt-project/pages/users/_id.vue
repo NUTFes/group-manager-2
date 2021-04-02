@@ -8,6 +8,7 @@
               <ul>
                 <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
                 <li><div class="breadcrumbs-item">{{show.user_name}}</div></li>
+                {{ user.id }}
               </ul>
             </div>
           </v-card-text>
@@ -283,21 +284,8 @@
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
-import Menu from "~/components/Menu.vue";
-import axios from "axios";
-import { mapState } from "vuex";
 export default {
-  components: {
-    Header,
-    Menu,
-  },
-  fetch({ store }) {
-    store.dispatch("getRights");
-  },
-  computed: {
-    ...mapState(["rights"]),
-  },
+
   data() {
     return {
       show: [],
@@ -330,14 +318,29 @@ export default {
       })
       .then((response) => {
         this.show = response.data
+        this.user = response.data.user
+        this.role_id = response.data.user.role_id
       })
   },
   methods: {
+    reload: function() {
+      const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
+      this.$axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.show = response.data
+        this.user = response.data.user
+        this.role_id = response.data.user.role_id
+      })
+    },
     edit_dialog_open: function() {
       this.edit_dialog = true
     },
     edit: function() {
-      const edit_url = '/api/v1/update_user/' + this.id + '/' + this.role_id
+      const edit_url = '/api/v1/update_user/' + this.user.id + '/' + this.role_id
       console.log(edit_url)
       this.$axios.get(edit_url , {
         headers: { 
