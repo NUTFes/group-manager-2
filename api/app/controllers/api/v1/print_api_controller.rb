@@ -124,8 +124,33 @@ class Api::V1::PrintApiController < ApplicationController
 
   # 使用電力リスト
   def get_print_powers
-    @group = Group.find(1)
-    render json: @group
+    power_orders = PowerOrder.all
+    power_orders_list = []
+    for power_order in power_orders
+      group_name = power_order.group.name
+      id = power_order.id
+      group_id = power_order.group_id
+      item = power_order.item
+      power = power_order.power
+      manufacturer = power_order.manufacturer
+      model = power_order.model
+      item_url = power_order.item_url
+      created_at = power_order.created_at
+      updated_at = power_order.updated_at
+      power_orders_list << {
+        group_name: group_name,
+        id: id,
+        group_id: group_id,
+        item: item,
+        power: power,
+        manufacturer: manufacturer,
+        model: model,
+        item_url: item_url,
+        created_at: created_at,
+        updated_at: updated_at,
+      }
+    end
+    render json: power_orders_list
   end
 
   # 連絡先リスト
