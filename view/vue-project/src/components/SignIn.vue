@@ -2,9 +2,9 @@
     <v-row justify="center">
       <v-col cols="1"></v-col>
       <v-col cols="10">
-        <v-card>
-          <v-card-title>
-            <span class="headline">ログイン</span>
+        <v-card class="py-5">
+          <v-card-title class="text-center font-weight-bold">
+            ログイン
           </v-card-title>
           <v-card-text>
             <v-container>
@@ -31,20 +31,25 @@
               </v-form>
             </v-container>
           </v-card-text>
-        <v-row>
-          <v-col>
             <v-card-actions>
-              <v-btn color="blue darken-1" block dark @click="submit">ログイン</v-btn>
+              <v-btn 
+                color="btn" 
+                text  
+                dark 
+                rounded
+                tabindex="-1"
+                class="ml-2"
+                @click="cancel">パスワードを忘れた場合</v-btn>
+              <v-btn 
+                color="btn" 
+                depressed
+                absolute
+                right 
+                dark 
+                rounded
+                class="pl-4 font-weight-bold"
+                @click="submit">ログイン<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
             </v-card-actions>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card-actions>
-              <v-btn color="blue darken-1" text block dark @click="cancel">キャンセル</v-btn>
-            </v-card-actions>
-          </v-col>
-        </v-row>
        </v-card>
       </v-col>
       <v-col cols="1"></v-col>
