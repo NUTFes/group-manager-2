@@ -45,13 +45,68 @@ class Api::V1::GroupsApiController < ApplicationController
     group = Group.find(params[:id])
     user = group.user.name
     fes_year = group.fes_year.year_num
+    place_first = Place.find(group.place_order.first).name
+    place_second = Place.find(group.place_order.second).name
+    place_third = Place.find(group.place_order.third).name
+    stage_first = Stage.find(group.stage_order.stage_first).name
+    stage_second = Stage.find(group.stage_order.stage_second).name
+    fes_date = FesDate.find(group.stage_order.fes_date_id).date
+    rental_order_lists = []
+    for rental_order in group.rental_orders
+      rental_id = rental_order.rental_item.id
+      rental_item = rental_order.rental_item.name
+      rental_num = rental_order.num
+      rental_order_lists << {
+        rental_id: rental_id,
+        rental_item: rental_item,
+        rental_num: rental_num
+      }
+    end
+    purchase_list = []
+    for food_product in group.food_products
+      purchase_lists = food_product.purchase_lists
+      purchase_list << {
+        purchase_lists: purchase_lists
+      }
+    end
     group_list = []
     group_list = {
       group: group,
       user: user,
-      fes_year: fes_year
+      fes_year: fes_year,
+      place_first: place_first,
+      place_second: place_second,
+      place_third: place_third,
+      stage_first: stage_first,
+      stage_second: stage_second,
+      fes_date: fes_date,
+      purchase_list: purchase_list,
+      rental_order_lists: rental_order_lists,
     }
     render json: group_list
+  end
+
+  def get_group_detail
+    group = Group.find(params[:id])
+    sub_rep = group.sub_rep
+    employees = group.employees
+    stage_common_option = group.stage_common_option
+    power_orders = group.power_orders
+    place_order = group.place_order
+    stage_order = group.stage_order
+    food_products = group.food_products
+    group_details = []
+    group_details = {
+      group: group,
+      sub_rep: sub_rep,
+      employees: employees,
+      stage_common_option: stage_common_option,
+      power_orders: power_orders,
+      place_order: place_order,
+      stage_order: stage_order,
+      food_products: food_products,
+    }
+    render json: group_details 
   end
 
 end
