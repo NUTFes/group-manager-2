@@ -8,7 +8,6 @@
               <ul>
                 <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
                 <li><div class="breadcrumbs-item">{{show.user_name}}</div></li>
-                {{ user.id }}
               </ul>
             </div>
           </v-card-text>
@@ -29,18 +28,31 @@
                   <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
                   {{show.user_name}}
                   <v-spacer></v-spacer>
+                <v-tooltip top v-if="email != uid">
+                  <template v-slot:activator="{ on, attrs  }">
+                      <v-btn 
+                      text 
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="edit_user_info_dialog = true" 
+                      fab>
+                      <v-icon class="ma-5">mdi-account-edit-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>ユーザー情報編集</span>
+                </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
                       <v-btn 
                       text 
                       v-bind="attrs"
                       v-on="on"
-                      @click="edit_dialog_open" 
+                      @click="edit_role_dialog_open" 
                       fab>
                       <v-icon class="ma-5">mdi-pencil</v-icon>
                     </v-btn>
                   </template>
-                  <span>編集</span>
+                  <span>権限編集</span>
                 </v-tooltip>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -167,18 +179,101 @@
       <v-col></v-col>
     </v-row>
 
-    <!-- 編集ダイアログ -->
+    <!-- ユーザー情報編集ダイアログ -->
     <v-dialog
-      v-model="edit_dialog"
+      v-model="edit_user_info_dialog"
       width="500"
       >
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
-            <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
+            <v-icon class="ma-5" dark>mdi-pencil</v-icon>ユーザー情報編集
           </div>
           <v-spacer></v-spacer>
-          <v-btn text @click="edit_dialog = false" fab dark>
+          <v-btn text @click="edit_user_info_dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+      </v-card-title>
+
+      <v-card-text>
+        <v-row>
+          <v-col>
+            <v-form ref="form">
+            <v-text-field
+              label="名前"
+              v-model="name"
+              :rules="[rules.requied]"
+              outlined
+              /></v-text-field>
+            <v-text-field
+              label="学籍番号"
+              v-model="student_id"
+              :rules="[rules.requied]"
+              outlined
+              counter=8
+              /></v-text-field>
+            <v-select
+              label="学年"
+              v-model="grade_id"
+              :items="items_grade"
+              item-text="label"
+              item-value="id"
+              outlined
+              /></v-select>
+            <v-select
+              label="課程"
+              v-model="department_id"
+              :items="items_department"
+              item-text="label"
+              item-value="id"
+              outlined
+              /></v-select>
+            <v-text-field
+              label="電話番号"
+              v-model="tel"
+              :rules="[rules.requied]"
+              outlined
+              counter=11
+              /></v-text-field>
+            <v-text-field
+              label="メールアドレス"
+              v-model="email"
+              :rules="[rules.requied]"
+              outlined
+              /></v-text-field>
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="#78909C"
+          dark
+          @click="edit_user_info"
+          >
+          編集する
+        </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog> 
+
+
+    <!-- 権限編集ダイアログ -->
+    <v-dialog
+      v-model="edit_role_dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-pencil</v-icon>権限編集
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="edit_role_dialog = false" fab dark>
             ​ <v-icon>mdi-close</v-icon>
           </v-btn>
       </v-card-title>
@@ -207,7 +302,7 @@
         <v-btn
           color="#78909C"
           dark
-          @click="edit"
+          @click="edit_role"
           >
           編集する
         </v-btn>
@@ -288,28 +383,88 @@ export default {
 
   data() {
     return {
+      uid: localStorage.getItem('uid'),
       show: [],
       user: [],
-      id: [],
+      name: [],
+      student_id: [],
+      tel: [],      
+      email: [],
+      user_id: [],
       role_id: [],
       role: [],
-      grade: [],
-      department: [],
+      grade_id: [],
+      department_id: [],
       detail: [],
-      spgroup:[],
       group_categories:[],
       fes_years:[],
       expand: false,
-      edit_dialog: false,
+      edit_user_info_dialog: false,
+      edit_role_dialog: false,
       delete_dialog: false,
       items_role:[
         {label:"developer",id:1},
         {label:"maneger",id:2},
         {label:"user",id:3}
-      ]
+      ],
+      items_department:[
+        { label: "機械創造工学課程", id: 1 },
+        { label: "電気電子情報工学課程", id: 2 },
+        { label: "物質材料工学課程", id: 3 },
+        { label: "環境社会基盤工学課程", id: 4 },
+        { label: "生物機能工学課程", id: 5 },
+        { label: "情報・経営システム工学課程", id: 6 },
+        { label: "機械創造工学専攻", id: 7 },
+        { label: "電気電子情報工学専攻", id: 8 },
+        { label: "物質材料工学専攻", id: 9 },
+        { label: "環境社会基盤工学専攻", id: 10 },
+        { label: "生物機能工学専攻", id: 11 },
+        { label: "情報・経営システム工学専攻", id: 12 },
+        { label: "原子力システム安全工学専攻", id: 13 },
+        { label: "システム安全専攻", id: 14 },
+        { label: "技術科学イノベーション専攻", id: 15 },
+        { label: "情報・制御工学専攻", id: 16 },
+        { label: "材料工学専攻", id: 17 },
+        { label: "エネルギー・環境工学専攻", id: 18 },
+        { label: "生物統合工学専攻", id: 19 },
+        { label: "その他", id: 20 }
+      ],
+      items_grade:[
+        { label: "B1[学部1年]", id: 1 },
+        { label: "B2[学部2年]", id: 2 },
+        { label: "B3[学部3年]", id: 3 },
+        { label: "B4[学部4年]", id: 4 },
+        { label: "M1[修士1年]", id: 5 },
+        { label: "M2[修士2年]", id: 6 },
+        { label: "D1[博士1年]", id: 7 },
+        { label: "D2[博士2年]", id: 8 },
+        { label: "D3[博士3年]", id: 9 },
+        { label: "GD1[イノベ1年]", id: 10 },
+        { label: "GD2[イノベ2年]", id: 11 },
+        { label: "GD3[イノベ3年]", id: 12 },
+        { label: "GD4[イノベ4年]", id: 13 },
+        { label: "GD5[イノベ5年]", id: 14 },
+        { label: "その他", id: 15 }
+      ],
+      rules: {
+        requied: value => !!value || '入力してください'
+      }
     };
   },
   mounted() {
+    const get_user_detail_url = "/user_details/" + this.$route.params.id;
+    this.$axios.get(get_user_detail_url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response)
+        this.student_id = response.data.student_id
+        this.grade_id = response.data.grade_id
+        this.department_id = response.data.department_id
+        this.tel = response.data.tel
+      })
     const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
     this.$axios.get(url, {
         headers: {
@@ -319,6 +474,9 @@ export default {
       .then((response) => {
         this.show = response.data
         this.user = response.data.user
+        this.user_id = response.data.user_id
+        this.name = response.data.user.name
+        this.email = response.data.user.email
         this.role_id = response.data.user.role_id
       })
   },
@@ -336,10 +494,10 @@ export default {
         this.role_id = response.data.user.role_id
       })
     },
-    edit_dialog_open: function() {
-      this.edit_dialog = true
+    edit_role_dialog_open: function() {
+      this.edit_role_dialog = true
     },
-    edit: function() {
+    edit_role: function() {
       const edit_url = '/api/v1/update_user/' + this.user.id + '/' + this.role_id
       console.log(edit_url)
       this.$axios.get(edit_url , {
@@ -349,7 +507,26 @@ export default {
       }).then(response => {
         console.log(response)
         this.reload()
-        this.edit_dialog = false
+        this.edit_role_dialog = false
+        this.success_snackbar = true
+      })
+    },
+    edit_user_info: function() {
+      if ( !this.$refs.form.validate() ) return;
+      const edit_user_info_url = '/api/v1/users/edit_user_info'
+      var params = {
+        'user_id': this.user_id,
+        'name': this.name,
+        'student_id': this.student_id,
+        'grade_id': this.grade_id,
+        'department_id': this.department_id,
+        'tel': this.tel,
+        'email': this.email 
+      }
+      console.log(edit_user_info_url)
+      this.$axios.post(edit_user_info_url, params).then(response => {
+        this.reload()
+        this.edit_user_info_dialog = false
         this.success_snackbar = true
       })
     },
