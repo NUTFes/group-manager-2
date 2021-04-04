@@ -92,8 +92,20 @@ class Api::V1::UsersController < ApplicationController
     @user_detail.save!
   end
 
+  def reset_password
+    @user = User.find(reset_password_params[:user_id])
+    @user.password = reset_password_params[:password]
+    @user.password_confirmation = reset_password_params[:password_confirmation]
+    @user.save!
+  end
+
   private
+  
     def edit_user_info_params
       params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
+    end
+
+    def reset_password_params
+      params.permit(:user_id, :password, :password_confirmation)
     end
 end

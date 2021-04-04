@@ -47,9 +47,22 @@
                       text 
                       v-bind="attrs"
                       v-on="on"
+                      @click="reset_password_dialog = true" 
+                      fab>
+                      <v-icon class="ma-5">mdi-lock-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>パスワード変更</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs  }">
+                      <v-btn 
+                      text 
+                      v-bind="attrs"
+                      v-on="on"
                       @click="edit_role_dialog_open" 
                       fab>
-                      <v-icon class="ma-5">mdi-pencil</v-icon>
+                      <v-icon class="ma-5">mdi-star-outline</v-icon>
                     </v-btn>
                   </template>
                   <span>権限編集</span>
@@ -187,7 +200,7 @@
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
-            <v-icon class="ma-5" dark>mdi-pencil</v-icon>ユーザー情報編集
+            <v-icon class="ma-5" dark>mdi-account-edit-outline</v-icon>ユーザー情報編集
           </div>
           <v-spacer></v-spacer>
           <v-btn text @click="edit_user_info_dialog = false" fab dark>
@@ -260,6 +273,68 @@
       </v-card-actions>
       </v-card>
     </v-dialog> 
+    
+    <!--  パスワード再設定ダイアログ -->
+    <v-dialog
+      v-model="reset_password_dialog"
+      width="500"
+      >
+      <v-card>
+        <v-card-title class="headline blue-grey darken-3">
+          <div style="color: white">
+            <v-icon class="ma-5" dark>mdi-lock-outline</v-icon>パスワード変更
+          </div>
+          <v-spacer></v-spacer>
+          <v-btn text @click="reset_password_dialog = false" fab dark>
+            ​ <v-icon>mdi-close</v-icon>
+          </v-btn>
+      </v-card-title>
+
+      <v-card-text>
+        <v-row>
+          <v-col>
+            <v-form ref="form">
+              <v-text-field
+                label="新しいパスワード"
+                v-model="password"
+                :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
+                :rules="[rules.requied, rules.min]"
+                :type="show_pass ? 'password' : 'text'"
+                hint="8文字以上"
+                counter
+                outlined
+                @click:append="show_pass = !show_pass"
+              ></v-text-field>
+              <v-text-field
+                label="新しいパスワードの再入力"
+                v-model="password_confirmation"
+                :append-icon="show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'"
+                :rules="[rules.requied, rules.min, rules.match]"
+                :type="show_pass_confirmation ? 'password' : 'text'"
+                hint="8文字以上"
+                counter
+                outlined
+                @click:append="show_pass_confirmation = !show_pass_confirmation"
+              ></v-text-field>
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="#78909C"
+          dark
+          @click="reset_password"
+          >
+          変更する
+        </v-btn>
+      </v-card-actions>
+      </v-card>
+    </v-dialog> 
 
 
     <!-- 権限編集ダイアログ -->
@@ -270,7 +345,7 @@
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
-            <v-icon class="ma-5" dark>mdi-pencil</v-icon>権限編集
+            <v-icon class="ma-5" dark>mdi-star-outline</v-icon>権限編集
           </div>
           <v-spacer></v-spacer>
           <v-btn text @click="edit_role_dialog = false" fab dark>
@@ -386,20 +461,25 @@ export default {
       uid: localStorage.getItem('uid'),
       show: [],
       user: [],
-      name: [],
-      student_id: [],
-      tel: [],      
-      email: [],
       user_id: [],
+      name: [],
+      email: [],
+      password: [],
+      password_confirmation: [],
       role_id: [],
       role: [],
+      tel: [],      
+      student_id: [],
       grade_id: [],
       department_id: [],
       detail: [],
       group_categories:[],
       fes_years:[],
       expand: false,
+      show_pass: true,
+      show_pass_confirmation: true,
       edit_user_info_dialog: false,
+      reset_password_dialog: false,
       edit_role_dialog: false,
       delete_dialog: false,
       items_role:[
@@ -447,7 +527,9 @@ export default {
         { label: "その他", id: 15 }
       ],
       rules: {
-        requied: value => !!value || '入力してください'
+        requied: value => !!value || '入力してください',
+        min: v => v.length >= 8 || '８文字未満です',
+        match: v => v === this.password || 'パスワードと再確認パスワードが一致していません',
       }
     };
   },
@@ -523,10 +605,23 @@ export default {
         'tel': this.tel,
         'email': this.email 
       }
-      console.log(edit_user_info_url)
       this.$axios.post(edit_user_info_url, params).then(response => {
         this.reload()
         this.edit_user_info_dialog = false
+        this.success_snackbar = true
+      })
+    },
+    reset_password: function() {
+      if ( !this.$refs.form.validate() ) return;
+      const reset_password_url = '/api/v1/users/reset_password'
+      var params = {
+        'user_id': this.user_id,
+        'password': this.password,
+        'password_confirmation': this.password_confirmation
+      }
+      this.$axios.post(reset_password_url, params).then(response => {
+        this.reload()
+        this.reset_password_dialog = false
         this.success_snackbar = true
       })
     },
