@@ -2,14 +2,17 @@
   <v-row justify="center">
     <v-col cols="2"></v-col>
     <v-col cols="8">
-      <v-card>
+      <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
             <v-col cols="2"></v-col>
             <v-col cols="8" align="center">
               <v-card-title class="justify-center">
-                <h1>ユーザー情報変更</h1>
+                <h1 style="color:#333333">ユーザー情報変更</h1>
               </v-card-title>
+		<br>
+		<v-divider/>
+		<br>
               <v-card-text>
                 <v-form ref="form">
                   <v-text-field
