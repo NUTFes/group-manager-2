@@ -76,7 +76,7 @@
                 </v-form>
               </v-card-text>
               <v-card-action>
-                <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
+                <v-btn color="blue darken-1" dark rounded style="box-shadow:none" @click="submit">登録</v-btn>
                 <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
               </v-card-action>
             </v-col>
