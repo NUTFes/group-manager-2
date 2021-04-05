@@ -591,27 +591,6 @@
                 >
                 物品申請情報を更新しました
                 </v-snackbar>
-                <v-container>
-                  <v-row>
-                    <v-col cols="10"></v-col>
-                    <v-col cols="1">
-                  <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                      <v-btn
-                      v-if="addRentalOrder" 
-                      fab elevation="0" 
-                      v-bind="attrs" 
-                      v-on="on" 
-                      dark color="purple accent-2" 
-                      @click="openAddRentalOrderDisplay">
-                      <v-icon>mdi-plus</v-icon></v-btn>
-                  </template>
-            <span>電力申請を追加する</span>
-          </v-tooltip>
-                    </v-col>
-                    <v-col cols="1"></v-col>
-                  </v-row>
-                </v-container>
               </v-tab-item>
               <!-- ステージ利用申請情報 -->
               <v-tab-item>
