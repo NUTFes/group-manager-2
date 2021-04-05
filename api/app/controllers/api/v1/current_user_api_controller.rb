@@ -193,8 +193,11 @@ class Api::V1::CurrentUserApiController < ApplicationController
               purchase_lists_all << {
                 id: purchase_list.id,
                 food_product: purchase_list.food_product.name,
+                food_product_id: purchase_list.food_product.id,
                 shop: purchase_list.shop.name,
+                shop_id: purchase_list.shop.id,
                 fes_date: purchase_list.fes_date.date,
+                fes_date_id: purchase_list.fes_date.id,
                 item: purchase_list.items,
                 is_fresh: purchase_list.is_fresh,
               } 
@@ -204,8 +207,11 @@ class Api::V1::CurrentUserApiController < ApplicationController
             purchase_lists_all << {
               id: "-9999",
               food_product: "-9999",
+              food_product_id: "-9999",
               shop: "-9999",
+              shop_id: "-9999",
               fes_date: "-9999",
+              fes_date_id: "-9999",
               item: "-9999",
               is_fresh: "-9999",
             }
@@ -253,4 +259,16 @@ class Api::V1::CurrentUserApiController < ApplicationController
     render json: regist_info
   end
 
+  def password_reset 
+    @user = current_api_user
+    @user.password = password_reset_params[:password]
+    @user.password_confirmation = password_reset_params[:password_confirmation]
+    @user.save!
+  end
+
+  private
+    # Only allow a list of trusted parameters through.
+    def password_reset_params
+      params.permit(:password, :password_confirmation)
+    end
 end

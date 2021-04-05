@@ -27,7 +27,6 @@ services:
     
   view:
     build: ./view
-    command: npm run serve
     container_name: 'GM2-VIEW'
     ports:
       - "8080:8080"
@@ -51,7 +50,19 @@ services:
       - ./admin_view:/app
     tty: true
     environment:
-      - VUE_APP_URL=http://localhost:3000
+      - VUE_APP_URL=http://133.125.44.106:3000
+
+  nginx:
+    container_name: 'nginx'
+    build: ./nginx
+    volumes:
+      - code_share:/var/www/public
+    ports:
+      - 80:80
+    depends_on:
+      - api
+      - view
+      - admin_view
 
 volumes:
   mysql-data:

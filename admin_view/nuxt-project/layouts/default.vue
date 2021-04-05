@@ -1,6 +1,6 @@
 <template>
   <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
-    <Header v-if="main"/>
+    <Header v-if="main && print" />
       <div class="pad-bottom">
         <v-row>
           <v-col cols="2" v-if="main && print">
@@ -37,10 +37,10 @@ export default {
   },
   computed:{
     main(){
-      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail' && this.$route.path !== '/users/print'
+      return this.$route.path !== '/' && this.$route.path !== '/signup' && this.$route.path !== '/regist_user_detail'
     },
     print(){
-      return this.$route.path !== '/users/print'
+      return this.$route.path !== '/print/employees' && this.$route.path !== '/print/products' && this.$route.path !== '/print/items' && this.$route.path !== '/print/powers' && this.$route.path !== '/print/address'
     }
   },
   mounted() {
@@ -198,5 +198,29 @@ export default {
 }
 .card {
   padding-right: 5%
+}
+.sticky-note {
+  width: max-content;
+  height: max-content;
+  margin-bottom: 1em;
+  overflow: hidden;
+  box-shadow: .25rem 0 .25rem hsla(0, 0%, 0%, .1);
+  background-image:
+    linear-gradient(90deg, hsla(0, 0%, 45%, .1) 2rem, hsla(0, 100%, 100%, 0) 2.5rem)
+  , linear-gradient(90deg, hsla(60, 100%, 85%, 1), hsla(60, 100%, 85%, 1));
+  line-height: 1.8;
+}
+
+.sticky-note hr {
+  border: none;
+}
+
+.sticky-note__item {
+  padding: 0 .25em 0 3em;
+}
+
+.sticky-note__date {
+  text-align: right;
+  padding-right: .5em;
 }
 </style>

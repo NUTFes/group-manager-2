@@ -7,7 +7,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon>mdi-cog</v-icon>設定
+                <v-icon class="mr-5">mdi-cog</v-icon>設定
                 <v-spacer></v-spacer>
               </v-card-title>
               <hr class="mt-n3">

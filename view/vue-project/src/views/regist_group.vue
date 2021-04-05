@@ -387,7 +387,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-font">
+                    <v-card-title class="font-weight-bold">
                       ステージ詳細申請
                     </v-card-title>
                     <v-divider></v-divider>

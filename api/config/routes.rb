@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
-      get "group_food_products/:group_id" => "food_products_api#get_group_food_product"
+      post "current_user/password_reset" => "current_user_api#password_reset"
       # 物品周り 
       get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
       get "get_item_name" => "items_api#get_item_name"
@@ -90,12 +90,19 @@ Rails.application.routes.draw do
       get "get_food_products" => "food_products_api#get_food_products"
       get "get_food_product/:id" => "food_products_api#get_food_product"
       get "get_food_products_from_group/:id" => "food_products_api#get_food_products_from_group"
+      get "group_food_products/:group_id" => "food_products_api#get_group_food_product"
       # 購入品周り
       get "get_purchase_lists" => "purchase_lists_api#get_purchase_lists"
       get "get_purchase_list/:id" => "purchase_lists_api#get_purchase_list"
       # 開催日周り
       get "get_fes_dates" => "fes_dates_api#get_fes_dates"
       get "get_fes_date/:id" => "fes_dates_api#get_fes_date"
+      # 印刷ページ周り
+      get "get_print_employees" => "print_api#get_print_employees"
+      get "get_print_products" => "print_api#get_print_products"
+      get "get_print_items" => "print_api#get_print_items"
+      get "get_print_powers" => "print_api#get_print_powers"
+      get "get_print_address" => "print_api#get_print_address"
     end
   end
   namespace :api do

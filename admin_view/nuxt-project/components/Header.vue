@@ -62,14 +62,15 @@
               v-for="item in memos"
               :key="item.id"
               >
-              <v-list-item-content>
-                <v-list-title>{{ item.user }}</v-list-title>
-                <v-list-title>{{ item.memo.content }}</v-list-title>
+              <v-list-item-content class="sticky-note">
+                <v-list-title class="sticky-note__item">{{ item.user }}</v-list-title>
+                <v-list-title class="sticky-note__item">{{ item.memo.content }}</v-list-title>
                 <br>
                 <br>
-                <v-list-title style="text-align:right">{{ item.created_at | format-date}}</v-list-title>
+                <v-list-title class="sticky-note__date">{{ item.created_at | format-date}}</v-list-title>
                 <v-divider/>
               </v-list-item-content>
+
             </v-list-item>
           </v-list>
         </div>

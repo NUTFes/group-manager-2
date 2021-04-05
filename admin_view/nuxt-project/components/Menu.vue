@@ -9,9 +9,9 @@
       <v-list-item dark>
       </v-list-item>
       <v-list-item dark style="background-color:#bf794e">
-        <v-list-item-content>
-          <v-list-item-title>Group-Manager-Admin</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-avatar rounded class="mx-auto" width="55" height="55">
+          <v-img :src="icon_src"></v-img>
+        </v-list-item-avatar>
       </v-list-item>
 
       <v-list dense>
@@ -108,10 +108,10 @@
 </template>
 <script>
 import axios from 'axios' 
-
 export default {
   data () {
     return {
+      icon_src: require("@/assets/symbol-mark.svg"),
       drawer: true,
       // マイページ系
       mypage_items: [
@@ -151,6 +151,7 @@ export default {
       operation_items: [
         { title: '物品割り当て', icon: 'mdi-cube', click: '/assign_items' },
         { title: 'お知らせ', icon: 'mdi-newspaper-variant', click: '/news' },
+        { title: '印刷', icon: 'mdi-printer', click: '/print' },
         { title: '設定', icon: 'mdi-cog', click: '/user_page_setting' },
       ],
       user: []

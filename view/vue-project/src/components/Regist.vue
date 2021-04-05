@@ -948,6 +948,8 @@
                         <v-list-item>
                           <v-list-item-content>調理の有無</v-list-item-content>
                           <v-list-item-content v-if="food_product.is_cooking == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="food_product.is_cooking == true">調理する</v-list-item-content>
+                          <v-list-item-content v-else-if="food_product.is_cooking == false">調理しない</v-list-item-content>
                           <v-list-item-content v-else>{{ food_product.is_cooking }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
@@ -1029,7 +1031,7 @@
                               text
                               v-bind="attrs"
                               v-on="on"
-                              @click
+                              @click="openPurchaseListDisplay(purchase_list.id, purchase_list.item, purchase_list.food_product_id, purchase_list.shop_id, purchase_list.fes_date_id, purchase_list.is_fresh)"
                               >
                               <v-icon>mdi-pencil</v-icon>
                             </v-btn>
@@ -1066,9 +1068,11 @@
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>生鮮食品の有無</v-list-item-content>
+                          <v-list-item-content>生鮮食品</v-list-item-content>
                           <v-list-item-content v-if="purchase_list.is_fresh == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ purchase_list.is_fresh }}</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === true">はい</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === false">いいえ</v-list-item-content>
+                          <v-list-item-content v-else>その他</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
@@ -1112,8 +1116,18 @@
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
-
-                <!-- AddModal -->
+                <!-- EditModal -->
+                <PurchaseList ref="PurchaseListDlg"
+                  :id="this.edit_purchase_list_id"
+                  :groupId="this.regist.group.id"
+                  :item="this.purchase_list_item"
+                  :shopId="this.shop_id"
+                  :fesDateId="this.fes_date_id"
+                  :foodProductId="this.purchase_food_product_id"
+                  :isFresh="this.is_fresh"
+                  @reload="reload"
+                />
+               <!-- AddModal -->
                 <AddPurchaseList ref="AddPurchaseListDlg"
                   :groupId="this.regist.group.id"
                   @reload="reload"
@@ -1125,14 +1139,17 @@
       </v-card>
             <!-- 削除ダイアログ(登録情報すべて) -->
       <v-dialog v-model="delete_dialog" width="500">
-        <v-card>
-          <v-card-title class="main">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog = false" fab black>
-              ​ <v-icon >mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1141,10 +1158,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes">
+            <v-btn depressed color="red" dark @click="delete_yes">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1153,26 +1170,30 @@
 
       <!-- 削除ダイアログ(電力申請) -->
       <v-dialog v-model="delete_dialog_power" width="500">
-        <v-card>
-          <v-card-title class="main">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_power = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_power = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
+
           <v-card-title>
             削除してよろしいですか？
           </v-card-title>
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_power">
+            <v-btn depressed color="red" dark @click="delete_yes_power">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_power = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_power = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1182,13 +1203,16 @@
       <!-- 削除ダイアログ(物品申請) -->
       <v-dialog v-model="delete_dialog_item" width="500">
         <v-card>
-          <v-card-title class="main">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_item = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_item = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1197,10 +1221,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_item">
+            <v-btn depressed color="red" dark @click="delete_yes_item">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_item = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_item = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1210,13 +1234,16 @@
       <!-- 削除ダイアログ(従業員) -->
       <v-dialog v-model="delete_dialog_employee" width="500">
         <v-card>
-          <v-card-title class="main">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_employee = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_employee = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1225,10 +1252,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_employee">
+            <v-btn depressed color="red" dark @click="delete_yes_employee">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_employee = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_employee = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1237,14 +1264,17 @@
       
       <!-- 削除ダイアログ(販売食品) -->
       <v-dialog v-model="delete_dialog_food" width="500">
-        <v-card>
-          <v-card-title class="main">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_food = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_food = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1253,10 +1283,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_food">
+            <v-btn depressed color="red" dark @click="delete_yes_food">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_food = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_food = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1265,14 +1295,17 @@
 
       <!-- 削除ダイアログ(購入品) -->
       <v-dialog v-model="delete_dialog_purchase" width="500">
-        <v-card>
-          <v-card-title class="main">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_purchase = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_purchase = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1284,7 +1317,7 @@
             <v-btn depressed color="red" dark @click="delete_yes_purchase">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_purchase = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_purchase = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1306,6 +1339,7 @@
   import StageOption from '@/components/EditModal/StageCommonOption.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Rentalorder from '@/components/EditModal/rental_order.vue'
+  import PurchaseList from '@/components/EditModal/purchase_list.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
   import Addemployee from '@/components/AddModal/employee.vue'
@@ -1327,6 +1361,7 @@
       StageOption,
       Foodproduct,
       Rentalorder,
+      PurchaseList,
       Addpower,
       AddRentalOrder,
       Addemployee,
@@ -1404,6 +1439,13 @@
       is_cooking: [],
       first_day_num: [],
       second_day_num: [],
+      //購入品情報
+      edit_purchase_list_id: [], 
+      purchase_list_item: [], 
+      purchase_food_product_id: [], 
+      shop_id: [], 
+      fes_date_id: [], 
+      is_fresh: [],
       }
     },
     mounted() {
@@ -1476,7 +1518,6 @@
       },
       //削除メソッド(販売食品)
       delete_yes_food() {
-        console.log("aaaaaaaaaa")
       const url = process.env.VUE_APP_URL + "/food_products/" + this.food_product_id;
       console.log(url)
       axios.delete(url);      
@@ -1485,7 +1526,6 @@
       },
       //削除メソッド(購入品)
       delete_yes_purchase() {
-                console.log("aaaaaaaaaa")
       const url = process.env.VUE_APP_URL + "/purchase_lists/" + this.purchase_list_id;
             console.log(url)
       axios.delete(url)      
@@ -1602,6 +1642,23 @@
         this.rental_item_id = rental_item_id
         this.num = num
         this.$refs.rentalorderDlg.isDisplay = true
+      },
+      openPurchaseListDisplay(purchase_list_id, item, food_product_id, shop_id, fes_date_id, is_fresh) {
+        this.edit_purchase_list_id = purchase_list_id
+        this.purchase_list_item = item
+        this.purchase_food_product_id = food_product_id
+        this.shop_id = shop_id
+        this.fes_date_id = fes_date_id
+        this.is_fresh = is_fresh
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+          headers: { 
+            "Content-Type": "application/json", 
+          }
+        })
+          .then(response => {
+            this.$refs.PurchaseListDlg.food_products = response.data
+          })
+        this.$refs.PurchaseListDlg.isDisplay = true
       },
       openAddPurchaseListDisplay() {
         axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {

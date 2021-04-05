@@ -7,7 +7,7 @@
               <div class="breadcrumbs">
               <ul>
                 <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
-                <li><div class="breadcrumbs-item">{{ user.name }}</div></li>
+                <li><div class="breadcrumbs-item">{{show.user_name}}</div></li>
               </ul>
             </div>
           </v-card-text>
@@ -26,7 +26,7 @@
                   <v-icon v-if="user.role_id == 1" color="red" class="ma-1">mdi-account-cog</v-icon>
                   <v-icon v-if="user.role_id == 2" color="green">mdi-account-tie</v-icon>
                   <v-icon v-if="user.role_id == 3" color="blue">mdi-account</v-icon>
-                  {{ user.name }}
+                  {{show.user_name}}
                   <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
@@ -61,23 +61,23 @@
                     <tbody>
                       <tr>
                         <th>学籍番号：</th>
-                        <td class="caption">{{ detail.student_id }}</td>
+                        <td class="caption">{{show.student_id}}</td>
                       </tr>
                       <tr>
                         <th>学年：</th>
-                        <td class="caption">{{ grade }}</td>
+                        <td class="caption">{{show.grade}}</td>
                       </tr>
                       <tr>
                         <th>課程：</th>
-                        <td class="caption">{{ department }}</td>
+                        <td class="caption">{{show.department}}</td>
                       </tr>
                       <tr>
                         <th>電話番号：</th>
-                        <td class="caption">{{ detail.tel }}</td>
+                        <td class="caption">{{show.tel}}</td>
                       </tr>
                       <tr>
                         <th>メールアドレス：</th>
-                        <td class="caption">{{ user.email }}</td>
+                        <td class="caption">{{show.email}}</td>
                       </tr>
                       <tr>
                         <th>登録日時：</th>
@@ -101,18 +101,27 @@
       </v-col>
     </v-row>
 
-    <v-row v-for="group in groups" :key="group.id">
+    <v-row
+    v-for="(group, i) in show.groups"
+    :key="i"
+    >
       <v-col>
         <div class="card">
-          <v-card flat v-if="group.user_id === user.id">
+          <v-card flat
+              :to="{
+              name: 'groups-id',
+              params:{
+                id: group.group.id
+              }
+            }">
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">{{data}}
                 <v-card-title class="font-weight-bold mt-3">
-                  <v-icon>mdi-account-group</v-icon>
-                  参加団体情報
+                  <v-icon class="mr-2">mdi-account-group</v-icon>
+                  申請参加団体情報
                   <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = true"><v-icon class="ma-5" color="#E040FB">mdi-pencil</v-icon></v-btn>
+                  <v-btn text @click="dialog = true"></v-btn>
                 </v-card-title>
                 <hr class="mt-n3" />
                 <v-simple-table class="my-9">
@@ -120,23 +129,24 @@
                     <tbody>
                       <tr>
                         <th>団体名：</th>
-                        <td class="caption">{{ group.name }}</td>
+                        <td class="caption">{{group.group.name}}</td>
                       </tr>
                       <tr>
                         <th>企画名：</th>
-                        <td class="caption">{{ group.project_name }}</td>
+                        <td class="caption">{{group.group.project_name}}</td>
                       </tr>
                       <tr>
                         <th>活動内容：</th>
-                        <td class="caption">{{ group.activity }}</td>
+                        <td class="caption">{{group.group.activity}}</td>
                       </tr>
                       <tr>
                         <th>グループカテゴリ：</th>
-                        <td class="caption">{{ group.group_category_id }}</td>
+                        <td class="caption">{{group.category}}
+                        </td>
                       </tr>
                       <tr>
                         <th>開催年：</th>
-                        <td class="caption">{{ group.fes_year_id }}</td>
+                        <td class="caption">{{group.fes_year}}</td>
                       </tr>
                     </tbody>
                   </template>
@@ -290,6 +300,7 @@ export default {
   },
   data() {
     return {
+      show: [],
       user: [],
       id: [],
       role_id: [],
@@ -297,7 +308,9 @@ export default {
       grade: [],
       department: [],
       detail: [],
-      groups: [],
+      spgroup:[],
+      group_categories:[],
+      fes_years:[],
       expand: false,
       edit_dialog: false,
       delete_dialog: false,
@@ -310,51 +323,16 @@ export default {
   },
   mounted() {
     const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-    this.$axios
-      .get(url, {
+    this.$axios.get(url, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        this.id = response.data.user.id;
-        this.role_id = response.data.user.role_id;
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.detail = response.data.detail;
-      })
-      this.$axios.get('groups/', {
-      headers: { 
-        "Content-Type": "application/json"
-      }
-    }
-    )
-      .then(response => {
-        this.groups = response.data
+        this.show = response.data
       })
   },
   methods: {
-    reload: function(){
-      console.log("reload")
-      const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-        this.id = response.data.user.id;
-        this.role_id = response.data.user.role_id;
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.detail = response.data.detail;
-        })
-    },
     edit_dialog_open: function() {
       this.edit_dialog = true
     },
