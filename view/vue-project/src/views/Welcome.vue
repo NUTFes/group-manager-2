@@ -1,26 +1,13 @@
 <template>
   <div>
     <div class="background" id="container">
-
       <div>
         <br><br><br>
-        <v-row>
-          <v-col cols="2"></v-col>
-          <v-col cols="4">
-            <div class="text-center">
-        <div class="text-label">
-          <v-container>
-            <v-row>
-              <v-col>
-                <v-img :src="topImage"></v-img>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
-            </div>
-          </v-col>
-          <v-col cols="4">
-            <v-card class="card-color">
+        <v-row class="hero-header">
+          <v-col cols="7"></v-col>
+
+          <v-col cols="5 pl-15 pr-5">
+            <v-card flat class="card-color">
               <br>
               <div class="text-center" v-show="show">
                 <Signup />
@@ -33,7 +20,6 @@
               <br>
             </v-card>
           </v-col>
-          <v-col cols="2"></v-col>
         </v-row>
       </div>
     </div>
@@ -83,10 +69,10 @@ v-sheet{
 }
 
 .background{
- background-image: url("~@/assets/welcome.png");
+ background-image: url("~@/assets/hero-header-golden-ratio-logo.png");
  background-size: cover;
  min-height: 80vh;
- background-position: center center;
+ background-position: center center;  
 }
 
 .text-label{
