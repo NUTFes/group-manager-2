@@ -135,6 +135,35 @@
             <v-col cols="1"></v-col>
             <v-col cols=4>
               <v-card-title>
+              <v-icon class="pr-2">mdi-power-plug</v-icon>  
+                電力申請の追加
+              </v-card-title>
+            </v-col>
+            <v-col cols=2>
+              <v-card-text v-if="add_power_order===true">募集中</v-card-text>
+              <v-card-text v-if="add_power_order===false">募集締め切り</v-card-text>
+            </v-col>
+            <v-col cols=2>
+              <v-switch
+                v-model="add_power_order"
+                color="green lighten-1"
+                ></v-switch>
+            </v-col>
+            <v-col cols=3></v-col>
+        </v-row>
+
+        <v-row >
+        <v-col cols="1"></v-col>
+        <v-col cols=10 >
+        <v-divider ></v-divider>
+        </v-col>
+        <v-col cols="1"></v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols=4>
+              <v-card-title>
               <v-icon class="pr-2">mdi-power-plug</v-icon>
                 電力申請情報編集・削除
               </v-card-title>
@@ -146,6 +175,35 @@
             <v-col cols=2>
               <v-switch
                 v-model="is_edit_power_order"
+                color="green lighten-1"
+                ></v-switch>
+            </v-col>
+            <v-col cols=3></v-col>
+        </v-row>
+
+        <v-row >
+        <v-col cols="1"></v-col>
+        <v-col cols=10 >
+        <v-divider ></v-divider>
+        </v-col>
+        <v-col cols="1"></v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols=4>
+              <v-card-title>
+              <v-icon class="pr-2">mdi-table-chair</v-icon>  
+                貸出物品の追加
+              </v-card-title>
+            </v-col>
+            <v-col cols=2>
+              <v-card-text v-if="add_rental_order===true">募集中</v-card-text>
+              <v-card-text v-if="add_rental_order===false">募集締め切り</v-card-text>
+            </v-col>
+            <v-col cols=2>
+              <v-switch
+                v-model="add_rental_order"
                 color="green lighten-1"
                 ></v-switch>
             </v-col>
@@ -223,6 +281,35 @@
             <v-col cols=4>
               <v-card-title>
               <v-icon class="pr-2">mdi-account</v-icon>  
+                従業員の追加
+              </v-card-title>
+            </v-col>
+            <v-col cols=2>
+              <v-card-text v-if="add_employee===true">募集中</v-card-text>
+              <v-card-text v-if="add_employee===false">募集締め切り</v-card-text>
+            </v-col>
+            <v-col cols=2>
+              <v-switch
+                v-model="add_employee"
+                color="green lighten-1"
+                ></v-switch>
+            </v-col>
+            <v-col cols=3></v-col>
+        </v-row>
+
+        <v-row >
+        <v-col cols="1"></v-col>
+        <v-col cols=10 >
+        <v-divider ></v-divider>
+        </v-col>
+        <v-col cols="1"></v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols=4>
+              <v-card-title>
+              <v-icon class="pr-2">mdi-account</v-icon>  
                 従業員情報編集・削除
               </v-card-title>
             </v-col>
@@ -233,6 +320,35 @@
             <v-col cols=2>
               <v-switch
                 v-model="is_edit_employee"
+                color="green lighten-1"
+                ></v-switch>
+            </v-col>
+            <v-col cols=3></v-col>
+        </v-row>
+
+        <v-row >
+        <v-col cols="1"></v-col>
+        <v-col cols=10 >
+        <v-divider ></v-divider>
+        </v-col>
+        <v-col cols="1"></v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols=4>
+              <v-card-title>
+              <v-icon class="pr-2">mdi-baguette</v-icon>  
+                販売食品の追加
+              </v-card-title>
+            </v-col>
+            <v-col cols=2>
+              <v-card-text v-if="add_food_product===true">募集中</v-card-text>
+              <v-card-text v-if="add_food_product===false">募集締め切り</v-card-text>
+            </v-col>
+            <v-col cols=2>
+              <v-switch
+                v-model="add_food_product"
                 color="green lighten-1"
                 ></v-switch>
             </v-col>
@@ -281,155 +397,6 @@
             <v-col cols=4>
               <v-card-title>
               <v-icon class="pr-2">mdi-cart</v-icon>  
-                購入品情報編集・削除
-              </v-card-title>
-            </v-col>
-            <v-col cols=2>
-              <v-card-text v-if="is_edit_purchase_list===true">募集中</v-card-text>
-              <v-card-text v-if="is_edit_purchase_list===false">募集締め切り</v-card-text>
-            </v-col>
-            <v-col cols=2>
-              <v-switch
-                v-model="is_edit_purchase_list"
-                color="green lighten-1"
-                ></v-switch>
-            </v-col>
-            <v-col cols=3></v-col>
-        </v-row>
-
-        <v-row >
-        <v-col cols="1"></v-col>
-        <v-col cols=10 >
-        <v-divider ></v-divider>
-        </v-col>
-        <v-col cols="1"></v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols=4>
-              <v-card-title>
-              <v-icon class="pr-2">mdi-power-plug</v-icon>  
-                電力申請の追加
-              </v-card-title>
-            </v-col>
-            <v-col cols=2>
-              <v-card-text v-if="add_power_order===true">募集中</v-card-text>
-              <v-card-text v-if="add_power_order===false">募集締め切り</v-card-text>
-            </v-col>
-            <v-col cols=2>
-              <v-switch
-                v-model="add_power_order"
-                color="green lighten-1"
-                ></v-switch>
-            </v-col>
-            <v-col cols=3></v-col>
-        </v-row>
-
-        <v-row >
-        <v-col cols="1"></v-col>
-        <v-col cols=10 >
-        <v-divider ></v-divider>
-        </v-col>
-        <v-col cols="1"></v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols=4>
-              <v-card-title>
-              <v-icon class="pr-2">mdi-table-chair</v-icon>  
-                貸出物品の追加
-              </v-card-title>
-            </v-col>
-            <v-col cols=2>
-              <v-card-text v-if="add_rental_order===true">募集中</v-card-text>
-              <v-card-text v-if="add_rental_order===false">募集締め切り</v-card-text>
-            </v-col>
-            <v-col cols=2>
-              <v-switch
-                v-model="add_rental_order"
-                color="green lighten-1"
-                ></v-switch>
-            </v-col>
-            <v-col cols=3></v-col>
-        </v-row>
-
-        <v-row >
-        <v-col cols="1"></v-col>
-        <v-col cols=10 >
-        <v-divider ></v-divider>
-        </v-col>
-        <v-col cols="1"></v-col>
-        </v-row>
-
-
-        <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols=4>
-              <v-card-title>
-              <v-icon class="pr-2">mdi-account</v-icon>  
-                従業員の追加
-              </v-card-title>
-            </v-col>
-            <v-col cols=2>
-              <v-card-text v-if="add_employee===true">募集中</v-card-text>
-              <v-card-text v-if="add_employee===false">募集締め切り</v-card-text>
-            </v-col>
-            <v-col cols=2>
-              <v-switch
-                v-model="add_employee"
-                color="green lighten-1"
-                ></v-switch>
-            </v-col>
-            <v-col cols=3></v-col>
-        </v-row>
-
-
-
-        <v-row >
-        <v-col cols="1"></v-col>
-        <v-col cols=10 >
-        <v-divider ></v-divider>
-        </v-col>
-        <v-col cols="1"></v-col>
-        </v-row>
-
-        <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols=4>
-              <v-card-title>
-              <v-icon class="pr-2">mdi-baguette</v-icon>  
-                販売食品の追加
-              </v-card-title>
-            </v-col>
-            <v-col cols=2>
-              <v-card-text v-if="add_food_product===true">募集中</v-card-text>
-              <v-card-text v-if="add_food_product===false">募集締め切り</v-card-text>
-            </v-col>
-            <v-col cols=2>
-              <v-switch
-                v-model="add_food_product"
-                color="green lighten-1"
-                ></v-switch>
-            </v-col>
-            <v-col cols=3></v-col>
-        </v-row>
-
-        <v-row >
-        <v-col cols="1"></v-col>
-        <v-col cols=10 >
-        <v-divider ></v-divider>
-        </v-col>
-        <v-col cols="1"></v-col>
-        </v-row>
-
-
-        <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols=4>
-              <v-card-title>
-              <v-icon class="pr-2">mdi-cart</v-icon>  
                 購入品の追加
               </v-card-title>
             </v-col>
@@ -440,6 +407,35 @@
             <v-col cols=2>
               <v-switch
                 v-model="add_purchase_list"
+                color="green lighten-1"
+                ></v-switch>
+            </v-col>
+            <v-col cols=3></v-col>
+        </v-row>
+
+        <v-row >
+        <v-col cols="1"></v-col>
+        <v-col cols=10 >
+        <v-divider ></v-divider>
+        </v-col>
+        <v-col cols="1"></v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols=4>
+              <v-card-title>
+              <v-icon class="pr-2">mdi-cart</v-icon>  
+                購入品情報編集・削除
+              </v-card-title>
+            </v-col>
+            <v-col cols=2>
+              <v-card-text v-if="is_edit_purchase_list===true">募集中</v-card-text>
+              <v-card-text v-if="is_edit_purchase_list===false">募集締め切り</v-card-text>
+            </v-col>
+            <v-col cols=2>
+              <v-switch
+                v-model="is_edit_purchase_list"
                 color="green lighten-1"
                 ></v-switch>
             </v-col>
