@@ -8,7 +8,6 @@
               <ul>
                 <li><div class="breadcrumbs-item"><router-link to="/users">ユーザー一覧</router-link></div></li>
                 <li><div class="breadcrumbs-item">{{show.user_name}}</div></li>
-                {{ user.id }}
               </ul>
             </div>
           </v-card-text>

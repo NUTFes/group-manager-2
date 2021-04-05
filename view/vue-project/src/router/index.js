@@ -15,6 +15,7 @@ import RegistFoodBooths from "../views/regist_food_booths.vue";
 import RegistPurchase from "../views/regist_purchase.vue";
 import Firstcustomer from "../views/FirstCustomer.vue";
 import EditUserInfo from "../views/edit_user_info.vue";
+import PasswordReset from "../views/password_reset.vue";
 
 Vue.use(VueRouter);
 
@@ -85,7 +86,11 @@ const routes = [
     name: "Firstcustomer",
     component: Firstcustomer
   },
-
+  {
+    path: "/password_reset",
+    name: "PasswordReset",
+    component: PasswordReset
+  },
   {
     path: "/edit_user_info",
     name: "EditUserInfo",
