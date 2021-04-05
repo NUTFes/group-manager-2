@@ -107,7 +107,7 @@ export default {
       { id: 5, name: '研究室公開' },
       { id: 6, name: 'その他' }
       ],
-      fesYearId: 1,
+      fesYearId: [],
       formHasErrors: false,
       rules: {
       required: value => !!value || '入力してください',
@@ -187,6 +187,11 @@ export default {
         console.error(error)
         return error;
       }
+    )
+    axios.get(process.env.VUE_APP_URL + '/user_page_settings/1').then(
+      (response) => {
+        this.fesYearId = response.data.fes_year_id
+      },
     )
   },
   watch: {

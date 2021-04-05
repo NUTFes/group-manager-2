@@ -54,7 +54,6 @@
         </v-card-text>
             <v-card-actions>
               <v-btn color="btn" block dark @click="submit">登録</v-btn>
-              <v-btn color="blue darken-1" text block dark @click="cancel">キャンセル</v-btn>
             </v-card-actions>
       </v-card>
     </v-col>

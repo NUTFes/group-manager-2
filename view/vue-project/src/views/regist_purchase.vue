@@ -5,12 +5,18 @@
       <v-card-title>購入品登録</v-card-title>
       <v-divider />
       <v-card-text>
+        <v-row>
+        <v-col cols=3></v-col>
+        <v-col cols=3>
         <v-select
           v-model="purchaseSteps"
           :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
           label="購入品数"
           outlined
         ></v-select>
+        </v-col>
+        <v-col cols="6"><v-card-text>個の購入品を登録</v-card-text></v-col>
+        </v-row>
         <v-stepper class="stepper" v-model="e1">
           <v-stepper-header class="stepper">
             <template v-for="purchaseStep in purchaseSteps">
@@ -38,61 +44,53 @@
                 ref="purchaseChild"
                 :key="purchaseStep"
               />
-              <v-row>
-                <v-col cols="2" />
-                <v-col cols="8">
+                  <v-card-actions>
+                  <v-spacer></v-spacer>
                   <v-btn
-                    block
-                    height="50"
+                    rounded
+                    text
+                    color="btn"
+                    class="pr-5"
+                    @click="e1 -= 1"
+                    v-show="purchaseStep != 1"
+                  >
+                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                    戻る
+                  </v-btn>
+                  <v-btn
+                    rounded
                     outlined
-                    color="primary"
+                    color="btn"
+                    class="pl-5"
                     @click="e1 += 1"
                     v-show="purchaseSteps != purchaseStep"
                   >
                     {{ purchaseStep + 1 }}
                     つ目へ
+                    <v-icon class="ml-n1">mdi-menu-right</v-icon>
                   </v-btn>
-                </v-col>
-                <v-col cols="2" />
-              </v-row>
-              <v-row>
-                <v-col cols="4" />
-                <v-col cols="4">
-                  <v-btn
-                    height="50"
-                    block
-                    text
-                    @click="e1 -= 1"
-                    v-show="purchaseStep != 1"
-                  >
-                    戻る
-                  </v-btn>
-                </v-col>
-                <v-col cols="4" />
-              </v-row>
-              <v-divider />
+                    </v-card-actions>
+               <v-divider class="mb-8" />
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
         <v-row>
-          <v-col cols="9" />
-          <v-col cols="3">
+          <v-col cols="10" />
+          <v-col cols="2">
             <v-btn
-              class="stepper"
-              dark
               rounded
-              height="50"
-              block
+              dark
+              depressed
+              large
+              class="font-weight-bold"
+              color="btn"
               @click="submit"
-              color="purple accent-2"
-              align="right"
-              >登録
+              >完了
             </v-btn></v-col
           ></v-row
         >
       </v-card-text>
     </v-col>
-    <v-col cols="2" />
   </v-row>
 </template>
 <script>

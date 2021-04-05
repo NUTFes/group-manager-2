@@ -135,12 +135,18 @@
                     <v-card-title class="font-weight-bold">物品登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
+                      <v-row>
+                        <v-col cols=3></v-col>
+                        <v-col cols=3>
                       <v-select
                         v-model="rentalSteps"
                         :items="[1, 2, 3, 4, 5, 6]"
                         label="登録物品数"
                         outlined
                       />
+                        </v-col>
+                        <v-col cols=6><v-card-text>個の物品を登録する</v-card-text></v-col>
+                      </v-row>
                       <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
                           <template v-for="rentalStep in rentalSteps">
