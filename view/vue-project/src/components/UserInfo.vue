@@ -27,6 +27,15 @@
             >
               ユーザー情報を編集する
             </v-btn>
+	    <br><br>
+            <v-btn 
+              to="/password_reset"
+              style="box-shadow:none"
+              outlined
+              color="purple accent-2"
+            >
+	      パスワードを変更する
+            </v-btn>
           </v-card-text>
         </v-col>
       </v-row>

@@ -48,7 +48,7 @@ Rails.application.routes.draw do
       get "current_user/regist_info" => "current_user_api#get_regist_info"
       get "current_user/get_user_detail_raw" => "current_user_api#get_user_detail_raw"
       post "current_user/edit_user_info" => "current_user_api#edit_user_info"
-      get "group_food_products/:group_id" => "food_products_api#get_group_food_product"
+      post "current_user/password_reset" => "current_user_api#password_reset"
       # 物品周り 
       get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
       get "get_item_name" => "items_api#get_item_name"
