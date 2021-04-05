@@ -2,19 +2,23 @@
   <v-row justify="center">
     <v-col cols="2"></v-col>
     <v-col cols="8">
-      <v-card>
+      <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
             <v-col cols="2"></v-col>
             <v-col cols="8" align="center">
               <v-card-title class="justify-center">
-                <h1>パスワード再設定</h1>
+                <h1 style="color:#333333">パスワード再設定</h1>
               </v-card-title>
+                <br>
+                <v-divider></v-divider>
+                <br>
               <v-card-text>
                 <v-form ref="form">
                   <v-text-field
                     label="パスワード"
                     ref="password"
+                    outlined
                     v-model="password"
                     :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
                     :rules="[rules.requied, rules.min]"
@@ -26,6 +30,7 @@
                   ></v-text-field>
                   <v-text-field
                     label="パスワードの再入力"
+                    outlined
                     ref="password_confirmation"
                     v-model="password_confirmation"
                     :append-icon="show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'"
@@ -39,8 +44,8 @@
                 </v-form>
               </v-card-text>
               <v-card-action>
-                <v-btn color="blue darken-1" block @click="submit">変更登録</v-btn>
-                <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
+                <v-btn color="btn" rounded depressed dark block @click="submit">変更登録</v-btn>
+                <v-btn color="btn" text block @click="cancel">リセット</v-btn>
               </v-card-action>
             </v-col>
             <v-col cols="2"></v-col>

@@ -7,7 +7,7 @@
           <v-col cols="7"></v-col>
 
           <v-col cols="5 pl-15 pr-5">
-            <v-card class="card-color">
+            <v-card flat class="card-color">
               <br>
               <div class="text-center" v-show="show">
                 <Signup />
