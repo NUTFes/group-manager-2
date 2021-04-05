@@ -79,4 +79,33 @@ class Api::V1::UsersController < ApplicationController
     render json: user_detail
   end
 
+  def edit_user_info
+    @user = User.find(edit_user_info_params[:user_id])
+    @user_detail = @user.user_detail
+    @user.name = edit_user_info_params[:name] 
+    @user.email = edit_user_info_params[:email] 
+    @user_detail.student_id = edit_user_info_params[:student_id] 
+    @user_detail.grade_id = edit_user_info_params[:grade_id] 
+    @user_detail.department_id = edit_user_info_params[:department_id] 
+    @user_detail.tel = edit_user_info_params[:tel] 
+    @user.save!
+    @user_detail.save!
+  end
+
+  def reset_password
+    @user = User.find(reset_password_params[:user_id])
+    @user.password = reset_password_params[:password]
+    @user.password_confirmation = reset_password_params[:password_confirmation]
+    @user.save!
+  end
+
+  private
+  
+    def edit_user_info_params
+      params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
+    end
+
+    def reset_password_params
+      params.permit(:user_id, :password, :password_confirmation)
+    end
 end

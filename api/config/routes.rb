@@ -39,6 +39,8 @@ Rails.application.routes.draw do
       get "users/show_user_detail/:id" => "users#show_user_detail"
       get "users/get_user_detail" => "users#get_user_detail"
       get "update_user/:id/:role_id" => "users#update"
+      post "users/edit_user_info" => "users#edit_user_info"
+      post "users/reset_password" => "users#reset_password"
       # 副代表周り
       get "get_sub_rep_details/:id" => "sub_rep_api#get_sub_rep_details"
       # 現在のユーザーについて
