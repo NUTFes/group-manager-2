@@ -56,6 +56,7 @@ Rails.application.routes.draw do
       get "get_group_from_project_name/:id" => "groups_api#get_group_from_project_name"
       get "get_groups" => "groups_api#get_groups"
       get "get_group/:id" => "groups_api#get_group"
+      get "get_group_detail/:id" => "groups_api#get_group_detail"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"

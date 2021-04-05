@@ -1,5 +1,19 @@
 <template>
-  <div>
+  <div v-if="data.length === 0">
+    <div class="card">
+      <v-card flat>
+        <br><br>
+        <div class="text-center">
+        <v-progress-circular
+          indeterminate
+          color="#009688"
+        ></v-progress-circular>
+        <br><br>
+        </div>
+      </v-card>
+    </div>
+  </div>
+  <div v-else>
     <v-row>
       <v-col>
         <div class="card">
@@ -131,13 +145,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ group.created_at | (format - date) }}
+                          {{ group.created_at | format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ group.updated_at | (format - date) }}
+                          {{ group.updated_at | format-date }}
                         </td>
                       </tr>
                     </tbody>
@@ -149,7 +163,7 @@
           <br />
           <v-row>
             <v-col cols=6>
-              <v-card flats>
+              <v-card flat>
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -175,43 +189,13 @@
                 </v-row>
               </v-card>
             </v-col>
-            <v-col cols="6">
+             <v-col cols=6>
               <v-card flat>
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
                     <v-card-title class="font-weight-bold mt-3">
-                      従業員
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody v-for="Employee in Employees" :key="Employee.id">
-                          <tr>
-                            <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="th">
-                              <th>{{ Employee.id }}</th>
-                            </router-link>
-                            <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="td">
-                              <td class="caption">{{ Employee.name }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-          <br>
-          <v-row>
-            <v-col cols=6>
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      会場
+                      会場申請
                     </v-card-title>
                     <hr class="mt-n3" />
                     <v-simple-table class="my-9">
@@ -248,13 +232,16 @@
                 </v-row>
               </v-card>
             </v-col>
+          </v-row>
+          <br>
+          <v-row>
             <v-col cols="6">
               <v-card flat　:to="{ name: 'power_orders'}">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
                     <v-card-title class="font-weight-bold mt-3">
-                      電力
+                      電力申請
                     </v-card-title>
                     <hr class="mt-n3" />
                     <v-simple-table class="my-9">
@@ -279,15 +266,13 @@
                 </v-row>
               </v-card>
             </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
+            <v-col cols="6">
               <v-card flat>
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
                     <v-card-title class="font-weight-bold mt-3">
-                      物品
+                      物品申請
                     </v-card-title>
                     <hr class="mt-n3" />
                     <v-simple-table class="my-9">
@@ -314,7 +299,7 @@
             </v-col>
           </v-row>
           <br />
-          <v-row>
+          <v-row v-if="groupCategoryId === 3">
             <v-col cols="6">
               <v-card flat>
                 <v-row>
@@ -455,7 +440,7 @@
             </v-col>
           </v-row>
           <br />
-          <v-row>
+          <v-row v-if="groupCategoryId !== 3">
             <v-col>
               <v-card flat>
                 <v-row>
@@ -496,11 +481,37 @@
                 </v-row>
               </v-card>
             </v-col>
+            <v-col cols="6">
+              <v-card flat>
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-title class="font-weight-bold mt-3">
+                      従業員
+                    </v-card-title>
+                    <hr class="mt-n3" />
+                    <v-simple-table class="my-9">
+                      <template v-slot:default>
+                        <tbody v-for="Employee in Employees" :key="Employee.id">
+                          <tr>
+                            <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="th">
+                              <th>{{ Employee.id }}</th>
+                            </router-link>
+                            <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="td">
+                              <td class="caption">{{ Employee.name }}</td>
+                            </router-link>
+                          </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
           </v-row>
         </div>
       </v-col>
     </v-row>
-
     <v-row>
       <v-col>
         <div class="card">
@@ -638,6 +649,8 @@ import moment from "moment";
 export default {
   data() {
     return {
+      data: [],
+      detail_data: [],
       group: [],
       user_id: [],
       user: [],
@@ -748,6 +761,7 @@ export default {
           },
         })
         .then((response) => {
+          this.data = response.data
           this.group = response.data.group;
           this.groupName = this.group.name;
           this.groupProjectName = this.group.project_name;
@@ -755,17 +769,35 @@ export default {
           this.groupActivity = this.group.activity;
           this.user_id = this.group.user_id;
           this.fes_year_id = this.group.fes_year_id;
-          this.user = response.data.user;
-          this.year = response.data.fes_year;
-          this.place_first = response.data.place_first;
-          this.place_second = response.data.place_second;
-          this.place_third = response.data.place_third;
-          this.stage_first = response.data.stage_first;
-          this.stage_second = response.data.stage_second;
-          this.rentalOrderLists = response.data.rental_order_lists;
-          this.fes_date = response.data.fes_date;
-          this.purchase_lists = response.data.purchase_lists;
+          this.user = this.data.user;
+          this.year = this.data.fes_year;
+          this.place_first = this.data.place_first;
+          this.place_second = this.data.place_second;
+          this.place_third = this.data.place_third;
+          this.stage_first = this.data.stage_first;
+          this.stage_second = this.data.stage_second;
+          this.rentalOrderLists = this.data.rental_order_lists;
+          this.fes_date = this.data.fes_date;
+          this.purchase_lists = this.data.purchase_lists;
         });
+      const group_detail_url = "api/v1/get_group_detail/" + this.$route.params.id;
+      this.$axios.get(group_detail_url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.detail_data = response.data
+        this.Group = this.detail_data.group;
+        this.subRep = this.detail_data.sub_rep;
+        this.Employees = this.detail_data.employees;
+        this.placeOrder = this.detail_data.place_order;
+        this.powerOrders = this.detail_data.power_orders;
+        this.rentalOrders = this.detail_data.rental_orders;
+        this.stageOrder = this.detail_data.stage_order;
+        this.stageCommonOption = this.detail_data.stage_common_option;
+        this.foodProducts = this.detail_data.food_products;
+      });
     },
     edit_dialog_open: function () {
       const year_url = "/fes_years/";
@@ -833,6 +865,7 @@ export default {
         },
       })
       .then((response) => {
+        this.data = response.data
         this.group = response.data.group;
         this.groupName = this.group.name;
         this.groupProjectName = this.group.project_name;
@@ -840,16 +873,16 @@ export default {
         this.groupActivity = this.group.activity;
         this.user_id = this.group.user_id;
         this.fes_year_id = this.group.fes_year_id;
-        this.user = response.data.user;
-        this.year = response.data.fes_year;
-        this.place_first = response.data.place_first;
-        this.place_second = response.data.place_second;
-        this.place_third = response.data.place_third;
-        this.stage_first = response.data.stage_first;
-        this.stage_second = response.data.stage_second;
-        this.rentalOrderLists = response.data.rental_order_lists;
-        this.fes_date = response.data.fes_date;
-        this.purchase_lists = response.data.purchase_lists;
+        this.user = this.data.user;
+        this.year = this.data.fes_year;
+        this.place_first = this.data.place_first;
+        this.place_second = this.data.place_second;
+        this.place_third = this.data.place_third;
+        this.stage_first = this.data.stage_first;
+        this.stage_second = this.data.stage_second;
+        this.rentalOrderLists = this.data.rental_order_lists;
+        this.fes_date = this.data.fes_date;
+        this.purchase_lists = this.data.purchase_lists;
       });
 
     const category_url = "group_categories/";
@@ -875,29 +908,17 @@ export default {
         },
       })
       .then((response) => {
-        console.log(response);
-        this.Group = response.data.group;
-        this.subRep = response.data.sub_rep;
-        this.Employees = response.data.employees;
-        this.placeOrder = response.data.place_order;
-        this.powerOrders = response.data.power_orders;
-        this.rentalOrders = response.data.rental_orders;
-        this.stageOrder = response.data.stage_order;
-        this.stageCommonOption = response.data.stage_common_option;
-        this.foodProducts = response.data.food_products;
+        this.detail_data = response.data
+        this.Group = this.detail_data.group;
+        this.subRep = this.detail_data.sub_rep;
+        this.Employees = this.detail_data.employees;
+        this.placeOrder = this.detail_data.place_order;
+        this.powerOrders = this.detail_data.power_orders;
+        this.rentalOrders = this.detail_data.rental_orders;
+        this.stageOrder = this.detail_data.stage_order;
+        this.stageCommonOption = this.detail_data.stage_common_option;
+        this.foodProducts = this.detail_data.food_products;
       });
-      
-    this.$axios.get('/places', {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    })
-      .then(response => {
-        this.places = response.data
-        for (let i = 0; i < this.places.length; i++) {
-          this.place_list.push(this.places[i]['name'])
-        }
-      })
   },
 
   filters: {

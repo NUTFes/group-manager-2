@@ -48,9 +48,15 @@ class Api::V1::GroupsApiController < ApplicationController
     place_first = Place.find(group.place_order.first).name
     place_second = Place.find(group.place_order.second).name
     place_third = Place.find(group.place_order.third).name
-    stage_first = Stage.find(group.stage_order.stage_first).name
-    stage_second = Stage.find(group.stage_order.stage_second).name
-    fes_date = FesDate.find(group.stage_order.fes_date_id).date
+    if group.stage_order == nil
+      stage_first = '未登録'
+      stage_second = '未登録'
+      fes_date = '未登録'
+    else
+      stage_first = Stage.find(group.stage_order.stage_first).name
+      stage_second = Stage.find(group.stage_order.stage_second).name
+      fes_date = FesDate.find(group.stage_order.fes_date_id).date
+    end
     rental_order_lists = []
     for rental_order in group.rental_orders
       rental_id = rental_order.rental_item.id
