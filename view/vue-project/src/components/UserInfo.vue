@@ -17,6 +17,25 @@
             <v-icon class="mr-2">mdi-school-outline</v-icon>{{ user.grade}}<br>
             <v-icon class="mr-2">mdi-school</v-icon>{{ user.department}}<br>
             <v-icon class="mr-2">mdi-phone</v-icon>{{ user.tel}}
+            </v-card-text>
+            <v-card-text>
+            <v-btn 
+              to="/edit_user_info"
+              style="box-shadow:none"
+              outlined
+              color="purple accent-2"
+            >
+              ユーザー情報を編集する
+            </v-btn>
+	    <br><br>
+            <v-btn 
+              to="/password_reset"
+              style="box-shadow:none"
+              outlined
+              color="purple accent-2"
+            >
+	      パスワードを変更する
+            </v-btn>
           </v-card-text>
         </v-col>
       </v-row>

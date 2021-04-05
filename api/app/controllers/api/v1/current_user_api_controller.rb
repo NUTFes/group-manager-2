@@ -266,8 +266,30 @@ class Api::V1::CurrentUserApiController < ApplicationController
     @user.save!
   end
 
+  def get_user_detail_raw
+    @user = current_api_user
+    @user_detail = @user.user_detail
+    render json: {user: @user, user_detail: @user_detail}
+  end
+
+  def edit_user_info
+    @user = current_api_user
+		@user_detail = @user.user_detail
+    @user.name = edit_user_info_params[:name]
+    @user.email = edit_user_info_params[:email]
+    @user_detail.student_id = edit_user_info_params[:student_id]
+    @user_detail.tel = edit_user_info_params[:tel]
+    @user_detail.department_id = edit_user_info_params[:department_id]
+    @user_detail.grade_id = edit_user_info_params[:grade_id]
+    @user.save!
+		@user_detail.save!
+  end
+
   private
-    # Only allow a list of trusted parameters through.
+    def edit_user_info_params
+      params.permit(:name, :email, :student_id, :tel, :department_id, :grade_id)
+    end
+
     def password_reset_params
       params.permit(:password, :password_confirmation)
     end

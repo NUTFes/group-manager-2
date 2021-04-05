@@ -1,6 +1,5 @@
 UserPageSetting.seed( :id,
     { id: 1 ,   is_regist_group: true,
-                is_regist_food_product: true,
                 is_edit_group: true, 
                 is_edit_sub_rep: true,
                 is_edit_place: true,
@@ -10,6 +9,12 @@ UserPageSetting.seed( :id,
                 is_edit_employee: true,
                 is_edit_food_product: true,
                 is_edit_purchase_list: true,
+                add_power_order: true, 
+                add_rental_order: true, 
+                add_employee: true, 
+                add_food_product: true, 
+                add_purchase_list: true, 
+                fes_year_id: 2,
 
             }
 )

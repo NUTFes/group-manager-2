@@ -39,6 +39,8 @@ Rails.application.routes.draw do
       get "users/show_user_detail/:id" => "users#show_user_detail"
       get "users/get_user_detail" => "users#get_user_detail"
       get "update_user/:id/:role_id" => "users#update"
+      post "users/edit_user_info" => "users#edit_user_info"
+      post "users/reset_password" => "users#reset_password"
       # 副代表周り
       get "get_sub_rep_details/:id" => "sub_rep_api#get_sub_rep_details"
       # 現在のユーザーについて
@@ -46,6 +48,8 @@ Rails.application.routes.draw do
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
+      get "current_user/get_user_detail_raw" => "current_user_api#get_user_detail_raw"
+      post "current_user/edit_user_info" => "current_user_api#edit_user_info"
       post "current_user/password_reset" => "current_user_api#password_reset"
       # 物品周り 
       get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
@@ -56,6 +60,7 @@ Rails.application.routes.draw do
       get "get_group_from_project_name/:id" => "groups_api#get_group_from_project_name"
       get "get_groups" => "groups_api#get_groups"
       get "get_group/:id" => "groups_api#get_group"
+      get "get_group_detail/:id" => "groups_api#get_group_detail"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
