@@ -43,6 +43,6 @@ class UserPageSettingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_page_setting_params
-      params.permit(:is_regist_group, :is_regist_food_product, :is_edit_group, :is_edit_sub_rep, :is_edit_place, :is_edit_power_order, :is_edit_rental_order, :is_edit_stage_order, :is_edit_employee, :is_edit_food_product, :is_edit_purchase_list)
+      params.permit(:is_regist_group, :is_edit_group, :is_edit_sub_rep, :is_edit_place, :is_edit_power_order, :is_edit_rental_order, :is_edit_stage_order, :is_edit_employee, :is_edit_food_product, :is_edit_purchase_list,:add_power_order,:add_rental_order,:add_employee,:add_food_product,:add_purchase_list, :fes_year_id)
     end
 end

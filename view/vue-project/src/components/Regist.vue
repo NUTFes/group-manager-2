@@ -9,6 +9,7 @@
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              v-if="isEditGroup" 
               text
               v-bind="attrs"
               v-on="on"
@@ -362,6 +363,7 @@
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
+                              v-if="isEditPowerOrder"
                               text
                               v-bind="attrs"
                               v-on="on"
@@ -415,6 +417,7 @@
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
+                          v-if="addPowerOrder"
                           fab
                           dark
                           v-bind="attrs"
@@ -498,6 +501,7 @@
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
+                              v-if="isEditRentalOrder"
                               text
                               v-bind="attrs"
                               v-on="on"
@@ -566,7 +570,14 @@
                     <v-col cols="1">
                   <v-tooltip top>
                   <template v-slot:activator="{ on, attrs  }">
-                      <v-btn fab elevation="0" v-bind="attrs" v-on="on" dark color="purple accent-2" @click="openAddRentalOrderDisplay"><v-icon>mdi-plus</v-icon></v-btn>
+                      <v-btn
+                      v-if="addRentalOrder" 
+                      fab elevation="0" 
+                      v-bind="attrs" 
+                      v-on="on" 
+                      dark color="purple accent-2" 
+                      @click="openAddRentalOrderDisplay">
+                      <v-icon>mdi-plus</v-icon></v-btn>
                   </template>
             <span>電力申請を追加する</span>
           </v-tooltip>
@@ -784,6 +795,7 @@
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
+                              v-if="isEditEmployee"
                               text
                               v-bind="attrs"
                               v-on="on"
@@ -819,6 +831,7 @@
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
+                          v-if="addEmployee"
                           fab
                           dark
                           v-bind="attrs"
@@ -898,6 +911,7 @@
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
+                              v-if="isEditFoodproduct"
                               text
                               v-bind="attrs"
                               v-on="on"
@@ -947,6 +961,7 @@
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
+                          v-if="addFoodProduct"
                           fab
                           dark
                           v-bind="attrs"
@@ -1022,6 +1037,7 @@
                         <v-tooltip top>
                           <template v-slot:activator="{ on, attrs }">
                             <v-btn
+                              v-if="isEditPurchaseList"
                               text
                               v-bind="attrs"
                               v-on="on"
@@ -1078,6 +1094,7 @@
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
+                          v-if="addPurchaseList"
                           fab
                           dark
                           v-bind="attrs"
@@ -1304,6 +1321,7 @@
   import Addemployee from '@/components/AddModal/employee.vue'
   import AddFoodProduct from '@/components/AddModal/FoodProduct.vue'
   import AddPurchaseList from '@/components/AddModal/PurchaseList.vue'
+import rental_orderVue from './EditModal/rental_order.vue'
 
   export default {
     props: {
@@ -1366,6 +1384,11 @@
       isEditEmployee: [],
       isEditFoodproduct:[],
       isEditPurchaseList: [],
+      addPowerOrder: [],
+      addRentalOrder: [],
+      addEmployee: [],
+      addFoodProduct: [],
+      addPurchaseList: [],
       // 物品申請編集用
       rental_order_id: [],
       rental_item_id: [],
@@ -1442,6 +1465,11 @@
           this.isEditFoodproduct = response.data[0].is_edit_food_product
           this.isEditPurchaseList = response.data[0].is_edit_purchase_list
           this.isAddRentalOrder = response.data[0].is_add_rental_order
+          this.addPowerOrder = response.data[0].add_power_order
+          this.addRentalOrder = response.data[0].add_rental_order
+          this.addEmployee = response.data[0].add_employee
+          this.addFoodProduct = response.data[0].add_food_product
+          this.addPurchaseList = response.data[0].add_purchase_list
           console.log(response)
         })
     },
