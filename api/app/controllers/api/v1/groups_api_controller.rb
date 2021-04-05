@@ -45,9 +45,15 @@ class Api::V1::GroupsApiController < ApplicationController
     group = Group.find(params[:id])
     user = group.user.name
     fes_year = group.fes_year.year_num
-    place_first = Place.find(group.place_order.first).name
-    place_second = Place.find(group.place_order.second).name
-    place_third = Place.find(group.place_order.third).name
+    if group.group_category.id == 3
+      place_first = '未登録'
+      place_second = '未登録'
+      place_third = '未登録'
+    else
+      place_first = Place.find(group.place_order.first).name
+      place_second = Place.find(group.place_order.second).name
+      place_third = Place.find(group.place_order.third).name
+    end
     if group.stage_order == nil
       stage_first = '未登録'
       stage_second = '未登録'

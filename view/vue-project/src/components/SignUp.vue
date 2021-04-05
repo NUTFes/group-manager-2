@@ -52,20 +52,9 @@
             </v-form>
           </v-container>
         </v-card-text>
-        <v-row>
-          <v-col>
             <v-card-actions>
-              <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
+              <v-btn color="btn" block dark @click="submit">登録</v-btn>
             </v-card-actions>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card-actions>
-              <v-btn color="blue darken-1" text block dark @click="cancel">キャンセル</v-btn>
-            </v-card-actions>
-          </v-col>
-        </v-row>
       </v-card>
     </v-col>
     <v-col cols="1"></v-col>

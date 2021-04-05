@@ -4,7 +4,7 @@
       class = "mx-auto"
       outlined
     >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報</b>
+      <v-card-title class="main font-weight-bold"><v-icon class="pr-2" size="30">mdi-information</v-icon>登録情報
         <v-spacer></v-spacer>  
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
@@ -13,19 +13,18 @@
               text
               v-bind="attrs"
               v-on="on"
+              class="my-n5"
               @click="open_delete_dialog(regist.group.id)"
               fab
-              ><v-icon class="ma-5">mdi-delete</v-icon>
+              ><v-icon>mdi-delete</v-icon>
             </v-btn>
           </template>
           <span>削除</span>
         </v-tooltip>
       </v-card-title>
-
-        <v-divider class="mx-4"></v-divider>
         <v-row>
           <v-col>
-            <v-tabs vertical color="#E040FB">
+            <v-tabs vertical color="btn">
               <v-tab
                 :value="tab-1"
                 class="font-weight-bold justify-start"
@@ -102,7 +101,7 @@
                     <v-card
                       flat
                       >
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
                         <v-spacer></v-spacer>
                         <v-tooltip top>
@@ -115,7 +114,7 @@
                               v-on="on"
                               @click="openGroupDisplay"
                               >
-                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                              <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                           </template>
                           <span>団体情報を編集する</span>
@@ -176,7 +175,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title  style="color:#333333; font-size:25px">
+                      <v-card-title>
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
                       <v-tooltip top>
@@ -189,7 +188,7 @@
                             v-on="on"
                             @click="openSubRepDisplay"
                             >
-                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            <v-icon>mdi-pencil</v-icon>
                           </v-btn>
                         </template>
                         <span>副代表情報を編集する</span>
@@ -264,7 +263,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
                         <v-tooltip top>
@@ -277,7 +276,7 @@
                             v-on="on"
                             @click="openPlaceDisplay"
                             >
-                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            <v-icon>mdi-pencil</v-icon>
                           </v-btn>
                         </template>
                         <span>会場申請情報を編集する</span>
@@ -342,7 +341,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
                         <v-tooltip top>
@@ -355,7 +354,7 @@
                             v-on="on"
                             @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"
                             >
-                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            <v-icon>mdi-pencil</v-icon>
                           </v-btn>
                         </template>
                         <span>電力申請情報を編集する</span>
@@ -411,27 +410,31 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
                 <v-row>
-                  <v-col cols="10"></v-col>
-                  <v-col cols="1">
+                  <v-col cols=1></v-col>
+                  <v-col cols=10>
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
                           v-if="addPowerOrder"
                           fab
                           dark
+                          depressed
                           v-bind="attrs"
                           v-on="on"
-                          color="purple accent-2"
-                          elevation="0"
+                          color="btn"
                           @click="openAddpowerDisplay()">
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                       </template>
                       <span>電力申請を追加する</span>
                     </v-tooltip>
+                    </v-card-actions>
                   </v-col>
-                  <v-col cols="1"></v-col>
+                  <v-col cols=1></v-col>
                 </v-row>
                 <!--EditModal-->
                 <Power ref="powerDlg"
@@ -478,7 +481,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
                         <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -493,7 +496,7 @@
                             v-on="on"
                             @click="openRentalorderDisplay(rental_order.id, rental_order.rental_item_id, rental_order.num)"
                             >
-                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            <v-icon>mdi-pencil</v-icon>
                           </v-btn>
                         </template>
                         <span>物品申請情報を編集する</span>
@@ -530,6 +533,30 @@
                     </v-card>
                   </v-col>
                   <v-col cols=1></v-col>
+                </v-row>
+                <!--AddButtom -->
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn 
+                            fab 
+                            v-bind="attrs" 
+                            depressed
+                            v-on="on" 
+                            dark 
+                            color="purple accent-2" 
+                            @click="openAddRentalOrderDisplay"><v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請を追加する</span>
+                      </v-tooltip>
+                    </v-card-actions>
+                  </v-col>
+                  <v-col cols="1"></v-col>
                 </v-row>
                 <!--Editmodal-->
                 <Rentalorder
@@ -586,14 +613,13 @@
                   </v-row>
                 </v-container>
               </v-tab-item>
-
               <!-- ステージ利用申請情報 -->
               <v-tab-item>
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-microphone</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
@@ -607,7 +633,7 @@
                             v-on="on"
                             @click="openStageOrderDisplay()"
                             >
-                            <v-icon　class="pr-2">mdi-pencil</v-icon>
+                            <v-icon>mdi-pencil</v-icon>
                           </v-btn>
                         </template>
                         <span>ステージ利用申請情報を編集する</span>
@@ -706,7 +732,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-microphone-plus</v-icon>
                         <b>ステージオプション申請情報</b>
                         <v-spacer></v-spacer>
@@ -773,7 +799,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-account</v-icon>
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -787,7 +813,7 @@
                               v-on="on"
                               @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"
                               >
-                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                              <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                           </template>
                           <span>従業員情報を編集する</span>
@@ -825,6 +851,7 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
                 <v-row>
                   <v-col cols="10"></v-col>
                   <v-col cols="1">
@@ -889,7 +916,7 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
                         <b>販売食品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -903,7 +930,7 @@
                               v-on="on"
                               @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"
                               >
-                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                              <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                           </template>
                           <span>販売食品情報を編集する</span>
@@ -955,9 +982,12 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
                 <v-row>
-                  <v-col cols="10"></v-col>
-                  <v-col cols="1">
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
@@ -966,43 +996,43 @@
                           dark
                           v-bind="attrs"
                           v-on="on"
-                          color="purple accent-2"
-                          elevation="0"
+                          color="btn"
+                          depressed
                           @click="openAddFoodProductDisplay()">
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                       </template>
                       <span>販売食品を追加する</span>
                     </v-tooltip>
+                    </v-card-actions>
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
-
-              <!-- AddModal -->  
-              <AddFoodProduct ref="AddFoodProductDlg"
-                :groupId="this.regist.group.id"
-                @reload="reload"
-              >
-              </AddFoodProduct>
+                <!-- AddModal -->  
+                <AddFoodProduct ref="AddFoodProductDlg"
+                  :groupId="this.regist.group.id"
+                  @reload="reload"
+                  >
+                </AddFoodProduct>
                 <!--EditModal-->
-                  <Foodproduct ref="foodproductDlg"
-                    :id = "this.food_product_id"
-                    :groupId = "this.group_id"
-                    :name = "this.name"
-                    :firstN = "this.first_day_num"
-                    :secondN = "this.second_day_num"
-                    :cooking = "this.is_cooking"
-                    @reload="reload"
-                    @openFoodproductSnackbar="openFoodproductSnackbar"
-                  ></Foodproduct>
-                  <v-snackbar
-                    top
-                    text
-                    color="purple accent-2"
-                    v-model="foodproductSnackbar"
-                    >
-                    販売食品情報を更新しました
-                  </v-snackbar>
+                <Foodproduct ref="foodproductDlg"
+                  :id = "this.food_product_id"
+                  :groupId = "this.group_id"
+                  :name = "this.name"
+                  :firstN = "this.first_day_num"
+                  :secondN = "this.second_day_num"
+                  :cooking = "this.is_cooking"
+                  @reload="reload"
+                  @openFoodproductSnackbar="openFoodproductSnackbar"
+                ></Foodproduct>
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="foodproductSnackbar"
+                  >
+                  販売食品情報を更新しました
+                </v-snackbar>
               </v-tab-item>
 
               <!-- 購入品情報 -->
@@ -1015,7 +1045,7 @@
                   <v-col>
                     <v-card v-if="purchase_list.food_product == -9999"></v-card>
                     <v-card v-else flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
@@ -1029,7 +1059,7 @@
                               v-on="on"
                               @click="openPurchaseListDisplay(purchase_list.id, purchase_list.item, purchase_list.food_product_id, purchase_list.shop_id, purchase_list.fes_date_id, purchase_list.is_fresh)"
                               >
-                              <v-icon　class="pr-2">mdi-pencil</v-icon>
+                              <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                           </template>
                           <span>購入品情報情報を編集する</span>
@@ -1088,9 +1118,12 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
                 <v-row>
-                  <v-col cols="10"></v-col>
-                  <v-col cols="1">
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
@@ -1099,19 +1132,19 @@
                           dark
                           v-bind="attrs"
                           v-on="on"
-                          color="purple accent-2"
-                          elevation="0"
+                          color="btn"
+                          depressed
                           @click="openAddPurchaseListDisplay()">
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                       </template>
                       <span>購入品を追加する</span>
                     </v-tooltip>
+                    </v-card-actions>
                   </v-col>
                   <v-col cols="1"></v-col>
                 </v-row>
                 <!-- EditModal -->
-                <!---->
                 <PurchaseList ref="PurchaseListDlg"
                   :id="this.edit_purchase_list_id"
                   :groupId="this.regist.group.id"
@@ -1134,69 +1167,16 @@
       </v-card>
             <!-- 削除ダイアログ(登録情報すべて) -->
       <v-dialog v-model="delete_dialog" width="500">
-        <v-card>
-          <v-card-title style="background-color:#ECEFF1">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog = false" fab black>
-              ​ <v-icon >mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes">
-              はい
-            </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog = false">
-              いいえ
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- 削除ダイアログ(電力申請) -->
-      <v-dialog v-model="delete_dialog_power" width="500">
-        <v-card>
-          <v-card-title style="background-color:#ECEFF1">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
-            <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_power = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_power">
-              はい
-            </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_power = false">
-              いいえ
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <!-- 削除ダイアログ(物品申請) -->
-      <v-dialog v-model="delete_dialog_item" width="500">
-        <v-card>
-          <v-card-title style="background-color:#ECEFF1">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
-            <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_item = false" fab black>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog = false" 
+            >
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
@@ -1206,10 +1186,73 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_item">
+            <v-btn depressed color="red" dark @click="delete_yes">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_item = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(電力申請) -->
+      <v-dialog v-model="delete_dialog_power" width="500">
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_power = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_power">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_power = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(物品申請) -->
+      <v-dialog v-model="delete_dialog_item" width="500">
+        <v-card>
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_item = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_item">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_item = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1219,13 +1262,16 @@
       <!-- 削除ダイアログ(従業員) -->
       <v-dialog v-model="delete_dialog_employee" width="500">
         <v-card>
-          <v-card-title style="background-color:#ECEFF1">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_employee = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_employee = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1234,10 +1280,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_employee">
+            <v-btn depressed color="red" dark @click="delete_yes_employee">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_employee = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_employee = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1246,14 +1292,17 @@
       
       <!-- 削除ダイアログ(販売食品) -->
       <v-dialog v-model="delete_dialog_food" width="500">
-        <v-card>
-          <v-card-title style="background-color:#ECEFF1">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_food = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_food = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1262,10 +1311,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_food">
+            <v-btn depressed color="red" dark @click="delete_yes_food">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_food = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_food = false">
               いいえ
             </v-btn>
           </v-card-actions>
@@ -1274,14 +1323,17 @@
 
       <!-- 削除ダイアログ(購入品) -->
       <v-dialog v-model="delete_dialog_purchase" width="500">
-        <v-card>
-          <v-card-title style="background-color:#ECEFF1">
-            <div style="color: black">
-              <v-icon class="ma-5" black>mdi-delete</v-icon>削除
-            </div>
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
             <v-spacer></v-spacer>
-            <v-btn text @click="delete_dialog_purchase = false" fab black>
-              ​ <v-icon>mdi-close</v-icon>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_purchase = false" 
+            >
+              <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-title>
@@ -1290,10 +1342,10 @@
           <v-divider></v-divider>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes_purchase">
+            <v-btn depressed color="red" dark @click="delete_yes_purchase">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog_purchase = false">
+            <v-btn depressed color="blue" dark @click="delete_dialog_purchase = false">
               いいえ
             </v-btn>
           </v-card-actions>

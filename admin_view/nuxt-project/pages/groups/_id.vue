@@ -198,7 +198,7 @@
                       会場申請
                     </v-card-title>
                     <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
+                    <v-simple-table class="my-9" v-if="groupCategoryId !== 3">
                       <template v-slot:default>
                         <tbody>
                           <tr>
@@ -228,6 +228,9 @@
                         </tbody>
                       </template>
                     </v-simple-table>
+                    <v-else>
+                      <v-card-text>会場申請はありません</v-card-text>
+                    </v-else>
                   </v-col>
                 </v-row>
               </v-card>

@@ -6,10 +6,10 @@
       <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8" align="center">
-              <v-card-title class="justify-center">
-                <h1 style="color:#333333">参加団体登録</h1>
+            <v-col cols=1></v-col>
+            <v-col cols=10 align="center">
+              <v-card-title class="justify-center font-weight-bold">
+                参加団体登録
               </v-card-title>
               <v-divider></v-divider>
               <v-card-text>
@@ -58,18 +58,29 @@
                   ></v-text-field>
                 </v-form>
               </v-card-text>
-              <v-row>
-                <v-col cols=2></v-col>
-                  <v-col cols=8>
-              <v-card-action>
-                <v-btn color="blue darken-1" block large dark @click="submit">登録</v-btn>
-                <v-btn color="blue darken-1" text block to="/MyPage">マイページに戻る</v-btn>
-              </v-card-action>
-                  </v-col>
-                <v-col cols=2></v-col>
-              </v-row>
+              <v-divider class="mb-8"></v-divider>
+              <v-card-actions>
+                <v-btn
+                  color="btn"
+                  rounded
+                  large
+                  text
+                  tabindex="1"
+                  class="pr-4 font-weight-bold"
+                  to="/MyPage"><v-icon class="pr-n1">mdi-menu-left</v-icon>マイページに戻る</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="btn" 
+                  rounded
+                  large
+                  dark 
+                  depressed
+                  tabindex="0"
+                  class="pl-4 font-weight-bold"
+                  @click="submit">登録<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+              </v-card-actions>
+              <v-col cols=1></v-col>
             </v-col>
-            <v-col cols="2"></v-col>
           </v-row>
         </v-container>
       </v-card>
@@ -96,7 +107,7 @@ export default {
       { id: 5, name: '研究室公開' },
       { id: 6, name: 'その他' }
       ],
-      fesYearId: 1,
+      fesYearId: [],
       formHasErrors: false,
       rules: {
       required: value => !!value || '入力してください',
@@ -176,6 +187,11 @@ export default {
         console.error(error)
         return error;
       }
+    )
+    axios.get(process.env.VUE_APP_URL + '/user_page_settings/1').then(
+      (response) => {
+        this.fesYearId = response.data.fes_year_id
+      },
     )
   },
   watch: {
