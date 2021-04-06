@@ -1,9 +1,8 @@
 <template>
   <div>
-    <v-row>
+     <v-row>
       <v-col>
-        <div class="card">
-          <v-card flat>
+         <v-card flat class="mx-15 ">
             <v-container>
               <v-row>
                 <v-col cols="1"></v-col>
@@ -72,7 +71,6 @@
               </v-row>
             </v-container>
           </v-card>
-        </div>
       </v-col>
     </v-row>
     <v-row>
@@ -85,6 +83,7 @@
         <div>
           <v-card
             flat
+            class="ml-15"
             :to="{
               name: 'groups',
             }"
@@ -113,9 +112,9 @@
         </div>
       </v-col>
       <v-col>
-        <div style="padding-right:10%">
           <v-card 
              flat
+             class="mr-15"
              :to="{
                   name: 'users'
                   }"
@@ -146,6 +145,7 @@
           <br>
           <v-card
             flat
+            class="mr-15"
             :to="{
               name: 'assign_items',
             }"
@@ -176,7 +176,6 @@
               </v-row>
             </v-container>
           </v-card>
-        </div>
       </v-col>
     </v-row>
   </div>

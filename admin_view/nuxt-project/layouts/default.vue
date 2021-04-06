@@ -1,20 +1,12 @@
 <template>
-  <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
+  <v-app :style="{ background: $vuetify.theme.themes.light.background }">
+    <Menu v-if="main && print" />
     <Header v-if="main && print" />
-      <div class="pad-bottom">
-        <v-row>
-          <v-col cols="2" v-if="main && print">
-            <Menu/>
-          </v-col>
-          <v-col cols=10>
-            <v-main>
-              <transition mode='in-out'>
-              <nuxt />
-              </transition>
-            </v-main>
-          </v-col>
-        </v-row>
-      </div>
+    <v-main fluid>
+    <transition mode='in-out'>
+          <nuxt />
+    </transition>
+    </v-main>
   </v-app>
 </template>
 

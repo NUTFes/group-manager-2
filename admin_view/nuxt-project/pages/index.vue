@@ -1,7 +1,9 @@
 <template>
-  <v-row>
-    <v-col>
-      <div class="login-card">
+  <div class="login-card">
+  <v-container fill-height fluid>
+  <v-row justify="center" align="center">
+    <v-col cols=1></v-col>
+    <v-col cols=10 align-self="auto">
         <v-card flat>
           <v-row align="center">
             <v-col cols="5">
@@ -92,9 +94,11 @@
             </v-col>
           </v-row>
         </v-card>
-      </div>
     </v-col>
+    <v-col cols=1></v-col>
   </v-row>
+</v-container>
+  </div>
 </template>
 
 <script>
@@ -168,7 +172,9 @@ export default {
 <style scoped>
 .login-card {
   padding-top: 5%;
-  padding-left: 20%;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-bottom: 5%;
 }
 .grey-title {
   color: #424242;

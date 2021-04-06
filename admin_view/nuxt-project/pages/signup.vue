@@ -110,7 +110,7 @@ export default {
 
 <style>
 .signup-card {
-  padding-top: 5%;
-  padding-left: 20%;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 </style>

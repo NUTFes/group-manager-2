@@ -6,7 +6,6 @@
     <div v-else>
     <v-row>
       <v-col>
-        <div class="card">
         <v-card-text>
           <div class="breadcrumbs">
             <ul>
@@ -15,7 +14,7 @@
             </ul>
           </div>
           </v-card-text>
-        <v-card flat>
+        <v-card flat class="mx-15">
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10"> 
@@ -94,7 +93,6 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
-        </div>
       </v-col>
     </v-row>
     </div>

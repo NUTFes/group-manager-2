@@ -1,13 +1,12 @@
 <template>
     <v-navigation-drawer
       v-model="drawer"
-      absolute
+      app
+      fixed
+      clipped
       permanent
       color="#37474F"
       >
-      <!-- ヘッダーと重ならないようにする -->
-      <v-list-item dark>
-      </v-list-item>
       <v-list-item dark style="background-color:#bf794e">
         <v-list-item-avatar rounded class="mx-auto" width="55" height="55">
           <v-img :src="icon_src"></v-img>
@@ -32,9 +31,9 @@
         </v-list-item>
       </v-list>
 
-      <v-list-item dark style="background-color:#81D4FA">
-        <v-list-item-content>
-          <v-list-item-title><div style="color:#333333"><b>一覧情報</b></div></v-list-item-title>
+      <v-list-item dark style="background-color:#FFFFFF">
+        <v-list-item-content class="#FFFFFF">
+          <v-list-item-title><div style="color:#37474F"><b>一覧情報</b></div></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -56,9 +55,9 @@
         </v-list-item>
       </v-list>
 
-      <v-list-item dark style="background-color:#81D4FA">
+      <v-list-item dark style="background-color:#FFFFFF">
         <v-list-item-content>
-          <v-list-item-title><div style="color:#333333"><b>申請情報</b></div></v-list-item-title>
+          <v-list-item-title><div style="color:#37474F"><b>申請情報</b></div></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       
@@ -80,9 +79,9 @@
         </v-list-item>
       </v-list>
 
-      <v-list-item dark style="background-color:#81D4FA">
+      <v-list-item dark style="background-color:#FFFFFF">
         <v-list-item-content>
-          <v-list-item-title><div style="color:#333333"><b>操作</b></div></v-list-item-title>
+          <v-list-item-title><div style="color:#37474F"><b>操作</b></div></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -104,7 +103,6 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-  </div>
 </template>
 <script>
 import axios from 'axios' 

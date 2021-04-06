@@ -1,7 +1,12 @@
 <template>
   <div>
-    <v-row>
-      <v-app-bar app dark dense color="#424242">
+      <v-app-bar
+        app
+        clipped-left
+        dark 
+        dense 
+        color="#424242"
+      >
         <v-toolbar-title><v-btn text to="/dashboard" color="#424242"><div style="color:white">参加団体管理アプリ-管理者ページ</div></v-btn></v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn text to="/dashboard" color="#424242">
@@ -75,7 +80,6 @@
           </v-list>
         </div>
       </v-navigation-drawer>
-    </v-row>
   </div>
 </template>
 

@@ -16,7 +16,6 @@
   <div v-else>
     <v-row>
       <v-col>
-        <div class="card">
           <v-card-text>
             <div class="breadcrumbs">
               <ul>
@@ -31,7 +30,7 @@
               </ul>
             </div>
           </v-card-text>
-          <v-card flat>
+          <v-card flat class="mx-15">
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
@@ -163,7 +162,7 @@
           <br />
           <v-row>
             <v-col cols=6>
-              <v-card flat>
+              <v-card flat class="ml-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -190,7 +189,7 @@
               </v-card>
             </v-col>
              <v-col cols=6>
-              <v-card flat>
+              <v-card flat class="mr-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -239,7 +238,7 @@
           <br>
           <v-row>
             <v-col cols="6">
-              <v-card flat　:to="{ name: 'power_orders'}">
+              <v-card flat class="ml-15" :to="{ name: 'power_orders'}">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -270,7 +269,7 @@
               </v-card>
             </v-col>
             <v-col cols="6">
-              <v-card flat>
+              <v-card flat class="mr-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -304,7 +303,7 @@
           <br />
           <v-row v-if="groupCategoryId === 3">
             <v-col cols="6">
-              <v-card flat>
+              <v-card flat class="ml-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -379,7 +378,7 @@
               </v-card>
             </v-col>
             <v-col cols="6">
-              <v-card flat>
+              <v-card flat class="mr-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -445,7 +444,7 @@
           <br />
           <v-row v-if="groupCategoryId !== 3">
             <v-col>
-              <v-card flat>
+              <v-card flat class="ml-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -485,7 +484,7 @@
               </v-card>
             </v-col>
             <v-col cols="6">
-              <v-card flat>
+              <v-card flat class="mr-15">
                 <v-row>
                   <v-col cols="1"></v-col>
                   <v-col cols="10">
@@ -512,7 +511,6 @@
               </v-card>
             </v-col>
           </v-row>
-        </div>
       </v-col>
     </v-row>
     <v-row>

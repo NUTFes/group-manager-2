@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="card">
-      <v-card flat>
+      <v-card flat class="mr-15">
         <v-row> 
           <v-col cols=1></v-col>
           <v-col cols=10>

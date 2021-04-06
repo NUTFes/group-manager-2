@@ -21,8 +21,7 @@
 
     <v-row>
       <v-col>
-        <div class="card" >
-          <v-card flat>
+          <v-card flat class="mx-15">
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
@@ -99,14 +98,12 @@
               </v-col>
             </v-row>
           </v-card>
-        </div>
       </v-col>
     </v-row>
 
     <v-row v-for="group in groups" :key="group.id">
       <v-col>
-        <div class="card">
-          <v-card flat v-if="group.user_id === user.id">
+          <v-card flat class="mx-15" v-if="group.user_id === user.id">
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
@@ -146,7 +143,6 @@
               </v-col>
             </v-row>
           </v-card>
-        </div>
       </v-col>
     </v-row>
 

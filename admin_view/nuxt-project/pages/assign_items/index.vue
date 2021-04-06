@@ -1,9 +1,8 @@
 <template>
   <div> 
-    <div class="card"> 
       <v-row>
         <v-col>
-          <v-card flat>
+          <v-card flat class="mx-15">
             <v-row>
               <v-col cols=1></v-col>
               <v-col cols=10>
@@ -24,7 +23,6 @@
           </v-card>
         </v-col>
       </v-row>
-    </div>
     <div class="text-center" v-if="stocker_places.length === 0">
       <br><br>
       <v-progress-circular
@@ -33,8 +31,7 @@
         ></v-progress-circular>
       <br><br>
     </div>
-    <div v-else style="padding-right:5%; padding-left:1%">
-      <v-row>
+      <v-row class="mx-15" align="center" justify="center">
         <v-col v-for="stocker_place in stocker_places">
           <v-hover v-slot:default="{ hover }">
             <v-card 
@@ -65,7 +62,6 @@
           </v-hover>
         </v-col>
       </v-row>
-    </div>
   </div>
 </template>
 
