@@ -866,7 +866,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch("users/getRole");
+    this.$store.dispatch("users/getUser");
     const url = "api/v1/get_group/" + this.$route.params.id;
     this.$axios
       .get(url, {

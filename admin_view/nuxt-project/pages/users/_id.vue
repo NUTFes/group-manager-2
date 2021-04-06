@@ -231,13 +231,13 @@
                 <v-text-field
                   label="名前"
                   v-model="name"
-                  :rules="[rules.requied]"
+                  :rules="[rules.required]"
                   outlined
                 />
                 <v-text-field
                   label="学籍番号"
                   v-model="student_id"
-                  :rules="[rules.requied]"
+                  :rules="[rules.required]"
                   outlined
                   counter="8"
                 />
@@ -260,14 +260,14 @@
                 <v-text-field
                   label="電話番号"
                   v-model="tel"
-                  :rules="[rules.requied]"
+                  :rules="[rules.required]"
                   outlined
                   counter="11"
                 />
                 <v-text-field
                   label="メールアドレス"
                   v-model="email"
-                  :rules="[rules.requied]"
+                  :rules="[rules.required]"
                   outlined
                 />
               </v-form>
@@ -307,7 +307,7 @@
                   label="新しいパスワード"
                   v-model="password"
                   :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
-                  :rules="[rules.requied, rules.min]"
+                  :rules="[rules.required, rules.min]"
                   :type="show_pass ? 'password' : 'text'"
                   hint="8文字以上"
                   counter
@@ -320,7 +320,7 @@
                   :append-icon="
                     show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'
                   "
-                  :rules="[rules.requied, rules.min, rules.match]"
+                  :rules="[rules.required, rules.min, rules.match]"
                   :type="show_pass_confirmation ? 'password' : 'text'"
                   hint="8文字以上"
                   counter
@@ -435,12 +435,12 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
+      selfRoleId: state => state.users.role,
+      uid: state => state.users.uid
     })
   },
   data() {
     return {
-      uid: localStorage.getItem("uid"),
       show: [],
       user: [],
       user_id: [],
@@ -468,7 +468,18 @@ export default {
         { label: "developer", id: 1 },
         { label: "maneger", id: 2 },
         { label: "user", id: 3 }
-      ]
+      ],
+      rules: {
+        requied: value => !!value || "入力してください",
+        min: v => v.length >= 8 || "８文字未満です",
+        match: v =>
+          v === this.password ||
+          "パスワードと再確認パスワードが一致していません",
+        email: v => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(v) || "適切なメールアドレスではありません";
+        }
+      }
     };
   },
   mounted() {
