@@ -40,21 +40,6 @@
                   </template>
                   <span>更新する</span>
                 </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      to="/users/print"
-                    >
-                      <v-icon dark>mdi-printer</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>印刷する</span>
-                </v-tooltip>
               </v-card-title>
 
               <v-dialog v-model="dialog" width="500">
@@ -205,12 +190,12 @@
                     <template
                       v-slot:item.place_allow_list.created_at="{ item }"
                     >
-                      {{ item.place_allow_list.created_at | (format - date) }}
+                      {{ item.place_allow_list.created_at || (format - date) }}
                     </template>
                     <template
                       v-slot:item.place_allow_list.updated_at="{ item }"
                     >
-                      {{ item.place_allow_list.updated_at | (format - date) }}
+                      {{ item.place_allow_list.updated_at || (format - date) }}
                     </template>
                   </v-data-table>
                 </div>
@@ -321,10 +306,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%;
-}
-</style>

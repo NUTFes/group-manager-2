@@ -41,21 +41,6 @@
                     </template>
                     <span>更新する</span>
                   </v-tooltip>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        class="mx-2"
-                        fab
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        to="/stage_common_options/print"
-                      >
-                        <v-icon dark>mdi-printer</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>印刷する</span>
-                  </v-tooltip>
                 </v-card-title>
 
                 <v-dialog v-model="dialog" max-width="500">
@@ -90,6 +75,7 @@
                               label="所持機器の使用"
                               v-model="ownEquipment"
                               :items="items_available"
+                              :menu-props="{ top: true, offsetY: true }"
                               item-text="label"
                               item-value="value"
                               background-color="white"
@@ -385,9 +371,3 @@ export default {
   }
 };
 </script>
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%;
-}
-</style>

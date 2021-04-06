@@ -14,6 +14,8 @@ import RegistGroup from "../views/regist_group.vue";
 import RegistFoodBooths from "../views/regist_food_booths.vue";
 import RegistPurchase from "../views/regist_purchase.vue";
 import Firstcustomer from "../views/FirstCustomer.vue";
+import EditUserInfo from "../views/edit_user_info.vue";
+import PasswordReset from "../views/password_reset.vue";
 
 Vue.use(VueRouter);
 
@@ -83,12 +85,23 @@ const routes = [
     path: "/firstcustomer",
     name: "Firstcustomer",
     component: Firstcustomer
+  },
+  {
+    path: "/password_reset",
+    name: "PasswordReset",
+    component: PasswordReset
+  },
+  {
+    path: "/edit_user_info",
+    name: "EditUserInfo",
+    component: EditUserInfo
   }
 ];
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
+  // base: process.env.VUE_APP_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };

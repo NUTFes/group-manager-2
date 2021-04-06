@@ -108,7 +108,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .signup-card {
   padding-top: 5%;
   padding-left: 20%;

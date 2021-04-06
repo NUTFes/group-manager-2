@@ -9,9 +9,9 @@
       <v-list-item dark>
       </v-list-item>
       <v-list-item dark style="background-color:#bf794e">
-        <v-list-item-content>
-          <v-list-item-title>Group-Manager-Admin</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-avatar rounded class="mx-auto" width="55" height="55">
+          <v-img :src="icon_src"></v-img>
+        </v-list-item-avatar>
       </v-list-item>
 
       <v-list dense>
@@ -108,14 +108,14 @@
 </template>
 <script>
 import axios from 'axios' 
-
 export default {
   data () {
     return {
+      icon_src: require("@/assets/symbol-mark.svg"),
       drawer: true,
       // マイページ系
       mypage_items: [
-        { title: 'マイページ', icon: 'mdi-account-circle', click: '/mypage'},
+        { title: 'ダッシュボード', icon: 'mdi-view-dashboard', click: '/dashboard'},
       ],
       // 一覧系
       list_items: [
@@ -129,6 +129,8 @@ export default {
         { title: '割り当て物品一覧', icon: 'mdi-cube-outline', click: '/assign_rental_items' },
         { title: 'ステージ一覧', icon: 'mdi-microphone-variant', click: '/stages' },
         { title: '店一覧', icon: 'mdi-cart-outline', click: '/shops' },
+        { title: '開催年', icon: 'mdi-calendar-blank-multiple', click: '/fes_years' },
+        { title: '開催日', icon: 'mdi-calendar-month', click: '/fes_dates' },
 
       ],
       // 申請系
@@ -149,6 +151,7 @@ export default {
       operation_items: [
         { title: '物品割り当て', icon: 'mdi-cube', click: '/assign_items' },
         { title: 'お知らせ', icon: 'mdi-newspaper-variant', click: '/news' },
+        { title: '印刷', icon: 'mdi-printer', click: '/print' },
         { title: '設定', icon: 'mdi-cog', click: '/user_page_setting' },
       ],
       user: []
@@ -170,7 +173,3 @@ export default {
   },
 }
 </script>
-
- <style>
-
-</style>

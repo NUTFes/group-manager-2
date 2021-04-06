@@ -75,13 +75,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ place.created_at | (format - date) }}
+                            {{ place.created_at || format - date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ place.updated_at | (format - date) }}
+                            {{ place.updated_at || format - date }}
                           </td>
                           <td v-if="rights == 1">
                             <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -255,15 +255,15 @@
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
-import NoData from "../../components/NoData.vue" ;
+import NoData from "../../components/NoData.vue";
 
 export default {
   computed: {
     ...mapState({
       selfRoleId: state => state.users.role
-    }),
+    })
   },
-  components :{
+  components: {
     NoData
   },
   data() {
@@ -273,66 +273,68 @@ export default {
       expand: false,
       edit_dialog: false,
       delete_dialog: false,
-       rules: {
+      rules: {
         required: value => !!value || "入力してください"
       }
     };
   },
   mounted() {
-    this.$store.dispatch("users/getUser")
+    this.$store.dispatch("users/getUser");
     const url = "places/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       })
-      .then((response) => {
-        this.place = response.data
-        this.id = response.data.id
-        this.name = response.data.name
-      })
+      .then(response => {
+        this.place = response.data;
+        this.id = response.data.id;
+        this.name = response.data.name;
+      });
   },
   methods: {
-    reload: function(){
-      console.log("reload")
+    reload: function() {
+      console.log("reload");
       const url = "/places/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }
-      )
-        .then(response => {
-        this.place = response.data
-        this.id = response.data.id
-        this.name = response.data.name
+      this.$axios
+        .get(url, {
+          headers: {
+            "Content-Type": "application/json"
+          }
         })
+        .then(response => {
+          this.place = response.data;
+          this.id = response.data.id;
+          this.name = response.data.name;
+        });
     },
     edit_dialog_open: function() {
-      this.edit_dialog = true
+      this.edit_dialog = true;
     },
     edit: function() {
-      const edit_url = '/places/' + this.id + '?name=' + this.name
-      console.log(edit_url)
-      this.$axios.put(edit_url , {
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }).then(response => {
-        console.log(response)
-        this.reload()
-        this.edit_dialog = false
-        this.success_snackbar = true
-      })
+      const edit_url = "/places/" + this.id + "?name=" + this.name;
+      console.log(edit_url);
+      this.$axios
+        .put(edit_url, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => {
+          console.log(response);
+          this.reload();
+          this.edit_dialog = false;
+          this.success_snackbar = true;
+        });
     },
     delete_yes: function() {
       const url = "/places/" + this.$route.params.id;
-      this.$axios.delete(url)
-      this.$router.push('/places')
+      this.$axios.delete(url);
+      this.$router.push("/places");
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -341,12 +343,5 @@ td {
 }
 th {
   width: 30%;
-}
-</style>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%;
 }
 </style>

@@ -1,17 +1,30 @@
 <template>
-  <v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="8"
-      >
-      <v-card
-        class = "mx-auto"
-        outlined
-      >
-      <v-card-title style="background-color:#ECEFF1; font-size:30px"><v-icon class="pr-2" size="40">mdi-information</v-icon><b>登録情報</b></v-card-title>
-        <v-divider class="mx-4"></v-divider>
+  <div>
+    <v-card
+      class = "mx-auto"
+      outlined
+    >
+      <v-card-title class="main font-weight-bold"><v-icon class="pr-2" size="30">mdi-information</v-icon>登録情報
+        <v-spacer></v-spacer>  
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-if="isEditGroup" 
+              text
+              v-bind="attrs"
+              v-on="on"
+              class="my-n5"
+              @click="open_delete_dialog(regist.group.id)"
+              fab
+              ><v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </template>
+          <span>削除</span>
+        </v-tooltip>
+      </v-card-title>
         <v-row>
           <v-col>
-            <v-tabs vertical color="#E040FB">
+            <v-tabs vertical color="btn">
               <v-tab
                 :value="tab-1"
                 class="font-weight-bold justify-start"
@@ -51,41 +64,61 @@
                 :value="tab-6"
                 class="font-weight-bold justify-start"
               >
-                <v-icon class="pr-2">mdi-microphone-variant</v-icon>ステージ利用申請情報
+                <v-icon class="pr-2">mdi-microphone</v-icon>ステージ利用申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-7"
                 class="font-weight-bold justify-start"
               >
-                <v-icon class="pr-2">mdi-account</v-icon>従業員情報
+                <v-icon class="pr-2">mdi-microphone-plus</v-icon>ステージオプション申請情報
               </v-tab>
 
               <v-tab
                 :value="tab-8"
                 class="font-weight-bold justify-start"
               >
-                <v-icon class="pr-2">mdi-baguette</v-icon>販売食品情報
+                <v-icon class="pr-2">mdi-account</v-icon>従業員情報
               </v-tab>
 
               <v-tab
                 :value="tab-9"
                 class="font-weight-bold justify-start"
               >
+                <v-icon class="pr-2">mdi-baguette</v-icon>販売食品情報
+              </v-tab>
+
+              <v-tab
+                :value="tab-10"
+                class="font-weight-bold justify-start"
+              >
                 <v-icon class="pr-2">mdi-cart</v-icon>購入品情報
               </v-tab>
-              <v-tab-item
-                >
+              <v-tab-item>
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card
                       flat
                       >
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditGroup" text fab @click="openGroupDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditGroup" 
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openGroupDisplay"
+                              >
+                              <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>団体情報を編集する</span>
+                        </v-tooltip>
                         <Group ref="groupDlg"
                           :groupId="regist.group.id"
                           :groupName="regist.group.name"
@@ -142,10 +175,24 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title  style="color:#333333; font-size:25px">
+                      <v-card-title>
                       <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon><b>副代表情報</b>
                       <v-spacer></v-spacer>
-                      <v-btn v-if="isEditSubRep" text fab @click="openSubRepDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditSubRep" 
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openSubRepDisplay"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>副代表情報を編集する</span>
+                      </v-tooltip>
                       <SubRep ref="subRepDlg"
                           :groupId="regist.group.id"
                           :name="regist.sub_rep.name"
@@ -216,10 +263,24 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-map-marker</v-icon><b>会場申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPlace" text fab @click="openPlaceDisplay"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditPlace"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openPlaceDisplay"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>会場申請情報を編集する</span>
+                      </v-tooltip>
                         <Place ref="placeDlg"
                           :groupId="regist.group.id"
                           :firstId="regist.place_order.first"
@@ -280,10 +341,38 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-power-plug</v-icon><b>製品 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPowerOrder" text fab @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditPowerOrder"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openPowerDisplay(power_order.id, power_order.group_id, power_order.item, power_order.power, power_order.manufacturer, power_order.model, power_order.item_url)"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>電力申請情報を編集する</span>
+                      </v-tooltip>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-if="isEditPowerOrder"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_power(power_order.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -321,26 +410,31 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
                 <v-row>
-                  <v-col cols="10"></v-col>
-                  <v-col cols="1">
+                  <v-col cols=1></v-col>
+                  <v-col cols=10>
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
+                          v-if="addPowerOrder"
                           fab
                           dark
+                          depressed
                           v-bind="attrs"
                           v-on="on"
-                          color="purple accent-2"
-                          elevation="0"
+                          color="btn"
                           @click="openAddpowerDisplay()">
                           <v-icon>mdi-plus</v-icon>
                         </v-btn>
                       </template>
                       <span>電力申請を追加する</span>
                     </v-tooltip>
+                    </v-card-actions>
                   </v-col>
-                  <v-col cols="1"></v-col>
+                  <v-col cols=1></v-col>
                 </v-row>
                 <!--EditModal-->
                 <Power ref="powerDlg"
@@ -387,11 +481,40 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
                         <b>物品申請情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditRentalOrder" text fab @click="openRentalorderDisplay(rental_order.id, rental_order.rental_item_id, rental_order.num)"><v-icon>mdi-pencil</v-icon></v-btn>
+
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditRentalOrder"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openRentalorderDisplay(rental_order.id, rental_order.rental_item_id, rental_order.num)"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請情報を編集する</span>
+                      </v-tooltip>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-if="isEditRentalOrder"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_item(rental_order.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -411,66 +534,89 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn 
+                            fab 
+                            v-bind="attrs" 
+                            depressed
+                            v-on="on" 
+                            dark 
+                            color="purple accent-2" 
+                            @click="openAddRentalOrderDisplay"><v-icon>mdi-plus</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>物品申請を追加する</span>
+                      </v-tooltip>
+                    </v-card-actions>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
                 <!--Editmodal-->
                 <Rentalorder
-                ref="rentalorderDlg"
-                :id="this.rental_order_id"
-                :groupId="this.regist.group.id"
-                :itemId="this.rental_item_id"
-                :num="this.num"
-                @reload="reload"
-                @openRentalorderSnackbar="openRentalorderSnackbar"
+                  ref="rentalorderDlg"
+                  :id="this.rental_order_id"
+                  :groupId="this.regist.group.id"
+                  :itemId="this.rental_item_id"
+                  :num="this.num"
+                  @reload="reload"
+                  @openRentalorderSnackbar="openRentalorderSnackbar"
                 >
                 </Rentalorder>
                 <!--AddModal-->
-                  <AddRentalOrder ref="AddRentalOrderDlg"
-                      :groupId="this.regist.group.id"
-                      @reload="reload"
-                      @openAddrentalorderSnackbar="openAddrentalorderSnackbar">
-                  </AddRentalOrder>
-                  <v-snackbar
-                      top
-                      text
-                      color="purple accent-2"
-                      v-model="rentalorderSnackbar"
-                      >
-                      物品申請情報を更新しました
-                    </v-snackbar>
-                  <v-snackbar
-                      top
-                      text
-                      color="purple accent-2"
-                      v-model="AddrentalorderSnackbar"
-                      >
-                      物品申請情報を更新しました
-                    </v-snackbar>
-                <v-container>
-                  <v-row>
-                    <v-col cols="10"></v-col>
-                    <v-col cols="1">
-                  <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                      <v-btn fab elevation="0" v-bind="attrs" v-on="on" dark color="purple accent-2" @click="openAddRentalOrderDisplay"><v-icon>mdi-plus</v-icon></v-btn>
-                  </template>
-            <span>電力申請を追加する</span>
-          </v-tooltip>
-                    </v-col>
-                    <v-col cols="1"></v-col>
-                  </v-row>
-                </v-container>
+                <AddRentalOrder ref="AddRentalOrderDlg"
+                  :groupId="this.regist.group.id"
+                  @reload="reload"
+                  @openAddrentalorderSnackbar="openAddrentalorderSnackbar">
+                </AddRentalOrder>
+                <v-snackbar
+                    top
+                    text
+                    color="purple accent-2"
+                    v-model="rentalorderSnackbar"
+                >
+                物品申請情報を更新しました
+                </v-snackbar>
+                <v-snackbar
+                    top
+                    text
+                    color="purple accent-2"
+                    v-model="AddrentalorderSnackbar"
+                >
+                物品申請情報を更新しました
+                </v-snackbar>
               </v-tab-item>
-
               <!-- ステージ利用申請情報 -->
               <v-tab-item>
                 <v-row>
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
-                        <v-icon class="pr-2" size="30">mdi-microphone-variant</v-icon>
+                      <v-card-title>
+                        <v-icon class="pr-2" size="30">mdi-microphone</v-icon>
                         <b>ステージ利用申請情報</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditStageOrder" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs  }">
+                          <v-btn
+                            v-if="isEditStageOrder"
+                            fab
+                            text
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="openStageOrderDisplay()"
+                            >
+                            <v-icon>mdi-pencil</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>ステージ利用申請情報を編集する</span>
+                      </v-tooltip>
                       </v-card-title>
                       <hr>
                        <v-list>
@@ -538,8 +684,91 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!-- Edit Modal -->
+                <StageOrder ref="stageOrderDlg"
+                  :id="this.regist.stage_order.id"
+                  :groupId="this.regist.stage_order.group_id"
+                  :isSunny="this.regist.stage_order.is_sunny"
+                  :fesDateId="this.regist.stage_order.fes_date_id"
+                  :stageFirst="this.regist.stage_order.stage_first"
+                  :stageSecond="this.regist.stage_order.stage_second"
+                  :useTimeInterval="this.regist.stage_order.use_time_interval"
+                  :prepareTimeInterval="this.regist.stage_order.prepare_time_interval"
+                  :cleanupTimeInterval="this.regist.stage_order.cleanup_time_interval"
+                  :prepareStartTime="this.regist.stage_order.prepare_start_time"
+                  :performanceStartTime="this.regist.stage_order.performance_start_time"
+                  :performanceEndTime="this.regist.stage_order.performance_end_time"
+                  :cleanupEndTime="this.regist.stage_order.cleanup_end_time"
+                  @reload="reload"
+                  @openEmployeeSnackbar="openStageOrderSnackbar"
+                />
+
               </v-tab-item>
 
+              <!-- ステージオプション申請情報 -->
+              <v-tab-item>
+                <v-row>
+                  <v-col cols=1></v-col>
+                  <v-col>
+                    <v-card flat>
+                      <v-card-title>
+                        <v-icon class="pr-2" size="30">mdi-microphone-plus</v-icon>
+                        <b>ステージオプション申請情報</b>
+                        <v-spacer></v-spacer>
+                        <v-btn v-if="isEditStageOrder" text fab @click="openStageOptionDisplay"><v-icon>mdi-pencil</v-icon></v-btn>
+                      </v-card-title>
+                      <hr>
+                       <v-list>
+                        <v-list-item>
+                          <v-list-item-content>所持機器の使用</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.own_equipment == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.own_equipment === true">使用</v-list-item-content>
+                          <v-list-item-content v-else>使用しない</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>音楽</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.bgm == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.bgm === true">使用</v-list-item-content>
+                          <v-list-item-content v-else>使用しない</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>撮影許可</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.camera_permission == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.camera_permission === true">許可</v-list-item-content>
+                          <v-list-item-content v-else>許可しない</v-list-item-content>
+                        </v-list-item>
+                      <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>騒音</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.loud_sound == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_common_option.loud_sound === true">出す</v-list-item-content>
+                          <v-list-item-content v-else>出さない</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>ステージ内容</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_common_option.stage_content == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_common_option.stage_content }}</v-list-item-content>
+                        </v-list-item>
+                       </v-list>
+                    </v-card>
+                  </v-col>
+                  <v-col cols=1></v-col>
+                </v-row>
+                <!--EditModal-->
+                <StageOption ref="StageOptionDlg"
+                      :id = "regist.stage_common_option.id"
+                      :groupId = "regist.stage_common_option.group_id"
+                      :ownEquipment = "regist.stage_common_option.own_equipment"
+                      :Bgm = "regist.stage_common_option.bgm"
+                      :cameraPermission = "regist.stage_common_option.camera_permission"
+                      :loudSound = "regist.stage_common_option.loud_sound"
+                      :stageContent = "regist.stage_common_option.stage_content"
+                      @reload="reload"
+                ></StageOption>
+              </v-tab-item>
               <!-- 従業員情報 -->
               <v-tab-item>
                 <v-row
@@ -549,11 +778,39 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-account</v-icon>
                         <b>従業員 {{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditEmployee" text fab @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditEmployee"
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openEmployeeDisplay(employee.id, employee.group_id, employee.name, employee.student_id)"
+                              >
+                              <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>従業員情報を編集する</span>
+                        </v-tooltip>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-if="isEditEmployee"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_employee(employee.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -573,12 +830,14 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
                 <v-row>
                   <v-col cols="10"></v-col>
                   <v-col cols="1">
                     <v-tooltip top>
                       <template v-slot:activator="{ on, attrs  }">
                         <v-btn
+                          v-if="addEmployee"
                           fab
                           dark
                           v-bind="attrs"
@@ -636,11 +895,39 @@
                   <v-col cols=1></v-col>
                   <v-col>
                     <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
                         <b>販売食品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditFoodproduct" text fab @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditFoodproduct"
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openFoodproductDisplay(food_product.id, food_product.group_id, food_product.name, food_product.first_day_num, food_product.second_day_num, food_product.is_cooking)"
+                              >
+                              <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>販売食品情報を編集する</span>
+                        </v-tooltip>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-if="isEditFoodproduct"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_food(food_product.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -665,6 +952,8 @@
                         <v-list-item>
                           <v-list-item-content>調理の有無</v-list-item-content>
                           <v-list-item-content v-if="food_product.is_cooking == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="food_product.is_cooking == true">調理する</v-list-item-content>
+                          <v-list-item-content v-else-if="food_product.is_cooking == false">調理しない</v-list-item-content>
                           <v-list-item-content v-else>{{ food_product.is_cooking }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
@@ -672,25 +961,57 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn
+                          v-if="addFoodProduct"
+                          fab
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          color="btn"
+                          depressed
+                          @click="openAddFoodProductDisplay()">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>販売食品を追加する</span>
+                    </v-tooltip>
+                    </v-card-actions>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+                <!-- AddModal -->  
+                <AddFoodProduct ref="AddFoodProductDlg"
+                  :groupId="this.regist.group.id"
+                  @reload="reload"
+                  >
+                </AddFoodProduct>
                 <!--EditModal-->
-                  <Foodproduct ref="foodproductDlg"
-                    :id = "this.food_product_id"
-                    :groupId = "this.group_id"
-                    :name = "this.name"
-                    :firstN = "this.first_day_num"
-                    :secondN = "this.second_day_num"
-                    :cooking = "this.is_cooking"
-                    @reload="reload"
-                    @openFoodproductSnackbar="openFoodproductSnackbar"
-                  ></Foodproduct>
-                  <v-snackbar
-                    top
-                    text
-                    color="purple accent-2"
-                    v-model="foodproductSnackbar"
-                    >
-                    販売食品情報を更新しました
-                  </v-snackbar>
+                <Foodproduct ref="foodproductDlg"
+                  :id = "this.food_product_id"
+                  :groupId = "this.group_id"
+                  :name = "this.name"
+                  :firstN = "this.first_day_num"
+                  :secondN = "this.second_day_num"
+                  :cooking = "this.is_cooking"
+                  @reload="reload"
+                  @openFoodproductSnackbar="openFoodproductSnackbar"
+                ></Foodproduct>
+                <v-snackbar
+                  top
+                  text
+                  color="purple accent-2"
+                  v-model="foodproductSnackbar"
+                  >
+                  販売食品情報を更新しました
+                </v-snackbar>
               </v-tab-item>
 
               <!-- 購入品情報 -->
@@ -701,12 +1022,41 @@
                   >
                   <v-col cols=1></v-col>
                   <v-col>
-                    <v-card flat>
-                      <v-card-title style="color:#333333; font-size:25px">
+                    <v-card v-if="purchase_list.food_product == -9999"></v-card>
+                    <v-card v-else flat>
+                      <v-card-title>
                         <v-icon class="pr-2" size="30">mdi-cart</v-icon>
                         <b>購入品情報{{ i+1 }}</b>
                         <v-spacer></v-spacer>
-                        <v-btn v-if="isEditPurchaseList" text><v-icon class="pr-2">mdi-pencil</v-icon></v-btn>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs  }">
+                            <v-btn
+                              v-if="isEditPurchaseList"
+                              fab
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="openPurchaseListDisplay(purchase_list.id, purchase_list.item, purchase_list.food_product_id, purchase_list.shop_id, purchase_list.fes_date_id, purchase_list.is_fresh)"
+                              >
+                              <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>購入品情報情報を編集する</span>
+                        </v-tooltip>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              v-if="isEditPurchaseList"
+                              text
+                              v-bind="attrs"
+                              v-on="on"
+                              @click="open_delete_dialog_purchase(purchase_list.id)"
+                              fab
+                              ><v-icon class="ma-5">mdi-delete</v-icon>
+                            </v-btn>
+                          </template>
+                          <span>削除</span>
+                        </v-tooltip>
                       </v-card-title>
                       <hr>
                       <v-list>
@@ -724,9 +1074,11 @@
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
-                          <v-list-item-content>生鮮食品の有無</v-list-item-content>
+                          <v-list-item-content>生鮮食品</v-list-item-content>
                           <v-list-item-content v-if="purchase_list.is_fresh == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ purchase_list.is_fresh }}</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === true">はい</v-list-item-content>
+                          <v-list-item-content v-else-if="purchase_list.is_fresh === false">いいえ</v-list-item-content>
+                          <v-list-item-content v-else>その他</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
@@ -745,15 +1097,243 @@
                   </v-col>
                   <v-col cols=1></v-col>
                 </v-row>
+                <!--AddButtom -->
+                <v-row>
+                  <v-col cols="1"></v-col>
+                  <v-col cols="10">
+                    <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn
+                          v-if="addPurchaseList"
+                          fab
+                          dark
+                          v-bind="attrs"
+                          v-on="on"
+                          color="btn"
+                          depressed
+                          @click="openAddPurchaseListDisplay()">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>購入品を追加する</span>
+                    </v-tooltip>
+                    </v-card-actions>
+                  </v-col>
+                  <v-col cols="1"></v-col>
+                </v-row>
+                <!-- EditModal -->
+                <PurchaseList ref="PurchaseListDlg"
+                  :id="this.edit_purchase_list_id"
+                  :groupId="this.regist.group.id"
+                  :item="this.purchase_list_item"
+                  :shopId="this.shop_id"
+                  :fesDateId="this.fes_date_id"
+                  :foodProductId="this.purchase_food_product_id"
+                  :isFresh="this.is_fresh"
+                  @reload="reload"
+                />
+               <!-- AddModal -->
+                <AddPurchaseList ref="AddPurchaseListDlg"
+                  :groupId="this.regist.group.id"
+                  @reload="reload"
+                />
               </v-tab-item>
             </v-tabs>
           </v-col>
         </v-row>
       </v-card>
-    </v-col>
-    <v-col cols="2"></v-col>
-  </v-row>
+            <!-- 削除ダイアログ(登録情報すべて) -->
+      <v-dialog v-model="delete_dialog" width="500">
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(電力申請) -->
+      <v-dialog v-model="delete_dialog_power" width="500">
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_power = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_power">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_power = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(物品申請) -->
+      <v-dialog v-model="delete_dialog_item" width="500">
+        <v-card>
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_item = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_item">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_item = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(従業員) -->
+      <v-dialog v-model="delete_dialog_employee" width="500">
+        <v-card>
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_employee = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_employee">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_employee = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      
+      <!-- 削除ダイアログ(販売食品) -->
+      <v-dialog v-model="delete_dialog_food" width="500">
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_food = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_food">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_food = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- 削除ダイアログ(購入品) -->
+      <v-dialog v-model="delete_dialog_purchase" width="500">
+        <v-card class="mx-auto">
+          <v-card-title class="main font-weight-bold">
+              <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
+            <v-spacer></v-spacer>
+            <v-btn 
+              fab
+              text 
+              class="my-n2"
+              @click="delete_dialog_purchase = false" 
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-title>
+            削除してよろしいですか？
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn depressed color="red" dark @click="delete_yes_purchase">
+              はい
+            </v-btn>
+            <v-btn depressed color="blue" dark @click="delete_dialog_purchase = false">
+              いいえ
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
+
 </template>
+
 
 <script>
   import axios from 'axios'
@@ -761,12 +1341,18 @@
   import SubRep from '@/components/EditModal/sub_rep.vue'
   import Power from '@/components/EditModal/power.vue'
   import Place from '@/components/EditModal/place.vue'
+  import StageOrder from '@/components/EditModal/stage_order.vue'
   import Employee from '@/components/EditModal/employee.vue'
+  import StageOption from '@/components/EditModal/StageCommonOption.vue'
   import Foodproduct from '@/components/EditModal/foodproduct.vue'
   import Rentalorder from '@/components/EditModal/rental_order.vue'
+  import PurchaseList from '@/components/EditModal/purchase_list.vue'
   import Addpower from '@/components/AddModal/power.vue'
   import AddRentalOrder from '@/components/AddModal/RentalOrder.vue'
   import Addemployee from '@/components/AddModal/employee.vue'
+  import AddFoodProduct from '@/components/AddModal/FoodProduct.vue'
+  import AddPurchaseList from '@/components/AddModal/PurchaseList.vue'
+import rental_orderVue from './EditModal/rental_order.vue'
 
   export default {
     props: {
@@ -778,12 +1364,17 @@
       SubRep,
       Power,
       Place,
+      StageOrder,
       Employee,
+      StageOption,
       Foodproduct,
       Rentalorder,
+      PurchaseList,
       Addpower,
       AddRentalOrder,
-      Addemployee
+      Addemployee,
+      AddFoodProduct,
+      AddPurchaseList,
     },
     data () {
     return {
@@ -794,6 +1385,16 @@
       ],
       user: [],
       tab: 'tab-2',
+      delete_dialog: false,
+      delete_dialog_group: false,
+      delete_dialog_subrep: false,
+      delete_dialog_place: false,
+      delete_dialog_power: false,
+      delete_dialog_item: false,
+      delete_dialog_stage: false,
+      delete_dialog_employee: false,
+      delete_dialog_food: false,
+      delete_dialog_purchase: false,
       groupSnackbar: false,
       placeSnackbar: false,
       subrepSnackbar: false,
@@ -804,6 +1405,7 @@
       addpowerSnackbar: false,
       addRentalOrderSnackbar: false,
       addEmployeeSnackbar: false,
+      addRentalOrderSnackbar: false,
       isEditGroup: [],
       isEditSubRep: [],
       isEditPlace: [],
@@ -813,9 +1415,16 @@
       isEditEmployee: [],
       isEditFoodproduct:[],
       isEditPurchaseList: [],
+      addPowerOrder: [],
+      addRentalOrder: [],
+      addEmployee: [],
+      addFoodProduct: [],
+      addPurchaseList: [],
       // 物品申請編集用
       rental_order_id: [],
       rental_item_id: [],
+      //削除コマンド用
+      purchase_list_id: [],
       // 物品申請用
       isAddRentalOrder: [],
       num: [],
@@ -827,6 +1436,13 @@
       model:[], 
       power: [],
       url:[],
+      //ステージオプション申請用
+      stage_option_id: [],
+      own_equipment: [],
+      bgm: [],
+      camera_permission: [],
+      loud_sound: [],
+      stage_content: [],
       //従業員申請用
       employee_id: [],
       name:[],
@@ -836,6 +1452,13 @@
       is_cooking: [],
       first_day_num: [],
       second_day_num: [],
+      //購入品情報
+      edit_purchase_list_id: [], 
+      purchase_list_item: [], 
+      purchase_food_product_id: [], 
+      shop_id: [], 
+      fes_date_id: [], 
+      is_fresh: [],
       }
     },
     mounted() {
@@ -873,13 +1496,65 @@
           this.isEditFoodproduct = response.data[0].is_edit_food_product
           this.isEditPurchaseList = response.data[0].is_edit_purchase_list
           this.isAddRentalOrder = response.data[0].is_add_rental_order
+          this.addPowerOrder = response.data[0].add_power_order
+          this.addRentalOrder = response.data[0].add_rental_order
+          this.addEmployee = response.data[0].add_employee
+          this.addFoodProduct = response.data[0].add_food_product
+          this.addPurchaseList = response.data[0].add_purchase_list
           console.log(response)
         })
     },
+
     methods: {
+      //削除メソッド(団体すべて)
+      delete_yes() {
+      const url = process.env.VUE_APP_URL + "/groups/" + this.group_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog = false
+      },
+      //削除メソッド(電力申請)
+      delete_yes_power() {
+      const url = process.env.VUE_APP_URL + "/power_orders/" + this.power_order_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog_power = false
+      },
+      //削除メソッド(物品申請)
+      delete_yes_item() {
+      const url = process.env.VUE_APP_URL +  "/rental_orders/" + this.rental_order_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog_item = false
+      },
+      //削除メソッド(従業員申請)
+      delete_yes_employee() {
+      const url = process.env.VUE_APP_URL +  "/employees/" + this.employee_id;
+      axios.delete(url);
+      this.reload()
+      this.delete_dialog_employee = false
+      },
+      //削除メソッド(販売食品)
+      delete_yes_food() {
+      const url = process.env.VUE_APP_URL + "/food_products/" + this.food_product_id;
+      console.log(url)
+      axios.delete(url);      
+      this.reload()
+      this.delete_dialog_food = false
+      },
+      //削除メソッド(購入品)
+      delete_yes_purchase() {
+      const url = process.env.VUE_APP_URL + "/purchase_lists/" + this.purchase_list_id;
+            console.log(url)
+      axios.delete(url)      
+      this.reload()
+      this.delete_dialog_purchase = false
+      },
+
       reload() {
         this.$emit('reload');
       },
+      //編集後Snackbar
       openGroupSnackbar() {
         this.groupSnackbar = true
       },
@@ -898,6 +1573,7 @@
       openFoodproductSnackbar() {
         this.foodproductSnackbar = true
       },
+      //追加後Snackkbar
       openAddpowerSnackbar() {
         this.addPowerSnackbar = true
       },
@@ -910,22 +1586,22 @@
       openAddemployeeSnackbar() {
         this.addemployeeSnackbar = true
       },
+      openAddFoodProductDisplay() {
+        this.$refs.AddFoodProductDlg.isDisplay = true
+        console.log(this.$refs.AddFoodProductDlg.isDisplay)
+      },
+      //編集用コンポーネント
       openGroupDisplay() {
         this.$refs.groupDlg.isDisplay = true
+      },
+      openStageOrderDisplay() {
+        this.$refs.stageOrderDlg.isDisplay = true
       },
       openSubRepDisplay() {
         this.$refs.subRepDlg.isDisplay = true
       },
       openPlaceDisplay() {
         this.$refs.placeDlg.isDisplay = true
-      },
-      openAddRentalOrderDisplay(id, group_id, name, num) {
-        this.rental_order_id = id
-        this.group_id = group_id
-        this.name = name
-        this.num = num
-        this.$refs.AddRentalOrderDlg.isDisplay = true
-        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
       },
       openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
         this.power_order_id = id
@@ -937,6 +1613,16 @@
         this.url = url
         this.$refs.powerDlg.isDisplay = true
         console.log(this.$refs.powerDlg.isDisplay)
+      },
+      openStageOptionDisplay(id, group_id, own_equipment, bgm, camera_permission, loud_sound, stage_content) {
+        this.stage_option_id = id
+        this.group_id = group_id
+        this.own_equipment = own_equipment
+        this.bgm = bgm
+        this.camera_permission = camera_permission
+        this.loud_sound = loud_sound
+        this.stage_content = stage_content
+        this.$refs.StageOptionDlg.isDisplay = true
       },
       openEmployeeDisplay(id, group_id, name, student_id){
         this.employee_id = id
@@ -954,6 +1640,15 @@
         this.is_cooking = is_cooking
         this.$refs.foodproductDlg.isDisplay = true
       },
+      //追加用コンポーネント
+      openAddRentalOrderDisplay(id, group_id, name, num) {
+        this.rental_order_id = id
+        this.group_id = group_id
+        this.name = name
+        this.num = num
+        this.$refs.AddRentalOrderDlg.isDisplay = true
+        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
+      },
       openAddpowerDisplay() {
         this.$refs.addpowerDlg.isDisplay = true
       },
@@ -965,6 +1660,62 @@
         this.rental_item_id = rental_item_id
         this.num = num
         this.$refs.rentalorderDlg.isDisplay = true
+      },
+      openPurchaseListDisplay(purchase_list_id, item, food_product_id, shop_id, fes_date_id, is_fresh) {
+        this.edit_purchase_list_id = purchase_list_id
+        this.purchase_list_item = item
+        this.purchase_food_product_id = food_product_id
+        this.shop_id = shop_id
+        this.fes_date_id = fes_date_id
+        this.is_fresh = is_fresh
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+          headers: { 
+            "Content-Type": "application/json", 
+          }
+        })
+          .then(response => {
+            this.$refs.PurchaseListDlg.food_products = response.data
+          })
+        this.$refs.PurchaseListDlg.isDisplay = true
+      },
+      openAddPurchaseListDisplay() {
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+          headers: { 
+            "Content-Type": "application/json", 
+          }
+        })
+          .then(response => {
+            this.$refs.AddPurchaseListDlg.food_products = response.data
+          })
+        this.$refs.AddPurchaseListDlg.isDisplay = true
+      },
+      openPurchaseListSnackbar(){
+        this.addRentalOrderSnackbar = true
+      },
+      //削除用ダイアログ
+      open_delete_dialog_power(id){
+        this.power_order_id = id
+        this.delete_dialog_power = true
+      },
+      open_delete_dialog_item(id){
+        this.rental_order_id = id
+        this.delete_dialog_item = true
+      },
+      open_delete_dialog_employee(id){
+        this.employee_id = id
+        this.delete_dialog_employee = true
+      },
+      open_delete_dialog_food(id){
+        this.food_product_id = id
+        this.delete_dialog_food = true
+      },
+      open_delete_dialog(id){
+        this.group_id = id
+        this.delete_dialog = true
+      },
+      open_delete_dialog_purchase(id){
+        this.purchase_list_id = id
+        this.delete_dialog_purchase = true
       },
     }
   }

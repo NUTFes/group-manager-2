@@ -107,7 +107,6 @@ class Api::V1::CurrentUserApiController < ApplicationController
         first_stage_order = "-9999"
         second_stage_order = "-9999"
         stage_date = "-9999"
-        stage_order = [] 
         stage_order = {
           use_time_interval: "-9999",
           prepare_time_interval: "-9999",
@@ -118,6 +117,22 @@ class Api::V1::CurrentUserApiController < ApplicationController
           cleanup_end_time: "-9999",
         }
       end
+
+      # ステージオプション申請情報を取得
+      if !group.stage_common_option.nil?
+        stage_common_option = group.stage_common_option
+      else
+        stage_common_option = []
+        stage_common_option = {
+          own_equipment: "-9999",
+          bgm: "-9999",
+          camera_permission: "-9999",
+          loud_sound: "-9999",
+          stage_content: "-9999",
+        }
+      end
+
+
       # 電力申請情報を取得
       if !group.power_orders.nil?
         power_orders = group.power_orders
@@ -178,8 +193,11 @@ class Api::V1::CurrentUserApiController < ApplicationController
               purchase_lists_all << {
                 id: purchase_list.id,
                 food_product: purchase_list.food_product.name,
+                food_product_id: purchase_list.food_product.id,
                 shop: purchase_list.shop.name,
+                shop_id: purchase_list.shop.id,
                 fes_date: purchase_list.fes_date.date,
+                fes_date_id: purchase_list.fes_date.id,
                 item: purchase_list.items,
                 is_fresh: purchase_list.is_fresh,
               } 
@@ -189,8 +207,11 @@ class Api::V1::CurrentUserApiController < ApplicationController
             purchase_lists_all << {
               id: "-9999",
               food_product: "-9999",
+              food_product_id: "-9999",
               shop: "-9999",
+              shop_id: "-9999",
               fes_date: "-9999",
+              fes_date_id: "-9999",
               item: "-9999",
               is_fresh: "-9999",
             }
@@ -227,6 +248,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
         first_stage_order: first_stage_order, # 第一希望ステージのIDからステージ名を復号
         second_stage_order: second_stage_order, # 第二希望ステージのIDからステージ名を復号
         stage_date: stage_date, # 日付のIDから日付を復号
+        stage_common_option: stage_common_option,
         power_orders: power_orders,
         rental_orders: rental_orders_list,
         employees: employees,
@@ -237,4 +259,38 @@ class Api::V1::CurrentUserApiController < ApplicationController
     render json: regist_info
   end
 
+  def password_reset 
+    @user = current_api_user
+    @user.password = password_reset_params[:password]
+    @user.password_confirmation = password_reset_params[:password_confirmation]
+    @user.save!
+  end
+
+  def get_user_detail_raw
+    @user = current_api_user
+    @user_detail = @user.user_detail
+    render json: {user: @user, user_detail: @user_detail}
+  end
+
+  def edit_user_info
+    @user = current_api_user
+		@user_detail = @user.user_detail
+    @user.name = edit_user_info_params[:name]
+    @user.email = edit_user_info_params[:email]
+    @user_detail.student_id = edit_user_info_params[:student_id]
+    @user_detail.tel = edit_user_info_params[:tel]
+    @user_detail.department_id = edit_user_info_params[:department_id]
+    @user_detail.grade_id = edit_user_info_params[:grade_id]
+    @user.save!
+		@user_detail.save!
+  end
+
+  private
+    def edit_user_info_params
+      params.permit(:name, :email, :student_id, :tel, :department_id, :grade_id)
+    end
+
+    def password_reset_params
+      params.permit(:password, :password_confirmation)
+    end
 end

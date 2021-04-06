@@ -39,7 +39,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>副代表登録</v-card-title>
+                    <v-card-title class="font-weight-bold">副代表登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-text-field
@@ -104,26 +104,25 @@
                         clearable
                         outlined
                       ></v-text-field>
-                      <v-divider></v-divider>
                     </v-card-text>
+                    <v-divider class="mb-8"></v-divider>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        depressed
+                        large
+                        rounded
+                        dark
+                        color="btn"
+                        class="stepper pl-4 font-weight-bold"
+                        @click="e1 += 1"
+                      >
+                        次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
+                      </v-btn>
+                    </v-card-actions>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="9"></v-col>
-                <v-col cols="3">
-                  <v-btn
-                    class="stepper"
-                    rounded
-                    height="50"
-                    block
-                    color="primary"
-                    @click="e1 += 1"
-                  >
-                    次へ
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-stepper-content>
 
@@ -133,15 +132,21 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>物品登録</v-card-title>
+                    <v-card-title class="font-weight-bold">物品登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
+                      <v-row>
+                        <v-col cols=3></v-col>
+                        <v-col cols=3>
                       <v-select
                         v-model="rentalSteps"
                         :items="[1, 2, 3, 4, 5, 6]"
                         label="登録物品数"
                         outlined
                       />
+                        </v-col>
+                        <v-col cols=6><v-card-text>個の物品を登録する</v-card-text></v-col>
+                      </v-row>
                       <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
                           <template v-for="rentalStep in rentalSteps">
@@ -169,66 +174,65 @@
                               :groupId="groupId"
                               :key="rentalStep"
                             />
-                            <v-row>
-                              <v-col cols="4" />
-                              <v-col cols="4">
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
                                 <v-btn
-                                  block
-                                  height="50"
+                                  rounded
+                                  text
+                                  large
+                                  color="btn"
+                                  class="pr-5"
+                                  @click="e3 -= 1"
+                                  v-show="rentalStep != 1"
+                                >
+                                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                  戻る
+                                </v-btn>
+                                <v-btn
+                                  rounded
                                   outlined
-                                  color="primary"
+                                  large
+                                  color="btn"
+                                  class="pl-5"
                                   @click="e3 += 1"
                                   v-show="rentalSteps != rentalStep"
                                 >
                                   {{ rentalStep + 1 }}
                                   個目の物品へ
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="4" />
-                            </v-row>
-                            <v-row>
-                              <v-col cols="4" />
-                              <v-col cols="4">
-                                <v-btn
-                                  height="50"
-                                  block
-                                  text
-                                  @click="e3 -= 1"
-                                  v-show="rentalStep != 1"
-                                >
-                                  戻る
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="4" />
-                            </v-row>
-                            <v-divider />
+                                  <v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                            </v-card-actions>
                           </v-stepper-content>
                         </v-stepper-items>
                       </v-stepper>
                     </v-card-text>
+                    <v-divider class="mb-8" />
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn 
+                        text  
+                        rounded
+                        large
+                        color="btn"
+                        class="pr-4 font-weight-bold"
+                        @click="e1 -= 1"
+                      >
+                        <v-icon class="mr-n1">mdi-menu-left</v-icon>戻る
+                      </v-btn>
+                      <v-btn
+                        rounded
+                        depressed
+                        large
+                        class="pl-4 font-weight-bold"
+                        color="primary"
+                        @click="e1 += 1"
+                      >
+                        次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
+                      </v-btn>
+                    </v-card-actions>
+
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6"></v-col>
-                <v-col cols="3">
-                  <v-btn text height="50" block @click="e1 -= 1">
-                    戻る
-                  </v-btn>
-                </v-col>
-                <v-col cols="3">
-                  <v-btn
-                    class="stepper"
-                    rounded
-                    height="50"
-                    block
-                    color="primary"
-                    @click="e1 += 1"
-                  >
-                    次へ
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-stepper-content>
 
@@ -238,7 +242,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>電力申請</v-card-title>
+                    <v-card-title class="font-weight-bold">電力申請</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-select
@@ -275,65 +279,62 @@
                               ref="powerChild"
                               :key="powerStep"
                             />
-                            <v-row>
-                              <v-col cols="4" />
-                              <v-col cols="4">
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
                                 <v-btn
-                                  block
-                                  height="50"
+                                  rounded
+                                  text
+                                  color="btn"
+                                  class="pr-5"
+                                  @click="e2 -= 1"
+                                  v-show="powerStep != 1"
+                                >
+                                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                  戻る
+                                </v-btn>
+                                <v-btn
+                                  rounded
                                   outlined
-                                  color="primary"
+                                  color="btn"
+                                  class="pl-5"
                                   @click="e2 += 1"
                                   v-show="powerSteps != powerStep"
                                 >
                                   {{ powerStep + 1 }}個目の製品へ
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="4" />
-                            </v-row>
-                            <v-row>
-                              <v-col cols="4" />
-                              <v-col cols="4">
-                                <v-btn
-                                  height="50"
-                                  block
-                                  text
-                                  @click="e2 -= 1"
-                                  v-show="powerStep != 1"
-                                >
-                                  戻る
-                                </v-btn>
-                              </v-col>
-                              <v-col cols="4" />
-                            </v-row>
+                                  <v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                            </v-card-actions>
                           </v-stepper-content>
-                          <v-divider />
                         </v-stepper-items>
                       </v-stepper>
                     </v-card-text>
+                    <v-divider class="mb-8" />
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn 
+                        text  
+                        rounded
+                        large
+                        color="btn"
+                        class="pr-4 font-weight-bold"
+                        @click="e1 -= 1"
+                      >
+                        <v-icon class="mr-n1">mdi-menu-left</v-icon>戻る
+                      </v-btn>
+                      <v-btn
+                        rounded
+                        dark
+                        depressed
+                        large
+                        class="pl-4 font-weight-bold"
+                        color="btn"
+                        @click="e1 += 1"
+                      >
+                        次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
+                      </v-btn>
+                    </v-card-actions>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6"></v-col>
-                <v-col cols="3">
-                  <v-btn text height="50" block @click="e1 -= 1">
-                    戻る
-                  </v-btn>
-                </v-col>
-                <v-col cols="3">
-                  <v-btn
-                    class="stepper"
-                    rounded
-                    height="50"
-                    block
-                    color="primary"
-                    @click="e1 += 1"
-                  >
-                    次へ
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-stepper-content>
 
@@ -343,7 +344,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>
+                    <v-card-title class="font-weight-bold">
                       ステージ利用申請
                     </v-card-title>
                     <v-divider></v-divider>
@@ -354,30 +355,35 @@
                         :key="stageStep"
                       />
                     </v-card-text>
-                    <v-divider />
+                    <v-divider class="mb-8" />
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn 
+                        text  
+                        rounded
+                        large
+                        color="btn"
+                        class="pr-4 font-weight-bold"
+                        @click="e1 -= 1"
+                      >
+                        <v-icon class="mr-n1">mdi-menu-left</v-icon>戻る
+                      </v-btn>
+                      <v-btn
+                        rounded
+                        dark
+                        depressed
+                        large
+                        class="pl-4 font-weight-bold"
+                        color="btn"
+                        @click="e1 += 1"
+                      >
+                        次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
+                      </v-btn>
+                    </v-card-actions>
+
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6"></v-col>
-                <v-col cols="3">
-                  <v-btn text height="50" block @click="e1 -= 1">
-                    戻る
-                  </v-btn>
-                </v-col>
-                <v-col cols="3">
-                  <v-btn
-                    class="stepper"
-                    rounded
-                    height="50"
-                    block
-                    color="primary"
-                    @click="e1 += 1"
-                  >
-                    次へ
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-stepper-content>
 
@@ -387,7 +393,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>
+                    <v-card-title class="font-weight-bold">
                       ステージ詳細申請
                     </v-card-title>
                     <v-divider></v-divider>
@@ -398,31 +404,34 @@
                         :key="stageCommonStep"
                       />
                     </v-card-text>
-                    <v-divider />
+                    <v-divider class="mb-8" />
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn 
+                        text  
+                        rounded
+                        large
+                        color="btn"
+                        class="pr-4 font-weight-bold"
+                        @click="e1 -= 1"
+                      >
+                        <v-icon class="mr-n1">mdi-menu-left</v-icon>戻る
+                      </v-btn>
+                      <v-btn
+                        rounded
+                        dark
+                        depressed
+                        large
+                        class="font-weight-bold"
+                        color="btn"
+                        @click="stageSubmit"
+                      >
+                        完了
+                      </v-btn>
+                    </v-card-actions>
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
-              </v-row>
-              <v-row>
-                <v-col cols="6"></v-col>
-                <v-col cols="3">
-                  <v-btn text height="50" block @click="e1 -= 1">
-                    戻る
-                  </v-btn>
-                </v-col>
-                <v-col cols="3">
-                  <v-btn
-                    class="stepper"
-                    dark
-                    rounded
-                    height="50"
-                    block
-                    color="purple accent-2"
-                    @click="stageSubmit"
-                  >
-                    登録
-                  </v-btn>
-                </v-col>
               </v-row>
             </v-stepper-content>
           </v-stepper-items>

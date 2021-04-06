@@ -56,7 +56,6 @@ export default {
   data () {
     return {
       isDisplay: false,
-      groups:[],
       }
     },
     computed: {
@@ -95,20 +94,7 @@ export default {
       )
     },
   },
-    mounted() {
-    const groupUrl = process.env.VUE_APP_URL + '/groups'
-    axios.get(groupUrl, {
-      headers: {
-        "Content-Type": "application/json",
-      }
-    }).then(
-      (response) => {
-        this.groups = response.data
-      },
-      (error) => {
-        return error;
-      }
-    )
+  mounted() {
   },
 }
 </script>

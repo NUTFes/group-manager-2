@@ -2,9 +2,9 @@
   <div>
     <v-row>
       <v-col>
-        <div class="card">
+        <div class="signup-card">
           <v-card class="mt-5 mx-auto " max-width="600" flat>
-            <v-row justify="center" style="padding-top:5%">
+            <v-row justify="center" style="padding-top:5%; padding-bottom:5%">
               <p cols="12" class="mt-3 display-1">
               詳細登録
               </p>
@@ -153,7 +153,7 @@ export default {
       params.append('user_id', this.user.id);
       this.$axios.post('/user_details', params).then(
         (response) => {
-          this.$router.push('/mypage')
+          this.$router.push('/dashboard')
         },
         (error) => {
           return error
@@ -186,9 +186,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.card {
-  padding-top: 5%;
-  padding-left: 20%;
-}
-</style>

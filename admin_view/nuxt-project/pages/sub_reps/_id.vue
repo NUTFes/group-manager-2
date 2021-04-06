@@ -88,13 +88,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ sub_rep.created_at || (format - date) }}
+                            {{ sub_rep.created_at || format - date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ sub_rep.updated_at || (format - date) }}
+                            {{ sub_rep.updated_at || format - date }}
                           </td>
                           <td v-if="rights == 1">
                             <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -439,10 +439,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%;
-}
-</style>

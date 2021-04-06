@@ -113,13 +113,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ stage.created_at || (format - date) }}
+                            {{ stage.created_at || format - date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ stage.updated_at || (format - date) }}
+                            {{ stage.updated_at || format - date }}
                           </td>
                         </tr>
                       </tbody>
@@ -255,7 +255,7 @@
 <script>
 import axios from "axios";
 import NoData from "../../components/NoData.vue";
-import {mapState} from "vuex"
+import { mapState } from "vuex";
 export default {
   components: {
     NoData
@@ -285,7 +285,7 @@ export default {
     })
   },
   mounted() {
-    this.$store.dispatch("users/getRole")
+    this.$store.dispatch("users/getRole");
     const url = "/stages/" + this.$route.params.id;
     this.$axios
       .get(url, {
@@ -354,10 +354,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%;
-}
-</style>

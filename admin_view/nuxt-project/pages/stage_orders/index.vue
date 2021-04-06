@@ -40,21 +40,6 @@
                     </template>
                     <span>更新する</span>
                   </v-tooltip>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        class="mx-2"
-                        fab
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        to="/stage_orders/print"
-                      >
-                        <v-icon dark>mdi-printer</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>印刷する</span>
-                  </v-tooltip>
                 </v-card-title>
 
                 <v-dialog v-model="dialog" max-width="500">
@@ -147,7 +132,6 @@
                                 label="準備時間"
                                 v-model="prepareTimeInterval"
                                 :items="time_interval"
-                                text
                                 text
                                 outlined
                                 clearable
@@ -254,10 +238,10 @@
                         >
                       </template>
                       <template v-slot:item.created_at="{ item }">
-                        {{ item.stage_order.created_at || (format - date) }}
+                        {{ item.stage_order.created_at || format - date }}
                       </template>
                       <template v-slot:item.updated_at="{ item }">
-                        {{ item.stage_order.updated_at || (format - date) }}
+                        {{ item.stage_order.updated_at || format - date }}
                       </template>
                     </v-data-table>
                   </div>

@@ -121,13 +121,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ purchase.created_at || format - date }}
+                          {{ purchase.created_at || format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ purchase.updated_at || format - date }}
+                          {{ purchase.updated_at || format-date }}
                         </td>
                         <td v-if="rights == 1">
                           <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -360,7 +360,7 @@ export default {
         });
     },
     delete_yes() {
-      const url = "/api/v1/get_purchase_list/" + this.$route.params.id;
+      const url = "/purchase_lists/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/purchase_lists");
     },
@@ -456,12 +456,5 @@ td {
 }
 th {
   width: 30%;
-}
-</style>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%;
 }
 </style>

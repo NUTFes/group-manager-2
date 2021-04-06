@@ -31,6 +31,7 @@ const _b53a0298 = () => interopDefault(import('../pages/stages/index.vue' /* web
 const _47ba2bbb = () => interopDefault(import('../pages/stocker_items/index.vue' /* webpackChunkName: "pages/stocker_items/index" */))
 const _58dc60f2 = () => interopDefault(import('../pages/stocker_places/index.vue' /* webpackChunkName: "pages/stocker_places/index" */))
 const _18296e94 = () => interopDefault(import('../pages/sub_reps/index.vue' /* webpackChunkName: "pages/sub_reps/index" */))
+const _1fbc60ea = () => interopDefault(import('../pages/user_page_setting/index.vue' /* webpackChunkName: "pages/user_page_setting/index" */))
 const _123c2dff = () => interopDefault(import('../pages/users/index.vue' /* webpackChunkName: "pages/users/index" */))
 const _497a2d5d = () => interopDefault(import('../pages/users/print/index.vue' /* webpackChunkName: "pages/users/print/index" */))
 const _17493152 = () => interopDefault(import('../pages/assign_items/_id.vue' /* webpackChunkName: "pages/assign_items/_id" */))
@@ -187,6 +188,10 @@ export const routerOptions = {
     path: "/sub_reps",
     component: _18296e94,
     name: "sub_reps"
+  }, {
+    path: "/user_page_setting",
+    component: _1fbc60ea,
+    name: "user_page_setting"
   }, {
     path: "/users",
     component: _123c2dff,

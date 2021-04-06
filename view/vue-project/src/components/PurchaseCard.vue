@@ -15,17 +15,15 @@
               clearable
               outlined
             ></v-select>
-            <v-select
-              label="購入店"
-              ref="shop"
-              v-model="shopId"
+                        <v-text-field
+              label="購入物"
+              ref="item"
+              v-model="item"
               :rules="[rules.required]"
-              :items="shopList"
-              :menu-props="{ top: false, offsetY: true }"
-              item-text="name"
-              item-value="id"
+              text
               outlined
-            ></v-select>
+              required
+            ></v-text-field>
             <p align="left">
               生ものか
               <v-btn-toggle
@@ -41,6 +39,17 @@
               </v-btn-toggle>
             </p>
             <v-select
+              label="購入店"
+              ref="shop"
+              v-model="shopId"
+              :rules="[rules.required]"
+              :items="shopList"
+              :menu-props="{ top: false, offsetY: true }"
+              item-text="name"
+              item-value="id"
+              outlined
+            ></v-select>
+            <v-select
               label="購入日"
               v-model.number="fesDateId"
               :items="fesDateList"
@@ -50,15 +59,7 @@
               clearable
               outlined
             />
-            <v-text-field
-              label="購入物"
-              ref="item"
-              v-model="item"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
+
           </v-form>
         </v-card-text>
       </v-col>
@@ -75,42 +76,9 @@ export default {
       rules: {
         required: value => !!value || "入力してください"
       },
-      fesDateList: [
-        { date: "9/18", id: 1 },
-        { date: "9/19", id: 2 },
-        { date: "9/20", id: 3 }
-      ],
+      fesDateList: [],
       foodProductList: [],
-      shopList: [
-        { name: "アピタ 長岡店", id: 1 },
-        { name: "イオン 長岡店", id: 2 },
-        { name: "ウオロク 北山店", id: 3 },
-        { name: "ウオロク 長岡店", id: 4 },
-        { name: "カトウ食材", id: 5 },
-        { name: "業務スーパー 中沢店", id: 6 },
-        { name: "サンマート", id: 7 },
-        { name: "スーパーセンタームサシ", id: 8 },
-        { name: "チャレンジャー 北長岡店", id: 9 },
-        { name: "ドン・キホーテ 長岡インター店", id: 10 },
-        { name: "ナルス 大島店", id: 11 },
-        { name: "なんじゃ村", id: 12 },
-        { name: "原信 今朝白店", id: 13 },
-        { name: "原信 古正寺店", id: 14 },
-        { name: "原信 関原店", id: 15 },
-        { name: "原信 寺島店", id: 16 },
-        { name: "原信 来迎寺店", id: 17 },
-        { name: "PLANT-5 見附店", id: 18 },
-        { name: "三和園茶舗", id: 19 },
-        { name: "大和屋 本店", id: 20 },
-        { name: "やまや", id: 21 },
-        { name: "リカードコミュニケーション おぐまや", id: 22 },
-        { name: "良食生活館 きたまち店", id: 23 },
-        { name: "山ス流通サービス株式会社", id: 24 },
-        { name: "菜加", id: 25 },
-        { name: "ひらせい 長岡ニュータウン店", id: 26 },
-        { name: "紅屋重正", id: 27 },
-        { name: "ダイレックス 喜多町店", id: 28 }
-      ],
+      shopList: [],
       valid: false,
       groupId: localStorage.getItem("group_id")
     };
@@ -185,6 +153,16 @@ export default {
           return error;
         }
       );
+    axios.get(process.env.VUE_APP_URL + '/api/v1/get_current_fes_dates').then(
+      (response) => {
+        this.fesDateList = response.data
+      }
+    )
+    axios.get(process.env.VUE_APP_URL + '/shops').then(
+      (response) => {
+        this.shopList = response.data
+      }
+    )
   }
 };
 </script>

@@ -1,24 +1,35 @@
 <template>
   <div>
-    <DashBoard />
-    <UserInfo />
-    <News />
-    <div v-if="this.regist_info.length === 0">
-      <v-progress-circular
-        indeterminate
-        color="primary"
-        ></v-progress-circular>
-    </div>
-    <div v-else>
-      <div v-for="(regist, i) in regist_info" :key="i">
-        <Regist :num="i" :regist="regist" @reload="reload()" />
-        <div style="text-align:center" v-if="isRegistGroup">
-          <v-container>
+    <v-row>
+      <v-col>
+        <DashBoard />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="2"></v-col>
+      <v-col cols="2">
+        <v-row>
+          <v-col>
+            <UserInfo />
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="6">
+        <v-row>
+          <v-col>
+            <News />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <div v-for="(regist, i) in regist_info" :key="i">
+              <Regist :num="i" :regist="regist" @reload="reload()" />
+              <v-container>
             <v-row>
               <v-col cols="4"></v-col>
               <v-col cols="4">
                 <v-btn
-                  v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999"'
+                  v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999" && addEmployee && addFoodProduct &&addPurchaseList'
                   block dark color="purple accent-2"
                   dark
                   rounded
@@ -31,16 +42,18 @@
               <v-col cols="4"></v-col>
             </v-row>
           </v-container>
-        </div>
-      </div>
-    </div>
-    <br />
-    <div style="text-align:center" v-if="isRegistGroup">
+            </div>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="2"></v-col>
+    </v-row>
       <v-container>
         <v-row>
           <v-col cols="4"></v-col>
           <v-col cols="4">
             <v-btn
+              v-if="isRegistGroup"
               block dark color="purple accent-2"
                dark
                rounded
@@ -53,7 +66,6 @@
           <v-col cols="4"></v-col>
         </v-row>
       </v-container>
-    </div>
     <br>
   </div>
 </template>
@@ -82,7 +94,10 @@ export default {
       ],
       users: [],
       regist_info: [],
-      isRegistGroup: []
+      isRegistGroup: [],
+      addEmployee: [],
+      addFoodProduct: [],
+      addPurchaseList: [],
     };
   },
   methods: {
@@ -164,6 +179,9 @@ export default {
       })
       .then(response => {
         this.isRegistGroup = response.data[0].is_regist_group;
+        this.addEmployee = response.data[0].add_employee;
+        this.addFoodProduct = response.data[0].add_food_product;
+        this.addPurchaseList = response.data[0].add_purchase_list;
         console.log(response);
       });
 

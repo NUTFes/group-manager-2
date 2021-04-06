@@ -2,9 +2,9 @@
   <div>
     <v-row>
       <v-app-bar app dark dense color="#424242">
-        <v-toolbar-title>参加団体管理アプリ-管理者ページ</v-toolbar-title>
+        <v-toolbar-title><v-btn text to="/dashboard" color="#424242"><div style="color:white">参加団体管理アプリ-管理者ページ</div></v-btn></v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn text to="/mypage" color="#424242">
+        <v-btn text to="/dashboard" color="#424242">
           <v-icon color="white">mdi-account-circle</v-icon>
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>
@@ -62,14 +62,15 @@
               v-for="item in memos"
               :key="item.id"
               >
-              <v-list-item-content>
-                <v-list-title>{{ item.user }}</v-list-title>
-                <v-list-title>{{ item.memo.content }}</v-list-title>
+              <v-list-item-content class="sticky-note">
+                <v-list-title class="sticky-note__item">{{ item.user }}</v-list-title>
+                <v-list-title class="sticky-note__item">{{ item.memo.content }}</v-list-title>
                 <br>
                 <br>
-                <v-list-title style="text-align:right">{{ item.created_at | format-date}}</v-list-title>
+                <v-list-title class="sticky-note__date">{{ item.created_at | format-date}}</v-list-title>
                 <v-divider/>
               </v-list-item-content>
+
             </v-list-item>
           </v-list>
         </div>

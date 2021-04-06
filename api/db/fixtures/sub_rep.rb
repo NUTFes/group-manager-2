@@ -6,5 +6,5 @@ SubRep.seed( :id,
                 tel: "111-2222-3333" ,
                 email: "nutfes-hanako@email.com" ,
                 student_id: 11222333 
-    }
+    },
 )

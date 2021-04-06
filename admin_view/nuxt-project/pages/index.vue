@@ -67,7 +67,7 @@
                       <v-col cols="2" />
                         <v-col cols="8">
                           <nuxt-link class="text-center" to="/signup">
-                            新規登録はこちら
+                            <div style="color:black">新規登録はこちら</div>
                           </nuxt-link>
                         </v-col>
                         <v-col cols="2" />
@@ -149,10 +149,7 @@ export default {
         })
         .then(
           response => {
-            localStorage.setItem(
-              "access-token",
-              response.headers["access-token"]
-            );
+            localStorage.setItem("access-token", response.headers["access-token"]);
             localStorage.setItem("client", response.headers.client);
             localStorage.setItem("uid", response.headers.uid);
             localStorage.setItem("token-type", response.headers["token-type"]);

@@ -10,21 +10,6 @@
               <v-card-title class="font-weight-bold mt-3">
                 <v-icon class="mr-5">mdi-unfold-more-vertical</v-icon>企画名申請一覧
                 <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                            class="mx-2" 
-                            fab 
-                            text
-                            v-bind="attrs"
-                            v-on="on"
-                            to="/users/print"
-                            >
-                            <v-icon dark>mdi-printer</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>印刷する</span>
-                </v-tooltip>
               </v-card-title>
               <hr class="mt-n3">
               <template>
@@ -101,10 +86,3 @@ export default {
   },
 }
 </script>
-
-<style>
-.card {
-  padding-left: 1%;
-  padding-right: 5%
-}
-</style>
