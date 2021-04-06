@@ -1,6 +1,5 @@
 <template>
-    <div class="card">
-        <v-card flat>
+        <v-card flat class="mx-15">
             <v-row>
                 <v-col cols=1></v-col>
                 <v-col>
@@ -14,7 +13,6 @@
                 <v-col cols=1></v-col>
             </v-row>
         </v-card>
-    </div>
 </template>
 <script>
 export default {
