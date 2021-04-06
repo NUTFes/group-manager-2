@@ -23,7 +23,9 @@ class Api::V1::UsersController < ApplicationController
     @user = User.find(params[:id])
     role = @user.role.name
     grade = @user.user_detail.grade.name
+    grade_id = @user.user_detail.grade.id
     department = @user.user_detail.department.name
+    department_id = @user.user_detail.department.id
     student_id = @user.user_detail.student_id
     tel = @user.user_detail.tel
     user_id = @user.id
@@ -51,7 +53,9 @@ class Api::V1::UsersController < ApplicationController
       email: email,
       role: role,
       grade: grade,
+      grade_id: grade_id,
       department: department,
+      department_id: department_id,
       student_id: student_id,
       tel: tel,
     }

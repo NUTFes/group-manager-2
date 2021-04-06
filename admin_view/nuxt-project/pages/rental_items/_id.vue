@@ -100,13 +100,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ rental_item.created_at || format - date }}
+                            {{ rental_item.created_at | format-date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ rental_item.updated_at || format - date }}
+                            {{ rental_item.updated_at | format-date }}
                           </td>
                           <td v-if="rights == 1">
                             <v-icon color="#E91E63">mdi-pencil</v-icon>

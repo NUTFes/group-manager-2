@@ -113,13 +113,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ stage.created_at || format - date }}
+                            {{ stage.created_at | format-date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ stage.updated_at || format - date }}
+                            {{ stage.updated_at | format-date }}
                           </td>
                         </tr>
                       </tbody>

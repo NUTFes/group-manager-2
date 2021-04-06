@@ -145,13 +145,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ group.created_at || (format - date) }}
+                          {{ group.created_at | format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ group.updated_at || (format - date) }}
+                          {{ group.updated_at | format-date }}
                         </td>
                       </tr>
                     </tbody>

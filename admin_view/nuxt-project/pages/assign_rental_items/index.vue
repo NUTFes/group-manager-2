@@ -137,12 +137,12 @@
                     <template
                       v-slot:item.assign_rental_item.created_at="{ item }"
                     >
-                      {{ item.assign_rental_item.created_at || format - date }}
+                      {{ item.assign_rental_item.created_at | format-date }}
                     </template>
                     <template
                       v-slot:item.assign_rental_item.updated_at="{ item }"
                     >
-                      {{ item.assign_rental_item.updated_at || format - date }}
+                      {{ item.assign_rental_item.updated_at | format-date }}
                     </template>
                   </v-data-table>
                 </div>

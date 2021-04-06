@@ -166,7 +166,7 @@
                           <th>登録日時：</th>
                           <td class="caption">
                             {{
-                              stage_common_option.created_at || format - date
+                              stage_common_option.created_at | format-date
                             }}
                           </td>
                         </tr>
@@ -174,7 +174,7 @@
                           <th>編集日時：</th>
                           <td class="caption">
                             {{
-                              stage_common_option.updated_at || format - date
+                              stage_common_option.updated_at | format-date
                             }}
                           </td>
                         </tr>

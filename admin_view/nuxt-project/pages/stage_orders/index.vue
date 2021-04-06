@@ -238,10 +238,10 @@
                         >
                       </template>
                       <template v-slot:item.created_at="{ item }">
-                        {{ item.stage_order.created_at || format - date }}
+                        {{ item.stage_order.created_at | format-date }}
                       </template>
                       <template v-slot:item.updated_at="{ item }">
-                        {{ item.stage_order.updated_at || format - date }}
+                        {{ item.stage_order.updated_at | format-date }}
                       </template>
                     </v-data-table>
                   </div>

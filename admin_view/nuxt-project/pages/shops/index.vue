@@ -129,10 +129,10 @@
                     "
                   >
                     <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at || (format - date) }}
+                      {{ item.created_at | format-date }}
                     </template>
                     <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at || (format - date) }}
+                      {{ item.updated_at | format-date }}
                     </template>
                   </v-data-table>
                 </div>

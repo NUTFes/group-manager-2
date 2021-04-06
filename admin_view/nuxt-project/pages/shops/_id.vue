@@ -84,13 +84,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ shop.created_at || format - date }}
+                            {{ shop.created_at | format-date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ shop.updated_at || format - date }}
+                            {{ shop.updated_at | format-date }}
                           </td>
                         </tr>
                       </tbody>

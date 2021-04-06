@@ -95,13 +95,13 @@
                         <tr>
                           <th>created_at：</th>
                           <td class="caption">
-                            {{ assign_rental_item.created_at || format - date }}
+                            {{ assign_rental_item.created_at | format-date }}
                           </td>
                         </tr>
                         <tr>
                           <th>updated_at：</th>
                           <td class="caption">
-                            {{ assign_rental_item.updated_at || format - date }}
+                            {{ assign_rental_item.updated_at | format-date }}
                           </td>
                         </tr>
                       </tbody>

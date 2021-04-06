@@ -173,14 +173,10 @@
                     <template
                       v-slot:item.rental_item_allow_list.created_at="{ item }"
                     >
-                      {{
-                        item.rental_item_allow_list.created_at || format - date
-                      }}
+                      {{ item.rental_item_allow_list.created_at | format-date }}
                     </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{
-                        item.rental_item_allow_list.updated_at || format - date
-                      }}
+                    <template v-slot:item.rental_item_allow_list.updated_at="{ item }">
+                      {{ item.rental_item_allow_list.updated_at | format-date }}
                     </template>
                   </v-data-table>
                 </div>

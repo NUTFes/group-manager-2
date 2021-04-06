@@ -133,13 +133,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ stocker_place.created_at || format - date }}
+                            {{ stocker_place.created_at | format-date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ stocker_place.updated_at || format - date }}
+                            {{ stocker_place.updated_at | format-date }}
                           </td>
                         </tr>
                       </tbody>

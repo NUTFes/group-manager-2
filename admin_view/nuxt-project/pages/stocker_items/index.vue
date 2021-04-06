@@ -145,10 +145,10 @@
                     "
                   >
                     <template v-slot:item.stocker_item.created_at="{ item }">
-                      {{ item.stocker_item.created_at || format - date }}
+                      {{ item.stocker_item.created_at | format-date }}
                     </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.stocker_item.updated_at || format - date }}
+                    <template v-slot:item.stocker_item.updated_at="{ item }">
+                      {{ item.stocker_item.updated_at | format-date }}
                     </template>
                   </v-data-table>
                 </div>

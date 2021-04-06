@@ -190,12 +190,12 @@
                     <template
                       v-slot:item.place_allow_list.created_at="{ item }"
                     >
-                      {{ item.place_allow_list.created_at || (format - date) }}
+                      {{ item.place_allow_list.created_at | format-date }}
                     </template>
                     <template
                       v-slot:item.place_allow_list.updated_at="{ item }"
                     >
-                      {{ item.place_allow_list.updated_at || (format - date) }}
+                      {{ item.place_allow_list.updated_at | format-date }}
                     </template>
                   </v-data-table>
                 </div>

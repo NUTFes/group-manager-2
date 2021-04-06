@@ -95,13 +95,13 @@
                         <tr>
                           <th>登録日時：</th>
                           <td class="caption">
-                            {{ stocker_item.created_at || format - date }}
+                            {{ stocker_item.created_at | format-date }}
                           </td>
                         </tr>
                         <tr>
                           <th>編集日時：</th>
                           <td class="caption">
-                            {{ stocker_item.updated_at || format - date }}
+                            {{ stocker_item.updated_at | format-date }}
                           </td>
                         </tr>
                       </tbody>
