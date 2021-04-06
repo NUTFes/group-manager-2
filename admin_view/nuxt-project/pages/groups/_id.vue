@@ -52,7 +52,7 @@
                     </template>
                     <span>編集</span>
                   </v-tooltip>
-                  <v-tooltip top>
+                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         text
@@ -647,6 +647,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 import moment from "moment";
 
 export default {
@@ -754,6 +755,11 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState({
+      selfRoleId: state => state.users.role
+    })
+  },
   methods: {
     reload: function () {
       const url = "api/v1/get_group/" + this.$route.params.id;
@@ -860,6 +866,7 @@ export default {
     },
   },
   mounted() {
+    this.$store.dispatch("users/getUser");
     const url = "api/v1/get_group/" + this.$route.params.id;
     this.$axios
       .get(url, {
