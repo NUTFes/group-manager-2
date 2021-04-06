@@ -3,14 +3,20 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card-text>
-          <div class="breadcrumbs">
-            <ul>
-              <li><div class="breadcrumbs-item"><router-link to="/power_orders">電力申請一覧</router-link></div></li>
-              <li><div class="breadcrumbs-item">{{ power_order.item }}</div></li>
-            </ul>
-          </div>
-        </v-card-text>
+          <v-card-text>
+            <div class="breadcrumbs">
+              <ul>
+                <li>
+                  <div class="breadcrumbs-item">
+                    <router-link to="/power_orders">電力申請一覧</router-link>
+                  </div>
+                </li>
+                <li>
+                  <div class="breadcrumbs-item">{{ power_order.item }}</div>
+                </li>
+              </ul>
+            </div>
+          </v-card-text>
         </div>
       </v-col>
     </v-row>
@@ -18,89 +24,105 @@
     <v-row>
       <v-col>
         <div class="card">
-        <v-card flat>
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10"> 
-              <v-card-title class="font-weight-bold mt-3">
-                {{ power_order.item }}
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                      text 
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="edit_dialog_open" 
-                      fab>
-                      <v-icon class="ma-5">mdi-pencil</v-icon>
-                    </v-btn>
+          <v-card flat>
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-title class="font-weight-bold mt-3">
+                  {{ power_order.item }}
+                  <v-spacer></v-spacer>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="edit_dialog_open"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-pencil</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>編集</span>
+                  </v-tooltip>
+                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="delete_dialog = true"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>削除</span>
+                  </v-tooltip>
+                </v-card-title>
+                <hr class="mt-n3" />
+                <v-simple-table class="my-9">
+                  <template v-slot:default>
+                    <tbody>
+                      <tr>
+                        <th>ID：</th>
+                        <td class="caption">{{ power_order.id }}</td>
+                      </tr>
+                      <tr>
+                        <th>参加団体：</th>
+                        <td class="caption">{{ group }}</td>
+                      </tr>
+                      <tr>
+                        <th>製品：</th>
+                        <td class="caption">{{ power_order.item }}</td>
+                      </tr>
+                      <tr>
+                        <th>電力：</th>
+                        <td class="caption">{{ power_order.power }}</td>
+                      </tr>
+                      <tr>
+                        <th>メーカー：</th>
+                        <td class="caption">{{ power_order.manufacturer }}</td>
+                      </tr>
+                      <tr>
+                        <th>型番：</th>
+                        <td class="caption">{{ power_order.model }}</td>
+                      </tr>
+                      <tr>
+                        <th>製品URL：</th>
+                        <td class="caption">
+                          <a :href="power_order.item_url" target="_blank"
+                            ><font color="blue">{{
+                              power_order.item_url
+                            }}</font></a
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>登録日時：</th>
+                        <td class="caption">
+                          {{ power_order.created_at || (format - date) }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>編集日時：</th>
+                        <td class="caption">
+                          {{ power_order.updated_at || (format - date) }}
+                        </td>
+                        <td v-if="rights == 1">
+                          <v-icon color="#E91E63">mdi-pencil</v-icon>
+                        </td>
+                        <td v-if="rights == 2">
+                          <v-icon color="#E91E63">mdi-eye</v-icon>
+                        </td>
+                      </tr>
+                    </tbody>
                   </template>
-                  <span>編集</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                      text 
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="delete_dialog = true" 
-                      fab>
-                      <v-icon class="ma-5">mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>削除</span>
-                </v-tooltip>
-              </v-card-title>
-              <hr class="mt-n3">
-              <v-simple-table class="my-9">
-                <template v-slot:default>
-                  <tbody>
-                    <tr>
-                      <th>ID：</th>
-                      <td class="caption">{{ power_order.id }}</td>
-                    </tr>
-                    <tr>
-                      <th>参加団体：</th>
-                      <td class="caption">{{ group }}</td>
-                    </tr>
-                    <tr>
-                      <th>製品：</th>
-                      <td class="caption">{{ power_order.item }}</td>
-                    </tr>
-                    <tr>
-                      <th>電力：</th>
-                      <td class="caption">{{ power_order.power }}</td>
-                    </tr>
-                    <tr>
-                      <th>メーカー：</th>
-                      <td class="caption">{{ power_order.manufacturer }}</td>
-                    </tr>
-                    <tr>
-                      <th>型番：</th>
-                      <td class="caption">{{ power_order.model }}</td>
-                    </tr>
-                    <tr>
-                      <th>製品URL：</th>
-                      <td class="caption"><a :href=power_order.item_url target="_blank"><font color="blue">{{ power_order.item_url }}</font></a></td>
-                    </tr>
-                    <tr>
-                      <th>登録日時：</th>
-                      <td class="caption">{{ power_order.created_at | format-date }}</td>
-                    </tr>
-                    <tr>
-                      <th>編集日時：</th>
-                      <td class="caption">{{ power_order.updated_at | format-date }}</td>
-                      <td v-if="rights == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
-                      <td v-if="rights == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
+                </v-simple-table>
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+          </v-card>
         </div>
       </v-col>
     </v-row>
@@ -108,16 +130,16 @@
     <v-row>
       <v-col>
         <div class="card">
-          <v-btn text color="white" to="/power_orders"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">電力申請一覧に戻る</div></v-btn>
+          <v-btn text color="white" to="/power_orders"
+            ><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+            <div class="back-button">電力申請一覧に戻る</div></v-btn
+          >
         </div>
       </v-col>
     </v-row>
 
     <!-- 編集ダイアログ -->
-    <v-dialog
-      v-model="edit_dialog"
-      width="500"
-      >
+    <v-dialog v-model="edit_dialog" width="500">
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
@@ -129,85 +151,78 @@
           </v-btn>
         </v-card-title>
 
-      <v-card-text>
-        <v-row>
-          <v-col>
-            <v-form ref="form">
-              <v-select
-                label="参加団体"
-                v-model="group_id"
-                :items="group_list"
-                item-text="name"
-                item-value="id"
-                text
-                outlined
-                clearable
-                :rules="[rules.required]"
+        <v-card-text>
+          <v-row>
+            <v-col>
+              <v-form ref="form">
+                <v-select
+                  label="参加団体"
+                  v-model="group_id"
+                  :items="group_list"
+                  item-text="name"
+                  item-value="id"
+                  text
+                  outlined
+                  clearable
+                  :rules="[rules.required]"
                 />
-              <v-text-field
-                label="製品名"
-                v-model="item"
-                clearable
-                outlined
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-text-field
-                label="電力(ワット)"
-                v-model="power"
-                clearable
-                outlined
-                type="number"
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-text-field
-                label="メーカー"
-                v-model="manufacturer"
-                :rules="[rules.required]"
-                text
-                outlined
-                required
-              ></v-text-field>
-              <v-text-field
-                label="型番"
-                v-model="model"
-                :rules="[rules.required]"
-                text
-                outlined
-                required
-              ></v-text-field>
-              <v-text-field
-                label="製品URL"
-                v-model="itemUrl"
-                :rules="[rules.required]"
-                text
-                outlined
-                required
-              ></v-text-field>
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-card-text>
+                <v-text-field
+                  label="製品名"
+                  v-model="item"
+                  clearable
+                  outlined
+                  :rules="[rules.required]"
+                ></v-text-field>
+                <v-text-field
+                  label="電力(ワット)"
+                  v-model="power"
+                  clearable
+                  outlined
+                  type="number"
+                  :rules="[rules.required]"
+                ></v-text-field>
+                <v-text-field
+                  label="メーカー"
+                  v-model="manufacturer"
+                  :rules="[rules.required]"
+                  text
+                  outlined
+                  required
+                ></v-text-field>
+                <v-text-field
+                  label="型番"
+                  v-model="model"
+                  :rules="[rules.required]"
+                  text
+                  outlined
+                  required
+                ></v-text-field>
+                <v-text-field
+                  label="製品URL"
+                  v-model="itemUrl"
+                  :rules="[rules.required]"
+                  text
+                  outlined
+                  required
+                ></v-text-field>
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-card-text>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="#78909C"
-          dark
-          @click="edit"
-          >
-          編集する
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#78909C" dark @click="edit">
+            編集する
+          </v-btn>
+        </v-card-actions>
       </v-card>
-    </v-dialog> 
+    </v-dialog>
 
     <!-- 削除ダイアログ -->
-    <v-dialog
-      v-model="delete_dialog"
-      width="500"
-      >
+    <v-dialog v-model="delete_dialog" width="500">
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
@@ -219,61 +234,40 @@
           </v-btn>
         </v-card-title>
 
-      <v-card-title>
-        削除してよろしいですか？
-      </v-card-title>
+        <v-card-title>
+          削除してよろしいですか？
+        </v-card-title>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          flat
-          color="red"
-          dark
-          @click="delete_yes"
-          >
-          はい
-        </v-btn>
-        <v-btn
-          flat
-          color="blue"
-          dark
-          @click="delete_dialog = false"
-          >
-          いいえ
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat color="red" dark @click="delete_yes">
+            はい
+          </v-btn>
+          <v-btn flat color="blue" dark @click="delete_dialog = false">
+            いいえ
+          </v-btn>
+        </v-card-actions>
       </v-card>
-    </v-dialog> 
+    </v-dialog>
 
     <!-- 編集成功SnackBar -->
-    <v-snackbar
-      v-model="success_snackbar"
-      color="blue-grey"
-      top
-      elevation="24"
-    >
+    <v-snackbar v-model="success_snackbar" color="blue-grey" top elevation="24">
       編集しました
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="white"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-        <v-icon>mdi-close</v-icon>
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
-
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
+import axios from "axios";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -293,83 +287,107 @@ export default {
       success_snackbar: false,
       delete_snackbar: false,
       rules: {
-        required: value => !!value || '入力してください',
-      },
-    }
+        required: value => !!value || "入力してください"
+      }
+    };
+  },
+  computed: {
+    ...mapState({
+      selfRoleId: state => state.users.role
+    })
   },
   mounted() {
+    this.$store.dispatch("users/getUser");
     const url = "/api/v1/get_power_order/" + this.$route.params.id;
-    this.$axios.get(url, {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    }
-    )
-      .then(response => {
-        this.power_order = response.data.power_order
-        this.group = response.data.group
-        this.group_id = response.data.power_order.group_id
-        this.item = response.data.power_order.item
-        this.power = response.data.power_order.power
-        this.manufacturer = response.data.power_order.manufacturer
-        this.model = response.data.power_order.model
-        this.itemUrl = response.data.power_order.item_url
+    this.$axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
+      .then(response => {
+        this.power_order = response.data.power_order;
+        this.group = response.data.group;
+        this.group_id = response.data.power_order.group_id;
+        this.item = response.data.power_order.item;
+        this.power = response.data.power_order.power;
+        this.manufacturer = response.data.power_order.manufacturer;
+        this.model = response.data.power_order.model;
+        this.itemUrl = response.data.power_order.item_url;
+      });
   },
   methods: {
-    reload: function(){
+    reload: function() {
       const url = "/api/v1/get_power_order/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }
-      )
-        .then(response => {
-          this.power_order = response.data.power_order
-          this.group = response.data.group
-          this.group_id = response.data.power_order.group_id
-          this.item = response.data.power_order.item
-          this.power = response.data.power_order.power
-          this.manufacturer = response.data.power_order.manufacturer
-          this.model = response.data.power_order.model
-          this.itemUrl = response.data.power_order.item_url
+      this.$axios
+        .get(url, {
+          headers: {
+            "Content-Type": "application/json"
+          }
         })
+        .then(response => {
+          this.power_order = response.data.power_order;
+          this.group = response.data.group;
+          this.group_id = response.data.power_order.group_id;
+          this.item = response.data.power_order.item;
+          this.power = response.data.power_order.power;
+          this.manufacturer = response.data.power_order.manufacturer;
+          this.model = response.data.power_order.model;
+          this.itemUrl = response.data.power_order.item_url;
+        });
     },
     edit_dialog_open: function() {
-      this.$axios.get('/groups', {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }).then(response => {
-        this.group_list = response.data
-      })
-      this.edit_dialog = true
+      this.$axios
+        .get("/groups", {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => {
+          this.group_list = response.data;
+        });
+      this.edit_dialog = true;
     },
     edit: function() {
-      const edit_url = 'power_orders/' + this.power_order.id + '?group_id=' + this.group_id + '&item=' + this.item + '&power=' + this.power + '&manufacturer=' + this.manufacturer + '&model=' + this.model + '&item_url=' + this.itemUrl
-      this.$axios.put(edit_url , {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }).then(response => {
-        this.reload()
-        this.edit_dialog = false
-        this.success_snackbar = true
-      })
+      const edit_url =
+        "power_orders/" +
+        this.power_order.id +
+        "?group_id=" +
+        this.group_id +
+        "&item=" +
+        this.item +
+        "&power=" +
+        this.power +
+        "&manufacturer=" +
+        this.manufacturer +
+        "&model=" +
+        this.model +
+        "&item_url=" +
+        this.itemUrl;
+      this.$axios
+        .put(edit_url, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => {
+          this.reload();
+          this.edit_dialog = false;
+          this.success_snackbar = true;
+        });
     },
     delete_yes: function() {
       const url = "/power_orders/" + this.$route.params.id;
-      this.$axios.delete(url)
-      this.$router.push("/power_orders")
+      this.$axios.delete(url);
+      this.$router.push("/power_orders");
     }
   }
-}
+};
 </script>
 
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%
+  padding-right: 5%;
 }
 </style>

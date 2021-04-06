@@ -1,217 +1,227 @@
 <template>
   <div>
     <div v-if="this.sub_rep.length === 0">
-      <NoData/>
+      <NoData />
     </div>
     <div v-else>
-    <v-row>
-      <v-col>
-        <div class="card">
-        <v-card-text>
-          <div class="breadcrumbs">
-            <ul>
-              <li><div class="breadcrumbs-item"><router-link to="/sub_reps">副代表一覧</router-link></div></li> 
-              <li><div class="breadcrumbs-item">{{ sub_rep.name }}</div></li>
-            </ul>
+      <v-row>
+        <v-col>
+          <div class="card">
+            <v-card-text>
+              <div class="breadcrumbs">
+                <ul>
+                  <li>
+                    <div class="breadcrumbs-item">
+                      <router-link to="/sub_reps">副代表一覧</router-link>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="breadcrumbs-item">{{ sub_rep.name }}</div>
+                  </li>
+                </ul>
+              </div>
+            </v-card-text>
+            <v-card flat>
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    {{ sub_rep.name }}
+                    <v-spacer></v-spacer>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          text
+                          v-bind="attrs"
+                          v-on="on"
+                          @click="edit_dialog_open"
+                          fab
+                        >
+                          <v-icon class="ma-5">mdi-pencil</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>編集</span>
+                    </v-tooltip>
+                    <v-tooltip top v-if="selfRoleId == (1 || 2)">
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          text
+                          v-bind="attrs"
+                          v-on="on"
+                          @click="delete_dialog = true"
+                          fab
+                        >
+                          <v-icon class="ma-5">mdi-delete</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>削除</span>
+                    </v-tooltip>
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <th>参加団体：</th>
+                          <td class="caption">{{ group }}</td>
+                        </tr>
+                        <tr>
+                          <th>学籍番号：</th>
+                          <td class="caption">{{ sub_rep.student_id }}</td>
+                        </tr>
+                        <tr>
+                          <th>メールアドレス：</th>
+                          <td class="caption">{{ sub_rep.email }}</td>
+                        </tr>
+                        <tr>
+                          <th>電話番号：</th>
+                          <td class="caption">{{ sub_rep.tel }}</td>
+                        </tr>
+                        <tr>
+                          <th>課程：</th>
+                          <td class="caption">{{ department }}</td>
+                        </tr>
+                        <tr>
+                          <th>学年：</th>
+                          <td class="caption">{{ grade }}</td>
+                        </tr>
+                        <tr>
+                          <th>登録日時：</th>
+                          <td class="caption">
+                            {{ sub_rep.created_at || (format - date) }}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>編集日時：</th>
+                          <td class="caption">
+                            {{ sub_rep.updated_at || (format - date) }}
+                          </td>
+                          <td v-if="rights == 1">
+                            <v-icon color="#E91E63">mdi-pencil</v-icon>
+                          </td>
+                          <td v-if="rights == 2">
+                            <v-icon color="#E91E63">mdi-eye</v-icon>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+                <v-col cols="1"></v-col>
+              </v-row>
+            </v-card>
           </div>
-          </v-card-text>
-        <v-card flat>
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10"> 
-              <v-card-title class="font-weight-bold mt-3">
-                {{ sub_rep.name }}
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                      text 
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="edit_dialog_open" 
-                      fab>
-                      <v-icon class="ma-5">mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>編集</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                      text 
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="delete_dialog = true" 
-                      fab>
-                      <v-icon class="ma-5">mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>削除</span>
-                </v-tooltip>
-              </v-card-title>
-              <hr class="mt-n3">
-              <v-simple-table class="my-9">
-                <template v-slot:default>
-                  <tbody>
-                    <tr>
-                      <th>参加団体：</th>
-                      <td class="caption">{{ group }}</td>
-                    </tr>
-                    <tr>
-                      <th>学籍番号：</th>
-                      <td class="caption">{{ sub_rep.student_id }}</td>
-                    </tr>
-                    <tr>
-                      <th>メールアドレス：</th>
-                      <td class="caption">{{ sub_rep.email }}</td>
-                    </tr>
-                    <tr>
-                      <th>電話番号：</th>
-                      <td class="caption">{{ sub_rep.tel }}</td>
-                    </tr>
-                    <tr>
-                      <th>課程：</th>
-                      <td class="caption">{{ department }}</td>
-                    </tr>
-                    <tr>
-                      <th>学年：</th>
-                      <td class="caption">{{ grade }}</td>
-                    </tr>
-                    <tr>
-                      <th>登録日時：</th>
-                      <td class="caption">{{ sub_rep.created_at | format-date }}</td>
-                    </tr>
-                    <tr>
-                      <th>編集日時：</th>
-                      <td class="caption">{{ sub_rep.updated_at | format-date }}</td>
-                      <td v-if="rights == 1"><v-icon color="#E91E63">mdi-pencil</v-icon></td>
-                      <td v-if="rights == 2"><v-icon color="#E91E63">mdi-eye</v-icon></td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-        </div>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
     </div>
 
     <v-row>
       <v-col>
         <div class="card">
-          <v-btn text color="white" to="/sub_reps"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div class="back-button">副代表一覧に戻る</div></v-btn>
+          <v-btn text color="white" to="/sub_reps"
+            ><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+            <div class="back-button">副代表一覧に戻る</div></v-btn
+          >
         </div>
       </v-col>
     </v-row>
 
     <!-- 編集ダイアログ -->
-    <v-dialog
-      v-model="edit_dialog"
-      width="500"
-      >
+    <v-dialog v-model="edit_dialog" width="500">
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
             <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
-          </div><v-spacer></v-spacer>
+          </div>
+          <v-spacer></v-spacer>
           <v-btn text @click="edit_dialog = false" fab dark>
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
 
-      <v-card-text>
-        <v-row>
-          <v-col>
-            <v-form ref="form">
-              <v-select
-                label="参加団体"
-                v-model="group_id"
-                :items="group_list"
-                item-text="name"
-                item-value="id"
-                text
-                outlined
-                clearable
-                :rules="[rules.required]"
+        <v-card-text>
+          <v-row>
+            <v-col>
+              <v-form ref="form">
+                <v-select
+                  label="参加団体"
+                  v-model="group_id"
+                  :items="group_list"
+                  item-text="name"
+                  item-value="id"
+                  text
+                  outlined
+                  clearable
+                  :rules="[rules.required]"
                 />
-              <v-text-field
-                label="名前"
-                v-model="name"
-                clearable
-                outlined
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-text-field
-                label="学籍番号"
-                v-model="student_id"
-                clearable
-                outlined
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-select
-                label="学科"
-                v-model="department_id"
-                :items="departments"
-                item-text="name"
-                item-value="id"
-                text
-                outlined
-                clearable
-                :rules="[rules.required]"
+                <v-text-field
+                  label="名前"
+                  v-model="name"
+                  clearable
+                  outlined
+                  :rules="[rules.required]"
+                ></v-text-field>
+                <v-text-field
+                  label="学籍番号"
+                  v-model="student_id"
+                  clearable
+                  outlined
+                  :rules="[rules.required]"
+                ></v-text-field>
+                <v-select
+                  label="学科"
+                  v-model="department_id"
+                  :items="departments"
+                  item-text="name"
+                  item-value="id"
+                  text
+                  outlined
+                  clearable
+                  :rules="[rules.required]"
                 />
-              <v-select
-                label="学年"
-                v-model="grade_id"
-                :items="grades"
-                item-text="name"
-                item-value="id"
-                text
-                outlined
-                clearable
-                :rules="[rules.required]"
+                <v-select
+                  label="学年"
+                  v-model="grade_id"
+                  :items="grades"
+                  item-text="name"
+                  item-value="id"
+                  text
+                  outlined
+                  clearable
+                  :rules="[rules.required]"
                 />
-              <v-text-field
-                label="電話番号"
-                v-model="tel"
-                clearable
-                outlined
-                :rules="[rules.required]"
-              ></v-text-field>
-              <v-text-field
-                label="メールアドレス"
-                v-model="email"
-                clearable
-                outlined
-                :rules="[rules.required]"
-              ></v-text-field>
-            </v-form>
-          </v-col>
-        </v-row>
-      </v-card-text>
+                <v-text-field
+                  label="電話番号"
+                  v-model="tel"
+                  clearable
+                  outlined
+                  :rules="[rules.required]"
+                ></v-text-field>
+                <v-text-field
+                  label="メールアドレス"
+                  v-model="email"
+                  clearable
+                  outlined
+                  :rules="[rules.required]"
+                ></v-text-field>
+              </v-form>
+            </v-col>
+          </v-row>
+        </v-card-text>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="#78909C"
-          dark
-          @click="edit"
-          >
-          編集する
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#78909C" dark @click="edit">
+            編集する
+          </v-btn>
+        </v-card-actions>
       </v-card>
-    </v-dialog> 
+    </v-dialog>
 
     <!-- 削除ダイアログ -->
-    <v-dialog
-      v-model="delete_dialog"
-      width="500"
-      >
+    <v-dialog v-model="delete_dialog" width="500">
       <v-card>
         <v-card-title class="headline blue-grey darken-3">
           <div style="color: white">
@@ -223,51 +233,31 @@
           </v-btn>
         </v-card-title>
 
-      <v-card-title>
-        {{ sub_rep.name }} を削除してよろしいですか？
-      </v-card-title>
+        <v-card-title>
+          {{ sub_rep.name }} を削除してよろしいですか？
+        </v-card-title>
 
-      <v-divider></v-divider>
+        <v-divider></v-divider>
 
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-          flat
-          color="red"
-          dark
-          @click="delete_yes"
-          >
-          はい
-        </v-btn>
-        <v-btn
-          flat
-          color="blue"
-          dark
-          @click="delete_dialog = false"
-          >
-          いいえ
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat color="red" dark @click="delete_yes">
+            はい
+          </v-btn>
+          <v-btn flat color="blue" dark @click="delete_dialog = false">
+            いいえ
+          </v-btn>
+        </v-card-actions>
       </v-card>
-    </v-dialog> 
+    </v-dialog>
 
     <!-- 編集成功SnackBar -->
-    <v-snackbar
-      v-model="success_snackbar"
-      color="blue-grey"
-      top
-      elevation="24"
-    >
+    <v-snackbar v-model="success_snackbar" color="blue-grey" top elevation="24">
       編集しました
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="white"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-        <v-icon>mdi-close</v-icon>
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          <v-icon>mdi-close</v-icon>
         </v-btn>
       </template>
     </v-snackbar>
@@ -275,8 +265,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-import NoData from '../../components/NoData.vue'
+import axios from "axios";
+import NoData from "../../components/NoData.vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -343,88 +334,115 @@ export default {
         { name: "その他", id: 15 }
       ],
       rules: {
-        required: value => !!value || '入力してください',
-      },
-    }
+        required: value => !!value || "入力してください"
+      }
+    };
+  },
+  computed: {
+    ...mapState({
+      selfRoleId: state => state.users.role
+    })
   },
   mounted() {
+    this.$store.dispatch("users/getUser");
     const url = "/api/v1/get_sub_rep_details/" + this.$route.params.id;
-    this.$axios.get(url, {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    }
-    )
-      .then(response => {
-        this.sub_rep = response.data.sub_rep
-        this.name = response.data.sub_rep.name
-        this.group = response.data.group
-        this.group_id = response.data.sub_rep.group_id
-        this.department_id = response.data.sub_rep.department_id
-        this.grade_id = response.data.sub_rep.grade_id
-        this.student_id = response.data.sub_rep.student_id
-        this.email = response.data.sub_rep.email
-        this.tel = response.data.sub_rep.tel
-        this.grade = response.data.grade
-        this.department = response.data.department
+    this.$axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
+      .then(response => {
+        this.sub_rep = response.data.sub_rep;
+        this.name = response.data.sub_rep.name;
+        this.group = response.data.group;
+        this.group_id = response.data.sub_rep.group_id;
+        this.department_id = response.data.sub_rep.department_id;
+        this.grade_id = response.data.sub_rep.grade_id;
+        this.student_id = response.data.sub_rep.student_id;
+        this.email = response.data.sub_rep.email;
+        this.tel = response.data.sub_rep.tel;
+        this.grade = response.data.grade;
+        this.department = response.data.department;
+      });
   },
   methods: {
-    reload: function(){
+    reload: function() {
       const url = "/api/v1/get_sub_rep_details/" + this.$route.params.id;
-      this.$axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      })
-        .then(response => {
-          this.sub_rep = response.data.sub_rep
-          this.name = response.data.sub_rep.name
-          this.group = response.data.group
-          this.group_id = response.data.sub_rep.group_id
-          this.department_id = response.data.sub_rep.department_id
-          this.grade_id = response.data.sub_rep.grade_id
-          this.student_id = response.data.sub_rep.student_id
-          this.email = response.data.sub_rep.email
-          this.tel = response.data.sub_rep.tel
-          this.grade = response.data.grade
-          this.department = response.data.department
+      this.$axios
+        .get(url, {
+          headers: {
+            "Content-Type": "application/json"
+          }
         })
+        .then(response => {
+          this.sub_rep = response.data.sub_rep;
+          this.name = response.data.sub_rep.name;
+          this.group = response.data.group;
+          this.group_id = response.data.sub_rep.group_id;
+          this.department_id = response.data.sub_rep.department_id;
+          this.grade_id = response.data.sub_rep.grade_id;
+          this.student_id = response.data.sub_rep.student_id;
+          this.email = response.data.sub_rep.email;
+          this.tel = response.data.sub_rep.tel;
+          this.grade = response.data.grade;
+          this.department = response.data.department;
+        });
     },
     edit_dialog_open: function() {
-      this.$axios.get('/groups', {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }).then(response => {
-        this.group_list = response.data
-      })
-      this.edit_dialog = true
+      this.$axios
+        .get("/groups", {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => {
+          this.group_list = response.data;
+        });
+      this.edit_dialog = true;
     },
     edit: function() {
-      const edit_url = 'sub_reps/' + this.sub_rep.id + '?group_id=' + this.group_id + '&name=' + this.name + '&department_id=' + this.department_id + '&grade_id=' + this.grade_id + '&tel=' + this.tel + '&email=' + this.email + '&student_id=' + this.student_id
-      this.$axios.put(edit_url , {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      }).then(response => {
-        this.reload()
-        this.edit_dialog = false
-        this.success_snackbar = true
-      })
+      const edit_url =
+        "sub_reps/" +
+        this.sub_rep.id +
+        "?group_id=" +
+        this.group_id +
+        "&name=" +
+        this.name +
+        "&department_id=" +
+        this.department_id +
+        "&grade_id=" +
+        this.grade_id +
+        "&tel=" +
+        this.tel +
+        "&email=" +
+        this.email +
+        "&student_id=" +
+        this.student_id;
+      this.$axios
+        .put(edit_url, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => {
+          this.reload();
+          this.edit_dialog = false;
+          this.success_snackbar = true;
+        });
     },
     delete_yes: function() {
       const url = "/sub_reps/" + this.$route.params.id;
-      this.$axios.delete(url)
-      this.$router.push("/sub_reps")
+      this.$axios.delete(url);
+      this.$router.push("/sub_reps");
     }
   }
-}
+};
 </script>
 
 <style>
 .card {
   padding-left: 1%;
-  padding-right: 5%
+  padding-right: 5%;
 }
 </style>

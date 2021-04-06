@@ -38,7 +38,7 @@
                     </template>
                     <span>編集</span>
                   </v-tooltip>
-                  <v-tooltip top>
+                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         text
@@ -131,13 +131,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ group.created_at | (format - date) }}
+                          {{ group.created_at || (format - date) }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ group.updated_at | (format - date) }}
+                          {{ group.updated_at || (format - date) }}
                         </td>
                       </tr>
                     </tbody>
@@ -286,6 +286,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -315,6 +316,11 @@ export default {
         required: value => !!value || "入力してください"
       }
     };
+  },
+  computed: {
+    ...mapState({
+      selfRoleId: state => state.users.role
+    })
   },
   methods: {
     reload: function() {
@@ -395,6 +401,7 @@ export default {
     }
   },
   mounted() {
+    this.$store.dispatch("users/getRole");
     const url = "api/v1/get_group/" + this.$route.params.id;
     this.$axios
       .get(url, {

@@ -29,7 +29,7 @@
                 <v-card-title class="font-weight-bold mt-3">
                   {{ rental_item_allow_list.rental_item_id }}
                   <v-spacer></v-spacer>
-                <v-tooltip top>
+                <v-tooltip top v-if="selfRoleId==1">
                   <template v-slot:activator="{ on, attrs  }">
                       <v-btn 
                       text 
@@ -42,7 +42,7 @@
                   </template>
                   <span>編集</span>
                 </v-tooltip>
-                <v-tooltip top>
+                <v-tooltip top v-if="selfRoleId==1">
                   <template v-slot:activator="{ on, attrs  }">
                     <v-btn 
                       text 
@@ -241,6 +241,7 @@
 <script>
 import axios from "axios";
 import NoData from "../../components/NoData.vue" ;
+import {mapState} from "vuex"
 export default {
   components :{
     NoData
@@ -261,7 +262,13 @@ export default {
 
     };
   },
+  computed:{
+    ...mapState({
+      selfRoleId: state=>state.users.role
+    })
+  },
   mounted() {
+    this.$store.dispatch("users/getUser")
     this.$axios.get('/group_categories', {
       headers: { 
         "Content-Type": "application/json", 

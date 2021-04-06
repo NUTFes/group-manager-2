@@ -9,7 +9,7 @@
               <v-card-title class="font-weight-bold mt-3">
                 <v-icon class="mr-5">mdi-home-map-marker</v-icon>在庫場所一覧
                 <v-spacer></v-spacer>
-                <v-tooltip top>
+                <v-tooltip top v-if="selfRoleId == 1">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       class="mx-2"
@@ -116,7 +116,7 @@
                     :items="stocker_places"
                     class="elevation-0 my-9"
                     @click:row="
-                      (data) =>
+                      data =>
                         $router.push({ path: `/stocker_places/${data.id}` })
                     "
                   >
@@ -164,10 +164,10 @@
                       >
                     </template>
                     <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | (format - date) }}
+                      {{ item.created_at || format - date }}
                     </template>
                     <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | (format - date) }}
+                      {{ item.updated_at || format - date }}
                     </template>
                   </v-data-table>
                 </div>
@@ -182,6 +182,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -196,40 +197,46 @@ export default {
         { text: "在庫登録", value: "stock_item_status" },
         { text: "物品割り当て", value: "assign_item_status" },
         { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" },
-      ],
+        { text: "編集日時", value: "updated_at" }
+      ]
     };
   },
+  computed: {
+    ...mapState({
+      selfRoleId: state => state.users.role
+    })
+  },
   mounted() {
+    this.$store.dispatch("users/getUser");
     this.$axios
       .get("/stocker_places", {
         headers: {
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       })
-      .then((response) => {
+      .then(response => {
         this.stocker_places = response.data;
       });
   },
   methods: {
-    reload: function () {
+    reload: function() {
       this.$axios
         .get("/stocker_places", {
           headers: {
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "application/json"
+          }
         })
-        .then((response) => {
+        .then(response => {
           this.stocker_places = response.data;
         });
     },
-    register: function () {
+    register: function() {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("name", this.name);
       params.append("stock_item_status", this.stock_item_status);
       params.append("assign_item_status", this.assign_item_status);
-      this.$axios.post("/stocker_places", params).then((response) => {
+      this.$axios.post("/stocker_places", params).then(response => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -237,8 +244,8 @@ export default {
         this.stock_item_status = "";
         this.assign_item_status = "";
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

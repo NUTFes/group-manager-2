@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from "axios";
 
 /**
  * vuexについて
@@ -17,7 +17,7 @@ export const state = () => ({
   accessToken: null,
   client: null,
   uid: null
-})
+});
 
 /**
  * mutation
@@ -27,27 +27,24 @@ export const state = () => ({
  */
 export const mutations = {
   setRole(state, number) {
-    state.role = number
+    state.role = number;
   },
   setAccessToken(state, text) {
-    state.accessToken = text
+    state.accessToken = text;
   },
   setClient(state, text) {
-    state.client = text
+    state.client = text;
   },
   setUid(state, text) {
-    state.uid = text
-  },
-  resetRole(state) {
-    state.role = 4
+    state.uid = text;
   },
   resetAll(state) {
-    state.role = null
-    state.accessToken = null
-    state.client = null
-    state.uid = null
+    state.role = null;
+    state.accessToken = null;
+    state.client = null;
+    state.uid = null;
   }
-}
+};
 
 /**
  * action
@@ -65,37 +62,55 @@ export const actions = {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
-        },
-      })
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid")
+        }
+      });
 
-      console.log(response)
-      commit("setRole", response.user.role_id)
-      commit("setAccessToken", response.user.accessToken)
-      commit("setClient", response.user.client)
-      commit("setUid", response.user.uid)
+      console.log(response);
+      commit("setRole", response.user.role_id);
+      commit("setAccessToken", response.user.accessToken);
+      commit("setClient", response.user.client);
+      commit("setUid", response.user.uid);
     } catch (error) {
-      commit("setRole", null)
-      commit("setAccessToken", null)
-      commit("setClient", null)
-      commit("setUid", null)
+      commit("setRole", null);
+      commit("setAccessToken", null);
+      commit("setClient", null);
+      commit("setUid", null);
     }
   }
-}
+};
 
 /**
  * getter
  * stateを扱いやすい形に変形して提供する
  * findなどでLINQみたいにできる
+ * よくわからないけどdispatchがないといわれる
  */
 
 export const getters = {
-  getRole( state, dispatch ) {
+  getRole(state, dispatch) {
     if (state.role === null) {
-      console.log('a')
-      dispatch("getUser")
+      dispatch("getUser");
     }
-    return state.role
+    return state.role;
+  },
+  getAccessToken(state, dispatch) {
+    if (state.accessToken === null) {
+      dispatch("getUser");
+    }
+    return state.accessToken;
+  },
+  getClient(state, dispatch) {
+    if (state.client === null) {
+      dispatch("getUser");
+    }
+    return state.client;
+  },
+  getUid(state, dispatch) {
+    if (state.uid === null) {
+      dispatch("getUser");
+    }
+    return state.uid;
   }
-}
+};

@@ -10,7 +10,7 @@
                 <v-icon class="mr-5">mdi-table-furniture</v-icon
                 >使用可能物品一覧
                 <v-spacer></v-spacer>
-                <v-tooltip top>
+                <v-tooltip top v-if="selfRoleId == 1">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       class="mx-2"
@@ -79,7 +79,7 @@
                             :items="rental_items"
                             :menu-props="{
                               top: true,
-                              offsetY: true,
+                              offsetY: true
                             }"
                             item-text="name"
                             item-value="id"
@@ -91,7 +91,7 @@
                             :items="group_categories"
                             :menu-props="{
                               top: true,
-                              offsetY: true,
+                              offsetY: true
                             }"
                             item-text="name"
                             item-value="id"
@@ -135,9 +135,9 @@
                     :items="rental_item_allow_list"
                     class="elevation-0 my-9"
                     @click:row="
-                      (data) =>
+                      data =>
                         $router.push({
-                          path: `/rental_item_allow_lists/${data.rental_item_allow_list.id}`,
+                          path: `/rental_item_allow_lists/${data.rental_item_allow_list.id}`
                         })
                     "
                   >
@@ -189,12 +189,12 @@
                       v-slot:item.rental_item_allow_list.created_at="{ item }"
                     >
                       {{
-                        item.rental_item_allow_list.created_at | format-date
+                        item.rental_item_allow_list.created_at || format - date
                       }}
                     </template>
                     <template v-slot:item.updated_at="{ item }">
                       {{
-                        item.rental_item_allow_list.updated_at | format-date
+                        item.rental_item_allow_list.updated_at || format - date
                       }}
                     </template>
                   </v-data-table>
@@ -210,6 +210,7 @@
 </template>
 
 <script>
+import {mapState} from "vuex"
 export default {
   data() {
     return {
@@ -229,7 +230,13 @@ export default {
       ],
     };
   },
+  computed:{
+    ...mapState({
+      selfRoleId: state=>state.users.role
+    })
+  },
   mounted() {
+    this.$store.dispatch("users/getUser")
     this.$axios
       .get("/group_categories", {
         headers: {
