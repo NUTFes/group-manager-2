@@ -12,7 +12,7 @@
                   </div>
                 </li>
                 <li>
-                  <div class="breadcrumbs-item">{{ group }}</div>
+                  <div class="breadcrumbs-item">{{ group_name }}</div>
                 </li>
               </ul>
             </div>
@@ -28,7 +28,7 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3">
-                  {{ group }}
+                  {{ group_name }}
                   <v-spacer></v-spacer>
                   <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
@@ -69,7 +69,7 @@
                       </tr>
                       <tr>
                         <th>参加団体：</th>
-                        <td class="caption">{{ group }}</td>
+                        <td class="caption">{{ group_name }}</td>
                       </tr>
                       <tr>
                         <th>第一希望：</th>
@@ -104,6 +104,44 @@
                         <td v-if="rights == 2">
                           <v-icon color="#E91E63">mdi-eye</v-icon>
                         </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+          </v-card>
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <div class="card">
+          <v-card flat>
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-title class="font-weight-bold mt-3">
+                  その他
+                  <v-spacer></v-spacer>
+                </v-card-title>
+                <hr class="mt-n3" />
+                <v-simple-table class="my-9">
+                  <template v-slot:default>
+                    <tbody>
+                      
+                      <tr
+                        v-for="(power_order, index) in power_orders"
+                        :key="(power_order, index)"
+                      >
+                        <th>製品{{ index + 1 }}：</th>
+                        <td class="caption">{{ power_order.item }}</td>
+                      </tr>
+                      <tr>
+                        <th>合計電力：</th>
+                        <td class="caption">{{ total_power }} W</td>
                       </tr>
                     </tbody>
                   </template>
@@ -256,8 +294,10 @@ export default {
   data() {
     return {
       place_order: [],
+      power_orders: [],
+      total_power: [],
       places: [],
-      group: [],
+      group_name: [],
       group_id: [],
       first: [],
       first_id: [],
@@ -288,8 +328,10 @@ export default {
       })
       .then((response) => {
         this.place_order = response.data.place_order;
+        this.power_orders = response.data.power_orders;
+        this.total_power = response.data.total_power;
         this.group_id = response.data.place_order.group_id;
-        this.group = response.data.group;
+        this.group_name = response.data.group_name;
         this.first = response.data.first;
         this.second = response.data.second;
         this.third = response.data.third;
@@ -310,8 +352,10 @@ export default {
         })
         .then((response) => {
           this.place_order = response.data.place_order;
+          this.power_orders = response.data.power_orders;
+          this.total_power = response.data.total_power;
           this.group_id = response.data.place_order.group_id;
-          this.group = response.data.group;
+          this.group_name = response.data.group_name;
           this.first = response.data.first;
           this.second = response.data.second;
           this.third = response.data.third;
@@ -371,7 +415,7 @@ export default {
     },
     delete_yes: function () {
       const url = "/place_orders/" + this.$route.params.id;
-      this.$axios.delete(url)
+      this.$axios.delete(url);
       this.$router.push("/place_orders");
     },
   },
