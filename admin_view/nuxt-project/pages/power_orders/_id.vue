@@ -70,7 +70,7 @@
                       </tr>
                       <tr>
                         <th>参加団体：</th>
-                        <td class="caption">{{ group }}</td>
+                        <td class="caption">{{ group_name }}</td>
                       </tr>
                       <tr>
                         <th>製品：</th>
@@ -115,6 +115,55 @@
                         <td v-if="rights == 2">
                           <v-icon color="#E91E63">mdi-eye</v-icon>
                         </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+          </v-card>
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <div class="card">
+          <v-card flat>
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-title class="font-weight-bold mt-3">
+                  その他
+                  <v-spacer></v-spacer>
+                </v-card-title>
+                <hr class="mt-n3" />
+                <v-simple-table class="my-9">
+                  <template v-slot:default>
+                    <tbody>
+                      <tr>
+                        <th>申請会場 第一希望：</th>
+                        <td class="caption">{{ first }}</td>
+                      </tr>
+                      <tr>
+                        <th>申請会場 第二希望：</th>
+                        <td class="caption">{{ second }}</td>
+                      </tr>
+                      <tr>
+                        <th>申請会場 第三希望：</th>
+                        <td class="caption">{{ third }}</td>
+                      </tr>
+                      <tr
+                        v-for="(power_order, index) in power_orders"
+                        :key="(power_order, index)"
+                      >
+                        <th>製品{{ index + 1 }}：</th>
+                        <td class="caption">{{ power_order.item }}</td>
+                      </tr>
+                      <tr>
+                        <th>合計電力：</th>
+                        <td class="caption">{{ total_power }} W</td>
                       </tr>
                     </tbody>
                   </template>
@@ -214,9 +263,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="edit">
-            編集する
-          </v-btn>
+          <v-btn color="#78909C" dark @click="edit"> 編集する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -234,17 +281,13 @@
           </v-btn>
         </v-card-title>
 
-        <v-card-title>
-          削除してよろしいですか？
-        </v-card-title>
+        <v-card-title> 削除してよろしいですか？ </v-card-title>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="red" dark @click="delete_yes">
-            はい
-          </v-btn>
+          <v-btn flat color="red" dark @click="delete_yes"> はい </v-btn>
           <v-btn flat color="blue" dark @click="delete_dialog = false">
             いいえ
           </v-btn>
@@ -271,11 +314,16 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      power_orders: [],
       power_order: [],
       expand: false,
       dialog: false,
       group: [],
       group_id: [],
+      group_name: [],
+      first: [],
+      second: [],
+      third: [],
       item: [],
       power: [],
       manufacturer: [],
@@ -302,30 +350,59 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
+        this.power_orders = response.data.power_orders;
         this.power_order = response.data.power_order;
+        this.total_power = response.data.total_power;
         this.group = response.data.group;
+        this.group_name = response.data.group_name;
         this.group_id = response.data.power_order.group_id;
         this.item = response.data.power_order.item;
         this.power = response.data.power_order.power;
         this.manufacturer = response.data.power_order.manufacturer;
         this.model = response.data.power_order.model;
         this.itemUrl = response.data.power_order.item_url;
+        this.first = response.data.first;
+        this.second = response.data.second;
+        this.third = response.data.third;
+      });
+    const place_url = "/api/v1/get_place_order/" + this.group_id;
+    this.$axios
+      .get(place_url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.power_orders = response.data.power_orders;
+        this.place_order = response.data.place_order;
+        this.total_power = response.data.total_power;
+        this.first = response.data.first;
+        this.second = response.data.second;
+        this.third = response.data.third;
+        this.first_id = response.data.place_order.first;
+        this.second_id = response.data.place_order.second;
+        this.third_id = response.data.place_order.third;
+        this.remark = response.data.place_order.remark;
+        this.first = response.data.first;
+        this.second = response.data.second;
+        this.third = response.data.third;
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
+
       const url = "/api/v1/get_power_order/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.power_order = response.data.power_order;
           this.group = response.data.group;
           this.group_id = response.data.power_order.group_id;
@@ -336,6 +413,14 @@ export default {
           this.itemUrl = response.data.power_order.item_url;
         });
     },
+    edit_dialog_open: function () {
+      this.$axios
+        .get("/groups", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
     edit_dialog_open: function() {
       this.$axios
         .get("/groups", {
@@ -348,7 +433,7 @@ export default {
         });
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "power_orders/" +
         this.power_order.id +
@@ -367,20 +452,22 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
+
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/power_orders/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/power_orders");
-    }
-  }
+    },
+  },
+
 };
 </script>
