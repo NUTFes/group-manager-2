@@ -25,4 +25,10 @@ class Api::V1::FesDatesApiController < ApplicationController
     render json: fes_date_list
   end
 
+  def get_current_fes_dates
+    fes_year = UserPageSetting.find(1).fes_year_id
+    fes_dates = FesDate.where(fes_year: fes_year)
+    render json: fes_dates
+  end
+
 end

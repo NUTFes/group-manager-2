@@ -41,7 +41,11 @@ export default {
   data() {
     return {
       item_list:[
-        { text: 'ユーザー', url: '/print/users' },
+        { text: '従業員リスト', url: '/print/employees' },
+        { text: '販売食品リスト', url: '/print/products' },
+        { text: '貸出物品リスト', url: '/print/items' },
+        { text: '使用電力リスト', url: '/print/powers' },
+        { text: '連絡先リスト', url: '/print/address' },
       ],
     }
   },

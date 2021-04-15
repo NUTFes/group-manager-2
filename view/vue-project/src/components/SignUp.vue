@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-col cols="1"></v-col>
     <v-col cols="10">
-      <v-card>
+      <v-card flat>
         <v-card-title>
           <span class="headline">新規登録</span>
         </v-card-title>
@@ -10,7 +10,6 @@
           <v-container>
             <v-form ref="form">
               <p v-bind:style="warnStyle" v-html="getMessage"></p>
-
               <v-text-field
                 label="フルネーム"
                 ref="name"
@@ -52,20 +51,16 @@
             </v-form>
           </v-container>
         </v-card-text>
-        <v-row>
-          <v-col>
             <v-card-actions>
-              <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
+              <v-btn
+                color="btn" 
+                depressed
+                absolute
+                right 
+                dark 
+                rounded 
+              @click="submit">登録</v-btn>
             </v-card-actions>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card-actions>
-              <v-btn color="blue darken-1" text block dark @click="cancel">キャンセル</v-btn>
-            </v-card-actions>
-          </v-col>
-        </v-row>
       </v-card>
     </v-col>
     <v-col cols="1"></v-col>

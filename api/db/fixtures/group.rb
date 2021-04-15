@@ -5,5 +5,5 @@ Group.seed( :id,
                 user_id: 1 ,
                 group_category_id: 1 ,
                 fes_year_id: 1  
-    }
+    },
 )

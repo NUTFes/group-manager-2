@@ -22,12 +22,18 @@
                   <v-card-title>従業員登録</v-card-title>
                   <v-divider></v-divider>
                   <v-card-text>
+                    <v-row>
+                      <v-col cols=3></v-col>
+                      <v-col cols=3>
                     <v-select
                       v-model="employeeSteps"
                       :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
                       label="従業員数"
                       outlined
                     ></v-select>
+                    </v-col>
+                    <v-col cols=6><v-card-text>人の従業員を登録する</v-card-text></v-col>
+                    </v-row>
                     <v-stepper class="stepper" v-model="e2">
                       <v-stepper-header class="stepper">
                         <template v-for="employeeStep in employeeSteps">
@@ -55,38 +61,35 @@
                             ref="employeeChild"
                             :key="employeeStep"
                           />
-                          <v-row>
-                            <v-col cols="4" />
-                            <v-col cols="4">
-                              <v-btn
-                                block
-                                height="50"
-                                outlined
-                                color="primary"
-                                @click="e2 += 1"
-                                v-show="employeeSteps != employeeStep"
-                              >
-                                {{ employeeStep + 1 }}
-                                人目へ
-                              </v-btn>
-                            </v-col>
-                            <v-col cols="4" />
-                          </v-row>
-                          <v-row>
-                            <v-col cols="4" />
-                            <v-col cols="4">
-                              <v-btn
-                                height="50"
-                                block
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                             <v-btn
+                                rounded
                                 text
+                                large
+                                color="btn"
+                                class="pr-5"
                                 @click="e2 -= 1"
                                 v-show="employeeStep != 1"
                               >
+                              <v-icon class="mr-n1">mdi-menu-left</v-icon>
                                 戻る
                               </v-btn>
-                            </v-col>
-                            <v-col cols="4" />
-                          </v-row>
+                            <v-btn
+                              rounded
+                              outlined
+                              large
+                              color="btn"
+                              class="pl-5"
+                              @click="e2 += 1"
+                              v-show="employeeSteps != employeeStep"
+                            >
+                              {{ employeeStep + 1 }}
+                              人目へ
+                              <v-icon class="ml-n1">mdi-menu-right</v-icon>
+                            </v-btn>
+                           
+                              </v-card-actions>
                         </v-stepper-content>
                       </v-stepper-items>
                     </v-stepper>
@@ -95,18 +98,20 @@
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
+            <v-divider class="mb-8"></v-divider>
             <v-row>
               <v-col cols="9"></v-col>
               <v-col cols="3">
                 <v-btn
-                  class="stepper"
                   rounded
-                  height="50"
-                  block
+                  depressed
+                  large
+                  class="pl-4 font-weight-bold"
                   color="primary"
                   @click="e1 += 1"
                 >
                   次へ
+                  <v-icon class="ml-n1">mdi-menu-right</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -121,12 +126,18 @@
                   <v-card-title>販売食品の登録</v-card-title>
                   <v-divider></v-divider>
                   <v-card-text>
+                    <v-row>
+                      <v-col cols=3></v-col>
+                      <v-col cols=3>
                     <v-select
                       v-model="foodProductSteps"
                       :items="[1, 2, 3, 4, 5]"
                       label="購入数"
                       outlined
                     ></v-select>
+                      </v-col>
+                      <v-col cols=6><v-card-text>個の販売食品を登録する</v-card-text></v-col>
+                    </v-row>
                     <v-stepper class="stepper" v-model="e3">
                       <v-stepper-header class="stepper">
                         <template v-for="foodProductStep in foodProductSteps">
@@ -154,38 +165,34 @@
                             ref="foodProductChild"
                             :key="foodProductStep"
                           />
-                          <v-row>
-                            <v-col cols="4" />
-                            <v-col cols="4">
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                               <v-btn
+                                rounded
+                                text
+                                large
+                                color="btn"
+                                class="pr-5"
+                                @click="e3 -= 1"
+                                v-show="employeeStep != 1"
+                              >
+                              <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                戻る
+                              </v-btn>
                               <v-btn
-                                block
-                                height="50"
-                                outlined
-                                color="primary"
+                               rounded
+                              outlined
+                              large
+                              color="btn"
+                              class="pl-5"
                                 @click="e3 += 1"
                                 v-show="foodProductSteps != foodProductStep"
                               >
                                 {{ foodProductStep + 1 }}
                                 個目の販売食品へ
+                                <v-icon class="ml-n1">mdi-menu-right</v-icon>
                               </v-btn>
-                            </v-col>
-                            <v-col cols="4" />
-                          </v-row>
-                          <v-row>
-                            <v-col cols="4" />
-                            <v-col cols="4">
-                              <v-btn
-                                height="50"
-                                block
-                                text
-                                @click="e3 -= 1"
-                                v-show="employeeStep != 1"
-                              >
-                                戻る
-                              </v-btn>
-                            </v-col>
-                            <v-col cols="4" />
-                          </v-row>
+                              </v-card-actions>
                         </v-stepper-content>
                       </v-stepper-items>
                     </v-stepper>
@@ -194,27 +201,31 @@
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
-              <v-col cols="6"></v-col>
-              <v-col cols="3">
-                <v-btn text height="50" block @click="e1 -= 1">
-                  戻る
-                </v-btn>
-              </v-col>
-              <v-col cols="3">
-                <v-btn
-                  class="stepper"
-                  dark
-                  rounded
-                  height="50"
-                  block
-                  color="purple accent-2"
-                  @click="submit"
-                >
-                  登録
-                </v-btn>
-              </v-col>
-            </v-row>
+            <v-divider class="mb-8"></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn 
+              text  
+              rounded
+              large
+              color="btn"
+              class="pr-4 font-weight-bold" 
+              @click="e1 -= 1">
+              <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                戻る
+              </v-btn>
+              <v-btn
+              rounded
+              dark
+              depressed
+              large
+              class="font-weight-bold"
+              color="btn"
+              @click="submit"
+              >
+                完了
+              </v-btn>
+            </v-card-actions>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>

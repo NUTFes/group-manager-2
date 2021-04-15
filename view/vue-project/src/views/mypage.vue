@@ -29,7 +29,7 @@
               <v-col cols="4"></v-col>
               <v-col cols="4">
                 <v-btn
-                  v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999"'
+                  v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999" && addEmployee && addFoodProduct &&addPurchaseList'
                   block dark color="purple accent-2"
                   dark
                   rounded
@@ -53,6 +53,7 @@
           <v-col cols="4"></v-col>
           <v-col cols="4">
             <v-btn
+              v-if="isRegistGroup"
               block dark color="purple accent-2"
                dark
                rounded
@@ -93,7 +94,10 @@ export default {
       ],
       users: [],
       regist_info: [],
-      isRegistGroup: []
+      isRegistGroup: [],
+      addEmployee: [],
+      addFoodProduct: [],
+      addPurchaseList: [],
     };
   },
   methods: {
@@ -175,6 +179,9 @@ export default {
       })
       .then(response => {
         this.isRegistGroup = response.data[0].is_regist_group;
+        this.addEmployee = response.data[0].add_employee;
+        this.addFoodProduct = response.data[0].add_food_product;
+        this.addPurchaseList = response.data[0].add_purchase_list;
         console.log(response);
       });
 

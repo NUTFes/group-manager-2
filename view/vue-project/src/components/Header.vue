@@ -1,11 +1,11 @@
 <template>
   <div>
-    <v-app-bar app color="#FAFAFA" dark>
+    <v-app-bar app color="header" dark>
       <v-container>
         <v-row>
           <v-col cols="2"></v-col>
           <v-col cols="7" class="d-inline-flex flex-row align-center">
-            <router-link to="/mypage">
+            <router-link to="/mypage" tabindex="-1">
               <v-img contain :src="logoImage"> </v-img>
             </router-link>
           </v-col>
@@ -24,9 +24,9 @@
               <v-list dense>
                 <v-list-item @click="signOut">
                   <v-list-item-content>
-                    <v-list-item-title>
+                    <v-list-item-title class="font-weight-bold">
                       <v-icon class="pr-2" size="30">mdi-logout</v-icon
-                      ><b>ログアウト</b>
+                      >ログアウト
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>

@@ -44,7 +44,7 @@
                     </template>
                     <span>編集</span>
                   </v-tooltip>
-                  <v-tooltip top>
+                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         text
@@ -121,13 +121,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ purchase.created_at || format - date }}
+                          {{ purchase.created_at || format-date }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ purchase.updated_at || format - date }}
+                          {{ purchase.updated_at || format-date }}
                         </td>
                         <td v-if="rights == 1">
                           <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -233,17 +233,17 @@
               item-value="id"
               outlined
             ></v-select>
-              <v-select
+            <v-select
               label="生ものか"
-                v-model="is_fresh"
-                :menu-props="{ top: false, offsetY: true }"
-                :items="isFreshList"
-                item-text="name"
-                item-value="bool"
-                ref="isFresh"
-                clearable
-                outlined
-              ></v-select>
+              v-model="is_fresh"
+              :menu-props="{ top: false, offsetY: true }"
+              :items="isFreshList"
+              item-text="name"
+              item-value="bool"
+              ref="isFresh"
+              clearable
+              outlined
+            ></v-select>
             <v-select
               label="購入日"
               v-model.number="fes_date_id"
@@ -272,6 +272,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -330,6 +331,11 @@ export default {
         { name: "いいえ", bool: false }
       ]
     };
+  },
+  computed: {
+    ...mapState({
+      selfRoleId: state => state.users.role
+    })
   },
   methods: {
     async reload() {
@@ -419,6 +425,7 @@ export default {
     }
   },
   mounted() {
+    this.$store.dispatch("users/getUser");
     const url = "/api/v1/get_purchase_list/" + this.$route.params.id;
     this.$axios
       .get(url, {

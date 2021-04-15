@@ -77,6 +77,11 @@
     </v-row>
     <v-row>
       <v-col>
+        <update/>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
         <div>
           <v-card
             flat
@@ -184,6 +189,7 @@ import axios from "axios";
 import Chart1 from "./Chart_Group";
 import Chart2 from "./Chart_Stock";
 import Chart3 from "./Chart_Assign";
+import Update from '../components/Update.vue';
 
 export default {
   components: {
@@ -192,6 +198,7 @@ export default {
     Chart3,
     Header,
     Menu,
+    Update,
   },
   data() {
     return {
