@@ -369,28 +369,6 @@ export default {
         this.second = response.data.second;
         this.third = response.data.third;
       });
-    const place_url = "/api/v1/get_place_order/" + this.group_id;
-    this.$axios
-      .get(place_url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.power_orders = response.data.power_orders;
-        this.place_order = response.data.place_order;
-        this.total_power = response.data.total_power;
-        this.first = response.data.first;
-        this.second = response.data.second;
-        this.third = response.data.third;
-        this.first_id = response.data.place_order.first;
-        this.second_id = response.data.place_order.second;
-        this.third_id = response.data.place_order.third;
-        this.remark = response.data.place_order.remark;
-        this.first = response.data.first;
-        this.second = response.data.second;
-        this.third = response.data.third;
-      });
   },
   methods: {
     reload: function () {
@@ -413,14 +391,6 @@ export default {
           this.itemUrl = response.data.power_order.item_url;
         });
     },
-    edit_dialog_open: function () {
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
     edit_dialog_open: function() {
       this.$axios
         .get("/groups", {
