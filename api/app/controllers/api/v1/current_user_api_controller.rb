@@ -98,16 +98,30 @@ class Api::V1::CurrentUserApiController < ApplicationController
         remark = "-9999"
       end
       # ステージ情報を取得
-      if !group.stage_order.nil?
-        stage_date = group.stage_order.fes_date.date
-        first_stage_order = Stage&.find_by_id(group.stage_order&.stage_first)&.name
-        second_stage_order = Stage&.find_by_id(group.stage_order&.stage_second)&.name
-        stage_order = group.stage_order
+      if !group.stage_orders.nil?
+        stage_orders = group.stage_orders
+        stage_orders_list = []
+        for stage_order in stage_orders
+          stage_orders_list << {
+            id: stage_order.id,
+            stage_date: stage_order.fes_date.date,
+            first_stage_order: Stage.find(stage_order.stage_first).name,
+            second_stage_order: Stage.find(stage_order.stage_second).name,
+            use_time_interval: stage_order.use_time_interval,
+            prepare_time_interval: stage_order.prepare_time_interval,
+            cleanup_time_interval: stage_order.cleanup_time_interval,
+            prepare_start_time: stage_order.prepare_start_time,
+            performance_start_time: stage_order.performance_start_time,
+            performance_end_time: stage_order.performance_end_time,
+            cleanup_end_time: stage_order.cleanup_end_time
+          }
+        end
       else
-        first_stage_order = "-9999"
-        second_stage_order = "-9999"
-        stage_date = "-9999"
-        stage_order = {
+        stage_orders_list = {
+          id: "-9999",
+          first_stage_order: "-9999",
+          second_stage_order: "-9999",
+          stage_date: "-9999",
           use_time_interval: "-9999",
           prepare_time_interval: "-9999",
           cleanup_time_interval: "-9999",
