@@ -1,23 +1,14 @@
 <template>
-  <v-app dark :style="{ background: $vuetify.theme.themes.light.background }">
+  <v-app :style="{ background: $vuetify.theme.themes.light.background }">
+    <Menu v-if="main && print" />
     <Header v-if="main && print" />
-      <div class="pad-bottom">
-        <v-row>
-          <v-col cols="2" v-if="main && print">
-            <Menu/>
-          </v-col>
-          <v-col cols=10>
-            <v-main>
-              <transition mode='in-out'>
-              <nuxt />
-              </transition>
-            </v-main>
-          </v-col>
-        </v-row>
-      </div>
+    <v-main>
+      <transition mode='in-out'>
+        <nuxt />
+      </transition>
+    </v-main>
   </v-app>
 </template>
-
 <script>
 import Header from '~/components/Header.vue'
 import Menu from '~/components/Menu.vue'
@@ -180,7 +171,7 @@ export default {
 .breadcrumbs ul li:last-child .breadcrumbs-item {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
-  background: #BF794E;
+  background: var(--v-accent-base);
 }
 .breadcrumbs ul li:last-child .breadcrumbs-item:after {
   display: none; 

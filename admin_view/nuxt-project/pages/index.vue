@@ -169,6 +169,9 @@ export default {
 .login-card {
   padding-top: 5%;
   padding-left: 20%;
+  padding-right: 20%;
+  padding-bottom: 5%;
+  height: 100%;
 }
 .grey-title {
   color: #424242;

@@ -31,86 +31,84 @@
 
       <v-row>
         <v-col>
-          <div class="card">
-            <v-card flat>
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card-title class="font-weight-bold mt-3">
-                    {{ stocker_item.rental_item_id }}
-                    <v-spacer></v-spacer>
-                    <v-tooltip top v-if="selfRoleId == 1">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="edit_dialog_open"
-                          fab
-                        >
-                          <v-icon class="ma-5">mdi-pencil</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>編集</span>
-                    </v-tooltip>
-                    <v-tooltip top v-if="selfRoleId == 1">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="delete_dialog = true"
-                          fab
-                        >
-                          <v-icon class="ma-5">mdi-delete</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>削除</span>
-                    </v-tooltip>
-                  </v-card-title>
-                  <hr class="mt-n3" />
-                  <v-simple-table class="my-9">
-                    <template v-slot:default>
-                      <tbody>
-                        <tr>
-                          <th>ID：</th>
-                          <td class="caption">{{ stocker_item.id }}</td>
-                        </tr>
-                        <tr>
-                          <th>物品：</th>
-                          <td class="caption">{{ item }}</td>
-                        </tr>
-                        <tr>
-                          <th>場所：</th>
-                          <td class="caption">{{ stocker_place }}</td>
-                        </tr>
-                        <tr>
-                          <th>個数：</th>
-                          <td class="caption">{{ stocker_item.num }}</td>
-                        </tr>
-                        <tr>
-                          <th>開催年：</th>
-                          <td class="caption">{{ fes_year }}</td>
-                        </tr>
-                        <tr>
-                          <th>登録日時：</th>
-                          <td class="caption">
-                            {{ stocker_item.created_at | format-date }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>編集日時：</th>
-                          <td class="caption">
-                            {{ stocker_item.updated_at | format-date }}
-                          </td>
-                        </tr>
-                      </tbody>
+          <v-card flat class="mx-15">
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-title class="font-weight-bold mt-3">
+                  {{ stocker_item.rental_item_id }}
+                  <v-spacer></v-spacer>
+                  <v-tooltip top v-if="selfRoleId == 1">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="edit_dialog_open"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-pencil</v-icon>
+                      </v-btn>
                     </template>
-                  </v-simple-table>
-                </v-col>
-              </v-row>
-            </v-card>
-          </div>
+                    <span>編集</span>
+                  </v-tooltip>
+                  <v-tooltip top v-if="selfRoleId == 1">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="delete_dialog = true"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>削除</span>
+                  </v-tooltip>
+                </v-card-title>
+                <hr class="mt-n3" />
+                <v-simple-table class="my-9">
+                  <template v-slot:default>
+                    <tbody>
+                      <tr>
+                        <th>ID：</th>
+                        <td class="caption">{{ stocker_item.id }}</td>
+                      </tr>
+                      <tr>
+                        <th>物品：</th>
+                        <td class="caption">{{ item }}</td>
+                      </tr>
+                      <tr>
+                        <th>場所：</th>
+                        <td class="caption">{{ stocker_place }}</td>
+                      </tr>
+                      <tr>
+                        <th>個数：</th>
+                        <td class="caption">{{ stocker_item.num }}</td>
+                      </tr>
+                      <tr>
+                        <th>開催年：</th>
+                        <td class="caption">{{ fes_year }}</td>
+                      </tr>
+                      <tr>
+                        <th>登録日時：</th>
+                        <td class="caption">
+                          {{ stocker_item.created_at | format-date }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>編集日時：</th>
+                        <td class="caption">
+                          {{ stocker_item.updated_at | format-date }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-col>
+            </v-row>
+          </v-card>
         </v-col>
       </v-row>
 
@@ -182,7 +180,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="#78909C" dark @click="edit">
+            <v-btn depressed dark color="btn" @click="edit">
               編集する
             </v-btn>
           </v-card-actions>
@@ -210,10 +208,10 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes">
+            <v-btn depressed dark color="yes" @click="delete_yes">
               はい
             </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog = false">
+            <v-btn depressed dark color="no" @click="delete_dialog = false">
               いいえ
             </v-btn>
           </v-card-actions>

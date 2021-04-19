@@ -6,80 +6,78 @@
     <div v-else>  
     <v-row>
       <v-col>
-        <div class="card">
-          <v-card-text>
-            <div class="breadcrumbs">
-              <ul>
-                <li><div class="breadcrumbs-item"><router-link to="/news">お知らせ一覧</router-link></div></li>
-                <li><div class="breadcrumbs-item">{{ news.title }}</div></li>
-              </ul>
-            </div>
-          </v-card-text>
-          <v-card flat>
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10"> 
-                <v-card-title class="font-weight-bold mt-3">
-                  {{ news.title }}
-                  <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                      <v-btn 
-                      text 
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="edit_dialog_open" 
-                      fab>
-                      <v-icon class="ma-5">mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>編集</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li><div class="breadcrumbs-item"><router-link to="/news">お知らせ一覧</router-link></div></li>
+              <li><div class="breadcrumbs-item">{{ news.title }}</div></li>
+            </ul>
+          </div>
+        </v-card-text>
+        <v-card flat class="mx-15">
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10"> 
+              <v-card-title class="font-weight-bold mt-3">
+                {{ news.title }}
+                <v-spacer></v-spacer>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs  }">
                     <v-btn 
-                      text 
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="delete_dialog = true" 
-                      fab>
-                      <v-icon class="ma-5">mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>削除</span>
-                </v-tooltip>
-                </v-card-title>
-                <hr class="mt-n3">
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>ID：</th>
-                        <td class="caption">{{ news.id }}</td>
-                      </tr>
-                      <tr>
-                        <th>タイトル：</th>
-                        <td class="caption">{{ news.title }}</td>
-                      </tr>
-                      <tr>
-                        <th>内容：</th>
-                        <td class="caption">{{ news.body }}</td>
-                      </tr>
-                      <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">{{ news.created_at | format-date }}</td>
-                      </tr>
-                      <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">{{ news.updated_at | format-date }}</td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
+                    text 
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="edit_dialog_open" 
+                    fab>
+                    <v-icon class="ma-5">mdi-pencil</v-icon>
+                  </v-btn>
+                </template>
+                <span>編集</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs  }">
+                  <v-btn 
+                    text 
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="delete_dialog = true" 
+                    fab>
+                    <v-icon class="ma-5">mdi-delete</v-icon>
+                  </v-btn>
+                </template>
+                <span>削除</span>
+              </v-tooltip>
+              </v-card-title>
+              <hr class="mt-n3">
+              <v-simple-table class="my-9">
+                <template v-slot:default>
+                  <tbody>
+                    <tr>
+                      <th>ID：</th>
+                      <td class="caption">{{ news.id }}</td>
+                    </tr>
+                    <tr>
+                      <th>タイトル：</th>
+                      <td class="caption">{{ news.title }}</td>
+                    </tr>
+                    <tr>
+                      <th>内容：</th>
+                      <td class="caption">{{ news.body }}</td>
+                    </tr>
+                    <tr>
+                      <th>登録日時：</th>
+                      <td class="caption">{{ news.created_at | format-date }}</td>
+                    </tr>
+                    <tr>
+                      <th>編集日時：</th>
+                      <td class="caption">{{ news.updated_at | format-date }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -136,8 +134,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="#78909C"
+          depressed
           dark
+          color="btn"
           @click="edit"
           >
           編集する
@@ -171,17 +170,17 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          flat
-          color="red"
+          depressed
           dark
+          color="yes"
           @click="delete_yes"
           >
           はい
         </v-btn>
         <v-btn
-          flat
-          color="blue"
+          depressed
           dark
+          color="no"
           @click="delete_dialog = false"
           >
           いいえ

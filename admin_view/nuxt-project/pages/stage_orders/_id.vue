@@ -25,157 +25,155 @@
 
     <v-row>
       <v-col>
-        <div class="card">
-          <v-card flat>
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
-                  {{ group }}
-                  <v-spacer></v-spacer>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="edit_dialog_open"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-pencil</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>編集</span>
-                  </v-tooltip>
-                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="delete_dialog = true"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-delete</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>削除</span>
-                  </v-tooltip>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>ID：</th>
-                        <td class="caption">{{ stage_order.id }}</td>
-                      </tr>
-                      <tr>
-                        <th>参加団体：</th>
-                        <td class="caption">{{ group }}</td>
-                      </tr>
-                      <tr>
-                        <th>晴れを希望：</th>
-                        <td class="caption">
-                          <v-chip
-                            v-if="stage_order.is_sunny == true"
-                            color="red"
-                            text-color="white"
-                            small
-                            >はい</v-chip
-                          >
-                          <v-chip
-                            v-if="stage_order.is_sunny == false"
-                            color="blue"
-                            text-color="white"
-                            small
-                            >いいえ</v-chip
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>希望日：</th>
-                        <td class="caption">
-                          {{ fes_date.date }} - {{ fes_date.day }} -
-                          {{ fes_date.days_num }}日目
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>第一希望：</th>
-                        <td class="caption">{{ stage_first }}</td>
-                      </tr>
-                      <tr>
-                        <th>第二希望：</th>
-                        <td class="caption">{{ stage_second }}</td>
-                      </tr>
-                      <tr>
-                        <th>使用時間幅：</th>
-                        <td class="caption">
-                          {{ stage_order.use_time_interval }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>準備時間幅：</th>
-                        <td class="caption">
-                          {{ stage_order.prepare_time_interval }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>掃除寺間幅：</th>
-                        <td class="caption">
-                          {{ stage_order.cleanup_time_interval }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>準備開始時刻：</th>
-                        <td class="caption">
-                          {{ stage_order.prepare_start_time }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>パフォーマンス開始時刻：</th>
-                        <td class="caption">
-                          {{ stage_order.performance_start_time }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>パフォーマンス終了時刻：</th>
-                        <td class="caption">
-                          {{ stage_order.performance_end_time }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>掃除終了時刻：</th>
-                        <td class="caption">
-                          {{ stage_order.cleanup_end_time }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">
-                          {{ stage_order.created_at | format-date }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">
-                          {{ stage_order.updated_at | format-date }}
-                        </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
-                        </td>
-                      </tr>
-                    </tbody>
+        <v-card flat class="mx-15">
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3">
+                {{ group }}
+                <v-spacer></v-spacer>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="edit_dialog_open"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-pencil</v-icon>
+                    </v-btn>
                   </template>
-                </v-simple-table>
-              </v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-          </v-card>
-        </div>
+                  <span>編集</span>
+                </v-tooltip>
+                <v-tooltip top v-if="selfRoleId == (1 || 2)">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="delete_dialog = true"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>削除</span>
+                </v-tooltip>
+              </v-card-title>
+              <hr class="mt-n3" />
+              <v-simple-table class="my-9">
+                <template v-slot:default>
+                  <tbody>
+                    <tr>
+                      <th>ID：</th>
+                      <td class="caption">{{ stage_order.id }}</td>
+                    </tr>
+                    <tr>
+                      <th>参加団体：</th>
+                      <td class="caption">{{ group }}</td>
+                    </tr>
+                    <tr>
+                      <th>晴れを希望：</th>
+                      <td class="caption">
+                        <v-chip
+                          v-if="stage_order.is_sunny == true"
+                          color="red"
+                          text-color="white"
+                          small
+                          >はい</v-chip
+                        >
+                        <v-chip
+                          v-if="stage_order.is_sunny == false"
+                          color="blue"
+                          text-color="white"
+                          small
+                          >いいえ</v-chip
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>希望日：</th>
+                      <td class="caption">
+                        {{ fes_date.date }} - {{ fes_date.day }} -
+                        {{ fes_date.days_num }}日目
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>第一希望：</th>
+                      <td class="caption">{{ stage_first }}</td>
+                    </tr>
+                    <tr>
+                      <th>第二希望：</th>
+                      <td class="caption">{{ stage_second }}</td>
+                    </tr>
+                    <tr>
+                      <th>使用時間幅：</th>
+                      <td class="caption">
+                        {{ stage_order.use_time_interval }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>準備時間幅：</th>
+                      <td class="caption">
+                        {{ stage_order.prepare_time_interval }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>掃除寺間幅：</th>
+                      <td class="caption">
+                        {{ stage_order.cleanup_time_interval }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>準備開始時刻：</th>
+                      <td class="caption">
+                        {{ stage_order.prepare_start_time }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>パフォーマンス開始時刻：</th>
+                      <td class="caption">
+                        {{ stage_order.performance_start_time }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>パフォーマンス終了時刻：</th>
+                      <td class="caption">
+                        {{ stage_order.performance_end_time }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>掃除終了時刻：</th>
+                      <td class="caption">
+                        {{ stage_order.cleanup_end_time }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>登録日時：</th>
+                      <td class="caption">
+                        {{ stage_order.created_at | format-date }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>編集日時：</th>
+                      <td class="caption">
+                        {{ stage_order.updated_at | format-date }}
+                      </td>
+                      <td v-if="rights == 1">
+                        <v-icon color="#E91E63">mdi-pencil</v-icon>
+                      </td>
+                      <td v-if="rights == 2">
+                        <v-icon color="#E91E63">mdi-eye</v-icon>
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -333,7 +331,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="edit">
+          <v-btn depressed dark color="btn" @click="edit">
             編集する
           </v-btn>
         </v-card-actions>
@@ -361,10 +359,10 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="red" dark @click="delete_yes">
+          <v-btn depressed dark color="yes" @click="delete_yes">
             はい
           </v-btn>
-          <v-btn flat color="blue" dark @click="delete_dialog = false">
+          <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
         </v-card-actions>

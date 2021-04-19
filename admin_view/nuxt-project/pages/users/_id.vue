@@ -23,179 +23,176 @@
 
     <v-row>
       <v-col>
-        <div class="card">
-          <v-card flat>
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
-                  <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
-                    >mdi-account-cog</v-icon
-                  >
-                  <v-icon v-if="user.role_id == 2" color="green"
-                    >mdi-account-tie</v-icon
-                  >
-                  <v-icon v-if="user.role_id == 3" color="blue"
-                    >mdi-account</v-icon
-                  >
-                  {{ show.user_name }}
-                  <v-spacer></v-spacer>
-                  <v-tooltip top v-if="email != uid && selfRoleId == 1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="open_edit_user_dialog_open"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-account-edit-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>ユーザー情報編集</span>
-                  </v-tooltip>
-                  <v-tooltip top v-if="selfRoleId == 1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="reset_password_dialog = true"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-lock-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>パスワード変更</span>
-                  </v-tooltip>
-                  <v-tooltip top v-if="selfRoleId == 1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="edit_role_dialog_open"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-star-outline</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>権限編集</span>
-                  </v-tooltip>
-                  <v-tooltip top v-if="selfRoleId == 1">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="delete_dialog = true"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-delete</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>削除</span>
-                  </v-tooltip>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>学籍番号：</th>
-                        <td class="caption">{{ show.student_id }}</td>
-                      </tr>
-                      <tr>
-                        <th>学年：</th>
-                        <td class="caption">{{ show.grade }}</td>
-                      </tr>
-                      <tr>
-                        <th>課程：</th>
-                        <td class="caption">{{ show.department }}</td>
-                      </tr>
-                      <tr>
-                        <th>電話番号：</th>
-                        <td class="caption">{{ show.tel }}</td>
-                      </tr>
-                      <tr>
-                        <th>メールアドレス：</th>
-                        <td class="caption">{{ show.email }}</td>
-                      </tr>
-                      <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">
-                          {{ user.created_at | format-date }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">
-                          {{ user.updated_at | format-date }}
-                        </td>
-                      </tr>
-                    </tbody>
+        <v-card flat class="mx-15">
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3">
+                <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
+                  >mdi-account-cog</v-icon
+                >
+                <v-icon v-if="user.role_id == 2" color="green"
+                  >mdi-account-tie</v-icon
+                >
+                <v-icon v-if="user.role_id == 3" color="blue"
+                  >mdi-account</v-icon
+                >
+                {{ show.user_name }}
+                <v-spacer></v-spacer>
+                <v-tooltip top v-if="email != uid && selfRoleId == 1">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="open_edit_user_dialog_open"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-account-edit-outline</v-icon>
+                    </v-btn>
                   </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
+                  <span>ユーザー情報編集</span>
+                </v-tooltip>
+                <v-tooltip top v-if="selfRoleId == 1">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="reset_password_dialog = true"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-lock-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>パスワード変更</span>
+                </v-tooltip>
+                <v-tooltip top v-if="selfRoleId == 1">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="edit_role_dialog_open"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-star-outline</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>権限編集</span>
+                </v-tooltip>
+                <v-tooltip top v-if="selfRoleId == 1">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="delete_dialog = true"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>削除</span>
+                </v-tooltip>
+              </v-card-title>
+              <hr class="mt-n3" />
+              <v-simple-table class="my-9">
+                <template v-slot:default>
+                  <tbody>
+                    <tr>
+                      <th>学籍番号：</th>
+                      <td class="caption">{{ show.student_id }}</td>
+                    </tr>
+                    <tr>
+                      <th>学年：</th>
+                      <td class="caption">{{ show.grade }}</td>
+                    </tr>
+                    <tr>
+                      <th>課程：</th>
+                      <td class="caption">{{ show.department }}</td>
+                    </tr>
+                    <tr>
+                      <th>電話番号：</th>
+                      <td class="caption">{{ show.tel }}</td>
+                    </tr>
+                    <tr>
+                      <th>メールアドレス：</th>
+                      <td class="caption">{{ show.email }}</td>
+                    </tr>
+                    <tr>
+                      <th>登録日時：</th>
+                      <td class="caption">
+                        {{ user.created_at | format-date }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>編集日時：</th>
+                      <td class="caption">
+                        {{ user.updated_at | format-date }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
     <v-row v-for="(group, i) in show.groups" :key="i">
       <v-col>
-        <div class="card">
-          <v-card
-            flat
-            :to="{
-              name: 'groups-id',
-              params: {
-                id: group.group.id
-              }
-            }"
-          >
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10"
-                >{{ data }}
-                <v-card-title class="font-weight-bold mt-3">
-                  <v-icon class="mr-2">mdi-account-group</v-icon>
-                  申請参加団体情報
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = true"></v-btn>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>団体名：</th>
-                        <td class="caption">{{ group.group.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>企画名：</th>
-                        <td class="caption">{{ group.group.project_name }}</td>
-                      </tr>
-                      <tr>
-                        <th>活動内容：</th>
-                        <td class="caption">{{ group.group.activity }}</td>
-                      </tr>
-                      <tr>
-                        <th>グループカテゴリ：</th>
-                        <td class="caption">{{ group.category }}</td>
-                      </tr>
-                      <tr>
-                        <th>開催年：</th>
-                        <td class="caption">{{ group.fes_year }}</td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
+        <v-card
+          flat
+          class="mx-15"
+          :to="{
+            name: 'groups-id',
+            params: {
+              id: group.group.id
+            }
+          }"
+        >
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10"
+              >{{ data }}
+              <v-card-title class="font-weight-bold mt-3">
+                <v-icon class="mr-2">mdi-account-group</v-icon>
+                申請参加団体情報
+                <v-spacer></v-spacer>
+                <v-btn text @click="dialog = true"></v-btn>
+              </v-card-title>
+              <hr class="mt-n3" />
+              <v-simple-table class="my-9">
+                <template v-slot:default>
+                  <tbody>
+                    <tr>
+                      <th>団体名：</th>
+                      <td class="caption">{{ group.group.name }}</td>
+                    </tr>
+                    <tr>
+                      <th>企画名：</th>
+                      <td class="caption">{{ group.group.project_name }}</td>
+                    </tr>
+                    <tr>
+                      <th>活動内容：</th>
+                      <td class="caption">{{ group.group.activity }}</td>
+                    </tr>
+                    <tr>
+                      <th>グループカテゴリ：</th>
+                      <td class="caption">{{ group.category }}</td>
+                    </tr>
+                    <tr>
+                      <th>開催年：</th>
+                      <td class="caption">{{ group.fes_year }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -219,7 +216,7 @@
           </div>
           <v-spacer></v-spacer>
           <v-btn text @click="edit_user_info_dialog = false" fab dark>
-            ​ <v-icon>mdi-close</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
 
@@ -278,7 +275,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="edit_user_info">
+          <v-btn color="btn" depressed dark @click="edit_user_info">
             編集する
           </v-btn>
         </v-card-actions>
@@ -337,7 +334,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="reset_password">
+          <v-btn color="btn" depressed dark @click="reset_password">
             変更する
           </v-btn>
         </v-card-actions>
@@ -353,7 +350,7 @@
           </div>
           <v-spacer></v-spacer>
           <v-btn text @click="edit_role_dialog = false" fab dark>
-            ​ <v-icon>mdi-close</v-icon>
+             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
 
@@ -378,7 +375,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="edit_role">
+          <v-btn color="btn" depressed dark @click="edit_role">
             編集する
           </v-btn>
         </v-card-actions>
@@ -406,10 +403,10 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="red" dark @click="delete_yes">
+          <v-btn color="yes" depressed dark @click="delete_yes">
             はい
           </v-btn>
-          <v-btn flat color="blue" dark @click="delete_dialog = false">
+          <v-btn color="no" depressed dark @click="delete_dialog = false">
             いいえ
           </v-btn>
         </v-card-actions>

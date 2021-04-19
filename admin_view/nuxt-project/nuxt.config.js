@@ -82,19 +82,29 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
-          background: "#EEEEEE"
+          background: "#EEEEEE",
+          text: "#333333",
+          btn: "#E040FB"
         },
         light: {
-          primary: "#424242",
-          accent: "#E040FB",
+          primary: "#333333",
           secondary: "#37474F",
-          info: "FFFFFF",
+          accent: "#b57614",
+          info: "#FFFFFF",
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
-          background: "#EEEEEE"
+          background: "#EEEEEE",
+          //for components
+          header: "#424242",
+          menu1: "#37474F",
+          menu2: "#FFFFFF",
+          btn: "#b16286",
+          yes: "#cc241d",
+          no: "#458588"
         }
-      }
-    }
-  },
+      },
+      options: {customProperties: true}
+    },
+  }
 }

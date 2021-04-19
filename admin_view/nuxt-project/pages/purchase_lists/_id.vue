@@ -23,126 +23,124 @@
 
     <v-row>
       <v-col>
-        <div class="card">
-          <v-card flat>
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
-                  {{ purchase.items }}
-                  <v-spacer></v-spacer>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="openModal"
-                        fab
-                        ><v-icon class="ma-5">mdi-pencil</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>編集</span>
-                  </v-tooltip>
-                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="delete_dialog = true"
-                        fab
-                        ><v-icon class="ma-5">mdi-delete</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>削除</span>
-                  </v-tooltip>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>id：</th>
-                        <td class="caption">
-                          {{ purchase.id }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>food_product_id：</th>
-                        <td class="caption">
-                          {{ purchase.food_product_id }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>参加団体：</th>
-                        <td class="caption">
-                          {{ group }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>販売食品：</th>
-                        <td class="caption">
-                          {{ food_product }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>使用日：</th>
-                        <td class="caption">
-                          {{ fes_date.date }} - {{ fes_date.day }} -
-                          {{ fes_date.days_num }}日目
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>店：</th>
-                        <td class="caption">
-                          {{ shop }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>なまもの：</th>
-                        <td class="caption">
-                          <v-chip
-                            v-if="purchase.is_fresh == true"
-                            color="red"
-                            text-color="white"
-                            small
-                            >はい</v-chip
-                          >
-                          <v-chip
-                            v-if="purchase.is_fresh == false"
-                            color="blue"
-                            text-color="white"
-                            small
-                            >いいえ</v-chip
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">
-                          {{ purchase.created_at || format-date }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">
-                          {{ purchase.updated_at || format-date }}
-                        </td>
-                        <td v-if="rights == 1">
-                          <v-icon color="#E91E63">mdi-pencil</v-icon>
-                        </td>
-                        <td v-if="rights == 2">
-                          <v-icon color="#E91E63">mdi-eye</v-icon>
-                        </td>
-                      </tr>
-                    </tbody>
+        <v-card flat class="mx-15">
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3">
+                {{ purchase.items }}
+                <v-spacer></v-spacer>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="openModal"
+                      fab
+                      ><v-icon class="ma-5">mdi-pencil</v-icon>
+                    </v-btn>
                   </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </div>
+                  <span>編集</span>
+                </v-tooltip>
+                <v-tooltip top v-if="selfRoleId == (1 || 2)">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="delete_dialog = true"
+                      fab
+                      ><v-icon class="ma-5">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>削除</span>
+                </v-tooltip>
+              </v-card-title>
+              <hr class="mt-n3" />
+              <v-simple-table class="my-9">
+                <template v-slot:default>
+                  <tbody>
+                    <tr>
+                      <th>id：</th>
+                      <td class="caption">
+                        {{ purchase.id }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>food_product_id：</th>
+                      <td class="caption">
+                        {{ purchase.food_product_id }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>参加団体：</th>
+                      <td class="caption">
+                        {{ group }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>販売食品：</th>
+                      <td class="caption">
+                        {{ food_product }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>使用日：</th>
+                      <td class="caption">
+                        {{ fes_date.date }} - {{ fes_date.day }} -
+                        {{ fes_date.days_num }}日目
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>店：</th>
+                      <td class="caption">
+                        {{ shop }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>なまもの：</th>
+                      <td class="caption">
+                        <v-chip
+                          v-if="purchase.is_fresh == true"
+                          color="red"
+                          text-color="white"
+                          small
+                          >はい</v-chip
+                        >
+                        <v-chip
+                          v-if="purchase.is_fresh == false"
+                          color="blue"
+                          text-color="white"
+                          small
+                          >いいえ</v-chip
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>登録日時：</th>
+                      <td class="caption">
+                        {{ purchase.created_at | format-date }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>編集日時：</th>
+                      <td class="caption">
+                        {{ purchase.updated_at | format-date }}
+                      </td>
+                      <td v-if="rights == 1">
+                        <v-icon color="#E91E63">mdi-pencil</v-icon>
+                      </td>
+                      <td v-if="rights == 2">
+                        <v-icon color="#E91E63">mdi-eye</v-icon>
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
 
@@ -165,7 +163,7 @@
           </div>
           <v-spacer></v-spacer>
           <v-btn text @click="delete_dialog = false" fab dark>
-            ​ <v-icon>mdi-close</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
 
@@ -177,10 +175,10 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="red" dark @click="delete_yes">
+          <v-btn depressed dark color="yes" @click="delete_yes">
             はい
           </v-btn>
-          <v-btn flat color="blue" dark @click="delete_dialog = false">
+          <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
         </v-card-actions>
@@ -190,11 +188,9 @@
     <!-- modal window to edit -->
     <v-dialog v-model="dialog" width="500">
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
-          <div style="color: white">
-            <v-icon class="ma-5">mdi-pencil</v-icon>
+        <v-card-title class="headline secondary white--text">
+            <v-icon dark class="ma-5">mdi-pencil</v-icon>
             編集
-          </div>
           <v-spacer />
           <v-btn text @click="dialog = false" fab dark>
             <v-icon class="ma-5">mdi-close</v-icon>
@@ -263,8 +259,12 @@
             ></v-text-field>
           </v-form>
         </v-card-text>
+
+        <v-divider></v-divider>
+
         <v-card-actions>
-          <v-btn color="#78909C" block dark @click="edit">登録</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn depressed dark color="btn" @click="edit">登録</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

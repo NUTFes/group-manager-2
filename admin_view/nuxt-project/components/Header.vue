@@ -1,19 +1,44 @@
 <template>
   <div>
-    <v-row>
-      <v-app-bar app dark dense color="#424242">
-        <v-toolbar-title><v-btn text to="/dashboard" color="#424242"><div style="color:white">参加団体管理アプリ-管理者ページ</div></v-btn></v-toolbar-title>
+      <v-app-bar
+        app
+        clipped-left
+        dark 
+        dense 
+        color="header"
+      >
+        <v-toolbar-title>
+          <v-btn
+            v-if="this.$route.path === '/dashboard'"
+            text
+          >
+            参加団体管理アプリ-管理者ページ
+          </v-btn>
+          <v-btn
+            v-else
+            text 
+            to="/dashboard"
+          >
+            参加団体管理アプリ-管理者ページ
+          </v-btn>
+        </v-toolbar-title>
+
         <v-spacer></v-spacer>
-        <v-btn text to="/dashboard" color="#424242">
-          <v-icon color="white">mdi-account-circle</v-icon>
+
+        <v-btn text color="#header" v-if="this.$route.path === '/dashboard'">
+          <v-icon>mdi-account-circle</v-icon>
           <v-card-text style="color:white">{{ user.name }}</v-card-text>
         </v-btn>
-        <v-btn text @click="logout" color="#424242">
-          <v-icon color="white">mdi-exit-to-app</v-icon>
+        <v-btn text to="/dashboard" color="#header" v-else>
+          <v-icon>mdi-account-circle</v-icon>
+          <v-card-text style="color:white">{{ user.name }}</v-card-text>
+        </v-btn>
+        <v-btn text @click="logout" color="#header">
+          <v-icon>mdi-exit-to-app</v-icon>
           <v-card-text style="color:white">ログアウト</v-card-text>
         </v-btn>
         <v-btn
-          color="pink"
+          color="btn"
           dark
           @click="open"
           style="box-shadow:none"
@@ -24,7 +49,7 @@
       </v-app-bar>
       <v-navigation-drawer
         v-model="drawer"
-        absolute
+        fixed
         right
         temporary
         hide-overlay
@@ -40,8 +65,8 @@
             required
             height="100"
             ></v-textarea>
-          <v-btn v-if="this.content.length===0" outlined color="blue darken-1" block large dark>投稿</v-btn>
-          <v-btn v-else color="blue darken-1" block large dark @click="submit">投稿</v-btn>
+          <v-btn v-if="this.content.length===0" outlined color="btn" block large dark>投稿</v-btn>
+          <v-btn v-else color="btn" block large dark depressed @click="submit">投稿</v-btn>
           </v-list-item-content>
         </v-list-item>
 
@@ -75,7 +100,6 @@
           </v-list>
         </div>
       </v-navigation-drawer>
-    </v-row>
   </div>
 </template>
 

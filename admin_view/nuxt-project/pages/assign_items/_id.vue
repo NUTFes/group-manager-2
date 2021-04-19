@@ -19,118 +19,114 @@
       <v-col cols=6>
         <v-row>
           <v-col>
-            <div class="card">
-              <v-card flat>
-                <v-row>
-                  <v-col cols=1></v-col>
-                  <v-col cols=10>
-                    <v-card-title>
-                      在庫情報 | {{ stocker_place.name }} |
-                      <v-chip small v-if="stocker_place.stock_item_status == 1" color="red" class="ml-2" @click="stock_item_status_dialog = true"><div style="color:white">未着手</div></v-chip>
-                      <v-chip small v-if="stocker_place.stock_item_status == 2" color="blue" class="ml-2"><div style="color:white" @click="stock_item_status_dialog = true">入力中</div></v-chip>
-                      <v-chip small v-if="stocker_place.stock_item_status == 3" color="green" class="ml-2" @click="stock_item_status_dialog = true"><div style="color:white">完了</div></v-chip>
-                      <v-spacer></v-spacer>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs  }">
-                          <v-btn 
-                                  class="mx-2" 
-                                  fab 
-                                  text
-                                  v-bind="attrs"
-                                  v-on="on"
-                                  @click="open_stocker()"
-                                  >
-                                  <v-icon dark>mdi-plus</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>在庫物品を追加する</span>
-                      </v-tooltip>
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-data-table
-                      :headers="stocker_items_headers"
-                      :items="stocker_items"
-                      class="elevation-0 my-9"
-                      >
-                      <template v-slot:item.actions="{ item }">
+            <v-card flat class="ml-15">
+              <v-row>
+                <v-col cols=1></v-col>
+                <v-col cols=10>
+                  <v-card-title>
+                    在庫情報 | {{ stocker_place.name }} |
+                    <v-chip small v-if="stocker_place.stock_item_status == 1" color="red" class="ml-2" @click="stock_item_status_dialog = true"><div style="color:white">未着手</div></v-chip>
+                    <v-chip small v-if="stocker_place.stock_item_status == 2" color="blue" class="ml-2"><div style="color:white" @click="stock_item_status_dialog = true">入力中</div></v-chip>
+                    <v-chip small v-if="stocker_place.stock_item_status == 3" color="green" class="ml-2" @click="stock_item_status_dialog = true"><div style="color:white">完了</div></v-chip>
+                    <v-spacer></v-spacer>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn 
+                                class="mx-2" 
+                                fab 
+                                text
+                                v-bind="attrs"
+                                v-on="on"
+                                @click="open_stocker()"
+                                >
+                                <v-icon dark>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>在庫物品を追加する</span>
+                    </v-tooltip>
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-data-table
+                    :headers="stocker_items_headers"
+                    :items="stocker_items"
+                    class="elevation-0 my-9"
+                    >
+                    <template v-slot:item.actions="{ item }">
+                      <v-icon
+                        small
+                        class="mr-2"
+                        @click="open_edit_stocker_item(item)"
+                        >
+                        mdi-pencil
+                      </v-icon>
                         <v-icon
                           small
-                          class="mr-2"
-                          @click="open_edit_stocker_item(item)"
+                          @click="delete_stocker_item(item)"
                           >
-                          mdi-pencil
+                          mdi-delete
                         </v-icon>
-                          <v-icon
-                            small
-                            @click="delete_stocker_item(item)"
-                            >
-                            mdi-delete
-                          </v-icon>
-                      </template>
-                    </v-data-table>
-                  </v-col>
-                  <v-col cols=1></v-col>
-                </v-row>
-              </v-card>
-            </div>
+                    </template>
+                  </v-data-table>
+                </v-col>
+                <v-col cols=1></v-col>
+              </v-row>
+            </v-card>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <div class="card">
-              <v-card flat>
-                <v-row>
-                  <v-col cols=1></v-col>
-                  <v-col cols=10>
-                    <v-card-title>
-                      割り当て情報 | {{ stocker_place.name }} |
-                      <v-chip small v-if="stocker_place.assign_item_status == 1" color="red" class="ml-2"><div style="color:white" @click="assign_item_status_dialog = true">未着手</div></v-chip>
-                      <v-chip small v-if="stocker_place.assign_item_status == 2" color="blue" class="ml-2"><div style="color:white" @click="assign_item_status_dialog = true">入力中</div></v-chip>
-                      <v-chip small v-if="stocker_place.assign_item_status == 3" color="green" class="ml-2" @click="assign_item_status_dialog = true"><div style="color:white">完了</div></v-chip>
-                      <v-spacer></v-spacer>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs  }">
-                          <v-btn 
-                                  class="mx-2" 
-                                  fab 
-                                  text
-                                  v-bind="attrs"
-                                  v-on="on"
-                                  @click="open_assign()"
-                                  >
-                                  <v-icon dark>mdi-plus</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>物品を割り当てる</span>
-                      </v-tooltip>
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-data-table
-                      :headers="assign_items_headers"
-                      :items="assign_items"
-                      class="elevation-0 my-9"
-                      >
-                      <template v-slot:item.actions="{ item }">
+            <v-card flat class="ml-15">
+              <v-row>
+                <v-col cols=1></v-col>
+                <v-col cols=10>
+                  <v-card-title>
+                    割り当て情報 | {{ stocker_place.name }} |
+                    <v-chip small v-if="stocker_place.assign_item_status == 1" color="red" class="ml-2"><div style="color:white" @click="assign_item_status_dialog = true">未着手</div></v-chip>
+                    <v-chip small v-if="stocker_place.assign_item_status == 2" color="blue" class="ml-2"><div style="color:white" @click="assign_item_status_dialog = true">入力中</div></v-chip>
+                    <v-chip small v-if="stocker_place.assign_item_status == 3" color="green" class="ml-2" @click="assign_item_status_dialog = true"><div style="color:white">完了</div></v-chip>
+                    <v-spacer></v-spacer>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on, attrs  }">
+                        <v-btn 
+                                class="mx-2" 
+                                fab 
+                                text
+                                v-bind="attrs"
+                                v-on="on"
+                                @click="open_assign()"
+                                >
+                                <v-icon dark>mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>物品を割り当てる</span>
+                    </v-tooltip>
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-data-table
+                    :headers="assign_items_headers"
+                    :items="assign_items"
+                    class="elevation-0 my-9"
+                    >
+                    <template v-slot:item.actions="{ item }">
+                      <v-icon
+                        small
+                        class="mr-2"
+                        @click="open_edit_assign_item(item)"
+                        >
+                        mdi-pencil
+                      </v-icon>
                         <v-icon
                           small
-                          class="mr-2"
-                          @click="open_edit_assign_item(item)"
+                          @click="delete_assign_item(item)"
                           >
-                          mdi-pencil
+                          mdi-delete
                         </v-icon>
-                          <v-icon
-                            small
-                            @click="delete_assign_item(item)"
-                            >
-                            mdi-delete
-                          </v-icon>
-                      </template>
-                    </v-data-table>
-                  </v-col>
-                  <v-col cols=1></v-col>
-                </v-row>
-              </v-card>
-            </div>
+                    </template>
+                  </v-data-table>
+                </v-col>
+                <v-col cols=1></v-col>
+              </v-row>
+            </v-card>
           </v-col>
         </v-row>
       </v-col>
@@ -155,7 +151,7 @@
       width="500"
       >
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
+        <v-card-title class="headline secondary">
           <div style="color:white">在庫ステータス更新</div>
         </v-card-title>
         <v-card-text>
@@ -182,10 +178,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
-            text
+            depressed
+            dark
+            color="btn"
             @click="update_stock_status"
-            >
+          >
             更新
           </v-btn>
         </v-card-actions>
@@ -198,7 +195,7 @@
       width="500"
       >
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
+        <v-card-title class="headline secondary">
           <div style="color:white">割り当てステータス更新</div>
         </v-card-title>
         <v-card-text>
@@ -225,8 +222,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
-            text
+            depressed
+            dark
+            color="btn"
             @click="update_assign_status"
             >
             更新
@@ -241,8 +239,12 @@
       width="500"
       >
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
+        <v-card-title class="headline secondary">
           <div style="color:white">在庫を追加する</div>
+          <v-spacer />
+          <v-btn text @click="stocker_dialog = false" fab dark>
+            <v-icon class="ma-5">mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
 
       <v-card-text>
@@ -280,8 +282,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="primary"
-          text
+          depressed
+          dark
+          color="btn"
           @click="submit"
           >
           登録
@@ -296,10 +299,14 @@
       width="500"
       >
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
+        <v-card-title class="headline secondary">
           <div style="color:white">在庫物品を編集する</div>
-        </v-card-title>
+          <v-spacer />
+          <v-btn text @click="stocker_edit_dialog = false" fab dark>
+            <v-icon class="ma-5">mdi-close</v-icon>
+          </v-btn>
 
+        </v-card-title>
       <v-card-text>
         <v-row>
           <v-col>
@@ -335,8 +342,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="primary"
-          text
+          dark
+          depressed
+          color="btn"
           @click="edit_stocker_item"
           >
           編集
@@ -352,8 +360,12 @@
       width="500"
       >
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
+        <v-card-title class="headline secondary">
           <div style="color:white">物品を割り当てる</div>
+          <v-spacer />
+          <v-btn text @click="assign_dialog = false" fab dark>
+            <v-icon class="ma-5">mdi-close</v-icon>
+          </v-btn>
         </v-card-title>
 
       <v-card-text>
@@ -401,8 +413,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="primary"
-          text
+          depressed
+          dark
+          color="btn"
           @click="assign"
           >
           割り当て
@@ -417,7 +430,7 @@
       width="500"
       >
       <v-card>
-        <v-card-title class="headline blue-grey darken-3">
+        <v-card-title class="headline secondary">
           <div style="color:white">物品を割り当てを編集する</div>
         </v-card-title>
 
@@ -466,8 +479,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          color="primary"
-          text
+          depressed
+          dark
+          color="btn"
           @click="edit_assign_item"
           >
           編集

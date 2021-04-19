@@ -1,23 +1,21 @@
 <template>
   <div>
-    <div class="card">
-      <v-card flat>
-        <v-row> 
-          <v-col cols=1></v-col>
-          <v-col cols=10>
-            <v-card-title>物品申請一覧</v-card-title>
-            <hr class="mt-n3" />
-            <v-data-table
-              :headers="headers"
-              :items="rental_orders"
-              class="elevation-0 my-9"
-              >
-            </v-data-table>
-          </v-col>
-          <v-col cols=1></v-col>
-        </v-row>
-      </v-card>
-    </div>
+    <v-card flat class="mr-15">
+      <v-row> 
+        <v-col cols=1></v-col>
+        <v-col cols=10>
+          <v-card-title class="my-3">物品申請一覧</v-card-title>
+          <hr class="mt-n3" />
+          <v-data-table
+            :headers="headers"
+            :items="rental_orders"
+            class="elevation-0 my-9"
+            >
+          </v-data-table>
+        </v-col>
+        <v-col cols=1></v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 

@@ -1,14 +1,13 @@
 <template>
     <v-navigation-drawer
       v-model="drawer"
-      absolute
+      app
+      fixed
+      clipped
       permanent
-      color="#37474F"
+      color="menu1"
       >
-      <!-- ヘッダーと重ならないようにする -->
-      <v-list-item dark>
-      </v-list-item>
-      <v-list-item dark style="background-color:#bf794e">
+      <v-list-item dark class="accent">
         <v-list-item-avatar rounded class="mx-auto" width="55" height="55">
           <v-img :src="icon_src"></v-img>
         </v-list-item-avatar>
@@ -19,7 +18,7 @@
           v-for="item in mypage_items"
           :key="item.title"
           :to="item.click"
-          color="#81D4FA"
+          color="menu2"
           dark
           >
           <v-list-item-icon>
@@ -32,9 +31,9 @@
         </v-list-item>
       </v-list>
 
-      <v-list-item dark style="background-color:#81D4FA">
+      <v-list-item dark class="menu2">
         <v-list-item-content>
-          <v-list-item-title><div style="color:#333333"><b>一覧情報</b></div></v-list-item-title>
+          <v-list-item-title class="font-weight-bold menu1--text">一覧情報</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -43,7 +42,7 @@
           v-for="item in list_items"
           :key="item.title"
           :to="item.click"
-          color="#81D4FA"
+          color="menu2"
           dark
           >
           <v-list-item-icon>
@@ -56,9 +55,9 @@
         </v-list-item>
       </v-list>
 
-      <v-list-item dark style="background-color:#81D4FA">
+      <v-list-item dark class="menu2">
         <v-list-item-content>
-          <v-list-item-title><div style="color:#333333"><b>申請情報</b></div></v-list-item-title>
+          <v-list-item-title class="font-weight-bold menu1--text">申請情報</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       
@@ -67,7 +66,7 @@
           v-for="item in order_items"
           :key="item.title"
           :to="item.click"
-          color="#81D4FA"
+          color="menu2"
           dark
           >
           <v-list-item-icon>
@@ -80,9 +79,9 @@
         </v-list-item>
       </v-list>
 
-      <v-list-item dark style="background-color:#81D4FA">
+      <v-list-item dark class="menu2">
         <v-list-item-content>
-          <v-list-item-title><div style="color:#333333"><b>操作</b></div></v-list-item-title>
+          <v-list-item-title class="font-weight-bold menu1--text">操作</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -91,7 +90,7 @@
           v-for="item in operation_items"
           :key="item.title"
           :to="item.click"
-          color="#81D4FA"
+          color="menu2"
           dark
           >
           <v-list-item-icon>
@@ -104,8 +103,8 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-  </div>
 </template>
+
 <script>
 import axios from 'axios' 
 export default {
