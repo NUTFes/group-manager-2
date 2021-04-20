@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div
+    v-if="
+      this.$route.path === '/' ||
+      this.$route.path === '/Firstcustomer' ||
+      this.$route.path === '/MyPage' ||
+      this.$route.path === '/mypage'
+    "
+  >
     <v-app-bar app color="header" dark>
       <v-container>
         <v-row>
@@ -13,7 +20,11 @@
             <v-menu
               open-on-hover
               offset-y
-              v-if="this.$route.path === '/MyPage' || this.$route.path === '/mypage'"
+              v-if="
+                this.$route.path === '/Firstcustomer' ||
+                this.$route.path === '/MyPage' ||
+                this.$route.path === '/mypage'
+              "
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn text color="#757575" dark v-bind="attrs" v-on="on">
