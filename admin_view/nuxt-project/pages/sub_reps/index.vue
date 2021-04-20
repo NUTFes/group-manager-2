@@ -2,8 +2,7 @@
   <div>
     <v-row>
       <v-col>
-        <div class="card">
-        <v-card flat>
+        <v-card flat class="mx-15">
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
@@ -42,152 +41,152 @@
                 </v-tooltip>
               </v-card-title>
 
-                <v-dialog v-model="dialog" max-width="500">
-                  <v-card>
-                    <v-card-title class="headline blue-grey darken-3">
-                      <div style="color: white">
-                        <v-icon class="ma-5" dark>mdi-account-outline</v-icon
-                        >副代表の追加
-                      </div>
-                      <v-spacer></v-spacer>
-                      <v-btn text @click="dialog = false" fab dark>
-                        ​ <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </v-card-title>
-
-                    <v-card-text>
-                      <v-row>
-                        <v-col>
-                          <v-form ref="form">
-                            <v-text-field
-                              class="body-1"
-                              label="名前"
-                              v-model="subRepName"
-                              background-color="white"
-                              outlined
-                              clearable
-                            >
-                            </v-text-field>
-                            <v-select
-                              label="参加団体名"
-                              v-model="Group"
-                              :items="groups"
-                              :menu-props="{
-                                top: true,
-                                offsetY: true,
-                              }"
-                              item-text="name"
-                              item-value="id"
-                              outlined
-                            ></v-select>
-                            <v-text-field
-                              class="body-1"
-                              label="学籍番号"
-                              v-model="subRepSutudentId"
-                              :rules="[rules.min8, rules.over8]"
-                              hint="お持ちでない方：0を8桁入力"
-                              background-color="white"
-                              counter="8"
-                              outlined
-                              clearable
-                            >
-                            </v-text-field>
-                            <v-select
-                              label="学科"
-                              v-model.number="subRepDepartmentId"
-                              :items="departments"
-                              :menu-props="{ top: true, offsetY: true }"
-                              item-text="name"
-                              item-value="id"
-                              background-color="white"
-                              outlined
-                              clearable
-                            >
-                            </v-select>
-                            <v-select
-                              label="学年"
-                              v-model.number="subRepGradeId"
-                              :items="grades"
-                              :menu-props="{ top: true, offsetY: true }"
-                              item-text="name"
-                              item-value="id"
-                              background-color="white"
-                              outlined
-                              clearable
-                            >
-                            </v-select>
-                            <v-text-field
-                              label="電話番号"
-                              v-model="subRepTel"
-                              :rules="[rules.min11, rules.over11]"
-                              hint="ハイフンなしで半角入力"
-                              persistent-hint
-                              counter="11"
-                              background-color="white"
-                              outlined
-                              clearable
-                            >
-                            </v-text-field>
-                            <v-text-field
-                              label="メールアドレス"
-                              v-model="subRepEmail"
-                              background-color="white"
-                              outlined
-                              clearable
-                            >
-                            </v-text-field>
-                            <v-card-actions>
-                              <v-btn
-                                flatk
-                                large
-                                block
-                                dark
-                                color="blue"
-                                @click="register()"
-                                >登録
-                              </v-btn>
-                            </v-card-actions>
-                          </v-form>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                    <br />
-                  </v-card>
-                </v-dialog>
-
-                <hr class="mt-n3" />
-                <template>
-                  <div class="text-center" v-if="sub_reps.length === 0">
-                    <br /><br />
-                    <v-progress-circular
-                      indeterminate
-                      color="#009688"
-                    ></v-progress-circular>
-                    <br /><br />
+            <v-dialog v-model="dialog" max-width="500">
+              <v-card>
+                <v-card-title class="headline blue-grey darken-3">
+                  <div style="color: white">
+                    <v-icon class="ma-5" dark>mdi-account-outline</v-icon
+                    >副代表の追加
                   </div>
-                  <div v-else>
-                    <v-data-table
-                      :headers="headers"
-                      :items="sub_reps"
-                      class="elevation-0 my-9"
-                      @click:row="
-                        (data) => $router.push({ path: `/sub_reps/${data.id}` })
-                      "
-                    >
-                      <template v-slot:item.created_at="{ item }">
-                        {{ item.created_at | (format - date) }}
-                      </template>
-                      <template v-slot:item.updated_at="{ item }">
-                        {{ item.updated_at | (format - date) }}
-                      </template>
-                    </v-data-table>
-                  </div>
-                </template>
-              </v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-          </v-card>
-        </div>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="dialog = false" fab dark>
+                    ​ <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-row>
+                    <v-col>
+                      <v-form ref="form">
+                        <v-text-field
+                          class="body-1"
+                          label="名前"
+                          v-model="subRepName"
+                          background-color="white"
+                          outlined
+                          clearable
+                        >
+                        </v-text-field>
+                        <v-select
+                          label="参加団体名"
+                          v-model="Group"
+                          :items="groups"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true,
+                          }"
+                          item-text="name"
+                          item-value="id"
+                          outlined
+                        ></v-select>
+                        <v-text-field
+                          class="body-1"
+                          label="学籍番号"
+                          v-model="subRepSutudentId"
+                          :rules="[rules.min8, rules.over8]"
+                          hint="お持ちでない方：0を8桁入力"
+                          background-color="white"
+                          counter="8"
+                          outlined
+                          clearable
+                        >
+                        </v-text-field>
+                        <v-select
+                          label="学科"
+                          v-model.number="subRepDepartmentId"
+                          :items="departments"
+                          :menu-props="{ top: true, offsetY: true }"
+                          item-text="name"
+                          item-value="id"
+                          background-color="white"
+                          outlined
+                          clearable
+                        >
+                        </v-select>
+                        <v-select
+                          label="学年"
+                          v-model.number="subRepGradeId"
+                          :items="grades"
+                          :menu-props="{ top: true, offsetY: true }"
+                          item-text="name"
+                          item-value="id"
+                          background-color="white"
+                          outlined
+                          clearable
+                        >
+                        </v-select>
+                        <v-text-field
+                          label="電話番号"
+                          v-model="subRepTel"
+                          :rules="[rules.min11, rules.over11]"
+                          hint="ハイフンなしで半角入力"
+                          persistent-hint
+                          counter="11"
+                          background-color="white"
+                          outlined
+                          clearable
+                        >
+                        </v-text-field>
+                        <v-text-field
+                          label="メールアドレス"
+                          v-model="subRepEmail"
+                          background-color="white"
+                          outlined
+                          clearable
+                        >
+                        </v-text-field>
+                      </v-form>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    depressed
+                    dark
+                    color="btn"
+                    @click="register()"
+                    >登録
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <hr class="mt-n3" />
+            <template>
+              <div class="text-center" v-if="sub_reps.length === 0">
+                <br /><br />
+                <v-progress-circular
+                  indeterminate
+                  color="#009688"
+                ></v-progress-circular>
+                <br /><br />
+              </div>
+              <div v-else>
+                <v-data-table
+                  :headers="headers"
+                  :items="sub_reps"
+                  class="elevation-0 my-9"
+                  @click:row="
+                    (data) => $router.push({ path: `/sub_reps/${data.id}` })
+                  "
+                >
+                  <template v-slot:item.created_at="{ item }">
+                    {{ item.created_at | format-date }}
+                  </template>
+                  <template v-slot:item.updated_at="{ item }">
+                    {{ item.updated_at | format-date }}
+                  </template>
+                </v-data-table>
+              </div>
+            </template>
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
   </div>

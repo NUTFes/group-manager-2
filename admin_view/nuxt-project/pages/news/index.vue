@@ -1,8 +1,7 @@
 <template>
   <v-row>
     <v-col>
-      <div class="card">
-        <v-card flat>
+        <v-card flat class="mx-15">
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
@@ -80,30 +79,25 @@
                         clearable
                      />
                     </v-col>
-                    ​ <v-col cols="1"></v-col>
+                     <v-col cols="1"></v-col>
                   </v-row>
-                  <v-row>
-                    ​ <v-col cols="1"></v-col>
-                    <v-col cols="10">
+
+                  <v-divider></v-divider>
+
                       <v-card-actions>
+                        <v-spacer></v-spacer>
                         <v-btn
-                          flatk
-                          large
-                          block
+                          depressed
                           dark
-                          color="blue"
+                          color="btn"
                           @click="
                             register();
                             dialog = false;
                             reload;
                           "
-                          >登録 ​
+                        >登録
                         </v-btn>
                       </v-card-actions>
-                    </v-col>
-                    <v-col cols="1"></v-col>
-                  </v-row>
-                  <br>
                 </v-card>
               </v-dialog>
 
@@ -140,7 +134,6 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
-      </div>
     </v-col>
   </v-row>
   </div>

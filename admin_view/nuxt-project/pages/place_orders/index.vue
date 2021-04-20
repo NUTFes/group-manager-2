@@ -2,8 +2,7 @@
   <div>
     <v-row>
       <v-col>
-        <div class="card">
-        <v-card flat>
+        <v-card flat class="mx-15">
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
@@ -107,22 +106,23 @@
                               clearable
                             >
                             </v-select>
-                            <v-card-actions>
-                              <v-btn
-                                flatk
-                                large
-                                block
-                                dark
-                                color="blue"
-                                @click="register()"
-                                >登録 ​
-                              </v-btn>
-                            </v-card-actions>
                           </v-form>
                         </v-col>
                       </v-row>
                     </v-card-text>
-                    <br />
+
+                    <v-divider></v-divider>
+                    
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        depressed
+                        dark
+                        color="btn"
+                        @click="register()"
+                      >登録
+                      </v-btn>
+                    </v-card-actions>
                   </v-card>
                 </v-dialog>
 
@@ -159,7 +159,6 @@
             <v-col cols="1"></v-col>
           </v-row>
         </v-card>
-        </div>
       </v-col>
     </v-row>
   </div>

@@ -6,7 +6,6 @@
     <div v-else>
       <v-row>
         <v-col>
-          <div class="card">
             <v-card-text>
               <div class="breadcrumbs">
                 <ul>
@@ -21,7 +20,7 @@
                 </ul>
               </div>
             </v-card-text>
-            <v-card flat>
+            <v-card flat class="mx-15">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
@@ -110,7 +109,6 @@
                 <v-col cols="1"></v-col>
               </v-row>
             </v-card>
-          </div>
         </v-col>
       </v-row>
     </div>
@@ -213,7 +211,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="edit">
+          <v-btn depressed dark color="btn" @click="edit">
             編集する
           </v-btn>
         </v-card-actions>
@@ -241,10 +239,10 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="red" dark @click="delete_yes">
+          <v-btn depressed dark color="yes" @click="delete_yes">
             はい
           </v-btn>
-          <v-btn flat color="blue" dark @click="delete_dialog = false">
+          <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
         </v-card-actions>

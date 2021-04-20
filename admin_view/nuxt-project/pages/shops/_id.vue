@@ -6,7 +6,6 @@
     <div v-else>
       <v-row>
         <v-col>
-          <div class="card">
             <v-card-text>
               <div class="breadcrumbs">
                 <ul>
@@ -21,7 +20,7 @@
                 </ul>
               </div>
             </v-card-text>
-            <v-card flat>
+            <v-card flat class="mx-15">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
@@ -99,7 +98,6 @@
                 </v-col>
               </v-row>
             </v-card>
-          </div>
         </v-col>
       </v-row>
 
@@ -117,7 +115,7 @@
       <!-- 編集ダイアログ -->
       <v-dialog v-model="edit_dialog" width="500">
         <v-card>
-          <v-card-title class="headline blue-grey darken-3">
+          <v-card-title class="headline secondary">
             <div style="color: white">
               <v-icon class="ma-5" dark>mdi-pencil</v-icon>編集
             </div>
@@ -172,7 +170,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="#78909C" dark @click="edit"> 編集する </v-btn>
+            <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -196,8 +194,8 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn flat color="red" dark @click="delete_yes"> はい </v-btn>
-            <v-btn flat color="blue" dark @click="delete_dialog = false">
+            <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
+            <v-btn depressed dark color="no" @click="delete_dialog = false">
               いいえ
             </v-btn>
           </v-card-actions>

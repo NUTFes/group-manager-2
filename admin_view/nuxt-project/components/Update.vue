@@ -1,20 +1,18 @@
 <template>
-    <div class="card">
-        <v-card flat>
-            <v-row>
-                <v-col cols=1></v-col>
-                <v-col>
-                    <v-card-title><v-icon class="mr-2">mdi-information</v-icon>アップデート情報</v-card-title>
-                    <v-card-text>
-                        <li v-for="t in text">
-                            <v-chip class="ma-2" label color="red" x-small><div style="color:white">new</div></v-chip> ({{ t.date }}) {{ t.body }}
-                        </li>
-                    </v-card-text>
-                </v-col>
-                <v-col cols=1></v-col>
-            </v-row>
-        </v-card>
-    </div>
+  <v-card flat class="mx-15">
+      <v-row>
+          <v-col cols=1></v-col>
+          <v-col>
+              <v-card-title><v-icon class="mr-2">mdi-information</v-icon>アップデート情報</v-card-title>
+              <v-card-text>
+                  <li v-for="t in text">
+                      <v-chip class="ma-2" label color="red" x-small><div style="color:white">new</div></v-chip> ({{ t.date }}) {{ t.body }}
+                  </li>
+              </v-card-text>
+          </v-col>
+          <v-col cols=1></v-col>
+      </v-row>
+  </v-card>
 </template>
 <script>
 export default {

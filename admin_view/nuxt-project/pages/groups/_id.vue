@@ -16,503 +16,501 @@
   <div v-else>
     <v-row>
       <v-col>
-        <div class="card">
-          <v-card-text>
-            <div class="breadcrumbs">
-              <ul>
-                <li>
-                  <div class="breadcrumbs-item">
-                    <router-link to="/groups">参加団体一覧</router-link>
-                  </div>
-                </li>
-                <li>
-                  <div class="breadcrumbs-item">{{ group.name }}</div>
-                </li>
-              </ul>
-            </div>
-          </v-card-text>
-          <v-card flat>
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
-                  {{ group.name }}
-                  <v-spacer></v-spacer>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="edit_dialog_open"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-pencil</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>編集</span>
-                  </v-tooltip>
-                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="delete_dialog = true"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-delete</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>削除</span>
-                  </v-tooltip>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>ID：</th>
-                        <td class="caption">{{ group.id }}</td>
-                      </tr>
-                      <tr>
-                        <th>ユーザー：</th>
-                        <td class="caption">{{ user }}</td>
-                      </tr>
-                      <tr>
-                        <th>グループ名：</th>
-                        <td class="caption">{{ group.name }}</td>
-                      </tr>
-                      <tr>
-                        <th>企画名：</th>
-                        <td class="caption">{{ group.project_name }}</td>
-                      </tr>
-                      <tr>
-                        <th>活動内容：</th>
-                        <td class="caption">{{ group.activity }}</td>
-                      </tr>
-                      <tr>
-                        <th>グループカテゴリ：</th>
-                        <td>
-                          <v-chip
-                            v-if="group.group_category_id == 1"
-                            color="red"
-                            text-color="white"
-                            small
-                            >{{ category[0] }}</v-chip
-                          >
-                          <v-chip
-                            v-if="group.group_category_id == 2"
-                            color="pink"
-                            text-color="white"
-                            small
-                            >{{ category[1] }}</v-chip
-                          >
-                          <v-chip
-                            v-if="group.group_category_id == 3"
-                            color="blue"
-                            text-color="white"
-                            small
-                            >{{ category[2] }}</v-chip
-                          >
-                          <v-chip
-                            v-if="group.group_category_id == 4"
-                            color="green"
-                            text-color="white"
-                            small
-                            >{{ category[3] }}</v-chip
-                          >
-                          <v-chip
-                            v-if="group.group_category_id == 5"
-                            color="orange"
-                            text-color="white"
-                            small
-                            >{{ category[4] }}</v-chip
-                          >
-                          <v-chip
-                            v-if="group.group_category_id == 6"
-                            color="blue-gray"
-                            text-color="white"
-                            small
-                            >{{ category[5] }}</v-chip
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>開催年：</th>
-                        <td class="caption">{{ year }}</td>
-                      </tr>
-                      <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">
-                          {{ group.created_at | format-date }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">
-                          {{ group.updated_at | format-date }}
-                        </td>
-                      </tr>
-                    </tbody>
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li>
+                <div class="breadcrumbs-item">
+                  <router-link to="/groups">参加団体一覧</router-link>
+                </div>
+              </li>
+              <li>
+                <div class="breadcrumbs-item">{{ group.name }}</div>
+              </li>
+            </ul>
+          </div>
+        </v-card-text>
+        <v-card flat class="mx-15">
+          <v-row>
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3">
+                {{ group.name }}
+                <v-spacer></v-spacer>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="edit_dialog_open"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-pencil</v-icon>
+                    </v-btn>
                   </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-          <br />
-          <v-row>
-            <v-col cols=6>
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      副代表
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
-                            <router-link :to="{ name: 'sub_reps-id', params:{ id: subRep.id }}" tag="th">
-                              <th>名前：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'sub_reps-id', params:{ id: subRep.id }}" tag="th">
-                            <td class="caption">{{ subRep.name }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-             <v-col cols=6>
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      会場申請
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9" v-if="groupCategoryId !== 3">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
-                            <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
-                              <th>第一希望</th>
-                            </router-link>
-                            <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
-                              <td>{{ place_first }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
-                              <th>第二希望</th>
-                            </router-link>
-                            <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
-                              <td>{{ place_second }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
-                              <th>第三希望</th>
-                            </router-link>
-                            <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
-                              <td>{{ place_third }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                    <v-else>
-                      <v-card-text>会場申請はありません</v-card-text>
-                    </v-else>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-          <br>
-          <v-row>
-            <v-col cols="6">
-              <v-card flat　:to="{ name: 'power_orders'}">
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      電力申請
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
-                              <th>製品</th>
-                              <th>電力</th>
-                          </tr>
-                          <tr v-for="powerOrder in powerOrders" :key="powerOrder.id">
-                            <router-link :to="{ name: 'power_orders-id', params:{ id: powerOrder.id }}" tag="td">
-                              <td class="caption">{{ powerOrder.item }}</td>
-                            </router-link>
-                            <router-link :to="{ name: 'power_orders-id', params:{ id: powerOrder.id }}" tag="td">
-                              <td class="caption">{{ powerOrder.power }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col cols="6">
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      物品申請
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
-                            <th>貸し出し物品名：</th>
-                            <th>貸し出し個数：</th>
-                          </tr>
-                          <tr v-for="rentalOrderList in rentalOrderLists" :key="rentalOrderList.id">
-                            <router-link :to="{ name: 'rental_orders-id', params:{ id: rentalOrderList.rental_id }}" tag="td">
-                              <td>{{ rentalOrderList.rental_item }}</td>
-                            </router-link>
-                            <router-link :to="{ name: 'rental_orders-id', params:{ id: rentalOrderList.rental_id }}" tag="td">
-                              <td>{{ rentalOrderList.rental_num }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>  
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
+                  <span>編集</span>
+                </v-tooltip>
+                <v-tooltip top v-if="selfRoleId == (1 || 2)">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="delete_dialog = true"
+                      fab
+                    >
+                      <v-icon class="ma-5">mdi-delete</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>削除</span>
+                </v-tooltip>
+              </v-card-title>
+              <hr class="mt-n3" />
+              <v-simple-table class="my-9">
+                <template v-slot:default>
+                  <tbody>
+                    <tr>
+                      <th>ID：</th>
+                      <td class="caption">{{ group.id }}</td>
+                    </tr>
+                    <tr>
+                      <th>ユーザー：</th>
+                      <td class="caption">{{ user }}</td>
+                    </tr>
+                    <tr>
+                      <th>グループ名：</th>
+                      <td class="caption">{{ group.name }}</td>
+                    </tr>
+                    <tr>
+                      <th>企画名：</th>
+                      <td class="caption">{{ group.project_name }}</td>
+                    </tr>
+                    <tr>
+                      <th>活動内容：</th>
+                      <td class="caption">{{ group.activity }}</td>
+                    </tr>
+                    <tr>
+                      <th>グループカテゴリ：</th>
+                      <td>
+                        <v-chip
+                          v-if="group.group_category_id == 1"
+                          color="red"
+                          text-color="white"
+                          small
+                          >{{ category[0] }}</v-chip
+                        >
+                        <v-chip
+                          v-if="group.group_category_id == 2"
+                          color="pink"
+                          text-color="white"
+                          small
+                          >{{ category[1] }}</v-chip
+                        >
+                        <v-chip
+                          v-if="group.group_category_id == 3"
+                          color="blue"
+                          text-color="white"
+                          small
+                          >{{ category[2] }}</v-chip
+                        >
+                        <v-chip
+                          v-if="group.group_category_id == 4"
+                          color="green"
+                          text-color="white"
+                          small
+                          >{{ category[3] }}</v-chip
+                        >
+                        <v-chip
+                          v-if="group.group_category_id == 5"
+                          color="orange"
+                          text-color="white"
+                          small
+                          >{{ category[4] }}</v-chip
+                        >
+                        <v-chip
+                          v-if="group.group_category_id == 6"
+                          color="blue-gray"
+                          text-color="white"
+                          small
+                          >{{ category[5] }}</v-chip
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>開催年：</th>
+                      <td class="caption">{{ year }}</td>
+                    </tr>
+                    <tr>
+                      <th>登録日時：</th>
+                      <td class="caption">
+                        {{ group.created_at | format-date }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>編集日時：</th>
+                      <td class="caption">
+                        {{ group.updated_at | format-date }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
             </v-col>
           </v-row>
-          <br />
-          <v-row v-if="groupCategoryId === 3">
-            <v-col cols="6">
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      ステージ：
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>希望日：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ fes_date }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>第一希望：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ stage_first }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>第二希望：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ stage_second }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>準備開始時刻：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ stageOrder.prepare_start_time }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>パフォーマンス開始時刻：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ stageOrder.performance_start_time }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>パフォーマンス終了時刻：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ stageOrder.performance_end_time }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
-                              <th>掃除終了時刻：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                              <td>{{ stageOrder.cleanup_end_time }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col cols="6">
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      ステージオプション
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
-                              <th>所持機器の使用：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                              <td v-if="stageCommonOption.own_equipment == true">{{ items_available[0].label }}</td>
-                              <td v-if="stageCommonOption.own_equipment == false">{{ items_available[1].label }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
-                              <th>音楽をかける：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                              <td v-if="stageCommonOption.bgm == true">{{ items_available[0].label }}</td>
-                              <td v-if="stageCommonOption.bgm == false">{{ items_available[1].label }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
-                              <th>撮影許可：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                              <td v-if="stageCommonOption.camera_permission == true">{{ photo_available[0].label }}</td>
-                              <td v-if="stageCommonOption.camera_permission == false">{{ photo_available[1].label }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
-                            <th>大きな音を出すか：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                              <td v-if="stageCommonOption.loud_sound == true">{{ loud_able[0].label }}</td>
-                              <td v-if="stageCommonOption.loud_sound == false">{{ loud_able[1].label }}</td>
-                            </router-link>
-                          </tr>
-                          <tr>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
-                              <th>ステージ内容：</th>
-                            </router-link>
-                            <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                              <td>{{ stageCommonOption.stage_content }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-          <br />
-          <v-row v-if="groupCategoryId !== 3">
-            <v-col>
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      販売食品
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody>
-                          <tr>
+        </v-card>
+        <br />
+        <v-row>
+          <v-col cols=6>
+            <v-card flat class="ml-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    副代表
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <router-link :to="{ name: 'sub_reps-id', params:{ id: subRep.id }}" tag="th">
                             <th>名前：</th>
-                            <th>調理の有無：</th>
-                            <th>1日目の個数：</th>
-                            <th>2日目の個数：</th>
-                          </tr>
-                          <tr v-for="foodProduct in foodProducts" :key="foodProduct.id">
-                            <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
-                              <td>{{ foodProduct.name }}</td>
-                            </router-link>
-                            <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
-                              <td v-if="foodProduct.is_cooking == true">{{ cooking_available[0].label }}</td>
-                              <td v-if="foodProduct.is_cooking == false">{{ cooking_available[1].label }}</td>
-                            </router-link>
-                            <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
-                              <td>{{ foodProduct.first_day_num }}</td>
-                            </router-link>
-                            <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
-                              <td>{{ foodProduct.second_day_num }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col cols="6">
-              <v-card flat>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-card-title class="font-weight-bold mt-3">
-                      従業員
-                    </v-card-title>
-                    <hr class="mt-n3" />
-                    <v-simple-table class="my-9">
-                      <template v-slot:default>
-                        <tbody v-for="Employee in Employees" :key="Employee.id">
-                          <tr>
-                            <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="th">
-                              <th>{{ Employee.id }}</th>
-                            </router-link>
-                            <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="td">
-                              <td class="caption">{{ Employee.name }}</td>
-                            </router-link>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
+                          </router-link>
+                          <router-link :to="{ name: 'sub_reps-id', params:{ id: subRep.id }}" tag="th">
+                          <td class="caption">{{ subRep.name }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+           <v-col cols=6>
+            <v-card flat class="mr-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    会場申請
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9" v-if="groupCategoryId !== 3">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
+                            <th>第一希望</th>
+                          </router-link>
+                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
+                            <td>{{ place_first }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
+                            <th>第二希望</th>
+                          </router-link>
+                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
+                            <td>{{ place_second }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
+                            <th>第三希望</th>
+                          </router-link>
+                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
+                            <td>{{ place_third }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                  <v-else>
+                    <v-card-text>会場申請はありません</v-card-text>
+                  </v-else>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+        <br>
+        <v-row>
+          <v-col cols="6">
+            <v-card flat class="ml-15" :to="{ name: 'power_orders'}">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    電力申請
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                            <th>製品</th>
+                            <th>電力</th>
+                        </tr>
+                        <tr v-for="powerOrder in powerOrders" :key="powerOrder.id">
+                          <router-link :to="{ name: 'power_orders-id', params:{ id: powerOrder.id }}" tag="td">
+                            <td class="caption">{{ powerOrder.item }}</td>
+                          </router-link>
+                          <router-link :to="{ name: 'power_orders-id', params:{ id: powerOrder.id }}" tag="td">
+                            <td class="caption">{{ powerOrder.power }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+          <v-col cols="6">
+            <v-card flat class="mr-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    物品申請
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <th>貸し出し物品名：</th>
+                          <th>貸し出し個数：</th>
+                        </tr>
+                        <tr v-for="rentalOrderList in rentalOrderLists" :key="rentalOrderList.id">
+                          <router-link :to="{ name: 'rental_orders-id', params:{ id: rentalOrderList.rental_id }}" tag="td">
+                            <td>{{ rentalOrderList.rental_item }}</td>
+                          </router-link>
+                          <router-link :to="{ name: 'rental_orders-id', params:{ id: rentalOrderList.rental_id }}" tag="td">
+                            <td>{{ rentalOrderList.rental_num }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>  
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+        <br />
+        <v-row v-if="groupCategoryId === 3">
+          <v-col cols="6">
+            <v-card flat class="ml-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    ステージ：
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>希望日：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ fes_date }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>第一希望：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stage_first }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>第二希望：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stage_second }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>準備開始時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.prepare_start_time }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>パフォーマンス開始時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.performance_start_time }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>パフォーマンス終了時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.performance_end_time }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>掃除終了時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.cleanup_end_time }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+          <v-col cols="6">
+            <v-card flat class="mr-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    ステージオプション
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                            <th>所持機器の使用：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
+                            <td v-if="stageCommonOption.own_equipment == true">{{ items_available[0].label }}</td>
+                            <td v-if="stageCommonOption.own_equipment == false">{{ items_available[1].label }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                            <th>音楽をかける：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
+                            <td v-if="stageCommonOption.bgm == true">{{ items_available[0].label }}</td>
+                            <td v-if="stageCommonOption.bgm == false">{{ items_available[1].label }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                            <th>撮影許可：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
+                            <td v-if="stageCommonOption.camera_permission == true">{{ photo_available[0].label }}</td>
+                            <td v-if="stageCommonOption.camera_permission == false">{{ photo_available[1].label }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                          <th>大きな音を出すか：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
+                            <td v-if="stageCommonOption.loud_sound == true">{{ loud_able[0].label }}</td>
+                            <td v-if="stageCommonOption.loud_sound == false">{{ loud_able[1].label }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                            <th>ステージ内容：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
+                            <td>{{ stageCommonOption.stage_content }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+        <br />
+        <v-row v-if="groupCategoryId !== 3">
+          <v-col>
+            <v-card flat class="ml-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    販売食品
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <th>名前：</th>
+                          <th>調理の有無：</th>
+                          <th>1日目の個数：</th>
+                          <th>2日目の個数：</th>
+                        </tr>
+                        <tr v-for="foodProduct in foodProducts" :key="foodProduct.id">
+                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                            <td>{{ foodProduct.name }}</td>
+                          </router-link>
+                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                            <td v-if="foodProduct.is_cooking == true">{{ cooking_available[0].label }}</td>
+                            <td v-if="foodProduct.is_cooking == false">{{ cooking_available[1].label }}</td>
+                          </router-link>
+                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                            <td>{{ foodProduct.first_day_num }}</td>
+                          </router-link>
+                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                            <td>{{ foodProduct.second_day_num }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+          <v-col cols="6">
+            <v-card flat class="mr-15">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    従業員
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody v-for="Employee in Employees" :key="Employee.id">
+                        <tr>
+                          <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="th">
+                            <th>{{ Employee.id }}</th>
+                          </router-link>
+                          <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="td">
+                            <td class="caption">{{ Employee.name }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
     <v-row>
@@ -600,7 +598,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#78909C" dark @click="edit"> 編集する </v-btn>
+          <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -624,8 +622,8 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn flat color="red" dark @click="delete_yes"> はい </v-btn>
-          <v-btn flat color="blue" dark @click="delete_dialog = false">
+          <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
+          <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
         </v-card-actions>

@@ -1,163 +1,162 @@
 <template>
   <v-row>
     <v-col>
-      <div class="card">
-        <v-card flat>
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-table-chair</v-icon>在庫物品一覧
-                <v-spacer></v-spacer>
-                <v-tooltip top v-if="selfRoleId == 1">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="open_add_dialog"
-                    >
-                      <v-icon dark>mdi-plus-circle-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>在庫物品の追加</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="reload"
-                    >
-                      <v-icon dark>mdi-reload</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>更新する</span>
-                </v-tooltip>
-              </v-card-title>
-              <v-dialog v-model="dialog" max-width="500">
-                <v-card>
-                  <v-card-title class="headline blue-grey darken-3">
-                    <div style="color: white">
-                      <v-icon class="ma-5" dark>mdi-table-chair</v-icon
-                      >在庫物品の追加
-                    </div>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab dark>
-                      <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                  </v-card-title>
-
-                  <v-card-text>
-                    <v-row>
-                      <v-col>
-                        <v-form ref="form">
-                          <v-select
-                            label="物品"
-                            v-model="rentalItemId"
-                            :items="rental_items"
-                            :menu-props="{
-                              top: true,
-                              offsetY: true
-                            }"
-                            item-text="name"
-                            item-value="id"
-                            outlined
-                          ></v-select>
-                          <v-select
-                            label="場所"
-                            v-model="stockerPlaceId"
-                            :items="stocker_places"
-                            :menu-props="{
-                              top: true,
-                              offsetY: true
-                            }"
-                            item-text="name"
-                            item-value="id"
-                            outlined
-                          ></v-select>
-                          <v-select
-                            label="開催年"
-                            v-model="fesYearId"
-                            :items="fes_years"
-                            :menu-props="{
-                              top: true,
-                              offsetY: true
-                            }"
-                            item-text="year_num"
-                            item-value="id"
-                            outlined
-                          ></v-select>
-                          <v-text-field
-                            class="body-1"
-                            label="個数"
-                            v-model="num"
-                            background-color="white"
-                            outlined
-                            clearable
-                            type="number"
-                          >
-                          </v-text-field>
-                          <v-card-actions>
-                            <v-btn
-                              flatk
-                              large
-                              block
-                              dark
-                              color="blue"
-                              @click="register()"
-                              >登録 ​
-                            </v-btn>
-                          </v-card-actions>
-                        </v-form>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                  <br />
-                </v-card>
-              </v-dialog>
-
-              <hr class="mt-n3" />
-              <template>
-                <div class="text-center" v-if="stocker_items.length === 0">
-                  <br /><br />
-                  <v-progress-circular
-                    indeterminate
-                    color="#009688"
-                  ></v-progress-circular>
-                  <br /><br />
-                </div>
-                <div v-else>
-                  <v-data-table
-                    :headers="headers"
-                    :items="stocker_items"
-                    class="elevation-0 my-9"
-                    @click:row="
-                      data =>
-                        $router.push({
-                          path: `/stocker_items/${data.stocker_item.id}`
-                        })
-                    "
+      <v-card flat class="mx-15">
+        <v-row>
+          <v-col cols="1"></v-col>
+          <v-col cols="10">
+            <v-card-title class="font-weight-bold mt-3">
+              <v-icon class="mr-5">mdi-table-chair</v-icon>在庫物品一覧
+              <v-spacer></v-spacer>
+              <v-tooltip top v-if="selfRoleId == 1">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    text
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="open_add_dialog"
                   >
-                    <template v-slot:item.stocker_item.created_at="{ item }">
-                      {{ item.stocker_item.created_at | format-date }}
-                    </template>
-                    <template v-slot:item.stocker_item.updated_at="{ item }">
-                      {{ item.stocker_item.updated_at | format-date }}
-                    </template>
-                  </v-data-table>
-                </div>
-              </template>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-      </div>
+                    <v-icon dark>mdi-plus-circle-outline</v-icon>
+                  </v-btn>
+                </template>
+                <span>在庫物品の追加</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    text
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="reload"
+                  >
+                    <v-icon dark>mdi-reload</v-icon>
+                  </v-btn>
+                </template>
+                <span>更新する</span>
+              </v-tooltip>
+            </v-card-title>
+            <v-dialog v-model="dialog" max-width="500">
+              <v-card>
+                <v-card-title class="headline blue-grey darken-3">
+                  <div style="color: white">
+                    <v-icon class="ma-5" dark>mdi-table-chair</v-icon
+                    >在庫物品の追加
+                  </div>
+                  <v-spacer></v-spacer>
+                  <v-btn text @click="dialog = false" fab dark>
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-row>
+                    <v-col>
+                      <v-form ref="form">
+                        <v-select
+                          label="物品"
+                          v-model="rentalItemId"
+                          :items="rental_items"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          item-text="name"
+                          item-value="id"
+                          outlined
+                        ></v-select>
+                        <v-select
+                          label="場所"
+                          v-model="stockerPlaceId"
+                          :items="stocker_places"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          item-text="name"
+                          item-value="id"
+                          outlined
+                        ></v-select>
+                        <v-select
+                          label="開催年"
+                          v-model="fesYearId"
+                          :items="fes_years"
+                          :menu-props="{
+                            top: true,
+                            offsetY: true
+                          }"
+                          item-text="year_num"
+                          item-value="id"
+                          outlined
+                        ></v-select>
+                        <v-text-field
+                          class="body-1"
+                          label="個数"
+                          v-model="num"
+                          background-color="white"
+                          outlined
+                          clearable
+                          type="number"
+                        >
+                        </v-text-field>
+                      </v-form>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    depressed
+                    dark
+                    color="btn"
+                    @click="register()"
+                  >登録
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <hr class="mt-n3" />
+            <template>
+              <div class="text-center" v-if="stocker_items.length === 0">
+                <br /><br />
+                <v-progress-circular
+                  indeterminate
+                  color="#009688"
+                ></v-progress-circular>
+                <br /><br />
+              </div>
+              <div v-else>
+                <v-data-table
+                  :headers="headers"
+                  :items="stocker_items"
+                  class="elevation-0 my-9"
+                  @click:row="
+                    data =>
+                      $router.push({
+                        path: `/stocker_items/${data.stocker_item.id}`
+                      })
+                  "
+                >
+                  <template v-slot:item.stocker_item.created_at="{ item }">
+                    {{ item.stocker_item.created_at | format-date }}
+                  </template>
+                  <template v-slot:item.stocker_item.updated_at="{ item }">
+                    {{ item.stocker_item.updated_at | format-date }}
+                  </template>
+                </v-data-table>
+              </div>
+            </template>
+          </v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+      </v-card>
     </v-col>
   </v-row>
 </template>
