@@ -622,62 +622,69 @@
                        <v-list>
                         <v-list-item>
                           <v-list-item-content>月日</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_date == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_date }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].stage_date == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].stage_date }}</v-list-item-content>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item>
+                          <v-list-item-content>天気</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].is_sunny == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else-if="regist.stage_orders[0].is_sunny==true">晴れ</v-list-item-content>
+                          <v-list-item-content v-else>雨</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>第1希望</v-list-item-content>
-                          <v-list-item-content v-if="regist.first_stage_order == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.first_stage_order }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].first_stage_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].first_stage_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>第2希望</v-list-item-content>
-                          <v-list-item-content v-if="regist.second_stage_order == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.second_stage_order }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].second_stage_order == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].second_stage_order }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>準備時間幅</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.prepare_time_interval == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.prepare_time_interval }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].prepare_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].prepare_time_interval }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>使用時間幅</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.use_time_interval == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.use_time_interval }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].use_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].use_time_interval }}</v-list-item-content>
                         </v-list-item>
                       <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>掃除時間幅</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.cleanup_time_interval == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.cleanup_time_interval }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].cleanup_time_interval == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].cleanup_time_interval }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>準備開始時刻</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.prepare_start_time == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.prepare_start_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].prepare_start_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].prepare_start_time }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>パフォーマンス開始時刻</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.performance_start_time == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.performance_start_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].performance_start_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].performance_start_time }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>パフォーマンス終了時刻</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.performance_end_time == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.performance_end_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].performance_end_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].performance_end_time }}</v-list-item-content>
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item>
                           <v-list-item-content>掃除終了時刻</v-list-item-content>
-                          <v-list-item-content v-if="regist.stage_order.cleanup_end_time == -9999">未登録</v-list-item-content>
-                          <v-list-item-content v-else>{{ regist.stage_order.cleanup_end_time }}</v-list-item-content>
+                          <v-list-item-content v-if="regist.stage_orders[0].cleanup_end_time == -9999">未登録</v-list-item-content>
+                          <v-list-item-content v-else>{{ regist.stage_orders[0].cleanup_end_time }}</v-list-item-content>
                         </v-list-item>
                        </v-list>
                     </v-card>
@@ -685,7 +692,7 @@
                   <v-col cols=1></v-col>
                 </v-row>
                 <!-- Edit Modal -->
-                <StageOrder ref="stageOrderDlg"
+                <!-- <StageOrder ref="stageOrderDlg"
                   :id="this.regist.stage_order.id"
                   :groupId="this.regist.stage_order.group_id"
                   :isSunny="this.regist.stage_order.is_sunny"
@@ -701,7 +708,7 @@
                   :cleanupEndTime="this.regist.stage_order.cleanup_end_time"
                   @reload="reload"
                   @openEmployeeSnackbar="openStageOrderSnackbar"
-                />
+                /> -->
 
               </v-tab-item>
 
