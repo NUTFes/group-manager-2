@@ -13,7 +13,9 @@
             <v-menu
               open-on-hover
               offset-y
-              v-if="this.$route.path === '/MyPage' || this.$route.path === '/mypage'"
+              v-if="
+                this.$route.path === '/MyPage' || this.$route.path === '/mypage'
+              "
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn text color="#757575" dark v-bind="attrs" v-on="on">
@@ -22,6 +24,22 @@
                 </v-btn>
               </template>
               <v-list dense>
+                <v-list-item to="/edit_user_info">
+                  <v-list-item-content>
+                    <v-list-item-title class="font-weight-bold">
+                      <v-icon class="pr-2" size="30">mdi-account-edit</v-icon
+                      >ユーザー情報編集
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item to="/password_reset">
+                  <v-list-item-content>
+                    <v-list-item-title class="font-weight-bold">
+                      <v-icon class="pr-2" size="30">mdi-lock-reset</v-icon
+                      >パスワード変更
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
                 <v-list-item @click="signOut">
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold">
