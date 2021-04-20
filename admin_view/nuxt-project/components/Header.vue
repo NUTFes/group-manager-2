@@ -92,7 +92,7 @@
                 <v-list-title class="sticky-note__item">{{ item.memo.content }}</v-list-title>
                 <br>
                 <br>
-                <v-list-title class="sticky-note__date">{{ item.created_at | format-date}}</v-list-title>
+                <v-list-title class="sticky-note__date">{{ item.memo.created_at | format-date}}</v-list-title>
                 <v-divider/>
               </v-list-item-content>
 

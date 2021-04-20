@@ -11,10 +11,10 @@
                   <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
                     >mdi-account-cog</v-icon
                   >
-                  <v-icon v-if="user.role_id == 2" color="green"
+                  <v-icon v-if="user.role_id == 2" color="green" class="ma-1"
                     >mdi-account-tie</v-icon
                   >
-                  <v-icon v-if="user.role_id == 3" color="blue"
+                  <v-icon v-if="user.role_id == 3" color="blue" class="ma-1"
                     >mdi-account</v-icon
                   >
                   {{ user.name }}
@@ -132,8 +132,8 @@
                  </v-col>
                  <v-col cols=6>
                    <v-card-text><v-chip color="red" text-color="white"><v-avatar left class="red darken-4">{{ dashboard_data.developer_num }}</v-avatar>developers</v-chip></v-card-text>
-                   <v-card-text><v-chip color="blue" text-color="white"><v-avatar left class="blue darken-4">{{ dashboard_data.manager_num }}</v-avatar>managers</v-chip></v-card-text>
-                   <v-card-text><v-chip color="green" text-color="white"><v-avatar left class="green darken-4">{{ dashboard_data.user_num }}</v-avatar>users</v-chip></v-card-text>
+                   <v-card-text><v-chip color="green" text-color="white"><v-avatar left class="green darken-4">{{ dashboard_data.manager_num }}</v-avatar>managers</v-chip></v-card-text>
+                   <v-card-text><v-chip color="blue" text-color="white"><v-avatar left class="blue darken-4">{{ dashboard_data.user_num }}</v-avatar>users</v-chip></v-card-text>
                  </v-col>
                </v-row>
              </v-col>
