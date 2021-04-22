@@ -105,9 +105,9 @@ class Api::V1::CurrentUserApiController < ApplicationController
           stage_orders_list << {
             id: stage_order.id,
             is_sunny: stage_order.is_sunny,
-            first_stage_order: Stage.find(stage_order.stage_first).name,
-            second_stage_order: Stage.find(stage_order.stage_second).name,
-            stage_date: stage_order.fes_date.date,
+            first_stage_order: Stage.find(stage_order.stage_first),
+            second_stage_order: Stage.find(stage_order.stage_second),
+            stage_date: stage_order.fes_date,
             use_time_interval: stage_order.use_time_interval,
             prepare_time_interval: stage_order.prepare_time_interval,
             cleanup_time_interval: stage_order.cleanup_time_interval,

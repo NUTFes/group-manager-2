@@ -22,7 +22,6 @@
         </v-row>
         <v-row>
           <v-col>
-            {{ regist_info }}
             <div v-for="(regist, i) in regist_info" :key="i">
               <Regist :num="i" :regist="regist" @reload="reload()" />
               <v-container>
