@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <v-row>
+  <div class="signup-card">
+    <v-container fill-height>
+    <v-row 
+      align="center" 
+      justify="center" 
+      :style="{ background: $vuetify.theme.themes.light.loginbg }">
       <v-col>
-        <div class="signup-card">
-          <v-card class="mt-5 mx-auto " max-width="600" flat>
             <v-form ref="form" v-model="valid" lazy-validation>
                 <v-row justify="center" style="padding-top:5%; padding-bottom:5%">
-                  <p cols="12" class="mt-3 display-1">
+                  <p cols="12" class="mt-3 display-1 font-weight-bold info--text">
                   新規登録
                   </p>
                 </v-row>
@@ -47,10 +49,11 @@
                 <v-row justify="center" style="padding-bottom:5%">
                   <v-col cols="12" md="10" sm="10">
                     <v-btn
-                      flat
+                      depressed
+                      dark
                       block
                       large
-                      class="mr-4 blue white--text"
+                      color = "btn"
                       @click="signup"
                       >
                       新規登録
@@ -61,17 +64,17 @@
                         outlined 
                         large
                         href="/"
+                        color = "btn"
                         >
                         ログインはこちら
                       </v-btn>
                   </v-col>
                 </v-row>
             </v-form>
-          </v-card>
-        </div>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
+</div>
 </template>
 
 <script>
@@ -110,7 +113,10 @@ export default {
 
 <style>
 .signup-card {
-  padding-top: 5%;
-  padding-left: 20%;
+  padding-top: 2%;
+  padding-left: 30%;
+  padding-right: 30%;
+  padding-bottom: 2%;
+  height: 100%;
 }
 </style>

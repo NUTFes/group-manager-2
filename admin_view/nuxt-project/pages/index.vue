@@ -1,15 +1,14 @@
 <template>
-  <v-row>
-    <v-col>
-      <div class="login-card">
-        <v-card flat>
-          <v-row align="center">
+  <div class="login-card">
+  <v-container fill-height>
+    <v-row 
+      align="center" 
+      justify="center" 
+      :style="{ background: $vuetify.theme.themes.light.loginbg }">
             <v-col cols="5">
               <v-form ref="form" lazy-validation>
-                <v-container>
                   <v-row justify="center">
-                    <v-col cols="1"></v-col>
-                    <p cols="10" class="mt-3 display-1 grey-title">
+                    <p cols="10" class="my-10 display-1 font-weight-bold info--text">
                     ログイン
                     </p>
                     <p v-bind:style="warnStyle" v-html="getMessage"></p>
@@ -50,16 +49,28 @@
                         />
                     </v-col>
                   </v-row>
-                  <v-row align="center" justify="center">
-                    <v-col cols="1" />
-                      <v-col cols="10" md="10" sm="10">
+                  <v-row>
+                    <v-col>
+                      <v-card-actions>
+                      <v-btn
+                        depressed
+                        text
+                        color="btn"
+                        @click="loginWithAuthModule"
+                        >
+                        パスワードを忘れた場合
+                      </v-btn>
+                        <v-spacer></v-spacer>
                         <v-btn
-                          block
-                          class="mr-4 blue white--text"
+                          depressed
+                          dark
+                          color="btn"
                           @click="loginWithAuthModule"
                           >
                           ログイン
+                          <v-icon class="mx-n1">mdi-menu-right</v-icon>
                         </v-btn>
+                        </v-card-actions>
                       </v-col>
                   </v-row>
                   <v-container>
@@ -73,16 +84,15 @@
                         <v-col cols="2" />
                     </v-row>
                   </v-container>
-                </v-container>
               </v-form>
             </v-col>
-            <v-col cols="7">
+            <v-col cols="7" class="mr-n6">
               <v-img
-                position="right"
-                min-height="600"
-                max-height="600"
+                position="center"
+                min-height="700"
+                max-height="800"
                 v-bind:src="image_src"
-                class="mt-n3 pt-n3 mb-n3 pb-n3"
+                class="my-n3"
                 >
                 <div class="inner">
                   <img width="80%" src="@/assets/logo_japanese.svg" />
@@ -90,11 +100,9 @@
                 </div>
               </v-img>
             </v-col>
-          </v-row>
-        </v-card>
-      </div>
-    </v-col>
-  </v-row>
+</v-row>
+        </v-container>
+</div>
 </template>
 
 <script>
@@ -167,10 +175,8 @@ export default {
 
 <style scoped>
 .login-card {
-  padding-top: 5%;
   padding-left: 20%;
   padding-right: 20%;
-  padding-bottom: 5%;
   height: 100%;
 }
 .grey-title {

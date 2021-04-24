@@ -90,7 +90,7 @@ export default {
           primary: "#333333",
           secondary: "#37474F",
           accent: "#b57614",
-          info: "#FFFFFF",
+          info: "#333333",
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
@@ -101,7 +101,8 @@ export default {
           menu2: "#FFFFFF",
           btn: "#b16286",
           yes: "#cc241d",
-          no: "#458588"
+          no: "#458588",
+          loginbg: "#FFFFFF"
         }
       },
       options: {customProperties: true}
