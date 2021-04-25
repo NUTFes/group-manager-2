@@ -13,11 +13,11 @@
         <v-col cols='2'></v-col>
       </v-row>
 
-      <v-row class="">
+      <v-row>
         <v-col cols='2'></v-col>
         <v-col cols='8'>
           <div class="text-center text-h4 text-no-wrap">
-              <p>開催日時：2021年9月14日(土) 15日(日)<br></p>
+              <p>開催日時：2021年9月11日(土) 12日(日)<br></p>
               <p>募集締切：2021年7月30日(月)</p>
           </div>
         </v-col>
@@ -52,10 +52,8 @@
             </v-row>
           </v-col>
 
-
 <!-- 継続参加率 -->
           <v-col cols="0.5"></v-col>
-
           <v-col cols="2" class="">
             <v-row>
               <v-col class="text-center text-h5">
@@ -66,7 +64,6 @@
               <div class="pie mt-2">92.7%</div>
             </v-row>
           </v-col>
-
           <v-col cols="0.5"></v-col>
 
 <!-- 参加団体増加率 -->
@@ -85,35 +82,34 @@
         </v-row>
       </div>
 
-<!-- 登録の流れ -->
-    <div class="my-16"><!-- 登録の流れwrapper -->
+<!-- 主な参加形式 -->
+    <div class="my-16">
       <v-row>
         <v-col cols='2'></v-col>
         <v-col cols='8'>
           <div class="text-center text-h3 text-no-wrap stroke">
-            登録の流れ
+            主な参加形式
           </div>
         </v-col>
         <v-col cols='2'></v-col>
       </v-row>
 
-<!-- 01_ユーザー情報の登録 -->
-      <v-row class="pa-1 blue-grey lighten-5">
+<!-- 01_模擬店 -->
+      <v-row class="py-3 blue lighten-5">
         <v-col cols="1.5"></v-col>
-        <v-col cols="4"><!-- 画像 -->
-          <v-img src="../assets/following-step01.svg"></v-img>
+        <v-col class="mx-4 img-rotate-left" cols="4"><!-- 画像 -->
+          <v-img class="ma-1 welcome-img" src="../assets/welcome_shop.jpg"></v-img>
         </v-col>
-
         <v-col cols="5"><!-- 文章 -->
           <v-row>
-            <v-col cols="1"><!-- STEP01 -->
+            <v-col cols="1">
               <v-row>
                 <v-col class="num-title--text text-h5 pa-0">
-                  <p class="mb-0 ml-1">STEP</p>
+                  <p class="mb-0 ml-1">TYPE</p>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col class="pa-0 num-title--num text-h2 font-weight-medium">
+                <v-col class="pa-1 num-title--num text-h2 font-weight-medium">
                   <p class="">01</p>
                 </v-col>
               </v-row>
@@ -121,270 +117,182 @@
             <v-col cols="11"><!-- title and text -->
               <div class="ml-4">
                 <v-row>
-                  <v-col class="pa-o text-h3 font-weight-medium text-no-wrap" >
-                    <p class="ma-0 mt-4">
-                      ユーザー情報の登録
+                  <v-col class="text-h3 font-weight-bold text-no-wrap" >
+                    <p class="ml-2 mt-4 txt-box-title-letter-spacing">
+                      模擬店
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col class="text-body-1">
-                    <p>
-                      学籍番号、電話番号、学科、学年を入力します。<br>
-                      ここの文章が多いとどんな感じになるかなあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
-                    </p>
+                  <v-col class="pa-5 text-body-1 welcome-textbox-blue white">
+                    <div class="font-weight-bold welcome-textbox">
+                      <p>
+                        ここ文章が入りますああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                      </p>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
-
             </v-col>
           </v-row>
         </v-col>
-
         <v-col cols="1.5"></v-col>
       </v-row>
 
-<!-- 02_参加団体登録 -->
+<!-- 三角 -->
+      <v-row>
+        <div class="triangle-after01"></div>
+      </v-row>
+
+<!-- 02_ステージ企画 -->
       <v-row class="pa-1">
         <v-col cols="1.5"></v-col>
-
         <v-col cols="5"><!-- 文章 -->
           <v-row>
             <v-col cols="1"><!-- STEP01 -->
               <v-row>
                 <v-col class="num-title--text text-h5 pa-0">
-                  <p class="mb-0 ml-1">STEP</p>
+                  <p class="mb-0 ml-1">TYPE</p>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col class="pa-0 num-title--num text-h2 font-weight-medium">
-                  <p class="">02</p>
+                  <p>02</p>
                 </v-col>
               </v-row>
             </v-col>
-            <v-col cols="11"><!-- title and text -->
+            <v-col cols="11">
               <div class="ml-4">
                 <v-row>
                   <v-col class="pa-o text-h3 font-weight-medium text-no-wrap" >
-                    <p class="ma-0 mt-4">
-                      参加団体登録
+                    <p class="ml-3 mt-4 font-weight-bold txt-box-title-letter-spacing">
+                      ステージ企画
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col class="text-body-1">
-                    <p>
-                      団体メイ、カテゴリ、活動内容、企画名。<br>
-                      ここの文章が多いとどんな感じになるかなあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
-                    </p>
+                  <v-col class="pa-5 text-body-1 welcome-textbox-white">
+                    <div class="font-weight-bold welcome-textbox">
+                      <p>
+                        ここに文章が入りますあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                      </p>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
             </v-col>
           </v-row>
         </v-col>
-
-        <v-col cols="4"><!-- 画像 -->
-          <v-img src="../assets/following-step02.svg"></v-img>
+        <v-col class="ma-4 img-rotate-right" cols="4"><!-- 画像 -->
+          <v-img class="welcome-img" src="../assets/welcome_stage.jpg"></v-img>
         </v-col>
-
-
         <v-col cols="1.5"></v-col>
       </v-row>
 
-<!-- 03_副代表登録 -->
-      <v-row class="pa-1 blue-grey lighten-5">
-        <v-col cols="1.5"></v-col>
-        <v-col cols="4"><!-- 画像 -->
-          <v-img src="../assets/following-step03.svg"></v-img>
-        </v-col>
+<!-- 三角 -->
+      <v-row>
+        <div class="triangle-befor03"></div>
+      </v-row>
 
+<!-- 03_展示体験 -->
+      <v-row class="pa-1 blue lighten-5">
+        <v-col cols="1.5"></v-col>
+        <v-col class="ma-4 img-rotate-left" cols="4"><!-- 画像 -->
+          <v-img class="welcome-img" src="../assets/welcome_exhexp.jpg"></v-img>
+        </v-col>
         <v-col cols="5"><!-- 文章 -->
           <v-row>
             <v-col cols="1"><!-- STEP01 -->
               <v-row>
                 <v-col class="num-title--text text-h5 pa-0">
-                  <p class="mb-0 ml-1">STEP</p>
+                  <p class="mb-0 ml-1">TYPE</p>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col class="pa-0 num-title--num text-h2 font-weight-medium">
-                  <p class="">03</p>
+                  <p>03</p>
                 </v-col>
               </v-row>
             </v-col>
             <v-col cols="11"><!-- title and text -->
               <div class="ml-4">
                 <v-row>
-                  <v-col class="pa-o text-h3 font-weight-medium text-no-wrap" >
-                    <p class="ma-0 mt-4">
-                      副代表登録
+                  <v-col class="text-h3 font-weight-medium text-no-wrap" >
+                    <p class="ml-3 mt-4 txt-box-title-letter-spacing font-weight-bold font-weight-black">
+                      展示・体験
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col class="text-body-1">
-                    <p>
-                      名前、学籍番号、学科、学年、電話番号、メールアドレスを登録します。<br>
-                      ここの文章が多いとどんな感じになるかなあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
-                    </p>
+                  <v-col class="pa-5 text-body-1 welcome-textbox-blue white">
+                    <div class="box font-weight-bold welcome-textbox">
+                      <p>
+                        ここに文章が入りますあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                      </p>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
-
             </v-col>
           </v-row>
         </v-col>
-
         <v-col cols="1.5"></v-col>
       </v-row>
 
-<!-- 04_物品登録 -->
-      <v-row class="pa-1">
-        <v-col cols="1.5"></v-col>
-
-        <v-col cols="5"><!-- 文章 -->
-          <v-row>
-            <v-col cols="1"><!-- STEP01 -->
-              <v-row>
-                <v-col class="num-title--text text-h5 pa-0">
-                  <p class="mb-0 ml-1">STEP</p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col class="pa-0 num-title--num text-h2 font-weight-medium">
-                  <p class="">04</p>
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="11"><!-- title and text -->
-              <div class="ml-4">
-                <v-row>
-                  <v-col class="pa-o text-h3 font-weight-medium text-no-wrap" >
-                    <p class="ma-0 mt-4">
-                      物品登録
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col class="text-body-1">
-                    <p>
-                      合計登録物品数、借りたい物品の種類・数を登録します。<br>
-                      ここの文章が多いとどんな感じになるかなあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
-                    </p>
-                  </v-col>
-                </v-row>
-              </div>
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <v-col cols="4"><!-- 画像 -->
-          <v-img src="../assets/following-step04.svg"></v-img>
-        </v-col>
-
-
-        <v-col cols="1.5"></v-col>
+<!-- 三角 -->
+      <v-row>
+        <div class="triangle-after03"></div>
       </v-row>
 
-<!-- 05_電力申請 -->
-      <v-row class="pa-1 blue-grey lighten-5">
+<!-- 04_研究室公開 -->
+      <v-row class="my-n2">
         <v-col cols="1.5"></v-col>
-        <v-col cols="4"><!-- 画像 -->
-          <v-img src="../assets/following-step05.svg"></v-img>
-        </v-col>
-
         <v-col cols="5"><!-- 文章 -->
           <v-row>
-            <v-col cols="1"><!-- STEP01 -->
+            <v-col cols="1"><!-- STEP04 -->
               <v-row>
                 <v-col class="num-title--text text-h5 pa-0">
-                  <p class="mb-0 ml-1">STEP</p>
+                  <p class="mb-0 ml-1">TYPE</p>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col class="pa-0 num-title--num text-h2 font-weight-medium">
-                  <p class="">05</p>
+                  <p>04</p>
                 </v-col>
               </v-row>
             </v-col>
             <v-col cols="11"><!-- title and text -->
               <div class="ml-4">
                 <v-row>
-                  <v-col class="pa-o text-h3 font-weight-medium text-no-wrap" >
-                    <p class="ma-0 mt-4">
-                      電力申請
+                  <v-col class="text-h3 font-weight-medium text-no-wrap" >
+                    <p class="ml-3 mt-4 font-weight-bold txt-box-title-letter-spacing">
+                      研究室公開
                     </p>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col class="text-body-1">
-                    <p>
-                      技大祭当日に使用する製品の製品名・消費電力量・メーカー・型番・製品URLを登録します。<br>
-                      ここの文章が多いとどんな感じになるかなあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
-                    </p>
-                  </v-col>
-                </v-row>
-              </div>
-
-            </v-col>
-          </v-row>
-        </v-col>
-
-        <v-col cols="1.5"></v-col>
-      </v-row>
-
-<!-- 06_会場登録 -->
-      <v-row class="pa-1">
-        <v-col cols="1.5"></v-col>
-
-        <v-col cols="5"><!-- 文章 -->
-          <v-row>
-            <v-col cols="1"><!-- STEP01 -->
-              <v-row>
-                <v-col class="num-title--text text-h5 pa-0">
-                  <p class="mb-0 ml-1">STEP</p>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col class="pa-0 num-title--num text-h2 font-weight-medium">
-                  <p class="">06</p>
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="11"><!-- title and text -->
-              <div class="ml-4">
-                <v-row>
-                  <v-col class="pa-o text-h3 font-weight-medium text-no-wrap" >
-                    <p class="ma-0 mt-4">
-                      会場・ステージ登録
-                    </p>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col class="text-body-1">
-                    <p>
-                      第一希望から第三希望までの出店希望場所を登録します。<br>
-                      ここの文章が多いとどんな感じになるかなあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
-                    </p>
+                  <v-col class="pa-5 text-body-1 welcome-textbox-white">
+                    <div class="font-weight-bold welcome-textbox">
+                      <p>
+                        ここに文章が入ります<br>
+                        あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                      </p>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
             </v-col>
           </v-row>
         </v-col>
-
-        <v-col cols="4"><!-- 画像 -->
-          <v-img src="../assets/following-step06.svg"></v-img>
+        <v-col class="ma-4 img-rotate-right" cols="4"><!-- 画像 -->
+          <v-img class="welcome-img" src="../assets/welcome_labo.jpg"></v-img>
         </v-col>
-
-
         <v-col cols="1.5"></v-col>
       </v-row>
     </div>
-<!-- 以降　各種SNSのリンク、連絡先の表示、よくある質問へのリンク -->
 
-      <div  class="my-16"><!-- よくある質問 -->
+<!-- 以降　各種SNSのリンク、連絡先の表示、よくある質問へのリンク -->
+    <div  class="my-16"><!-- よくある質問 -->
       <v-row>
         <v-col cols='2'></v-col>
         <v-col cols='8'>
@@ -395,28 +303,19 @@
         <v-col cols='2'></v-col>
       </v-row>
 
-      <v-row class="">
+      <v-row>
         <v-col cols='2'></v-col>
         <v-col cols='8'>
           <div class="text-center text-h5 text-no-wrap">
-              <p>ご不明な点がある場合は「<a href="">よくある質問と解答</a>」をご覧ください。
-              </p>
+            <p>ご不明な点がある場合は「<a href="">よくある質問と解答</a>」をご覧ください。</p>
           </div>
         </v-col>
         <v-col cols='2'></v-col>
       </v-row>
-      </div>
+    </div>
 
-
-
-      </v-col>
-      <v-col cols="2.5"></v-col>
-    </v-row>
     </v-conteiner>
   </div>
-
-<!-- ここテスト機関 -->
-
 </template>
 
 <script>
@@ -429,48 +328,7 @@ export default {
 </script>
 
 <style scooped>
-.welcomecol{
-background:#fff;
-padding:0;
-margin:0;
-}
-.welcometitleback
-{
-  height:260px;
-  margin:40px 0 0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-top:groove;
-}
-.welcomesentence{
-  height:136px;
-  margin:0 0 40px;
-  border-bottom:groove;
-
-}
-.welcometitle{
-  text-align:left;
-  font-size:25pt;
- 
-}
-.welcomeback
-{
-background-color:#dcedc8;
-height:500px;
-}
-.welcomerow{
-
-margin:150px 0;
-
-}
-
-.date--item {
-  display: block;
-  text-align: center;
-}
-
-.pie {
+.pie {/* 開催実績の円グラフ */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -484,19 +342,71 @@ margin:150px 0;
   border-radius: 50%;
 }
 
-.num-title--text {
-  height: 1.5rem;
-}
-
-.num-title--num {
-  height: 4rem;
-}
-
-.stroke {
+.stroke {/* 見出しずらし装飾 */
   color: rgba(0 0 0 / 0);
   letter-spacing: .1em;
   -webkit-text-stroke: 1px #333;
   text-shadow: 2px 2px 0 #E040FB;
+}
+
+.num-title--text {
+  height: 1.5rem;
+}
+.num-title--num {
+  height: 4rem;
+  color: #E040FB;
+}
+
+/* 画像回転 */
+.img-rotate-left {
+	display: inline-block;
+	transform: rotate(-2.5deg);
+}
+.img-rotate-right {
+  display: iniline-block;
+  transform: rotate(2.5deg);
+}
+
+/* 画像の影 */
+.welcome-img {
+  box-shadow: 20px 15px 0 #BBDEFB;
+  border: 10px solid #fff;
+}
+
+/* triangle 装飾用三角形 */
+.triangle-after01 {
+  background: transparent;
+  border-top: 3vw solid #E3F2FD;
+  border-right: 110vw solid transparent;
+  border-color: none;
+}
+.triangle-befor03 {
+  background: transparent;
+  border-bottom: 3vw solid #e3f2fd;
+  border-right: 110vw solid transparent;
+  border-color: none;
+}
+.triangle-after03 {
+  background: transparent;
+  border-top: 3vw solid #E3F2FD;
+  border-right: 110vw solid transparent;
+  border-color: none;
+}
+
+/* 色別テキストボックス装飾 */
+.welcome-textbox-blue {
+  box-shadow: 20px 15px 0 #BBDEFB;
+}
+.welcome-textbox-white {
+  border: 10px solid #E3F2FD;
+  box-shadow: 20px 15px 0 #BBDEFB;
+}
+.welcome-textbox {
+  line-height: 1.75rem;
+  letter-spacing: .1rem;
+}
+.txt-box-title-letter-spacing {
+  letter-spacing: .5rem;
 }
 
 </style>
