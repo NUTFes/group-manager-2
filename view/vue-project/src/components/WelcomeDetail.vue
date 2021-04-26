@@ -2,7 +2,7 @@
   <div style='background-color:rgb(255,255,255)'>
     <v-conteiner>
 <!-- 参加概要 -->
-      <div  class="my-16">
+      <div class="my-16">
       <v-row>
         <v-col cols='2'></v-col>
         <v-col cols='8'>
