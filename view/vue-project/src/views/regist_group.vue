@@ -349,11 +349,63 @@
                     </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
-                      <StageCard
-                        :groupId="groupId"
-                        ref="stageChild"
-                        :key="stageStep"
-                      />
+                      <v-stepper class="stepper" v-model="e2">
+                        <v-stepper-header class="stepper">
+                          <template v-for="stageStep in stageSteps">
+                            <v-stepper-step
+                              :key="`${stageStep}-step`"
+                              :complete="e2 > stageStep"
+                              :step="stageStep"
+                              > 
+                              <div v-if="stageStep == 1">晴れ</div>
+                              <div v-if="stageStep == 2">雨</div>
+                            </v-stepper-step>
+                            <v-divider
+                              v-if="stageStep !== stageSteps"
+                              :key="stageStep"
+                            ></v-divider>
+                          </template>
+                        </v-stepper-header>
+                        <v-stepper-items>
+                          <v-stepper-content
+                            v-for="stageStep in stageSteps"
+                            :key="`${stageStep}-content`"
+                            :step="stageStep"
+                          >
+                            <StageCard
+                              ref="stageChild"
+                              :groupId="groupId"
+                              :isSunny=weatherFlag[stageStep-1]
+                              :key="stageStep"
+                            />
+                            
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                                <v-btn
+                                  rounded
+                                  text
+                                  color="btn"
+                                  class="pr-5"
+                                  @click="e2 -= 1"
+                                  v-show="stageStep != 1"
+                                >
+                                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                  戻る
+                                </v-btn>
+                                <v-btn
+                                  rounded
+                                  outlined
+                                  color="btn"
+                                  class="pl-5"
+                                  @click="e2 += 1"
+                                  v-show="stageSteps != stageStep"
+                                >
+                                  次へ
+                                  <v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                            </v-card-actions>
+                          </v-stepper-content>
+                        </v-stepper-items>
+                      </v-stepper>
                     </v-card-text>
                     <v-divider class="mb-8" />
                     <v-card-actions>
@@ -534,13 +586,18 @@ export default {
       powerItemUrl: [], // 製品URL
 
       // 物品申請
-      rentalSteps: 2
+      rentalSteps: 2,
+
+      // ステージ申請
+      stageSteps: 2,
+      weatherFlag: [true, false],
     };
   },
   watch: {
     powerSteps(val) {
       if (this.e2 > val) {
         this.e2 = val;
+        
       }
     }
   },
@@ -585,6 +642,11 @@ export default {
         this.$refs.rentalChild[i].submit();
       }
 
+      // ステージ登録
+      for (let i = 0; i < this.stageSteps; i++) {
+        this.$refs.stageChild[i].submit();
+      }
+
       this.$router.push("MyPage");
     },
     saleSubmit: function() {
@@ -618,7 +680,7 @@ export default {
     stageSubmit: function() {
       this.commonSubmit();
 
-      this.$refs.stageChild.submit();
+      // this.$refs.stageChild.submit();
 
       this.$refs.stageCommonChild.submit();
 

@@ -98,16 +98,32 @@ class Api::V1::CurrentUserApiController < ApplicationController
         remark = "-9999"
       end
       # ステージ情報を取得
-      if !group.stage_order.nil?
-        stage_date = group.stage_order.fes_date.date
-        first_stage_order = Stage&.find_by_id(group.stage_order&.stage_first)&.name
-        second_stage_order = Stage&.find_by_id(group.stage_order&.stage_second)&.name
-        stage_order = group.stage_order
+      if !group.stage_orders.nil?
+        stage_orders = group.stage_orders
+        stage_orders_list = []
+        for stage_order in stage_orders
+          stage_orders_list << {
+            id: stage_order.id,
+            is_sunny: stage_order.is_sunny,
+            first_stage_order: Stage.find(stage_order.stage_first),
+            second_stage_order: Stage.find(stage_order.stage_second),
+            stage_date: stage_order.fes_date,
+            use_time_interval: stage_order.use_time_interval,
+            prepare_time_interval: stage_order.prepare_time_interval,
+            cleanup_time_interval: stage_order.cleanup_time_interval,
+            prepare_start_time: stage_order.prepare_start_time,
+            performance_start_time: stage_order.performance_start_time,
+            performance_end_time: stage_order.performance_end_time,
+            cleanup_end_time: stage_order.cleanup_end_time
+          }
+        end
       else
-        first_stage_order = "-9999"
-        second_stage_order = "-9999"
-        stage_date = "-9999"
-        stage_order = {
+        stage_orders_list = {
+          id: "-9999",
+          is_sunny: "-9999",
+          first_stage_order: "-9999",
+          second_stage_order: "-9999",
+          stage_date: "-9999",
           use_time_interval: "-9999",
           prepare_time_interval: "-9999",
           cleanup_time_interval: "-9999",
@@ -131,7 +147,6 @@ class Api::V1::CurrentUserApiController < ApplicationController
           stage_content: "-9999",
         }
       end
-
 
       # 電力申請情報を取得
       if !group.power_orders.nil?
@@ -244,10 +259,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
         first_place_order: first_place_order,# 第一希望のIDからステージ名を復号
         second_place_order: second_place_order, # 第二希望ステージのIDからステージ名を復号
         third_place_order: third_place_order, # 第三希望ステージのIDからステージ名を復号
-        stage_order: stage_order,
-        first_stage_order: first_stage_order, # 第一希望ステージのIDからステージ名を復号
-        second_stage_order: second_stage_order, # 第二希望ステージのIDからステージ名を復号
-        stage_date: stage_date, # 日付のIDから日付を復号
+        stage_orders: stage_orders_list,
         stage_common_option: stage_common_option,
         power_orders: power_orders,
         rental_orders: rental_orders_list,
