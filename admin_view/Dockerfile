@@ -12,3 +12,5 @@ RUN npm install -g create-nuxt-app
 RUN npm install @nuxtjs/axios
 RUN npm install @nuxtjs/auth
 RUN npm install pdfmake
+
+RUN npm run build
