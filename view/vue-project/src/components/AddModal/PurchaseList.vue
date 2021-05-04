@@ -124,19 +124,17 @@ export default {
       .then((response) => {
         this.shops = response.data;
       })
+      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
+        headers: {
+        "Content-Type": "application/json",
+        }
+        })
+        .then(response => {
+        this.food_products = response.data;
+        })
     },
 
   methods: {
-    reload: function () {
-      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          this.purchase_lists = response.data;
-        });
-    },
     register: function () {
       axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
@@ -157,6 +155,19 @@ export default {
         this.item = "";
         this.isFresh = "";
       });
+    },
+    getFoodProducts: function() {
+      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid")
+        }
+      })
+        .then(response => {
+          this.food_products = response.data;
+        });
     },
   }
 }
