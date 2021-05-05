@@ -7,8 +7,8 @@ RUN rm -f /etc/nginx/conf.d/*
 ADD group-manager-api.conf /etc/nginx/conf.d/group-manager-api.conf
 ADD group-manager.conf /etc/nginx/conf.d/group-manager.conf
 ADD group-manager-admin.conf /etc/nginx/conf.d/group-manager-admin.conf
-ADD nutfes-record-api.conf /etc/nginx/conf.d/nutfes-record-api.conf
-ADD nutfes-record.conf /etc/nginx/conf.d/nutfes-record.conf
+ADD record-api.conf /etc/nginx/conf.d/record-api.conf
+ADD record.conf /etc/nginx/conf.d/record.conf
 
 # ビルド完了後にNginxを起動
 CMD /usr/sbin/nginx -g 'daemon off;' -c /etc/nginx/nginx.conf
