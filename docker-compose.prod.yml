@@ -45,7 +45,7 @@ services:
     container_name: 'GM2-ADMIN-VIEW'
     ports:
       - "8000:8000"
-    command: npm run dev
+    command: npm run start
     volumes:
       - ./admin_view:/app
     tty: true

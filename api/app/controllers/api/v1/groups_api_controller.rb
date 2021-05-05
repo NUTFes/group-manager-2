@@ -54,15 +54,28 @@ class Api::V1::GroupsApiController < ApplicationController
       place_second = Place.find(group.place_order.second).name
       place_third = Place.find(group.place_order.third).name
     end
-    if group.stage_order == nil
-      stage_first = '未登録'
-      stage_second = '未登録'
-      fes_date = '未登録'
-    else
-      stage_first = Stage.find(group.stage_order.stage_first).name
-      stage_second = Stage.find(group.stage_order.stage_second).name
-      fes_date = FesDate.find(group.stage_order.fes_date_id).date
+    stage_orders_lists = []
+    for stage_order in group.stage_orders
+      is_sunny = stage_order.is_sunny
+      stage_first = Stage.find(stage_order.stage_first).name
+      stage_second = Stage.find(stage_order.stage_second).name
+      fes_date = FesDate.find(stage_order.fes_date_id).date
+      stage_orders_lists << {
+        is_sunny: is_sunny,
+        stage_first: stage_first,
+        stage_second: stage_second,
+        fes_date: fes_date,
+      }
     end
+    # if group.stage_orders == nil
+    #   stage_first = '未登録'
+    #   stage_second = '未登録'
+    #   fes_date = '未登録'
+    # else
+    #   stage_first = Stage.find(group.stage_order.stage_first).name
+    #   stage_second = Stage.find(group.stage_order.stage_second).name
+    #   fes_date = FesDate.find(group.stage_order.fes_date_id).date
+    # end
     rental_order_lists = []
     for rental_order in group.rental_orders
       rental_id = rental_order.rental_item.id
@@ -89,9 +102,7 @@ class Api::V1::GroupsApiController < ApplicationController
       place_first: place_first,
       place_second: place_second,
       place_third: place_third,
-      stage_first: stage_first,
-      stage_second: stage_second,
-      fes_date: fes_date,
+      stage_orders_lists: stage_orders_lists,
       purchase_list: purchase_list,
       rental_order_lists: rental_order_lists,
     }
@@ -105,7 +116,7 @@ class Api::V1::GroupsApiController < ApplicationController
     stage_common_option = group.stage_common_option
     power_orders = group.power_orders
     place_order = group.place_order
-    stage_order = group.stage_order
+    stage_orders = group.stage_orders
     food_products = group.food_products
     group_details = []
     group_details = {
@@ -115,7 +126,7 @@ class Api::V1::GroupsApiController < ApplicationController
       stage_common_option: stage_common_option,
       power_orders: power_orders,
       place_order: place_order,
-      stage_order: stage_order,
+      stage_orders: stage_orders,
       food_products: food_products,
     }
     render json: group_details 

@@ -45,7 +45,7 @@
               </v-card-text>
               <v-card-action>
                 <v-btn color="btn" rounded depressed dark block @click="submit">変更登録</v-btn>
-                <v-btn color="btn" text block @click="cancel">リセット</v-btn>
+                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
               </v-card-action>
             </v-col>
             <v-col cols="2"></v-col>

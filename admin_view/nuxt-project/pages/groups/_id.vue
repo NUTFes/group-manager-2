@@ -302,13 +302,13 @@
         </v-row>
         <br />
         <v-row v-if="groupCategoryId === 3">
-          <v-col cols="6">
-            <v-card flat class="ml-15">
+          <v-col cols="6" v-for="stageOrder in stageOrders" :key="stageOrder.id">
+            <v-card flat class="ml-15" v-if="stageOrder.is_sunny === true">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card-title class="font-weight-bold mt-3">
-                    ステージ：
+                    ステージ：晴れ
                   </v-card-title>
                   <hr class="mt-n3" />
                   <v-simple-table class="my-9">
@@ -319,7 +319,7 @@
                             <th>希望日：</th>
                           </router-link>
                           <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                            <td>{{ fes_date }}</td>
+                            <td>{{ isSunnyLists.fes_date }}</td>
                           </router-link>
                         </tr>
                         <tr>
@@ -327,7 +327,7 @@
                             <th>第一希望：</th>
                           </router-link>
                           <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                            <td>{{ stage_first }}</td>
+                            <td>{{ isSunnyLists.stage_first }}</td>
                           </router-link>
                         </tr>
                         <tr>
@@ -335,7 +335,7 @@
                             <th>第二希望：</th>
                           </router-link>
                           <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
-                            <td>{{ stage_second }}</td>
+                            <td>{{ isSunnyLists.stage_second }}</td>
                           </router-link>
                         </tr>
                         <tr>
@@ -347,7 +347,81 @@
                           </router-link>
                         </tr>
                         <tr>
+                          <router-link :to="{ kname: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>パフォーマンス開始時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.performance_start_time }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
                           <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>パフォーマンス終了時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.performance_end_time }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>掃除終了時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.cleanup_end_time }}</td>
+                          </router-link>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-col>
+              </v-row>
+            </v-card>
+            
+            <v-card flat class="mr-15" v-if="stageOrder.is_sunny === false">
+              <v-row>
+                <v-col cols="1"></v-col>
+                <v-col cols="10">
+                  <v-card-title class="font-weight-bold mt-3">
+                    ステージ：雨
+                  </v-card-title>
+                  <hr class="mt-n3" />
+                  <v-simple-table class="my-9">
+                    <template v-slot:default>
+                      <tbody>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>希望日：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ isRainyLists.fes_date }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>第一希望：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ isRainyLists.stage_first }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>第二希望：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ isRainyLists.stage_second }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                            <th>準備開始時刻：</th>
+                          </router-link>
+                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                            <td>{{ stageOrder.prepare_start_time }}</td>
+                          </router-link>
+                        </tr>
+                        <tr>
+                          <router-link :to="{ kname: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
                             <th>パフォーマンス開始時刻：</th>
                           </router-link>
                           <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
@@ -377,8 +451,11 @@
               </v-row>
             </v-card>
           </v-col>
+        </v-row>
+        <br />
+        <v-row>
           <v-col cols="6">
-            <v-card flat class="mr-15">
+            <v-card flat class="ml-15">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
@@ -665,10 +742,10 @@ export default {
       place_first: [],
       place_second: [],
       place_third: [],
-      stage_first: [],
-      stage_second: [],
+      stageOrdersLists: [],
+      isSunnyLists: [],
+      isRainyLists: [],
       rentalOrderLists: [],
-      fes_date: [],
       purchase_lists: [],
       expand: false,
       dialog: false,
@@ -682,7 +759,7 @@ export default {
       placeOrder: [],
       powerOrders: [],
       rentalOrders: [],
-      stageOrder: [],
+      stageOrders: [],
       stageCommonOption: [],
       foodProducts: [],
       edit_dialog: false,
@@ -781,11 +858,17 @@ export default {
           this.place_first = this.data.place_first;
           this.place_second = this.data.place_second;
           this.place_third = this.data.place_third;
-          this.stage_first = this.data.stage_first;
-          this.stage_second = this.data.stage_second;
+          this.stageOrdersLists = this.data.stage_orders_lists;
           this.rentalOrderLists = this.data.rental_order_lists;
-          this.fes_date = this.data.fes_date;
           this.purchase_lists = this.data.purchase_lists;
+
+          for (var i = 0; i < 2; i++){
+            if (stageOrdersLists[i].is_sunny){
+              this.isSunnyLists = stageOrdersLists[i]
+            } else {
+              this.isRainyLists = stageOrdersLists[i]
+            }
+          }
         });
       const group_detail_url = "api/v1/get_group_detail/" + this.$route.params.id;
       this.$axios.get(group_detail_url, {
@@ -801,7 +884,7 @@ export default {
         this.placeOrder = this.detail_data.place_order;
         this.powerOrders = this.detail_data.power_orders;
         this.rentalOrders = this.detail_data.rental_orders;
-        this.stageOrder = this.detail_data.stage_order;
+        this.stageOrders = this.detail_data.stage_orders;
         this.stageCommonOption = this.detail_data.stage_common_option;
         this.foodProducts = this.detail_data.food_products;
       });
@@ -852,7 +935,6 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
           this.reload();
           this.edit_dialog = false;
         });
@@ -886,11 +968,16 @@ export default {
         this.place_first = this.data.place_first;
         this.place_second = this.data.place_second;
         this.place_third = this.data.place_third;
-        this.stage_first = this.data.stage_first;
-        this.stage_second = this.data.stage_second;
+        this.stageOrdersLists = this.data.stage_orders_lists;
         this.rentalOrderLists = this.data.rental_order_lists;
-        this.fes_date = this.data.fes_date;
         this.purchase_lists = this.data.purchase_lists;
+        for (var i = 0; i < 2; i++){
+          if (this.stageOrdersLists[i].is_sunny){
+            this.isSunnyLists = this.stageOrdersLists[i]
+          } else {
+            this.isRainyLists = this.stageOrdersLists[i]
+          }
+        }
       });
 
     const category_url = "group_categories/";
@@ -923,7 +1010,7 @@ export default {
         this.placeOrder = this.detail_data.place_order;
         this.powerOrders = this.detail_data.power_orders;
         this.rentalOrders = this.detail_data.rental_orders;
-        this.stageOrder = this.detail_data.stage_order;
+        this.stageOrders = this.detail_data.stage_orders;
         this.stageCommonOption = this.detail_data.stage_common_option;
         this.foodProducts = this.detail_data.food_products;
       });

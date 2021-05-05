@@ -4,20 +4,19 @@
       <v-col cols="12" align="center">
         <v-card-text>
           <v-form ref="form">
-            <p align="left">
-              天気
-              <v-btn-toggle
-                class="mb-6 ml-6"
-                v-model="isSunny"
-                borderless
-                dense
-                ref="isSunny"
-                color="purple accent-2"
-              >
-                <v-btn value="true" @click="stageListIsSunny">晴れ</v-btn>
-                <v-btn value="false" @click="stageListIsRainy">雨</v-btn>
-              </v-btn-toggle>
-            </p>
+            <v-text
+              v-if="isSunny==true"
+              class="font-weight-bold"
+            >
+              晴れ
+            </v-text>
+            <v-text
+              v-if="isSunny==false"
+              class="font-weight-bold"
+            >
+              雨
+            </v-text>
+            <v-divider class="mb-8" />
             <v-select
               label="何日目か"
               ref="fesDate"
@@ -175,7 +174,10 @@ export default {
     "vue-timepicker": vueTimepicker,
     VueTimepicker
   },
-  props: { groupId: Number },
+  props: { 
+    groupId: Number,
+    isSunny: Boolean,
+  },
   data() {
     return {
       rules: {
@@ -189,17 +191,11 @@ export default {
         { name: "二日目", id: 3 }
       ],
       time_interval: ["5分", "10分", "15分", "20分", "25分", "30分", "35分", "40分", "45分", "50分", "55分", "60分", "65分", "70分", "75分", "80分", "90分", "95分", "100分", "105分", "110分", "115分", "120分"],
-      stageList: [
-        { name: "メインステージ", id: 1, isSelect: false },
-        { name: "サブステージ", id: 2, isSelect: false },
-        { name: "体育館", id: 3, isSelect: true },
-        { name: "マルチメディアセンター", id: 4, isSelect: true },
-        { name: "武道館", id: 5, isSelect: true },
-        { name: "希望なし", id: 6, isSelect: true }
-      ],
+      stageList: [],
+      sunnyStageList: [],
+      rainyStageList: [],
       firstStageList: [],
       secondStageList: [],
-      isSunny: true,
       fesDate: "",
       stageFirst: "",
       stageSecond: "",
@@ -318,21 +314,6 @@ export default {
         }
       );
     },
-    stageListIsSunny() {
-      this.firstStageList = this.stageList;
-      this.secondStageList = this.stageList;
-    },
-    stageListIsRainy() {
-      let stageList = [];
-      for (let i = 0; i < this.stageList.length; i++) {
-        if (this.stageList[i].isSelect) {
-          console.log(this.stageList[i]);
-          stageList.push(this.stageList[i]);
-        }
-      }
-      this.firstStageList = stageList;
-      this.secondStageList = stageList;
-    },
     selectSecondStageList() {
       this.secondStageList = [];
       for (let i = 0; i < this.firstStageList.length; i++) {
@@ -340,10 +321,49 @@ export default {
           this.secondStageList.push(this.firstStageList[i]);
         }
       }
-    }
+    },
+    createSunnyStageList(){
+      this.sunnyStageList = [];
+      for(let i = 0; i < this.stageList.length; i++){
+        if(this.stageList[i].enable_sunny == true){
+          this.sunnyStageList.push(this.stageList[i])
+        }
+      }
+    },
+    createRainyStageList(){
+      this.rainyStageList = [];
+      for(let i = 0; i < this.stageList.length; i++){
+        if(this.stageList[i].enable_rainy == true){
+          this.rainyStageList.push(this.stageList[i])
+        }
+      }
+    },
+    createStageList() {
+      if(this.isSunny==true){
+        this.firstStageList = this.sunnyStageList;
+        this.secondStageList = this.sunnyStageList;
+      }
+      else if(this.isSunny==false){
+        this.firstStageList = this.rainyStageList;
+        this.secondStageList = this.rainyStageList;
+      }
+    },
   },
 
   mounted() {
+    axios.get(process.env.VUE_APP_URL + "/stages",{
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(
+      response => {
+        this.stageList = response.data;
+        this.createSunnyStageList()
+        this.createRainyStageList()
+        this.createStageList()
+      }
+    )
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {

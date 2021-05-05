@@ -1,100 +1,109 @@
 <template>
-  <v-row>
-    <v-col>
-      <div class="login-card">
-        <v-card flat>
-          <v-row align="center">
-            <v-col cols="5">
-              <v-form ref="form" lazy-validation>
-                <v-container>
-                  <v-row justify="center">
-                    <v-col cols="1"></v-col>
-                    <p cols="10" class="mt-3 display-1 grey-title">
+  <div class="login-card">
+    <v-container fill-height>
+      <v-row 
+        align="center" 
+        justify="center" 
+        :style="{ background: $vuetify.theme.themes.light.loginbg }"
+      >
+        <v-col cols="5">
+          <v-form ref="form" lazy-validation>
+            <v-row justify="center">
+              <p cols="10" class="my-10 display-1 font-weight-bold info--text">
+              ログイン
+              </p>
+              <p v-bind:style="warnStyle" v-html="getMessage"></p>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="1">
+                <v-icon color="#424242">mdi-email</v-icon>
+              </v-col>
+              <v-col cols="10" md="10" sm="10">
+                <v-text-field
+                  v-model="email"
+                  ref="email"
+                  label="Eメールアドレス"
+                  v-on:keyup.enter="loginWithAuthModule"
+                  :rules="[rules.requied, rules.email]"
+                  required
+                />
+                  <p class="caption mb-0" />
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="1">
+                <v-icon color="#424242">mdi-key</v-icon>
+              </v-col>
+              <v-col cols="10" md="10" sm="10">
+                <v-text-field
+                  v-model="password"
+                  ref="password"
+                  label="パスワード"
+                  counter
+                  v-on:keyup.enter="loginWithAuthModule"
+                  v-bind:append-icon="
+                                       show_pass ? 'mdi-eye-off' : 'mdi-eye'
+                                       "
+                  :rules="[rules.required, rules.min]"
+                  v-bind:type="show_pass ? 'password' : 'text'"
+                  @click:append="show_pass = !show_pass"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-card-actions>
+                  <v-btn
+                    depressed
+                    text
+                    color="btn"
+                    @click="loginWithAuthModule"
+                  >
+                    パスワードを忘れた場合
+                  </v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    depressed
+                    dark
+                    color="btn"
+                    @click="loginWithAuthModule"
+                  >
                     ログイン
-                    </p>
-                    <p v-bind:style="warnStyle" v-html="getMessage"></p>
-                  </v-row>
-                  <v-row align="center" justify="center">
-                    <v-col cols="1">
-                      <v-icon color="#424242">mdi-email</v-icon>
-                    </v-col>
-                    <v-col cols="10" md="10" sm="10">
-                      <v-text-field
-                        v-model="email"
-                        ref="email"
-                        label="Eメールアドレス"
-                        v-on:keyup.enter="loginWithAuthModule"
-                        :rules="[rules.requied, rules.email]"
-                        required
-                        />
-                        <p class="caption mb-0" />
-                    </v-col>
-                  </v-row>
-                  <v-row align="center" justify="center">
-                    <v-col cols="1">
-                      <v-icon color="#424242">mdi-key</v-icon>
-                    </v-col>
-                    <v-col cols="10" md="10" sm="10">
-                      <v-text-field
-                        v-model="password"
-                        ref="password"
-                        label="パスワード"
-                        counter
-                        v-on:keyup.enter="loginWithAuthModule"
-                        v-bind:append-icon="
-                                             show_pass ? 'mdi-eye-off' : 'mdi-eye'
-                                             "
-                        :rules="[rules.required, rules.min]"
-                        v-bind:type="show_pass ? 'password' : 'text'"
-                        @click:append="show_pass = !show_pass"
-                        />
-                    </v-col>
-                  </v-row>
-                  <v-row align="center" justify="center">
-                    <v-col cols="1" />
-                      <v-col cols="10" md="10" sm="10">
-                        <v-btn
-                          block
-                          class="mr-4 blue white--text"
-                          @click="loginWithAuthModule"
-                          >
-                          ログイン
-                        </v-btn>
-                      </v-col>
-                  </v-row>
-                  <v-container>
-                    <v-row align="center" justify="center">
-                      <v-col cols="2" />
-                        <v-col cols="8">
-                          <nuxt-link class="text-center" to="/signup">
-                            <div style="color:black">新規登録はこちら</div>
-                          </nuxt-link>
-                        </v-col>
-                        <v-col cols="2" />
-                    </v-row>
-                  </v-container>
-                </v-container>
-              </v-form>
-            </v-col>
-            <v-col cols="7">
-              <v-img
-                position="right"
-                min-height="600"
-                max-height="600"
-                v-bind:src="image_src"
-                class="mt-n3 pt-n3 mb-n3 pb-n3"
-                >
-                <div class="inner">
-                  <img width="80%" src="@/assets/logo_japanese.svg" />
-                  <img width="80%" src="@/assets/logo_english.svg" />
-                </div>
-              </v-img>
-            </v-col>
-          </v-row>
-        </v-card>
-      </div>
-    </v-col>
-  </v-row>
+                    <v-icon class="mx-n1">mdi-menu-right</v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+            <v-container>
+              <v-row align="center" justify="center">
+                <v-col cols="2" />
+                  <v-col cols="8">
+                    <nuxt-link class="text-center" to="/signup">
+                      <div style="color:black">新規登録はこちら</div>
+                    </nuxt-link>
+                  </v-col>
+                  <v-col cols="2" />
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-col>
+        <v-col cols="7" class="mr-n6">
+          <v-img
+            position="center"
+            min-height="700"
+            max-height="800"
+            v-bind:src="image_src"
+            class="my-n3"
+          >
+            <div class="inner">
+              <img width="80%" src="@/assets/logo_japanese.svg" />
+              <img width="80%" src="@/assets/logo_english.svg" />
+            </div>
+          </v-img>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -167,10 +176,8 @@ export default {
 
 <style scoped>
 .login-card {
-  padding-top: 5%;
   padding-left: 20%;
   padding-right: 20%;
-  padding-bottom: 5%;
   height: 100%;
 }
 .grey-title {
