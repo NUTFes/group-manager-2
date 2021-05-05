@@ -3,11 +3,9 @@
     <v-row>
       <v-col>
         <div class="signup-card">
-          <v-card class="mt-5 mx-auto " max-width="600" flat>
-            <v-row justify="center" style="padding-top:5%; padding-bottom:5%">
-              <p cols="12" class="mt-3 display-1">
-              詳細登録
-              </p>
+          <v-card class="mt-5 mx-auto" max-width="600" flat>
+            <v-row justify="center" style="padding-top: 5%; padding-bottom: 5%">
+              <p cols="12" class="mt-3 display-1">詳細登録</p>
             </v-row>
             <v-row>
               <v-col cols="1"></v-col>
@@ -21,7 +19,7 @@
                   :rules="[rules.min, rules.over]"
                   counter="8"
                   clearable
-                  ></v-text-field>
+                ></v-text-field>
                 <v-text-field
                   label="TEL"
                   background-color="white"
@@ -31,7 +29,7 @@
                   hint="ハイフンなしで半角入力"
                   persistent-hint
                   clearable
-                  ></v-text-field>
+                ></v-text-field>
                 <v-select
                   v-model.number="department_id"
                   :items="departments"
@@ -41,7 +39,7 @@
                   item-value="id"
                   outlined
                   clearable
-                  ></v-select>
+                ></v-select>
                 <v-select
                   v-model.number="grade_id"
                   :items="grades"
@@ -51,7 +49,7 @@
                   item-value="id"
                   outlined
                   clearable
-                  ></v-select>
+                ></v-select>
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
@@ -64,7 +62,7 @@
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <br>
+            <br />
           </v-card>
         </div>
       </v-col>
@@ -73,20 +71,21 @@
 </template>
 
 <style>
-h1{
+h1 {
   text-align: center;
   color: purple;
 }
 </style>
 
 <script>
-import axios from 'axios'
-import Header from '../components/Header.vue'
+import axios from "axios";
+import Header from "../components/Header.vue";
 export default {
+  auth: false,
   components: {
-    Header, 
-　},
-  data () {
+    Header,
+  },
+  data() {
     return {
       student_id: [],
       tel: [],
@@ -94,12 +93,12 @@ export default {
       department_id: [],
       grade_id: [],
 
-      rules:{
-        min: v => v.length >= 8 || '8桁かどうかを確認してください',
-        over: v => v.length <= 8 || '8桁かどうかを確認してください',
+      rules: {
+        min: (v) => v.length >= 8 || "8桁かどうかを確認してください",
+        over: (v) => v.length <= 8 || "8桁かどうかを確認してください",
       },
 
-      departments:[
+      departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
         { name: "物質材料工学課程", id: 3 },
@@ -119,9 +118,9 @@ export default {
         { name: "材料工学専攻", id: 17 },
         { name: "エネルギー・環境工学専攻", id: 18 },
         { name: "生物統合工学専攻", id: 19 },
-        { name: "その他", id: 20 }
+        { name: "その他", id: 20 },
       ],
-      grades:[
+      grades: [
         { name: "B1[学部1年]", id: 1 },
         { name: "B2[学部2年]", id: 2 },
         { name: "B3[学部3年]", id: 3 },
@@ -136,53 +135,52 @@ export default {
         { name: "GD3[イノベ3年]", id: 12 },
         { name: "GD4[イノベ4年]", id: 13 },
         { name: "GD5[イノベ5年]", id: 14 },
-        { name: "その他", id: 15 }
-      ]
-    }
-
+        { name: "その他", id: 15 },
+      ],
+    };
   },
 
   methods: {
-    register: function() {
-      this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
+    register: function () {
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
-      params.append('student_id', this.student_id);
-      params.append('tel', this.tel);
-      params.append('department_id', this.department_id);
-      params.append('grade_id', this.grade_id);
-      params.append('user_id', this.user.id);
-      this.$axios.post('/user_details', params).then(
+      params.append("student_id", this.student_id);
+      params.append("tel", this.tel);
+      params.append("department_id", this.department_id);
+      params.append("grade_id", this.grade_id);
+      params.append("user_id", this.user.id);
+      this.$axios.post("/user_details", params).then(
         (response) => {
-          this.$router.push('/dashboard')
+          this.$router.push("/dashboard");
         },
         (error) => {
-          return error
+          return error;
         }
-        )
+      );
     },
 
-    reset: function(){
-      this.student_id = ''
-      this.tel = ''
-      this.department_id = ''
-      this.grade_id = ''
+    reset: function () {
+      this.student_id = "";
+      this.tel = "";
+      this.department_id = "";
+      this.grade_id = "";
     },
   },
 
   mounted() {
-    this.$axios.get('/api/v1/users/show', {
-      headers: { 
-        "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }
-    )
-      .then(response => {
-        this.user = response.data.data
+    this.$axios
+      .get("/api/v1/users/show", {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
       })
-  }
-}
+      .then((response) => {
+        this.user = response.data.data;
+      });
+  },
+};
 </script>
 

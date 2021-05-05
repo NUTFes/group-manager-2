@@ -86,37 +86,36 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
-  data () {
+  auth: false,
+  data() {
     return {
-      password: '',
-      password_confirmation: '',
-      email: '',
-      name: ''
-    }
+      password: "",
+      password_confirmation: "",
+      email: "",
+      name: "",
+    };
   },
   methods: {
     signup() {
       var params = new URLSearchParams();
-      params.append('name', this.name);
-      params.append('email', this.email);
-      params.append('role_id', 2); // デフォルトはmanager権限
-      params.append('password', this.password);
-      params.append('password_confirmation', this.password_confirmation);
-      this.$axios.defaults.headers.common['Content-Type'] = 'application/json';
-      this.$axios.post('/api/auth', params).then(
-        (response) => {
-          localStorage.setItem('access-token', response.headers['access-token'])
-          localStorage.setItem('client', response.headers['client'])
-          localStorage.setItem('uid', response.headers['uid'])
-          localStorage.setItem('token-type', response.headers['token-type'])
-          this.$router.push('regist_user_detail')
-        }
-      )
-    }
-  }
-}
+      params.append("name", this.name);
+      params.append("email", this.email);
+      params.append("role_id", 2); // デフォルトはmanager権限
+      params.append("password", this.password);
+      params.append("password_confirmation", this.password_confirmation);
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      this.$axios.post("/api/auth", params).then((response) => {
+        localStorage.setItem("access-token", response.headers["access-token"]);
+        localStorage.setItem("client", response.headers["client"]);
+        localStorage.setItem("uid", response.headers["uid"]);
+        localStorage.setItem("token-type", response.headers["token-type"]);
+        this.$router.push("regist_user_detail");
+      });
+    },
+  },
+};
 </script>
 
 <style>
