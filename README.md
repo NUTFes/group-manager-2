@@ -10,10 +10,11 @@
 ## 使用技術
 ![group-manager_jpg 001](https://user-images.githubusercontent.com/33748835/117113055-ec9f7300-adc4-11eb-8596-39ece1173bee.jpeg)
 
-### view(ユーザー画面)
 ### api
 ruby 2.7.1  
-rails 6.1.3.1  
+rails 6.1.3.1
+
+### view(ユーザー画面)
 SPA
 node v12.14.1
 @vue/cli 4.4.4
