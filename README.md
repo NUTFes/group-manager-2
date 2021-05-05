@@ -1,4 +1,4 @@
-# 参加団体管理アプリ
+# 参加団体管理アプリ ver 2.X
 ## ユーザー画面（参加団体向け）
 [site](http://group-manager.nutfes.net/)
 <img width="1680" alt="user" src="https://user-images.githubusercontent.com/33748835/117110132-a3e5bb00-adc0-11eb-9ae4-5e90e1718f2d.png">
