@@ -8,7 +8,7 @@
 <img width="1680" alt="admin_page" src="https://user-images.githubusercontent.com/33748835/117109914-5a956b80-adc0-11eb-8f76-d256368b0cd3.png">
 
 ## 使用技術
-![group-manager_jpg 001](https://user-images.githubusercontent.com/33748835/117113055-ec9f7300-adc4-11eb-8596-39ece1173bee.jpeg)
+![group-manager-jpeg 001](https://user-images.githubusercontent.com/33748835/117114823-45700b00-adc7-11eb-8bab-7442f38a7065.jpeg)
 
 ### api
 ruby 2.7.1 <br> 
