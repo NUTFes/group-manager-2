@@ -2,7 +2,8 @@
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color:#ECEFF1; font-size:30px">
-        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon><b>購入品情報の修正</b>
+        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon>
+        <b>購入品情報の修正</b>
         <v-spacer></v-spacer>
         <v-btn text fab @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
       </v-card-title>
@@ -13,7 +14,7 @@
             <v-card-text>
               <v-form ref="form">
                 <v-select
-                  label="販売食品"
+                  label="使用目的食品"
                   v-model="foodProductId"
                   :items="food_products"
                   :menu-props="{
@@ -85,11 +86,12 @@
 <script>
 import axios from 'axios'
 export default {
-   props: {
-    id: Number,
-    groupId: Number,
+  props: {
     foodProductId: Number,
+    groupId: Number,
+    id: Number,
     item: String,
+    foodProduct: String,
     shopId: Number,
     fesDateId: Number,
     isFresh: Boolean,
@@ -110,7 +112,7 @@ export default {
 
     }
   },
-  mounted(groupId) {
+  mounted() {
     axios.get(process.env.VUE_APP_URL + "/fes_dates", {
         headers: {
           "Content-Type": "application/json",
@@ -119,6 +121,7 @@ export default {
       .then((response) => {
         this.fes_dates = response.data;
       })
+
     axios.get(process.env.VUE_APP_URL + "/shops", {
         headers: {
           "Content-Type": "application/json",
@@ -127,30 +130,21 @@ export default {
       .then((response) => {
         this.shops = response.data;
       })
-    axios.get(process.env.VUE_APP_URL + "/", {
+
+        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
         headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.fes_dates = response.data;
-      })
-    },
+        "Content-Type": "application/json",
+        }
+        })
+        .then(response => {
+        this.food_products = response.data;
+        })
+  },
 
   methods: {
-    reload: function () {
-      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          this.purchase_lists = response.data;
-        });
-    },
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
-      const url = process.env.VUE_APP_URL + '/purchase_lists/' + this.id +  '?items=' + this.item + '&shop_id=' + this.shopId + '&fes_date_id=' + this.fesDateId + '&items=' + this.item + '&is_fresh=' + this.isFresh
+      const url = process.env.VUE_APP_URL + '/purchase_lists/' + this.id +  '?food_product=' + this.foodProduct + '&shop_id=' + this.shopId + '&fes_date_id=' + this.fesDateId + '&items=' + this.item + '&is_fresh=' + this.isFresh
       console.log(url)
       axios.put(url).then(
         (response) => {
@@ -162,7 +156,20 @@ export default {
           return error;
         }
       )
-    }
+    },
+    getFoodProducts: function() {
+      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid")
+        }
+      })
+        .then(response => {
+          this.food_products = response.data;
+        });
+    },
   }
 }
 </script>
