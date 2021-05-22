@@ -238,7 +238,7 @@ export default {
       )
         .then(response => {
           this.isEditRentalOrder = response.data[0].is_edit_rental_order
-          this.isAddRentalOrder = response.data[0].is_add_rental_order
+          this.isAddRentalOrder = response.data[0].add_rental_order
         })
     },
 
