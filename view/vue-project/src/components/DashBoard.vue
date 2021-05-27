@@ -1,24 +1,18 @@
 <template>
 	<v-row>
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
+    <v-col>
       <v-card elevation="0" color="#ECEFF1">
         <v-row align="center">
-          <v-col cols=9>
+          <v-col>
             <v-card-text class="font-weight-bold subtitle-1">
-            <h3>{{ user.name }}  様</h3>
-            <h3>技大祭に参加していただき誠にありがとうございます。<br>登録情報の確認や変更が行えます。<br>入力締め切りはお守りいただくよう、よろしくお願いします。</h3>
+            <h2>{{ user.name }}  様</h2>
+            <v-divider class="my-3"/>
+            技大祭に参加していただき誠に<br>ありがとうございます。<br>登録情報の確認や変更が行えます。<br>入力締め切りはお守りいただくよう、<br>よろしくお願いします。
             </v-card-text>
           </v-col> 
-          <v-col cols=3> 
-            <v-list-item link to="/Firstcustomer" class="justify-end">初めての方へ</v-list-item>
-            <v-list-item link to="/group" class="justify-end">参加団体管理アプリとは</v-list-item>
-            <v-list-item link to="/group" class="justify-end">よくあるご質問</v-list-item>
-          </v-col>
         </v-row>
       </v-card>
     </v-col>
-    <v-col cols="2"></v-col>
   </v-row>
 </template>
 

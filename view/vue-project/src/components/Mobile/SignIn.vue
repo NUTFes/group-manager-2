@@ -3,7 +3,7 @@
       <v-col cols="1"></v-col>
       <v-col cols="10">
         <v-card flat class="py-5">
-          <v-card-title class="headline font-weight-bold">
+          <v-card-title class="text-center font-weight-bold">
             ログイン
           </v-card-title>
           <v-card-text>
@@ -34,6 +34,7 @@
             <v-card-actions>
               <v-btn 
                 color="btn" 
+                small
                 text  
                 dark 
                 rounded
@@ -42,13 +43,14 @@
                 @click="cancel">パスワードを忘れた場合</v-btn>
               <v-btn 
                 color="btn" 
+                small
                 depressed
                 absolute
                 right 
                 dark 
                 rounded
                 class="pl-4 font-weight-bold"
-                @click="submit">ログイン<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                @click="MobileSubmit">ログイン<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
             </v-card-actions>
        </v-card>
       </v-col>
@@ -100,7 +102,7 @@ export default {
       })
       this.show = false
     },
-    submit: function() {
+    MobileSubmit: function() {
       this.formHasErrors = false
 
       Object.keys(this.form).forEach(f => {
@@ -120,7 +122,7 @@ export default {
           localStorage.setItem('client', response.headers['client'])
           localStorage.setItem('uid', response.headers['uid'])
           localStorage.setItem('token-type', response.headers['token-type'])
-          this.$router.push('MyPage')
+          this.$router.push('mobile_mypage')
         },
         (error) => {
           this.message = 'ログインに失敗しました。<br>Failed to SignIn'

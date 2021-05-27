@@ -16,6 +16,8 @@ import RegistPurchase from "../views/regist_purchase.vue";
 import Firstcustomer from "../views/FirstCustomer.vue";
 import EditUserInfo from "../views/edit_user_info.vue";
 import PasswordReset from "../views/password_reset.vue";
+import MobileWelcome from "../views/Mobile/Welcome.vue"
+import MobileMypage from "../views/Mobile/Mypage.vue"
 
 Vue.use(VueRouter);
 
@@ -95,7 +97,17 @@ const routes = [
     path: "/edit_user_info",
     name: "EditUserInfo",
     component: EditUserInfo
-  }
+  },
+  {
+    path: "/mobile_welcome",
+    name: "MobileWelcome",
+    component: MobileWelcome,
+  },
+  {
+    path: "/mobile_mypage",
+    name: "MobileMypage",
+    component: MobileMypage,
+  },
 ];
 
 const router = new VueRouter({

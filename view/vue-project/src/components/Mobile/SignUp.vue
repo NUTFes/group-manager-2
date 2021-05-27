@@ -3,13 +3,12 @@
     <v-col cols="1"></v-col>
     <v-col cols="10">
       <v-card flat class="py-5">
-        <v-card-title class="headline font-weight-bold">
+        <v-card-title class="font-weight-bold">
           新規登録
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-form ref="form">
-              <p v-bind:style="warnStyle" v-html="getMessage"></p>
               <v-text-field
                   label="フルネーム"
                   ref="name"
@@ -50,9 +49,10 @@
                   ></v-text-field>
             </v-form>
           </v-container>
-        <v-card-actions class="pt-10 pb-3">
+        <v-card-actions class="pt-6">
           <v-btn 
             color="btn" 
+            small
             depressed
             absolute
             right 
@@ -63,6 +63,7 @@
         </v-card-actions>
 
         </v-card-text>
+
       </v-card>
     </v-col>
     <v-col cols="1"></v-col>
