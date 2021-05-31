@@ -76,6 +76,7 @@ Rails.application.routes.draw do
       # 電力申請周り
       get "get_power_orders" => "power_orders_api#get_power_orders"
       get "get_power_order/:id" => "power_orders_api#get_power_order"
+      get "get_print_power_orders" => "power_orders_api#get_print_power_orders"
       # 使用可能物品周り
       get "get_rental_item_allow_lists" => "rental_item_allow_lists_api#get_rental_item_allow_lists"
       get "get_rental_item_allow_list/:id" => "rental_item_allow_lists_api#get_rental_item_allow_list"

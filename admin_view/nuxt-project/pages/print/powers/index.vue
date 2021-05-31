@@ -23,20 +23,29 @@
       <h3>テーブルを印刷する</h3>
       <v-simple-table dense>
         <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">ID</th>
-              <th class="text-left">name</th>
-              <th class="text-left">email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-            </tr>
-          </tbody>
+          <table border=solid>
+            <thead>
+              <tr>
+                <th class="text-left">団体名</th>
+                <th class="text-left">製品名</th>
+                <th class="text-left">電力</th>
+                <th class="text-left">メーカー</th>
+                <th class="text-left">型番</th>
+                <th class="text-left">URL</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="power_order in power_orders" :key="power_order.id">
+                <td>{{power_order.group}}</td>
+                <td>{{power_order.power_order.item}}</td>
+                <td>{{power_order.power_order.power}}</td>
+                <td>{{power_order.power_order.manufacturer}}</td>
+                <td>{{power_order.power_order.model}}</td>
+                <td>{{power_order.power_order.item_url}}</td>
+              </tr>
+            </tbody>
+          </table>
         </template>
       </v-simple-table>
     </div>
@@ -58,27 +67,31 @@ export default {
   data() {
     return {
       list: null,
-      users: null
+      power_orders: null
     }
   },
   components:{
     Header,
     Menu,
   },
-  mounted() {
-    this.getList()
+  async mounted() {
+    await this.getList()
     setTimeout(this.handlePrint, 100);
   },
   methods: {
-    getList() {
-      this.$axios.get('api/v1/users/index', {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      })
-      .then(response => {
-        this.users = response.data.data
-      })
+    async getList(){
+      try {
+        var list = await this.$axios.get('api/v1/get_power_orders', {
+          headers: {
+            "Content-Type": "application/json",
+          }
+        })
+        this.power_orders = list.data
+        console.log(this.power_orders)
+      } catch(e) {
+        this.powers = []
+        console.error("error")
+      }
     },
     handlePrint() {
       window.print()

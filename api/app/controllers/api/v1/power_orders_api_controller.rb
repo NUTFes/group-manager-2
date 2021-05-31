@@ -1,5 +1,21 @@
 class Api::V1::PowerOrdersApiController < ApplicationController
 
+  def get_print_power_orders
+    groups = Group.all
+    print_power_list = []
+    for group in groups
+      power_orders = group.power_orders
+      name = group.name
+      count = power_orders.length
+      print_power_list << {
+      name: name,
+      count: count,
+      power_orders: power_orders,
+      }
+    end
+    render json: print_power_list
+  end
+
   def get_power_orders
     # 電力申請の一覧を取得する
     power_orders = PowerOrder.all
