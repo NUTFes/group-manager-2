@@ -19,6 +19,7 @@ import PasswordReset from "../views/password_reset.vue";
 import MobileWelcome from "../views/Mobile/Welcome.vue"
 import MobileMypage from "../views/Mobile/Mypage.vue"
 import MobilePasswordReset from "../views/Mobile/password_reset.vue";
+import MobileEditUserInfo from "../views/Mobile/edit_user_info.vue"
 
 Vue.use(VueRouter);
 
@@ -114,7 +115,13 @@ const routes = [
     name: "MobilePasswordReset",
     component: MobilePasswordReset,
   },
+  {
+    path: "/mobile_edit_user_info",
+    name: "MobileEditUserInfo",
+    component: MobileEditUserInfo,
+  }
 ];
+
 
 const router = new VueRouter({
   mode: "history",

@@ -1,16 +1,14 @@
 <template>
   <v-row justify="center">
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
+    <v-col></v-col>
       <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8" align="center">
+          <v-col align="center">
               <v-card-title class="justify-center">
-                <h1 style="color:#333333">ユーザー情報変更</h1>
+                <h2 style="color:#333333">ユーザー情報変更</h2>
               </v-card-title>
-		<br>
+		              <br>
 		<v-divider/>
 		<br>
               <v-card-text>
@@ -77,10 +75,9 @@
               </v-card-text>
               <v-card-action>
                 <v-btn color="btn" dark block rounded depressed @click="submit">登録</v-btn>
-                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
+                <v-btn color="btn" text block rounded to="/mobile_mypage">マイページに戻る</v-btn>
               </v-card-action>
             </v-col>
-            <v-col cols="2"></v-col>
           </v-row>
         </v-container>
       </v-card>
@@ -187,7 +184,7 @@ export default {
         (response) => {
           console.log(response)
           localStorage.setItem('uid', this.email)
-          this.$router.push('MyPage')
+          this.$router.push('mobile_mypage')
         },
         (error) => {
           console.log('登録できませんでした')
