@@ -127,7 +127,7 @@
                   <v-col class="pa-5 text-body-1 welcome-textbox-blue white">
                     <div class="font-weight-bold welcome-textbox">
                       <p>
-                        ここ文章が入りますああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                        サークル・研究室・留学生など毎年たくさんの団体に出店していただいています。
                       </p>
                     </div>
                   </v-col>
@@ -174,7 +174,7 @@
                   <v-col class="pa-5 text-body-1 welcome-textbox-white">
                     <div class="font-weight-bold welcome-textbox">
                       <p>
-                        ここに文章が入りますあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                        機械建設棟前のメインステージを使ってパフォーマンスをしていただいています。
                       </p>
                     </div>
                   </v-col>
@@ -227,7 +227,7 @@
                   <v-col class="pa-5 text-body-1 welcome-textbox-blue white">
                     <div class="box font-weight-bold welcome-textbox">
                       <p>
-                        ここに文章が入りますあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                        主にサークル活動の楽しさを伝えるための展示や体験ができるブースを出店していただいています。
                       </p>
                     </div>
                   </v-col>
@@ -274,8 +274,7 @@
                   <v-col class="pa-5 text-body-1 welcome-textbox-white">
                     <div class="font-weight-bold welcome-textbox">
                       <p>
-                        ここに文章が入ります<br>
-                        あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ。
+                        研究内容に興味を持ってもらえるような展示や体験ブースを出店していただいています。
                       </p>
                     </div>
                   </v-col>
