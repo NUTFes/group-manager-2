@@ -3,7 +3,7 @@
       <v-col cols="1"></v-col>
       <v-col cols="10">
         <v-card flat class="py-5">
-          <v-card-title class="text-center font-weight-bold">
+          <v-card-title class="headline font-weight-bold">
             ログイン
           </v-card-title>
           <v-card-text>

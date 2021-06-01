@@ -1,9 +1,11 @@
 <template>
   <div>
     <v-row>
+      <v-col cols="2"></v-col>
       <v-col>
         <DashBoard />
       </v-col>
+      <v-col cols="2"></v-col>
     </v-row>
     <v-row>
       <v-col cols="2"></v-col>
