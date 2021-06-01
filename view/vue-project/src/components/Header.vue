@@ -33,14 +33,23 @@
                 </v-btn>
               </template>
               <v-list dense>
-                <v-list-item to="/edit_user_info">
+                <v-list-item to="/profile">
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold">
+                      <v-icon class="pr-2" size="30">mdi-account-details</v-icon
+                      >プロフィール
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item to="/edit_user_info">
+                  <v-list-item-content>
+                      <v-list-item-title class="font-weight-bold">
                       <v-icon class="pr-2" size="30">mdi-account-edit</v-icon
                       >ユーザー情報編集
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
+
                 <v-list-item to="/password_reset">
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold">
