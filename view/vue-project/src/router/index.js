@@ -18,6 +18,8 @@ import EditUserInfo from "../views/edit_user_info.vue";
 import PasswordReset from "../views/password_reset.vue";
 import MobileWelcome from "../views/Mobile/Welcome.vue"
 import MobileMypage from "../views/Mobile/Mypage.vue"
+import MobileFirstCustomer from "../views/Mobile/FirstCustomer.vue"
+
 
 Vue.use(VueRouter);
 
@@ -108,6 +110,11 @@ const routes = [
     name: "MobileMypage",
     component: MobileMypage,
   },
+  {
+    path: "/mobile_firstcustomer",
+    name: "MobileFirstCustomer",
+    component: MobileFirstCustomer,
+  }
 ];
 
 const router = new VueRouter({
