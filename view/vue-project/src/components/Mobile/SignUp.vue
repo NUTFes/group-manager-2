@@ -49,18 +49,18 @@
                   ></v-text-field>
             </v-form>
           </v-container>
-        <v-card-actions class="pt-6">
-          <v-btn 
-            color="btn" 
-            small
-            depressed
-            absolute
-            right 
-            dark 
-            rounded
-            class="pl-4 font-weight-bold"
-            @click="submit">登録<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
-        </v-card-actions>
+          <v-card-actions class="pt-6">
+            <v-btn 
+                          color="btn" 
+                          small
+                          depressed
+                          absolute
+                          right 
+                          dark 
+                          rounded
+                          class="pl-4 font-weight-bold"
+                          @click="submit">登録<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+          </v-card-actions>
 
         </v-card-text>
 
@@ -118,7 +118,7 @@ export default {
       })
       this.show = false
     },
-    submit: function() {
+    submit: async function() {
 
       this.formHasErrors = false
 
@@ -129,26 +129,24 @@ export default {
       if (!this.formHasErrors) return 'Can`t Sign Up'
 
       const url = process.env.VUE_APP_URL + '/api/auth'
-      var params = new URLSearchParams();
-      params.append('name', this.name);
-      params.append('email', this.email);
-      params.append('role_id', 3); // デフォルトはuser権限
-      params.append('password', this.password);
-      params.append('password_confirmation', this.password_confirmation);
-      axios.defaults.headers.common['Content-Type'] = 'application/json';
-      axios.post(url, params).then(
-        (response) => {
-          localStorage.setItem('access-token', response.headers['access-token'])
-          localStorage.setItem('client', response.headers['client'])
-          localStorage.setItem('uid', response.headers['uid'])
-          localStorage.setItem('token-type', response.headers['token-type'])
-          this.$router.push('user_detail')
-        },
-        (error) => {
-          this.message = '登録に失敗しました。<br>Failed to SignUp'
-          return error
-        }
-      )
+      try {
+        var params = new URLSearchParams();
+        params.append('name', this.name);
+        params.append('email', this.email);
+        params.append('role_id', 3); // デフォルトはuser権限
+        params.append('password', this.password);
+        params.append('password_confirmation', this.password_confirmation);
+        axios.defaults.headers.common['Content-Type'] = 'application/json';
+        response = await axios.post(url, params)
+        localStorage.setItem('access-token', response.headers['access-token'])
+        localStorage.setItem('client', response.headers['client'])
+        localStorage.setItem('uid', response.headers['uid'])
+        localStorage.setItem('token-type', response.headers['token-type'])
+        this.$router.push('mobile_user_detail')
+      } catch ( e ) {
+        this.message = '登録に失敗しました。<br>Failed to SignUp'
+        return e
+      }
     }
   }
 }
