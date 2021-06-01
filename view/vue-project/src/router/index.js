@@ -16,9 +16,11 @@ import RegistPurchase from "../views/regist_purchase.vue";
 import Firstcustomer from "../views/FirstCustomer.vue";
 import EditUserInfo from "../views/edit_user_info.vue";
 import PasswordReset from "../views/password_reset.vue";
-import MobileWelcome from "../views/Mobile/Welcome.vue"
-import MobileMypage from "../views/Mobile/Mypage.vue"
+import MobileWelcome from "../views/Mobile/Welcome.vue";
+import MobileMypage from "../views/Mobile/Mypage.vue";
 import MobilePasswordReset from "../views/Mobile/password_reset.vue";
+import MobilePlace from "../views/Mobile/place.vue";
+
 
 Vue.use(VueRouter);
 
@@ -113,6 +115,11 @@ const routes = [
     path: "/mobile_password_reset",
     name: "MobilePasswordReset",
     component: MobilePasswordReset,
+  },
+  {
+    path: "/mobile_place",
+    name: "MobilePlace",
+    component: MobilePlace,
   },
 ];
 
