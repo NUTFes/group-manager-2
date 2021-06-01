@@ -19,7 +19,8 @@ import PasswordReset from "../views/password_reset.vue";
 import MobileWelcome from "../views/Mobile/Welcome.vue"
 import MobileMypage from "../views/Mobile/Mypage.vue"
 import MobileFirstCustomer from "../views/Mobile/FirstCustomer.vue"
-
+import MobilePower from "../views/Mobile/power.vue"
+import MobilePasswordReset from "../views/Mobile/password_reset.vue";
 
 Vue.use(VueRouter);
 
@@ -114,7 +115,17 @@ const routes = [
     path: "/mobile_firstcustomer",
     name: "MobileFirstCustomer",
     component: MobileFirstCustomer,
-  }
+  },
+  {
+    path: "/mobile_power",
+    name: "MobilePower",
+    component: MobilePower,
+  },
+  {
+    path: "/mobile_password_reset",
+    name: "MobilePasswordReset",
+    component: MobilePasswordReset,
+  },
 ];
 
 const router = new VueRouter({
