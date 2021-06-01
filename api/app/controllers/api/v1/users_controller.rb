@@ -103,7 +103,22 @@ class Api::V1::UsersController < ApplicationController
     @user.save!
   end
 
+  def get_user_role_id
+    @email = params[:email]
+    @user = User.where(email:@email).first
+    if @user == nil then 
+      render json: 4
+      return
+    end
+    @role_id = @user.role_id
+    render json: @role_id
+   
+  end
+  
+
   private
+  
+
   
     def edit_user_info_params
       params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
