@@ -1,8 +1,8 @@
 <template>
   <v-card>
     <v-row justify="space-around">
-      <v-col cols="5"></v-col>
-      <v-col cols="2">
+      <v-col cols="2"></v-col>
+      <v-col cols="8">
         <h1>電力登録</h1>
         <v-select
           v-model="steps"
@@ -25,11 +25,11 @@
           outlined
         ></v-select>
       </v-col>
-      <v-col cols="5"></v-col>
+      <v-col cols="2"></v-col>
     </v-row>
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8">
+      <v-col cols="1"></v-col>
+      <v-col cols="10">
         <v-stepper v-model="e1" :vertical="true">
           <v-stepper-header>
             <template v-for="step in steps">
@@ -39,7 +39,6 @@
                 :step="step"
                 :editable="true"
               >
-                {{ step }}個目
               </v-stepper-step>
               <v-divider v-if="step !== steps" :key="step" />
             </template>
@@ -47,12 +46,13 @@
           <v-stepper-items>
             <template>
               <v-stepper-content
+                class="step"
                 v-for="step in steps"
                 :key="`${step}-content`"
                 :step="step"
               >
                 <v-card>
-                  <PowerCard :groupId="groupId" ref="child" :key="step" />
+                  <PowerCard :groupId="groupId" ref="child" :key="step"/>
                 </v-card>
               </v-stepper-content>
             </template>
@@ -60,14 +60,14 @@
         </v-stepper>
         <v-btn color="blue darken-1" block @click="all_submit">登録</v-btn>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="1"></v-col>
     </v-row>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import PowerCard from "../components/PowerCard";
+import PowerCard from "../../components/Mobile/PowerCard";
 export default {
   components: {
     PowerCard
@@ -167,3 +167,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.step {
+  padding: 0px 0px 0px 0px !important;
+  margin: 0px 0px 0px 0px !important;
+}
+</style>
