@@ -1,7 +1,8 @@
 <template>
   <v-app>
-    <Header/>
-    <v-main>
+    <MobileHeader/>
+    <Header/> 
+    <v-main class="overflow-hidden">
       <transition mode="out-in">
         <router-view/>
       </transition>
@@ -14,6 +15,7 @@
 import HelloWorld from './components/HelloWorld';
 import Welcome from './views/Welcome.vue';
 import Header from '@/components/Header.vue'
+import MobileHeader from '@/components/Mobile/Header.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
@@ -23,13 +25,20 @@ export default {
     HelloWorld,
     Welcome,
     Header,
+    MobileHeader,
     Footer
   },
-
-  data: () => ({
-    //
-  }),
-
+  data () {
+    return{
+      isMobile: false,
+      mobile: []
+    };
+  },
+  created: function () {
+    const isMobile = require('ismobilejs');
+    this.mobile = isMobile.phone;
+    console.log(this.mobile)
+  },
 };
 </script>
 

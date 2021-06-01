@@ -1,91 +1,69 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="2"></v-col>
-      <v-col>
-        <DashBoard />
+    <v-row class="px-0">
+      <v-col class="mx-0">
+        <DashBoard v-if="isMobile === false"/>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="2">
-        <v-row>
-          <v-col>
-            <UserInfo />
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="6">
-        <v-row>
-          <v-col>
-            <News />
-          </v-col>
-        </v-row>
+      <v-col>
         <v-row>
           <v-col>
             <div v-for="(regist, i) in regist_info" :key="i">
-              <Regist :num="i" :regist="regist" @reload="reload()" />
+              <MobileRegist :num="i" :regist="regist" @reload="reload()" />
               <v-container>
-            <v-row>
-              <v-col cols="4"></v-col>
-              <v-col cols="4">
-                <v-btn
-                  v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999" && addEmployee && addFoodProduct &&addPurchaseList'
-                  block dark color="purple accent-2"
-                  dark
-                  rounded
-                  elevation = "0"
-                  @click="set_group_id(regist.group.id)"
-                  >
-                  <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>{{ regist.group.name }}の販売食品を追加する
-                </v-btn>
-              </v-col>
-              <v-col cols="4"></v-col>
-            </v-row>
-          </v-container>
+                <v-row>
+                  <v-col cols="4"></v-col>
+                  <v-col cols="4">
+                    <v-btn
+                        v-if='regist.group.group_category_id === 1 && regist.employees[0].name === "-9999" && addEmployee && addFoodProduct &&addPurchaseList'
+                        block 
+                        dark 
+                        color="purple accent-2"
+                        rounded
+                        elevation = "0"
+                        @click="set_group_id(regist.group.id)"
+                    >
+                      <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>{{ regist.group.name }}の販売食品を追加する
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="4"></v-col>
+                </v-row>
+              </v-container>
             </div>
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
-      <v-container>
-        <v-row>
-          <v-col cols="4"></v-col>
-          <v-col cols="4">
-            <v-btn
+    <v-container>
+      <v-row>
+        <v-col class="text-center">
+          <v-btn
               v-if="isRegistGroup"
-              block dark color="purple accent-2"
-               dark
-               rounded
-               elevation = "0"
-               to="/group"
-             >
-           <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
-            </v-btn>
-          </v-col>
-          <v-col cols="4"></v-col>
-        </v-row>
-      </v-container>
+              dark color="purple accent-2"
+                   rounded
+                   elevation = "0"
+                   to="/group"
+                   >
+                   <v-icon class="pr-2">mdi-plus</v-icon>参加団体を追加する
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
     <br>
   </div>
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
-import DashBoard from "@/components/DashBoard.vue";
-import UserInfo from "@/components/UserInfo.vue";
-import News from "@/components/News.vue";
-import Regist from "@/components/Regist.vue";
+import DashBoard from "@/components/Mobile/DashBoard.vue";
+import Regist from "@/components/Mobile/Regist.vue";
+import MobileRegist from "@/components/Mobile/MobileRegist.vue";
 import axios from "axios";
 export default {
   components: {
     DashBoard,
-    UserInfo,
-    Header,
-    News,
-    Regist
+    Regist,
+    MobileRegist
   },
   data() {
     return {
@@ -94,6 +72,8 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid")
       ],
+      isMobile: false,
+      mobile: [],
       users: [],
       regist_info: [],
       isRegistGroup: [],
@@ -101,6 +81,10 @@ export default {
       addFoodProduct: [],
       addPurchaseList: [],
     };
+  },
+  created: function () {
+    const isMobile = require('ismobilejs');
+    this.mobile = isMobile.phone;
   },
   methods: {
     signOut: function() {
@@ -124,13 +108,13 @@ export default {
     reload() {
       const regist_info_url = process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
       axios.get(regist_info_url, {
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token"),
-            "client": localStorage.getItem("client"),
-            "uid": localStorage.getItem("uid")
-          }
-        })
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid")
+        }
+      })
         .then(response => {
           console.log(response)
           this.regist_info = response.data;
@@ -151,9 +135,9 @@ export default {
         uid: localStorage.getItem("uid")
       }
     })
-    .then(response => {
-      this.users = response;
-    });
+      .then(response => {
+        this.users = response;
+      });
 
     const regist_info_url = process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
     axios
