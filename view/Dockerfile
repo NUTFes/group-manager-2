@@ -14,6 +14,7 @@ RUN npm install --save axios
 RUN npm install --save vuex-persistedstate
 RUN npm install --save moment
 RUN npm install --save vue2-timepicker
+RUN npm install --save ismobilejs
 
 ENV VUE_APP_URL='http://133.125.44.106:3000'
 # ENV VUE_APP_PORT='3000'
