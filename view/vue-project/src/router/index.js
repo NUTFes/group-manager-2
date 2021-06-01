@@ -18,6 +18,9 @@ import EditUserInfo from "../views/edit_user_info.vue";
 import PasswordReset from "../views/password_reset.vue";
 import MobileWelcome from "../views/Mobile/Welcome.vue"
 import MobileMypage from "../views/Mobile/Mypage.vue"
+import MobileUserDetail from "../views/Mobile/UserDetail.vue"
+import MobileGroup from "../views/Mobile/Group.vue"
+import MobileSubRep from "../views/Mobile/SubRep.vue"
 
 Vue.use(VueRouter);
 
@@ -107,6 +110,21 @@ const routes = [
     path: "/mobile_mypage",
     name: "MobileMypage",
     component: MobileMypage,
+  },
+  {
+    path: "/mobile_user_detail",
+    name: "MobileUserDetail",
+    component: MobileUserDetail,
+  },
+  {
+    path: "/mobile_group",
+    name: "MobileGroup",
+    component: MobileGroup,
+  },
+  {
+    path: "/mobile_sub_rep",
+    name: "MobileSubRep",
+    component: MobileSubRep,
   },
 ];
 

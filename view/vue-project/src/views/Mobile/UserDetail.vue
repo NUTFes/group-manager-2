@@ -1,9 +1,8 @@
 <template>
   <div>
-  <v-container align="center">
+  <v-container>
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8">
+      <v-col>
         <v-card
           flat
           >
@@ -11,11 +10,10 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <br>
-              <v-card-title class="justify-center"><h1 style="color:#333333">ユーザーの詳細を登録</h1></v-card-title>
+              <v-card-title class="title font-weight-bold justify-center">ユーザーの詳細を登録</v-card-title>
               <br>
               <v-row>
-                <v-col cols="2"></v-col>
-                <v-col cols="8">
+                <v-col>
                   <v-text-field
                     label="学籍番号８桁"
                     background-color="white"
@@ -62,16 +60,15 @@
                     clearable
                     ></v-select>
                 </v-col>
-                <v-col cols="2"></v-col>
               </v-row>
               <v-row>
                 <v-col cols="2"></v-col>
                 <v-col cols="8">
                   <v-card-actions>
-                    <v-btn large block color="primary" @click="register">登録</v-btn>
+                    <v-btn depressed block color="primary" @click="register">登録</v-btn>
                   </v-card-actions>
                   <v-card-actions>
-                    <v-btn large block text @click="reset">クリア</v-btn>
+                    <v-btn depressed block text @click="reset">クリア</v-btn>
                   </v-card-actions>
                 </v-col>
                 <v-col cols="2"></v-col>
@@ -82,7 +79,6 @@
           </v-row>
         </v-card>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
   </v-container>
   </div>
@@ -101,7 +97,7 @@ import Header from '@/components/Header.vue'
 export default {
   components: {
     Header, 
-　},
+    　},
   data () {
     return {
       student_id: [],
@@ -159,25 +155,22 @@ export default {
   },
 
   methods: {
-    register: function() {
+    register: async function() {
       const url = process.env.VUE_APP_URL + '/user_details'
       axios.defaults.headers.common['Content-Type'] = 'application/json';
-      var params = new URLSearchParams();
-      params.append('student_id', this.student_id);
-      params.append('tel', this.tel);
-      params.append('department_id', this.department_id);
-      params.append('grade_id', this.grade_id);
-      params.append('user_id', this.user.id);
-      axios.post(url, params).then(
-        (response) => {
-          this.$router.push('group')
-        },
-        (error) => {
-          return error
-        }
-        )
+      try {
+        var params = new URLSearchParams();
+        params.append('student_id', this.student_id);
+        params.append('tel', this.tel);
+        params.append('department_id', this.department_id);
+        params.append('grade_id', this.grade_id);
+        params.append('user_id', this.user.id);
+        axios.post(url, params)
+        this.$router.push('mobile_group')
+      } catch ( e ) {
+        return e
+      }
     },
-
     reset: function(){
       this.student_id = ''
       this.tel = ''
@@ -186,20 +179,21 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-    axios.get(url, {
-      headers: { 
-        "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }
-    )
-      .then(response => {
-        this.user = response.data.data
+    try {
+      response = await  axios.get(url, {
+        headers: { 
+          "Content-Type": "application/json", 
+          "access-token": localStorage.getItem('access-token'),
+          "client": localStorage.getItem('client'),
+          "uid": localStorage.getItem('uid')
+        }
       })
+      this.user = response.data.data
+    } catch ( e ) {
+      return e
+    }
   }
 }
 </script>
