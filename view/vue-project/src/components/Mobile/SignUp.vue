@@ -118,35 +118,34 @@ export default {
       })
       this.show = false
     },
-    submit: async function() {
-
+    submit: function() {
       this.formHasErrors = false
-
       Object.keys(this.form).forEach(f => {
         if (!this.form[f]) this.formHasErrors = true
         this.$refs[f].validate(true)
       })
       if (!this.formHasErrors) return 'Can`t Sign Up'
-
       const url = process.env.VUE_APP_URL + '/api/auth'
-      try {
-        var params = new URLSearchParams();
-        params.append('name', this.name);
-        params.append('email', this.email);
-        params.append('role_id', 3); // デフォルトはuser権限
-        params.append('password', this.password);
-        params.append('password_confirmation', this.password_confirmation);
-        axios.defaults.headers.common['Content-Type'] = 'application/json';
-        response = await axios.post(url, params)
-        localStorage.setItem('access-token', response.headers['access-token'])
-        localStorage.setItem('client', response.headers['client'])
-        localStorage.setItem('uid', response.headers['uid'])
-        localStorage.setItem('token-type', response.headers['token-type'])
-        this.$router.push('mobile_user_detail')
-      } catch ( e ) {
-        this.message = '登録に失敗しました。<br>Failed to SignUp'
-        return e
-      }
+      var params = new URLSearchParams();
+      params.append('name', this.name);
+      params.append('email', this.email);
+      params.append('role_id', 3); // デフォルトはuser権限
+      params.append('password', this.password);
+      params.append('password_confirmation', this.password_confirmation);
+      axios.defaults.headers.common['Content-Type'] = 'application/json';
+      axios.post(url, params).then(
+        (response) => {
+          localStorage.setItem('access-token', response.headers['access-token'])
+          localStorage.setItem('client', response.headers['client'])
+          localStorage.setItem('uid', response.headers['uid'])
+          localStorage.setItem('token-type', response.headers['token-type'])
+          this.$router.push('mobile_user_detail')
+        },
+        (error) => {
+          this.message = '登録に失敗しました。<br>Failed to SignUp'
+          return error
+        }
+      )
     }
   }
 }

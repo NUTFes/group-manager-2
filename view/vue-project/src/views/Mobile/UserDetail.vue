@@ -84,13 +84,6 @@
   </div>
 </template>
 
-<style>
-h1{
-  text-align: center;
-  color: purple;
-}
-</style>
-
 <script>
 import axios from 'axios'
 import Header from '@/components/Header.vue'

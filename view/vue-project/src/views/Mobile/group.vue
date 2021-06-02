@@ -136,9 +136,8 @@ export default {
     cancel: function() {
       this.$refs.form.reset();
     },
-    submit: async function() {
+    submit: function() {
       if ( !this.$refs.form.validate() ) return;
-
       const url = process.env.VUE_APP_URL + '/groups'
       let params = new URLSearchParams();
       params.append('name', this.groupName);
@@ -148,40 +147,47 @@ export default {
       params.append('group_category_id', this.groupCategoryId);
       params.append('fes_year_id', this.fesYearId);
       axios.defaults.headers.common['Content-Type'] = 'application/json';
-      try {
-        response = await axios.post(url, params)
-        console.log('response:', response.data.id)
-        localStorage.setItem('group_id', response.data.id)
-        localStorage.setItem('group_category_id', this.groupCategoryId)
-        if (this.groupCategoryId == 3){
-          this.$router.push('regist_group')
-        } else {
-          this.$router.push('regist_shop')
-        }
-      } catch ( e ) {
+      axios.post(url, params).then(
+        (response) => {
+          console.log('response:', response.data.id)
+          localStorage.setItem('group_id', response.data.id)
+          localStorage.setItem('group_category_id', this.groupCategoryId)
+          if (this.groupCategoryId == 3){
+            this.$router.push('regist_group')
+          } else {
+            this.$router.push('regist_shop')
+          }
+        },
+        (error) => {
           console.log('登録できませんでした')
-          return e
-      }
+          return error;
+        }
+      )
     },
   },
-
-  async mounted() {
-    try {
-      const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-      user_res = await axios.get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem('access-token'),
-          "client": localStorage.getItem('client'),
-          "uid": localStorage.getItem('uid')
-        }
-      })
-      user_page_settings_res = await axios.get(process.env.VUE_APP_URL + '/user_page_settings/1')
-      this.user = user_res.data.data
-      this.fesYearId = user_page_settings_res.data.fes_year_id
-    } catch ( e ) {
-        return e
-    }
+  mounted() {
+    const url = process.env.VUE_APP_URL + '/api/v1/users/show'
+    axios.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem('access-token'),
+        "client": localStorage.getItem('client'),
+        "uid": localStorage.getItem('uid')
+      }
+    }).then(
+      (response) => {
+        this.user = response.data.data
+      },
+      (error) => {
+        console.error(error)
+        return error;
+      }
+    )
+    axios.get(process.env.VUE_APP_URL + '/user_page_settings/1').then(
+      (response) => {
+        this.fesYearId = response.data.fes_year_id
+      },
+    )
   },
   watch: {
     activity() {
@@ -189,5 +195,4 @@ export default {
     }
   }
 }
-
 </script>
