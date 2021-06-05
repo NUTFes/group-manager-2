@@ -57,6 +57,7 @@
 # Ignore master key for decrypting credentials and more.
 /api/config/master.key
 /admin_api/config/master.key
+/admin_api/config/credentials.yml.enc
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
