@@ -110,3 +110,6 @@ typings/
 # Optional REPL history
 .description.lsi
 .nuxt/
+
+# SSL server certificate
+/certs/
