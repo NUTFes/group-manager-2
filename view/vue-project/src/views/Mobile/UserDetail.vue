@@ -1,9 +1,8 @@
 <template>
   <div>
-  <v-container align="center">
+  <v-container>
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8">
+      <v-col>
         <v-card
           flat
           >
@@ -11,11 +10,10 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <br>
-              <v-card-title class="justify-center"><h1 style="color:#333333">ユーザーの詳細を登録</h1></v-card-title>
-              <br>
+              <v-card-title class="title font-weight-bold justify-center">ユーザーの詳細を登録</v-card-title>
+              <v-divider class="mb-7"/>
               <v-row>
-                <v-col cols="2"></v-col>
-                <v-col cols="8">
+                <v-col>
                   <v-text-field
                     label="学籍番号８桁"
                     background-color="white"
@@ -62,16 +60,16 @@
                     clearable
                     ></v-select>
                 </v-col>
-                <v-col cols="2"></v-col>
               </v-row>
+              <v-divider/>
               <v-row>
                 <v-col cols="2"></v-col>
                 <v-col cols="8">
                   <v-card-actions>
-                    <v-btn large block color="primary" @click="register">登録</v-btn>
+                    <v-btn depressed block rounded dark color="btn" @click="register">登録</v-btn>
                   </v-card-actions>
                   <v-card-actions>
-                    <v-btn large block text @click="reset">クリア</v-btn>
+                    <v-btn depressed block rounded text @click="reset">クリア</v-btn>
                   </v-card-actions>
                 </v-col>
                 <v-col cols="2"></v-col>
@@ -82,18 +80,10 @@
           </v-row>
         </v-card>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
   </v-container>
   </div>
 </template>
-
-<style>
-h1{
-  text-align: center;
-  color: purple;
-}
-</style>
 
 <script>
 import axios from 'axios'
@@ -101,7 +91,7 @@ import Header from '@/components/Header.vue'
 export default {
   components: {
     Header, 
-　},
+    　},
   data () {
     return {
       student_id: [],
@@ -170,12 +160,12 @@ export default {
       params.append('user_id', this.user.id);
       axios.post(url, params).then(
         (response) => {
-          this.$router.push('group')
+          this.$router.push('mobile_group')
         },
         (error) => {
           return error
         }
-        )
+      )
     },
 
     reset: function(){
@@ -186,20 +176,21 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-    axios.get(url, {
-      headers: { 
-        "Content-Type": "application/json", 
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }
-    )
-      .then(response => {
-        this.user = response.data.data
+    try {
+      response = await axios.get(url, {
+        headers: { 
+          "Content-Type": "application/json", 
+          "access-token": localStorage.getItem('access-token'),
+          "client": localStorage.getItem('client'),
+          "uid": localStorage.getItem('uid')
+        }
       })
+      this.user = response.data.data
+    } catch ( e ) {
+      return e
+    }
   }
 }
 </script>

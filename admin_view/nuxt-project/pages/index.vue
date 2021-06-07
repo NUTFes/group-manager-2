@@ -66,7 +66,7 @@
                     depressed
                     dark
                     color="btn"
-                    @click="get_user_role_id"
+                    @click="loginWithAuthModule"
                   >
                     ログイン
                     <v-icon class="mx-n1">mdi-menu-right</v-icon>
@@ -116,8 +116,6 @@ export default {
       show_pass: true,
       formHasErrors: false,
       message: "",
-      action: "",
-      role_id: [],
       warnStyle: {
         color: "#F44336"
       },
@@ -143,30 +141,6 @@ export default {
     }
   },
   methods: {
-    
-    get_user_role_id:function(){
-      const url = "/api/v1/users/get_user_role_id/?email="  +this.email;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.role_id = response.data;
-          if(this.role_id < 3)
-          {
-           this.loginWithAuthModule();
-          }else{
-            this.message = "メールアドレスかパスワードが違います。";
-            return error;
-          }
-         
-        });
-
-    },
-
     async loginWithAuthModule() {
       this.formHasErrors = false;
 
@@ -184,7 +158,6 @@ export default {
         })
         .then(
           response => {
-            
             localStorage.setItem("access-token", response.headers["access-token"]);
             localStorage.setItem("client", response.headers.client);
             localStorage.setItem("uid", response.headers.uid);

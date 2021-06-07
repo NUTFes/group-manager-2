@@ -1,17 +1,15 @@
 <template>
   <div>
   <v-row justify="center">
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
+    <v-col>
       <v-card flat>
-        <v-container class="justify-content-center">
           <v-row>
             <v-col cols=1></v-col>
             <v-col cols=10 align="center">
               <v-card-title class="justify-center font-weight-bold">
                 参加団体登録
               </v-card-title>
-              <v-divider></v-divider>
+              <v-divider class="mb-7"/>
               <v-card-text>
                 <v-form ref="form">
                   <v-text-field
@@ -67,7 +65,7 @@
                   text
                   tabindex="1"
                   class="pr-4 font-weight-bold"
-                  to="/MyPage"><v-icon class="pr-n1">mdi-menu-left</v-icon>マイページに戻る</v-btn>
+                  to="/mobile_mypage"><v-icon class="pr-n1">mdi-menu-left</v-icon>マイページへ</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
                   color="btn" 
@@ -82,10 +80,8 @@
               <v-col cols=1></v-col>
             </v-col>
           </v-row>
-        </v-container>
       </v-card>
     </v-col>
-    <v-col cols="2"></v-col>
   </v-row>
   </div>
 </template>
@@ -140,7 +136,6 @@ export default {
     },
     submit: function() {
       if ( !this.$refs.form.validate() ) return;
-
       const url = process.env.VUE_APP_URL + '/groups'
       let params = new URLSearchParams();
       params.append('name', this.groupName);
@@ -149,7 +144,6 @@ export default {
       params.append('user_id', this.user.id);
       params.append('group_category_id', this.groupCategoryId);
       params.append('fes_year_id', this.fesYearId);
-
       axios.defaults.headers.common['Content-Type'] = 'application/json';
       axios.post(url, params).then(
         (response) => {
@@ -157,9 +151,9 @@ export default {
           localStorage.setItem('group_id', response.data.id)
           localStorage.setItem('group_category_id', this.groupCategoryId)
           if (this.groupCategoryId == 3){
-            this.$router.push('regist_group')
-          }else {
-            this.$router.push('regist_shop')
+            this.$router.push('mobile_regist_group')
+          } else {
+            this.$router.push('mobile_regist_shop')
           }
         },
         (error) => {
@@ -169,7 +163,6 @@ export default {
       )
     },
   },
-
   mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
     axios.get(url, {
@@ -200,5 +193,4 @@ export default {
     }
   }
 }
-
 </script>

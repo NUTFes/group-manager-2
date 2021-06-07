@@ -1,61 +1,55 @@
 <template>
-  <v-container class="justify-content-center">
-    <v-row>
-      <v-col cols="12" align="center">
-        <v-card-text>
-          <v-form ref="form">
-            <v-text-field
-              label="製品名"
-              ref="item"
-              v-model="item"
-              v-bind:value="n"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="電力量（ワット）"
-              ref="power"
-              v-model="power"
-              type="number"
-              :rules="[rules.required, rules.max]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="メーカー"
-              ref="manufacturer"
-              v-model="manufacturer"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="型番"
-              ref="model"
-              v-model="model"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="製品URL"
-              ref="itemUrl"
-              v-model="itemUrl"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            ></v-text-field>
-          </v-form>
-        </v-card-text>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <v-form ref="form">
+      <v-text-field
+          label="製品名"
+          ref="item"
+          v-model="item"
+          v-bind:value="n"
+          :rules="[rules.required]"
+          text
+          outlined
+          required
+          ></v-text-field>
+      <v-text-field
+          label="電力量（ワット）"
+          ref="power"
+          v-model="power"
+          type="number"
+          :rules="[rules.required, rules.max]"
+          text
+          outlined
+          required
+          ></v-text-field>
+      <v-text-field
+          label="メーカー"
+          ref="manufacturer"
+          v-model="manufacturer"
+          :rules="[rules.required]"
+          text
+          outlined
+          required
+          ></v-text-field>
+      <v-text-field
+          label="型番"
+          ref="model"
+          v-model="model"
+          :rules="[rules.required]"
+          text
+          outlined
+          required
+          ></v-text-field>
+      <v-text-field
+          label="製品URL"
+          ref="itemUrl"
+          v-model="itemUrl"
+          :rules="[rules.required]"
+          text
+          outlined
+          required
+          ></v-text-field>
+    </v-form>
+  </div>
 </template>
 
 <script>

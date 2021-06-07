@@ -43,7 +43,7 @@
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
-                <v-list-item to="/mobile_password_reset">
+                <v-list-item to="/password_reset">
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold">
                       <v-icon class="pr-2" size="30">mdi-lock-reset</v-icon

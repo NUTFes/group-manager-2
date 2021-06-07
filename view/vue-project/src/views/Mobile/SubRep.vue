@@ -1,112 +1,111 @@
 <template>
-  <v-form>
+  <div>
     <v-container>
       <v-row>
-        <v-col cols="2"></v-col>
-        <v-col cols="8">
-          <v-card>
+        <v-col>
+          <v-card flat>
             <v-row>
-              <v-col cols="2"></v-col>
-              <v-col cols="8">
-                <h1>副代表の詳細登録画面</h1>
-                
-                <v-select
-                  label="団体"
-                  ref="group"
-                  v-model="group_id"
-                  :rules="[rules.required]"
-                  :items="group"
-                  :menu-props="{
-                    top: true,
-                    offsetY: true,
-                  }"
-                  item-text="name"
-                  item-value="id"
-                  outlined
-                ></v-select>
-                <v-text-field
-                  label="名前"
-                  background-color="white"
-                  v-model="name"
-                  clearable
-                  ></v-text-field>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <br>
+                <v-card-title class="title font-weight-bold justify-center">副代表の詳細登録画面</v-card-title>
+                <br>
+                <v-row>
+                  <v-col>
+                    <v-select
+                        label="団体"
+                        ref="group"
+                        v-model="group_id"
+                        :rules="[rules.required]"
+                        :items="group"
+                        :menu-props="{
+                                      top: true,
+                                      offsetY: true,
+                                      }"
+                        item-text="name"
+                        item-value="id"
+                        outlined
+                        ></v-select>
+                    <v-text-field
+                        label="名前"
+                        background-color="white"
+                        v-model="name"
+                        clearable
+                        ></v-text-field>
 
-                <v-text-field
-                  label="学籍番号"
-                  background-color="white"
-                  v-model="student_id"
-                  :rules="[rules.min1, rules.over1]"
-                  hint="お持ちでない方：0を8桁入力"
-                  persistent-hint
-                  item-text="name"
-                  item-value="id"
-                  counter="8"
-                  clearable
-                  ></v-text-field>
+                    <v-text-field
+                        label="学籍番号"
+                        background-color="white"
+                        v-model="student_id"
+                        :rules="[rules.min1, rules.over1]"
+                        hint="お持ちでない方：0を8桁入力"
+                        persistent-hint
+                        item-text="name"
+                        item-value="id"
+                        counter="8"
+                        clearable
+                        ></v-text-field>
 
-                <v-select
-                  label="学科"
-                  v-model.number="department_id"
-                  :items="departments"
-                  :menu-props="{ top: true, offsetY: true }"
-                  item-text="name"
-                  item-value="id"
-                  clearable
-                  ></v-select>
+                    <v-select
+                        label="学科"
+                        v-model.number="department_id"
+                        :items="departments"
+                        :menu-props="{ top: true, offsetY: true }"
+                        item-text="name"
+                        item-value="id"
+                        clearable
+                        ></v-select>
 
-                <v-select
-                  label="学年"
-                  v-model.number="grade_id"
-                  :items="grades"
-                  :menu-props="{ top: true, offsetY: true }"
-                  item-text="name"
-                  item-value="id"
-                  clearable
-                  ></v-select>
+                    <v-select
+                        label="学年"
+                        v-model.number="grade_id"
+                        :items="grades"
+                        :menu-props="{ top: true, offsetY: true }"
+                        item-text="name"
+                        item-value="id"
+                        clearable
+                        ></v-select>
 
-                <v-text-field
-                  label="TEL"
-                  background-color="white"
-                  v-model="tel"
-                  :rules="[rules.min2, rules.over2]"
-                  hint="ハイフンなしで半角入力"
-                  persistent-hint
-                  counter="11"
-                  clearable
-                  ></v-text-field>
+                    <v-text-field
+                        label="TEL"
+                        background-color="white"
+                        v-model="tel"
+                        :rules="[rules.min2, rules.over2]"
+                        hint="ハイフンなしで半角入力"
+                        persistent-hint
+                        counter="11"
+                        clearable
+                        ></v-text-field>
 
-                <v-text-field
-                  label="EMAIL"
-                  background-color="white"
-                  v-model="email"
-                  clearable
-                  ></v-text-field>
+                    <v-text-field
+                        label="EMAIL"
+                        background-color="white"
+                        v-model="email"
+                        clearable
+                        ></v-text-field>
+                  </v-col>
+                </v-row>
               </v-col>
               <v-col cols="2"></v-col>
             </v-row>
             <v-row>
               <v-col cols="2"></v-col>
               <v-col cols="8">
-                <v-card-action>
-                  <v-btn text color="blue darken-1" @click="reset">削除</v-btn>
-                  <v-btn color="blue darken-1" @click="register">登録</v-btn>
-                </v-card-action>
+                <v-card-actions>
+                  <v-btn depressed block color="primary" @click="register">登録</v-btn>
+                </v-card-actions>
+                <v-card-actions>
+                  <v-btn depressed block text @click="reset">クリア</v-btn>
+                </v-card-actions>
               </v-col>
               <v-col cols="2"></v-col>
             </v-row>
           </v-card>
         </v-col>
-        <v-col cols="2"></v-col>
       </v-row>
     </v-container>
-  </v-form>
+  </div>
 </template>
-
-<style>
-h1{
-    text-align: center;
-}
-</style>
 
 <script>
 import axios from 'axios'
@@ -121,7 +120,6 @@ export default {
             grade_id: [],
             tel: [],
             email: [],
-
             rules:{
                 min1: v => v.length >= 8 || '8桁かどうかを確認してください',
                 over1: v => v.length <= 8 || '8桁かどうかを確認してください',
@@ -130,7 +128,6 @@ export default {
                 min2: v => v.length >= 11 || '11桁かどうかを確認してください',
                 over2: v => v.length <= 11 || '11桁かどうかを確認してください',
             },
-
             departments:[
                 { name: "機械創造工学課程", id: 1 },
                 { name: "電気電子情報工学課程", id: 2 },
@@ -153,7 +150,6 @@ export default {
                 { name: "生物統合工学専攻", id: 19 },
                 { name: "その他", id: 20 }
             ],
-
             grades: [
                 { name: "B1[学部1年]", id: 1 },
                 { name: "B2[学部2年]", id: 2 },
@@ -173,7 +169,6 @@ export default {
             ],
         }
     },
-
     methods: {
         register: function() {
         const url = process.env.VUE_APP_URL + '/sub_reps';
@@ -188,14 +183,13 @@ export default {
         params.append('email' , this.email);
         axios.post(url, params).then(
             (response) => {
-            this.$router.push('mypage')
+            this.$router.push('mobile_mypage')
             },
             (error) => {
             return error
             }
             )
         },
-
         reset: function(){
             this.student_id = ''
             this.email = ''
@@ -206,7 +200,6 @@ export default {
             this.name = ''
         },
     },
-
     mounted(){
       const url = process.env.VUE_APP_URL + '/api/v1/users/show'
       axios.get(url, {
@@ -242,6 +235,5 @@ export default {
       }
     )
     },
-
 }
 </script>
