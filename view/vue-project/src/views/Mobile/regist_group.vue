@@ -497,7 +497,7 @@
 <script>
 import axios from "axios";
 import Header from "@/components/Header.vue";
-import PowerCard from "../components/PowerCard";
+import PowerCard from "@/components/PowerCard";
 import RentalCard from "@/components/RentalCard";
 import StageCard from "@/components/StageCard";
 import StageCommonCard from "@/components/StageCommonCard";

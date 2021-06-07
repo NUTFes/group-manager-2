@@ -43,7 +43,7 @@
               dark color="purple accent-2"
                    rounded
                    elevation = "0"
-                   to="/group"
+                   to="/mobile_group"
                    >
                    <v-icon class="pr-2">mdi-plus</v-icon>参加団体を追加する
           </v-btn>

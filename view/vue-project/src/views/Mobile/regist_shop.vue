@@ -438,14 +438,12 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
-import PowerCard from "../components/PowerCard";
-import RentalCard from "@/components/RentalCard";
-import StageCard from "@/components/StageCard";
-import StageCommonCard from "@/components/StageCommonCard";
+import PowerCard from "@/components/Mobile/PowerCard";
+import RentalCard from "@/components/Mobile/RentalCard";
+import StageCard from "@/components/Mobile/StageCard";
+import StageCommonCard from "@/components/Mobile/StageCommonCard";
 export default {
   components: {
-    Header,
     PowerCard,
     RentalCard,
     StageCard,

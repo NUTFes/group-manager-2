@@ -11,7 +11,7 @@
             <v-col cols="10">
               <br>
               <v-card-title class="title font-weight-bold justify-center">ユーザーの詳細を登録</v-card-title>
-              <br>
+              <v-divider class="mb-7"/>
               <v-row>
                 <v-col>
                   <v-text-field
@@ -61,14 +61,15 @@
                     ></v-select>
                 </v-col>
               </v-row>
+              <v-divider/>
               <v-row>
                 <v-col cols="2"></v-col>
                 <v-col cols="8">
                   <v-card-actions>
-                    <v-btn depressed block color="primary" @click="register">登録</v-btn>
+                    <v-btn depressed block rounded dark color="btn" @click="register">登録</v-btn>
                   </v-card-actions>
                   <v-card-actions>
-                    <v-btn depressed block text @click="reset">クリア</v-btn>
+                    <v-btn depressed block rounded text @click="reset">クリア</v-btn>
                   </v-card-actions>
                 </v-col>
                 <v-col cols="2"></v-col>
@@ -148,22 +149,25 @@ export default {
   },
 
   methods: {
-    register: async function() {
+    register: function() {
       const url = process.env.VUE_APP_URL + '/user_details'
       axios.defaults.headers.common['Content-Type'] = 'application/json';
-      try {
-        var params = new URLSearchParams();
-        params.append('student_id', this.student_id);
-        params.append('tel', this.tel);
-        params.append('department_id', this.department_id);
-        params.append('grade_id', this.grade_id);
-        params.append('user_id', this.user.id);
-        axios.post(url, params)
-        this.$router.push('mobile_group')
-      } catch ( e ) {
-        return e
-      }
+      var params = new URLSearchParams();
+      params.append('student_id', this.student_id);
+      params.append('tel', this.tel);
+      params.append('department_id', this.department_id);
+      params.append('grade_id', this.grade_id);
+      params.append('user_id', this.user.id);
+      axios.post(url, params).then(
+        (response) => {
+          this.$router.push('mobile_group')
+        },
+        (error) => {
+          return error
+        }
+      )
     },
+
     reset: function(){
       this.student_id = ''
       this.tel = ''
@@ -175,7 +179,7 @@ export default {
   async mounted() {
     const url = process.env.VUE_APP_URL + '/api/v1/users/show'
     try {
-      response = await  axios.get(url, {
+      response = await axios.get(url, {
         headers: { 
           "Content-Type": "application/json", 
           "access-token": localStorage.getItem('access-token'),
