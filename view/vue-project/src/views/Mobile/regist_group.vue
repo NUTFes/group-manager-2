@@ -647,7 +647,7 @@ export default {
         this.$refs.stageChild[i].submit();
       }
 
-      this.$router.push("MyPage");
+      this.$router.push("mobile_mypage");
     },
     saleSubmit: function() {
       if (groupCategoryId == null) {
@@ -675,7 +675,7 @@ export default {
         }
       );
 
-      this.$router.push("MyPage");
+      this.$router.push("mobile_mypage");
     },
     stageSubmit: function() {
       this.commonSubmit();
@@ -684,7 +684,7 @@ export default {
 
       this.$refs.stageCommonChild.submit();
 
-      this.$router.push("MyPage");
+      this.$router.push("mobile_mypage");
     },
     getIndex: function() {
       for (let i = 0; i < this.placeList.length; i++) {

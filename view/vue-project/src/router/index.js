@@ -26,6 +26,8 @@ import MobilePower from "../views/Mobile/power.vue"
 import MobilePasswordReset from "../views/Mobile/password_reset.vue";
 import MobileRegistGroup from "../views/Mobile/regist_group.vue";
 import MobileRegistShop from "../views/Mobile/regist_shop.vue";
+import MobilePlace from "../views/Mobile/place.vue";
+
 
 Vue.use(VueRouter);
 
@@ -155,6 +157,11 @@ const routes = [
     path: "/mobile_regist_shop",
     name: "MobileRegistShop",
     component: MobileRegistShop,
+  },
+  {
+    path: "/mobile_place",
+    name: "MobilePlace",
+    component: MobilePlace,
   },
 ];
 
