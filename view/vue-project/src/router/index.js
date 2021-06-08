@@ -25,9 +25,17 @@ import MobileSubRep from "../views/Mobile/SubRep.vue";
 import MobileFirstCustomer from "../views/Mobile/FirstCustomer.vue";
 import MobilePower from "../views/Mobile/power.vue";
 import MobilePasswordReset from "../views/Mobile/password_reset.vue";
+<<<<<<< HEAD
+<<<<<<< HEAD
 import MobileRegistGroup from "../views/Mobile/regist_group.vue";
 import MobileRegistShop from "../views/Mobile/regist_shop.vue";
 import MobilePlace from "../views/Mobile/place.vue";
+=======
+import MobileEditUserInfo from "../views/Mobile/edit_user_info.vue"
+>>>>>>> [mod] modify edit_user_info.vue
+=======
+import MobileEditUserInfo from "../views/Mobile/edit_user_info.vue"
+>>>>>>> e5cf0808584cc2e9901c198ed06c3af7291c1964
 
 Vue.use(VueRouter);
 
@@ -149,6 +157,8 @@ const routes = [
     component: MobilePasswordReset,
   },
   {
+<<<<<<< HEAD
+<<<<<<< HEAD
     path: "/mobile_regist_group",
     name: "MobileRegistGroup",
     component: MobileRegistGroup,
@@ -168,7 +178,19 @@ const routes = [
     name: "Profile",
     component: Profile,
   },
+=======
+=======
+>>>>>>> e5cf0808584cc2e9901c198ed06c3af7291c1964
+    path: "/mobile_edit_user_info",
+    name: "MobileEditUserInfo",
+    component: MobileEditUserInfo,
+  }
+<<<<<<< HEAD
+>>>>>>> [mod] modify edit_user_info.vue
+=======
+>>>>>>> e5cf0808584cc2e9901c198ed06c3af7291c1964
 ];
+
 
 const router = new VueRouter({
   mode: "history",

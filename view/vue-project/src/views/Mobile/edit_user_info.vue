@@ -1,16 +1,14 @@
 <template>
   <v-row justify="center">
-    <v-col cols="2"></v-col>
-    <v-col cols="8">
+    <v-col></v-col>
       <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
-            <v-col cols="2"></v-col>
-            <v-col cols="8" align="center">
+          <v-col align="center">
               <v-card-title class="justify-center">
-                <h1 style="color:#333333">ユーザー情報変更</h1>
+                <h2 style="color:#333333">ユーザー情報変更</h2>
               </v-card-title>
-		<br>
+		              <br>
 		<v-divider/>
 		<br>
               <v-card-text>
@@ -77,10 +75,9 @@
               </v-card-text>
               <v-card-action>
                 <v-btn color="btn" dark block rounded depressed @click="submit">登録</v-btn>
-                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
+                <v-btn color="btn" text block rounded to="/mobile_mypage">マイページに戻る</v-btn>
               </v-card-action>
             </v-col>
-            <v-col cols="2"></v-col>
           </v-row>
         </v-container>
       </v-card>
@@ -101,6 +98,8 @@ export default {
       tel: null,
       department_id: null,
       grade_id: null,
+      student: null,
+      pad_student_id: null,
 
       rules:{
         requied: value => !!value || '入力してください',
@@ -161,20 +160,29 @@ export default {
       this.$refs.form.reset();
     },
 
+    zeropadding: function(num){
+      var padnum = null;
+      padnum = ('00000000' + num).slice(-8);
+      console.log(padnum);
+      return padnum;
+    },
+
 		submit: function() {
       if ( !this.$refs.form.validate() ) return;
 
       const post_url = process.env.VUE_APP_URL + '/api/v1/current_user/edit_user_info'
 
+      // this.zeropadding();
+
 			var params =  {
           'name' : this.name,
           'email' : this.email,
-					'student_id' : this.student_id,
+					'student_id' : Number(this.student_id),
           'tel' : this.tel,
           'department_id' : this.department_id, 
           'grade_id' : this.grade_id
       }
-
+      
       axios.post(post_url, params, {
           headers: {
             'Content-Type': 'application/json',
@@ -187,7 +195,7 @@ export default {
         (response) => {
           console.log(response)
           localStorage.setItem('uid', this.email)
-          this.$router.push('MyPage')
+          this.$router.push('mobile_mypage')
         },
         (error) => {
           console.log('登録できませんでした')
@@ -210,7 +218,7 @@ export default {
         console.log(response.data)
         this.name = response.data.user.name
         this.email = response.data.user.email
-        this.student_id = String(response.data.user_detail.student_id)
+        this.student_id = String(this.zeropadding(response.data.user_detail.student_id))
         this.tel = response.data.user_detail.tel
         this.department_id = response.data.user_detail.department_id
         this.grade_id = response.data.user_detail.grade_id

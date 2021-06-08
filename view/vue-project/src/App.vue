@@ -35,8 +35,8 @@ export default {
     };
   },
   created: function () {
-    const isMobile = require('ismobilejs');
-    this.mobile = isMobile.phone;
+    // const isMobile = require('ismobilejs');
+    // this.mobile = isMobile.phone;
     console.log(this.mobile)
   },
 };
