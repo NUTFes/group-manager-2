@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-form ref="form">
+  <div class="ma-0 pa-0">
+    <v-form ref="form" class="ma-0 pa-0">
       <v-text-field
           label="製品名"
           ref="item"

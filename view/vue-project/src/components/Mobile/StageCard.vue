@@ -1,8 +1,7 @@
 <template>
   <v-container class="justify-content-center">
     <v-row>
-      <v-col cols="12" align="center">
-        <v-card-text>
+      <v-col cols="12" align="center" class="ma-0 pa-0">
           <v-form ref="form">
             <v-text
               v-if="isSunny==true"
@@ -158,7 +157,6 @@
                 </p>
               </div>
           </v-form>
-        </v-card-text>
       </v-col>
     </v-row>
   </v-container>

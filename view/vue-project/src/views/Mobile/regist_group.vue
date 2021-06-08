@@ -1,8 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8">
+      <v-col>
         <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
           <v-stepper-header class="stepper">
             <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2"
@@ -39,7 +38,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">副代表登録</v-card-title>
+                    <v-card-title class="font-weight-bold justify-center">副代表登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-text-field
@@ -132,20 +131,18 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">物品登録</v-card-title>
+                    <v-card-title class="font-weight-bold justify-center">物品登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-row>
-                        <v-col cols=3></v-col>
-                        <v-col cols=3>
-                      <v-select
-                        v-model="rentalSteps"
-                        :items="[1, 2, 3, 4, 5, 6]"
-                        label="登録物品数"
-                        outlined
-                      />
+                        <v-col>
+                          <v-select
+                            v-model="rentalSteps"
+                            :items="[1, 2, 3, 4, 5, 6]"
+                            label="登録物品数"
+                            outlined
+                          />
                         </v-col>
-                        <v-col cols=6><v-card-text>個の物品を登録する</v-card-text></v-col>
                       </v-row>
                       <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
@@ -168,6 +165,7 @@
                             v-for="rentalStep in rentalSteps"
                             :key="`${rentalStep}-content`"
                             :step="rentalStep"
+                            class="ma-0 pa-0"
                           >
                             <RentalCard
                               ref="rentalChild"
@@ -177,11 +175,10 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                                 <v-btn
+                                  small
                                   rounded
                                   text
-                                  large
                                   color="btn"
-                                  class="pr-5"
                                   @click="e3 -= 1"
                                   v-show="rentalStep != 1"
                                 >
@@ -189,9 +186,9 @@
                                   戻る
                                 </v-btn>
                                 <v-btn
+                                  small
                                   rounded
                                   outlined
-                                  large
                                   color="btn"
                                   class="pl-5"
                                   @click="e3 += 1"
@@ -242,7 +239,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">電力申請</v-card-title>
+                    <v-card-title class="font-weight-bold justify-center">電力申請</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-select
@@ -251,7 +248,7 @@
                         label="登録製品数"
                         outlined
                       />
-                      <v-stepper class="stepper" v-model="e2">
+                      <v-stepper class="stepper ma-0 pa-0" v-model="e2">
                         <v-stepper-header class="stepper">
                           <template v-for="powerStep in powerSteps">
                             <v-stepper-step
@@ -270,11 +267,13 @@
                         </v-stepper-header>
                         <v-stepper-items>
                           <v-stepper-content
+                            class="ma-0 pa-0"
                             v-for="powerStep in powerSteps"
                             :key="`${powerStep}-content`"
                             :step="powerStep"
                           >
                             <PowerCard
+                              class="ma-0 pa-0"
                               :groupId="groupId"
                               ref="powerChild"
                               :key="powerStep"
@@ -344,7 +343,7 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">
+                    <v-card-title class="font-weight-bold justify-center">
                       ステージ利用申請
                     </v-card-title>
                     <v-divider></v-divider>
@@ -368,6 +367,7 @@
                         </v-stepper-header>
                         <v-stepper-items>
                           <v-stepper-content
+                            class="ma-0 pa-0"
                             v-for="stageStep in stageSteps"
                             :key="`${stageStep}-content`"
                             :step="stageStep"
@@ -445,10 +445,10 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">
+                    <v-card-title class="font-weight-bold justify-center">
                       ステージ詳細申請
                     </v-card-title>
-                    <v-divider></v-divider>
+                    <v-divider class="mb-8" />
                     <v-card-text>
                       <StageCommonCard
                         :groupId="groupId"
@@ -489,7 +489,6 @@
           </v-stepper-items>
         </v-stepper>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
   </div>
 </template>
@@ -497,10 +496,10 @@
 <script>
 import axios from "axios";
 import Header from "@/components/Header.vue";
-import PowerCard from "@/components/PowerCard";
-import RentalCard from "@/components/RentalCard";
-import StageCard from "@/components/StageCard";
-import StageCommonCard from "@/components/StageCommonCard";
+import PowerCard from "@/components/Mobile/PowerCard";
+import RentalCard from "@/components/Mobile/RentalCard";
+import StageCard from "@/components/Mobile/StageCard";
+import StageCommonCard from "@/components/Mobile/StageCommonCard";
 export default {
   components: {
     Header,

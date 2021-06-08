@@ -1,8 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="2"></v-col>
-      <v-col cols="8">
+      <v-col>
         <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
           <v-stepper-header class="stepper">
             <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2"
@@ -33,8 +32,8 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>副代表登録</v-card-title>
-                    <v-divider></v-divider>
+                    <v-card-title class="font-weight-bold justify-center">副代表登録</v-card-title>
+                    <v-divider/>
                     <v-card-text>
                       <v-text-field
                         label="名前"
@@ -126,12 +125,11 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>物品登録</v-card-title>
-                    <v-divider></v-divider>
+                    <v-card-title class="font-weight-bold justify-center">物品登録</v-card-title>
+                    <v-divider/>
                     <v-card-text>
                       <v-row>
-                        <v-col cols=3></v-col>
-                        <v-col cols=3>
+                        <v-col>
                       <v-select
                         v-model="rentalSteps"
                         :items="[1, 2, 3, 4, 5, 6]"
@@ -139,7 +137,6 @@
                         outlined
                       />
                         </v-col>
-                        <v-col cols=6><v-card-text>個の物品を登録する</v-card-text></v-col>
                       </v-row>                    
                       <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
@@ -159,6 +156,7 @@
                         </v-stepper-header>
                         <v-stepper-items>
                           <v-stepper-content
+                            class="ma-0 pa-0"
                             v-for="rentalStep in rentalSteps"
                             :key="`${rentalStep}-content`"
                             :step="rentalStep"
@@ -171,9 +169,9 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
                                 <v-btn
+                                  small
                                   rounded
                                   text
-                                  large
                                   color="btn"
                                   class="pr-5"
                                   @click="e3 -= 1"
@@ -182,10 +180,11 @@
                                   <v-icon class="mr-n1">mdi-menu-left</v-icon>
                                   戻る
                                 </v-btn>
+                              <v-spacer></v-spacer>
                                 <v-btn
+                                  small
                                   rounded
                                   outlined
-                                  large
                                   color="btn"
                                   class="pl-5"
                                   @click="e3 += 1"
@@ -235,12 +234,11 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title>電力申請</v-card-title>
-                    <v-divider></v-divider>
+                    <v-card-title class="font-weight-bold justify-center">電力申請</v-card-title>
+                    <v-divider/>
                     <v-card-text>
                       <v-row>
-                        <v-col cols=3></v-col>
-                      <v-col cols=3>
+                      <v-col>
                       <v-select
                         v-model="powerSteps"
                         :items="[1, 2, 3, 4, 5]"
@@ -248,9 +246,8 @@
                         outlined
                       />
                       </v-col>
-                      <v-col cols=6><v-card-text>個の電力を登録する</v-card-text></v-col>
                       </v-row>
-                      <v-stepper class="stepper" v-model="e2">
+                      <v-stepper class="stepper justify-center" v-model="e2">
                         <v-stepper-header class="stepper">
                           <template v-for="powerStep in powerSteps">
                             <v-stepper-step
@@ -269,6 +266,7 @@
                         </v-stepper-header>
                         <v-stepper-items>
                           <v-stepper-content
+                            class="ma-0 pa-0"
                             v-for="powerStep in powerSteps"
                             :key="`${powerStep}-content`"
                             :step="powerStep"
@@ -279,23 +277,21 @@
                               :key="powerStep"
                             />
                             <v-card-actions>
-                              <v-spacer></v-spacer>
                                 <v-btn
                                   rounded
                                   text
-                                  large
+                                  small
                                   color="btn"
-                                  class="pr-5"
                                   @click="e2 -= 1"
-                                  v-show="rentalStep != 1"
+                                  v-show="powerStep != 1"
                                 >
                                   <v-icon class="mr-n1">mdi-menu-left</v-icon>
                                   戻る
                                 </v-btn>
                                 <v-btn
+                                  small
                                   rounded
                                   outlined
-                                  large
                                   color="btn"
                                   class="pl-5"
                                   @click="e2 += 1"
@@ -345,7 +341,7 @@
                 <v-col cols="1"></v-col>
                 <v-col>
                   <v-card class="mb-12" flat>
-                    <v-card-title>会場登録</v-card-title>
+                    <v-card-title class="font-weight-bold justify-center">会場登録</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-select
@@ -431,7 +427,6 @@
           </v-stepper-items>
         </v-stepper>
       </v-col>
-      <v-col cols="2"></v-col>
     </v-row>
   </div>
 </template>
@@ -577,7 +572,7 @@ export default {
         this.$refs.rentalChild[i].submit();
       }
 
-      this.$router.push("MyPage");
+  //    this.$router.push("MyPage");
     },
     saleSubmit: function() {
       if (this.groupCategoryId == null) {
@@ -604,7 +599,7 @@ export default {
         }
       );
 
-      this.$router.push("MyPage");
+      this.$router.push("mobile_mypage");
     },
     getIndex: function() {
       for (let i = 0; i < this.placeList.length; i++) {

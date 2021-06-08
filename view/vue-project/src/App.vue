@@ -34,11 +34,6 @@ export default {
       mobile: []
     };
   },
-  created: function () {
-    // const isMobile = require('ismobilejs');
-    // this.mobile = isMobile.phone;
-    console.log(this.mobile)
-  },
 };
 </script>
 

@@ -1,13 +1,13 @@
 <template>
-  <v-container class="justify-content-center">
+  <v-container class="justify-content-center ma-0 pa-0">
     <v-row>
-      <v-col cols="12" align="center">
-        <v-card-text>
+      <v-col cols="12" align="center" class="ma-0 pa-0">
           <v-form ref="form">
-            <p align="left">
+            <p align="center">
               所持機器を使用するか
+            </p>
               <v-btn-toggle
-                class="mb-6 ml-6"
+                class="mb-6"
                 borderless
                 dense
                 v-model="ownEquipment"
@@ -17,11 +17,11 @@
                 <v-btn value="true">YES</v-btn>
                 <v-btn value="false">NO</v-btn>
               </v-btn-toggle>
-            </p>
-            <p align="left">
+            <p align="center" class="mt-3">
               音楽を流すか
+            </p>
               <v-btn-toggle
-                class="mb-6 ml-6"
+                class="mb-6"
                 borderless
                 dense
                 v-model="bgm"
@@ -31,11 +31,11 @@
                 <v-btn value="true">YES</v-btn>
                 <v-btn value="false">NO</v-btn>
               </v-btn-toggle>
-            </p>
-            <p align="left">
+            <p align="center" class="mt-3">
               撮影の許可
+            </p>
               <v-btn-toggle
-                class="mb-6 ml-6"
+                class="mb-6"
                 borderless
                 dense
                 v-model="cameraPermission"
@@ -45,11 +45,11 @@
                 <v-btn value="true">YES</v-btn>
                 <v-btn value="false">NO</v-btn>
               </v-btn-toggle>
-            </p>
-            <p align="left">
+            <p align="center" class="mt-3">
               騒音
+            </p>
               <v-btn-toggle
-                class="mb-6 ml-6"
+                class="mb-6"
                 borderless
                 dense
                 v-model="loudSound"
@@ -59,8 +59,6 @@
                 <v-btn value="true">YES</v-btn>
                 <v-btn value="false">NO</v-btn>
               </v-btn-toggle>
-            </p>
-
             <v-textarea
               label="ステージ内容"
               ref="stageContent"
@@ -69,9 +67,9 @@
               text
               outlined
               required
+              class="mt-5"
             ></v-textarea>
           </v-form>
-        </v-card-text>
       </v-col>
     </v-row>
   </v-container>

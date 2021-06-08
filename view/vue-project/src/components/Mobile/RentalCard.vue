@@ -1,7 +1,7 @@
 <template>
   <v-container class="justify-content-center">
-    <v-row>
-      <v-col cols=12>
+    <v-row class="pa-0">
+      <v-col class="ma-0 pa-0">
         <v-form ref="form">
           <v-select
             label="物品"
