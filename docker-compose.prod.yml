@@ -74,6 +74,8 @@ services:
       - ./certs:/var/lib/https-portal
       - code_share:/var/www/vhosts/group-manager.nutfes.net
       - ./nginx:/etc/nginx/conf.d
+      - ./nginx/group-manager.nutfes.net.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.conf.erb:ro
+      - ./nginx/group-manager.nutfes.net.ssl.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.ssl.conf.erb:ro
 
 volumes:
   mysql-data:
