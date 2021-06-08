@@ -2,7 +2,7 @@
   <div>
     <v-row class="px-0">
       <v-col class="mx-0">
-        <DashBoard v-if="isMobile === false"/>
+        <!-- <DashBoard v-if="isMobile === false"/> -->
       </v-col>
     </v-row>
     <v-row>
@@ -83,8 +83,8 @@ export default {
     };
   },
   created: function () {
-    const isMobile = require('ismobilejs');
-    this.mobile = isMobile.phone;
+    //const isMobile = require('ismobilejs');
+    //this.mobile = isMobile.phone;
   },
   methods: {
     signOut: function() {
