@@ -152,6 +152,7 @@ export default {
         { title: 'お知らせ', icon: 'mdi-newspaper-variant', click: '/news' },
         { title: '印刷', icon: 'mdi-printer', click: '/print' },
         { title: '設定', icon: 'mdi-cog', click: '/user_page_setting' },
+        { title: 'ユーザー個人設定', icon: 'mdi-account-cog', click: '/current_user_setting' },
       ],
       user: []
     }
