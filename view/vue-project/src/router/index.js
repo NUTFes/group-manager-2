@@ -29,7 +29,6 @@ import MobileRegistGroup from "../views/Mobile/regist_group.vue";
 import MobileRegistShop from "../views/Mobile/regist_shop.vue";
 import MobilePlace from "../views/Mobile/place.vue";
 import MobileEditUserInfo from "../views/Mobile/edit_user_info.vue";
-import MobileEditUserInfo from "../views/Mobile/edit_user_info.vue";
 
 Vue.use(VueRouter);
 
