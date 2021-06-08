@@ -82,10 +82,6 @@ export default {
       addPurchaseList: [],
     };
   },
-  created: function () {
-    const isMobile = require('ismobilejs');
-    this.mobile = isMobile.phone;
-  },
   methods: {
     signOut: function() {
       const url = process.env.VUE_APP_URL + "/api/auth/sign_out";

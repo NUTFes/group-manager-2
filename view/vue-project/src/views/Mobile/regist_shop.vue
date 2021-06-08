@@ -572,7 +572,7 @@ export default {
         this.$refs.rentalChild[i].submit();
       }
 
-      this.$router.push("MyPage");
+  //    this.$router.push("MyPage");
     },
     saleSubmit: function() {
       if (this.groupCategoryId == null) {
@@ -599,7 +599,7 @@ export default {
         }
       );
 
-      this.$router.push("MyPage");
+      this.$router.push("mobile_mypage");
     },
     getIndex: function() {
       for (let i = 0; i < this.placeList.length; i++) {
