@@ -6,6 +6,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
       && apt install -y nodejs yarn \
       && apt install -y libpq-dev \
       && mkdir /myapp
+RUN apt install vim -y
 
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
