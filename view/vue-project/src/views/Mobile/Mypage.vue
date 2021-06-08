@@ -2,7 +2,7 @@
   <div>
     <v-row class="px-0">
       <v-col class="mx-0">
-        <DashBoard v-if="isMobile === false"/>
+        <!-- <DashBoard v-if="isMobile === false"/> -->
       </v-col>
     </v-row>
     <v-row>

@@ -16,18 +16,19 @@ import RegistPurchase from "../views/regist_purchase.vue";
 import Firstcustomer from "../views/FirstCustomer.vue";
 import EditUserInfo from "../views/edit_user_info.vue";
 import PasswordReset from "../views/password_reset.vue";
-import MobileWelcome from "../views/Mobile/Welcome.vue"
-import MobileMypage from "../views/Mobile/Mypage.vue"
-import MobileUserDetail from "../views/Mobile/UserDetail.vue"
-import MobileGroup from "../views/Mobile/group.vue"
-import MobileSubRep from "../views/Mobile/SubRep.vue"
-import MobileFirstCustomer from "../views/Mobile/FirstCustomer.vue"
-import MobilePower from "../views/Mobile/power.vue"
+import Profile from "../views/profile.vue";
+import MobileWelcome from "../views/Mobile/Welcome.vue";
+import MobileMypage from "../views/Mobile/Mypage.vue";
+import MobileUserDetail from "../views/Mobile/UserDetail.vue";
+import MobileGroup from "../views/Mobile/group.vue";
+import MobileSubRep from "../views/Mobile/SubRep.vue";
+import MobileFirstCustomer from "../views/Mobile/FirstCustomer.vue";
+import MobilePower from "../views/Mobile/power.vue";
 import MobilePasswordReset from "../views/Mobile/password_reset.vue";
 import MobileRegistGroup from "../views/Mobile/regist_group.vue";
 import MobileRegistShop from "../views/Mobile/regist_shop.vue";
 import MobilePlace from "../views/Mobile/place.vue";
-
+import MobileEditUserInfo from "../views/Mobile/edit_user_info.vue";
 
 Vue.use(VueRouter);
 
@@ -35,78 +36,78 @@ const routes = [
   {
     path: "/",
     name: "Welcome",
-    component: Welcome
+    component: Welcome,
   },
   {
     path: "/about",
     name: "About",
-    component: About
+    component: About,
   },
   {
     path: "/mypage",
     name: "MyPage",
-    component: MyPage
+    component: MyPage,
   },
   {
     path: "/user_detail",
     name: "UserDetail",
-    component: UserDetail
+    component: UserDetail,
   },
   {
     path: "/group",
     name: "Group",
-    component: Group
+    component: Group,
   },
   {
     path: "/place",
     name: "Place",
-    component: Place
+    component: Place,
   },
   {
     path: "/power",
     name: "Power",
-    component: Power
+    component: Power,
   },
   {
     path: "/sub_rep",
     name: "SubRep",
-    component: SubRep
+    component: SubRep,
   },
   {
     path: "/regist_shop",
     name: "RegistShop",
-    component: RegistShop
+    component: RegistShop,
   },
   {
     path: "/regist_group",
     name: "RegistGroup",
-    component: RegistGroup
+    component: RegistGroup,
   },
   {
     path: "/regist_food_booths",
     name: "RegistFoodBooths",
-    component: RegistFoodBooths
+    component: RegistFoodBooths,
   },
   {
     path: "/regist_purchase",
     name: "RegistPurchase",
-    component: RegistPurchase
+    component: RegistPurchase,
   },
 
   {
     path: "/firstcustomer",
     name: "Firstcustomer",
-    component: Firstcustomer
+    component: Firstcustomer,
   },
   {
     path: "/password_reset",
     name: "PasswordReset",
-    component: PasswordReset
+    component: PasswordReset,
   },
   {
     path: "/edit_user_info",
     name: "EditUserInfo",
-    component: EditUserInfo
+    component: EditUserInfo,
   },
   {
     path: "/mobile_welcome",
@@ -163,6 +164,16 @@ const routes = [
     name: "MobilePlace",
     component: MobilePlace,
   },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+  },
+  {
+    path: "/mobile_edit_user_info",
+    name: "MobileEditUserInfo",
+    component: MobileEditUserInfo,
+  },
 ];
 
 const router = new VueRouter({
@@ -172,7 +183,7 @@ const router = new VueRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     return { x: 0, y: 0 };
-  }
+  },
 });
 
 export default router;
