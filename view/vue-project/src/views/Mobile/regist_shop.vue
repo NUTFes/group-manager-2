@@ -126,7 +126,7 @@
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
                     <v-card-title class="font-weight-bold justify-center">物品登録</v-card-title>
-                    <v-divider></v-divider>
+                    <v-divider/>
                     <v-card-text>
                       <v-row>
                         <v-col>
