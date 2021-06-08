@@ -161,6 +161,13 @@ export default {
       this.$refs.form.reset();
     },
 
+    zeropadding: function(num){
+      var padnum = null;
+      padnum = ('00000000' + num).slice(-8);
+      console.log(padnum);
+      return padnum;
+    },
+
 		submit: function() {
       if ( !this.$refs.form.validate() ) return;
 
@@ -169,7 +176,7 @@ export default {
 			var params =  {
           'name' : this.name,
           'email' : this.email,
-					'student_id' : this.student_id,
+					'student_id' : Number(this.student_id),
           'tel' : this.tel,
           'department_id' : this.department_id, 
           'grade_id' : this.grade_id
@@ -210,7 +217,7 @@ export default {
         console.log(response.data)
         this.name = response.data.user.name
         this.email = response.data.user.email
-        this.student_id = String(response.data.user_detail.student_id)
+        this.student_id = String(this.zeropadding(response.data.user_detail.student_id))
         this.tel = response.data.user_detail.tel
         this.department_id = response.data.user_detail.department_id
         this.grade_id = response.data.user_detail.grade_id
