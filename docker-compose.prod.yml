@@ -11,24 +11,28 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     tty: true
+    restart: always
 
   api:
     build: ./api
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec pumactl start"
     container_name: 'GM2-API'
     volumes:
       - ./api:/myapp
+      - ./certs:/certs
     ports:
-      - "3000:3000"
+      - "3000:9292" #local:pumactl
     depends_on:
       - db
     stdin_open: true
     tty: true
+    environment: 
+      - RAILS_ENV=production
     
   view:
     build: ./view
     container_name: 'GM2-VIEW'
-    ports:
+    ports: 
       - "8080:8080"
     volumes:
       - ./view:/app
@@ -36,7 +40,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      - VUE_APP_URL=http://localhost:3000
+      - VUE_APP_URL=https://group-manager-api.nutfes.net
     depends_on:
       - api
 
@@ -50,19 +54,28 @@ services:
       - ./admin_view:/app
     tty: true
     environment:
-      - VUE_APP_URL=http://133.125.44.106:3000
+      - VUE_APP_URL=https://group-manager-api.nutfes.net
 
-  nginx:
-    container_name: 'nginx'
-    build: ./nginx
-    volumes:
-      - code_share:/var/www/public
+  https-portal:
+    image: steveltn/https-portal:1
+    container_name: 'https-portal'
     ports:
-      - 80:80
-    depends_on:
+      - '80:80'
+      - '443:443'
+    links:
       - api
       - view
       - admin_view
+    environment:
+      DOMAINS: ' group-manager.nutfes.net , group-manager-admin.nutfes.net -> http://admin_view:8000 , group-manager-api.nutfes.net -> http://api:3000 , record-api.nutfes.net -> http://localhost:3001 '
+      STAGE: 'production' # Don't use production until staging works
+      #FORCE_RENEW: 'true'
+    volumes:
+      - ./certs:/var/lib/https-portal
+      - code_share:/var/www/vhosts/group-manager.nutfes.net
+      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/group-manager.nutfes.net.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.conf.erb:ro
+      - ./nginx/group-manager.nutfes.net.ssl.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.ssl.conf.erb:ro
 
 volumes:
   mysql-data:
