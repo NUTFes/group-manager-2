@@ -76,6 +76,7 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - ./nginx/group-manager.nutfes.net.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.conf.erb:ro
       - ./nginx/group-manager.nutfes.net.ssl.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.ssl.conf.erb:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   mysql-data:
