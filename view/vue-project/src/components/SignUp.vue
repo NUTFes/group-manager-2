@@ -11,7 +11,7 @@
             <v-form ref="form">
               <p v-bind:style="warnStyle" v-html="getMessage"></p>
               <v-text-field
-                  label="フルネーム"
+                  label="代表者のフルネーム"
                   ref="name"
                   v-model="name"
                   :rules="[rules.requied]"
