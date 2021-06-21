@@ -10,7 +10,7 @@
           <v-container>
             <v-form ref="form">
               <v-text-field
-                  label="フルネーム"
+                  label="代表者のフルネーム"
                   ref="name"
                   v-model="name"
                   :rules="[rules.requied]"
