@@ -21,24 +21,35 @@
     <div class="sheet">
       <h2>ユーザー一覧</h2>
       <h3>テーブルを印刷する</h3>
+      <table table border="1" rules="rows">
       <v-simple-table dense>
         <template v-slot:default>
+         
           <thead>
             <tr>
               <th class="text-left">ID</th>
-              <th class="text-left">name</th>
-              <th class="text-left">email</th>
+              <th class="text-left">group name</th>
+              <th class="text-left">item</th>
+              <th class="text-left">power</th>
+              <th class="text-left">manufacturer</th>
+              <th class="text-left">model</th>
+              <th class="text-left">item url</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
+            <tr v-for="(power, i) in powers" :key="i">
+              <td>{{power.id}}</td>
+              <td>{{power.group_name}}</td>
+              <td>{{power.item}}</td>
+              <td>{{power.power}}</td>
+              <td>{{power.manufacturer}}</td>
+              <td>{{power.model}}</td>
+              <td>{{power.item_url}}</td>
             </tr>
           </tbody>
         </template>
       </v-simple-table>
+      </table>
     </div>
 
     <v-row>
@@ -58,7 +69,7 @@ export default {
   data() {
     return {
       list: null,
-      users: null
+      powers: null
     }
   },
   components:{
@@ -71,13 +82,13 @@ export default {
   },
   methods: {
     getList() {
-      this.$axios.get('api/v1/users/index', {
+      this.$axios.get('api/v1/get_print_powers', {
         headers: { 
           "Content-Type": "application/json", 
         }
       })
       .then(response => {
-        this.users = response.data.data
+        this.powers = response.data
       })
     },
     handlePrint() {
