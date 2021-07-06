@@ -2,8 +2,7 @@
   <div>
     <v-row>
       <v-col>
-        <v-card flat class="mx-15">
-          <v-container>
+        <v-card flat class="mx-15 pb-5">
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
@@ -69,7 +68,6 @@
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-          </v-container>
         </v-card>
       </v-col>
     </v-row>
