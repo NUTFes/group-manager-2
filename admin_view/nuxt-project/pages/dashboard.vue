@@ -6,7 +6,7 @@
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
+                <v-card-title class="font-weight-bold mt-3 pb-7">
                   <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
                     >mdi-account-cog</v-icon
                   >
@@ -89,11 +89,11 @@
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
+                <v-card-title class="font-weight-bold mt-3 pb-7">
                   <v-icon class="ma-1">mdi-account-group</v-icon>
                   参加団体
                 </v-card-title>
-                <v-divider></v-divider>
+                <hr class="mt-n3" color="#BDBDBD"/>
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
@@ -114,15 +114,16 @@
            :to="{
                 name: 'users'
                 }"
-           >
+           > 
            <v-row>
              <v-col cols=1></v-col>
              <v-col cols=10>
-               <v-card-title class="font-weight-bold mt-3">
+               <v-card-title class="font-weight-bold mt-6 pb-7">
                  <v-icon class="ma-1">mdi-account-circle</v-icon>
                  ユーザー数
                </v-card-title>
-               <v-divider></v-divider>
+               <!-- <v-divider /> -->
+               <hr class="mt-n3" color="#BDBDBD"/>
                <v-row>
                  <v-col cols=6>
                    <br><br>
@@ -150,11 +151,12 @@
             <v-row>
               <v-col cols="1"></v-col>
               <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
+                <v-card-title class="font-weight-bold mt-3 pb-7">
                   <v-icon class="ma-1">mdi-cube</v-icon>
                   物品割り当て
                 </v-card-title>
-                <v-divider></v-divider>
+                <!-- <v-divider /> -->
+                <hr class="mt-n3" color="#BDBDBD"/>
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
