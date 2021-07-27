@@ -19,24 +19,26 @@
     </v-row>
 
     <div class="sheet">
-      <h2>ユーザー一覧</h2>
+      <h2>従業員一覧</h2>
       <h3>テーブルを印刷する</h3>
       <v-simple-table dense>
         <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">ID</th>
-              <th class="text-left">name</th>
-              <th class="text-left">email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-            </tr>
-          </tbody>
+          <table border=solid>
+            <thead>
+              <tr>
+                <th class="text-left">ID</th>
+                <th class="text-left">name</th>
+                <th class="text-left">email</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="employee in employees" :key="employee.id">
+                <td>{{employee.id}}</td>
+                <td>{{employee.name}}</td>
+                <td>{{employee.student_id}}</td>
+              </tr>
+            </tbody>
+          </table>
         </template>
       </v-simple-table>
     </div>
@@ -58,7 +60,7 @@ export default {
   data() {
     return {
       list: null,
-      users: null
+      employees: null
     }
   },
   components:{
@@ -71,13 +73,13 @@ export default {
   },
   methods: {
     getList() {
-      this.$axios.get('api/v1/users/index', {
+      this.$axios.get('/employees', {
         headers: { 
           "Content-Type": "application/json", 
         }
       })
       .then(response => {
-        this.users = response.data.data
+        this.employees = response.data
       })
     },
     handlePrint() {

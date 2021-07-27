@@ -19,24 +19,30 @@
     </v-row>
 
     <div class="sheet">
-      <h2>ユーザー一覧</h2>
+      <h2>販売食品一覧</h2>
       <h3>テーブルを印刷する</h3>
       <v-simple-table dense>
         <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">ID</th>
-              <th class="text-left">name</th>
-              <th class="text-left">email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-            </tr>
-          </tbody>
+          <table border=solid>
+            <thead>
+              <tr>
+                <th class="text-left">ID</th>
+                <th class="text-left">name</th>
+                <th class="text-left">1日目の個数</th>
+                <th class="text-left">2日目の個数</th>
+                <th class="text-left">調理の有無</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="product in products" :key="product.id">
+                <td>{{product.id}}</td>
+                <td>{{product.name}}</td>
+                <td>{{product.first_day_num}}</td>
+                <td>{{product.second_day_num}}</td>
+                <td>{{product.is_cooking}}</td>
+              </tr>
+            </tbody>
+          </table>
         </template>
       </v-simple-table>
     </div>
@@ -58,7 +64,7 @@ export default {
   data() {
     return {
       list: null,
-      users: null
+      products: null
     }
   },
   components:{
@@ -71,13 +77,13 @@ export default {
   },
   methods: {
     getList() {
-      this.$axios.get('api/v1/users/index', {
+      this.$axios.get('/food_products', {
         headers: { 
           "Content-Type": "application/json", 
         }
       })
       .then(response => {
-        this.users = response.data.data
+        this.products = response.data
       })
     },
     handlePrint() {
