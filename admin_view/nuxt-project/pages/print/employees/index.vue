@@ -28,7 +28,7 @@
               <tr>
                 <th class="text-left">ID</th>
                 <th class="text-left">name</th>
-                <th class="text-left">email</th>
+                <th class="text-left">studentID</th>
               </tr>
             </thead>
             <tbody>

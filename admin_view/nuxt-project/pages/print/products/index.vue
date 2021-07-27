@@ -39,7 +39,16 @@
                 <td>{{product.name}}</td>
                 <td>{{product.first_day_num}}</td>
                 <td>{{product.second_day_num}}</td>
-                <td>{{product.is_cooking}}</td>
+                <td>
+                  <v-chip
+                    v-if="product.is_cooking == true"
+                    color="white"
+                  >する</v-chip>
+                  <v-chip
+                    v-if="product.is_cooking == false"
+                    color="white"
+                  >しない</v-chip>
+                </td>
               </tr>
             </tbody>
           </table>
