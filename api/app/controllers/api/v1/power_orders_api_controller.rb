@@ -22,9 +22,11 @@ class Api::V1::PowerOrdersApiController < ApplicationController
     power_orders_list = []
     for power_order in power_orders
       group = power_order.group.name
+      num = power_order.group.power_orders.length
       power_orders_list << {
         power_order: power_order,
         group: group,
+        num: num,
       }
     end
     render json: power_orders_list
