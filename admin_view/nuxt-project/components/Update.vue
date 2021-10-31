@@ -3,7 +3,8 @@
       <v-row>
           <v-col cols=1></v-col>
           <v-col>
-              <v-card-title><v-icon class="mr-2">mdi-information</v-icon>アップデート情報</v-card-title>
+              <v-card-title class="font-weight-bold "><v-icon class="mr-2 pb-7">mdi-information</v-icon>アップデート情報</v-card-title>
+              <hr class="mt-n3">
               <v-card-text>
                   <li v-for="t in text">
                       <v-chip class="ma-2" label color="red" x-small><div style="color:white">new</div></v-chip> ({{ t.date }}) {{ t.body }}
