@@ -1,111 +1,127 @@
 <template>
   <div>
-  <v-container>
-    <v-row>
-      <v-col>
-        <v-card
-          flat
-          >
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <br>
-              <v-card-title class="title font-weight-bold justify-center">ユーザーの詳細を登録</v-card-title>
-              <v-divider class="mb-7"/>
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    label="学籍番号８桁"
-                    background-color="white"
-                    outlined
-                    v-model="student_id"
-                    hint="お持ちでない方：0を8桁入力"
-                    :rules="[rules.min, rules.over]"
-                    counter="8"
-                    filled
-                    clearable
-                    ></v-text-field>
-                  <br>
-                  <v-text-field
-                    label="TEL"
-                    background-color="white"
-                    outlined
-                    v-model="tel"
-                    counter="11"
-                    hint="ハイフンなしで半角入力"
-                    persistent-hint
-                    filled
-                    clearable
-                    ></v-text-field>
-                  <br>
-                  <v-select
-                    v-model.number="department_id"
-                    :items="departments"
-                    :menu-props="{ top: true, offsetY: true }"
-                    label="学科"
-                    item-text="name"
-                    item-value="id"
-                    outlined
-                    clearable
-                    ></v-select>
-                  <br>
-                  <v-select
-                    v-model.number="grade_id"
-                    :items="grades"
-                    :menu-props="{ top: true, offsetY: true }"
-                    label="学年"
-                    item-text="name"
-                    item-value="id"
-                    outlined
-                    clearable
-                    ></v-select>
-                </v-col>
-              </v-row>
-              <v-divider/>
-              <v-row>
-                <v-col cols="2"></v-col>
-                <v-col cols="8">
-                  <v-card-actions>
-                    <v-btn depressed block rounded dark color="btn" @click="register">登録</v-btn>
-                  </v-card-actions>
-                  <v-card-actions>
-                    <v-btn depressed block rounded text @click="reset">クリア</v-btn>
-                  </v-card-actions>
-                </v-col>
-                <v-col cols="2"></v-col>
-              </v-row>
-              <br>
-            </v-col>
-            <v-col cols="1"></v-col>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-row flat>
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <br />
+                <v-card-title class="title font-weight-bold justify-center"
+                  >ユーザーの詳細を登録</v-card-title
+                >
+                <v-divider class="mb-7" />
+                <v-row>
+                  <v-col>
+                    <v-form ref="form">
+                      <v-text-field
+                        label="学籍番号８桁"
+                        background-color="white"
+                        outlined
+                        v-model="student_id"
+                        ref="student_id"
+                        hint="お持ちでない方：0を8桁入力"
+                        :rules="[rules.min, rules.over, rules.required]"
+                        counter="8"
+                        filled
+                        clearable
+                      ></v-text-field>
+                      <br />
+                      <v-text-field
+                        label="TEL"
+                        background-color="white"
+                        outlined
+                        v-model="tel"
+                        ref="tel"
+                        :rules="[rules.required]"
+                        counter="11"
+                        hint="ハイフンなしで半角入力"
+                        persistent-hint
+                        filled
+                        clearable
+                      ></v-text-field>
+                      <br />
+                      <v-select
+                        v-model.number="department_id"
+                        :items="departments"
+                        ref="department_id"
+                        :rules="[rules.required]"
+                        :menu-props="{ top: true, offsetY: true }"
+                        label="学科"
+                        item-text="name"
+                        item-value="id"
+                        outlined
+                        clearable
+                      ></v-select>
+                      <br />
+                      <v-select
+                        v-model.number="grade_id"
+                        ref="grade_id"
+                        :rules="[rules.required]"
+                        :items="grades"
+                        :menu-props="{ top: true, offsetY: true }"
+                        label="学年"
+                        item-text="name"
+                        item-value="id"
+                        outlined
+                        clearable
+                      ></v-select>
+                    </v-form>
+                  </v-col>
+                </v-row>
+                <v-divider />
+                <v-row>
+                  <v-col cols="2"></v-col>
+                  <v-col cols="8">
+                    <v-card-actions>
+                      <v-btn
+                        depressed
+                        block
+                        rounded
+                        dark
+                        color="btn"
+                        @click="register"
+                        >登録</v-btn
+                      >
+                    </v-card-actions>
+                    <v-card-actions>
+                      <v-btn depressed block rounded text @click="reset"
+                        >クリア</v-btn
+                      >
+                    </v-card-actions>
+                  </v-col>
+                  <v-col cols="2"></v-col>
+                </v-row>
+                <br />
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
           </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Header from '@/components/Header.vue'
+import axios from "axios";
+import Header from "@/components/Header.vue";
 export default {
   components: {
-    Header, 
-    　},
-  data () {
+    Header,
+  },
+  data() {
     return {
-      student_id: [],
-      tel: [],
       user: [],
-      department_id: [],
-      grade_id: [],
 
-      rules:{
-        min: v => v.length >= 8 || '8桁かどうかを確認してください',
-        over: v => v.length <= 8 || '8桁かどうかを確認してください',
+      rules: {
+        min: (v) => v.length >= 8 || "8桁かどうかを確認してください",
+        over: (v) => v.length <= 8 || "8桁かどうかを確認してください",
+        required: (v) => !!v || "入力してください",
       },
 
-      departments:[
+      departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
         { name: "物質材料工学課程", id: 3 },
@@ -125,9 +141,9 @@ export default {
         { name: "材料工学専攻", id: 17 },
         { name: "エネルギー・環境工学専攻", id: 18 },
         { name: "生物統合工学専攻", id: 19 },
-        { name: "その他", id: 20 }
+        { name: "その他", id: 20 },
       ],
-      grades:[
+      grades: [
         { name: "B1[学部1年]", id: 1 },
         { name: "B2[学部2年]", id: 2 },
         { name: "B3[学部3年]", id: 3 },
@@ -142,56 +158,68 @@ export default {
         { name: "GD3[イノベ3年]", id: 12 },
         { name: "GD4[イノベ4年]", id: 13 },
         { name: "GD5[イノベ5年]", id: 14 },
-        { name: "その他", id: 15 }
-      ]
-    }
-
+        { name: "その他", id: 15 },
+      ],
+    };
+  },
+  computed: {
+    form() {
+      return {
+        student_id: [],
+        tel: [],
+        department_id: [],
+        grade_id: [],
+      };
+    },
   },
 
   methods: {
     register: function() {
-      const url = process.env.VUE_APP_URL + '/user_details'
-      axios.defaults.headers.common['Content-Type'] = 'application/json';
+      const url = process.env.VUE_APP_URL + "/user_details";
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+
+      if (!this.$refs.form.validate()) return;
+
       var params = new URLSearchParams();
-      params.append('student_id', this.student_id);
-      params.append('tel', this.tel);
-      params.append('department_id', this.department_id);
-      params.append('grade_id', this.grade_id);
-      params.append('user_id', this.user.id);
+      params.append("student_id", this.student_id);
+      params.append("tel", this.tel);
+      params.append("department_id", this.department_id);
+      params.append("grade_id", this.grade_id);
+      params.append("user_id", this.user.id);
       axios.post(url, params).then(
         (response) => {
-          this.$router.push('mobile_group')
+          console.log(response);
+            this.$router.push("mobile_group");
         },
         (error) => {
-          return error
+          console.error(error);
+          return error;
         }
-      )
+      );
     },
 
-    reset: function(){
-      this.student_id = ''
-      this.tel = ''
-      this.department_id = ''
-      this.grade_id = ''
+    reset: function() {
+      this.$refs.form.reset();
     },
   },
 
   async mounted() {
-    const url = process.env.VUE_APP_URL + '/api/v1/users/show'
+    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     try {
-      response = await axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-          "access-token": localStorage.getItem('access-token'),
-          "client": localStorage.getItem('client'),
-          "uid": localStorage.getItem('uid')
-        }
-      })
-      this.user = response.data.data
-    } catch ( e ) {
-      return e
+      var response = await axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      });
+      console.log(response);
+      this.user = response.data.data;
+    } catch (e) {
+      console.error(e);
+      return e;
     }
-  }
-}
+  },
+};
 </script>
-
