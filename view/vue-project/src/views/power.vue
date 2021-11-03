@@ -18,7 +18,7 @@
           :items="group"
           :menu-props="{
             top: true,
-            offsetY: true
+            offsetY: true,
           }"
           item-text="name"
           item-value="id"
@@ -70,37 +70,37 @@ import axios from "axios";
 import PowerCard from "../components/PowerCard";
 export default {
   components: {
-    PowerCard
+    PowerCard,
   },
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください",
-        max: value => value <= 1000 || "大きすぎます"
+        required: (value) => !!value || "入力してください",
+        max: (value) => value <= 1000 || "大きすぎます",
       },
       group: [],
       e1: 1,
       steps: 2,
-      groupId: 0
+      groupId: 0,
     };
   },
   watch: {
     steps(val) {
       if (this.e1 > val) this.e1 = val;
-    }
+    },
   },
   methods: {
-    onInput: val => {
+    onInput: (val) => {
       this.steps = parseInt(val);
     },
-    nextStep: n => {
+    nextStep: (n) => {
       if (n === this.steps) {
         this.e1 = 1;
       } else {
         this.e1 = n + 1;
       }
     },
-    all_submit: function() {
+    all_submit: function () {
       let valid = true;
       for (let i = 0; i < this.steps; i++) {
         if (!this.$refs.child[i].validate) {
@@ -117,7 +117,7 @@ export default {
         let res = this.$refs.child[i].submit();
       }
       this.$router.push("MyPage");
-    }
+    },
   },
 
   mounted() {
@@ -128,16 +128,16 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           this.user = response.data.data;
           console.log(this.user);
           console.log(this.user.id);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
@@ -149,21 +149,21 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           for (let i = 0; i < response.data.length; i++) {
             this.group.push(response.data[i]);
           }
           console.log(this.group);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-  }
+  },
 };
 </script>

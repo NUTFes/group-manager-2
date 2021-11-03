@@ -88,7 +88,7 @@
 
 <script>
 
-import axios from 'axios'
+import axios from "axios"
 export default {
   data () {
     return {
@@ -101,17 +101,17 @@ export default {
       student: null,
       pad_student_id: null,
 
-      rules:{
-        requied: value => !!value || '入力してください',
-				student_id_length: v => v.length == 8  || '8桁かどうかを確認してください',
-				tel_length: v => v.length == 11  || '11桁かどうかを確認してください',
+      rules: {
+        requied: value => !!value || "入力してください",
+        student_id_length: v => v.length == 8 || "8桁かどうかを確認してください",
+        tel_length: v => v.length == 11 || "11桁かどうかを確認してください",
         email: v => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(v) || '適切なメールアドレスではありません。'
+          return pattern.test(v) || "適切なメールアドレスではありません。"
         }
       },
 
-      departments:[
+      departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
         { name: "物質材料工学課程", id: 3 },
@@ -133,7 +133,7 @@ export default {
         { name: "生物統合工学専攻", id: 19 },
         { name: "その他", id: 20 }
       ],
-      grades:[
+      grades: [
         { name: "B1[学部1年]", id: 1 },
         { name: "B2[学部2年]", id: 2 },
         { name: "B3[学部3年]", id: 3 },
@@ -161,57 +161,57 @@ export default {
     },
 
     zeropadding: function(num){
-      var padnum = null;
-      padnum = ('00000000' + num).slice(-8);
+      let padnum = null;
+      padnum = ("00000000" + num).slice(-8);
       console.log(padnum);
       return padnum;
     },
 
-		submit: function() {
-      if ( !this.$refs.form.validate() ) return;
+    submit: function() {
+      if (!this.$refs.form.validate()) return;
 
-      const post_url = process.env.VUE_APP_URL + '/api/v1/current_user/edit_user_info'
+      const post_url = process.env.VUE_APP_URL + "/api/v1/current_user/edit_user_info"
 
       // this.zeropadding();
 
-			var params =  {
-          'name' : this.name,
-          'email' : this.email,
-					'student_id' : Number(this.student_id),
-          'tel' : this.tel,
-          'department_id' : this.department_id, 
-          'grade_id' : this.grade_id
+      let params = {
+        "name": this.name,
+        "email": this.email,
+        "student_id": Number(this.student_id),
+        "tel": this.tel,
+        "department_id": this.department_id, 
+        "grade_id": this.grade_id
       }
       
       axios.post(post_url, params, {
-          headers: {
-            'Content-Type': 'application/json',
-            'access-token': localStorage.getItem('access-token'),
-            'client': localStorage.getItem('client'),
-            'uid': localStorage.getItem('uid')
-          }
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid")
         }
+      }
       ).then(
         (response) => {
           console.log(response)
-          localStorage.setItem('uid', this.email)
-          this.$router.push('mobile_mypage')
+          localStorage.setItem("uid", this.email)
+          this.$router.push("mobile_mypage")
         },
         (error) => {
-          console.log('登録できませんでした')
+          console.log("登録できませんでした")
           return error;
         }
       )
     },
   },
   mounted() {
-    const get_url = process.env.VUE_APP_URL + '/api/v1/current_user/get_user_detail_raw'
+    const get_url = process.env.VUE_APP_URL + "/api/v1/current_user/get_user_detail_raw"
     axios.get(get_url, {
       headers: {
         "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid")
       }
     }).then(
       (response) => {
@@ -232,15 +232,4 @@ export default {
 }
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
 

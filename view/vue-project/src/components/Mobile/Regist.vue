@@ -1377,56 +1377,55 @@
 
 </template>
 
-
 <script>
-  import axios from 'axios'
-  import Group from '@/components/Mobile/EditModal/Group.vue'
-  import SubRep from '@/components/Mobile/EditModal/SubRep.vue'
-  import Power from '@/components/Mobile/EditModal/Power.vue'
-  import Place from '@/components/Mobile/EditModal/Place.vue'
-  import StageOrder from '@/components/Mobile/EditModal/StageOrder.vue'
-  import Employee from '@/components/Mobile/EditModal/Employee.vue'
-  import StageOption from '@/components/Mobile/EditModal/StageCommonOption.vue'
-  import FoodProduct from '@/components/Mobile/EditModal/FoodProduct.vue'
-  import Rentalorder from '@/components/Mobile/EditModal/RentalOrder.vue'
-  import PurchaseList from '@/components/Mobile/EditModal/PurchaseList.vue'
-  import Addpower from '@/components/Mobile/AddModal/Power.vue'
-  import AddRentalOrder from '@/components/Mobile/AddModal/RentalOrder.vue'
-  import Addemployee from '@/components/Mobile/AddModal/Employee.vue'
-  import AddFoodProduct from '@/components/Mobile/AddModal/FoodProduct.vue'
-  import AddPurchaseList from '@/components/Mobile/AddModal/PurchaseList.vue'
+import axios from "axios"
+import Group from "@/components/Mobile/EditModal/Group.vue"
+import SubRep from "@/components/Mobile/EditModal/SubRep.vue"
+import Power from "@/components/Mobile/EditModal/Power.vue"
+import Place from "@/components/Mobile/EditModal/Place.vue"
+import StageOrder from "@/components/Mobile/EditModal/StageOrder.vue"
+import Employee from "@/components/Mobile/EditModal/Employee.vue"
+import StageOption from "@/components/Mobile/EditModal/StageCommonOption.vue"
+import FoodProduct from "@/components/Mobile/EditModal/FoodProduct.vue"
+import Rentalorder from "@/components/Mobile/EditModal/RentalOrder.vue"
+import PurchaseList from "@/components/Mobile/EditModal/PurchaseList.vue"
+import Addpower from "@/components/Mobile/AddModal/Power.vue"
+import AddRentalOrder from "@/components/Mobile/AddModal/RentalOrder.vue"
+import Addemployee from "@/components/Mobile/AddModal/Employee.vue"
+import AddFoodProduct from "@/components/Mobile/AddModal/FoodProduct.vue"
+import AddPurchaseList from "@/components/Mobile/AddModal/PurchaseList.vue"
 
-  export default {
-    props: {
-      num: String,
-      regist: String,
-    },
-    components: {
-      Group,
-      SubRep,
-      Power,
-      Place,
-      StageOrder,
-      Employee,
-      StageOption,
-      FoodProduct,
-      Rentalorder,
-      PurchaseList,
-      Addpower,
-      AddRentalOrder,
-      Addemployee,
-      AddFoodProduct,
-      AddPurchaseList,
-    },
-    data () {
+export default {
+  props: {
+    num: String,
+    regist: String,
+  },
+  components: {
+    Group,
+    SubRep,
+    Power,
+    Place,
+    StageOrder,
+    Employee,
+    StageOption,
+    FoodProduct,
+    Rentalorder,
+    PurchaseList,
+    Addpower,
+    AddRentalOrder,
+    Addemployee,
+    AddFoodProduct,
+    AddPurchaseList,
+  },
+  data () {
     return {
       data: [
-        localStorage.getItem('access-token'),
-        localStorage.getItem('client'),
-        localStorage.getItem('uid')
+        localStorage.getItem("access-token"),
+        localStorage.getItem("client"),
+        localStorage.getItem("uid")
       ],
       user: [],
-      tab: 'tab-2',
+      tab: "tab-2",
       delete_dialog: false,
       delete_dialog_group: false,
       delete_dialog_subrep: false,
@@ -1456,7 +1455,7 @@
       isEditRentalOrder: [],
       isEditStageOrder: [],
       isEditEmployee: [],
-      isEditFoodProduct:[],
+      isEditFoodProduct: [],
       isEditPurchaseList: [],
       addPowerOrder: [],
       addRentalOrder: [],
@@ -1474,11 +1473,11 @@
       // 電力申請用
       power_order_id: [],
       group_id: [],
-      item:[], 
+      item: [], 
       manufacturer: [],
-      model:[], 
+      model: [], 
       power: [],
-      url:[],
+      url: [],
       //ステージ申請用
       stage_order_id: [],
       is_sunny: [],
@@ -1501,8 +1500,8 @@
       stage_content: [],
       //従業員申請用
       employee_id: [],
-      name:[],
-      student_id:[],      
+      name: [],
+      student_id: [],      
       //販売食品用
       food_product_id: [],
       is_cooking: [],
@@ -1515,280 +1514,280 @@
       shop_id: [], 
       fes_date_id: [], 
       is_fresh: [],
+    }
+  },
+  mounted() {
+    const url = process.env.VUE_APP_URL + "/api/v1/users/show"
+    axios.get(url, {
+      headers: { 
+        "Content-Type": "application/json", 
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
+        "uid": localStorage.getItem("uid")
       }
-    },
-    mounted() {
-      const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-      axios.get(url, {
-        headers: { 
-          "Content-Type": "application/json", 
-          "access-token": localStorage.getItem('access-token'),
-          "client": localStorage.getItem('client'),
-          "uid": localStorage.getItem('uid')
-        }
-      }
-      )
-        .then(response => {
-          this.user = response.data.data
-        })
+    }
+    )
+      .then(response => {
+        this.user = response.data.data
+      })
 
-      const settingurl = process.env.VUE_APP_URL + '/user_page_settings'
-      axios.get(settingurl, {
-        headers: { 
-          "Content-Type": "application/json", 
-          "access-token": localStorage.getItem('access-token'),
-          "client": localStorage.getItem('client'),
-        }
+    const settingurl = process.env.VUE_APP_URL + "/user_page_settings"
+    axios.get(settingurl, {
+      headers: { 
+        "Content-Type": "application/json", 
+        "access-token": localStorage.getItem("access-token"),
+        "client": localStorage.getItem("client"),
       }
-      )
-        .then(response => {
-          this.isEditGroup = response.data[0].is_edit_group
-          this.isEditSubRep = response.data[0].is_edit_sub_rep
-          this.isEditPlace = response.data[0].is_edit_place
-          this.isEditPowerOrder = response.data[0].is_edit_power_order
-          this.isEditRentalOrder = response.data[0].is_edit_rental_order
-          this.isEditStageOrder = response.data[0].is_edit_stage_order
-          this.isEditEmployee = response.data[0].is_edit_employee
-          this.isEditFoodProduct = response.data[0].is_edit_food_product
-          this.isEditPurchaseList = response.data[0].is_edit_purchase_list
-          this.isAddRentalOrder = response.data[0].is_add_rental_order
-          this.addPowerOrder = response.data[0].add_power_order
-          this.addRentalOrder = response.data[0].add_rental_order
-          this.addEmployee = response.data[0].add_employee
-          this.addFoodProduct = response.data[0].add_food_product
-          this.addPurchaseList = response.data[0].add_purchase_list
-          console.log(response)
-        })
-    },
+    }
+    )
+      .then(response => {
+        this.isEditGroup = response.data[0].is_edit_group
+        this.isEditSubRep = response.data[0].is_edit_sub_rep
+        this.isEditPlace = response.data[0].is_edit_place
+        this.isEditPowerOrder = response.data[0].is_edit_power_order
+        this.isEditRentalOrder = response.data[0].is_edit_rental_order
+        this.isEditStageOrder = response.data[0].is_edit_stage_order
+        this.isEditEmployee = response.data[0].is_edit_employee
+        this.isEditFoodProduct = response.data[0].is_edit_food_product
+        this.isEditPurchaseList = response.data[0].is_edit_purchase_list
+        this.isAddRentalOrder = response.data[0].is_add_rental_order
+        this.addPowerOrder = response.data[0].add_power_order
+        this.addRentalOrder = response.data[0].add_rental_order
+        this.addEmployee = response.data[0].add_employee
+        this.addFoodProduct = response.data[0].add_food_product
+        this.addPurchaseList = response.data[0].add_purchase_list
+        console.log(response)
+      })
+  },
 
-    methods: {
-      //削除メソッド(団体すべて)
-      delete_yes() {
+  methods: {
+    //削除メソッド(団体すべて)
+    delete_yes() {
       const url = process.env.VUE_APP_URL + "/groups/" + this.group_id;
       axios.delete(url);
       this.reload()
       this.delete_dialog = false
-      },
-      //削除メソッド(電力申請)
-      delete_yes_power() {
+    },
+    //削除メソッド(電力申請)
+    delete_yes_power() {
       const url = process.env.VUE_APP_URL + "/power_orders/" + this.power_order_id;
       axios.delete(url);
       this.reload()
       this.delete_dialog_power = false
-      },
-      //削除メソッド(物品申請)
-      delete_yes_item() {
-      const url = process.env.VUE_APP_URL +  "/rental_orders/" + this.rental_order_id;
+    },
+    //削除メソッド(物品申請)
+    delete_yes_item() {
+      const url = process.env.VUE_APP_URL + "/rental_orders/" + this.rental_order_id;
       axios.delete(url);
       this.reload()
       this.delete_dialog_item = false
-      },
-      //削除メソッド(従業員申請)
-      delete_yes_employee() {
-      const url = process.env.VUE_APP_URL +  "/employees/" + this.employee_id;
+    },
+    //削除メソッド(従業員申請)
+    delete_yes_employee() {
+      const url = process.env.VUE_APP_URL + "/employees/" + this.employee_id;
       axios.delete(url);
       this.reload()
       this.delete_dialog_employee = false
-      },
-      //削除メソッド(販売食品)
-      delete_yes_food() {
+    },
+    //削除メソッド(販売食品)
+    delete_yes_food() {
       const url = process.env.VUE_APP_URL + "/food_products/" + this.food_product_id;
       console.log(url)
       axios.delete(url);      
       this.reload()
       this.delete_dialog_food = false
-      },
-      //削除メソッド(購入品)
-      delete_yes_purchase() {
+    },
+    //削除メソッド(購入品)
+    delete_yes_purchase() {
       const url = process.env.VUE_APP_URL + "/purchase_lists/" + this.purchase_list_id;
-            console.log(url)
+      console.log(url)
       axios.delete(url)      
       this.reload()
       this.delete_dialog_purchase = false
-      },
+    },
 
-      reload() {
-        this.$emit('reload');
-      },
-      //編集後Snackbar
-      openGroupSnackbar() {
-        this.groupSnackbar = true
-      },
-      openPlaceSnackbar() {
-        this.placeSnackbar = true
-      },
-      openSubrepSnackbar() {
-        this.subrepSnackbar = true
-      },
-      openPowerSnackbar() {
-        this.powerSnackbar = true
-      },
-      openStageOrderSnackbar() {
-        this.stageOrderSnackbar = true
-      },
-      openEmployeeSnackbar() {
-        this.employeeSnackbar = true
-      },
-      openFoodProductSnackbar() {
-        this.foodproductSnackbar = true
-      },
-      //追加後Snackkbar
-      openAddpowerSnackbar() {
-        this.addPowerSnackbar = true
-      },
-      openRentalorderSnackbar(){
-        this.rentalorderSnackbar = true
-      },
-      openAddrentalorderSnackbar(){
-        this.addRentalOrderSnackbar = true
-      },
-      openAddemployeeSnackbar() {
-        this.addemployeeSnackbar = true
-      },
-      openAddFoodProductDisplay() {
-        this.$refs.AddFoodProductDlg.isDisplay = true
-        console.log(this.$refs.AddFoodProductDlg.isDisplay)
-      },
-      //編集用コンポーネント
-      openGroupDisplay() {
-        this.$refs.groupDlg.isDisplay = true
-      },
-      openSubRepDisplay() {
-        this.$refs.subRepDlg.isDisplay = true
-      },
-      openPlaceDisplay() {
-        this.$refs.placeDlg.isDisplay = true
-      },
-      openStageOrderDisplay(stage_order_id, group_id, is_sunny, stage_date, stage_first, stage_second, use_time_interval, prepare_time_interval, cleanup_time_interval, prepare_start_time, performance_start_time, performance_end_time, cleanup_end_time) {
-        this.stage_order_id = stage_order_id
-        this.group_id = group_id
-        this.is_sunny = is_sunny
-        this.stage_date = stage_date
-        this.stage_first = stage_first
-        this.stage_second = stage_second
-        this.use_time_interval = use_time_interval
-        this.prepare_time_interval = prepare_time_interval
-        this.cleanup_time_interval = cleanup_time_interval
-        this.prepare_start_time = prepare_start_time
-        this.performance_start_time = performance_start_time
-        this.performance_end_time = performance_end_time
-        this.cleanup_end_time = cleanup_end_time
-        this.$refs.stageOrderDlg.isDisplay = true
-      },
-      openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
-        this.power_order_id = id
-        this.group_id = group_id
-        this.item = item
-        this.power = power
-        this.manufacturer = manufacturer
-        this.model = model
-        this.url = url
-        this.$refs.powerDlg.isDisplay = true
-        console.log(this.$refs.powerDlg.isDisplay)
-      },
-      openStageOptionDisplay(id, group_id, own_equipment, bgm, camera_permission, loud_sound, stage_content) {
-        this.stage_option_id = id
-        this.group_id = group_id
-        this.own_equipment = own_equipment
-        this.bgm = bgm
-        this.camera_permission = camera_permission
-        this.loud_sound = loud_sound
-        this.stage_content = stage_content
-        this.$refs.StageOptionDlg.isDisplay = true
-      },
-      openEmployeeDisplay(id, group_id, name, student_id){
-        this.employee_id = id
-        this.group_id = group_id
-        this.name = name
-        this.student_id = student_id
-        this.$refs.employeeDlg.isDisplay = true
-      },
-      openFoodProductDisplay(id, group_id, name, first_day_num, second_day_num, is_cooking) {
-        this.food_product_id = id
-        this.group_id = group_id
-        this.name = name
-        this.first_day_num = first_day_num
-        this.second_day_num = second_day_num
-        this.is_cooking = is_cooking
-        this.$refs.foodproductDlg.isDisplay = true
-      },
-      //追加用コンポーネント
-      openAddRentalOrderDisplay(id, group_id, name, num) {
-        this.rental_order_id = id
-        this.group_id = group_id
-        this.name = name
-        this.num = num
-        this.$refs.AddRentalOrderDlg.isDisplay = true
-        console.log(this.$refs.AddRentalOrderDlg.isDisplay)
-      },
-      openAddpowerDisplay() {
-        this.$refs.addpowerDlg.isDisplay = true
-      },
-      openAddemployeeDisplay() {
-        this.$refs.addemployeeDlg.isDisplay = true
-      },
-      openRentalorderDisplay(id, rental_item_id, num){
-        this.rental_order_id = id
-        this.rental_item_id = rental_item_id
-        this.num = num
-        this.$refs.rentalorderDlg.isDisplay = true
-      },
-      openPurchaseListDisplay(purchase_list_id, item, food_product_id, shop_id, fes_date_id, is_fresh) {
-        this.edit_purchase_list_id = purchase_list_id
-        this.purchase_list_item = item
-        this.purchase_food_product_id = food_product_id
-        this.shop_id = shop_id
-        this.fes_date_id = fes_date_id
-        this.is_fresh = is_fresh
-        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
-          headers: { 
-            "Content-Type": "application/json", 
-          }
+    reload() {
+      this.$emit("reload");
+    },
+    //編集後Snackbar
+    openGroupSnackbar() {
+      this.groupSnackbar = true
+    },
+    openPlaceSnackbar() {
+      this.placeSnackbar = true
+    },
+    openSubrepSnackbar() {
+      this.subrepSnackbar = true
+    },
+    openPowerSnackbar() {
+      this.powerSnackbar = true
+    },
+    openStageOrderSnackbar() {
+      this.stageOrderSnackbar = true
+    },
+    openEmployeeSnackbar() {
+      this.employeeSnackbar = true
+    },
+    openFoodProductSnackbar() {
+      this.foodproductSnackbar = true
+    },
+    //追加後Snackkbar
+    openAddpowerSnackbar() {
+      this.addPowerSnackbar = true
+    },
+    openRentalorderSnackbar(){
+      this.rentalorderSnackbar = true
+    },
+    openAddrentalorderSnackbar(){
+      this.addRentalOrderSnackbar = true
+    },
+    openAddemployeeSnackbar() {
+      this.addemployeeSnackbar = true
+    },
+    openAddFoodProductDisplay() {
+      this.$refs.AddFoodProductDlg.isDisplay = true
+      console.log(this.$refs.AddFoodProductDlg.isDisplay)
+    },
+    //編集用コンポーネント
+    openGroupDisplay() {
+      this.$refs.groupDlg.isDisplay = true
+    },
+    openSubRepDisplay() {
+      this.$refs.subRepDlg.isDisplay = true
+    },
+    openPlaceDisplay() {
+      this.$refs.placeDlg.isDisplay = true
+    },
+    openStageOrderDisplay(stage_order_id, group_id, is_sunny, stage_date, stage_first, stage_second, use_time_interval, prepare_time_interval, cleanup_time_interval, prepare_start_time, performance_start_time, performance_end_time, cleanup_end_time) {
+      this.stage_order_id = stage_order_id
+      this.group_id = group_id
+      this.is_sunny = is_sunny
+      this.stage_date = stage_date
+      this.stage_first = stage_first
+      this.stage_second = stage_second
+      this.use_time_interval = use_time_interval
+      this.prepare_time_interval = prepare_time_interval
+      this.cleanup_time_interval = cleanup_time_interval
+      this.prepare_start_time = prepare_start_time
+      this.performance_start_time = performance_start_time
+      this.performance_end_time = performance_end_time
+      this.cleanup_end_time = cleanup_end_time
+      this.$refs.stageOrderDlg.isDisplay = true
+    },
+    openPowerDisplay(id, group_id, item, power, manufacturer, model, url) {
+      this.power_order_id = id
+      this.group_id = group_id
+      this.item = item
+      this.power = power
+      this.manufacturer = manufacturer
+      this.model = model
+      this.url = url
+      this.$refs.powerDlg.isDisplay = true
+      console.log(this.$refs.powerDlg.isDisplay)
+    },
+    openStageOptionDisplay(id, group_id, own_equipment, bgm, camera_permission, loud_sound, stage_content) {
+      this.stage_option_id = id
+      this.group_id = group_id
+      this.own_equipment = own_equipment
+      this.bgm = bgm
+      this.camera_permission = camera_permission
+      this.loud_sound = loud_sound
+      this.stage_content = stage_content
+      this.$refs.StageOptionDlg.isDisplay = true
+    },
+    openEmployeeDisplay(id, group_id, name, student_id){
+      this.employee_id = id
+      this.group_id = group_id
+      this.name = name
+      this.student_id = student_id
+      this.$refs.employeeDlg.isDisplay = true
+    },
+    openFoodProductDisplay(id, group_id, name, first_day_num, second_day_num, is_cooking) {
+      this.food_product_id = id
+      this.group_id = group_id
+      this.name = name
+      this.first_day_num = first_day_num
+      this.second_day_num = second_day_num
+      this.is_cooking = is_cooking
+      this.$refs.foodproductDlg.isDisplay = true
+    },
+    //追加用コンポーネント
+    openAddRentalOrderDisplay(id, group_id, name, num) {
+      this.rental_order_id = id
+      this.group_id = group_id
+      this.name = name
+      this.num = num
+      this.$refs.AddRentalOrderDlg.isDisplay = true
+      console.log(this.$refs.AddRentalOrderDlg.isDisplay)
+    },
+    openAddpowerDisplay() {
+      this.$refs.addpowerDlg.isDisplay = true
+    },
+    openAddemployeeDisplay() {
+      this.$refs.addemployeeDlg.isDisplay = true
+    },
+    openRentalorderDisplay(id, rental_item_id, num){
+      this.rental_order_id = id
+      this.rental_item_id = rental_item_id
+      this.num = num
+      this.$refs.rentalorderDlg.isDisplay = true
+    },
+    openPurchaseListDisplay(purchase_list_id, item, food_product_id, shop_id, fes_date_id, is_fresh) {
+      this.edit_purchase_list_id = purchase_list_id
+      this.purchase_list_item = item
+      this.purchase_food_product_id = food_product_id
+      this.shop_id = shop_id
+      this.fes_date_id = fes_date_id
+      this.is_fresh = is_fresh
+      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      })
+        .then(response => {
+          this.$refs.PurchaseListDlg.food_products = response.data
         })
-          .then(response => {
-            this.$refs.PurchaseListDlg.food_products = response.data
-          })
-        this.$refs.PurchaseListDlg.isDisplay = true
-      },
-      openAddPurchaseListDisplay() {
-        axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
-          headers: { 
-            "Content-Type": "application/json", 
-          }
+      this.$refs.PurchaseListDlg.isDisplay = true
+    },
+    openAddPurchaseListDisplay() {
+      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.regist.group.id, {
+        headers: { 
+          "Content-Type": "application/json", 
+        }
+      })
+        .then(response => {
+          this.$refs.AddPurchaseListDlg.food_products = response.data
         })
-          .then(response => {
-            this.$refs.AddPurchaseListDlg.food_products = response.data
-          })
-        this.$refs.AddPurchaseListDlg.isDisplay = true
-      },
-      openPurchaseListSnackbar(){
-        this.addRentalOrderSnackbar = true
-      },
-      //削除用ダイアログ
-      open_delete_dialog_power(id){
-        this.power_order_id = id
-        this.delete_dialog_power = true
-      },
-      open_delete_dialog_item(id){
-        this.rental_order_id = id
-        this.delete_dialog_item = true
-      },
-      open_delete_dialog_employee(id){
-        this.employee_id = id
-        this.delete_dialog_employee = true
-      },
-      open_delete_dialog_food(id){
-        this.food_product_id = id
-        this.delete_dialog_food = true
-      },
-      open_delete_dialog(id){
-        this.group_id = id
-        this.delete_dialog = true
-      },
-      open_delete_dialog_purchase(id){
-        this.purchase_list_id = id
-        this.delete_dialog_purchase = true
-      },
-    }
+      this.$refs.AddPurchaseListDlg.isDisplay = true
+    },
+    openPurchaseListSnackbar(){
+      this.addRentalOrderSnackbar = true
+    },
+    //削除用ダイアログ
+    open_delete_dialog_power(id){
+      this.power_order_id = id
+      this.delete_dialog_power = true
+    },
+    open_delete_dialog_item(id){
+      this.rental_order_id = id
+      this.delete_dialog_item = true
+    },
+    open_delete_dialog_employee(id){
+      this.employee_id = id
+      this.delete_dialog_employee = true
+    },
+    open_delete_dialog_food(id){
+      this.food_product_id = id
+      this.delete_dialog_food = true
+    },
+    open_delete_dialog(id){
+      this.group_id = id
+      this.delete_dialog = true
+    },
+    open_delete_dialog_purchase(id){
+      this.purchase_list_id = id
+      this.delete_dialog_purchase = true
+    },
   }
+}
 </script>

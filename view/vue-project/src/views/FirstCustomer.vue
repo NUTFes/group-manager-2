@@ -2,8 +2,6 @@
 <v-conteiner>
 <v-row>
 
-
-
 <v-col cols='6'>
     <v-row>
         <v-col cols='12'>
@@ -22,7 +20,6 @@
     </v-row>
 </v-col>
 
-
 <v-col cols='6'>
     <v-row>
     <v-col cols='8'>    
@@ -31,7 +28,6 @@
                     <v-img contain  src="@/assets/gidaija.jpg" >
                     <v-card-title class='cardtitle'>ギダイジャー</v-card-title>
                     </v-img>
-                    
 
                 </v-card>
             </v-col>
@@ -42,7 +38,6 @@
                     <v-img contain  src="@/assets/omocha.jpg" >
                     <v-card-title class='cardtitle'>科学のおもちゃ箱</v-card-title>
                     </v-img>
-                    
 
                 </v-card>    
             </v-col>
@@ -52,7 +47,6 @@
                     <v-img contain  src="@/assets/taiko.jpg" >
                     <v-card-title class='cardtitle'>太鼓</v-card-title>
                     </v-img>
-                    
 
                 </v-card>
             </v-col>
@@ -62,7 +56,6 @@
                     <v-img contain  src="@/assets/wanage.jpg" >
                     <v-card-title class='cardtitle'>ふれあいパーク</v-card-title>
                     </v-img>
-                    
 
                 </v-card>
             </v-col>
@@ -72,7 +65,6 @@
                     <v-img contain  src="@/assets/taiken1.jpg" >
                     <v-card-title class='cardtitle'>ギダイジャー</v-card-title>
                     </v-img>
-                    
 
                 </v-card>    
             </v-col>
@@ -82,7 +74,6 @@
                     <v-img contain  src="@/assets/taiken1.jpg" >
                     <v-card-title class='cardtitle'>ギダイジャー</v-card-title>
                     </v-img>
-                    
 
                 </v-card>
             </v-col>
@@ -103,7 +94,6 @@
                     </v-card>
                 </v-col>
             </v-col>
-            
     
             <v-col cols='8'>
                 <v-col cols='12'>
@@ -115,16 +105,12 @@
                 </v-col>
             </v-col>
 
-
      </v-row>
 </v-col>
-
-
 
 </v-row>
 </v-conteiner>
 </template>
-
 
 <style>
 
@@ -133,8 +119,6 @@
 font-size:30px; 
 
 }
-
-
 
 .aboutcentens{
 padding:50px 50px 0;
@@ -149,7 +133,5 @@ left:0;
 
 }
 
-
 </style>
-
 

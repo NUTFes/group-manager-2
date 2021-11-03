@@ -1,10 +1,13 @@
 <template>
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
-      <v-card-title style="background-color:#ECEFF1; font-size:30px">
-        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon><b>購入品情報追加</b>
+      <v-card-title style="background-color: #eceff1; font-size: 30px">
+        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon
+        ><b>購入品情報追加</b>
         <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay=false"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn text fab @click="isDisplay = false"
+          ><v-icon>mdi-close</v-icon></v-btn
+        >
       </v-card-title>
       <v-container>
         <v-row>
@@ -24,15 +27,15 @@
                   item-value="id"
                   outlined
                 ></v-select>
-              <v-text-field
-                class="body-1"
-                label="購入品"
-                v-model="item"
-                background-color="white"
-                outlined
-                clearable
-              >
-              </v-text-field>
+                <v-text-field
+                  class="body-1"
+                  label="購入品"
+                  v-model="item"
+                  background-color="white"
+                  outlined
+                  clearable
+                >
+                </v-text-field>
                 <v-select
                   label="なまもの"
                   :items="isFresh"
@@ -67,11 +70,13 @@
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols=4></v-col>
-                <v-col cols=4>
-                  <v-btn color="blue darken-1" large block dark @click="register">編集する</v-btn>
-                </v-col>
-                <v-col cols=4></v-col>
+              <v-col cols="4"></v-col>
+              <v-col cols="4">
+                <v-btn color="blue darken-1" large block dark @click="register"
+                  >編集する</v-btn
+                >
+              </v-col>
+              <v-col cols="4"></v-col>
             </v-row>
           </v-col>
           <v-col cols="2"></v-col>
@@ -82,12 +87,12 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
-   props: {
+  props: {
     groupId: Number,
   },
-  data () {
+  data() {
     return {
       isDisplay: false,
       food_products: [],
@@ -101,74 +106,89 @@ export default {
       shopId: [],
       item: [],
       isFresh: [
-        {label: 'はい', value: 'true'},
-        {label: 'いいえ', value: 'false'}
+        { label: "はい", value: "true" },
+        { label: "いいえ", value: "false" },
       ],
-
-    }
+    };
   },
   mounted(groupId) {
-    axios.get(process.env.VUE_APP_URL + "/fes_dates", {
+    axios
+      .get(process.env.VUE_APP_URL + "/fes_dates", {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
         this.fes_dates = response.data;
-      })
-    axios.get(process.env.VUE_APP_URL + "/shops", {
+      });
+    axios
+      .get(process.env.VUE_APP_URL + "/shops", {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
         this.shops = response.data;
-      })
-      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
-        headers: {
-        "Content-Type": "application/json",
+      });
+    axios
+      .get(
+        process.env.VUE_APP_URL +
+          "/api/v1/get_food_products_from_group/" +
+          this.groupId,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        })
-        .then(response => {
+      )
+      .then((response) => {
         this.food_products = response.data;
-        })
-    },
+      });
+  },
 
   methods: {
     register: function () {
       axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
+      let params = new URLSearchParams();
       params.append("group_id", this.Group);
       params.append("food_product_id", this.foodProductId);
       params.append("fes_date_id", this.fesDateId);
       params.append("shop_id", this.shopId);
       params.append("items", this.item);
       params.append("is_fresh", this.isFresh);
-      axios.post(process.env.VUE_APP_URL + "/purchase_lists", params).then((response) => {
-        console.log(response);
-        this.isDisplay = false;
-        this.$emit('reload')
-        this.Group = "";
-        this.foodProductId = "";
-        this.fesDateId = "";
-        this.shopId = "";
-        this.item = "";
-        this.isFresh = "";
-      });
+      axios
+        .post(process.env.VUE_APP_URL + "/purchase_lists", params)
+        .then((response) => {
+          console.log(response);
+          this.isDisplay = false;
+          this.$emit("reload");
+          this.Group = "";
+          this.foodProductId = "";
+          this.fesDateId = "";
+          this.shopId = "";
+          this.item = "";
+          this.isFresh = "";
+        });
     },
-    getFoodProducts: function() {
-      axios.get(process.env.VUE_APP_URL + "/api/v1/get_food_products_from_group/" + this.groupId, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid")
-        }
-      })
-        .then(response => {
+    getFoodProducts: function () {
+      axios
+        .get(
+          process.env.VUE_APP_URL +
+            "/api/v1/get_food_products_from_group/" +
+            this.groupId,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "access-token": localStorage.getItem("access-token"),
+              client: localStorage.getItem("client"),
+              uid: localStorage.getItem("uid"),
+            },
+          }
+        )
+        .then((response) => {
           this.food_products = response.data;
         });
     },
-  }
-}
+  },
+};
 </script>

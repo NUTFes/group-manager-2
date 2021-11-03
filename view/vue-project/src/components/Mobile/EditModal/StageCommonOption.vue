@@ -150,7 +150,22 @@ export default {
       if (!this.$refs.form.validate()) return;
 
       const url =
-        process.env.VUE_APP_URL + "/stage_common_options" + "/" + this.id + "?group_id=" + this.groupId + "&own_equipment=" + this.ownEquipment + "&bgm=" + this.Bgm + "&camera_permission=" + this.cameraPermission + "&loud_sound=" + this.loudSound + "&stage_content=" + this.stageContent;
+        process.env.VUE_APP_URL +
+        "/stage_common_options" +
+        "/" +
+        this.id +
+        "?group_id=" +
+        this.groupId +
+        "&own_equipment=" +
+        this.ownEquipment +
+        "&bgm=" +
+        this.Bgm +
+        "&camera_permission=" +
+        this.cameraPermission +
+        "&loud_sound=" +
+        this.loudSound +
+        "&stage_content=" +
+        this.stageContent;
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.put(url).then(
         (response) => {

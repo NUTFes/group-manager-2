@@ -65,11 +65,11 @@ export default {
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください",
-        max: value => value <= 1000 || "大きすぎます"
+        required: (value) => !!value || "入力してください",
+        max: (value) => value <= 1000 || "大きすぎます",
       },
       group: [],
-      valid: false
+      valid: false,
     };
   },
 
@@ -80,9 +80,9 @@ export default {
         power: "",
         manufacturer: "",
         model: "",
-        itemUrl: ""
+        itemUrl: "",
       };
-    }
+    },
   },
   methods: {
     cancel() {
@@ -107,17 +107,17 @@ export default {
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
-        response => {
+        (response) => {
           console.log("response:", response);
           //          this.$router.push("MyPage");
           return "ok";
         },
-        error => {
+        (error) => {
           console.log("登録できませんでした");
           return error;
         }
       );
-    }
+    },
   },
 
   mounted() {
@@ -128,16 +128,16 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           this.user = response.data.data;
           console.log(this.user);
           console.log(this.user.id);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
@@ -149,21 +149,21 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           for (let i = 0; i < response.data.length; i++) {
             this.group.push(response.data[i]);
           }
           console.log(this.group);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-  }
+  },
 };
 </script>

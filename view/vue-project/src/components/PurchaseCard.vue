@@ -15,7 +15,7 @@
               clearable
               outlined
             ></v-select>
-                        <v-text-field
+            <v-text-field
               label="購入物"
               ref="item"
               v-model="item"
@@ -59,7 +59,6 @@
               clearable
               outlined
             />
-
           </v-form>
         </v-card-text>
       </v-col>
@@ -74,13 +73,13 @@ export default {
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください"
+        required: (value) => !!value || "入力してください",
       },
       fesDateList: [],
       foodProductList: [],
       shopList: [],
       valid: false,
-      groupId: localStorage.getItem("group_id")
+      groupId: localStorage.getItem("group_id"),
     };
   },
 
@@ -91,9 +90,9 @@ export default {
         shopId: "",
         fesDateId: "",
         isFresh: "",
-        item: ""
+        item: "",
       };
-    }
+    },
   },
   methods: {
     cancel() {
@@ -115,19 +114,19 @@ export default {
       params.append("is_fresh", this.isFresh);
       params.append("items", this.item);
 
-      params.forEach(element => console.log(element));
+      params.forEach((element) => console.log(element));
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
-        response => {
+        (response) => {
           console.log("response:", response);
           return "ok";
         },
-        error => {
+        (error) => {
           console.log("登録できませんでした");
           return error;
         }
       );
-    }
+    },
   },
 
   mounted() {
@@ -139,30 +138,28 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
-          response.data.forEach(foodProduct => {
+        (response) => {
+          response.data.forEach((foodProduct) => {
             this.foodProductList.push(foodProduct);
           });
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-    axios.get(process.env.VUE_APP_URL + '/api/v1/get_current_fes_dates').then(
-      (response) => {
-        this.fesDateList = response.data
-      }
-    )
-    axios.get(process.env.VUE_APP_URL + '/shops').then(
-      (response) => {
-        this.shopList = response.data
-      }
-    )
-  }
+    axios
+      .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates")
+      .then((response) => {
+        this.fesDateList = response.data;
+      });
+    axios.get(process.env.VUE_APP_URL + "/shops").then((response) => {
+      this.shopList = response.data;
+    });
+  },
 };
 </script>

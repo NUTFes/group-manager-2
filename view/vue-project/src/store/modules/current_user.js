@@ -1,24 +1,24 @@
 import axios from "axios";
 
-const apiUrlBase = process.env.VUE_APP_URL + '/api/v1/current_user/show'
+const apiUrlBase = process.env.VUE_APP_URL + "/api/v1/current_user/show";
 
 const headers = {
-  "Content-Type": "multipart/form-data"
+  "Content-Type": "multipart/form-data",
 };
 
 const state = {
-  posts: []
+  posts: [],
 };
 
 const getters = {
-  posts: state => state.posts.sort((a, b) => b.id - a.id)
+  posts: (state) => state.posts.sort((a, b) => b.id - a.id),
 };
 
 const mutations = {
   setPosts: (state, posts) => (state.posts = posts),
   appendPost: (state, post) => (state.posts = [...state.posts, post]),
   removePost: (state, id) =>
-    (state.posts = state.posts.filter(post => post.id !== id))
+    (state.posts = state.posts.filter((post) => post.id !== id)),
 };
 
 const actions = {
@@ -45,7 +45,7 @@ const actions = {
     } catch (e) {
       console.error(e);
     }
-  }
+  },
 };
 
 export default {
@@ -53,5 +53,5 @@ export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

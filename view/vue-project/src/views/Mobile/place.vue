@@ -6,7 +6,7 @@
         <v-card-title class="justify-center">
           <h1>会場登録</h1>
         </v-card-title>
-        <hr>
+        <hr />
         <v-card-text>
           <v-form ref="form">
             <v-select
@@ -77,7 +77,9 @@
         </v-card-text>
         <v-card-action>
           <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
-          <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
+          <v-btn color="blue darken-1" text block @click="cancel"
+            >リセット</v-btn
+          >
         </v-card-action>
       </v-col>
       <v-col cols="1"></v-col>
@@ -86,17 +88,16 @@
 </template>
 
 <script>
-
 // 電力登録をUIで増やして一気に登録させないようにする。
 // MyPageでエラー吐かせる。
 
-import axios from 'axios'
+import axios from "axios";
 export default {
-  data () {
+  data() {
     return {
       rules: {
-        required: value => !!value || '入力してください',
-        max: value => value <= 1000 || '大きすぎます',
+        required: (value) => !!value || "入力してください",
+        max: (value) => value <= 1000 || "大きすぎます",
       },
       group: [],
       placeList: [],
@@ -104,44 +105,42 @@ export default {
       secondId: null,
       thirdId: null,
       remark: null,
-      groupId: null
-    }
+      groupId: null,
+    };
   },
-  computed: {
-  },
+  computed: {},
   methods: {
-    cancel: function() {
+    cancel: function () {
       this.$refs.form.reset();
     },
-    submit: function() {
-      if ( !this.$refs.form.validate() ) return;
+    submit: function () {
+      if (!this.$refs.form.validate()) return;
 
-      const url = process.env.VUE_APP_URL + '/place_orders'
+      const url = process.env.VUE_APP_URL + "/place_orders";
       let params = new URLSearchParams();
-      params.append('group_id', this.groupId);
-      params.append('first', this.firstId);
-      params.append('second', this.secondId);
-      params.append('third', this.thirdId);
-      params.append('remark', this.remark);
+      params.append("group_id", this.groupId);
+      params.append("first", this.firstId);
+      params.append("second", this.secondId);
+      params.append("third", this.thirdId);
+      params.append("remark", this.remark);
 
-
-      axios.defaults.headers.common['Content-Type'] = 'application/json';
+      axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
         (response) => {
-          console.log('response:', response)
-          this.$router.push('mobile_mypage')
+          console.log("response:", response);
+          this.$router.push("mobile_mypage");
         },
         (error) => {
-          console.log('登録できませんでした')
+          console.log("登録できませんでした");
           return error;
         }
-      )
+      );
     },
-    getIndex: function(){
-      console.log('getIndex',this.placeList.length)
-      for(let i=0; i<this.placeList.length;i++){
-        console.log(this.placeList[i])
-        if(this.placeList[i]['group_id'] === this.groupId){
+    getIndex: function () {
+      console.log("getIndex", this.placeList.length);
+      for (let i = 0; i < this.placeList.length; i++) {
+        console.log(this.placeList[i]);
+        if (this.placeList[i]["group_id"] === this.groupId) {
           return i;
         }
       }
@@ -149,66 +148,72 @@ export default {
     },
   },
   mounted() {
-    const url = process.env.VUE_APP_URL + '/api/v1/users/show'
-    axios.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        this.user = response.data.data
-        console.log(this.user)
-        console.log(this.user.id)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
-    const groupUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups'
-    axios.get(groupUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        for(let i=0;i<response.data.length;i++){
-          this.group.push(response.data[i])
+    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
+    axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then(
+        (response) => {
+          this.user = response.data.data;
+          console.log(this.user);
+          console.log(this.user.id);
+        },
+        (error) => {
+          console.error(error);
+          return error;
         }
-        console.log('group: ',this.group)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
-    const placeUrl = process.env.VUE_APP_URL + '/api/v1/current_user/groups/places'
-    axios.get(placeUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        for(let i=0;i<response.data.length;i++){
-          this.placeList.push(response.data[i])
+      );
+    const groupUrl = process.env.VUE_APP_URL + "/api/v1/current_user/groups";
+    axios
+      .get(groupUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then(
+        (response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            this.group.push(response.data[i]);
+          }
+          console.log("group: ", this.group);
+        },
+        (error) => {
+          console.error(error);
+          return error;
         }
-        console.log('place: ',this.placeList)
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
+      );
+    const placeUrl =
+      process.env.VUE_APP_URL + "/api/v1/current_user/groups/places";
+    axios
+      .get(placeUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then(
+        (response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            this.placeList.push(response.data[i]);
+          }
+          console.log("place: ", this.placeList);
+        },
+        (error) => {
+          console.error(error);
+          return error;
+        }
+      );
   },
-}
-
+};
 </script>

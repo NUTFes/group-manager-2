@@ -52,7 +52,6 @@
             </v-row>
           </v-col>
 
-
 <!-- 継続参加率 -->
           <v-col cols="0.5"></v-col>
 
@@ -281,7 +280,6 @@
           <v-img src="../assets/following-step04.svg"></v-img>
         </v-col>
 
-
         <v-col cols="1.5"></v-col>
       </v-row>
 
@@ -375,7 +373,6 @@
         <v-col cols="4"><!-- 画像 -->
           <v-img src="../assets/following-step06.svg"></v-img>
         </v-col>
-
 
         <v-col cols="1.5"></v-col>
       </v-row>

@@ -155,9 +155,46 @@ export default {
       ],
       stages_list: [],
       radioGroup: 1,
-      time_interval: ["5分","10分","15分","20分","25分","30分","35分","40分","45分","50分","55分","60分","65分","70分","75分","80分","90分","95分","100分","105分","110分","115分","120分",],
+      time_interval: [
+        "5分",
+        "10分",
+        "15分",
+        "20分",
+        "25分",
+        "30分",
+        "35分",
+        "40分",
+        "45分",
+        "50分",
+        "55分",
+        "60分",
+        "65分",
+        "70分",
+        "75分",
+        "80分",
+        "90分",
+        "95分",
+        "100分",
+        "105分",
+        "110分",
+        "115分",
+        "120分",
+      ],
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "00"],
-      minute_range: ["00","05","10","15","20","25","30","35","40","45","50","55",],
+      minute_range: [
+        "00",
+        "05",
+        "10",
+        "15",
+        "20",
+        "25",
+        "30",
+        "35",
+        "40",
+        "45",
+        "50",
+        "55",
+      ],
       time_range: [],
     };
   },
@@ -168,7 +205,34 @@ export default {
   },
   methods: {
     edit: function () {
-      const url = process.env.VUE_APP_URL + "/stage_orders/" + this.id + "?group_id=" + this.groupId + "&is_sunny=" + this.isSunny + "&fes_date_id=" + this.stageDateId + "&stage_first=" + this.stageFirst + "&stage_second=" + this.stageSecond + "&use_time_interval=" + this.useTimeInterval + "&prepare_time_interval=" + this.prepareTimeInterval + "&cleanup_time_interval=" + this.cleanupTimeInterval + "&prepare_start_time=" + this.prepareStartTime + "&performance_start_time=" + this.performanceStartTime + "&performance_end_time=" + this.performanceEndTime + "&cleanup_end_time=" + this.cleanupEndTime;
+      const url =
+        process.env.VUE_APP_URL +
+        "/stage_orders/" +
+        this.id +
+        "?group_id=" +
+        this.groupId +
+        "&is_sunny=" +
+        this.isSunny +
+        "&fes_date_id=" +
+        this.stageDateId +
+        "&stage_first=" +
+        this.stageFirst +
+        "&stage_second=" +
+        this.stageSecond +
+        "&use_time_interval=" +
+        this.useTimeInterval +
+        "&prepare_time_interval=" +
+        this.prepareTimeInterval +
+        "&cleanup_time_interval=" +
+        this.cleanupTimeInterval +
+        "&prepare_start_time=" +
+        this.prepareStartTime +
+        "&performance_start_time=" +
+        this.performanceStartTime +
+        "&performance_end_time=" +
+        this.performanceEndTime +
+        "&cleanup_end_time=" +
+        this.cleanupEndTime;
       console.log(url);
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.put(url).then(
@@ -184,8 +248,8 @@ export default {
       );
     },
     set_time_range: function () {
-      for (var hour of this.hour_range) {
-        for (var minute of this.minute_range) {
+      for (let hour of this.hour_range) {
+        for (let minute of this.minute_range) {
           this.time_range.push(hour + ":" + minute);
         }
       }
