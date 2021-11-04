@@ -97,11 +97,7 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 export default {
-  components: {
-    Header,
-  },
   data() {
     return {
       groupCategories: [
@@ -134,7 +130,7 @@ export default {
     adjustHeight() {
       const textarea = this.$refs.activity;
       const resetHeight = new Promise(function (resolve) {
-        resolve((textarea.style.height = "auto"));
+        resolve(textarea.style.height = "auto");
       });
       resetHeight.then(function () {
         textarea.style.height = textarea.scrollHeight + "px";

@@ -449,14 +449,10 @@
 import axios from "axios";
 import PowerCard from "@/components/Mobile/PowerCard";
 import RentalCard from "@/components/Mobile/RentalCard";
-import StageCard from "@/components/Mobile/StageCard";
-import StageCommonCard from "@/components/Mobile/StageCommonCard";
 export default {
   components: {
     PowerCard,
     RentalCard,
-    StageCard,
-    StageCommonCard,
   },
   data() {
     return {
@@ -569,7 +565,7 @@ export default {
       axios.post(subRepUrl, subRepParams).then(
         (response) => {
           console.log("副代表登録");
-          // console.log(response)
+          console.log(response.status);
         },
         (error) => {
           return error;
@@ -606,7 +602,7 @@ export default {
       axios.post(placeUrl, placeParams).then(
         (response) => {
           console.log("会場申請登録");
-          // console.log(response)
+          console.log(response.status);
         },
         (error) => {
           return error;

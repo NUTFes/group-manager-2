@@ -115,6 +115,7 @@ export default {
 
       for (let i = 0; i < this.steps; i++) {
         let res = this.$refs.child[i].submit();
+        console.log(res);
       }
       this.$router.push("MyPage");
     },

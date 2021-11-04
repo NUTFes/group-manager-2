@@ -448,18 +448,12 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 import PowerCard from "../components/PowerCard";
 import RentalCard from "@/components/RentalCard";
-import StageCard from "@/components/StageCard";
-import StageCommonCard from "@/components/StageCommonCard";
 export default {
   components: {
-    Header,
     PowerCard,
     RentalCard,
-    StageCard,
-    StageCommonCard,
   },
   data() {
     return {
@@ -572,7 +566,7 @@ export default {
       axios.post(subRepUrl, subRepParams).then(
         (response) => {
           console.log("副代表登録");
-          // console.log(response)
+          console.log(response.status);
         },
         (error) => {
           return error;
@@ -609,7 +603,7 @@ export default {
       axios.post(placeUrl, placeParams).then(
         (response) => {
           console.log("会場申請登録");
-          // console.log(response)
+          console.log(response.log);
         },
         (error) => {
           return error;

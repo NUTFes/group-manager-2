@@ -63,14 +63,10 @@
 </template>
 
 <script>
-import DashBoard from "@/components/Mobile/DashBoard.vue";
-import Regist from "@/components/Mobile/Regist.vue";
 import MobileRegist from "@/components/Mobile/MobileRegist.vue";
 import axios from "axios";
 export default {
   components: {
-    DashBoard,
-    Regist,
     MobileRegist,
   },
   data() {

@@ -502,14 +502,12 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 import PowerCard from "@/components/Mobile/PowerCard";
 import RentalCard from "@/components/Mobile/RentalCard";
 import StageCard from "@/components/Mobile/StageCard";
 import StageCommonCard from "@/components/Mobile/StageCommonCard";
 export default {
   components: {
-    Header,
     PowerCard,
     RentalCard,
     StageCard,
@@ -630,7 +628,7 @@ export default {
       axios.post(subRepUrl, subRepParams).then(
         (response) => {
           console.log("副代表登録");
-          // console.log(response)
+          console.log(response.status);
         },
         (error) => {
           return error;
@@ -655,7 +653,7 @@ export default {
       this.$router.push("mobile_mypage");
     },
     saleSubmit: function () {
-      if (groupCategoryId == null) {
+      if (this.groupCategoryId == null) {
         console.log("can't group_category_id");
         return;
       }
@@ -673,7 +671,7 @@ export default {
       axios.post(placeUrl, placeParams).then(
         (response) => {
           console.log("会場申請登録");
-          // console.log(response)
+          console.log(response.status);
         },
         (error) => {
           return error;

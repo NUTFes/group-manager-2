@@ -18,7 +18,7 @@
                       label="団体"
                       ref="group"
                       v-model="group_id"
-                      :rules="[rules.required]"
+                      :rules="[rules1.required]"
                       :items="group"
                       :menu-props="{
                         top: true,
@@ -39,7 +39,7 @@
                       label="学籍番号"
                       background-color="white"
                       v-model="student_id"
-                      :rules="[rules.min1, rules.over1]"
+                      :rules="[rules1.min1, rules1.over1]"
                       hint="お持ちでない方：0を8桁入力"
                       persistent-hint
                       item-text="name"
@@ -72,7 +72,7 @@
                       label="TEL"
                       background-color="white"
                       v-model="tel"
-                      :rules="[rules.min2, rules.over2]"
+                      :rules2="[rules2.min2, rules2.over2]"
                       hint="ハイフンなしで半角入力"
                       persistent-hint
                       counter="11"
@@ -124,11 +124,11 @@ export default {
       grade_id: [],
       tel: [],
       email: [],
-      rules: {
+      rules1: {
         min1: (v) => v.length >= 8 || "8桁かどうかを確認してください",
         over1: (v) => v.length <= 8 || "8桁かどうかを確認してください",
       },
-      rules: {
+      rules2: {
         min2: (v) => v.length >= 11 || "11桁かどうかを確認してください",
         over2: (v) => v.length <= 11 || "11桁かどうかを確認してください",
       },
@@ -188,6 +188,7 @@ export default {
       axios.post(url, params).then(
         (response) => {
           this.$router.push("mobile_mypage");
+          console.log(response.status);
         },
         (error) => {
           return error;
