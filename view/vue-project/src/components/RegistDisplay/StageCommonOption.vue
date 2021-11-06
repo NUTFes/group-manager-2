@@ -117,7 +117,6 @@ export default {
   },
   components: {
     StageOption,
-    StageOptionSnackbar: false,
   },
   data() {
     return {

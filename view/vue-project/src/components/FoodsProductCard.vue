@@ -83,6 +83,7 @@ export default {
     cancel() {
       this.$refs.form.reset();
     },
+    /*
     validate() {
       if (!this.$refs.form.validate()) {
         valid = false;
@@ -90,6 +91,7 @@ export default {
       }
       return true;
     },
+    */
     submit() {
       const url = process.env.VUE_APP_URL + "/food_products";
       let params = new URLSearchParams();

@@ -205,9 +205,11 @@ export default {
       fesDate: "",
       stageFirst: "",
       stageSecond: "",
-      prepareInterval: [],
+      /*
       useInterval: [],
+      prepareInterval: [],
       cleanupInterval: [],
+      */
       prepareStartTime: [],
       performanceStartTime: [],
       performanceFinishTime: [],
@@ -252,6 +254,7 @@ export default {
     cancel() {
       this.$refs.form.reset();
     },
+    /*
     validate() {
       if (!this.$refs.form.validate()) {
         valid = false;
@@ -259,6 +262,7 @@ export default {
       }
       return true;
     },
+    */
     submit() {
       if (this.prepareInterval.length == 0) {
         this.prepareInterval = "-9999";

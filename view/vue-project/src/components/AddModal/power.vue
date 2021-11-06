@@ -111,6 +111,7 @@ export default {
 
       axios.post(post_url, params).then(
         (response) => {
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("reload");
           this.$emit("openAddpowerSnackbar");

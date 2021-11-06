@@ -97,6 +97,7 @@ export default {
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.put(url).then(
         (response) => {
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("openEmployeeSnackbar");
           this.$emit("reload");

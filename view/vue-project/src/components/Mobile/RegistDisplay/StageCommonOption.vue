@@ -115,7 +115,7 @@ export default {
   },
   components: {
     StageOption,
-    StageOptionSnackbar: false,
+    //StageOptionSnackbar: false,
   },
   data() {
     return {
@@ -124,6 +124,7 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
+      StageOptionSnackbar: false,
     };
   },
   methods: {

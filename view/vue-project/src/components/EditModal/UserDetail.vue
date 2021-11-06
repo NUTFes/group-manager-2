@@ -170,6 +170,7 @@ export default {
       params.append("user_id", this.user.id);
       axios.post(url, params).then(
         (response) => {
+          console.log(response.status);
           this.$router.push("mypage");
         },
         (error) => {

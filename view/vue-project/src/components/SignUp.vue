@@ -74,7 +74,6 @@
 
 <script>
 import axios from "axios";
-import colors from "vuetify/lib/util/colors";
 export default {
   name: "SignUp",
   data() {

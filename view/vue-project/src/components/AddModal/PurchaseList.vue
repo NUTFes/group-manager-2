@@ -111,7 +111,7 @@ export default {
       ],
     };
   },
-  mounted(groupId) {
+  mounted() {
     axios
       .get(process.env.VUE_APP_URL + "/fes_dates", {
         headers: {

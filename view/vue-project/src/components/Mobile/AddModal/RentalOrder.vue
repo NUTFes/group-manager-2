@@ -125,7 +125,7 @@ export default {
       axios
         .post(process.env.VUE_APP_URL + "/rental_orders", params)
         .then((response) => {
-          console.log(response);
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("reload");
           this.$emit("openRentalorderSnackbar");

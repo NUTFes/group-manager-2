@@ -172,6 +172,7 @@ export default {
       console.log(url);
       axios.put(url).then(
         (response) => {
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("openFoodproductSnackbar");
           this.$emit("reload");

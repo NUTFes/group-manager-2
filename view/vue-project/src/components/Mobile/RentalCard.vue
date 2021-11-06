@@ -66,6 +66,7 @@ export default {
     },
   },
   methods: {
+    /*
     validate() {
       if (this.$refs.form.validate()) {
         return false;
@@ -73,6 +74,7 @@ export default {
       valid = false;
       return true;
     },
+    */
     submit() {
       axios.defaults.headers.common["Content-Type"] = "application/json";
       const url = process.env.VUE_APP_URL + "/rental_orders";

@@ -25,7 +25,7 @@
                 label="学籍番号"
                 background-color="white"
                 v-model="studentId"
-                :rules="[rules.min1, rules.over1]"
+                :rule1="[rule1.min1, rule1.over1]"
                 hint="お持ちでない方：0を8桁入力"
                 persistent-hint
                 item-text="name"
@@ -61,7 +61,7 @@
                 label="TEL"
                 background-color="white"
                 v-model="tel"
-                :rules="[rules.min2, rules.over2]"
+                :rule2="[rule2.min2, rule2.over2]"
                 hint="ハイフンなしで半角入力"
                 persistent-hint
                 counter="11"
@@ -109,11 +109,11 @@ export default {
   data() {
     return {
       isDisplay: false,
-      rules: {
+      rule1: {
         min1: (v) => v.length >= 8 || "8桁かどうかを確認してください",
         over1: (v) => v.length <= 8 || "8桁かどうかを確認してください",
       },
-      rules: {
+      rule2: {
         min2: (v) => v.length >= 11 || "11桁かどうかを確認してください",
         over2: (v) => v.length <= 11 || "11桁かどうかを確認してください",
       },
@@ -183,6 +183,7 @@ export default {
         this.email;
       axios.put(url).then(
         (response) => {
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("openSubrepSnackbar");
           this.$emit("reload");

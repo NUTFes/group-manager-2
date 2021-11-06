@@ -131,7 +131,7 @@ export default {
       axios
         .post(process.env.VUE_APP_URL + "/food_products", params)
         .then((response) => {
-          console.log(response);
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("reload");
           this.Group = "";

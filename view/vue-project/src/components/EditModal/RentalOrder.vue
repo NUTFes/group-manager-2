@@ -103,6 +103,7 @@ export default {
         this.num;
       axios.put(url).then(
         (response) => {
+          console.log(response.status);
           this.isDisplay = false;
           this.$emit("openRentalorderSnackbar");
           this.$emit("reload");
