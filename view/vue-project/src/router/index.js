@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
 import Welcome from "../views/Welcome.vue";
 import About from "../views/About.vue";
 import MyPage from "../views/mypage.vue";
@@ -182,6 +181,9 @@ const router = new VueRouter({
   // base: process.env.VUE_APP_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {
+    console.log(to);
+    console.log(from);
+    console.log(savedPosition);
     return { x: 0, y: 0 };
   },
 });

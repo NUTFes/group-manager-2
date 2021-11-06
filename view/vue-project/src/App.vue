@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
-import Welcome from "./views/Welcome.vue";
 import Header from "@/components/Header.vue";
 import MobileHeader from "@/components/Mobile/Header.vue";
 import Footer from "@/components/Footer.vue";
@@ -22,8 +20,6 @@ export default {
   name: "App",
 
   components: {
-    HelloWorld,
-    Welcome,
     Header,
     MobileHeader,
     Footer,
