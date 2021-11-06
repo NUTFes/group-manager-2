@@ -201,7 +201,7 @@
 
 <script>
 import axios from "axios";
-import PurchaseList from "@/components/EditModal/purchase_list.vue";
+import PurchaseList from "@/components/EditModal/PurchaseList.vue";
 import AddPurchaseList from "@/components/AddModal/PurchaseList.vue";
 
 export default {

@@ -189,7 +189,7 @@
 
 <script>
 import axios from "axios";
-import Foodproduct from "@/components/EditModal/foodproduct.vue";
+import Foodproduct from "@/components/EditModal/FoodProduct.vue";
 import AddFoodProduct from "@/components/AddModal/FoodProduct.vue";
 
 export default {

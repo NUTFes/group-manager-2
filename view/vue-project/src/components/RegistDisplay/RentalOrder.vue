@@ -171,7 +171,7 @@
 
 <script>
 import axios from "axios";
-import Rentalorder from "@/components/EditModal/rental_order.vue";
+import Rentalorder from "@/components/EditModal/RentalOrder.vue";
 import AddRentalOrder from "@/components/AddModal/RentalOrder.vue";
 
 export default {

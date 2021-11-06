@@ -108,7 +108,7 @@
 
 <script>
 import axios from "axios";
-import SubRep from "@/components/EditModal/sub_rep.vue";
+import SubRep from "@/components/EditModal/SubRep.vue";
 
 export default {
   props: {

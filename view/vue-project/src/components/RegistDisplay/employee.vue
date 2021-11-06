@@ -150,8 +150,8 @@
 
 <script>
 import axios from "axios";
-import Employee from "@/components/EditModal/employee.vue";
-import Addemployee from "@/components/AddModal/employee.vue";
+import Employee from "@/components/EditModal/Employee.vue";
+import Addemployee from "@/components/AddModal/Employee.vue";
 
 export default {
   props: {

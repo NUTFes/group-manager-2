@@ -82,7 +82,7 @@
 
 <script>
 import axios from "axios";
-import Group from "@/components/EditModal/group.vue";
+import Group from "@/components/EditModal/Group.vue";
 
 export default {
   props: {

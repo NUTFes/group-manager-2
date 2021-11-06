@@ -149,16 +149,16 @@
 
 <script>
 import axios from "axios";
-import Registgroup from "@/components/RegistDisplay/group.vue";
-import Registemployee from "@/components/RegistDisplay/employee.vue";
-import Registfoodproduct from "@/components/RegistDisplay/foodproduct.vue";
-import Registplace from "@/components/RegistDisplay/place.vue";
-import Registpower from "@/components/RegistDisplay/power.vue";
-import Registpurchase from "@/components/RegistDisplay/purchase_list.vue";
-import Registrentalorder from "@/components/RegistDisplay/rental_order.vue";
-import Registstageorder from "@/components/RegistDisplay/stage_order.vue";
+import Registgroup from "@/components/RegistDisplay/Group.vue";
+import Registemployee from "@/components/RegistDisplay/Employee.vue";
+import Registfoodproduct from "@/components/RegistDisplay/FoodProduct.vue";
+import Registplace from "@/components/RegistDisplay/Place.vue";
+import Registpower from "@/components/RegistDisplay/Power.vue";
+import Registpurchase from "@/components/RegistDisplay/PurchaseList.vue";
+import Registrentalorder from "@/components/RegistDisplay/RentalOrder.vue";
+import Registstageorder from "@/components/RegistDisplay/StageOrder.vue";
 import Registstagecommonoption from "@/components/RegistDisplay/StageCommonOption.vue";
-import Registsubrep from "@/components/RegistDisplay/sub_rep.vue";
+import Registsubrep from "@/components/RegistDisplay/SubRep.vue";
 
 export default {
   props: {

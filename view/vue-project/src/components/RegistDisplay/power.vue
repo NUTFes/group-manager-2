@@ -180,8 +180,8 @@
 
 <script>
 import axios from "axios";
-import Power from "@/components/EditModal/power.vue";
-import Addpower from "@/components/AddModal/power.vue";
+import Power from "@/components/EditModal/Power.vue";
+import Addpower from "@/components/AddModal/Power.vue";
 
 export default {
   props: {

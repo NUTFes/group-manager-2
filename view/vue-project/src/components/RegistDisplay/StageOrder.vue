@@ -192,7 +192,7 @@
 
 <script>
 import axios from "axios";
-import StageOrder from "@/components/EditModal/stage_order.vue";
+import StageOrder from "@/components/EditModal/StageOrder.vue";
 
 export default {
   props: {

@@ -84,7 +84,7 @@
 
 <script>
 import axios from "axios";
-import Place from "@/components/EditModal/place.vue";
+import Place from "@/components/EditModal/Place.vue";
 
 export default {
   props: {
