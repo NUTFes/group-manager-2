@@ -2,74 +2,66 @@
   <v-container class="justify-content-center ma-0 pa-0">
     <v-row>
       <v-col cols="12" align="center" class="ma-0 pa-0">
-          <v-form ref="form">
-            <p align="center">
-              所持機器を使用するか
-            </p>
-              <v-btn-toggle
-                class="mb-6"
-                borderless
-                dense
-                v-model="ownEquipment"
-                ref="ownEquipment"
-                color="purple accent-2"
-              >
-                <v-btn value="true">YES</v-btn>
-                <v-btn value="false">NO</v-btn>
-              </v-btn-toggle>
-            <p align="center" class="mt-3">
-              音楽を流すか
-            </p>
-              <v-btn-toggle
-                class="mb-6"
-                borderless
-                dense
-                v-model="bgm"
-                ref="bgm"
-                color="purple accent-2"
-              >
-                <v-btn value="true">YES</v-btn>
-                <v-btn value="false">NO</v-btn>
-              </v-btn-toggle>
-            <p align="center" class="mt-3">
-              撮影の許可
-            </p>
-              <v-btn-toggle
-                class="mb-6"
-                borderless
-                dense
-                v-model="cameraPermission"
-                ref="cameraPermission"
-                color="purple accent-2"
-              >
-                <v-btn value="true">YES</v-btn>
-                <v-btn value="false">NO</v-btn>
-              </v-btn-toggle>
-            <p align="center" class="mt-3">
-              騒音
-            </p>
-              <v-btn-toggle
-                class="mb-6"
-                borderless
-                dense
-                v-model="loudSound"
-                ref="loudSound"
-                color="purple accent-2"
-              >
-                <v-btn value="true">YES</v-btn>
-                <v-btn value="false">NO</v-btn>
-              </v-btn-toggle>
-            <v-textarea
-              label="ステージ内容"
-              ref="stageContent"
-              v-model="stageContent"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-              class="mt-5"
-            ></v-textarea>
-          </v-form>
+        <v-form ref="form">
+          <p align="center">所持機器を使用するか</p>
+          <v-btn-toggle
+            class="mb-6"
+            borderless
+            dense
+            v-model="ownEquipment"
+            ref="ownEquipment"
+            color="purple accent-2"
+          >
+            <v-btn value="true">YES</v-btn>
+            <v-btn value="false">NO</v-btn>
+          </v-btn-toggle>
+          <p align="center" class="mt-3">音楽を流すか</p>
+          <v-btn-toggle
+            class="mb-6"
+            borderless
+            dense
+            v-model="bgm"
+            ref="bgm"
+            color="purple accent-2"
+          >
+            <v-btn value="true">YES</v-btn>
+            <v-btn value="false">NO</v-btn>
+          </v-btn-toggle>
+          <p align="center" class="mt-3">撮影の許可</p>
+          <v-btn-toggle
+            class="mb-6"
+            borderless
+            dense
+            v-model="cameraPermission"
+            ref="cameraPermission"
+            color="purple accent-2"
+          >
+            <v-btn value="true">YES</v-btn>
+            <v-btn value="false">NO</v-btn>
+          </v-btn-toggle>
+          <p align="center" class="mt-3">騒音</p>
+          <v-btn-toggle
+            class="mb-6"
+            borderless
+            dense
+            v-model="loudSound"
+            ref="loudSound"
+            color="purple accent-2"
+          >
+            <v-btn value="true">YES</v-btn>
+            <v-btn value="false">NO</v-btn>
+          </v-btn-toggle>
+          <v-textarea
+            label="ステージ内容"
+            ref="stageContent"
+            v-model="stageContent"
+            :rules="[rules.required]"
+            text
+            outlined
+            required
+            class="mt-5"
+          ></v-textarea>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
@@ -82,10 +74,10 @@ export default {
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください"
+        required: (value) => !!value || "入力してください",
       },
       group: [],
-      valid: false
+      valid: false,
     };
   },
 
@@ -96,14 +88,15 @@ export default {
         bgm: "",
         cameraPermission: "",
         loudSound: "",
-        stageContent: ""
+        stageContent: "",
       };
-    }
+    },
   },
   methods: {
     cancel() {
       this.$refs.form.reset();
     },
+    /*
     validate() {
       if (!this.$refs.form.validate()) {
         valid = false;
@@ -111,6 +104,7 @@ export default {
       }
       return true;
     },
+    */
     submit() {
       const url = process.env.VUE_APP_URL + "/stage_common_options";
       let params = new URLSearchParams();
@@ -123,16 +117,16 @@ export default {
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
-        response => {
+        (response) => {
           console.log("response:", response);
           return "ok";
         },
-        error => {
+        (error) => {
           console.log("登録できませんでした");
           return error;
         }
       );
-    }
+    },
   },
 
   mounted() {
@@ -143,16 +137,16 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           this.user = response.data.data;
           console.log(this.user);
           console.log(this.user.id);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
@@ -164,21 +158,21 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           for (let i = 0; i < response.data.length; i++) {
             this.group.push(response.data[i]);
           }
           console.log(this.group);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-  }
+  },
 };
 </script>

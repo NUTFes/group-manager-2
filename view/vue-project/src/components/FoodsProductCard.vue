@@ -61,11 +61,11 @@ export default {
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください",
-        max: value => value <= 1000 || "大きすぎます"
+        required: (value) => !!value || "入力してください",
+        max: (value) => value <= 1000 || "大きすぎます",
       },
       group: [],
-      valid: false
+      valid: false,
     };
   },
 
@@ -75,14 +75,15 @@ export default {
         name: "",
         firstDayNum: "",
         secondDayNum: "",
-        isCooking: ""
+        isCooking: "",
       };
-    }
+    },
   },
   methods: {
     cancel() {
       this.$refs.form.reset();
     },
+    /*
     validate() {
       if (!this.$refs.form.validate()) {
         valid = false;
@@ -90,6 +91,7 @@ export default {
       }
       return true;
     },
+    */
     submit() {
       const url = process.env.VUE_APP_URL + "/food_products";
       let params = new URLSearchParams();
@@ -101,16 +103,16 @@ export default {
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
-        response => {
+        (response) => {
           console.log("response:", response);
           return "ok";
         },
-        error => {
+        (error) => {
           console.log("登録できませんでした");
           return error;
         }
       );
-    }
+    },
   },
 
   mounted() {
@@ -121,16 +123,16 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           this.user = response.data.data;
           console.log(this.user);
           console.log(this.user.id);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
@@ -142,21 +144,21 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           for (let i = 0; i < response.data.length; i++) {
             this.group.push(response.data[i]);
           }
           console.log(this.group);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-  }
+  },
 };
 </script>

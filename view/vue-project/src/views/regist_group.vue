@@ -17,18 +17,12 @@
               >電力申請</v-stepper-step
             >
             <v-divider></v-divider>
-            <v-stepper-step
-              :complete="e1 > 4"
-              step="4"
-              color="purple accent-2"
-              >ステージ<br>利用申請</v-stepper-step
+            <v-stepper-step :complete="e1 > 4" step="4" color="purple accent-2"
+              >ステージ<br />利用申請</v-stepper-step
             >
             <v-divider></v-divider>
-            <v-stepper-step
-              :complete="e1 > 5"
-              step="5"
-              color="purple accent-2"
-              >ステージ<br>利用詳細</v-stepper-step
+            <v-stepper-step :complete="e1 > 5" step="5" color="purple accent-2"
+              >ステージ<br />利用詳細</v-stepper-step
             >
           </v-stepper-header>
 
@@ -39,7 +33,9 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">副代表登録</v-card-title>
+                    <v-card-title class="font-weight-bold"
+                      >副代表登録</v-card-title
+                    >
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-text-field
@@ -132,20 +128,24 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">物品登録</v-card-title>
+                    <v-card-title class="font-weight-bold"
+                      >物品登録</v-card-title
+                    >
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-row>
-                        <v-col cols=3></v-col>
-                        <v-col cols=3>
-                      <v-select
-                        v-model="rentalSteps"
-                        :items="[1, 2, 3, 4, 5, 6]"
-                        label="登録物品数"
-                        outlined
-                      />
+                        <v-col cols="3"></v-col>
+                        <v-col cols="3">
+                          <v-select
+                            v-model="rentalSteps"
+                            :items="[1, 2, 3, 4, 5, 6]"
+                            label="登録物品数"
+                            outlined
+                          />
                         </v-col>
-                        <v-col cols=6><v-card-text>個の物品を登録する</v-card-text></v-col>
+                        <v-col cols="6"
+                          ><v-card-text>個の物品を登録する</v-card-text></v-col
+                        >
                       </v-row>
                       <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
@@ -176,30 +176,33 @@
                             />
                             <v-card-actions>
                               <v-spacer></v-spacer>
-                                <v-btn
-                                  rounded
-                                  text
-                                  large
-                                  color="btn"
-                                  class="pr-5"
-                                  @click="e3 -= 1"
-                                  v-show="rentalStep != 1"
-                                >
-                                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
-                                  戻る
-                                </v-btn>
-                                <v-btn
-                                  rounded
-                                  outlined
-                                  large
-                                  color="btn"
-                                  class="pl-5"
-                                  @click="e3 += 1"
-                                  v-show="rentalSteps != rentalStep"
-                                >
-                                  {{ rentalStep + 1 }}
-                                  個目の物品へ
-                                  <v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                              <v-btn
+                                rounded
+                                text
+                                large
+                                color="btn"
+                                class="pr-5"
+                                @click="e3 -= 1"
+                                v-show="rentalStep != 1"
+                              >
+                                <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                戻る
+                              </v-btn>
+                              <v-btn
+                                rounded
+                                outlined
+                                large
+                                color="btn"
+                                class="pl-5"
+                                @click="e3 += 1"
+                                v-show="rentalSteps != rentalStep"
+                              >
+                                {{ rentalStep + 1 }}
+                                個目の物品へ
+                                <v-icon class="ml-n1"
+                                  >mdi-menu-right</v-icon
+                                ></v-btn
+                              >
                             </v-card-actions>
                           </v-stepper-content>
                         </v-stepper-items>
@@ -208,8 +211,8 @@
                     <v-divider class="mb-8" />
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn 
-                        text  
+                      <v-btn
+                        text
                         rounded
                         large
                         color="btn"
@@ -229,7 +232,6 @@
                         次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
                       </v-btn>
                     </v-card-actions>
-
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
@@ -242,7 +244,9 @@
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">電力申請</v-card-title>
+                    <v-card-title class="font-weight-bold"
+                      >電力申請</v-card-title
+                    >
                     <v-divider></v-divider>
                     <v-card-text>
                       <v-select
@@ -281,27 +285,30 @@
                             />
                             <v-card-actions>
                               <v-spacer></v-spacer>
-                                <v-btn
-                                  rounded
-                                  text
-                                  color="btn"
-                                  class="pr-5"
-                                  @click="e2 -= 1"
-                                  v-show="powerStep != 1"
-                                >
-                                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
-                                  戻る
-                                </v-btn>
-                                <v-btn
-                                  rounded
-                                  outlined
-                                  color="btn"
-                                  class="pl-5"
-                                  @click="e2 += 1"
-                                  v-show="powerSteps != powerStep"
-                                >
-                                  {{ powerStep + 1 }}個目の製品へ
-                                  <v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                              <v-btn
+                                rounded
+                                text
+                                color="btn"
+                                class="pr-5"
+                                @click="e2 -= 1"
+                                v-show="powerStep != 1"
+                              >
+                                <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                戻る
+                              </v-btn>
+                              <v-btn
+                                rounded
+                                outlined
+                                color="btn"
+                                class="pl-5"
+                                @click="e2 += 1"
+                                v-show="powerSteps != powerStep"
+                              >
+                                {{ powerStep + 1 }}個目の製品へ
+                                <v-icon class="ml-n1"
+                                  >mdi-menu-right</v-icon
+                                ></v-btn
+                              >
                             </v-card-actions>
                           </v-stepper-content>
                         </v-stepper-items>
@@ -310,8 +317,8 @@
                     <v-divider class="mb-8" />
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn 
-                        text  
+                      <v-btn
+                        text
                         rounded
                         large
                         color="btn"
@@ -356,7 +363,7 @@
                               :key="`${stageStep}-step`"
                               :complete="e2 > stageStep"
                               :step="stageStep"
-                              > 
+                            >
                               <div v-if="stageStep == 1">晴れ</div>
                               <div v-if="stageStep == 2">雨</div>
                             </v-stepper-step>
@@ -375,33 +382,36 @@
                             <StageCard
                               ref="stageChild"
                               :groupId="groupId"
-                              :isSunny=weatherFlag[stageStep-1]
+                              :isSunny="weatherFlag[stageStep - 1]"
                               :key="stageStep"
                             />
-                            
+
                             <v-card-actions>
                               <v-spacer></v-spacer>
-                                <v-btn
-                                  rounded
-                                  text
-                                  color="btn"
-                                  class="pr-5"
-                                  @click="e2 -= 1"
-                                  v-show="stageStep != 1"
-                                >
-                                  <v-icon class="mr-n1">mdi-menu-left</v-icon>
-                                  戻る
-                                </v-btn>
-                                <v-btn
-                                  rounded
-                                  outlined
-                                  color="btn"
-                                  class="pl-5"
-                                  @click="e2 += 1"
-                                  v-show="stageSteps != stageStep"
-                                >
-                                  次へ
-                                  <v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn>
+                              <v-btn
+                                rounded
+                                text
+                                color="btn"
+                                class="pr-5"
+                                @click="e2 -= 1"
+                                v-show="stageStep != 1"
+                              >
+                                <v-icon class="mr-n1">mdi-menu-left</v-icon>
+                                戻る
+                              </v-btn>
+                              <v-btn
+                                rounded
+                                outlined
+                                color="btn"
+                                class="pl-5"
+                                @click="e2 += 1"
+                                v-show="stageSteps != stageStep"
+                              >
+                                次へ
+                                <v-icon class="ml-n1"
+                                  >mdi-menu-right</v-icon
+                                ></v-btn
+                              >
                             </v-card-actions>
                           </v-stepper-content>
                         </v-stepper-items>
@@ -410,8 +420,8 @@
                     <v-divider class="mb-8" />
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn 
-                        text  
+                      <v-btn
+                        text
                         rounded
                         large
                         color="btn"
@@ -432,7 +442,6 @@
                         次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
                       </v-btn>
                     </v-card-actions>
-
                   </v-card>
                 </v-col>
                 <v-col cols="1"></v-col>
@@ -459,8 +468,8 @@
                     <v-divider class="mb-8" />
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn 
-                        text  
+                      <v-btn
+                        text
                         rounded
                         large
                         color="btn"
@@ -496,18 +505,16 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 import PowerCard from "../components/PowerCard";
 import RentalCard from "@/components/RentalCard";
 import StageCard from "@/components/StageCard";
 import StageCommonCard from "@/components/StageCommonCard";
 export default {
   components: {
-    Header,
     PowerCard,
     RentalCard,
     StageCard,
-    StageCommonCard
+    StageCommonCard,
   },
   data() {
     return {
@@ -515,12 +522,12 @@ export default {
       e2: 1,
       e3: 1,
       rules: {
-        required: value => !!value || "入力してください",
-        min8: v => v.length >= 8 || "8桁かどうかを確認してください",
-        over8: v => v.length <= 8 || "8桁かどうかを確認してください",
-        min11: v => v.length >= 11 || "11桁かどうかを確認してください",
-        over11: v => v.length <= 11 || "11桁かどうかを確認してください",
-        max: value => value <= 1000 || "大きすぎます"
+        required: (value) => !!value || "入力してください",
+        min8: (v) => v.length >= 8 || "8桁かどうかを確認してください",
+        over8: (v) => v.length <= 8 || "8桁かどうかを確認してください",
+        min11: (v) => v.length >= 11 || "11桁かどうかを確認してください",
+        over11: (v) => v.length <= 11 || "11桁かどうかを確認してください",
+        max: (value) => value <= 1000 || "大きすぎます",
       },
       groupId: localStorage.getItem("group_id"),
       groupCategoryId: localStorage.getItem("group_category_id"),
@@ -551,7 +558,7 @@ export default {
         { name: "材料工学専攻", id: 17 },
         { name: "エネルギー・環境工学専攻", id: 18 },
         { name: "生物統合工学専攻", id: 19 },
-        { name: "その他", id: 20 }
+        { name: "その他", id: 20 },
       ],
       // 学年
       grades: [
@@ -569,7 +576,7 @@ export default {
         { name: "GD3 [イノベ3年]", id: 12 },
         { name: "GD4 [イノベ4年]", id: 13 },
         { name: "GD5 [イノベ5年]", id: 14 },
-        { name: "その他", id: 15 }
+        { name: "その他", id: 15 },
       ],
       // 会場登録
       placeList: [],
@@ -597,9 +604,8 @@ export default {
     powerSteps(val) {
       if (this.e2 > val) {
         this.e2 = val;
-        
       }
-    }
+    },
   },
   computed: {
     isStage: () => {
@@ -607,14 +613,14 @@ export default {
         return true;
       }
       return false;
-    }
+    },
   },
   methods: {
-    commonSubmit: function() {
+    commonSubmit: function () {
       // 副代表登録
       axios.defaults.headers.common["Content-Type"] = "application/json";
       const subRepUrl = process.env.VUE_APP_URL + "/sub_reps";
-      var subRepParams = new URLSearchParams();
+      let subRepParams = new URLSearchParams();
       subRepParams.append("group_id", this.groupId);
       subRepParams.append("name", this.subRepName);
       subRepParams.append("department_id", this.subRepDepartmentId);
@@ -623,11 +629,11 @@ export default {
       subRepParams.append("email", this.subRepEmail);
       subRepParams.append("student_id", this.subRepStudentId);
       axios.post(subRepUrl, subRepParams).then(
-        response => {
+        (response) => {
           console.log("副代表登録");
-          // console.log(response)
+          console.log(response.status);
         },
-        error => {
+        (error) => {
           return error;
         }
       );
@@ -649,8 +655,8 @@ export default {
 
       this.$router.push("MyPage");
     },
-    saleSubmit: function() {
-      if (groupCategoryId == null) {
+    saleSubmit: function () {
+      if (this.groupCategoryId == null) {
         console.log("can't group_category_id");
         return;
       }
@@ -659,25 +665,25 @@ export default {
 
       // 会場申請登録
       const placeUrl = process.env.VUE_APP_URL + "/place_orders";
-      var placeParams = new URLSearchParams();
+      let placeParams = new URLSearchParams();
       placeParams.append("group_id", this.groupId);
       placeParams.append("first", this.placeFirstId);
       placeParams.append("second", this.placeSecondId);
       placeParams.append("third", this.placeThirdId);
       placeParams.append("remark", this.placeRemark);
       axios.post(placeUrl, placeParams).then(
-        response => {
+        (response) => {
           console.log("会場申請登録");
-          // console.log(response)
+          console.log(response.status);
         },
-        error => {
+        (error) => {
           return error;
         }
       );
 
       this.$router.push("MyPage");
     },
-    stageSubmit: function() {
+    stageSubmit: function () {
       this.commonSubmit();
 
       // this.$refs.stageChild.submit();
@@ -686,7 +692,7 @@ export default {
 
       this.$router.push("MyPage");
     },
-    getIndex: function() {
+    getIndex: function () {
       for (let i = 0; i < this.placeList.length; i++) {
         if (this.placeList[i]["group_id"] === this.groupId) {
           return i;
@@ -694,16 +700,16 @@ export default {
       }
       return 0;
     },
-    nextStep: n => {
+    nextStep: (n) => {
       if (n === this.powerSteps) {
         this.e2 = 1;
       } else {
         this.e2 = n + 1;
       }
     },
-    onInputPower: val => {
+    onInputPower: (val) => {
       this.powerSteps = parseInt(val);
-    }
+    },
   },
   mounted() {
     const placeUrl =
@@ -714,22 +720,22 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           for (let i = 0; i < response.data.length; i++) {
             this.placeList.push(response.data[i]);
           }
           // console.log('place: ',this.placeList)
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-  }
+  },
 };
 </script>
 

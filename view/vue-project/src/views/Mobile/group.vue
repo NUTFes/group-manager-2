@@ -93,11 +93,7 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 export default {
-  components: {
-    Header,
-  },
   data() {
     return {
       groupCategories: [
@@ -129,17 +125,17 @@ export default {
   methods: {
     adjustHeight() {
       const textarea = this.$refs.activity;
-      const resetHeight = new Promise(function(resolve) {
+      const resetHeight = new Promise(function (resolve) {
         resolve((textarea.style.height = "auto"));
       });
-      resetHeight.then(function() {
+      resetHeight.then(function () {
         textarea.style.height = textarea.scrollHeight + "px";
       });
     },
-    cancel: function() {
+    cancel: function () {
       this.$refs.form.reset();
     },
-    submit: function() {
+    submit: function () {
       if (!this.$refs.form.validate()) return;
       const url = process.env.VUE_APP_URL + "/groups";
       let params = new URLSearchParams();

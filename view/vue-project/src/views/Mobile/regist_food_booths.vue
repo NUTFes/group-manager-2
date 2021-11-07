@@ -23,16 +23,18 @@
                   <v-divider></v-divider>
                   <v-card-text>
                     <v-row>
-                      <v-col cols=3></v-col>
-                      <v-col cols=3>
-                    <v-select
-                      v-model="employeeSteps"
-                      :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-                      label="従業員数"
-                      outlined
-                    ></v-select>
-                    </v-col>
-                    <v-col cols=6><v-card-text>人の従業員を登録する</v-card-text></v-col>
+                      <v-col cols="3"></v-col>
+                      <v-col cols="3">
+                        <v-select
+                          v-model="employeeSteps"
+                          :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+                          label="従業員数"
+                          outlined
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="6"
+                        ><v-card-text>人の従業員を登録する</v-card-text></v-col
+                      >
                     </v-row>
                     <v-stepper class="stepper" v-model="e2">
                       <v-stepper-header class="stepper">
@@ -61,20 +63,20 @@
                             ref="employeeChild"
                             :key="employeeStep"
                           />
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                             <v-btn
-                                rounded
-                                text
-                                large
-                                color="btn"
-                                class="pr-5"
-                                @click="e2 -= 1"
-                                v-show="employeeStep != 1"
-                              >
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              rounded
+                              text
+                              large
+                              color="btn"
+                              class="pr-5"
+                              @click="e2 -= 1"
+                              v-show="employeeStep != 1"
+                            >
                               <v-icon class="mr-n1">mdi-menu-left</v-icon>
-                                戻る
-                              </v-btn>
+                              戻る
+                            </v-btn>
                             <v-btn
                               rounded
                               outlined
@@ -88,8 +90,7 @@
                               人目へ
                               <v-icon class="ml-n1">mdi-menu-right</v-icon>
                             </v-btn>
-                           
-                              </v-card-actions>
+                          </v-card-actions>
                         </v-stepper-content>
                       </v-stepper-items>
                     </v-stepper>
@@ -127,16 +128,20 @@
                   <v-divider></v-divider>
                   <v-card-text>
                     <v-row>
-                      <v-col cols=3></v-col>
-                      <v-col cols=3>
-                    <v-select
-                      v-model="foodProductSteps"
-                      :items="[1, 2, 3, 4, 5]"
-                      label="購入数"
-                      outlined
-                    ></v-select>
+                      <v-col cols="3"></v-col>
+                      <v-col cols="3">
+                        <v-select
+                          v-model="foodProductSteps"
+                          :items="[1, 2, 3, 4, 5]"
+                          label="購入数"
+                          outlined
+                        ></v-select>
                       </v-col>
-                      <v-col cols=6><v-card-text>個の販売食品を登録する</v-card-text></v-col>
+                      <v-col cols="6"
+                        ><v-card-text
+                          >個の販売食品を登録する</v-card-text
+                        ></v-col
+                      >
                     </v-row>
                     <v-stepper class="stepper" v-model="e3">
                       <v-stepper-header class="stepper">
@@ -165,34 +170,34 @@
                             ref="foodProductChild"
                             :key="foodProductStep"
                           />
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                               <v-btn
-                                rounded
-                                text
-                                large
-                                color="btn"
-                                class="pr-5"
-                                @click="e3 -= 1"
-                                v-show="employeeStep != 1"
-                              >
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              rounded
+                              text
+                              large
+                              color="btn"
+                              class="pr-5"
+                              @click="e3 -= 1"
+                              v-show="employeeStep != 1"
+                            >
                               <v-icon class="mr-n1">mdi-menu-left</v-icon>
-                                戻る
-                              </v-btn>
-                              <v-btn
-                               rounded
+                              戻る
+                            </v-btn>
+                            <v-btn
+                              rounded
                               outlined
                               large
                               color="btn"
                               class="pl-5"
-                                @click="e3 += 1"
-                                v-show="foodProductSteps != foodProductStep"
-                              >
-                                {{ foodProductStep + 1 }}
-                                個目の販売食品へ
-                                <v-icon class="ml-n1">mdi-menu-right</v-icon>
-                              </v-btn>
-                              </v-card-actions>
+                              @click="e3 += 1"
+                              v-show="foodProductSteps != foodProductStep"
+                            >
+                              {{ foodProductStep + 1 }}
+                              個目の販売食品へ
+                              <v-icon class="ml-n1">mdi-menu-right</v-icon>
+                            </v-btn>
+                          </v-card-actions>
                         </v-stepper-content>
                       </v-stepper-items>
                     </v-stepper>
@@ -204,24 +209,25 @@
             <v-divider class="mb-8"></v-divider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn 
-              text  
-              rounded
-              large
-              color="btn"
-              class="pr-4 font-weight-bold" 
-              @click="e1 -= 1">
-              <v-icon class="mr-n1">mdi-menu-left</v-icon>
+              <v-btn
+                text
+                rounded
+                large
+                color="btn"
+                class="pr-4 font-weight-bold"
+                @click="e1 -= 1"
+              >
+                <v-icon class="mr-n1">mdi-menu-left</v-icon>
                 戻る
               </v-btn>
               <v-btn
-              rounded
-              dark
-              depressed
-              large
-              class="font-weight-bold"
-              color="btn"
-              @click="submit"
+                rounded
+                dark
+                depressed
+                large
+                class="font-weight-bold"
+                color="btn"
+                @click="submit"
               >
                 完了
               </v-btn>
@@ -240,7 +246,7 @@ import FoodsProductCard from "@/components/FoodsProductCard";
 export default {
   components: {
     EmployeeCard,
-    FoodsProductCard
+    FoodsProductCard,
   },
   data() {
     return {
@@ -249,7 +255,7 @@ export default {
       e3: 1,
       employeeSteps: 2,
       foodProductSteps: 2,
-      groupId: localStorage.getItem("group_id")
+      groupId: localStorage.getItem("group_id"),
     };
   },
   methods: {
@@ -263,8 +269,8 @@ export default {
         this.$refs.foodProductChild[i].submit();
       }
       this.$router.push("regist_purchase");
-    }
-  }
+    },
+  },
 };
 </script>
 

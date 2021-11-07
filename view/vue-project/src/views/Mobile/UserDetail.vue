@@ -106,11 +106,7 @@
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 export default {
-  components: {
-    Header,
-  },
   data() {
     return {
       user: [],
@@ -174,13 +170,13 @@ export default {
   },
 
   methods: {
-    register: function() {
+    register: function () {
       const url = process.env.VUE_APP_URL + "/user_details";
       axios.defaults.headers.common["Content-Type"] = "application/json";
 
       if (!this.$refs.form.validate()) return;
 
-      var params = new URLSearchParams();
+      let params = new URLSearchParams();
       params.append("student_id", this.student_id);
       params.append("tel", this.tel);
       params.append("department_id", this.department_id);
@@ -189,7 +185,7 @@ export default {
       axios.post(url, params).then(
         (response) => {
           console.log(response);
-            this.$router.push("mobile_group");
+          this.$router.push("mobile_group");
         },
         (error) => {
           console.error(error);
@@ -198,7 +194,7 @@ export default {
       );
     },
 
-    reset: function() {
+    reset: function () {
       this.$refs.form.reset();
     },
   },
@@ -206,7 +202,7 @@ export default {
   async mounted() {
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     try {
-      var response = await axios.get(url, {
+      let response = await axios.get(url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),

@@ -1,23 +1,24 @@
 <template>
   <v-container>
     <v-row v-for="(rental_order, i) in regist.rental_orders" :key="i">
+      <v-col cols="1"></v-col>
       <v-col>
         <v-card flat>
-          <v-card-title class="font-weight-bold subtitle-1">
-            <v-icon class="pr-2">mdi-table-chair</v-icon>
+          <v-card-title>
+            <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
             <b>物品申請情報{{ i + 1 }}</b>
             <v-spacer></v-spacer>
+
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-if="isEditRentalOrder"
-                  x-small
                   fab
                   text
                   v-bind="attrs"
                   v-on="on"
                   @click="
-                    openRentalOrderDisplay(
+                    openRentalorderDisplay(
                       rental_order.id,
                       rental_order.rental_item_id,
                       rental_order.num
@@ -29,11 +30,11 @@
               </template>
               <span>物品申請情報を編集する</span>
             </v-tooltip>
+
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-if="isEditRentalOrder"
-                  x-small
                   text
                   v-bind="attrs"
                   v-on="on"
@@ -47,7 +48,8 @@
             </v-tooltip>
           </v-card-title>
           <hr />
-          <v-list class="subtitle-2">
+
+          <v-list>
             <v-list-item>
               <v-list-item-content>物品名</v-list-item-content>
               <v-list-item-content v-if="rental_order.name == -9999"
@@ -70,6 +72,7 @@
           </v-list>
         </v-card>
       </v-col>
+      <v-col cols="1"></v-col>
     </v-row>
 
     <!-- 削除ダイアログ(物品申請) -->
@@ -129,16 +132,16 @@
     </v-row>
 
     <!--Editmodal-->
-    <RentalOrder
+    <Rentalorder
       ref="rentalorderDlg"
       :id="this.rental_order_id"
       :groupId="this.regist.group.id"
       :itemId="this.rental_item_id"
       :num="this.num"
       @reload="reload"
-      @openRentalOrderSnackbar="openRentalOrderSnackbar"
+      @openRentalorderSnackbar="openRentalorderSnackbar"
     >
-    </RentalOrder>
+    </Rentalorder>
 
     <!--AddModal-->
     <AddRentalOrder
@@ -168,8 +171,8 @@
 
 <script>
 import axios from "axios";
-import RentalOrder from "@/components/Mobile/EditModal/RentalOrder.vue";
-import AddRentalOrder from "@/components/Mobile/AddModal/RentalOrder.vue";
+import Rentalorder from "@/components/EditModal/RentalOrder.vue";
+import AddRentalOrder from "@/components/AddModal/RentalOrder.vue";
 
 export default {
   props: {
@@ -177,7 +180,7 @@ export default {
     regist: String,
   },
   components: {
-    RentalOrder,
+    Rentalorder,
     AddRentalOrder,
   },
   data() {
@@ -209,7 +212,7 @@ export default {
     reload() {
       this.$emit("reload");
     },
-    openRentalOrderSnackbar() {
+    openRentalorderSnackbar() {
       this.rentalorderSnackbar = true;
     },
     openAddrentalorderSnackbar() {
@@ -222,7 +225,7 @@ export default {
       this.num = num;
       this.$refs.AddRentalOrderDlg.isDisplay = true;
     },
-    openRentalOrderDisplay(id, rental_item_id, num) {
+    openRentalorderDisplay(id, rental_item_id, num) {
       this.rental_order_id = id;
       this.rental_item_id = rental_item_id;
       this.num = num;

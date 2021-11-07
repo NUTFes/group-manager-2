@@ -1,18 +1,18 @@
 <template>
   <v-container>
     <v-row v-for="(purchase_list, i) in regist.purchase_lists" :key="i">
+      <v-col cols="1"></v-col>
       <v-col>
         <v-card v-if="purchase_list.food_product == -9999"></v-card>
         <v-card v-else flat>
-          <v-card-title class="font-weight-bold subtitle-1">
-            <v-icon class="pr-2">mdi-cart</v-icon>
+          <v-card-title>
+            <v-icon class="pr-2" size="30">mdi-cart</v-icon>
             <b>購入品情報{{ i + 1 }}</b>
             <v-spacer></v-spacer>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-if="isEditPurchaseList"
-                  x-small
                   fab
                   text
                   v-bind="attrs"
@@ -40,7 +40,6 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-if="isEditPurchaseList"
-                  x-small
                   text
                   v-bind="attrs"
                   v-on="on"
@@ -53,7 +52,7 @@
             </v-tooltip>
           </v-card-title>
           <hr />
-          <v-list class="subtitle-2">
+          <v-list>
             <v-list-item>
               <v-list-item-content>購入品名</v-list-item-content>
               <v-list-item-content v-if="purchase_list.item == -9999"
@@ -110,6 +109,7 @@
           </v-list>
         </v-card>
       </v-col>
+      <v-col cols="1"></v-col>
     </v-row>
 
     <!-- 削除ダイアログ(購入品) -->
@@ -201,8 +201,8 @@
 
 <script>
 import axios from "axios";
-import PurchaseList from "@/components/Mobile/EditModal/PurchaseList.vue";
-import AddPurchaseList from "@/components/Mobile/AddModal/PurchaseList.vue";
+import PurchaseList from "@/components/EditModal/PurchaseList.vue";
+import AddPurchaseList from "@/components/AddModal/PurchaseList.vue";
 
 export default {
   props: {

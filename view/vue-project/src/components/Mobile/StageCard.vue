@@ -2,161 +2,145 @@
   <v-container class="justify-content-center">
     <v-row>
       <v-col cols="12" align="center" class="ma-0 pa-0">
-          <v-form ref="form">
-            <v-text
-              v-if="isSunny==true"
-              class="font-weight-bold"
-            >
-              晴れ
-            </v-text>
-            <v-text
-              v-if="isSunny==false"
-              class="font-weight-bold"
-            >
-              雨
-            </v-text>
-            <v-divider class="mb-8" />
+        <v-form ref="form">
+          <v-text v-if="isSunny == true" class="font-weight-bold">
+            晴れ
+          </v-text>
+          <v-text v-if="isSunny == false" class="font-weight-bold"> 雨 </v-text>
+          <v-divider class="mb-8" />
+          <v-select
+            label="何日目か"
+            ref="fesDate"
+            v-model.number="fesDate"
+            :items="fesDateList"
+            :menu-props="{ top: false, offsetY: true }"
+            item-text="name"
+            item-value="id"
+            :rules="[rules.required]"
+            clearable
+            outlined
+          ></v-select>
+          <v-select
+            label="第一希望場所"
+            ref="stageFirst"
+            v-model.number="stageFirst"
+            :items="firstStageList"
+            :menu-props="{ top: false, offsetY: true }"
+            item-text="name"
+            item-value="id"
+            clearable
+            outlined
+            required
+            @change="selectSecondStageList"
+          ></v-select>
+          <v-select
+            label="第二希望場所"
+            ref="stageSecond"
+            v-model.number="stageSecond"
+            :items="secondStageList"
+            :menu-props="{ top: false, offsetY: true }"
+            item-text="name"
+            item-value="id"
+            clearable
+            outlined
+            required
+          ></v-select>
+          <v-radio-group v-model="radio">
+            <v-radio label="時間幅で申請" :value="1"></v-radio>
+            <v-radio label="時刻で申請" :value="2"></v-radio>
+          </v-radio-group>
+          <div v-if="radio == 1">
             <v-select
-              label="何日目か"
-              ref="fesDate"
-              v-model.number="fesDate"
-              :items="fesDateList"
+              label="準備時間幅"
+              v-model="prepareInterval"
+              :items="time_interval"
               :menu-props="{ top: false, offsetY: true }"
-              item-text="name"
-              item-value="id"
-              :rules="[rules.required]"
-              clearable
-              outlined
-            ></v-select>
-            <v-select
-              label="第一希望場所"
-              ref="stageFirst"
-              v-model.number="stageFirst"
-              :items="firstStageList"
-              :menu-props="{ top: false, offsetY: true }"
-              item-text="name"
-              item-value="id"
               clearable
               outlined
               required
-              @change="selectSecondStageList"
             ></v-select>
             <v-select
-              label="第二希望場所"
+              label="使用時間幅"
               ref="stageSecond"
-              v-model.number="stageSecond"
-              :items="secondStageList"
+              v-model="useInterval"
+              :items="time_interval"
               :menu-props="{ top: false, offsetY: true }"
-              item-text="name"
-              item-value="id"
               clearable
               outlined
               required
-              ></v-select>
-            <v-radio-group
-              v-model="radio"
-              >
-              <v-radio
-                label="時間幅で申請"
-                :value=1
-                ></v-radio>
-              <v-radio
-                label="時刻で申請"
-                :value=2
-                ></v-radio>
-            </v-radio-group>
-              <div v-if="radio == 1">
-                <v-select
-                  label="準備時間幅"
-                  v-model="prepareInterval"
-                  :items="time_interval"
-                  :menu-props="{ top: false, offsetY: true }"
-                  clearable
-                  outlined
-                  required
-                  ></v-select>
-                <v-select
-                  label="使用時間幅"
-                  ref="stageSecond"
-                  v-model="useInterval"
-                  :items="time_interval"
-                  :menu-props="{ top: false, offsetY: true }"
-                  clearable
-                  outlined
-                  required
-                  ></v-select>
-                <v-select
-                  label="掃除時間幅"
-                  ref="stageSecond"
-                  v-model="cleanupInterval"
-                  :items="time_interval"
-                  :menu-props="{ top: false, offsetY: true }"
-                  clearable
-                  outlined
-                  required
-                  ></v-select>
-              </div>
-              <div v-if="radio == 2">
-                <p align="left">
-                準備開始時刻
-                <vue-timepicker
-                  input-class="timepicker"
-                  v-model="prepareStartTime"
-                  format="HH:mm"
-                  minute-interval="15"
-                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                  hide-disable-hours
-                  hide-disable-minutes
-                  advanced-keyboard
-                  manual-input
-                  />
-                </p>
+            ></v-select>
+            <v-select
+              label="掃除時間幅"
+              ref="stageSecond"
+              v-model="cleanupInterval"
+              :items="time_interval"
+              :menu-props="{ top: false, offsetY: true }"
+              clearable
+              outlined
+              required
+            ></v-select>
+          </div>
+          <div v-if="radio == 2">
+            <p align="left">
+              準備開始時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="prepareStartTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
 
-                <p align="left">
-                パフォーマンス開始時刻
-                <vue-timepicker
-                  input-class="timepicker"
-                  v-model="performanceStartTime"
-                  format="HH:mm"
-                  minute-interval="15"
-                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                  hide-disable-hours
-                  hide-disable-minutes
-                  advanced-keyboard
-                  manual-input
-                  />
-                </p>
+            <p align="left">
+              パフォーマンス開始時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="performanceStartTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
 
-                <p align="left">
-                パフォーマンス終了時刻
-                <vue-timepicker
-                  input-class="timepicker"
-                  v-model="performanceFinishTime"
-                  format="HH:mm"
-                  minute-interval="15"
-                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                  hide-disable-hours
-                  hide-disable-minutes
-                  advanced-keyboard
-                  manual-input
-                  />
-                </p>
-                <p align="left">
-                掃除終了時刻
-                <vue-timepicker
-                  input-class="timepicker"
-                  v-model="cleanupFinishTime"
-                  format="HH:mm"
-                  minute-interval="15"
-                  :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
-                  hide-disable-hours
-                  hide-disable-minutes
-                  advanced-keyboard
-                  manual-input
-                  />
-                </p>
-              </div>
-          </v-form>
+            <p align="left">
+              パフォーマンス終了時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="performanceFinishTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
+            <p align="left">
+              掃除終了時刻
+              <vue-timepicker
+                input-class="timepicker"
+                v-model="cleanupFinishTime"
+                format="HH:mm"
+                minute-interval="15"
+                :hour-range="[9, 10, 11, 12, 13, 14, 15, 16, 17]"
+                hide-disable-hours
+                hide-disable-minutes
+                advanced-keyboard
+                manual-input
+              />
+            </p>
+          </div>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
@@ -170,25 +154,49 @@ import VueTimepicker from "vue2-timepicker/src/vue-timepicker.vue";
 export default {
   components: {
     "vue-timepicker": vueTimepicker,
-    VueTimepicker
+    VueTimepicker,
   },
-  props: { 
+  props: {
     groupId: Number,
     isSunny: Boolean,
   },
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください"
+        required: (value) => !!value || "入力してください",
       },
       radio: 1,
       group: [],
       valid: false,
       fesDateList: [
         { name: "一日目", id: 2 },
-        { name: "二日目", id: 3 }
+        { name: "二日目", id: 3 },
       ],
-      time_interval: ["5分", "10分", "15分", "20分", "25分", "30分", "35分", "40分", "45分", "50分", "55分", "60分", "65分", "70分", "75分", "80分", "90分", "95分", "100分", "105分", "110分", "115分", "120分"],
+      time_interval: [
+        "5分",
+        "10分",
+        "15分",
+        "20分",
+        "25分",
+        "30分",
+        "35分",
+        "40分",
+        "45分",
+        "50分",
+        "55分",
+        "60分",
+        "65分",
+        "70分",
+        "75分",
+        "80分",
+        "90分",
+        "95分",
+        "100分",
+        "105分",
+        "110分",
+        "115分",
+        "120分",
+      ],
       stageList: [],
       sunnyStageList: [],
       rainyStageList: [],
@@ -197,13 +205,15 @@ export default {
       fesDate: "",
       stageFirst: "",
       stageSecond: "",
-      prepareInterval: [],
+      /*
       useInterval: [],
+      prepareInterval: [],
       cleanupInterval: [],
+      */
       prepareStartTime: [],
       performanceStartTime: [],
       performanceFinishTime: [],
-      cleanupFinishTime: []
+      cleanupFinishTime: [],
     };
   },
 
@@ -238,12 +248,13 @@ export default {
     },
     stringCleanupFinishTime() {
       return this.cleanupFinishTime.HH + ":" + this.cleanupFinishTime.mm;
-    }
+    },
   },
   methods: {
     cancel() {
       this.$refs.form.reset();
     },
+    /*
     validate() {
       if (!this.$refs.form.validate()) {
         valid = false;
@@ -251,39 +262,46 @@ export default {
       }
       return true;
     },
+    */
     submit() {
-      if (this.prepareInterval.length == 0){
-        this.prepareInterval = "-9999"
+      if (this.prepareInterval.length == 0) {
+        this.prepareInterval = "-9999";
       }
-      if (this.useInterval.length == 0){
-        this.useInterval = "-9999"
+      if (this.useInterval.length == 0) {
+        this.useInterval = "-9999";
       }
-      if (this.cleanupInterval.length == 0){
-        this.cleanupInterval = "-9999"
+      if (this.cleanupInterval.length == 0) {
+        this.cleanupInterval = "-9999";
       }
-      if (this.prepareStartTime.length == 0){
-        this.prepareStartTime = { "HH": "00", "mm": "00" }
+      if (this.prepareStartTime.length == 0) {
+        this.prepareStartTime = { HH: "00", mm: "00" };
       }
-      if (this.prepareStartTime.HH == "" && this.prepareStartTime.mm == ""){
-        this.prepareStartTime = { "HH": "00", "mm": "00" }
+      if (this.prepareStartTime.HH == "" && this.prepareStartTime.mm == "") {
+        this.prepareStartTime = { HH: "00", mm: "00" };
       }
-      if (this.performanceStartTime.length == 0){
-        this.performanceStartTime = { "HH": "00", "mm": "00" }
+      if (this.performanceStartTime.length == 0) {
+        this.performanceStartTime = { HH: "00", mm: "00" };
       }
-      if (this.performanceStartTime.HH == "" && this.performanceStartTime.mm == ""){
-        this.performanceStartTime = { "HH": "00", "mm": "00" }
+      if (
+        this.performanceStartTime.HH == "" &&
+        this.performanceStartTime.mm == ""
+      ) {
+        this.performanceStartTime = { HH: "00", mm: "00" };
       }
-      if (this.performanceFinishTime.length == 0){
-        this.performanceFinishTime = { "HH": "00", "mm": "00" }
+      if (this.performanceFinishTime.length == 0) {
+        this.performanceFinishTime = { HH: "00", mm: "00" };
       }
-      if (this.performanceFinishTime.HH == "" && this.performanceFinishTime.mm == ""){
-        this.performanceFinishTime = { "HH": "00", "mm": "00" }
+      if (
+        this.performanceFinishTime.HH == "" &&
+        this.performanceFinishTime.mm == ""
+      ) {
+        this.performanceFinishTime = { HH: "00", mm: "00" };
       }
-      if (this.cleanupFinishTime.length == 0){
-        this.cleanupFinishTime = { "HH": "00", "mm": "00" }
+      if (this.cleanupFinishTime.length == 0) {
+        this.cleanupFinishTime = { HH: "00", mm: "00" };
       }
-      if (this.cleanupFinishTime.HH == "" && this.cleanupFinishTime.mm == ""){
-        this.cleanupFinishTime = { "HH": "00", "mm": "00" }
+      if (this.cleanupFinishTime.HH == "" && this.cleanupFinishTime.mm == "") {
+        this.cleanupFinishTime = { HH: "00", mm: "00" };
       }
       const url = process.env.VUE_APP_URL + "/stage_orders";
       let params = new URLSearchParams();
@@ -302,11 +320,11 @@ export default {
 
       axios.defaults.headers.common["Content-Type"] = "application/json";
       axios.post(url, params).then(
-        response => {
+        (response) => {
           console.log("response:", response);
           return "ok";
         },
-        error => {
+        (error) => {
           console.log("登録できませんでした");
           return error;
         }
@@ -320,28 +338,27 @@ export default {
         }
       }
     },
-    createSunnyStageList(){
+    createSunnyStageList() {
       this.sunnyStageList = [];
-      for(let i = 0; i < this.stageList.length; i++){
-        if(this.stageList[i].enable_sunny == true){
-          this.sunnyStageList.push(this.stageList[i])
+      for (let i = 0; i < this.stageList.length; i++) {
+        if (this.stageList[i].enable_sunny == true) {
+          this.sunnyStageList.push(this.stageList[i]);
         }
       }
     },
-    createRainyStageList(){
+    createRainyStageList() {
       this.rainyStageList = [];
-      for(let i = 0; i < this.stageList.length; i++){
-        if(this.stageList[i].enable_rainy == true){
-          this.rainyStageList.push(this.stageList[i])
+      for (let i = 0; i < this.stageList.length; i++) {
+        if (this.stageList[i].enable_rainy == true) {
+          this.rainyStageList.push(this.stageList[i]);
         }
       }
     },
     createStageList() {
-      if(this.isSunny==true){
+      if (this.isSunny == true) {
         this.firstStageList = this.sunnyStageList;
         this.secondStageList = this.sunnyStageList;
-      }
-      else if(this.isSunny==false){
+      } else if (this.isSunny == false) {
         this.firstStageList = this.rainyStageList;
         this.secondStageList = this.rainyStageList;
       }
@@ -349,19 +366,18 @@ export default {
   },
 
   mounted() {
-    axios.get(process.env.VUE_APP_URL + "/stages",{
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(
-      response => {
+    axios
+      .get(process.env.VUE_APP_URL + "/stages", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
         this.stageList = response.data;
-        this.createSunnyStageList()
-        this.createRainyStageList()
-        this.createStageList()
-      }
-    )
+        this.createSunnyStageList();
+        this.createRainyStageList();
+        this.createStageList();
+      });
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {
@@ -369,16 +385,16 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           this.user = response.data.data;
           console.log(this.user);
           console.log(this.user.id);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
@@ -390,22 +406,22 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
       .then(
-        response => {
+        (response) => {
           for (let i = 0; i < response.data.length; i++) {
             this.group.push(response.data[i]);
           }
           console.log(this.group);
         },
-        error => {
+        (error) => {
           console.error(error);
           return error;
         }
       );
-  }
+  },
 };
 </script>
 <style>

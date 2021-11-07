@@ -1,15 +1,14 @@
 <template>
   <v-container>
     <v-card flat>
-      <v-card-title class="font-weight-bold subtitle-1">
-        <v-icon class="pr-2">mdi-account-multiple</v-icon>
+      <v-card-title>
+        <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon>
         <b>副代表情報</b>
         <v-spacer></v-spacer>
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               v-if="isEditSubRep"
-              x-small
               fab
               text
               v-bind="attrs"
@@ -32,7 +31,7 @@
           :tel="regist.sub_rep.tel"
           :email="regist.sub_rep.email"
           @reload="reload"
-          @openSubRepSnackbar="openSubRepSnackbar"
+          @openSubrepSnackbar="openSubrepSnackbar"
         >
         </SubRep>
 
@@ -42,7 +41,7 @@
       </v-card-title>
       <hr />
 
-      <v-list class="subtitle-2">
+      <v-list>
         <v-list-item>
           <v-list-item-content>氏名</v-list-item-content>
           <v-list-item-content v-if="regist.sub_rep.name == -9999"
@@ -109,7 +108,7 @@
 
 <script>
 import axios from "axios";
-import SubRep from "@/components/Mobile/EditModal/SubRep.vue";
+import SubRep from "@/components/EditModal/SubRep.vue";
 
 export default {
   props: {
@@ -136,7 +135,7 @@ export default {
       this.$refs.subRepDlg.isDisplay = true;
     },
     //編集後Snackbar
-    openSubRepSnackbar() {
+    openSubrepSnackbar() {
       this.subrepSnackbar = true;
     },
     reload() {

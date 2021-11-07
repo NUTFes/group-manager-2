@@ -1,17 +1,17 @@
 <template>
   <v-container>
     <v-row v-for="(stage_order, i) in regist.stage_orders" :key="i">
+      <v-col cols="1"></v-col>
       <v-col>
         <v-card flat>
-          <v-card-title class="font-weight-bold subtitle-2">
-            <v-icon class="pr-2">mdi-microphone</v-icon>
+          <v-card-title>
+            <v-icon class="pr-2" size="30">mdi-microphone</v-icon>
             <b>ステージ利用申請情報</b>
             <v-spacer></v-spacer>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   v-if="isEditStageOrder"
-                  x-small
                   fab
                   text
                   v-bind="attrs"
@@ -42,9 +42,9 @@
           </v-card-title>
 
           <hr />
-          <v-list class="subtitle-2">
+          <v-list>
             <v-list-item>
-              <v-list-item-content class="pr-3">月日</v-list-item-content>
+              <v-list-item-content>月日</v-list-item-content>
               <v-list-item-content v-if="stage_order.stage_date.id == -9999"
                 >未登録</v-list-item-content
               >
@@ -54,7 +54,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3">天気</v-list-item-content>
+              <v-list-item-content>天気</v-list-item-content>
               <v-list-item-content v-if="stage_order.is_sunny == -9999"
                 >未登録</v-list-item-content
               >
@@ -65,7 +65,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3">第1希望</v-list-item-content>
+              <v-list-item-content>第1希望</v-list-item-content>
               <v-list-item-content v-if="stage_order.first_stage_order == -9999"
                 >未登録</v-list-item-content
               >
@@ -75,7 +75,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3">第2希望</v-list-item-content>
+              <v-list-item-content>第2希望</v-list-item-content>
               <v-list-item-content
                 v-if="stage_order.second_stage_order == -9999"
                 >未登録</v-list-item-content
@@ -86,7 +86,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3">準備時間幅</v-list-item-content>
+              <v-list-item-content>準備時間幅</v-list-item-content>
               <v-list-item-content
                 v-if="stage_order.prepare_time_interval == -9999"
                 >未登録</v-list-item-content
@@ -97,7 +97,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3">使用時間幅</v-list-item-content>
+              <v-list-item-content>使用時間幅</v-list-item-content>
               <v-list-item-content v-if="stage_order.use_time_interval == -9999"
                 >未登録</v-list-item-content
               >
@@ -107,7 +107,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3">掃除時間幅</v-list-item-content>
+              <v-list-item-content>掃除時間幅</v-list-item-content>
               <v-list-item-content
                 v-if="stage_order.cleanup_time_interval == -9999"
                 >未登録</v-list-item-content
@@ -118,9 +118,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3"
-                >準備開始時刻</v-list-item-content
-              >
+              <v-list-item-content>準備開始時刻</v-list-item-content>
               <v-list-item-content
                 v-if="stage_order.prepare_start_time == -9999"
                 >未登録</v-list-item-content
@@ -131,9 +129,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3"
-                >パフォーマンス開始時刻</v-list-item-content
-              >
+              <v-list-item-content>パフォーマンス開始時刻</v-list-item-content>
               <v-list-item-content
                 v-if="stage_order.performance_start_time == -9999"
                 >未登録</v-list-item-content
@@ -144,9 +140,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3"
-                >パフォーマンス終了時刻</v-list-item-content
-              >
+              <v-list-item-content>パフォーマンス終了時刻</v-list-item-content>
               <v-list-item-content
                 v-if="stage_order.performance_end_time == -9999"
                 >未登録</v-list-item-content
@@ -157,9 +151,7 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item>
-              <v-list-item-content class="pr-3"
-                >掃除終了時刻</v-list-item-content
-              >
+              <v-list-item-content>掃除終了時刻</v-list-item-content>
               <v-list-item-content v-if="stage_order.cleanup_end_time == -9999"
                 >未登録</v-list-item-content
               >
@@ -170,6 +162,7 @@
           </v-list>
         </v-card>
       </v-col>
+      <v-col cols="1"></v-col>
     </v-row>
 
     <!-- Edit Modal -->
@@ -199,7 +192,7 @@
 
 <script>
 import axios from "axios";
-import StageOrder from "@/components/Mobile/EditModal/StageOrder.vue";
+import StageOrder from "@/components/EditModal/StageOrder.vue";
 
 export default {
   props: {

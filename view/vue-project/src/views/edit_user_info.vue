@@ -8,11 +8,11 @@
             <v-col cols="2"></v-col>
             <v-col cols="8" align="center">
               <v-card-title class="justify-center">
-                <h1 style="color:#333333">ユーザー情報変更</h1>
+                <h1 style="color: #333333">ユーザー情報変更</h1>
               </v-card-title>
-		<br>
-		<v-divider/>
-		<br>
+              <br />
+              <v-divider />
+              <br />
               <v-card-text>
                 <v-form ref="form">
                   <v-text-field
@@ -22,7 +22,7 @@
                     outlined
                     clearable
                   ></v-text-field>
-                  <br>
+                  <br />
                   <v-text-field
                     label="メールアドレス"
                     v-model="email"
@@ -30,7 +30,7 @@
                     outlined
                     clearable
                   ></v-text-field>
-                  <br>
+                  <br />
                   <v-text-field
                     label="学籍番号８桁"
                     v-model="student_id"
@@ -40,7 +40,7 @@
                     outlined
                     clearable
                   ></v-text-field>
-                  <br>
+                  <br />
                   <v-text-field
                     label="TEL"
                     v-model="tel"
@@ -51,7 +51,7 @@
                     outlined
                     clearable
                   ></v-text-field>
-                  <br>
+                  <br />
                   <v-select
                     label="学科"
                     v-model.number="department_id"
@@ -61,8 +61,8 @@
                     item-value="id"
                     :menu-props="{ top: true, offsetY: true }"
                     outlined
-                    ></v-select>
-                  <br>
+                  ></v-select>
+                  <br />
                   <v-select
                     label="学年"
                     v-model.number="grade_id"
@@ -76,8 +76,12 @@
                 </v-form>
               </v-card-text>
               <v-card-action>
-                <v-btn color="btn" dark block rounded depressed @click="submit">登録</v-btn>
-                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
+                <v-btn color="btn" dark block rounded depressed @click="submit"
+                  >登録</v-btn
+                >
+                <v-btn color="btn" text block rounded to="/mypage"
+                  >マイページに戻る</v-btn
+                >
               </v-card-action>
             </v-col>
             <v-col cols="2"></v-col>
@@ -90,10 +94,9 @@
 </template>
 
 <script>
-
-import axios from 'axios'
+import axios from "axios";
 export default {
-  data () {
+  data() {
     return {
       name: null,
       email: null,
@@ -102,17 +105,19 @@ export default {
       department_id: null,
       grade_id: null,
 
-      rules:{
-        requied: value => !!value || '入力してください',
-				student_id_length: v => v.length == 8  || '8桁かどうかを確認してください',
-				tel_length: v => v.length == 11  || '11桁かどうかを確認してください',
-        email: v => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return pattern.test(v) || '適切なメールアドレスではありません。'
-        }
+      rules: {
+        requied: (value) => !!value || "入力してください",
+        student_id_length: (v) =>
+          v.length == 8 || "8桁かどうかを確認してください",
+        tel_length: (v) => v.length == 11 || "11桁かどうかを確認してください",
+        email: (v) => {
+          const pattern =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(v) || "適切なメールアドレスではありません。";
+        },
       },
 
-      departments:[
+      departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
         { name: "物質材料工学課程", id: 3 },
@@ -132,9 +137,9 @@ export default {
         { name: "材料工学専攻", id: 17 },
         { name: "エネルギー・環境工学専攻", id: 18 },
         { name: "生物統合工学専攻", id: 19 },
-        { name: "その他", id: 20 }
+        { name: "その他", id: 20 },
       ],
-      grades:[
+      grades: [
         { name: "B1[学部1年]", id: 1 },
         { name: "B2[学部2年]", id: 2 },
         { name: "B3[学部3年]", id: 3 },
@@ -149,97 +154,89 @@ export default {
         { name: "GD3[イノベ3年]", id: 12 },
         { name: "GD4[イノベ4年]", id: 13 },
         { name: "GD5[イノベ5年]", id: 14 },
-        { name: "その他", id: 15 }
-      ]
-    }
+        { name: "その他", id: 15 },
+      ],
+    };
   },
-  computed: {
-  },
+  computed: {},
   methods: {
-
-    cancel: function() {
+    cancel: function () {
       this.$refs.form.reset();
     },
 
-    zeropadding: function(num){
-      var padnum = null;
-      padnum = ('00000000' + num).slice(-8);
+    zeropadding: function (num) {
+      let padnum = null;
+      padnum = ("00000000" + num).slice(-8);
       console.log(padnum);
       return padnum;
     },
 
-		submit: function() {
-      if ( !this.$refs.form.validate() ) return;
+    submit: function () {
+      if (!this.$refs.form.validate()) return;
 
-      const post_url = process.env.VUE_APP_URL + '/api/v1/current_user/edit_user_info'
+      const post_url =
+        process.env.VUE_APP_URL + "/api/v1/current_user/edit_user_info";
 
-			var params =  {
-          'name' : this.name,
-          'email' : this.email,
-					'student_id' : Number(this.student_id),
-          'tel' : this.tel,
-          'department_id' : this.department_id, 
-          'grade_id' : this.grade_id
-      }
+      let params = {
+        name: this.name,
+        email: this.email,
+        student_id: Number(this.student_id),
+        tel: this.tel,
+        department_id: this.department_id,
+        grade_id: this.grade_id,
+      };
 
-      axios.post(post_url, params, {
+      axios
+        .post(post_url, params, {
           headers: {
-            'Content-Type': 'application/json',
-            'access-token': localStorage.getItem('access-token'),
-            'client': localStorage.getItem('client'),
-            'uid': localStorage.getItem('uid')
+            "Content-Type": "application/json",
+            "access-token": localStorage.getItem("access-token"),
+            client: localStorage.getItem("client"),
+            uid: localStorage.getItem("uid"),
+          },
+        })
+        .then(
+          (response) => {
+            console.log(response);
+            localStorage.setItem("uid", this.email);
+            this.$router.push("MyPage");
+          },
+          (error) => {
+            console.log("登録できませんでした");
+            return error;
           }
-        }
-      ).then(
-        (response) => {
-          console.log(response)
-          localStorage.setItem('uid', this.email)
-          this.$router.push('MyPage')
-        },
-        (error) => {
-          console.log('登録できませんでした')
-          return error;
-        }
-      )
+        );
     },
   },
   mounted() {
-    const get_url = process.env.VUE_APP_URL + '/api/v1/current_user/get_user_detail_raw'
-    axios.get(get_url, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-        "uid": localStorage.getItem('uid')
-      }
-    }).then(
-      (response) => {
-        console.log(response.data)
-        this.name = response.data.user.name
-        this.email = response.data.user.email
-        this.student_id = String(this.zeropadding(response.data.user_detail.student_id))
-        this.tel = response.data.user_detail.tel
-        this.department_id = response.data.user_detail.department_id
-        this.grade_id = response.data.user_detail.grade_id
-      },
-      (error) => {
-        console.error(error)
-        return error;
-      }
-    )
+    const get_url =
+      process.env.VUE_APP_URL + "/api/v1/current_user/get_user_detail_raw";
+    axios
+      .get(get_url, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then(
+        (response) => {
+          console.log(response.data);
+          this.name = response.data.user.name;
+          this.email = response.data.user.email;
+          this.student_id = String(
+            this.zeropadding(response.data.user_detail.student_id)
+          );
+          this.tel = response.data.user_detail.tel;
+          this.department_id = response.data.user_detail.department_id;
+          this.grade_id = response.data.user_detail.grade_id;
+        },
+        (error) => {
+          console.error(error);
+          return error;
+        }
+      );
   },
-}
-
+};
 </script>
-
-
-
-
-
-
-
-
-
-
-
-

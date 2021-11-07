@@ -10,7 +10,7 @@
               <v-col cols="10">
                 <br />
                 <v-card-title class="justify-center"
-                  ><h1 style="color:#333333">
+                  ><h1 style="color: #333333">
                     ユーザーの詳細を登録
                   </h1></v-card-title
                 >
@@ -110,11 +110,8 @@ h1 {
 
 <script>
 import axios from "axios";
-import Header from "@/components/Header.vue";
 export default {
-  components: {
-    Header,
-  },
+  components: {},
   data() {
     return {
       user: [],
@@ -177,10 +174,10 @@ export default {
   },
 
   methods: {
-    register: function() {
+    register: function () {
       const url = process.env.VUE_APP_URL + "/user_details";
       axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
+      let params = new URLSearchParams();
 
       if (!this.$refs.form.validate()) return;
 
@@ -190,7 +187,7 @@ export default {
       params.append("grade_id", this.grade_id);
       params.append("user_id", this.user.id);
       axios.post(url, params).then(
-        (response) => {
+        () => {
           this.$router.push("group");
         },
         (error) => {
@@ -199,7 +196,7 @@ export default {
       );
     },
 
-    reset: function() {
+    reset: function () {
       this.$refs.form.reset();
     },
   },
