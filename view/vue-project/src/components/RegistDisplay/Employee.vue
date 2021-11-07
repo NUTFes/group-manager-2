@@ -181,6 +181,7 @@ export default {
     };
   },
   methods: {
+    //削除メソッド(従業員申請)
     delete_yes_employee() {
       const url = process.env.VUE_APP_URL + "/employees/" + this.employee_id;
       axios.delete(url);
