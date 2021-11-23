@@ -5,13 +5,13 @@ class GroupsController < ApplicationController
   # GET /groups.json
   def index
     @groups = Group.all
-    render json: @groups
+    render json: fmt(ok, @groups)
   end
 
   # GET /groups/1
   # GET /groups/1.json
   def show
-    render json: @group
+    render json: fmt(ok, @group)
   end
 
   # POST /groups

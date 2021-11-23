@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+
+  # users
+  get "/users" => "users#index"
+  get "/users/:id" => "users#show"
+  get "/current_user" => "users#get_current_user"
+  put "/users/:id" => "users#update"
+  delete "/users/:id" => "users#destroy"
+
   resources :user_page_settings
   resources :memos
   resources :news
