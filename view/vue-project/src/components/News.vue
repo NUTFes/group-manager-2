@@ -21,22 +21,22 @@
           <v-card-title class="headline grey lighten-2">
             <v-icon class="pr-2" size="40">mdi-bell-outline</v-icon>
             {{ currentNews.title }}
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn text @click="dialog = false" fab>
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-card-title>
           <v-row>
-            <v-col cols="2"></v-col>
+            <v-col cols="2" />
             <v-col cols="8">
               <v-card-text class="body-1">
                 {{ currentNews.body }}
               </v-card-text>
             </v-col>
-            <v-col cols="2"></v-col>
+            <v-col cols="2" />
           </v-row>
           <v-row>
-            <v-col cols="8"></v-col>
+            <v-col cols="8" />
             <v-col cols="4">
               <v-card-text>
                 {{ currentNews.created_at | moment }}<br />

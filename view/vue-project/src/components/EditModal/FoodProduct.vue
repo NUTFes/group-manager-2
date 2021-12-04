@@ -2,16 +2,16 @@
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color: #eceff1; font-size: 30px">
-        <v-icon class="pr-3" size="35">mdi-baguette</v-icon
-        ><b>販売食品情報の修正</b>
-        <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-icon class="pr-3" size="35">mdi-baguette</v-icon>
+        <b>販売食品情報の修正</b>
+        <v-spacer />
+        <v-btn text fab @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container class="justify-content-center">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8" align="center">
             <v-card-text>
               <v-form ref="form">
@@ -22,7 +22,7 @@
                   outlined
                   required
                   clearable
-                ></v-text-field>
+                />
                 <v-text-field
                   label="1日目の個数"
                   v-model="firstN"
@@ -32,7 +32,7 @@
                   outlined
                   required
                   clearable
-                ></v-text-field>
+                />
                 <v-text-field
                   label="2日目の個数"
                   v-model="secondN"
@@ -42,7 +42,7 @@
                   outlined
                   required
                   clearable
-                ></v-text-field>
+                />
                 <v-select
                   label="調理の有無"
                   ref="cooking"
@@ -51,20 +51,18 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
               <v-col cols="4">
-                <v-btn color="blue darken-1" large block dark @click="submit"
-                  >編集する</v-btn
-                >
+                <v-btn color="blue darken-1" large block dark @click="submit">編集する</v-btn>
               </v-col>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
             </v-row>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>
@@ -89,7 +87,6 @@ export default {
         { id: true, name: "する" },
         { id: false, name: "しない" },
       ],
-      groups: [],
     };
   },
 
@@ -125,24 +122,6 @@ export default {
         }
       );
     },
-  },
-
-  mounted() {
-    const groupUrl = process.env.VUE_APP_URL + "/groups";
-    axios
-      .get(groupUrl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(
-        (response) => {
-          this.groups = response.data;
-        },
-        (error) => {
-          return error;
-        }
-      );
   },
 };
 </script>

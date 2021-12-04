@@ -2,16 +2,16 @@
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color: #eceff1; font-size: 30px">
-        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon
-        ><b>購入品情報追加</b>
-        <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon>
+        <b>購入品情報追加</b>
+        <v-spacer />
+        <v-btn text fab @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container>
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8" align="center">
             <v-card-text>
               <v-form ref="form">
@@ -26,7 +26,7 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
                 <v-text-field
                   class="body-1"
                   label="購入品"
@@ -34,8 +34,7 @@
                   background-color="white"
                   outlined
                   clearable
-                >
-                </v-text-field>
+                />
                 <v-select
                   label="なまもの"
                   :items="isFresh"
@@ -46,7 +45,7 @@
                     offsetY: true,
                   }"
                   outlined
-                ></v-select>
+                />
                 <v-select
                   label="開催日"
                   v-model="fesDateId"
@@ -54,7 +53,7 @@
                   item-text="date"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
                 <v-select
                   label="店"
                   v-model="shopId"
@@ -66,20 +65,18 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
               <v-col cols="4">
-                <v-btn color="blue darken-1" large block dark @click="register"
-                  >編集する</v-btn
-                >
+                <v-btn color="blue darken-1" large block dark @click="register">編集する</v-btn>
               </v-col>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
             </v-row>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>

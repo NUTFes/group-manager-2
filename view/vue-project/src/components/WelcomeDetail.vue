@@ -4,40 +4,40 @@
       <!-- 参加概要 -->
       <div class="my-16">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <p class="mt-16 text-center text-h3 text-no-wrap stroke">
               参加概要
             </p>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h4 text-no-wrap">
               <p>開催日時：2021年9月11日(土) 12日(日)<br /></p>
               <p>募集締切：2021年7月30日(月)</p>
             </div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </div>
 
       <!-- 参加実績 -->
       <div class="my-16">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h3 text-no-wrap stroke">開催実績</div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <!-- 参加団体数 -->
         <v-row>
-          <v-col cols="2.5"></v-col>
+          <v-col cols="2.5" />
 
           <v-col cols="2">
             <v-row>
@@ -46,12 +46,12 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-img src="../assets/group.svg" class="mt-n5"></v-img>
+              <v-img src="../assets/group.svg" class="mt-n5" />
             </v-row>
           </v-col>
 
           <!-- 継続参加率 -->
-          <v-col cols="0.5"></v-col>
+          <v-col cols="0.5" />
           <v-col cols="2" class="">
             <v-row>
               <v-col class="text-center text-h5">
@@ -62,7 +62,7 @@
               <div class="pie mt-2">92.7%</div>
             </v-row>
           </v-col>
-          <v-col cols="0.5"></v-col>
+          <v-col cols="0.5" />
 
           <!-- 参加団体増加率 -->
           <v-col cols="2">
@@ -72,38 +72,36 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-img src="../assets/graph-arrow.svg" class="mt-2"></v-img>
+              <v-img src="../assets/graph-arrow.svg" class="mt-2" />
             </v-row>
           </v-col>
 
-          <v-col cols="2.5"></v-col>
+          <v-col cols="2.5" />
         </v-row>
       </div>
 
       <!-- 主な参加形式 -->
       <div class="my-16">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h3 text-no-wrap stroke">
               主な参加形式
             </div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <!-- 01_模擬店 -->
         <v-row class="py-3 blue lighten-5">
-          <v-col cols="1.5"></v-col>
-          <v-col class="mx-4 img-rotate-left" cols="4"
-            ><!-- 画像 -->
+          <v-col cols="1.5" />
+          <v-col class="mx-4 img-rotate-left" cols="4">
             <v-img
               class="ma-1 welcome-img"
               src="../assets/welcome_shop.jpg"
-            ></v-img>
+            />
           </v-col>
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="5">
             <v-row>
               <v-col cols="1">
                 <v-row>
@@ -117,8 +115,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="text-h3 font-weight-bold text-no-wrap">
@@ -140,22 +137,20 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 三角 -->
         <v-row>
-          <div class="triangle-after01"></div>
+          <div class="triangle-after01" />
         </v-row>
 
         <!-- 02_ステージ企画 -->
         <v-row class="pa-1">
-          <v-col cols="1.5"></v-col>
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="1.5" />
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">TYPE</p>
@@ -196,36 +191,32 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col class="ma-4 img-rotate-right" cols="4"
-            ><!-- 画像 -->
+          <v-col class="ma-4 img-rotate-right" cols="4">
             <v-img
               class="welcome-img"
               src="../assets/welcome_stage.jpg"
-            ></v-img>
+            />
           </v-col>
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 三角 -->
         <v-row>
-          <div class="triangle-befor03"></div>
+          <div class="triangle-befor03" />
         </v-row>
 
         <!-- 03_展示体験 -->
         <v-row class="pa-1 blue lighten-5">
-          <v-col cols="1.5"></v-col>
-          <v-col class="ma-4 img-rotate-left" cols="4"
-            ><!-- 画像 -->
+          <v-col cols="1.5" />
+          <v-col class="ma-4 img-rotate-left" cols="4">
             <v-img
               class="welcome-img"
               src="../assets/welcome_exhexp.jpg"
-            ></v-img>
+            />
           </v-col>
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">TYPE</p>
@@ -237,8 +228,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="text-h3 font-weight-medium text-no-wrap">
@@ -267,22 +257,20 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 三角 -->
         <v-row>
-          <div class="triangle-after03"></div>
+          <div class="triangle-after03" />
         </v-row>
 
         <!-- 04_研究室公開 -->
         <v-row class="my-n2">
-          <v-col cols="1.5"></v-col>
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="1.5" />
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP04 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">TYPE</p>
@@ -294,8 +282,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="text-h3 font-weight-medium text-no-wrap">
@@ -324,11 +311,10 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col class="ma-4 img-rotate-right" cols="4"
-            ><!-- 画像 -->
-            <v-img class="welcome-img" src="../assets/welcome_labo.jpg"></v-img>
+          <v-col class="ma-4 img-rotate-right" cols="4">
+            <v-img class="welcome-img" src="../assets/welcome_labo.jpg" />
           </v-col>
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
       </div>
 
@@ -336,24 +322,23 @@
       <div class="my-16">
         <!-- よくある質問 -->
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <p class="text-center text-h4 text-no-wrap">よくある質問</p>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h5 text-no-wrap">
               <p>
-                ご不明な点がある場合は「<a href="">よくある質問と解答</a
-                >」をご覧ください。
+                ご不明な点がある場合は「<a href="">よくある質問と解答</a>」をご覧ください。
               </p>
             </div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </div>
     </v-conteiner>

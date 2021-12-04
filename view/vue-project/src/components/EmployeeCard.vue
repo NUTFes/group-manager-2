@@ -12,7 +12,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="学籍番号"
               ref="studentId"
@@ -23,7 +23,7 @@
               counter="8"
               outlined
               required
-            ></v-text-field>
+            />
           </v-form>
         </v-card-text>
       </v-col>

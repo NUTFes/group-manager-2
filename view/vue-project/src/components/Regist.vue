@@ -3,7 +3,7 @@
     <v-card class="mx-auto" outlined>
       <v-card-title class="main font-weight-bold"
         ><v-icon class="pr-2" size="30">mdi-information</v-icon>登録情報
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -49,8 +49,7 @@
             </v-tab>
 
             <v-tab :value="tab - 7" class="font-weight-bold justify-start">
-              <v-icon class="pr-2">mdi-microphone-plus</v-icon
-              >ステージオプション申請情報
+              <v-icon class="pr-2">mdi-microphone-plus</v-icon>ステージオプション申請情報
             </v-tab>
 
             <v-tab :value="tab - 8" class="font-weight-bold justify-start">
@@ -128,19 +127,17 @@
       <v-card class="mx-auto">
         <v-card-title class="main font-weight-bold">
           <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn fab text class="my-n2" @click="delete_dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-title> 削除してよろしいですか？ </v-card-title>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn depressed color="red" dark @click="delete_yes"> はい </v-btn>
-          <v-btn depressed color="blue" dark @click="delete_dialog = false">
-            いいえ
-          </v-btn>
+          <v-btn depressed color="blue" dark @click="delete_dialog = false">いいえ</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

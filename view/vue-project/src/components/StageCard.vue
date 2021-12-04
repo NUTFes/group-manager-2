@@ -22,7 +22,7 @@
               :rules="[rules.required]"
               clearable
               outlined
-            ></v-select>
+            />
             <v-select
               label="第一希望場所"
               ref="stageFirst"
@@ -35,7 +35,7 @@
               outlined
               required
               @change="selectSecondStageList"
-            ></v-select>
+            />
             <v-select
               label="第二希望場所"
               ref="stageSecond"
@@ -47,7 +47,7 @@
               clearable
               outlined
               required
-            ></v-select>
+            />
             <v-radio-group v-model="radio">
               <v-radio label="時間幅で申請" :value="1"></v-radio>
               <v-radio label="時刻で申請" :value="2"></v-radio>
@@ -61,7 +61,7 @@
                 clearable
                 outlined
                 required
-              ></v-select>
+              />
               <v-select
                 label="使用時間幅"
                 ref="stageSecond"
@@ -71,7 +71,7 @@
                 clearable
                 outlined
                 required
-              ></v-select>
+              />
               <v-select
                 label="掃除時間幅"
                 ref="stageSecond"
@@ -81,7 +81,7 @@
                 clearable
                 outlined
                 required
-              ></v-select>
+              />
             </div>
             <div v-if="radio == 2">
               <p align="left">

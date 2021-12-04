@@ -4,14 +4,14 @@
       <v-card-title style="background-color: #eceff1; font-size: 30px">
         <v-icon class="pr-3" size="35">mdi-map-marker</v-icon>
         <b>会場登録</b>
-        <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-spacer />
+        <v-btn text fab @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container>
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8" align="center">
             <v-card-text>
               <v-form ref="form">
@@ -28,7 +28,7 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
                 <v-select
                   label="第二希望場所"
                   ref="second"
@@ -42,7 +42,7 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
                 <v-select
                   label="第三希望場所"
                   ref="third"
@@ -56,7 +56,7 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
                 <v-text-field
                   label="備考"
                   ref="remark"
@@ -64,20 +64,18 @@
                   text
                   outlined
                   required
-                ></v-text-field>
+                />
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
               <v-col cols="4">
-                <v-btn color="blue darken-1" large block dark @click="submit"
-                  >編集する</v-btn
-                >
+                <v-btn color="blue darken-1" large block dark @click="submit">編集する</v-btn>
               </v-col>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
             </v-row>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>
@@ -85,9 +83,6 @@
 </template>
 
 <script>
-// 電力登録をUIで増やして一気に登録させないようにする。
-// MyPageでエラー吐かせる。
-
 import axios from "axios";
 export default {
   props: {
