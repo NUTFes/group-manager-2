@@ -18,8 +18,8 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 
 if "production" == ENV.fetch("RAILS_ENV") { "production" }
     ssl_bind '0.0.0.0', '9292', {
-      key: '/certs/group-manager-api.nutfes.net/production/domain.key',
-      cert: '/certs/group-manager-api.nutfes.net/production/signed.crt',
+      key: '/certs/live/group-manager-api.nutfes.net-0001/privkey.pem',
+      cert: '/certs/live/group-manager-api.nutfes.net-0001/fullchain.pem',
       verify_mode: "none"
     }
 end

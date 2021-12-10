@@ -19,7 +19,7 @@ services:
     container_name: 'GM2-API'
     volumes:
       - ./api:/myapp
-      - ./certs:/certs
+      - /etc/letsencrypt:/certs:ro
     ports:
       - "3000:9292" #local:pumactl
     depends_on:
@@ -56,27 +56,17 @@ services:
     environment:
       - VUE_APP_URL=https://group-manager-api.nutfes.net
 
-  https-portal:
-    image: steveltn/https-portal:1
-    container_name: 'https-portal'
-    ports:
-      - '80:80'
-      - '443:443'
-    links:
-      - api
-      - view
-      - admin_view
-    environment:
-      DOMAINS: ' group-manager.nutfes.net , group-manager-admin.nutfes.net -> http://admin_view:8000 , group-manager-api.nutfes.net -> http://api:3000 , record-api.nutfes.net -> http://localhost:3001 '
-      STAGE: 'production' # Don't use production until staging works
-      #FORCE_RENEW: 'true'
+
+  nginx:
+    image: nginx:1.17
     volumes:
-      - ./certs:/var/lib/https-portal
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - code_share:/var/www/vhosts/group-manager.nutfes.net
-      - ./nginx:/etc/nginx/conf.d
-      - ./nginx/group-manager.nutfes.net.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.conf.erb:ro
-      - ./nginx/group-manager.nutfes.net.ssl.conf.erb:/var/lib/nginx-conf/group-manager.nutfes.net.ssl.conf.erb:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 10001:80
+    depends_on:
+      - admin_view
+      - api
 
 volumes:
   mysql-data:
