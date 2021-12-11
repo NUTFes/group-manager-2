@@ -11,4 +11,9 @@ class Group < ApplicationRecord
     has_many :food_products, dependent: :destroy
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
+
+    # Group(参加団体)があるかを確認する
+    def self.is_exists?(id)
+      return self.exists?(id=id)
+    end
 end

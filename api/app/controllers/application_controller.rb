@@ -8,7 +8,12 @@ class ApplicationController < ActionController::API
   def undefined; return { code: 999, message: 'undefined' } end
 
   # 出力するAPIのフォーマット
-  def fmt(status=undefined, data=[])
-    return { status: status, path: request.fullpath, data: data }
+  def fmt(status=undefined, data=[], option="")
+    # メッセージを追加したいときに使う
+    if option != ""
+      status.store("option", option)
+    end
+    return { status: status, data: data }
+    #return { status: status, path: request.fullpath, data: data } // fullpathいるかな？
   end
 end
