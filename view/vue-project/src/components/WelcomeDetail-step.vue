@@ -4,41 +4,38 @@
       <!-- 参加概要 -->
       <div class="my-16">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
-            <p class="mt-16 text-center text-h3 text-no-wrap stroke">
-              参加概要
-            </p>
+            <p class="mt-16 text-center text-h3 text-no-wrap stroke">参加概要</p>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h4 text-no-wrap">
               <p>開催日時：2021年9月14日(土) 15日(日)<br /></p>
               <p>募集締切：2021年7月30日(月)</p>
             </div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </div>
 
       <!-- 参加実績 -->
       <div class="my-16">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h3 text-no-wrap stroke">開催実績</div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <!-- 参加団体数 -->
         <v-row>
-          <v-col cols="2.5"></v-col>
-
+          <v-col cols="2.5" />
           <v-col cols="2">
             <v-row>
               <v-col class="text-center text-h5 mx-5">
@@ -46,13 +43,12 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-img src="../assets/group.svg" class="mt-n5"></v-img>
+              <v-img src="../assets/group.svg" class="mt-n5" />
             </v-row>
           </v-col>
 
           <!-- 継続参加率 -->
-          <v-col cols="0.5"></v-col>
-
+          <v-col cols="0.5" />
           <v-col cols="2" class="">
             <v-row>
               <v-col class="text-center text-h5">
@@ -63,8 +59,7 @@
               <div class="pie mt-2">92.7%</div>
             </v-row>
           </v-col>
-
-          <v-col cols="0.5"></v-col>
+          <v-col cols="0.5" />
 
           <!-- 参加団体増加率 -->
           <v-col cols="2">
@@ -74,40 +69,34 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-img src="../assets/graph-arrow.svg" class="mt-2"></v-img>
+              <v-img src="../assets/graph-arrow.svg" class="mt-2" />
             </v-row>
           </v-col>
-
-          <v-col cols="2.5"></v-col>
+          <v-col cols="2.5" />
         </v-row>
       </div>
 
       <!-- 登録の流れ -->
       <div class="my-16">
-        <!-- 登録の流れwrapper -->
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h3 text-no-wrap stroke">
               登録の流れ
             </div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <!-- 01_ユーザー情報の登録 -->
         <v-row class="pa-1 blue-grey lighten-5">
-          <v-col cols="1.5"></v-col>
-          <v-col cols="4"
-            ><!-- 画像 -->
-            <v-img src="../assets/following-step01.svg"></v-img>
+          <v-col cols="1.5" />
+          <v-col cols="4">
+            <v-img src="../assets/following-step01.svg" />
           </v-col>
-
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">STEP</p>
@@ -119,8 +108,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="pa-o text-h3 font-weight-medium text-no-wrap">
@@ -138,19 +126,15 @@
               </v-col>
             </v-row>
           </v-col>
-
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 02_参加団体登録 -->
         <v-row class="pa-1">
-          <v-col cols="1.5"></v-col>
-
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="1.5" />
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">STEP</p>
@@ -162,8 +146,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="pa-o text-h3 font-weight-medium text-no-wrap">
@@ -181,27 +164,21 @@
               </v-col>
             </v-row>
           </v-col>
-
-          <v-col cols="4"
-            ><!-- 画像 -->
-            <v-img src="../assets/following-step02.svg"></v-img>
+          <v-col cols="4">
+            <v-img src="../assets/following-step02.svg" />
           </v-col>
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 03_副代表登録 -->
         <v-row class="pa-1 blue-grey lighten-5">
-          <v-col cols="1.5"></v-col>
-          <v-col cols="4"
-            ><!-- 画像 -->
-            <v-img src="../assets/following-step03.svg"></v-img>
+          <v-col cols="1.5" />
+          <v-col cols="4">
+            <v-img src="../assets/following-step03.svg" />
           </v-col>
-
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">STEP</p>
@@ -213,8 +190,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="pa-o text-h3 font-weight-medium text-no-wrap">
@@ -232,19 +208,15 @@
               </v-col>
             </v-row>
           </v-col>
-
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 04_物品登録 -->
         <v-row class="pa-1">
-          <v-col cols="1.5"></v-col>
-
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="1.5" />
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">STEP</p>
@@ -256,8 +228,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="pa-o text-h3 font-weight-medium text-no-wrap">
@@ -276,27 +247,22 @@
             </v-row>
           </v-col>
 
-          <v-col cols="4"
-            ><!-- 画像 -->
-            <v-img src="../assets/following-step04.svg"></v-img>
+          <v-col cols="4">
+            <v-img src="../assets/following-step04.svg" />
           </v-col>
-
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 05_電力申請 -->
         <v-row class="pa-1 blue-grey lighten-5">
-          <v-col cols="1.5"></v-col>
-          <v-col cols="4"
-            ><!-- 画像 -->
-            <v-img src="../assets/following-step05.svg"></v-img>
+          <v-col cols="1.5" />
+          <v-col cols="4">
+            <v-img src="../assets/following-step05.svg" />
           </v-col>
 
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">STEP</p>
@@ -308,8 +274,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="pa-o text-h3 font-weight-medium text-no-wrap">
@@ -327,19 +292,15 @@
               </v-col>
             </v-row>
           </v-col>
-
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
 
         <!-- 06_会場登録 -->
         <v-row class="pa-1">
-          <v-col cols="1.5"></v-col>
-
-          <v-col cols="5"
-            ><!-- 文章 -->
+          <v-col cols="1.5" />
+          <v-col cols="5">
             <v-row>
-              <v-col cols="1"
-                ><!-- STEP01 -->
+              <v-col cols="1">
                 <v-row>
                   <v-col class="num-title--text text-h5 pa-0">
                     <p class="mb-0 ml-1">STEP</p>
@@ -351,8 +312,7 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11"
-                ><!-- title and text -->
+              <v-col cols="11">
                 <div class="ml-4">
                   <v-row>
                     <v-col class="pa-o text-h3 font-weight-medium text-no-wrap">
@@ -371,12 +331,10 @@
             </v-row>
           </v-col>
 
-          <v-col cols="4"
-            ><!-- 画像 -->
-            <v-img src="../assets/following-step06.svg"></v-img>
+          <v-col cols="4">
+            <v-img src="../assets/following-step06.svg" />
           </v-col>
-
-          <v-col cols="1.5"></v-col>
+          <v-col cols="1.5" />
         </v-row>
       </div>
       <!-- 以降 各種SNSのリンク、連絡先の表示、よくある質問へのリンク -->
@@ -384,28 +342,26 @@
       <div class="my-16">
         <!-- よくある質問 -->
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <p class="text-center text-h4 text-no-wrap">よくある質問</p>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
 
         <v-row class="">
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h5 text-no-wrap">
               <p>
-                ご不明な点がある場合は「<a href="">よくある質問と解答</a
-                >」をご覧ください。
+                ご不明な点がある場合は「<a href="">よくある質問と解答</a>」をご覧ください。
               </p>
             </div>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </div>
-
-      <v-col cols="2.5"></v-col>
+      <v-col cols="2.5" />
     </v-conteiner>
   </div>
 

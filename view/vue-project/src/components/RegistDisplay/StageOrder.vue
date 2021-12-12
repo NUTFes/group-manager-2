@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-row v-for="(stage_order, i) in regist.stage_orders" :key="i">
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col>
         <v-card flat>
           <v-card-title>
             <v-icon class="pr-2" size="30">mdi-microphone</v-icon>
             <b>ステージ利用申請情報</b>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -45,124 +45,75 @@
           <v-list>
             <v-list-item>
               <v-list-item-content>月日</v-list-item-content>
-              <v-list-item-content v-if="stage_order.stage_date.id == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.stage_date.date
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.stage_date.id == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.stage_date.date }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>天気</v-list-item-content>
-              <v-list-item-content v-if="stage_order.is_sunny == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else-if="stage_order.is_sunny == true"
-                >晴れ</v-list-item-content
-              >
+              <v-list-item-content v-if="stage_order.is_sunny == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else-if="stage_order.is_sunny == true">晴れ</v-list-item-content>
               <v-list-item-content v-else>雨</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>第1希望</v-list-item-content>
-              <v-list-item-content v-if="stage_order.first_stage_order == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.first_stage_order.name
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.first_stage_order == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.first_stage_order.name }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>第2希望</v-list-item-content>
-              <v-list-item-content
-                v-if="stage_order.second_stage_order == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.second_stage_order.name
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.second_stage_order == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.second_stage_order.name }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>準備時間幅</v-list-item-content>
-              <v-list-item-content
-                v-if="stage_order.prepare_time_interval == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.prepare_time_interval
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.prepare_time_interval == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.prepare_time_interval }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>使用時間幅</v-list-item-content>
-              <v-list-item-content v-if="stage_order.use_time_interval == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.use_time_interval
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.use_time_interval == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.use_time_interval }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>掃除時間幅</v-list-item-content>
-              <v-list-item-content
-                v-if="stage_order.cleanup_time_interval == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.cleanup_time_interval
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.cleanup_time_interval == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.cleanup_time_interval }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>準備開始時刻</v-list-item-content>
-              <v-list-item-content
-                v-if="stage_order.prepare_start_time == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.prepare_start_time
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.prepare_start_time == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.prepare_start_time }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>パフォーマンス開始時刻</v-list-item-content>
-              <v-list-item-content
-                v-if="stage_order.performance_start_time == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.performance_start_time
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.performance_start_time == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.performance_start_time }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>パフォーマンス終了時刻</v-list-item-content>
               <v-list-item-content
-                v-if="stage_order.performance_end_time == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.performance_end_time
-              }}</v-list-item-content>
+                v-if="stage_order.performance_end_time == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.performance_end_time }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>掃除終了時刻</v-list-item-content>
-              <v-list-item-content v-if="stage_order.cleanup_end_time == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                stage_order.cleanup_end_time
-              }}</v-list-item-content>
+              <v-list-item-content v-if="stage_order.cleanup_end_time == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ stage_order.cleanup_end_time }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- Edit Modal -->
@@ -183,10 +134,12 @@
       :cleanupEndTime="this.cleanup_end_time"
       @reload="reload"
       @openStageOrderSnackbar="openStageOrderSnackbar"
-    ></StageOrder>
+    />
+
     <v-snackbar top text color="purple accent-2" v-model="stageOrderSnackbar">
       ステージ申請情報を更新しました
     </v-snackbar>
+
   </v-container>
 </template>
 
@@ -209,8 +162,6 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_stage: false,
-      stageOrderSnackbar: false,
       isEditStageOrder: [],
       group_id: [],
       is_sunny: [],

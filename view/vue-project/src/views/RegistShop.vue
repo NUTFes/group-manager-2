@@ -1,50 +1,41 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
       <v-col cols="8">
         <v-stepper class="stepper" v-model="e1" non-linear alt-labels>
           <v-stepper-header class="stepper">
-            <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2"
-              >副代表登録</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2"
-              >物品申請</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2"
-              >電力申請</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 4" step="4" color="purple accent-2"
-              >ステージ<br />利用申請</v-stepper-step
-            >
-            <v-divider></v-divider>
-            <v-stepper-step :complete="e1 > 5" step="5" color="purple accent-2"
-              >ステージ<br />利用詳細</v-stepper-step
-            >
+            <v-stepper-step :complete="e1 > 1" step="1" color="purple accent-2">副代表登録</v-stepper-step>
+            <v-divider />
+            <v-stepper-step :complete="e1 > 2" step="2" color="purple accent-2">物品申請</v-stepper-step>
+            <v-divider />
+            <v-stepper-step :complete="e1 > 3" step="3" color="purple accent-2">電力申請</v-stepper-step>
+            <v-divider />
+            <v-stepper-step
+              v-if="!isStage"
+              :complete="e1 > 4"
+              step="4"
+              color="purple accent-2"
+              >会場申請
+            </v-stepper-step>
           </v-stepper-header>
 
           <v-stepper-items class="stepper">
             <!-- 副代表登録 -->
             <v-stepper-content step="1">
               <v-row>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold"
-                      >副代表登録</v-card-title
-                    >
-                    <v-divider></v-divider>
+                    <v-card-title>副代表登録</v-card-title>
+                    <v-divider />
                     <v-card-text>
                       <v-text-field
                         label="名前"
                         v-model="subRepName"
                         clearable
                         outlined
-                      ></v-text-field>
-
+                      />
                       <v-text-field
                         label="学籍番号"
                         background-color="white"
@@ -57,8 +48,7 @@
                         counter="8"
                         clearable
                         outlined
-                      ></v-text-field>
-
+                      />
                       <v-select
                         label="学科"
                         v-model.number="subRepDepartmentId"
@@ -68,8 +58,7 @@
                         item-value="id"
                         clearable
                         outlined
-                      ></v-select>
-
+                      />
                       <v-select
                         label="学年"
                         v-model.number="subRepGradeId"
@@ -79,8 +68,7 @@
                         item-value="id"
                         clearable
                         outlined
-                      ></v-select>
-
+                      />
                       <v-text-field
                         label="電話番号"
                         background-color="white"
@@ -91,8 +79,7 @@
                         counter="11"
                         clearable
                         outlined
-                      ></v-text-field>
-
+                      />
                       <v-text-field
                         label="メールアドレス"
                         background-color="white"
@@ -101,16 +88,16 @@
                         outlined
                       ></v-text-field>
                     </v-card-text>
-                    <v-divider class="mb-8"></v-divider>
+                    <v-divider class="mb-8" />
                     <v-card-actions>
-                      <v-spacer></v-spacer>
+                      <v-spacer />
                       <v-btn
-                        depressed
-                        large
                         rounded
                         dark
+                        depressed
+                        large
+                        class="pl-4 font-weight-bold"
                         color="btn"
-                        class="stepper pl-4 font-weight-bold"
                         @click="e1 += 1"
                       >
                         次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
@@ -118,23 +105,21 @@
                     </v-card-actions>
                   </v-card>
                 </v-col>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
               </v-row>
             </v-stepper-content>
 
             <!-- 物品申請 -->
             <v-stepper-content step="2">
               <v-row>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold"
-                      >物品登録</v-card-title
-                    >
-                    <v-divider></v-divider>
+                    <v-card-title>物品登録</v-card-title>
+                    <v-divider />
                     <v-card-text>
                       <v-row>
-                        <v-col cols="3"></v-col>
+                        <v-col cols="3" />
                         <v-col cols="3">
                           <v-select
                             v-model="rentalSteps"
@@ -143,9 +128,9 @@
                             outlined
                           />
                         </v-col>
-                        <v-col cols="6"
-                          ><v-card-text>個の物品を登録する</v-card-text></v-col
-                        >
+                        <v-col cols="6">
+                          <v-card-text>個の物品を登録する</v-card-text>
+                        </v-col>
                       </v-row>
                       <v-stepper class="stepper" v-model="e3">
                         <v-stepper-header class="stepper">
@@ -160,7 +145,7 @@
                             <v-divider
                               v-if="rentalStep !== rentalSteps"
                               :key="rentalStep"
-                            ></v-divider>
+                             />
                           </template>
                         </v-stepper-header>
                         <v-stepper-items>
@@ -175,7 +160,7 @@
                               :key="rentalStep"
                             />
                             <v-card-actions>
-                              <v-spacer></v-spacer>
+                              <v-spacer />
                               <v-btn
                                 rounded
                                 text
@@ -199,10 +184,8 @@
                               >
                                 {{ rentalStep + 1 }}
                                 個目の物品へ
-                                <v-icon class="ml-n1"
-                                  >mdi-menu-right</v-icon
-                                ></v-btn
-                              >
+                                <v-icon class="ml-n1">mdi-menu-right</v-icon>
+                              </v-btn>
                             </v-card-actions>
                           </v-stepper-content>
                         </v-stepper-items>
@@ -210,7 +193,7 @@
                     </v-card-text>
                     <v-divider class="mb-8" />
                     <v-card-actions>
-                      <v-spacer></v-spacer>
+                      <v-spacer />
                       <v-btn
                         text
                         rounded
@@ -234,27 +217,33 @@
                     </v-card-actions>
                   </v-card>
                 </v-col>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
               </v-row>
             </v-stepper-content>
 
             <!-- 電力申請 -->
             <v-stepper-content step="3">
               <v-row>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
                 <v-col cols="10">
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold"
-                      >電力申請</v-card-title
-                    >
-                    <v-divider></v-divider>
+                    <v-card-title>電力申請</v-card-title>
+                    <v-divider />
                     <v-card-text>
-                      <v-select
-                        v-model="powerSteps"
-                        :items="[1, 2, 3, 4, 5]"
-                        label="登録製品数"
-                        outlined
-                      />
+                      <v-row>
+                        <v-col cols="3" />
+                        <v-col cols="3">
+                          <v-select
+                            v-model="powerSteps"
+                            :items="[1, 2, 3, 4, 5]"
+                            label="登録製品数"
+                            outlined
+                          />
+                        </v-col>
+                        <v-col cols="6">
+                          <v-card-text>個の電力を登録する</v-card-text>
+                        </v-col>
+                      </v-row>
                       <v-stepper class="stepper" v-model="e2">
                         <v-stepper-header class="stepper">
                           <template v-for="powerStep in powerSteps">
@@ -269,7 +258,7 @@
                             <v-divider
                               v-if="powerStep !== powerSteps"
                               :key="powerStep"
-                            ></v-divider>
+                             />
                           </template>
                         </v-stepper-header>
                         <v-stepper-items>
@@ -284,14 +273,15 @@
                               :key="powerStep"
                             />
                             <v-card-actions>
-                              <v-spacer></v-spacer>
+                              <v-spacer />
                               <v-btn
                                 rounded
                                 text
+                                large
                                 color="btn"
                                 class="pr-5"
                                 @click="e2 -= 1"
-                                v-show="powerStep != 1"
+                                v-show="rentalStep != 1"
                               >
                                 <v-icon class="mr-n1">mdi-menu-left</v-icon>
                                 戻る
@@ -299,119 +289,16 @@
                               <v-btn
                                 rounded
                                 outlined
+                                large
                                 color="btn"
                                 class="pl-5"
                                 @click="e2 += 1"
                                 v-show="powerSteps != powerStep"
                               >
-                                {{ powerStep + 1 }}個目の製品へ
-                                <v-icon class="ml-n1"
-                                  >mdi-menu-right</v-icon
-                                ></v-btn
-                              >
-                            </v-card-actions>
-                          </v-stepper-content>
-                        </v-stepper-items>
-                      </v-stepper>
-                    </v-card-text>
-                    <v-divider class="mb-8" />
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        text
-                        rounded
-                        large
-                        color="btn"
-                        class="pr-4 font-weight-bold"
-                        @click="e1 -= 1"
-                      >
-                        <v-icon class="mr-n1">mdi-menu-left</v-icon>戻る
-                      </v-btn>
-                      <v-btn
-                        rounded
-                        dark
-                        depressed
-                        large
-                        class="pl-4 font-weight-bold"
-                        color="btn"
-                        @click="e1 += 1"
-                      >
-                        次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
-                      </v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-            </v-stepper-content>
-
-            <!-- ステージ利用申請 -->
-            <v-stepper-content v-if="isStage" step="4">
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">
-                      ステージ利用申請
-                    </v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text>
-                      <v-stepper class="stepper" v-model="e2">
-                        <v-stepper-header class="stepper">
-                          <template v-for="stageStep in stageSteps">
-                            <v-stepper-step
-                              :key="`${stageStep}-step`"
-                              :complete="e2 > stageStep"
-                              :step="stageStep"
-                            >
-                              <div v-if="stageStep == 1">晴れ</div>
-                              <div v-if="stageStep == 2">雨</div>
-                            </v-stepper-step>
-                            <v-divider
-                              v-if="stageStep !== stageSteps"
-                              :key="stageStep"
-                            ></v-divider>
-                          </template>
-                        </v-stepper-header>
-                        <v-stepper-items>
-                          <v-stepper-content
-                            v-for="stageStep in stageSteps"
-                            :key="`${stageStep}-content`"
-                            :step="stageStep"
-                          >
-                            <StageCard
-                              ref="stageChild"
-                              :groupId="groupId"
-                              :isSunny="weatherFlag[stageStep - 1]"
-                              :key="stageStep"
-                            />
-
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                rounded
-                                text
-                                color="btn"
-                                class="pr-5"
-                                @click="e2 -= 1"
-                                v-show="stageStep != 1"
-                              >
-                                <v-icon class="mr-n1">mdi-menu-left</v-icon>
-                                戻る
+                                {{ powerStep + 1 }}
+                                個目の製品へ
+                                <v-icon class="ml-n1">mdi-menu-right</v-icon>
                               </v-btn>
-                              <v-btn
-                                rounded
-                                outlined
-                                color="btn"
-                                class="pl-5"
-                                @click="e2 += 1"
-                                v-show="stageSteps != stageStep"
-                              >
-                                次へ
-                                <v-icon class="ml-n1"
-                                  >mdi-menu-right</v-icon
-                                ></v-btn
-                              >
                             </v-card-actions>
                           </v-stepper-content>
                         </v-stepper-items>
@@ -419,7 +306,7 @@
                     </v-card-text>
                     <v-divider class="mb-8" />
                     <v-card-actions>
-                      <v-spacer></v-spacer>
+                      <v-spacer />
                       <v-btn
                         text
                         rounded
@@ -432,11 +319,10 @@
                       </v-btn>
                       <v-btn
                         rounded
-                        dark
                         depressed
                         large
                         class="pl-4 font-weight-bold"
-                        color="btn"
+                        color="primary"
                         @click="e1 += 1"
                       >
                         次へ<v-icon class="ml-n1">mdi-menu-right</v-icon>
@@ -444,30 +330,72 @@
                     </v-card-actions>
                   </v-card>
                 </v-col>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
               </v-row>
             </v-stepper-content>
 
-            <!-- ステージ利用詳細 -->
-            <v-stepper-content v-if="isStage" step="5">
+            <!-- 会場申請登録 -->
+            <v-stepper-content v-if="!isStage" step="4">
               <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
+                <v-col cols="1" />
+                <v-col>
                   <v-card class="mb-12" flat>
-                    <v-card-title class="font-weight-bold">
-                      ステージ詳細申請
-                    </v-card-title>
-                    <v-divider></v-divider>
+                    <v-card-title>会場登録</v-card-title>
+                    <v-divider />
                     <v-card-text>
-                      <StageCommonCard
-                        :groupId="groupId"
-                        ref="stageCommonChild"
-                        :key="stageCommonStep"
+                      <v-select
+                        label="第一希望場所"
+                        v-model="placeFirstId"
+                        :rules="[rules.required]"
+                        :items="this.placeList[getIndex()]['place_list']"
+                        :menu-props="{
+                          top: true,
+                          offsetY: true,
+                        }"
+                        item-text="place"
+                        item-value="place_id"
+                        outlined
+                      />
+                      <v-select
+                        label="第二希望場所"
+                        ref="second"
+                        v-model="placeSecondId"
+                        :rules="[rules.required]"
+                        :items="this.placeList[getIndex()]['place_list']"
+                        :menu-props="{
+                          top: true,
+                          offsetY: true,
+                        }"
+                        item-text="place"
+                        item-value="place_id"
+                        outlined
+                      />
+                      <v-select
+                        label="第三希望場所"
+                        ref="third"
+                        v-model="placeThirdId"
+                        :rules="[rules.required]"
+                        :items="this.placeList[getIndex()]['place_list']"
+                        :menu-props="{
+                          top: true,
+                          offsetY: true,
+                        }"
+                        item-text="place"
+                        item-value="place_id"
+                        outlined
+                      />
+                      <v-text-field
+                        label="備考"
+                        v-model="placeRemark"
+                        height="150"
+                        text
+                        outlined
+                        required
                       />
                     </v-card-text>
                     <v-divider class="mb-8" />
                     <v-card-actions>
-                      <v-spacer></v-spacer>
+                      <v-spacer />
                       <v-btn
                         text
                         rounded
@@ -485,20 +413,20 @@
                         large
                         class="font-weight-bold"
                         color="btn"
-                        @click="stageSubmit"
+                        @click="saleSubmit"
                       >
                         完了
                       </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-col>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
               </v-row>
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
     </v-row>
   </div>
 </template>
@@ -507,14 +435,10 @@
 import axios from "axios";
 import PowerCard from "../components/PowerCard";
 import RentalCard from "@/components/RentalCard";
-import StageCard from "@/components/StageCard";
-import StageCommonCard from "@/components/StageCommonCard";
 export default {
   components: {
     PowerCard,
     RentalCard,
-    StageCard,
-    StageCommonCard,
   },
   data() {
     return {
@@ -594,10 +518,6 @@ export default {
 
       // 物品申請
       rentalSteps: 2,
-
-      // ステージ申請
-      stageSteps: 2,
-      weatherFlag: [true, false],
     };
   },
   watch: {
@@ -648,11 +568,6 @@ export default {
         this.$refs.rentalChild[i].submit();
       }
 
-      // ステージ登録
-      for (let i = 0; i < this.stageSteps; i++) {
-        this.$refs.stageChild[i].submit();
-      }
-
       this.$router.push("MyPage");
     },
     saleSubmit: function () {
@@ -660,7 +575,6 @@ export default {
         console.log("can't group_category_id");
         return;
       }
-
       this.commonSubmit();
 
       // 会場申請登録
@@ -674,21 +588,12 @@ export default {
       axios.post(placeUrl, placeParams).then(
         (response) => {
           console.log("会場申請登録");
-          console.log(response.status);
+          console.log(response.log);
         },
         (error) => {
           return error;
         }
       );
-
-      this.$router.push("MyPage");
-    },
-    stageSubmit: function () {
-      this.commonSubmit();
-
-      // this.$refs.stageChild.submit();
-
-      this.$refs.stageCommonChild.submit();
 
       this.$router.push("MyPage");
     },
@@ -739,7 +644,7 @@ export default {
 };
 </script>
 
-<style scooped>
+<style>
 .stepper {
   box-shadow: none;
 }

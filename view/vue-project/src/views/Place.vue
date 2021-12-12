@@ -1,11 +1,11 @@
 <template>
   <v-row justify="center">
-    <v-col cols="2"></v-col>
+    <v-col cols="2" />
     <v-col cols="8">
       <v-card>
         <v-container class="justify-content-center">
           <v-row>
-            <v-col cols="2"></v-col>
+            <v-col cols="2" />
             <v-col cols="8" align="center">
               <v-card-title class="justify-center">
                 <h1>会場登録</h1>
@@ -25,7 +25,7 @@
                     item-text="name"
                     item-value="id"
                     outlined
-                  ></v-select>
+                  />
                   <v-select
                     label="第一希望場所"
                     ref="first"
@@ -39,7 +39,7 @@
                     item-text="place"
                     item-value="place_id"
                     outlined
-                  ></v-select>
+                  />
                   <v-select
                     label="第二希望場所"
                     ref="second"
@@ -53,7 +53,7 @@
                     item-text="place"
                     item-value="place_id"
                     outlined
-                  ></v-select>
+                  />
                   <v-select
                     label="第三希望場所"
                     ref="third"
@@ -67,7 +67,7 @@
                     item-text="place"
                     item-value="place_id"
                     outlined
-                  ></v-select>
+                  />
                   <v-text-field
                     label="備考"
                     ref="remark"
@@ -75,29 +75,24 @@
                     text
                     outlined
                     required
-                  ></v-text-field>
+                  />
                 </v-form>
               </v-card-text>
               <v-card-action>
                 <v-btn color="blue darken-1" block @click="submit">登録</v-btn>
-                <v-btn color="blue darken-1" text block @click="cancel"
-                  >リセット</v-btn
-                >
+                <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
               </v-card-action>
             </v-col>
-            <v-col cols="2"></v-col>
+            <v-col cols="2" />
           </v-row>
         </v-container>
       </v-card>
     </v-col>
-    <v-col cols="2"></v-col>
+    <v-col cols="2" />
   </v-row>
 </template>
 
 <script>
-// 電力登録をUIで増やして一気に登録させないようにする。
-// MyPageでエラー吐かせる。
-
 import axios from "axios";
 export default {
   data() {

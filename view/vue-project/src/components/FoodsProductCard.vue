@@ -12,7 +12,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="一日目の個数"
               ref="firstDayNum"
@@ -22,7 +22,7 @@
               outlined
               text
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="二日目の個数"
               ref="secondDayNum"
@@ -32,7 +32,7 @@
               outlined
               text
               required
-            ></v-text-field>
+            />
             <p align="left">
               調理するか
               <v-btn-toggle

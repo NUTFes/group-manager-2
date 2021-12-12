@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-col cols="1"></v-col>
+    <v-col cols="1" />
     <v-col cols="10">
       <v-card flat class="py-5">
         <v-card-title class="headline font-weight-bold">
@@ -15,7 +15,7 @@
                 v-model="email"
                 :rules="[rules.requied, rules.email]"
                 required
-              ></v-text-field>
+              />
               <v-text-field
                 label="パスワード"
                 v-model="password"
@@ -27,7 +27,7 @@
                 counter
                 @click:append="show_pass = !show_pass"
                 required
-              ></v-text-field>
+              />
             </v-form>
           </v-container>
         </v-card-text>
@@ -40,8 +40,9 @@
             tabindex="-1"
             class="ml-2"
             @click="cancel"
-            >パスワードを忘れた場合</v-btn
-          >
+            >
+            パスワードを忘れた場合
+          </v-btn>
           <v-btn
             color="btn"
             depressed
@@ -51,12 +52,14 @@
             rounded
             class="pl-4 font-weight-bold"
             @click="submit"
-            >ログイン<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn
-          >
+            >
+            ログイン
+            <v-icon class="ml-n1">mdi-menu-right</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
-    <v-col cols="1"></v-col>
+    <v-col cols="1" />
   </v-row>
 </template>
 

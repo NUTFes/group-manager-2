@@ -69,7 +69,7 @@
               text
               outlined
               required
-            ></v-textarea>
+            />
           </v-form>
         </v-card-text>
       </v-col>

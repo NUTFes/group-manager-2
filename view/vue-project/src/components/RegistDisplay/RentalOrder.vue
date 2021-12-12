@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-row v-for="(rental_order, i) in regist.rental_orders" :key="i">
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col>
         <v-card flat>
           <v-card-title>
             <v-icon class="pr-2" size="30">mdi-table-chair</v-icon>
             <b>物品申請情報{{ i + 1 }}</b>
-            <v-spacer></v-spacer>
+            <v-spacer />
 
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -38,7 +38,7 @@
                   text
                   v-bind="attrs"
                   v-on="on"
-                  @click="open_delete_dialog_item(rental_order.id)"
+                  @click="openDeleteDialogItem(rental_order.id)"
                   fab
                 >
                   <v-icon class="ma-5">mdi-delete</v-icon>
@@ -52,51 +52,43 @@
           <v-list>
             <v-list-item>
               <v-list-item-content>物品名</v-list-item-content>
-              <v-list-item-content v-if="rental_order.name == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                rental_order.name
-              }}</v-list-item-content>
+              <v-list-item-content v-if="rental_order.name == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ rental_order.name }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>数量</v-list-item-content>
-              <v-list-item-content v-if="rental_order.num == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                rental_order.num
-              }}</v-list-item-content>
+              <v-list-item-content v-if="rental_order.num == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ rental_order.num }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- 削除ダイアログ(物品申請) -->
-    <v-dialog v-model="delete_dialog_item" width="500">
+    <v-dialog v-model="deleteDialogItem" width="500">
       <v-card>
         <v-card-title class="main font-weight-bold">
           <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
-          <v-spacer></v-spacer>
-          <v-btn fab text class="my-n2" @click="delete_dialog_item = false">
+          <v-spacer />
+          <v-btn fab text class="my-n2" @click="deleteDialogItem = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-title> 削除してよろしいですか？ </v-card-title>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn depressed color="red" dark @click="delete_yes_item">
+          <v-spacer />
+          <v-btn depressed color="red" dark @click="deleteYesItem">
             はい
           </v-btn>
           <v-btn
             depressed
             color="blue"
             dark
-            @click="delete_dialog_item = false"
+            @click="deleteDialogItem = false"
           >
             いいえ
           </v-btn>
@@ -106,10 +98,10 @@
 
     <!--AddButton-->
     <v-row>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col cols="10">
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -128,7 +120,7 @@
           </v-tooltip>
         </v-card-actions>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!--Editmodal-->
@@ -139,33 +131,31 @@
       :itemId="this.rental_item_id"
       :num="this.num"
       @reload="reload"
-      @openRentalorderSnackbar="openRentalorderSnackbar"
-    >
-    </Rentalorder>
+      @openRentalOrderSnackbar="openRentalOrderSnackbar"
+    />
 
     <!--AddModal-->
     <AddRentalOrder
       ref="AddRentalOrderDlg"
       :groupId="this.regist.group.id"
       @reload="reload"
-      @openAddrentalorderSnackbar="openAddrentalorderSnackbar"
-    >
-    </AddRentalOrder>
+      @openAddRentalOrderSnackbar="openAddRentalOrderSnackbar"
+    />
 
     <!--Addsnackbar-->
-    <v-snackbar
-      top
-      text
-      color="purple accent-2"
-      v-model="addrentalorderSnackbar"
-    >
+    <v-snackbar top text color="purple accent-2" v-model="addRentalOrderSnackbar">
       物品申請情報を追加しました
     </v-snackbar>
 
     <!--Editsnackbar-->
-    <v-snackbar top text color="purple accent-2" v-model="rentalorderSnackbar">
+    <v-snackbar top text color="purple accent-2" v-model="rentalOrderSnackbar">
       物品申請情報を更新しました
     </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="deleteRentalOrderSnackbar">
+      物品申請情報を削除しました
+    </v-snackbar>
+
   </v-container>
 </template>
 
@@ -190,9 +180,7 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_item: false,
-      rentalOrderSnackbar: false,
-      addRentalOrderSnackbar: false,
+      deleteDialogItem: false,
       isEditRentalOrder: [],
       isAddRentalOrder: [],
       addRentalOrder: [],
@@ -202,21 +190,22 @@ export default {
 
   methods: {
     //削除メソッド(物品申請)
-    delete_yes_item() {
+    deleteYesItem() {
       const url =
         process.env.VUE_APP_URL + "/rental_orders/" + this.rental_order_id;
       axios.delete(url);
       this.reload();
-      this.delete_dialog_item = false;
+      this.deleteDialogItem = false;
+      this.deleteRentalOrderSnackbar = true;
     },
     reload() {
       this.$emit("reload");
     },
-    openRentalorderSnackbar() {
-      this.rentalorderSnackbar = true;
+    openRentalOrderSnackbar() {
+      this.rentalOrderSnackbar = true;
     },
-    openAddrentalorderSnackbar() {
-      this.addrentalorderSnackbar = true;
+    openAddRentalOrderSnackbar() {
+      this.addRentalOrderSnackbar = true;
     },
     openAddRentalOrderDisplay(id, group_id, name, num) {
       this.rental_order_id = id;
@@ -231,9 +220,9 @@ export default {
       this.num = num;
       this.$refs.rentalorderDlg.isDisplay = true;
     },
-    open_delete_dialog_item(id) {
+    openDeleteDialogItem(id) {
       this.rental_order_id = id;
-      this.delete_dialog_item = true;
+      this.deleteDialogItem = true;
     },
   },
 

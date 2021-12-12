@@ -3,17 +3,17 @@
     <Header />
     <v-container align="center">
       <v-row>
-        <v-col cols="2"></v-col>
+        <v-col cols="2" />
         <v-col cols="8">
           <v-card flat>
             <v-row>
-              <v-col cols="1"></v-col>
+              <v-col cols="1" />
               <v-col cols="10">
                 <br />
                 <v-card-title><h2>ユーザーの詳細を登録</h2></v-card-title>
                 <br />
                 <v-row>
-                  <v-col cols="2"></v-col>
+                  <v-col cols="2" />
                   <v-col cols="8">
                     <v-text-field
                       label="学籍番号８桁"
@@ -25,7 +25,7 @@
                       counter="8"
                       filled
                       clearable
-                    ></v-text-field>
+                    />
                     <br />
                     <v-text-field
                       label="TEL"
@@ -37,7 +37,7 @@
                       persistent-hint
                       filled
                       clearable
-                    ></v-text-field>
+                    />
                     <br />
                     <v-select
                       v-model.number="department_id"
@@ -48,7 +48,7 @@
                       item-value="id"
                       outlined
                       clearable
-                    ></v-select>
+                    />
                     <br />
                     <v-select
                       v-model.number="grade_id"
@@ -59,31 +59,29 @@
                       item-value="id"
                       outlined
                       clearable
-                    ></v-select>
+                    />
                   </v-col>
-                  <v-col cols="2"></v-col>
+                  <v-col cols="2" />
                 </v-row>
                 <v-row>
-                  <v-col cols="2"></v-col>
+                  <v-col cols="2" />
                   <v-col cols="8">
                     <v-card-actions>
-                      <v-btn large block color="primary" @click="register"
-                        >登録</v-btn
-                      >
+                      <v-btn large block color="primary" @click="register">登録</v-btn>
                     </v-card-actions>
                     <v-card-actions>
                       <v-btn large block text @click="reset">クリア</v-btn>
                     </v-card-actions>
                   </v-col>
-                  <v-col cols="2"></v-col>
+                  <v-col cols="2" />
                 </v-row>
                 <br />
               </v-col>
-              <v-col cols="1"></v-col>
+              <v-col cols="1" />
             </v-row>
           </v-card>
         </v-col>
-        <v-col cols="2"></v-col>
+        <v-col cols="2" />
       </v-row>
     </v-container>
   </div>

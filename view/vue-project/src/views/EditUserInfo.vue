@@ -1,11 +1,11 @@
 <template>
   <v-row justify="center">
-    <v-col cols="2"></v-col>
+    <v-col cols="2" />
     <v-col cols="8">
       <v-card flat>
         <v-container class="justify-content-center">
           <v-row>
-            <v-col cols="2"></v-col>
+            <v-col cols="2" />
             <v-col cols="8" align="center">
               <v-card-title class="justify-center">
                 <h1 style="color: #333333">ユーザー情報変更</h1>
@@ -21,7 +21,7 @@
                     :rules="[rules.requied]"
                     outlined
                     clearable
-                  ></v-text-field>
+                  />
                   <br />
                   <v-text-field
                     label="メールアドレス"
@@ -29,7 +29,7 @@
                     :rules="[rules.requied, rules.email]"
                     outlined
                     clearable
-                  ></v-text-field>
+                  />
                   <br />
                   <v-text-field
                     label="学籍番号８桁"
@@ -39,7 +39,7 @@
                     counter="8"
                     outlined
                     clearable
-                  ></v-text-field>
+                  />
                   <br />
                   <v-text-field
                     label="TEL"
@@ -50,7 +50,7 @@
                     persistent-hint
                     outlined
                     clearable
-                  ></v-text-field>
+                  />
                   <br />
                   <v-select
                     label="学科"
@@ -61,7 +61,7 @@
                     item-value="id"
                     :menu-props="{ top: true, offsetY: true }"
                     outlined
-                  ></v-select>
+                  />
                   <br />
                   <v-select
                     label="学年"
@@ -72,24 +72,20 @@
                     item-value="id"
                     :menu-props="{ top: true, offsetY: true }"
                     outlined
-                  ></v-select>
+                  />
                 </v-form>
               </v-card-text>
               <v-card-action>
-                <v-btn color="btn" dark block rounded depressed @click="submit"
-                  >登録</v-btn
-                >
-                <v-btn color="btn" text block rounded to="/mypage"
-                  >マイページに戻る</v-btn
-                >
+                <v-btn color="btn" dark block rounded depressed @click="submit">登録</v-btn>
+                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
               </v-card-action>
             </v-col>
-            <v-col cols="2"></v-col>
+            <v-col cols="2" />
           </v-row>
         </v-container>
       </v-card>
     </v-col>
-    <v-col cols="2"></v-col>
+    <v-col cols="2" />
   </v-row>
 </template>
 

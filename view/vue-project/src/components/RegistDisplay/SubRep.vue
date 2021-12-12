@@ -4,7 +4,7 @@
       <v-card-title>
         <v-icon class="pr-2" size="30">mdi-account-multiple</v-icon>
         <b>副代表情報</b>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -31,75 +31,51 @@
           :tel="regist.sub_rep.tel"
           :email="regist.sub_rep.email"
           @reload="reload"
-          @openSubrepSnackbar="openSubrepSnackbar"
-        >
-        </SubRep>
+          @openSubRepSnackbar="openSubRepSnackbar"
+        />
 
-        <v-snackbar top text color="purple accent-2" v-model="subrepSnackbar">
+        <v-snackbar top text color="purple accent-2" v-model="subRepSnackbar">
           副代表情報を更新しました
         </v-snackbar>
+
       </v-card-title>
       <hr />
 
       <v-list>
         <v-list-item>
           <v-list-item-content>氏名</v-list-item-content>
-          <v-list-item-content v-if="regist.sub_rep.name == -9999"
-            >未登録</v-list-item-content
-          >
-          <v-list-item-content v-else>{{
-            regist.sub_rep.name
-          }}</v-list-item-content>
+          <v-list-item-content v-if="regist.sub_rep.name == -9999">未登録</v-list-item-content>
+          <v-list-item-content v-else>{{ regist.sub_rep.name }}</v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider />
         <v-list-item>
           <v-list-item-content>学籍番号</v-list-item-content>
-          <v-list-item-content v-if="regist.sub_rep.student_id == -9999"
-            >未登録</v-list-item-content
-          >
-          <v-list-item-content v-else>{{
-            regist.sub_rep.student_id
-          }}</v-list-item-content>
+          <v-list-item-content v-if="regist.sub_rep.student_id == -9999">未登録</v-list-item-content>
+          <v-list-item-content v-else>{{ regist.sub_rep.student_id }}</v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider />
         <v-list-item>
           <v-list-item-content>学科</v-list-item-content>
-          <v-list-item-content v-if="regist.sub_rep.department_id == -9999"
-            >未登録</v-list-item-content
-          >
-          <v-list-item-content v-else>{{
-            regist.sub_rep.department_id
-          }}</v-list-item-content>
+          <v-list-item-content v-if="regist.sub_rep.department_id == -9999">未登録</v-list-item-content>
+          <v-list-item-content v-else>{{ regist.sub_rep.department_id }}</v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider />
         <v-list-item>
           <v-list-item-content>学年</v-list-item-content>
-          <v-list-item-content v-if="regist.sub_rep.grade_id == -9999"
-            >未登録</v-list-item-content
-          >
-          <v-list-item-content v-else>{{
-            regist.sub_rep.grade_id
-          }}</v-list-item-content>
+          <v-list-item-content v-if="regist.sub_rep.grade_id == -9999">未登録</v-list-item-content>
+          <v-list-item-content v-else>{{ regist.sub_rep.grade_id }}</v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider />
         <v-list-item>
           <v-list-item-content>電話番号</v-list-item-content>
-          <v-list-item-content v-if="regist.sub_rep.tel == -9999"
-            >未登録</v-list-item-content
-          >
-          <v-list-item-content v-else>{{
-            regist.sub_rep.tel
-          }}</v-list-item-content>
+          <v-list-item-content v-if="regist.sub_rep.tel == -9999">未登録</v-list-item-content>
+          <v-list-item-content v-else>{{ regist.sub_rep.tel }}</v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider />
         <v-list-item>
           <v-list-item-content>メールアドレス</v-list-item-content>
-          <v-list-item-content v-if="regist.sub_rep.email == -9999"
-            >未登録</v-list-item-content
-          >
-          <v-list-item-content v-else>{{
-            regist.sub_rep.email
-          }}</v-list-item-content>
+          <v-list-item-content v-if="regist.sub_rep.email == -9999">未登録</v-list-item-content>
+          <v-list-item-content v-else>{{ regist.sub_rep.email }}</v-list-item-content>
         </v-list-item>
       </v-list>
     </v-card>
@@ -125,8 +101,6 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_subrep: false,
-      subrepSnackbar: false,
       isEditSubRep: [],
     };
   },
@@ -135,8 +109,8 @@ export default {
       this.$refs.subRepDlg.isDisplay = true;
     },
     //編集後Snackbar
-    openSubrepSnackbar() {
-      this.subrepSnackbar = true;
+    openSubRepSnackbar() {
+      this.subRepSnackbar = true;
     },
     reload() {
       this.$emit("reload");

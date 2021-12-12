@@ -2,16 +2,16 @@
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color: #eceff1; font-size: 30px">
-        <v-icon class="pr-3" size="35">mdi-power-plug</v-icon
-        ><b>電力申請の登録情報を修正する</b>
-        <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-icon class="pr-3" size="35">mdi-power-plug</v-icon>
+        <b>電力申請の登録情報を修正する</b>
+        <v-spacer />
+        <v-btn text fab @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container class="justify-content-center">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8" align="center">
             <v-card-text>
               <v-form ref="form">
@@ -22,7 +22,7 @@
                   text
                   outlined
                   required
-                ></v-text-field>
+                />
                 <v-text-field
                   label="電力量"
                   v-model="power"
@@ -31,7 +31,7 @@
                   text
                   outlined
                   required
-                ></v-text-field>
+                />
                 <v-text-field
                   label="メーカー"
                   v-model="manufacturer"
@@ -39,7 +39,7 @@
                   text
                   outlined
                   required
-                ></v-text-field>
+                />
                 <v-text-field
                   label="型番"
                   v-model="model"
@@ -47,7 +47,7 @@
                   text
                   outlined
                   required
-                ></v-text-field>
+                />
                 <v-text-field
                   label="製品URL"
                   v-model="url"
@@ -55,20 +55,18 @@
                   text
                   outlined
                   required
-                ></v-text-field>
+                />
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
               <v-col cols="4">
-                <v-btn color="blue darken-1" large block dark @click="submit"
-                  >編集する</v-btn
-                >
+                <v-btn color="blue darken-1" large block dark @click="submit">編集する</v-btn>
               </v-col>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
             </v-row>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>
@@ -90,7 +88,6 @@ export default {
   data() {
     return {
       isDisplay: false,
-      groups: [],
       rules: {
         required: (value) => !!value || "入力してください",
         max: (value) => value <= 1000 || "大きすぎます",
@@ -133,24 +130,6 @@ export default {
         }
       );
     },
-  },
-
-  mounted() {
-    const groupUrl = process.env.VUE_APP_URL + "/groups";
-    axios
-      .get(groupUrl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(
-        (response) => {
-          this.groups = response.data;
-        },
-        (error) => {
-          return error;
-        }
-      );
   },
 };
 </script>
