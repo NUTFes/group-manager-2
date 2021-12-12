@@ -1,21 +1,29 @@
-class Api::V1::UsersController < ApplicationController
+class UsersController < ApplicationController
   # before_action :authenticate_api_user!
+  before_action :set_user, only: [:show, :update, :destroy]
 
   def index
     @users = User.all
-    render json: @users, status: 200
+    render json: fmt(ok, @users)
   end
   
   def show
+    render json: fmt(ok, @user)
+  end
+
+  def get_current_user
     @user = current_api_user
-    render json: { data: @user }
+    render json: fmt(ok, @user)
   end
 
   def update
-    @user = User.find(params[:id])
-    role_id = params[:role_id]
-    @user.update(role_id: role_id)
-    render json: @user
+    @user.update(user_params)
+    render json: fmt(ok, @user)
+  end
+
+  def destroy
+    @user.destroy
+    render json: fmt(ok)
   end
 
   def show_user_detail
@@ -103,6 +111,14 @@ class Api::V1::UsersController < ApplicationController
   end
 
   private
+
+    def set_user
+      @user = User.find(params[:id])
+    end
+
+    def user_params
+      params.permit(:name, :email, :role_id)
+    end
   
     def edit_user_info_params
       params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
