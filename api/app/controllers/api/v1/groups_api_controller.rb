@@ -1,11 +1,91 @@
 class Api::V1::GroupsApiController < ApplicationController
 
-  def tests
-    @groups = Group.with_purchase_lists
+  def get_group_with_categories
+    @groups = Group.with_group_categories
     render json: fmt(ok, @groups)
   end
 
-  def test
+  def get_group_with_category
+    @group = Group.with_group_category(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_sub_reps
+    @groups = Group.with_sub_reps
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_sub_rep
+    @group = Group.with_sub_rep(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_place_orders
+    @groups = Group.with_place_orders
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_place_order
+    @group = Group.with_place_order(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_stage_orders
+    @groups = Group.with_stage_orders
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_stage_order
+    @group = Group.with_stage_order(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_stage_common_options
+    @groups = Group.with_stage_common_options
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_stage_common_option
+    @group = Group.with_stage_common_option(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_power_orders
+    @groups = Group.with_power_orders
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_power_order
+    @group = Group.with_power_order(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_rental_orders
+    @groups = Group.with_rental_orders
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_rental_order
+    @group = Group.with_rental_order(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_employees
+    @groups = Group.with_employees
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_employee
+    @group = Group.with_employee(params[:id])
+    render json: fmt(ok, @group)
+  end
+
+  def get_group_with_food_products
+    @groups = Group.with_food_products
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_food_product
     @group = Group.with_food_product(params[:id])
     render json: fmt(ok, @group)
   end
