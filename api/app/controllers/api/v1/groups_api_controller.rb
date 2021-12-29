@@ -1,5 +1,15 @@
 class Api::V1::GroupsApiController < ApplicationController
 
+  def tests
+    @groups = Group.with_purchase_lists
+    render json: fmt(ok, @groups)
+  end
+
+  def test
+    @group = Group.with_food_product(params[:id])
+    render json: fmt(ok, @group)
+  end
+
   def get_group_name
     # 参加団体の名前を取得する
     groups = Group.all
