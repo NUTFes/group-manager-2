@@ -5,9 +5,13 @@ services:
     container_name: 'GM2-DB'
     environment:
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_USER: root
+      MYSQL_USER: group-manager-2 # テスト的にユーザーを作ってみる
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     command: --default-authentication-plugin=mysql_native_password
+    restart: 'always'
     volumes:
       - mysql-data:/var/lib/mysql
     tty: true
