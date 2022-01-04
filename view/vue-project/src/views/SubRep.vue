@@ -2,11 +2,11 @@
   <v-form>
     <v-container>
       <v-row>
-        <v-col cols="2"></v-col>
+        <v-col cols="2" />
         <v-col cols="8">
           <v-card>
             <v-row>
-              <v-col cols="2"></v-col>
+              <v-col cols="2" />
               <v-col cols="8">
                 <h1>副代表の詳細登録画面</h1>
 
@@ -23,14 +23,13 @@
                   item-text="name"
                   item-value="id"
                   outlined
-                ></v-select>
+                />
                 <v-text-field
                   label="名前"
                   background-color="white"
                   v-model="name"
                   clearable
-                ></v-text-field>
-
+                />
                 <v-text-field
                   label="学籍番号"
                   background-color="white"
@@ -42,8 +41,7 @@
                   item-value="id"
                   counter="8"
                   clearable
-                ></v-text-field>
-
+                />
                 <v-select
                   label="学科"
                   v-model.number="department_id"
@@ -52,8 +50,7 @@
                   item-text="name"
                   item-value="id"
                   clearable
-                ></v-select>
-
+                />
                 <v-select
                   label="学年"
                   v-model.number="grade_id"
@@ -62,8 +59,7 @@
                   item-text="name"
                   item-value="id"
                   clearable
-                ></v-select>
-
+                />
                 <v-text-field
                   label="TEL"
                   background-color="white"
@@ -73,30 +69,29 @@
                   persistent-hint
                   counter="11"
                   clearable
-                ></v-text-field>
-
+                />
                 <v-text-field
                   label="EMAIL"
                   background-color="white"
                   v-model="email"
                   clearable
-                ></v-text-field>
+                />
               </v-col>
-              <v-col cols="2"></v-col>
+              <v-col cols="2" />
             </v-row>
             <v-row>
-              <v-col cols="2"></v-col>
+              <v-col cols="2" />
               <v-col cols="8">
                 <v-card-action>
                   <v-btn text color="blue darken-1" @click="reset">削除</v-btn>
                   <v-btn color="blue darken-1" @click="register">登録</v-btn>
                 </v-card-action>
               </v-col>
-              <v-col cols="2"></v-col>
+              <v-col cols="2" />
             </v-row>
           </v-card>
         </v-col>
-        <v-col cols="2"></v-col>
+        <v-col cols="2" />
       </v-row>
     </v-container>
   </v-form>

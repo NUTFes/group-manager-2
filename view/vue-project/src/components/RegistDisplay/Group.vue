@@ -2,7 +2,7 @@
   <v-container>
     <v-card-title>
       <v-icon class="pr-2" size="30">mdi-account-group</v-icon><b>団体情報</b>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <v-tooltip top>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -28,53 +28,38 @@
         :activity="regist.group.activity"
         @reload="reload"
         @openGroupSnackbar="openGroupSnackbar"
-      ></Group>
+      />
 
       <v-snackbar top text color="purple accent-2" v-model="groupSnackbar">
         参加団体情報を更新しました
       </v-snackbar>
+
     </v-card-title>
     <hr />
 
     <v-list>
       <v-list-item>
         <v-list-item-content>団体名</v-list-item-content>
-        <v-list-item-content v-if="regist.sub_rep.name == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.group.name
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.sub_rep.name == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.group.name }}</v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list-item>
         <v-list-item-content>企画名</v-list-item-content>
-        <v-list-item-content v-if="regist.group.project_name == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.group.project_name
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.group.project_name == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.group.project_name }}</v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list-item>
         <v-list-item-content>カテゴリー</v-list-item-content>
-        <v-list-item-content v-if="regist.group_category == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.group_category
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.group_category == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.group_category }}</v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list-item>
         <v-list-item-content>活動内容</v-list-item-content>
-        <v-list-item-content v-if="regist.group.activity == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.group.activity
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.group.activity == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.group.activity }}</v-list-item-content>
       </v-list-item>
     </v-list>
   </v-container>
@@ -100,7 +85,6 @@ export default {
         localStorage.getItem("uid"),
       ],
       delete_dialog: false,
-      groupSnackbar: false,
       isEditGroup: [],
     };
   },

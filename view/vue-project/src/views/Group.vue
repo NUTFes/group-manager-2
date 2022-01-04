@@ -1,17 +1,17 @@
 <template>
   <div>
     <v-row justify="center">
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
       <v-col cols="8">
         <v-card flat>
           <v-container class="justify-content-center">
             <v-row>
-              <v-col cols="1"></v-col>
+              <v-col cols="1" />
               <v-col cols="10" align="center">
                 <v-card-title class="justify-center font-weight-bold">
                   参加団体登録
                 </v-card-title>
-                <v-divider></v-divider>
+                <v-divider />
                 <v-card-text>
                   <v-form ref="form">
                     <v-text-field
@@ -22,7 +22,7 @@
                       text
                       outlined
                       required
-                    ></v-text-field>
+                    />
                     <v-select
                       label="カテゴリ"
                       ref="groupCategory"
@@ -36,7 +36,7 @@
                       item-text="name"
                       item-value="id"
                       outlined
-                    ></v-select>
+                    />
                     <v-textarea
                       label="活動内容"
                       ref="activity"
@@ -46,7 +46,7 @@
                       text
                       outlined
                       required
-                    ></v-textarea>
+                    />
                     <v-text-field
                       label="企画名"
                       ref="projectName"
@@ -55,10 +55,10 @@
                       text
                       outlined
                       required
-                    ></v-text-field>
+                    />
                   </v-form>
                 </v-card-text>
-                <v-divider class="mb-8"></v-divider>
+                <v-divider class="mb-8" />
                 <v-card-actions>
                   <v-btn
                     color="btn"
@@ -68,10 +68,11 @@
                     tabindex="1"
                     class="pr-4 font-weight-bold"
                     to="/MyPage"
-                    ><v-icon class="pr-n1">mdi-menu-left</v-icon
-                    >マイページに戻る</v-btn
-                  >
-                  <v-spacer></v-spacer>
+                    >
+                    <v-icon class="pr-n1">mdi-menu-left</v-icon>
+                    マイページに戻る
+                  </v-btn>
+                  <v-spacer />
                   <v-btn
                     color="btn"
                     rounded
@@ -81,16 +82,18 @@
                     tabindex="0"
                     class="pl-4 font-weight-bold"
                     @click="submit"
-                    >登録<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn
-                  >
+                    >
+                    登録
+                    <v-icon class="ml-n1">mdi-menu-right</v-icon>
+                  </v-btn>
                 </v-card-actions>
-                <v-col cols="1"></v-col>
+                <v-col cols="1" />
               </v-col>
             </v-row>
           </v-container>
         </v-card>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
     </v-row>
   </div>
 </template>

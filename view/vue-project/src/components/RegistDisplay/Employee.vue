@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <v-row v-for="(employee, i) in regist.employees" :key="i">
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col>
         <v-card v-if="employee.name == -9999"></v-card>
         <v-card v-else flat>
           <v-card-title>
             <v-icon class="pr-2" size="30">mdi-account</v-icon>
             <b>従業員 {{ i + 1 }}</b>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -38,7 +38,7 @@
                   text
                   v-bind="attrs"
                   v-on="on"
-                  @click="open_delete_dialog_employee(employee.id)"
+                  @click="openDeleteDialogEmployee(employee.id)"
                   fab
                   ><v-icon class="ma-5">mdi-delete</v-icon>
                 </v-btn>
@@ -52,41 +52,39 @@
               <v-list-item-content>名前</v-list-item-content>
               <v-list-item-content>{{ employee.name }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>学籍番号</v-list-item-content>
-              <v-list-item-content>{{
-                employee.student_id
-              }}</v-list-item-content>
+              <v-list-item-content>{{ employee.student_id }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- 削除ダイアログ(従業員) -->
-    <v-dialog v-model="delete_dialog_employee" width="500">
+    <v-dialog v-model="deleteDialogEmployee" width="500">
       <v-card>
         <v-card-title class="main font-weight-bold">
           <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
-          <v-spacer></v-spacer>
-          <v-btn fab text class="my-n2" @click="delete_dialog_employee = false">
+          <v-spacer />
+          <v-btn fab text class="my-n2" @click="deleteDialogEmployee = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-title> 削除してよろしいですか？ </v-card-title>
-        <v-divider></v-divider>
+        <v-card-title>削除してよろしいですか？</v-card-title>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn depressed color="red" dark @click="delete_yes_employee">
+          <v-spacer />
+          <v-btn depressed color="red" dark @click="deleteYesEmployee">
             はい
           </v-btn>
           <v-btn
             depressed
             color="blue"
             dark
-            @click="delete_dialog_employee = false"
+            @click="deleteDialogEmployee = false"
           >
             いいえ
           </v-btn>
@@ -96,7 +94,7 @@
 
     <!--AddButtom -->
     <v-row>
-      <v-col cols="10"></v-col>
+      <v-col cols="10" />
       <v-col cols="1">
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
@@ -116,7 +114,7 @@
           <span>従業員申請を追加する</span>
         </v-tooltip>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!--EditModal-->
@@ -128,23 +126,28 @@
       :name="this.name"
       @reload="reload"
       @openEmployeeSnackbar="openEmployeeSnackbar"
-    ></Employee>
+    />
 
     <!--AddModal-->
     <Addemployee
       ref="addemployeeDlg"
       :groupId="this.regist.group.id"
       @reload="reload"
-      @openAddemployeeSnackbar="openAddemployeeSnackbar"
-    ></Addemployee>
+      @openAddEmployeeSnackbar="openAddEmployeeSnackbar"
+    />
 
     <v-snackbar top text color="purple accent-2" v-model="employeeSnackbar">
       従業員情報を更新しました
     </v-snackbar>
 
-    <v-snackbar top text color="purple accent-2" v-model="addemployeeSnackbar">
+    <v-snackbar top text color="purple accent-2" v-model="addEmployeeSnackbar">
       従業員情報を追加しました
     </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="deleteEmployeeSnackbar">
+      従業員情報を削除しました
+    </v-snackbar>
+
   </v-container>
 </template>
 
@@ -169,9 +172,7 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_employee: false,
-      employeeSnackbar: false,
-      addEmployeeSnackbar: false,
+      deleteDialogEmployee: false,
       addEmployee: [],
       isEditEmployee: [],
       employee_id: [],
@@ -181,12 +182,12 @@ export default {
     };
   },
   methods: {
-    //削除メソッド(従業員申請)
-    delete_yes_employee() {
+    deleteYesEmployee() {
       const url = process.env.VUE_APP_URL + "/employees/" + this.employee_id;
       axios.delete(url);
       this.reload();
-      this.delete_dialog_employee = false;
+      this.deleteDialogEmployee = false;
+      this.deleteEmployeeSnackbar = true;
     },
     reload() {
       this.$emit("reload");
@@ -194,8 +195,8 @@ export default {
     openEmployeeSnackbar() {
       this.employeeSnackbar = true;
     },
-    openAddemployeeSnackbar() {
-      this.addemployeeSnackbar = true;
+    openAddEmployeeSnackbar() {
+      this.addEmployeeSnackbar = true;
     },
     openEmployeeDisplay(id, group_id, name, student_id) {
       this.employee_id = id;
@@ -207,9 +208,9 @@ export default {
     openAddemployeeDisplay() {
       this.$refs.addemployeeDlg.isDisplay = true;
     },
-    open_delete_dialog_employee(id) {
+    openDeleteDialogEmployee(id) {
       this.employee_id = id;
-      this.delete_dialog_employee = true;
+      this.deleteDialogEmployee = true;
     },
   },
 

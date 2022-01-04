@@ -4,12 +4,8 @@
       <v-col cols="12" align="center">
         <v-card-text>
           <v-form ref="form">
-            <v-text v-if="isSunny == true" class="font-weight-bold">
-              晴れ
-            </v-text>
-            <v-text v-if="isSunny == false" class="font-weight-bold">
-              雨
-            </v-text>
+            <v-text v-if="isSunny == true" class="font-weight-bold">晴れ</v-text>
+            <v-text v-if="isSunny == false" class="font-weight-bold">雨</v-text>
             <v-divider class="mb-8" />
             <v-select
               label="何日目か"
@@ -22,7 +18,7 @@
               :rules="[rules.required]"
               clearable
               outlined
-            ></v-select>
+            />
             <v-select
               label="第一希望場所"
               ref="stageFirst"
@@ -35,7 +31,7 @@
               outlined
               required
               @change="selectSecondStageList"
-            ></v-select>
+            />
             <v-select
               label="第二希望場所"
               ref="stageSecond"
@@ -47,10 +43,10 @@
               clearable
               outlined
               required
-            ></v-select>
+            />
             <v-radio-group v-model="radio">
-              <v-radio label="時間幅で申請" :value="1"></v-radio>
-              <v-radio label="時刻で申請" :value="2"></v-radio>
+              <v-radio label="時間幅で申請" :value="1" />
+              <v-radio label="時刻で申請" :value="2" />
             </v-radio-group>
             <div v-if="radio == 1">
               <v-select
@@ -61,7 +57,7 @@
                 clearable
                 outlined
                 required
-              ></v-select>
+              />
               <v-select
                 label="使用時間幅"
                 ref="stageSecond"
@@ -71,7 +67,7 @@
                 clearable
                 outlined
                 required
-              ></v-select>
+              />
               <v-select
                 label="掃除時間幅"
                 ref="stageSecond"
@@ -81,7 +77,7 @@
                 clearable
                 outlined
                 required
-              ></v-select>
+              />
             </div>
             <div v-if="radio == 2">
               <p align="left">
@@ -98,7 +94,6 @@
                   manual-input
                 />
               </p>
-
               <p align="left">
                 パフォーマンス開始時刻
                 <vue-timepicker
@@ -113,7 +108,6 @@
                   manual-input
                 />
               </p>
-
               <p align="left">
                 パフォーマンス終了時刻
                 <vue-timepicker

@@ -1,14 +1,14 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
       <v-col>
         <DashBoard />
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
     </v-row>
     <v-row>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
       <v-col cols="8">
         <v-row>
           <v-col>
@@ -21,7 +21,7 @@
               <Regist :num="i" :regist="regist" @reload="reload()" />
               <v-container>
                 <v-row>
-                  <v-col cols="4"></v-col>
+                  <v-col cols="4" />
                   <v-col cols="4">
                     <v-btn
                       v-if="
@@ -38,22 +38,22 @@
                       elevation="0"
                       @click="set_group_id(regist.group.id)"
                     >
-                      <v-icon class="pr-2 pb-1">mdi-baguette</v-icon
-                      >{{ regist.group.name }}の販売食品を追加する
+                      <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>
+                      {{ regist.group.name }}の販売食品を追加する
                     </v-btn>
                   </v-col>
-                  <v-col cols="4"></v-col>
+                  <v-col cols="4" />
                 </v-row>
               </v-container>
             </div>
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
     </v-row>
     <v-container>
       <v-row>
-        <v-col cols="4"></v-col>
+        <v-col cols="4" />
         <v-col cols="4">
           <v-btn
             v-if="isRegistGroup"
@@ -67,7 +67,7 @@
             <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
           </v-btn>
         </v-col>
-        <v-col cols="4"></v-col>
+        <v-col cols="4" />
       </v-row>
     </v-container>
     <br />

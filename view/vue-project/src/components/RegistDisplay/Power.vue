@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <v-row v-for="(power_order, i) in regist.power_orders" :key="i">
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col>
-        <v-card v-if="power_order.item == -9999"></v-card>
+        <v-card v-if="power_order.item == -9999" />
         <v-card v-else flat>
           <v-card-title>
             <v-icon class="pr-2" size="30">mdi-power-plug</v-icon>
             <b>製品 {{ i + 1 }}</b>
-            <v-spacer></v-spacer>
+            <v-spacer />
 
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -43,7 +43,7 @@
                   text
                   v-bind="attrs"
                   v-on="on"
-                  @click="open_delete_dialog_power(power_order.id)"
+                  @click="openDeleteDialogPower(power_order.id)"
                   fab
                   ><v-icon class="ma-5">mdi-delete</v-icon>
                 </v-btn>
@@ -58,42 +58,38 @@
               <v-list-item-content>製品名</v-list-item-content>
               <v-list-item-content>{{ power_order.item }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
-              <v-list-item-content>電力量</v-list-item-content>
+              <v-list-item-content>最大定格電力量</v-list-item-content>
               <v-list-item-content>{{ power_order.power }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>メーカー</v-list-item-content>
-              <v-list-item-content>{{
-                power_order.manufacturer
-              }}</v-list-item-content>
+              <v-list-item-content>{{ power_order.manufacturer }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>型番</v-list-item-content>
               <v-list-item-content>{{ power_order.model }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>URL</v-list-item-content>
-              <v-list-item-content>{{
-                power_order.item_url
-              }}</v-list-item-content>
+              <v-list-item-content>{{ power_order.item_url }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!--AddButtom -->
     <v-row>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col cols="10">
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -113,32 +109,32 @@
           </v-tooltip>
         </v-card-actions>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- 削除ダイアログ(電力申請) -->
-    <v-dialog v-model="delete_dialog_power" width="500">
+    <v-dialog v-model="deleteDialogPower" width="500">
       <v-card class="mx-auto">
         <v-card-title class="main font-weight-bold">
           <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
-          <v-spacer></v-spacer>
-          <v-btn fab text class="my-n2" @click="delete_dialog_power = false">
+          <v-spacer />
+          <v-btn fab text class="my-n2" @click="deleteDialogPower = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
 
         <v-card-title> 削除してよろしいですか？ </v-card-title>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn depressed color="red" dark @click="delete_yes_power">
+          <v-spacer />
+          <v-btn depressed color="red" dark @click="deleteYesPower">
             はい
           </v-btn>
           <v-btn
             depressed
             color="blue"
             dark
-            @click="delete_dialog_power = false"
+            @click="deleteDialogPower = false"
           >
             いいえ
           </v-btn>
@@ -158,23 +154,28 @@
       :url="this.url"
       @reload="reload"
       @openPowerSnackbar="openPowerSnackbar"
-    ></Power>
+    />
 
     <!--AddModal-->
     <Addpower
       ref="addpowerDlg"
       :groupId="this.regist.group.id"
       @reload="reload"
-      @openAddpowerSnackbar="openAddpowerSnackbar"
-    ></Addpower>
+      @openAddPowerSnackbar="openAddPowerSnackbar"
+    />
 
     <v-snackbar top text color="purple accent-2" v-model="powerSnackbar">
       電力申請情報を更新しました
     </v-snackbar>
 
-    <v-snackbar top text color="purple accent-2" v-model="addpowerSnackbar">
+    <v-snackbar top text color="purple accent-2" v-model="addPowerSnackbar">
       電力申請情報を追加しました
     </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="deletePowerSnackbar">
+      電力申請情報を削除しました
+    </v-snackbar>
+
   </v-container>
 </template>
 
@@ -199,9 +200,7 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_power: false,
-      powerSnackbar: false,
-      addpowerSnackbar: false,
+      deleteDialogPower: false,
       isEditPowerOrder: [],
       addPowerOrder: [],
       power_order_id: [],
@@ -215,12 +214,13 @@ export default {
   },
   methods: {
     //削除メソッド
-    delete_yes_power() {
+    deleteYesPower() {
       const url =
         process.env.VUE_APP_URL + "/power_orders/" + this.power_order_id;
       axios.delete(url);
       this.reload();
-      this.delete_dialog_power = false;
+      this.deleteDialogPower = false;
+      this.deletePowerSnackbar = true;
     },
     //リロード
     reload() {
@@ -231,7 +231,7 @@ export default {
       this.powerSnackbar = true;
     },
     //追加後Snackkbar
-    openAddpowerSnackbar() {
+    openAddPowerSnackbar() {
       this.addPowerSnackbar = true;
     },
     //編集のコンポーネントに関するプロップス
@@ -250,9 +250,9 @@ export default {
       this.$refs.addpowerDlg.isDisplay = true;
     },
     //削除用のメソッドのプロップス
-    open_delete_dialog_power(id) {
+    openDeleteDialogPower(id) {
       this.power_order_id = id;
-      this.delete_dialog_power = true;
+      this.deleteDialogPower = true;
     },
   },
 

@@ -6,14 +6,14 @@
       <v-divider />
       <v-card-text>
         <v-row>
-          <v-col cols="3"></v-col>
+          <v-col cols="3" />
           <v-col cols="3">
             <v-select
               v-model="purchaseSteps"
               :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
               label="購入品数"
               outlined
-            ></v-select>
+            />
           </v-col>
           <v-col cols="6"><v-card-text>個の購入品を登録</v-card-text></v-col>
         </v-row>
@@ -45,7 +45,7 @@
                 :key="purchaseStep"
               />
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn
                   rounded
                   text
@@ -86,13 +86,14 @@
               color="btn"
               @click="submit"
               >完了
-            </v-btn></v-col
-          ></v-row
-        >
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-col>
   </v-row>
 </template>
+
 <script>
 import PurchaseCard from "@/components/PurchaseCard";
 export default {

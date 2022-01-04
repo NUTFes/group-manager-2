@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <v-row v-for="(purchase_list, i) in regist.purchase_lists" :key="i">
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col>
-        <v-card v-if="purchase_list.food_product == -9999"></v-card>
+        <v-card v-if="purchase_list.food_product == -9999" />
         <v-card v-else flat>
           <v-card-title>
             <v-icon class="pr-2" size="30">mdi-cart</v-icon>
             <b>購入品情報{{ i + 1 }}</b>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -43,7 +43,7 @@
                   text
                   v-bind="attrs"
                   v-on="on"
-                  @click="open_delete_dialog_purchase(purchase_list.id)"
+                  @click="openDeleteDialogPurchase(purchase_list.id)"
                   fab
                   ><v-icon class="ma-5">mdi-delete</v-icon>
                 </v-btn>
@@ -55,85 +55,63 @@
           <v-list>
             <v-list-item>
               <v-list-item-content>購入品名</v-list-item-content>
-              <v-list-item-content v-if="purchase_list.item == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                purchase_list.item
-              }}</v-list-item-content>
+              <v-list-item-content v-if="purchase_list.item == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ purchase_list.item }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>使用目的製品</v-list-item-content>
-              <v-list-item-content v-if="purchase_list.food_product == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                purchase_list.food_product
-              }}</v-list-item-content>
+              <v-list-item-content v-if="purchase_list.food_product == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ purchase_list.food_product }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>生鮮食品</v-list-item-content>
-              <v-list-item-content v-if="purchase_list.is_fresh == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else-if="purchase_list.is_fresh === true"
-                >はい</v-list-item-content
-              >
-              <v-list-item-content v-else-if="purchase_list.is_fresh === false"
-                >いいえ</v-list-item-content
-              >
+              <v-list-item-content v-if="purchase_list.is_fresh == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else-if="purchase_list.is_fresh === true">はい</v-list-item-content>
+              <v-list-item-content v-else-if="purchase_list.is_fresh === false">いいえ</v-list-item-content>
               <v-list-item-content v-else>その他</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>購入店舗</v-list-item-content>
-              <v-list-item-content v-if="purchase_list.shop == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                purchase_list.shop
-              }}</v-list-item-content>
+              <v-list-item-content v-if="purchase_list.shop == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ purchase_list.shop }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>使用日</v-list-item-content>
-              <v-list-item-content v-if="purchase_list.fes_date == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                purchase_list.fes_date
-              }}</v-list-item-content>
+              <v-list-item-content v-if="purchase_list.fes_date == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ purchase_list.fes_date }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- 削除ダイアログ(購入品) -->
-    <v-dialog v-model="delete_dialog_purchase" width="500">
+    <v-dialog v-model="deleteDialogPurchase" width="500">
       <v-card class="mx-auto">
         <v-card-title class="main font-weight-bold">
           <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
-          <v-spacer></v-spacer>
-          <v-btn fab text class="my-n2" @click="delete_dialog_purchase = false">
+          <v-spacer />
+          <v-btn fab text class="my-n2" @click="deleteDialogPurchase = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-title> 削除してよろしいですか？ </v-card-title>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn depressed color="red" dark @click="delete_yes_purchase">
+          <v-spacer />
+          <v-btn depressed color="red" dark @click="deleteYesPurchase">
             はい
           </v-btn>
           <v-btn
             depressed
             color="blue"
             dark
-            @click="delete_dialog_purchase = false"
+            @click="deleteDialogPurchase = false"
           >
             いいえ
           </v-btn>
@@ -143,10 +121,10 @@
 
     <!--AddButtom -->
     <v-row>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col cols="10">
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -166,7 +144,7 @@
           </v-tooltip>
         </v-card-actions>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- EditModal -->
@@ -181,21 +159,31 @@
       :fesDateId="this.fes_date_id"
       :isFresh="this.is_fresh"
       @reload="reload"
+      @openPurchaseListSnackbar="openPurchaseListSnackbar"
       @getFoodProducts="getFoodProducts"
-    ></PurchaseList>
+    />
 
     <!-- AddModal -->
     <AddPurchaseList
       ref="AddPurchaseListDlg"
       :groupId="this.regist.group.id"
       @reload="reload"
-      @openPurchaselistSnackbar="openPurchaselistSnackbar"
+      @openAddPurchaseListSnackbar="openAddPurchaseListSnackbar"
       @getFoodProducts="getFoodProducts"
-    ></AddPurchaseList>
+    />
 
-    <v-snackbar top text color="purple accent-2" v-model="PurchaselistSnackbar">
+    <v-snackbar top text color="purple accent-2" v-model="purchaseListSnackbar">
       購入品情報を更新しました
     </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="addPurchaseListSnackbar">
+      購入品情報を追加しました
+    </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="deletePurchaseListSnackbar">
+      購入品情報を削除しました
+    </v-snackbar>
+
   </v-container>
 </template>
 
@@ -220,8 +208,7 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_purchase: false,
-      PurchaselistSnackbar: false,
+      deleteDialogPurchase: false,
       isEditPurchaseList: [],
       addPurchaseList: [],
       purchase_list_id: [],
@@ -236,12 +223,13 @@ export default {
   },
   methods: {
     //削除メソッド(購入品)
-    delete_yes_purchase() {
+    deleteYesPurchase() {
       const url =
         process.env.VUE_APP_URL + "/purchase_lists/" + this.purchase_list_id;
       axios.delete(url);
       this.reload();
-      this.delete_dialog_purchase = false;
+      this.deleteDialogPurchase = false;
+      this.deletePurchaseListSnackbar = true;
     },
     reload() {
       this.$emit("reload");
@@ -290,11 +278,14 @@ export default {
       // })
     },
     openPurchaseListSnackbar() {
-      this.PurchaselistSnackbar = true;
+      this.purchaseListSnackbar = true;
     },
-    open_delete_dialog_purchase(id) {
+    openAddPurchaseListSnackbar() {
+      this.addPurchaseListSnackbar = true;
+    },
+    openDeleteDialogPurchase(id) {
       this.purchase_list_id = id;
-      this.delete_dialog_purchase = true;
+      this.deleteDialogPurchase = true;
     },
   },
 

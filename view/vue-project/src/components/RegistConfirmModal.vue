@@ -2,15 +2,16 @@
   <v-dialog v-model="isDisplay" persistent width="1200">
     <v-card flat>
       <v-card-title style="background-color: #eceff1; font-size: 30px">
-        <v-icon class="pr-3" size="35">mdi-account-group</v-icon><b>団体登録</b>
-        <v-spacer></v-spacer>
-        <v-btn text @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-icon class="pr-3" size="35">mdi-account-group</v-icon>
+        <b>団体登録</b>
+        <v-spacer />
+        <v-btn text @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container>
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8">
             <v-form ref="form">
               <v-text-field
@@ -21,7 +22,7 @@
                 text
                 outlined
                 required
-              ></v-text-field>
+              />
               <v-select
                 label="カテゴリ"
                 ref="groupCategory"
@@ -35,7 +36,7 @@
                 item-text="name"
                 item-value="id"
                 outlined
-              ></v-select>
+              />
               <v-textarea
                 label="活動内容"
                 ref="activity"
@@ -45,7 +46,7 @@
                 text
                 outlined
                 required
-              ></v-textarea>
+              />
               <v-text-field
                 label="企画名"
                 ref="projectName"
@@ -54,15 +55,13 @@
                 text
                 outlined
                 required
-              ></v-text-field>
+              />
             </v-form>
             <v-btn color="blue darken-1" block dark @click="submit">登録</v-btn>
-            <v-btn color="blue darken-1" text block @click="cancel"
-              >リセット</v-btn
-            >
+            <v-btn color="blue darken-1" text block @click="cancel">リセット</v-btn>
             <br />
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>

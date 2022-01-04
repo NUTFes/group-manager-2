@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-col cols="1"></v-col>
+    <v-col cols="1" />
     <v-col cols="10">
       <v-card flat class="py-5">
         <v-card-title class="headline font-weight-bold">
@@ -16,14 +16,14 @@
                 v-model="name"
                 :rules="[rules.requied]"
                 required
-              ></v-text-field>
+              />
               <v-text-field
                 label="メールアドレス"
                 ref="email"
                 v-model="email"
                 :rules="[rules.requied, rules.email]"
                 required
-              ></v-text-field>
+              />
               <v-text-field
                 label="パスワード"
                 ref="password"
@@ -35,7 +35,7 @@
                 counter
                 @click:append="show_pass = !show_pass"
                 required
-              ></v-text-field>
+              />
               <v-text-field
                 label="パスワードの再入力"
                 ref="password_confirmation"
@@ -49,7 +49,7 @@
                 counter
                 @click:append="show_pass_confirmation = !show_pass_confirmation"
                 required
-              ></v-text-field>
+              />
             </v-form>
           </v-container>
           <v-card-actions class="pt-10 pb-3">
@@ -62,13 +62,15 @@
               rounded
               class="pl-4 font-weight-bold"
               @click="submit"
-              >登録<v-icon class="ml-n1">mdi-menu-right</v-icon></v-btn
-            >
+              >
+              登録
+              <v-icon class="ml-n1">mdi-menu-right</v-icon>
+            </v-btn>
           </v-card-actions>
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col cols="1"></v-col>
+    <v-col cols="1" />
   </v-row>
 </template>
 

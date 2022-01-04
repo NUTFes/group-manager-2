@@ -2,16 +2,16 @@
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color: #eceff1; font-size: 30px">
-        <v-icon class="pr-3" size="35">mdi-power-plug</v-icon
-        ><b>従業員の登録情報を追加する</b>
-        <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-icon class="pr-3" size="35">mdi-power-plug</v-icon>
+        <b>従業員の登録情報を追加する</b>
+        <v-spacer />
+        <v-btn text fab @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container class="justify-content-center">
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8" align="center">
             <v-card-text>
               <v-form ref="form">
@@ -22,7 +22,7 @@
                   outlined
                   required
                   clearable
-                ></v-text-field>
+                />
                 <v-text-field
                   label="学籍番号"
                   v-model="student_id"
@@ -32,20 +32,18 @@
                   outlined
                   required
                   clearable
-                ></v-text-field>
+                />
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
               <v-col cols="4">
-                <v-btn color="blue darken-1" large block dark @click="submit"
-                  >追加する</v-btn
-                >
+                <v-btn color="blue darken-1" large block dark @click="submit">追加する</v-btn>
               </v-col>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
             </v-row>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>
@@ -83,7 +81,7 @@ export default {
           console.log(response.status);
           this.isDisplay = false;
           this.$emit("reload");
-          this.$emit("openAddemployeeSnackbar");
+          this.$emit("openAddEmployeeSnackbar");
           this.name = [];
           this.student_id = [];
         },

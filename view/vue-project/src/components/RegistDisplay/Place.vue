@@ -30,53 +30,38 @@
           :remark="regist.place_order.remark"
           @reload="reload"
           @openPlaceSnackbar="openPlaceSnackbar"
-        ></Place>
+        />
 
         <v-snackbar top text color="purple accent-2" v-model="placeSnackbar">
           会場申請情報を更新しました
         </v-snackbar>
+
       </v-card-title>
       <hr />
 
       <v-card-text v-if="regist.first_place_order == -9999">未登録</v-card-text>
       <v-list-item>
         <v-list-item-content>第1志望</v-list-item-content>
-        <v-list-item-content v-if="regist.first_place_order == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.first_place_order
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.first_place_order == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.first_place_order }}</v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list-item>
         <v-list-item-content>第2志望</v-list-item-content>
-        <v-list-item-content v-if="regist.second_place_order == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.second_place_order
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.second_place_order == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.second_place_order }}</v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list-item>
         <v-list-item-content>第3志望</v-list-item-content>
-        <v-list-item-content v-if="regist.third_place_order == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.third_place_order
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.third_place_order == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.third_place_order }}</v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider />
       <v-list-item>
         <v-list-item-content>備考</v-list-item-content>
-        <v-list-item-content v-if="regist.place_order == -9999"
-          >未登録</v-list-item-content
-        >
-        <v-list-item-content v-else>{{
-          regist.place_order.remark
-        }}</v-list-item-content>
+        <v-list-item-content v-if="regist.place_order == -9999">未登録</v-list-item-content>
+        <v-list-item-content v-else>{{ regist.place_order.remark }}</v-list-item-content>
       </v-list-item>
     </v-card>
   </v-container>
@@ -101,8 +86,6 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_place: false,
-      placeSnackbar: false,
       isEditPlace: [],
     };
   },

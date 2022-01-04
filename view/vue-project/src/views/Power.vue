@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-row justify="space-around">
-      <v-col cols="5"></v-col>
+      <v-col cols="5" />
       <v-col cols="2">
         <h1>電力登録</h1>
         <v-select
@@ -9,7 +9,7 @@
           :items="[1, 2, 3, 4, 5]"
           label="登録製品数"
           outlined
-        ></v-select>
+        />
         <v-select
           label="団体"
           ref="group"
@@ -23,12 +23,12 @@
           item-text="name"
           item-value="id"
           outlined
-        ></v-select>
+        />
       </v-col>
-      <v-col cols="5"></v-col>
+      <v-col cols="5" />
     </v-row>
     <v-row>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
       <v-col cols="8">
         <v-stepper v-model="e1" :vertical="true">
           <v-stepper-header>
@@ -60,7 +60,7 @@
         </v-stepper>
         <v-btn color="blue darken-1" block @click="all_submit">登録</v-btn>
       </v-col>
-      <v-col cols="2"></v-col>
+      <v-col cols="2" />
     </v-row>
   </v-card>
 </template>

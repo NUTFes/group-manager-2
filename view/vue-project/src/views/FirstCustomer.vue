@@ -48,9 +48,7 @@
             <v-col cols="12">
               <v-card>
                 <v-img contain src="@/assets/omocha.jpg">
-                  <v-card-title class="cardtitle"
-                    >科学のおもちゃ箱</v-card-title
-                  >
+                  <v-card-title class="cardtitle">科学のおもちゃ箱</v-card-title>
                 </v-img>
               </v-card>
             </v-col>

@@ -2,16 +2,16 @@
   <v-dialog v-model="isDisplay" persistent width="1000">
     <v-card flat>
       <v-card-title style="background-color: #eceff1; font-size: 30px">
-        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon
-        ><b>販売食品情報追加</b>
-        <v-spacer></v-spacer>
-        <v-btn text fab @click="isDisplay = false"
-          ><v-icon>mdi-close</v-icon></v-btn
-        >
+        <v-icon class="pr-3" size="35">mdi-map-marker</v-icon>
+        <b>販売食品情報追加</b>
+        <v-spacer />
+        <v-btn text fab @click="isDisplay = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-container>
         <v-row>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
           <v-col cols="8" align="center">
             <v-card-text>
               <v-form ref="form">
@@ -22,8 +22,7 @@
                   background-color="white"
                   outlined
                   clearable
-                >
-                </v-text-field>
+                />
                 <v-select
                   class="body-1"
                   label="調理の有無"
@@ -34,8 +33,7 @@
                   background-color="white"
                   outlined
                   clearable
-                >
-                </v-select>
+                />
                 <v-text-field
                   class="body-1"
                   label="1日目の個数"
@@ -44,8 +42,7 @@
                   outlined
                   clearable
                   type="number"
-                >
-                </v-text-field>
+                />
                 <v-text-field
                   class="body-1"
                   label="2日目の個数"
@@ -54,21 +51,18 @@
                   outlined
                   clearable
                   type="number"
-                >
-                </v-text-field>
+                />
               </v-form>
             </v-card-text>
             <v-row>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
               <v-col cols="4">
-                <v-btn color="blue darken-1" large block dark @click="register"
-                  >編集する</v-btn
-                >
+                <v-btn color="blue darken-1" large block dark @click="register">編集する</v-btn>
               </v-col>
-              <v-col cols="4"></v-col>
+              <v-col cols="4" />
             </v-row>
           </v-col>
-          <v-col cols="2"></v-col>
+          <v-col cols="2" />
         </v-row>
       </v-container>
     </v-card>
@@ -83,7 +77,6 @@ export default {
   data() {
     return {
       isDisplay: false,
-      food_products: [],
       groups: [],
       dialog: false,
       Group: [],
@@ -97,29 +90,7 @@ export default {
       ],
     };
   },
-  mounted() {
-    axios
-      .get(process.env.VUE_APP_URL + "/api/v1/get_food_products", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.food_products = response.data;
-      });
-  },
   methods: {
-    reload: function () {
-      axios
-        .get(process.env.VUE_APP_URL + "/api/v1/get_food_products", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.food_products = response.data;
-        });
-    },
     register: function () {
       axios.defaults.headers.common["Content-Type"] = "application/json";
       let params = new URLSearchParams();
@@ -134,6 +105,7 @@ export default {
           console.log(response);
           this.isDisplay = false;
           this.$emit("reload");
+          this.$emit("openAddFoodProductSnackbar");
           this.Group = "";
           this.productName = "";
           this.isCooking = "";

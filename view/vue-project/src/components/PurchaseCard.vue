@@ -14,7 +14,7 @@
               item-value="id"
               clearable
               outlined
-            ></v-select>
+            />
             <v-text-field
               label="購入物"
               ref="item"
@@ -23,7 +23,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <p align="left">
               生ものか
               <v-btn-toggle
@@ -48,7 +48,7 @@
               item-text="name"
               item-value="id"
               outlined
-            ></v-select>
+            />
             <v-select
               label="購入日"
               v-model.number="fesDateId"

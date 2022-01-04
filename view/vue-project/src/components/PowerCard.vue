@@ -13,7 +13,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="電力量（ワット）"
               ref="power"
@@ -23,7 +23,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="メーカー"
               ref="manufacturer"
@@ -32,7 +32,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="型番"
               ref="model"
@@ -41,7 +41,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
             <v-text-field
               label="製品URL"
               ref="itemUrl"
@@ -50,7 +50,7 @@
               text
               outlined
               required
-            ></v-text-field>
+            />
           </v-form>
         </v-card-text>
       </v-col>

@@ -1,13 +1,13 @@
 <template>
   <v-container>
     <v-row v-for="(food_product, i) in regist.food_products" :key="i">
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col>
         <v-card flat>
           <v-card-title>
             <v-icon class="pr-2" size="30">mdi-baguette</v-icon>
             <b>販売食品情報{{ i + 1 }}</b>
-            <v-spacer></v-spacer>
+            <v-spacer />
 
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -41,7 +41,7 @@
                   text
                   v-bind="attrs"
                   v-on="on"
-                  @click="open_delete_dialog_food(food_product.id)"
+                  @click="openDeleteDialogFood(food_product.id)"
                   fab
                   ><v-icon class="ma-5">mdi-delete</v-icon>
                 </v-btn>
@@ -53,77 +53,57 @@
           <v-list>
             <v-list-item>
               <v-list-item-content>商品名</v-list-item-content>
-              <v-list-item-content v-if="food_product.name == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                food_product.name
-              }}</v-list-item-content>
+              <v-list-item-content v-if="food_product.name == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ food_product.name }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>1日目の個数</v-list-item-content>
-              <v-list-item-content v-if="food_product.first_day_num == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                food_product.first_day_num
-              }}</v-list-item-content>
+              <v-list-item-content v-if="food_product.first_day_num == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ food_product.first_day_num }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>2日目の個数</v-list-item-content>
-              <v-list-item-content v-if="food_product.second_day_num == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                food_product.second_day_num
-              }}</v-list-item-content>
+              <v-list-item-content v-if="food_product.second_day_num == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else>{{ food_product.second_day_num }}</v-list-item-content>
             </v-list-item>
-            <v-divider></v-divider>
+            <v-divider />
             <v-list-item>
               <v-list-item-content>調理の有無</v-list-item-content>
-              <v-list-item-content v-if="food_product.is_cooking == -9999"
-                >未登録</v-list-item-content
-              >
-              <v-list-item-content v-else-if="food_product.is_cooking == true"
-                >調理する</v-list-item-content
-              >
-              <v-list-item-content v-else-if="food_product.is_cooking == false"
-                >調理しない</v-list-item-content
-              >
-              <v-list-item-content v-else>{{
-                food_product.is_cooking
-              }}</v-list-item-content>
+              <v-list-item-content v-if="food_product.is_cooking == -9999">未登録</v-list-item-content>
+              <v-list-item-content v-else-if="food_product.is_cooking == true">調理する</v-list-item-content>
+              <v-list-item-content v-else-if="food_product.is_cooking == false">調理しない</v-list-item-content>
+              <v-list-item-content v-else>{{ food_product.is_cooking }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- 削除ダイアログ(販売食品) -->
-    <v-dialog v-model="delete_dialog_food" width="500">
+    <v-dialog v-model="deleteDialogFood" width="500">
       <v-card class="mx-auto">
         <v-card-title class="main font-weight-bold">
           <v-icon class="pr-2" size="30">mdi-delete</v-icon>削除
-          <v-spacer></v-spacer>
-          <v-btn fab text class="my-n2" @click="delete_dialog_food = false">
+          <v-spacer />
+          <v-btn fab text class="my-n2" @click="deleteDialogFood = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-title> 削除してよろしいですか？ </v-card-title>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn depressed color="red" dark @click="delete_yes_food">
+          <v-spacer />
+          <v-btn depressed color="red" dark @click="deleteYesFood">
             はい
           </v-btn>
           <v-btn
             depressed
             color="blue"
             dark
-            @click="delete_dialog_food = false"
+            @click="deleteDialogFood = false"
           >
             いいえ
           </v-btn>
@@ -133,10 +113,10 @@
 
     <!--AddButtom -->
     <v-row>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
       <v-col cols="10">
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -156,7 +136,7 @@
           </v-tooltip>
         </v-card-actions>
       </v-col>
-      <v-col cols="1"></v-col>
+      <v-col cols="1" />
     </v-row>
 
     <!-- AddModal -->
@@ -164,8 +144,8 @@
       ref="AddFoodProductDlg"
       :groupId="this.regist.group.id"
       @reload="reload"
-    >
-    </AddFoodProduct>
+      @openAddFoodProductSnackbar="openAddFoodProductSnackbar"
+    />
 
     <!--EditModal-->
     <Foodproduct
@@ -177,13 +157,21 @@
       :secondN="this.second_day_num"
       :cooking="this.is_cooking"
       @reload="reload"
-      @openFoodproductSnackbar="openFoodproductSnackbar"
-    >
-    </Foodproduct>
+      @openFoodProductSnackbar="openFoodProductSnackbar"
+    />
 
-    <v-snackbar top text color="purple accent-2" v-model="foodproductSnackbar">
+    <v-snackbar top text color="purple accent-2" v-model="foodProductSnackbar">
       販売食品情報を更新しました
     </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="addFoodProductSnackbar">
+      販売食品情報を追加しました
+    </v-snackbar>
+
+    <v-snackbar top text color="purple accent-2" v-model="deleteFoodProductSnackbar">
+      販売食品情報を削除しました
+    </v-snackbar>
+
   </v-container>
 </template>
 
@@ -208,8 +196,7 @@ export default {
         localStorage.getItem("client"),
         localStorage.getItem("uid"),
       ],
-      delete_dialog_food: false,
-      foodproductSnackbar: false,
+      deleteDialogFood: false,
       isEditFoodproduct: [],
       addFoodProduct: [],
       food_product_id: [],
@@ -222,19 +209,23 @@ export default {
   },
   methods: {
     //削除メソッド(販売食品)
-    delete_yes_food() {
+    deleteYesFood() {
       const url =
         process.env.VUE_APP_URL + "/food_products/" + this.food_product_id;
       axios.delete(url);
       this.reload();
-      this.delete_dialog_food = false;
+      this.deleteDialogFood = false;
+      this.deleteFoodProductSnackbar = true;
     },
     reload() {
       this.$emit("reload");
     },
     //編集後Snackbar
-    openFoodproductSnackbar() {
-      this.foodproductSnackbar = true;
+    openFoodProductSnackbar() {
+      this.foodProductSnackbar = true;
+    },
+    openAddFoodProductSnackbar() {
+      this.addFoodProductSnackbar = true;
     },
     openAddFoodProductDisplay() {
       this.$refs.AddFoodProductDlg.isDisplay = true;
@@ -255,9 +246,9 @@ export default {
       this.is_cooking = is_cooking;
       this.$refs.foodproductDlg.isDisplay = true;
     },
-    open_delete_dialog_food(id) {
+    openDeleteDialogFood(id) {
       this.food_product_id = id;
-      this.delete_dialog_food = true;
+      this.deleteDialogFood = true;
     },
   },
 
