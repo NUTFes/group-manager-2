@@ -69,6 +69,25 @@ Rails.application.routes.draw do
       get "get_groups" => "groups_api#get_groups"
       get "get_group/:id" => "groups_api#get_group"
       get "get_group_detail/:id" => "groups_api#get_group_detail"
+      # --- 新規参加団体周りのAPI --- 
+      get "get_group_with_categories" => "groups_api#get_group_with_categories"
+      get "get_group_with_category" => "groups_api#get_group_with_category"
+      get "get_group_with_sub_reps" => "groups_api#get_group_with_sub_reps"
+      get "get_group_with_sub_rep" => "groups_api#get_group_with_sub_rep"
+      get "get_group_with_place_orders" => "groups_api#get_group_with_place_orders"
+      get "get_group_with_place_order" => "groups_api#get_group_with_place_order"
+      get "get_group_with_stage_orders" => "groups_api#get_group_with_stage_orders"
+      get "get_group_with_stage_order" => "groups_api#get_group_with_stage_order"
+      get "get_group_with_stage_common_options" => "groups_api#get_group_with_stage_common_options"
+      get "get_group_with_stage_common_option" => "groups_api#get_group_with_stage_common_option"
+      get "get_group_with_power_orders" => "groups_api#get_group_with_power_orders"
+      get "get_group_with_power_order" => "groups_api#get_group_with_power_order"
+      get "get_group_with_rental_orders" => "groups_api#get_group_with_rental_orders"
+      get "get_group_with_rental_order" => "groups_api#get_group_with_rental_order"
+      get "get_group_with_employees" => "groups_api#get_group_with_employees"
+      get "get_group_with_employee" => "groups_api#get_group_with_employee"
+      get "get_group_with_food_products" => "groups_api#get_group_with_food_products"
+      get "get_group_with_food_product" => "groups_api#get_group_with_food_product"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
@@ -117,6 +136,9 @@ Rails.application.routes.draw do
       get "get_print_items" => "print_api#get_print_items"
       get "get_print_powers" => "print_api#get_print_powers"
       get "get_print_address" => "print_api#get_print_address"
+
+      get "tests" => "groups_api#tests"
+      get "tests/:id" => "groups_api#test"
     end
   end
   namespace :api do
