@@ -3,11 +3,11 @@ class StockerPlacesController < ApplicationController
 
   def index
     @stocker_places = StockerPlace.all
-    render json: @stocker_places
+    render json: fmt(ok, @stocker_places)
   end
 
   def show
-    render json: @stocker_place
+    render json: fmt(ok, @tocker_place)
   end
 
   def create
@@ -17,13 +17,12 @@ class StockerPlacesController < ApplicationController
 
   def update
     @stocker_place.update(stocker_place_params)
-    render json: @stocker_place
+    render json: fmt(ok, @stocker_place)
   end
 
   def destroy
     @stocker_place.destroy
-    @stocker_places = StockerPlace.all
-    render json: @stocker_places
+    render json: fmt(ok, [], "Deleted stocker_place = "+params[:id])
   end
 
   private

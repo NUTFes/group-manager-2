@@ -5,13 +5,13 @@ class PlaceOrdersController < ApplicationController
   # GET /place_orders.json
   def index
     @place_orders = PlaceOrder.all
-    render json: @place_orders
+    render json: fmt(ok, @place_orders)
   end
 
   # GET /place_orders/1
   # GET /place_orders/1.json
   def show
-    render json: @place_order
+    render json: fmt(ok, @place_order)
   end
 
   # POST /place_orders
@@ -19,14 +19,14 @@ class PlaceOrdersController < ApplicationController
   def create
     @place_order = PlaceOrder.new(place_order_params)
     @place_order.save
-    render json: @place_order
+    render json: fmt(ok, @place_order)
   end
 
   # PATCH/PUT /place_orders/1
   # PATCH/PUT /place_orders/1.json
   def update
     @place_order.update(place_order_params)
-    render json: @place_order
+    render json: fmt(ok, @place_order)
   end
 
   # DELETE /place_orders/1

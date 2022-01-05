@@ -23,7 +23,7 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    render json: fmt(ok)
+    render json: fmt(ok, [], "Deleted user = "+params[:id])
   end
 
   def show_user_detail
@@ -67,7 +67,7 @@ class UsersController < ApplicationController
       tel: tel,
     }
 
-    render json: user_detail
+    render json: fmt(ok, user_detail)
   end
 
   def get_user_detail
@@ -87,7 +87,7 @@ class UsersController < ApplicationController
       
     }
 
-    render json: user_detail
+    render json: fmt(ok, user_detail)
   end
 
   def edit_user_info

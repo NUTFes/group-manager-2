@@ -5,13 +5,13 @@ class RentalOrdersController < ApplicationController
   # GET /rental_orders.json
   def index
     @rental_orders = RentalOrder.all
-    render json: @rental_orders
+    render json: fmt(ok, @rental_orders)
   end
 
   # GET /rental_orders/1
   # GET /rental_orders/1.json
   def show
-    render json: @rental_order
+    render json: fmt(ok, @rental_order)
   end
 
   # POST /rental_orders
@@ -19,22 +19,21 @@ class RentalOrdersController < ApplicationController
   def create
     @rental_order = RentalOrder.new(rental_order_params)
     @rental_order.save
-    render json: @rental_order
+    render json: fmt(ok, @rental_order)
   end
 
   # PATCH/PUT /rental_orders/1
   # PATCH/PUT /rental_orders/1.json
   def update
     @rental_order.update(rental_order_params)
-    render json: @rental_order
+    render json: fmt(ok, @rental_order)
   end
 
   # DELETE /rental_orders/1
   # DELETE /rental_orders/1.json
   def destroy
     @rental_order.destroy
-    @rental_orders = RentalOrder.all
-    render json: @rental_orders
+    render json: fmt(ok, [], "Deleted rental_order = "+params[:id]) 
   end
 
   private

@@ -3,11 +3,11 @@ class RentalItemAllowListsController < ApplicationController
 
   def index
     @rental_item_allow_lists = RentalItemAllowList.all
-    render json: @rental_item_allow_lists
+    render json: fmt(ok, @rental_item_allow_lists)
   end
 
   def show
-    render json: @rental_item_allow_list
+    render json: fmt(ok, @rental_item_allow_list)
   end
 
   def create

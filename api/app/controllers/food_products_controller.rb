@@ -5,13 +5,13 @@ class FoodProductsController < ApplicationController
   # GET /food_products.json
   def index
     @food_products = FoodProduct.all
-    render json: @food_products
+    render json: fmt(ok, @food_products)
   end
 
   # GET /food_products/1
   # GET /food_products/1.json
   def show
-    render json: @food_product
+    render json: fmt(ok, @food_product)
   end
 
   # POST /food_products

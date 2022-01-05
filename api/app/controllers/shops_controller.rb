@@ -3,11 +3,11 @@ class ShopsController < ApplicationController
 
   def index
     @shops = Shop.all
-    render json: @shops
+    render json: fmt(ok, @shops)
   end
 
   def show
-    render json: @shop
+    render json: fmt(ok, @shop)
   end
 
   def create

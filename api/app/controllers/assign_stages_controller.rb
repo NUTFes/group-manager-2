@@ -5,13 +5,13 @@ class AssignStagesController < ApplicationController
   # GET /assign_stages.json
   def index
     @assign_stages = AssignStage.all
-    render json: @assign_stages
+    render json: fmt(ok, @assign_stages)
   end
 
   # GET /assign_stages/1
   # GET /assign_stages/1.json
   def show
-    render json: @assign_stage
+    render json: fmt(ok, @assign_stage)
   end
 
   # POST /assign_stages

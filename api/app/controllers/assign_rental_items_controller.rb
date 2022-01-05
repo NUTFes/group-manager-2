@@ -5,13 +5,13 @@ class AssignRentalItemsController < ApplicationController
   # GET /assign_rental_items.json
   def index
     @assign_rental_items = AssignRentalItem.all
-    render json: @assign_rental_items
+    render json: fmt(ok, @assign_rental_items)
   end
 
   # GET /assign_rental_items/1
   # GET /assign_rental_items/1.json
   def show
-    render json: @assign_rental_item
+    render json: fmt(ok, @assign_rental_item)
   end
 
   # POST /assign_rental_items
@@ -19,14 +19,14 @@ class AssignRentalItemsController < ApplicationController
   def create
     @assign_rental_item = AssignRentalItem.new(assign_rental_item_params)
     @assign_rental_item.save
-    render json: @assign_rental_item
+    render json: fmt(ok, @assign_rental_item)
   end
 
   # PATCH/PUT /assign_rental_items/1
   # PATCH/PUT /assign_rental_items/1.json
   def update
     @assign_rental_item.update(assign_rental_item_params)
-    render json: @assign_rental_item
+    render json: fmt(ok, @assign_rental_item)
   end
 
   # DELETE /assign_rental_items/1

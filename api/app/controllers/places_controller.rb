@@ -3,22 +3,22 @@ class PlacesController < ApplicationController
 
   def index
     @places = Place.all
-    render json: @places
+    render json: fmt(ok, @places)
   end
 
   def show
-    render json: @place
+    render json: fmt(ok, @place)
   end
 
   def create
     @place = Place.new(place_params)
     @place.save
-    render json: @place
+    render json: fmt(ok, @place)
   end
 
   def update
     @place.update(place_params)
-    render json: @place
+    render json: fmt(ok, @place)
   end
 
   # DELETE /place_orders/1

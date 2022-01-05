@@ -5,13 +5,13 @@ class EmployeesController < ApplicationController
   # GET /employees.json
   def index
     @employees = Employee.all
-    render json: @employees
+    render json: fmt(ok, @employees)
   end
 
   # GET /employees/1
   # GET /employees/1.json
   def show
-    render json: @employee
+    render json: fmt(ok, @employee)
   end
 
   # POST /employees

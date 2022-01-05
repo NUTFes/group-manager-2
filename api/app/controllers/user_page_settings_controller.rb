@@ -5,13 +5,13 @@ class UserPageSettingsController < ApplicationController
   # GET /user_page_settings.json
   def index
     @user_page_settings = UserPageSetting.all
-    render json: @user_page_settings
+    render json: fmt(ok, @user_page_settings)
   end
 
   # GET /user_page_settings/1
   # GET /user_page_settings/1.json
   def show
-    render json: @user_page_setting
+    render json: fmt(ok, @user_page_setting)
   end
 
   # POST /user_page_settings
@@ -19,14 +19,14 @@ class UserPageSettingsController < ApplicationController
   def create
     @user_page_setting = UserPageSetting.new(user_page_setting_params)
     @user_page_setting.save
-    render json: @user_page_setting
+    render json: fmt(ok, @user_page_setting)
   end
 
   # PATCH/PUT /user_page_settings/1
   # PATCH/PUT /user_page_settings/1.json
   def update
     @user_page_setting.update(user_page_setting_params)
-    render json: @user_page_setting
+    render json: fmt(ok, @user_page_setting)
   end
 
   # DELETE /user_page_settings/1

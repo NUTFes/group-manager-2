@@ -3,28 +3,27 @@ class FesYearsController < ApplicationController
 
   def index
     @fes_years = FesYear.all
-    render json: @fes_years
+    render json: fmt(ok, @fes_years)
   end
 
   def show
-    render json: @fes_year
+    render json: fmt(ok, @fes_year)
   end
 
   def create
     @fes_year = FesYear.new(fes_year_params)
     @fes_year.save
-    render json: @fes_year
+    render json: fmt(ok, @fes_year)
   end
 
   def update
     @fes_year.update(fes_year_params)
-    render json: @fes_year
+    render json: fmt(ok, @fes_year)
   end
 
   def destroy
     @fes_year.destroy
-    @fes_years = FesYear.all
-    render json: @fes_years
+    render json: fmt(ok, [], "Deleted fes_year = "+params[:id])
   end
 
   private

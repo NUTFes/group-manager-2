@@ -3,22 +3,22 @@ class RentalItemsController < ApplicationController
 
   def index
     @rental_items = RentalItem.all
-    render json: @rental_items
+    render json: fmt(ok, @rental_items)
   end
 
   def show
-    render json: @rental_item
+    render json: fmt(ok, @rental_item)
   end
 
   def create
     @rental_item = RentalItem.new(rental_item_params)
     @rental_item.save
-    render json: @rental_item
+    render json: fmt(ok, @rental_item)
   end
 
   def update
     @rental_item.update(rental_item_params)
-    render json: @rental_item
+    render json: fmt(ok, @rental_item)
   end
 
   def destroy

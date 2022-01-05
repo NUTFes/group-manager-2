@@ -3,22 +3,22 @@ class GroupCategoriesController < ApplicationController
 
   def index
     @group_categories = GroupCategory.all
-    render json: @group_categories
+    render json: fmt(ok, @group_categories)
   end
 
   def show
-    render json: @group_category
+    render json: fmt(ok, @group_category)
   end
 
   def create
     @group_category = Group.new(group_category_params)
     @group_category.save
-    render json: @group_category
+    render json: fmt(ok, @group_category)
   end
 
   def update
     @group.update(group_category_params)
-    render json: @group_category
+    render json: fmt(ok, @group_category)
   end
 
   def destroy

@@ -5,13 +5,13 @@ class PowerOrdersController < ApplicationController
   # GET /power_orders.json
   def index
     @power_orders = PowerOrder.all
-    render json: @power_orders
+    render json: fmt(ok, @power_orders)
   end
 
   # GET /power_orders/1
   # GET /power_orders/1.json
   def show
-    render json: @power_order
+    render json: fmt(ok, @power_order)
   end
 
   # POST /power_orders
@@ -19,14 +19,14 @@ class PowerOrdersController < ApplicationController
   def create
     @power_order = PowerOrder.new(power_order_params)
     @power_order.save
-    render json: @power_order
+    render json: fmt(ok, @power_order)
   end
 
   # PATCH/PUT /power_orders/1
   # PATCH/PUT /power_orders/1.json
   def update
     @power_order.update(power_order_params)
-    render json: @power_order
+    render json: fmt(ok, @power_order)
   end
 
   # DELETE /power_orders/1

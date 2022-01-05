@@ -3,11 +3,11 @@ class StagesController < ApplicationController
 
   def index
     @stages = Stage.all
-    render json: @stages
+    render json: fmt(ok, @stages)
   end
 
   def show
-     render json: @stage
+     render json: fmt(ok, @stage)
   end
 
   def create

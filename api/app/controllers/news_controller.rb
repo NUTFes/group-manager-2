@@ -5,13 +5,13 @@ class NewsController < ApplicationController
   # GET /news.json
   def index
     @news = News.all.order(id: "DESC")
-    render json: @news
+    render json: fmt(ok, @news)
   end
 
   # GET /news/1
   # GET /news/1.json
   def show
-    render json: @news
+    render json: fmt(ok, @news)
   end
 
   # POST /news

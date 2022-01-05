@@ -5,13 +5,13 @@ class PurchaseListsController < ApplicationController
   # GET /purchase_lists.json
   def index
     @purchase_lists = PurchaseList.all
-    render json: @purchase_lists
+    render json: fmt(ok, @purchase_lists)
   end
 
   # GET /purchase_lists/1
   # GET /purchase_lists/1.json
   def show
-    render json: @purchase_list
+    render json: fmt(ok, @purchase_list)
   end
 
   # POST /purchase_lists

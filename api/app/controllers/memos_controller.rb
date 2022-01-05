@@ -13,13 +13,13 @@ class MemosController < ApplicationController
         user: user
       }
     end
-    render json: memo_list
+    render json: fmt(ok, memo_list)
   end
 
   # GET /memos/1
   # GET /memos/1.json
   def show
-    render json: @memo
+    render json: fmt(ok, @memo)
   end
 
   # POST /memos
@@ -36,7 +36,7 @@ class MemosController < ApplicationController
         user: user
       }
     end
-    render json: memo_list
+    render json: fmt(ok, memo_list)
     # render json: @memos
   end
 
@@ -53,7 +53,7 @@ class MemosController < ApplicationController
         user: user
       }
     end
-    render json: memo_list
+    render json: fmt(ok, memo_list)
     # render json: @memos
   end
 

@@ -5,13 +5,13 @@ class RentableItemsController < ApplicationController
   # GET /rentable_items.json
   def index
     @rentable_items = RentableItem.all
-    render json: @rentable_items
+    render json: fmt(ok, @rentable_items)
   end
 
   # GET /rentable_items/1
   # GET /rentable_items/1.json
   def show
-    render json: @rentable_item
+    render json: fmt(ok, @rentable_item)
   end
 
   # POST /rentable_items
