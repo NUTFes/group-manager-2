@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_group
       # groupのIDのgroupが存在するかを確認
-      if Group.is_exists?(params[:id])
+      if Group.exists?(params[:id])
         @group = Group.find(params[:id])
       else
         # なければnot found

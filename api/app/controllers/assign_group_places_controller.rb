@@ -17,26 +17,32 @@ class AssignGroupPlacesController < ApplicationController
   # POST /assign_group_places
   # POST /assign_group_places.json
   def create
-    @assign_group_place = AssignGroupPlace.new(assign_group_place_params)
-    @assign_group_place.save
+    @assign_group_place = AssignGroupPlace.create(assign_group_place_params)
+    render json: fmt(created, @assign_group_place)
   end
 
   # PATCH/PUT /assign_group_places/1
   # PATCH/PUT /assign_group_places/1.json
   def update
     @assign_group_place.update(assign_group_place_params)
+    render json: fmt(created, @assign_group_place, "Updeted assign_group_place id = "+params[:id])
   end
 
   # DELETE /assign_group_places/1
   # DELETE /assign_group_places/1.json
   def destroy
     @assign_group_place.destroy
+    render json: fmt(ok, [], "Deleted assign_group_place = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_assign_group_place
-      @assign_group_place = AssignGroupPlace.find(params[:id])
+      if AssignGroupPlace.exists?(params[:id])
+        @assign_group_place = AssignGroupPlace.find(params[:id])
+      else 
+        render json: fmt(not_found, [], "Not found assign_group_place = "+params[:id]) 
+      end
     end
 
     # Only allow a list of trusted parameters through.
