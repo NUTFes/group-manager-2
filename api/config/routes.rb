@@ -59,6 +59,9 @@ Rails.application.routes.draw do
       get "current_user/get_user_detail_raw" => "current_user_api#get_user_detail_raw"
       post "current_user/edit_user_info" => "current_user_api#edit_user_info"
       post "current_user/password_reset" => "current_user_api#password_reset"
+      # --- 新規ユーザー周りのAPI --- 
+      get "get_user_with_user_details" => "users_api#get_user_with_user_details"
+      get "get_user_with_user_detail" => "user_api#get_user_with_user_detail"
       # 物品周り 
       get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
       get "get_item_name" => "items_api#get_item_name"
