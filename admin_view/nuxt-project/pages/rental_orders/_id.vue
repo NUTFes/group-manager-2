@@ -84,13 +84,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ rental_order.created_at | format-date }}
+                        {{ rental_order.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ rental_order.updated_at | format-date }}
+                        {{ rental_order.updated_at | formatDate }}
                       </td>
                       <td v-if="rights == 1">
                         <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -175,9 +175,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="btn" @click="edit">
-            編集する
-          </v-btn>
+          <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -195,17 +193,13 @@
           </v-btn>
         </v-card-title>
 
-        <v-card-title>
-          削除してよろしいですか？
-        </v-card-title>
+        <v-card-title> 削除してよろしいですか？ </v-card-title>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="yes" @click="delete_yes">
-            はい
-          </v-btn>
+          <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
           <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
@@ -245,14 +239,14 @@ export default {
       success_snackbar: false,
       delete_snackbar: false,
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -260,10 +254,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.rental_order = response.data.rental_order;
         this.group_id = response.data.rental_order.group_id;
         this.group = response.data.group;
@@ -273,15 +267,15 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       const url = "/api/v1/get_rental_order/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.rental_order = response.data.rental_order;
           this.group_id = response.data.rental_order.group_id;
           this.group = response.data.group;
@@ -290,28 +284,28 @@ export default {
           this.num = response.data.rental_order.num;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.group_list = response.data;
         });
       this.$axios
         .get("/rental_items", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.item_list = response.data;
         });
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/rental_orders/" +
         this.rental_order.id +
@@ -324,20 +318,20 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/rental_orders/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/rental_orders");
-    }
-  }
+    },
+  },
 };
 </script>

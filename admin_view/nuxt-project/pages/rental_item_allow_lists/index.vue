@@ -6,8 +6,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-table-furniture</v-icon
-              >使用可能物品一覧
+              <v-icon class="mr-5">mdi-table-furniture</v-icon>使用可能物品一覧
               <v-spacer></v-spacer>
               <v-tooltip top v-if="selfRoleId == 1">
                 <template v-slot:activator="{ on, attrs }">
@@ -63,7 +62,7 @@
                           :items="rental_items"
                           :menu-props="{
                             top: true,
-                            offsetY: true
+                            offsetY: true,
                           }"
                           item-text="name"
                           item-value="id"
@@ -75,13 +74,12 @@
                           :items="group_categories"
                           :menu-props="{
                             top: true,
-                            offsetY: true
+                            offsetY: true,
                           }"
                           item-text="name"
                           item-value="id"
                           outlined
                         ></v-select>
-
                       </v-form>
                     </v-col>
                   </v-row>
@@ -91,12 +89,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="register()"
-                  >登録
+                  <v-btn depressed dark color="btn" @click="register()"
+                    >登録
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -121,9 +115,9 @@
                   :items="rental_item_allow_list"
                   class="elevation-0 my-9"
                   @click:row="
-                    data =>
+                    (data) =>
                       $router.push({
-                        path: `/rental_item_allow_lists/${data.rental_item_allow_list.id}`
+                        path: `/rental_item_allow_lists/${data.rental_item_allow_list.id}`,
                       })
                   "
                 >
@@ -174,10 +168,16 @@
                   <template
                     v-slot:item.rental_item_allow_list.created_at="{ item }"
                   >
-                    {{ item.rental_item_allow_list.created_at | format-date }}
+                    {{
+                      item.rental_item_allow_list.created_at | formatDate
+                    }}
                   </template>
-                  <template v-slot:item.rental_item_allow_list.updated_at="{ item }">
-                    {{ item.rental_item_allow_list.updated_at | format-date }}
+                  <template
+                    v-slot:item.rental_item_allow_list.updated_at="{ item }"
+                  >
+                    {{
+                      item.rental_item_allow_list.updated_at | formatDate
+                    }}
                   </template>
                 </v-data-table>
               </div>
@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex"
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -211,13 +211,13 @@ export default {
       ],
     };
   },
-  computed:{
+  computed: {
     ...mapState({
-      selfRoleId: state=>state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
-    this.$store.dispatch("users/getUser")
+    this.$store.dispatch("users/getUser");
     this.$axios
       .get("/group_categories", {
         headers: {

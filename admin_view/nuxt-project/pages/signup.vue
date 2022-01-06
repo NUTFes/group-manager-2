@@ -1,42 +1,33 @@
 <template>
   <div class="signup-card">
     <v-container fill-height>
-      <v-row 
-        align="center" 
-        justify="center" 
+      <v-row
+        align="center"
+        justify="center"
         :style="{ background: $vuetify.theme.themes.light.loginbg }"
       >
         <v-col>
-          <v-form 
-            ref="form" 
-            v-model="valid" 
-            lazy-validation
-          >
-            <v-row 
-              justify="center" 
-              style="padding-top:5%; padding-bottom:5%"
-            >
-              <p class="mt-3 display-1 font-weight-bold info--text">
-                新規登録
-              </p>
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-row justify="center" style="padding-top: 5%; padding-bottom: 5%">
+              <p class="mt-3 display-1 font-weight-bold info--text">新規登録</p>
             </v-row>
             <v-row>
-              <v-col cols=1></v-col>
-              <v-col cols=10>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
                 <v-text-field
                   v-model="name"
                   label="フルネーム"
                   outlined
                   clearable
                 />
-                  <p class="caption mb-0" />
+                <p class="caption mb-0" />
                 <v-text-field
                   v-model="email"
                   label="Eメールアドレス"
                   outlined
                   clearable
                 />
-                  <p class="caption mb-0" />
+                <p class="caption mb-0" />
                 <v-text-field
                   outlined
                   clearable
@@ -52,28 +43,15 @@
                   label="パスワード確認"
                 />
               </v-col>
-              <v-col cols=1></v-col>
+              <v-col cols="1"></v-col>
             </v-row>
-            <v-row justify="center" style="padding-bottom:5%">
+            <v-row justify="center" style="padding-bottom: 5%">
               <v-col cols="12" md="10" sm="10">
-                <v-btn
-                  depressed
-                  dark
-                  block
-                  large
-                  color = "btn"
-                  @click="signup"
-                >
+                <v-btn depressed dark block large color="btn" @click="signup">
                   新規登録
                 </v-btn>
-                <br>
-                <v-btn
-                  block
-                  outlined 
-                  large
-                  href="/"
-                  color = "btn"
-                >
+                <br />
+                <v-btn block outlined large href="/" color="btn">
                   ログインはこちら
                 </v-btn>
               </v-col>

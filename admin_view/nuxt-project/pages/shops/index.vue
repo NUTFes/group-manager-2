@@ -96,11 +96,7 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="register()"
+                  <v-btn depressed dark color="btn" @click="register()"
                     >登録
                   </v-btn>
                 </v-card-actions>
@@ -123,14 +119,14 @@
                   :items="shops"
                   class="elevation-0 my-9"
                   @click:row="
-                    data => $router.push({ path: `/shops/${data.id}` })
+                    (data) => $router.push({ path: `/shops/${data.id}` })
                   "
                 >
                   <template v-slot:item.created_at="{ item }">
-                    {{ item.created_at | format-date }}
+                    {{ item.created_at | formatDate }}
                   </template>
                   <template v-slot:item.updated_at="{ item }">
-                    {{ item.updated_at | format-date }}
+                    {{ item.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>
@@ -159,53 +155,53 @@ export default {
         { text: "店名", value: "name" },
         { text: "電話番号", value: "tel" },
         // { text: '開店時間', value: 'opening_hours' },
-        { text: "住所", value: "address" }
+        { text: "住所", value: "address" },
         // { text: '日時', value: 'created_at' },
         // { text: '編集日時', value: 'updated_at' },
       ],
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/shops", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.shops = response.data;
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/shops", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.shops = response.data;
         });
     },
 
-    register: function() {
+    register: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("name", this.name);
       params.append("tel", this.tel);
       params.append("opening_hours", this.opening_hours);
       params.append("address", this.address);
-      this.$axios.post("/shops", params).then(response => {
+      this.$axios.post("/shops", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -214,8 +210,8 @@ export default {
         this.opening_hours = "";
         this.address = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <<<<<<< HEAD
@@ -226,5 +222,4 @@ export default {
   padding-right: 5%;
 }
 </style>
-=======
->>>>>>> 3f172cd76df3dbaed33f2d88ac0196b12970257b
+======= >>>>>>> 3f172cd76df3dbaed33f2d88ac0196b12970257b

@@ -6,109 +6,109 @@
     <div v-else>
       <v-row>
         <v-col>
-            <v-card-text>
-              <div class="breadcrumbs">
-                <ul>
-                  <li>
-                    <div class="breadcrumbs-item">
-                      <router-link to="/sub_reps">副代表一覧</router-link>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="breadcrumbs-item">{{ sub_rep.name }}</div>
-                  </li>
-                </ul>
-              </div>
-            </v-card-text>
-            <v-card flat class="mx-15">
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card-title class="font-weight-bold mt-3">
-                    {{ sub_rep.name }}
-                    <v-spacer></v-spacer>
-                    <v-tooltip top>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="edit_dialog_open"
-                          fab
-                        >
-                          <v-icon class="ma-5">mdi-pencil</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>編集</span>
-                    </v-tooltip>
-                    <v-tooltip top v-if="selfRoleId == (1 || 2)">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="delete_dialog = true"
-                          fab
-                        >
-                          <v-icon class="ma-5">mdi-delete</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>削除</span>
-                    </v-tooltip>
-                  </v-card-title>
-                  <hr class="mt-n3" />
-                  <v-simple-table class="my-9">
-                    <template v-slot:default>
-                      <tbody>
-                        <tr>
-                          <th>参加団体：</th>
-                          <td class="caption">{{ group }}</td>
-                        </tr>
-                        <tr>
-                          <th>学籍番号：</th>
-                          <td class="caption">{{ sub_rep.student_id }}</td>
-                        </tr>
-                        <tr>
-                          <th>メールアドレス：</th>
-                          <td class="caption">{{ sub_rep.email }}</td>
-                        </tr>
-                        <tr>
-                          <th>電話番号：</th>
-                          <td class="caption">{{ sub_rep.tel }}</td>
-                        </tr>
-                        <tr>
-                          <th>課程：</th>
-                          <td class="caption">{{ department }}</td>
-                        </tr>
-                        <tr>
-                          <th>学年：</th>
-                          <td class="caption">{{ grade }}</td>
-                        </tr>
-                        <tr>
-                          <th>登録日時：</th>
-                          <td class="caption">
-                            {{ sub_rep.created_at | format-date }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>編集日時：</th>
-                          <td class="caption">
-                            {{ sub_rep.updated_at | format-date }}
-                          </td>
-                          <td v-if="rights == 1">
-                            <v-icon color="#E91E63">mdi-pencil</v-icon>
-                          </td>
-                          <td v-if="rights == 2">
-                            <v-icon color="#E91E63">mdi-eye</v-icon>
-                          </td>
-                        </tr>
-                      </tbody>
+          <v-card-text>
+            <div class="breadcrumbs">
+              <ul>
+                <li>
+                  <div class="breadcrumbs-item">
+                    <router-link to="/sub_reps">副代表一覧</router-link>
+                  </div>
+                </li>
+                <li>
+                  <div class="breadcrumbs-item">{{ sub_rep.name }}</div>
+                </li>
+              </ul>
+            </div>
+          </v-card-text>
+          <v-card flat class="mx-15">
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-title class="font-weight-bold mt-3">
+                  {{ sub_rep.name }}
+                  <v-spacer></v-spacer>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="edit_dialog_open"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-pencil</v-icon>
+                      </v-btn>
                     </template>
-                  </v-simple-table>
-                </v-col>
-                <v-col cols="1"></v-col>
-              </v-row>
-            </v-card>
+                    <span>編集</span>
+                  </v-tooltip>
+                  <v-tooltip top v-if="selfRoleId == (1 || 2)">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="delete_dialog = true"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>削除</span>
+                  </v-tooltip>
+                </v-card-title>
+                <hr class="mt-n3" />
+                <v-simple-table class="my-9">
+                  <template v-slot:default>
+                    <tbody>
+                      <tr>
+                        <th>参加団体：</th>
+                        <td class="caption">{{ group }}</td>
+                      </tr>
+                      <tr>
+                        <th>学籍番号：</th>
+                        <td class="caption">{{ sub_rep.student_id }}</td>
+                      </tr>
+                      <tr>
+                        <th>メールアドレス：</th>
+                        <td class="caption">{{ sub_rep.email }}</td>
+                      </tr>
+                      <tr>
+                        <th>電話番号：</th>
+                        <td class="caption">{{ sub_rep.tel }}</td>
+                      </tr>
+                      <tr>
+                        <th>課程：</th>
+                        <td class="caption">{{ department }}</td>
+                      </tr>
+                      <tr>
+                        <th>学年：</th>
+                        <td class="caption">{{ grade }}</td>
+                      </tr>
+                      <tr>
+                        <th>登録日時：</th>
+                        <td class="caption">
+                          {{ sub_rep.created_at | formatDate }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>編集日時：</th>
+                        <td class="caption">
+                          {{ sub_rep.updated_at | formatDate }}
+                        </td>
+                        <td v-if="rights == 1">
+                          <v-icon color="#E91E63">mdi-pencil</v-icon>
+                        </td>
+                        <td v-if="rights == 2">
+                          <v-icon color="#E91E63">mdi-eye</v-icon>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-col>
+              <v-col cols="1"></v-col>
+            </v-row>
+          </v-card>
         </v-col>
       </v-row>
     </div>
@@ -211,9 +211,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="btn" @click="edit">
-            編集する
-          </v-btn>
+          <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -239,9 +237,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="yes" @click="delete_yes">
-            はい
-          </v-btn>
+          <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
           <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
@@ -269,7 +265,7 @@ import { mapState } from "vuex";
 
 export default {
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -311,7 +307,7 @@ export default {
         { name: "材料工学専攻", id: 17 },
         { name: "エネルギー・環境工学専攻", id: 18 },
         { name: "生物統合工学専攻", id: 19 },
-        { name: "その他", id: 20 }
+        { name: "その他", id: 20 },
       ],
       // 学年
       grades: [
@@ -329,17 +325,17 @@ export default {
         { name: "GD3 [イノベ3年]", id: 12 },
         { name: "GD4 [イノベ4年]", id: 13 },
         { name: "GD5 [イノベ5年]", id: 14 },
-        { name: "その他", id: 15 }
+        { name: "その他", id: 15 },
       ],
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -347,10 +343,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.sub_rep = response.data.sub_rep;
         this.name = response.data.sub_rep.name;
         this.group = response.data.group;
@@ -365,15 +361,15 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       const url = "/api/v1/get_sub_rep_details/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.sub_rep = response.data.sub_rep;
           this.name = response.data.sub_rep.name;
           this.group = response.data.group;
@@ -387,19 +383,19 @@ export default {
           this.department = response.data.department;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.group_list = response.data;
         });
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "sub_reps/" +
         this.sub_rep.id +
@@ -420,20 +416,20 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/sub_reps/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/sub_reps");
-    }
-  }
+    },
+  },
 };
 </script>

@@ -94,13 +94,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ assign_rental_item.created_at | format-date }}
+                          {{ assign_rental_item.created_at | formatDate }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ assign_rental_item.updated_at | format-date }}
+                          {{ assign_rental_item.updated_at | formatDate }}
                         </td>
                       </tr>
                     </tbody>
@@ -180,9 +180,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="btn" depressed dark @click="edit">
-              編集する
-            </v-btn>
+            <v-btn color="btn" depressed dark @click="edit"> 編集する </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -200,17 +198,13 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
+          <v-card-title> 削除してよろしいですか？ </v-card-title>
 
           <v-divider></v-divider>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed color="yes" dark @click="delete_yes">
-              はい
-            </v-btn>
+            <v-btn depressed color="yes" dark @click="delete_yes"> はい </v-btn>
             <v-btn depressed color="no" dark @click="delete_dialog = false">
               いいえ
             </v-btn>
@@ -242,7 +236,7 @@ import NoData from "../../components/NoData.vue";
 import { mapState } from "vuex";
 export default {
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -264,42 +258,42 @@ export default {
       edit_dialog: false,
       delete_dialog: false,
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/stocker_places", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.places = response.data;
       });
     this.$axios
       .get("/rental_items", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.item_list = response.data;
       });
     this.$axios
       .get("/groups", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.groups = response.data;
       });
 
@@ -307,10 +301,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.data = response.data;
         this.assign_rental_item = response.data.assign_rental_item;
         this.id = response.data.assign_rental_item.id;
@@ -325,16 +319,16 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       console.log("reload");
       const url = "/api/v1/get_assign_rental_item/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.data = response.data;
           this.assign_rental_item = response.data.assign_rental_item;
           this.id = response.data.assign_rental_item.id;
@@ -348,10 +342,10 @@ export default {
           this.stocker_place = response.data.stocker_place;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/assign_rental_items/" +
         this.id +
@@ -367,22 +361,22 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/assign_rental_items/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/assign_rental_items");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -394,4 +388,3 @@ th {
   width: 30%;
 }
 </style>
-

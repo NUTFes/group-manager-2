@@ -36,8 +36,8 @@
                           <td>{{ power.manufacturer }}</td>
                           <td>{{ power.model }}</td>
                           <td>{{ power.item_id }}</td>
-                          <td>{{ power.created_at | format-date }}</td>
-                          <td>{{ power.updated_at | format-date}}</td>
+                          <td>{{ power.created_at | formatDate }}</td>
+                          <td>{{ power.updated_at | formatDate}}</td>
                         </tr>
                       </tbody>
                     </template>

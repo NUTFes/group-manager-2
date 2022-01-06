@@ -110,7 +110,7 @@
                   :items="rental_items"
                   class="elevation-0 my-9"
                   @click:row="
-                    data => $router.push({ path: `/rental_items/${data.id}` })
+                    (data) => $router.push({ path: `/rental_items/${data.id}` })
                   "
                 >
                   <template v-slot:item.is_rentable="{ item }">
@@ -130,10 +130,10 @@
                     >
                   </template>
                   <template v-slot:item.created_at="{ item }">
-                    {{ item.created_at | format-date }}
+                    {{ item.created_at | formatDate }}
                   </template>
                   <template v-slot:item.updated_at="{ item }">
-                    {{ item.updated_at | format-date }}
+                    {{ item.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>
@@ -160,18 +160,18 @@ export default {
         { text: "名前", value: "name" },
         { text: "貸し出し", value: "is_rentable" },
         { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" }
+        { text: "編集日時", value: "updated_at" },
       ],
       rental_available: [
         { label: "可能", value: true },
-        { label: "不可能", value: false }
-      ]
+        { label: "不可能", value: false },
+      ],
     };
   },
   compouted: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -181,41 +181,41 @@ export default {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.rental_items = response.data;
       });
   },
 
   methods: {
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/rental_items", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.rental_items = response.data;
         });
     },
-    register: function() {
+    register: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("name", this.name);
       params.append("is_rentable", this.isRentable);
       console.log(params);
-      this.$axios.post("/rental_items", params).then(response => {
+      this.$axios.post("/rental_items", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
         this.name = "";
         this.isRentable = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <<<<<<< HEAD

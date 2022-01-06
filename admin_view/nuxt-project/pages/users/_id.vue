@@ -123,13 +123,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ user.created_at | format-date }}
+                        {{ user.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ user.updated_at | format-date }}
+                        {{ user.updated_at | formatDate }}
                       </td>
                     </tr>
                   </tbody>
@@ -149,8 +149,8 @@
           :to="{
             name: 'groups-id',
             params: {
-              id: group.group.id
-            }
+              id: group.group.id,
+            },
           }"
         >
           <v-row>
@@ -350,7 +350,7 @@
           </div>
           <v-spacer></v-spacer>
           <v-btn text @click="edit_role_dialog = false" fab dark>
-             <v-icon>mdi-close</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
 
@@ -395,17 +395,13 @@
           </v-btn>
         </v-card-title>
 
-        <v-card-title>
-          削除してよろしいですか？
-        </v-card-title>
+        <v-card-title> 削除してよろしいですか？ </v-card-title>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="yes" depressed dark @click="delete_yes">
-            はい
-          </v-btn>
+          <v-btn color="yes" depressed dark @click="delete_yes"> はい </v-btn>
           <v-btn color="no" depressed dark @click="delete_dialog = false">
             いいえ
           </v-btn>
@@ -431,9 +427,9 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role,
-      uid: state => state.users.uid
-    })
+      selfRoleId: (state) => state.users.role,
+      uid: (state) => state.users.uid,
+    }),
   },
   data() {
     return {
@@ -460,7 +456,7 @@ export default {
       reset_password_dialog: false,
       edit_role_dialog: false,
       delete_dialog: false,
-      departments:[
+      departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
         { name: "物質材料工学課程", id: 3 },
@@ -480,9 +476,9 @@ export default {
         { name: "材料工学専攻", id: 17 },
         { name: "エネルギー・環境工学専攻", id: 18 },
         { name: "生物統合工学専攻", id: 19 },
-        { name: "その他", id: 20 }
+        { name: "その他", id: 20 },
       ],
-      grades:[
+      grades: [
         { name: "B1[学部1年]", id: 1 },
         { name: "B2[学部2年]", id: 2 },
         { name: "B3[学部3年]", id: 3 },
@@ -497,24 +493,25 @@ export default {
         { name: "GD3[イノベ3年]", id: 12 },
         { name: "GD4[イノベ4年]", id: 13 },
         { name: "GD5[イノベ5年]", id: 14 },
-        { name: "その他", id: 15 }
+        { name: "その他", id: 15 },
       ],
       items_role: [
         { label: "developer", id: 1 },
         { label: "maneger", id: 2 },
-        { label: "user", id: 3 }
+        { label: "user", id: 3 },
       ],
       rules: {
-        requied: value => !!value || "入力してください",
-        min: v => v.length >= 8 || "８文字未満です",
-        match: v =>
+        requied: (value) => !!value || "入力してください",
+        min: (v) => v.length >= 8 || "８文字未満です",
+        match: (v) =>
           v === this.password ||
           "パスワードと再確認パスワードが一致していません",
-        email: v => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        email: (v) => {
+          const pattern =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           return pattern.test(v) || "適切なメールアドレスではありません";
-        }
-      }
+        },
+      },
     };
   },
   mounted() {
@@ -523,14 +520,14 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         console.log("aaaaaaaaaaaaaaaaa", response);
         this.student_id = response.data.student_id;
         this.grade_id = response.data.grade_id;
-        console.log("aaaaaaaaaaaaaaaaa", this.grade_id)
+        console.log("aaaaaaaaaaaaaaaaa", this.grade_id);
         this.department_id = response.data.department_id;
         this.tel = response.data.tel;
         this.show = response.data;
@@ -542,43 +539,43 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.show = response.data;
           this.user = response.data.user;
           this.role_id = response.data.user.role_id;
         });
     },
-    edit_role_dialog_open: function() {
+    edit_role_dialog_open: function () {
       this.edit_role_dialog = true;
     },
-    open_edit_user_dialog_open: function() {
-      this.edit_user_info_dialog = true
+    open_edit_user_dialog_open: function () {
+      this.edit_user_info_dialog = true;
     },
-    edit_role: function() {
+    edit_role: function () {
       const edit_url =
         "/api/v1/update_user/" + this.user.id + "/" + this.role_id;
       this.$axios
         .get(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_role_dialog = false;
           this.success_snackbar = true;
         });
     },
-    edit_user_info: function() {
+    edit_user_info: function () {
       if (!this.$refs.form.validate()) return;
       const edit_user_info_url = "/api/v1/users/edit_user_info";
       var params = {
@@ -588,32 +585,32 @@ export default {
         grade_id: this.grade_id,
         department_id: this.department_id,
         tel: this.tel,
-        email: this.email
+        email: this.email,
       };
-      this.$axios.post(edit_user_info_url, params).then(response => {
+      this.$axios.post(edit_user_info_url, params).then((response) => {
         this.reload();
         this.edit_user_info_dialog = false;
         this.success_snackbar = true;
       });
     },
-    reset_password: function() {
+    reset_password: function () {
       if (!this.$refs.form.validate()) return;
       const reset_password_url = "/api/v1/users/reset_password";
       var params = {
         user_id: this.user_id,
         password: this.password,
-        password_confirmation: this.password_confirmation
+        password_confirmation: this.password_confirmation,
       };
-      this.$axios.post(reset_password_url, params).then(response => {
+      this.$axios.post(reset_password_url, params).then((response) => {
         this.reload();
         this.reset_password_dialog = false;
         this.success_snackbar = true;
       });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       this.$router.push("/users");
-    }
-  }
+    },
+  },
 };
 </script>
 

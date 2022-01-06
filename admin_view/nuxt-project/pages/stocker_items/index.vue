@@ -62,7 +62,7 @@
                           :items="rental_items"
                           :menu-props="{
                             top: true,
-                            offsetY: true
+                            offsetY: true,
                           }"
                           item-text="name"
                           item-value="id"
@@ -74,7 +74,7 @@
                           :items="stocker_places"
                           :menu-props="{
                             top: true,
-                            offsetY: true
+                            offsetY: true,
                           }"
                           item-text="name"
                           item-value="id"
@@ -86,7 +86,7 @@
                           :items="fes_years"
                           :menu-props="{
                             top: true,
-                            offsetY: true
+                            offsetY: true,
                           }"
                           item-text="year_num"
                           item-value="id"
@@ -111,12 +111,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="register()"
-                  >登録
+                  <v-btn depressed dark color="btn" @click="register()"
+                    >登録
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -138,17 +134,17 @@
                   :items="stocker_items"
                   class="elevation-0 my-9"
                   @click:row="
-                    data =>
+                    (data) =>
                       $router.push({
-                        path: `/stocker_items/${data.stocker_item.id}`
+                        path: `/stocker_items/${data.stocker_item.id}`,
                       })
                   "
                 >
                   <template v-slot:item.stocker_item.created_at="{ item }">
-                    {{ item.stocker_item.created_at | format-date }}
+                    {{ item.stocker_item.created_at | formatDate }}
                   </template>
                   <template v-slot:item.stocker_item.updated_at="{ item }">
-                    {{ item.stocker_item.updated_at | format-date }}
+                    {{ item.stocker_item.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>
@@ -182,77 +178,77 @@ export default {
         { text: "個数", value: "stocker_item.num" },
         { text: "開催年", value: "fes_year" },
         { text: "日時", value: "stocker_item.created_at" },
-        { text: "編集日時", value: "stocker_item.updated_at" }
-      ]
+        { text: "編集日時", value: "stocker_item.updated_at" },
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/api/v1/get_stocker_items", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.stocker_items = response.data;
       });
   },
   methods: {
-    open_add_dialog: function() {
+    open_add_dialog: function () {
       this.$axios
         .get("/stocker_places", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stocker_places = response.data;
         });
       this.$axios
         .get("/rental_items", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.rental_items = response.data;
         });
       this.$axios
         .get("/fes_years", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.fes_years = response.data;
         });
       this.dialog = true;
     },
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/api/v1/get_stocker_items", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stocker_items = response.data;
         });
     },
-    register: function() {
+    register: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("rental_item_id", this.rentalItemId);
       params.append("stocker_place_id", this.stockerPlaceId);
       params.append("fes_year_id", this.fesYearId);
       params.append("num", this.num);
-      this.$axios.post("/stocker_items", params).then(response => {
+      this.$axios.post("/stocker_items", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -261,7 +257,7 @@ export default {
         this.fesYearId = "";
         this.num = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>

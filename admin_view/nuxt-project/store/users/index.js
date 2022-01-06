@@ -16,7 +16,7 @@ export const state = () => ({
   role: null,
   accessToken: null,
   client: null,
-  uid: null
+  uid: null,
 });
 
 /**
@@ -43,7 +43,7 @@ export const mutations = {
     state.accessToken = null;
     state.client = null;
     state.uid = null;
-  }
+  },
 };
 
 /**
@@ -63,8 +63,8 @@ export const actions = {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
           client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid")
-        }
+          uid: localStorage.getItem("uid"),
+        },
       });
 
       console.log(response);
@@ -78,7 +78,7 @@ export const actions = {
       commit("setClient", null);
       commit("setUid", null);
     }
-  }
+  },
 };
 
 /**
@@ -112,5 +112,5 @@ export const getters = {
       dispatch("getUser");
     }
     return state.uid;
-  }
+  },
 };

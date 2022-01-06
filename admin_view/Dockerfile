@@ -1,4 +1,4 @@
-FROM node:12.18.4
+FROM node:16.13.1
 
 WORKDIR /app/nuxt-project
 

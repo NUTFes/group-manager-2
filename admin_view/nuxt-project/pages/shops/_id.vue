@@ -6,98 +6,98 @@
     <div v-else>
       <v-row>
         <v-col>
-            <v-card-text>
-              <div class="breadcrumbs">
-                <ul>
-                  <li>
-                    <div class="breadcrumbs-item">
-                      <router-link to="/shops">店一覧</router-link>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="breadcrumbs-item">{{ shop.name }}</div>
-                  </li>
-                </ul>
-              </div>
-            </v-card-text>
-            <v-card flat class="mx-15">
-              <v-row>
-                <v-col cols="1"></v-col>
-                <v-col cols="10">
-                  <v-card-title class="font-weight-bold mt-3">
-                    {{ shop.name }}
-                    <v-spacer></v-spacer>
-                    <v-tooltip top v-if="selfRoleId == 1">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="edit_dialog_open"
-                          fab
-                        >
-                          <v-icon class="ma-5">mdi-pencil</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>編集</span>
-                    </v-tooltip>
-                    <v-tooltip top v-if="selfRoleId == 1">
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="delete_dialog = true"
-                          fab
-                        >
-                          <v-icon class="ma-5">mdi-delete</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>削除</span>
-                    </v-tooltip>
-                  </v-card-title>
-                  <hr class="mt-n3" />
-                  <v-simple-table class="my-9">
-                    <template v-slot:default>
-                      <tbody>
-                        <tr>
-                          <th>ID：</th>
-                          <td class="caption">{{ shop.id }}</td>
-                        </tr>
-                        <tr>
-                          <th>店名：</th>
-                          <td class="caption">{{ shop.name }}</td>
-                        </tr>
-                        <tr>
-                          <th>開店時間：</th>
-                          <td class="caption">{{ shop.opening_hours }}</td>
-                        </tr>
-                        <tr>
-                          <th>電話番号：</th>
-                          <td class="caption">{{ shop.tel }}</td>
-                        </tr>
-                        <tr>
-                          <th>住所：</th>
-                          <td class="caption">{{ shop.address }}</td>
-                        </tr>
-                        <tr>
-                          <th>登録日時：</th>
-                          <td class="caption">
-                            {{ shop.created_at | format-date }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>編集日時：</th>
-                          <td class="caption">
-                            {{ shop.updated_at | format-date }}
-                          </td>
-                        </tr>
-                      </tbody>
+          <v-card-text>
+            <div class="breadcrumbs">
+              <ul>
+                <li>
+                  <div class="breadcrumbs-item">
+                    <router-link to="/shops">店一覧</router-link>
+                  </div>
+                </li>
+                <li>
+                  <div class="breadcrumbs-item">{{ shop.name }}</div>
+                </li>
+              </ul>
+            </div>
+          </v-card-text>
+          <v-card flat class="mx-15">
+            <v-row>
+              <v-col cols="1"></v-col>
+              <v-col cols="10">
+                <v-card-title class="font-weight-bold mt-3">
+                  {{ shop.name }}
+                  <v-spacer></v-spacer>
+                  <v-tooltip top v-if="selfRoleId == 1">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="edit_dialog_open"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-pencil</v-icon>
+                      </v-btn>
                     </template>
-                  </v-simple-table>
-                </v-col>
-              </v-row>
-            </v-card>
+                    <span>編集</span>
+                  </v-tooltip>
+                  <v-tooltip top v-if="selfRoleId == 1">
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        text
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="delete_dialog = true"
+                        fab
+                      >
+                        <v-icon class="ma-5">mdi-delete</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>削除</span>
+                  </v-tooltip>
+                </v-card-title>
+                <hr class="mt-n3" />
+                <v-simple-table class="my-9">
+                  <template v-slot:default>
+                    <tbody>
+                      <tr>
+                        <th>ID：</th>
+                        <td class="caption">{{ shop.id }}</td>
+                      </tr>
+                      <tr>
+                        <th>店名：</th>
+                        <td class="caption">{{ shop.name }}</td>
+                      </tr>
+                      <tr>
+                        <th>開店時間：</th>
+                        <td class="caption">{{ shop.opening_hours }}</td>
+                      </tr>
+                      <tr>
+                        <th>電話番号：</th>
+                        <td class="caption">{{ shop.tel }}</td>
+                      </tr>
+                      <tr>
+                        <th>住所：</th>
+                        <td class="caption">{{ shop.address }}</td>
+                      </tr>
+                      <tr>
+                        <th>登録日時：</th>
+                        <td class="caption">
+                          {{ shop.created_at | formatDate }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>編集日時：</th>
+                        <td class="caption">
+                          {{ shop.updated_at | formatDate }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-col>
+            </v-row>
+          </v-card>
         </v-col>
       </v-row>
 
@@ -229,11 +229,11 @@ import NoData from "../../components/NoData.vue";
 export default {
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -247,8 +247,8 @@ export default {
       edit_dialog: false,
       delete_dialog: false,
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   mounted() {
@@ -257,10 +257,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.shop = response.data;
         this.id = response.data.id;
         this.name = response.data.name;
@@ -270,16 +270,16 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       console.log("reload");
       const url = "/shops/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.shop = response.data;
           this.id = response.data.id;
           this.name = response.data.name;
@@ -288,10 +288,10 @@ export default {
           this.address = response.data.address;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/shops/" +
         this.id +
@@ -306,21 +306,21 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/shops/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/shops");
-    }
-  }
+    },
+  },
 };
 </script>

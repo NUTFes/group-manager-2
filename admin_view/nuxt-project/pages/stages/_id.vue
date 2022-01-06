@@ -112,13 +112,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ stage.created_at | format-date }}
+                          {{ stage.created_at | formatDate }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ stage.updated_at | format-date }}
+                          {{ stage.updated_at | formatDate }}
                         </td>
                       </tr>
                     </tbody>
@@ -193,9 +193,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="btn" @click="edit">
-              編集する
-            </v-btn>
+            <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -213,17 +211,13 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
+          <v-card-title> 削除してよろしいですか？ </v-card-title>
 
           <v-divider></v-divider>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="yes" @click="delete_yes">
-              はい
-            </v-btn>
+            <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
             <v-btn depressed dark color="no" @click="delete_dialog = false">
               いいえ
             </v-btn>
@@ -256,7 +250,7 @@ import NoData from "../../components/NoData.vue";
 import { mapState } from "vuex";
 export default {
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -270,17 +264,17 @@ export default {
       enable_rainy: [],
       enable_items: [
         { label: "使用可能", value: true },
-        { label: "使用不可能", value: false }
+        { label: "使用不可能", value: false },
       ],
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getRole");
@@ -288,10 +282,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.stage = response.data;
         this.id = response.data.id;
         this.name = response.data.name;
@@ -300,16 +294,16 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       console.log("reload");
       const url = "/stages/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stage = response.data;
           this.name = response.data.name;
           this.id = response.data.id;
@@ -317,10 +311,10 @@ export default {
           this.enable_rainy = response.data.enable_rainy;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/stages/" +
         this.id +
@@ -334,21 +328,21 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/stages/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/stages");
-    }
-  }
+    },
+  },
 };
 </script>

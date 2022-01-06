@@ -115,15 +115,15 @@
                             clearable
                           >
                           </v-select>
-                        <v-textarea
-                          class="body-1"
-                          label="ステージ内容"
-                          v-model="stageContent"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-textarea>
+                          <v-textarea
+                            class="body-1"
+                            label="ステージ内容"
+                            v-model="stageContent"
+                            background-color="white"
+                            outlined
+                            clearable
+                          >
+                          </v-textarea>
                         </v-form>
                       </v-col>
                     </v-row>
@@ -133,12 +133,8 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn
-                      depressed
-                      dark
-                      color="btn"
-                      @click="register()"
-                    >登録
+                    <v-btn depressed dark color="btn" @click="register()"
+                      >登録
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -249,14 +245,14 @@
                       v-slot:item.stage_common_option.created_at="{ item }"
                     >
                       {{
-                        item.stage_common_option.created_at | format-date
+                        item.stage_common_option.created_at | formatDate
                       }}
                     </template>
                     <template
                       v-slot:item.stage_common_option.updated_at="{ item }"
                     >
                       {{
-                        item.stage_common_option.updated_at | format-date
+                        item.stage_common_option.updated_at | formatDate
                       }}
                     </template>
                   </v-data-table>
@@ -297,17 +293,17 @@ export default {
         { text: "日時", value: "stage_common_option.created_at" },
         { text: "編集日時", value: "stage_common_option.updated_at" },
       ],
-      items_available:[
-        {label:"使用",value:true},
-        {label:"不使用",value:false}
+      items_available: [
+        { label: "使用", value: true },
+        { label: "不使用", value: false },
       ],
-      photo_available:[
-        {label:"許可",value:true},
-        {label:"禁止",value:false}
+      photo_available: [
+        { label: "許可", value: true },
+        { label: "禁止", value: false },
       ],
-      loud_able:[
-        {label:"出す",value:true},
-        {label:"出さない",value:false}
+      loud_able: [
+        { label: "出す", value: true },
+        { label: "出さない", value: false },
       ],
     };
   },
@@ -321,17 +317,17 @@ export default {
       .then((response) => {
         this.stage_common_options = response.data;
         this.ownEquipment = stage_common_options.own_equipment;
-        console.log(response.data)
-
+        console.log(response.data);
       });
-    this.$axios.get('/groups', {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    })
-      .then(response => {
-        this.groups = response.data
+    this.$axios
+      .get("/groups", {
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
+      .then((response) => {
+        this.groups = response.data;
+      });
   },
 
   methods: {
@@ -367,6 +363,6 @@ export default {
         this.stageContent = "";
       });
     },
-  }
+  },
 };
 </script>
