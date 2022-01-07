@@ -5,40 +5,44 @@ class UserPageSettingsController < ApplicationController
   # GET /user_page_settings.json
   def index
     @user_page_settings = UserPageSetting.all
-    render json: @user_page_settings
+    render json: fmt(ok, @user_page_settings)
   end
 
   # GET /user_page_settings/1
   # GET /user_page_settings/1.json
   def show
-    render json: @user_page_setting
+    render json: fmt(ok, @user_page_setting)
   end
 
   # POST /user_page_settings
   # POST /user_page_settings.json
   def create
-    @user_page_setting = UserPageSetting.new(user_page_setting_params)
-    @user_page_setting.save
-    render json: @user_page_setting
+    @user_page_setting = UserPageSetting.create(user_page_setting_params)
+    render json: fmt(created, @user_page_setting)
   end
 
   # PATCH/PUT /user_page_settings/1
   # PATCH/PUT /user_page_settings/1.json
   def update
     @user_page_setting.update(user_page_setting_params)
-    render json: @user_page_setting
+    render json: fmt(created, @user_page_setting, "Updated user_page_setting id = "+params[:id])
   end
 
   # DELETE /user_page_settings/1
   # DELETE /user_page_settings/1.json
   def destroy
     @user_page_setting.destroy
+    render json: fmt(ok, [], "Deleted user_page_setting = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user_page_setting
-      @user_page_setting = UserPageSetting.find(params[:id])
+      if UserPageSetting.exists?(params[:id])
+        @user_page_setting = UserPageSetting.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found user_page_setting = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

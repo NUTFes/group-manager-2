@@ -3,34 +3,36 @@ class FesDatesController < ApplicationController
   
     def index
       @fes_dates = FesDate.all
-      render json: @fes_dates
+      render json: fmt(ok, @fes_dates)
     end
   
     def show
-      render json: @fes_date
+      render json: fmt(ok, @fes_date)
     end
   
     def create
-      @fes_date = FesDate.new(fes_date_params)
-      @fes_date.save
-      render json: @fes_date
+      @fes_date = FesDate.create(fes_date_params)
+      render json: fmt(created, @fes_date)
     end
   
     def update
       @fes_date.update(fes_date_params)
-      render json: @fes_date
+      render json: fmt(created, @fes_date, "Updated fes_date id = "+params[:id])
     end
   
     def destroy
       @fes_date.destroy
-      @fes_dates = FesDate.all
-      render json: @fes_dates
+      render json: fmt(ok, [], "Deleted fes_date = "+params[:id])
     end
   
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_fes_date
-        @fes_date = FesDate.find(params[:id])
+        if FesDate.exists?(params[:id])
+          @fes_date = FesDate.find(params[:id])
+        else
+          render json: fmt(not_found, [], "Not found fes_date = "+params[:id])
+        end
       end
   
       # Only allow a list of trusted parameters through.
