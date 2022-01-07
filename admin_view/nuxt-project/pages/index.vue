@@ -1,16 +1,16 @@
 <template>
   <div class="login-card">
     <v-container fill-height>
-      <v-row 
-        align="center" 
-        justify="center" 
+      <v-row
+        align="center"
+        justify="center"
         :style="{ background: $vuetify.theme.themes.light.loginbg }"
       >
         <v-col cols="5">
           <v-form ref="form" lazy-validation>
             <v-row justify="center">
               <p cols="10" class="my-10 display-1 font-weight-bold info--text">
-              ログイン
+                ログイン
               </p>
               <p v-bind:style="warnStyle" v-html="getMessage"></p>
             </v-row>
@@ -27,7 +27,7 @@
                   :rules="[rules.requied, rules.email]"
                   required
                 />
-                  <p class="caption mb-0" />
+                <p class="caption mb-0" />
               </v-col>
             </v-row>
             <v-row align="center" justify="center">
@@ -41,9 +41,7 @@
                   label="パスワード"
                   counter
                   v-on:keyup.enter="loginWithAuthModule"
-                  v-bind:append-icon="
-                                       show_pass ? 'mdi-eye-off' : 'mdi-eye'
-                                       "
+                  v-bind:append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
                   :rules="[rules.required, rules.min]"
                   v-bind:type="show_pass ? 'password' : 'text'"
                   @click:append="show_pass = !show_pass"
@@ -77,12 +75,12 @@
             <v-container>
               <v-row align="center" justify="center">
                 <v-col cols="2" />
-                  <v-col cols="8">
-                    <nuxt-link class="text-center" to="/signup">
-                      <div style="color:black">新規登録はこちら</div>
-                    </nuxt-link>
-                  </v-col>
-                  <v-col cols="2" />
+                <v-col cols="8">
+                  <nuxt-link class="text-center" to="/signup">
+                    <div style="color: black">新規登録はこちら</div>
+                  </nuxt-link>
+                </v-col>
+                <v-col cols="2" />
               </v-row>
             </v-container>
           </v-form>
@@ -117,34 +115,35 @@ export default {
       formHasErrors: false,
       message: "",
       warnStyle: {
-        color: "#F44336"
+        color: "#F44336",
       },
       rules: {
-        required: value => !!value || "入力してください",
-        min: value => value.length >= 8 || "８文字以上入力してください",
-        email: value => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        required: (value) => !!value || "入力してください",
+        min: (value) => value.length >= 8 || "８文字以上入力してください",
+        email: (value) => {
+          const pattern =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           return pattern.test(value) || "適切なメールアドレスではありません";
-        }
-      }
+        },
+      },
     };
   },
   computed: {
     form() {
       return {
         email: null,
-        password: null
+        password: null,
       };
     },
     getMessage() {
       return this.message;
-    }
+    },
   },
   methods: {
     async loginWithAuthModule() {
       this.formHasErrors = false;
 
-      Object.keys(this.form).forEach(f => {
+      Object.keys(this.form).forEach((f) => {
         if (!this.form[f]) this.formHasErrors = true;
         this.$refs[f].validate(true);
       });
@@ -153,24 +152,27 @@ export default {
         .loginWith("local", {
           data: {
             email: this.email,
-            password: this.password
-          }
+            password: this.password,
+          },
         })
         .then(
-          response => {
-            localStorage.setItem("access-token", response.headers["access-token"]);
+          (response) => {
+            localStorage.setItem(
+              "access-token",
+              response.headers["access-token"]
+            );
             localStorage.setItem("client", response.headers.client);
             localStorage.setItem("uid", response.headers.uid);
             localStorage.setItem("token-type", response.headers["token-type"]);
             return response;
           },
-          error => {
+          (error) => {
             this.message = "メールアドレスかパスワードが違います。";
             return error;
           }
         );
-    }
-  }
+    },
+  },
 };
 </script>
 

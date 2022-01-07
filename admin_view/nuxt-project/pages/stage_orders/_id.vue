@@ -152,13 +152,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ stage_order.created_at | format-date }}
+                        {{ stage_order.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ stage_order.updated_at | format-date }}
+                        {{ stage_order.updated_at | formatDate }}
                       </td>
                       <td v-if="rights == 1">
                         <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -211,7 +211,7 @@
                   :items="groups"
                   :menu-props="{
                     top: true,
-                    offsetY: true
+                    offsetY: true,
                   }"
                   item-text="name"
                   item-value="id"
@@ -331,9 +331,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="btn" @click="edit">
-            編集する
-          </v-btn>
+          <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -351,17 +349,13 @@
           </v-btn>
         </v-card-title>
 
-        <v-card-title>
-          削除してよろしいですか？
-        </v-card-title>
+        <v-card-title> 削除してよろしいですか？ </v-card-title>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="yes" @click="delete_yes">
-            はい
-          </v-btn>
+          <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
           <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
@@ -410,7 +404,7 @@ export default {
       radioGroup: 1,
       is_sunny_list: [
         { label: "晴れ", value: true },
-        { label: "雨", value: false }
+        { label: "雨", value: false },
       ],
       fes_date_list: [],
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "00"],
@@ -426,7 +420,7 @@ export default {
         "40",
         "45",
         "50",
-        "55"
+        "55",
       ],
       time_range: [],
       time_interval: [
@@ -452,14 +446,14 @@ export default {
         "105分",
         "110分",
         "115分",
-        "120分"
-      ]
+        "120分",
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -467,10 +461,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.stage_order = response.data.stage_order;
         this.group = response.data.group;
         this.stage_first = response.data.stage_first;
@@ -492,15 +486,15 @@ export default {
     this.set_time_range();
   },
   methods: {
-    reload: function() {
+    reload: function () {
       const url = "/api/v1/get_stage_order_details/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stage_order = response.data.stage_order;
           this.group = response.data.group;
           this.stage_first = response.data.stage_first;
@@ -520,44 +514,44 @@ export default {
           this.cleanupEndTime = this.stage_order.cleanup_end_time;
         });
     },
-    set_time_range: function() {
+    set_time_range: function () {
       for (var hour of this.hour_range) {
         for (var minute of this.minute_range) {
           this.time_range.push(hour + ":" + minute);
         }
       }
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.$axios
         .get("/stages", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stages_list = response.data;
         });
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.groups = response.data;
         });
       this.$axios
         .get("/fes_dates", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.fes_date_list = response.data;
         });
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/stage_orders/" +
         this.stage_order.id +
@@ -588,22 +582,22 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/stage_orders/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/stage_orders");
-    }
-  }
+    },
+  },
 };
 </script>
 

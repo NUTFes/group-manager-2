@@ -12,11 +12,6 @@ class Group < ApplicationRecord
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
 
-    # IDに対してgroup(参加団体)があるかを確認する
-    def self.is_exists?(id)
-      return self.exists?(id=id)
-    end
-
     ### group_category (参加団体カテゴリ)
     
     # 全てのgroupとそのgroup_categoryを取得する

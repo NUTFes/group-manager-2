@@ -134,10 +134,10 @@
                               "
                   >
                   <template v-slot:item.fes_date.created_at="{ item }">
-                    {{ item.fes_date.created_at | format-date }}
+                    {{ item.fes_date.created_at | formatDate }}
                   </template>
                   <template v-slot:item.fes_date.updated_at="{ item }">
-                    {{ item.fes_date.updated_at | format-date }}
+                    {{ item.fes_date.updated_at | formatDate }}
                   </template>
                 </v-data-table>                      
               </div>

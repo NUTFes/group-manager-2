@@ -108,11 +108,7 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="register()"
+                  <v-btn depressed dark color="btn" @click="register()"
                     >登録 ​
                   </v-btn>
                 </v-card-actions>
@@ -182,10 +178,10 @@
                     >
                   </template>
                   <template v-slot:item.group.created_at="{ item }">
-                    {{ item.group.created_at | format-date }}
+                    {{ item.group.created_at | formatDate }}
                   </template>
                   <template v-slot:item.group.updated_at="{ item }">
-                    {{ item.group.updated_at | format-date }}
+                    {{ item.group.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>
@@ -272,7 +268,7 @@ export default {
       });
   },
   methods: {
-    open_add_dialog: function (){
+    open_add_dialog: function () {
       const url = "/api/v1/current_user/show";
       this.$axios
         .get(url, {
@@ -292,16 +288,16 @@ export default {
             return error;
           }
         );
-    this.$axios
-      .get("/fes_years", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.year_list = response.data;
-      });
-    this.dialog = true
+      this.$axios
+        .get("/fes_years", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.year_list = response.data;
+        });
+      this.dialog = true;
     },
     reload: function () {
       this.$axios

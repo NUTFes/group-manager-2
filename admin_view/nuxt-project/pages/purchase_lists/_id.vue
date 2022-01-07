@@ -32,12 +32,7 @@
                 <v-spacer></v-spacer>
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="openModal"
-                      fab
+                    <v-btn text v-bind="attrs" v-on="on" @click="openModal" fab
                       ><v-icon class="ma-5">mdi-pencil</v-icon>
                     </v-btn>
                   </template>
@@ -120,13 +115,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ purchase.created_at | format-date }}
+                        {{ purchase.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ purchase.updated_at | format-date }}
+                        {{ purchase.updated_at | formatDate }}
                       </td>
                       <td v-if="rights == 1">
                         <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -167,17 +162,13 @@
           </v-btn>
         </v-card-title>
 
-        <v-card-title>
-          削除してよろしいですか？
-        </v-card-title>
+        <v-card-title> 削除してよろしいですか？ </v-card-title>
 
         <v-divider></v-divider>
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn depressed dark color="yes" @click="delete_yes">
-            はい
-          </v-btn>
+          <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
           <v-btn depressed dark color="no" @click="delete_dialog = false">
             いいえ
           </v-btn>
@@ -189,8 +180,8 @@
     <v-dialog v-model="dialog" width="500">
       <v-card>
         <v-card-title class="headline secondary white--text">
-            <v-icon dark class="ma-5">mdi-pencil</v-icon>
-            編集
+          <v-icon dark class="ma-5">mdi-pencil</v-icon>
+          編集
           <v-spacer />
           <v-btn text @click="dialog = false" fab dark>
             <v-icon class="ma-5">mdi-close</v-icon>
@@ -293,7 +284,7 @@ export default {
       fesDateList: [
         { date: "9/18", id: 1 },
         { date: "9/19", id: 2 },
-        { date: "9/20", id: 3 }
+        { date: "9/20", id: 3 },
       ],
       foodProductList: [],
       shopList: [
@@ -324,27 +315,27 @@ export default {
         { name: "菜加", id: 25 },
         { name: "ひらせい 長岡ニュータウン店", id: 26 },
         { name: "紅屋重正", id: 27 },
-        { name: "ダイレックス 喜多町店", id: 28 }
+        { name: "ダイレックス 喜多町店", id: 28 },
       ],
       isFreshList: [
         { name: "はい", bool: true },
-        { name: "いいえ", bool: false }
-      ]
+        { name: "いいえ", bool: false },
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   methods: {
     async reload() {
       const url = "api/v1/get_purchase_list/" + this.$route.params.id;
       await this.$axios
         .get(url, {
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json" },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response.data.purchase_list);
           this.purchase = response.data.purchase_list;
           this.food_product = response.data.food_product;
@@ -381,7 +372,7 @@ export default {
         "&items=" +
         this.items;
       await this.$axios.put(edit_url, {
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
       await this.reload();
 
@@ -391,10 +382,10 @@ export default {
       await this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.groupList = response.data;
         });
 
@@ -408,21 +399,21 @@ export default {
       this.$axios
         .get(foodProductUrl, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
         .then(
-          response => {
-            response.data.forEach(foodProduct => {
+          (response) => {
+            response.data.forEach((foodProduct) => {
               this.foodProductList.push(foodProduct);
             });
           },
-          error => {
+          (error) => {
             console.error(error);
             return error;
           }
         );
-    }
+    },
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -430,10 +421,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.purchase = response.data.purchase_list;
         this.food_product = response.data.food_product;
         this.food_product_id = this.purchase.food_product_id;
@@ -446,7 +437,7 @@ export default {
         this.is_fresh = Boolean(this.purchase.is_fresh);
         this.items = this.purchase.items;
       });
-  }
+  },
 };
 </script>
 

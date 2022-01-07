@@ -98,12 +98,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="register()"
-                  >登録
+                  <v-btn depressed dark color="btn" @click="register()"
+                    >登録
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -111,10 +107,7 @@
 
             <hr class="mt-n3" />
             <template>
-              <div
-                class="text-center"
-                v-if="assign_rental_items.length === 0"
-              >
+              <div class="text-center" v-if="assign_rental_items.length === 0">
                 <br /><br />
                 <v-progress-circular
                   indeterminate
@@ -128,21 +121,21 @@
                   :items="assign_rental_items"
                   class="elevation-0 my-9"
                   @click:row="
-                    data =>
+                    (data) =>
                       $router.push({
-                        path: `/assign_rental_items/${data.assign_rental_item.id}`
+                        path: `/assign_rental_items/${data.assign_rental_item.id}`,
                       })
                   "
                 >
                   <template
                     v-slot:item.assign_rental_item.created_at="{ item }"
                   >
-                    {{ item.assign_rental_item.created_at | format-date }}
+                    {{ item.assign_rental_item.created_at | formatDate }}
                   </template>
                   <template
                     v-slot:item.assign_rental_item.updated_at="{ item }"
                   >
-                    {{ item.assign_rental_item.updated_at | format-date }}
+                    {{ item.assign_rental_item.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>
@@ -178,81 +171,81 @@ export default {
         { text: "個数", value: "assign_rental_item.num" },
         { text: "在庫場所", value: "stocker_place" },
         { text: "日時", value: "assign_rental_item.created_at" },
-        { text: "編集日時", value: "assign_rental_item.updated_at" }
-      ]
+        { text: "編集日時", value: "assign_rental_item.updated_at" },
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/api/v1/get_assign_rental_items", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.assign_rental_items = response.data;
       });
   },
 
   methods: {
-    openModal: function() {
+    openModal: function () {
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.groups = response.data;
         });
       this.$axios
         .get("/rental_items", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.item_list = response.data;
         });
       this.$axios
         .get("/stocker_places", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.places = response.data;
         });
       this.dialog = true;
     },
 
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/api/v1/get_assign_rental_items", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.assign_rental_items = response.data;
           console.log("reload");
         });
     },
 
-    register: function() {
+    register: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("group_id", this.Group);
       params.append("rental_item_id", this.itemId);
       params.append("num", this.num);
       params.append("stocker_place_id", this.placeId);
-      this.$axios.post("/assign_rental_items", params).then(response => {
+      this.$axios.post("/assign_rental_items", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -261,8 +254,8 @@ export default {
         this.num = "";
         this.placeId = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <<<<<<< HEAD

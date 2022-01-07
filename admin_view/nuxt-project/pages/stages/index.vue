@@ -7,8 +7,7 @@
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-microphone-variant</v-icon
-                >ステージ一覧
+                <v-icon class="mr-5">mdi-microphone-variant</v-icon>ステージ一覧
                 <v-spacer></v-spacer>
                 <v-tooltip top v-if="selfRoleId == 1">
                   <template v-slot:activator="{ on, attrs }">
@@ -94,12 +93,8 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn
-                      depressed
-                      dark
-                      color="btn"
-                      @click="register()"
-                    >登録
+                    <v-btn depressed dark color="btn" @click="register()"
+                      >登録
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -121,7 +116,7 @@
                     :items="stages"
                     class="elevation-0 my-9"
                     @click:row="
-                      data => $router.push({ path: `/stages/${data.id}` })
+                      (data) => $router.push({ path: `/stages/${data.id}` })
                     "
                   >
                     <template v-slot:item.enable_sunny="{ item }">
@@ -157,10 +152,10 @@
                       >
                     </template>
                     <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | format-date }}
+                      {{ item.created_at | formatDate }}
                     </template>
                     <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | format-date }}
+                      {{ item.updated_at | formatDate }}
                     </template>
                   </v-data-table>
                 </div>
@@ -185,11 +180,11 @@ export default {
       name: [],
       dialog: false,
       rules: {
-        required: value => !!value || "入力してください"
+        required: (value) => !!value || "入力してください",
       },
       enable_items: [
         { label: "使用可能", value: true },
-        { label: "使用不可能", value: false }
+        { label: "使用不可能", value: false },
       ],
       headers: [
         { text: "ID", value: "id" },
@@ -197,47 +192,47 @@ export default {
         { text: "晴れ", value: "enable_sunny" },
         { text: "雨", value: "enable_rainy" },
         { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" }
-      ]
+        { text: "編集日時", value: "updated_at" },
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("stages", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.stages = response.data;
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/stages", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stages = response.data;
         });
     },
 
-    register: function() {
+    register: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("name", this.name);
       params.append("enable_sunny", this.enable_Sunny);
       params.append("enable_rainy", this.enable_Rainy);
-      this.$axios.post("/stages", params).then(response => {
+      this.$axios.post("/stages", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -245,8 +240,8 @@ export default {
         this.enable_Sunny = "";
         this.enable_Rainy = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <<<<<<< HEAD

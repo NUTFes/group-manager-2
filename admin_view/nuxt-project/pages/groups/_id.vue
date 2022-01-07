@@ -2,13 +2,13 @@
   <div v-if="data.length === 0">
     <div class="card">
       <v-card flat>
-        <br><br>
+        <br /><br />
         <div class="text-center">
-        <v-progress-circular
-          indeterminate
-          color="#009688"
-        ></v-progress-circular>
-        <br><br>
+          <v-progress-circular
+            indeterminate
+            color="#009688"
+          ></v-progress-circular>
+          <br /><br />
         </div>
       </v-card>
     </div>
@@ -144,13 +144,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ group.created_at | format-date }}
+                        {{ group.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ group.updated_at | format-date }}
+                        {{ group.updated_at | formatDate }}
                       </td>
                     </tr>
                   </tbody>
@@ -161,7 +161,7 @@
         </v-card>
         <br />
         <v-row>
-          <v-col cols=6>
+          <v-col cols="6">
             <v-card flat class="ml-15">
               <v-row>
                 <v-col cols="1"></v-col>
@@ -174,11 +174,23 @@
                     <template v-slot:default>
                       <tbody>
                         <tr>
-                          <router-link :to="{ name: 'sub_reps-id', params:{ id: subRep.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'sub_reps-id',
+                              params: { id: subRep.id },
+                            }"
+                            tag="th"
+                          >
                             <th>名前：</th>
                           </router-link>
-                          <router-link :to="{ name: 'sub_reps-id', params:{ id: subRep.id }}" tag="th">
-                          <td class="caption">{{ subRep.name }}</td>
+                          <router-link
+                            :to="{
+                              name: 'sub_reps-id',
+                              params: { id: subRep.id },
+                            }"
+                            tag="th"
+                          >
+                            <td class="caption">{{ subRep.name }}</td>
                           </router-link>
                         </tr>
                       </tbody>
@@ -188,7 +200,7 @@
               </v-row>
             </v-card>
           </v-col>
-           <v-col cols=6>
+          <v-col cols="6">
             <v-card flat class="mr-15">
               <v-row>
                 <v-col cols="1"></v-col>
@@ -201,26 +213,62 @@
                     <template v-slot:default>
                       <tbody>
                         <tr>
-                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'place_orders-id',
+                              params: { id: placeOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第一希望</th>
                           </router-link>
-                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'place_orders-id',
+                              params: { id: placeOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ place_first }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'place_orders-id',
+                              params: { id: placeOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第二希望</th>
                           </router-link>
-                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'place_orders-id',
+                              params: { id: placeOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ place_second }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'place_orders-id',
+                              params: { id: placeOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第三希望</th>
                           </router-link>
-                          <router-link :to="{ name: 'place_orders-id', params:{ id: placeOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'place_orders-id',
+                              params: { id: placeOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ place_third }}</td>
                           </router-link>
                         </tr>
@@ -235,10 +283,10 @@
             </v-card>
           </v-col>
         </v-row>
-        <br>
+        <br />
         <v-row>
           <v-col cols="6">
-            <v-card flat class="ml-15" :to="{ name: 'power_orders'}">
+            <v-card flat class="ml-15" :to="{ name: 'power_orders' }">
               <v-row>
                 <v-col cols="1"></v-col>
                 <v-col cols="10">
@@ -250,14 +298,29 @@
                     <template v-slot:default>
                       <tbody>
                         <tr>
-                            <th>製品</th>
-                            <th>電力</th>
+                          <th>製品</th>
+                          <th>電力</th>
                         </tr>
-                        <tr v-for="powerOrder in powerOrders" :key="powerOrder.id">
-                          <router-link :to="{ name: 'power_orders-id', params:{ id: powerOrder.id }}" tag="td">
+                        <tr
+                          v-for="powerOrder in powerOrders"
+                          :key="powerOrder.id"
+                        >
+                          <router-link
+                            :to="{
+                              name: 'power_orders-id',
+                              params: { id: powerOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td class="caption">{{ powerOrder.item }}</td>
                           </router-link>
-                          <router-link :to="{ name: 'power_orders-id', params:{ id: powerOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'power_orders-id',
+                              params: { id: powerOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td class="caption">{{ powerOrder.power }}</td>
                           </router-link>
                         </tr>
@@ -284,15 +347,30 @@
                           <th>貸し出し物品名：</th>
                           <th>貸し出し個数：</th>
                         </tr>
-                        <tr v-for="rentalOrderList in rentalOrderLists" :key="rentalOrderList.id">
-                          <router-link :to="{ name: 'rental_orders-id', params:{ id: rentalOrderList.rental_id }}" tag="td">
+                        <tr
+                          v-for="rentalOrderList in rentalOrderLists"
+                          :key="rentalOrderList.id"
+                        >
+                          <router-link
+                            :to="{
+                              name: 'rental_orders-id',
+                              params: { id: rentalOrderList.rental_id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ rentalOrderList.rental_item }}</td>
                           </router-link>
-                          <router-link :to="{ name: 'rental_orders-id', params:{ id: rentalOrderList.rental_id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'rental_orders-id',
+                              params: { id: rentalOrderList.rental_id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ rentalOrderList.rental_num }}</td>
                           </router-link>
                         </tr>
-                      </tbody>  
+                      </tbody>
                     </template>
                   </v-simple-table>
                 </v-col>
@@ -302,7 +380,11 @@
         </v-row>
         <br />
         <v-row v-if="groupCategoryId === 3">
-          <v-col cols="6" v-for="stageOrder in stageOrders" :key="stageOrder.id">
+          <v-col
+            cols="6"
+            v-for="stageOrder in stageOrders"
+            :key="stageOrder.id"
+          >
             <v-card flat class="ml-15" v-if="stageOrder.is_sunny === true">
               <v-row>
                 <v-col cols="1"></v-col>
@@ -315,58 +397,142 @@
                     <template v-slot:default>
                       <tbody>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>希望日：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ isSunnyLists.fes_date }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第一希望：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ isSunnyLists.stage_first }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第二希望：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ isSunnyLists.stage_second }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>準備開始時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.prepare_start_time }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ kname: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              kname: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>パフォーマンス開始時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.performance_start_time }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>パフォーマンス終了時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.performance_end_time }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>掃除終了時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.cleanup_end_time }}</td>
                           </router-link>
                         </tr>
@@ -376,7 +542,7 @@
                 </v-col>
               </v-row>
             </v-card>
-            
+
             <v-card flat class="mr-15" v-if="stageOrder.is_sunny === false">
               <v-row>
                 <v-col cols="1"></v-col>
@@ -389,58 +555,142 @@
                     <template v-slot:default>
                       <tbody>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>希望日：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ isRainyLists.fes_date }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第一希望：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ isRainyLists.stage_first }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>第二希望：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ isRainyLists.stage_second }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>準備開始時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.prepare_start_time }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ kname: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              kname: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>パフォーマンス開始時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.performance_start_time }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>パフォーマンス終了時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.performance_end_time }}</td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="th"
+                          >
                             <th>掃除終了時刻：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_orders-id', params:{ id: stageOrder.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_orders-id',
+                              params: { id: stageOrder.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageOrder.cleanup_end_time }}</td>
                           </router-link>
                         </tr>
@@ -467,46 +717,128 @@
                     <template v-slot:default>
                       <tbody>
                         <tr>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="th"
+                          >
                             <th>所持機器の使用：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                            <td v-if="stageCommonOption.own_equipment == true">{{ items_available[0].label }}</td>
-                            <td v-if="stageCommonOption.own_equipment == false">{{ items_available[1].label }}</td>
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="td"
+                          >
+                            <td v-if="stageCommonOption.own_equipment == true">
+                              {{ items_available[0].label }}
+                            </td>
+                            <td v-if="stageCommonOption.own_equipment == false">
+                              {{ items_available[1].label }}
+                            </td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="th"
+                          >
                             <th>音楽をかける：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                            <td v-if="stageCommonOption.bgm == true">{{ items_available[0].label }}</td>
-                            <td v-if="stageCommonOption.bgm == false">{{ items_available[1].label }}</td>
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="td"
+                          >
+                            <td v-if="stageCommonOption.bgm == true">
+                              {{ items_available[0].label }}
+                            </td>
+                            <td v-if="stageCommonOption.bgm == false">
+                              {{ items_available[1].label }}
+                            </td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="th"
+                          >
                             <th>撮影許可：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                            <td v-if="stageCommonOption.camera_permission == true">{{ photo_available[0].label }}</td>
-                            <td v-if="stageCommonOption.camera_permission == false">{{ photo_available[1].label }}</td>
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="td"
+                          >
+                            <td
+                              v-if="stageCommonOption.camera_permission == true"
+                            >
+                              {{ photo_available[0].label }}
+                            </td>
+                            <td
+                              v-if="
+                                stageCommonOption.camera_permission == false
+                              "
+                            >
+                              {{ photo_available[1].label }}
+                            </td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
-                          <th>大きな音を出すか：</th>
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="th"
+                          >
+                            <th>大きな音を出すか：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
-                            <td v-if="stageCommonOption.loud_sound == true">{{ loud_able[0].label }}</td>
-                            <td v-if="stageCommonOption.loud_sound == false">{{ loud_able[1].label }}</td>
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="td"
+                          >
+                            <td v-if="stageCommonOption.loud_sound == true">
+                              {{ loud_able[0].label }}
+                            </td>
+                            <td v-if="stageCommonOption.loud_sound == false">
+                              {{ loud_able[1].label }}
+                            </td>
                           </router-link>
                         </tr>
                         <tr>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="th"
+                          >
                             <th>ステージ内容：</th>
                           </router-link>
-                          <router-link :to="{ name: 'stage_common_options-id', params:{ id: stageCommonOption.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'stage_common_options-id',
+                              params: { id: stageCommonOption.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ stageCommonOption.stage_content }}</td>
                           </router-link>
                         </tr>
@@ -538,18 +870,49 @@
                           <th>1日目の個数：</th>
                           <th>2日目の個数：</th>
                         </tr>
-                        <tr v-for="foodProduct in foodProducts" :key="foodProduct.id">
-                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                        <tr
+                          v-for="foodProduct in foodProducts"
+                          :key="foodProduct.id"
+                        >
+                          <router-link
+                            :to="{
+                              name: 'food_products-id',
+                              params: { id: foodProduct.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ foodProduct.name }}</td>
                           </router-link>
-                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
-                            <td v-if="foodProduct.is_cooking == true">{{ cooking_available[0].label }}</td>
-                            <td v-if="foodProduct.is_cooking == false">{{ cooking_available[1].label }}</td>
+                          <router-link
+                            :to="{
+                              name: 'food_products-id',
+                              params: { id: foodProduct.id },
+                            }"
+                            tag="td"
+                          >
+                            <td v-if="foodProduct.is_cooking == true">
+                              {{ cooking_available[0].label }}
+                            </td>
+                            <td v-if="foodProduct.is_cooking == false">
+                              {{ cooking_available[1].label }}
+                            </td>
                           </router-link>
-                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'food_products-id',
+                              params: { id: foodProduct.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ foodProduct.first_day_num }}</td>
                           </router-link>
-                          <router-link :to="{ name: 'food_products-id', params:{ id: foodProduct.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'food_products-id',
+                              params: { id: foodProduct.id },
+                            }"
+                            tag="td"
+                          >
                             <td>{{ foodProduct.second_day_num }}</td>
                           </router-link>
                         </tr>
@@ -573,10 +936,22 @@
                     <template v-slot:default>
                       <tbody v-for="Employee in Employees" :key="Employee.id">
                         <tr>
-                          <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="th">
+                          <router-link
+                            :to="{
+                              name: 'employees-id',
+                              params: { id: Employee.id },
+                            }"
+                            tag="th"
+                          >
                             <th>{{ Employee.id }}</th>
                           </router-link>
-                          <router-link :to="{ name: 'employees-id', params:{ id: Employee.id }}" tag="td">
+                          <router-link
+                            :to="{
+                              name: 'employees-id',
+                              params: { id: Employee.id },
+                            }"
+                            tag="td"
+                          >
                             <td class="caption">{{ Employee.name }}</td>
                           </router-link>
                         </tr>
@@ -809,21 +1184,21 @@ export default {
         { name: "GD5 [イノベ5年]", id: 14 },
         { name: "その他", id: 15 },
       ],
-      items_available:[
-        {label:"使用",value:true},
-        {label:"不使用",value:false}
+      items_available: [
+        { label: "使用", value: true },
+        { label: "不使用", value: false },
       ],
-      photo_available:[
-        {label:"許可",value:true},
-        {label:"禁止",value:false}
+      photo_available: [
+        { label: "許可", value: true },
+        { label: "禁止", value: false },
       ],
-      loud_able:[
-        {label:"出す",value:true},
-        {label:"出さない",value:false}
+      loud_able: [
+        { label: "出す", value: true },
+        { label: "出さない", value: false },
       ],
-      cooking_available:[
-        {label:"する",value:true},
-        {label:"しない",value:false}
+      cooking_available: [
+        { label: "する", value: true },
+        { label: "しない", value: false },
       ],
       rules: {
         required: (value) => !!value || "入力してください",
@@ -832,8 +1207,8 @@ export default {
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   methods: {
     reload: function () {
@@ -845,7 +1220,7 @@ export default {
           },
         })
         .then((response) => {
-          this.data = response.data
+          this.data = response.data;
           this.group = response.data.group;
           this.groupName = this.group.name;
           this.groupProjectName = this.group.project_name;
@@ -862,32 +1237,34 @@ export default {
           this.rentalOrderLists = this.data.rental_order_lists;
           this.purchase_lists = this.data.purchase_lists;
 
-          for (var i = 0; i < 2; i++){
-            if (stageOrdersLists[i].is_sunny){
-              this.isSunnyLists = stageOrdersLists[i]
+          for (var i = 0; i < 2; i++) {
+            if (stageOrdersLists[i].is_sunny) {
+              this.isSunnyLists = stageOrdersLists[i];
             } else {
-              this.isRainyLists = stageOrdersLists[i]
+              this.isRainyLists = stageOrdersLists[i];
             }
           }
         });
-      const group_detail_url = "api/v1/get_group_detail/" + this.$route.params.id;
-      this.$axios.get(group_detail_url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.detail_data = response.data
-        this.Group = this.detail_data.group;
-        this.subRep = this.detail_data.sub_rep;
-        this.Employees = this.detail_data.employees;
-        this.placeOrder = this.detail_data.place_order;
-        this.powerOrders = this.detail_data.power_orders;
-        this.rentalOrders = this.detail_data.rental_orders;
-        this.stageOrders = this.detail_data.stage_orders;
-        this.stageCommonOption = this.detail_data.stage_common_option;
-        this.foodProducts = this.detail_data.food_products;
-      });
+      const group_detail_url =
+        "api/v1/get_group_detail/" + this.$route.params.id;
+      this.$axios
+        .get(group_detail_url, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.detail_data = response.data;
+          this.Group = this.detail_data.group;
+          this.subRep = this.detail_data.sub_rep;
+          this.Employees = this.detail_data.employees;
+          this.placeOrder = this.detail_data.place_order;
+          this.powerOrders = this.detail_data.power_orders;
+          this.rentalOrders = this.detail_data.rental_orders;
+          this.stageOrders = this.detail_data.stage_orders;
+          this.stageCommonOption = this.detail_data.stage_common_option;
+          this.foodProducts = this.detail_data.food_products;
+        });
     },
     edit_dialog_open: function () {
       const year_url = "/fes_years/";
@@ -955,7 +1332,7 @@ export default {
         },
       })
       .then((response) => {
-        this.data = response.data
+        this.data = response.data;
         this.group = response.data.group;
         this.groupName = this.group.name;
         this.groupProjectName = this.group.project_name;
@@ -971,11 +1348,11 @@ export default {
         this.stageOrdersLists = this.data.stage_orders_lists;
         this.rentalOrderLists = this.data.rental_order_lists;
         this.purchase_lists = this.data.purchase_lists;
-        for (var i = 0; i < 2; i++){
-          if (this.stageOrdersLists[i].is_sunny){
-            this.isSunnyLists = this.stageOrdersLists[i]
+        for (var i = 0; i < 2; i++) {
+          if (this.stageOrdersLists[i].is_sunny) {
+            this.isSunnyLists = this.stageOrdersLists[i];
           } else {
-            this.isRainyLists = this.stageOrdersLists[i]
+            this.isRainyLists = this.stageOrdersLists[i];
           }
         }
       });
@@ -1003,7 +1380,7 @@ export default {
         },
       })
       .then((response) => {
-        this.detail_data = response.data
+        this.detail_data = response.data;
         this.Group = this.detail_data.group;
         this.subRep = this.detail_data.sub_rep;
         this.Employees = this.detail_data.employees;

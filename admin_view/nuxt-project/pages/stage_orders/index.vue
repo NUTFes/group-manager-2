@@ -64,7 +64,7 @@
                             :items="groups"
                             :menu-props="{
                               top: true,
-                              offsetY: true
+                              offsetY: true,
                             }"
                             item-text="name"
                             item-value="id"
@@ -112,10 +112,7 @@
                             clearable
                           />
                           <v-radio-group v-model="radioGroup">
-                            <v-radio
-                              label="時間幅で登録"
-                              :value="1"
-                            ></v-radio>
+                            <v-radio label="時間幅で登録" :value="1"></v-radio>
                             <v-radio label="時刻で登録" :value="2"></v-radio>
                           </v-radio-group>
                           <div v-if="radioGroup === 1">
@@ -188,12 +185,8 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn
-                      depressed
-                      dark
-                      color="btn"
-                      @click="register()"
-                    >登録
+                    <v-btn depressed dark color="btn" @click="register()"
+                      >登録
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -215,9 +208,9 @@
                     :items="stage_orders"
                     class="elevation-0 my-9"
                     @click:row="
-                      data =>
+                      (data) =>
                         $router.push({
-                          path: `/stage_orders/${data.stage_order.id}`
+                          path: `/stage_orders/${data.stage_order.id}`,
                         })
                     "
                   >
@@ -238,10 +231,10 @@
                       >
                     </template>
                     <template v-slot:item.created_at="{ item }">
-                      {{ item.stage_order.created_at | format-date }}
+                      {{ item.stage_order.created_at | formatDate }}
                     </template>
                     <template v-slot:item.updated_at="{ item }">
-                      {{ item.stage_order.updated_at | format-date }}
+                      {{ item.stage_order.updated_at | formatDate }}
                     </template>
                   </v-data-table>
                 </div>
@@ -263,12 +256,12 @@ import VueTimepicker from "vue2-timepicker";
 export default {
   components: {
     "vue-timepicker": vueTimepicker,
-    VueTimepicker
+    VueTimepicker,
   },
   data() {
     return {
       rules: {
-        required: value => !!value || "入力してください"
+        required: (value) => !!value || "入力してください",
       },
       stage_orders: [],
       stages: [],
@@ -297,11 +290,11 @@ export default {
         { text: "第二希望", value: "stage_second" },
         // { text: '総合時間幅', value: 'use_time_interval' },
         { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" }
+        { text: "編集日時", value: "updated_at" },
       ],
       is_sunny_list: [
         { label: "晴れ", value: true },
-        { label: "雨", value: false }
+        { label: "雨", value: false },
       ],
       fes_date_list: [],
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17"],
@@ -317,7 +310,7 @@ export default {
         "40",
         "45",
         "50",
-        "55"
+        "55",
       ],
       time_range: [],
       time_interval: [
@@ -343,18 +336,18 @@ export default {
         "105分",
         "110分",
         "115分",
-        "120分"
-      ]
+        "120分",
+      ],
     };
   },
   mounted() {
     this.$axios
       .get("api/v1/get_stage_orders_details", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.stage_orders = response.data;
       });
     this.set_time_range();
@@ -365,58 +358,58 @@ export default {
       let hour =
         (this.performanceEndTime.HH - this.performanceStartTime.HH) * 60;
       return hour + minute;
-    }
+    },
   },
   methods: {
-    set_time_range: function() {
+    set_time_range: function () {
       for (var hour of this.hour_range) {
         for (var minute of this.minute_range) {
           this.time_range.push(hour + ":" + minute);
         }
       }
     },
-    open_dialog: function() {
+    open_dialog: function () {
       this.$axios
         .get("/stages", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stages_list = response.data;
         });
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.groups = response.data;
         });
       this.$axios
         .get("/fes_dates", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.fes_date_list = response.data;
         });
       this.dialog = true;
     },
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/api/v1/get_stage_orders_details", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stage_orders = response.data;
         });
     },
-    register: function() {
+    register: function () {
       if (this.prepareTimeInterval.length == 0) {
         this.prepareTimeInterval = "-9999";
       }
@@ -471,7 +464,7 @@ export default {
       params.append("performance_end_time", this.performanceEndTime);
       params.append("cleanup_end_time", this.cleanupEndTime);
 
-      this.$axios.post("/stage_orders", params).then(response => {
+      this.$axios.post("/stage_orders", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -488,8 +481,8 @@ export default {
         this.performanceEndTime = "";
         this.cleanupEndTime = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -7,45 +7,44 @@
           <v-col cols="10">
             <v-card-title class="font-weight-bold mt-3">
               <v-icon class="mr-5">mdi-account</v-icon>従業員申請一覧
-              <v-spacer></v-spacer>           
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                            class="mx-2" 
-                            fab 
-                            text
-                            v-bind="attrs"
-                            v-on="on"
-                            @click="dialog=true"
-                            >
-                            <v-icon dark>mdi-plus-circle-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>従業員の追加</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="reload"
-                    >
-                      <v-icon dark>mdi-reload</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>更新する</span>
-                </v-tooltip>
+              <v-spacer></v-spacer>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    text
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="dialog = true"
+                  >
+                    <v-icon dark>mdi-plus-circle-outline</v-icon>
+                  </v-btn>
+                </template>
+                <span>従業員の追加</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="mx-2"
+                    fab
+                    text
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="reload"
+                  >
+                    <v-icon dark>mdi-reload</v-icon>
+                  </v-btn>
+                </template>
+                <span>更新する</span>
+              </v-tooltip>
             </v-card-title>
 
             <v-dialog v-model="dialog" max-width="500">
               <v-card>
                 <v-card-title class="headline blue-grey darken-3">
                   <div style="color: white">
-                    <v-icon class="ma-5" dark>mdi-account</v-icon
-                    >従業員の追加
+                    <v-icon class="ma-5" dark>mdi-account</v-icon>従業員の追加
                   </div>
                   <v-spacer></v-spacer>
                   <v-btn text @click="dialog = false" fab dark>
@@ -93,31 +92,27 @@
                     </v-col>
                   </v-row>
                 </v-card-text>
-                
+
                 <v-divider></v-divider>
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="register()"
-                  >登録
+                  <v-btn depressed dark color="btn" @click="register()"
+                    >登録
                   </v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
-                
-            <hr class="mt-n3">
+
+            <hr class="mt-n3" />
             <template>
               <div class="text-center" v-if="employees.length === 0">
-                <br><br>
+                <br /><br />
                 <v-progress-circular
                   indeterminate
                   color="#009688"
-                  ></v-progress-circular>
-                <br><br>
+                ></v-progress-circular>
+                <br /><br />
               </div>
               <div v-else>
                 <v-data-table
@@ -125,17 +120,17 @@
                   :items="employees"
                   class="elevation-0 my-9"
                   @click:row="
-                              (data) =>
-                              $router.push({ path: `/employees/${data.employee.id}`})
-                              "
-                  >
+                    (data) =>
+                      $router.push({ path: `/employees/${data.employee.id}` })
+                  "
+                >
                   <template v-slot:item.employee.created_at="{ item }">
-                    {{ item.employee.created_at | format-date }}
+                    {{ item.employee.created_at | formatDate }}
                   </template>
                   <template v-slot:item.employee.updated_at="{ item }">
-                    {{ item.employee.updated_at | format-date }}
+                    {{ item.employee.updated_at | formatDate }}
                   </template>
-                </v-data-table>                      
+                </v-data-table>
               </div>
             </template>
           </v-col>
@@ -182,14 +177,15 @@ export default {
       .then((response) => {
         this.employees = response.data;
       });
-    this.$axios.get('/groups', {
-      headers: { 
-        "Content-Type": "application/json", 
-      }
-    })
-      .then(response => {
-        this.groups = response.data
+    this.$axios
+      .get("/groups", {
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
+      .then((response) => {
+        this.groups = response.data;
+      });
   },
 
   methods: {
@@ -219,6 +215,6 @@ export default {
         this.studentId = "";
       });
     },
-  }
+  },
 };
 </script>

@@ -6,7 +6,8 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "format": "prettier --write --ignore-path .gitignore './**/*.{js,vue,json,css}'"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
@@ -25,6 +26,9 @@
     "webpack": "4.46.0"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.11.2"
+    "@nuxtjs/vuetify": "^1.11.2",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.5.1"
   }
 }

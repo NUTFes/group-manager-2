@@ -111,13 +111,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ food_product.created_at | format-date }}
+                          {{ food_product.created_at | formatDate }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ food_product.updated_at | format-date }}
+                          {{ food_product.updated_at | formatDate }}
                         </td>
                         <td v-if="rights == 1">
                           <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -211,9 +211,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="btn" @click="edit">
-              編集する
-            </v-btn>
+            <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -231,9 +229,7 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
+          <v-card-title> 削除してよろしいですか？ </v-card-title>
 
           <v-divider></v-divider>
 
@@ -273,7 +269,7 @@ import NoData from "../../components/NoData.vue";
 import { mapState } from "vuex";
 export default {
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -291,37 +287,37 @@ export default {
       delete_dialog: false,
       cooking_items: [
         { label: "する", value: true },
-        { label: "しない", value: false }
+        { label: "しない", value: false },
       ],
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/groups", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.groups = response.data;
       });
     const url = "/api/v1/get_food_product/" + this.$route.params.id;
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.data = response.data;
         this.food_product = response.data.food_product;
         this.id = response.data.food_product.id;
@@ -334,16 +330,16 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       console.log("reload");
       const url = "/api/v1/get_food_product/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.data = response.data;
           this.food_product = response.data.food_product;
           this.id = response.data.food_product.id;
@@ -355,10 +351,10 @@ export default {
           this.is_cooking = response.data.food_product.is_cooking;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/food_products/" +
         this.id +
@@ -376,22 +372,22 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/food_products/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/food_products");
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>

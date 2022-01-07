@@ -1,21 +1,28 @@
 <template>
   <div class="sheets">
     <v-row>
-      <v-col cols=4></v-col>
+      <v-col cols="4"></v-col>
       <v-col>
-        <h1 style="color:#333333;">印刷プレビュー</h1>
+        <h1 style="color: #333333">印刷プレビュー</h1>
       </v-col>
-      <v-col cols=2></v-col>
+      <v-col cols="2"></v-col>
     </v-row>
     <v-row>
-      <v-col cols=4></v-col>
-      <v-col cols=3>
-        <v-btn rounded block color="blue" height="50" to="/print"><v-icon class="mr-3" style="color:white">mdi-arrow-left-bold</v-icon><div style="color:white">管理者画面に戻る</div></v-btn>
+      <v-col cols="4"></v-col>
+      <v-col cols="3">
+        <v-btn rounded block color="blue" height="50" to="/print"
+          ><v-icon class="mr-3" style="color: white"
+            >mdi-arrow-left-bold</v-icon
+          >
+          <div style="color: white">管理者画面に戻る</div></v-btn
+        >
       </v-col>
-      <v-col cols=3>
-        <v-btn rounded block height="50" color="primary" @click="handlePrint"><v-icon class="mr-3">mdi-printer</v-icon>印刷する</v-btn>
+      <v-col cols="3">
+        <v-btn rounded block height="50" color="primary" @click="handlePrint"
+          ><v-icon class="mr-3">mdi-printer</v-icon>印刷する</v-btn
+        >
       </v-col>
-      <v-col cols=2></v-col>
+      <v-col cols="2"></v-col>
     </v-row>
 
     <div class="sheet">
@@ -42,49 +49,53 @@
     </div>
 
     <v-row>
-      <v-col cols=4></v-col>
+      <v-col cols="4"></v-col>
       <v-col>
-        <v-btn text color="white" to="/users"><v-icon color="#333333">mdi-arrow-left-bold</v-icon><div style="color:#333333">ユーザー一覧に戻る</div></v-btn>
+        <v-btn text color="white" to="/users"
+          ><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+          <div style="color: #333333">ユーザー一覧に戻る</div></v-btn
+        >
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Menu from '~/components/Menu.vue'
+import Header from "~/components/Header.vue";
+import Menu from "~/components/Menu.vue";
 
 export default {
   data() {
     return {
       list: null,
-      users: null
-    }
+      users: null,
+    };
   },
-  components:{
+  components: {
     Header,
     Menu,
   },
   mounted() {
-    this.getList()
+    this.getList();
     setTimeout(this.handlePrint, 100);
   },
   methods: {
     getList() {
-      this.$axios.get('api/v1/users/index', {
-        headers: { 
-          "Content-Type": "application/json", 
-        }
-      })
-      .then(response => {
-        this.users = response.data.data
-      })
+      this.$axios
+        .get("api/v1/users/index", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.users = response.data.data;
+        });
     },
     handlePrint() {
-      window.print()
-    }
-  }
-}
+      window.print();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -97,7 +108,7 @@ h1 {
 
 /* hide in print */
 @media print {
-  .sheets > :not(.sheet){
+  .sheets > :not(.sheet) {
     display: none;
   }
 }
@@ -111,7 +122,7 @@ h1 {
     margin: 5mm;
     padding: 5mm;
     background: white;
-    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    box-shadow: 0 0.5mm 2mm rgba(0, 0, 0, 0.3);
     margin-left: 32%;
   }
 }

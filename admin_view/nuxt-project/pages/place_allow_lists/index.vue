@@ -93,12 +93,8 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    color="btn"
-                    depressed
-                    dark
-                    @click="register()"
-                  >登録
+                  <v-btn color="btn" depressed dark @click="register()"
+                    >登録
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -119,9 +115,9 @@
                   :items="place_allow_list"
                   class="elevation-0 my-9"
                   @click:row="
-                    data =>
+                    (data) =>
                       $router.push({
-                        path: `/place_allow_lists/${data.place_allow_list.id}`
+                        path: `/place_allow_lists/${data.place_allow_list.id}`,
                       })
                   "
                 >
@@ -185,15 +181,11 @@
                       ><v-icon class="mr-1">mdi-close</v-icon>不可能</v-chip
                     >
                   </template>
-                  <template
-                    v-slot:item.place_allow_list.created_at="{ item }"
-                  >
-                    {{ item.place_allow_list.created_at | format-date }}
+                  <template v-slot:item.place_allow_list.created_at="{ item }">
+                    {{ item.place_allow_list.created_at | formatDate }}
                   </template>
-                  <template
-                    v-slot:item.place_allow_list.updated_at="{ item }"
-                  >
-                    {{ item.place_allow_list.updated_at | format-date }}
+                  <template v-slot:item.place_allow_list.updated_at="{ item }">
+                    {{ item.place_allow_list.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>
@@ -222,7 +214,7 @@ export default {
       dialog: false,
       enable_items: [
         { label: "使用可能", value: true },
-        { label: "使用不可能", value: false }
+        { label: "使用不可能", value: false },
       ],
       headers: [
         { text: "ID", value: "place_allow_list.id" },
@@ -230,33 +222,33 @@ export default {
         { text: "グループカテゴリー", value: "group_category.id" },
         { text: "使用", value: "place_allow_list.enable" },
         { text: "作成日時", value: "place_allow_list.created_at" },
-        { text: "編集日時", value: "place_allow_list.updated_at" }
-      ]
+        { text: "編集日時", value: "place_allow_list.updated_at" },
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/places", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.places = response.data;
       });
     this.$axios
       .get("/group_categories", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.group_categories = response.data;
         for (let i = 0; i < this.group_categories.length; i++) {
           this.category.push(this.group_categories[i]["name"]);
@@ -265,33 +257,33 @@ export default {
     this.$axios
       .get("/api/v1/get_place_allow_lists", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.place_allow_list = response.data;
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       this.$axios
         .get("/api/v1/get_place_allow_lists", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.place_allow_list = response.data;
         });
     },
 
-    register: function() {
+    register: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
       params.append("place_id", this.place_id);
       params.append("group_category_id", this.group_category_id);
       params.append("enable", this.enable);
-      this.$axios.post("/place_allow_lists", params).then(response => {
+      this.$axios.post("/place_allow_lists", params).then((response) => {
         console.log(response);
         this.dialog = false;
         this.reload();
@@ -299,7 +291,7 @@ export default {
         this.group_category = "";
         this.enable = "";
       });
-    }
-  }
+    },
+  },
 };
 </script>

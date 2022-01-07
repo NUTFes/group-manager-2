@@ -133,8 +133,7 @@
                             color="red"
                             text-color="white"
                             small
-                            ><v-icon class="mr-1">mdi-check</v-icon
-                            >可能</v-chip
+                            ><v-icon class="mr-1">mdi-check</v-icon>可能</v-chip
                           >
                           <v-chip
                             v-if="place_allow_list.enable == false"
@@ -149,13 +148,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ place_allow_list.created_at | format-date }}
+                          {{ place_allow_list.created_at | formatDate }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ place_allow_list.updated_at | format-date }}
+                          {{ place_allow_list.updated_at | formatDate }}
                         </td>
                       </tr>
                     </tbody>
@@ -281,9 +280,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="btn" @click="edit">
-              編集する
-            </v-btn>
+            <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -301,17 +298,13 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
+          <v-card-title> 削除してよろしいですか？ </v-card-title>
 
           <v-divider></v-divider>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="yes" @click="delete_yes">
-              はい
-            </v-btn>
+            <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
             <v-btn depressed dark color="no" @click="delete_dialog = false">
               いいえ
             </v-btn>
@@ -344,7 +337,7 @@ import NoData from "../../components/NoData.vue";
 import { mapState } from "vuex";
 export default {
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -361,33 +354,33 @@ export default {
       delete_dialog: false,
       enable_items: [
         { label: "使用可能", value: true },
-        { label: "使用不可能", value: false }
-      ]
+        { label: "使用不可能", value: false },
+      ],
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/places", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.places = response.data;
       });
     this.$axios
       .get("/group_categories", {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.group_categories = response.data;
         for (let i = 0; i < this.group_categories.length; i++) {
           this.category.push(this.group_categories[i]["name"]);
@@ -398,10 +391,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.id = response.data.place_allow_list.id;
         this.place_allow_list = response.data.place_allow_list;
         this.place = response.data.place;
@@ -411,16 +404,16 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       console.log("reload");
       const url = "/api/v1/get_place_allow_list/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.id = response.data.place_allow_list.id;
           this.place_allow_list = response.data.place_allow_list;
           this.place = response.data.place;
@@ -429,10 +422,10 @@ export default {
           this.group_category = response.data.group_category.id;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/place_allow_lists/" +
         this.id +
@@ -446,22 +439,22 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/place_allow_lists/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/place_allow_lists");
-    }
-  }
+    },
+  },
 };
 </script>
 

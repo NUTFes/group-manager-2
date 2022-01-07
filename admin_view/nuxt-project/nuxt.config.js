@@ -1,36 +1,33 @@
-import colors from 'vuetify/es5/util/colors'
+import colors from "vuetify/es5/util/colors";
 
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   server: {
-    host: '0.0.0.0',
-    port: 8000
+    host: "0.0.0.0",
+    port: 8000,
   },
   head: {
-    titleTemplate: '参加団体管理アプリ-管理者ページ',
-    title: '管理者ページ',
+    titleTemplate: "参加団体管理アプリ-管理者ページ",
+    title: "管理者ページ",
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { hid: "description", name: "description", content: "" },
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
 
   router: {
-    middleware: ['auth']
+    middleware: ["auth"],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    { src: '~/plugins/axios.js', ssr: false },
-    { src: '~/plugins/fileter.js', ssr: false },
+    { src: "~/plugins/axios.js", ssr: false },
+    { src: "~/plugins/fileter.js", ssr: false },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -39,41 +36,41 @@ export default {
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
+    "@nuxtjs/vuetify",
   ],
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/auth',
-    ['@nuxtjs/moment', ['ja']],
-  ],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", ["@nuxtjs/moment", ["ja"]]],
 
   axios: {
     // baseURL: 'http://localhost:3000'
-    baseURL: process.env.VUE_APP_URL
+    baseURL: process.env.VUE_APP_URL,
   },
 
   auth: {
     redirect: {
-      login: '/',
-      logout: '/',
+      login: "/",
+      logout: "/",
       callback: false,
-      home: '/dashboard'
+      home: "/dashboard",
     },
     strategies: {
       local: {
         endpoints: {
-          login: { url: '/api/auth/sign_in', method: 'post', propertyName: false },
+          login: {
+            url: "/api/auth/sign_in",
+            method: "post",
+            propertyName: false,
+          },
           logout: false,
-          user: false
-        }
-      }
-    }
+          user: false,
+        },
+      },
+    },
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
+    customVariables: ["~/assets/variables.scss"],
     theme: {
       dark: false,
       light: true,
@@ -88,7 +85,7 @@ export default {
           success: colors.green.accent3,
           background: "#EEEEEE",
           text: "#333333",
-          btn: "#E040FB"
+          btn: "#E040FB",
         },
         light: {
           primary: "#333333",
@@ -106,10 +103,10 @@ export default {
           btn: "#b16286",
           yes: "#cc241d",
           no: "#458588",
-          loginbg: "#FFFFFF"
-        }
+          loginbg: "#FFFFFF",
+        },
       },
-      options: { customProperties: true }
+      options: { customProperties: true },
     },
-  }
-}
+  },
+};

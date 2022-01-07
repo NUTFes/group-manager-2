@@ -89,13 +89,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ place_order.created_at | format-date }}
+                        {{ place_order.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ place_order.updated_at | format-date }}
+                        {{ place_order.updated_at | formatDate }}
                       </td>
                       <td v-if="rights == 1">
                         <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -128,7 +128,6 @@
               <v-simple-table class="my-9">
                 <template v-slot:default>
                   <tbody>
-                    
                     <tr
                       v-for="(power_order, index) in power_orders"
                       :key="(power_order, index)"
@@ -310,14 +309,14 @@ export default {
       success_snackbar: false,
       delete_snackbar: false,
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -325,10 +324,10 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.place_order = response.data.place_order;
         this.power_orders = response.data.power_orders;
         this.total_power = response.data.total_power;
@@ -344,15 +343,15 @@ export default {
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       const url = "/api/v1/get_place_order/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.place_order = response.data.place_order;
           this.power_orders = response.data.power_orders;
           this.total_power = response.data.total_power;
@@ -367,28 +366,28 @@ export default {
           this.remark = response.data.place_order.remark;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.$axios
         .get("/places", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.places = response.data;
         });
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.group_list = response.data;
         });
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url =
         "/place_orders/" +
         this.place_order.id +
@@ -406,20 +405,20 @@ export default {
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/place_orders/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/place_orders");
-    }
-  }
+    },
+  },
 };
 </script>

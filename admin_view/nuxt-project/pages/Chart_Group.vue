@@ -43,7 +43,7 @@ export default {
                 min: 0,
                 max: 30,
                 fontSize: 14,
-                stepSize: 5  
+                stepSize: 5,
               },
             },
           ],

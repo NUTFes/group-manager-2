@@ -100,13 +100,13 @@
                     <tr>
                       <th>登録日時：</th>
                       <td class="caption">
-                        {{ power_order.created_at | format-date }}
+                        {{ power_order.created_at | formatDate }}
                       </td>
                     </tr>
                     <tr>
                       <th>編集日時：</th>
                       <td class="caption">
-                        {{ power_order.updated_at | format-date }}
+                        {{ power_order.updated_at | formatDate }}
                       </td>
                       <td v-if="rights == 1">
                         <v-icon color="#E91E63">mdi-pencil</v-icon>
@@ -331,14 +331,14 @@ export default {
       success_snackbar: false,
       delete_snackbar: false,
       rules: {
-        required: value => !!value || "入力してください"
-      }
+        required: (value) => !!value || "入力してください",
+      },
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -368,7 +368,6 @@ export default {
   },
   methods: {
     reload: function () {
-
       const url = "/api/v1/get_power_order/" + this.$route.params.id;
       this.$axios
         .get(url, {
@@ -387,14 +386,14 @@ export default {
           this.itemUrl = response.data.power_order.item_url;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.$axios
         .get("/groups", {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.group_list = response.data;
         });
       this.edit_dialog = true;
@@ -422,7 +421,6 @@ export default {
           },
         })
         .then((response) => {
-
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
@@ -434,6 +432,5 @@ export default {
       this.$router.push("/power_orders");
     },
   },
-
 };
 </script>

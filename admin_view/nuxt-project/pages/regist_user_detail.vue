@@ -57,7 +57,15 @@
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-actions>
-                  <v-btn depressed large block dark color="btn" @click="register">登録</v-btn>
+                  <v-btn
+                    depressed
+                    large
+                    block
+                    dark
+                    color="btn"
+                    @click="register"
+                    >登録</v-btn
+                  >
                 </v-card-actions>
               </v-col>
               <v-col cols="1"></v-col>
@@ -183,4 +191,3 @@ export default {
   },
 };
 </script>
-

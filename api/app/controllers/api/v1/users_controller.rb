@@ -1,5 +1,15 @@
 class Api::V1::UsersController < ApplicationController
   # before_action :authenticate_api_user!
+  #
+  def get_user_with_user_details
+    @users = User.with_user_details
+    render json: fmt(ok, @users)
+  end
+
+  def get_user_with_user_detail
+    @user = User.with_user_detail(params[:id])
+    render json: fmt(ok, @user)
+  end
 
   def index
     @users = User.all

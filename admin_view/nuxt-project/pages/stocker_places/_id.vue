@@ -132,13 +132,13 @@
                       <tr>
                         <th>登録日時：</th>
                         <td class="caption">
-                          {{ stocker_place.created_at | format-date }}
+                          {{ stocker_place.created_at | formatDate }}
                         </td>
                       </tr>
                       <tr>
                         <th>編集日時：</th>
                         <td class="caption">
-                          {{ stocker_place.updated_at | format-date }}
+                          {{ stocker_place.updated_at | formatDate }}
                         </td>
                       </tr>
                     </tbody>
@@ -189,9 +189,7 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="btn" @click="edit">
-              編集する
-            </v-btn>
+            <v-btn depressed dark color="btn" @click="edit"> 編集する </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -209,17 +207,13 @@
             </v-btn>
           </v-card-title>
 
-          <v-card-title>
-            削除してよろしいですか？
-          </v-card-title>
+          <v-card-title> 削除してよろしいですか？ </v-card-title>
 
           <v-divider></v-divider>
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn depressed dark color="yes" @click="delete_yes">
-              はい
-            </v-btn>
+            <v-btn depressed dark color="yes" @click="delete_yes"> はい </v-btn>
             <v-btn depressed dark color="no" @click="delete_dialog = false">
               いいえ
             </v-btn>
@@ -252,7 +246,7 @@ import NoData from "../../components/NoData.vue";
 import { mapState } from "vuex";
 export default {
   components: {
-    NoData
+    NoData,
   },
   data() {
     return {
@@ -261,13 +255,13 @@ export default {
       name: [],
       expand: false,
       edit_dialog: false,
-      delete_dialog: false
+      delete_dialog: false,
     };
   },
   computed: {
     ...mapState({
-      selfRoleId: state => state.users.role
-    })
+      selfRoleId: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$store.dispatch("users/getUser");
@@ -275,56 +269,56 @@ export default {
     this.$axios
       .get(url, {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       })
-      .then(response => {
+      .then((response) => {
         this.stocker_place = response.data;
         this.id = response.data.id;
         this.name = response.data.name;
       });
   },
   methods: {
-    reload: function() {
+    reload: function () {
       console.log("reload");
       const url = "/stocker_places/" + this.$route.params.id;
       this.$axios
         .get(url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.stocker_place = response.data;
           this.id = response.data.id;
           this.name = response.data.name;
         });
     },
-    edit_dialog_open: function() {
+    edit_dialog_open: function () {
       this.edit_dialog = true;
     },
-    edit: function() {
+    edit: function () {
       const edit_url = "/stocker_places/" + this.id + "?name=" + this.name;
       console.log(edit_url);
       this.$axios
         .put(edit_url, {
           headers: {
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           this.reload();
           this.edit_dialog = false;
           this.success_snackbar = true;
         });
     },
-    delete_yes: function() {
+    delete_yes: function () {
       const url = "/stocker_places/" + this.$route.params.id;
       this.$axios.delete(url);
       this.$router.push("/stocker_places");
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -1,82 +1,82 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
+  <v-container class="pa-0 ma-0">
+    <v-row class="pa-0 ma-0">
+      <v-col class="pt-0 ma-0">
         <v-card flat class="mx-15 pb-5">
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3 pb-7">
-                  <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
-                    >mdi-account-cog</v-icon
-                  >
-                  <v-icon v-if="user.role_id == 2" color="green" class="ma-1"
-                    >mdi-account-tie</v-icon
-                  >
-                  <v-icon v-if="user.role_id == 3" color="blue" class="ma-1"
-                    >mdi-account</v-icon
-                  >
-                  {{ user.name }}
-                  <v-spacer></v-spacer>
-                </v-card-title>
-                <hr class="mt-n3" />
-              </v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-row>
-                  <v-col cols="1" align="center"
-                    ><v-icon>mdi-account-outline</v-icon></v-col
-                  >
-                  <v-col cols="3">学籍番号</v-col>
-                  <v-col cols="8">{{ student_id }}</v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col cols="1" align="center"
-                    ><v-icon>mdi-school-outline</v-icon></v-col
-                  >
-                  <v-col cols="3">学年</v-col>
-                  <v-col cols="8">{{ grade }}</v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col cols="1" align="center"
-                    ><v-icon>mdi-school</v-icon></v-col
-                  >
-                  <v-col cols="3">課程</v-col>
-                  <v-col cols="8">{{ department }}</v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col cols="1" align="center"
-                    ><v-icon>mdi-phone</v-icon></v-col
-                  >
-                  <v-col cols="3">電話番号</v-col>
-                  <v-col cols="8">{{ tel }}</v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col cols="1" align="center"
-                    ><v-icon>mdi-email</v-icon></v-col
-                  >
-                  <v-col cols="3">メールアドレス</v-col>
-                  <v-col cols="8">{{ user.email }}</v-col>
-                </v-row>
-              </v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
+          <v-row class="pa-0 ma-0">
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-3 pb-7">
+                <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
+                  >mdi-account-cog</v-icon
+                >
+                <v-icon v-if="user.role_id == 2" color="green" class="ma-1"
+                  >mdi-account-tie</v-icon
+                >
+                <v-icon v-if="user.role_id == 3" color="blue" class="ma-1"
+                  >mdi-account</v-icon
+                >
+                {{ user.name }}
+                <v-spacer></v-spacer>
+              </v-card-title>
+              <hr class="mt-n3" />
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
+          <v-row class="pa-0 ma-0">
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-row class="pa-0 ma-0">
+                <v-col cols="1" align="center"
+                  ><v-icon>mdi-account-outline</v-icon></v-col
+                >
+                <v-col cols="3">学籍番号</v-col>
+                <v-col cols="8">{{ student_id }}</v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <v-row class="pa-0 ma-0">
+                <v-col cols="1" align="center"
+                  ><v-icon>mdi-school-outline</v-icon></v-col
+                >
+                <v-col cols="3">学年</v-col>
+                <v-col cols="8">{{ grade }}</v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <v-row class="pa-0 ma-0">
+                <v-col cols="1" align="center"
+                  ><v-icon>mdi-school</v-icon></v-col
+                >
+                <v-col cols="3">課程</v-col>
+                <v-col cols="8">{{ department }}</v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <v-row class="pa-0 ma-0">
+                <v-col cols="1" align="center"
+                  ><v-icon>mdi-phone</v-icon></v-col
+                >
+                <v-col cols="3">電話番号</v-col>
+                <v-col cols="8">{{ tel }}</v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <v-row class="pa-0 ma-0">
+                <v-col cols="1" align="center"
+                  ><v-icon>mdi-email</v-icon></v-col
+                >
+                <v-col cols="3">メールアドレス</v-col>
+                <v-col cols="8">{{ user.email }}</v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pa-0 ma-0">
       <v-col>
-        <update/>
+        <update />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pa-0 ma-0">
       <v-col>
         <v-card
           flat
@@ -86,60 +86,87 @@
           }"
         >
           <v-container>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3 pb-7">
                   <v-icon class="ma-1">mdi-account-group</v-icon>
                   参加団体
                 </v-card-title>
-                <hr class="mt-n3" color="#BDBDBD"/>
+                <hr class="mt-n3" color="#BDBDBD" />
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
-              <v-col cols="10">
-                  <chart1></chart1>
-              </v-col
+              <v-col cols="10"> <chart1></chart1> </v-col
             ></v-row>
             <v-col cols="1"></v-col>
           </v-container>
         </v-card>
       </v-col>
       <v-col>
-        <v-card 
-           flat
-           class="mr-15"
-           :to="{
-                name: 'users'
-                }"
-           > 
-           <v-row>
-             <v-col cols=1></v-col>
-             <v-col cols=10>
-               <v-card-title class="font-weight-bold mt-6 pb-7">
-                 <v-icon class="ma-1">mdi-account-circle</v-icon>
-                 ユーザー数
-               </v-card-title>
-               <!-- <v-divider /> -->
-               <hr class="mt-n3" color="#BDBDBD"/>
-               <v-row>
-                 <v-col cols=6>
-                   <br><br>
-                   <v-card-text><div style="font-size:100px; text-align:center">{{ dashboard_data.all_user_num }}</div><br><br><br><div style="font-size:20px; text-align:center">people</div></v-card-text>
-                 </v-col>
-                 <v-col cols=6>
-                   <v-card-text><v-chip color="red" text-color="white"><v-avatar left class="red darken-4">{{ dashboard_data.developer_num }}</v-avatar>developers</v-chip></v-card-text>
-                   <v-card-text><v-chip color="green" text-color="white"><v-avatar left class="green darken-4">{{ dashboard_data.manager_num }}</v-avatar>managers</v-chip></v-card-text>
-                   <v-card-text><v-chip color="blue" text-color="white"><v-avatar left class="blue darken-4">{{ dashboard_data.user_num }}</v-avatar>users</v-chip></v-card-text>
-                 </v-col>
-               </v-row>
-             </v-col>
-             <v-col cols=1></v-col>
-           </v-row>
+        <v-card
+          flat
+          class="mr-15"
+          :to="{
+            name: 'users',
+          }"
+        >
+          <v-row class="pa-0 ma-0">
+            <v-col cols="1"></v-col>
+            <v-col cols="10">
+              <v-card-title class="font-weight-bold mt-6 pb-7">
+                <v-icon class="ma-1">mdi-account-circle</v-icon>
+                ユーザー数
+              </v-card-title>
+              <!-- <v-divider /> -->
+              <hr class="mt-n3" color="#BDBDBD" />
+              <v-row class="pa-0 ma-0">
+                <v-col cols="6">
+                  <br /><br />
+                  <v-card-text
+                    ><div style="font-size: 100px; text-align: center">
+                      {{ dashboard_data.all_user_num }}
+                    </div>
+                    <br /><br /><br />
+                    <div style="font-size: 20px; text-align: center">
+                      people
+                    </div></v-card-text
+                  >
+                </v-col>
+                <v-col cols="6">
+                  <v-card-text
+                    ><v-chip color="red" text-color="white"
+                      ><v-avatar left class="red darken-4">{{
+                        dashboard_data.developer_num
+                      }}</v-avatar
+                      >developers</v-chip
+                    ></v-card-text
+                  >
+                  <v-card-text
+                    ><v-chip color="green" text-color="white"
+                      ><v-avatar left class="green darken-4">{{
+                        dashboard_data.manager_num
+                      }}</v-avatar
+                      >managers</v-chip
+                    ></v-card-text
+                  >
+                  <v-card-text
+                    ><v-chip color="blue" text-color="white"
+                      ><v-avatar left class="blue darken-4">{{
+                        dashboard_data.user_num
+                      }}</v-avatar
+                      >users</v-chip
+                    ></v-card-text
+                  >
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="1"></v-col>
+          </v-row>
         </v-card>
-        <br>
+        <br />
         <v-card
           flat
           class="mr-15"
@@ -148,7 +175,7 @@
           }"
         >
           <v-container>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3 pb-7">
@@ -156,17 +183,17 @@
                   物品割り当て
                 </v-card-title>
                 <!-- <v-divider /> -->
-                <hr class="mt-n3" color="#BDBDBD"/>
+                <hr class="mt-n3" color="#BDBDBD" />
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="5">在庫情報</v-col>
               <v-col cols="5">割り当て情報</v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="5"><chart2></chart2></v-col>
               <v-col cols="5"><chart3></chart3></v-col>
@@ -176,7 +203,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -186,7 +213,7 @@ import axios from "axios";
 import Chart1 from "./Chart_Group";
 import Chart2 from "./Chart_Stock";
 import Chart3 from "./Chart_Assign";
-import Update from '../components/Update.vue';
+import Update from "../components/Update.vue";
 
 export default {
   components: {
@@ -217,8 +244,8 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
         },
       })
       .then((response) => {
