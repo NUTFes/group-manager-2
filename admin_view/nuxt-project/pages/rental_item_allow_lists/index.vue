@@ -168,16 +168,12 @@
                   <template
                     v-slot:item.rental_item_allow_list.created_at="{ item }"
                   >
-                    {{
-                      item.rental_item_allow_list.created_at | formatDate
-                    }}
+                    {{ item.rental_item_allow_list.created_at | formatDate }}
                   </template>
                   <template
                     v-slot:item.rental_item_allow_list.updated_at="{ item }"
                   >
-                    {{
-                      item.rental_item_allow_list.updated_at | formatDate
-                    }}
+                    {{ item.rental_item_allow_list.updated_at | formatDate }}
                   </template>
                 </v-data-table>
               </div>

@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
+  <v-container class="pa-0 ma-0">
+    <v-row class="pa-0 ma-0">
+      <v-col class="pt-0 ma-0">
         <v-card flat class="mx-15 pb-5">
-          <v-row>
+          <v-row class="pa-0 ma-0">
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-3 pb-7">
@@ -23,10 +23,10 @@
             </v-col>
             <v-col cols="1"></v-col>
           </v-row>
-          <v-row>
+          <v-row class="pa-0 ma-0">
             <v-col cols="1"></v-col>
             <v-col cols="10">
-              <v-row>
+              <v-row class="pa-0 ma-0">
                 <v-col cols="1" align="center"
                   ><v-icon>mdi-account-outline</v-icon></v-col
                 >
@@ -34,7 +34,7 @@
                 <v-col cols="8">{{ student_id }}</v-col>
               </v-row>
               <v-divider></v-divider>
-              <v-row>
+              <v-row class="pa-0 ma-0">
                 <v-col cols="1" align="center"
                   ><v-icon>mdi-school-outline</v-icon></v-col
                 >
@@ -42,7 +42,7 @@
                 <v-col cols="8">{{ grade }}</v-col>
               </v-row>
               <v-divider></v-divider>
-              <v-row>
+              <v-row class="pa-0 ma-0">
                 <v-col cols="1" align="center"
                   ><v-icon>mdi-school</v-icon></v-col
                 >
@@ -50,7 +50,7 @@
                 <v-col cols="8">{{ department }}</v-col>
               </v-row>
               <v-divider></v-divider>
-              <v-row>
+              <v-row class="pa-0 ma-0">
                 <v-col cols="1" align="center"
                   ><v-icon>mdi-phone</v-icon></v-col
                 >
@@ -58,7 +58,7 @@
                 <v-col cols="8">{{ tel }}</v-col>
               </v-row>
               <v-divider></v-divider>
-              <v-row>
+              <v-row class="pa-0 ma-0">
                 <v-col cols="1" align="center"
                   ><v-icon>mdi-email</v-icon></v-col
                 >
@@ -71,12 +71,12 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pa-0 ma-0">
       <v-col>
         <update />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="pa-0 ma-0">
       <v-col>
         <v-card
           flat
@@ -86,7 +86,7 @@
           }"
         >
           <v-container>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3 pb-7">
@@ -97,7 +97,7 @@
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="10"> <chart1></chart1> </v-col
             ></v-row>
@@ -113,7 +113,7 @@
             name: 'users',
           }"
         >
-          <v-row>
+          <v-row class="pa-0 ma-0">
             <v-col cols="1"></v-col>
             <v-col cols="10">
               <v-card-title class="font-weight-bold mt-6 pb-7">
@@ -122,7 +122,7 @@
               </v-card-title>
               <!-- <v-divider /> -->
               <hr class="mt-n3" color="#BDBDBD" />
-              <v-row>
+              <v-row class="pa-0 ma-0">
                 <v-col cols="6">
                   <br /><br />
                   <v-card-text
@@ -175,7 +175,7 @@
           }"
         >
           <v-container>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="10">
                 <v-card-title class="font-weight-bold mt-3 pb-7">
@@ -187,13 +187,13 @@
               </v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="5">在庫情報</v-col>
               <v-col cols="5">割り当て情報</v-col>
               <v-col cols="1"></v-col>
             </v-row>
-            <v-row>
+            <v-row class="pa-0 ma-0">
               <v-col cols="1"></v-col>
               <v-col cols="5"><chart2></chart2></v-col>
               <v-col cols="5"><chart3></chart3></v-col>
@@ -203,7 +203,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>

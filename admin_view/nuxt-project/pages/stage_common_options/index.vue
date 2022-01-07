@@ -244,16 +244,12 @@
                     <template
                       v-slot:item.stage_common_option.created_at="{ item }"
                     >
-                      {{
-                        item.stage_common_option.created_at | formatDate
-                      }}
+                      {{ item.stage_common_option.created_at | formatDate }}
                     </template>
                     <template
                       v-slot:item.stage_common_option.updated_at="{ item }"
                     >
-                      {{
-                        item.stage_common_option.updated_at | formatDate
-                      }}
+                      {{ item.stage_common_option.updated_at | formatDate }}
                     </template>
                   </v-data-table>
                 </div>

@@ -3,9 +3,11 @@
     <Menu v-if="main && print" />
     <Header v-if="main && print" />
     <v-main>
-      <transition mode="in-out">
-        <nuxt />
-      </transition>
+      <v-container class="py-7">
+        <transition mode="in-out">
+          <nuxt />
+        </transition>
+      </v-container>
     </v-main>
   </v-app>
 </template>
