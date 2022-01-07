@@ -25,7 +25,7 @@ class AssignGroupPlacesController < ApplicationController
   # PATCH/PUT /assign_group_places/1.json
   def update
     @assign_group_place.update(assign_group_place_params)
-    render json: fmt(created, @assign_group_place, "Updeted assign_group_place id = "+params[:id])
+    render json: fmt(created, @assign_group_place, "Updated assign_group_place id = "+params[:id])
   end
 
   # DELETE /assign_group_places/1

@@ -17,8 +17,8 @@ class StockerItemsController < ApplicationController
   # POST /stocker_items
   # POST /stocker_items.json
   def create
-    @stocker_item = StockerItem.new(stocker_item_params)
-    @stocker_item.save
+    @stocker_item = StockerItem.create(stocker_item_params)
+    render json: fmt(created, @stocker_item)
     # @stocker_items = StockerItem.all
     # render json: @stocker_items
   end
@@ -27,7 +27,7 @@ class StockerItemsController < ApplicationController
   # PATCH/PUT /stocker_items/1.json
   def update
     @stocker_item.update(stocker_item_params)
-    render json: fmt(ok, @stocker_item)
+    render json: fmt(created, @stocker_item, "Updated stocker_item id = "+params[:id])
   end
 
   # DELETE /stocker_items/1
@@ -40,7 +40,11 @@ class StockerItemsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stocker_item
-      @stocker_item = StockerItem.find(params[:id])
+      if StockerItem.exists?(params[:id])
+        @stocker_item = StockerItem.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found stocker_item = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

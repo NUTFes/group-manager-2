@@ -11,14 +11,13 @@ class FesYearsController < ApplicationController
   end
 
   def create
-    @fes_year = FesYear.new(fes_year_params)
-    @fes_year.save
-    render json: fmt(ok, @fes_year)
+    @fes_year = FesYear.create(fes_year_params)
+    render json: fmt(created, @fes_year)
   end
 
   def update
     @fes_year.update(fes_year_params)
-    render json: fmt(ok, @fes_year)
+    render json: fmt(created, @fes_year)
   end
 
   def destroy
@@ -29,7 +28,11 @@ class FesYearsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_fes_year
-      @fes_year = FesYear.find(params[:id])
+      if FesYear.exists?(params[:id])
+        @fes_year = FesYear.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found fes_year = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

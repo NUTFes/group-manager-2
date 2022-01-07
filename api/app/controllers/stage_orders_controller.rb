@@ -17,16 +17,15 @@ class StageOrdersController < ApplicationController
   # POST /stage_orders
   # POST /stage_orders.json
   def create
-    @stage_order = StageOrder.new(stage_order_params)
-    @stage_order.save
-    render json: fmt(ok, @stage_order) 
+    @stage_order = StageOrder.create(stage_order_params)
+    render json: fmt(created, @stage_order) 
   end
 
   # PATCH/PUT /stage_orders/1
   # PATCH/PUT /stage_orders/1.json
   def update
     @stage_order.update(stage_order_params)
-    render json: fmt(ok, @stage_order) 
+    render json: fmt(created, @stage_order, "Updated stage_order id = "+params[:id]) 
   end
 
   # DELETE /stage_orders/1
@@ -39,7 +38,11 @@ class StageOrdersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage_order
-      @stage_order = StageOrder.find(params[:id])
+      if StageOrder.exists?(params[:id])
+        @stage_order = StageOrder.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found stage_order = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

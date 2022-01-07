@@ -11,13 +11,13 @@ class StockerPlacesController < ApplicationController
   end
 
   def create
-    @stocker_place = StockerPlace.new(stocker_place_params)
-    @stocker_place.save
+    @stocker_place = StockerPlace.create(stocker_place_params)
+    render json: fmt(created, @stocker_place)
   end
 
   def update
     @stocker_place.update(stocker_place_params)
-    render json: fmt(ok, @stocker_place)
+    render json: fmt(created, @stocker_place, "Updated stocker_place id = "+params[:id])
   end
 
   def destroy
@@ -28,7 +28,11 @@ class StockerPlacesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stocker_place
-      @stocker_place = StockerPlace.find(params[:id])
+      if StockerPlace.exists?(params[:id])
+        @stocker_place = StockerPlace.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found stocker_place = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

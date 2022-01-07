@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 
   def update
     @user.update(user_params)
-    render json: fmt(ok, @user)
+    render json: fmt(created, @user, "Updated user id = "+params[:id])
   end
 
   def destroy

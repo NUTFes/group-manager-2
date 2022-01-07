@@ -11,22 +11,28 @@ class StagesController < ApplicationController
   end
 
   def create
-    @stage = Stage.new(stage_params)
-    @stage.save
+    @stage = Stage.create(stage_params)
+    render json: fmt(created, @stage)
   end
 
   def update
     @stage.update(stage_params)
+    render json: fmt(created, @stage, "Updated stage id = "+params[:id])
   end
 
   def destroy
     @stage.destroy
+    render json: fmt(ok, [], "Deleted stage = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage
-      @stage = Stage.find(params[:id])
+      if Stage.exists?(params[:id])
+        @stage = Stage.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found stage = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

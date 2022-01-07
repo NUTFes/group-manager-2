@@ -25,8 +25,7 @@ class MemosController < ApplicationController
   # POST /memos
   # POST /memos.json
   def create
-    @memo = Memo.new(memo_params)
-    @memo.save
+    @memo = Memo.create(memo_params)
     @memos = Memo.all.order(id: "DESC")
     memo_list = []
     for memo in @memos
@@ -36,7 +35,7 @@ class MemosController < ApplicationController
         user: user
       }
     end
-    render json: fmt(ok, memo_list)
+    render json: fmt(created, memo_list)
     # render json: @memos
   end
 
@@ -53,7 +52,7 @@ class MemosController < ApplicationController
         user: user
       }
     end
-    render json: fmt(ok, memo_list)
+    render json: fmt(created, memo_list)
     # render json: @memos
   end
 
@@ -61,12 +60,17 @@ class MemosController < ApplicationController
   # DELETE /memos/1.json
   def destroy
     @memo.destroy
+    render json: fmt(ok, [], "Deleted memo = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_memo
-      @memo = Memo.find(params[:id])
+      if Memo.exists?(params[:id])
+        @memo = Memo.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found memo = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

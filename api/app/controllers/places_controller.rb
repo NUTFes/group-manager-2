@@ -11,26 +11,30 @@ class PlacesController < ApplicationController
   end
 
   def create
-    @place = Place.new(place_params)
-    @place.save
-    render json: fmt(ok, @place)
+    @place = Place.create(place_params)
+    render json: fmt(created, @place)
   end
 
   def update
     @place.update(place_params)
-    render json: fmt(ok, @place)
+    render json: fmt(created, @place, "Updated place id = "+params[:id])
   end
 
   # DELETE /place_orders/1
   # DELETE /place_orders/1.json
   def destroy
     @place.destroy
+    render json: fmt(ok, [], "Deleted place = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_place
-      @place = Place.find(params[:id])
+      if Place.exists?(params[:id])
+        @place = Place.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found place = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

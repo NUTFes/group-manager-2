@@ -17,26 +17,32 @@ class AssignStagesController < ApplicationController
   # POST /assign_stages
   # POST /assign_stages.json
   def create
-    @assign_stage = AssignStage.new(assign_stage_params)
-    @assign_stage.save
+    @assign_stage = AssignStage.create(assign_stage_params)
+    render json: fmt(created, @assign_stage)
   end
 
   # PATCH/PUT /assign_stages/1
   # PATCH/PUT /assign_stages/1.json
   def update
     @assign_stage.update(assign_stage_params)
+    render json: fmt(created, @assign_stage, "Updated assign_stage id = "+params[:id])
   end
 
   # DELETE /assign_stages/1
   # DELETE /assign_stages/1.json
   def destroy
     @assign_stage.destroy
+    render json: fmt(ok, [], "Deleted assign_stage = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_assign_stage
-      @assign_stage = AssignStage.find(params[:id])
+      if AssignStage.exists?(params[:id])
+        @assign_stage = AssignStage.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found assign_stage = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

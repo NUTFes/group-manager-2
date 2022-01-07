@@ -17,16 +17,15 @@ class PlaceAllowListsController < ApplicationController
   # POST /place_allow_lists
   # POST /place_allow_lists.json
   def create
-    @place_allow_list = PlaceAllowList.new(place_allow_list_params)
-    @place_allow_list.save
-    render json: fmt(ok, @place_allow_list)
+    @place_allow_list = PlaceAllowList.create(place_allow_list_params)
+    render json: fmt(created, @place_allow_list)
   end
 
   # PATCH/PUT /place_allow_lists/1
   # PATCH/PUT /place_allow_lists/1.json
   def update
     @place_allow_list.update(place_allow_list_params)
-    render json: fmt(ok, @place_allow_list)
+    render json: fmt(created, @place_allow_list, "Updated place_allow_list id = "+params[:id])
   end
 
   # DELETE /place_allow_lists/1
@@ -39,7 +38,11 @@ class PlaceAllowListsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_place_allow_list
-      @place_allow_list = PlaceAllowList.find(params[:id])
+      if PlaceAllowList.exists?(params[:id])
+        @place_allow_list = PlaceAllowList.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found place_allow_list = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

@@ -18,14 +18,14 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = Group.create(group_params)
-    render json: fmt(ok, @group)
+    render json: fmt(created, @group)
   end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
     @group.update(group_params)
-    render json: fmt(ok, @group)
+    render json: fmt(created, @group, "Updated group id = "+params[:id])
   end
 
   # DELETE /groups/1

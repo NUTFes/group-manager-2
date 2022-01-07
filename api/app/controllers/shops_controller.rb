@@ -11,22 +11,28 @@ class ShopsController < ApplicationController
   end
 
   def create
-    @shop = Shop.new(shop_params)
-    @shop.save
+    @shop = Shop.create(shop_params)
+    render json: fmt(created, @shop) 
   end
 
   def update
     @shop.update(shop_params)
+    render json: fmt(created, @shop, "Updated shop id = "+params[:id])
   end
 
   def destroy
     @shop.destroy
+    render json: fmt(ok, [], "Deleted shop = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_shop
-      @shop = Shop.find(params[:id])
+      if Shop.exists?(params[:id])
+        @shop = Shop.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found shop = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

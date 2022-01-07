@@ -17,26 +17,32 @@ class NewsController < ApplicationController
   # POST /news
   # POST /news.json
   def create
-    @news = News.new(news_params)
-    @news.save
+    @news = News.create(news_params)
+    render json: fmt(created, @news)
   end
 
   # PATCH/PUT /news/1
   # PATCH/PUT /news/1.json
   def update
     @news.update(news_params)
+    render json: fmt(created, @news, "Updated news id = "+params[:id])
   end
 
   # DELETE /news/1
   # DELETE /news/1.json
   def destroy
     @news.destroy
+    render json: fmt(ok, [], "Deleted news = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_news
-      @news = News.find(params[:id])
+      if News.exists?(params[:id])
+        @news = News.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found news = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.

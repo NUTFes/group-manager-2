@@ -17,16 +17,15 @@ class RentalOrdersController < ApplicationController
   # POST /rental_orders
   # POST /rental_orders.json
   def create
-    @rental_order = RentalOrder.new(rental_order_params)
-    @rental_order.save
-    render json: fmt(ok, @rental_order)
+    @rental_order = RentalOrder.create(rental_order_params)
+    render json: fmt(created, @rental_order)
   end
 
   # PATCH/PUT /rental_orders/1
   # PATCH/PUT /rental_orders/1.json
   def update
     @rental_order.update(rental_order_params)
-    render json: fmt(ok, @rental_order)
+    render json: fmt(created, @rental_order, "Updated rental_order id = "+params[:id])
   end
 
   # DELETE /rental_orders/1
@@ -39,7 +38,11 @@ class RentalOrdersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_rental_order
-      @rental_order = RentalOrder.find(params[:id])
+      if RentalOrder.exists?(params[:id])
+        @rental_order = RentalOrder.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found rental_order = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.
