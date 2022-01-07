@@ -8,15 +8,11 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
   belongs_to :role
   has_one :user_detail, dependent: :destroy
-  has_many :users, dependent: :destroy
+  has_many :groups, dependent: :destroy
   has_many :memos
 
-  # IDに対してuserがあるかを確認する
-  def self.is_exists?(id)
-    return self.exists?(id=id)
-  end
-
   ### user_detail (ユーザー詳細情報)
+  #
   # 全てのuserとそのuser_detailを取得する
   def self.with_user_details
     @records = User.preload(:user_detail)
