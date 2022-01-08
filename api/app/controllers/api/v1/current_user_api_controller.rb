@@ -52,7 +52,15 @@ class Api::V1::CurrentUserApiController < ApplicationController
     end
     render json: data
   end
+  
+  # ログインユーザーの登録情報を全て取得する
+  def current_regist_info
+    @user = current_api_user
+    @groups = @user.with_regist_info
+    render json: fmt(ok, @groups)
+  end
 
+  # TODO: フロントが整ったら消す
   def get_regist_info
     @user = current_api_user
     @groups = @user.groups

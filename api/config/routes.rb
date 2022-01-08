@@ -56,6 +56,11 @@ Rails.application.routes.draw do
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
+
+      ### TODO: フロントが整備されたらこのAPIを/current_user/regist_infoにして既存のものを消す
+      get "current_user/current_regist_info" => "current_user_api#current_regist_info"
+      ###
+      
       get "current_user/get_user_detail_raw" => "current_user_api#get_user_detail_raw"
       post "current_user/edit_user_info" => "current_user_api#edit_user_info"
       post "current_user/password_reset" => "current_user_api#password_reset"
