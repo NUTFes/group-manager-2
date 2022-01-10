@@ -1,28 +1,114 @@
 <template>
-  <div class="menu-container">
-    <div class="menu-content">
-      <nav>
-        <ul>
-          <li v-for="item in list_items" :key="item.title">
-            <a v-bind:href="item.click"
-              ><v-icon color="white">{{ item.icon }}</v-icon
-              >{{ item.title }}</a
-            >
-          </li>
-        </ul>
-      </nav>
-      <nav>
-        <ul>
-          <li v-for="item in order_items" :key="item.title">
-            <a v-bind:href="item.click"
-              ><v-icon color="white">{{ item.icon }}</v-icon
-              >{{ item.title }}</a
-            >
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
+  <v-navigation-drawer
+    v-model="drawer"
+    app
+    fixed
+    clipped
+    permanent
+    color="menu1"
+  >
+    <v-list-item dark class="accent">
+      <v-list-item-avatar rounded class="mx-auto" width="55" height="55">
+        <v-img :src="icon_src"></v-img>
+      </v-list-item-avatar>
+    </v-list-item>
+
+    <v-list dense>
+      <v-list-item
+        v-for="item in mypage_items"
+        :key="item.title"
+        :to="item.click"
+        color="menu2"
+        dark
+      >
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+
+    <v-list-item dark class="menu2">
+      <v-list-item-content>
+        <v-list-item-title class="font-weight-bold menu1--text"
+          >一覧情報</v-list-item-title
+        >
+      </v-list-item-content>
+    </v-list-item>
+
+    <v-list dense>
+      <v-list-item
+        v-for="item in list_items"
+        :key="item.title"
+        :to="item.click"
+        color="menu2"
+        dark
+      >
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+
+    <v-list-item dark class="menu2">
+      <v-list-item-content>
+        <v-list-item-title class="font-weight-bold menu1--text"
+          >申請情報</v-list-item-title
+        >
+      </v-list-item-content>
+    </v-list-item>
+
+    <v-list dense>
+      <v-list-item
+        v-for="item in order_items"
+        :key="item.title"
+        :to="item.click"
+        color="menu2"
+        dark
+      >
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+
+    <v-list-item dark class="menu2">
+      <v-list-item-content>
+        <v-list-item-title class="font-weight-bold menu1--text"
+          >操作</v-list-item-title
+        >
+      </v-list-item-content>
+    </v-list-item>
+
+    <v-list dense>
+      <v-list-item
+        v-for="item in operation_items"
+        :key="item.title"
+        :to="item.click"
+        color="menu2"
+        dark
+      >
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -148,34 +234,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.menu-container {
-  position: fixed;
-  left: 0;
-  height: 100%;
-  width: 250px;
-  margin-top: 60px;
-  background-color: #333;
-  border-top: 1px solid #fff;
-  z-index: 1;
-  overflow: auto;
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding-left: 0px;
-}
-
-li {
-  padding: 20px 5px;
-  width: 100%;
-  height: 100%;
-}
-
-a {
-  width: 100%;
-  height: 100%;
-}
-</style>

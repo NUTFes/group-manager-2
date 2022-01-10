@@ -1,0 +1,59 @@
+:root {
+  --primary: #ffac5d;
+  --secondary: #ffffff;
+
+  --accent-0: #fff;
+  --accent-1: #fafafa;
+  --accent-2: #eaeaea;
+  --accent-3: #999999;
+  --accent-4: #888888;
+  --accent-5: #666666;
+  --accent-6: #444444;
+  --accent-7: #333333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+  box-sizing: border-box;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  height: 100%;
+  overscroll-behavior-x: none;
+}
+
+a {
+  text-decoration: none;
+  font-size: 14px;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  height: 100%;
+}
+
+.main-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  gap: 20px;
+}

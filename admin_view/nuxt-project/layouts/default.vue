@@ -1,15 +1,15 @@
 <template>
-  <v-app :style="{ background: $vuetify.theme.themes.light.background }">
-    <Menu v-if="main && print" />
-    <Header v-if="main && print" />
-    <v-main>
-      <v-container class="py-7">
+  <div>
+    <v-app :style="{ background: $vuetify.theme.themes.light.background }">
+      <Header v-if="main && print" />
+      <Menu v-if="main && print" />
+      <main>
         <transition mode="in-out">
           <nuxt />
         </transition>
-      </v-container>
-    </v-main>
-  </v-app>
+      </main>
+    </v-app>
+  </div>
 </template>
 <script>
 import Header from "~/components/Header.vue";
@@ -103,6 +103,18 @@ export default {
 </script>
 
 <style lang="scss">
+main {
+  margin-top: 60px;
+  margin-left: 250px;
+  padding: 50px 100px;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  gap: 20px;
+}
+
 .pad-bottom {
   padding-bottom: 150px;
 }
