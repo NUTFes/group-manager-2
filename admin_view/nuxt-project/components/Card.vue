@@ -29,6 +29,7 @@ export default {
   align-items: center;
   justify-content: center;
   flex-flow: column;
+  flex-grow: 0;
   background-color: #fff;
   color: var(--accent-7);
   padding: 20px 40px;

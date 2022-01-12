@@ -26,17 +26,21 @@ html {
   scrollbar-width: none;
   box-sizing: border-box;
   min-height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
   font-family: 'Noto Sans JP', sans-serif;
   height: 100%;
-  overscroll-behavior-x: none;
 }
 
 a {
   text-decoration: none;
   font-size: 14px;
+}
+
+li {
+  list-style-type:none;
 }
 
 button {
@@ -51,9 +55,23 @@ table {
 }
 
 .main-content {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-flow: column;
   gap: 20px;
+}
+
+.page-enter, .page-leave-to{
+  opacity: 0;
+}
+.page-enter-active, .page-leave-active{
+  transition: opacity .6s;
+}
+.layout-enter, .layout-leave-active{
+  opacity: 0;
+}
+.layout-enter-active, .layout-leave-active{
+  transition: opacity .6s;
 }

@@ -4,7 +4,7 @@
       <Header v-if="main && print" />
       <Menu v-if="main && print" />
       <main>
-        <transition mode="in-out">
+        <transition name="page">
           <nuxt />
         </transition>
       </main>

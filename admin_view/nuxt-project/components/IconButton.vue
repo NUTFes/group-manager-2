@@ -1,5 +1,10 @@
 <template>
-    <button class="icon-button" @click="on_click"><span class="material-icons">{{icon_name}}</span></button>
+  <button class="icon-button" @click="on_click">
+    <nuxt-link v-if="to !== ''" :to="to">
+      <span class="material-icons">{{ icon_name }}</span>
+    </nuxt-link>
+    <span class="material-icons" v-else>{{ icon_name }}</span>
+  </button>
 </template>
 <script>
 export default {
@@ -14,15 +19,23 @@ export default {
       type: Function,
       required: false,
     },
+    to: {
+      type: Function,
+      required: false,
+      default: "",
+    },
   },
 };
 </script>
 <style>
-  .icon-button {
-    border-radius: 50%;
-    padding: 2px;
-  }
-  .icon-button:hover {
-    background-color: rgba(255,255,255,0.1)
-  }
+.icon-button {
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+.icon-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 </style>

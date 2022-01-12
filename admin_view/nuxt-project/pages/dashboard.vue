@@ -1,226 +1,33 @@
 <template>
   <div class="main-content">
-    <Card width="1000px">
-      <p><span class="material-icons">double_arrow</span>{{ user.name }}</p>
-      <table>
-        <tr>
-          <td><span class="material-icons">double_arrow</span></td>
-          <td>学籍番号</td>
-          <td>{{ student_id }}</td>
-        </tr>
-        <tr>
-          <td><span class="material-icons">double_arrow</span></td>
-          <td>学年</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><span class="material-icons">double_arrow</span></td>
-          <td>課程</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><span class="material-icons">double_arrow</span></td>
-          <td>電話番号</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><span class="material-icons">double_arrow</span></td>
-          <td>メールアドレス</td>
-          <td></td>
-        </tr>
-      </table>
-    </Card>
-    <Card width="1000px"
-      ><span class="material-icons">double_arrow</span>{{ user.name }}</Card
-    >
-    <v-row class="pa-0 ma-0">
-      <v-col class="pt-0 ma-0">
-        <Card width="1000px">
-          <v-icon v-if="user.role_id == 1" color="red" class="ma-1"
-            >mdi-account-cog</v-icon
-          >
-          <v-icon v-if="user.role_id == 2" color="green" class="ma-1"
-            >mdi-account-tie</v-icon
-          >
-          <v-icon v-if="user.role_id == 3" color="blue" class="ma-1"
-            >mdi-account</v-icon
-          >
-          {{ user.name }}
-          <hr class="mt-n3" />
-          <v-row class="pa-0 ma-0">
-            <v-col cols="1" align="center"
-              ><v-icon>mdi-account-outline</v-icon></v-col
-            >
-            <v-col cols="3">学籍番号</v-col>
-            <v-col cols="8">{{ student_id }}</v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row class="pa-0 ma-0">
-            <v-col cols="1" align="center"
-              ><v-icon>mdi-school-outline</v-icon></v-col
-            >
-            <v-col cols="3">学年</v-col>
-            <v-col cols="8">{{ grade }}</v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row class="pa-0 ma-0">
-            <v-col cols="1" align="center"><v-icon>mdi-school</v-icon></v-col>
-            <v-col cols="3">課程</v-col>
-            <v-col cols="8">{{ department }}</v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row class="pa-0 ma-0">
-            <v-col cols="1" align="center"><v-icon>mdi-phone</v-icon></v-col>
-            <v-col cols="3">電話番号</v-col>
-            <v-col cols="8">{{ tel }}</v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <v-row class="pa-0 ma-0">
-            <v-col cols="1" align="center"><v-icon>mdi-email</v-icon></v-col>
-            <v-col cols="3">メールアドレス</v-col>
-            <v-col cols="8">{{ user.email }}</v-col>
-          </v-row>
-        </Card>
-      </v-col>
-    </v-row>
-    <v-row class="pa-0 ma-0">
-      <v-col>
-        <update />
-      </v-col>
-    </v-row>
-    <v-row class="pa-0 ma-0">
-      <v-col>
-        <v-card
-          flat
-          class="ml-15"
-          :to="{
-            name: 'groups',
-          }"
-        >
-          <v-container>
-            <v-row class="pa-0 ma-0">
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3 pb-7">
-                  <v-icon class="ma-1">mdi-account-group</v-icon>
-                  参加団体
-                </v-card-title>
-                <hr class="mt-n3" color="#BDBDBD" />
-              </v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-            <v-row class="pa-0 ma-0">
-              <v-col cols="1"></v-col>
-              <v-col cols="10"> <chart1></chart1> </v-col
-            ></v-row>
-            <v-col cols="1"></v-col>
-          </v-container>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card
-          flat
-          class="mr-15"
-          :to="{
-            name: 'users',
-          }"
-        >
-          <v-row class="pa-0 ma-0">
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-6 pb-7">
-                <v-icon class="ma-1">mdi-account-circle</v-icon>
-                ユーザー数
-              </v-card-title>
-              <!-- <v-divider /> -->
-              <hr class="mt-n3" color="#BDBDBD" />
-              <v-row class="pa-0 ma-0">
-                <v-col cols="6">
-                  <br /><br />
-                  <v-card-text
-                    ><div style="font-size: 100px; text-align: center">
-                      {{ dashboard_data.all_user_num }}
-                    </div>
-                    <br /><br /><br />
-                    <div style="font-size: 20px; text-align: center">
-                      people
-                    </div></v-card-text
-                  >
-                </v-col>
-                <v-col cols="6">
-                  <v-card-text
-                    ><v-chip color="red" text-color="white"
-                      ><v-avatar left class="red darken-4">{{
-                        dashboard_data.developer_num
-                      }}</v-avatar
-                      >developers</v-chip
-                    ></v-card-text
-                  >
-                  <v-card-text
-                    ><v-chip color="green" text-color="white"
-                      ><v-avatar left class="green darken-4">{{
-                        dashboard_data.manager_num
-                      }}</v-avatar
-                      >managers</v-chip
-                    ></v-card-text
-                  >
-                  <v-card-text
-                    ><v-chip color="blue" text-color="white"
-                      ><v-avatar left class="blue darken-4">{{
-                        dashboard_data.user_num
-                      }}</v-avatar
-                      >users</v-chip
-                    ></v-card-text
-                  >
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-        <br />
-        <v-card
-          flat
-          class="mr-15"
-          :to="{
-            name: 'assign_items',
-          }"
-        >
-          <v-container>
-            <v-row class="pa-0 ma-0">
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3 pb-7">
-                  <v-icon class="ma-1">mdi-cube</v-icon>
-                  物品割り当て
-                </v-card-title>
-                <!-- <v-divider /> -->
-                <hr class="mt-n3" color="#BDBDBD" />
-              </v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-            <v-row class="pa-0 ma-0">
-              <v-col cols="1"></v-col>
-              <v-col cols="5">在庫情報</v-col>
-              <v-col cols="5">割り当て情報</v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-            <v-row class="pa-0 ma-0">
-              <v-col cols="1"></v-col>
-              <v-col cols="5"><chart2></chart2></v-col>
-              <v-col cols="5"><chart3></chart3></v-col>
-              <v-col cols="1"></v-col>
-            </v-row>
-          </v-container>
-        </v-card>
-      </v-col>
-    </v-row>
+    <Row>
+      <Card width="500px">
+        <Chart1 />
+      </Card>
+      <Card width="500px">
+        <Chart2 />
+      </Card>
+      <Card width="500px">
+        <Chart3 />
+      </Card>
+    </Row>
+    <Row width="100%">
+      <Row justify="start">
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+        <Card width="300px">a</Card>
+      </Row>
+    </Row>
   </div>
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
-import Menu from "~/components/Menu.vue";
 import axios from "axios";
 import Chart1 from "./Chart_Group";
 import Chart2 from "./Chart_Stock";
@@ -232,8 +39,6 @@ export default {
     Chart1,
     Chart2,
     Chart3,
-    Header,
-    Menu,
     Update,
   },
   data() {
@@ -252,7 +57,7 @@ export default {
   },
   mounted() {
     this.$axios
-      .$get("api/v1/users/get_user_detail", {
+      .get("api/v1/users/get_user_detail", {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
