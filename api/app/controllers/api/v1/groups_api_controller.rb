@@ -1,5 +1,15 @@
 class Api::V1::GroupsApiController < ApplicationController
 
+  def get_groups_by_fes_year_id
+    fes_year_id = params[:fes_year_id]
+    @groups = Group.where(fes_year_id:fes_year_id)
+    if @groups.count == 0
+      render json: fmt(not_found, [], "Not found groups by fes_year_id ="+fes_year_id)
+    else 
+      render json: fmt(ok, @groups)
+    end
+  end
+
   def get_group_name
     # 参加団体の名前を取得する
     groups = Group.all
