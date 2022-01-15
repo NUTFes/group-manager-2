@@ -88,6 +88,15 @@ class Api::V1::GroupsApiController < ApplicationController
   def get_group_with_food_product
     @group = Group.with_food_product(params[:id])
     render json: fmt(ok, @group)
+
+  def get_groups_by_fes_year_id
+    fes_year_id = params[:fes_year_id]
+    @groups = Group.where(fes_year_id:fes_year_id)
+    if @groups.count == 0
+      render json: fmt(not_found, [], "Not found groups by fes_year_id ="+fes_year_id)
+    else 
+      render json: fmt(ok, @groups)
+    end
   end
 
   def get_group_name
