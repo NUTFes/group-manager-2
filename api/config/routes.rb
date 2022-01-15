@@ -91,6 +91,7 @@ Rails.application.routes.draw do
       get "get_group_with_employee" => "groups_api#get_group_with_employee"
       get "get_group_with_food_products" => "groups_api#get_group_with_food_products"
       get "get_group_with_food_product" => "groups_api#get_group_with_food_product"
+      get "get_groups_by_fes_year/:fes_year_id" => "groups_api#get_groups_by_fes_year_id"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
@@ -133,6 +134,7 @@ Rails.application.routes.draw do
       get "get_fes_dates" => "fes_dates_api#get_fes_dates"
       get "get_fes_date/:id" => "fes_dates_api#get_fes_date"
       get "get_current_fes_dates" => "fes_dates_api#get_current_fes_dates"
+      get "get_fes_years" => "fes_dates_api#get_fes_years"
       # 印刷ページ周り
       get "get_print_employees" => "print_api#get_print_employees"
       get "get_print_products" => "print_api#get_print_products"
