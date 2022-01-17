@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
+      get "get_groups_csv" => "output_csv#output_groups_csv"
       # ダッシュボード用API
       get "dashboard" => "dashboard_api#get_dashboard_info"
       # ユーザー周りのAPI
