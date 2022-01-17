@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       get "get_stocker_item_for_stocker_place/:id" => "items_api#get_stocker_item_for_stocker_place"
       get "get_item_name" => "items_api#get_item_name"
       get "get_assign_rental_item_for_stocker_place/:stocker_place_id" => "items_api#get_assign_rental_item_for_stocker_place"
+      get "get_rentable_items" => "items_api#get_rentable_items"
       # 参加団体周り
       get "get_group_name" => "groups_api#get_group_name"
       get "get_group_from_project_name/:id" => "groups_api#get_group_from_project_name"
