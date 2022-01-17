@@ -30,6 +30,17 @@
                       >
                     </td>
                   </tr>
+                  <tr>
+                    <td class="text-left">参加団体一覧CSV出力</td>
+                    <td class="text-left">
+                      <v-btn
+                        @click="getGroupsOutputCSV"
+                        style="box-shadow: none"
+                        color="blue"
+                        ><v-icon color="white">mdi-printer</v-icon></v-btn
+                      >
+                    </td>
+                  </tr>
                 </tbody>
               </template>
             </v-simple-table>
@@ -54,5 +65,10 @@ export default {
       ],
     };
   },
+  methods: {
+    getGroupsOutputCSV: function() {
+      window.open("http://localhost:3000/api/v1/get_groups_csv", "参加団体一覧CSV出力")
+    }
+  }
 };
 </script>
