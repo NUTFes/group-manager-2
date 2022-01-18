@@ -5,7 +5,7 @@ class Api::V1::OutputCsvController < ApplicationController
     @groups = Group.all
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(name, project_name, activity, user_id, group_category_id, fes_year_id)
+      column_name = %w(name project_name activity user_id group_category_id fes_year_id)
       csv << column_name
       @groups.each do |group|
         column_values = [
