@@ -1,34 +1,23 @@
 <template>
-  <div class="header-container">
-    <header class="header-contents">
-      <div class="header-title">
-        <img src="~/assets/symbol-mark.svg" />
-        <h3><a href="/dashboard"> 参加団体管理アプリ-管理者ページ </a></h3>
-      </div>
-      <div class="header-option">
-        <ul class="header-nav">
-          <li class="header-nav-icon">
-            <a><span class="material-icons">account_circle</span></a>
-            <ul>
-              <div class="header-nav-content">
-                <h3>{{ user.name }}</h3>
-                <p>{{ user.student_id }}</p>
-                <p>{{ user.email }}</p>
-                <div>
-                  <IconButton icon_name="edit" to="/current_user_setting" />
-                  <IconButton icon_name="logout" :on_click="logout" />
-                </div>
-              </div>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </header>
+  <div>
+    <AccountModal :showContent="showContent" />
+    <div class="header-container">
+      <header class="header-contents">
+        <div class="header-title">
+          <img src="~/assets/symbol-mark.svg" />
+          <h3><a href="/dashboard"> 参加団体管理アプリ-管理者ページ </a></h3>
+        </div>
+        <div class="header-option">
+          <IconButton icon_name="account_circle" :on_click="openModal" />
+        </div>
+      </header>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import AccountModal from "~/components/AccountModal.vue";
 export default {
   data() {
     return {
@@ -37,6 +26,7 @@ export default {
       content: [],
       memos: [],
       users: [],
+      showContent: false,
     };
   },
   mounted() {
@@ -88,6 +78,10 @@ export default {
       localStorage.removeItem("uid");
       this.$router.push("/");
     },
+    openModal: function () {
+      this.showContent = false;
+      this.showContent = true;
+    },
   },
 };
 </script>
@@ -106,7 +100,12 @@ img {
   padding: 0px 30px;
   z-index: 2;
   color: white;
-  background-color: #333;
+  background: radial-gradient(
+    ellipse at top left,
+    rgba(40, 40, 40, 0.9),
+    rgba(40, 40, 40, 0.8)
+  );
+  backdrop-filter: blur(4px);
 }
 .header-contents {
   width: 100%;
@@ -127,61 +126,5 @@ img {
   align-items: center;
   justify-content: end;
   flex-grow: 1;
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.header-nav > li {
-  padding: 2px;
-  border-radius: 50%;
-}
-
-.header-nav > li > a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.header-nav-content {
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  padding: 30px 24px 30px 0px;
-  height: 100%;
-  gap: 10px;
-}
-
-.header-nav-content > div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 10px;
-}
-
-.header-nav-content p {
-  margin-top: -10px;
-  font-size: 12px;
-}
-
-.header-nav ul {
-  background: #333;
-  width: 250px;
-  opacity: 0;
-  position: absolute;
-  transition: all 0.5s ease;
-  top: 60px;
-  right: 0;
-  margin-left: 100px;
-}
-
-.header-nav:hover ul {
-  opacity: 1;
 }
 </style>

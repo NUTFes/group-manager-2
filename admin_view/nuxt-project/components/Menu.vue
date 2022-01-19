@@ -15,11 +15,11 @@
         </ul>
       </nav>
       <div class="menu-header">
-        <h4>一覧情報</h4>
+        <h4>申請情報</h4>
       </div>
       <nav class="menu">
         <ul>
-          <li v-for="item in list_items" :key="item.title">
+          <li v-for="item in order_items" :key="item.title">
             <nuxt-link v-bind:to="item.click"
               ><span class="material-icons">{{ item.icon }}</span
               >{{ item.title }}</nuxt-link
@@ -28,11 +28,11 @@
         </ul>
       </nav>
       <div class="menu-header">
-        <h4>申請情報</h4>
+        <h4>一覧情報</h4>
       </div>
       <nav class="menu">
         <ul>
-          <li v-for="item in order_items" :key="item.title">
+          <li v-for="item in list_items" :key="item.title">
             <nuxt-link v-bind:to="item.click"
               ><span class="material-icons">{{ item.icon }}</span
               >{{ item.title }}</nuxt-link
@@ -189,9 +189,18 @@ export default {
   width: 250px;
   margin-top: 60px;
   padding-bottom: 20px;
-  background-color: #333;
+  background: radial-gradient(
+    ellipse at top left,
+    rgba(51, 51, 51, 0.9),
+    rgba(51, 51, 51, 0.8)
+  );
+  backdrop-filter: blur(4px);
   z-index: 1;
   overflow: auto;
+}
+
+.menu-content {
+  margin-bottom: 60px;
 }
 
 .menu ul {
@@ -226,8 +235,9 @@ export default {
 }
 
 .menu-header {
-  color: #fff;
+  color: #ff69b4;
   padding: 20px 10px;
+  display: flex;
   border-top: 1px solid #fff;
   border-bottom: 1px solid #fff;
 }

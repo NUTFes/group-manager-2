@@ -1,28 +1,32 @@
 <template>
   <div class="main-content">
     <Row>
-      <Card width="500px">
-        <Chart1 />
+      <Card>
+        <h3>参加団体</h3>
+        <hr />
+        <Chart1 :styles="myStyles" />
       </Card>
-      <Card width="500px">
-        <Chart2 />
-      </Card>
-      <Card width="500px">
-        <Chart3 />
+      <Card>
+        <h3>ユーザー数</h3>
+        <hr />
+        <Chart2 :styles="myStyles" />
       </Card>
     </Row>
-    <Row width="100%">
-      <Row justify="start">
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-        <Card width="300px">a</Card>
-      </Row>
+    <Row>
+      <Card width="300px" gap="20px">
+        <h3>物品割り当て</h3>
+        <hr />
+        <Row>
+          <Card width="" height="" padding="0" flexGrow="0">
+            在庫
+            <Chart2 :styles="myStyles" />
+          </Card>
+          <Card width="" height="" padding="0" flexGrow="0">
+            割り当て済み
+            <Chart3 :styles="myStyles" />
+          </Card>
+        </Row>
+      </Card>
     </Row>
   </div>
 </template>
@@ -53,6 +57,7 @@ export default {
       rate: [],
       groups_length: [],
       dashboard_data: [],
+      height: 100,
     };
   },
   mounted() {
@@ -82,6 +87,14 @@ export default {
       .then((response) => {
         this.dashboard_data = response.data;
       });
+  },
+  computed: {
+    myStyles() {
+      return {
+        height: "250px",
+        position: "relative",
+      };
+    },
   },
 };
 </script>

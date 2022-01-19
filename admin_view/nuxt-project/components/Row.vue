@@ -10,7 +10,7 @@ export default {
     width: {
       type: String,
       required: false,
-      default: "",
+      default: "100%",
     },
     align: {
       type: String,
