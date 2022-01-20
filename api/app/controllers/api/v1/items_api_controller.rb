@@ -1,5 +1,10 @@
 class Api::V1::ItemsApiController < ApplicationController
-
+  
+  def get_rentable_items
+    @items = RentalItem.where(is_rentable: true) 
+    render json: fmt(ok, @items)
+  end
+  
   def get_stocker_item_for_stocker_place
     # 在庫場所から在庫物品をすべて取得する
     items = StockerItem.where(stocker_place_id: params[:id])

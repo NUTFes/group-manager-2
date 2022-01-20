@@ -18,14 +18,14 @@ class GroupsController < ApplicationController
   # POST /groups.json
   def create
     @group = Group.create(group_params)
-    render json: fmt(ok, @group)
+    render json: fmt(created, @group)
   end
 
   # PATCH/PUT /groups/1
   # PATCH/PUT /groups/1.json
   def update
     @group.update(group_params)
-    render json: fmt(ok, @group)
+    render json: fmt(created, @group, "Updated group id = "+params[:id])
   end
 
   # DELETE /groups/1
@@ -39,7 +39,7 @@ class GroupsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_group
       # groupのIDのgroupが存在するかを確認
-      if Group.is_exists?(params[:id])
+      if Group.exists?(params[:id])
         @group = Group.find(params[:id])
       else
         # なければnot found

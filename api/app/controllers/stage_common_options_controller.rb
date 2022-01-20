@@ -5,38 +5,44 @@ class StageCommonOptionsController < ApplicationController
   # GET /stage_common_options.json
   def index
     @stage_common_options = StageCommonOption.all
-    render json: @stage_common_options
+    render json: fmt(ok, @stage_common_options)
   end
 
   # GET /stage_common_options/1
   # GET /stage_common_options/1.json
   def show
-    render json: @stage_common_option
+    render json: fmt(ok, @stage_common_option)
   end
 
   # POST /stage_common_options
   # POST /stage_common_options.json
   def create
-    @stage_common_option = StageCommonOption.new(stage_common_option_params)
-    @stage_common_option.save
+    @stage_common_option = StageCommonOption.create(stage_common_option_params)
+    render json: fmt(created, @stage_common_option)
   end
 
   # PATCH/PUT /stage_common_options/1
   # PATCH/PUT /stage_common_options/1.json
   def update
     @stage_common_option.update(stage_common_option_params)
+    render json: fmt(created, @stage_common_option, "Updated stage_common_option id = "+params[:id])
   end
 
   # DELETE /stage_common_options/1
   # DELETE /stage_common_options/1.json
   def destroy
     @stage_common_option.destroy
+    render json: fmt(ok, [], "Deleted stage_common_option = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage_common_option
-      @stage_common_option = StageCommonOption.find(params[:id])
+      if StageCommonOption.exists?(params[:id])
+        @stage_common_option = StageCommonOption.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found stage_common_option = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.
