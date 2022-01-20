@@ -50,6 +50,8 @@ Rails.application.routes.draw do
       get "update_user/:id/:role_id" => "users#update"
       post "users/edit_user_info" => "users#edit_user_info"
       post "users/reset_password" => "users#reset_password"
+      post "get_refinement_users" => "users#get_refinement_users"
+      post "get_search_users" => "users#get_search_users"
       # 副代表周り
       get "get_sub_rep_details/:id" => "sub_rep_api#get_sub_rep_details"
       # 現在のユーザーについて
@@ -93,7 +95,8 @@ Rails.application.routes.draw do
       get "get_group_with_employee" => "groups_api#get_group_with_employee"
       get "get_group_with_food_products" => "groups_api#get_group_with_food_products"
       get "get_group_with_food_product" => "groups_api#get_group_with_food_product"
-      get "get_groups_by_fes_year/:fes_year_id" => "groups_api#get_groups_by_fes_year_id"
+      post "get_refinement_groups" => "groups_api#get_refinement_groups"
+      post "get_search_groups" => "groups_api#get_search_groups"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"

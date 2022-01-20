@@ -88,13 +88,40 @@ class Api::V1::GroupsApiController < ApplicationController
   def get_group_with_food_product
     @group = Group.with_food_product(params[:id])
     render json: fmt(ok, @group)
+  end
 
-  def get_groups_by_fes_year_id
-    fes_year_id = params[:fes_year_id]
-    @groups = Group.where(fes_year_id:fes_year_id)
+  # 絞り込み機能
+  def get_refinement_groups
+    fes_year_id = params[:fes_year_id].to_i
+    group_category_id = params[:group_category_id].to_i
+    # 両方ともALL
+    if fes_year_id == 0 && group_category_id == 0
+      @groups = Group.all
+      # fes_year_idだけ指定 
+    elsif fes_year_id != 0 && group_category_id == 0
+      @groups = Group.where(fes_year_id: fes_year_id)
+      # group_category_idだけ指定 
+    elsif fes_year_id == 0 && group_category_id != 0
+      @groups = Group.where(group_category_id: group_category_id)
+      # 両方とも指定
+    else
+      @groups = Group.where(fes_year_id: fes_year_id).where(group_category_id: group_category_id)
+    end
+
     if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups by fes_year_id ="+fes_year_id)
+      render json: fmt(not_found, [], "Not found groups")
     else 
+      render json: fmt(ok, @groups)
+    end
+  end
+
+  # あいまい検索機能
+  def get_search_groups
+    word = params[:word]
+    @groups = Group.where("name like ?","%#{word}%")
+    if @groups.count == 0
+      render json: fmt(not_found, [], "Not found groups")
+    else
       render json: fmt(ok, @groups)
     end
   end
