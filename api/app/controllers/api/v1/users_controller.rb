@@ -25,7 +25,7 @@ class Api::V1::UsersController < ApplicationController
     if @users.count == 0
       render json: fmt(not_found, [], "Not found groups")
     else
-      render json: fmt(ok, { result: @users, count: @count } )
+      render json: fmt(ok, @users)
     end
   end
 
