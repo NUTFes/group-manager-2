@@ -1,126 +1,108 @@
 <template>
-  <div>
+  <div class="main-content">
     <div v-if="assign_rental_item.length === 0">
       <NoData />
     </div>
-    <div v-else>
-      <v-row>
-        <v-col>
-          <div class="card">
-            <v-card-text>
-              <div class="breadcrumbs">
-                <ul>
-                  <li>
-                    <div class="breadcrumbs-item">
-                      <router-link to="/assign_rental_items"
-                        >割り当て物品一覧</router-link
-                      >
-                    </div>
-                  </li>
-                  <li>
-                    <div class="breadcrumbs-item">
-                      {{ assign_rental_item.id }}
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </v-card-text>
-          </div>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col>
-          <v-card flat class="mx-15">
-            <v-row>
-              <v-col cols="1"></v-col>
-              <v-col cols="10">
-                <v-card-title class="font-weight-bold mt-3">
+    <div v-else class="main-content">
+      <div class="card">
+        <v-card-text>
+          <div class="breadcrumbs">
+            <ul>
+              <li>
+                <div class="breadcrumbs-item">
+                  <router-link to="/assign_rental_items"
+                    >割り当て物品一覧</router-link
+                  >
+                </div>
+              </li>
+              <li>
+                <div class="breadcrumbs-item">
                   {{ assign_rental_item.id }}
-                  <v-spacer></v-spacer>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="edit_dialog_open"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-pencil</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>編集</span>
-                  </v-tooltip>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="delete_dialog = true"
-                        fab
-                      >
-                        <v-icon class="ma-5">mdi-delete</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>削除</span>
-                  </v-tooltip>
-                </v-card-title>
-                <hr class="mt-n3" />
-                <v-simple-table class="my-9">
-                  <template v-slot:default>
-                    <tbody>
-                      <tr>
-                        <th>id：</th>
-                        <td class="caption">{{ assign_rental_item.id }}</td>
-                      </tr>
-                      <tr>
-                        <th>参加団体：</th>
-                        <td class="caption">{{ group }}</td>
-                      </tr>
-                      <tr>
-                        <th>物品：</th>
-                        <td class="caption">{{ item }}</td>
-                      </tr>
-                      <tr>
-                        <th>個数：</th>
-                        <td class="caption">{{ assign_rental_item.num }}</td>
-                      </tr>
-                      <tr>
-                        <th>在庫場所：</th>
-                        <td class="caption">{{ stocker_place }}</td>
-                      </tr>
-                      <tr>
-                        <th>登録日時：</th>
-                        <td class="caption">
-                          {{ assign_rental_item.created_at | formatDate }}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>編集日時：</th>
-                        <td class="caption">
-                          {{ assign_rental_item.updated_at | formatDate }}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </v-card-text>
+      </div>
 
-      <v-row>
-        <v-col>
-          <v-btn text color="white" to="/assign_rental_items"
-            ><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
-            <div class="back-button">割り当て物品一覧に戻る</div></v-btn
-          >
-        </v-col>
-        <v-col></v-col>
-      </v-row>
+      <Card width="100%">
+        <v-card-title class="font-weight-bold mt-3">
+          {{ assign_rental_item.id }}
+          <v-spacer></v-spacer>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                v-bind="attrs"
+                v-on="on"
+                @click="edit_dialog_open"
+                fab
+              >
+                <v-icon class="ma-5">mdi-pencil</v-icon>
+              </v-btn>
+            </template>
+            <span>編集</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                text
+                v-bind="attrs"
+                v-on="on"
+                @click="delete_dialog = true"
+                fab
+              >
+                <v-icon class="ma-5">mdi-delete</v-icon>
+              </v-btn>
+            </template>
+            <span>削除</span>
+          </v-tooltip>
+        </v-card-title>
+        <hr class="mt-n3" />
+        <v-simple-table class="my-9">
+          <template v-slot:default>
+            <tbody>
+              <tr>
+                <th>id：</th>
+                <td class="caption">{{ assign_rental_item.id }}</td>
+              </tr>
+              <tr>
+                <th>参加団体：</th>
+                <td class="caption">{{ group }}</td>
+              </tr>
+              <tr>
+                <th>物品：</th>
+                <td class="caption">{{ item }}</td>
+              </tr>
+              <tr>
+                <th>個数：</th>
+                <td class="caption">{{ assign_rental_item.num }}</td>
+              </tr>
+              <tr>
+                <th>在庫場所：</th>
+                <td class="caption">{{ stocker_place }}</td>
+              </tr>
+              <tr>
+                <th>登録日時：</th>
+                <td class="caption">
+                  {{ assign_rental_item.created_at | formatDate }}
+                </td>
+              </tr>
+              <tr>
+                <th>編集日時：</th>
+                <td class="caption">
+                  {{ assign_rental_item.updated_at | formatDate }}
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </Card>
+
+      <v-btn text color="white" to="/assign_rental_items"
+        ><v-icon color="#333333">mdi-arrow-left-bold</v-icon>
+        <div class="back-button">割り当て物品一覧に戻る</div></v-btn
+      >
 
       <!-- 編集ダイアログ -->
 

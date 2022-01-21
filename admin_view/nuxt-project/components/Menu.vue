@@ -187,7 +187,6 @@ export default {
   left: 0;
   height: 100%;
   width: 250px;
-  margin-top: 60px;
   padding-bottom: 20px;
   background: radial-gradient(
     ellipse at top left,
@@ -222,23 +221,28 @@ export default {
 
 .menu a {
   display: inline-flex;
+  font-size: 16px;
+  font-weight: 300;
   align-items: center;
-  padding: 15px 15px;
+  padding: 15px 20px;
   width: 100%;
   height: 100%;
 }
 
 .menu span {
   font-size: 20px;
+  font-weight: 100;
   padding-right: 10px;
   padding-bottom: 1px;
 }
 
 .menu-header {
-  color: #ff69b4;
-  padding: 20px 10px;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--accent-0);
+  border-top: 1px solid var(--accent-5);
+  border-bottom: 1px solid var(--accent-5);
+  padding: 20px 20px;
   display: flex;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
 }
 </style>

@@ -5,7 +5,7 @@
       <header class="header-contents">
         <div class="header-title">
           <img src="~/assets/symbol-mark.svg" />
-          <h3><a href="/dashboard"> 参加団体管理アプリ-管理者ページ </a></h3>
+          <a href="/dashboard"> 参加団体管理アプリ-管理者ページ </a>
         </div>
         <div class="header-option">
           <IconButton icon_name="account_circle" :on_click="openModal" />

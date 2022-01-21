@@ -37,6 +37,11 @@ export default {
       required: false,
       default: "10px",
     },
+    border: {
+      type: String,
+      required: false,
+      default: "1px solid #ebebeb",
+    },
   },
   computed: {
     CardOption() {
@@ -47,6 +52,7 @@ export default {
         "--card-flex-grow": this.flexGrow,
         "--card-flex-flow": this.flexFlow,
         "--card-gap": this.gap,
+        "--card-border": this.border,
       };
     },
   },
@@ -65,5 +71,6 @@ export default {
   color: var(--accent-7);
   padding: var(--card-padding);
   gap: var(--card-gap);
+  border: var(--card-border);
 }
 </style>

@@ -2,26 +2,32 @@
   <div class="main-content">
     <Row>
       <Card>
-        <h3>参加団体</h3>
+        <Row justify="start">
+          <h3>参加団体</h3>
+        </Row>
         <hr />
         <Chart1 :styles="myStyles" />
       </Card>
       <Card>
-        <h3>ユーザー数</h3>
+        <Row justify="start">
+          <h3>ユーザー数</h3>
+        </Row>
         <hr />
         <Chart2 :styles="myStyles" />
       </Card>
     </Row>
     <Row>
       <Card width="300px" gap="20px">
-        <h3>物品割り当て</h3>
+        <Row justify="start">
+          <h3>物品割り当て</h3>
+        </Row>
         <hr />
         <Row>
-          <Card width="" height="" padding="0" flexGrow="0">
+          <Card width="" height="" padding="0" flexGrow="0" border="0px">
             在庫
             <Chart2 :styles="myStyles" />
           </Card>
-          <Card width="" height="" padding="0" flexGrow="0">
+          <Card width="" height="" padding="0" flexGrow="0" border="0px">
             割り当て済み
             <Chart3 :styles="myStyles" />
           </Card>

@@ -1,14 +1,12 @@
 <template>
   <div>
-    <v-app :style="{ background: $vuetify.theme.themes.light.background }">
-      <Header v-if="main && print" />
-      <Menu v-if="main && print" />
-      <main>
-        <transition name="page">
-          <nuxt />
-        </transition>
-      </main>
-    </v-app>
+    <Header v-if="main && print" />
+    <Menu v-if="main && print" />
+    <main>
+      <transition name="page">
+        <nuxt />
+      </transition>
+    </main>
   </div>
 </template>
 <script>
@@ -103,18 +101,6 @@ export default {
 </script>
 
 <style lang="scss">
-main {
-  margin-top: 60px;
-  margin-left: 250px;
-  padding: 50px 100px;
-  z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: column;
-  gap: 20px;
-}
-
 .pad-bottom {
   padding-bottom: 150px;
 }

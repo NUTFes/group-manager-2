@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <Card width="1000px">
-      <v-row>
-        <v-col cols="1"></v-col>
-        <v-col cols="10">
-          <v-card-title class="font-weight-bold mt-3">
-            <v-icon class="mr-5">mdi-newspaper-variant</v-icon>お知らせ
+  <div class="main-content">
+    <Card width="100%">
+      <Row>
+        <v-icon class="mr-5">mdi-newspaper-variant</v-icon>
+        <h3>お知らせ</h3>
             <v-spacer></v-spacer>
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
@@ -37,7 +35,7 @@
               </template>
               <span>更新する</span>
             </v-tooltip>
-          </v-card-title>
+          </Row>
           <v-dialog v-model="dialog" max-width="500">
             <v-card>
               <v-card-title class="headline blue-grey darken-3">

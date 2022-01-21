@@ -20,7 +20,7 @@ export default {
       required: false,
     },
     to: {
-      type: Function,
+      type: String,
       required: false,
       default: "",
     },
