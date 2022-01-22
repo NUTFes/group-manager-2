@@ -90,6 +90,42 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @group)
   end
 
+  # 絞り込み機能
+  def get_refinement_groups
+    fes_year_id = params[:fes_year_id].to_i
+    group_category_id = params[:group_category_id].to_i
+    # 両方ともALL
+    if fes_year_id == 0 && group_category_id == 0
+      @groups = Group.all
+      # fes_year_idだけ指定 
+    elsif fes_year_id != 0 && group_category_id == 0
+      @groups = Group.where(fes_year_id: fes_year_id)
+      # group_category_idだけ指定 
+    elsif fes_year_id == 0 && group_category_id != 0
+      @groups = Group.where(group_category_id: group_category_id)
+      # 両方とも指定
+    else
+      @groups = Group.where(fes_year_id: fes_year_id).where(group_category_id: group_category_id)
+    end
+
+    if @groups.count == 0
+      render json: fmt(not_found, [], "Not found groups")
+    else 
+      render json: fmt(ok, @groups)
+    end
+  end
+
+  # あいまい検索機能
+  def get_search_groups
+    word = params[:word]
+    @groups = Group.where("name like ?","%#{word}%")
+    if @groups.count == 0
+      render json: fmt(not_found, [], "Not found groups")
+    else
+      render json: fmt(ok, @groups)
+    end
+  end
+
   def get_group_name
     # 参加団体の名前を取得する
     groups = Group.all

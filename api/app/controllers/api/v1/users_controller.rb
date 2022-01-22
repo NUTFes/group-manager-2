@@ -1,6 +1,34 @@
 class Api::V1::UsersController < ApplicationController
   # before_action :authenticate_api_user!
-  #
+  
+  # 絞り込み機能
+  def get_refinement_users
+    role_id = params[:role_id].to_i
+    # 両方ともALL
+    if role_id == 0
+      @users = User.all
+    elsif role_id != 0
+      @users = User.where(role_id: role_id)
+    end
+
+    if @users.count == 0
+      render json: fmt(not_found, [], "Not found users")
+    else 
+      render json: fmt(ok, @users)
+    end
+  end
+
+  # あいまい検索機能
+  def get_search_users
+    word = params[:word]
+    @users = User.where("name like ? or email like ?", "%#{word}%", "%#{word}%")
+    if @users.count == 0
+      render json: fmt(not_found, [], "Not found groups")
+    else
+      render json: fmt(ok, @users)
+    end
+  end
+
   def get_user_with_user_details
     @users = User.with_user_details
     render json: fmt(ok, @users)
