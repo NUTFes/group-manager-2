@@ -1,34 +1,29 @@
 <template>
   <div class="main-content">
+    <SubHeader pageTitle="ダッシュボード" />
     <Row>
       <Card>
         <Row justify="start">
-          <h3>参加団体</h3>
+          <h4>参加団体</h4>
         </Row>
         <hr />
         <Chart1 :styles="myStyles" />
       </Card>
-      <Card>
-        <Row justify="start">
-          <h3>ユーザー数</h3>
-        </Row>
-        <hr />
-        <Chart2 :styles="myStyles" />
-      </Card>
+      <UsersCard />
     </Row>
     <Row>
       <Card width="300px" gap="20px">
         <Row justify="start">
-          <h3>物品割り当て</h3>
+          <h4>物品割り当て</h4>
         </Row>
         <hr />
         <Row>
           <Card width="" height="" padding="0" flexGrow="0" border="0px">
-            在庫
+            <p>在庫</p>
             <Chart2 :styles="myStyles" />
           </Card>
           <Card width="" height="" padding="0" flexGrow="0" border="0px">
-            割り当て済み
+            <p>割り当て済み</p>
             <Chart3 :styles="myStyles" />
           </Card>
         </Row>
@@ -97,7 +92,8 @@ export default {
   computed: {
     myStyles() {
       return {
-        height: "250px",
+        height: "300px",
+        width: "400px",
         position: "relative",
       };
     },

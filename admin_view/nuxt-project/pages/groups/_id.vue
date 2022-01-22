@@ -16,56 +16,17 @@
   <div v-else>
     <v-row>
       <v-col>
-        <v-card-text>
-          <div class="breadcrumbs">
-            <ul>
-              <li>
-                <div class="breadcrumbs-item">
-                  <router-link to="/groups">参加団体一覧</router-link>
-                </div>
-              </li>
-              <li>
-                <div class="breadcrumbs-item">{{ group.name }}</div>
-              </li>
-            </ul>
-          </div>
-        </v-card-text>
-        <v-card flat class="mx-15">
+        <SubHeader
+          v-bind:pageTitle="group.name"
+          pageSubTitle="参加団体申請一覧"
+        >
+          <CommonButton iconName="edit"> 編集 </CommonButton>
+          <CommonButton iconName="delete"> 削除 </CommonButton>
+        </SubHeader>
+        <Card>
           <v-row>
             <v-col cols="1"></v-col>
             <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                {{ group.name }}
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="edit_dialog_open"
-                      fab
-                    >
-                      <v-icon class="ma-5">mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>編集</span>
-                </v-tooltip>
-                <v-tooltip top v-if="selfRoleId == (1 || 2)">
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="delete_dialog = true"
-                      fab
-                    >
-                      <v-icon class="ma-5">mdi-delete</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>削除</span>
-                </v-tooltip>
-              </v-card-title>
               <hr class="mt-n3" />
               <v-simple-table class="my-9">
                 <template v-slot:default>
@@ -158,7 +119,7 @@
               </v-simple-table>
             </v-col>
           </v-row>
-        </v-card>
+        </Card>
         <br />
         <v-row>
           <v-col cols="6">

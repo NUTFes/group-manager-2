@@ -12,6 +12,10 @@
   --accent-5: #666666;
   --accent-6: #444444;
   --accent-7: #333333;
+
+  --button-primary: #3485FF;
+  --button-secondary: #E38AD5;
+  --button-radius: 50px;
 }
 
 * {
@@ -41,12 +45,16 @@ body {
 main {
   margin-top: 60px;
   margin-left: 250px;
-  padding: 50px 100px;
+  padding: 20px 100px;
   z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-flow: column;
+}
+
+h4 {
+  font-weight: 500;
 }
 
 a {
@@ -56,7 +64,8 @@ a {
 }
 
 p {
-  font-size: 12px
+  font-size: 14px;
+  font-weight: 300;
 }
 
 li {
@@ -70,8 +79,21 @@ button {
 }
 
 table {
+  font-size: 14px;
   width: 100%;
-  height: 100%;
+  border-collapse:collapse;
+}
+
+th {
+  padding: 5px;
+  border-bottom: solid 1px var(--accent-3);
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: solid 1px #F3F3F3;
+  padding: 25px;
 }
 
 hr {
@@ -99,6 +121,14 @@ hr {
   justify-content: center;
   flex-flow: column;
   gap: 20px;
+}
+
+.material-icons {
+  display: inline-flex;
+  font-size: 24px;
+  font-weight: 300;
+  align-items: center;
+  justify-content: center;
 }
 
 .page-enter, .page-leave-to{

@@ -244,5 +244,6 @@ export default {
   border-bottom: 1px solid var(--accent-5);
   padding: 20px 20px;
   display: flex;
+  letter-spacing: 1px;
 }
 </style>

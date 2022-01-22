@@ -1,187 +1,27 @@
 <template>
   <div class="main-content">
+    <SubHeader pageTitle="参加団体申請一覧">
+      <CommonButton iconName="add_circle"> 追加 </CommonButton>
+    </SubHeader>
     <Card width="100%">
-      <Row>
-        <v-icon class="mr-5">mdi-account-group</v-icon>
-        <h3>参加団体申請一覧</h3>
-        <v-spacer></v-spacer>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mx-2"
-              fab
-              text
-              v-bind="attrs"
-              v-on="on"
-              @click="open_add_dialog"
-            >
-              <v-icon dark>mdi-plus-circle-outline</v-icon>
-            </v-btn>
-          </template>
-          <span>参加団体の追加</span>
-        </v-tooltip>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mx-2"
-              fab
-              text
-              v-bind="attrs"
-              v-on="on"
-              @click="reload"
-            >
-              <v-icon dark>mdi-reload</v-icon>
-            </v-btn>
-          </template>
-          <span>更新する</span>
-        </v-tooltip>
-      </Row>
-      <v-dialog v-model="dialog" max-width="500">
-        <v-card>
-          <v-card-title class="headline blue-grey darken-3">
-            <div style="color: white">
-              <v-icon class="ma-5" dark>mdi-account-group</v-icon>参加団体の追加
-            </div>
-            <v-spacer></v-spacer>
-            <v-btn text @click="dialog = false" fab dark>
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-
-          <v-card-text>
-            <v-row>
-              <v-col>
-                <v-form ref="form">
-                  <v-text-field
-                    class="body-1"
-                    label="団体名"
-                    v-model="groupName"
-                    background-color="white"
-                    outlined
-                    clearable
-                  >
-                  </v-text-field>
-                  <v-select
-                    label="カテゴリ"
-                    v-model="groupCategoryId"
-                    :items="groupCategories"
-                    item-text="name"
-                    item-value="id"
-                    outlined
-                  ></v-select>
-                  <v-text-field
-                    class="body-1"
-                    label="企画名"
-                    v-model="projectName"
-                    background-color="white"
-                    outlined
-                    clearable
-                  >
-                  </v-text-field>
-                  <v-textarea
-                    label="活動内容"
-                    v-model="activity"
-                    @keydown="adjustHeight"
-                    background-color="white"
-                    outlined
-                    clearable
-                  >
-                  </v-textarea>
-                  <v-select
-                    label="開催年"
-                    v-model="fesYearId"
-                    :items="year_list"
-                    item-text="year_num"
-                    item-value="id"
-                    outlined
-                  ></v-select>
-                </v-form>
-              </v-col>
-            </v-row>
-          </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn depressed dark color="btn" @click="register()"
-              >登録 ​
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <hr class="mt-n3" />
-      <template>
-        <div class="text-center" v-if="groups.length === 0">
-          <br /><br />
-          <v-progress-circular
-            indeterminate
-            color="#009688"
-          ></v-progress-circular>
-          <br /><br />
-        </div>
-        <div v-else>
-          <v-data-table
-            :headers="headers"
-            :items="groups"
-            class="elevation-0 my-9"
-            @click:row="
-              (data) => $router.push({ path: `/groups/${data.group.id}` })
-            "
-          >
-            <template v-slot:item.group.group_category_id="{ item }">
-              <v-chip
-                v-if="item.group.group_category_id == 1"
-                color="red"
-                text-color="white"
-                small
-                >{{ category[0] }}</v-chip
-              >
-              <v-chip
-                v-if="item.group.group_category_id == 2"
-                color="pink"
-                text-color="white"
-                small
-                >{{ category[1] }}</v-chip
-              >
-              <v-chip
-                v-if="item.group.group_category_id == 3"
-                color="blue"
-                text-color="white"
-                small
-                >{{ category[2] }}</v-chip
-              >
-              <v-chip
-                v-if="item.group.group_category_id == 4"
-                color="green"
-                text-color="white"
-                small
-                >{{ category[3] }}</v-chip
-              >
-              <v-chip
-                v-if="item.group.group_category_id == 5"
-                color="orange"
-                text-color="white"
-                small
-                >{{ category[4] }}</v-chip
-              >
-              <v-chip
-                v-if="item.group.group_category_id == 6"
-                color="blue-gray"
-                text-color="white"
-                small
-                >{{ category[5] }}</v-chip
-              >
-            </template>
-            <template v-slot:item.group.created_at="{ item }">
-              {{ item.group.created_at | formatDate }}
-            </template>
-            <template v-slot:item.group.updated_at="{ item }">
-              {{ item.group.updated_at | formatDate }}
-            </template>
-          </v-data-table>
-        </div>
-      </template>
+    {{ groups }}
+      <table>
+        <thead>
+          <tr>
+            <th v-for="(header, index) in headers" v-bind:key="index">
+              {{ header }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(group, index) in groups" v-bind:key="group.id">
+            <td>{{ group.name }}</td>
+            <td>{{ group.project_name }}</td>
+            <td>{{ group.group_category_id }}</td>
+            <td>{{ fes_year }}</td>
+          </tr>
+        </tbody>
+      </table>
     </Card>
   </div>
 </template>
@@ -190,7 +30,6 @@
 export default {
   data() {
     return {
-      groups: [],
       group_categories: [],
       category: [],
       fes_years: [],
@@ -212,6 +51,16 @@ export default {
         { id: 6, name: "その他" },
       ],
       headers: [
+        "ID",
+        "グループ名",
+        "企画名",
+        "グループカテゴリ",
+        "開催年",
+        "日時",
+        "編集日時",
+      ],
+      /*
+      headers: [
         { text: "ID", value: "group.id" },
         { text: "グループ名", value: "group.name" },
         { text: "企画名", value: "group.project_name" },
@@ -220,8 +69,87 @@ export default {
         { text: "日時", value: "group.created_at" },
         { text: "編集日時", value: "group.updated_at" },
       ],
+      books: [
+        {
+          id: 101,
+          title: "Vue.jsでレンダリング",
+          price: 1730,
+          published: "2021-01-01",
+          isbn: "978-4-111111-11-1",
+        },
+        {
+          id: 201,
+          title: "Vue.js入門",
+          price: 1500,
+          published: "2021-01-15",
+          isbn: "978-4-222222-22-2",
+        },
+        {
+          id: 301,
+          title: "Bulmaのすすめ",
+          price: 1340,
+          published: "2021-02-01",
+          isbn: "978-4-333333-33-3",
+        },
+        {
+          id: 401,
+          title: "Nuxt.js入門",
+          price: 2400,
+          published: "2021-02-15",
+          isbn: "978-4-444444-44-4",
+        },
+        {
+          id: 501,
+          title: "JavaScript入門",
+          price: 1800,
+          published: "2021-03-01",
+          isbn: "978-4-555555-55-5",
+        },
+        {
+          id: 601,
+          title: "実践 JavaScript",
+          price: 1590,
+          published: "2021-03-15",
+          isbn: "978-4-666666-66-6",
+        },
+        {
+          id: 701,
+          title: "CSS3リファレンス",
+          price: 2680,
+          published: "2021-04-01",
+          isbn: "978-4-777777-77-7",
+        },
+        {
+          id: 801,
+          title: "HTML5リファレンス",
+          price: 1470,
+          published: "2021-04-15",
+          isbn: "978-4-888888-88-8",
+        },
+        {
+          id: 901,
+          title: "Vue.js 3.x 基礎",
+          price: 2230,
+          published: "2021-05-01",
+          isbn: "978-4-999999-99-9",
+        },
+      ],
+
+      // テーブルのヘッダー配列
+      headers: ["ID", "タイトル", "価格", "発行日", "ISBN"],
+      */
     };
   },
+  		async asyncData({ $axios }) {
+			// 取得先のURL
+			const url = "/api/v1/get_groups";
+			// リクエスト（Get）
+			const response = await $axios.$get(url);
+			// 配列で返ってくるのでJSONにして返却
+			return {
+				groups: response
+			};
+		},
   mounted() {
     this.$axios
       .get("/api/v1/get_groups", {
@@ -230,7 +158,9 @@ export default {
         },
       })
       .then((response) => {
-        this.groups = response.data;
+        console.log(response.data.length)
+        groups = response.data.length;
+        return groups
       });
 
     this.$axios

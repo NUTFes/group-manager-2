@@ -8,6 +8,8 @@
           <a href="/dashboard"> 参加団体管理アプリ-管理者ページ </a>
         </div>
         <div class="header-option">
+          <IconButton icon_name="notifications" :on_click="openModal" />
+          <IconButton icon_name="forum" :on_click="openModal" />
           <IconButton icon_name="account_circle" :on_click="openModal" />
         </div>
       </header>
@@ -126,5 +128,6 @@ img {
   align-items: center;
   justify-content: end;
   flex-grow: 1;
+  gap: 15px;
 }
 </style>
