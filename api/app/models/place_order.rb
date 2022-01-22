@@ -8,7 +8,8 @@ class PlaceOrder < ApplicationRecord
       return { 
         "first": @places[self.first-1].name,
         "second": @places[self.second-1].name,
-        "third": @places[self.third-1].name
+        "third": @places[self.third-1].name,
+        "remark": self.remark
       }
     end
 end
