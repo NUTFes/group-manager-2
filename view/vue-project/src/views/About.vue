@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div>
     <h1>This is an about page</h1>
     <template>
       <v-row justify="center">
@@ -18,30 +18,30 @@
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      label="Legal first name*"
+                      input="Legal first name*"
                       required
                     />
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      label="Legal middle name"
+                      input="Legal middle name"
                       hint="example of helper text only on focus"
                     />
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                      label="Legal last name*"
+                      input="Legal last name*"
                       hint="example of persistent helper text"
                       persistent-hint
                       required
                     />
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field label="Email*" required />
+                    <v-text-field input="Email*" required />
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      label="Password*"
+                      input="Password*"
                       type="password"
                       required
                     />
@@ -49,7 +49,7 @@
                   <v-col cols="12" sm="6">
                     <v-select
                       :items="['0-17', '18-29', '30-54', '54+']"
-                      label="Age*"
+                      input="Age*"
                       required
                     />
                   </v-col>
@@ -66,7 +66,7 @@
                         'Coding',
                         'Basejump',
                       ]"
-                      label="Interests"
+                      input="Interests"
                       multiple
                     />
                   </v-col>
@@ -90,7 +90,7 @@
 export default {
   data() {
     return {
-      dialog: true,
+      dialog: false,
     };
   },
 };

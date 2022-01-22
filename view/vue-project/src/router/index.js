@@ -8,6 +8,11 @@ import SubRep from "../views/SubRep.vue";
 import Place from "../views/Place.vue";
 import Group from "../views/Group.vue";
 import Power from "../views/Power.vue";
+
+import RegistInformation from "../views/RegistInformation.vue";
+import RegistRep from "../views/RegistRep.vue";
+import RegistSubRep from "../views/RegistSubRep.vue";
+
 import RegistShop from "../views/RegistShop.vue";
 import RegistGroup from "../views/RegistGroup.vue";
 import RegistFoodBooths from "../views/RegistFoodBooths.vue";
@@ -71,6 +76,21 @@ const routes = [
     path: "/sub_rep",
     name: "SubRep",
     component: SubRep,
+  },
+  {
+    path: "/regist_information",
+    name: "RegistInformation",
+    component: RegistInformation,
+  },
+  {
+    path: "/regist_rep",
+    name: "RegistRep",
+    component: RegistRep,
+  },
+  {
+    path: "/regist_subrep",
+    name: "RegistSubRep",
+    component: RegistSubRep,
   },
   {
     path: "/regist_shop",
