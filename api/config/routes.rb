@@ -150,12 +150,10 @@ Rails.application.routes.draw do
       get "get_print_items" => "print_api#get_print_items"
       get "get_print_powers" => "print_api#get_print_powers"
       get "get_print_address" => "print_api#get_print_address"
-
-      get "test" => "print_pdf#test"
     end
   end
 
-  get "print_pdf/groups"
+  get "print_pdf/group/:group_id/output" => "print_pdf#output_rental_items_pdf"
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
