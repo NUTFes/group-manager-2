@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
 
+  # 識別番号
+  post 'group_identification' => "group_identification#create"
+  put 'group_identification/:id' => "group_identification#update"
+  delete 'group_identification/:id' => "group_identification#destroy"
+
+  # 会場割り当て機能
+  get 'place_numbers' => "place_number#index"
+  get 'place_numbers/:id' => "place_number#show"
+  post 'place_numbers' => "place_number#create"
+  put 'place_numbers/:id' => "place_number#update"
+  delete 'place_numbers/:id' => "place_number#destroy"
+  
   # users
   get "/users" => "users#index"
   get "/users/:id" => "users#show"
