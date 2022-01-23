@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  post 'group_identification' => "group_identification#create"
+  put 'group_identification/:id' => "group_identification#update"
+  delete 'group_identification/:id' => "group_identification#destroy"
   # users
   get "/users" => "users#index"
   get "/users/:id" => "users#show"

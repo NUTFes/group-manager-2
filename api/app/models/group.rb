@@ -11,6 +11,7 @@ class Group < ApplicationRecord
     has_many :food_products, dependent: :destroy
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
+    has_one :group_identification, dependent: :destroy
 
     ### group_category (参加団体カテゴリ)
     
