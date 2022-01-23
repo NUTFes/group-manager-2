@@ -290,4 +290,14 @@ class Group < ApplicationRecord
         }
     end
 
+    # 割り当てられた会場を取得
+    def place
+      return self.group_identification.place_number.place
+    end
+
+    # 識別番号取得
+    def number
+      return self.group_identification.number
+    end
+
 end
