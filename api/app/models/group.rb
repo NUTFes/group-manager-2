@@ -11,6 +11,7 @@ class Group < ApplicationRecord
     has_many :food_products, dependent: :destroy
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
+    has_one :group_identification, dependent: :destroy
 
     ### group_category (参加団体カテゴリ)
     
@@ -287,6 +288,16 @@ class Group < ApplicationRecord
             "food_products": group.food_products.count == 0 ? nil : group.food_products
           }
         }
+    end
+
+    # 割り当てられた会場を取得
+    def place
+      return self.group_identification.place_number.place
+    end
+
+    # 識別番号取得
+    def number
+      return self.group_identification.number
     end
 
 end

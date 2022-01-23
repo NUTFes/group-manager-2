@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
 
+  # 識別番号
+  post 'group_identification' => "group_identification#create"
+  put 'group_identification/:id' => "group_identification#update"
+  delete 'group_identification/:id' => "group_identification#destroy"
+
+  # 会場割り当て機能
+  get 'place_numbers' => "place_number#index"
+  get 'place_numbers/:id' => "place_number#show"
+  post 'place_numbers' => "place_number#create"
+  put 'place_numbers/:id' => "place_number#update"
+  delete 'place_numbers/:id' => "place_number#destroy"
+  
   # users
   get "/users" => "users#index"
   get "/users/:id" => "users#show"
@@ -39,7 +51,17 @@ Rails.application.routes.draw do
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
-      get "get_groups_csv" => "output_csv#output_groups_csv"
+      get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
+      get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
+      get "get_rental_orders_csv/:fes_year_id" => "output_csv#output_rental_orders_csv"
+      get "get_power_orders_csv/:fes_year_id" => "output_csv#output_power_orders_csv"
+      get "get_place_orders_csv/:fes_year_id" => "output_csv#output_place_orders_csv"
+      get "get_stage_orders_csv/:fes_year_id" => "output_csv#output_stage_orders_csv"
+      get "get_stage_common_options_csv/:fes_year_id" => "output_csv#output_stage_common_options_csv"
+      get "get_employees_csv/:fes_year_id" => "output_csv#output_employees_csv"
+      get "get_food_products_csv/:fes_year_id" => "output_csv#output_food_products_csv"
+      get "get_purchase_lists_csv/:fes_year_id" => "output_csv#output_purchase_lists_csv"
+      get "get_users_csv/:fes_year_id" => "output_csv#output_users_csv"
       # ダッシュボード用API
       get "dashboard" => "dashboard_api#get_dashboard_info"
       # ユーザー周りのAPI
