@@ -79,6 +79,8 @@ Rails.application.routes.draw do
       # --- 新規参加団体周りのAPI --- 
       get "get_group_with_categories" => "groups_api#get_group_with_categories"
       get "get_group_with_category" => "groups_api#get_group_with_category"
+      get "get_group_with_categories_and_fes_years" => "groups_api#get_group_with_categories_and_fes_years"
+      get "get_group_with_category_and_fes_year" => "groups_api#get_group_with_category_and_fes_year"
       get "get_group_with_sub_reps" => "groups_api#get_group_with_sub_reps"
       get "get_group_with_sub_rep" => "groups_api#get_group_with_sub_rep"
       get "get_group_with_place_orders" => "groups_api#get_group_with_place_orders"

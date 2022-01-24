@@ -2,7 +2,15 @@
   <div class="sub-header-container" :style="SubHeader">
     <div class="sub-header-title">
       <h2>{{ pageTitle }}</h2>
-      <p>{{ pageSubTitle }}</p>
+      <button
+        @click="
+          () => {
+            this.$router.go(-1);
+          }
+        "
+      >
+        {{ pageSubTitle }}
+      </button>
     </div>
     <div class="sub-header-content">
       <slot></slot>
@@ -18,16 +26,6 @@ export default {
       required: false,
       default: "300px",
     },
-    align: {
-      type: String,
-      required: false,
-      default: "center",
-    },
-    justify: {
-      type: String,
-      required: false,
-      default: "center",
-    },
     pageTitle: {
       type: String,
       required: false,
@@ -37,13 +35,15 @@ export default {
       type: String,
       required: false,
     },
+    parentPageLink: {
+      type: String,
+      required: false,
+    },
   },
   computed: {
     SubHeaderOption() {
       return {
         "--sub-header-height": this.height,
-        "--sub-header-align": this.align,
-        "--sub-header-justify": this.justify,
       };
     },
   },
@@ -52,18 +52,20 @@ export default {
 <style scoped>
 h2 {
   font-size: 20px;
+  font-weight: 500;
 }
 
-p {
+button {
+  font-size: 14px;
   color: var(--accent-3);
 }
 
 .sub-header-container {
   width: 100%;
-  height: 100px;
+  height: 80px;
   display: flex;
-  align-items: var(--sub-header-align);
-  justify-content: var(--sub-header-justify);
+  align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
 }
 .sub-header-title {

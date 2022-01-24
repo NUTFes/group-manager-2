@@ -10,6 +10,16 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @group)
   end
 
+  def get_group_with_categories_and_fes_years
+    @groups = Group.with_group_categories_and_fes_years
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_with_category_and_fes_year
+    @group = Group.with_group_category_and_fes_year(params[:id])
+    render json: fmt(ok, @group)
+  end
+
   def get_group_with_sub_reps
     @groups = Group.with_sub_reps
     render json: fmt(ok, @groups)

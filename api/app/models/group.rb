@@ -39,6 +39,35 @@ class Group < ApplicationRecord
     end
 
 
+    ### group_category, fes_year (参加団体カテゴリ＋開催年)
+    
+    # 全てのgroupとそのgroup_categoryとfes_yearを取得する
+    def self.with_group_categories_and_fes_years
+      @records = Group.preload(:group_category)
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "group_category": group.group_category,
+            "fes_year": group.fes_year
+          } 
+        }
+    end
+
+    # 指定したIDのgroupとそのgroup_categoryとfes_yearを取得する
+    def self.with_group_category_and_fes_year(group_id)
+      @record = Group.eager_load(:group_category).where(groups: {id: group_id})
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "group_category": group.group_category,
+            "fes_year": group.fes_year
+          } 
+        }
+    end
+
+
     ### sub rep (副代表)
     
     # 全てのgroupとそのsub_repを取得する
