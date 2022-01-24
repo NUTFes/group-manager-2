@@ -1,11 +1,65 @@
 <h1>参加団体情報管理表</h1>
 
-<table>
-  <tbody>
+<div class="padding-top">
+  <h2>参加団体情報</h2>
+  <table class="info">
+    <tbody>
+      <tr>
+        <th>No.</th>
+        <td><%= @group.id %></td>
+        <td style="width:20%"><%= @group.number %></td>
+      </tr>
+      <tr style="height:60px">
+        <th>団体名</th>
+        <td colspan=2><%= @group.name %></td>
+      </tr>
+      <tr>
+        <th>分類</th>
+        <td colspan=2><%= @group.group_category.name %></td>
+      </tr>
+      <tr>
+        <th rowspan=2>活動時間</th>
+        <td><%= @group.fes_year.fes_dates.second.nil? ? nil : @group.fes_year.fes_dates.second.date %>（1日目）</td>
+        <td>10:00～17:00</td>
+      </tr>
+      <tr>
+        <td><%= @group.fes_year.fes_dates.third.nil? ? nil : @group.fes_year.fes_dates.third.date %>（2日目）</td>
+        <td>10:00～17:00</td>
+      </tr>
+      <tr>
+        <th>場所</th>
+        <td colspan=2><%= @group.place %></td>
+      </tr>
+      <tr>
+        <th>識別番号</th>
+        <td colspan=2><%= @group.number %></td>
+      </tr>
+      <tr>
+        <th>使用電力</th>
+        <td colspan=2><%= @group.sum_power_orders %> [w]</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="padding-top">
+  <h2>貸出物品一覧</h2>
+  <table class="items">
     <tr>
-      <td>No.</td>
-      <td><%= @group.id %></td>
-      <td><%= @group.number %></td>
+      <th>物品名</th>
+      <th>借りる場所</th>
+      <th>数量</th>
+      <th>貸出日</th>
+      <th>返却日</th>
     </tr>
-  </tbody>
-</table>
+    <% @group.assign_rental_items.each do |assign_rental_item| %>
+    <tr>
+      <td><%= assign_rental_item.rental_item.name %></td>
+      <td><%= assign_rental_item.stocker_place.name %></td>
+      <td><%= assign_rental_item.num %></td>
+      <td><%= @group.fes_year.fes_dates.first.nil? ? nil : @group.fes_year.fes_dates.first.date %></td>
+      <td><%= @group.fes_year.fes_dates.fourth.nil? ? nil : @group.fes_year.fes_dates.fourth.date %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
