@@ -57,6 +57,23 @@ services:
     environment:
       - VUE_APP_URL=http://localhost:3000
 
+  inside_view:
+    build: ./inside_view
+    command: npm run serve
+    container_name: 'GM2-INSIDE-VIEW'
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./inside_view:/app
+        #      - code_share:/app/vue-project/dist
+    stdin_open: true
+    tty: true
+    environment:
+      - VUE_APP_URL=http://localhost:3000
+    depends_on:
+      - api
+
+
 volumes:
   mysql-data:
     driver: local
