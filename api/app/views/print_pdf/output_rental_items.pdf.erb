@@ -5,9 +5,8 @@
   <table class="info">
     <tbody>
       <tr>
-        <th>No.</th>
-        <td><%= @group.id %></td>
-        <td style="width:20%"><%= @group.number %></td>
+        <th>識別番号</th>
+        <td colspan=2><%= @group.number %></td>
       </tr>
       <tr style="height:60px">
         <th>団体名</th>
@@ -29,10 +28,6 @@
       <tr>
         <th>場所</th>
         <td colspan=2><%= @group.place %></td>
-      </tr>
-      <tr>
-        <th>識別番号</th>
-        <td colspan=2><%= @group.number %></td>
       </tr>
       <tr>
         <th>使用電力</th>

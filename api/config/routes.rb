@@ -159,6 +159,7 @@ Rails.application.routes.draw do
   get "print_pdf/rental_items_list/:fes_year_id/output" => "print_pdf#output_rental_items_list_pdf"
   get "print_pdf/contacts/:fes_year_id/output" => "print_pdf#output_contacts_pdf"
   get "print_pdf/food_products/:fes_year_id/output" => "print_pdf#output_food_products_pdf"
+  get "print_pdf/group_info/:group_id/output" => "print_pdf#output_group_info_pdf"
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {

@@ -3,13 +3,12 @@ class PrintPdfController < ApplicationController
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf
-    if Group.exists?(params[:group_id])
-      @group = Group.find(params[:group_id])
-      print_pdf("output_rental_items", "output_rental_items_pdf", "物品貸出書類_物品持ち出し表(各団体向け)_#{format("%02d", @group.id)}.#{@group.name}", 'Not Landscape')
-    # groupが存在しなければNot FoundのHTMLを出力
-    else
-      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
-    end
+    output_groups("output_rental_items", "output_rental_items_pdf", "物品貸し出し書類_物品持ち出し表(各団体向け)", "Not Landscape")
+  end
+
+  # 参加団体情報リスト
+  def output_group_info_pdf
+    output_groups("output_group_info", "output_group_info_pdf", "参加団体情報", "Not Landscape")
   end
 
   # 使用電力リスト出力
@@ -35,6 +34,17 @@ class PrintPdfController < ApplicationController
   # 連絡先リスト
   def output_contacts_pdf
     output_groups_with_categories("output_contact", "output_contact_pdf", "連絡先リスト", "Not Landscape")
+  end
+
+  # 全参加団体用
+  def output_groups(template_name, style_name, output_file_name, type)
+    if Group.exists?(params[:group_id])
+      @group = Group.find(params[:group_id])
+      print_pdf(template_name, style_name, "#{output_file_name}_#{format("%02d", @group.id)}.#{@group.name}", type)
+    # groupが存在しなければNot FoundのHTMLを出力
+    else
+      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+    end
   end
 
   # 食品販売
