@@ -14,42 +14,52 @@ class PrintPdfController < ApplicationController
 
   # 使用電力リスト出力
   def output_powers_pdf
+    output_groups_with_categories("output_powers", "output_powers_pdf", "使用電力リスト", "Landscape")
+  end
+
+  # 従業員リスト
+  def output_employees_pdf
+    output_groups_in_group_category_1("output_employees", "output_employees_pdf", "従業員リスト", "Not Landscape")
+  end
+
+  # 貸出物品リスト
+  def output_rental_items_list_pdf
+    output_groups_with_categories("output_rental_items_list", "output_rental_items_list_pdf", "貸出物品リスト", "Landscape")
+  end
+
+  # 販売食品リスト
+  def output_food_products_pdf
+    output_groups_in_group_category_1("output_food_products", "output_food_products_pdf", "販売食品リスト", "Landscape")
+  end
+
+  # 連絡先リスト
+  def output_contacts_pdf
+    output_groups_with_categories("output_contact", "output_contact_pdf", "連絡先リスト", "Not Landscape")
+  end
+
+  # 食品販売
+  def output_groups_in_group_category_1(template_name, style_name, output_file_name, type)
     if Group.where(fes_year_id: params[:fes_year_id]).exists?
+      @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
+      print_pdf(template_name, style_name, output_file_name, type)
+    else 
+      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+    end
+  end
+
+  # カテゴリ分けされたもの
+  def output_groups_with_categories(template_name, style_name, output_file_name, type)
+    if Group.where(fes_year_id: params[:fes_year_id]).exists?
+      @groups = Group.where(fes_year_id: params[:fes_year_id])
       @catgories = []
       for i in 1..6 do
         group = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: i)
         @catgories << group
       end
-      print_pdf("output_powers", "output_powers_pdf", "使用電力リスト", 'Landscape')
+      print_pdf(template_name, style_name, output_file_name, type)
     else 
       render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
     end
-  end
-
-  # 従業員リスト
-  def output_employees_pdf
-    if Group.where(fes_year_id: params[:fes_year_id]).exists?
-      @groups = Group.where(fes_year_id: params[:fes_date_id]).where(group_category_id: 1)
-      print_pdf("output_powers", "output_powers_pdf", "従業員リスト", 'Landscape')
-    else 
-      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
-    end
-  end
-
-  # 貸出物品リスト
-  def output_rental_items_pdf
-  end
-
-  # 販売食品リスト
-  def output_food_products_pdf
-  end
-
-  # 連絡先リスト
-  def output_contacts_pdf
-  end
-
-  # 購入品リスト
-  def output_purchases_pdf
   end
 
   # 印刷

@@ -8,14 +8,9 @@ table {
   text-align: center;
 }
 
-th {
-  width: 10%;
-}
-
 tr {
   height: 40px;
 }
-
 
 .page-break {
   page-break-after:always;

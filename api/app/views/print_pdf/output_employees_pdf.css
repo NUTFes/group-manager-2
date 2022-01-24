@@ -8,11 +8,15 @@ table {
   text-align: center;
 }
 
-th {
-  width: 10%;
+.employees th {
+  width: 25%;
 }
 
-tr {
+.employees tr {
+  height: 40px;
+}
+
+.employees td {
   height: 40px;
 }
 
