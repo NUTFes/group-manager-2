@@ -323,4 +323,15 @@ class Group < ApplicationRecord
       return count
     end
 
+    # 物品の未配分を計算する
+    def unallocated_rental_items
+      unallocated_rental_items = self.rental_orders.preload(:rental_item).map{ 
+        |rental_order|
+        {
+          "item": rental_order.rental_item.name,
+          "num": rental_order.num - self.assign_rental_items.map{ |assign_rental_item| assign_rental_item.num }.sum
+        }
+      }
+      return unallocated_rental_items
+    end
 end
