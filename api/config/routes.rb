@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
 
+  # 識別番号
+  post 'group_identification' => "group_identification#create"
+  put 'group_identification/:id' => "group_identification#update"
+  delete 'group_identification/:id' => "group_identification#destroy"
+
+  # 会場割り当て機能
+  post 'place_numbers' => "place_number#create"
+  put 'place_numbers/:id' => "place_number#update"
+  delete 'place_numbers/:id' => "place_number#destroy"
+
+  # ステージ割り当て機能
+  post 'stage_numbers' => "stage_number#create"
+  put 'stage_numbers/:id' => "stage_number#update"
+  delete 'stage_numbers/:id' => "stage_number#destroy"
+  
   # users
   get "/users" => "users#index"
   get "/users/:id" => "users#show"
