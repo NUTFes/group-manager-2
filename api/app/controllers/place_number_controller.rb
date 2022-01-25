@@ -2,12 +2,6 @@ class PlaceNumberController < ApplicationController
   before_action :set_place_number, only: [:show, :update, :destroy]
 
   # 会場割り当て
-  
-  def index
-  end
-
-  def show
-  end
 
   def create
     @place_number = PlaceNumber.create(place_number_params)

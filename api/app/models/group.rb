@@ -290,6 +290,11 @@ class Group < ApplicationRecord
         }
     end
 
+    # 割り当てられたステージを取得
+    def stage
+      return self.group_identification.stage_number.stage
+    end
+
     # 割り当てられた会場を取得
     def place
       return self.group_identification.place_number.place
