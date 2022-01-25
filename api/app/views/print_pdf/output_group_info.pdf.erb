@@ -1,0 +1,181 @@
+<p>基本情報</p>
+<table>
+  <tr>
+    <th>識別番号</th>
+    <td><%= @group.number %>
+  </tr>
+  <tr>
+    <th>参加団体名</th>
+    <td><%= @group.name %>
+  </tr>
+  <tr>
+    <th>企画名</th>
+    <td><%= @group.project_name %>
+  </tr>
+  <tr>
+    <th>カテゴリ</th>
+    <td><%= @group.group_category.name %>
+  </tr>
+</table>
+
+<p>代表者情報</p>
+<table>
+  <tr>
+    <th colspan=3>代表者</th>
+  </tr>
+  <tr>
+    <th>名前</th>
+    <th>メールアドレス</th>
+    <th>電話番号</th>
+  </tr>
+  <tr>
+  <td><%= @group.user.name %></td>
+  <td><%= @group.user.email %></td>
+  <td><%= @group.user.user_detail.tel %></td>
+  </tr>
+  <tr>
+    <th>学籍番号</th>
+    <th>課程・専攻</th>
+    <th>学年</th>
+  </tr>
+  <tr>
+    <td><%= @group.user.user_detail.student_id %></td>
+    <td><%= @group.user.user_detail.department.name %></td>
+    <td><%= @group.user.user_detail.grade.name %></td>
+  </tr>
+
+  <tr></tr>
+
+  <tr>
+    <th colspan=3>副代表者</th>
+  </tr>
+  <tr>
+    <th>名前</th>
+    <th>メールアドレス</th>
+    <th>電話番号</th>
+  </tr>
+  <tr>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.name%></td>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.email %></td>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.tel %></td>
+  </tr>
+  <tr>
+    <th>学籍番号</th>
+    <th>課程・専攻</th>
+    <th>学年</th>
+  </tr>
+  <tr>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.student_id %></td>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.department.name %></td>
+    <td><%= @group.sub_rep.nil? ? nil : @group.sub_rep.grade.name %></td>
+  </tr>
+</table>
+
+<p>使用電力情報</p>
+<table>
+  <tr>
+    <th>名前</th>
+    <th>電力 [w]</th>
+    <th>メーカー</th>
+    <th>型番</th>
+  </tr>
+  <% @group.power_orders.each do |power_order| %>
+  <tr>
+    <td><%= power_order.item %></td>
+    <td><%= power_order.power %></td>
+    <td><%= power_order.manufacturer %></td>
+    <td><%= power_order.model %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <th>合計 [w]</th>
+    <td><%= @group.sum_power_orders %></td>
+    <td colspan=2></td>
+  </tr>
+</table>
+
+<p>貸出物品情報</p>
+<table>
+  <tr>
+    <th>物品名</th>
+    <th>借用場所</th>
+    <th>数量</th>
+  </tr>
+  <% @group.assign_rental_items.each do |item| %>
+  <tr>
+    <td><%= item.rental_item.name %></td>
+    <td><%= item.stocker_place.name %></td>
+    <td><%= item.num %></td>
+  </tr>
+  <% end %>
+</table>
+
+<% if @group.group_category_id == 1 %>
+<p>会場情報</p>
+<table>
+  <tr>
+    <th>会場</th>
+    <td><%= @group.place %></td>
+  </tr>
+</table>
+
+<p>販売食品</p>
+<table>
+  <tr>
+    <th>販売食品</th>
+    <th style="width:5%">調理</th>
+    <th style="width:5%">1日目(個)</th>
+    <th style="width:5%">2日目(個)</th>
+    <th>仕入れ品</th>
+    <th>仕入れ先</th>
+    <th style="width:5%">なま<br>もの</th>
+  </tr>
+  <tr>
+    <% if @group.food_products.exists? %>
+    <% @group.food_products.each do |food_product| %>
+      <td rowspan=<%= food_product.purchase_lists.count %>><%= food_product.name %></td>
+      <td style="width:5%" rowspan=<%= food_product.purchase_lists.count %>><%= food_product.is_cooking ? "有" : "無" %></td>
+      <td style="width:5%" rowspan=<%= food_product.purchase_lists.count %>><%= food_product.first_day_num %></td>
+      <td style="width:5%" rowspan=<%= food_product.purchase_lists.count %>><%= food_product.second_day_num %></td>
+      <% if food_product.purchase_lists.exists? %>
+      <% food_product.purchase_lists.each do |purchase_list| %>
+      <td><%= purchase_list.items %></td>
+      <td><%= purchase_list.shop.name %></td>
+      <td><%= purchase_list.is_fresh ? "YES" : "NO" %></td>
+    </tr>
+      <% end %>
+      <% else %>
+      <td colspan=3>なし</td>
+    </tr>
+      <% end %>
+  </tr>
+    <% end %>
+  <% else %>
+    <td colspan=5>なし</td>
+  <% end %>
+</table>
+
+<p>従業員情報<p>
+<table>
+  <tr>
+    <th>名前</th>
+    <th>学籍番号</th>
+  </tr>
+  <% if @group.employees.exists? %>
+  <% @group.employees.each do |employee| %>
+  <tr>
+    <td><%= employee.name %></td>
+    <td><%= employee.student_id %></td>
+  </tr>
+  <% end %>
+  <% end %>
+</table>
+<% elsif @group.group_category_id == 3 %>
+<% else %>
+<table>
+  <tr>
+    <th>会場</th>
+    <td><%= @group.place %></td>
+  </tr>
+</table>
+<% end %>

@@ -54,17 +54,7 @@ Rails.application.routes.draw do
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
-      get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
-      get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
-      get "get_rental_orders_csv/:fes_year_id" => "output_csv#output_rental_orders_csv"
-      get "get_power_orders_csv/:fes_year_id" => "output_csv#output_power_orders_csv"
-      get "get_place_orders_csv/:fes_year_id" => "output_csv#output_place_orders_csv"
-      get "get_stage_orders_csv/:fes_year_id" => "output_csv#output_stage_orders_csv"
-      get "get_stage_common_options_csv/:fes_year_id" => "output_csv#output_stage_common_options_csv"
-      get "get_employees_csv/:fes_year_id" => "output_csv#output_employees_csv"
-      get "get_food_products_csv/:fes_year_id" => "output_csv#output_food_products_csv"
-      get "get_purchase_lists_csv/:fes_year_id" => "output_csv#output_purchase_lists_csv"
-      get "get_users_csv/:fes_year_id" => "output_csv#output_users_csv"
+      get "get_groups_csv" => "output_csv#output_groups_csv"
       # ダッシュボード用API
       get "dashboard" => "dashboard_api#get_dashboard_info"
       # ユーザー周りのAPI
@@ -175,12 +165,16 @@ Rails.application.routes.draw do
       get "get_print_items" => "print_api#get_print_items"
       get "get_print_powers" => "print_api#get_print_powers"
       get "get_print_address" => "print_api#get_print_address"
-
-      get "test" => "print_pdf#test"
     end
   end
 
-  get "print_pdf/groups"
+  get "print_pdf/group/:group_id/output" => "print_pdf#output_rental_items_pdf"
+  get "print_pdf/power/:fes_year_id/output" => "print_pdf#output_powers_pdf"
+  get "print_pdf/employees/:fes_year_id/output" => "print_pdf#output_employees_pdf"
+  get "print_pdf/rental_items_list/:fes_year_id/output" => "print_pdf#output_rental_items_list_pdf"
+  get "print_pdf/contacts/:fes_year_id/output" => "print_pdf#output_contacts_pdf"
+  get "print_pdf/food_products/:fes_year_id/output" => "print_pdf#output_food_products_pdf"
+  get "print_pdf/group_info/:group_id/output" => "print_pdf#output_group_info_pdf"
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {

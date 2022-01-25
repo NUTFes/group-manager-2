@@ -12,4 +12,5 @@ class PlaceOrder < ApplicationRecord
         "remark": self.remark
       }
     end
+
 end
