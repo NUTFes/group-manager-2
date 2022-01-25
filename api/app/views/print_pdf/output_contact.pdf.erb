@@ -1,0 +1,32 @@
+<% @catgories.each do |category| %>
+  <% if category.exists? %>
+    <div class="page-break">
+      <h1>連絡先リスト - <%= category.first.group_category.name%></h1>
+      <table>
+        <tr>
+          <th>参加団体形式</th>
+          <th>団体番号</th>
+          <th>団体名</th>
+          <th>氏名</th>
+          <th>電話番号</th>
+          <th>メールアドレス</th>
+        </tr>
+        <% category.each do |group| %>
+        <tr>
+          <td rowspan=2><%= group.group_category.name %></td>
+          <td rowspan=2><%= group.number %></td>
+          <td rowspan=2><%= group.name %></td>
+          <td><%= group.user.name %></td>
+          <td><%= group.user.user_detail.tel %></td>
+          <td><%= group.user.email %></td>
+        </tr>
+        <tr>
+          <td><%= group.sub_rep.nil? ? nil : group.sub_rep.name %></td>
+          <td><%= group.sub_rep.nil? ? nil : group.sub_rep.tel %></td>
+          <td><%= group.sub_rep.nil? ? nil : group.sub_rep.email %></td>
+        </tr>
+      <% end %>
+      </table>
+    </div>
+  <% end %>
+<% end %>

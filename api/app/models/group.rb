@@ -292,12 +292,30 @@ class Group < ApplicationRecord
 
     # 割り当てられた会場を取得
     def place
-      return self.group_identification.place_number.place
+      return self.group_identification.nil? || self.group_identification.place_number.nil? ? nil : self.group_identification.place_number.place.name
     end
 
     # 識別番号取得
     def number
-      return self.group_identification.number
+      return self.group_identification.nil? ? nil : self.group_identification.number
+    end
+
+    # 電力申請の総和を計算する
+    def sum_power_orders
+      sum = 0
+      self.power_orders.each do |power_order|
+        sum += power_order.power
+      end
+      return sum
+    end
+
+    # 購入食品の個数を計算する
+    def count_purchase_lists
+      count = 0
+      self.food_products.each do |food_product|
+        count += food_product.purchase_lists.count
+      end
+      return count
     end
 
 end
