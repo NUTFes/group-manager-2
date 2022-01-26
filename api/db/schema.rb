@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_23_030856) do
+ActiveRecord::Schema.define(version: 2022_01_25_035856) do
 
   create_table "assign_group_places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
@@ -224,6 +224,13 @@ ActiveRecord::Schema.define(version: 2022_01_23_030856) do
     t.boolean "camera_permission"
     t.boolean "loud_sound"
     t.text "stage_content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "stage_numbers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "stage_id"
+    t.integer "group_identification_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

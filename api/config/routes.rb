@@ -6,11 +6,14 @@ Rails.application.routes.draw do
   delete 'group_identification/:id' => "group_identification#destroy"
 
   # 会場割り当て機能
-  get 'place_numbers' => "place_number#index"
-  get 'place_numbers/:id' => "place_number#show"
   post 'place_numbers' => "place_number#create"
   put 'place_numbers/:id' => "place_number#update"
   delete 'place_numbers/:id' => "place_number#destroy"
+
+  # ステージ割り当て機能
+  post 'stage_numbers' => "stage_number#create"
+  put 'stage_numbers/:id' => "stage_number#update"
+  delete 'stage_numbers/:id' => "stage_number#destroy"
   
   # users
   get "/users" => "users#index"
@@ -179,12 +182,16 @@ Rails.application.routes.draw do
       get "get_print_items" => "print_api#get_print_items"
       get "get_print_powers" => "print_api#get_print_powers"
       get "get_print_address" => "print_api#get_print_address"
-
-      get "test" => "print_pdf#test"
     end
   end
 
-  get "print_pdf/groups"
+  get "print_pdf/group/:group_id/output" => "print_pdf#output_rental_items_pdf"
+  get "print_pdf/power/:fes_year_id/output" => "print_pdf#output_powers_pdf"
+  get "print_pdf/employees/:fes_year_id/output" => "print_pdf#output_employees_pdf"
+  get "print_pdf/rental_items_list/:fes_year_id/output" => "print_pdf#output_rental_items_list_pdf"
+  get "print_pdf/contacts/:fes_year_id/output" => "print_pdf#output_contacts_pdf"
+  get "print_pdf/food_products/:fes_year_id/output" => "print_pdf#output_food_products_pdf"
+  get "print_pdf/group_info/:group_id/output" => "print_pdf#output_group_info_pdf"
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
