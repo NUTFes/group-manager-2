@@ -67,6 +67,9 @@ Rails.application.routes.draw do
       #---物品申請ページ
       get "get_rental_order_index_for_admin_view" => "rental_orders_api#get_rental_order_index_for_admin_view"
       get "get_rental_order_show_for_admin_view/:id" => "rental_orders_api#get_rental_order_show_for_admin_view"
+      #---ステージ申請ページ
+      get "get_stage_order_index_for_admin_view" => "stage_orders_api#get_stage_order_index_for_admin_view"
+      get "get_stage_order_show_for_admin_view/:id" => "stage_orders_api#get_stage_order_show_for_admin_view"
 
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
