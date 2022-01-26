@@ -5,7 +5,6 @@
 			追加
 		</CommonButton>
 	</SubHeader>
-	<p>{{ powerOrders }}</p>
 	<Card width="100%">
 		<table>
 			<thead>
@@ -33,8 +32,6 @@
 </template>
 
 <script>
-import CommonButton from "../../components/CommonButton.vue";
-import SearchDropDown from "../../components/SearchDropDown.vue";
 export default {
 	watchQuery: ["page"],
     data() {
@@ -94,6 +91,5 @@ export default {
             });
         },
     },
-    components: { CommonButton, SearchDropDown }
 };
 </script>

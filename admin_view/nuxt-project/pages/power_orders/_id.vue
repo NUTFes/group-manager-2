@@ -1,10 +1,9 @@
 <template>
 	<div class="main-content">
-		<SubHeader v-bind:pageTitle="タイトル" pageSubTitle="電力申請一覧">
+		<SubHeader v-bind:pageTitle="powerOrder.power_order.item" pageSubTitle="電力申請一覧">
 			<CommonButton iconName="edit"> 編集 </CommonButton>
 			<CommonButton iconName="delete"> 削除 </CommonButton>
 		</SubHeader>
-		{{ powerOrder }}
 		<Row>
 			<Card padding="40px 150px" gap="20px">
 				<Row justify="start">
@@ -133,6 +132,5 @@ watchQuery: ["page"],
 					this.$router.push("/power_orders");
 			},
 	},
-	components: { SubHeader, CommonButton }
 };
 </script>
