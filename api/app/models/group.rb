@@ -41,10 +41,10 @@ class Group < ApplicationRecord
 
 
     ### group_category, fes_year (参加団体カテゴリ＋開催年)
-    
+
     # 全てのgroupとそのgroup_categoryとfes_yearを取得する
     def self.with_group_categories_and_fes_years
-      @records = Group.preload(:group_category)
+      @records = Group.preload(:group_category, :fes_year)
         .map{ 
           |group| 
           { 
@@ -53,6 +53,57 @@ class Group < ApplicationRecord
             "fes_year": group.fes_year
           } 
         }
+    end
+
+    def self.with_order_info(group_id)
+      group = Group.find(group_id)
+      @record = 
+        { 
+          "group": group,
+          "user": group.user.nil? ? nil: group.user,
+          "group_category": group.group_category.nil? ? nil : group.group_category.name,
+          "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
+          "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
+          "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
+          "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
+            |stage_order|
+            { 
+              "stage_order": stage_order.to_info_h
+            }
+          },
+          "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
+          "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
+            |power_order|
+            {
+              "power_order": power_order.to_info_h
+            }
+          },
+          "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
+            |rental_order|
+            {
+              "rental_item": rental_order.to_rental_item_info_h,
+            }
+          },
+          "employees": group.employees.count == 0 ? nil : group.employees.map{
+            |employee|
+            {
+              "employee": employee.to_info_h
+            }
+          },
+          "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
+            |food_product|
+            {
+              "food_product": food_product.to_info_h,
+              "purchase_lists": food_product.purchase_lists.map{
+                |purchase_list|
+                {
+                  "purchase_list": purchase_list.to_info_h
+                }
+              }
+            }
+          }
+        }
+      return @record
     end
 
     # 指定したIDのgroupとそのgroup_categoryとfes_yearを取得する

@@ -1,5 +1,15 @@
 class Api::V1::GroupsApiController < ApplicationController
 
+  def get_group_index_for_admin_view
+    @groups = Group.with_group_categories_and_fes_years
+    render json: fmt(ok, @groups)
+  end
+
+  def get_group_show_for_admin_view
+    @groups = Group.with_order_info(params[:id])
+    render json: fmt(ok, @groups)
+  end
+
   def get_group_with_categories
     @groups = Group.with_group_categories
     render json: fmt(ok, @groups)
@@ -7,16 +17,6 @@ class Api::V1::GroupsApiController < ApplicationController
 
   def get_group_with_category
     @group = Group.with_group_category(params[:id])
-    render json: fmt(ok, @group)
-  end
-
-  def get_group_with_categories_and_fes_years
-    @groups = Group.with_group_categories_and_fes_years
-    render json: fmt(ok, @groups)
-  end
-
-  def get_group_with_category_and_fes_year
-    @group = Group.with_group_category_and_fes_year(params[:id])
     render json: fmt(ok, @group)
   end
 

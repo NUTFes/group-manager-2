@@ -51,6 +51,11 @@ Rails.application.routes.draw do
   resources :fes_years
   namespace 'api' do
     namespace 'v1' do
+      #---管理者画面用---
+      #---参加団体申請一覧ページ
+      get "get_group_index_for_admin_view" => "groups_api#get_group_index_for_admin_view"
+      get "get_group_show_for_admin_view/:id" => "groups_api#get_group_show_for_admin_view"
+
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
       get "get_rental_orders_csv/:fes_year_id" => "output_csv#output_rental_orders_csv"
