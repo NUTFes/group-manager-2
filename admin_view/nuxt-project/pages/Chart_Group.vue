@@ -8,8 +8,8 @@ export default {
     return {
       data: {
         labels: [
-          "模擬店（食品販売）",
-          "模擬店（物品販売）",
+          "食品販売",
+          "物品販売",
           "ステージ企画",
           "展示・体験",
           "研究室公開",
@@ -17,7 +17,7 @@ export default {
         ],
         datasets: [
           {
-            label: "参加団体数",
+            label: { display: false },
             data: [0, 0, 0, 0, 0, 0],
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
@@ -32,6 +32,10 @@ export default {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+          display: false,
+        },
         scales: {
           xAxes: [
             {
@@ -42,7 +46,7 @@ export default {
               ticks: {
                 min: 0,
                 max: 30,
-                fontSize: 14,
+                fontSize: 12,
                 stepSize: 5,
               },
             },

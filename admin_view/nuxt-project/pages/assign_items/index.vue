@@ -1,34 +1,19 @@
 <template>
-  <div>
-    <v-row class="pb-5">
-      <v-col>
-        <v-card flat class="mx-15">
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-cube</v-icon>
-                物品割り当て
-              </v-card-title>
-              <hr class="mt-n3" />
-              <v-card-text>
-                STEP1．在庫場所を選択<br />
-                STEP2．在庫場所ごとに在庫登録<br />
-                STEP3．在庫場所ごとに在庫登録を確認して参加団体に物品を割り当て<br />
-                ステータス（未着手/入力中/完了）を随時変更してください
-              </v-card-text>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+  <div class="main-content">
+    <Card width="100%">
+      <h3>物品割り当て</h3>
+      <hr />
+      STEP1．在庫場所を選択<br />
+      STEP2．在庫場所ごとに在庫登録<br />
+      STEP3．在庫場所ごとに在庫登録を確認して参加団体に物品を割り当て<br />
+      ステータス（未着手/入力中/完了）を随時変更してください
+    </Card>
     <div class="text-center" v-if="stocker_places.length === 0">
       <br /><br />
       <v-progress-circular indeterminate color="#009688"></v-progress-circular>
       <br /><br />
     </div>
-    <div v-else class="mx-15">
+    <Row v-else>
       <v-row justify="center">
         <v-col v-for="stocker_place in stocker_places">
           <v-hover v-slot:default="{ hover }">
@@ -103,7 +88,7 @@
           </v-hover>
         </v-col>
       </v-row>
-    </div>
+    </Row>
   </div>
 </template>
 

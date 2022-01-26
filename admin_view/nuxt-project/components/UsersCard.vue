@@ -1,0 +1,48 @@
+<template>
+  <Card>
+    <Row justify="start">
+      <h4>ユーザー数</h4>
+    </Row>
+    <div class="users-card-content">
+      <h1>{{ dashboardData.all_user_num }}</h1>
+      <Row>
+        <Tag primaryColor="#FF7070" secondaryColor="#E38AD5"
+          >{{ dashboardData.developer_num }} Developers</Tag
+        >
+        <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A"
+          >{{ dashboardData.manager_num }} Managers</Tag
+        >
+        <Tag primaryColor="#9C8AE3" secondaryColor="#70FFDD"
+          >{{ dashboardData.user_num }} Users</Tag
+        >
+      </Row>
+    </div>
+    <hr />
+  </Card>
+</template>
+<script>
+import axios from "axios";
+export default {
+  watchQuery: ["page"],
+  name: "CommonButton",
+  props: {
+    dashboardData: {
+      type: Object,
+      required: false,
+    },
+  },
+};
+</script>
+<style>
+.users-card-content {
+  font-size: 60px;
+  width: 400px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-flow: column;
+  gap: 20px;
+}
+</style>

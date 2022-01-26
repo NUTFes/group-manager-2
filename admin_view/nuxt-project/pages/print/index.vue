@@ -77,12 +77,18 @@ export default {
     };
   },
   methods: {
-    getGroupsOutputCSV: function() {
-      window.open("http://localhost:3000/api/v1/get_groups_csv", "参加団体一覧CSV出力")
+    getGroupsOutputCSV: function () {
+      window.open(
+        "http://localhost:3000/api/v1/get_groups_csv",
+        "参加団体一覧CSV出力"
+      );
     },
-    getGroupsOutputPDF: function() {
-      window.open("http://localhost:3000/print_pdf/groups.pdf", "参加団体一覧PDF出力")
-    }
-  }
+    getGroupsOutputPDF: function () {
+      window.open(
+        "http://localhost:3000/print_pdf/groups.pdf",
+        "参加団体一覧PDF出力"
+      );
+    },
+  },
 };
 </script>
