@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="参加団体申請一覧">
-      <CommonButton iconName="add_circle" :on_click="open_add_dialog">
+      <CommonButton iconName="add_circle" :on_click="openModal">
         追加
       </CommonButton>
     </SubHeader>
@@ -47,7 +47,9 @@
     <GroupAddModal
       @close="closeModal"
       v-if="isOpenAddModal"
+      :submitGroup="submitGroup"
       :year_list="year_list"
+      :groupCategories="groupCategories"
     />
   </div>
 </template>
@@ -61,12 +63,13 @@ export default {
   },
   data() {
     return {
+      value: '',
       groups: [],
       group_categories: [],
       category: [],
       fes_years: [],
       years: [],
-      groupName: [],
+      groupName: '',
       projectName: [],
       activity: [],
       groupCategoryId: [],
@@ -94,7 +97,7 @@ export default {
     };
   },
   async asyncData({ $axios }) {
-    const url = "/api/v1/get_group_with_categories_and_fes_years";
+    const url = "/api/v1/get_group_index_for_admin_view";
     const groupRes = await $axios.$get(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -106,46 +109,39 @@ export default {
   methods: {
     refinementGroups: function (id) {
       const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + id;
-      const refRes = this.$axios.$get(refUrl);
+      const refRes = this.$axios.$post(refUrl);
       console.log(refUrl);
       console.log(refRes);
     },
-    open_add_dialog: function () {
-      const url = "/api/v1/current_user/show";
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
-          },
-        })
-        .then(
-          (response) => {
-            this.user = response.data.data;
-          },
-          (error) => {
-            console.error(error);
-            return error;
-          }
-        );
+    openModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
     },
     closeModal() {
       this.isOpenAddModal = false;
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groups = response.data;
-        });
+    submitGroup() {
+      console.log(searchText);
+      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
+      let params = new URLSearchParams();
+      params.append("user_id", this.user.id);
+      params.append("name", this.groupName);
+      params.append("project_name", this.projectName);
+      params.append("activity", this.activity);
+      params.append("group_category_id", this.groupCategoryId);
+      params.append("fes_year_id", this.fesYearId);
+      console.log(params)
+      this.$axios.post("/groups", params).then((response) => {
+        console.log(response);
+        $emit("close");
+        console.log("*****************************:");
+        //this.reload();
+        this.groupName = "";
+        this.projectName = "";
+        this.activity = "";
+        this.groupCategoryId = "";
+        this.fesYearId = "";
+      });
     },
   },
 };

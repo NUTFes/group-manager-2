@@ -52,14 +52,6 @@ export default {
       required: false,
     },
   },
-  methods: {
-    openModal: function () {
-      this.showContent = !this.showContent;
-    },
-    closeModal: function () {
-      this.showContent = false;
-    },
-  },
   mounted() {
     window.addEventListener(
       "click",

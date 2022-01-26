@@ -45,7 +45,7 @@ body {
 main {
   margin-top: 60px;
   margin-left: 250px;
-  padding: 20px 100px;
+  padding: 20px 60px;
   z-index: 0;
   display: flex;
   align-items: center;
@@ -84,6 +84,40 @@ table {
   border-collapse:collapse;
 }
 
+.vertical-table {
+  display: flex;
+  font-size: 14px;
+  width: 100%;
+}
+
+.vertical-table thead {
+  width: 50%;
+}
+
+.vertical-table tbody {
+  width: 100%;
+}
+
+.vertical-table tr, .vertical-table th, .vertical-table td {
+  display: block;
+  width: 100%;
+}
+
+.vertical-table th, .vertical-table td {
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: solid 1px #F3F3F3;
+  padding: 25px 50px;
+}
+
+.vertical-table th {
+  font-weight: 500;
+}
+.vertical-table tr:hover {
+  color: var(--accent-7);
+  background-color: #fff;
+}
+
 tr:hover {
   color: white;
   background-color: var(--accent-7);
@@ -114,12 +148,12 @@ hr {
 }
 
 @keyframes border_anim {
-	0%{
-		width: 0%;
-	}
-	100%{
-		width: 100%;
-	}
+  0%{
+    width: 0%;
+  }
+  100%{
+    width: 100%;
+  }
 }
 
 .main-content {

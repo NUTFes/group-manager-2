@@ -31,8 +31,6 @@ export default {
 </script>
 <style scoped>
 .common-button {
-  width: var(--common-button-width);
-  height: var(--common-button-width);
   border-radius: var(--button-radius);
   padding: 10px 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
