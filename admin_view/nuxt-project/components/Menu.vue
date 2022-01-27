@@ -78,21 +78,21 @@ export default {
           icon: "living",
           click: "/rental_item_allow_lists",
         },
-        {
-          title: "在庫場所一覧",
-          icon: "warehouse",
-          click: "/stocker_places",
-        },
-        {
-          title: "在庫物品一覧",
-          icon: "table_restaurant",
-          click: "/stocker_items",
-        },
-        {
-          title: "割り当て物品一覧",
-          icon: "inventory",
-          click: "/assign_rental_items",
-        },
+        // {
+        //   title: "在庫場所一覧",
+        //   icon: "warehouse",
+        //   click: "/stocker_places",
+        // },
+        // {
+        //   title: "在庫物品一覧",
+        //   icon: "table_restaurant",
+        //   click: "/stocker_items",
+        // },
+        // {
+        //   title: "割り当て物品一覧",
+        //   icon: "inventory",
+        //   click: "/assign_rental_items",
+        // },
         {
           title: "ステージ一覧",
           icon: "festival",
@@ -153,6 +153,7 @@ export default {
           click: "/assign_items",
         },
         { title: "会場割り当て", icon: "event_seat", click: "/assign_items" },
+        { title: "ステージ割り当て", icon: "stadium", click: "/assign_items" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         { title: "書類印刷", icon: "print", click: "/print" },
         {
