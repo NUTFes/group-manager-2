@@ -1,8 +1,19 @@
 class PowerOrder < ApplicationRecord
     belongs_to :group
 
-    def self.with_group
+    def self.with_groups
       @record = PowerOrder.preload(:group)
+        .map{
+          |power_order|
+          {
+            "power_order": power_order,
+            "group": power_order.group
+          }
+        }
+    end
+
+    def self.with_group(power_order_id)
+      @record = PowerOrder.eager_load(:group).where(power_orders: {id: power_order_id})
         .map{
           |power_order|
           {

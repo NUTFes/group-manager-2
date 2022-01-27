@@ -1,36 +1,39 @@
 <template>
-	<div class="main-content">
-		<SubHeader v-bind:pageTitle="foodProduct.food_product.name" pageSubTitle="販売食品申請一覧">
-			<CommonButton iconName="edit"> 編集 </CommonButton>
-			<CommonButton iconName="delete"> 削除 </CommonButton>
-		</SubHeader>
-		<Row>
-			<Card padding="40px 150px" gap="20px">
-				<Row justify="start">
-					<h4>基本情報</h4>
-				</Row>
-				<table class="vertical-table">
-					<thead>
-						<th v-for="(n, i) in headers" :key="i">
-							{{ n }}
-						</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{ foodProduct.food_product.id }}</td>
-							<td>{{ foodProduct.group.name }}</td>
-							<td>{{ foodProduct.food_product.name }}</td>
-							<td>{{ foodProduct.food_product.first_day_num }}</td>
-							<td>{{ foodProduct.food_product.second_day_num }}</td>
-							<td>{{ foodProduct.food_product.is_cooking }}</td>
-							<td>{{ foodProduct.food_product.created_at | formatDate }}</td>
-							<td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</Card>
-		</Row>
-	</div>
+  <div class="main-content">
+    <SubHeader
+      v-bind:pageTitle="foodProduct.food_product.name"
+      pageSubTitle="販売食品申請一覧"
+    >
+      <CommonButton iconName="edit"> 編集 </CommonButton>
+      <CommonButton iconName="delete"> 削除 </CommonButton>
+    </SubHeader>
+    <Row>
+      <Card padding="40px 150px" gap="20px">
+        <Row justify="start">
+          <h4>基本情報</h4>
+        </Row>
+        <table class="vertical-table">
+          <thead>
+            <th v-for="(n, i) in headers" :key="i">
+              {{ n }}
+            </th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ foodProduct.food_product.id }}</td>
+              <td>{{ foodProduct.group.name }}</td>
+              <td>{{ foodProduct.food_product.name }}</td>
+              <td>{{ foodProduct.food_product.first_day_num }}</td>
+              <td>{{ foodProduct.food_product.second_day_num }}</td>
+              <td>{{ foodProduct.food_product.is_cooking }}</td>
+              <td>{{ foodProduct.food_product.created_at | formatDate }}</td>
+              <td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
+    </Row>
+  </div>
 </template>
 
 <script>
@@ -51,15 +54,15 @@ watchQuery: ["page"],
       ],
     };
   },
-	async asyncData({ $axios, route}){
-		const routeId = route.path.replace("/food_products/", "");
-		const url = "/api/v1/get_food_product_show_for_admin_view/" + routeId;
-		const response = await $axios.$get(url);
-		return {
-			foodProduct: response.data,
-			route: url,
-		}
-	},
+  async asyncData({ $axios, route }) {
+    const routeId = route.path.replace("/food_products/", "");
+    const url = "/api/v1/get_food_product_show_for_admin_view/" + routeId;
+    const response = await $axios.$get(url);
+    return {
+      foodProduct: response.data,
+      route: url,
+    };
+  },
   computed: {
     ...mapState({
       selfRoleId: (state) => state.users.role,

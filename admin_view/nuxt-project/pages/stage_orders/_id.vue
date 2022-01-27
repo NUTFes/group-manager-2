@@ -1,26 +1,33 @@
 <template>
-	<div class="main-content">
-		<SubHeader v-bind:pageTitle="stageOrder.group.name" pageSubTitle="ステージ申請一覧">
-			<CommonButton iconName="edit"> 編集 </CommonButton>
-			<CommonButton iconName="delete"> 削除 </CommonButton>
-		</SubHeader>
-		<Row>
-			<Card padding="40px 150px" gap="20px">
-				<Row justify="start">
-					<h4>基本情報</h4>
-				</Row>
-				<table class="vertical-table">
-					<thead>
-						<th v-for="(n, i) in headers" :key="i">
-							{{ n }}
-						</th>
-					</thead>
-					<tbody>
-						<tr>
+  <div class="main-content">
+    <SubHeader
+      v-bind:pageTitle="stageOrder.group.name"
+      pageSubTitle="ステージ申請一覧"
+    >
+      <CommonButton iconName="edit"> 編集 </CommonButton>
+      <CommonButton iconName="delete"> 削除 </CommonButton>
+    </SubHeader>
+    <Row>
+      <Card padding="40px 150px" gap="20px">
+        <Row justify="start">
+          <h4>基本情報</h4>
+        </Row>
+        <table class="vertical-table">
+          <thead>
+            <th v-for="(n, i) in headers" :key="i">
+              {{ n }}
+            </th>
+          </thead>
+          <tbody>
+            <tr>
               <td>{{ stageOrder.stage_order.id }}</td>
               <td>{{ stageOrder.group.name }}</td>
               <td>{{ stageOrder.stage_order.is_sunny }}</td>
-              <td>{{ stageOrder.stage_order_info.date }} - {{stageOrder.stage_order_info.day }} - {{ stageOrder.stage_order_info.day_num }}日目</td>
+              <td>
+                {{ stageOrder.stage_order_info.date }} -
+                {{ stageOrder.stage_order_info.day }} -
+                {{ stageOrder.stage_order_info.day_num }}日目
+              </td>
               <td>{{ stageOrder.stage_order_info.stage_first }}</td>
               <td>{{ stageOrder.stage_order_info.stage_second }}</td>
               <td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
@@ -32,18 +39,18 @@
               <td>{{ stageOrder.stage_order_info.cleanup_end_time }}</td>
               <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
               <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</Card>
-		</Row>
-	</div>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
+    </Row>
+  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -62,18 +69,18 @@ export default {
         "掃除終了時刻",
         "登録日時",
         "編集日時",
-      ]
+      ],
     };
   },
-	async asyncData({ $axios, route }){
-		const routeId = route.path.replace("/stage_orders/", "");
-		const url = "/api/v1/get_stage_order_show_for_admin_view/" + routeId;
-		const response = await $axios.$get(url);
-		return {
-			stageOrder: response.data,
-			route: url,
-		}
-	},
+  async asyncData({ $axios, route }) {
+    const routeId = route.path.replace("/stage_orders/", "");
+    const url = "/api/v1/get_stage_order_show_for_admin_view/" + routeId;
+    const response = await $axios.$get(url);
+    return {
+      stageOrder: response.data,
+      route: url,
+    };
+  },
   computed: {
     ...mapState({
       selfRoleId: (state) => state.users.role,

@@ -1,6 +1,9 @@
 <template>
   <div class="main-content">
-    <SubHeader v-bind:pageTitle="placeOrder.group.name" pageSubTitle="会場申請一覧">
+    <SubHeader
+      v-bind:pageTitle="placeOrder.group.name"
+      pageSubTitle="会場申請一覧"
+    >
       <CommonButton iconName="edit"> 編集 </CommonButton>
       <CommonButton iconName="edit"> 削除 </CommonButton>
     </SubHeader>
@@ -14,18 +17,17 @@
                 {{ n }}
               </th>
             </thead>
-              <tr>
-                <td>{{ placeOrder.place_order.id }}</td>
-                <td>{{ placeOrder.group.name }}</td>
-                <td>{{ placeOrder.place_order_name.first }}</td>
-                <td>{{ placeOrder.place_order_name.second }}</td>
-                <td>{{ placeOrder.place_order_name.third }}</td>
-                <td>{{ placeOrder.place_order.remark }}</td>
-                <td>{{ placeOrder.place_order.created_at | formatDate }}</td>
-                <td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
-              </tr>
-            <tbody>
-            </tbody>
+            <tr>
+              <td>{{ placeOrder.place_order.id }}</td>
+              <td>{{ placeOrder.group.name }}</td>
+              <td>{{ placeOrder.place_order_name.first }}</td>
+              <td>{{ placeOrder.place_order_name.second }}</td>
+              <td>{{ placeOrder.place_order_name.third }}</td>
+              <td>{{ placeOrder.place_order.remark }}</td>
+              <td>{{ placeOrder.place_order.created_at | formatDate }}</td>
+              <td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
+            </tr>
+            <tbody></tbody>
           </table>
         </Row>
       </Card>
@@ -47,17 +49,17 @@ export default {
         "備考",
         "登録日時",
         "編集日時",
-      ]
+      ],
     };
   },
-  async asyncData({ $axios, route }){
+  async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/place_orders/", "");
     const url = "/api/v1/get_place_order_show_for_admin_view/" + routeId;
     const response = await $axios.$get(url);
     return {
       placeOrder: response.data,
       route: url,
-    }
+    };
   },
   computed: {
     ...mapState({

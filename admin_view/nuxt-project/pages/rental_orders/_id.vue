@@ -1,34 +1,37 @@
 <template>
-	<div class="main-content">
-		<SubHeader v-bind:pageTitle="rentalOrder.group.name" pageSubTitle="物品申請一覧">
-			<CommonButton iconName="edit"> 編集 </CommonButton>
-			<CommonButton iconName="delete"> 削除 </CommonButton>
-		</SubHeader>
-		<Row>
-			<Card padding="40px 150px" gap="20px">
-				<Row justify="start">
-					<h4>基本情報</h4>
-				</Row>
-				<table class="vertical-table">
-					<thead>
-						<th v-for="(n, i) in headers" :key="i">
-							{{ n }}
-						</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{ rentalOrder.rental_order.id }}</td>
-							<td>{{ rentalOrder.group.name }}</td>
-							<td>{{ rentalOrder.rental_item.name }}</td>
-							<td>{{ rentalOrder.rental_order.num }}</td>
-							<td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
-							<td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</Card>
-		</Row>
-	</div>
+  <div class="main-content">
+    <SubHeader
+      v-bind:pageTitle="rentalOrder.group.name"
+      pageSubTitle="物品申請一覧"
+    >
+      <CommonButton iconName="edit"> 編集 </CommonButton>
+      <CommonButton iconName="delete"> 削除 </CommonButton>
+    </SubHeader>
+    <Row>
+      <Card padding="40px 150px" gap="20px">
+        <Row justify="start">
+          <h4>基本情報</h4>
+        </Row>
+        <table class="vertical-table">
+          <thead>
+            <th v-for="(n, i) in headers" :key="i">
+              {{ n }}
+            </th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ rentalOrder.rental_order.id }}</td>
+              <td>{{ rentalOrder.group.name }}</td>
+              <td>{{ rentalOrder.rental_item.name }}</td>
+              <td>{{ rentalOrder.rental_order.num }}</td>
+              <td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
+              <td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
+    </Row>
+  </div>
 </template>
 
 <script>
@@ -36,25 +39,18 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "貸出物品",
-        "個数",
-        "登録日時",
-        "編集日時"
-      ]
+      headers: ["ID", "参加団体", "貸出物品", "個数", "登録日時", "編集日時"],
     };
   },
-	async asyncData({ $axios, route}){
-		const routeId = route.path.replace("/rental_orders/", "");
-		const url = "/api/v1/get_rental_order_show_for_admin_view/" + routeId;
-		const response = await $axios.$get(url);
-		return {
-			rentalOrder: response.data,
-			route: url,
-		}
-	},
+  async asyncData({ $axios, route }) {
+    const routeId = route.path.replace("/rental_orders/", "");
+    const url = "/api/v1/get_rental_order_show_for_admin_view/" + routeId;
+    const response = await $axios.$get(url);
+    return {
+      rentalOrder: response.data,
+      route: url,
+    };
+  },
   computed: {
     ...mapState({
       selfRoleId: (state) => state.users.role,

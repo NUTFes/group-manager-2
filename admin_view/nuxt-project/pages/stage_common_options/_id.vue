@@ -1,43 +1,56 @@
 <template>
-	<div class="main-content">
-		<SubHeader v-bind:pageTitle="stageCommonOption.group.name" pageSubTitle="ステージオプション申請一覧">
-			<CommonButton iconName="edit"> 編集 </CommonButton>
-			<CommonButton iconName="delete"> 削除 </CommonButton>
-		</SubHeader>
-		<Row>
-			<Card padding="40px 150px" gap="20px">
-				<Row justify="start">
-					<h4>基本情報</h4>
-				</Row>
-				<table class="vertical-table">
-					<thead>
-						<th v-for="(n, i) in headers" :key="i">
-							{{ n }}
-						</th>
-					</thead>
-					<tbody>
+  <div class="main-content">
+    <SubHeader
+      v-bind:pageTitle="stageCommonOption.group.name"
+      pageSubTitle="ステージオプション申請一覧"
+    >
+      <CommonButton iconName="edit"> 編集 </CommonButton>
+      <CommonButton iconName="delete"> 削除 </CommonButton>
+    </SubHeader>
+    <Row>
+      <Card padding="40px 150px" gap="20px">
+        <Row justify="start">
+          <h4>基本情報</h4>
+        </Row>
+        <table class="vertical-table">
+          <thead>
+            <th v-for="(n, i) in headers" :key="i">
+              {{ n }}
+            </th>
+          </thead>
+          <tbody>
             <tr>
               <td>{{ stageCommonOption.stage_common_option.id }}</td>
               <td>{{ stageCommonOption.group.name }}</td>
               <td>{{ stageCommonOption.stage_common_option.own_equipment }}</td>
               <td>{{ stageCommonOption.stage_common_option.bgm }}</td>
-              <td>{{ stageCommonOption.stage_common_option.camera_permission }}</td>
+              <td>
+                {{ stageCommonOption.stage_common_option.camera_permission }}
+              </td>
               <td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
               <td>{{ stageCommonOption.stage_common_option.stage_content }}</td>
-              <td>{{ stageCommonOption.stage_common_option.created_at | formatDate }}</td>
-              <td>{{ stageCommonOption.stage_common_option.updated_at | formatDate }}</td>
+              <td>
+                {{
+                  stageCommonOption.stage_common_option.created_at | formatDate
+                }}
+              </td>
+              <td>
+                {{
+                  stageCommonOption.stage_common_option.updated_at | formatDate
+                }}
+              </td>
             </tr>
-					</tbody>
-				</table>
-			</Card>
-		</Row>
-	</div>
+          </tbody>
+        </table>
+      </Card>
+    </Row>
+  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -50,19 +63,19 @@ export default {
         "ステージ内容",
         "登録日時",
         "編集日時",
-      ]
-
+      ],
     };
   },
-	async asyncData({ $axios, route }){
-		const routeId = route.path.replace("/stage_common_options/", "");
-		const url = "/api/v1/get_stage_common_option_show_for_admin_view/" + routeId;
-		const response = await $axios.$get(url);
-		return {
-			stageCommonOption: response.data,
-			route: url,
-		}
-	},
+  async asyncData({ $axios, route }) {
+    const routeId = route.path.replace("/stage_common_options/", "");
+    const url =
+      "/api/v1/get_stage_common_option_show_for_admin_view/" + routeId;
+    const response = await $axios.$get(url);
+    return {
+      stageCommonOption: response.data,
+      route: url,
+    };
+  },
   computed: {
     ...mapState({
       selfRoleId: (state) => state.users.role,

@@ -1,41 +1,46 @@
 <template>
-	<div class="main-content">
-	<SubHeader pageTitle="販売食品申請一覧">
-		<CommonButton iconName="add_circle" :on_click="openModal">
-			追加
-		</CommonButton>
-	</SubHeader>
-	<Card width="100%">
-		<table>
-			<thead>
-				<th v-for="(header, index) in headers" v-bind:key="index">
-					{{ header }}
-				</th>
-			</thead>		
-			<tbody>
-				<tr
-					v-for="(foodProduct, index) in foodProducts"
-					@click="() => $router.push({ path: `/food_products/` + foodProduct.food_product.id })"
-					:key="index"
-				>
-					<td>{{ foodProduct.food_product.id }}</td>
-					<td>{{ foodProduct.group.name }}</td>
-					<td>{{ foodProduct.food_product.name }}</td>
-					<td>{{ foodProduct.food_product.first_day_num }}</td>
-					<td>{{ foodProduct.food_product.second_day_num }}</td>
-					<td>{{ foodProduct.food_product.is_cooking }}</td>
-					<td>{{ foodProduct.food_product.created_at | formatDate }}</td>
-					<td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
-				</tr>
-			</tbody>
-		</table>	
-	</Card>	
-	</div>
+  <div class="main-content">
+    <SubHeader pageTitle="販売食品申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+    <Card width="100%">
+      <table>
+        <thead>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(foodProduct, index) in foodProducts"
+            @click="
+              () =>
+                $router.push({
+                  path: `/food_products/` + foodProduct.food_product.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ foodProduct.food_product.id }}</td>
+            <td>{{ foodProduct.group.name }}</td>
+            <td>{{ foodProduct.food_product.name }}</td>
+            <td>{{ foodProduct.food_product.first_day_num }}</td>
+            <td>{{ foodProduct.food_product.second_day_num }}</td>
+            <td>{{ foodProduct.food_product.is_cooking }}</td>
+            <td>{{ foodProduct.food_product.created_at | formatDate }}</td>
+            <td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </Card>
+  </div>
 </template>
 
 <script>
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [

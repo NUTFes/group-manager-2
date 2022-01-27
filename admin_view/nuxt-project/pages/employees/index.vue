@@ -14,15 +14,18 @@
         </thead>
         <tbody>
           <tr
-            v-for="(employee, index) in employees" :key="index"
-            @click="() => $router.push({ path: `/employees/` + employee.employee.id })"
+            v-for="(employee, index) in employees"
+            :key="index"
+            @click="
+              () => $router.push({ path: `/employees/` + employee.employee.id })
+            "
           >
-          <td>{{ employee.employee.id }}</td>
-          <td>{{ employee.group.name }}</td>
-          <td>{{ employee.employee.name }}</td>
-          <td>{{ employee.employee.student_id }}</td>
-          <td>{{ employee.employee.created_at | formatDate }}</td>
-          <td>{{ employee.employee.updated_at | formatDate }}</td>
+            <td>{{ employee.employee.id }}</td>
+            <td>{{ employee.group.name }}</td>
+            <td>{{ employee.employee.name }}</td>
+            <td>{{ employee.employee.student_id }}</td>
+            <td>{{ employee.employee.created_at | formatDate }}</td>
+            <td>{{ employee.employee.updated_at | formatDate }}</td>
           </tr>
         </tbody>
       </table>
@@ -32,17 +35,10 @@
 
 <script>
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "名前",
-        "学籍番号",
-        "登録日時",
-        "編集日時",
-      ]
+      headers: ["ID", "参加団体", "名前", "学籍番号", "登録日時", "編集日時"],
     };
   },
   async asyncData({ $axios }) {

@@ -1,7 +1,12 @@
 class Api::V1::PowerOrdersApiController < ApplicationController
 
   def get_power_order_index_for_admin_view
-    @power_orders = PowerOrder.with_group
+    @power_orders = PowerOrder.with_groups
+    render json: fmt(ok, @power_orders)
+  end
+
+  def get_power_order_for_admin_view
+    @power_orders = PowerOrder.with_group(params[:id])
     render json: fmt(ok, @power_orders)
   end
 

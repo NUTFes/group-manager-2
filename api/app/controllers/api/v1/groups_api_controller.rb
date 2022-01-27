@@ -105,6 +105,12 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @group)
   end
 
+  #fes_yearによる絞り込み
+  def get_groups_refinemented_by_fes_year
+    @group = Group.where(fes_year_id: params[:fes_year_id])
+    render json: fmt(ok, @group)
+  end
+
   # 絞り込み機能
   def get_refinement_groups
     fes_year_id = params[:fes_year_id].to_i

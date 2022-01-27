@@ -60,6 +60,7 @@ Rails.application.routes.draw do
       get "get_group_show_for_admin_view/:id" => "groups_api#get_group_show_for_admin_view"
       #---電力申請ページ
       get "get_power_order_index_for_admin_view" => "power_orders_api#get_power_order_index_for_admin_view"
+      get "get_power_order_for_admin_view" => "power_orders_api#get_power_order_for_admin_view"
       get "get_power_order_show_for_admin_view/:id" => "power_orders_api#get_power_order_show_for_admin_view"
       #---会場申請ページ
       get "get_place_order_index_for_admin_view" => "place_orders_api#get_place_order_index_for_admin_view"
@@ -156,6 +157,7 @@ Rails.application.routes.draw do
       get "get_group_with_employee" => "groups_api#get_group_with_employee"
       get "get_group_with_food_products" => "groups_api#get_group_with_food_products"
       get "get_group_with_food_product" => "groups_api#get_group_with_food_product"
+      get "get_groups_refinemented_by_fes_year" => "groups_api#get_groups_refinemented_by_fes_year"
       post "get_refinement_groups" => "groups_api#get_refinement_groups"
       post "get_search_groups" => "groups_api#get_search_groups"
       # ステージオプション周り
