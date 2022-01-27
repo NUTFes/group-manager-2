@@ -34,6 +34,7 @@
         <tbody>
           <tr
             v-for="(group, index) in groups"
+            :key="index"
             @click="() => $router.push({ path: `/groups/` + group.group.id })"
           >
             <td>{{ group.group.id }}</td>

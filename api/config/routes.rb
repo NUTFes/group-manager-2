@@ -76,6 +76,10 @@ Rails.application.routes.draw do
       #---従業員申請ページ
       get "get_employee_index_for_admin_view" => "employees_api#get_employee_index_for_admin_view"
       get "get_employee_show_for_admin_view/:id" => "employees_api#get_employee_show_for_admin_view"
+      #---販売食品申請ページ
+      get "get_food_product_index_for_admin_view" => "food_products_api#get_food_product_index_for_admin_view"
+      get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
+
 
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
