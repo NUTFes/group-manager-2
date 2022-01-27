@@ -15,6 +15,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     tty: true
+    platform: linux/x86_64 # M1 Mac用
 
   api:
     build: ./api
