@@ -4,6 +4,9 @@
 		<CommonButton iconName="add_circle" :on_click="openModal">
 			追加
 		</CommonButton>
+    <CommonButton iconName="file_download" :on_click="downloadCSV">
+      CSVダウンロード
+    </CommonButton>
 	</SubHeader>
 	<Card width="100%">
 		<table>
@@ -137,6 +140,13 @@ watchQuery: ["page"],
         this.item = "";
         this.isFresh = "";
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_purchase_lists_csv/" + 1;
+      window.open(
+        url,
+        "購入品申請_CSV"
+      );
     },
   },
 };
