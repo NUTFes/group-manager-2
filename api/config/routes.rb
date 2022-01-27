@@ -70,6 +70,9 @@ Rails.application.routes.draw do
       #---ステージ申請ページ
       get "get_stage_order_index_for_admin_view" => "stage_orders_api#get_stage_order_index_for_admin_view"
       get "get_stage_order_show_for_admin_view/:id" => "stage_orders_api#get_stage_order_show_for_admin_view"
+      #---ステージオプション申請ページ
+      get "get_stage_common_option_index_for_admin_view" => "stage_common_options_api#get_stage_common_option_index_for_admin_view"
+      get "get_stage_common_option_show_for_admin_view/:id" => "stage_common_options_api#get_stage_common_option_show_for_admin_view"
 
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"

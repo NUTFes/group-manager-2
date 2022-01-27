@@ -43,6 +43,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
+	watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -64,7 +65,7 @@ export default {
       ]
     };
   },
-	async asyncData({ $axios, route}){
+	async asyncData({ $axios, route }){
 		const routeId = route.path.replace("/stage_orders/", "");
 		const url = "/api/v1/get_stage_order_show_for_admin_view/" + routeId;
 		const response = await $axios.$get(url);
