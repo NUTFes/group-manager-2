@@ -67,32 +67,32 @@ export default {
           click: "/users",
         },
         { title: "会場一覧", icon: "place", click: "/places" },
-        {
-          title: "使用可能会場一覧",
-          icon: "add_location_alt",
-          click: "/place_allow_lists",
-        },
+        // {
+        //   title: "使用可能会場一覧",
+        //   icon: "add_location_alt",
+        //   click: "/place_allow_lists",
+        // },
         { title: "物品一覧", icon: "chair", click: "/rental_items" },
-        {
-          title: "使用可能物品一覧",
-          icon: "living",
-          click: "/rental_item_allow_lists",
-        },
-        {
-          title: "在庫場所一覧",
-          icon: "warehouse",
-          click: "/stocker_places",
-        },
-        {
-          title: "在庫物品一覧",
-          icon: "table_restaurant",
-          click: "/stocker_items",
-        },
-        {
-          title: "割り当て物品一覧",
-          icon: "inventory",
-          click: "/assign_rental_items",
-        },
+        // {
+        //   title: "使用可能物品一覧",
+        //   icon: "living",
+        //   click: "/rental_item_allow_lists",
+        // },
+        // {
+        //   title: "在庫場所一覧",
+        //   icon: "warehouse",
+        //   click: "/stocker_places",
+        // },
+        // {
+        //   title: "在庫物品一覧",
+        //   icon: "table_restaurant",
+        //   click: "/stocker_items",
+        // },
+        // {
+        //   title: "割り当て物品一覧",
+        //   icon: "inventory",
+        //   click: "/assign_rental_items",
+        // },
         {
           title: "ステージ一覧",
           icon: "festival",
@@ -109,11 +109,11 @@ export default {
       // 申請系
       order_items: [
         { title: "参加団体申請", icon: "groups", click: "/groups" },
-        {
-          title: "企画名申請",
-          icon: "drive_file_rename_outline",
-          click: "/project_names",
-        },
+        // {
+        //   title: "企画名申請",
+        //   icon: "drive_file_rename_outline",
+        //   click: "/project_names",
+        // },
         { title: "副代表申請", icon: "directions_walk", click: "/sub_reps" },
         {
           title: "会場申請",
@@ -153,6 +153,7 @@ export default {
           click: "/assign_items",
         },
         { title: "会場割り当て", icon: "event_seat", click: "/assign_items" },
+        { title: "ステージ割り当て", icon: "stadium", click: "/assign_items" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         { title: "書類印刷", icon: "print", click: "/print" },
         {

@@ -135,7 +135,7 @@ export default {
     const groupsUrl =
       "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" +
       currentFesYearId;
-    const groupsRes = await $axios.$get(groupsUrl);
+    const groupsRes = await $axios.$post(groupsUrl);
 
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
