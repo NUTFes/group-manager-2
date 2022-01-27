@@ -1,6 +1,5 @@
 <template>
   <div class="main-content">
-
     <SubHeader pageTitle="会場申請一覧">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
@@ -16,8 +15,14 @@
         </thead>
         <tbody>
           <tr
-            v-for="(placeOrder, index) in placeOrders" :key="index"
-            @click="() => $router.push({ path: `/place_orders/` + placeOrder.place_order.id })"
+            v-for="(placeOrder, index) in placeOrders"
+            :key="index"
+            @click="
+              () =>
+                $router.push({
+                  path: `/place_orders/` + placeOrder.place_order.id,
+                })
+            "
           >
             <td>{{ placeOrder.place_order.id }}</td>
             <td>{{ placeOrder.group.name }}</td>
@@ -40,10 +45,12 @@
         <div>
           <h3>団体名</h3>
           <select v-model="appGroup">
-            <option disabled value="">
-              選択してください
-            </option>
-            <option v-for="group in groupList" :key="group.id" :value="group.id">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
               {{ group.name }}
             </option>
           </select>
@@ -51,10 +58,12 @@
         <div>
           <h3>第一希望</h3>
           <select v-model="firstPlaceOrder">
-            <option disabled value="">
-              選択してください
-            </option>
-            <option v-for="place in placeList" :key="place.id" :value="place.id">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
               {{ place.name }}
             </option>
           </select>
@@ -62,10 +71,12 @@
         <div>
           <h3>第二希望</h3>
           <select v-model="secondPlaceOrder">
-            <option disabled value="">
-              選択してください
-            </option>
-            <option v-for="place in placeList" :key="place.id" :value="place.id">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
               {{ place.name }}
             </option>
           </select>
@@ -73,20 +84,23 @@
         <div>
           <h3>第三希望</h3>
           <select v-model="thirdPlaceOrder">
-            <option disabled value="">
-              選択してください
-            </option>
-            <option v-for="place in placeList" :key="place.id" :value="place.id">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
               {{ place.name }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitPlaceOrder">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submitPlaceOrder"
+          >登録</CommonButton
+        >
       </template>
     </AddModal>
-
   </div>
 </template>
 
@@ -117,8 +131,10 @@ export default {
     const placeOrderUrl = "/api/v1/get_place_order_index_for_admin_view";
     const placeOrderRes = await $axios.$get(placeOrderUrl);
 
-    const currentFesYearId = 1
-    const groupsUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" + currentFesYearId;
+    const currentFesYearId = 1;
+    const groupsUrl =
+      "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" +
+      currentFesYearId;
     const groupsRes = await $axios.$get(groupsUrl);
 
     const placesUrl = "/places";
@@ -131,27 +147,10 @@ export default {
       placeOrders: placeOrderRes.data,
       groupList: groupsRes.data,
       placeList: placesRes.data,
-      yearList: yearRes
-    }
+      yearList: yearRes,
+    };
   },
   methods: {
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("first", this.placeFirst);
-      params.append("second", this.placeSecond);
-      params.append("third", this.placeThird);
-      this.$axios.post("/place_orders", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
-        this.placeFirst = "";
-        this.placeSecond = "";
-        this.placeThird = "";
-      });
-    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
@@ -160,36 +159,32 @@ export default {
       this.isOpenAddModal = false;
     },
     reload() {
-      this.groupId = this.groups.length + 1
-      const reUrl = "/api/v1/get_group_for_admin_view?id=" + this.groupId;
+      const placeOrderId = this.placeOrders.length + 1;
+      const reUrl =
+        "/api/v1/get_place_order_show_for_admin_view/" + placeOrderId;
       this.$axios.$get(reUrl).then((response) => {
-        this.groups.push(response.data[0])
-      })
+        this.placeOrders.push(response.data);
+      });
     },
     async submitPlaceOrder() {
-      const currentUserUrl = "/api/v1/current_user/show";
-      const CurrentUser = await this.$axios.get(currentUserUrl, {
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
-          },
-        })
-      const postGroupUrl = '/place_orders/'
-        + '?group_id=' + CurrentUser.data.data.id
-        + '&first=' + this.groupName 
-        + "&second=" + this.projectName 
-        + "&third=" + this.activity 
+      const postPlaceOrderUrl =
+        "/place_orders/" +
+        "?group_id=" +
+        this.appGroup +
+        "&first=" +
+        this.firstPlaceOrder +
+        "&second=" +
+        this.secondPlaceOrder +
+        "&third=" +
+        this.thirdPlaceOrder;
 
-      this.$axios.$post(postGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload()
-        this.closeAddModal()
+      this.$axios.$post(postPlaceOrderUrl).then((response) => {
+        this.appGroup = "";
+        this.firstPlaceOrder = "";
+        this.secondPlaceOrder = "";
+        this.thirdPlaceOrder = "";
+        this.reload();
+        this.closeAddModal();
       });
     },
   },

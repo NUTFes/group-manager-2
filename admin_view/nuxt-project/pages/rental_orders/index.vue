@@ -1,49 +1,47 @@
 <template>
-	<div class="main-content">
-	<SubHeader pageTitle="物品申請一覧">
-		<CommonButton iconName="add_circle" :on_click="openModal">
-			追加
-		</CommonButton>
-	</SubHeader>
-	<Card width="100%">
-		<table>
-			<thead>
-				<th v-for="(header, index) in headers" v-bind:key="index">
-					{{ header }}
-				</th>
-			</thead>		
-			<tbody>
-				<tr
-					v-for="(rentalOrder, index) in rentalOrders"
-					@click="() => $router.push({ path: `/rental_orders/` + rentalOrder.rental_order.id })"
-					:key="index"
-				>
-					<td>{{ rentalOrder.rental_order.id }}</td>
-					<td>{{ rentalOrder.group.name }}</td>
-					<td>{{ rentalOrder.rental_item.name }}</td>
-					<td>{{ rentalOrder.rental_item.num }}</td>
-					<td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
-					<td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
-				</tr>
-			</tbody>
-		</table>	
-	</Card>	
-	</div>
+  <div class="main-content">
+    <SubHeader pageTitle="物品申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+    <Card width="100%">
+      <table>
+        <thead>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(rentalOrder, index) in rentalOrders"
+            @click="
+              () =>
+                $router.push({
+                  path: `/rental_orders/` + rentalOrder.rental_order.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ rentalOrder.rental_order.id }}</td>
+            <td>{{ rentalOrder.group.name }}</td>
+            <td>{{ rentalOrder.rental_item.name }}</td>
+            <td>{{ rentalOrder.rental_item.num }}</td>
+            <td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
+            <td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </Card>
+  </div>
 </template>
 
 <script>
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
-      headers: [
-       "ID",
-       "参加団体",
-       "貸出物品",
-       "個数",
-       "登録日時",
-       "編集日時"
-      ]
+      headers: ["ID", "参加団体", "貸出物品", "個数", "登録日時", "編集日時"],
     };
   },
   async asyncData({ $axios }) {

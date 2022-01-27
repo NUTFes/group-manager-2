@@ -1,41 +1,46 @@
 <template>
-	<div class="main-content">
-	<SubHeader pageTitle="ステージ申請一覧">
-		<CommonButton iconName="add_circle" :on_click="openModal">
-			追加
-		</CommonButton>
-	</SubHeader>
-	<Card width="100%">
-		<table>
-			<thead>
-				<th v-for="(header, index) in headers" v-bind:key="index">
-					{{ header }}
-				</th>
-			</thead>		
-			<tbody>
-				<tr
-					v-for="(stageOrder, index) in stageOrders"
-					@click="() => $router.push({ path: `/stage_orders/` + stageOrder.stage_order.id })"
-					:key="index"
-				>
-					<td>{{ stageOrder.stage_order.id }}</td>
-					<td>{{ stageOrder.group.name }}</td>
-					<td>{{ stageOrder.stage_order.is_sunny }}</td>
-					<td>{{ stageOrder.stage_order_info.date }}</td>
-					<td>{{ stageOrder.stage_order_info.stage_first }}</td>
-					<td>{{ stageOrder.stage_order_info.stage_second }}</td>
-					<td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
-					<td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
-				</tr>
-			</tbody>
-		</table>	
-	</Card>	
-	</div>
+  <div class="main-content">
+    <SubHeader pageTitle="ステージ申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+    <Card width="100%">
+      <table>
+        <thead>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(stageOrder, index) in stageOrders"
+            @click="
+              () =>
+                $router.push({
+                  path: `/stage_orders/` + stageOrder.stage_order.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ stageOrder.stage_order.id }}</td>
+            <td>{{ stageOrder.group.name }}</td>
+            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ stageOrder.stage_order_info.date }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
+            <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </Card>
+  </div>
 </template>
 
 <script>
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -47,7 +52,7 @@ export default {
         "第二希望",
         "登録日時",
         "編集日時",
-      ]
+      ],
     };
   },
   async asyncData({ $axios }) {

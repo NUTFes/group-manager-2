@@ -1,35 +1,38 @@
 <template>
   <div class="main-content">
-    <SubHeader v-bind:pageTitle="group.group.name" pageSubTitle="参加団体申請一覧">
+    <SubHeader
+      v-bind:pageTitle="group.group.name"
+      pageSubTitle="参加団体申請一覧"
+    >
       <CommonButton iconName="edit"> 編集 </CommonButton>
       <CommonButton iconName="delete"> 削除 </CommonButton>
     </SubHeader>
     <Row>
-      <Card padding="40px 150px"gap="20px">
-      <Row justify="start">
-      <h4>基本情報</h4>
-      </Row>
-      <table class="vertical-table">
-        <thead>
-          <th v-for="header in headers">
-            {{ header }}
-          </th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{group.group.id}}</td>
-            <td>{{group.user.name}}</td>
-            <td>{{group.group.name}}</td>
-            <td>{{group.group.project_name}}</td>
-            <td>{{group.group.activity}}</td>
-            <td>{{group.group_category}}</td>
-            <td>{{group.fes_year}}</td>
-            <td>{{group.group.created_at | formatDate}}</td>
-            <td>{{group.group.updated_at | formatDate}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </Card>
+      <Card padding="40px 150px" gap="20px">
+        <Row justify="start">
+          <h4>基本情報</h4>
+        </Row>
+        <table class="vertical-table">
+          <thead>
+            <th v-for="header in headers">
+              {{ header }}
+            </th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ group.group.id }}</td>
+              <td>{{ group.user.name }}</td>
+              <td>{{ group.group.name }}</td>
+              <td>{{ group.group.project_name }}</td>
+              <td>{{ group.group.activity }}</td>
+              <td>{{ group.group_category }}</td>
+              <td>{{ group.fes_year }}</td>
+              <td>{{ group.group.created_at | formatDate }}</td>
+              <td>{{ group.group.updated_at | formatDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </Card>
     </Row>
   </div>
 </template>
@@ -52,7 +55,7 @@ export default {
         "カテゴリー",
         "開催年",
         "登録日時",
-        "編集日時"
+        "編集日時",
       ],
       data: [],
       detail_data: [],

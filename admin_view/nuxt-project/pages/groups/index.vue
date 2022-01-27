@@ -1,6 +1,5 @@
 <template>
   <div class="main-content">
-
     <SubHeader pageTitle="参加団体申請一覧">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
@@ -57,15 +56,17 @@
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください"/>
+          <input v-model="groupName" placeholder="入力してください" />
         </div>
         <div>
           <h3>カテゴリー</h3>
           <select v-model="groupCategoryId">
-            <option disabled value="">
-              選択してください
-            </option>
-            <option v-for="category in groupCategories" :key="category.id" :value="category.id">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="category in groupCategories"
+              :key="category.id"
+              :value="category.id"
+            >
               {{ category.name }}
             </option>
           </select>
@@ -81,9 +82,7 @@
         <div>
           <h3>開催年</h3>
           <select v-model="fesYearId">
-            <option disabled value="">
-              選択してください
-            </option>
+            <option disabled value="">選択してください</option>
             <option v-for="year in yearList" :key="year.id" :value="year.id">
               {{ year.year_num }}
             </option>
@@ -91,10 +90,11 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitGroup">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submitGroup"
+          >登録</CommonButton
+        >
       </template>
     </AddModal>
-
   </div>
 </template>
 
@@ -103,7 +103,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      value: '',
+      value: "",
       groups: [],
       group_categories: [],
       category: [],
@@ -163,29 +163,36 @@ export default {
       this.isOpenAddModal = false;
     },
     reload() {
-      const groupId = this.groups.length + 1
+      const groupId = this.groups.length + 1;
       const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
       this.$axios.$get(reUrl).then((response) => {
-        this.groups.push(response.data[0])
-      })
+        this.groups.push(response.data[0]);
+      });
     },
     async submitGroup() {
       const currentUserUrl = "/api/v1/current_user/show";
       const CurrentUser = await this.$axios.get(currentUserUrl, {
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
-          },
-        })
-      const postGroupUrl = '/groups/'
-        + '?user_id=' + CurrentUser.data.data.id
-        + '&name=' + this.groupName 
-        + "&project_name=" + this.projectName 
-        + "&activity=" + this.activity 
-        + "&group_category_id=" + this.groupCategoryId
-        + "&fes_year_id=" + this.fesYearId
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      });
+      const postGroupUrl =
+        "/groups/" +
+        "?user_id=" +
+        CurrentUser.data.data.id +
+        "&name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&activity=" +
+        this.activity +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&fes_year_id=" +
+        this.fesYearId;
 
       this.$axios.$post(postGroupUrl).then((response) => {
         this.groupName = "";
@@ -193,8 +200,8 @@ export default {
         this.activity = "";
         this.groupCategoryId = "";
         this.fesYearId = "";
-        this.reload()
-        this.closeAddModal()
+        this.reload();
+        this.closeAddModal();
       });
     },
   },

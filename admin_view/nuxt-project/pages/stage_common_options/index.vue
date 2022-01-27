@@ -1,41 +1,58 @@
 <template>
-	<div class="main-content">
-	<SubHeader pageTitle="ステージオプション申請一覧">
-		<CommonButton iconName="add_circle" :on_click="openModal">
-			追加
-		</CommonButton>
-	</SubHeader>
-	<Card width="100%">
-		<table>
-			<thead>
-				<th v-for="(header, index) in headers" v-bind:key="index">
-					{{ header }}
-				</th>
-			</thead>		
-			<tbody>
-				<tr
-					v-for="(stageCommonOption, index) in stageCommonOption"
-					@click="() => $router.push({ path: `/stage_common_options/` + stageCommonOption.stage_common_option.id })"
-					:key="index"
-				>
-					<td>{{ stageCommonOption.stage_common_option.id }}</td>
-					<td>{{ stageCommonOption.group.name }}</td>
-					<td>{{ stageCommonOption.stage_common_option.own_equipment }}</td>
-					<td>{{ stageCommonOption.stage_common_option.bgm }}</td>
-					<td>{{ stageCommonOption.stage_common_option.camera_permission }}</td>
-					<td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
-					<td>{{ stageCommonOption.stage_common_option.created_at | formatDate }}</td>
-					<td>{{ stageCommonOption.stage_common_option.updated_at | formatDate }}</td>
-				</tr>
-			</tbody>
-		</table>	
-	</Card>	
-	</div>
+  <div class="main-content">
+    <SubHeader pageTitle="ステージオプション申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+    <Card width="100%">
+      <table>
+        <thead>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(stageCommonOption, index) in stageCommonOption"
+            @click="
+              () =>
+                $router.push({
+                  path:
+                    `/stage_common_options/` +
+                    stageCommonOption.stage_common_option.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ stageCommonOption.stage_common_option.id }}</td>
+            <td>{{ stageCommonOption.group.name }}</td>
+            <td>{{ stageCommonOption.stage_common_option.own_equipment }}</td>
+            <td>{{ stageCommonOption.stage_common_option.bgm }}</td>
+            <td>
+              {{ stageCommonOption.stage_common_option.camera_permission }}
+            </td>
+            <td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
+            <td>
+              {{
+                stageCommonOption.stage_common_option.created_at | formatDate
+              }}
+            </td>
+            <td>
+              {{
+                stageCommonOption.stage_common_option.updated_at | formatDate
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Card>
+  </div>
 </template>
 
 <script>
 export default {
-	watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -47,7 +64,7 @@ export default {
         "大きな音",
         "登録日時",
         "編集日時",
-      ]
+      ],
     };
   },
   async asyncData({ $axios }) {
