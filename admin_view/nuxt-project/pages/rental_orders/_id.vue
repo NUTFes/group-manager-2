@@ -12,23 +12,26 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ rentalOrder.rental_order.id }}</td>
-              <td>{{ rentalOrder.group.name }}</td>
-              <td>{{ rentalOrder.rental_item.name }}</td>
-              <td>{{ rentalOrder.rental_order.num }}</td>
-              <td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
-              <td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <VerticalTable>
+          <tr>
+            <th>ID</th><td>{{ rentalOrder.rental_order.id }}</td>
+          </tr>
+          <tr>
+            <th>団体名</th><td>{{ rentalOrder.group.name }}</td>
+          </tr>
+          <tr>
+            <th>物品名</th><td>{{ rentalOrder.rental_item.name }}</td>
+          </tr>
+          <tr>
+            <th>個数</th><td>{{ rentalOrder.rental_order.num }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th><td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th><td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
+          </tr>
+        </VerticalTable>
       </Card>
     </Row>
   </div>

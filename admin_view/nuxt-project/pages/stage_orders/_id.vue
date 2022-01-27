@@ -12,36 +12,53 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ stageOrder.stage_order.id }}</td>
-              <td>{{ stageOrder.group.name }}</td>
-              <td>{{ stageOrder.stage_order.is_sunny }}</td>
-              <td>
-                {{ stageOrder.stage_order_info.date }} -
-                {{ stageOrder.stage_order_info.day }} -
-                {{ stageOrder.stage_order_info.day_num }}日目
-              </td>
-              <td>{{ stageOrder.stage_order_info.stage_first }}</td>
-              <td>{{ stageOrder.stage_order_info.stage_second }}</td>
-              <td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
-              <td>{{ stageOrder.stage_order_info.prepare_time_interval }}</td>
-              <td>{{ stageOrder.stage_order_info.cleanup_time_interval }}</td>
-              <td>{{ stageOrder.stage_order_info.prepare_start_time }}</td>
-              <td>{{ stageOrder.stage_order_info.performance_start_time }}</td>
-              <td>{{ stageOrder.stage_order_info.performance_end_time }}</td>
-              <td>{{ stageOrder.stage_order_info.cleanup_end_time }}</td>
-              <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
-              <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ stageOrder.stage_order.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>参加団体</th><td>{{ stageOrder.group.name }}</td>
+            </tr>
+            <tr>
+              <th>晴れ希望</th><td>{{ stageOrder.stage_order.is_sunny }}</td>
+            </tr>
+            <tr>
+              <th>希望日</th><td>{{ stageOrder.stage_order_info.date }} - {{ stageOrder.stage_order_info.day }} - {{ stageOrder.stage_order_info.day_num }}日目</td>
+            </tr>
+            <tr>
+              <th>第一希望</th><td>{{ stageOrder.stage_order_info.stage_first }}</td>
+            </tr>
+            <tr>
+              <th>第二希望</th><td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            </tr>
+            <tr>
+              <th>使用時間幅</th><td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
+            </tr>
+            <tr>
+              <th>準備時間幅</th><td>{{ stageOrder.stage_order_info.prepare_time_interval }}</td>
+            </tr>
+            <tr>
+              <th>掃除時間幅</th><td>{{ stageOrder.stage_order_info.cleanup_time_interval }}</td>
+            </tr>
+            <tr>
+              <th>準備開始時刻</th><td>{{ stageOrder.stage_order_info.prepare_start_time }}</td>
+            </tr>
+            <tr>
+              <th>パフォーマンス開始時刻</th><td>{{ stageOrder.stage_order_info.performance_start_time }}</td>
+            </tr>
+            <tr>
+              <th>パフォーマンス終了時刻</th><td>{{ stageOrder.stage_order_info.performance_end_time }}</td>
+            </tr>
+            <tr>
+              <th>掃除終了時刻</th><td>{{ stageOrder.stage_order_info.cleanup_end_time }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
+            </tr>
+        </VerticalTable>
       </Card>
     </Row>
   </div>
@@ -132,25 +149,25 @@ export default {
         .then((response) => {
           this.stages_list = response.data;
         });
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groups = response.data;
-        });
-      this.$axios
-        .get("/fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_date_list = response.data;
-        });
-      this.edit_dialog = true;
+        this.$axios
+          .get("/groups", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            this.groups = response.data;
+          });
+          this.$axios
+            .get("/fes_dates", {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+            .then((response) => {
+              this.fes_date_list = response.data;
+            });
+            this.edit_dialog = true;
     },
     edit: function () {
       const edit_url =

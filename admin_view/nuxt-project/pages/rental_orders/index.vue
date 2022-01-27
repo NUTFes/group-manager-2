@@ -6,34 +6,29 @@
       </CommonButton>
     </SubHeader>
     <Card width="100%">
-      <table>
-        <thead>
-          <th v-for="(header, index) in headers" v-bind:key="index">
-            {{ header }}
-          </th>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(rentalOrder, index) in rentalOrders"
-            @click="
-              () =>
-                $router.push({
-                  path: `/rental_orders/` + rentalOrder.rental_order.id,
-                })
-            "
-            :key="index"
-          >
-            <td>{{ rentalOrder.rental_order.id }}</td>
-            <td>{{ rentalOrder.group.name }}</td>
-            <td>{{ rentalOrder.rental_item.name }}</td>
-            <td>{{ rentalOrder.rental_item.num }}</td>
-            <td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
-            <td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </Card>
-  </div>
+      <Table>
+      <template v-slot:table-header>
+        <th v-for="(header, index) in headers" v-bind:key="index">
+          {{ header }}
+        </th>
+      </template>
+      <template v-slot:table-body>
+        <tr
+          v-for="(rentalOrder, index) in rentalOrders"
+          @click="() => $router.push({path: `/rental_orders/` + rentalOrder.rental_order.id})"
+          :key="index"
+        >
+          <td>{{ rentalOrder.rental_order.id }}</td>
+          <td>{{ rentalOrder.group.name }}</td>
+          <td>{{ rentalOrder.rental_item.name }}</td>
+          <td>{{ rentalOrder.rental_order.num }}</td>
+          <td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
+          <td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
+        </tr>
+      </template>
+    </Table>
+  </Card>
+</div>
 </template>
 
 <script>

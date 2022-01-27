@@ -12,13 +12,7 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
               <td>{{ stageCommonOption.stage_common_option.id }}</td>
               <td>{{ stageCommonOption.group.name }}</td>
@@ -40,8 +34,7 @@
                 }}
               </td>
             </tr>
-          </tbody>
-        </table>
+        </VerticalTable>
       </Card>
     </Row>
   </div>

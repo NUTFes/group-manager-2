@@ -12,26 +12,35 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="header in headers">
-              {{ header }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ group.group.id }}</td>
-              <td>{{ group.user.name }}</td>
-              <td>{{ group.group.name }}</td>
-              <td>{{ group.group.project_name }}</td>
-              <td>{{ group.group.activity }}</td>
-              <td>{{ group.group_category }}</td>
-              <td>{{ group.fes_year }}</td>
-              <td>{{ group.group.created_at | formatDate }}</td>
-              <td>{{ group.group.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ group.group.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>代表者氏名</th><td>{{ group.user.name }}</td>
+            </tr>
+            <tr>
+              <th>団体名</th><td>{{ group.group.name }}</td>
+            </tr>
+            <tr>
+              <th>企画名</th><td>{{ group.group.project_name }}</td>
+            </tr>
+            <tr>
+              <th>活動内容</th><td>{{ group.group.activity }}</td>
+            </tr>
+            <tr>
+              <th>カテゴリー</th><td>{{ group.group_category }}</td>
+            </tr>
+            <tr>
+              <th>開催年</th><td>{{ group.fes_year }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ group.group.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ group.group.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
       </Card>
     </Row>
   </div>

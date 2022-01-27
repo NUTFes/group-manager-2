@@ -34,8 +34,24 @@ export default {
   border-radius: 50%;
   width: 30px;
   height: 30px;
+  transition: .4s;
 }
 .icon-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(
+    45deg,
+    var(--button-secondary) 0%,
+    var(--button-primary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  box-shadow:  1px 1px 8px #292828,
+             -1px -1px 8px #878484;
 }
+
+.icon-button:active {
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 5px 5px 4px #3d3b3b,
+            inset -5px -5px 4px #737171;
+}
+
 </style>

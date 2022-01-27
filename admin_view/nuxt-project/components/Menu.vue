@@ -186,7 +186,7 @@ export default {
   position: fixed;
   left: 0;
   height: 100%;
-  width: 250px;
+  width: 260px;
   padding-bottom: 20px;
   background: radial-gradient(
     ellipse at top left,
@@ -213,10 +213,25 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+  transition: .2s;
 }
 
 .menu li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  margin-left: 10px;
+  letter-spacing: 1px;
+  background: linear-gradient(
+    45deg,
+    var(--button-secondary) 0%,
+    var(--primary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  box-shadow:  4px 4px 5px #484747,
+             -2px -2px 8px #636060;
+}
+.menu li:active {
+  box-shadow: inset 2px 2px 5px #484747,
+            inset -2px -2px 5px #686565;
 }
 
 .menu a {

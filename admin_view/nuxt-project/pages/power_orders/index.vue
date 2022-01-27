@@ -6,20 +6,20 @@
       </CommonButton>
     </SubHeader>
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" v-bind:key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(powerOrder, index) in powerOrders"
             @click="
-              () =>
-                $router.push({
-                  path: `/power_orders/` + powerOrder.power_order.id,
-                })
+            () =>
+            $router.push({
+              path: `/power_orders/` + powerOrder.power_order.id,
+            })
             "
             :key="index"
           >
@@ -30,8 +30,8 @@
             <td>{{ powerOrder.power_order.created_at | formatDate }}</td>
             <td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
   </div>
 </template>

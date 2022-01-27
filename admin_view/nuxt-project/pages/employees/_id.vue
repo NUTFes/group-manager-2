@@ -12,23 +12,26 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ employee.employee.id }}</td>
-              <td>{{ employee.group.name }}</td>
-              <td>{{ employee.employee.name }}</td>
-              <td>{{ employee.employee.student_id }}</td>
-              <td>{{ employee.employee.created_at | formatDate }}</td>
-              <td>{{ employee.employee.updated_at | formatDate }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <VerticalTable>
+          <tr>
+            <th>ID</th><td>{{ employee.employee.id }}</td>
+          </tr>
+          <tr>
+            <th>参加団体</th><td>{{ employee.group.name }}</td>
+          </tr>
+          <tr>
+            <th>氏名</th><td>{{ employee.employee.name }}</td>
+          </tr>
+          <tr>
+            <th>学籍番号</th><td>{{ employee.employee.student_id }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th><td>{{ employee.employee.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th><td>{{ employee.employee.updated_at | formatDate }}</td>
+          </tr>
+        </VerticalTable>
       </Card>
     </Row>
   </div>
@@ -40,7 +43,6 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "名前", "学籍番号", "登録日時", "編集日時"],
     };
   },
   async asyncData({ $axios, route }) {

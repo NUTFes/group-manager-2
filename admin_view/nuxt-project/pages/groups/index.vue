@@ -24,13 +24,13 @@
     </SubSubHeader>
 
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" v-bind:key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(group, index) in groups"
             :key="index"
@@ -44,8 +44,8 @@
             <td>{{ group.group.created_at | formatDate }}</td>
             <td>{{ group.group.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
 
     <AddModal
@@ -91,8 +91,8 @@
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitGroup"
-          >登録</CommonButton
-        >
+        >登録</CommonButton
+      >
       </template>
     </AddModal>
   </div>
