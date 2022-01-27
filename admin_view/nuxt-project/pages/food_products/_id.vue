@@ -36,6 +36,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
+watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -45,7 +46,7 @@ export default {
         "1日目の個数",
         "2日目の個数",
         "調理の有無",
-        "日時",
+        "登録日時",
         "編集日時",
       ],
     };

@@ -79,7 +79,9 @@ Rails.application.routes.draw do
       #---販売食品申請ページ
       get "get_food_product_index_for_admin_view" => "food_products_api#get_food_product_index_for_admin_view"
       get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
-
+      #---購入品申請ページ
+      get "get_purchase_list_index_for_admin_view" => "purchase_lists_api#get_purchase_list_index_for_admin_view"
+      get "get_purchase_list_show_for_admin_view/:id" => "purchase_lists_api#get_purchase_list_show_for_admin_view"
 
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
