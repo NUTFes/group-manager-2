@@ -39,19 +39,19 @@ import { mapState } from "vuex";
 export default {
 watchQuery: ["page"],
 	data() {
-			return {
-				headers: [
-					"ID",
-					"参加団体",
-					"製品",
-					"電力 [w]",
-					"メーカー",
-					"型番",
-					"製品URL",
-					"登録日時",
-					"編集日時"
-				]
-			};
+    return {
+      headers: [
+        "ID",
+        "参加団体",
+        "製品",
+        "電力 [w]",
+        "メーカー",
+        "型番",
+        "製品URL",
+        "登録日時",
+        "編集日時"
+      ]
+    };
 	},
 	computed: {
 			...mapState({
