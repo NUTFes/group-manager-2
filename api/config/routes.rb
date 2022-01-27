@@ -80,6 +80,7 @@ Rails.application.routes.draw do
       get "get_food_product_index_for_admin_view" => "food_products_api#get_food_product_index_for_admin_view"
       get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
 
+
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
       get "get_rental_orders_csv/:fes_year_id" => "output_csv#output_rental_orders_csv"
