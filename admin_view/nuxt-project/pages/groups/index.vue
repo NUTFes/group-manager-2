@@ -4,6 +4,9 @@
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
     </SubHeader>
 
     <SubSubHeader>
@@ -203,6 +206,13 @@ export default {
         this.reload();
         this.closeAddModal();
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_groups_csv/" + 2;
+      window.open(
+        url,
+        "参加団体一覧_CSV"
+      );
     },
   },
 };
