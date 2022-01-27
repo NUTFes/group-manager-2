@@ -1,13 +1,15 @@
 <template>
   <div class="main-content">
+
     <SubHeader pageTitle="参加団体申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
     </SubHeader>
+
     <SubSubHeader>
       <SearchDropDown
-        :nameList="year_list"
+        :nameList="yearList"
         :on_click="refinementGroups"
         value="year_num"
       >
@@ -21,6 +23,7 @@
         All Categories
       </SearchDropDown>
     </SubSubHeader>
+
     <Card width="100%">
       <table>
         <thead>
@@ -44,23 +47,59 @@
         </tbody>
       </table>
     </Card>
-    <GroupAddModal
-      @close="closeModal"
+
+    <AddModal
+      @close="closeAddModal"
       v-if="isOpenAddModal"
-      :submitGroup="submitGroup"
-      :year_list="year_list"
-      :groupCategories="groupCategories"
-    />
+      title="参加団体申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <input v-model="groupName" placeholder="入力してください"/>
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="groupCategoryId">
+            <option disabled value="">
+              選択してください
+            </option>
+            <option v-for="category in groupCategories" :key="category.id" :value="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>企画名</h3>
+          <input v-model="projectName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>活動内容</h3>
+          <textarea v-model="activity" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearId">
+            <option disabled value="">
+              選択してください
+            </option>
+            <option v-for="year in yearList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitGroup">登録</CommonButton>
+      </template>
+    </AddModal>
+
   </div>
 </template>
 
 <script>
-import GroupAddModal from "~/components/AddModals/GroupAddModal.vue";
 export default {
   watchQuery: ["page"],
-  components: {
-    GroupAddModal,
-  },
   data() {
     return {
       value: '',
@@ -69,13 +108,15 @@ export default {
       category: [],
       fes_years: [],
       years: [],
-      groupName: '',
+      groupName: "",
       projectName: [],
       activity: [],
-      groupCategoryId: [],
-      fesYearId: [],
+      groupCategoryId: "",
+      fesYearId: "",
       year_list: [],
       user: [],
+      groupId: "",
+      reGroup: [],
       isOpenAddModal: false,
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
@@ -103,7 +144,7 @@ export default {
     const yearsRes = await $axios.$get(yearsUrl);
     return {
       groups: groupRes.data,
-      year_list: yearsRes.data,
+      yearList: yearsRes.data,
     };
   },
   methods: {
@@ -113,34 +154,48 @@ export default {
       console.log(refUrl);
       console.log(refRes);
     },
-    openModal() {
+    openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
     },
-    closeModal() {
+    closeAddModal() {
       this.isOpenAddModal = false;
     },
-    submitGroup() {
-      console.log(searchText);
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      let params = new URLSearchParams();
-      params.append("user_id", this.user.id);
-      params.append("name", this.groupName);
-      params.append("project_name", this.projectName);
-      params.append("activity", this.activity);
-      params.append("group_category_id", this.groupCategoryId);
-      params.append("fes_year_id", this.fesYearId);
-      console.log(params)
-      this.$axios.post("/groups", params).then((response) => {
-        console.log(response);
-        $emit("close");
-        console.log("*****************************:");
-        //this.reload();
+    reload() {
+      this.groupId = this.groups.length + 1
+      console.log(this.groupId)
+      const reUrl = "/api/v1/get_group_for_admin_view?id=" + this.groupId;
+      console.log(reUrl)
+      this.$axios.$get(reUrl).then((response) => {
+        this.groups.push(response.data[0])
+      })
+    },
+    async submitGroup() {
+      const currentUserUrl = "/api/v1/current_user/show";
+      const CurrentUser = await this.$axios.get(currentUserUrl, {
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": localStorage.getItem("access-token"),
+            client: localStorage.getItem("client"),
+            uid: localStorage.getItem("uid"),
+          },
+        })
+      const postGroupUrl = '/groups/'
+        + '?user_id=' + CurrentUser.data.data.id
+        + '&name=' + this.groupName 
+        + "&project_name=" + this.projectName 
+        + "&activity=" + this.activity 
+        + "&group_category_id=" + this.groupCategoryId
+        + "&fes_year_id=" + this.fesYearId
+
+      this.$axios.$post(postGroupUrl).then((response) => {
         this.groupName = "";
         this.projectName = "";
         this.activity = "";
         this.groupCategoryId = "";
         this.fesYearId = "";
+        this.reload()
+        this.closeAddModal()
       });
     },
   },

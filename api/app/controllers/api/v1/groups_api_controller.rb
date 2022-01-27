@@ -5,6 +5,11 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @groups)
   end
 
+  def get_group_for_admin_view
+    @groups = Group.with_group_category_and_fes_year(params[:id])
+    render json: fmt(ok, @groups)
+  end
+
   def get_group_show_for_admin_view
     @groups = Group.with_order_info(params[:id])
     render json: fmt(ok, @groups)

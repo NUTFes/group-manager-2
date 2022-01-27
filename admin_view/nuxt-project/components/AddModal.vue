@@ -1,85 +1,68 @@
 <template>
   <transition name="fade" appear>
-    <div class="modal">
-      <div class="modal__container" @click.self="$emit('close')">
-        <div class="modal__box">
-          <h2>参加団体の追加</h2>
-          <div class="modal_content">
+    <div class="add-modal">
+      <div class="add-modal__container" @click.self="$emit('close')">
+        <div class="add-modal__box">
+          <h2>{{ title }}</h2>
+          <div class="add-modal_content">
             <form>
-              <div class="form-content">
-                <h3>団体名</h3>
-                <input v-model="message" placeholder="入力してください" />
-              </div>
-              <div class="form-content">
-                <h3>団体名</h3>
-                <input v-model="message" placeholder="入力してください" />
-              </div>
-              <div class="form-content">
-                <h3>団体名</h3>
-                <input v-model="message" placeholder="入力してください" />
-              </div>
-              <div class="form-content">
-                <h3>団体名</h3>
-                <input v-model="message" placeholder="入力してください" />
-              </div>
-              <div class="form-content">
-                <h3>団体名</h3>
-                <input v-model="message" placeholder="入力してください" />
-              </div>
-              <div class="form-content">
-                <h3>団体名</h3>
-                <input v-model="message" placeholder="入力してください" />
-              </div>
-              <CommonButton> 登録 </CommonButton>
+              <slot name="form"></slot>
             </form>
           </div>
-        </div>
+          <slot name="method"/></slot>
       </div>
     </div>
-  </transition>
+  </div>
+</transition>
 </template>
 
 <script>
-import axios from "axios";
 export default {
-  data() {
-    return {
-      user: [],
-      user_detail: [],
-      role: [],
-      grade: [],
-      department: [],
-      student_id: [],
-      tel: [],
-      rate: [],
-      groups_length: [],
-      dashboard_data: [],
-    };
-  },
   props: {
-    showContent: {
-      type: Boolean,
+    title: {
+      type: String,
       required: false,
-      default: false,
+      default: "追加",
     },
   },
 };
 </script>
 
-<style scoped>
-input {
+<style>
+.add-modal_content input, .add-modal_content textarea{
   color: var(--accent-2);
   border: 1px solid var(--accent-3);
   padding: 15px;
   width: 500px;
+  transition: all 0.5s 0s ease;
 }
 
-h3 {
+.add-modal_content input:focus, .add-modal_content textarea:focus {
+  border: 1px solid var(--accent-0);
+  z-index: 20;
+  outline: 0;
+}
+
+.add-modal_content select {
+  color: var(--accent-0);
+  border: 1px solid var(--accent-3);
+  padding: 15px;
+  width: 500px;
+  transition: all 0.5s 0s ease;
+}
+
+.add-modal_content select:focus {
+  border: 1px solid var(--accent-0);
+  z-index: 20;
+  outline: 0;
+}
+
+.add-modal_content h3 {
   font-size: 16px;
   font-weight: 300;
 }
 
-form {
+.add-modal_content form {
   width: 100%;
   height: 100%;
   display: flex;
@@ -89,7 +72,7 @@ form {
   gap: 25px;
 }
 
-.form-content {
+.add-modal_content div {
   display: flex;
   align-items: start;
   justify-content: center;
@@ -97,25 +80,29 @@ form {
   gap: 10px;
 }
 
-.modal {
+.default-option {
+  color: red;
+}
+
+.add-modal {
   top: 0;
   left: 0;
   position: fixed;
+  padding: 100px;
   height: 100%;
   width: 100%;
   z-index: 11;
   background-color: rgba(51, 51, 51, 0.3);
+  overflow: auto
 }
-.modal__container {
+.add-modal__container {
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.modal__box {
-  height: 80%;
+.add-modal__box {
   z-index: 15;
   display: flex;
   justify-content: center;
@@ -124,30 +111,20 @@ form {
   padding: 50px 50px;
   color: #fff;
   background: radial-gradient(
-    ellipse at top left,
-    rgba(51, 51, 51, 0.9),
-    rgba(51, 51, 51, 0.8)
-  );
-  backdrop-filter: blur(4px);
-  gap: 30px;
+  ellipse at top left,
+  rgba(51, 51, 51, 0.9),
+  rgba(51, 51, 51, 0.8)
+);
+backdrop-filter: blur(4px);
+gap: 30px;
 }
 
-.modal_content {
-  overflow: auto;
+.add-modal_content {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: start;
-  align-items: center;
   flex-flow: column;
   gap: 20px;
-}
-
-.modal__action {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
 }
 
 .fade-enter-active,
