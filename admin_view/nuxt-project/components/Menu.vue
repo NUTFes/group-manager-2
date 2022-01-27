@@ -67,17 +67,17 @@ export default {
           click: "/users",
         },
         { title: "会場一覧", icon: "place", click: "/places" },
-        {
-          title: "使用可能会場一覧",
-          icon: "add_location_alt",
-          click: "/place_allow_lists",
-        },
+        // {
+        //   title: "使用可能会場一覧",
+        //   icon: "add_location_alt",
+        //   click: "/place_allow_lists",
+        // },
         { title: "物品一覧", icon: "chair", click: "/rental_items" },
-        {
-          title: "使用可能物品一覧",
-          icon: "living",
-          click: "/rental_item_allow_lists",
-        },
+        // {
+        //   title: "使用可能物品一覧",
+        //   icon: "living",
+        //   click: "/rental_item_allow_lists",
+        // },
         // {
         //   title: "在庫場所一覧",
         //   icon: "warehouse",
