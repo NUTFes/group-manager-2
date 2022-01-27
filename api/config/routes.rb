@@ -55,12 +55,14 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       #---管理者画面用---
+      #---ユーザー一覧ページ
+      get "get_user_index_for_admin_view" => "users#get_user_index_for_admin_view"
+      get "get_user_show_for_admin_view/:id" => "users#get_user_show_for_admin_view"
       #---参加団体申請ページ
       get "get_group_index_for_admin_view" => "groups_api#get_group_index_for_admin_view"
       get "get_group_show_for_admin_view/:id" => "groups_api#get_group_show_for_admin_view"
       #---電力申請ページ
       get "get_power_order_index_for_admin_view" => "power_orders_api#get_power_order_index_for_admin_view"
-      get "get_power_order_for_admin_view" => "power_orders_api#get_power_order_for_admin_view"
       get "get_power_order_show_for_admin_view/:id" => "power_orders_api#get_power_order_show_for_admin_view"
       #---会場申請ページ
       get "get_place_order_index_for_admin_view" => "place_orders_api#get_place_order_index_for_admin_view"
@@ -157,9 +159,10 @@ Rails.application.routes.draw do
       get "get_group_with_employee" => "groups_api#get_group_with_employee"
       get "get_group_with_food_products" => "groups_api#get_group_with_food_products"
       get "get_group_with_food_product" => "groups_api#get_group_with_food_product"
-      get "get_groups_refinemented_by_fes_year" => "groups_api#get_groups_refinemented_by_fes_year"
       post "get_refinement_groups" => "groups_api#get_refinement_groups"
       post "get_search_groups" => "groups_api#get_search_groups"
+      post "get_search_groups" => "groups_api#get_search_groups"
+      post "get_groups_refinemented_by_fes_year" => "groups_api#get_groups_refinemented_by_fes_year"
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
@@ -211,6 +214,7 @@ Rails.application.routes.draw do
     end
   end
 
+  # pdf印刷
   get "print_pdf/group/:group_id/output" => "print_pdf#output_rental_items_pdf"
   get "print_pdf/power/:fes_year_id/output" => "print_pdf#output_powers_pdf"
   get "print_pdf/employees/:fes_year_id/output" => "print_pdf#output_employees_pdf"

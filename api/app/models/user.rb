@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
         |user| 
         { 
           "user": user, 
+          "role": user.role,
           "user_detail": user.user_detail,
           "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
         } 
@@ -28,15 +29,13 @@ class User < ActiveRecord::Base
 
   # 指定したIDのuserとそのuser_detailを取得する
   def self.with_user_detail(user_id)
-    @record = User.eager_load(:user_detail).where(users: {id: user_id})
-      .map{ 
-        |user| 
-        { 
-          "user": user, 
-          "user_detail": user.user_detail,
-          "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
-        } 
-      }
+    user = User.find(user_id)
+    return { 
+      "user": user, 
+      "role": user.role,
+      "user_detail": user.user_detail,
+      "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
+    } 
   end
 
   ### ユーザーが登録している情報の全てを取得する

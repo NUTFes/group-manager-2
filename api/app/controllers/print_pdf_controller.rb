@@ -94,7 +94,7 @@ class PrintPdfController < ApplicationController
 
         send_data pdf.to_pdf,
           filename: "#{output_file_name}.pdf",
-          disposition: "inline", # ダウンロードせず表示する
+          # disposition: "inline", # ダウンロードせず表示する
           type: "application/pdf"
 
       end

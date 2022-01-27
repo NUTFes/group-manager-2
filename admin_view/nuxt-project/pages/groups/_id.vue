@@ -4,6 +4,7 @@
       v-bind:pageTitle="group.group.name"
       pageSubTitle="参加団体申請一覧"
     >
+      <CommonButton iconName="print" :on_click="printPDF"> pdf印刷 </CommonButton>
       <CommonButton iconName="edit"> 編集 </CommonButton>
       <CommonButton iconName="delete"> 削除 </CommonButton>
     </SubHeader>
@@ -76,5 +77,14 @@ export default {
       route: url,
     };
   },
+  methods: {
+    async printPDF() {
+      const url = "http://localhost:3000" + "/print_pdf/group_info/" + this.group.group.id + "/output.pdf";
+      window.open(
+        url,
+        this.group.group.name + "_PDF"
+      );
+    }
+  }
 };
 </script>

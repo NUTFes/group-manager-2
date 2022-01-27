@@ -1,6 +1,16 @@
 class Api::V1::UsersController < ApplicationController
   # before_action :authenticate_api_user!
   
+  def get_user_index_for_admin_view
+    @users = User.with_user_details
+    render json: fmt(ok, @users)
+  end
+
+  def get_user_show_for_admin_view
+    @user = User.with_user_detail(params[:id])
+    render json: fmt(ok, @user)
+  end
+  
   # 絞り込み機能
   def get_refinement_users
     role_id = params[:role_id].to_i
