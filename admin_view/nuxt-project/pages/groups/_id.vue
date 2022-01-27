@@ -4,9 +4,10 @@
       v-bind:pageTitle="group.group.name"
       pageSubTitle="参加団体申請一覧"
     >
-      <CommonButton iconName="print" :on_click="printPDF"> pdf印刷 </CommonButton>
       <CommonButton iconName="edit"> 編集 </CommonButton>
       <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="print" :on_click="printPDF"> 参加団体情報ダウンロード </CommonButton>
+      <CommonButton iconName="print" :on_click="printRentalItemsPDF"> 物品貸し出し表ダウンロード </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -80,6 +81,13 @@ export default {
   methods: {
     async printPDF() {
       const url = "http://localhost:3000" + "/print_pdf/group_info/" + this.group.group.id + "/output.pdf";
+      window.open(
+        url,
+        this.group.group.name + "_PDF"
+      );
+    },
+    async printRentalItemsPDF() {
+      const url = "http://localhost:3000" + "/print_pdf/group/" + this.group.group.id + "/output.pdf";
       window.open(
         url,
         this.group.group.name + "_PDF"
