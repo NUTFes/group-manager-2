@@ -1,9 +1,16 @@
 FROM ruby:2.7.1
 
-RUN apt install wget
-RUN wget http://download.docker.com/linux/ubuntu/gpg
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-      && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+
+#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+#      && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+#      && apt-get update \
+#      && apt-get install -y nodejs npm yarn \
+#      && apt-get install -y build-essential libpq-dev libgtk-3.0 libnss3 libatk-bridge2.0-0\
+#      && mkdir /myapp
+ 
+# M1 Mac 対策 
+RUN wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo 'deb http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list
       && apt-get update \
       && apt-get install -y nodejs npm yarn \
       && apt-get install -y build-essential libpq-dev libgtk-3.0 libnss3 libatk-bridge2.0-0\
