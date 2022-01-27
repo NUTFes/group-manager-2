@@ -2,6 +2,13 @@ h1 {
   text-align: center;
 }
 
+.page-break {
+  page-break-after:always;
+  &:last-child {
+    page-break-after: avoid;
+  }
+}
+
 table {
   width: 100%;
   align: center;
