@@ -11,8 +11,8 @@
       </Row>
       <table class="vertical-table">
         <thead>
-          <th v-for="(n, i) in headers">
-            {{ headers[i] }}
+          <th v-for="header in headers">
+            {{ header }}
           </th>
         </thead>
         <tbody>
