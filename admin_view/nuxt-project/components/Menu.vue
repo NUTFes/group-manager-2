@@ -109,11 +109,11 @@ export default {
       // 申請系
       order_items: [
         { title: "参加団体申請", icon: "groups", click: "/groups" },
-        {
-          title: "企画名申請",
-          icon: "drive_file_rename_outline",
-          click: "/project_names",
-        },
+        // {
+        //   title: "企画名申請",
+        //   icon: "drive_file_rename_outline",
+        //   click: "/project_names",
+        // },
         { title: "副代表申請", icon: "directions_walk", click: "/sub_reps" },
         {
           title: "会場申請",
