@@ -216,12 +216,14 @@ Rails.application.routes.draw do
 
   # pdf印刷
   get "print_pdf/group/:group_id/output" => "print_pdf#output_rental_items_pdf"
+  get "print_pdf/group_all/:fes_year_id/output" => "print_pdf#output_all_groups_rental_items_pdf"
   get "print_pdf/power/:fes_year_id/output" => "print_pdf#output_powers_pdf"
   get "print_pdf/employees/:fes_year_id/output" => "print_pdf#output_employees_pdf"
   get "print_pdf/rental_items_list/:fes_year_id/output" => "print_pdf#output_rental_items_list_pdf"
   get "print_pdf/contacts/:fes_year_id/output" => "print_pdf#output_contacts_pdf"
   get "print_pdf/food_products/:fes_year_id/output" => "print_pdf#output_food_products_pdf"
   get "print_pdf/group_info/:group_id/output" => "print_pdf#output_group_info_pdf"
+  get "print_pdf/all_groups_info/:fes_year_id/output" => "print_pdf#output_all_groups_info_pdf"
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {

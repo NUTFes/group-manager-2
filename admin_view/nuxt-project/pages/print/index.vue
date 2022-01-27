@@ -23,6 +23,14 @@
           <td>連絡先リスト</td>
           <td><CommonButton iconName="file_download" :on_click="downloadContactsPDF">ダウンロード</CommonButton></td>
         </tr>
+        <tr>
+          <td>参加団体情報リストまとめ</td>
+          <td><CommonButton iconName="file_download" :on_click="downloadGroupInfoPDF">ダウンロード</CommonButton></td>
+        </tr>
+        <tr>
+          <td>物品貸し出し表まとめ</td>
+          <td><CommonButton iconName="file_download" :on_click="downloadRentalItemsAllPDF">ダウンロード</CommonButton></td>
+        </tr>
 		</table>	
 	</Card>	
   </div>
@@ -59,6 +67,18 @@ export default {
       window.open(
         "http://localhost:3000" + "/print_pdf/contacts/" + 1 + "/output.pdf",
         "連絡先リスト"
+      );
+    },
+    downloadGroupInfoPDF: function () {
+      window.open(
+        "http://localhost:3000" + "/print_pdf/all_groups_info/" + 1 + "/output.pdf",
+        "参加団体情報リスト"
+      );
+    },
+    downloadRentalItemsAllPDF: function () {
+      window.open(
+        "http://localhost:3000" + "/print_pdf/group_all/" + 1 + "/output.pdf",
+        "物品貸し出し表まとめ"
       );
     },
   },
