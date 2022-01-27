@@ -162,10 +162,8 @@ export default {
       this.isOpenAddModal = false;
     },
     reload() {
-      this.groupId = this.groups.length + 1
-      console.log(this.groupId)
-      const reUrl = "/api/v1/get_group_for_admin_view?id=" + this.groupId;
-      console.log(reUrl)
+      const groupId = this.groups.length + 1
+      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
       this.$axios.$get(reUrl).then((response) => {
         this.groups.push(response.data[0])
       })
