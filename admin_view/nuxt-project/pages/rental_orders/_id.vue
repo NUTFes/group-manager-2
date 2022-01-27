@@ -37,6 +37,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
       headers: ["ID", "参加団体", "貸出物品", "個数", "登録日時", "編集日時"],

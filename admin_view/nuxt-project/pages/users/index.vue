@@ -37,6 +37,7 @@
 
 <script>
 export default {
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
