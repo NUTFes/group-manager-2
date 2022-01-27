@@ -9,9 +9,9 @@
       <span class="material-icons">arrow_drop_down</span>
     </button>
     <transition name="fade">
-      <div class="modal" v-show="$data.showContent">
-        <div class="modal__container" @click.self="closeModal">
-          <div class="modal__box">
+      <div class="drop-down" v-show="$data.showContent">
+        <div class="drop-down__container" @click.self="closeModal">
+          <div class="drop-down__box">
             <button
               class="common-button"
               :style="SearchDropDownOption"
@@ -27,6 +27,7 @@
     </transition>
   </div>
 </template>
+
 <script>
 export default {
   name: "SearchDropDown",
@@ -75,6 +76,7 @@ export default {
 }
 
 .common-button {
+  border-radius: 0px;
   width: 160px;
   height: 35px;
   padding: 5px 5px 5px 15px;
@@ -92,6 +94,7 @@ export default {
   gap: 5px;
 }
 .common-button:before {
+  border-radius: 0px;
   content: "";
   width: 100%;
   height: 100%;
@@ -108,6 +111,8 @@ export default {
   backdrop-filter: blur(4px);
 }
 .common-button:after {
+  border-radius: 0px;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
   content: "";
   width: 100%;
   height: 100%;
@@ -133,12 +138,12 @@ export default {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 
-.modal {
+.drop-down {
   width: 160px;
   position: absolute;
   z-index: 11;
 }
-.modal__container {
+.drop-down__container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -146,7 +151,7 @@ export default {
   align-items: start;
 }
 
-.modal__box {
+.drop-down__box {
   z-index: 12;
   margin-top: 0px;
   display: flex;
