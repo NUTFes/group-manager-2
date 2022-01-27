@@ -57,7 +57,6 @@ Rails.application.routes.draw do
       #---管理者画面用---
       #---参加団体申請ページ
       get "get_group_index_for_admin_view" => "groups_api#get_group_index_for_admin_view"
-      get "get_group_for_admin_view" => "groups_api#get_group_for_admin_view"
       get "get_group_show_for_admin_view/:id" => "groups_api#get_group_show_for_admin_view"
       #---電力申請ページ
       get "get_power_order_index_for_admin_view" => "power_orders_api#get_power_order_index_for_admin_view"
@@ -74,6 +73,12 @@ Rails.application.routes.draw do
       #---ステージオプション申請ページ
       get "get_stage_common_option_index_for_admin_view" => "stage_common_options_api#get_stage_common_option_index_for_admin_view"
       get "get_stage_common_option_show_for_admin_view/:id" => "stage_common_options_api#get_stage_common_option_show_for_admin_view"
+      #---従業員申請ページ
+      get "get_employee_index_for_admin_view" => "employees_api#get_employee_index_for_admin_view"
+      get "get_employee_show_for_admin_view/:id" => "employees_api#get_employee_show_for_admin_view"
+      #---販売食品申請ページ
+      get "get_food_product_index_for_admin_view" => "food_products_api#get_food_product_index_for_admin_view"
+      get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
 
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
