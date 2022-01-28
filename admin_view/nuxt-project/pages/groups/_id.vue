@@ -6,8 +6,8 @@
     >
       <CommonButton iconName="edit"> 編集 </CommonButton>
       <CommonButton iconName="delete"> 削除 </CommonButton>
-      <CommonButton iconName="print" :on_click="printPDF"> 参加団体情報ダウンロード </CommonButton>
-      <CommonButton iconName="print" :on_click="printRentalItemsPDF"> 物品貸し出し表ダウンロード </CommonButton>
+      <CommonButton iconName="download" :on_click="printPDF"> 参加団体情報 </CommonButton>
+      <CommonButton iconName="download" :on_click="printRentalItemsPDF"> 物品貸し出し表 </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">

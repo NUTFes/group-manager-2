@@ -227,10 +227,13 @@ export default {
 }
 
 .menu a {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   transition: .2s;
 }
 
-.menu li:hover a{
+.menu li:hover a {
   font-weight: 500;
   letter-spacing: 1px;
   width: calc( 100% - 1em );
