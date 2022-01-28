@@ -33,7 +33,7 @@ export default {
 .common-button {
   border-radius: var(--button-radius);
   padding: 10px 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(4px);
   text-align: center;
   font-size: 14px;

@@ -1,5 +1,6 @@
 <template>
   <div class="main-content">
+
     <SubHeader
       v-bind:pageTitle="placeOrder.group.name"
       pageSubTitle="会場申請一覧"
@@ -7,31 +8,43 @@
       <CommonButton iconName="edit"> 編集 </CommonButton>
       <CommonButton iconName="edit"> 削除 </CommonButton>
     </SubHeader>
+
     <Row>
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+
+            <VerticalTable>
             <tr>
-              <td>{{ placeOrder.place_order.id }}</td>
-              <td>{{ placeOrder.group.name }}</td>
-              <td>{{ placeOrder.place_order_name.first }}</td>
-              <td>{{ placeOrder.place_order_name.second }}</td>
-              <td>{{ placeOrder.place_order_name.third }}</td>
-              <td>{{ placeOrder.place_order.remark }}</td>
-              <td>{{ placeOrder.place_order.created_at | formatDate }}</td>
-              <td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ placeOrder.place_order.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>団体名</th><td>{{ placeOrder.group.name }}</td>
+            </tr>
+            <tr>
+              <th>第一希望</th><td>{{ placeOrder.place_order_name.first }}</td>
+            </tr>
+            <tr>
+              <th>第二希望</th><td>{{ placeOrder.place_order_name.second }}</td>
+            </tr>
+            <tr>
+              <th>第三希望</th><td>{{ placeOrder.place_order_name.third }}</td>
+            </tr>
+            <tr>
+              <th>備考</th><td>{{ placeOrder.place_order.remark }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ placeOrder.place_order.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
+
         </Row>
       </Card>
     </Row>
+
   </div>
 </template>
 

@@ -11,23 +11,29 @@
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+          <VerticalTable>
             <tr>
-              <td>{{ fesDate.fes_date.id }}</td>
-              <td>{{ fesDate.fes_year.year_num }}</td>
-              <td>{{ fesDate.fes_date.days_num }}</td>
-              <td>{{ fesDate.fes_date.date }}</td>
-              <td>{{ fesDate.fes_date.day }}</td>
-              <td>{{ fesDate.fes_date.created_at | formatDate }}</td>
-              <td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ fesDate.fes_date.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>開催年</th><td>{{ fesDate.fes_year.year_num }}</td>
+            </tr>
+            <tr>
+              <th>何日目</th><td>{{ fesDate.fes_date.days_num }}</td>
+            </tr>
+            <tr>
+              <th>開催日</th><td>{{ fesDate.fes_date.date }}</td>
+            </tr>
+            <tr>
+              <th>曜日</th><td>{{ fesDate.fes_date.day }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ fesDate.fes_date.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
         </Row>
       </Card>
     </Row>

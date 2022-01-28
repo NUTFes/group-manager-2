@@ -12,26 +12,35 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ powerOrder.power_order.id }}</td>
-              <td>{{ powerOrder.group.name }}</td>
-              <td>{{ powerOrder.power_order.item }}</td>
-              <td>{{ powerOrder.power_order.power }}</td>
-              <td>{{ powerOrder.power_order.manufacturer }}</td>
-              <td>{{ powerOrder.power_order.model }}</td>
-              <td>{{ powerOrder.power_order.item_url }}</td>
-              <td>{{ powerOrder.power_order.created_at | formatDate }}</td>
-              <td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ powerOrder.power_order.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>団体名</th><td>{{ powerOrder.group.name }}</td>
+            </tr>
+            <tr>
+              <th>製品名</th><td>{{ powerOrder.power_order.item }}</td>
+            </tr>
+            <tr>
+              <th>電力 [w]</th><td>{{ powerOrder.power_order.power }}</td>
+            </tr>
+            <tr>
+              <th>メーカー</th><td>{{ powerOrder.power_order.manufacturer }}</td>
+            </tr>
+            <tr>
+              <th>型番</th><td>{{ powerOrder.power_order.model }}</td>
+            </tr>
+            <tr>
+              <th>製品URL</th><td>{{ powerOrder.power_order.item_url }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ powerOrder.power_order.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
       </Card>
     </Row>
   </div>

@@ -1,8 +1,8 @@
 <template>
-	<div class="main-content">
-	<SubHeader pageTitle="書類印刷"></SubHeader>
-	<Card width="100%">
-		<table>
+  <div class="main-content">
+    <SubHeader pageTitle="書類印刷"></SubHeader>
+    <Card width="100%">
+      <VerticalTable>
         <tr>
           <td>使用電力リスト</td>
           <td><CommonButton iconName="file_download" :on_click="downloadPowerPDF">ダウンロード</CommonButton></td>
@@ -31,8 +31,8 @@
           <td>物品貸し出し表まとめ</td>
           <td><CommonButton iconName="file_download" :on_click="downloadRentalItemsAllPDF">ダウンロード</CommonButton></td>
         </tr>
-		</table>	
-	</Card>	
+      </VerticalTable>
+    </Card>
   </div>
 </template>
 

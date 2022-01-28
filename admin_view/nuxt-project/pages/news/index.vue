@@ -7,21 +7,21 @@
     </SubHeader>
 
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" :key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(n, index) in news"
             :key="index"
             @click="
-              () =>
-                $router.push({
-                  path: `/news/` + n.id,
-                })
+            () =>
+            $router.push({
+              path: `/news/` + n.id,
+            })
             "
           >
             <td>{{ n.id }}</td>
@@ -29,8 +29,8 @@
             <td>{{ n.created_at | formatDate }}</td>
             <td>{{ n.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
   </div>
 </template>

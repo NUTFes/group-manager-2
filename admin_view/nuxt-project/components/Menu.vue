@@ -186,7 +186,7 @@ export default {
   position: fixed;
   left: 0;
   height: 100%;
-  width: 250px;
+  width: 260px;
   padding-bottom: 20px;
   background: radial-gradient(
     ellipse at top left,
@@ -199,7 +199,17 @@ export default {
 }
 
 .menu-content {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-flow: column;
+  gap: 5px;
   margin-bottom: 60px;
+}
+
+.menu {
+  width: 100%;
 }
 
 .menu ul {
@@ -215,8 +225,31 @@ export default {
   height: 100%;
 }
 
-.menu li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.menu a {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: .2s;
+}
+
+.menu li:hover a {
+  font-weight: 500;
+  letter-spacing: 1px;
+  width: calc( 100% - 1em );
+  transform: translateX(8px);
+  background: linear-gradient(
+    45deg,
+    var(--button-secondary) 0%,
+    var(--primary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  box-shadow:  4px 4px 5px #484747,
+             -2px -2px 8px #636060;
+}
+.menu li:active a {
+  box-shadow: inset 2px 2px 5px #484747,
+            inset -2px -2px 5px #686565;
 }
 
 .menu a {
@@ -237,6 +270,7 @@ export default {
 }
 
 .menu-header {
+  width: 100%;
   font-size: 16px;
   font-weight: 300;
   color: var(--accent-0);

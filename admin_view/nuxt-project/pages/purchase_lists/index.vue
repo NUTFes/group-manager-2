@@ -1,43 +1,43 @@
 <template>
-	<div class="main-content">
-	<SubHeader pageTitle="購入食品申請一覧">
-		<CommonButton iconName="add_circle" :on_click="openModal">
-			追加
-		</CommonButton>
-    <CommonButton iconName="file_download" :on_click="downloadCSV">
-      CSVダウンロード
-    </CommonButton>
-	</SubHeader>
-	<Card width="100%">
-		<table>
-			<thead>
-				<th v-for="(header, index) in headers" v-bind:key="index">
-					{{ header }}
-				</th>
-			</thead>		
-			<tbody>
-				<tr
-					v-for="(purchaseList, index) in purchaseLists"
-					@click="() => $router.push({ path: `/purchase_lists/` + purchaseList.purchase_list.id })"
-					:key="index"
-				>
-					<td>{{ purchaseList.purchase_list.id }}</td>
-					<td>{{ purchaseList.group.name }}</td>
-					<td>{{ purchaseList.purchase_list_info.food_product }}</td>
-					<td>{{ purchaseList.purchase_list.items }}</td>
-					<td>{{ purchaseList.purchase_list.is_fresh }}</td>
-					<td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
-					<td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
-				</tr>
-			</tbody>
-		</table>	
-	</Card>	
-	</div>
+  <div class="main-content">
+    <SubHeader pageTitle="購入食品申請一覧">
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+      <CommonButton iconName="add_circle" :on_click="openModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(purchaseList, index) in purchaseLists"
+            @click="() => $router.push({ path: `/purchase_lists/` + purchaseList.purchase_list.id })"
+            :key="index"
+          >
+            <td>{{ purchaseList.purchase_list.id }}</td>
+            <td>{{ purchaseList.group.name }}</td>
+            <td>{{ purchaseList.purchase_list_info.food_product }}</td>
+            <td>{{ purchaseList.purchase_list.items }}</td>
+            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
+            <td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
+  </div>
 </template>
 
 <script>
 export default {
-watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -72,26 +72,26 @@ watchQuery: ["page"],
         .then((response) => {
           this.groups = response.data;
         });
-      this.$axios
-        .get("/fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_dates = response.data;
-        });
-      this.$axios
-        .get("/shops", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.shops = response.data;
-        });
+        this.$axios
+          .get("/fes_dates", {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then((response) => {
+            this.fes_dates = response.data;
+          });
+          this.$axios
+            .get("/shops", {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+            .then((response) => {
+              this.shops = response.data;
+            });
 
-      this.dialog = true;
+            this.dialog = true;
     },
 
     getPurchaseList: function (groupId) {

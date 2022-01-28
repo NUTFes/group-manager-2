@@ -7,13 +7,13 @@
     </SubHeader>
 
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" :key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(place, index) in places"
             :key="index"
@@ -29,8 +29,8 @@
             <td>{{ place.created_at | formatDate }}</td>
             <td>{{ place.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
   </div>
 </template>

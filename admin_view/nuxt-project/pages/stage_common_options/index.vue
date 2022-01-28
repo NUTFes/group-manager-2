@@ -9,22 +9,22 @@
       </CommonButton>
     </SubHeader>
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" v-bind:key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(stageCommonOption, index) in stageCommonOption"
             @click="
-              () =>
-                $router.push({
-                  path:
-                    `/stage_common_options/` +
-                    stageCommonOption.stage_common_option.id,
-                })
+            () =>
+            $router.push({
+              path:
+              `/stage_common_options/` +
+              stageCommonOption.stage_common_option.id,
+            })
             "
             :key="index"
           >
@@ -47,8 +47,8 @@
               }}
             </td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
   </div>
 </template>

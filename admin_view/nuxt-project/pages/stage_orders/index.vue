@@ -9,13 +9,13 @@
       </CommonButton>
     </SubHeader>
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" v-bind:key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(stageOrder, index) in stageOrders"
             @click="
@@ -35,8 +35,8 @@
             <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
             <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+    </Table>
     </Card>
   </div>
 </template>

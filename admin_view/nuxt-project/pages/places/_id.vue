@@ -11,20 +11,20 @@
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+          <VerticalTable>
             <tr>
-              <td>{{ place.id }}</td>
-              <td>{{ place.name }}</td>
-              <td>{{ place.created_at | formatDate }}</td>
-              <td>{{ place.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ place.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>名前</th><td>{{ place.name }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ place.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ place.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
         </Row>
       </Card>
     </Row>
@@ -42,12 +42,6 @@ export default {
   },
   data() {
     return {
-      headers: [
-        "ID",
-        "名前",
-        "登録日時",
-        "編集日時",
-      ],
     };
   },
   async asyncData({ $axios, route }) {

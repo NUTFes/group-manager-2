@@ -11,22 +11,26 @@
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+          <VerticalTable>
             <tr>
-              <td>{{ stage.id }}</td>
-              <td>{{ stage.name }}</td>
-              <td>{{ stage.enable_sunny }}</td>
-              <td>{{ stage.enable_rainy }}</td>
-              <td>{{ stage.created_at | formatDate }}</td>
-              <td>{{ stage.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ stage.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>名前</th><td>{{ stage.name }}</td>
+            </tr>
+            <tr>
+              <th>晴れ</th><td>{{ stage.enable_sunny }}</td>
+            </tr>
+            <tr>
+              <th>雨</th><td>{{ stage.enable_rainy }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ stage.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ stage.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
         </Row>
       </Card>
     </Row>
