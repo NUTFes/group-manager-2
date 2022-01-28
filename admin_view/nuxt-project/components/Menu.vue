@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
@@ -114,7 +113,7 @@ export default {
         //   icon: "drive_file_rename_outline",
         //   click: "/project_names",
         // },
-        { title: "副代表申請", icon: "directions_walk", click: "/sub_reps" },
+        { title: "代表者申請", icon: "directions_walk", click: "/representatives" },
         {
           title: "会場申請",
           icon: "person_pin_circle",
@@ -152,8 +151,8 @@ export default {
           icon: "assignment_return",
           click: "/assign_items",
         },
-        { title: "会場割り当て", icon: "event_seat", click: "/assign_items" },
-        { title: "ステージ割り当て", icon: "stadium", click: "/assign_items" },
+        { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
+        { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         { title: "書類印刷", icon: "print", click: "/print" },
         {

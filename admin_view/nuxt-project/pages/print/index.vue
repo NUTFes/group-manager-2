@@ -38,6 +38,7 @@
 
 <script>
 export default {
+  watchQuery: ["page"],
   methods: {
     downloadPowerPDF: function () {
       window.open(
