@@ -1,6 +1,6 @@
 <template>
   <form method="get" action="#" class="search-container">
-    <input type="text" size="25" placeholder="search" />
+    <slot></slot>
   </form>
 </template>
 <script>
@@ -8,7 +8,7 @@ export default {
   name: "SearchBar",
 };
 </script>
-<style scoped>
+<style>
 .search-container {
 }
 
@@ -18,22 +18,22 @@ export default {
   border-radius: 50px;
 }
 
-input::-webkit-input-placeholder {
+.serarch-container input::-webkit-input-placeholder {
   font-family: "Material Icons";
   color: var(--accent-3);
 }
 
-input::-moz-placeholder {
+.serarch-container input::-moz-placeholder {
   font-family: "Material Icons";
   color: var(--accent-3);
 }
 
-input:-ms-input-placeholder {
+.serarch-container input:-ms-input-placeholder {
   font-family: "Material Icons";
   color: var(--accent-3);
 }
 
-input:-moz-placeholder {
+.serarch-container input:-moz-placeholder {
   font-family: "Material Icons";
   color: var(--accent-3);
 }
