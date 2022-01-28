@@ -58,6 +58,9 @@ Rails.application.routes.draw do
       #---ユーザー一覧ページ
       get "get_user_index_for_admin_view" => "users#get_user_index_for_admin_view"
       get "get_user_show_for_admin_view/:id" => "users#get_user_show_for_admin_view"
+      #---代表者一覧ページ
+      get "get_representative_index_for_admin_view" => "users#get_representative_index_for_admin_view"
+      get "get_representative_show_for_admin_view/:id" => "users#get_representative_show_for_admin_view"
       #---参加団体申請ページ
       get "get_group_index_for_admin_view" => "groups_api#get_group_index_for_admin_view"
       get "get_group_show_for_admin_view/:id" => "groups_api#get_group_show_for_admin_view"

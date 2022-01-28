@@ -10,6 +10,18 @@ class Api::V1::UsersController < ApplicationController
     @user = User.with_user_detail(params[:id])
     render json: fmt(ok, @user)
   end
+
+  # 代表者の取得
+  def get_representative_index_for_admin_view
+    @users = User.with_sub_reps
+    render json: fmt(ok, @users)
+  end
+
+  def get_representative_show_for_admin_view
+    @user = User.with_sub_rep(params[:id])
+    render json: fmt(ok, @user)
+  end
+
   
   # 絞り込み機能
   def get_refinement_users
