@@ -15,6 +15,7 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
+          {{ group }}
             <tr>
               <th>ID</th><td>{{ group.group.id }}</td>
             </tr>
@@ -88,14 +89,24 @@ export default {
     };
   },
   methods: {
-    openAddModal() {
-      this.isOpenAddModal = false;
-      this.isOpenAddModal = true;
+    openEditModal() {
+      this.isOpenEditModal = false;
+      this.isOpenEditModal = true;
     },
-    closeAddModal() {
-      this.isOpenAddModal = false;
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    reload() {
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
+    },
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
+    },
+    async reload() {
+      const routeId = route.path.replace("/groups/", "");
+      const url = "/api/v1/get_group_show_for_admin_view/" + routeId;
+      const response = await $axios.$get(url);
       const groupId = this.groups.slice(-1)[0].group.id + 1;
       const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
       this.$axios.$get(reUrl).then((response) => {
@@ -112,7 +123,7 @@ export default {
           uid: localStorage.getItem("uid"),
         },
       });
-      const postGroupUrl =
+      const putGroupUrl =
         "/groups/" +
         "?user_id=" +
         CurrentUser.data.data.id +
@@ -127,7 +138,7 @@ export default {
         "&fes_year_id=" +
         this.fesYearId;
 
-      this.$axios.$post(postGroupUrl).then((response) => {
+      this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";
         this.projectName = "";
         this.activity = "";

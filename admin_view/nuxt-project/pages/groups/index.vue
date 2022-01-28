@@ -167,13 +167,13 @@ export default {
     },
     reload() {
       const groupId = this.groups.slice(-1)[0].group.id + 1;
-      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
+      const reUrl = "/api/v1/get_group_for_admin_view/" + groupId;
       this.$axios.$get(reUrl).then((response) => {
         this.groups.push(response.data[0]);
       });
     },
     async submitGroup() {
-      const currentUserUrl = "/api/v1/current_user/show";
+      const currentUserUrl = "/api/v1/users/show";
       const CurrentUser = await this.$axios.get(currentUserUrl, {
         headers: {
           "Content-Type": "application/json",
