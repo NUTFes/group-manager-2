@@ -39,5 +39,4 @@ class Api::V1::PurchaseListsApiController < ApplicationController
     }
     render json: purchase_lists
   end
-
 end

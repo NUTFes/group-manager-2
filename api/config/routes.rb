@@ -64,6 +64,7 @@ Rails.application.routes.draw do
       post "get_search_users" => "users#get_search_users"
       # 副代表周り
       get "get_sub_rep_details/:id" => "sub_rep_api#get_sub_rep_details"
+      post "get_search_sub_reps" => "sub_rep_api#get_search_sub_reps"
       # 現在のユーザーについて
       get "current_user/show" => "current_user_api#show"
       get "current_user/groups" => "current_user_api#get_groups"
@@ -110,18 +111,26 @@ Rails.application.routes.draw do
       # ステージオプション周り
       get "get_stage_common_options_with_group/" => "stage_common_options_api#get_stage_common_options_with_group"
       get "get_stage_common_options_with_group/:id" => "stage_common_options_api#get_stage_common_option_with_group"
+      post "get_refinement_stage_common_options" => "stage_common_options_api#get_refinement_stage_common_options"
+      post "get_search_stage_common_options" => "stage_common_options_api#get_search_stage_common_options"
       # ステージ申請周り
       get "get_stage_orders_details" => "stage_orders_api#get_stage_orders_details"
       get "get_stage_order_details/:id" => "stage_orders_api#get_stage_order_details"
+      post "get_refinement_stage_orders" => "stage_orders_api#get_refinement_stage_orders"
+      post "get_search_stage_orders" => "stage_orders_api#get_search_stage_orders"
       # 使用会場周り
       get "get_place_allow_lists" => "place_allow_lists_api#get_place_allow_lists"
       get "get_place_allow_list/:id" => "place_allow_lists_api#get_place_allow_list"
       # 会場申請周り
       get "get_place_orders" => "place_orders_api#get_place_orders"
       get "get_place_order/:id" => "place_orders_api#get_place_order"
+      post "get_refinement_place_orders" => "place_orders_api#get_refinement_place_orders"
+      post "get_search_place_orders" => "place_orders_api#get_search_place_orders"
       # 電力申請周り
       get "get_power_orders" => "power_orders_api#get_power_orders"
       get "get_power_order/:id" => "power_orders_api#get_power_order"
+      post "get_refinement_power_orders" => "power_orders_api#get_refinement_power_orders"
+      post "get_search_power_orders" => "power_orders_api#get_search_power_orders"
       # 使用可能物品周り
       get "get_rental_item_allow_lists" => "rental_item_allow_lists_api#get_rental_item_allow_lists"
       get "get_rental_item_allow_list/:id" => "rental_item_allow_lists_api#get_rental_item_allow_list"
@@ -131,17 +140,23 @@ Rails.application.routes.draw do
       # 物品申請周り
       get "get_rental_orders" => "rental_orders_api#get_rental_orders"
       get "get_rental_order/:id" => "rental_orders_api#get_rental_order"
+      post "get_refinement_rental_orders" => "rental_orders_api#get_refinement_rental_orders"
+      post "get_search_rental_orders" => "rental_orders_api#get_search_rental_orders"
       # 割り当て物品周り
       get "get_assign_rental_items" => "assign_rental_items_api#get_assign_rental_items"
       get "get_assign_rental_item/:id" => "assign_rental_items_api#get_assign_rental_item"
       # 従業員周り
       get "get_employees" => "employees_api#get_employees"
       get "get_employee/:id" => "employees_api#get_employee"
+      post "get_refinement_employees" => "employees_api#get_refinement_employees"
+      post "get_search_employees" => "employees_api#get_search_employees"
       # 販売食品周り
       get "get_food_products" => "food_products_api#get_food_products"
       get "get_food_product/:id" => "food_products_api#get_food_product"
       get "get_food_products_from_group/:id" => "food_products_api#get_food_products_from_group"
       get "group_food_products/:group_id" => "food_products_api#get_group_food_product"
+      post "get_refinement_food_products" => "food_products_api#get_refinement_food_products"
+      post "get_search_food_product" => "food_products_api#get_search_food_product"
       # 購入品周り
       get "get_purchase_lists" => "purchase_lists_api#get_purchase_lists"
       get "get_purchase_list/:id" => "purchase_lists_api#get_purchase_list"
