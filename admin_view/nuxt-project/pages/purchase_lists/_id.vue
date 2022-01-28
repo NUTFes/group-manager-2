@@ -1,43 +1,52 @@
 <template>
-	<div class="main-content">
-		<SubHeader v-bind:pageTitle="purchaseList.purchase_list.items" pageSubTitle="購入食品申請一覧">
-			<CommonButton iconName="edit"> 編集 </CommonButton>
-			<CommonButton iconName="delete"> 削除 </CommonButton>
-		</SubHeader>
-		<Row>
-			<Card padding="40px 150px" gap="20px">
-				<Row justify="start">
-					<h4>基本情報</h4>
-				</Row>
-				<table class="vertical-table">
-					<thead>
-						<th v-for="(n, i) in headers" :key="i">
-							{{ n }}
-						</th>
-					</thead>
-					<tbody>
-						<tr>
-              <td>{{ purchaseList.purchase_list.id }}</td>
-              <td>{{ purchaseList.group.name }}</td>
-              <td>{{ purchaseList.purchase_list_info.food_product }}</td>
-              <td>{{ purchaseList.purchase_list.items }}</td>
-              <td>{{ purchaseList.purchase_list.is_fresh }}</td>
-              <td>{{ purchaseList.purchase_list_info.shop }}</td>
-              <td>{{ purchaseList.purchase_list_info.date }} - {{ purchaseList.purchase_list_info.day }} - {{ purchaseList.purchase_list.days_num }}</td>
-              <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
-              <td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</Card>
-		</Row>
-	</div>
+  <div class="main-content">
+    <SubHeader v-bind:pageTitle="purchaseList.purchase_list.items" pageSubTitle="購入食品申請一覧">
+      <CommonButton iconName="edit"> 編集 </CommonButton>
+      <CommonButton iconName="delete"> 削除 </CommonButton>
+    </SubHeader>
+    <Row>
+      <Card padding="40px 150px" gap="20px">
+        <Row justify="start">
+          <h4>基本情報</h4>
+        </Row>
+        <VerticalTable>
+            <tr>
+              <th>ID</th><td>{{ purchaseList.purchase_list.id }}</td>
+            </tr>
+            <tr>
+              <th>参加団体</th><td>{{ purchaseList.group.name }}</td>
+            </tr>
+            <tr>
+              <th>販売食品</th><td>{{ purchaseList.purchase_list_info.food_product }}</td>
+            </tr>
+            <tr>
+              <th>購入品</th><td>{{ purchaseList.purchase_list.items }}</td>
+            </tr>
+            <tr>
+              <th>なまもの</th><td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            </tr>
+            <tr>
+              <th>購入店</th><td>{{ purchaseList.purchase_list_info.shop }}</td>
+            </tr>
+            <tr>
+              <th>仕入れ日</th><td>{{ purchaseList.purchase_list_info.date }} - {{ purchaseList.purchase_list_info.day }} - {{ purchaseList.purchase_list.days_num }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
+      </Card>
+    </Row>
+  </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
-watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       headers: [
@@ -53,15 +62,15 @@ watchQuery: ["page"],
       ],
     };
   },
-	async asyncData({ $axios, route}){
-		const routeId = route.path.replace("/purchase_lists/", "");
-		const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
-		const response = await $axios.$get(url);
-		return {
-			purchaseList: response.data,
-			route: url,
-		}
-	},
+  async asyncData({ $axios, route}){
+    const routeId = route.path.replace("/purchase_lists/", "");
+    const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
+    const response = await $axios.$get(url);
+    return {
+      purchaseList: response.data,
+      route: url,
+    }
+  },
   computed: {
     ...mapState({
       selfRoleId: (state) => state.users.role,
@@ -128,9 +137,9 @@ watchQuery: ["page"],
           this.groupList = response.data;
         });
 
-      await this.changeGroupFoodProductList();
+        await this.changeGroupFoodProductList();
 
-      this.dialog = true;
+        this.dialog = true;
     },
     changeGroupFoodProductList() {
       this.foodProductList = [];

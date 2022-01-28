@@ -12,22 +12,23 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ rentalItem.id }}</td>
-              <td>{{ rentalItem.name }}</td>
-              <td>{{ rentalItem.is_rentable }}</td>
-              <td>{{ rentalItem.created_at | formatDate }}</td>
-              <td>{{ rentalItem.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ rentalItem.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>名前</th><td>{{ rentalItem.name }}</td>
+            </tr>
+            <tr>
+              <th>貸し出し</th><td>{{ rentalItem.is_rentable }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ rentalItem.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ rentalItem.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
       </Card>
     </Row>
   </div>

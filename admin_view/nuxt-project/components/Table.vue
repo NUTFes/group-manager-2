@@ -18,6 +18,7 @@
 
 .normal-table tr {
   transition: 0.2s;
+  border-bottom: solid 1px var(--accent-2);
 }
 
 .normal-table th {
@@ -29,11 +30,13 @@
 .normal-table td {
   text-align: center;
   vertical-align: middle;
-  border-bottom: solid 1px var(--accent-2);
   padding: 25px;
 }
 
 .normal-table tr:hover {
+  transform: translateY(-1px);
+  background-color: white;
+  border: solid 1px var(--accent-0);
   box-shadow:  5px 5px 14px #f0f0f0,
              -5px -5px 14px #fafafa;
 }
@@ -49,7 +52,7 @@
 }
 .normal-table tr:active {
   border: none;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 
 .normal-table tr:last-child td{

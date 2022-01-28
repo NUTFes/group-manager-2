@@ -12,25 +12,32 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ foodProduct.food_product.id }}</td>
-              <td>{{ foodProduct.group.name }}</td>
-              <td>{{ foodProduct.food_product.name }}</td>
-              <td>{{ foodProduct.food_product.first_day_num }}</td>
-              <td>{{ foodProduct.food_product.second_day_num }}</td>
-              <td>{{ foodProduct.food_product.is_cooking }}</td>
-              <td>{{ foodProduct.food_product.created_at | formatDate }}</td>
-              <td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ foodProduct.food_product.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>団体名</th><td>{{ foodProduct.group.name }}</td>
+            </tr>
+            <tr>
+              <th>名前</th><td>{{ foodProduct.food_product.name }}</td>
+            </tr>
+            <tr>
+              <th>1日目の個数</th><td>{{ foodProduct.food_product.first_day_num }}</td>
+            </tr>
+            <tr>
+              <th>2日目の個数</th><td>{{ foodProduct.food_product.second_day_num }}</td>
+            </tr>
+            <tr>
+              <th>調理の有無</th><td>{{ foodProduct.food_product.is_cooking }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ foodProduct.food_product.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
       </Card>
     </Row>
   </div>

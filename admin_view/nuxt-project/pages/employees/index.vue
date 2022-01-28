@@ -36,48 +36,34 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="参加団体申請の追加"
+      title="従業員申請の追加"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <select v-model="appGroup">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
             >
-              {{ category.name }}
+              {{ group.name }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
         </div>
         <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
-            <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
-            </option>
-          </select>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="add_circle" :on_click="submitEmployee">登録</CommonButton
+        >
       </template>
     </AddModal>
 
@@ -91,15 +77,25 @@ export default {
     return {
       headers: ["ID", "参加団体", "名前", "学籍番号", "登録日時", "編集日時"],
       isOpenAddModal: false,
+      appGroup: "",
+      employeeName: "",
+      employeeStudentId: "",
     };
   },
   async asyncData({ $axios }) {
     const url = "/api/v1/get_employee_index_for_admin_view";
     const employeesRes = await $axios.$get(url);
+
+    const currentFesYearId = 1;
+    const groupsUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" + currentFesYearId;
+    const groupsRes = await $axios.$post(groupsUrl);
+
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
+
     return {
       employees: employeesRes.data,
+      groupList: groupsRes.data,
       yearList: yearsRes.data,
     };
   },
@@ -118,43 +114,24 @@ export default {
       this.isOpenAddModal = false;
     },
     reload() {
-      const groupId = this.groups.length + 1;
-      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl ="/api/v1/get_employee_show_for_admin_view/" + employeeId;
       this.$axios.$get(reUrl).then((response) => {
-        this.groups.push(response.data[0]);
+        this.employees.push(response.data);
       });
     },
-    async submitGroup() {
-      const currentUserUrl = "/api/v1/current_user/show";
-      const CurrentUser = await this.$axios.get(currentUserUrl, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      });
-      const postGroupUrl =
-        "/groups/" +
-        "?user_id=" +
-        CurrentUser.data.data.id +
-        "&name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&activity=" +
-        this.activity +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&fes_year_id=" +
-        this.fesYearId;
+    async submitEmployee() {
 
-      this.$axios.$post(postGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" + this.appGroup +
+        "&name=" + this.employeeName +
+        "&student_id=" + this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
         this.closeAddModal();
       });

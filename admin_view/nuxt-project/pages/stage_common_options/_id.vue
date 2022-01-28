@@ -14,25 +14,31 @@
         </Row>
         <VerticalTable>
             <tr>
-              <td>{{ stageCommonOption.stage_common_option.id }}</td>
-              <td>{{ stageCommonOption.group.name }}</td>
-              <td>{{ stageCommonOption.stage_common_option.own_equipment }}</td>
-              <td>{{ stageCommonOption.stage_common_option.bgm }}</td>
-              <td>
-                {{ stageCommonOption.stage_common_option.camera_permission }}
-              </td>
-              <td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
-              <td>{{ stageCommonOption.stage_common_option.stage_content }}</td>
-              <td>
-                {{
-                  stageCommonOption.stage_common_option.created_at | formatDate
-                }}
-              </td>
-              <td>
-                {{
-                  stageCommonOption.stage_common_option.updated_at | formatDate
-                }}
-              </td>
+              <th>ID</th><td>{{ stageCommonOption.stage_common_option.id }}</td>
+            </tr>
+            <tr>
+              <th>参加団体</th><td>{{ stageCommonOption.group.name }}</td>
+            </tr>
+            <tr>
+              <th>所持機器の使用 </th><td>{{ stageCommonOption.stage_common_option.own_equipment }}</td>
+            </tr>
+            <tr>
+              <th>音楽の有無</th><td>{{ stageCommonOption.stage_common_option.bgm }}</td>
+            </tr>
+            <tr>
+              <th>撮影許可</th><td>{{ stageCommonOption.stage_common_option.camera_permission }}</td>
+            </tr>
+            <tr>
+              <th>大きな音</th><td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
+            </tr>
+            <tr>
+              <th>ステージ内容</th><td>{{ stageCommonOption.stage_common_option.stage_content }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ stageCommonOption.stage_common_option.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ stageCommonOption.stage_common_option.updated_at | formatDate }}</td>
             </tr>
         </VerticalTable>
       </Card>

@@ -12,27 +12,38 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ user.user.id }}</td>
-              <td>{{ user.user.name }}</td>
-              <td>{{ user.role.name }}</td>
-              <td>{{ user.user.email }}</td>
-              <td>{{ user.user_detail.tel }}</td>
-              <td>{{ user.user_detail.student_id }}</td>
-              <td>{{ user.user_detail_info.department }}</td>
-              <td>{{ user.user_detail_info.grade }}</td>
-              <td>{{ user.user.created_at | formatDate }}</td>
-              <td>{{ user.user.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ user.user.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>名前</th><td>{{ user.user.name }}</td>
+            </tr>
+            <tr>
+              <th>権限</th><td>{{ user.role.name }}</td>
+            </tr>
+            <tr>
+              <th>メールアドレス</th><td>{{ user.user.email }}</td>
+            </tr>
+            <tr>
+              <th>電話番号</th><td>{{ user.user_detail.tel }}</td>
+            </tr>
+            <tr>
+              <th>学籍番号</th><td>{{ user.user_detail.student_id }}</td>
+            </tr>
+            <tr>
+              <th>課程・専攻</th><td>{{ user.user_detail_info.department }}</td>
+            </tr>
+            <tr>
+              <th>学年</th><td>{{ user.user_detail_info.grade }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ user.user.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ user.user.updated_at | formatDate }}</td>
+            </tr>
+        </VerticalTable>
       </Card>
     </Row>
   </div>
@@ -50,16 +61,6 @@ export default {
   },
   data() {
     return {
-      headers: [
-        "ID",
-        "名前",
-        "権限",
-        "メールアドレス",
-        "電話番号",
-        "学籍番号",
-        "課程・専攻",
-        "学年"
-      ]
     }
   },
   async asyncData({ $axios, route }) {

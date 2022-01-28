@@ -7,13 +7,13 @@
     </SubHeader>
 
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" :key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(fesDate, index) in fesDates"
             :key="index"
@@ -32,8 +32,8 @@
             <td>{{ fesDate.fes_date.created_at | formatDate }}</td>
             <td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
   </div>
 </template>

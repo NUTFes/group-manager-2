@@ -11,20 +11,20 @@
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+          <VerticalTable>
             <tr>
-              <td>{{ fesYear.id }}</td>
-              <td>{{ fesYear.year_num }}</td>
-              <td>{{ fesYear.created_at | formatDate }}</td>
-              <td>{{ fesYear.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ fesYear.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>開催年</th><td>{{ fesYear.year_num }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ fesYear.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ fesYear.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
         </Row>
       </Card>
     </Row>

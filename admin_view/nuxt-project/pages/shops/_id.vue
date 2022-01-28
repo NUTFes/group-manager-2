@@ -11,23 +11,29 @@
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+          <VerticalTable>
             <tr>
-              <td>{{ shop.id }}</td>
-              <td>{{ shop.name }}</td>
-              <td>{{ shop.tel }}</td>
-              <td>{{ shop.opening_hours }}</td>
-              <td>{{ shop.address }}</td>
-              <td>{{ shop.created_at | formatDate }}</td>
-              <td>{{ shop.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ shop.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>名前</th><td>{{ shop.name }}</td>
+            </tr>
+            <tr>
+              <th>電話番号</th><td>{{ shop.tel }}</td>
+            </tr>
+            <tr>
+              <th>開店時間</th><td>{{ shop.opening_hours }}</td>
+            </tr>
+            <tr>
+              <th>住所</th><td>{{ shop.address }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ shop.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ shop.updated_at | formatDate }}</td>
+            </tr>
+          </VerticalTable>
         </Row>
       </Card>
     </Row>
@@ -44,15 +50,6 @@ export default {
   },
   data() {
     return {
-      headers: [
-        "ID",
-        "名前",
-        "電話番号",
-        "開店時間",
-        "住所",
-        "登録日時",
-        "編集日時"
-      ]
     };
   },
   async asyncData({ $axios, route }) {

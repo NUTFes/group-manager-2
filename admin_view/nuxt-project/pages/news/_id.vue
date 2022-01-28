@@ -11,21 +11,23 @@
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
           <h4>基本情報</h4>
-          <table class="vertical-table">
-            <thead>
-              <th v-for="(n, i) in headers" :key="i">
-                {{ n }}
-              </th>
-            </thead>
+          <VerticalTable>
             <tr>
-              <td>{{ news.id }}</td>
-              <td>{{ news.title }}</td>
-              <td>{{ news.body }}</td>
-              <td>{{ news.created_at | formatDate }}</td>
-              <td>{{ news.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ news.id }}</td>
             </tr>
-            <tbody></tbody>
-          </table>
+            <tr>
+              <th>タイトル</th><td>{{ news.title }}</td>
+            </tr>
+            <tr>
+              <th>内容</th><td>{{ news.body }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ news.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ news.updated_at | formatDate }}</td>
+            </tr>
+        </VerticalTable>
         </Row>
       </Card>
     </Row>

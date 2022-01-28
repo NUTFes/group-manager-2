@@ -7,13 +7,13 @@
     </SubHeader>
 
     <Card width="100%">
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" :key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(stage, index) in stages"
             :key="index"
@@ -31,8 +31,8 @@
             <td>{{ stage.created_at | formatDate }}</td>
             <td>{{ stage.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+        </template>
+      </Table>
     </Card>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
     return {
       headers: [
         "ID",
+        "ステージ名",
         "晴れ",
         "雨",
         "登録日時",

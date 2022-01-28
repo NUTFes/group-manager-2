@@ -200,7 +200,17 @@ export default {
 }
 
 .menu-content {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  flex-flow: column;
+  gap: 5px;
   margin-bottom: 60px;
+}
+
+.menu {
+  width: 100%;
 }
 
 .menu ul {
@@ -214,12 +224,17 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+}
+
+.menu a {
   transition: .2s;
 }
 
-.menu li:hover {
-  margin-left: 10px;
+.menu li:hover a{
+  font-weight: 500;
   letter-spacing: 1px;
+  width: calc( 100% - 1em );
+  transform: translateX(8px);
   background: linear-gradient(
     45deg,
     var(--button-secondary) 0%,
@@ -230,7 +245,7 @@ export default {
   box-shadow:  4px 4px 5px #484747,
              -2px -2px 8px #636060;
 }
-.menu li:active {
+.menu li:active a {
   box-shadow: inset 2px 2px 5px #484747,
             inset -2px -2px 5px #686565;
 }
@@ -253,6 +268,7 @@ export default {
 }
 
 .menu-header {
+  width: 100%;
   font-size: 16px;
   font-weight: 300;
   color: var(--accent-0);
