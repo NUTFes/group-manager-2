@@ -1,0 +1,49 @@
+h1 {
+  text-align: center;
+}
+
+.page-break {
+  page-break-after:always;
+  &:last-child {
+    page-break-after: avoid;
+  }
+}
+
+table {
+  width: 100%;
+  align: center;
+  text-align: center;
+}
+
+.info th {
+  width: 20%;
+}
+
+.info tr {
+  height: 40px;
+}
+
+.info td {
+  width: 40%;
+}
+
+.items th {
+  width: 20%;
+}
+
+.items tr {
+  height: 40px;
+}
+
+.items td {
+  width: 20%;
+}
+
+.padding-top{
+  padding-top: 20px;
+}
+
+table, td, th, tr{
+  border: 1px #333333 solid;
+  border-collapse: collapse;
+}

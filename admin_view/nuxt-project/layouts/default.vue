@@ -1,15 +1,13 @@
 <template>
-  <v-app :style="{ background: $vuetify.theme.themes.light.background }">
-    <Menu v-if="main && print" />
+  <div>
     <Header v-if="main && print" />
-    <v-main>
-      <v-container class="py-7">
-        <transition mode="in-out">
-          <nuxt />
-        </transition>
-      </v-container>
-    </v-main>
-  </v-app>
+    <Menu v-if="main && print" />
+    <main>
+      <transition name="page">
+        <nuxt />
+      </transition>
+    </main>
+  </div>
 </template>
 <script>
 import Header from "~/components/Header.vue";

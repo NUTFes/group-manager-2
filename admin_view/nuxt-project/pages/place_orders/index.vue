@@ -1,256 +1,201 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
-        <v-card flat class="mx-15">
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-map-marker</v-icon>会場申請一覧
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="dialog = true"
-                    >
-                      <v-icon dark>mdi-plus-circle-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>会場申請の追加</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="reload"
-                    >
-                      <v-icon dark>mdi-reload</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>更新する</span>
-                </v-tooltip>
-              </v-card-title>
+  <div class="main-content">
+    <SubHeader pageTitle="会場申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+    </SubHeader>
 
-              <v-dialog v-model="dialog" max-width="500">
-                <v-card>
-                  <v-card-title class="headline blue-grey darken-3">
-                    <div style="color: white">
-                      <v-icon class="ma-5" dark>mdi-map-marker</v-icon
-                      >会場申請の追加
-                    </div>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab dark>
-                      ​ <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                  </v-card-title>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+      </template>
+      <template v-slot:table-body>
+          <tr
+            v-for="(placeOrder, index) in placeOrders"
+            :key="index"
+            @click="
+              () =>
+                $router.push({
+                  path: `/place_orders/` + placeOrder.place_order.id,
+                })
+            "
+          >
+            <td>{{ placeOrder.place_order.id }}</td>
+            <td>{{ placeOrder.group.name }}</td>
+            <td>{{ placeOrder.place_order_name.first }}</td>
+            <td>{{ placeOrder.place_order_name.second }}</td>
+            <td>{{ placeOrder.place_order_name.third }}</td>
+            <td>{{ placeOrder.place_order.created_at | formatDate }}</td>
+            <td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-                  <v-card-text>
-                    <v-row>
-                      <v-col>
-                        <v-form ref="form">
-                          <v-select
-                            label="参加団体名"
-                            v-model="Group"
-                            :items="groups"
-                            :menu-props="{
-                              top: true,
-                              offsetY: true,
-                            }"
-                            item-text="name"
-                            item-value="id"
-                            outlined
-                          ></v-select>
-                          <v-select
-                            label="第一希望"
-                            v-model.number="placeFirst"
-                            :items="places"
-                            :menu-props="{ top: true, offsetY: true }"
-                            item-text="name"
-                            item-value="id"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-select
-                            label="第二希望"
-                            v-model.number="placeSecond"
-                            :items="places"
-                            :menu-props="{ top: true, offsetY: true }"
-                            item-text="name"
-                            item-value="id"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-select
-                            label="第三希望"
-                            v-model.number="placeThird"
-                            :items="places"
-                            :menu-props="{ top: true, offsetY: true }"
-                            item-text="name"
-                            item-value="id"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                        </v-form>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-
-                  <v-divider></v-divider>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn depressed dark color="btn" @click="register()"
-                      >登録
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-
-              <hr class="mt-n3" />
-              <template>
-                <div class="text-center" v-if="place_orders.length === 0">
-                  <br /><br />
-                  <v-progress-circular
-                    indeterminate
-                    color="#009688"
-                  ></v-progress-circular>
-                  <br /><br />
-                </div>
-                <div v-else>
-                  <v-data-table
-                    :headers="headers"
-                    :items="place_orders"
-                    class="elevation-0 my-9"
-                    @click:row="
-                      (data) =>
-                        $router.push({
-                          path: `/place_orders/${data.place_order.id}`,
-                        })
-                    "
-                  >
-                    <template v-slot:item.place_order.created_at="{ item }">
-                      {{ item.place_order.created_at | formatDate }}
-                    </template>
-                    <template v-slot:item.place_order.updated_at="{ item }">
-                      {{ item.place_order.updated_at | formatDate }}
-                    </template>
-                  </v-data-table>
-                </div>
-              </template>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="会場申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第一希望</h3>
+          <select v-model="firstPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第二希望</h3>
+          <select v-model="secondPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第三希望</h3>
+          <select v-model="thirdPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitPlaceOrder"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      rules: {
-        required: (value) => !!value || "入力してください",
-      },
-      place_orders: [],
-      places: [],
-      groups: [],
-      dialog: false,
-      Group: [],
-      placeFirst: [],
-      placeSecond: [],
-      placeThird: [],
-      place_list: [],
       headers: [
-        { text: "ID", value: "place_order.id" },
-        { text: "参加団体", value: "group" },
-        { text: "第一希望", value: "first" },
-        { text: "第二希望", value: "second" },
-        { text: "第三希望", value: "third" },
-        { text: "日時", value: "place_order.created_at" },
-        { text: "編集日時", value: "place_order.updated_at" },
+        "ID",
+        "参加団体",
+        "第一希望",
+        "第二希望",
+        "第三希望",
+        "登録日時",
+        "編集日時",
       ],
+      isOpenAddModal: false,
+      groupList: [],
+      placeList: [],
+      appGroup: "",
+      firstPlaceOrder: "",
+      secondPlaceOrder: "",
+      thirdPlaceOrder: "",
     };
   },
-  mounted() {
-    this.$axios
-      .get("/places", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.places = response.data;
-        for (let i = 0; i < this.places.length; i++) {
-          this.place_list.push(this.places[i]["name"]);
-        }
-      });
-    this.$axios
-      .get("/api/v1/get_place_orders", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.place_orders = response.data;
-      });
-    this.$axios
-      .get("/groups", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups = response.data;
-      });
-  },
+  async asyncData({ $axios }) {
+    const placeOrderUrl = "/api/v1/get_place_order_index_for_admin_view";
+    const placeOrderRes = await $axios.$get(placeOrderUrl);
 
+    const currentFesYearId = 1;
+    const groupsUrl =
+      "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" +
+      currentFesYearId;
+    const groupsRes = await $axios.$post(groupsUrl);
+
+    const placesUrl = "/places";
+    const placesRes = await $axios.$get(placesUrl);
+
+    const yearUrl = "/fes_years";
+    const yearRes = await $axios.$get(yearUrl);
+
+    return {
+      placeOrders: placeOrderRes.data,
+      groupList: groupsRes.data,
+      placeList: placesRes.data,
+      yearList: yearRes,
+    };
+  },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_place_orders", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.place_orders = response.data;
-        });
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("first", this.placeFirst);
-      params.append("second", this.placeSecond);
-      params.append("third", this.placeThird);
-      this.$axios.post("/place_orders", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
-        this.placeFirst = "";
-        this.placeSecond = "";
-        this.placeThird = "";
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const placeOrderId = this.placeOrders.length + 1;
+      const reUrl =
+        "/api/v1/get_place_order_show_for_admin_view/" + placeOrderId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.placeOrders.push(response.data);
       });
+    },
+    async submitPlaceOrder() {
+      const postPlaceOrderUrl =
+        "/place_orders/" +
+        "?group_id=" +
+        this.appGroup +
+        "&first=" +
+        this.firstPlaceOrder +
+        "&second=" +
+        this.secondPlaceOrder +
+        "&third=" +
+        this.thirdPlaceOrder;
+
+      this.$axios.$post(postPlaceOrderUrl).then((response) => {
+        this.appGroup = "";
+        this.firstPlaceOrder = "";
+        this.secondPlaceOrder = "";
+        this.thirdPlaceOrder = "";
+        this.reload();
+        this.closeAddModal();
+      });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_place_orders_csv/" + 1;
+      window.open(
+        url,
+        "会場申請一覧_CSV"
+      );
     },
   },
 };

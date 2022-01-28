@@ -11,6 +11,7 @@ class Group < ApplicationRecord
     has_many :food_products, dependent: :destroy
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
+    has_one :group_identification, dependent: :destroy
 
     ### group_category (参加団体カテゴリ)
     
@@ -34,6 +35,86 @@ class Group < ApplicationRecord
           { 
             "group": group, 
             "group_category": group.group_category 
+          } 
+        }
+    end
+
+
+    ### group_category, fes_year (参加団体カテゴリ＋開催年)
+
+    # 全てのgroupとそのgroup_categoryとfes_yearを取得する
+    def self.with_group_categories_and_fes_years
+      @records = Group.preload(:group_category, :fes_year)
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "group_category": group.group_category,
+            "fes_year": group.fes_year
+          } 
+        }
+    end
+
+    def self.with_order_info(group_id)
+      group = Group.find(group_id)
+      @record = 
+        { 
+          "group": group,
+          "user": group.user.nil? ? nil: group.user,
+          "group_category": group.group_category.nil? ? nil : group.group_category.name,
+          "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
+          "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
+          "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
+          "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
+            |stage_order|
+            { 
+              "stage_order": stage_order.to_info_h
+            }
+          },
+          "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
+          "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
+            |power_order|
+            {
+              "power_order": power_order.to_info_h
+            }
+          },
+          "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
+            |rental_order|
+            {
+              "rental_item": rental_order.to_rental_item_info_h,
+            }
+          },
+          "employees": group.employees.count == 0 ? nil : group.employees.map{
+            |employee|
+            {
+              "employee": employee.to_info_h
+            }
+          },
+          "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
+            |food_product|
+            {
+              "food_product": food_product.to_info_h,
+              "purchase_lists": food_product.purchase_lists.map{
+                |purchase_list|
+                {
+                  "purchase_list": purchase_list.to_info_h
+                }
+              }
+            }
+          }
+        }
+      return @record
+    end
+
+    # 指定したIDのgroupとそのgroup_categoryとfes_yearを取得する
+    def self.with_group_category_and_fes_year(group_id)
+      @record = Group.eager_load(:group_category).where(groups: {id: group_id})
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "group_category": group.group_category,
+            "fes_year": group.fes_year
           } 
         }
     end
@@ -289,4 +370,48 @@ class Group < ApplicationRecord
         }
     end
 
+    # 割り当てられたステージを取得
+    def stage
+      return self.group_identification.stage_number.stage
+    end
+
+    # 割り当てられた会場を取得
+    def place
+      return self.group_identification.nil? || self.group_identification.place_number.nil? ? nil : self.group_identification.place_number.place.name
+    end
+
+    # 識別番号取得
+    def number
+      return self.group_identification.nil? ? nil : self.group_identification.number
+    end
+
+    # 電力申請の総和を計算する
+    def sum_power_orders
+      sum = 0
+      self.power_orders.each do |power_order|
+        sum += power_order.power
+      end
+      return sum
+    end
+
+    # 購入食品の個数を計算する
+    def count_purchase_lists
+      count = 0
+      self.food_products.each do |food_product|
+        count += food_product.purchase_lists.count
+      end
+      return count
+    end
+
+    # 物品の未配分を計算する
+    def unallocated_rental_items
+      unallocated_rental_items = self.rental_orders.preload(:rental_item).map{ 
+        |rental_order|
+        {
+          "item": rental_order.rental_item.name,
+          "num": rental_order.num - self.assign_rental_items.map{ |assign_rental_item| assign_rental_item.num }.sum
+        }
+      }
+      return unallocated_rental_items
+    end
 end

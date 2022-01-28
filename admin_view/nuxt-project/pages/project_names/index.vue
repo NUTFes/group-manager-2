@@ -1,54 +1,13 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
-        <v-card flat class="mx-15">
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-unfold-more-vertical</v-icon
-                >企画名申請一覧
-                <v-spacer></v-spacer>
-              </v-card-title>
-              <hr class="mt-n3" />
-              <template>
-                <div class="text-center" v-if="groups.length === 0">
-                  <br /><br />
-                  <v-progress-circular
-                    indeterminate
-                    color="#009688"
-                  ></v-progress-circular>
-                  <br /><br />
-                </div>
-                <div v-else>
-                  <v-data-table
-                    :headers="headers"
-                    :items="groups"
-                    class="elevation-0 my-9"
-                    @click:row="
-                      (data) =>
-                        $router.push({
-                          name: 'project_names-id',
-                          params: { id: data.id },
-                        })
-                    "
-                  >
-                    <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | formatDate }}
-                    </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | formatDate }}
-                    </template>
-                  </v-data-table>
-                </div>
-              </template>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+  <div class="main-content">
+    <SubHeader pageTitle="企画名申請一覧">
+      <CommonButton iconName="add_circle"> 追加 </CommonButton>
+    </SubHeader>
+    <SubSubHeader>
+      <SearchDropDown> All Years </SearchDropDown>
+      <SearchDropDown> All Categories </SearchDropDown>
+    </SubSubHeader>
+    <Card width="100%"> </Card>
   </div>
 </template>
 

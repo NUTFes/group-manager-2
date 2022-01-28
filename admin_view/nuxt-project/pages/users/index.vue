@@ -1,118 +1,63 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-account-multiple</v-icon>ユーザー一覧
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="reload"
-                  >
-                    <v-icon dark>mdi-reload</v-icon>
-                  </v-btn>
-                </template>
-                <span>更新する</span>
-              </v-tooltip>
-            </v-card-title>
-            <hr class="mt-n3" />
-            <template>
-              <div class="text-center" v-if="users.length === 0">
-                <br /><br />
-                <v-progress-circular
-                  indeterminate
-                  color="#009688"
-                ></v-progress-circular>
-                <br /><br />
-              </div>
-              <div v-else>
-                <v-data-table
-                  :headers="headers"
-                  :items="users"
-                  class="elevation-0 my-9"
-                  @click:row="
-                    (data) => $router.push({ path: `/users/${data.id}` })
-                  "
-                >
-                  <template v-slot:item.role_id="{ item }">
-                    <v-chip
-                      v-if="item.role_id == 1"
-                      color="red"
-                      text-color="white"
-                      small
-                      ><v-icon class="mr-1">mdi-account-cog</v-icon
-                      >developer</v-chip
-                    >
-                    <v-chip
-                      v-if="item.role_id == 2"
-                      color="green"
-                      text-color="white"
-                      small
-                      ><v-icon class="mr-1">mdi-account-tie</v-icon
-                      >manager</v-chip
-                    >
-                    <v-chip
-                      v-if="item.role_id == 3"
-                      color="blue"
-                      text-color="white"
-                      small
-                      ><v-icon class="mr-1">mdi-account</v-icon>user</v-chip
-                    >
-                  </template>
-                  <template v-slot:item.created_at="{ item }">
-                    {{ item.created_at | formatDate }}
-                  </template>
-                  <template v-slot:item.updated_at="{ item }">
-                    {{ item.updated_at | formatDate }}
-                  </template>
-                </v-data-table>
-              </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div class="main-content">
+    <SubHeader pageTitle="ユーザー一覧">
+      <CommonButton iconName="add_circle" :on_click="openModal">
+        追加
+      </CommonButton>
+    </SubHeader>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(user, index) in users"
+            @click="
+              () =>
+                $router.push({
+                  path: `/users/` + user.user.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ user.user.id }}</td>
+            <td>{{ user.user.name }}</td>
+            <td>{{ user.role.name }}</td>
+            <td>{{ user.user.created_at | formatDate }}</td>
+            <td>{{ user.user.updated_at | formatDate }}</td>
+          </tr>
+      </template>
+      </Table>
+    </Card>
+  </div>
 </template>
 
 <script>
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      users: [],
       headers: [
-        { text: "ID", value: "id" },
-        { text: "名前", value: "name" },
-        // { text: 'メールアドレス', value: 'email' },
-        { text: "権限", value: "role_id" },
-        { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" },
+        "ID",
+        "名前",
+        "権限",
+        "日時",
+        "編集日時",
       ],
     };
   },
-  mounted() {
-    this.$axios
-      .get("api/v1/users/index", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.users = response.data;
-      });
+  async asyncData({ $axios }) {
+    const url = "/api/v1/get_user_index_for_admin_view";
+    const userRes = await $axios.$get(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    return {
+      users: userRes.data,
+      yearList: yearsRes.data,
+    };
   },
   methods: {
     reload: function () {

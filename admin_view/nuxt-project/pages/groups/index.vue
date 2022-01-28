@@ -1,216 +1,141 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-account-group</v-icon>参加団体申請一覧
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="open_add_dialog"
-                  >
-                    <v-icon dark>mdi-plus-circle-outline</v-icon>
-                  </v-btn>
-                </template>
-                <span>参加団体の追加</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="reload"
-                  >
-                    <v-icon dark>mdi-reload</v-icon>
-                  </v-btn>
-                </template>
-                <span>更新する</span>
-              </v-tooltip>
-            </v-card-title>
-            <v-dialog v-model="dialog" max-width="500">
-              <v-card>
-                <v-card-title class="headline blue-grey darken-3">
-                  <div style="color: white">
-                    <v-icon class="ma-5" dark>mdi-account-group</v-icon
-                    >参加団体の追加
-                  </div>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = false" fab dark>
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-card-title>
+  <div class="main-content">
 
-                <v-card-text>
-                  <v-row>
-                    <v-col>
-                      <v-form ref="form">
-                        <v-text-field
-                          class="body-1"
-                          label="団体名"
-                          v-model="groupName"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-text-field>
-                        <v-select
-                          label="カテゴリ"
-                          v-model="groupCategoryId"
-                          :items="groupCategories"
-                          item-text="name"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                        <v-text-field
-                          class="body-1"
-                          label="企画名"
-                          v-model="projectName"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-text-field>
-                        <v-textarea
-                          label="活動内容"
-                          v-model="activity"
-                          @keydown="adjustHeight"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-textarea>
-                        <v-select
-                          label="開催年"
-                          v-model="fesYearId"
-                          :items="year_list"
-                          item-text="year_num"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                      </v-form>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
 
-                <v-divider></v-divider>
+    <SubHeader pageTitle="参加団体申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSV ({{ refYears }}年度)
+      </CommonButton>
+    </SubHeader>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn depressed dark color="btn" @click="register()"
-                    >登録 ​
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <hr class="mt-n3" />
-            <template>
-              <div class="text-center" v-if="groups.length === 0">
-                <br /><br />
-                <v-progress-circular
-                  indeterminate
-                  color="#009688"
-                ></v-progress-circular>
-                <br /><br />
-              </div>
-              <div v-else>
-                <v-data-table
-                  :headers="headers"
-                  :items="groups"
-                  class="elevation-0 my-9"
-                  @click:row="
-                    (data) => $router.push({ path: `/groups/${data.group.id}` })
-                  "
-                >
-                  <template v-slot:item.group.group_category_id="{ item }">
-                    <v-chip
-                      v-if="item.group.group_category_id == 1"
-                      color="red"
-                      text-color="white"
-                      small
-                      >{{ category[0] }}</v-chip
-                    >
-                    <v-chip
-                      v-if="item.group.group_category_id == 2"
-                      color="pink"
-                      text-color="white"
-                      small
-                      >{{ category[1] }}</v-chip
-                    >
-                    <v-chip
-                      v-if="item.group.group_category_id == 3"
-                      color="blue"
-                      text-color="white"
-                      small
-                      >{{ category[2] }}</v-chip
-                    >
-                    <v-chip
-                      v-if="item.group.group_category_id == 4"
-                      color="green"
-                      text-color="white"
-                      small
-                      >{{ category[3] }}</v-chip
-                    >
-                    <v-chip
-                      v-if="item.group.group_category_id == 5"
-                      color="orange"
-                      text-color="white"
-                      small
-                      >{{ category[4] }}</v-chip
-                    >
-                    <v-chip
-                      v-if="item.group.group_category_id == 6"
-                      color="blue-gray"
-                      text-color="white"
-                      small
-                      >{{ category[5] }}</v-chip
-                    >
-                  </template>
-                  <template v-slot:item.group.created_at="{ item }">
-                    {{ item.group.created_at | formatDate }}
-                  </template>
-                  <template v-slot:item.group.updated_at="{ item }">
-                    {{ item.group.updated_at | formatDate }}
-                  </template>
-                </v-data-table>
-              </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+    <SubSubHeader>
+      <template v-slot:refinement>
+      <SearchDropDown
+        :nameList="yearList"
+        :on_click="refinementGroups"
+        value="year_num"
+      >
+        {{ refYears }}
+      </SearchDropDown>
+      <SearchDropDown
+        :nameList="groupCategories"
+        :on_click="refinementGroups"
+        value="name"
+      >
+        {{ refGroupCategories }}
+      </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input v-model="searchText" @input="searchGroups" type="text" size="25" placeholder="search" />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(group, index) in groups"
+            :key="index"
+            @click="() => $router.push({ path: `/groups/` + group.group.id })"
+          >
+            <td>{{ group.group.id }}</td>
+            <td>{{ group.group.name }}</td>
+            <td>{{ group.group.project_name }}</td>
+            <td>{{ group.group_category.name }}</td>
+            <td>{{ group.fes_year.year_num }}</td>
+            <td>{{ group.group.created_at | formatDate }}</td>
+            <td>{{ group.group.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="参加団体申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="groupCategoryId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="category in groupCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>企画名</h3>
+          <input v-model="projectName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>活動内容</h3>
+          <textarea v-model="activity" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearId">
+            <option disabled value="">選択してください</option>
+            <option v-for="year in yearList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitGroup"
+        >登録</CommonButton
+      >
+      </template>
+    </AddModal>
+  </div>
 </template>
 
 <script>
 export default {
+  watchQuery: ["page"],
   data() {
     return {
+      value: "",
       groups: [],
       group_categories: [],
       category: [],
       fes_years: [],
       years: [],
-      groupName: [],
+      groupName: "",
       projectName: [],
       activity: [],
-      groupCategoryId: [],
-      fesYearId: [],
+      groupCategoryId: "",
+      fesYearId: "",
       year_list: [],
       user: [],
-      dialog: false,
+      groupId: "",
+      reGroup: [],
+      refYears: "Year",
+      refYearID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
+      isOpenAddModal: false,
+      searchText: '',
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
         { id: 2, name: "模擬店(物品販売)" },
@@ -220,124 +145,119 @@ export default {
         { id: 6, name: "その他" },
       ],
       headers: [
-        { text: "ID", value: "group.id" },
-        { text: "グループ名", value: "group.name" },
-        { text: "企画名", value: "group.project_name" },
-        { text: "グループカテゴリ", value: "group.group_category_id" },
-        { text: "開催年", value: "fes_year" },
-        { text: "日時", value: "group.created_at" },
-        { text: "編集日時", value: "group.updated_at" },
+        "ID",
+        "グループ名",
+        "企画名",
+        "カテゴリ",
+        "開催年",
+        "日時",
+        "編集日時",
       ],
     };
   },
-  mounted() {
-    this.$axios
-      .get("/api/v1/get_groups", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups = response.data;
-      });
-
-    this.$axios
-      .get("/group_categories", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.group_categories = response.data;
-        for (let i = 0; i < this.group_categories.length; i++) {
-          this.category.push(this.group_categories[i]["name"]);
-        }
-      });
-
-    this.$axios
-      .get("/fes_years", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.fes_years = response.data;
-        for (let i = 0; i < this.fes_years.length; i++) {
-          this.years.push(this.fes_years[i]["year_num"]);
-        }
-      });
+  async asyncData({ $axios }) {
+    const url = "/api/v1/get_group_index_for_admin_view";
+    const groupRes = await $axios.$get(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    return {
+      groups: groupRes.data,
+      yearList: yearsRes.data,
+    };
   },
   methods: {
-    open_add_dialog: function () {
-      const url = "/api/v1/current_user/show";
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
-          },
-        })
-        .then(
-          (response) => {
-            this.user = response.data.data;
-          },
-          (error) => {
-            console.error(error);
-            return error;
-          }
-        );
-      this.$axios
-        .get("/fes_years", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.year_list = response.data;
-        });
-      this.dialog = true;
+    async refinementGroups(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()){
+        this.refYearID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refYears = "ALL"
+        }else{
+          this.refYears = name_list[item_id - 1].year_num
+        }
+      // group_categoryで絞り込むとき
+      }else if(name_list.toString() == this.groupCategories.toString()){
+        this.refCategoryID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refGroupCategories = "ALL"
+        }else{
+          this.refGroupCategories = name_list[item_id - 1].name
+        }
+      }
+      this.groups = []
+      const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + this.refYearID + "&group_category_id=" + this.refCategoryID;
+      console.log(refUrl)
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data){
+        this.groups.push(res)
+      }
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groups = response.data;
-        });
+    async searchGroups(){
+      this.groups = []
+      const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data){
+        console.log(res)
+        this.groups.push(res)
+      }
     },
-    adjustHeight() {
-      const textarea = this.$refs.activity;
-      const resetHeight = new Promise(function (resolve) {
-        resolve((textarea.style.height = "auto"));
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const groupId = this.groups.length + 1;
+      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.groups.push(response.data[0]);
       });
-      resetHeight.then(function () {
-        textarea.style.height = textarea.scrollHeight + "px";
-      });
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("user_id", this.user.id);
-      params.append("name", this.groupName);
-      params.append("project_name", this.projectName);
-      params.append("activity", this.activity);
-      params.append("group_category_id", this.groupCategoryId);
-      params.append("fes_year_id", this.fesYearId);
-      this.$axios.post("/groups", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
+    async submitGroup() {
+      const currentUserUrl = "/api/v1/current_user/show";
+      const CurrentUser = await this.$axios.get(currentUserUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      });
+      const postGroupUrl =
+        "/groups/" +
+        "?user_id=" +
+        CurrentUser.data.data.id +
+        "&name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&activity=" +
+        this.activity +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&fes_year_id=" +
+        this.fesYearId;
+
+      this.$axios.$post(postGroupUrl).then((response) => {
         this.groupName = "";
         this.projectName = "";
         this.activity = "";
         this.groupCategoryId = "";
         this.fesYearId = "";
+        this.reload();
+        this.closeAddModal();
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_groups_csv/" + this.refYearID;
+      window.open(
+        url,
+        "参加団体一覧_CSV"
+      );
     },
   },
 };
