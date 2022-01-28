@@ -4,8 +4,8 @@
       v-bind:pageTitle="group.group.name"
       pageSubTitle="参加団体申請一覧"
     >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
       <CommonButton iconName="download" :on_click="printPDF"> 参加団体情報 </CommonButton>
       <CommonButton iconName="download" :on_click="printRentalItemsPDF"> 物品貸し出し表 </CommonButton>
     </SubHeader>
@@ -88,6 +88,55 @@ export default {
     };
   },
   methods: {
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const groupId = this.groups.slice(-1)[0].group.id + 1;
+      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.groups.push(response.data[0]);
+      });
+    },
+    async submitGroup() {
+      const currentUserUrl = "/api/v1/current_user/show";
+      const CurrentUser = await this.$axios.get(currentUserUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      });
+      const postGroupUrl =
+        "/groups/" +
+        "?user_id=" +
+        CurrentUser.data.data.id +
+        "&name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&activity=" +
+        this.activity +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&fes_year_id=" +
+        this.fesYearId;
+
+      this.$axios.$post(postGroupUrl).then((response) => {
+        this.groupName = "";
+        this.projectName = "";
+        this.activity = "";
+        this.groupCategoryId = "";
+        this.fesYearId = "";
+        this.reload();
+        this.closeAddModal();
+      });
+    },
     async printPDF() {
       const url = "http://localhost:3000" + "/print_pdf/group_info/" + this.group.group.id + "/output.pdf";
       window.open(

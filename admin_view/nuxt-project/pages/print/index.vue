@@ -5,31 +5,31 @@
       <VerticalTable>
         <tr>
           <td>使用電力リスト</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadPowerPDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadPowerPDF">ダウンロード</InTableButton></td>
         </tr>
         <tr>
           <td>従業員リスト</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadEmployeePDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadEmployeePDF">ダウンロード</InTableButton></td>
         </tr>
         <tr>
           <td>貸出物品リスト</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadRentalItemsPDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadRentalItemsPDF">ダウンロード</InTableButton></td>
         </tr>
         <tr>
           <td>販売食品リスト</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadFoodProductsPDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadFoodProductsPDF">ダウンロード</InTableButton></td>
         </tr>
         <tr>
           <td>連絡先リスト</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadContactsPDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadContactsPDF">ダウンロード</InTableButton></td>
         </tr>
         <tr>
           <td>参加団体情報リストまとめ</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadGroupInfoPDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadGroupInfoPDF">ダウンロード</InTableButton></td>
         </tr>
         <tr>
           <td>物品貸し出し表まとめ</td>
-          <td><CommonButton iconName="file_download" :on_click="downloadRentalItemsAllPDF">ダウンロード</CommonButton></td>
+          <td><InTableButton iconName="file_download" :on_click="downloadRentalItemsAllPDF">ダウンロード</InTableButton></td>
         </tr>
       </VerticalTable>
     </Card>
