@@ -4,6 +4,9 @@
       <CommonButton iconName="add_circle" :on_click="openModal">
         追加
       </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
     </SubHeader>
     <Card width="100%">
       <Table>
@@ -194,6 +197,13 @@ export default {
         this.performanceEndTime = "";
         this.cleanupEndTime = "";
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_stage_orders_csv/" + 1;
+      window.open(
+        url,
+        "ステージ申請一覧_CSV"
+      );
     },
   },
 };

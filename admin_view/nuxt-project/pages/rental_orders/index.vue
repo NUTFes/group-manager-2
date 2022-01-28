@@ -4,6 +4,9 @@
       <CommonButton iconName="add_circle" :on_click="openModal">
         追加
       </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
     </SubHeader>
     <Card width="100%">
       <Table>
@@ -75,6 +78,13 @@ export default {
         this.item_id = "";
         this.num = "";
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_rental_orders_csv/" + 1;
+      window.open(
+        url,
+        "物品申請一覧_CSV"
+      );
     },
   },
 };

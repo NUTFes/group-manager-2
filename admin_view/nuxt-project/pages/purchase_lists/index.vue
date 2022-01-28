@@ -1,6 +1,9 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="購入食品申請一覧">
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
       <CommonButton iconName="add_circle" :on_click="openModal">
         追加
       </CommonButton>
@@ -137,6 +140,13 @@ export default {
         this.item = "";
         this.isFresh = "";
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_purchase_lists_csv/" + 1;
+      window.open(
+        url,
+        "購入品申請_CSV"
+      );
     },
   },
 };

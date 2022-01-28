@@ -5,6 +5,9 @@
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
     </SubHeader>
 
     <Card width="100%">
@@ -135,6 +138,13 @@ export default {
         this.reload();
         this.closeAddModal();
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_employees_csv/" + 1;
+      window.open(
+        url,
+        "従業員一覧_CSV"
+      );
     },
   },
 };

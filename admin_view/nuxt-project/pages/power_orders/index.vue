@@ -4,6 +4,9 @@
       <CommonButton iconName="add_circle" :on_click="openModal">
         追加
       </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
     </SubHeader>
     <Card width="100%">
       <Table>
@@ -87,6 +90,13 @@ export default {
         this.model = "";
         this.itemUrl = "";
       });
+    },
+    async downloadCSV() {
+      const url = "http://localhost:3000" + "/api/v1/get_power_orders_csv/" + 1;
+      window.open(
+        url,
+        "電力申請_CSV"
+      );
     },
   },
 };
