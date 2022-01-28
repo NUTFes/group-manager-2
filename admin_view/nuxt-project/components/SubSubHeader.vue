@@ -1,10 +1,10 @@
 <template>
   <div class="sub-sub-header-container" :style="SubSubHeader">
     <div class="drop-down-container">
-      <slot></slot>
+      <slot name="refinement"></slot>
     </div>
     <div class="search-bar-container">
-      <SearchBar />
+      <slot name="search"></slot>
     </div>
   </div>
 </template>

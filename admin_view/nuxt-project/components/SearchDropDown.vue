@@ -14,10 +14,17 @@
           <div class="drop-down__box">
             <button
               class="common-button"
+              @click="on_click(0, nameList)"
+              :style="SearchDropDownOption"
+            >
+              ALL
+            </button>
+            <button
+              class="common-button"
               :style="SearchDropDownOption"
               v-for="item in nameList"
               :key="item.id"
-              @click="on_click(item.id)"
+              @click="on_click(item.id, nameList)"
             >
               {{ item[value] }}
             </button>

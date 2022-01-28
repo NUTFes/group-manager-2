@@ -1,29 +1,38 @@
 <template>
   <div class="main-content">
+
+
     <SubHeader pageTitle="参加団体申請一覧">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
-        CSVダウンロード
+        CSV ({{ refYears }}年度)
       </CommonButton>
     </SubHeader>
 
     <SubSubHeader>
+      <template v-slot:refinement>
       <SearchDropDown
         :nameList="yearList"
         :on_click="refinementGroups"
         value="year_num"
       >
-        All Years
+        {{ refYears }}
       </SearchDropDown>
       <SearchDropDown
         :nameList="groupCategories"
         :on_click="refinementGroups"
         value="name"
       >
-        All Categories
+        {{ refGroupCategories }}
       </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input v-model="searchText" @input="searchGroups" type="text" size="25" placeholder="search" />
+        </SearchBar>
+      </template>
     </SubSubHeader>
 
     <Card width="100%">
@@ -121,7 +130,12 @@ export default {
       user: [],
       groupId: "",
       reGroup: [],
+      refYears: "Year",
+      refYearID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
       isOpenAddModal: false,
+      searchText: '',
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
         { id: 2, name: "模擬店(物品販売)" },
@@ -152,11 +166,42 @@ export default {
     };
   },
   methods: {
-    refinementGroups: function (id) {
-      const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + id;
-      const refRes = this.$axios.$post(refUrl);
-      console.log(refUrl);
-      console.log(refRes);
+    async refinementGroups(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()){
+        this.refYearID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refYears = "ALL"
+        }else{
+          this.refYears = name_list[item_id - 1].year_num
+        }
+      // group_categoryで絞り込むとき
+      }else if(name_list.toString() == this.groupCategories.toString()){
+        this.refCategoryID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refGroupCategories = "ALL"
+        }else{
+          this.refGroupCategories = name_list[item_id - 1].name
+        }
+      }
+      this.groups = []
+      const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + this.refYearID + "&group_category_id=" + this.refCategoryID;
+      console.log(refUrl)
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data){
+        this.groups.push(res)
+      }
+    },
+    async searchGroups(){
+      this.groups = []
+      const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data){
+        console.log(res)
+        this.groups.push(res)
+      }
     },
     openAddModal() {
       this.isOpenAddModal = false;
@@ -208,7 +253,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_groups_csv/" + 2;
+      const url = "http://localhost:3000" + "/api/v1/get_groups_csv/" + this.refYearID;
       window.open(
         url,
         "参加団体一覧_CSV"

@@ -2,7 +2,14 @@ class Api::V1::OutputCsvController < ApplicationController
   require 'csv'
   
   def output_groups_csv
-    @groups = Group.where(fes_year_id:params[:fes_year_id])
+    if params[:fes_year_id].to_i == 0
+      # 全件選択
+      @groups = Group.all
+      filename_year = "全"
+    else
+      @groups = Group.where(fes_year_id: params[:fes_year_id])
+      filename_year = @groups.first.fes_year.year_num
+    end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w(参加団体名 企画名 活動内容 代表者 カテゴリー 開催年)
@@ -23,7 +30,7 @@ class Api::V1::OutputCsvController < ApplicationController
         csv << column_values
       end
     end
-    send_data(csv_data, filename: "参加団体申請_#{@groups.first.fes_year.year_num}年度.csv")
+    send_data(csv_data, filename: "参加団体申請_#{filename_year}年度.csv")
   end
 
 

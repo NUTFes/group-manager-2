@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many :groups, dependent: :destroy
   has_many :memos
 
+
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   @@no_sub_rep = {
       id: nil,
