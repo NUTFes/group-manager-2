@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       #---参加団体申請ページ
       get "get_group_index_for_admin_view" => "groups_api#get_group_index_for_admin_view"
       get "get_group_show_for_admin_view/:id" => "groups_api#get_group_show_for_admin_view"
+      get "get_group_for_admin_view/:id" => "groups_api#get_group_for_admin_view"
       post "get_refinement_groups" => "groups_api#get_refinement_groups"
       post "get_search_groups" => "groups_api#get_search_groups"
       post "get_groups_refinemented_by_fes_year" => "groups_api#get_groups_refinemented_by_fes_year"
