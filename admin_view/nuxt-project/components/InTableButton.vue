@@ -1,5 +1,5 @@
 <template>
-  <button class="common-button" @click="on_click" :style="CommonButtonOption">
+  <button class="in-table-button" @click="on_click" :style="InTableButtonOption">
     <nuxt-link v-if="to !== ''" :to="to">
       <span class="material-icons">{{ iconName }}</span>
       <slot></slot>
@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: "CommonButton",
+  name: "InTableButton",
   props: {
     iconName: {
       type: String,
@@ -30,7 +30,7 @@ export default {
 };
 </script>
 <style scoped>
-.common-button {
+.in-table-button {
   border-radius: var(--button-radius);
   padding: 10px 30px;
   backdrop-filter: blur(4px);
@@ -54,7 +54,7 @@ export default {
   -webkit-text-fill-color: transparent;
 }
 
-.common-button:hover {
+.in-table-button:hover {
   font-weight: 500;
   background: linear-gradient(
     45deg,
@@ -67,7 +67,7 @@ export default {
              -5px -5px 3px #fafafa;
 }
 
-.common-button:active {
+.in-table-button:active {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.25);
 }
 </style>

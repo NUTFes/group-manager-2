@@ -1,7 +1,6 @@
 <template>
   <div class="main-content">
 
-
     <SubHeader pageTitle="参加団体申請一覧">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
@@ -121,11 +120,13 @@ export default {
       category: [],
       fes_years: [],
       years: [],
+      // v-model
       groupName: "",
       projectName: [],
       activity: [],
       groupCategoryId: "",
       fesYearId: "",
+
       year_list: [],
       user: [],
       groupId: "",
