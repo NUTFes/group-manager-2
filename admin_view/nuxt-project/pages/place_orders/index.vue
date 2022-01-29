@@ -13,14 +13,14 @@
       <template v-slot:refinement>
       <SearchDropDown
         :nameList="yearList"
-        :on_click="refinementPowerOrders"
+        :on_click="refinementPlaceOrders"
         value="year_num"
       >
         {{ refYears }}
       </SearchDropDown>
       <SearchDropDown
         :nameList="placeList"
-        :on_click="refinementPowerOrders"
+        :on_click="refinementPlaceOrders"
         value="name"
       >
         {{ refPlaces }}
@@ -185,7 +185,7 @@ export default {
     };
   },
   methods: {
-    async refinementPowerOrders(item_id, name_list){
+    async refinementPlaceOrders(item_id, name_list){
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()){
         this.refYearID = item_id
