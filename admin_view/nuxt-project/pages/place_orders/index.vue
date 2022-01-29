@@ -9,6 +9,30 @@
       </CommonButton>
     </SubHeader>
 
+    <SubSubHeader>
+      <template v-slot:refinement>
+      <SearchDropDown
+        :nameList="yearList"
+        :on_click="refinementPowerOrders"
+        value="year_num"
+      >
+        {{ refYears }}
+      </SearchDropDown>
+      <SearchDropDown
+        :nameList="placeList"
+        :on_click="refinementPowerOrders"
+        value="name"
+      >
+        {{ refPlaces }}
+      </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input v-model="searchText" @input="searchPlaceOrders" type="text" size="25" placeholder="search" />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -122,38 +146,80 @@ export default {
         "編集日時",
       ],
       isOpenAddModal: false,
-      groupList: [],
       placeList: [],
       appGroup: "",
+      placeOrders: [],
       firstPlaceOrder: "",
       secondPlaceOrder: "",
       thirdPlaceOrder: "",
+      refYears: "Year",
+      refYearID: 0,
+      refPlaces: "Places",
+      refPlaceID: 0,
+      searchText: ''
     };
   },
   async asyncData({ $axios }) {
-    const placeOrderUrl = "/api/v1/get_place_order_index_for_admin_view";
-    const placeOrderRes = await $axios.$get(placeOrderUrl);
-
-    const currentFesYearId = 1;
-    const groupsUrl =
-      "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" +
-      currentFesYearId;
-    const groupsRes = await $axios.$post(groupsUrl);
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    // const placeOrderUrl = "/api/v1/get_place_order_index_for_admin_view";
+    const placeOrderUrl = "/api/v1/get_refinement_place_orders?fes_year_id=" + currentYearRes.data.fes_year_id;
+    const placeOrderRes = await $axios.$post(placeOrderUrl);
 
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
 
     const yearUrl = "/fes_years";
-    const yearRes = await $axios.$get(yearUrl);
+    const yearsRes = await $axios.$get(yearUrl);
+
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
 
     return {
       placeOrders: placeOrderRes.data,
-      groupList: groupsRes.data,
       placeList: placesRes.data,
-      yearList: yearRes,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num
     };
   },
   methods: {
+    async refinementPowerOrders(item_id, name_list){
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()){
+        this.refYearID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refYears == "ALL"
+        }else{
+          this.refYears = name_list[item_id - 1].year_num
+        }
+      }else if(name_list.toString() == this.placeList.toString()){
+        this.refPlaceID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refPlaces = "ALL"
+        }else{
+          this.refPlaces = name_list[item_id - 1].name
+        }
+      }
+      this.placeOrders = []
+      const refUrl = "/api/v1/get_refinement_place_orders?fes_year_id=" + this.refYearID + "&place_id=" + this.refPlaceID;
+      console.log(refUrl)
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data){
+        this.placeOrders.push(res)
+      }
+    },
+    async searchPlaceOrders(){
+      this.placeOrders = []
+      const searchUrl = "/api/v1/get_search_place_orders?word=" + this.searchText
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data){
+        this.placeOrders.push(res)
+      }
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
