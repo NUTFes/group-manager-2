@@ -1,106 +1,16 @@
 <template>
-  <div class="login-card">
-    <v-container fill-height>
-      <v-row
-        align="center"
-        justify="center"
-        :style="{ background: $vuetify.theme.themes.light.loginbg }"
-      >
-        <v-col cols="5">
-          <v-form ref="form" lazy-validation>
-            <v-row justify="center">
-              <p cols="10" class="my-10 display-1 font-weight-bold info--text">
-                ログイン
-              </p>
-              <p v-bind:style="warnStyle" v-html="getMessage"></p>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-col cols="1">
-                <v-icon color="#424242">mdi-email</v-icon>
-              </v-col>
-              <v-col cols="10" md="10" sm="10">
-                <v-text-field
-                  v-model="email"
-                  ref="email"
-                  label="Eメールアドレス"
-                  v-on:keyup.enter="loginWithAuthModule"
-                  :rules="[rules.requied, rules.email]"
-                  required
-                />
-                <p class="caption mb-0" />
-              </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-col cols="1">
-                <v-icon color="#424242">mdi-key</v-icon>
-              </v-col>
-              <v-col cols="10" md="10" sm="10">
-                <v-text-field
-                  v-model="password"
-                  ref="password"
-                  label="パスワード"
-                  counter
-                  v-on:keyup.enter="loginWithAuthModule"
-                  v-bind:append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
-                  :rules="[rules.required, rules.min]"
-                  v-bind:type="show_pass ? 'password' : 'text'"
-                  @click:append="show_pass = !show_pass"
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-card-actions>
-                  <v-btn
-                    depressed
-                    text
-                    color="btn"
-                    @click="loginWithAuthModule"
-                  >
-                    パスワードを忘れた場合
-                  </v-btn>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    depressed
-                    dark
-                    color="btn"
-                    @click="loginWithAuthModule"
-                  >
-                    ログイン
-                    <v-icon class="mx-n1">mdi-menu-right</v-icon>
-                  </v-btn>
-                </v-card-actions>
-              </v-col>
-            </v-row>
-            <v-container>
-              <v-row align="center" justify="center">
-                <v-col cols="2" />
-                <v-col cols="8">
-                  <nuxt-link class="text-center" to="/signup">
-                    <div style="color: black">新規登録はこちら</div>
-                  </nuxt-link>
-                </v-col>
-                <v-col cols="2" />
-              </v-row>
-            </v-container>
-          </v-form>
-        </v-col>
-        <v-col cols="7" class="mr-n6">
-          <v-img
-            position="center"
-            min-height="700"
-            max-height="800"
-            v-bind:src="image_src"
-            class="my-n3"
-          >
-            <div class="inner">
-              <img width="80%" src="@/assets/logo_japanese.svg" />
-              <img width="80%" src="@/assets/logo_english.svg" />
-            </div>
-          </v-img>
-        </v-col>
-      </v-row>
-    </v-container>
+  <div class="main-content">
+		<div class="body"></div>
+		<div class="grad"></div>
+			<div class="header">
+				<div>Group<span> Manager</span> 2</div>
+			</div>
+			<br>
+			<div class="login">
+				<input v-model="email" type="text" placeholder="email"><br>
+				<input v-model="password" type="password" placeholder="password"><br>
+				<button @click="loginWithAuthModule" class="bn632-hover bn27">login</button>
+			</div>
   </div>
 </template>
 
@@ -141,13 +51,12 @@ export default {
   },
   methods: {
     async loginWithAuthModule() {
-      this.formHasErrors = false;
-
-      Object.keys(this.form).forEach((f) => {
-        if (!this.form[f]) this.formHasErrors = true;
-        this.$refs[f].validate(true);
-      });
-      if (!this.formHasErrors) return "Can't Sign Up";
+      // this.formHasErrors = false;
+      // Object.keys(this.form).forEach((f) => {
+      //   if (!this.form[f]) this.formHasErrors = true;
+      //   this.$refs[f].validate(true);
+      // });
+      // if (!this.formHasErrors) return "Can't Sign Up";
       await this.$auth
         .loginWith("local", {
           data: {
@@ -177,24 +86,218 @@ export default {
 </script>
 
 <style scoped>
-.login-card {
-  padding-left: 20%;
-  padding-right: 20%;
-  height: 100%;
-}
-.grey-title {
-  color: #424242;
+@import url(https://fonts.googleapis.com/css?family=Exo:100,200,400);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+
+body{
+  margin: 0;
+  padding: 0;
+  background: #fff;
+
+  color: #fff;
+  font-family: Arial;
+  font-size: 12px;
 }
 
-.inner {
+.body{
   position: absolute;
-  text-align: center;
-  top: 50%;
-  transform: translateY(-50%);
+  top: -20px;
+  left: -20px;
+  right: -40px;
+  bottom: -40px;
+  width: auto;
+  height: auto;
+  background-color: #535353; 
+  background-size: cover;
+  -webkit-filter: blur(5px);
+  z-index: 0;
 }
 
-.text-center {
-  text-align: center;
-  display: block;
+.grad{
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -40px;
+  bottom: -40px;
+  width: auto;
+  height: auto;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.header{
+  position: absolute;
+  top: calc(50% - 35px);
+  left: calc(45% - 255px);
+  z-index: 2;
+}
+
+.header div{
+  float: left;
+  color: #fff;
+  font-family: 'Exo', sans-serif;
+  font-size: 35px;
+  font-weight: 200;
+}
+
+.header div span{
+  color: #5379fa !important;
+}
+
+.login{
+  position: absolute;
+  top: calc(50% - 75px);
+  left: calc(50% - 50px);
+  height: 150px;
+  width: 350px;
+  padding: 10px;
+  z-index: 2;
+}
+
+.login input[type=text]{
+  width: 250px;
+  height: 30px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 2px;
+  color: #fff;
+  font-family: 'Exo', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px;
+}
+
+.login input[type=password]{
+  width: 250px;
+  height: 30px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 2px;
+  color: #fff;
+  font-family: 'Exo', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px;
+  margin-top: 10px;
+}
+
+.login input[type=button]{
+  width: 260px;
+  height: 35px;
+  background: #fff;
+  border: 1px solid #fff;
+  cursor: pointer;
+  border-radius: 2px;
+  color: #a18d6c;
+  font-family: 'Exo', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 6px;
+  margin-top: 10px;
+}
+
+.login input[type=button]:hover{
+  opacity: 0.8;
+}
+
+.login input[type=button]:active{
+  opacity: 0.6;
+}
+
+.login input[type=text]:focus{
+  outline: none;
+  border: 1px solid rgba(255,255,255,0.9);
+}
+
+.login input[type=password]:focus{
+  outline: none;
+  border: 1px solid rgba(255,255,255,0.9);
+}
+
+.login input[type=button]:focus{
+  outline: none;
+}
+
+::-webkit-input-placeholder{
+   color: rgba(255,255,255,0.6);
+}
+
+::-moz-input-placeholder{
+   color: rgba(255,255,255,0.6);
+}
+.bn632-hover {
+  width: 160px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  margin: 20px;
+  height: 55px;
+  text-align:center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 50px;
+  moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.bn632-hover:hover {
+  background-position: 100% 0;
+  moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.bn632-hover:focus {
+  outline: none;
+}
+
+.bn632-hover.bn27 {
+  background-image: linear-gradient(
+    to right,
+    #ed6ea0,
+    #ec8c69,
+    #f7186a,
+    #fbb03b
+  );
+  box-shadow: 0 4px 15px 0 rgba(236, 116, 149, 0.75);
+}
+/* 簡易リセットCSS */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* 背景 */
+.bg {
+  background-color: #000; /* 画像がない場合のフォールバック */
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: 60px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ガラス本体 */
+.glass {
+  width: 100%;
+  max-width: 2200px;
+  padding-top: 500px;
+  background-color: rgba(255, 255, 255, 0.1); /* 背景色 */
+  border: 1px solid rgba(255, 255, 255, 0.4); /* ボーダー */
+  border-right-color: rgba(255, 255, 255, 0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  -webkit-backdrop-filter: blur(20px); /* ぼかしエフェクト */
+  backdrop-filter: blur(20px);
+  box-shadow: 0 5px 20px rgba(255, 152, 79, 0.5); /* 薄い影 */
 }
 </style>

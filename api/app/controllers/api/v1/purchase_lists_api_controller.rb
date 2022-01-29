@@ -9,5 +9,4 @@ class Api::V1::PurchaseListsApiController < ApplicationController
     @purchase_list = PurchaseList.with_group_and_info(params[:id])
     render json: fmt(ok, @purchase_list)
   end
-
 end
