@@ -43,34 +43,6 @@ export default {
       default: false,
     },
   },
-  mounted() {
-    this.$axios
-      .get("api/v1/users/get_user_detail", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.student_id = response.data.student_id;
-        this.tel = response.data.tel;
-      });
-    this.$axios
-      .get("api/v1/dashboard", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.dashboard_data = response.data;
-      });
-  },
   methods: {
     closeModal: function () {
       this.showContent = false;

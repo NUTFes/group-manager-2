@@ -1,6 +1,5 @@
 <template>
   <div>
-    <AccountModal :showContent="showContent" />
     <div class="header-container">
       <header class="header-contents">
         <div class="header-title">
@@ -8,42 +7,89 @@
           <a href="/dashboard"> 参加団体管理アプリ-管理者ページ </a>
         </div>
         <div class="header-option">
-          <IconButton icon_name="notifications" :on_click="openModal" />
-          <IconButton icon_name="forum" :on_click="openModal" />
+          <IconButton icon_name="notifications" :on_click="openAccountModalModal" />
+          <IconButton icon_name="forum" :on_click="openMemoModal" />
           <IconButton icon_name="account_circle" :on_click="openModal" />
         </div>
       </header>
     </div>
+    <AccontModal />
+    <MemoModal
+      @close="closeMemoModal"
+      v-if="isOpenMemoModal"
+      title="meme"
+    >
+      <IconButton icon_name="close" :on_click="closeMemoModal"/>
+    </MemoModal>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import AccountModal from "~/components/AccountModal.vue";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      drawer: false,
+      value: "",
+      groups: [],
+      group_categories: [],
+      category: [],
+      fes_years: [],
+      years: [],
+      // v-model
+      groupName: "",
+      projectName: [],
+      activity: [],
+      groupCategoryId: "",
+      fesYearId: "",
+
+      year_list: [],
       user: [],
-      content: [],
-      memos: [],
-      users: [],
-      showContent: false,
+      groupId: "",
+      reGroup: [],
+      refYears: "Year",
+      refYearID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
+      isOpenAccountModal: false,
+      isOpenMemoModal: false,
+      isOpenNotificationModal: false,
+      searchText: '',
+      groupCategories: [
+        { id: 1, name: "模擬店(食品販売)" },
+        { id: 2, name: "模擬店(物品販売)" },
+        { id: 3, name: "ステージ企画" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室公開" },
+        { id: 6, name: "その他" },
+      ],
+      headers: [
+        "ID",
+        "グループ名",
+        "企画名",
+        "カテゴリ",
+        "開催年",
+        "日時",
+        "編集日時",
+      ],
     };
   },
-  mounted() {
-    this.$axios
-      .get("api/v1/users/show", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.user = response.data.data;
-      });
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    // const url = "/api/v1/get_group_index_for_admin_view";
+    const url = "/api/v1/get_refinement_groups?fes_year_id=" + currentYearRes.data.fes_year_id + "&group_category_id=0";
+    const groupRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      groups: groupRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num
+    };
   },
   methods: {
     open: function () {
@@ -57,6 +103,14 @@ export default {
           this.memos = response.data;
         });
       this.drawer = true;
+    },
+    openMemoModal() {
+      this.isOpenMemoModal = true;
+      console.log("AAAAAAAAAAAAAAA")
+    },
+    closeMemoModal() {
+      this.isOpenMemoModal = false;
+      console.log("AAAAAAAAAAAAAAA")
     },
     submit: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
