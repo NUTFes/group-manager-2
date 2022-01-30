@@ -8,6 +8,48 @@
         CSVダウンロード
       </CommonButton>
     </SubHeader>
+
+    <SubSubHeader>
+      <template v-slot:refinement>
+      <SearchDropDown
+        :nameList="yearList"
+        :on_click="refinementStageOrders"
+        value="year_num"
+      >
+        {{ refYears }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="isSunnyList"
+        :on_click="refinementStageOrders"
+        value="value"
+      >
+        {{ refIsSunny }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="daysNumList"
+        :on_click="refinementStageOrders"
+        value="days_num"
+      >
+        {{ refDaysNum }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="stageList"
+        :on_click="refinementStageOrders"
+        value="name"
+      >
+        {{ refStage }}
+      </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input v-model="searchText" @keypress.enter="searchStageOrders" type="text" size="25" placeholder="search" />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -56,16 +98,45 @@ export default {
         "登録日時",
         "編集日時",
       ],
+      isSunnyList: [
+        { id: 1, value: "はい" },
+        { id: 2, value: "いいえ" }
+      ],
+      daysNumList: [
+        { id: 1, days_num: "1日目" },
+        { id: 2, days_num: "2日目" },
+      ],
+      refYears: "Years",
+      refYearID: 0,
+      refIsSunny: "晴れ希望",
+      refIsSunnyID: 0,
+      refDaysNum: "何日目",
+      refDaysNumID: 0,
+      refStage: "Stages",
+      refStageID: 0,
+      stageOrders: []
     };
   },
   async asyncData({ $axios }) {
-    const url = "/api/v1/get_stage_order_index_for_admin_view";
-    const stageOrdersRes = await $axios.$get(url);
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+
+    // const url = "/api/v1/get_stage_order_index_for_admin_view";
+    const url = "/api/v1/get_refinement_stage_orders?fes_year_id=" + currentYearRes.data.fes_year_id + "&stage_id=0&days_num=0&is_sunny=0";
+    const stageOrdersRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
+    const stagesUrl = "/stages";
+    const stagesRes = await $axios.$get(stagesUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id
+    })
     return {
       stageOrders: stageOrdersRes.data,
       yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+      stageList: stagesRes.data
     };
   },
   computed: {
@@ -77,6 +148,59 @@ export default {
     },
   },
   methods: {
+    async refinementStageOrders(item_id, name_list){
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL"
+        }else{
+          this.refYears = name_list[item_id - 1].year_num
+        }
+      // is_sunnyで絞り込むとき
+      }else if (Object.is(name_list, this.isSunnyList)){
+        this.refIsSunnyID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refIsSunny = "ALL"
+        }else{
+          this.refIsSunny = name_list[item_id - 1].value
+        }
+      // days_numで絞り込むとき
+      }else if (Object.is(name_list, this.daysNumList)){
+        this.refDaysNumID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refDaysNum = "ALL"
+        }else{
+          this.refDaysNum = name_list[item_id - 1].days_num
+        }
+      // stage_idで絞り込むとき
+      }else if (name_list.toString() == this.stageList.toString()) {
+        this.refStageID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refStage = "ALL"
+        }else{
+          this.refStage = name_list[item_id - 1].name
+        }
+      }
+      this.stageOrders = []
+      const refUrl = "/api/v1/get_refinement_stage_orders?fes_year_id=" + this.refYearID + "&stage_id=" + this.refStageID + "&days_num=" + this.refDaysNumID + "&is_sunny=" + this.refIsSunnyID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.stageOrders.push(res)
+      }
+    },
+    async searchStageOrders() {
+      this.stageOrders = []
+      const searchUrl = "/api/v1/get_search_stage_orders?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.stageOrders.push(res)
+      }
+    },
     set_time_range: function () {
       for (var hour of this.hour_range) {
         for (var minute of this.minute_range) {

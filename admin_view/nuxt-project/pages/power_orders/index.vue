@@ -141,7 +141,6 @@ export default {
       this.powerOrders = []
       const searchUrl = "/api/v1/get_search_power_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
-      console.log(searchUrl)
       for (const res of refRes.data) {
         this.powerOrders.push(res)
       }
