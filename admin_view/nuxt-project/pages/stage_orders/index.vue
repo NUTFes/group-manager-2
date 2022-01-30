@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージ申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -36,8 +36,43 @@
             <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
           </tr>
         </template>
-    </Table>
+      </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -56,6 +91,7 @@ export default {
         "登録日時",
         "編集日時",
       ],
+      isOpenAddModal: false,
     };
   },
   async asyncData({ $axios }) {
@@ -77,133 +113,51 @@ export default {
     },
   },
   methods: {
-    set_time_range: function () {
+    set_time_range() {
       for (var hour of this.hour_range) {
         for (var minute of this.minute_range) {
           this.time_range.push(hour + ":" + minute);
         }
       }
     },
-    open_dialog: function () {
-      this.$axios
-        .get("/stages", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stages_list = response.data;
-        });
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groups = response.data;
-        });
-      this.$axios
-        .get("/fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_date_list = response.data;
-        });
-      this.dialog = true;
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_stage_orders_details", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stage_orders = response.data;
-        });
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-    register: function () {
-      if (this.prepareTimeInterval.length == 0) {
-        this.prepareTimeInterval = "-9999";
-      }
-      if (this.useTimeInterval.length == 0) {
-        this.useTimeInterval = "-9999";
-      }
-      if (this.cleanupTimeInterval.length == 0) {
-        this.cleanupTimeInterval = "-9999";
-      }
-      if (this.prepareStartTime.length == 0) {
-        this.prepareStartTime = "00:00";
-      }
-      if (this.prepareStartTime.HH == "" && this.prepareStartTime.mm == "") {
-        this.prepareStartTime = "00:00";
-      }
-      if (this.performanceStartTime.length == 0) {
-        this.performanceStartTime = "00:00";
-      }
-      if (
-        this.performanceStartTime.HH == "" &&
-        this.performanceStartTime.mm == ""
-      ) {
-        this.performanceStartTime = "00:00";
-      }
-      if (this.performanceEndTime.length == 0) {
-        this.performanceEndTime = "00:00";
-      }
-      if (
-        this.performanceEndTime.HH == "" &&
-        this.performanceEndTime.mm == ""
-      ) {
-        this.performanceEndTime = "00:00";
-      }
-      if (this.cleanupEndTime.length == 0) {
-        this.cleanupEndTime = "00:00";
-      }
-      if (this.cleanupEndTime.HH == "" && this.cleanupEndTime.mm == "") {
-        this.cleanupEndTime = "00:00";
-      }
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("is_sunny", this.isSunny);
-      params.append("fes_date_id", this.fesDateId);
-      params.append("stage_first", this.stageFirst);
-      params.append("stage_second", this.stageSecond);
-      params.append("use_time_interval", this.useTimeInterval);
-      params.append("prepare_time_interval", this.prepareTimeInterval);
-      params.append("cleanup_time_interval", this.cleanupTimeInterval);
-      params.append("prepare_start_time", this.prepareStartTime);
-      params.append("performance_start_time", this.performanceStartTime);
-      params.append("performance_end_time", this.performanceEndTime);
-      params.append("cleanup_end_time", this.cleanupEndTime);
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
+      });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
 
-      this.$axios.post("/stage_orders", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
-        this.Group = "";
-        this.isSunny = "";
-        this.fesDateId = "";
-        this.stageFirst = "";
-        this.stageSecond = "";
-        this.useTimeInterval = "";
-        this.prepareTimeInterval = "";
-        this.cleanupTimeInterval = "";
-        this.prepareStartTime = "";
-        this.performanceStartTime = "";
-        this.performanceEndTime = "";
-        this.cleanupEndTime = "";
+        this.closeAddModal();
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_stage_orders_csv/" + this.refYearID;
-      window.open(
-        url,
-        "ステージ申請一覧_CSV"
-      );
+      const url =
+        "http://localhost:3000" +
+        "/api/v1/get_stage_orders_csv/" +
+        this.refYearID;
+      window.open(url, "ステージ申請一覧_CSV");
     },
   },
 };

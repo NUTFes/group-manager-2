@@ -4,8 +4,12 @@
       v-bind:pageTitle="foodProduct.food_product.name"
       pageSubTitle="販売食品申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,31 +17,39 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ foodProduct.food_product.id }}</td>
-            </tr>
-            <tr>
-              <th>団体名</th><td>{{ foodProduct.group.name }}</td>
-            </tr>
-            <tr>
-              <th>名前</th><td>{{ foodProduct.food_product.name }}</td>
-            </tr>
-            <tr>
-              <th>1日目の個数</th><td>{{ foodProduct.food_product.first_day_num }}</td>
-            </tr>
-            <tr>
-              <th>2日目の個数</th><td>{{ foodProduct.food_product.second_day_num }}</td>
-            </tr>
-            <tr>
-              <th>調理の有無</th><td>{{ foodProduct.food_product.is_cooking }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ foodProduct.food_product.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
-            </tr>
-          </VerticalTable>
+          <tr>
+            <th>ID</th>
+            <td>{{ foodProduct.food_product.id }}</td>
+          </tr>
+          <tr>
+            <th>団体名</th>
+            <td>{{ foodProduct.group.name }}</td>
+          </tr>
+          <tr>
+            <th>名前</th>
+            <td>{{ foodProduct.food_product.name }}</td>
+          </tr>
+          <tr>
+            <th>1日目の個数</th>
+            <td>{{ foodProduct.food_product.first_day_num }}</td>
+          </tr>
+          <tr>
+            <th>2日目の個数</th>
+            <td>{{ foodProduct.food_product.second_day_num }}</td>
+          </tr>
+          <tr>
+            <th>調理の有無</th>
+            <td>{{ foodProduct.food_product.is_cooking }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ foodProduct.food_product.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
+          </tr>
+        </VerticalTable>
       </Card>
     </Row>
 
@@ -83,9 +95,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -96,17 +106,18 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
-watchQuery: ["page"],
+  watchQuery: ["page"],
   data() {
     return {
       isOpenEditModal: false,
@@ -143,13 +154,15 @@ watchQuery: ["page"],
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl =  this.groupUrl
+      const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id)
-      const putGroupUrl = "/groups/" + this.group.group.id +
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
         "?name=" +
         this.groupName +
         "&project_name=" +
@@ -160,7 +173,7 @@ watchQuery: ["page"],
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl)
+      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";

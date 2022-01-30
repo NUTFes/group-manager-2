@@ -1,9 +1,15 @@
 <template>
   <div class="main-content">
-
-    <SubHeader v-bind:pageTitle="purchaseList.purchase_list.items" pageSubTitle="購入食品申請一覧">
-      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
+    <SubHeader
+      v-bind:pageTitle="purchaseList.purchase_list.items"
+      pageSubTitle="購入食品申請一覧"
+    >
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
 
     <Row>
@@ -12,34 +18,47 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ purchaseList.purchase_list.id }}</td>
-            </tr>
-            <tr>
-              <th>参加団体</th><td>{{ purchaseList.group.name }}</td>
-            </tr>
-            <tr>
-              <th>販売食品</th><td>{{ purchaseList.purchase_list_info.food_product }}</td>
-            </tr>
-            <tr>
-              <th>購入品</th><td>{{ purchaseList.purchase_list.items }}</td>
-            </tr>
-            <tr>
-              <th>なまもの</th><td>{{ purchaseList.purchase_list.is_fresh }}</td>
-            </tr>
-            <tr>
-              <th>購入店</th><td>{{ purchaseList.purchase_list_info.shop }}</td>
-            </tr>
-            <tr>
-              <th>仕入れ日</th><td>{{ purchaseList.purchase_list_info.date }} - {{ purchaseList.purchase_list_info.day }} - {{ purchaseList.purchase_list.days_num }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
-            </tr>
-          </VerticalTable>
+          <tr>
+            <th>ID</th>
+            <td>{{ purchaseList.purchase_list.id }}</td>
+          </tr>
+          <tr>
+            <th>参加団体</th>
+            <td>{{ purchaseList.group.name }}</td>
+          </tr>
+          <tr>
+            <th>販売食品</th>
+            <td>{{ purchaseList.purchase_list_info.food_product }}</td>
+          </tr>
+          <tr>
+            <th>購入品</th>
+            <td>{{ purchaseList.purchase_list.items }}</td>
+          </tr>
+          <tr>
+            <th>なまもの</th>
+            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+          </tr>
+          <tr>
+            <th>購入店</th>
+            <td>{{ purchaseList.purchase_list_info.shop }}</td>
+          </tr>
+          <tr>
+            <th>仕入れ日</th>
+            <td>
+              {{ purchaseList.purchase_list_info.date }} -
+              {{ purchaseList.purchase_list_info.day }} -
+              {{ purchaseList.purchase_list.days_num }}
+            </td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
+          </tr>
+        </VerticalTable>
       </Card>
     </Row>
 
@@ -85,9 +104,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -98,10 +115,11 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
@@ -115,14 +133,14 @@ export default {
       isOpenDeleteModal: false,
     };
   },
-  async asyncData({ $axios, route}){
+  async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/purchase_lists/", "");
     const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
     const response = await $axios.$get(url);
     return {
       purchaseList: response.data,
       route: url,
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -145,13 +163,15 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl =  this.groupUrl
+      const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id)
-      const putGroupUrl = "/groups/" + this.group.group.id +
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
         "?name=" +
         this.groupName +
         "&project_name=" +
@@ -162,7 +182,7 @@ export default {
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl)
+      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";

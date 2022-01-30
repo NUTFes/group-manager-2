@@ -1,6 +1,5 @@
 <template>
   <div class="main-content">
-
     <SubHeader pageTitle="参加団体申請一覧">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
@@ -12,24 +11,30 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-      <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementGroups"
-        value="year_num"
-      >
-        {{ refYears }}
-      </SearchDropDown>
-      <SearchDropDown
-        :nameList="groupCategories"
-        :on_click="refinementGroups"
-        value="name"
-      >
-        {{ refGroupCategories }}
-      </SearchDropDown>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementGroups"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementGroups"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @keypress.enter="searchGroups" type="text" size="25" placeholder="search" />
+          <input
+            v-model="searchText"
+            @keypress.enter="searchGroups"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -102,8 +107,8 @@
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitGroup"
-        >登録</CommonButton
-      >
+          >登録</CommonButton
+        >
       </template>
     </AddModal>
   </div>
@@ -136,7 +141,7 @@ export default {
       refGroupCategories: "Categories",
       refCategoryID: 0,
       isOpenAddModal: false,
-      searchText: '',
+      searchText: "",
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
         { id: 2, name: "模擬店(物品販売)" },
@@ -160,7 +165,10 @@ export default {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     // const url = "/api/v1/get_group_index_for_admin_view";
-    const url = "/api/v1/get_refinement_groups?fes_year_id=" + currentYearRes.data.fes_year_id + "&group_category_id=0";
+    const url =
+      "/api/v1/get_refinement_groups?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&group_category_id=0";
     const groupRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -171,43 +179,47 @@ export default {
       groups: groupRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
     async refinementGroups(item_id, name_list) {
       // fes_yearで絞り込むとき
-      if (name_list.toString() == this.yearList.toString()){
-        this.refYearID = item_id
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
         // ALLの時
-        if (item_id == 0){
-          this.refYears = "ALL"
-        }else{
-          this.refYears = name_list[item_id - 1].year_num
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
         }
-      // group_categoryで絞り込むとき
-      }else if(name_list.toString() == this.groupCategories.toString()){
-        this.refCategoryID = item_id
+        // group_categoryで絞り込むとき
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
         // ALLの時
-        if (item_id == 0){
-          this.refGroupCategories = "ALL"
-        }else{
-          this.refGroupCategories = name_list[item_id - 1].name
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
-      this.groups = []
-      const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + this.refYearID + "&group_category_id=" + this.refCategoryID;
+      this.groups = [];
+      const refUrl =
+        "/api/v1/get_refinement_groups?fes_year_id=" +
+        this.refYearID +
+        "&group_category_id=" +
+        this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
-      for (const res of refRes.data){
-        this.groups.push(res)
+      for (const res of refRes.data) {
+        this.groups.push(res);
       }
     },
-    async searchGroups(){
-      this.groups = []
-      const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText
+    async searchGroups() {
+      this.groups = [];
+      const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
-      for (const res of refRes.data){
-        this.groups.push(res)
+      for (const res of refRes.data) {
+        this.groups.push(res);
       }
     },
     openAddModal() {
@@ -260,11 +272,9 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_groups_csv/" + this.refYearID;
-      window.open(
-        url,
-        "参加団体一覧_CSV"
-      );
+      const url =
+        "http://localhost:3000" + "/api/v1/get_groups_csv/" + this.refYearID;
+      window.open(url, "参加団体一覧_CSV");
     },
   },
 };

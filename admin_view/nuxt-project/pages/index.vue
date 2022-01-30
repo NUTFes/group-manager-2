@@ -1,16 +1,18 @@
 <template>
   <div class="main-content">
-		<div class="body"></div>
-		<div class="grad"></div>
-			<div class="header">
-				<div>Group<span> Manager</span> 2</div>
-			</div>
-			<br>
-			<div class="login">
-				<input v-model="email" type="text" placeholder="email"><br>
-				<input v-model="password" type="password" placeholder="password"><br>
-				<button @click="loginWithAuthModule" class="bn632-hover bn27">login</button>
-			</div>
+    <div class="body"></div>
+    <div class="grad"></div>
+    <div class="header">
+      <div>Group<span> Manager</span> 2</div>
+    </div>
+    <br />
+    <div class="login">
+      <input v-model="email" type="text" placeholder="email" /><br />
+      <input v-model="password" type="password" placeholder="password" /><br />
+      <button @click="loginWithAuthModule" class="bn632-hover bn27">
+        login
+      </button>
+    </div>
   </div>
 </template>
 
@@ -89,7 +91,7 @@ export default {
 @import url(https://fonts.googleapis.com/css?family=Exo:100,200,400);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
 
-body{
+body {
   margin: 0;
   padding: 0;
   background: #fff;
@@ -99,7 +101,7 @@ body{
   font-size: 12px;
 }
 
-.body{
+.body {
   position: absolute;
   top: -20px;
   left: -20px;
@@ -107,13 +109,13 @@ body{
   bottom: -40px;
   width: auto;
   height: auto;
-  background-color: #535353; 
+  background-color: #535353;
   background-size: cover;
   -webkit-filter: blur(5px);
   z-index: 0;
 }
 
-.grad{
+.grad {
   position: absolute;
   top: -20px;
   left: -20px;
@@ -121,31 +123,37 @@ body{
   bottom: -40px;
   width: auto;
   height: auto;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, rgba(0, 0, 0, 0)),
+    color-stop(100%, rgba(0, 0, 0, 0.65))
+  ); /* Chrome,Safari4+ */
   z-index: 1;
   opacity: 0.7;
 }
 
-.header{
+.header {
   position: absolute;
   top: calc(50% - 35px);
   left: calc(45% - 255px);
   z-index: 2;
 }
 
-.header div{
+.header div {
   float: left;
   color: #fff;
-  font-family: 'Exo', sans-serif;
+  font-family: "Exo", sans-serif;
   font-size: 35px;
   font-weight: 200;
 }
 
-.header div span{
+.header div span {
   color: #5379fa !important;
 }
 
-.login{
+.login {
   position: absolute;
   top: calc(50% - 75px);
   left: calc(50% - 50px);
@@ -155,34 +163,34 @@ body{
   z-index: 2;
 }
 
-.login input[type=text]{
+.login input[type="text"] {
   width: 250px;
   height: 30px;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 2px;
   color: #fff;
-  font-family: 'Exo', sans-serif;
+  font-family: "Exo", sans-serif;
   font-size: 16px;
   font-weight: 400;
   padding: 4px;
 }
 
-.login input[type=password]{
+.login input[type="password"] {
   width: 250px;
   height: 30px;
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.6);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 2px;
   color: #fff;
-  font-family: 'Exo', sans-serif;
+  font-family: "Exo", sans-serif;
   font-size: 16px;
   font-weight: 400;
   padding: 4px;
   margin-top: 10px;
 }
 
-.login input[type=button]{
+.login input[type="button"] {
   width: 260px;
   height: 35px;
   background: #fff;
@@ -190,41 +198,41 @@ body{
   cursor: pointer;
   border-radius: 2px;
   color: #a18d6c;
-  font-family: 'Exo', sans-serif;
+  font-family: "Exo", sans-serif;
   font-size: 16px;
   font-weight: 400;
   padding: 6px;
   margin-top: 10px;
 }
 
-.login input[type=button]:hover{
+.login input[type="button"]:hover {
   opacity: 0.8;
 }
 
-.login input[type=button]:active{
+.login input[type="button"]:active {
   opacity: 0.6;
 }
 
-.login input[type=text]:focus{
+.login input[type="text"]:focus {
   outline: none;
-  border: 1px solid rgba(255,255,255,0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 }
 
-.login input[type=password]:focus{
+.login input[type="password"]:focus {
   outline: none;
-  border: 1px solid rgba(255,255,255,0.9);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 }
 
-.login input[type=button]:focus{
+.login input[type="button"]:focus {
   outline: none;
 }
 
-::-webkit-input-placeholder{
-   color: rgba(255,255,255,0.6);
+::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 
-::-moz-input-placeholder{
-   color: rgba(255,255,255,0.6);
+::-moz-input-placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 .bn632-hover {
   width: 160px;
@@ -234,22 +242,22 @@ body{
   cursor: pointer;
   margin: 20px;
   height: 55px;
-  text-align:center;
+  text-align: center;
   border: none;
   background-size: 300% 100%;
   border-radius: 50px;
-  moz-transition: all .4s ease-in-out;
-  -o-transition: all .4s ease-in-out;
-  -webkit-transition: all .4s ease-in-out;
-  transition: all .4s ease-in-out;
+  moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 }
 
 .bn632-hover:hover {
   background-position: 100% 0;
-  moz-transition: all .4s ease-in-out;
-  -o-transition: all .4s ease-in-out;
-  -webkit-transition: all .4s ease-in-out;
-  transition: all .4s ease-in-out;
+  moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 }
 
 .bn632-hover:focus {

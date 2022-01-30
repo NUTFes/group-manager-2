@@ -4,8 +4,12 @@
       v-bind:pageTitle="powerOrder.power_order.item"
       pageSubTitle="電力申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,34 +17,43 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ powerOrder.power_order.id }}</td>
-            </tr>
-            <tr>
-              <th>団体名</th><td>{{ powerOrder.group.name }}</td>
-            </tr>
-            <tr>
-              <th>製品名</th><td>{{ powerOrder.power_order.item }}</td>
-            </tr>
-            <tr>
-              <th>電力 [w]</th><td>{{ powerOrder.power_order.power }}</td>
-            </tr>
-            <tr>
-              <th>メーカー</th><td>{{ powerOrder.power_order.manufacturer }}</td>
-            </tr>
-            <tr>
-              <th>型番</th><td>{{ powerOrder.power_order.model }}</td>
-            </tr>
-            <tr>
-              <th>製品URL</th><td>{{ powerOrder.power_order.item_url }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ powerOrder.power_order.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
-            </tr>
-          </VerticalTable>
+          <tr>
+            <th>ID</th>
+            <td>{{ powerOrder.power_order.id }}</td>
+          </tr>
+          <tr>
+            <th>団体名</th>
+            <td>{{ powerOrder.group.name }}</td>
+          </tr>
+          <tr>
+            <th>製品名</th>
+            <td>{{ powerOrder.power_order.item }}</td>
+          </tr>
+          <tr>
+            <th>電力 [w]</th>
+            <td>{{ powerOrder.power_order.power }}</td>
+          </tr>
+          <tr>
+            <th>メーカー</th>
+            <td>{{ powerOrder.power_order.manufacturer }}</td>
+          </tr>
+          <tr>
+            <th>型番</th>
+            <td>{{ powerOrder.power_order.model }}</td>
+          </tr>
+          <tr>
+            <th>製品URL</th>
+            <td>{{ powerOrder.power_order.item_url }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ powerOrder.power_order.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
+          </tr>
+        </VerticalTable>
       </Card>
     </Row>
 
@@ -86,9 +99,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -99,10 +110,11 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
@@ -146,13 +158,15 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl =  this.groupUrl
+      const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id)
-      const putGroupUrl = "/groups/" + this.group.group.id +
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
         "?name=" +
         this.groupName +
         "&project_name=" +
@@ -163,7 +177,7 @@ export default {
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl)
+      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";

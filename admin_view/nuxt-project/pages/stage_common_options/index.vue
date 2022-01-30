@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージオプション申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -19,12 +19,12 @@
           <tr
             v-for="(stageCommonOption, index) in stageCommonOption"
             @click="
-            () =>
-            $router.push({
-              path:
-              `/stage_common_options/` +
-              stageCommonOption.stage_common_option.id,
-            })
+              () =>
+                $router.push({
+                  path:
+                    `/stage_common_options/` +
+                    stageCommonOption.stage_common_option.id,
+                })
             "
             :key="index"
           >
@@ -50,6 +50,41 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -68,6 +103,7 @@ export default {
         "登録日時",
         "編集日時",
       ],
+      isOpenAddModal: false,
     };
   },
   async asyncData({ $axios }) {
@@ -81,44 +117,44 @@ export default {
     };
   },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_stage_common_options_with_group", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stage_common_options = response.data;
-        });
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("own_equipment", this.ownEquipment);
-      params.append("bgm", this.Bgm);
-      params.append("camera_permission", this.cameraPermission);
-      params.append("loud_sound", this.loudSound);
-      params.append("stage_content", this.stageContent);
-      this.$axios.post("/stage_common_options", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
+      });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
-        this.Group = "";
-        this.ownEquipment = "";
-        this.Bgm = "";
-        this.cameraPermission = "";
-        this.loudSound = "";
-        this.stageContent = "";
+        this.closeAddModal();
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_stage_common_options_csv/" + this.refYearID;
-      window.open(
-        url,
-        "ステージオプション申請_CSV"
-      );
+      const url =
+        "http://localhost:3000" +
+        "/api/v1/get_stage_common_options_csv/" +
+        this.refYearID;
+      window.open(url, "ステージオプション申請_CSV");
     },
   },
 };

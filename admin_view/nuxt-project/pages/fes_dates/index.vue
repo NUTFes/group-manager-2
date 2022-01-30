@@ -35,6 +35,41 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -43,63 +78,57 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers:[
-        'ID',
-        '開催年',
-        '何日目',
-        '開催日',
-        '曜日',
-        '登録日時', 
-        '編集日時',
+      headers: [
+        "ID",
+        "開催年",
+        "何日目",
+        "開催日",
+        "曜日",
+        "登録日時",
+        "編集日時",
       ],
+      isOpenAddModal: false,
     };
   },
   async asyncData({ $axios }) {
-    const fesDateUrl = "/fes_dates"
+    const fesDateUrl = "/fes_dates";
     const fesDatesRes = await $axios.$get(fesDateUrl);
     return {
       fesDates: fesDatesRes.data,
     };
   },
   methods: {
-    openModal: function () {
-      this.$axios
-        .get("/fes_years", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_years = response.data;
-        });
-      this.dialog = true;
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_dates = response.data;
-        });
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("days_num", this.year_num);
-      params.append("date", this.date);
-      params.append("day", this.day);
-      params.append("fes_year_id", this.fes_year_id);
-      this.$axios.post("/fes_dates", params).then((response) => {
-        this.reload();
-        this.dialog = false;
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
       });
-      this.fes_year_id = [];
-      this.days_num = [];
-      this.date = [];
-      this.day = [];
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
+        this.reload();
+        this.closeAddModal();
+      });
     },
   },
 };

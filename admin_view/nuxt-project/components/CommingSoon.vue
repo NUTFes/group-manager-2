@@ -6,7 +6,15 @@
 
 <style scoped>
 .comming-soon {
-  background: linear-gradient(45deg, #654D58, #190A18, #A22A97, #A612E1, #3485FF, #3485FF);
+  background: linear-gradient(
+    45deg,
+    #654d58,
+    #190a18,
+    #a22a97,
+    #a612e1,
+    #3485ff,
+    #3485ff
+  );
   background-size: 1200% 1200%;
   animation: GradientBackground 10s ease infinite;
   width: 1000px;
@@ -36,6 +44,5 @@ h1 {
   100% {
     background-position: 0% 50%;
   }
-};
-
+} ;
 </style>

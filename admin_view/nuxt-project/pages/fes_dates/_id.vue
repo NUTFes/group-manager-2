@@ -4,8 +4,12 @@
       v-bind:pageTitle="fesDate.fes_date.date"
       pageSubTitle="開催日一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,25 +17,32 @@
           <h4>基本情報</h4>
           <VerticalTable>
             <tr>
-              <th>ID</th><td>{{ fesDate.fes_date.id }}</td>
+              <th>ID</th>
+              <td>{{ fesDate.fes_date.id }}</td>
             </tr>
             <tr>
-              <th>開催年</th><td>{{ fesDate.fes_year.year_num }}</td>
+              <th>開催年</th>
+              <td>{{ fesDate.fes_year.year_num }}</td>
             </tr>
             <tr>
-              <th>何日目</th><td>{{ fesDate.fes_date.days_num }}</td>
+              <th>何日目</th>
+              <td>{{ fesDate.fes_date.days_num }}</td>
             </tr>
             <tr>
-              <th>開催日</th><td>{{ fesDate.fes_date.date }}</td>
+              <th>開催日</th>
+              <td>{{ fesDate.fes_date.date }}</td>
             </tr>
             <tr>
-              <th>曜日</th><td>{{ fesDate.fes_date.day }}</td>
+              <th>曜日</th>
+              <td>{{ fesDate.fes_date.day }}</td>
             </tr>
             <tr>
-              <th>登録日時</th><td>{{ fesDate.fes_date.created_at | formatDate }}</td>
+              <th>登録日時</th>
+              <td>{{ fesDate.fes_date.created_at | formatDate }}</td>
             </tr>
             <tr>
-              <th>編集日時</th><td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
+              <th>編集日時</th>
+              <td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
             </tr>
           </VerticalTable>
         </Row>
@@ -80,9 +91,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -93,10 +102,11 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
@@ -133,13 +143,15 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl =  this.groupUrl
+      const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id)
-      const putGroupUrl = "/groups/" + this.group.group.id +
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
         "?name=" +
         this.groupName +
         "&project_name=" +
@@ -150,7 +162,7 @@ export default {
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl)
+      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";

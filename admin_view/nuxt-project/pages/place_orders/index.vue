@@ -11,24 +11,30 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-      <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementPlaceOrders"
-        value="year_num"
-      >
-        {{ refYears }}
-      </SearchDropDown>
-      <SearchDropDown
-        :nameList="placeList"
-        :on_click="refinementPlaceOrders"
-        value="name"
-      >
-        {{ refPlaces }}
-      </SearchDropDown>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementPlaceOrders"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="placeList"
+          :on_click="refinementPlaceOrders"
+          value="name"
+        >
+          {{ refPlaces }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @keypress.enter="searchPlaceOrders" type="text" size="25" placeholder="search" />
+          <input
+            v-model="searchText"
+            @keypress.enter="searchPlaceOrders"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -39,8 +45,8 @@
           <th v-for="(header, index) in headers" :key="index">
             {{ header }}
           </th>
-      </template>
-      <template v-slot:table-body>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(placeOrder, index) in placeOrders"
             :key="index"
@@ -156,14 +162,16 @@ export default {
       refYearID: 0,
       refPlaces: "Places",
       refPlaceID: 0,
-      searchText: ''
+      searchText: "",
     };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     // const placeOrderUrl = "/api/v1/get_place_order_index_for_admin_view";
-    const placeOrderUrl = "/api/v1/get_refinement_place_orders?fes_year_id=" + currentYearRes.data.fes_year_id;
+    const placeOrderUrl =
+      "/api/v1/get_refinement_place_orders?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
     const placeOrderRes = await $axios.$post(placeOrderUrl);
 
     const placesUrl = "/places";
@@ -181,43 +189,48 @@ export default {
       placeList: placesRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
-    async refinementPlaceOrders(item_id, name_list){
+    async refinementPlaceOrders(item_id, name_list) {
       // fes_yearで絞り込むとき
-      if (name_list.toString() == this.yearList.toString()){
-        this.refYearID = item_id
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
         // ALLの時
-        if (item_id == 0){
-          this.refYears == "ALL"
-        }else{
-          this.refYears = name_list[item_id - 1].year_num
+        if (item_id == 0) {
+          this.refYears == "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
         }
-      }else if(name_list.toString() == this.placeList.toString()){
-        this.refPlaceID = item_id
+      } else if (name_list.toString() == this.placeList.toString()) {
+        this.refPlaceID = item_id;
         // ALLの時
-        if (item_id == 0){
-          this.refPlaces = "ALL"
-        }else{
-          this.refPlaces = name_list[item_id - 1].name
+        if (item_id == 0) {
+          this.refPlaces = "ALL";
+        } else {
+          this.refPlaces = name_list[item_id - 1].name;
         }
       }
-      this.placeOrders = []
-      const refUrl = "/api/v1/get_refinement_place_orders?fes_year_id=" + this.refYearID + "&place_id=" + this.refPlaceID;
-      console.log(refUrl)
+      this.placeOrders = [];
+      const refUrl =
+        "/api/v1/get_refinement_place_orders?fes_year_id=" +
+        this.refYearID +
+        "&place_id=" +
+        this.refPlaceID;
+      console.log(refUrl);
       const refRes = await this.$axios.$post(refUrl);
-      for (const res of refRes.data){
-        this.placeOrders.push(res)
+      for (const res of refRes.data) {
+        this.placeOrders.push(res);
       }
     },
-    async searchPlaceOrders(){
-      this.placeOrders = []
-      const searchUrl = "/api/v1/get_search_place_orders?word=" + this.searchText
+    async searchPlaceOrders() {
+      this.placeOrders = [];
+      const searchUrl =
+        "/api/v1/get_search_place_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
-      for (const res of refRes.data){
-        this.placeOrders.push(res)
+      for (const res of refRes.data) {
+        this.placeOrders.push(res);
       }
     },
     openAddModal() {
@@ -257,11 +270,11 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_place_orders_csv/" + this.refYearID;
-      window.open(
-        url,
-        "会場申請一覧_CSV"
-      );
+      const url =
+        "http://localhost:3000" +
+        "/api/v1/get_place_orders_csv/" +
+        this.refYearID;
+      window.open(url, "会場申請一覧_CSV");
     },
   },
 };

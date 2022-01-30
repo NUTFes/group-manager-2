@@ -8,14 +8,16 @@
           </Row>
           <div class="memo-modal_content">
             <textarea v-model="activity" placeholder="メモ" />
-            <CommonButton iconName="add_circle" :on_click="submitGroup">投稿</CommonButton>
+            <CommonButton iconName="add_circle" :on_click="submitGroup"
+              >投稿</CommonButton
+            >
           </div>
           <div class="memo-modal__time-line">
             <div v-for="n in 20">
               <Row>
-              <h4>{{ test.user }}</h4>
-              <h5>{{ test.created_at }}</h5>
-          </Row>
+                <h4>{{ test.user }}</h4>
+                <h5>{{ test.created_at }}</h5>
+              </Row>
               <p>{{ test.text }}</p>
             </div>
           </div>
@@ -32,15 +34,16 @@ export default {
       test: {
         user: "陳郡の袁傪",
         text: "驚懼の中にも、彼は咄嗟に思いあたって、叫んだ。「その声は、我が友、李徴子ではないか？」",
-        created_at: "2022/11/11 23:59:59"
+        created_at: "2022/11/11 23:59:59",
       },
-    }
+    };
   },
 };
 </script>
 
 <style>
-.memo-modal_content input, .memo-modal_content textarea{
+.memo-modal_content input,
+.memo-modal_content textarea {
   width: 100%;
   height: 150px;
   color: var(--accent-2);
@@ -49,7 +52,8 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.memo-modal_content input:focus, .memo-modal_content textarea:focus {
+.memo-modal_content input:focus,
+.memo-modal_content textarea:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
@@ -125,12 +129,12 @@ export default {
   z-index: 15;
   color: #fff;
   background: radial-gradient(
-  ellipse at top left,
-  rgba(51, 51, 51, 0.9),
-  rgba(51, 51, 51, 0.8)
-);
-backdrop-filter: blur(4px);
-gap: 30px;
+    ellipse at top left,
+    rgba(51, 51, 51, 0.9),
+    rgba(51, 51, 51, 0.8)
+  );
+  backdrop-filter: blur(4px);
+  gap: 30px;
 }
 
 .memo-modal_content {
@@ -146,7 +150,7 @@ gap: 30px;
   gap: 30px;
   display: flex;
   flex-flow: column;
-  overflow: auto
+  overflow: auto;
 }
 
 .fade-enter-active,

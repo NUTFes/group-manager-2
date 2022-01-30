@@ -4,8 +4,12 @@
       v-bind:pageTitle="stageOrder.group.name"
       pageSubTitle="ステージ申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,51 +17,70 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ stageOrder.stage_order.id }}</td>
-            </tr>
-            <tr>
-              <th>参加団体</th><td>{{ stageOrder.group.name }}</td>
-            </tr>
-            <tr>
-              <th>晴れ希望</th><td>{{ stageOrder.stage_order.is_sunny }}</td>
-            </tr>
-            <tr>
-              <th>希望日</th><td>{{ stageOrder.stage_order_info.date }} - {{ stageOrder.stage_order_info.day }} - {{ stageOrder.stage_order_info.day_num }}日目</td>
-            </tr>
-            <tr>
-              <th>第一希望</th><td>{{ stageOrder.stage_order_info.stage_first }}</td>
-            </tr>
-            <tr>
-              <th>第二希望</th><td>{{ stageOrder.stage_order_info.stage_second }}</td>
-            </tr>
-            <tr>
-              <th>使用時間幅</th><td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
-            </tr>
-            <tr>
-              <th>準備時間幅</th><td>{{ stageOrder.stage_order_info.prepare_time_interval }}</td>
-            </tr>
-            <tr>
-              <th>掃除時間幅</th><td>{{ stageOrder.stage_order_info.cleanup_time_interval }}</td>
-            </tr>
-            <tr>
-              <th>準備開始時刻</th><td>{{ stageOrder.stage_order_info.prepare_start_time }}</td>
-            </tr>
-            <tr>
-              <th>パフォーマンス開始時刻</th><td>{{ stageOrder.stage_order_info.performance_start_time }}</td>
-            </tr>
-            <tr>
-              <th>パフォーマンス終了時刻</th><td>{{ stageOrder.stage_order_info.performance_end_time }}</td>
-            </tr>
-            <tr>
-              <th>掃除終了時刻</th><td>{{ stageOrder.stage_order_info.cleanup_end_time }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
-            </tr>
+          <tr>
+            <th>ID</th>
+            <td>{{ stageOrder.stage_order.id }}</td>
+          </tr>
+          <tr>
+            <th>参加団体</th>
+            <td>{{ stageOrder.group.name }}</td>
+          </tr>
+          <tr>
+            <th>晴れ希望</th>
+            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+          </tr>
+          <tr>
+            <th>希望日</th>
+            <td>
+              {{ stageOrder.stage_order_info.date }} -
+              {{ stageOrder.stage_order_info.day }} -
+              {{ stageOrder.stage_order_info.day_num }}日目
+            </td>
+          </tr>
+          <tr>
+            <th>第一希望</th>
+            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
+          </tr>
+          <tr>
+            <th>第二希望</th>
+            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+          </tr>
+          <tr>
+            <th>使用時間幅</th>
+            <td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
+          </tr>
+          <tr>
+            <th>準備時間幅</th>
+            <td>{{ stageOrder.stage_order_info.prepare_time_interval }}</td>
+          </tr>
+          <tr>
+            <th>掃除時間幅</th>
+            <td>{{ stageOrder.stage_order_info.cleanup_time_interval }}</td>
+          </tr>
+          <tr>
+            <th>準備開始時刻</th>
+            <td>{{ stageOrder.stage_order_info.prepare_start_time }}</td>
+          </tr>
+          <tr>
+            <th>パフォーマンス開始時刻</th>
+            <td>{{ stageOrder.stage_order_info.performance_start_time }}</td>
+          </tr>
+          <tr>
+            <th>パフォーマンス終了時刻</th>
+            <td>{{ stageOrder.stage_order_info.performance_end_time }}</td>
+          </tr>
+          <tr>
+            <th>掃除終了時刻</th>
+            <td>{{ stageOrder.stage_order_info.cleanup_end_time }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
+          </tr>
         </VerticalTable>
       </Card>
     </Row>
@@ -104,9 +127,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -117,10 +138,11 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
@@ -164,13 +186,15 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl =  this.groupUrl
+      const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id)
-      const putGroupUrl = "/groups/" + this.group.group.id +
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
         "?name=" +
         this.groupName +
         "&project_name=" +
@@ -181,7 +205,7 @@ export default {
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl)
+      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";

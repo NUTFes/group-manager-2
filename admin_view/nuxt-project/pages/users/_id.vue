@@ -1,11 +1,12 @@
 <template>
   <div class="main-content">
-    <SubHeader
-      v-bind:pageTitle="user.user.name"
-      pageSubTitle="ユーザー一覧"
-    >
-      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
+    <SubHeader v-bind:pageTitle="user.user.name" pageSubTitle="ユーザー一覧">
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,36 +14,46 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ user.user.id }}</td>
-            </tr>
-            <tr>
-              <th>名前</th><td>{{ user.user.name }}</td>
-            </tr>
-            <tr>
-              <th>権限</th><td>{{ user.role.name }}</td>
-            </tr>
-            <tr>
-              <th>メールアドレス</th><td>{{ user.user.email }}</td>
-            </tr>
-            <tr>
-              <th>電話番号</th><td>{{ user.user_detail.tel }}</td>
-            </tr>
-            <tr>
-              <th>学籍番号</th><td>{{ user.user_detail.student_id }}</td>
-            </tr>
-            <tr>
-              <th>課程・専攻</th><td>{{ user.user_detail_info.department }}</td>
-            </tr>
-            <tr>
-              <th>学年</th><td>{{ user.user_detail_info.grade }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ user.user.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ user.user.updated_at | formatDate }}</td>
-            </tr>
+          <tr>
+            <th>ID</th>
+            <td>{{ user.user.id }}</td>
+          </tr>
+          <tr>
+            <th>名前</th>
+            <td>{{ user.user.name }}</td>
+          </tr>
+          <tr>
+            <th>権限</th>
+            <td>{{ user.role.name }}</td>
+          </tr>
+          <tr>
+            <th>メールアドレス</th>
+            <td>{{ user.user.email }}</td>
+          </tr>
+          <tr>
+            <th>電話番号</th>
+            <td>{{ user.user_detail.tel }}</td>
+          </tr>
+          <tr>
+            <th>学籍番号</th>
+            <td>{{ user.user_detail.student_id }}</td>
+          </tr>
+          <tr>
+            <th>課程・専攻</th>
+            <td>{{ user.user_detail_info.department }}</td>
+          </tr>
+          <tr>
+            <th>学年</th>
+            <td>{{ user.user_detail_info.grade }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ user.user.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ user.user.updated_at | formatDate }}</td>
+          </tr>
         </VerticalTable>
       </Card>
     </Row>
@@ -89,9 +100,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -102,10 +111,11 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
@@ -123,7 +133,7 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
-    }
+    };
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/users/", "");
@@ -150,13 +160,15 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl =  this.groupUrl
+      const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id)
-      const putGroupUrl = "/groups/" + this.group.group.id +
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
         "?name=" +
         this.groupName +
         "&project_name=" +
@@ -167,7 +179,7 @@ export default {
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl)
+      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";
