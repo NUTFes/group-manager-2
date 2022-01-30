@@ -5,7 +5,7 @@
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
-        CSV ({{ refYears }}年度)
+				CSVダウンロード
       </CommonButton>
     </SubHeader>
 

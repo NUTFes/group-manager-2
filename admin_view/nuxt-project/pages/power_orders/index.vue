@@ -23,7 +23,7 @@
         :on_click="refinementPowerOrders"
         value="power"
       >
-        {{ refPower }}
+        {{ refPower }} [w] 以上
       </SearchDropDown>
       </template>
       <template v-slot:search>
@@ -70,10 +70,10 @@ export default {
   data() {
     return {
       powerOrders: [],
-      headers: ["ID", "参加団体", "製品", "電力", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "製品", "電力 [w]", "登録日時", "編集日時"],
       refYears: "Years",
       refYearID: 0,
-      refPower: "Power",
+      refPower: "0",
       searchText: '',
       powerList: [
         { id: 1, power: 0 }, 
@@ -124,7 +124,7 @@ export default {
       }else if (name_list.toString() == this.powerList.toString()){
         // ALLの時
         if (item_id == 0){
-          this.refPower = "ALL"
+          this.refPower = 0
         }else{
           this.refPower = name_list[item_id - 1].power
         }

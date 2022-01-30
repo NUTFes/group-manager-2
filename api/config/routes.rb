@@ -117,7 +117,7 @@ Rails.application.routes.draw do
       get "get_food_product_index_for_admin_view" => "food_products_api#get_food_product_index_for_admin_view"
       get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
       post "get_refinement_food_products" => "food_products_api#get_refinement_food_products"
-      post "get_search_food_product" => "food_products_api#get_search_food_product"
+      post "get_search_food_products" => "food_products_api#get_search_food_products"
       
       #---購入品申請ページ
       get "get_purchase_list_index_for_admin_view" => "purchase_lists_api#get_purchase_list_index_for_admin_view"

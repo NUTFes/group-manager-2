@@ -30,7 +30,6 @@ class Api::V1::PowerOrdersApiController < ApplicationController
       @power_orders = PowerOrder.all
       #fes_year_idだけ指定
     elsif fes_year_id != 0 && power == 0 
-      # @power_orders = Group.where(fes_year_id: fes_year_id).preload(:power_orders).map{ |group| group.power_orders.exists? ? group.power_orders : nil }.compact
       @power_orders = PowerOrder.preload(:group).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact 
       #rental_item_idだけ指定
     elsif fes_year_id == 0 && power != 0
@@ -50,7 +49,6 @@ class Api::V1::PowerOrdersApiController < ApplicationController
   #あいまい検索
   def get_search_power_orders
     word = params[:word]
-    # @power_orders = Group.where("name like ?", "%#{word}%").preload(:power_orders).map{ |group| group.power_orders } 
     @power_orders = PowerOrder.all.map{ |power_order| power_order if power_order.group.name.include?(word) || power_order.item.include?(word) }.compact
     if @power_orders.count == 0
       render json: fmt(not_found, [], "Not found power_orders")
