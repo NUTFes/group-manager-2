@@ -1,5 +1,5 @@
 class Employee < ApplicationRecord
-  belongs_to :group
+ belongs_to :group
 
   def self.with_groups
     @record = Employee.preload(:group)

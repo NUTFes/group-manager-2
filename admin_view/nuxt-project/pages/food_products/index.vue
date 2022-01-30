@@ -28,7 +28,7 @@
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @input="searchFoodProducts" type="text" size="25" placeholder="search" />
+          <input v-model="searchText" @keypress.enter="searchFoodProducts" type="text" size="25" placeholder="search" />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -179,7 +179,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_food_products_csv/" + 1;
+      const url = "http://localhost:3000" + "/api/v1/get_food_products_csv/" + this.refYearID;
       window.open(
         url,
         "販売食品申請_CSV"

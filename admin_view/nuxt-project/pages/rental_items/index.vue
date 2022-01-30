@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <SubHeader pageTitle="物品申請一覧">
+    <SubHeader pageTitle="物品一覧">
       <CommonButton iconName="add_circle" :on_click="openModal">
         追加
       </CommonButton>
