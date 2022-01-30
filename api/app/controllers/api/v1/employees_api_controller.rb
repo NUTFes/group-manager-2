@@ -10,39 +10,42 @@ class Api::V1::EmployeesApiController < ApplicationController
     render json: fmt(ok, @employee)
   end
 
+  def fit_employee_index_for_admin_view(employees)
+    employees.map{
+      |employee|
+      {
+        "employee": employee,
+        "group": employee.group
+      }
+    }
+  end
+
   # 絞り込み機能
   def get_refinement_employees
     fes_year_id = params[:fes_year_id].to_i
-    group_id = params[:group_id].to_i
-    # 両方ともALL
-    if fes_year_id == 0 && group_id == 0
+    # 指定なし
+    if fes_year_id == 0
       @employees = Employee.all
-      #fes_year_idだけ指定
-    elsif fes_year_id != 0 && group_id == 0 
-      @employees = Group.where(fes_year_id: fes_year_id).preload(:employees).map{ |group| group.employees }
-      #rental_item_idだけ指定
-    elsif fes_year_id == 0 && group_id != 0
-      @employees = Employee.where(group_id: group_id)
-      #両方とも指定
+      #fes_year_id指定
     else
-      @employees = Group.where(fes_year_id: fes_year_id).preload(:employees).map{ |group| group.employees.where(group_id: group_id) }  
+      @employees = Employee.preload(:group).map{ |employee| employee if employee.group.fes_year_id == fes_year_id }.compact
     end
 
     if @employees.count == 0
       render json: fmt(not_found, [], "Not found empolees")
     else 
-      render json: fmt(ok, @employees)
+      render json: fmt(ok, fit_employee_index_for_admin_view(@employees))
     end
   end
 
   #あいまい検索
   def get_search_employees
     word = params[:word]
-    @employees = Group.where("name like ?", "%#{word}%").preload(:employees).map{ |group| group.employees } 
+    @employees = Employee.all.map{ |employee| employee if employee.group.name.include?(word) || employee.name.include?(word) }.compact
     if @employees.count == 0
       render json: fmt(not_found, [], "Not found employees")
     else
-      render json: fmt(ok, @employees)
+      render json: fmt(ok, fit_employee_index_for_admin_view(@employees))
     end
   end
 

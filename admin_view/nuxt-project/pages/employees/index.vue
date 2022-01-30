@@ -10,6 +10,23 @@
       </CommonButton>
     </SubHeader>
 
+    <SubSubHeader>
+      <template v-slot:refinement>
+      <SearchDropDown
+        :nameList="yearList"
+        :on_click="refinementEmployees"
+        value="year_num"
+      >
+        {{ refYears }}
+      </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input v-model="searchText" @keypress.enter="searchEmployees" type="text" size="25" placeholder="search" />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -83,31 +100,54 @@ export default {
       appGroup: "",
       employeeName: "",
       employeeStudentId: "",
+      employees: [],
+      refYears: "Year",
+      refYearID: 0,
+      searchText: ""
     };
   },
   async asyncData({ $axios }) {
-    const url = "/api/v1/get_employee_index_for_admin_view";
-    const employeesRes = await $axios.$get(url);
-
-    const currentFesYearId = 1;
-    const groupsUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" + currentFesYearId;
-    const groupsRes = await $axios.$post(groupsUrl);
-
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    // const url = "/api/v1/get_employee_index_for_admin_view";
+    const url = "/api/v1/get_refinement_employees?fes_year_id=" + currentYearRes.data.fes_year_id;
+    const employeesRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
-
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
     return {
       employees: employeesRes.data,
-      groupList: groupsRes.data,
       yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num
     };
   },
   methods: {
-    refinementGroups: function (id) {
-      const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + id;
-      const refRes = this.$axios.$post(refUrl);
-      console.log(refUrl);
-      console.log(refRes);
+    async refinementEmployees(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      this.refYearID = item_id
+      // ALLの時
+      if (item_id == 0){
+        this.refYears = "ALL"
+      }else{
+        this.refYears = name_list[item_id - 1].year_num
+      }
+      this.employess = []
+      const refUrl = "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data){
+        this.employees.push(res)
+      }
+    },
+    async searchEmployees(){
+      this.employees = []
+      const searchUrl = "/api/v1/get_search_employees?word=" + this.searchText
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data){
+        this.employees.push(res)
+      }
     },
     openAddModal() {
       this.isOpenAddModal = false;
