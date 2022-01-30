@@ -5,7 +5,7 @@
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
-        CSV ({{ refYears }}年度)
+				CSVダウンロード
       </CommonButton>
     </SubHeader>
 
@@ -154,13 +154,21 @@ export default {
     };
   },
   async asyncData({ $axios }) {
-    const url = "/api/v1/get_group_index_for_admin_view";
-    const groupRes = await $axios.$get(url);
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    // const url = "/api/v1/get_group_index_for_admin_view";
+    const url = "/api/v1/get_refinement_groups?fes_year_id=" + currentYearRes.data.fes_year_id + "&group_category_id=0";
+    const groupRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
     return {
       groups: groupRes.data,
       yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num
     };
   },
   methods: {
@@ -186,7 +194,6 @@ export default {
       }
       this.groups = []
       const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + this.refYearID + "&group_category_id=" + this.refCategoryID;
-      console.log(refUrl)
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data){
         this.groups.push(res)
@@ -197,7 +204,6 @@ export default {
       const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText
       const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data){
-        console.log(res)
         this.groups.push(res)
       }
     },
