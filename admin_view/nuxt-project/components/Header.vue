@@ -9,17 +9,25 @@
         <div class="header-option">
           <IconButton
             icon_name="notifications"
-            :on_click="openAccountModalModal"
+            :on_click="openNotificationModal"
           />
           <IconButton icon_name="forum" :on_click="openMemoModal" />
-          <IconButton icon_name="account_circle" :on_click="openModal" />
+          <IconButton icon_name="account_circle" :on_click="openAccountModal" />
         </div>
       </header>
     </div>
-    <AccontModal />
-    <MemoModal @close="closeMemoModal" v-if="isOpenMemoModal" title="meme">
+    <NotificationModal
+      @close="closeNotificationModal"
+      v-if="isOpenNotificationModal"
+    >
+      <IconButton icon_name="close" :on_click="closeNotificationModal" />
+    </NotificationModal>
+    <MemoModal @close="closeMemoModal" v-if="isOpenMemoModal">
       <IconButton icon_name="close" :on_click="closeMemoModal" />
     </MemoModal>
+    <AccountModal @close="closeAccountModal" v-if="isOpenAccountModal">
+      <IconButton icon_name="close" :on_click="closeAccountModal" />
+    </AccountModal>
   </div>
 </template>
 
@@ -94,51 +102,23 @@ export default {
     };
   },
   methods: {
-    open: function () {
-      this.$axios
-        .get("/memos", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.memos = response.data;
-        });
-      this.drawer = true;
+    openNotificationModal() {
+      this.isOpenNotificationModal = true;
+    },
+    closeNotificationModal() {
+      this.isOpenNotificationModal = false;
     },
     openMemoModal() {
       this.isOpenMemoModal = true;
-      console.log("AAAAAAAAAAAAAAA");
     },
     closeMemoModal() {
       this.isOpenMemoModal = false;
-      console.log("AAAAAAAAAAAAAAA");
     },
-    submit: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("content", this.content);
-      params.append("user_id", this.user.id);
-      this.$axios.post("/memos", params).then(
-        (response) => {
-          this.memos = response.data;
-          this.content = "";
-        },
-        (error) => {
-          return error;
-        }
-      );
+    openAccountModal() {
+      this.isOpenAccountModal = true;
     },
-    logout() {
-      this.$auth.logout();
-      localStorage.removeItem("access-token");
-      localStorage.removeItem("client");
-      localStorage.removeItem("uid");
-      this.$router.push("/");
-    },
-    openModal: function () {
-      this.showContent = false;
-      this.showContent = true;
+    closeAccountModal() {
+      this.isOpenAccountModal = false;
     },
   },
 };

@@ -51,12 +51,12 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-	# 現在のログインしているユーザーを返す
-	# TODO: このコントローラーはフロントが整備され次第変更する
-	def show
-		@user = current_api_user
+  # 現在のログインしているユーザーを返す
+  # TODO: このコントローラーはフロントが整備され次第変更する
+  def show
+    @user = current_api_user
     render json: fmt(ok, @user)
-	end
+  end
 
   ### これ使ってる？ 
   def update
