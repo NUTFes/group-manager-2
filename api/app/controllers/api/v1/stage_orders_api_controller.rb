@@ -10,62 +10,91 @@ class Api::V1::StageOrdersApiController < ApplicationController
     render json: fmt(ok, @stage_order)
   end
 
-    #絞り込み機能 
-    def get_refinement_stage_orders
-      fes_year_id = params[:fes_year_id].to_i 
-      fes_date_id = params[:fes_date_id].to_i 
-      stage_id = params[:stage_id].to_i 
-      is_sunny = params[:is_sunny]
-      if is_sunny 
-        @stage_orders = StageOrder.where(is_sunny: is_sunny) 
-        if fes_year_id == 0 && fes_date_id == 0 && stage_id == 0  
-          @stage_order = StageOrder.where(is_sunny: is_sunny)
-        elsif fes_year_id != 0 && fes_date_id == 0 && stage_id == 0
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where(is_sunny: is_sunny) }
-        elsif fes_year_id == 0 && fes_date_id != 0 && stage_id == 0
-          @stage_orders = StageOrder.where(is_sunny: is_sunny).where(fes_date_id: fes_date_id)
-        elsif fes_year_id == 0 && fes_date_id == 0 && stage_id != 0
-          @stage_orders = StageOrder.where(is_sunny: is_sunny).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id)
-        elsif fes_year_id != 0 && fes_date_id != 0 && stage_id == 0
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where(is_sunny: is_sunny).where(fes_date_id: fes_date_id) }
-        elsif fes_year_id != 0 && fes_date_id == 0 && stage_id != 0
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where(is_sunny: is_sunny).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id) }
-        else 
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where(is_sunny: is_sunny).where(fes_date_id: fes_date_id).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id) }
-        end
-      else 
-        if fes_year_id == 0 && fes_date_id == 0 && stage_id == 0  
-          @stage_order = StageOrder.all
-        elsif fes_year_id != 0 && fes_date_id == 0 && stage_id == 0
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders }
-        elsif fes_year_id == 0 && fes_date_id != 0 && stage_id == 0
-          @stage_orders = StageOrder.where(fes_date_id: fes_date_id)
-        elsif fes_year_id == 0 && fes_date_id == 0 && stage_id != 0
-          @stage_orders = StageOrder.where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id)
-        elsif fes_year_id != 0 && fes_date_id != 0 && stage_id == 0
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where(fes_date_id: fes_date_id) }
-        elsif fes_year_id != 0 && fes_date_id == 0 && stage_id != 0
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id) }
-        else 
-          @stage_orders = Group.where(fes_year_id: fes_year_id).preload(:stage_orders).map{ |group| group.stage_orders.where(fes_date_id: fes_date_id).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id) }
-        end
-      end
-      
-      if @stage_orders.count == 0  
-        render json: fmt(not_found, [], "Not found stage_orders")
-      else 
-        render json: fmt(ok, @stage_orders)
-      end
+  def fit_stage_order_index_for_admin_view(stage_orders)
+    stage_orders.map{
+      |stage_order|
+      {
+        "stage_order": stage_order,
+        "stage_order_info": stage_order.to_info_h,
+        "group": stage_order.group
+      }
+    }
+  end
+
+  #絞り込み機能 
+  def get_refinement_stage_orders
+    fes_year_id = params[:fes_year_id].to_i 
+    days_num = params[:days_num].to_i 
+    stage_id = params[:stage_id].to_i 
+    is_sunny = params[:is_sunny].to_i
+    # 晴れ希望 0: 指定なし(ALL) 1: はい 2: いいえ
+    is_sunny_list = [nil, true, false]
+
+    # 絞り込みなし
+    if fes_year_id == 0 && days_num == 0 && stage_id == 0 && is_sunny == 0
+      @stage_orders = StageOrder.all
+    # fes_year_idで絞り込み
+    elsif fes_year_id != 0 && days_num == 0 && stage_id == 0 && is_sunny == 0
+      @stage_orders = StageOrder.preload(:group).map{ |stage_order| stage_order if stage_order.group.fes_year_id == fes_year_id }.compact
+    # days_numで絞り込み
+    elsif fes_year_id == 0 && days_num != 0 && stage_id == 0 && is_sunny == 0
+      @stage_orders = StageOrder.preload(:group).map{ |stage_order| stage_order if stage_order.fes_date.days_num == days_num }.compact
+    # stage_idで絞り込み
+    elsif fes_year_id == 0 && days_num == 0 && stage_id != 0 && is_sunny == 0
+      @stage_orders = StageOrder.where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id)
+    # is_sunnyで絞り込み
+    elsif fes_year_id == 0 && days_num == 0 && stage_id == 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny])
+    # fes_year_idとdays_numで絞り込み
+    elsif fes_year_id != 0 && days_num != 0 && stage_id == 0 && is_sunny == 0
+      @stage_orders = StageOrder.preload(:group, :fes_date).map{ |stage_order| stage_order if stage_order.group.fes_year_id == fes_year_id && stage_order.fes_date.days_num == days_num }.compact
+    # fes_year_idとstage_idで絞り込み
+    elsif fes_year_id != 0 && days_num == 0 && stage_id != 0 && is_sunny == 0
+      @stage_orders = StageOrder.where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id).preload(:group).map{ |stage_order| stage_order if stage_order.group.fes_year_id == fes_year_id }.compact
+    # fes_year_idとis_sunnyで絞り込み
+    elsif fes_year_id != 0 && days_num == 0 && stage_id == 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).preload(:group).map{ |stage_order| stage_order if stage_order.group.fes_year_id = fes_year_id }.compact
+    # days_numとstage_idで絞り込み
+    elsif fes_year_id == 0 && days_num != 0 && stage_id != 0 && is_sunny == 0
+      @stage_orders = StageOrder.where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id).preload(:group).map{ |stage_order| stage_order if stage_order.fes_date.days_num == days_num }.compact
+    # days_numとis_sunnyで絞り込み
+    elsif fes_year_id == 0 && days_num != 0 && stage_id == 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).preload(:group).map{ |stage_order| stage_order if stage_order.fes_date.days_num }.compact
+    # stage_idとis_sunnyで絞り込み
+    elsif fes_year_id == 0 && days_num == 0 && stage_id != 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id)
+
+    # fes_year_idとdays_numとstage_idで絞り込み
+    elsif fes_year_id != 0 && days_num != 0 && stage_id != 0 && is_sunny == 0
+      @stage_orders = StageOrder.where(stage_first: stage_id).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id).preload(:group).map{ |stage_order| stage_order if stage_order.fes_date.days_num == days_num }.compact
+    # fes_year_idとdays_numとis_sunnyで絞り込み
+    elsif fes_year_id != 0 && days_num != 0 && stage_id == 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).preload(:group).map{ |stage_order| stage_order if stage_order.fes_date.days_num == days_num }.compact
+    # days_numとstage_idとis_sunnyで絞り込み
+    elsif fes_year_id == 0 && days_num != 0 && stage_id != 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id).preload(:group).map{ |stage_order| stage_order if stage_order.fes_date.days_num == days_num }.compact
+    # fes_year_idとstage_idとis_sunnyで絞り込み
+    elsif fes_year_id != 0 && days_num == 0 && stage_id != 0 && is_sunny != 0
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id).preload(:group).map{ |stage_order| stage_order if stage_order.group.fes_year_id == fes_year_id }.compact
+    else
+      @stage_orders = StageOrder.where(is_sunny: is_sunny_list[is_sunny]).where("(stage_first = ?) OR (stage_second = ?)", stage_id, stage_id).preload(:group).map{ |stage_order| stage_order if stage_order.group.fes_year_id == fes_year_id && stage_order.fes_date.days_num == days_num }.compact
     end
+
+    if @stage_orders.count == 0
+      render json: fmt(not_found, [], "Not found stage_orders")
+    else 
+      render json: fmt(ok, fit_stage_order_index_for_admin_view(@stage_orders))
+    end
+  end
 
   #あいまい検索
   def get_search_stage_orders
     word = params[:word]
-    @stage_orders = Group.where("name like ?", "%#{word}%").preload(:stage_orders).map{ |group| group.stage_orders } 
+    @stage_orders = StageOrder.preload(:group).map{ |stage_order| stage_order if stage_order.group.name.include?(word) }
     if @stage_orders.count == 0
       render json: fmt(not_found, [], "Not found stage_orders")
     else
-      render json: fmt(ok, @stage_orders)
+      render json: fmt(ok, fit_stage_order_index_for_admin_view(@stage_orders))
     end
   end
 
