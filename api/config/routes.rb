@@ -125,6 +125,9 @@ Rails.application.routes.draw do
       get "get_purchase_list_index_for_admin_view" => "purchase_lists_api#get_purchase_list_index_for_admin_view"
       get "get_purchase_list_show_for_admin_view/:id" => "purchase_lists_api#get_purchase_list_show_for_admin_view"
 
+      #---開催日
+      get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"
+
       #---CSV出力
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
       get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
