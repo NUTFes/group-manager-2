@@ -66,6 +66,8 @@ Rails.application.routes.draw do
       #---代表者一覧ページ
       get "get_representative_index_for_admin_view" => "users#get_representative_index_for_admin_view"
       get "get_representative_show_for_admin_view/:id" => "users#get_representative_show_for_admin_view"
+      post "get_refinement_representatives" => "representatives_api#get_refinement_represantatives"
+      post "get_search_representatives" => "representatives_api#get_search_representatives"
       #(副代表の検索)
       post "get_search_sub_reps" => "sub_rep_api#get_search_sub_reps"
       
