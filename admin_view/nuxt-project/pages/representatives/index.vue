@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="代表者一覧">
-      <CommonButton iconName="add_circle"> 追加 </CommonButton>
+      <CommonButton iconName="add_circle"> 副代表追加 </CommonButton>
     </SubHeader>
     <SubSubHeader>
       <SearchDropDown> All Years </SearchDropDown>

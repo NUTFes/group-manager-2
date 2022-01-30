@@ -257,7 +257,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_place_orders_csv/" + 1;
+      const url = "http://localhost:3000" + "/api/v1/get_place_orders_csv/" + this.refYearID;
       window.open(
         url,
         "会場申請一覧_CSV"

@@ -158,7 +158,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_rental_orders_csv/" + 1;
+      const url = "http://localhost:3000" + "/api/v1/get_rental_orders_csv/" + this.refYearID;
       window.open(
         url,
         "物品申請一覧_CSV"

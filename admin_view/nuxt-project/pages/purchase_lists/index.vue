@@ -1,11 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="購入食品申請一覧">
-      <CommonButton iconName="file_download" :on_click="downloadCSV">
-        CSVダウンロード
-      </CommonButton>
       <CommonButton iconName="add_circle" :on_click="openModal">
         追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
       </CommonButton>
     </SubHeader>
     <Card width="100%">
@@ -142,7 +142,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_purchase_lists_csv/" + 1;
+      const url = "http://localhost:3000" + "/api/v1/get_purchase_lists_csv/" + this.refYearID;
       window.open(
         url,
         "購入品申請_CSV"
