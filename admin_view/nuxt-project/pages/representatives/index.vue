@@ -8,13 +8,13 @@
       <SearchDropDown> All Categories </SearchDropDown>
     </SubSubHeader>
     <Card width="100%"> 
-      <table>
-        <thead>
+      <Table>
+        <template v-slot:table-header>
           <th v-for="(header, index) in headers" v-bind:key="index">
             {{ header }}
           </th>
-        </thead>
-        <tbody>
+      </template>
+      <template v-slot:table-body>
           <tr
             v-for="(representative, index) in representatives"
             @click="
@@ -32,8 +32,8 @@
             <td>{{ representative.user.created_at | formatDate }}</td>
             <td>{{ representative.user.updated_at | formatDate }}</td>
           </tr>
-        </tbody>
-      </table>
+      </template>
+        </Table>
     </Card>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <transition name="fade" appear>
-    <div class="add-modal">
+    <div class="add-modal" @click.self="$emit('close')">
       <div class="add-modal__container" @click.self="$emit('close')">
         <div class="add-modal__box">
           <h2>{{ title }}</h2>
@@ -96,6 +96,7 @@ export default {
   overflow: auto
 }
 .add-modal__container {
+  height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;

@@ -32,11 +32,4 @@
   border-bottom: none;
 }
 
-.vertical-table tr:hover {
-  color: var(--accent-7);
-  background-color: var(--accent-9);
-  opacity: 0.8;
-  transition: 0.2s;
-}
-
 </style>

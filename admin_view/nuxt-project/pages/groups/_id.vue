@@ -1,5 +1,6 @@
 <template>
   <div class="main-content">
+
     <SubHeader
       v-bind:pageTitle="group.group.name"
       pageSubTitle="参加団体申請一覧"
@@ -9,6 +10,7 @@
       <CommonButton iconName="download" :on_click="printPDF"> 参加団体情報 </CommonButton>
       <CommonButton iconName="download" :on_click="printRentalItemsPDF"> 物品貸し出し表 </CommonButton>
     </SubHeader>
+
     <Row>
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
@@ -93,6 +95,18 @@
       >
       </template>
     </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="参加団体申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+      </template>
+    </DeleteModal>
+
   </div>
 </template>
 
@@ -207,6 +221,11 @@ export default {
         this.reload();
         this.closeEditModal();
       });
+    },
+    async deleteGroup() {
+      const delUrl = "/groups/" + this.$route.params.id;
+      const delRes = await this.$axios.$delete(delUrl);
+      this.$router.push("/groups");
     },
     async printPDF() {
       const url = "http://localhost:3000" + "/print_pdf/group_info/" + this.group.group.id + "/output.pdf";

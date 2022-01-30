@@ -12,23 +12,26 @@
         <Row justify="start">
           <h4>基本情報</h4>
         </Row>
-        <table class="vertical-table">
-          <thead>
-            <th v-for="(n, i) in headers" :key="i">
-              {{ n }}
-            </th>
-          </thead>
-          <tbody>
+        <VerticalTable>
             <tr>
-              <td>{{ representative.user.id }}</td>
-              <td>{{ representative.group.name }}</td>
-              <td>{{ representative.user.name }}</td>
-              <td>{{ representative.sub_rep.name }}</td>
-              <td>{{ representative.user.created_at | formatDate }}</td>
-              <td>{{ representative.user.updated_at | formatDate }}</td>
+              <th>ID</th><td>{{ representative.user.id }}</td>
             </tr>
-          </tbody>
-        </table>
+            <tr>
+              <th>参加団体</th><td>{{ representative.group.name }}</td>
+            </tr>
+            <tr>
+              <th>代表者</th><td>{{ representative.user.name }}</td>
+            </tr>
+            <tr>
+              <th>副代表</th><td>{{ representative.sub_rep.name }}</td>
+            </tr>
+            <tr>
+              <th>登録日時</th><td>{{ representative.user.created_at | formatDate }}</td>
+            </tr>
+            <tr>
+              <th>編集日時</th><td>{{ representative.user.updated_at | formatDate }}</td>
+            </tr>
+        </VerticalTable>
       </Card>
     </Row>
   </div>

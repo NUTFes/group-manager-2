@@ -1,9 +1,7 @@
 <template>
-  <form method="get" action="#" class="search-container">
-    <div>
+  <div class="search-container">
       <slot></slot>
-    </div>
-  </form>
+  </div>
 </template>
 <script>
 export default {
