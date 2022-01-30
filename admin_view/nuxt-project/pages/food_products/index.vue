@@ -28,7 +28,7 @@
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @input="searchFoodProducts" type="text" size="25" placeholder="search" />
+          <input v-model="searchText" @keypress.enter="searchFoodProducts" type="text" size="25" placeholder="search" />
         </SearchBar>
       </template>
     </SubSubHeader>
