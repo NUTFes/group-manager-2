@@ -4,8 +4,8 @@
       v-bind:pageTitle="rentalOrder.group.name"
       pageSubTitle="物品申請一覧"
     >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -34,6 +34,66 @@
         </VerticalTable>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="参加団体申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="groupCategoryId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="category in groupCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>企画名</h3>
+          <input v-model="projectName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>活動内容</h3>
+          <textarea v-model="activity" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearId">
+            <option disabled value="">選択してください</option>
+            <option v-for="year in yearList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="editGroup"
+        >登録</CommonButton
+      >
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="参加団体申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+      </template>
+    </DeleteModal>
+
   </div>
 </template>
 
@@ -43,7 +103,8 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "貸出物品", "個数", "登録日時", "編集日時"],
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
     };
   },
   async asyncData({ $axios, route }) {
@@ -61,70 +122,54 @@ export default {
     }),
   },
   methods: {
-    reload: function () {
-      const url = "/api/v1/get_rental_order/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.rental_order = response.data.rental_order;
-          this.group_id = response.data.rental_order.group_id;
-          this.group = response.data.group;
-          this.item = response.data.item;
-          this.item_id = response.data.rental_order.rental_item_id;
-          this.num = response.data.rental_order.num;
-        });
+    openEditModal() {
+      this.isOpenEditModal = false;
+      this.isOpenEditModal = true;
     },
-    edit_dialog_open: function () {
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.group_list = response.data;
-        });
-      this.$axios
-        .get("/rental_items", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.item_list = response.data;
-        });
-      this.edit_dialog = true;
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    edit: function () {
-      const edit_url =
-        "/rental_orders/" +
-        this.rental_order.id +
-        "?group_id=" +
-        this.group_id +
-        "&rental_item_id=" +
-        this.item_id +
-        "&num=" +
-        this.num;
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
     },
-    delete_yes: function () {
-      const url = "/rental_orders/" + this.$route.params.id;
-      this.$axios.delete(url);
-      this.$router.push("/rental_orders");
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
+    },
+    async reload() {
+      const reUrl =  this.groupUrl
+      const reGroupRes = await this.$axios.$get(reUrl);
+      this.group = reGroupRes.data;
+    },
+    async editGroup() {
+      console.log(this.group.group.id)
+      const putGroupUrl = "/groups/" + this.group.group.id +
+        "?name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&activity=" +
+        this.activity +
+        "&fes_year_id=" +
+        this.fesYearId;
+      console.log(putGroupUrl)
+
+      await this.$axios.$put(putGroupUrl).then((response) => {
+        this.groupName = "";
+        this.projectName = "";
+        this.activity = "";
+        this.groupCategoryId = "";
+        this.fesYearId = "";
+        this.reload();
+        this.closeEditModal();
+      });
+    },
+    async deleteGroup() {
+      const delUrl = "/groups/" + this.$route.params.id;
+      const delRes = await this.$axios.$delete(delUrl);
+      this.$router.push("/groups");
     },
   },
 };

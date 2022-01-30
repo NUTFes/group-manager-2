@@ -119,17 +119,6 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "ユーザー",
-        "団体名",
-        "企画名",
-        "活動内容",
-        "カテゴリー",
-        "開催年",
-        "登録日時",
-        "編集日時",
-      ],
       data: [],
       detail_data: [],
       group: [],

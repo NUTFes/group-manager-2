@@ -4,8 +4,8 @@
       v-bind:pageTitle="stageOrder.group.name"
       pageSubTitle="ステージ申請一覧"
     >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -61,6 +61,66 @@
         </VerticalTable>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="参加団体申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="groupCategoryId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="category in groupCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>企画名</h3>
+          <input v-model="projectName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>活動内容</h3>
+          <textarea v-model="activity" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearId">
+            <option disabled value="">選択してください</option>
+            <option v-for="year in yearList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="editGroup"
+        >登録</CommonButton
+      >
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="参加団体申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+      </template>
+    </DeleteModal>
+
   </div>
 </template>
 
@@ -70,23 +130,8 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "晴れ希望",
-        "希望日",
-        "第一希望",
-        "第二希望",
-        "使用時間幅",
-        "準備時間幅",
-        "掃除時間幅",
-        "準備開始時刻",
-        "パフォーマンス開始時刻",
-        "パフォーマンス終了時刻",
-        "掃除終了時刻",
-        "登録日時",
-        "編集日時",
-      ],
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
     };
   },
   async asyncData({ $axios, route }) {
@@ -104,116 +149,54 @@ export default {
     }),
   },
   methods: {
-    reload: function () {
-      const url = "/api/v1/get_stage_order_details/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stage_order = response.data.stage_order;
-          this.group = response.data.group;
-          this.stage_first = response.data.stage_first;
-          this.stage_second = response.data.stage_second;
-          this.fes_date = response.data.fes_date;
-          this.fes_date_id = this.stage_order.fes_date_id;
-          this.group_id = this.stage_order.group_id;
-          this.is_sunny = this.stage_order.is_sunny;
-          this.stage_first_id = this.stage_order.stage_first;
-          this.stage_second_id = this.stage_order.stage_second;
-          this.prepare_time_interval = this.stage_order.prepare_time_interval;
-          this.use_time_interval = this.stage_order.use_time_interval;
-          this.cleanup_time_interval = this.stage_order.cleanup_time_interval;
-          this.prepareStartTime = this.stage_order.prepare_start_time;
-          this.performanceStartTime = this.stage_order.performance_start_time;
-          this.performanceEndTime = this.stage_order.performance_end_time;
-          this.cleanupEndTime = this.stage_order.cleanup_end_time;
-        });
+    openEditModal() {
+      this.isOpenEditModal = false;
+      this.isOpenEditModal = true;
     },
-    set_time_range: function () {
-      for (var hour of this.hour_range) {
-        for (var minute of this.minute_range) {
-          this.time_range.push(hour + ":" + minute);
-        }
-      }
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    edit_dialog_open: function () {
-      this.$axios
-        .get("/stages", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stages_list = response.data;
-        });
-        this.$axios
-          .get("/groups", {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-          .then((response) => {
-            this.groups = response.data;
-          });
-          this.$axios
-            .get("/fes_dates", {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            })
-            .then((response) => {
-              this.fes_date_list = response.data;
-            });
-            this.edit_dialog = true;
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
     },
-    edit: function () {
-      const edit_url =
-        "/stage_orders/" +
-        this.stage_order.id +
-        "?group_id=" +
-        this.group_id +
-        "&is_sunny=" +
-        this.is_sunny +
-        "&fes_date_id=" +
-        this.fes_date_id +
-        "&stage_first_id=" +
-        this.stage_first_id +
-        "&stage_second=" +
-        this.stage_second_id +
-        "&use_time_interval=" +
-        this.use_time_interval +
-        "&prepare_time_interval=" +
-        this.prepare_time_interval +
-        "&cleanup_time_interval=" +
-        this.cleanup_time_interval +
-        "&prepare_start_time=" +
-        this.prepareStartTime +
-        "&performance_start_time=" +
-        this.performanceStartTime +
-        "&performance_end_time=" +
-        this.performanceEndTime +
-        "&cleanup_end_time=" +
-        this.cleanupEndTime;
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
     },
-    delete_yes: function () {
-      const url = "/stage_orders/" + this.$route.params.id;
-      this.$axios.delete(url);
-      this.$router.push("/stage_orders");
+    async reload() {
+      const reUrl =  this.groupUrl
+      const reGroupRes = await this.$axios.$get(reUrl);
+      this.group = reGroupRes.data;
+    },
+    async editGroup() {
+      console.log(this.group.group.id)
+      const putGroupUrl = "/groups/" + this.group.group.id +
+        "?name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&activity=" +
+        this.activity +
+        "&fes_year_id=" +
+        this.fesYearId;
+      console.log(putGroupUrl)
+
+      await this.$axios.$put(putGroupUrl).then((response) => {
+        this.groupName = "";
+        this.projectName = "";
+        this.activity = "";
+        this.groupCategoryId = "";
+        this.fesYearId = "";
+        this.reload();
+        this.closeEditModal();
+      });
+    },
+    async deleteGroup() {
+      const delUrl = "/groups/" + this.$route.params.id;
+      const delRes = await this.$axios.$delete(delUrl);
+      this.$router.push("/groups");
     },
   },
 };

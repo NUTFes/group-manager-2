@@ -1,9 +1,11 @@
 <template>
   <div class="main-content">
+
     <SubHeader v-bind:pageTitle="purchaseList.purchase_list.items" pageSubTitle="購入食品申請一覧">
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal"> 編集 </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal"> 削除 </CommonButton>
     </SubHeader>
+
     <Row>
       <Card padding="40px 150px" gap="20px">
         <Row justify="start">
@@ -40,6 +42,66 @@
           </VerticalTable>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="参加団体申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="groupCategoryId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="category in groupCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>企画名</h3>
+          <input v-model="projectName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>活動内容</h3>
+          <textarea v-model="activity" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearId">
+            <option disabled value="">選択してください</option>
+            <option v-for="year in yearList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="editGroup"
+        >登録</CommonButton
+      >
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="参加団体申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
+      </template>
+    </DeleteModal>
+
   </div>
 </template>
 
@@ -49,17 +111,8 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "販売食品",
-        "購入品",
-        "なまもの",
-        "購入店",
-        "仕入れ日",
-        "登録日時",
-        "編集日時",
-      ],
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
     };
   },
   async asyncData({ $axios, route}){
@@ -77,90 +130,54 @@ export default {
     }),
   },
   methods: {
+    openEditModal() {
+      this.isOpenEditModal = false;
+      this.isOpenEditModal = true;
+    },
+    closeEditModal() {
+      this.isOpenEditModal = false;
+    },
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
+    },
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
+    },
     async reload() {
-      const url = "api/v1/get_purchase_list/" + this.$route.params.id;
-      await this.$axios
-        .get(url, {
-          headers: { "Content-Type": "application/json" },
-        })
-        .then((response) => {
-          console.log(response.data.purchase_list);
-          this.purchase = response.data.purchase_list;
-          this.food_product = response.data.food_product;
-          this.food_product_id = this.purchase.food_product_id;
-          this.group = response.data.group;
-          this.group_id = response.data.group_id;
-          this.shop = response.data.shop;
-          this.shop_id = this.purchase.shop_id;
-          this.fes_date = response.data.fes_date;
-          this.fes_date_id = this.purchase.fes_date_id;
-          this.is_fresh = this.purchase.is_fresh;
-          this.items = this.purchase.items;
-        });
+      const reUrl =  this.groupUrl
+      const reGroupRes = await this.$axios.$get(reUrl);
+      this.group = reGroupRes.data;
     },
-    delete_yes() {
-      const url = "/purchase_lists/" + this.$route.params.id;
-      this.$axios.delete(url);
-      this.$router.push("/purchase_lists");
-    },
-    async edit() {
-      const edit_url =
-        "/purchase_lists/" +
-        this.purchase.id +
-        "?group_id=" +
-        this.group_id +
-        "&food_product_id=" +
-        this.food_product_id +
-        "&shop_id=" +
-        this.shop_id +
-        "&fes_date_id" +
-        this.fes_date_id +
-        "&is_fresh=" +
-        this.is_fresh +
-        "&items=" +
-        this.items;
-      await this.$axios.put(edit_url, {
-        headers: { "Content-Type": "application/json" },
+    async editGroup() {
+      console.log(this.group.group.id)
+      const putGroupUrl = "/groups/" + this.group.group.id +
+        "?name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&activity=" +
+        this.activity +
+        "&fes_year_id=" +
+        this.fesYearId;
+      console.log(putGroupUrl)
+
+      await this.$axios.$put(putGroupUrl).then((response) => {
+        this.groupName = "";
+        this.projectName = "";
+        this.activity = "";
+        this.groupCategoryId = "";
+        this.fesYearId = "";
+        this.reload();
+        this.closeEditModal();
       });
-      await this.reload();
-
-      this.dialog = false;
     },
-    async openModal() {
-      await this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groupList = response.data;
-        });
-
-        await this.changeGroupFoodProductList();
-
-        this.dialog = true;
-    },
-    changeGroupFoodProductList() {
-      this.foodProductList = [];
-      const foodProductUrl = "/api/v1/group_food_products/" + this.group_id;
-      this.$axios
-        .get(foodProductUrl, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then(
-          (response) => {
-            response.data.forEach((foodProduct) => {
-              this.foodProductList.push(foodProduct);
-            });
-          },
-          (error) => {
-            console.error(error);
-            return error;
-          }
-        );
+    async deleteGroup() {
+      const delUrl = "/groups/" + this.$route.params.id;
+      const delRes = await this.$axios.$delete(delUrl);
+      this.$router.push("/groups");
     },
   },
 };
