@@ -64,7 +64,7 @@ export default {
   min-height: var(--card-height);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-flow: var(--card-flex-flow);
   flex-grow: var(--card-flex-grow);
   background-color: #fff;

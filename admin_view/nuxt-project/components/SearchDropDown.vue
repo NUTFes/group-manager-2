@@ -1,7 +1,7 @@
 <template>
   <div ref="elRoot" class="drop-down-content">
     <button
-      class="common-button"
+      class="drop-down-button"
       @click="$data.showContent = !$data.showContent"
       :style="SearchDropDownOption"
     >
@@ -13,15 +13,13 @@
         <div class="drop-down__container" @click.self="closeModal">
           <div class="drop-down__box">
             <button
-              class="common-button"
+              class="drop-down-button"
               @click="on_click(0, nameList)"
-              :style="SearchDropDownOption"
             >
               ALL
             </button>
             <button
-              class="common-button"
-              :style="SearchDropDownOption"
+              class="drop-down-button"
               v-for="item in nameList"
               :key="item.id"
               @click="on_click(item.id, nameList)"
@@ -82,7 +80,11 @@ export default {
   width: 160px;
 }
 
-.common-button {
+.drop-down__box {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.drop-down-button {
   border-radius: 0px;
   width: 160px;
   height: 35px;
@@ -100,7 +102,8 @@ export default {
   z-index: 0;
   gap: 5px;
 }
-.common-button:before {
+
+.drop-down-button:before {
   border-radius: 0px;
   content: "";
   width: 100%;
@@ -110,14 +113,10 @@ export default {
   left: 0;
   transition: 0.5s;
   opacity: 0.8;
-  background: radial-gradient(
-    ellipse at top left,
-    rgba(40, 40, 40, 0.9),
-    rgba(40, 40, 40, 0.8)
-  );
+  background: rgba(40, 40, 40, 0.9);
   backdrop-filter: blur(4px);
 }
-.common-button:after {
+.drop-down-button:after {
   border-radius: 0px;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
   content: "";
@@ -134,14 +133,14 @@ export default {
     var(--button-secondary) 100%
   );
 }
-.common-button:hover:after {
+.drop-down-button:hover:after {
   opacity: 1;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
-.common-button:hover:before {
+.drop-down-button:hover:before {
   opacity: 0;
 }
-.common-button:active:after {
+.drop-down-button:active:after {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 

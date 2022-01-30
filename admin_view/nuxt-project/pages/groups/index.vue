@@ -1,5 +1,6 @@
 <template>
   <div class="main-content">
+
     <SubHeader pageTitle="参加団体申請一覧">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
@@ -28,7 +29,7 @@
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @input="searchGroups" type="text" size="25" placeholder="search" />
+          <input v-model="searchText" @keypress.enter="searchGroups" type="text" size="25" placeholder="search" />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -119,11 +120,13 @@ export default {
       category: [],
       fes_years: [],
       years: [],
+      // v-model
       groupName: "",
       projectName: [],
       activity: [],
       groupCategoryId: "",
       fesYearId: "",
+
       year_list: [],
       user: [],
       groupId: "",
@@ -215,14 +218,14 @@ export default {
       this.isOpenAddModal = false;
     },
     reload() {
-      const groupId = this.groups.length + 1;
-      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
+      const groupId = this.groups.slice(-1)[0].group.id + 1;
+      const reUrl = "/api/v1/get_group_for_admin_view/" + groupId;
       this.$axios.$get(reUrl).then((response) => {
         this.groups.push(response.data[0]);
       });
     },
     async submitGroup() {
-      const currentUserUrl = "/api/v1/current_user/show";
+      const currentUserUrl = "/api/v1/users/show";
       const CurrentUser = await this.$axios.get(currentUserUrl, {
         headers: {
           "Content-Type": "application/json",

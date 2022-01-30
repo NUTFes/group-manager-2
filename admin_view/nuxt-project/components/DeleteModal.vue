@@ -1,15 +1,15 @@
 <template>
   <transition name="fade" appear>
-    <div class="add-modal" @click.self="$emit('close')">
-      <div class="add-modal__container" @click.self="$emit('close')">
-        <div class="add-modal__box">
+    <div class="delete-modal" @click.self="$emit('close')">
+      <div class="delete-modal__container" @click.self="$emit('close')">
+        <div class="delete-modal__box">
           <h2>{{ title }}</h2>
-          <div class="add-modal_content">
-            <form>
-              <slot name="form"></slot>
-            </form>
+          <div class="delete-modal_content">
+            <h4>本当に削除しますか？</h4>
           </div>
-          <slot name="method"/></slot>
+          <Row>
+            <slot name="method"/></slot>
+        </Row>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style>
-.add-modal_content input, .add-modal_content textarea{
+.delete-modal_content input, .delete-modal_content textarea{
   color: var(--accent-2);
   border: 1px solid var(--accent-3);
   padding: 15px;
@@ -37,13 +37,13 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.add-modal_content input:focus, .add-modal_content textarea:focus {
+.delete-modal_content input:focus, .delete-modal_content textarea:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
 }
 
-.add-modal_content select {
+.delete-modal_content select {
   color: var(--accent-0);
   border: 1px solid var(--accent-3);
   padding: 15px;
@@ -51,18 +51,18 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.add-modal_content select:focus {
+.delete-modal_content select:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
 }
 
-.add-modal_content h3 {
+.delete-modal_content h3 {
   font-size: 16px;
   font-weight: 300;
 }
 
-.add-modal_content form {
+.delete-modal_content form {
   width: 100%;
   height: 100%;
   display: flex;
@@ -72,7 +72,7 @@ export default {
   gap: 25px;
 }
 
-.add-modal_content div {
+.delete-modal_content div {
   display: flex;
   align-items: start;
   justify-content: center;
@@ -84,26 +84,26 @@ export default {
   color: red;
 }
 
-.add-modal {
+.delete-modal {
   top: 0;
   left: 0;
   position: fixed;
-  padding: 100px;
   height: 100%;
   width: 100%;
   z-index: 11;
   background-color: rgba(51, 51, 51, 0.3);
   overflow: auto
 }
-.add-modal__container {
-  height: 100%;
+.delete-modal__container {
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.add-modal__box {
+.delete-modal__box {
+  width: 600px;
   z-index: 15;
   display: flex;
   justify-content: center;
@@ -120,9 +120,12 @@ backdrop-filter: blur(4px);
 gap: 30px;
 }
 
-.add-modal_content {
+.delete-modal_content {
   width: 100%;
   height: 100%;
+  padding: 50px;
+  justify-content: center;
+  align-items: center;
   display: flex;
   flex-flow: column;
   gap: 20px;

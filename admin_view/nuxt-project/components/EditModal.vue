@@ -1,10 +1,10 @@
 <template>
   <transition name="fade" appear>
-    <div class="add-modal" @click.self="$emit('close')">
-      <div class="add-modal__container" @click.self="$emit('close')">
-        <div class="add-modal__box">
+    <div class="edit-modal" @click.self="$emit('close')">
+      <div class="edit-modal__container" @click.self="$emit('close')">
+        <div class="edit-modal__box">
           <h2>{{ title }}</h2>
-          <div class="add-modal_content">
+          <div class="edit-modal_content">
             <form>
               <slot name="form"></slot>
             </form>
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style>
-.add-modal_content input, .add-modal_content textarea{
+.edit-modal_content input, .edit-modal_content textarea{
   color: var(--accent-2);
   border: 1px solid var(--accent-3);
   padding: 15px;
@@ -37,13 +37,13 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.add-modal_content input:focus, .add-modal_content textarea:focus {
+.edit-modal_content input:focus, .edit-modal_content textarea:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
 }
 
-.add-modal_content select {
+.edit-modal_content select {
   color: var(--accent-0);
   border: 1px solid var(--accent-3);
   padding: 15px;
@@ -51,18 +51,18 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.add-modal_content select:focus {
+.edit-modal_content select:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
 }
 
-.add-modal_content h3 {
+.edit-modal_content h3 {
   font-size: 16px;
   font-weight: 300;
 }
 
-.add-modal_content form {
+.edit-modal_content form {
   width: 100%;
   height: 100%;
   display: flex;
@@ -72,7 +72,7 @@ export default {
   gap: 25px;
 }
 
-.add-modal_content div {
+.edit-modal_content div {
   display: flex;
   align-items: start;
   justify-content: center;
@@ -84,7 +84,7 @@ export default {
   color: red;
 }
 
-.add-modal {
+.edit-modal {
   top: 0;
   left: 0;
   position: fixed;
@@ -95,15 +95,15 @@ export default {
   background-color: rgba(51, 51, 51, 0.3);
   overflow: auto
 }
-.add-modal__container {
-  height: 100%;
+.edit-modal__container {
   width: 100%;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.add-modal__box {
+.edit-modal__box {
   z-index: 15;
   display: flex;
   justify-content: center;
@@ -120,7 +120,7 @@ backdrop-filter: blur(4px);
 gap: 30px;
 }
 
-.add-modal_content {
+.edit-modal_content {
   width: 100%;
   height: 100%;
   display: flex;
