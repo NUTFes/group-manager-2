@@ -52,46 +52,48 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="開催日の編集"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <h3>開催年</h3>
+          <select v-model="fesYearID">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="year in yearsList"
+              :key="year.id"
+              :value="year.id"
             >
-              {{ category.name }}
+              {{ year.year_num }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
+          <h3>開催日</h3>
+          <input v-model="date" type="text" placeholder="入力してください" />
         </div>
         <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
+          <h3>曜日</h3>
+          <input v-model="day" placeholder="入力してください" />
         </div>
         <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
+          <h3>何日目</h3>
+          <select v-model="daysNum">
             <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
+            <option
+              v-for="daysNum in daysNumList"
+              :key="daysNum.id"
+              :value="daysNum.value"
+            >
+            {{ daysNum.text }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit"
+          >編集</CommonButton
+        >
       </template>
     </EditModal>
 
@@ -117,18 +119,38 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      fesDate: [],
+      fesYearID: null,
+      date: null,
+      day: null,
+      daysNum: null,
+      daysNumList: [
+        { id: 1, text: "準備日", value: 0},
+        { id: 2, text: "1日目", value: 1},
+        { id: 3, text: "2日目", value: 2},
+        { id: 4, text: "片付け日", value: 3},
+      ],
     };
   },
   async asyncData({ $axios, route }) {
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
     const routeId = route.path.replace("/fes_dates/", "");
     const fesDateUrl = "/fes_dates/" + routeId;
     const fesDateRes = await $axios.$get(fesDateUrl);
     return {
       fesDate: fesDateRes.data,
+      yearsList: yearsRes.data,
+      routeId: routeId,
     };
   },
   methods: {
     openEditModal() {
+      this.fesYearID = this.fesDate.fes_date.fes_year_id
+      this.date = this.fesDate.fes_date.date
+      this.day = this.fesDate.fes_date.day
+      this.daysNum = this.fesDate.fes_date.days_num
+      console.log(this.fesYearID)
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -142,42 +164,27 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+    async reload(id) {
+      const reUrl = "/fes_dates/" + id;
+      const resFesDate = await this.$axios.$get(reUrl);
+      this.fesDate = resFesDate.data;
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+    async edit() {
+      const url = "/fes_dates/" + this.routeId + "?fes_year_id=" + this.fesYearID + "&date=" + this.date + "&day=" + this.day + "&days_num=" + this.daysNum;
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload();
+      await this.$axios.$put(url).then((res) => {
+        this.fesYearID = null;
+        this.date = null;
+        this.day = null;
+        this.daysNum = null;
+        this.reload(res.data.id);
         this.closeEditModal();
       });
     },
     async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+      const delUrl = "/fes_dates/" + this.routeId;
+      await this.$axios.$delete(delUrl);
+      this.$router.push("/fes_dates");
     },
   },
 };
