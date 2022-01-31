@@ -29,19 +29,18 @@ export default {
       user: [],
     };
   },
-  async asyncData({ $axios }) {
+  async mounted() {
     const currentUserUrl = "/api/v1/users/show";
-    console.log(currentUserUrl)
-    const currentUserRes = await $axios.$get(currentUserUrl, {
-      headers: { 
+    const CurrentUser = await this.$axios.get(currentUserUrl, {
+      headers: {
         "Content-Type": "application/json",
-        "access-token": localStorage.getItem('access-token'),
-        "client": localStorage.getItem('client'),
-    }
-    })
-    return {
-      user: currentUserRes,
-    };
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid"),
+      },
+    });
+    console.log(CurrentUser.data.data)
+    this.user = CurrentUser.data.data
   },
   methods: {
     logout() {
