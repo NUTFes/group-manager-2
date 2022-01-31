@@ -105,7 +105,7 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="ステージオプション申請の追加"
     >
       <template v-slot:form>
         <div>
@@ -123,11 +123,11 @@
         </div>
         <div>
           <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <input v-model="stageOptionName" placeholder="入力してください" />
         </div>
         <div>
           <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <input v-model="stageOptionStudentId" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -171,6 +171,17 @@ export default {
         { id: 2, value: "出さない" }
       ],
       isOpenAddModal: false,
+      //v-model
+      groupID: "",
+      ownEquipment: "",
+      bgm: "",
+      cameraPermission: "",
+      loudSound: "",
+      stageContent: "",
+      //refinement
+      stageCommonOption: [],
+      searchText: "",
+      //other
       refYears: "Years",
       refYearID: 0,
       refIsOwnEquipment: "所持機器の使用",
@@ -181,8 +192,6 @@ export default {
       refIsCameraPermissionID: 0,
       refIsLoudSound: "大きな音",
       refIsLoudSoundID: 0,
-      stageCommonOption: [],
-      searchText: "",
     };
   },
   async asyncData({ $axios }) {
@@ -275,27 +284,23 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
-      });
-    },
     async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+      const postStageOptionUrl =
+        "/stage_common_options/" +
+        "?group_id=" + this.groupID
+        "&own_equipment=" + this.ownEquipment
+        "&bgm=" + this.bgm
+        "&camera_permission=" + this.cameraPermission
+        "&loud_sound=" + this.loudSound
+        "&stage_content=" + this.stageContent
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
+      await this.$axios.$post(postStageOptionUrl).then((response) => {
+        this.groupID = "";
+        this.ownEquipment = "";
+        this.bgm = "";
+        this.cameraPermission = "";
+        this.loudSound = "";
+        this.stageContent = "";
         this.reload();
         this.closeAddModal();
       });
