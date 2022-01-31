@@ -131,7 +131,6 @@ export default {
       }
       this.powerOrders = []
       const refUrl = "/api/v1/get_refinement_power_orders?fes_year_id=" + this.refYearID + "&power=" + this.refPower;
-      console.log(refUrl)
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.powerOrders.push(res)
