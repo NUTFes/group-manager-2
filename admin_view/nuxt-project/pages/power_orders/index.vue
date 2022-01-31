@@ -174,13 +174,8 @@ export default {
           this.refPower = name_list[item_id - 1].power;
         }
       }
-      this.powerOrders = [];
-      const refUrl =
-        "/api/v1/get_refinement_power_orders?fes_year_id=" +
-        this.refYearID +
-        "&power=" +
-        this.refPower;
-      console.log(refUrl);
+      this.powerOrders = []
+      const refUrl = "/api/v1/get_refinement_power_orders?fes_year_id=" + this.refYearID + "&power=" + this.refPower;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.powerOrders.push(res);
