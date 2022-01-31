@@ -39,33 +39,46 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="開催日の追加"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <select v-model="appGroup">
+          <h3>開催年</h3>
+          <select v-model="fesYearID">
             <option disabled value="">選択してください</option>
             <option
-              v-for="group in groupList"
-              :key="group.id"
-              :value="group.id"
+              v-for="year in yearsList"
+              :key="year.id"
+              :value="year.id"
             >
-              {{ group.name }}
+              {{ year.year_num }}
             </option>
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>開催日</h3>
+          <input v-model="date" type="text" placeholder="入力してください" />
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>曜日</h3>
+          <input v-model="day" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>何日目</h3>
+          <select v-model="daysNum">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="daysNum in daysNumList"
+              :key="daysNum.id"
+              :value="daysNum.value"
+            >
+            {{ daysNum.text }}
+            </option>
+          </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
@@ -87,14 +100,27 @@ export default {
         "登録日時",
         "編集日時",
       ],
+      daysNumList: [
+        { id: 1, text: "準備日", value: 0},
+        { id: 2, text: "1日目", value: 1},
+        { id: 3, text: "2日目", value: 2},
+        { id: 4, text: "片付け日", value: 3},
+      ],
       isOpenAddModal: false,
+      fesYearID: null,
+      date: null,
+      day: null,
+      daysNum: null
     };
   },
   async asyncData({ $axios }) {
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
     const fesDateUrl = "/fes_dates";
     const fesDatesRes = await $axios.$get(fesDateUrl);
     return {
       fesDates: fesDatesRes.data,
+      yearsList: yearsRes.data,
     };
   },
   methods: {
@@ -105,28 +131,21 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    reload(id) {
+      const refUrl = "/fes_dates/" + id;
+      this.$axios.$get(refUrl).then((response) => {
+        this.fesDates.push(response.data);
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
-
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+    async submit() {
+      const url = "/fes_dates?fes_year_id=" + this.fesYearID + "&date=" + this.date + "&day=" + this.day + "&days_num=" + this.daysNum;
+      console.log(url)
+      this.$axios.$post(url).then((response) => {
+        this.fesYearID = null;
+        this.date = null;
+        this.day = null;
+        this.daysNum = null;
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },
