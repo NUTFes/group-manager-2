@@ -50,14 +50,14 @@ class User < ActiveRecord::Base
   #
   # 全てのuserとそのuser_detailを取得する
   def self.with_user_details
-    @records = User.preload(:user_detail)
+    @records = User.preload(:role)
       .map{ 
         |user| 
         { 
           "user": user, 
           "role": user.role,
-          "user_detail": user.user_detail,
-          "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
+          # "user_detail": user.user_detail,
+          # "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
         } 
       }
   end
