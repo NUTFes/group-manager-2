@@ -141,7 +141,7 @@ export default {
       daysNumList: [
         { id: 1, days_num: "1日目" },
         { id: 2, days_num: "2日目" },
-      ],
+     ],
       refYears: "Years",
       refYearID: 0,
       refIsSunny: "晴れ希望",

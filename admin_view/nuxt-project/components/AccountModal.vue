@@ -31,6 +31,7 @@ export default {
   },
   async asyncData({ $axios }) {
     const currentUserUrl = "/api/v1/users/show";
+    console.log(currentUserUrl)
     const currentUserRes = await $axios.$get(currentUserUrl, {
       headers: { 
         "Content-Type": "application/json",
