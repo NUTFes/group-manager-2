@@ -36,33 +36,16 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="開催年の追加"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <select v-model="appGroup">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="group in groupList"
-              :key="group.id"
-              :value="group.id"
-            >
-              {{ group.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>開催年</h3>
+          <input v-model="year_num" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
@@ -77,6 +60,8 @@ export default {
     return {
       headers: ["ID", "開催年", "登録日時", "編集日時"],
       isOpenAddModal: false,
+      year_num: null,
+      fesYears: [],
     };
   },
   async asyncData({ $axios }) {
@@ -94,28 +79,17 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+    reload(id) {
+      const reUrl = "/fes_years/" + id;
       this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+        this.fesYears.push(response.data);
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
-
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+    async submit() {
+      const url = "/fes_years?year_num=" + this.year_num
+      this.$axios.$post(url).then((response) => {
+        this.year_num = null;
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },

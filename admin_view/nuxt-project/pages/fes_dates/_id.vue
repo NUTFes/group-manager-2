@@ -103,7 +103,7 @@
       title="参加団体申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
@@ -181,7 +181,7 @@ export default {
         this.closeEditModal();
       });
     },
-    async deleteGroup() {
+    async destroy() {
       const delUrl = "/fes_dates/" + this.routeId;
       await this.$axios.$delete(delUrl);
       this.$router.push("/fes_dates");
