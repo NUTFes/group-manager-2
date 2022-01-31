@@ -12,7 +12,7 @@
 .normal-table {
   font-size: 14px;
   width: 100%;
-  border-collapse:collapse;
+  border-collapse: collapse;
   border: solid 1px var(--accent-0);
 }
 
@@ -37,8 +37,7 @@
   transform: translateY(-1px);
   background-color: white;
   border: solid 1px var(--accent-0);
-  box-shadow:  5px 5px 14px #f0f0f0,
-             -5px -5px 14px #fafafa;
+  box-shadow: 5px 5px 14px #f0f0f0, -5px -5px 14px #fafafa;
 }
 
 .normal-table td:hover {
@@ -55,7 +54,7 @@
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 
-.normal-table tr:last-child td{
+.normal-table tr:last-child td {
   border-bottom: none;
 }
 </style>

@@ -12,10 +12,7 @@
       <div class="drop-down" v-show="$data.showContent">
         <div class="drop-down__container" @click.self="closeModal">
           <div class="drop-down__box">
-            <button
-              class="drop-down-button"
-              @click="on_click(0, nameList)"
-            >
+            <button class="drop-down-button" @click="on_click(0, nameList)">
               ALL
             </button>
             <button

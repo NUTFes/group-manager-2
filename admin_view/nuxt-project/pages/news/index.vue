@@ -18,10 +18,10 @@
             v-for="(n, index) in news"
             :key="index"
             @click="
-            () =>
-            $router.push({
-              path: `/news/` + n.id,
-            })
+              () =>
+                $router.push({
+                  path: `/news/` + n.id,
+                })
             "
           >
             <td>{{ n.id }}</td>
@@ -32,6 +32,41 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -40,40 +75,49 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "タイトル",
-        "日時",
-        "編集日時",
-      ],
+      headers: ["ID", "タイトル", "日時", "編集日時"],
+      isOpenAddModal: false,
     };
   },
   async asyncData({ $axios }) {
-    const newsUrl = "/news"
+    const newsUrl = "/news";
     const newsRes = await $axios.$get(newsUrl);
     return {
       news: newsRes.data,
     };
   },
   methods: {
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("title", this.title);
-      params.append("body", this.body);
-      this.$axios.post("/news", params);
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function () {
-      this.$axios
-        .get("/news", {
-          headers: {
-            "Content-Type": "application/json",
-            dialog: false,
-          },
-        })
-        .then((response) => {
-          this.news = response.data;
-        });
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
+      });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
+        this.reload();
+        this.closeAddModal();
+      });
     },
   },
 };

@@ -1,7 +1,9 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="代表者一覧">
-      <CommonButton iconName="add_circle"> 副代表追加 </CommonButton>
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
+        副代表追加
+      </CommonButton>
     </SubHeader>
     <SubSubHeader>
       <SearchDropDown> All Years </SearchDropDown>
@@ -10,29 +12,35 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-      <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementRepresentatives"
-        value="year_num"
-      >
-        {{ refYears }}
-      </SearchDropDown>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementRepresentatives"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @keypress.enter="searchRepresentatives" type="text" size="25" placeholder="search" />
+          <input
+            v-model="searchText"
+            @keypress.enter="searchRepresentatives"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
         </SearchBar>
       </template>
     </SubSubHeader>
 
-    <Card width="100%"> 
+    <Card width="100%">
       <Table>
         <template v-slot:table-header>
           <th v-for="(header, index) in headers" v-bind:key="index">
             {{ header }}
           </th>
-      </template>
-      <template v-slot:table-body>
+        </template>
+        <template v-slot:table-body>
           <tr
             v-for="(representative, index) in representatives"
             @click="
@@ -50,9 +58,44 @@
             <td>{{ representative.user.created_at | formatDate }}</td>
             <td>{{ representative.user.updated_at | formatDate }}</td>
           </tr>
-      </template>
-        </Table>
+        </template>
+      </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -61,26 +104,22 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "代表者",
-        "副代表",
-        "登録日時",
-        "編集日時",
-      ],
+      headers: ["ID", "参加団体", "代表者", "副代表", "登録日時", "編集日時"],
+      isOpenAddModal: false,
       refYears: "Year",
       refYearID: 0,
-      searchText: '',
-      representatives: []
-    }
+      searchText: "",
+      representatives: [],
+    };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     // const url = "/api/v1/get_representative_index_for_admin_view";
 
-    const url = "/api/v1/get_refinement_representatives?fes_year_id=" + currentYearRes.data.fes_year_id;
+    const url =
+      "/api/v1/get_refinement_representatives?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
     const representativesRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -91,74 +130,66 @@ export default {
       representatives: representativesRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
     async refinementRepresentatives(item_id, name_list) {
       // fes_yearで絞り込むとき
-      this.refYearID = item_id
+      this.refYearID = item_id;
       // ALLの時
-      if (item_id == 0){
-        this.refYears = "ALL"
-      }else{
-        this.refYears = name_list[item_id - 1].year_num
+      if (item_id == 0) {
+        this.refYears = "ALL";
+      } else {
+        this.refYears = name_list[item_id - 1].year_num;
       }
-      this.representatives = []
-      const refUrl = "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
+      this.representatives = [];
+      const refUrl =
+        "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
       const refRes = await this.$axios.$post(refUrl);
-      for (const res of refRes.data){
-        this.representatives.push(res)
+      for (const res of refRes.data) {
+        this.representatives.push(res);
       }
     },
-    async searchRepresentatives(){
-      this.representatives = []
-      const searchUrl = "/api/v1/get_search_representatives?word=" + this.searchText
+    async searchRepresentatives() {
+      this.representatives = [];
+      const searchUrl =
+        "/api/v1/get_search_representatives?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
-      for (const res of refRes.data){
-        this.representatives.push(res)
+      for (const res of refRes.data) {
+        this.representatives.push(res);
       }
     },
-    reload: function () {
-      this.$axios
-        .get("/sub_reps", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.sub_reps = response.data;
-        });
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    adjustHeight() {
-      const textarea = this.$refs.activity;
-      const resetHeight = new Promise(function (resolve) {
-        resolve((textarea.style.height = "auto"));
-      });
-      resetHeight.then(function () {
-        textarea.style.height = textarea.scrollHeight + "px";
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
       });
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("name", this.subRepName);
-      params.append("student_id", this.subRepSutudentId);
-      params.append("grade_id", this.subRepGradeId);
-      params.append("group_id", this.Group);
-      params.append("department_id", this.subRepDepartmentId);
-      params.append("tel", this.subRepTel);
-      params.append("email", this.subRepEmail);
-      this.$axios.post("/sub_reps", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
-        this.subRepName = "";
-        this.subRepSutudentId = "";
-        this.subRepGradeId = "";
-        this.groupCategoryId = "";
-        this.subRepTel = "";
-        this.subRepEmail = "";
+        this.closeAddModal();
       });
     },
   },

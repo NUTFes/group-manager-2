@@ -1,13 +1,64 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージオプション申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
         CSVダウンロード
       </CommonButton>
     </SubHeader>
+
+    <SubSubHeader>
+      <template v-slot:refinement>
+      <SearchDropDown
+        :nameList="yearList"
+        :on_click="refinementStageCommonOptions"
+        value="year_num"
+      >
+        {{ refYears }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="isOwnEquipmentList"
+        :on_click="refinementStageCommonOptions"
+        value="value"
+      >
+        {{ refIsOwnEquipment }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="isBgmList"
+        :on_click="refinementStageCommonOptions"
+        value="value"
+      >
+        {{ refIsBgm }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="isCameraPermissionList"
+        :on_click="refinementStageCommonOptions"
+        value="value"
+      >
+        {{ refIsCameraPermission }}
+      </SearchDropDown>
+
+      <SearchDropDown
+        :nameList="isLoudSoundList"
+        :on_click="refinementStageCommonOptions"
+        value="value"
+      >
+        {{ refIsLoudSound }}
+      </SearchDropDown>
+      </template>
+
+      <template v-slot:search>
+        <SearchBar>
+          <input v-model="searchText" @keypress.enter="searchStageCommonOptions" type="text" size="25" placeholder="search" />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -19,12 +70,12 @@
           <tr
             v-for="(stageCommonOption, index) in stageCommonOption"
             @click="
-            () =>
-            $router.push({
-              path:
-              `/stage_common_options/` +
-              stageCommonOption.stage_common_option.id,
-            })
+              () =>
+                $router.push({
+                  path:
+                    `/stage_common_options/` +
+                    stageCommonOption.stage_common_option.id,
+                })
             "
             :key="index"
           >
@@ -50,6 +101,41 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -68,57 +154,158 @@ export default {
         "登録日時",
         "編集日時",
       ],
+      isOwnEquipmentList: [
+        { id: 1, value: "使用する" },
+        { id: 2, value: "使用しない" }
+      ],
+      isBgmList: [
+        { id: 1, value: "かける" },
+        { id: 2, value: "かけない" }
+      ],
+      isCameraPermissionList: [
+        { id: 1, value: "許可" },
+        { id: 2, value: "許可しない" }
+      ],
+      isLoudSoundList: [
+        { id: 1, value: "出す" },
+        { id: 2, value: "出さない" }
+      ],
+      isOpenAddModal: false,
+      refYears: "Years",
+      refYearID: 0,
+      refIsOwnEquipment: "所持機器の使用",
+      refIsOwnEquipmentID: 0,
+      refIsBgm: "音楽をかける",
+      refIsBgmID: 0,
+      refIsCameraPermission: "撮影許可",
+      refIsCameraPermissionID: 0,
+      refIsLoudSound: "大きな音",
+      refIsLoudSoundID: 0,
+      stageCommonOption: [],
+      searchText: "",
     };
   },
   async asyncData({ $axios }) {
-    const url = "/api/v1/get_stage_common_option_index_for_admin_view";
-    const stageCommonOptionRes = await $axios.$get(url);
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+
+    // const url = "/api/v1/get_stage_common_option_index_for_admin_view";
+    const url = "/api/v1/get_refinement_stage_common_options?fes_year_id=" + currentYearRes.data.fes_year_id + "&own_equipment=0&bgm=0&camera_permission=0&loud_sound=0";
+    const stageCommonOptionRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id
+    })
     return {
       stageCommonOption: stageCommonOptionRes.data,
       yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num
     };
   },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_stage_common_options_with_group", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stage_common_options = response.data;
-        });
+    async refinementStageCommonOptions(item_id, name_list){
+      // fes_yearで絞り込むとき
+      if (Object.is(name_list, this.yearList)) {
+        this.refYearID = item_id
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL"
+        }else{
+          this.refYears = name_list[item_id - 1].year_num
+        }
+      // own_equipmentで絞り込むとき
+      }else if (Object.is(name_list, this.isOwnEquipmentList)){
+        this.refIsOwnEquipmentID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refIsOwnEquipment = "ALL"
+        }else{
+          this.refIsOwnEquipment = name_list[item_id - 1].value
+        }
+      // bgmで絞り込むとき
+      }else if (Object.is(name_list, this.isBgmList)){
+        this.refIsBgmID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refIsBgm = "ALL"
+        }else{
+          this.refIsBgm = name_list[item_id - 1].value
+        }
+      // camera_permissionで絞り込むとき
+      }else if (Object.is(name_list, this.isCameraPermissionList)) {
+        this.refIsCameraPermissionID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refIsCameraPermission = "ALL"
+        }else{
+          this.refIsCameraPermission = name_list[item_id - 1].value
+        }
+      // loud_soundで絞り込むとき
+      }else if (Object.is(name_list, this.isLoudSoundList)) {
+        this.refIsLoudSoundID = item_id
+        // ALLの時
+        if (item_id == 0){
+          this.refIsLoudSound = "ALL"
+        }else{
+          this.refIsLoudSound = name_list[item_id - 1].value
+        }
+      }
+      this.stageCommonOption = [];
+      const refUrl = "/api/v1/get_refinement_stage_common_options?fes_year_id=" + this.refYearID + "&own_equipment=" + this.refIsOwnEquipmentID + "&bgm=" + this.refIsBgmID + "&camera_permission=" + this.refIsCameraPermissionID + "&loud_sound=" + this.refIsLoudSoundID
+      console.log(refUrl)
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.stageCommonOption.push(res)
+      }
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("own_equipment", this.ownEquipment);
-      params.append("bgm", this.Bgm);
-      params.append("camera_permission", this.cameraPermission);
-      params.append("loud_sound", this.loudSound);
-      params.append("stage_content", this.stageContent);
-      this.$axios.post("/stage_common_options", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
+    async searchStageCommonOptions() {
+      this.stageCommonOption = []
+      const searchUrl = "/api/v1/get_search_stage_common_options?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.stageCommonOption.push(res)
+      }
+    },
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
+      });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
-        this.Group = "";
-        this.ownEquipment = "";
-        this.Bgm = "";
-        this.cameraPermission = "";
-        this.loudSound = "";
-        this.stageContent = "";
+        this.closeAddModal();
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_stage_common_options_csv/" + this.refYearID;
-      window.open(
-        url,
-        "ステージオプション申請_CSV"
-      );
+      const url =
+        "http://localhost:3000" +
+        "/api/v1/get_stage_common_options_csv/" +
+        this.refYearID;
+      window.open(url, "ステージオプション申請_CSV");
     },
   },
 };

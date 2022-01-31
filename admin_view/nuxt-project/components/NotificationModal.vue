@@ -1,18 +1,12 @@
 <template>
   <transition name="fade" appear>
-    <div class="memo-modal" @click.self="$emit('close')">
-      <div class="memo-modal__container" @click.self="$emit('close')">
-        <div class="memo-modal__box">
+    <div class="notification-modal" @click.self="$emit('close')">
+      <div class="notification-modal__container" @click.self="$emit('close')">
+        <div class="notification-modal__box">
           <Row justify="start">
             <slot></slot>
           </Row>
-          <div class="memo-modal_content">
-            <textarea v-model="activity" placeholder="メモ" />
-            <CommonButton iconName="add_circle" :on_click="submitGroup"
-              >投稿</CommonButton
-            >
-          </div>
-          <div class="memo-modal__time-line">
+          <div class="notification-modal__time-line">
             <div v-for="n in 20">
               <Row>
                 <h4>{{ test.user }}</h4>
@@ -42,8 +36,8 @@ export default {
 </script>
 
 <style>
-.memo-modal_content input,
-.memo-modal_content textarea {
+.notification-modal_content input,
+.notification-modal_content textarea {
   width: 100%;
   height: 150px;
   color: var(--accent-2);
@@ -52,14 +46,14 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.memo-modal_content input:focus,
-.memo-modal_content textarea:focus {
+.notification-modal_content input:focus,
+.notification-modal_content textarea:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
 }
 
-.memo-modal_content select {
+.notification-modal_content select {
   color: var(--accent-0);
   border: 1px solid var(--accent-3);
   padding: 15px;
@@ -67,18 +61,18 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.memo-modal_content select:focus {
+.notification-modal_content select:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
 }
 
-.memo-modal_content h3 {
+.notification-modal_content h3 {
   font-size: 16px;
   font-weight: 300;
 }
 
-.memo-modal_content form {
+.notification-modal_content form {
   width: 100%;
   height: 100%;
   display: flex;
@@ -88,7 +82,7 @@ export default {
   gap: 25px;
 }
 
-.memo-modal_content div {
+.notification-modal_content div {
   display: flex;
   align-items: start;
   justify-content: center;
@@ -100,7 +94,7 @@ export default {
   color: red;
 }
 
-.memo-modal {
+.notification-modal {
   top: 0;
   right: 0;
   position: fixed;
@@ -109,7 +103,7 @@ export default {
   width: 100%;
   z-index: 11;
 }
-.memo-modal__container {
+.notification-modal__container {
   height: 100%;
   width: 100%;
   min-height: 100%;
@@ -118,7 +112,7 @@ export default {
   align-items: start;
 }
 
-.memo-modal__box {
+.notification-modal__box {
   width: 400px;
   height: 100%;
   display: flex;
@@ -137,13 +131,13 @@ export default {
   gap: 30px;
 }
 
-.memo-modal_content {
+.notification-modal_content {
   width: 100%;
   display: flex;
   flex-flow: column;
   gap: 20px;
 }
-.memo-modal__time-line {
+.notification-modal__time-line {
   width: 100%;
   height: 100%;
   padding: 0px 15px;

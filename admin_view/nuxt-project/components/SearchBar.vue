@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-      <slot></slot>
+    <slot></slot>
   </div>
 </template>
 <script>
@@ -15,7 +15,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to right, var(--button-primary) 0%, var(--primary) 100%);
+  background: linear-gradient(
+    to right,
+    var(--button-primary) 0%,
+    var(--primary) 100%
+  );
   border-radius: 50px;
 }
 
@@ -24,8 +28,7 @@ export default {
   height: 40px;
   font-size: 14px;
   padding-left: 20px;
-  box-shadow: inset 1px 1px 2px #d9d9d9,
-            inset -5px -5px 10px #ffffff;
+  box-shadow: inset 1px 1px 2px #d9d9d9, inset -5px -5px 10px #ffffff;
   border-radius: 50px;
   border: 1px solid var(--accent-2);
   background: var(--accent-0);
@@ -35,8 +38,7 @@ export default {
 
 .search-container input:focus {
   border: 1px solid var(--accent-2);
-  box-shadow: inset 2px 2px 5px #d9d9d9,
-            inset -5px -5px 10px #ffffff;
+  box-shadow: inset 2px 2px 5px #d9d9d9, inset -5px -5px 10px #ffffff;
   border: none;
   outline: 0;
 }

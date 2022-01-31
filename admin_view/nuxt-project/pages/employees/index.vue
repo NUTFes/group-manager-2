@@ -1,6 +1,5 @@
 <template>
   <div class="main-content">
-
     <SubHeader pageTitle="従業員申請">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
@@ -12,17 +11,23 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-      <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementEmployees"
-        value="year_num"
-      >
-        {{ refYears }}
-      </SearchDropDown>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementEmployees"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @keypress.enter="searchEmployees" type="text" size="25" placeholder="search" />
+          <input
+            v-model="searchText"
+            @keypress.enter="searchEmployees"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -39,7 +44,7 @@
             v-for="(employee, index) in employees"
             :key="index"
             @click="
-            () => $router.push({ path: `/employees/` + employee.employee.id })
+              () => $router.push({ path: `/employees/` + employee.employee.id })
             "
           >
             <td>{{ employee.employee.id }}</td>
@@ -82,11 +87,11 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee">登録</CommonButton
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
         >
       </template>
     </AddModal>
-
   </div>
 </template>
 
@@ -103,14 +108,16 @@ export default {
       employees: [],
       refYears: "Year",
       refYearID: 0,
-      searchText: ""
+      searchText: "",
     };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     // const url = "/api/v1/get_employee_index_for_admin_view";
-    const url = "/api/v1/get_refinement_employees?fes_year_id=" + currentYearRes.data.fes_year_id;
+    const url =
+      "/api/v1/get_refinement_employees?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
     const employeesRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -121,32 +128,33 @@ export default {
       employees: employeesRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
     async refinementEmployees(item_id, name_list) {
       // fes_yearで絞り込むとき
-      this.refYearID = item_id
+      this.refYearID = item_id;
       // ALLの時
-      if (item_id == 0){
-        this.refYears = "ALL"
-      }else{
-        this.refYears = name_list[item_id - 1].year_num
+      if (item_id == 0) {
+        this.refYears = "ALL";
+      } else {
+        this.refYears = name_list[item_id - 1].year_num;
       }
-      this.employess = []
-      const refUrl = "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
+      this.employess = [];
+      const refUrl =
+        "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
       const refRes = await this.$axios.$post(refUrl);
-      for (const res of refRes.data){
-        this.employees.push(res)
+      for (const res of refRes.data) {
+        this.employees.push(res);
       }
     },
-    async searchEmployees(){
-      this.employees = []
-      const searchUrl = "/api/v1/get_search_employees?word=" + this.searchText
+    async searchEmployees() {
+      this.employees = [];
+      const searchUrl = "/api/v1/get_search_employees?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
-      for (const res of refRes.data){
-        this.employees.push(res)
+      for (const res of refRes.data) {
+        this.employees.push(res);
       }
     },
     openAddModal() {
@@ -158,18 +166,20 @@ export default {
     },
     reload() {
       const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl ="/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
       this.$axios.$get(reUrl).then((response) => {
         this.employees.push(response.data);
       });
     },
     async submitEmployee() {
-
       const postEmployeeUrl =
         "/employees/" +
-        "?group_id=" + this.appGroup +
-        "&name=" + this.employeeName +
-        "&student_id=" + this.employeeStudentId;
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
 
       this.$axios.$post(postEmployeeUrl).then((response) => {
         this.appGroup = "";
@@ -180,11 +190,9 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_employees_csv/" + this.refYearID;
-      window.open(
-        url,
-        "従業員一覧_CSV"
-      );
+      const url =
+        "http://localhost:3000" + "/api/v1/get_employees_csv/" + this.refYearID;
+      window.open(url, "従業員一覧_CSV");
     },
   },
 };

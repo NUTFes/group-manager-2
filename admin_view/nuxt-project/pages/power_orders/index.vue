@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="電力申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -11,24 +11,30 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-      <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementPowerOrders"
-        value="year_num"
-      >
-        {{ refYears }}
-      </SearchDropDown>
-      <SearchDropDown
-        :nameList="powerList"
-        :on_click="refinementPowerOrders"
-        value="power"
-      >
-        {{ refPower }} [w] 以上
-      </SearchDropDown>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementPowerOrders"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="powerList"
+          :on_click="refinementPowerOrders"
+          value="power"
+        >
+          {{ refPower }} [w] 以上
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @keypress.enter="searchPowerOrders" type="text" size="25" placeholder="search" />
+          <input
+            v-model="searchText"
+            @keypress.enter="searchPowerOrders"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -44,10 +50,10 @@
           <tr
             v-for="(powerOrder, index) in powerOrders"
             @click="
-            () =>
-            $router.push({
-              path: `/power_orders/` + powerOrder.power_order.id,
-            })
+              () =>
+                $router.push({
+                  path: `/power_orders/` + powerOrder.power_order.id,
+                })
             "
             :key="index"
           >
@@ -61,6 +67,41 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -71,12 +112,13 @@ export default {
     return {
       powerOrders: [],
       headers: ["ID", "参加団体", "製品", "電力 [w]", "登録日時", "編集日時"],
+      isOpenAddModal: false,
       refYears: "Years",
       refYearID: 0,
       refPower: "0",
-      searchText: '',
+      searchText: "",
       powerList: [
-        { id: 1, power: 0 }, 
+        { id: 1, power: 0 },
         { id: 2, power: 100 },
         { id: 3, power: 200 },
         { id: 4, power: 300 },
@@ -87,7 +129,7 @@ export default {
         { id: 9, power: 800 },
         { id: 10, power: 900 },
         { id: 11, power: 1000 },
-      ]
+      ],
     };
   },
   async asyncData({ $axios }) {
@@ -95,93 +137,97 @@ export default {
     const currentYearRes = await $axios.$get(currentYearUrl);
 
     // const url = "/api/v1/get_power_order_index_for_admin_view";
-    const url = "/api/v1/get_refinement_power_orders?fes_year_id=" + currentYearRes.data.fes_year_id + "&power=0";
+    const url =
+      "/api/v1/get_refinement_power_orders?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&power=0";
     const powerOrdersRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id
-    })
+      return element.id == currentYearRes.data.fes_year_id;
+    });
     return {
       powerOrders: powerOrdersRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
-    async refinementPowerOrders(item_id, name_list){
+    async refinementPowerOrders(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
-        this.refYearID = item_id
+        this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL"
-        }else{
-          this.refYears = name_list[item_id - 1].year_num
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
         }
-      // powerで絞り込むとき
-      }else if (name_list.toString() == this.powerList.toString()){
+        // powerで絞り込むとき
+      } else if (name_list.toString() == this.powerList.toString()) {
         // ALLの時
-        if (item_id == 0){
-          this.refPower = 0
-        }else{
-          this.refPower = name_list[item_id - 1].power
+        if (item_id == 0) {
+          this.refPower = 0;
+        } else {
+          this.refPower = name_list[item_id - 1].power;
         }
       }
       this.powerOrders = []
       const refUrl = "/api/v1/get_refinement_power_orders?fes_year_id=" + this.refYearID + "&power=" + this.refPower;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
-        this.powerOrders.push(res)
+        this.powerOrders.push(res);
       }
     },
     async searchPowerOrders() {
-      this.powerOrders = []
-      const searchUrl = "/api/v1/get_search_power_orders?word=" + this.searchText;
+      this.powerOrders = [];
+      const searchUrl =
+        "/api/v1/get_search_power_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data) {
-        this.powerOrders.push(res)
+        this.powerOrders.push(res);
       }
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_power_orders", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.power_orders = response.data;
-        });
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("item", this.item);
-      params.append("power", this.power);
-      params.append("manufacturer", this.manufacturer);
-      params.append("model", this.model);
-      params.append("item_url", this.itemUrl);
-      this.$axios.post("/power_orders", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
+      });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
-        this.Group = "";
-        this.power_order.item = "";
-        this.power_order.power = "";
-        this.manufacturer = "";
-        this.model = "";
-        this.itemUrl = "";
+        this.closeAddModal();
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_power_orders_csv/" + this.refYearID;
-      window.open(
-        url,
-        "電力申請_CSV"
-      );
+      const url =
+        "http://localhost:3000" +
+        "/api/v1/get_power_orders_csv/" +
+        this.refYearID;
+      window.open(url, "電力申請_CSV");
     },
   },
 };

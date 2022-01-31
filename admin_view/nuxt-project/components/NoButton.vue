@@ -56,11 +56,7 @@ export default {
   z-index: -1;
   left: 0;
   transition: 0.5s;
-  background: linear-gradient(
-    135deg,
-    #9C8AE3 0%,
-    #70FFDD 100%
-  );
+  background: linear-gradient(135deg, #9c8ae3 0%, #70ffdd 100%);
 }
 .common-button:after {
   content: "";

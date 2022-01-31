@@ -1,5 +1,9 @@
 <template>
-  <button class="in-table-button" @click="on_click" :style="InTableButtonOption">
+  <button
+    class="in-table-button"
+    @click="on_click"
+    :style="InTableButtonOption"
+  >
     <nuxt-link v-if="to !== ''" :to="to">
       <span class="material-icons">{{ iconName }}</span>
       <slot></slot>
@@ -63,8 +67,7 @@ export default {
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  box-shadow:  5px 5px 6px #f0f0f0,
-             -5px -5px 3px #fafafa;
+  box-shadow: 5px 5px 6px #f0f0f0, -5px -5px 3px #fafafa;
 }
 
 .in-table-button:active {

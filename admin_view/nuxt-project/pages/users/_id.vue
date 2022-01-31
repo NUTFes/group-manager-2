@@ -1,11 +1,12 @@
 <template>
   <div class="main-content">
-    <SubHeader
-      v-bind:pageTitle="user.user.name"
-      pageSubTitle="ユーザー一覧"
-    >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+    <SubHeader v-bind:pageTitle="user.user.name" pageSubTitle="ユーザー一覧">
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,39 +14,108 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ user.user.id }}</td>
-            </tr>
-            <tr>
-              <th>名前</th><td>{{ user.user.name }}</td>
-            </tr>
-            <tr>
-              <th>権限</th><td>{{ user.role.name }}</td>
-            </tr>
-            <tr>
-              <th>メールアドレス</th><td>{{ user.user.email }}</td>
-            </tr>
-            <tr>
-              <th>電話番号</th><td>{{ user.user_detail.tel }}</td>
-            </tr>
-            <tr>
-              <th>学籍番号</th><td>{{ user.user_detail.student_id }}</td>
-            </tr>
-            <tr>
-              <th>課程・専攻</th><td>{{ user.user_detail_info.department }}</td>
-            </tr>
-            <tr>
-              <th>学年</th><td>{{ user.user_detail_info.grade }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ user.user.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ user.user.updated_at | formatDate }}</td>
-            </tr>
+          <tr>
+            <th>ID</th>
+            <td>{{ user.user.id }}</td>
+          </tr>
+          <tr>
+            <th>名前</th>
+            <td>{{ user.user.name }}</td>
+          </tr>
+          <tr>
+            <th>権限</th>
+            <td>{{ user.role.name }}</td>
+          </tr>
+          <tr>
+            <th>メールアドレス</th>
+            <td>{{ user.user.email }}</td>
+          </tr>
+          <tr>
+            <th>電話番号</th>
+            <td>{{ user.user_detail.tel }}</td>
+          </tr>
+          <tr>
+            <th>学籍番号</th>
+            <td>{{ user.user_detail.student_id }}</td>
+          </tr>
+          <tr>
+            <th>課程・専攻</th>
+            <td>{{ user.user_detail_info.department }}</td>
+          </tr>
+          <tr>
+            <th>学年</th>
+            <td>{{ user.user_detail_info.grade }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ user.user.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ user.user.updated_at | formatDate }}</td>
+          </tr>
         </VerticalTable>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="参加団体申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="groupCategoryId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="category in groupCategories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>企画名</h3>
+          <input v-model="projectName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>活動内容</h3>
+          <textarea v-model="activity" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearId">
+            <option disabled value="">選択してください</option>
+            <option v-for="year in yearList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="参加団体申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
   </div>
 </template>
 
@@ -61,7 +131,9 @@ export default {
   },
   data() {
     return {
-    }
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
+    };
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/users/", "");
@@ -73,76 +145,56 @@ export default {
     };
   },
   methods: {
-    reload: function () {
-      const url = "api/v1/users/show_user_detail/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.show = response.data;
-          this.user = response.data.user;
-          this.role_id = response.data.user.role_id;
-        });
+    openEditModal() {
+      this.isOpenEditModal = false;
+      this.isOpenEditModal = true;
     },
-    edit_role_dialog_open: function () {
-      this.edit_role_dialog = true;
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    open_edit_user_dialog_open: function () {
-      this.edit_user_info_dialog = true;
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
     },
-    edit_role: function () {
-      const edit_url =
-        "/api/v1/update_user/" + this.user.id + "/" + this.role_id;
-      this.$axios
-        .get(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          this.reload();
-          this.edit_role_dialog = false;
-          this.success_snackbar = true;
-        });
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
     },
-    edit_user_info: function () {
-      if (!this.$refs.form.validate()) return;
-      const edit_user_info_url = "/api/v1/users/edit_user_info";
-      var params = {
-        user_id: this.user_id,
-        name: this.name,
-        student_id: this.student_id,
-        grade_id: this.grade_id,
-        department_id: this.department_id,
-        tel: this.tel,
-        email: this.email,
-      };
-      this.$axios.post(edit_user_info_url, params).then((response) => {
+    async reload() {
+      const reUrl = this.groupUrl;
+      const reGroupRes = await this.$axios.$get(reUrl);
+      this.group = reGroupRes.data;
+    },
+    async editGroup() {
+      console.log(this.group.group.id);
+      const putGroupUrl =
+        "/groups/" +
+        this.group.group.id +
+        "?name=" +
+        this.groupName +
+        "&project_name=" +
+        this.projectName +
+        "&group_category_id=" +
+        this.groupCategoryId +
+        "&activity=" +
+        this.activity +
+        "&fes_year_id=" +
+        this.fesYearId;
+      console.log(putGroupUrl);
+
+      await this.$axios.$put(putGroupUrl).then((response) => {
+        this.groupName = "";
+        this.projectName = "";
+        this.activity = "";
+        this.groupCategoryId = "";
+        this.fesYearId = "";
         this.reload();
-        this.edit_user_info_dialog = false;
-        this.success_snackbar = true;
+        this.closeEditModal();
       });
     },
-    reset_password: function () {
-      if (!this.$refs.form.validate()) return;
-      const reset_password_url = "/api/v1/users/reset_password";
-      var params = {
-        user_id: this.user_id,
-        password: this.password,
-        password_confirmation: this.password_confirmation,
-      };
-      this.$axios.post(reset_password_url, params).then((response) => {
-        this.reload();
-        this.reset_password_dialog = false;
-        this.success_snackbar = true;
-      });
-    },
-    delete_yes: function () {
-      this.$router.push("/users");
+    async deleteGroup() {
+      const delUrl = "/groups/" + this.$route.params.id;
+      const delRes = await this.$axios.$delete(delUrl);
+      this.$router.push("/groups");
     },
   },
 };
