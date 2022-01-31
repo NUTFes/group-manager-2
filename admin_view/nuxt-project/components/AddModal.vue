@@ -98,8 +98,8 @@ export default {
   overflow: auto;
 }
 .add-modal__container {
-  height: 100%;
   width: 100%;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
