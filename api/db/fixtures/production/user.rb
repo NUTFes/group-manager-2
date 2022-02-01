@@ -30,7 +30,7 @@ User.seed( :id,
                 role_id: 1
     },
     { id: 6 ,   name: '榑林丈' ,
-                email: 't.yasuda.nutfes@gmail.com' ,
+                email: '21.j.kurebayashi.nutfes@gmail.com' ,
                 password: 'gidaifes' ,
                 password_confirmation: 'gidaifes' ,
                 role_id: 1
