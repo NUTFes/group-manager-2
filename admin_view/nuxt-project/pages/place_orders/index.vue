@@ -127,6 +127,10 @@
             </option>
           </select>
         </div>
+        <div>
+          <h3>備考</h3>
+          <textarea v-model="remark" placeholder="入力してください" />
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitPlaceOrder"
@@ -158,11 +162,13 @@ export default {
       firstPlaceOrder: "",
       secondPlaceOrder: "",
       thirdPlaceOrder: "",
+      remark: "",
       refYears: "Year",
       refYearID: 0,
       refPlaces: "Places",
       refPlaceID: 0,
       searchText: "",
+      groupList: null,
     };
   },
   async asyncData({ $axios }) {
@@ -173,6 +179,7 @@ export default {
       "/api/v1/get_refinement_place_orders?fes_year_id=" +
       currentYearRes.data.fes_year_id;
     const placeOrderRes = await $axios.$post(placeOrderUrl);
+
 
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
@@ -233,19 +240,19 @@ export default {
         this.placeOrders.push(res);
       }
     },
-    openAddModal() {
-      this.isOpenAddModal = false;
+    async openAddModal() {
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const resGroups = await this.$axios.$get(url)
+      this.groupList = resGroups.data
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const placeOrderId = this.placeOrders.length + 1;
-      const reUrl =
-        "/api/v1/get_place_order_show_for_admin_view/" + placeOrderId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.placeOrders.push(response.data);
+    reload(id) {
+      const placeOrderUrl = "/api/v1/get_place_order_show_for_admin_view/" + id
+      this.$axios.$get(placeOrderUrl).then((response) => {
+        this.placeOrders.push(response.data)
       });
     },
     async submitPlaceOrder() {
@@ -258,14 +265,16 @@ export default {
         "&second=" +
         this.secondPlaceOrder +
         "&third=" +
-        this.thirdPlaceOrder;
+        this.thirdPlaceOrder +
+        "&remark=" +
+        this.remark;
 
       this.$axios.$post(postPlaceOrderUrl).then((response) => {
         this.appGroup = "";
         this.firstPlaceOrder = "";
         this.secondPlaceOrder = "";
         this.thirdPlaceOrder = "";
-        this.reload();
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },

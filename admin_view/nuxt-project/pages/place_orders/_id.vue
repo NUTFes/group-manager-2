@@ -55,59 +55,83 @@
       </Card>
     </Row>
 
+{{ placeOrder }}
+
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="会場申請の編集"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <select v-model="groupID">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
             >
-              {{ category.name }}
+              {{ group.name }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
+          <h3>第一希望</h3>
+          <select v-model="firstPlaceOrder">
             <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>第二希望</h3>
+          <select v-model="secondPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第三希望</h3>
+          <select v-model="thirdPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>備考</h3>
+          <textarea v-model="remark" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
       </template>
     </EditModal>
 
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+      title="会場申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
@@ -117,7 +141,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -133,6 +156,10 @@ export default {
       ],
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      firstPlaceOrder: null,
+      secondPlaceOrder: null,
+      thirdPlaceOrder: "",
+      placeOrder: []
     };
   },
   async asyncData({ $axios, route }) {
@@ -141,93 +168,39 @@ export default {
     const response = await $axios.$get(url);
     return {
       placeOrder: response.data,
-      route: url,
+      routeId: routeId,
     };
   },
-  computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-    }),
-  },
   methods: {
-    reload: function () {
-      const url = "/api/v1/get_place_order/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.place_order = response.data.place_order;
-          this.power_orders = response.data.power_orders;
-          this.total_power = response.data.total_power;
-          this.group_id = response.data.place_order.group_id;
-          this.group_name = response.data.group_name;
-          this.first = response.data.first;
-          this.second = response.data.second;
-          this.third = response.data.third;
-          this.first_id = response.data.place_order.first;
-          this.second_id = response.data.place_order.second;
-          this.third_id = response.data.place_order.third;
-          this.remark = response.data.place_order.remark;
-        });
+    edit (){
+      const url = "/place_orders/" + this.routeId + "?group_id=" + this.groupID + "&first=" + this.firstPlaceOrder + "&second=" + this.secondPlaceOrder + "&third=" + this.thirdPlaceOrder + "&remark=" + this.remark
+      this.$axios.$put(url).then((response) => {
+        this.reload(response.data.id);
+        this.closeEditModal()
+      });
     },
-    edit_dialog_open: function () {
-      this.$axios
-        .get("/places", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.places = response.data;
-        });
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.group_list = response.data;
-        });
-      this.edit_dialog = true;
+    async reload (id) {
+      const url = "/api/v1/get_place_order_show_for_admin_view/" + id;
+      const resPlaceOrder = await this.$axios.$get(url);
+      this.placeOrder = resPlaceOrder.data
     },
-    edit: function () {
-      const edit_url =
-        "/place_orders/" +
-        this.place_order.id +
-        "?group_id=" +
-        this.group_id +
-        "&first=" +
-        this.first_id +
-        "&second=" +
-        this.second_id +
-        "&third=" +
-        this.third_id +
-        "&remark=" +
-        this.remark;
-      console.log(edit_url);
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
-    },
-    delete_yes: function () {
-      const url = "/place_orders/" + this.$route.params.id;
-      this.$axios.delete(url);
+    async destroy() {
+      const url = "/place_orders/" + this.routeId
+      await this.$axios.$delete(url)
       this.$router.push("/place_orders");
     },
-    openEditModal() {
-      this.isOpenEditModal = false;
+    async openEditModal() {
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const resGroups = await this.$axios.$get(url)
+      this.groupList = resGroups.data
+      this.groupID = this.placeOrder.group.id
+      const placesUrl = "/places"
+      const resPlaces = await this.$axios.$get(placesUrl)
+      this.placeList = resPlaces.data
+      this.firstPlaceOrder = this.placeOrder.place_order.first
+      this.secondPlaceOrder = this.placeOrder.place_order.second
+      this.thirdPlaceOrder = this.placeOrder.place_order.third
+      this.remark = this.placeOrder.place_order.remark
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -239,43 +212,6 @@ export default {
     },
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
-    },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
-    },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
-
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload();
-        this.closeEditModal();
-      });
-    },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
     },
   },
 };

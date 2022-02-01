@@ -28,8 +28,9 @@ class Api::V1::GroupsApiController < ApplicationController
   end
 
   #fes_yearによる絞り込み
-  def get_groups_refinemented_by_fes_year
-    @group = Group.where(fes_year_id: params[:fes_year_id])
+  def get_groups_refinemented_by_current_fes_year
+    @current_fes_year = UserPageSetting.first.fes_year
+    @group = Group.where(fes_year_id: @current_fes_year.id)
     render json: fmt(ok, @group)
   end
 
