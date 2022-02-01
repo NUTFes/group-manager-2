@@ -280,7 +280,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL + 
         "/api/v1/get_place_orders_csv/" +
         this.refYearID;
       window.open(url, "会場申請一覧_CSV");

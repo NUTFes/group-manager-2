@@ -359,7 +359,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL + 
         "/api/v1/get_stage_common_options_csv/" +
         this.refYearID;
       window.open(url, "ステージオプション申請_CSV");
