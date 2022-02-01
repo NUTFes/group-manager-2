@@ -70,46 +70,68 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="ステージオプション申請の編集"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <h3>所持機器の使用</h3>
+          <select v-model="ownEquipment">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="item in isOwnEquipmentList"
+              :key="item.id"
+              :value="item.bool"
             >
-              {{ category.name }}
+              {{ item.value }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
+          <h3>音楽をかける</h3>
+          <select v-model="bgm">
             <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
+            <option
+              v-for="item in isBgmList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>撮影許可</h3>
+          <select v-model="cameraPermission">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isCameraPermissionList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>騒音</h3>
+          <select v-model="loudSound">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isLoudSoundList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>ステージ内容</h3>
+          <textarea v-model="stageContent" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -119,7 +141,7 @@
       title="参加団体申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="deleteData">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
@@ -136,16 +158,55 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOwnEquipmentList: [
+        { id: 1, value: "使用する", bool: true },
+        { id: 2, value: "使用しない", bool: false }
+      ],
+      isBgmList: [
+        { id: 1, value: "かける", bool: true },
+        { id: 2, value: "かけない", bool: false }
+      ],
+      isCameraPermissionList: [
+        { id: 1, value: "許可", bool: true },
+        { id: 2, value: "許可しない", bool: false }
+      ],
+      isLoudSoundList: [
+        { id: 1, value: "出す", bool: true },
+        { id: 2, value: "出さない", bool: false }
+      ],
+      //v-model
+      appGroup: "",
+      ownEquipment: "",
+      bgm: "",
+      cameraPermission: "",
+      loudSound: "",
+      stageContent: "",
     };
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/stage_common_options/", "");
+
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+
+    const groupUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" + currentYearRes.data.fes_year_id
+    const groupRes = await $axios.$post(groupUrl)
+
+
     const url =
       "/api/v1/get_stage_common_option_show_for_admin_view/" + routeId;
     const response = await $axios.$get(url);
     return {
       stageCommonOption: response.data,
       route: url,
+      groupList: groupRes.data,
+      //v-model
+      appGroup: response.data.group.id,
+      ownEquipment: response.data.stage_common_option.own_equipment,
+      bgm: response.data.stage_common_option.bgm,
+      cameraPermission: response.data.stage_common_option.camera_permission,
+      loudSound: response.data.stage_common_option.loud_sound,
+      stageContent: response.data.stage_common_option.stage_content,
     };
   },
   computed: {
@@ -169,41 +230,35 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
-    },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+      const reUrl = this.route;
+      const reStageOptionRes = await this.$axios.$get(reUrl);
+      console.log(reStageOptionRes.data)
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
+      this.stageCommonOption = reStageOptionRes.data;
+      console.log(this.stageCommonOption.data)
+    },
+    async edit() {
+      const putStageOptionUrl =
+        "/stage_common_options/" +
+        this.stageCommonOption.stage_common_option.id + 
+        "?group_id=" + this.appGroup +
+        "&own_equipment=" + this.ownEquipment +
+        "&bgm=" + this.bgm +
+        "&camera_permission=" + this.cameraPermission +
+        "&loud_sound=" + this.loudSound +
+        "&stage_content=" + this.stageContent
+      console.log(putStageOptionUrl)
+
+      await this.$axios.$put(putStageOptionUrl).then((response) => {
+        console.log(response)
         this.reload();
         this.closeEditModal();
       });
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
+    async deleteData() {
+      const delUrl = "/stage_common_options/" + this.$route.params.id;
       const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+      this.$router.push("/stage_common_options");
     },
   },
 };

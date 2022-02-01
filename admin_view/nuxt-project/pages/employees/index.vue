@@ -114,7 +114,10 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-    // const url = "/api/v1/get_employee_index_for_admin_view";
+
+    const groupUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=1"
+    const groupRes = await $axios.$post(groupUrl)
+
     const url =
       "/api/v1/get_refinement_employees?fes_year_id=" +
       currentYearRes.data.fes_year_id;
@@ -129,6 +132,7 @@ export default {
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
+      groupList: groupRes.data,
     };
   },
   methods: {
