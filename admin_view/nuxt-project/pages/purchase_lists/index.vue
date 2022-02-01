@@ -215,7 +215,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_purchase_lists_csv/" + this.refYearID;
+      const url = this.$config.apiURL + "/api/v1/get_purchase_lists_csv/" + this.refYearID;
       window.open(
         url,
         "購入品申請_CSV"

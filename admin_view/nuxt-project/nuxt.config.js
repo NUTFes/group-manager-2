@@ -26,6 +26,11 @@ export default {
     ],
   },
 
+  publicRuntimeConfig: {
+    apiURL: 'https://group-manager-api.nutfes.net'
+    // apiURL: 'http://localhost:3000'
+  },
+
   router: {
     middleware: ["auth"],
   },
@@ -48,7 +53,11 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", ["@nuxtjs/moment", ["ja"]]],
+  modules: [
+    "@nuxtjs/axios", 
+    "@nuxtjs/auth", 
+    ["@nuxtjs/moment", ["ja"]],
+  ],
 
   axios: {
     // baseURL: 'http://localhost:3000'

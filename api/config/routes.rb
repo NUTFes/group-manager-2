@@ -138,6 +138,7 @@ Rails.application.routes.draw do
       get "get_power_orders_csv/:fes_year_id" => "output_csv#output_power_orders_csv"
       get "get_place_orders_csv/:fes_year_id" => "output_csv#output_place_orders_csv"
       get "get_stage_orders_csv/:fes_year_id" => "output_csv#output_stage_orders_csv"
+      get "get_stage_common_options_csv/:fes_year_id" => "output_csv#output_stage_common_options_csv"
       get "get_employees_csv/:fes_year_id" => "output_csv#output_employees_csv"
       get "get_food_products_csv/:fes_year_id" => "output_csv#output_food_products_csv"
       get "get_purchase_lists_csv/:fes_year_id" => "output_csv#output_purchase_lists_csv"
