@@ -77,7 +77,7 @@ Rails.application.routes.draw do
       get "get_group_for_admin_view/:id" => "groups_api#get_group_for_admin_view"
       post "get_refinement_groups" => "groups_api#get_refinement_groups"
       post "get_search_groups" => "groups_api#get_search_groups"
-      post "get_groups_refinemented_by_fes_year" => "groups_api#get_groups_refinemented_by_fes_year"
+      get "get_groups_refinemented_by_current_fes_year" => "groups_api#get_groups_refinemented_by_current_fes_year"
 
       #---電力申請ページ
       get "get_power_order_index_for_admin_view" => "power_orders_api#get_power_order_index_for_admin_view"
