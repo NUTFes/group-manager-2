@@ -246,8 +246,8 @@ export default {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
 
-    const groupUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" + currentYearRes.data.fes_year_id
-    const groupRes = await $axios.$post(groupUrl)
+    const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
+    const groupRes = await $axios.$get(groupUrl)
 
     // const url = "/api/v1/get_stage_common_option_index_for_admin_view";
     const url = "/api/v1/get_refinement_stage_common_options?fes_year_id=" + currentYearRes.data.fes_year_id + "&own_equipment=0&bgm=0&camera_permission=0&loud_sound=0";
@@ -315,7 +315,6 @@ export default {
       }
       this.stageCommonOption = [];
       const refUrl = "/api/v1/get_refinement_stage_common_options?fes_year_id=" + this.refYearID + "&own_equipment=" + this.refIsOwnEquipmentID + "&bgm=" + this.refIsBgmID + "&camera_permission=" + this.refIsCameraPermissionID + "&loud_sound=" + this.refIsLoudSoundID
-      console.log(refUrl)
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.stageCommonOption.push(res)

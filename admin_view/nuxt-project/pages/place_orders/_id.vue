@@ -55,27 +55,12 @@
       </Card>
     </Row>
 
-{{ placeOrder }}
-
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
       title="会場申請の編集"
     >
       <template v-slot:form>
-        <div>
-          <h3>団体名</h3>
-          <select v-model="groupID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="group in groupList"
-              :key="group.id"
-              :value="group.id"
-            >
-              {{ group.name }}
-            </option>
-          </select>
-        </div>
         <div>
           <h3>第一希望</h3>
           <select v-model="firstPlaceOrder">
@@ -173,7 +158,7 @@ export default {
   },
   methods: {
     edit (){
-      const url = "/place_orders/" + this.routeId + "?group_id=" + this.groupID + "&first=" + this.firstPlaceOrder + "&second=" + this.secondPlaceOrder + "&third=" + this.thirdPlaceOrder + "&remark=" + this.remark
+      const url = "/place_orders/" + this.routeId + "?group_id=" + this.placeOrder.group.id + "&first=" + this.firstPlaceOrder + "&second=" + this.secondPlaceOrder + "&third=" + this.thirdPlaceOrder + "&remark=" + this.remark
       this.$axios.$put(url).then((response) => {
         this.reload(response.data.id);
         this.closeEditModal()
@@ -190,10 +175,6 @@ export default {
       this.$router.push("/place_orders");
     },
     async openEditModal() {
-      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
-      const resGroups = await this.$axios.$get(url)
-      this.groupList = resGroups.data
-      this.groupID = this.placeOrder.group.id
       const placesUrl = "/places"
       const resPlaces = await this.$axios.$get(placesUrl)
       this.placeList = resPlaces.data

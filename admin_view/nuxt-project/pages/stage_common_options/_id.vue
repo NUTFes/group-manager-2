@@ -189,17 +189,12 @@ export default {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
 
-    const groupUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=" + currentYearRes.data.fes_year_id
-    const groupRes = await $axios.$post(groupUrl)
-
-
     const url =
       "/api/v1/get_stage_common_option_show_for_admin_view/" + routeId;
     const response = await $axios.$get(url);
     return {
       stageCommonOption: response.data,
       route: url,
-      groupList: groupRes.data,
       //v-model
       appGroup: response.data.group.id,
       ownEquipment: response.data.stage_common_option.own_equipment,
