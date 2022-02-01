@@ -8,6 +8,7 @@
 /view/dist
 /admin_view/dist
 /inside_view/dist
+*.env
 
 # Log files
 /view/npm-debug.log*
