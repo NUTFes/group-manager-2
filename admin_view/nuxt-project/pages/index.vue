@@ -145,7 +145,7 @@ body {
   float: left;
   color: #fff;
   font-family: "Exo", sans-serif;
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 200;
 }
 
