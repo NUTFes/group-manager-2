@@ -6,12 +6,12 @@ build:
 	docker compose run --rm admin_view npm install
 	docker compose run --rm api rails db:create
 	docker compose run --rm api rails db:migrate
-	docker compose run --rm api rails db:seed_fu
+	docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
 
 build db:
 	docker compose run --rm api rails db:create
 	docker compose run --rm api rails db:migrate
-	docker compose run --rm api rails db:seed_fu
+	docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
 
 prod-build:
 	docker compose -f docker-compose.prod.yml build
@@ -22,7 +22,7 @@ prod-build:
 	docker compose -f docker-compose.prod.yml run --rm admin_view npm install
 	docker compose -f docker-compose.prod.yml run --rm api rails db:create
 	docker compose -f docker-compose.prod.yml run --rm api rails db:migrate
-	docker compose -f docker-compose.prod.yml run --rm api rails db:seed_fu
+	docker compose -f docker-compose.prod.yml run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/production
 
 prod-up:
 	docker compose -f docker-compose.prod.yml up -d
