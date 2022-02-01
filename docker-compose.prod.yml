@@ -1,18 +1,5 @@
 version: '3'
 services:
-  db:
-    image: mysql:8.0
-    container_name: 'GM2-DB'
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - "3306:3306"
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - mysql-data:/var/lib/mysql
-    tty: true
-    restart: always
-
   api:
     build: ./api
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec pumactl start"
@@ -21,19 +8,26 @@ services:
       - ./api:/myapp
     ports:
       - "3000:3000"
-    depends_on:
-      - db
     stdin_open: true
     tty: true
     environment: 
       - RAILS_ENV=production
-    
+    env_file:
+      - nutmeg-mysql.env
+
   view: #  build only
     build: ./view
     container_name: 'GM2-VIEW'
     volumes:
       - ./view:/app
-      - code_share:/app/vue-project/dist
+    environment:
+      - VUE_APP_URL=https://group-manager-api.nutfes.net
+
+  inside_view: #  build only
+    build: ./inside_view
+    container_name: 'GM2-INSIDE-VIEW'
+    volumes:
+      - ./inside_view:/app
     environment:
       - VUE_APP_URL=https://group-manager-api.nutfes.net
 
@@ -49,15 +43,15 @@ services:
     environment:
       - VUE_APP_URL=https://group-manager-api.nutfes.net
 
-
   web:
     image: nginx:1.17
     container_name: 'GM2-WEB'
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - code_share:/var/www/vhosts/group-manager.nutfes.net
+      - ./web/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./inside_view/vue-project/dist:/var/www/vhosts/group-manager-inside.nutfes.net
+      - ./view/vue-project/dist:/var/www/vhosts/group-manager.nutfes.net
     ports:
-      - 10001:80
+      - 80:80
     depends_on:
       - admin_view
       - api

@@ -235,7 +235,7 @@ export default {
     },
     async printPDF() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL +
         "/print_pdf/group_info/" +
         this.group.group.id +
         "/output.pdf";
@@ -243,7 +243,7 @@ export default {
     },
     async printRentalItemsPDF() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL +
         "/print_pdf/group/" +
         this.group.group.id +
         "/output.pdf";

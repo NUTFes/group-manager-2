@@ -232,7 +232,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL + 
         "/api/v1/get_food_products_csv/" +
         this.refYearID;
       window.open(url, "販売食品申請_CSV");

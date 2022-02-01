@@ -278,7 +278,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL + 
         "/api/v1/get_stage_orders_csv/" +
         this.refYearID;
       window.open(url, "ステージ申請一覧_CSV");

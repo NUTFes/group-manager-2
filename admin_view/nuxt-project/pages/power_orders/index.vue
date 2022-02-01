@@ -224,7 +224,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        "http://localhost:3000" +
+        this.$config.apiURL + 
         "/api/v1/get_power_orders_csv/" +
         this.refYearID;
       window.open(url, "電力申請_CSV");

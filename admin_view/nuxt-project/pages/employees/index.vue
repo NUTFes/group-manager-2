@@ -115,8 +115,8 @@ export default {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
 
-    const groupUrl = "/api/v1/get_groups_refinemented_by_fes_year?fes_year_id=1"
-    const groupRes = await $axios.$post(groupUrl)
+    const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
+    const groupRes = await $axios.$get(groupUrl)
 
     const url =
       "/api/v1/get_refinement_employees?fes_year_id=" +
@@ -195,7 +195,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        "http://localhost:3000" + "/api/v1/get_employees_csv/" + this.refYearID;
+        this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
       window.open(url, "従業員一覧_CSV");
     },
   },

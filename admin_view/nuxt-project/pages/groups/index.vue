@@ -272,8 +272,7 @@ export default {
       });
     },
     async downloadCSV() {
-      const url =
-        "http://localhost:3000" + "/api/v1/get_groups_csv/" + this.refYearID;
+      const url = this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
       window.open(url, "参加団体一覧_CSV");
     },
   },
