@@ -105,7 +105,7 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="ステージオプション申請の追加"
     >
       <template v-slot:form>
         <div>
@@ -122,12 +122,60 @@
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>所持機器の使用</h3>
+          <select v-model="ownEquipment">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isOwnEquipmentList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>音楽をかける</h3>
+          <select v-model="bgm">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isBgmList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>撮影許可</h3>
+          <select v-model="cameraPermission">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isCameraPermissionList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>騒音</h3>
+          <select v-model="loudSound">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isLoudSoundList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>ステージ内容</h3>
+          <textarea v-model="stageContent" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -155,22 +203,33 @@ export default {
         "編集日時",
       ],
       isOwnEquipmentList: [
-        { id: 1, value: "使用する" },
-        { id: 2, value: "使用しない" }
+        { id: 1, value: "使用する", bool: true },
+        { id: 2, value: "使用しない", bool: false }
       ],
       isBgmList: [
-        { id: 1, value: "かける" },
-        { id: 2, value: "かけない" }
+        { id: 1, value: "かける", bool: true },
+        { id: 2, value: "かけない", bool: false }
       ],
       isCameraPermissionList: [
-        { id: 1, value: "許可" },
-        { id: 2, value: "許可しない" }
+        { id: 1, value: "許可", bool: true },
+        { id: 2, value: "許可しない", bool: false }
       ],
       isLoudSoundList: [
-        { id: 1, value: "出す" },
-        { id: 2, value: "出さない" }
+        { id: 1, value: "出す", bool: true },
+        { id: 2, value: "出さない", bool: false }
       ],
       isOpenAddModal: false,
+      //v-model
+      appGroup: "",
+      ownEquipment: "",
+      bgm: "",
+      cameraPermission: "",
+      loudSound: "",
+      stageContent: "",
+      //refinement
+      stageCommonOption: [],
+      searchText: "",
+      //other
       refYears: "Years",
       refYearID: 0,
       refIsOwnEquipment: "所持機器の使用",
@@ -181,13 +240,14 @@ export default {
       refIsCameraPermissionID: 0,
       refIsLoudSound: "大きな音",
       refIsLoudSoundID: 0,
-      stageCommonOption: [],
-      searchText: "",
     };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+
+    const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
+    const groupRes = await $axios.$get(groupUrl)
 
     // const url = "/api/v1/get_stage_common_option_index_for_admin_view";
     const url = "/api/v1/get_refinement_stage_common_options?fes_year_id=" + currentYearRes.data.fes_year_id + "&own_equipment=0&bgm=0&camera_permission=0&loud_sound=0";
@@ -201,7 +261,8 @@ export default {
       stageCommonOption: stageCommonOptionRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num
+      refYears: currentYears[0].year_num,
+      groupList: groupRes.data,
     };
   },
   methods: {
@@ -254,7 +315,6 @@ export default {
       }
       this.stageCommonOption = [];
       const refUrl = "/api/v1/get_refinement_stage_common_options?fes_year_id=" + this.refYearID + "&own_equipment=" + this.refIsOwnEquipmentID + "&bgm=" + this.refIsBgmID + "&camera_permission=" + this.refIsCameraPermissionID + "&loud_sound=" + this.refIsLoudSoundID
-      console.log(refUrl)
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.stageCommonOption.push(res)
@@ -275,28 +335,25 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
-      });
-    },
     async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+      const postStageOptionUrl =
+        "/stage_common_options/" +
+        "?group_id=" + this.appGroup +
+        "&own_equipment=" + this.ownEquipment +
+        "&bgm=" + this.bgm +
+        "&camera_permission=" + this.cameraPermission +
+        "&loud_sound=" + this.loudSound +
+        "&stage_content=" + this.stageContent
+      console.log(postStageOptionUrl)
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+      await this.$axios.$post(postStageOptionUrl).then((response) => {
+        this.groupID = "";
+        this.ownEquipment = "";
+        this.bgm = "";
+        this.cameraPermission = "";
+        this.loudSound = "";
+        this.stageContent = "";
+        this.refinementStageCommonOptions(0, this.yearList);
         this.closeAddModal();
       });
     },

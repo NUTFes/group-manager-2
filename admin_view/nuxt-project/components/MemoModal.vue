@@ -7,18 +7,21 @@
             <slot></slot>
           </Row>
           <div class="memo-modal_content">
-            <textarea v-model="activity" placeholder="メモ" />
-            <CommonButton iconName="add_circle" :on_click="submitGroup"
+            <textarea v-model="content" placeholder="メモ" />
+            <CommonButton v-if="content !== ''" iconName="add_circle" :on_click="submit"
+              >投稿</CommonButton
+            >
+            <CommonButton v-else disabled iconName="add_circle" :on_click="submit"
               >投稿</CommonButton
             >
           </div>
           <div class="memo-modal__time-line">
-            <div v-for="n in 20">
+            <div v-for="memo in memos" :key="memo.id">
               <Row>
-                <h4>{{ test.user }}</h4>
-                <h5>{{ test.created_at }}</h5>
+                <h4>{{ memo.user.name }}</h4>
+                <h5>{{ memo.memo.created_at | formatDate }}</h5>
               </Row>
-              <p>{{ test.text }}</p>
+              <p>{{ memo.memo.content }}</p>
             </div>
           </div>
         </div>
@@ -29,15 +32,34 @@
 
 <script>
 export default {
+  props: {
+    memos: Array
+  },
   data() {
     return {
-      test: {
-        user: "陳郡の袁傪",
-        text: "驚懼の中にも、彼は咄嗟に思いあたって、叫んだ。「その声は、我が友、李徴子ではないか？」",
-        created_at: "2022/11/11 23:59:59",
-      },
+      content: '',
+      user: null
     };
   },
+  methods: {
+    async submit() {
+      // ログイン中のユーザーを取得
+      const currentUserUrl = "/api/v1/users/show";
+      const CurrentUser = await this.$axios.get(currentUserUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
+        },
+      });
+      this.user = CurrentUser.data.data
+      const url = "/memos?content=" + this.content + "&user_id=" + this.user.id
+      const res = await this.$axios.$post(url)
+      this.memos.unshift(res.data)
+      this.content = ""
+    }
+  }
 };
 </script>
 

@@ -22,7 +22,7 @@
     >
       <IconButton icon_name="close" :on_click="closeNotificationModal" />
     </NotificationModal>
-    <MemoModal @close="closeMemoModal" v-if="isOpenMemoModal">
+    <MemoModal @close="closeMemoModal" v-if="isOpenMemoModal" :memos="memos" >
       <IconButton icon_name="close" :on_click="closeMemoModal" />
     </MemoModal>
     <AccountModal @close="closeAccountModal" v-if="isOpenAccountModal">
@@ -61,6 +61,7 @@ export default {
       isOpenMemoModal: false,
       isOpenNotificationModal: false,
       searchText: "",
+      memos: [],
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
         { id: 2, name: "模擬店(物品販売)" },
@@ -108,7 +109,11 @@ export default {
     closeNotificationModal() {
       this.isOpenNotificationModal = false;
     },
-    openMemoModal() {
+    async openMemoModal() {
+      const memosUrl = "/memos"
+      const memosRes = await this.$axios.$get(memosUrl)
+      this.memos = memosRes.data
+      console.log(this.memos)
       this.isOpenMemoModal = true;
     },
     closeMemoModal() {

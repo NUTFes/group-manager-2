@@ -7,12 +7,13 @@
             <slot></slot>
           </Row>
           <div class="notification-modal__time-line">
-            <div v-for="n in 20">
+            <div v-for="content in contents" :key="content.id">
               <Row>
-                <h4>{{ test.user }}</h4>
-                <h5>{{ test.created_at }}</h5>
+                <h4>{{ content.status }}</h4>
+                <h5>{{ content.created_at }}</h5>
               </Row>
-              <p>{{ test.text }}</p>
+              <br>
+                <p>{{ content.text }}</p>
             </div>
           </div>
         </div>
@@ -25,11 +26,21 @@
 export default {
   data() {
     return {
-      test: {
-        user: "陳郡の袁傪",
-        text: "驚懼の中にも、彼は咄嗟に思いあたって、叫んだ。「その声は、我が友、李徴子ではないか？」",
-        created_at: "2022/11/11 23:59:59",
-      },
+     // NEW: 新規機能追加, FIX: バグ修正, RELEASE: リリース, OTHER: その他
+      contents: [
+        {
+          id: 1,
+          status: "RELEASE",
+          text: "バージョン 2.0.0をリリースしました",
+          created_at: "2022/2/1",
+        },
+        {
+          id: 2,
+          status: "NEW",
+          text: "UIを全く新しくしました",
+          created_at: "2022/2/1",
+        },
+      ]
     };
   },
 };
