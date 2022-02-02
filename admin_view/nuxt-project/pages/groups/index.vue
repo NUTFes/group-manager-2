@@ -1,9 +1,6 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="参加団体申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openSnackBar">
-        Test
-      </CommonButton>
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
