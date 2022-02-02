@@ -1,6 +1,9 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="参加団体申請一覧">
+      <CommonButton iconName="add_circle" :on_click="openSnackBar">
+        Test
+      </CommonButton>
       <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
@@ -106,11 +109,16 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitGroup"
-          >登録</CommonButton
-        >
+        <CommonButton iconName="add_circle" :on_click="submitGroup">登録</CommonButton>
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -141,6 +149,7 @@ export default {
       refGroupCategories: "Categories",
       refCategoryID: 0,
       isOpenAddModal: false,
+      isOpenSnackBar: true,
       searchText: "",
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
@@ -229,6 +238,14 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     reload() {
       const groupId = this.groups.slice(-1)[0].group.id + 1;
       const reUrl = "/api/v1/get_group_for_admin_view/" + groupId;
@@ -258,10 +275,9 @@ export default {
         this.activity +
         "&group_category_id=" +
         this.groupCategoryId +
-        "&fes_year_id=" +
-        this.fesYearId;
-
+        "&fes_year_id=" + this.fesYearId
       this.$axios.$post(postGroupUrl).then((response) => {
+        this.openSnackBar(this.groupName + "を追加しました");
         this.groupName = "";
         this.projectName = "";
         this.activity = "";
@@ -274,6 +290,7 @@ export default {
     async downloadCSV() {
       const url = this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
       window.open(url, "参加団体一覧_CSV");
+      this.openSnackBar("参加団体一覧をダウンロードしました");
     },
   },
 };
