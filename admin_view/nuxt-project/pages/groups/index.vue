@@ -146,7 +146,7 @@ export default {
       refGroupCategories: "Categories",
       refCategoryID: 0,
       isOpenAddModal: false,
-      isOpenSnackBar: true,
+      isOpenSnackBar: false,
       searchText: "",
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
