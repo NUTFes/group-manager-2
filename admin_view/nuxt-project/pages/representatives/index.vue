@@ -46,12 +46,12 @@
             @click="
               () =>
                 $router.push({
-                  path: `/representatives/` + representative.user.id,
+                  path: `/representatives/` + representative.group.id,
                 })
             "
             :key="index"
           >
-            <td>{{ representative.user.id }}</td>
+            <td>{{ representative.group.id }}</td>
             <td>{{ representative.group.name }}</td>
             <td>{{ representative.user.name }}</td>
             <td>{{ representative.sub_rep.name }}</td>
@@ -65,12 +65,12 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="副代表の追加"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="groupID">
             <option disabled value="">選択してください</option>
             <option
               v-for="group in groupList"
@@ -83,19 +83,61 @@
         </div>
         <div>
           <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>課程・専攻</h3>
+          <select v-model="departmentID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="department in departmentList"
+              :key="department.id"
+              :value="department.id"
+            >
+              {{ department.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>学年</h3>
+          <select v-model="gradeID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="grade in gradeList"
+              :key="grade.id"
+              :value="grade.id"
+            >
+              {{ grade.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>メールアドレス</h3>
+          <input v-model="email" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>電話番号</h3>
+          <input v-model="tel" placeholder="入力してください" />
         </div>
         <div>
           <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <input v-model="studentID" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -105,11 +147,58 @@ export default {
   data() {
     return {
       headers: ["ID", "参加団体", "代表者", "副代表", "登録日時", "編集日時"],
+      departmentList: [
+        { id: 1, name: '機械創造工学課程' },
+        { id: 2, name: '電気電子情報工学課程' },
+        { id: 3, name: '物質材料工学課程' },
+        { id: 4, name: '環境社会基盤工学課程' },
+        { id: 5, name: '生物機能工学課程' },
+        { id: 6, name: '情報・経営システム工学課程' },
+        { id: 7, name: '機械創造工学専攻' },
+        { id: 8, name: '電気電子情報工学専攻' },
+        { id: 9, name: '物質材料工学専攻' },
+        { id: 10, name: '環境社会基盤工学専攻' },
+        { id: 11, name: '生物機能工学専攻' },
+        { id: 12, name: '情報・経営システム工学専攻' },
+        { id: 13, name: '原子力システム安全工学専攻' },
+        { id: 14, name: 'システム安全専攻' },
+        { id: 15, name: '技術科学イノベーション専攻' },
+        { id: 16, name: '情報・制御工学専攻' },
+        { id: 17, name: '材料工学専攻' },
+        { id: 18, name: 'エネルギー・環境工学専攻' },
+        { id: 19, name: '生物統合工学専攻' },
+        { id: 20, name: 'その他' }
+      ],
+      gradeList: [
+        { id: 1, name: 'B1[学部1年]' },
+        { id: 2, name: 'B2[学部2年]' },
+        { id: 3, name: 'B3[学部3年]' },
+        { id: 4, name: 'B4[学部4年]' },
+        { id: 5, name: 'M1[修士1年]' },
+        { id: 6, name: 'M2[修士2年]' },
+        { id: 7, name: 'D1[博士1年]' },
+        { id: 8, name: 'D2[博士2年]' },
+        { id: 9, name: 'D3[博士3年]' },
+        { id: 10, name: 'GD1[イノベ1年]' },
+        { id: 11, name: 'GD2[イノベ2年]' },
+        { id: 12, name: 'GD3[イノベ3年]' },
+        { id: 13, name: 'GD4[イノベ4年]' },
+        { id: 14, name: 'GD4[イノベ5年]' },
+        { id: 15, name: 'その他' }
+      ],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
       refYears: "Year",
       refYearID: 0,
       searchText: "",
       representatives: [],
+      name: null,
+      groupID: null,
+      departmentID: null,
+      gradeID: null,
+      tel: null,
+      email: null,
+      studentID: null
     };
   },
   async asyncData({ $axios }) {
@@ -131,6 +220,7 @@ export default {
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
+      currentYearID: currentYears
     };
   },
   methods: {
@@ -160,37 +250,46 @@ export default {
         this.representatives.push(res);
       }
     },
-    openAddModal() {
-      this.isOpenAddModal = false;
+    async openAddModal() {
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const resGroups = await this.$axios.$get(groupUrl)
+      this.groupList = resGroups.data
+
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+      const url = "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
+      this.representatives = []
+      this.$axios.$post(url).then((response) => {
+        this.representatives = response.data;
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+    submit() {
+      const url = "/sub_reps?group_id=" + this.groupID + "&name=" + this.name + "&department_id=" + this.departmentID + "&grade_id=" + this.gradeID + "&email=" + this.email + "&tel=" + this.tel + "&student_id=" + this.studentID
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
-        this.closeAddModal();
+      this.$axios.$post(url).then((res) => {
+        this.name = ""
+        this.groupID = ""
+        this.departmentID = ""
+        this.gradeID = ""
+        this.tel = ""
+        this.email = ""
+        this.studentID = ""
+        this.openSnackBar(res.data.name + "を追加しました")
       });
+      this.reload();
+      this.closeAddModal();
     },
   },
 };

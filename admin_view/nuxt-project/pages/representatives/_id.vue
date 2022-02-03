@@ -4,10 +4,10 @@
       v-bind:pageTitle="representative.user.name"
       pageSubTitle="代表者一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="representative.sub_rep.id != null" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="representative.sub_rep.id != null" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -48,61 +48,77 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="副代表の編集"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
+          <h3>氏名</h3>
+          <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <h3>課程・専攻</h3>
+          <select v-model="departmentID">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="department in departmentList"
+              :key="department.id"
+              :value="department.id"
             >
-              {{ category.name }}
+              {{ department.name }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
+          <h3>学年</h3>
+          <select v-model="gradeID">
             <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
+            <option
+              v-for="grade in gradeList"
+              :key="grade.id"
+              :value="grade.id"
+            >
+              {{ grade.name }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>メールアドレス</h3>
+          <input v-model="email" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>電話番号</h3>
+          <input v-model="tel" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="studentID" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
       </template>
     </EditModal>
 
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+      title="副代表の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
       </template>
     </DeleteModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -113,6 +129,46 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
+      departmentList: [
+        { id: 1, name: '機械創造工学課程' },
+        { id: 2, name: '電気電子情報工学課程' },
+        { id: 3, name: '物質材料工学課程' },
+        { id: 4, name: '環境社会基盤工学課程' },
+        { id: 5, name: '生物機能工学課程' },
+        { id: 6, name: '情報・経営システム工学課程' },
+        { id: 7, name: '機械創造工学専攻' },
+        { id: 8, name: '電気電子情報工学専攻' },
+        { id: 9, name: '物質材料工学専攻' },
+        { id: 10, name: '環境社会基盤工学専攻' },
+        { id: 11, name: '生物機能工学専攻' },
+        { id: 12, name: '情報・経営システム工学専攻' },
+        { id: 13, name: '原子力システム安全工学専攻' },
+        { id: 14, name: 'システム安全専攻' },
+        { id: 15, name: '技術科学イノベーション専攻' },
+        { id: 16, name: '情報・制御工学専攻' },
+        { id: 17, name: '材料工学専攻' },
+        { id: 18, name: 'エネルギー・環境工学専攻' },
+        { id: 19, name: '生物統合工学専攻' },
+        { id: 20, name: 'その他' }
+      ],
+      gradeList: [
+        { id: 1, name: 'B1[学部1年]' },
+        { id: 2, name: 'B2[学部2年]' },
+        { id: 3, name: 'B3[学部3年]' },
+        { id: 4, name: 'B4[学部4年]' },
+        { id: 5, name: 'M1[修士1年]' },
+        { id: 6, name: 'M2[修士2年]' },
+        { id: 7, name: 'D1[博士1年]' },
+        { id: 8, name: 'D2[博士2年]' },
+        { id: 9, name: 'D3[博士3年]' },
+        { id: 10, name: 'GD1[イノベ1年]' },
+        { id: 11, name: 'GD2[イノベ2年]' },
+        { id: 12, name: 'GD3[イノベ3年]' },
+        { id: 13, name: 'GD4[イノベ4年]' },
+        { id: 14, name: 'GD4[イノベ5年]' },
+        { id: 15, name: 'その他' }
+      ],
     };
   },
   async asyncData({ $axios, route }) {
@@ -120,13 +176,27 @@ export default {
     const url = "/api/v1/get_representative_show_for_admin_view/" + routeId;
     const response = await $axios.$get(url);
     return {
+      routeId: routeId,
       representative: response.data,
       route: url,
+      groupID: null,
+      name: null,
+      departmentID: null,
+      gradeID: null,
+      email: null,
+      tel: null,
+      studentID: null
     };
   },
   methods: {
     openEditModal() {
-      this.isOpenEditModal = false;
+      this.groupID = this.representative.group.id
+      this.name = this.representative.sub_rep.name
+      this.departmentID = this.representative.sub_rep.department_id
+      this.gradeID = this.representative.sub_rep.grade_id
+      this.tel = this.representative.sub_rep.tel
+      this.email = this.representative.sub_rep.email
+      this.studentID = this.representative.sub_rep.student_id
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -139,42 +209,33 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+      const url = "/api/v1/get_representative_show_for_admin_view/" + this.routeId;
+      console.log(url)
+      const response = await $axios.$get(url);
+      this.representative = response.data;
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+    async edit() {
+      const url = "/sub_reps/" + this.representative.sub_rep.id + "?group_id=" + this.groupID + "&name=" + this.name + "&department_id=" + this.departmentID + "&grade_id=" + this.gradeID + "&email=" + this.email + "&tel=" + this.tel + "&student_id=" + this.studentID
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload();
-        this.closeEditModal();
-      });
+      this.$axios.$put(url);
+      this.closeEditModal();
+      this.openSnackBar("副代表を編集しました")
+      this.reload();
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+    async destroy() {
+      const delUrl = "/sub_reps/" + this.representative.sub_rep.id;
+      await this.$axios.$delete(delUrl);
+      this.openSnackBar("副代表を削除しました")
+      this.$router.push("/representatives");
     },
   },
 };
