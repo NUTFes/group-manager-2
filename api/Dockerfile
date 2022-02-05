@@ -22,6 +22,8 @@ RUN apt-get install fonts-ipa*
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
+RUN mkdir /myapp/tmp
+RUN mkdir /myapp/tmp/pids
 RUN bundle install
 COPY . /myapp
 

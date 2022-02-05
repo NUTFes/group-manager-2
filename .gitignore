@@ -6,7 +6,7 @@
 /admin_api/tmp
 .DS_Store
 /view/vue-project/dist
-/inside_view/vue-project/dit
+/inside_view/vue-project/dist
 *.env
 
 # Log files
