@@ -64,42 +64,28 @@
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
+          <h3>製品</h3>
+          <input v-model="item" placeholder="入力してください" />
         </div>
         <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
-            >
-              {{ category.name }}
-            </option>
-          </select>
+          <h3>電力</h3>
+          <input v-model="power" type="number" placeholder="入力してください" />
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
+          <h3>メーカー</h3>
+          <input v-model="manufacturer" placeholder="入力してください" />
         </div>
         <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
+          <h3>型番</h3>
+          <input v-model="model" placeholder="入力してください" />
         </div>
         <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
-            <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
-            </option>
-          </select>
+          <h3>製品URL</h3>
+          <input v-model="itemUrl" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -109,29 +95,38 @@
       title="参加団体申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
       </template>
     </DeleteModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      groupID: null,
+      item: null,
+      power: 0,
+      manufacturer: null,
+      model: null,
+      itemUrl: null,
+      isOpenSnackBar: false,
     };
-  },
-  computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-    }),
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/power_orders/", "");
@@ -140,11 +135,16 @@ export default {
     return {
       powerOrder: response.data,
       route: url,
+      routeId: routeId
     };
   },
   methods: {
     openEditModal() {
-      this.isOpenEditModal = false;
+      this.item = this.powerOrder.power_order.item
+      this.power = this.powerOrder.power_order.power
+      this.manufacturer = this.powerOrder.power_order.manufacturer
+      this.model = this.powerOrder.power_order.model
+      this.itemUrl = this.powerOrder.power_order.item_url
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -157,42 +157,33 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async reload() {
+      const url = "/api/v1/get_power_order_show_for_admin_view/" + this.routeId;
+      const res = await this.$axios.$get(url);
+      this.powerOrder = res.data;
+    },
+    async edit() {
+      const url = "/power_orders/" + this.routeId + "?group_id=" + this.powerOrder.power_order.group_id + "&item=" + this.item + "&power=" + this.power + "&manufacturer=" + this.manufacturer + "&model=" + this.model + "&item_url=" + this.itemUrl
+      console.log(url)
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
+      await this.$axios.$put(url).then(() => {
+        this.openSnackBar(this.item + "を編集しました")
         this.reload();
         this.closeEditModal();
       });
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+    async destroy() {
+      const delUrl = "/power_orders/" + this.routeId
+      await this.$axios.$delete(delUrl);
+      this.$router.push("/power_orders");
     },
   },
 };

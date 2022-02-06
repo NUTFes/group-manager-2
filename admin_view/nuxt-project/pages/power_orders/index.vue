@@ -71,12 +71,12 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="電力申請の追加"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="groupID">
             <option disabled value="">選択してください</option>
             <option
               v-for="group in groupList"
@@ -88,20 +88,40 @@
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>製品</h3>
+          <input v-model="item" placeholder="入力してください" />
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>電力</h3>
+          <input v-model="power" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>メーカー</h3>
+          <input v-model="manufacturer" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>型番</h3>
+          <input v-model="model" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>製品URL</h3>
+          <input v-model="itemUrl" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -130,6 +150,13 @@ export default {
         { id: 10, power: 900 },
         { id: 11, power: 1000 },
       ],
+      groupID: null,
+      item: null,
+      power: 0,
+      manufacturer: null,
+      model: null,
+      itemUrl: null,
+      isOpenSnackBar: false,
     };
   },
   async asyncData({ $axios }) {
@@ -190,36 +217,41 @@ export default {
         this.powerOrders.push(res);
       }
     },
-    openAddModal() {
-      this.isOpenAddModal = false;
+    async openAddModal() {
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const resGroups = await this.$axios.$get(url)
+      this.groupList = resGroups.data
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const powerOrderUrl = "/api/v1/get_power_order_show_for_admin_view/" + id
+      this.$axios.$get(powerOrderUrl).then((response) => {
+        this.powerOrders.push(response.data)
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
-
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+    async submit() {
+      const url = "/power_orders?group_id=" + this.groupID + "&item=" + this.item + "&power=" + this.power + "&manufacturer=" + this.manufacturer + "&model=" + this.model + "&item_url=" + this.itemUrl
+      this.$axios.$post(url).then((response) => {
+        this.reload(response.data.id);
+        this.openSnackBar(this.item + "を追加しました")
         this.closeAddModal();
+        this.groupID = null
+        this.item = null
+        this.power = null
+        this.manufacturer = null
+        this.model = null
+        this.item_url = null
       });
     },
     async downloadCSV() {
