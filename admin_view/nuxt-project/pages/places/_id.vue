@@ -139,7 +139,6 @@ export default {
       this.group = reGroupRes.data;
     },
     async editGroup() {
-      console.log(this.group.group.id);
       const putGroupUrl =
         "/groups/" +
         this.group.group.id +
@@ -153,7 +152,6 @@ export default {
         this.activity +
         "&fes_year_id=" +
         this.fesYearId;
-      console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.groupName = "";
