@@ -66,7 +66,7 @@
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="groupId">
             <option disabled value="">選択してください</option>
             <option
               v-for="group in groupList"
@@ -92,6 +92,14 @@
         >
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -102,21 +110,20 @@ export default {
     return {
       headers: ["ID", "参加団体", "名前", "学籍番号", "登録日時", "編集日時"],
       isOpenAddModal: false,
-      appGroup: "",
+      isOpenSnackBar: false,
+      groupId: "",
       employeeName: "",
       employeeStudentId: "",
       employees: [],
       refYears: "Year",
       refYearID: 0,
       searchText: "",
+      groupList: [],
     };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-
-    const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
-    const groupRes = await $axios.$get(groupUrl)
 
     const url =
       "/api/v1/get_refinement_employees?fes_year_id=" +
@@ -132,7 +139,6 @@ export default {
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
-      groupList: groupRes.data,
     };
   },
   methods: {
@@ -161,16 +167,25 @@ export default {
         this.employees.push(res);
       }
     },
-    openAddModal() {
-      this.isOpenAddModal = false;
+    async openAddModal() {
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const groupRes = await this.$axios.$get(groupUrl)
+      this.groupList = groupRes.data
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + id;
       this.$axios.$get(reUrl).then((response) => {
         this.employees.push(response.data);
       });
@@ -179,17 +194,18 @@ export default {
       const postEmployeeUrl =
         "/employees/" +
         "?group_id=" +
-        this.appGroup +
+        this.groupId +
         "&name=" +
         this.employeeName +
         "&student_id=" +
         this.employeeStudentId;
 
       this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.openSnackBar(this.employeeName + "を追加しました");
         this.appGroup = "";
         this.employeeName = "";
         this.employeeStudentId = "";
-        this.reload();
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },

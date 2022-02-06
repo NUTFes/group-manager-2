@@ -60,7 +60,7 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="電力申請の編集"
     >
       <template v-slot:form>
         <div>
@@ -92,7 +92,7 @@
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+      title="電力申請の削除"
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>

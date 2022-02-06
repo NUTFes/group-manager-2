@@ -153,6 +153,7 @@ Rails.application.routes.draw do
       post "users/reset_password" => "users#reset_password"
       post "get_refinement_users" => "users#get_refinement_users"
       post "get_search_users" => "users#get_search_users"
+      get "users/get_user_detail" => "users#get_user_detail"
 
       # 現在のユーザーについて
       get "current_user/show" => "current_user_api#show"
