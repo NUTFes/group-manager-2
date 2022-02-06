@@ -51,7 +51,7 @@ services:
       - ./inside_view/vue-project/dist:/var/www/vhosts/group-manager-inside.nutfes.net
       - ./view/vue-project/dist:/var/www/vhosts/group-manager.nutfes.net
     ports:
-      - 80:80
+      - "443:443"
     depends_on:
       - admin_view
       - api
