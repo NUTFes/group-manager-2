@@ -1,4 +1,4 @@
-class Api::V1::ItemsApiController < ApplicationController
+class Api::V1::RentalItemsApiController < ApplicationController
   
   def get_rentable_items
     @items = RentalItem.where(is_rentable: true) 

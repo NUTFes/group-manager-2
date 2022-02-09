@@ -71,12 +71,12 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="物品申請の追加"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="groupID">
             <option disabled value="">選択してください</option>
             <option
               v-for="group in groupList"
@@ -88,20 +88,37 @@
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>物品</h3>
+          <select v-model="rentalItemID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in rentableItemList"
+              :key="item.id"
+              :value="item.id"
+            >
+              {{ item.name }}
+            </option>
+          </select>
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>個数</h3>
+          <input v-model="num" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -118,6 +135,12 @@ export default {
       refRentalItems: "Items",
       refRentalItemID: 0,
       searchText: "",
+      groupID: null,
+      rentalItemID: null,
+      num: null,
+      groupList: [],
+      rentableItemList: [],
+      isOpenSnackBar: false,
     };
   },
   async asyncData({ $axios }) {
@@ -184,35 +207,41 @@ export default {
         this.rentalOrders.push(res);
       }
     },
-    openAddModal() {
-      this.isOpenAddModal = false;
+    async openAddModal() {
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const resGroups = await this.$axios.$get(groupUrl)
+      this.groupList = resGroups.data
+      const rentableItemsUrl = "/api/v1/get_rentable_items"
+      const resRentableItems = await this.$axios.$get(rentableItemsUrl)
+      this.rentableItemList = resRentableItems.data
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/api/v1/get_rental_order_show_for_admin_view/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.rentalOrders.push(response.data);
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+    async submit() {
+      const url = "/rental_orders?group_id=" + this.groupID + "&rental_item_id=" + this.rentalItemID + "&num=" + this.num
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+      this.$axios.$post(url).then((response) => {
+        this.openSnackBar("物品申請を追加しました")
+        this.groupID = null
+        this.rentalItemID = null
+        this.num = null
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },
