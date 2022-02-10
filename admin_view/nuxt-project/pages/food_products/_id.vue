@@ -56,72 +56,79 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="販売食品申請の編集"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
+          <h3>食品名</h3>
+          <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <h3>調理するか</h3>
+          <select v-model="isCooking">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="isCook in isCookingList"
+              :key="isCook.id"
+              :value="isCook.value"
             >
-              {{ category.name }}
+              {{ isCook.text }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
+          <h3>1日目の個数</h3>
+          <input v-model="first" type="number" placeholder="入力してください" />
         </div>
         <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
-            <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
-            </option>
-          </select>
+          <h3>2日目の個数</h3>
+          <input v-model="second" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
       </template>
     </EditModal>
 
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+      title="販売食品申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
       </template>
     </DeleteModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isCookingList: [
+        { id: 1, text: "調理あり", value: true },
+        { id: 2, text: "調理なし", value: false },
+      ],
+      name: "",
+      isCooking: null,
+      first: null,
+      second: null,
+      isOpenSnackBar: false,
     };
   },
   async asyncData({ $axios, route }) {
@@ -133,14 +140,12 @@ export default {
       route: url,
     };
   },
-  computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-    }),
-  },
   methods: {
     openEditModal() {
-      this.isOpenEditModal = false;
+      this.name = this.foodProduct.food_product.name
+      this.isCooking = this.foodProduct.food_product.is_cooking
+      this.first = this.foodProduct.food_product.first_day_num
+      this.second = this.foodProduct.food_product.second_day_num
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -153,42 +158,39 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async reload(id) {
+      const url = "/api/v1/get_food_product_show_for_admin_view/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.foodProduct = response.data
+      });
+    },
+    async edit() {
+      const url = "/food_products/" + this.foodProduct.food_product.id + "?group_id=" + this.foodProduct.food_product.group_id + "&name=" + this.name + "&is_cooking=" + this.isCooking + "&first_day_num=" + this.first + "&second_day_num=" + this.second
+      console.log(url)
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload();
+      await this.$axios.$put(url).then((response) => {
+        this.openSnackBar(this.name + "を編集しました")
+        this.groupID = null
+        this.name = ""
+        this.isCooking = null
+        this.first = null
+        this.second = null
+        this.reload(response.data.id);
         this.closeEditModal();
       });
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+    async destroy() {
+      const url = "/food_products/" + this.foodProduct.food_product.id
+      await this.$axios.$delete(url);
+      this.$router.push("/food_products");
     },
   },
 };
