@@ -21,7 +21,7 @@
         <SearchDropDown
           :nameList="isCookingList"
           :on_click="refinementFoodProducts"
-          value="value"
+          value="text"
         >
           {{ refIsCooking }}
         </SearchDropDown>
@@ -73,12 +73,12 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="販売食品申請の追加"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="groupID">
             <option disabled value="">選択してください</option>
             <option
               v-for="group in groupList"
@@ -90,20 +90,45 @@
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>食品名</h3>
+          <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>調理するか</h3>
+          <select v-model="isCooking">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="isCook in isCookingList"
+              :key="isCook.id"
+              :value="isCook.value"
+            >
+              {{ isCook.text }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>1日目の個数</h3>
+          <input v-model="first" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>2日目の個数</h3>
+          <input v-model="second" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -124,14 +149,21 @@ export default {
       ],
       isOpenAddModal: false,
       isCookingList: [
-        { id: 1, value: "調理あり" },
-        { id: 2, value: "調理なし" },
+        { id: 1, text: "調理あり", value: true },
+        { id: 2, text: "調理なし", value: false },
       ],
+      foodProducts: [],
       refYears: "Year",
       refYearID: 0,
       refIsCooking: "調理あり/なし",
       refIsCookingID: 0,
       searchText: "",
+      groupID: null,
+      name: "",
+      isCooking: null,
+      first: null,
+      second: null,
+      isOpenSnackBar: false,
     };
   },
   async asyncData({ $axios }) {
@@ -140,9 +172,9 @@ export default {
 
     // const url = "/api/v1/get_food_product_index_for_admin_view";
     const url =
-      "/api/v1/get_refinement_food_products?fes_year_id" +
+      "/api/v1/get_refinement_food_products?fes_year_id=" +
       currentYearRes.data.fes_year_id +
-      "&is_cooking=1";
+      "&is_cooking=0";
     const foodProductRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -174,7 +206,7 @@ export default {
         if (item_id == 0) {
           this.refIsCooking == "ALL";
         } else {
-          this.refIsCooking = name_list[item_id - 1].value;
+          this.refIsCooking = name_list[item_id - 1].text;
         }
       }
       this.foodProducts = [];
@@ -183,7 +215,6 @@ export default {
         this.refYearID +
         "&is_cooking=" +
         this.refIsCookingID;
-      console.log(refUrl);
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.foodProducts.push(res);
@@ -198,35 +229,40 @@ export default {
         this.foodProducts.push(res);
       }
     },
-    openAddModal() {
-      this.isOpenAddModal = false;
+    async openAddModal() {
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
+      const resGroups = await this.$axios.$get(url)
+      this.groupList = resGroups.data
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/api/v1/get_food_product_show_for_admin_view/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.foodProducts.push(response.data)
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+    async submit() {
+      const url = "/food_products?group_id=" + this.groupID + "&name=" + this.name + "&is_cooking=" + this.isCooking + "&first_day_num=" + this.first + "&second_day_num=" + this.second
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+      this.$axios.$post(url).then((response) => {
+        this.openSnackBar(this.name + "を追加しました")
+        this.groupID = null
+        this.name = ""
+        this.isCooking = null
+        this.first = null
+        this.second = null
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },
