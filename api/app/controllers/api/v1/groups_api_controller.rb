@@ -15,9 +15,22 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @groups)
   end
 
+  # admin_pageのviewの形に整える
+  def fit_group_index_for_admin_view(groups)
+    groups.map{
+      |group|
+      {
+        "group": group,
+        "group_category": group.group_category,
+        "fes_year": group.fes_year
+      }
+    }
+  end
+
   #fes_yearによる絞り込み
-  def get_groups_refinemented_by_fes_year
-    @group = Group.where(fes_year_id: params[:fes_year_id])
+  def get_groups_refinemented_by_current_fes_year
+    @current_fes_year = UserPageSetting.first.fes_year
+    @group = Group.where(fes_year_id: @current_fes_year.id)
     render json: fmt(ok, @group)
   end
 
@@ -42,7 +55,7 @@ class Api::V1::GroupsApiController < ApplicationController
     if @groups.count == 0
       render json: fmt(not_found, [], "Not found groups")
     else 
-      render json: fmt(ok, @groups)
+      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
   end
 
@@ -53,7 +66,7 @@ class Api::V1::GroupsApiController < ApplicationController
     if @groups.count == 0
       render json: fmt(not_found, [], "Not found groups")
     else
-      render json: fmt(ok, @groups)
+      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
   end
 

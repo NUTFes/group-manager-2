@@ -1,11 +1,12 @@
 <template>
   <div class="main-content">
-    <SubHeader
-      v-bind:pageTitle="fesYear.year_num"
-      pageSubTitle="開催年一覧"
-    >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="edit"> 削除 </CommonButton>
+    <SubHeader v-bind:pageTitle="fesYear.year_num" pageSubTitle="開催年一覧">
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,21 +14,54 @@
           <h4>基本情報</h4>
           <VerticalTable>
             <tr>
-              <th>ID</th><td>{{ fesYear.id }}</td>
+              <th>ID</th>
+              <td>{{ fesYear.id }}</td>
             </tr>
             <tr>
-              <th>開催年</th><td>{{ fesYear.year_num }}</td>
+              <th>開催年</th>
+              <td>{{ fesYear.year_num }}</td>
             </tr>
             <tr>
-              <th>登録日時</th><td>{{ fesYear.created_at | formatDate }}</td>
+              <th>登録日時</th>
+              <td>{{ fesYear.created_at | formatDate }}</td>
             </tr>
             <tr>
-              <th>編集日時</th><td>{{ fesYear.updated_at | formatDate }}</td>
+              <th>編集日時</th>
+              <td>{{ fesYear.updated_at | formatDate }}</td>
             </tr>
           </VerticalTable>
         </Row>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="参加団体申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>開催年</h3>
+          <input v-model="year_num" type="number" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="参加団体申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
   </div>
 </template>
 
@@ -36,12 +70,8 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "開催年",
-        "登録日時",
-        "編集日時"
-      ]
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
     };
   },
   async asyncData({ $axios, route }) {
@@ -50,44 +80,42 @@ export default {
     const fesYearRes = await $axios.$get(fesYearUrl);
     return {
       fesYear: fesYearRes.data,
+      routeId: routeId
     };
   },
   methods: {
-    reload: function () {
-      const url = "/fes_years/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_year = response.data;
-          this.id = response.data.id;
-          this.year_num = response.data.year_num;
-        });
+    openEditModal() {
+      this.year_num = this.fesYear.year_num
+      this.isOpenEditModal = false;
+      this.isOpenEditModal = true;
     },
-    edit_dialog_open: function () {
-      this.edit_dialog = true;
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    edit: function () {
-      const edit_url = "/fes_years/" + this.id + "?year_num=" + this.year_num;
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
     },
-    delete_yes: function () {
-      const url = "/fes_years/" + this.$route.params.id;
-      this.$axios.delete(url);
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
+    },
+    async reload(id) {
+      const url = "/fes_years/" + id
+      const res = await this.$axios.$get(url);
+      this.fesYear = res.data;
+    },
+    async edit() {
+      const url = "/fes_years/" + this.routeId + "?year_num=" + this.year_num
+      console.log(url)
+      await this.$axios.$put(url).then(() => {
+        this.year_num = null
+        this.reload(this.routeId);
+        this.closeEditModal();
+      });
+    },
+    async destroy() {
+      const delUrl = "/fes_years/" + this.routeId
+      await this.$axios.$delete(delUrl);
       this.$router.push("/fes_years");
     },
   },

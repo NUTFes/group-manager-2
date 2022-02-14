@@ -32,6 +32,24 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="開催年の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>開催年</h3>
+          <input v-model="year_num" type="number" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -40,42 +58,41 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers:[
-        'ID',
-        '開催年',
-        '登録日時', 
-        '編集日時',
-      ],
-    }
+      headers: ["ID", "開催年", "登録日時", "編集日時"],
+      isOpenAddModal: false,
+      year_num: null,
+      fesYears: [],
+    };
   },
   async asyncData({ $axios }) {
-    const fesYearUrl = "/fes_years"
+    const fesYearUrl = "/fes_years";
     const fesYearsRes = await $axios.$get(fesYearUrl);
     return {
       fesYears: fesYearsRes.data,
     };
   },
-  methods:{
-    reload: function() {
-      this.$axios.get('/fes_years', {
-        headers: { 
-          "Content-Type": "application/json", 
-        },
-      }
-      )
-        .then(response => {
-          this.fes_years = response.data
-        })
+  methods: {
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    register: function() {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("year_num", this.year_num);
-      this.$axios.post('/fes_years', params).then(response => {
-        this.reload()
-      })
-      this.year_num = []
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-  }
-}
+    reload(id) {
+      const reUrl = "/fes_years/" + id;
+      this.$axios.$get(reUrl).then((response) => {
+        this.fesYears.push(response.data);
+      });
+    },
+    async submit() {
+      const url = "/fes_years?year_num=" + this.year_num
+      this.$axios.$post(url).then((response) => {
+        this.year_num = null;
+        this.reload(response.data.id);
+        this.closeAddModal();
+      });
+    },
+  },
+};
 </script>

@@ -113,7 +113,11 @@ export default {
         //   icon: "drive_file_rename_outline",
         //   click: "/project_names",
         // },
-        { title: "代表者申請", icon: "directions_walk", click: "/representatives" },
+        {
+          title: "代表者申請",
+          icon: "directions_walk",
+          click: "/representatives",
+        },
         {
           title: "会場申請",
           icon: "person_pin_circle",
@@ -229,13 +233,13 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .menu li:hover a {
   font-weight: 500;
   letter-spacing: 1px;
-  width: calc( 100% - 1em );
+  width: calc(100% - 1em);
   transform: translateX(8px);
   background: linear-gradient(
     45deg,
@@ -244,12 +248,10 @@ export default {
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  box-shadow:  4px 4px 5px #484747,
-             -2px -2px 8px #636060;
+  box-shadow: 4px 4px 5px #484747, -2px -2px 8px #636060;
 }
 .menu li:active a {
-  box-shadow: inset 2px 2px 5px #484747,
-            inset -2px -2px 5px #686565;
+  box-shadow: inset 2px 2px 5px #484747, inset -2px -2px 5px #686565;
 }
 
 .menu a {

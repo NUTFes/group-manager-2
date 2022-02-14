@@ -1,6 +1,6 @@
 <template>
   <transition name="fade" appear>
-    <div class="add-modal">
+    <div class="add-modal" @click.self="$emit('close')">
       <div class="add-modal__container" @click.self="$emit('close')">
         <div class="add-modal__box">
           <h2>{{ title }}</h2>
@@ -9,11 +9,11 @@
               <slot name="form"></slot>
             </form>
           </div>
-          <slot name="method"/></slot>
+          <slot name="method"></slot>
+        </div>
       </div>
     </div>
-  </div>
-</transition>
+  </transition>
 </template>
 
 <script>
@@ -29,7 +29,8 @@ export default {
 </script>
 
 <style>
-.add-modal_content input, .add-modal_content textarea{
+.add-modal_content input,
+.add-modal_content textarea {
   color: var(--accent-2);
   border: 1px solid var(--accent-3);
   padding: 15px;
@@ -37,7 +38,8 @@ export default {
   transition: all 0.5s 0s ease;
 }
 
-.add-modal_content input:focus, .add-modal_content textarea:focus {
+.add-modal_content input:focus,
+.add-modal_content textarea:focus {
   border: 1px solid var(--accent-0);
   z-index: 20;
   outline: 0;
@@ -93,10 +95,11 @@ export default {
   width: 100%;
   z-index: 11;
   background-color: rgba(51, 51, 51, 0.3);
-  overflow: auto
+  overflow: auto;
 }
 .add-modal__container {
   width: 100%;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,12 +114,12 @@ export default {
   padding: 50px 50px;
   color: #fff;
   background: radial-gradient(
-  ellipse at top left,
-  rgba(51, 51, 51, 0.9),
-  rgba(51, 51, 51, 0.8)
-);
-backdrop-filter: blur(4px);
-gap: 30px;
+    ellipse at top left,
+    rgba(51, 51, 51, 0.9),
+    rgba(51, 51, 51, 0.8)
+  );
+  backdrop-filter: blur(4px);
+  gap: 30px;
 }
 
 .add-modal_content {

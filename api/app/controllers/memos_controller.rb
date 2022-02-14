@@ -4,16 +4,15 @@ class MemosController < ApplicationController
   # GET /memos
   # GET /memos.json
   def index
-    @memos = Memo.all.order(id: "DESC").limit(100)
-    memo_list = []
-    for memo in @memos
-      user = memo.user.name
-      memo_list << {
-        memo: memo,
-        user: user
+    @memos = Memo.preload(:user).order(id: "DESC").limit(100)
+      .map{ 
+        |memo| 
+        {
+          "memo": memo,
+          "user": memo.user
+        }
       }
-    end
-    render json: fmt(ok, memo_list)
+    render json: fmt(ok, @memos)
   end
 
   # GET /memos/1
@@ -25,17 +24,12 @@ class MemosController < ApplicationController
   # POST /memos
   # POST /memos.json
   def create
-    @memo = Memo.create(memo_params)
-    @memos = Memo.all.order(id: "DESC")
-    memo_list = []
-    for memo in @memos
-      user = memo.user.name
-      memo_list << {
-        memo: memo,
-        user: user
-      }
-    end
-    render json: fmt(created, memo_list)
+    @new_memo = Memo.create(memo_params)
+    @memo = {
+      "memo": @new_memo,
+      "user": @new_memo.user
+    }
+    render json: fmt(created, @memo)
     # render json: @memos
   end
 

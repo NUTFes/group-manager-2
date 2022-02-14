@@ -10,20 +10,33 @@
     </SubHeader>
 
     <SubSubHeader>
-      <SearchDropDown
-        :nameList="yearList"
-        :on_click="refinementGroups"
-        value="year_num"
-      >
-        All Years
-      </SearchDropDown>
-      <SearchDropDown
-        :nameList="groupCategories"
-        :on_click="refinementGroups"
-        value="name"
-      >
-        All Categories
-      </SearchDropDown>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementGroups"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementGroups"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchGroups"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
     </SubSubHeader>
 
     <Card width="100%">
@@ -93,11 +106,16 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitGroup"
-        >登録</CommonButton
-      >
+        <CommonButton iconName="add_circle" :on_click="submitGroup">登録</CommonButton>
       </template>
     </AddModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -112,16 +130,24 @@ export default {
       category: [],
       fes_years: [],
       years: [],
+      // v-model
       groupName: "",
       projectName: [],
       activity: [],
       groupCategoryId: "",
       fesYearId: "",
+
       year_list: [],
       user: [],
       groupId: "",
       reGroup: [],
+      refYears: "Year",
+      refYearID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
       isOpenAddModal: false,
+      isOpenSnackBar: false,
+      searchText: "",
       groupCategories: [
         { id: 1, name: "模擬店(食品販売)" },
         { id: 2, name: "模擬店(物品販売)" },
@@ -142,21 +168,65 @@ export default {
     };
   },
   async asyncData({ $axios }) {
-    const url = "/api/v1/get_group_index_for_admin_view";
-    const groupRes = await $axios.$get(url);
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    // const url = "/api/v1/get_group_index_for_admin_view";
+    const url =
+      "/api/v1/get_refinement_groups?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&group_category_id=0";
+    const groupRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
     return {
       groups: groupRes.data,
       yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
-    refinementGroups: function (id) {
-      const refUrl = "/api/v1/get_refinement_groups?fes_year_id=" + id;
-      const refRes = this.$axios.$post(refUrl);
-      console.log(refUrl);
-      console.log(refRes);
+    async refinementGroups(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+        // group_categoryで絞り込むとき
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
+        }
+      }
+      this.groups = [];
+      const refUrl =
+        "/api/v1/get_refinement_groups?fes_year_id=" +
+        this.refYearID +
+        "&group_category_id=" +
+        this.refCategoryID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.groups.push(res);
+      }
+    },
+    async searchGroups() {
+      this.groups = [];
+      const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.groups.push(res);
+      }
     },
     openAddModal() {
       this.isOpenAddModal = false;
@@ -165,15 +235,23 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     reload() {
-      const groupId = this.groups.length + 1;
-      const reUrl = "/api/v1/get_group_for_admin_view?id=" + groupId;
+      const groupId = this.groups.slice(-1)[0].group.id + 1;
+      const reUrl = "/api/v1/get_group_for_admin_view/" + groupId;
       this.$axios.$get(reUrl).then((response) => {
         this.groups.push(response.data[0]);
       });
     },
     async submitGroup() {
-      const currentUserUrl = "/api/v1/current_user/show";
+      const currentUserUrl = "/api/v1/users/show";
       const CurrentUser = await this.$axios.get(currentUserUrl, {
         headers: {
           "Content-Type": "application/json",
@@ -194,10 +272,9 @@ export default {
         this.activity +
         "&group_category_id=" +
         this.groupCategoryId +
-        "&fes_year_id=" +
-        this.fesYearId;
-
+        "&fes_year_id=" + this.fesYearId
       this.$axios.$post(postGroupUrl).then((response) => {
+        this.openSnackBar(this.groupName + "を追加しました");
         this.groupName = "";
         this.projectName = "";
         this.activity = "";
@@ -208,11 +285,9 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = "http://localhost:3000" + "/api/v1/get_groups_csv/" + 2;
-      window.open(
-        url,
-        "参加団体一覧_CSV"
-      );
+      const url = this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
+      window.open(url, "参加団体一覧_CSV");
+      this.openSnackBar("参加団体一覧をダウンロードしました");
     },
   },
 };

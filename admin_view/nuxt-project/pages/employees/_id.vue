@@ -4,8 +4,12 @@
       v-bind:pageTitle="employee.employee.name"
       pageSubTitle="従業員申請"
     >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -14,35 +18,88 @@
         </Row>
         <VerticalTable>
           <tr>
-            <th>ID</th><td>{{ employee.employee.id }}</td>
+            <th>ID</th>
+            <td>{{ employee.employee.id }}</td>
           </tr>
           <tr>
-            <th>参加団体</th><td>{{ employee.group.name }}</td>
+            <th>参加団体</th>
+            <td>{{ employee.group.name }}</td>
           </tr>
           <tr>
-            <th>氏名</th><td>{{ employee.employee.name }}</td>
+            <th>氏名</th>
+            <td>{{ employee.employee.name }}</td>
           </tr>
           <tr>
-            <th>学籍番号</th><td>{{ employee.employee.student_id }}</td>
+            <th>学籍番号</th>
+            <td>{{ employee.employee.student_id }}</td>
           </tr>
           <tr>
-            <th>登録日時</th><td>{{ employee.employee.created_at | formatDate }}</td>
+            <th>登録日時</th>
+            <td>{{ employee.employee.created_at | formatDate }}</td>
           </tr>
           <tr>
-            <th>編集日時</th><td>{{ employee.employee.updated_at | formatDate }}</td>
+            <th>編集日時</th>
+            <td>{{ employee.employee.updated_at | formatDate }}</td>
           </tr>
         </VerticalTable>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="従業員の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="studentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="従業員の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
     return {
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
+      isOpenSnackBar: false,
+      grouoId: null,
+      name: null,
+      studentId: null,
+      employee: null
     };
   },
   async asyncData({ $axios, route }) {
@@ -54,60 +111,59 @@ export default {
       route: url,
     };
   },
-  computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-    }),
-  },
   methods: {
-    reload: function () {
-      console.log("reload");
-      const url = "/api/v1/get_employee/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.employee = response.data.employee;
-          this.id = response.data.employee.id;
-          this.group = response.data.group;
-          this.student_id = response.data.employee.student_id;
-          this.group_id = response.data.employee.group_id;
-          this.name = response.data.employee.name;
-        });
+    openEditModal() {
+      this.groupId = this.employee.employee.group_id
+      this.name = this.employee.employee.name
+      this.studentId = this.employee.employee.student_id
+      this.isOpenEditModal = true;
     },
-    edit_dialog_open: function () {
-      this.edit_dialog = true;
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    edit: function () {
-      const edit_url =
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
+    },
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async reload(id) {
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + id;
+      const res = await this.$axios.$get(reUrl)
+      this.employee = res.data
+    },
+    async edit() {
+      const url =
         "/employees/" +
-        this.id +
+        this.employee.employee.id +
         "?group_id=" +
-        this.group_id +
+        this.groupId +
         "&name=" +
         this.name +
         "&student_id=" +
-        this.student_id;
-      console.log(edit_url);
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          console.log(response);
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
+        this.studentId;
+
+      await this.$axios.$put(url).then((response) => {
+        this.openSnackBar(this.name + "を編集しました");
+        this.groupId = null
+        this.name = null
+        this.studentId = null
+        this.reload(response.data.id);
+        this.closeEditModal();
+      });
     },
-    delete_yes: function () {
-      const url = "/employees/" + this.$route.params.id;
-      this.$axios.delete(url);
+    async destroy() {
+      const delUrl = "/employees/" + this.employee.employee.id;
+      await this.$axios.$delete(delUrl);
       this.$router.push("/employees");
     },
   },

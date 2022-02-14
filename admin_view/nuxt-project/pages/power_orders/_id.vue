@@ -4,8 +4,12 @@
       v-bind:pageTitle="powerOrder.power_order.item"
       pageSubTitle="電力申請一覧"
     >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="delete"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
     <Row>
       <Card padding="40px 150px" gap="20px">
@@ -13,62 +17,116 @@
           <h4>基本情報</h4>
         </Row>
         <VerticalTable>
-            <tr>
-              <th>ID</th><td>{{ powerOrder.power_order.id }}</td>
-            </tr>
-            <tr>
-              <th>団体名</th><td>{{ powerOrder.group.name }}</td>
-            </tr>
-            <tr>
-              <th>製品名</th><td>{{ powerOrder.power_order.item }}</td>
-            </tr>
-            <tr>
-              <th>電力 [w]</th><td>{{ powerOrder.power_order.power }}</td>
-            </tr>
-            <tr>
-              <th>メーカー</th><td>{{ powerOrder.power_order.manufacturer }}</td>
-            </tr>
-            <tr>
-              <th>型番</th><td>{{ powerOrder.power_order.model }}</td>
-            </tr>
-            <tr>
-              <th>製品URL</th><td>{{ powerOrder.power_order.item_url }}</td>
-            </tr>
-            <tr>
-              <th>登録日時</th><td>{{ powerOrder.power_order.created_at | formatDate }}</td>
-            </tr>
-            <tr>
-              <th>編集日時</th><td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
-            </tr>
-          </VerticalTable>
+          <tr>
+            <th>ID</th>
+            <td>{{ powerOrder.power_order.id }}</td>
+          </tr>
+          <tr>
+            <th>団体名</th>
+            <td>{{ powerOrder.group.name }}</td>
+          </tr>
+          <tr>
+            <th>製品名</th>
+            <td>{{ powerOrder.power_order.item }}</td>
+          </tr>
+          <tr>
+            <th>電力 [w]</th>
+            <td>{{ powerOrder.power_order.power }}</td>
+          </tr>
+          <tr>
+            <th>メーカー</th>
+            <td>{{ powerOrder.power_order.manufacturer }}</td>
+          </tr>
+          <tr>
+            <th>型番</th>
+            <td>{{ powerOrder.power_order.model }}</td>
+          </tr>
+          <tr>
+            <th>製品URL</th>
+            <td>{{ powerOrder.power_order.item_url }}</td>
+          </tr>
+          <tr>
+            <th>登録日時</th>
+            <td>{{ powerOrder.power_order.created_at | formatDate }}</td>
+          </tr>
+          <tr>
+            <th>編集日時</th>
+            <td>{{ powerOrder.power_order.updated_at | formatDate }}</td>
+          </tr>
+        </VerticalTable>
       </Card>
     </Row>
+
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="電力申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>製品</h3>
+          <input v-model="item" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>電力</h3>
+          <input v-model="power" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>メーカー</h3>
+          <input v-model="manufacturer" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>型番</h3>
+          <input v-model="model" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>製品URL</h3>
+          <input v-model="itemUrl" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="電力申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "製品",
-        "電力 [w]",
-        "メーカー",
-        "型番",
-        "製品URL",
-        "登録日時",
-        "編集日時",
-      ],
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
+      groupID: null,
+      item: null,
+      power: 0,
+      manufacturer: null,
+      model: null,
+      itemUrl: null,
+      isOpenSnackBar: false,
     };
-  },
-  computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-    }),
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/power_orders/", "");
@@ -77,71 +135,54 @@ export default {
     return {
       powerOrder: response.data,
       route: url,
+      routeId: routeId
     };
   },
   methods: {
-    reload: function () {
-      const url = "/api/v1/get_power_order/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.power_order = response.data.power_order;
-          this.group = response.data.group;
-          this.group_id = response.data.power_order.group_id;
-          this.item = response.data.power_order.item;
-          this.power = response.data.power_order.power;
-          this.manufacturer = response.data.power_order.manufacturer;
-          this.model = response.data.power_order.model;
-          this.itemUrl = response.data.power_order.item_url;
-        });
+    openEditModal() {
+      this.item = this.powerOrder.power_order.item
+      this.power = this.powerOrder.power_order.power
+      this.manufacturer = this.powerOrder.power_order.manufacturer
+      this.model = this.powerOrder.power_order.model
+      this.itemUrl = this.powerOrder.power_order.item_url
+      this.isOpenEditModal = true;
     },
-    edit_dialog_open: function () {
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.group_list = response.data;
-        });
-      this.edit_dialog = true;
+    closeEditModal() {
+      this.isOpenEditModal = false;
     },
-    edit: function () {
-      const edit_url =
-        "power_orders/" +
-        this.power_order.id +
-        "?group_id=" +
-        this.group_id +
-        "&item=" +
-        this.item +
-        "&power=" +
-        this.power +
-        "&manufacturer=" +
-        this.manufacturer +
-        "&model=" +
-        this.model +
-        "&item_url=" +
-        this.itemUrl;
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
     },
-    delete_yes: function () {
-      const url = "/power_orders/" + this.$route.params.id;
-      this.$axios.delete(url);
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async reload() {
+      const url = "/api/v1/get_power_order_show_for_admin_view/" + this.routeId;
+      const res = await this.$axios.$get(url);
+      this.powerOrder = res.data;
+    },
+    async edit() {
+      const url = "/power_orders/" + this.routeId + "?group_id=" + this.powerOrder.power_order.group_id + "&item=" + this.item + "&power=" + this.power + "&manufacturer=" + this.manufacturer + "&model=" + this.model + "&item_url=" + this.itemUrl
+      console.log(url)
+
+      await this.$axios.$put(url).then(() => {
+        this.openSnackBar(this.item + "を編集しました")
+        this.reload();
+        this.closeEditModal();
+      });
+    },
+    async destroy() {
+      const delUrl = "/power_orders/" + this.routeId
+      await this.$axios.$delete(delUrl);
       this.$router.push("/power_orders");
     },
   },

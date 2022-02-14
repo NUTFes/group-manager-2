@@ -3,16 +3,16 @@
     <div v-if="pageSubTitle !== ''" class="sub-header-link">
       <button
         @click="
-        () => {
-          this.$router.go(-1);
-        }
+          () => {
+            this.$router.go(-1);
+          }
         "
       >
         <span class="material-icons">arrow_back</span>
         {{ pageSubTitle }}
       </button>
     </div>
-    <div v-else class=""/>
+    <div v-else class="" />
     <div class="sub-header-main" :style="SubHeader">
       <div class="sub-header-title">
         <h2>{{ pageTitle }}</h2>
@@ -67,13 +67,13 @@ export default {
   padding: 5px;
   letter-spacing: 1px;
   font-size: 12px;
-  color: var(--accent-3);
+  color: var(--accent-4);
   border-bottom: 1px solid var(--accent-2);
-  transition: .3s
+  transition: 0.3s;
 }
 
 .sub-header-link button:hover {
-  color: var(--button-secondary);
+  border-radius: 50px;
   background: linear-gradient(
     45deg,
     var(--button-secondary) 0%,
@@ -81,8 +81,13 @@ export default {
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  border-bottom: 1px solid var(--button-secondary);
+  border-bottom: none;
   letter-spacing: 2px;
+  box-shadow: 2px 2px 3px var(--accent-2), -2px -2px 3px #fafafa;
+}
+
+.sub-header-link button:active {
+  box-shadow: none;
 }
 
 .sub-header-container span {
@@ -94,7 +99,7 @@ export default {
 }
 
 .sub-header-link {
-  height: 20px
+  height: 20px;
 }
 
 .sub-header-container {

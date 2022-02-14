@@ -35,6 +35,54 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="開催日の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="year in yearsList"
+              :key="year.id"
+              :value="year.id"
+            >
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>開催日</h3>
+          <input v-model="date" type="text" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>曜日</h3>
+          <input v-model="day" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>何日目</h3>
+          <select v-model="daysNum">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="daysNum in daysNumList"
+              :key="daysNum.id"
+              :value="daysNum.value"
+            >
+            {{ daysNum.text }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -43,63 +91,63 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers:[
-        'ID',
-        '開催年',
-        '何日目',
-        '開催日',
-        '曜日',
-        '登録日時', 
-        '編集日時',
+      headers: [
+        "ID",
+        "開催年",
+        "何日目",
+        "開催日",
+        "曜日",
+        "登録日時",
+        "編集日時",
       ],
+      daysNumList: [
+        { id: 1, text: "準備日", value: 0},
+        { id: 2, text: "1日目", value: 1},
+        { id: 3, text: "2日目", value: 2},
+        { id: 4, text: "片付け日", value: 3},
+      ],
+      isOpenAddModal: false,
+      fesYearID: null,
+      date: null,
+      day: null,
+      daysNum: null
     };
   },
   async asyncData({ $axios }) {
-    const fesDateUrl = "/fes_dates"
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const fesDateUrl = "/fes_dates";
     const fesDatesRes = await $axios.$get(fesDateUrl);
     return {
       fesDates: fesDatesRes.data,
+      yearsList: yearsRes.data,
     };
   },
   methods: {
-    openModal: function () {
-      this.$axios
-        .get("/fes_years", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_years = response.data;
-        });
-      this.dialog = true;
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_dates = response.data;
-        });
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("days_num", this.year_num);
-      params.append("date", this.date);
-      params.append("day", this.day);
-      params.append("fes_year_id", this.fes_year_id);
-      this.$axios.post("/fes_dates", params).then((response) => {
-        this.reload();
-        this.dialog = false;
+    reload(id) {
+      const refUrl = "/fes_dates/" + id;
+      this.$axios.$get(refUrl).then((response) => {
+        this.fesDates.push(response.data);
       });
-      this.fes_year_id = [];
-      this.days_num = [];
-      this.date = [];
-      this.day = [];
+    },
+    async submit() {
+      const url = "/fes_dates?fes_year_id=" + this.fesYearID + "&date=" + this.date + "&day=" + this.day + "&days_num=" + this.daysNum;
+      console.log(url)
+      this.$axios.$post(url).then((response) => {
+        this.fesYearID = null;
+        this.date = null;
+        this.day = null;
+        this.daysNum = null;
+        this.reload(response.data.id);
+        this.closeAddModal();
+      });
     },
   },
 };

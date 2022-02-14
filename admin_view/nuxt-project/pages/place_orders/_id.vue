@@ -1,12 +1,15 @@
 <template>
   <div class="main-content">
-
     <SubHeader
       v-bind:pageTitle="placeOrder.group.name"
       pageSubTitle="会場申請一覧"
     >
-      <CommonButton iconName="edit"> 編集 </CommonButton>
-      <CommonButton iconName="edit"> 削除 </CommonButton>
+      <CommonButton iconName="edit" :on_click="openEditModal">
+        編集
+      </CommonButton>
+      <CommonButton iconName="delete" :on_click="openDeleteModal">
+        削除
+      </CommonButton>
     </SubHeader>
 
     <Row>
@@ -14,42 +17,115 @@
         <Row justify="start">
           <h4>基本情報</h4>
 
-            <VerticalTable>
+          <VerticalTable>
             <tr>
-              <th>ID</th><td>{{ placeOrder.place_order.id }}</td>
+              <th>ID</th>
+              <td>{{ placeOrder.place_order.id }}</td>
             </tr>
             <tr>
-              <th>団体名</th><td>{{ placeOrder.group.name }}</td>
+              <th>団体名</th>
+              <td>{{ placeOrder.group.name }}</td>
             </tr>
             <tr>
-              <th>第一希望</th><td>{{ placeOrder.place_order_name.first }}</td>
+              <th>第一希望</th>
+              <td>{{ placeOrder.place_order_name.first }}</td>
             </tr>
             <tr>
-              <th>第二希望</th><td>{{ placeOrder.place_order_name.second }}</td>
+              <th>第二希望</th>
+              <td>{{ placeOrder.place_order_name.second }}</td>
             </tr>
             <tr>
-              <th>第三希望</th><td>{{ placeOrder.place_order_name.third }}</td>
+              <th>第三希望</th>
+              <td>{{ placeOrder.place_order_name.third }}</td>
             </tr>
             <tr>
-              <th>備考</th><td>{{ placeOrder.place_order.remark }}</td>
+              <th>備考</th>
+              <td>{{ placeOrder.place_order.remark }}</td>
             </tr>
             <tr>
-              <th>登録日時</th><td>{{ placeOrder.place_order.created_at | formatDate }}</td>
+              <th>登録日時</th>
+              <td>{{ placeOrder.place_order.created_at | formatDate }}</td>
             </tr>
             <tr>
-              <th>編集日時</th><td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
+              <th>編集日時</th>
+              <td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
             </tr>
           </VerticalTable>
-
         </Row>
       </Card>
     </Row>
 
+    <EditModal
+      @close="closeEditModal"
+      v-if="isOpenEditModal"
+      title="会場申請の編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>第一希望</h3>
+          <select v-model="firstPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第二希望</h3>
+          <select v-model="secondPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第三希望</h3>
+          <select v-model="thirdPlaceOrder">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in placeList"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>備考</h3>
+          <textarea v-model="remark" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+      </template>
+    </EditModal>
+
+    <DeleteModal
+      @close="closeDeleteModal"
+      v-if="isOpenDeleteModal"
+      title="会場申請の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -63,6 +139,12 @@ export default {
         "登録日時",
         "編集日時",
       ],
+      isOpenEditModal: false,
+      isOpenDeleteModal: false,
+      firstPlaceOrder: null,
+      secondPlaceOrder: null,
+      thirdPlaceOrder: "",
+      placeOrder: []
     };
   },
   async asyncData({ $axios, route }) {
@@ -71,90 +153,46 @@ export default {
     const response = await $axios.$get(url);
     return {
       placeOrder: response.data,
-      route: url,
+      routeId: routeId,
     };
   },
-  computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-    }),
-  },
   methods: {
-    reload: function () {
-      const url = "/api/v1/get_place_order/" + this.$route.params.id;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.place_order = response.data.place_order;
-          this.power_orders = response.data.power_orders;
-          this.total_power = response.data.total_power;
-          this.group_id = response.data.place_order.group_id;
-          this.group_name = response.data.group_name;
-          this.first = response.data.first;
-          this.second = response.data.second;
-          this.third = response.data.third;
-          this.first_id = response.data.place_order.first;
-          this.second_id = response.data.place_order.second;
-          this.third_id = response.data.place_order.third;
-          this.remark = response.data.place_order.remark;
-        });
+    edit (){
+      const url = "/place_orders/" + this.routeId + "?group_id=" + this.placeOrder.group.id + "&first=" + this.firstPlaceOrder + "&second=" + this.secondPlaceOrder + "&third=" + this.thirdPlaceOrder + "&remark=" + this.remark
+      this.$axios.$put(url).then((response) => {
+        this.reload(response.data.id);
+        this.closeEditModal()
+      });
     },
-    edit_dialog_open: function () {
-      this.$axios
-        .get("/places", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.places = response.data;
-        });
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.group_list = response.data;
-        });
-      this.edit_dialog = true;
+    async reload (id) {
+      const url = "/api/v1/get_place_order_show_for_admin_view/" + id;
+      const resPlaceOrder = await this.$axios.$get(url);
+      this.placeOrder = resPlaceOrder.data
     },
-    edit: function () {
-      const edit_url =
-        "/place_orders/" +
-        this.place_order.id +
-        "?group_id=" +
-        this.group_id +
-        "&first=" +
-        this.first_id +
-        "&second=" +
-        this.second_id +
-        "&third=" +
-        this.third_id +
-        "&remark=" +
-        this.remark;
-      console.log(edit_url);
-      this.$axios
-        .put(edit_url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.reload();
-          this.edit_dialog = false;
-          this.success_snackbar = true;
-        });
-    },
-    delete_yes: function () {
-      const url = "/place_orders/" + this.$route.params.id;
-      this.$axios.delete(url);
+    async destroy() {
+      const url = "/place_orders/" + this.routeId
+      await this.$axios.$delete(url)
       this.$router.push("/place_orders");
+    },
+    async openEditModal() {
+      const placesUrl = "/places"
+      const resPlaces = await this.$axios.$get(placesUrl)
+      this.placeList = resPlaces.data
+      this.firstPlaceOrder = this.placeOrder.place_order.first
+      this.secondPlaceOrder = this.placeOrder.place_order.second
+      this.thirdPlaceOrder = this.placeOrder.place_order.third
+      this.remark = this.placeOrder.place_order.remark
+      this.isOpenEditModal = true;
+    },
+    closeEditModal() {
+      this.isOpenEditModal = false;
+    },
+    openDeleteModal() {
+      this.isOpenDeleteModal = false;
+      this.isOpenDeleteModal = true;
+    },
+    closeDeleteModal() {
+      this.isOpenDeleteModal = false;
     },
   },
 };

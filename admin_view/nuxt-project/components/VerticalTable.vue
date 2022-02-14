@@ -9,7 +9,7 @@
 .vertical-table {
   font-size: 14px;
   width: 100%;
-  border-collapse:collapse;
+  border-collapse: collapse;
 }
 
 .vertical-table th {
@@ -28,15 +28,8 @@
   border-bottom: solid 1px var(--accent-2);
 }
 
-.vertical-table tr:last-child td, .vertical-table tr:last-child th {
+.vertical-table tr:last-child td,
+.vertical-table tr:last-child th {
   border-bottom: none;
 }
-
-.vertical-table tr:hover {
-  color: var(--accent-7);
-  background-color: var(--accent-9);
-  opacity: 0.8;
-  transition: 0.2s;
-}
-
 </style>

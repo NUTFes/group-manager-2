@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
-    <SubHeader pageTitle="物品申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openModal">
+    <SubHeader pageTitle="物品一覧">
+      <CommonButton iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
     </SubHeader>
@@ -32,6 +32,41 @@
         </template>
       </Table>
     </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
@@ -40,13 +75,8 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      headers: [
-        "ID",
-        "名前",
-        "貸し出し",
-        "登録日時",
-        "編集日時"
-      ]
+      headers: ["ID", "名前", "貸し出し", "登録日時", "編集日時"],
+      isOpenAddModal: false,
     };
   },
   async asyncData({ $axios }) {
@@ -65,29 +95,36 @@ export default {
     }),
   },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/rental_items", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.rental_items = response.data;
-        });
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("name", this.name);
-      params.append("is_rentable", this.isRentable);
-      console.log(params);
-      this.$axios.post("/rental_items", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
+      });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
         this.reload();
-        this.name = "";
-        this.isRentable = "";
+        this.closeAddModal();
       });
     },
   },
