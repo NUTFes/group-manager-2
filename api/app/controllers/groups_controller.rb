@@ -41,7 +41,6 @@ class GroupsController < ApplicationController
       ーーーーーーーーーーーーーーーー
   
       "
-
     }
 
     notifier = Slack::Notifier.new  webhockurl, CHANNEL: channel, USERNAME: username

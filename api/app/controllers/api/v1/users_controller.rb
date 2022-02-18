@@ -7,7 +7,7 @@ class Api::V1::UsersController < ApplicationController
 
     require 'slack-notifier'
     # slack Incomming Webhookの設定
-    webhockurl = "https://hooks.slack.com/services/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"
+    webhockurl = ""
     channel = "times-b1-ikarashi"
     username = "notibot"
 
