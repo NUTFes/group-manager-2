@@ -29,7 +29,9 @@ services:
       - db
     stdin_open: true
     tty: true
-    
+    env_file:
+      - webhook.env
+
   view:
     build: ./view
     command: npm run serve
