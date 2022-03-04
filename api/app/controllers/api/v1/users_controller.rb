@@ -4,21 +4,6 @@ class Api::V1::UsersController < ApplicationController
   def get_user_index_for_admin_view
     @users = User.with_user_details
     render json: fmt(ok, @users)
-
-    require 'slack-notifier'
-    # slack Incomming Webhookの設定
-    webhockurl = ""
-    channel = "times-b1-ikarashi"
-    username = "notibot"
-
-    # 通知内容
-    attachment = {
-      color: "good",
-      text: "送信完了",
-    }
-
-    notifier = Slack::Notifier.new  webhockurl, CHANNEL: channel, USERNAME: username
-    notifier.ping '', attachments: [ attachment ]
   end
 
   def get_user_show_for_admin_view

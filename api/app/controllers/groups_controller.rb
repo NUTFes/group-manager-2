@@ -22,10 +22,6 @@ class GroupsController < ApplicationController
 
     require 'slack-notifier'
     # slack Incomming Webhookの設定
-    webhockurl = ""
-    channel = "times-b1-ikarashi"
-    username = "notibot"
-
     # 通知内容
     attachment = {
       color: "good",
@@ -43,7 +39,10 @@ class GroupsController < ApplicationController
       "
     }
 
-    notifier = Slack::Notifier.new  webhockurl, CHANNEL: channel, USERNAME: username
+    notifier = Slack::Notifier.new(
+      ENV['WEBHOOK_URL'],
+      channel: '#' + ENV['CHANNEL']
+    )
     notifier.ping '', attachments: [ attachment ]    
   end
 
@@ -55,9 +54,6 @@ class GroupsController < ApplicationController
 
     require 'slack-notifier'
     # slack Incomming Webhookの設定
-    webhockurl = ""
-    channel = "times-b1-ikarashi"
-    username = "notibot"
 
     # 通知内容
     attachment = {
@@ -75,8 +71,10 @@ class GroupsController < ApplicationController
 
       "
     }
-
-    notifier = Slack::Notifier.new  webhockurl, CHANNEL: channel, USERNAME: username
+    notifier = Slack::Notifier.new(
+      ENV['WEBHOOK_URL'],
+      channel: '#' + ENV['CHANNEL']
+    )
     notifier.ping '', attachments: [ attachment ]    
   end
 
@@ -88,9 +86,6 @@ class GroupsController < ApplicationController
     
     require 'slack-notifier'
     # slack Incomming Webhookの設定
-    webhockurl = ""
-    channel = "times-b1-ikarashi"
-    username = "notibot"
     # 通知内容
     attachment = {
       color: "danger",
@@ -106,7 +101,10 @@ class GroupsController < ApplicationController
       "
     }
 
-    notifier = Slack::Notifier.new  webhockurl, CHANNEL: channel, USERNAME: username
+    notifier = Slack::Notifier.new(
+      ENV['WEBHOOK_URL'],
+      channel: '#' + ENV['CHANNEL']
+    )
     notifier.ping '', attachments: [ attachment ]    
   end
 
