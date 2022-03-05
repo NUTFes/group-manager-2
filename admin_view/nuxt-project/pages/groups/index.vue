@@ -76,6 +76,7 @@
         </div>
         <div>
           <h3>カテゴリー</h3>
+          <SelectBox></SelectBox>
           <select v-model="groupCategoryId">
             <option disabled value="">選択してください</option>
             <option
