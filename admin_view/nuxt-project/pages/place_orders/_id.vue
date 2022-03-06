@@ -144,7 +144,7 @@ export default {
       firstPlaceOrder: null,
       secondPlaceOrder: null,
       thirdPlaceOrder: "",
-      placeOrder: []
+      placeOrder: [],
     };
   },
   async asyncData({ $axios, route }) {
@@ -157,31 +157,43 @@ export default {
     };
   },
   methods: {
-    edit (){
-      const url = "/place_orders/" + this.routeId + "?group_id=" + this.placeOrder.group.id + "&first=" + this.firstPlaceOrder + "&second=" + this.secondPlaceOrder + "&third=" + this.thirdPlaceOrder + "&remark=" + this.remark
+    edit() {
+      const url =
+        "/place_orders/" +
+        this.routeId +
+        "?group_id=" +
+        this.placeOrder.group.id +
+        "&first=" +
+        this.firstPlaceOrder +
+        "&second=" +
+        this.secondPlaceOrder +
+        "&third=" +
+        this.thirdPlaceOrder +
+        "&remark=" +
+        this.remark;
       this.$axios.$put(url).then((response) => {
         this.reload(response.data.id);
-        this.closeEditModal()
+        this.closeEditModal();
       });
     },
-    async reload (id) {
+    async reload(id) {
       const url = "/api/v1/get_place_order_show_for_admin_view/" + id;
       const resPlaceOrder = await this.$axios.$get(url);
-      this.placeOrder = resPlaceOrder.data
+      this.placeOrder = resPlaceOrder.data;
     },
     async destroy() {
-      const url = "/place_orders/" + this.routeId
-      await this.$axios.$delete(url)
+      const url = "/place_orders/" + this.routeId;
+      await this.$axios.$delete(url);
       this.$router.push("/place_orders");
     },
     async openEditModal() {
-      const placesUrl = "/places"
-      const resPlaces = await this.$axios.$get(placesUrl)
-      this.placeList = resPlaces.data
-      this.firstPlaceOrder = this.placeOrder.place_order.first
-      this.secondPlaceOrder = this.placeOrder.place_order.second
-      this.thirdPlaceOrder = this.placeOrder.place_order.third
-      this.remark = this.placeOrder.place_order.remark
+      const placesUrl = "/places";
+      const resPlaces = await this.$axios.$get(placesUrl);
+      this.placeList = resPlaces.data;
+      this.firstPlaceOrder = this.placeOrder.place_order.first;
+      this.secondPlaceOrder = this.placeOrder.place_order.second;
+      this.thirdPlaceOrder = this.placeOrder.place_order.third;
+      this.remark = this.placeOrder.place_order.remark;
       this.isOpenEditModal = true;
     },
     closeEditModal() {

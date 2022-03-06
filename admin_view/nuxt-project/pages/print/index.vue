@@ -89,7 +89,7 @@ export default {
   methods: {
     downloadPowerPDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/power/" +
           this.currentYearID +
           "/output.pdf",
@@ -98,7 +98,7 @@ export default {
     },
     downloadEmployeePDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/employees/" +
           this.currentYearID +
           "/output.pdf",
@@ -107,7 +107,7 @@ export default {
     },
     downloadRentalItemsPDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/rental_items_list/" +
           this.currentYearID +
           "/output.pdf",
@@ -116,7 +116,7 @@ export default {
     },
     downloadFoodProductsPDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/food_products/" +
           this.currentYearID +
           "/output.pdf",
@@ -125,7 +125,7 @@ export default {
     },
     downloadContactsPDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/contacts/" +
           this.currentYearID +
           "/output.pdf",
@@ -134,7 +134,7 @@ export default {
     },
     downloadGroupInfoPDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/all_groups_info/" +
           this.currentYearID +
           "/output.pdf",
@@ -143,7 +143,7 @@ export default {
     },
     downloadRentalItemsAllPDF: function () {
       window.open(
-        this.$config.apiURL + 
+        this.$config.apiURL +
           "/print_pdf/group_all/" +
           this.currentYearID +
           "/output.pdf",

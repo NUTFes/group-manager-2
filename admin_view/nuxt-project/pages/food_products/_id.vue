@@ -82,7 +82,11 @@
         </div>
         <div>
           <h3>2日目の個数</h3>
-          <input v-model="second" type="number" placeholder="入力してください" />
+          <input
+            v-model="second"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
       </template>
       <template v-slot:method>
@@ -103,13 +107,9 @@
       </template>
     </DeleteModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -142,10 +142,10 @@ export default {
   },
   methods: {
     openEditModal() {
-      this.name = this.foodProduct.food_product.name
-      this.isCooking = this.foodProduct.food_product.is_cooking
-      this.first = this.foodProduct.food_product.first_day_num
-      this.second = this.foodProduct.food_product.second_day_num
+      this.name = this.foodProduct.food_product.name;
+      this.isCooking = this.foodProduct.food_product.is_cooking;
+      this.first = this.foodProduct.food_product.first_day_num;
+      this.second = this.foodProduct.food_product.second_day_num;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -169,26 +169,38 @@ export default {
     async reload(id) {
       const url = "/api/v1/get_food_product_show_for_admin_view/" + id;
       this.$axios.$get(url).then((response) => {
-        this.foodProduct = response.data
+        this.foodProduct = response.data;
       });
     },
     async edit() {
-      const url = "/food_products/" + this.foodProduct.food_product.id + "?group_id=" + this.foodProduct.food_product.group_id + "&name=" + this.name + "&is_cooking=" + this.isCooking + "&first_day_num=" + this.first + "&second_day_num=" + this.second
-      console.log(url)
+      const url =
+        "/food_products/" +
+        this.foodProduct.food_product.id +
+        "?group_id=" +
+        this.foodProduct.food_product.group_id +
+        "&name=" +
+        this.name +
+        "&is_cooking=" +
+        this.isCooking +
+        "&first_day_num=" +
+        this.first +
+        "&second_day_num=" +
+        this.second;
+      console.log(url);
 
       await this.$axios.$put(url).then((response) => {
-        this.openSnackBar(this.name + "を編集しました")
-        this.groupID = null
-        this.name = ""
-        this.isCooking = null
-        this.first = null
-        this.second = null
+        this.openSnackBar(this.name + "を編集しました");
+        this.groupID = null;
+        this.name = "";
+        this.isCooking = null;
+        this.first = null;
+        this.second = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });
     },
     async destroy() {
-      const url = "/food_products/" + this.foodProduct.food_product.id
+      const url = "/food_products/" + this.foodProduct.food_product.id;
       await this.$axios.$delete(url);
       this.$router.push("/food_products");
     },

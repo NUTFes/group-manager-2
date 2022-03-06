@@ -87,13 +87,9 @@
       </template>
     </DeleteModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-    
   </div>
 </template>
 
@@ -116,16 +112,16 @@ export default {
     return {
       rentalOrder: response.data,
       route: url,
-      routeId: routeId
+      routeId: routeId,
     };
   },
   methods: {
     async openEditModal() {
-      this.rentalItemID = this.rentalOrder.rental_order.rental_item_id
-      this.num = this.rentalOrder.rental_order.num
-      const rentableItemsUrl = "/api/v1/get_rentable_items"
-      const resRentableItems = await this.$axios.$get(rentableItemsUrl)
-      this.rentableItemList = resRentableItems.data
+      this.rentalItemID = this.rentalOrder.rental_order.rental_item_id;
+      this.num = this.rentalOrder.rental_order.num;
+      const rentableItemsUrl = "/api/v1/get_rentable_items";
+      const resRentableItems = await this.$axios.$get(rentableItemsUrl);
+      this.rentableItemList = resRentableItems.data;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -149,18 +145,26 @@ export default {
     async reload(id) {
       const url = "/api/v1/get_rental_order_show_for_admin_view/" + id;
       this.$axios.$get(url).then((response) => {
-        this.rentalOrder = response.data
+        this.rentalOrder = response.data;
       });
     },
     async edit() {
-      const url = "/rental_orders/" + this.routeId + "?group_id=" + this.rentalOrder.rental_order.group_id + "&rental_item_id=" + this.rentalItemID + "&num=" + this.num
-      console.log(url)
+      const url =
+        "/rental_orders/" +
+        this.routeId +
+        "?group_id=" +
+        this.rentalOrder.rental_order.group_id +
+        "&rental_item_id=" +
+        this.rentalItemID +
+        "&num=" +
+        this.num;
+      console.log(url);
 
       await this.$axios.$put(url).then((response) => {
-        this.openSnackBar("物品申請を編集しました")
-        this.groupID = null
-        this.rentalItemID = null
-        this.num = null
+        this.openSnackBar("物品申請を編集しました");
+        this.groupID = null;
+        this.rentalItemID = null;
+        this.num = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });

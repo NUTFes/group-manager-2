@@ -112,13 +112,9 @@
       </template>
     </AddModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -208,12 +204,12 @@ export default {
       }
     },
     async openAddModal() {
-      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
-      const resGroups = await this.$axios.$get(groupUrl)
-      this.groupList = resGroups.data
-      const rentableItemsUrl = "/api/v1/get_rentable_items"
-      const resRentableItems = await this.$axios.$get(rentableItemsUrl)
-      this.rentableItemList = resRentableItems.data
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(groupUrl);
+      this.groupList = resGroups.data;
+      const rentableItemsUrl = "/api/v1/get_rentable_items";
+      const resRentableItems = await this.$axios.$get(rentableItemsUrl);
+      this.rentableItemList = resRentableItems.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
@@ -234,22 +230,26 @@ export default {
       });
     },
     async submit() {
-      const url = "/rental_orders?group_id=" + this.groupID + "&rental_item_id=" + this.rentalItemID + "&num=" + this.num
+      const url =
+        "/rental_orders?group_id=" +
+        this.groupID +
+        "&rental_item_id=" +
+        this.rentalItemID +
+        "&num=" +
+        this.num;
 
       this.$axios.$post(url).then((response) => {
-        this.openSnackBar("物品申請を追加しました")
-        this.groupID = null
-        this.rentalItemID = null
-        this.num = null
+        this.openSnackBar("物品申請を追加しました");
+        this.groupID = null;
+        this.rentalItemID = null;
+        this.num = null;
         this.reload(response.data.id);
         this.closeAddModal();
       });
     },
     async downloadCSV() {
       const url =
-        this.$config.apiURL + 
-        "/api/v1/get_rental_orders_csv/" +
-        this.refYearID;
+        this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
       window.open(url, "物品申請一覧_CSV");
     },
   },

@@ -106,14 +106,13 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitGroup">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submitGroup"
+          >登録</CommonButton
+        >
       </template>
     </AddModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -272,7 +271,8 @@ export default {
         this.activity +
         "&group_category_id=" +
         this.groupCategoryId +
-        "&fes_year_id=" + this.fesYearId
+        "&fes_year_id=" +
+        this.fesYearId;
       this.$axios.$post(postGroupUrl).then((response) => {
         this.openSnackBar(this.groupName + "を追加しました");
         this.groupName = "";
@@ -285,7 +285,8 @@ export default {
       });
     },
     async downloadCSV() {
-      const url = this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
+      const url =
+        this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
       window.open(url, "参加団体一覧_CSV");
       this.openSnackBar("参加団体一覧をダウンロードしました");
     },

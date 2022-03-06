@@ -33,15 +33,15 @@
       </Table>
     </Card>
 
-    <AddModal
-      @close="closeAddModal"
-      v-if="isOpenAddModal"
-      title="開催年の追加"
-    >
+    <AddModal @close="closeAddModal" v-if="isOpenAddModal" title="開催年の追加">
       <template v-slot:form>
         <div>
           <h3>開催年</h3>
-          <input v-model="year_num" type="number" placeholder="入力してください" />
+          <input
+            v-model="year_num"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
       </template>
       <template v-slot:method>
@@ -86,7 +86,7 @@ export default {
       });
     },
     async submit() {
-      const url = "/fes_years?year_num=" + this.year_num
+      const url = "/fes_years?year_num=" + this.year_num;
       this.$axios.$post(url).then((response) => {
         this.year_num = null;
         this.reload(response.data.id);

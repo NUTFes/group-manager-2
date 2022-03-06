@@ -78,13 +78,9 @@
       </template>
     </DeleteModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -99,7 +95,7 @@ export default {
       grouoId: null,
       name: null,
       studentId: null,
-      employee: null
+      employee: null,
     };
   },
   async asyncData({ $axios, route }) {
@@ -113,9 +109,9 @@ export default {
   },
   methods: {
     openEditModal() {
-      this.groupId = this.employee.employee.group_id
-      this.name = this.employee.employee.name
-      this.studentId = this.employee.employee.student_id
+      this.groupId = this.employee.employee.group_id;
+      this.name = this.employee.employee.name;
+      this.studentId = this.employee.employee.student_id;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -138,8 +134,8 @@ export default {
     },
     async reload(id) {
       const reUrl = "/api/v1/get_employee_show_for_admin_view/" + id;
-      const res = await this.$axios.$get(reUrl)
-      this.employee = res.data
+      const res = await this.$axios.$get(reUrl);
+      this.employee = res.data;
     },
     async edit() {
       const url =
@@ -154,9 +150,9 @@ export default {
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.name + "を編集しました");
-        this.groupId = null
-        this.name = null
-        this.studentId = null
+        this.groupId = null;
+        this.name = null;
+        this.studentId = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });

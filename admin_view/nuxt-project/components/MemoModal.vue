@@ -8,10 +8,17 @@
           </Row>
           <div class="memo-modal_content">
             <textarea v-model="content" placeholder="メモ" />
-            <CommonButton v-if="content !== ''" iconName="add_circle" :on_click="submit"
+            <CommonButton
+              v-if="content !== ''"
+              iconName="add_circle"
+              :on_click="submit"
               >投稿</CommonButton
             >
-            <CommonButton v-else disabled iconName="add_circle" :on_click="submit"
+            <CommonButton
+              v-else
+              disabled
+              iconName="add_circle"
+              :on_click="submit"
               >投稿</CommonButton
             >
           </div>
@@ -33,12 +40,12 @@
 <script>
 export default {
   props: {
-    memos: Array
+    memos: Array,
   },
   data() {
     return {
-      content: '',
-      user: null
+      content: "",
+      user: null,
     };
   },
   methods: {
@@ -49,17 +56,17 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
         },
       });
-      this.user = CurrentUser.data.data
-      const url = "/memos?content=" + this.content + "&user_id=" + this.user.id
-      const res = await this.$axios.$post(url)
-      this.memos.unshift(res.data)
-      this.content = ""
-    }
-  }
+      this.user = CurrentUser.data.data;
+      const url = "/memos?content=" + this.content + "&user_id=" + this.user.id;
+      const res = await this.$axios.$post(url);
+      this.memos.unshift(res.data);
+      this.content = "";
+    },
+  },
 };
 </script>
 

@@ -146,6 +146,11 @@ export default {
           icon: "shopping_cart",
           click: "/purchase_lists",
         },
+        {
+          title: "参加団体PR申請",
+          icon: "badge",
+          click: "/public_relations",
+        },
       ],
       // 操作系
       operation_items: [
