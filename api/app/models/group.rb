@@ -12,6 +12,7 @@ class Group < ApplicationRecord
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
     has_one :group_identification, dependent: :destroy
+    has_one :public_relation
 
     ### group_category (参加団体カテゴリ)
     
@@ -367,6 +368,72 @@ class Group < ApplicationRecord
             "group": group,
             "food_products": group.food_products.count == 0 ? nil : group.food_products
           }
+        }
+    end
+
+    ### public relation (PR画像・文)
+    
+    # 全てのgroupとそのpublic_relationを取得する
+    def self.with_public_relations
+      @records = Group.preload(:public_relation)
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
+            "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
+            "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
+            "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
+          } 
+        }
+    end
+
+    # 指定したIDのgroupとそのpublic_relationを取得する
+    def self.with_public_relation(group_id)
+      @record = Group.eager_load(:public_relation).where(groups: {id: group_id})
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
+            "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
+            "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
+            "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
+          } 
+        }
+    end
+
+    # 指定したfes_yearに対応するgroupとそのpublic_relationを取得する
+    def self.with_public_relation_narrow_down_by_fes_year(fes_year_id)
+      @record = Group.eager_load(:public_relation).where(groups: {fes_year_id: fes_year_id})
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
+            "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
+            "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
+            "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
+          } 
+        }
+    end
+
+    # 検索ワードに対応するgroupとそのpublic_relationを取得する
+    def self.with_public_relation_narrow_down_by_search_word(word)
+      @record = Group.eager_load(:public_relation).where("name like ?","%#{word}%")
+        .map{ 
+          |group| 
+          { 
+            "group": group, 
+            "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
+            "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
+            "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
+            "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
+          } 
         }
     end
 

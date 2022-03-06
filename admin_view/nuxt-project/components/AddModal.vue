@@ -37,6 +37,17 @@ export default {
   width: 500px;
   transition: all 0.5s 0s ease;
 }
+.add-modal label {
+  color: var(--accent-2);
+  border: 1px solid var(--accent-3);
+  padding: 15px;
+  width: 500px;
+  transition: all 0.5s 0s ease;
+}
+
+.add-modal input[type="file"] {
+    display: none;
+}
 
 .add-modal_content input:focus,
 .add-modal_content textarea:focus {

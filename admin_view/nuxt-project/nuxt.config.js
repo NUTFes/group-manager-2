@@ -27,7 +27,7 @@ export default {
   },
 
   publicRuntimeConfig: {
-    apiURL: 'https://group-manager-api.nutfes.net'
+    apiURL: "https://group-manager-api.nutfes.net",
     // apiURL: 'http://localhost:3000'
   },
 
@@ -42,6 +42,7 @@ export default {
   plugins: [
     { src: "~/plugins/axios.js", ssr: false },
     { src: "~/plugins/fileter.js", ssr: false },
+    { src: "~/plugins/firebase.js" },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -53,11 +54,7 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    "@nuxtjs/axios", 
-    "@nuxtjs/auth", 
-    ["@nuxtjs/moment", ["ja"]],
-  ],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", ["@nuxtjs/moment", ["ja"]]],
 
   axios: {
     // baseURL: 'http://localhost:3000'

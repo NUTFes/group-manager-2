@@ -53,6 +53,7 @@ Rails.application.routes.draw do
   resources :shops
   resources :fes_dates
   resources :fes_years
+  resources :public_relations
 
   # /api/v1/...
   namespace 'api' do
@@ -127,6 +128,11 @@ Rails.application.routes.draw do
       get "get_purchase_list_show_for_admin_view/:id" => "purchase_lists_api#get_purchase_list_show_for_admin_view"
       post "get_refinement_purchase_lists" => "purchase_lists_api#get_refinement_purchase_lists"
       post "get_search_purchase_lists" => "purchase_lists_api#get_search_purchase_lists"
+
+      #---PR画像・文申請ページ
+      get "get_public_relation_for_admin_view/:id" => "public_relations_api#get_public_relation_for_admin_view"
+      post "get_refinement_public_relations" => "public_relations_api#get_refinement_public_relations"
+      post "get_search_public_relations" => "public_relations_api#get_search_public_relations"
 
       #---開催日
       get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"
