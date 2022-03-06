@@ -122,6 +122,7 @@ export default {
     return {
       headers: ["ID", "参加団体", "申請状況", "登録日時", "編集日時"],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
       isFreshList: [
         { id: 1, value: "はい" },
         { id: 2, value: "いいえ" },
@@ -227,11 +228,12 @@ export default {
              console.log(url)
 
              this.$axios.$post(url).then((response) => {
+               console.log("####")
+               this.closeAddModal();
                this.openSnackBar("PR画像・文申請を追加しました");
                this.groupID = null;
                this.blurb = null;
                //this.reload(response.data.id);
-               this.closeAddModal();
              })
              /*
              const url = "/api/videos?name=" + uploadTask.snapshot.ref.name + "&path=" + downloadURL
