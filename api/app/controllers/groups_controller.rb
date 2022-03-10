@@ -20,12 +20,10 @@ class GroupsController < ApplicationController
     @group = Group.create(group_params)
     render json: fmt(created, @group)
 
-    require 'slack-notifier'
-    # slack Incomming Webhookの設定
-    # 通知内容
-    attachment = {
-      color: "good",
-      type: "mrkdwn",
+    client = Slack::Web::Client.new
+    client.chat_postMessage(
+      token: ENV['BOT_USER_ACCESS_TOKEN'],
+      channel: '#' + ENV['CHANNEL'],
       text: "
       
       参加団体「#{@group.name}」が追加されました
@@ -37,13 +35,7 @@ class GroupsController < ApplicationController
       ーーーーーーーーーーーーーーーー
   
       "
-    }
-
-    notifier = Slack::Notifier.new(
-      ENV['WEBHOOK_URL'],
-      channel: '#' + ENV['CHANNEL']
-    )
-    notifier.ping '', attachments: [ attachment ]    
+    )    
   end
 
   # PATCH/PUT /groups/1
@@ -52,30 +44,22 @@ class GroupsController < ApplicationController
     @group.update(group_params)
     render json: fmt(created, @group, "Updated group id = "+params[:id])
 
-    require 'slack-notifier'
-    # slack Incomming Webhookの設定
-
-    # 通知内容
-    attachment = {
-      color: "warning",
-      type: "mrkdwn",
+    client = Slack::Web::Client.new
+    client.chat_postMessage(
+      token: ENV['BOT_USER_ACCESS_TOKEN'],
+      channel: '#' + ENV['CHANNEL'],
       text: "
-
-      #{@group.name}が編集されました
+      
+      参加団体「#{@group.name}」が編集されました
       ーーーーーーーーーーーーーーーー
       代表者：#{@group.user.name}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
-
+  
       "
-    }
-    notifier = Slack::Notifier.new(
-      ENV['WEBHOOK_URL'],
-      channel: '#' + ENV['CHANNEL']
-    )
-    notifier.ping '', attachments: [ attachment ]    
+    )    
   end
 
   # DELETE /groups/1
@@ -84,28 +68,22 @@ class GroupsController < ApplicationController
     @group.destroy
     render json: fmt(ok, [], "Deleted group id = "+params[:id])
     
-    require 'slack-notifier'
-    # slack Incomming Webhookの設定
-    # 通知内容
-    attachment = {
-      color: "danger",
-      type: "mrkdwn",
-      text: "#{@group.name}が削除されました
+    client = Slack::Web::Client.new
+    client.chat_postMessage(
+      token: ENV['BOT_USER_ACCESS_TOKEN'],
+      channel: '#' + ENV['CHANNEL'],
+      text: "
+      
+      参加団体「#{@group.name}」が削除されました
       ーーーーーーーーーーーーーーーー
       代表者：#{@group.user.name}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
-
+  
       "
-    }
-
-    notifier = Slack::Notifier.new(
-      ENV['WEBHOOK_URL'],
-      channel: '#' + ENV['CHANNEL']
-    )
-    notifier.ping '', attachments: [ attachment ]    
+    )        
   end
 
   private
