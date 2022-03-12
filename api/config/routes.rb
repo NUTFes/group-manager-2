@@ -61,8 +61,6 @@ Rails.application.routes.draw do
       #---ユーザー一覧ページ
       get "get_user_index_for_admin_view" => "users#get_user_index_for_admin_view"
       get "get_user_show_for_admin_view/:id" => "users#get_user_show_for_admin_view"
-      post "get_refinement_users" => "users#get_refinement_users"
-      post "get_search_users" => "users#get_search_users"
       get "users/show" => "users#show"
 
       #---代表者一覧ページ
