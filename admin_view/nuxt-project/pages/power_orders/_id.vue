@@ -102,13 +102,9 @@
       </template>
     </DeleteModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -135,16 +131,16 @@ export default {
     return {
       powerOrder: response.data,
       route: url,
-      routeId: routeId
+      routeId: routeId,
     };
   },
   methods: {
     openEditModal() {
-      this.item = this.powerOrder.power_order.item
-      this.power = this.powerOrder.power_order.power
-      this.manufacturer = this.powerOrder.power_order.manufacturer
-      this.model = this.powerOrder.power_order.model
-      this.itemUrl = this.powerOrder.power_order.item_url
+      this.item = this.powerOrder.power_order.item;
+      this.power = this.powerOrder.power_order.power;
+      this.manufacturer = this.powerOrder.power_order.manufacturer;
+      this.model = this.powerOrder.power_order.model;
+      this.itemUrl = this.powerOrder.power_order.item_url;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -171,17 +167,31 @@ export default {
       this.powerOrder = res.data;
     },
     async edit() {
-      const url = "/power_orders/" + this.routeId + "?group_id=" + this.powerOrder.power_order.group_id + "&item=" + this.item + "&power=" + this.power + "&manufacturer=" + this.manufacturer + "&model=" + this.model + "&item_url=" + this.itemUrl
-      console.log(url)
+      const url =
+        "/power_orders/" +
+        this.routeId +
+        "?group_id=" +
+        this.powerOrder.power_order.group_id +
+        "&item=" +
+        this.item +
+        "&power=" +
+        this.power +
+        "&manufacturer=" +
+        this.manufacturer +
+        "&model=" +
+        this.model +
+        "&item_url=" +
+        this.itemUrl;
+      console.log(url);
 
       await this.$axios.$put(url).then(() => {
-        this.openSnackBar(this.item + "を編集しました")
+        this.openSnackBar(this.item + "を編集しました");
         this.reload();
         this.closeEditModal();
       });
     },
     async destroy() {
-      const delUrl = "/power_orders/" + this.routeId
+      const delUrl = "/power_orders/" + this.routeId;
       await this.$axios.$delete(delUrl);
       this.$router.push("/power_orders");
     },

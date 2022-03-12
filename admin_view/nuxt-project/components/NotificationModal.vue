@@ -12,8 +12,8 @@
                 <h4>{{ content.status }}</h4>
                 <h5>{{ content.created_at }}</h5>
               </Row>
-              <br>
-                <p>{{ content.text }}</p>
+              <br />
+              <p>{{ content.text }}</p>
             </div>
           </div>
         </div>
@@ -26,7 +26,7 @@
 export default {
   data() {
     return {
-     // NEW: 新規機能追加, FIX: バグ修正, RELEASE: リリース, OTHER: その他
+      // NEW: 新規機能追加, FIX: バグ修正, RELEASE: リリース, OTHER: その他
       contents: [
         {
           id: 1,
@@ -40,7 +40,7 @@ export default {
           text: "UIを全く新しくしました",
           created_at: "2022/2/1",
         },
-      ]
+      ],
     };
   },
 };

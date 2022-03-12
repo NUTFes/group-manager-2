@@ -90,11 +90,7 @@
           <h3>音楽をかける</h3>
           <select v-model="bgm">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="item in isBgmList"
-              :key="item.id"
-              :value="item.bool"
-            >
+            <option v-for="item in isBgmList" :key="item.id" :value="item.bool">
               {{ item.value }}
             </option>
           </select>
@@ -160,19 +156,19 @@ export default {
       isOpenDeleteModal: false,
       isOwnEquipmentList: [
         { id: 1, value: "使用する", bool: true },
-        { id: 2, value: "使用しない", bool: false }
+        { id: 2, value: "使用しない", bool: false },
       ],
       isBgmList: [
         { id: 1, value: "かける", bool: true },
-        { id: 2, value: "かけない", bool: false }
+        { id: 2, value: "かけない", bool: false },
       ],
       isCameraPermissionList: [
         { id: 1, value: "許可", bool: true },
-        { id: 2, value: "許可しない", bool: false }
+        { id: 2, value: "許可しない", bool: false },
       ],
       isLoudSoundList: [
         { id: 1, value: "出す", bool: true },
-        { id: 2, value: "出さない", bool: false }
+        { id: 2, value: "出さない", bool: false },
       ],
       //v-model
       appGroup: "",
@@ -232,14 +228,20 @@ export default {
     async edit() {
       const putStageOptionUrl =
         "/stage_common_options/" +
-        this.stageCommonOption.stage_common_option.id + 
-        "?group_id=" + this.appGroup +
-        "&own_equipment=" + this.ownEquipment +
-        "&bgm=" + this.bgm +
-        "&camera_permission=" + this.cameraPermission +
-        "&loud_sound=" + this.loudSound +
-        "&stage_content=" + this.stageContent
-      console.log(putStageOptionUrl)
+        this.stageCommonOption.stage_common_option.id +
+        "?group_id=" +
+        this.appGroup +
+        "&own_equipment=" +
+        this.ownEquipment +
+        "&bgm=" +
+        this.bgm +
+        "&camera_permission=" +
+        this.cameraPermission +
+        "&loud_sound=" +
+        this.loudSound +
+        "&stage_content=" +
+        this.stageContent;
+      console.log(putStageOptionUrl);
 
       await this.$axios.$put(putStageOptionUrl).then(() => {
         this.reload();

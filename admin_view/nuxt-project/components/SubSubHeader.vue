@@ -36,7 +36,7 @@ export default {
       type: String,
       required: false,
     },
-    parentPageLink: {
+   parentPageLink: {
       type: String,
       required: false,
     },

@@ -115,13 +115,9 @@
       </template>
     </AddModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -201,8 +197,12 @@ export default {
           this.refPower = name_list[item_id - 1].power;
         }
       }
-      this.powerOrders = []
-      const refUrl = "/api/v1/get_refinement_power_orders?fes_year_id=" + this.refYearID + "&power=" + this.refPower;
+      this.powerOrders = [];
+      const refUrl =
+        "/api/v1/get_refinement_power_orders?fes_year_id=" +
+        this.refYearID +
+        "&power=" +
+        this.refPower;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.powerOrders.push(res);
@@ -218,9 +218,9 @@ export default {
       }
     },
     async openAddModal() {
-      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
-      const resGroups = await this.$axios.$get(url)
-      this.groupList = resGroups.data
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(url);
+      this.groupList = resGroups.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
@@ -235,30 +235,40 @@ export default {
       this.isOpenSnackBar = false;
     },
     reload(id) {
-      const powerOrderUrl = "/api/v1/get_power_order_show_for_admin_view/" + id
+      const powerOrderUrl = "/api/v1/get_power_order_show_for_admin_view/" + id;
       this.$axios.$get(powerOrderUrl).then((response) => {
-        this.powerOrders.push(response.data)
+        this.powerOrders.push(response.data);
       });
     },
     async submit() {
-      const url = "/power_orders?group_id=" + this.groupID + "&item=" + this.item + "&power=" + this.power + "&manufacturer=" + this.manufacturer + "&model=" + this.model + "&item_url=" + this.itemUrl
+      const url =
+        "/power_orders?group_id=" +
+        this.groupID +
+        "&item=" +
+        this.item +
+        "&power=" +
+        this.power +
+        "&manufacturer=" +
+        this.manufacturer +
+        "&model=" +
+        this.model +
+        "&item_url=" +
+        this.itemUrl;
       this.$axios.$post(url).then((response) => {
         this.reload(response.data.id);
-        this.openSnackBar(this.item + "を追加しました")
+        this.openSnackBar(this.item + "を追加しました");
         this.closeAddModal();
-        this.groupID = null
-        this.item = null
-        this.power = null
-        this.manufacturer = null
-        this.model = null
-        this.item_url = null
+        this.groupID = null;
+        this.item = null;
+        this.power = null;
+        this.manufacturer = null;
+        this.model = null;
+        this.item_url = null;
       });
     },
     async downloadCSV() {
       const url =
-        this.$config.apiURL + 
-        "/api/v1/get_power_orders_csv/" +
-        this.refYearID;
+        this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
       window.open(url, "電力申請_CSV");
     },
   },

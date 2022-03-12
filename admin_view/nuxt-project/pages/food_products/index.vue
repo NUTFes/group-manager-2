@@ -112,7 +112,11 @@
         </div>
         <div>
           <h3>2日目の個数</h3>
-          <input v-model="second" type="number" placeholder="入力してください" />
+          <input
+            v-model="second"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
       </template>
       <template v-slot:method>
@@ -122,13 +126,9 @@
       </template>
     </AddModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -230,9 +230,9 @@ export default {
       }
     },
     async openAddModal() {
-      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
-      const resGroups = await this.$axios.$get(url)
-      this.groupList = resGroups.data
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(url);
+      this.groupList = resGroups.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
@@ -249,28 +249,36 @@ export default {
     reload(id) {
       const url = "/api/v1/get_food_product_show_for_admin_view/" + id;
       this.$axios.$get(url).then((response) => {
-        this.foodProducts.push(response.data)
+        this.foodProducts.push(response.data);
       });
     },
     async submit() {
-      const url = "/food_products?group_id=" + this.groupID + "&name=" + this.name + "&is_cooking=" + this.isCooking + "&first_day_num=" + this.first + "&second_day_num=" + this.second
+      const url =
+        "/food_products?group_id=" +
+        this.groupID +
+        "&name=" +
+        this.name +
+        "&is_cooking=" +
+        this.isCooking +
+        "&first_day_num=" +
+        this.first +
+        "&second_day_num=" +
+        this.second;
 
       this.$axios.$post(url).then((response) => {
-        this.openSnackBar(this.name + "を追加しました")
-        this.groupID = null
-        this.name = ""
-        this.isCooking = null
-        this.first = null
-        this.second = null
+        this.openSnackBar(this.name + "を追加しました");
+        this.groupID = null;
+        this.name = "";
+        this.isCooking = null;
+        this.first = null;
+        this.second = null;
         this.reload(response.data.id);
         this.closeAddModal();
       });
     },
     async downloadCSV() {
       const url =
-        this.$config.apiURL + 
-        "/api/v1/get_food_products_csv/" +
-        this.refYearID;
+        this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
       window.open(url, "販売食品申請_CSV");
     },
   },

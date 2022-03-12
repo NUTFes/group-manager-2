@@ -36,21 +36,13 @@
       </Table>
     </Card>
 
-    <AddModal
-      @close="closeAddModal"
-      v-if="isOpenAddModal"
-      title="開催日の追加"
-    >
+    <AddModal @close="closeAddModal" v-if="isOpenAddModal" title="開催日の追加">
       <template v-slot:form>
         <div>
           <h3>開催年</h3>
           <select v-model="fesYearID">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="year in yearsList"
-              :key="year.id"
-              :value="year.id"
-            >
+            <option v-for="year in yearsList" :key="year.id" :value="year.id">
               {{ year.year_num }}
             </option>
           </select>
@@ -72,7 +64,7 @@
               :key="daysNum.id"
               :value="daysNum.value"
             >
-            {{ daysNum.text }}
+              {{ daysNum.text }}
             </option>
           </select>
         </div>
@@ -101,16 +93,16 @@ export default {
         "編集日時",
       ],
       daysNumList: [
-        { id: 1, text: "準備日", value: 0},
-        { id: 2, text: "1日目", value: 1},
-        { id: 3, text: "2日目", value: 2},
-        { id: 4, text: "片付け日", value: 3},
+        { id: 1, text: "準備日", value: 0 },
+        { id: 2, text: "1日目", value: 1 },
+        { id: 3, text: "2日目", value: 2 },
+        { id: 4, text: "片付け日", value: 3 },
       ],
       isOpenAddModal: false,
       fesYearID: null,
       date: null,
       day: null,
-      daysNum: null
+      daysNum: null,
     };
   },
   async asyncData({ $axios }) {
@@ -138,8 +130,16 @@ export default {
       });
     },
     async submit() {
-      const url = "/fes_dates?fes_year_id=" + this.fesYearID + "&date=" + this.date + "&day=" + this.day + "&days_num=" + this.daysNum;
-      console.log(url)
+      const url =
+        "/fes_dates?fes_year_id=" +
+        this.fesYearID +
+        "&date=" +
+        this.date +
+        "&day=" +
+        this.day +
+        "&days_num=" +
+        this.daysNum;
+      console.log(url);
       this.$axios.$post(url).then((response) => {
         this.fesYearID = null;
         this.date = null;

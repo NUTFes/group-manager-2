@@ -42,7 +42,11 @@
       <template v-slot:form>
         <div>
           <h3>開催年</h3>
-          <input v-model="year_num" type="number" placeholder="入力してください" />
+          <input
+            v-model="year_num"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
       </template>
       <template v-slot:method>
@@ -80,12 +84,12 @@ export default {
     const fesYearRes = await $axios.$get(fesYearUrl);
     return {
       fesYear: fesYearRes.data,
-      routeId: routeId
+      routeId: routeId,
     };
   },
   methods: {
     openEditModal() {
-      this.year_num = this.fesYear.year_num
+      this.year_num = this.fesYear.year_num;
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -100,21 +104,21 @@ export default {
       this.isOpenDeleteModal = false;
     },
     async reload(id) {
-      const url = "/fes_years/" + id
+      const url = "/fes_years/" + id;
       const res = await this.$axios.$get(url);
       this.fesYear = res.data;
     },
     async edit() {
-      const url = "/fes_years/" + this.routeId + "?year_num=" + this.year_num
-      console.log(url)
+      const url = "/fes_years/" + this.routeId + "?year_num=" + this.year_num;
+      console.log(url);
       await this.$axios.$put(url).then(() => {
-        this.year_num = null
+        this.year_num = null;
         this.reload(this.routeId);
         this.closeEditModal();
       });
     },
     async destroy() {
-      const delUrl = "/fes_years/" + this.routeId
+      const delUrl = "/fes_years/" + this.routeId;
       await this.$axios.$delete(delUrl);
       this.$router.push("/fes_years");
     },

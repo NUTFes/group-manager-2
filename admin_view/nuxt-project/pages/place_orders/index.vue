@@ -180,7 +180,6 @@ export default {
       currentYearRes.data.fes_year_id;
     const placeOrderRes = await $axios.$post(placeOrderUrl);
 
-
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
 
@@ -241,18 +240,18 @@ export default {
       }
     },
     async openAddModal() {
-      const url = "/api/v1/get_groups_refinemented_by_current_fes_year"
-      const resGroups = await this.$axios.$get(url)
-      this.groupList = resGroups.data
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(url);
+      this.groupList = resGroups.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
     reload(id) {
-      const placeOrderUrl = "/api/v1/get_place_order_show_for_admin_view/" + id
+      const placeOrderUrl = "/api/v1/get_place_order_show_for_admin_view/" + id;
       this.$axios.$get(placeOrderUrl).then((response) => {
-        this.placeOrders.push(response.data)
+        this.placeOrders.push(response.data);
       });
     },
     async submitPlaceOrder() {
@@ -280,9 +279,7 @@ export default {
     },
     async downloadCSV() {
       const url =
-        this.$config.apiURL + 
-        "/api/v1/get_place_orders_csv/" +
-        this.refYearID;
+        this.$config.apiURL + "/api/v1/get_place_orders_csv/" + this.refYearID;
       window.open(url, "会場申請一覧_CSV");
     },
   },

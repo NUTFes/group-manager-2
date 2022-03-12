@@ -93,13 +93,9 @@
       </template>
     </AddModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -168,9 +164,9 @@ export default {
       }
     },
     async openAddModal() {
-      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year"
-      const groupRes = await this.$axios.$get(groupUrl)
-      this.groupList = groupRes.data
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupRes = await this.$axios.$get(groupUrl);
+      this.groupList = groupRes.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {

@@ -4,7 +4,7 @@
       <div class="snack-modal__container" @click.self="$emit('close')">
         <div class="snack-modal__box" @click.self="$emit('close')">
           <div class="snack-modal_content">
-              <slot></slot>
+            <slot></slot>
           </div>
         </div>
       </div>
@@ -13,12 +13,10 @@
 </template>
 
 <script>
-export default {
-};
+export default {};
 </script>
 
 <style>
-
 .snack-modal_content h3 {
   font-size: 16px;
   font-weight: 300;

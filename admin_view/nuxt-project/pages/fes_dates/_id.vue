@@ -59,11 +59,7 @@
           <h3>開催年</h3>
           <select v-model="fesYearID">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="year in yearsList"
-              :key="year.id"
-              :value="year.id"
-            >
+            <option v-for="year in yearsList" :key="year.id" :value="year.id">
               {{ year.year_num }}
             </option>
           </select>
@@ -85,15 +81,13 @@
               :key="daysNum.id"
               :value="daysNum.value"
             >
-            {{ daysNum.text }}
+              {{ daysNum.text }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit"
-          >編集</CommonButton
-        >
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
       </template>
     </EditModal>
 
@@ -125,10 +119,10 @@ export default {
       day: null,
       daysNum: null,
       daysNumList: [
-        { id: 1, text: "準備日", value: 0},
-        { id: 2, text: "1日目", value: 1},
-        { id: 3, text: "2日目", value: 2},
-        { id: 4, text: "片付け日", value: 3},
+        { id: 1, text: "準備日", value: 0 },
+        { id: 2, text: "1日目", value: 1 },
+        { id: 3, text: "2日目", value: 2 },
+        { id: 4, text: "片付け日", value: 3 },
       ],
     };
   },
@@ -146,11 +140,11 @@ export default {
   },
   methods: {
     openEditModal() {
-      this.fesYearID = this.fesDate.fes_date.fes_year_id
-      this.date = this.fesDate.fes_date.date
-      this.day = this.fesDate.fes_date.day
-      this.daysNum = this.fesDate.fes_date.days_num
-      console.log(this.fesYearID)
+      this.fesYearID = this.fesDate.fes_date.fes_year_id;
+      this.date = this.fesDate.fes_date.date;
+      this.day = this.fesDate.fes_date.day;
+      this.daysNum = this.fesDate.fes_date.days_num;
+      console.log(this.fesYearID);
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -170,7 +164,17 @@ export default {
       this.fesDate = resFesDate.data;
     },
     async edit() {
-      const url = "/fes_dates/" + this.routeId + "?fes_year_id=" + this.fesYearID + "&date=" + this.date + "&day=" + this.day + "&days_num=" + this.daysNum;
+      const url =
+        "/fes_dates/" +
+        this.routeId +
+        "?fes_year_id=" +
+        this.fesYearID +
+        "&date=" +
+        this.date +
+        "&day=" +
+        this.day +
+        "&days_num=" +
+        this.daysNum;
 
       await this.$axios.$put(url).then((res) => {
         this.fesYearID = null;
