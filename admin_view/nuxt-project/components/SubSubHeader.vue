@@ -30,7 +30,6 @@ export default {
     pageTitle: {
       type: String,
       required: false,
-      default: "pageTitle",
     },
     pageSubSubTitle: {
       type: String,
