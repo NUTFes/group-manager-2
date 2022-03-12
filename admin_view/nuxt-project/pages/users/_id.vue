@@ -2,10 +2,10 @@
   <div class="main-content">
     <SubHeader v-bind:pageTitle="user.user.name" pageSubTitle="ユーザー一覧">
       <CommonButton iconName="edit" :on_click="openEditModal">
-        編集
+        権限編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
-        削除
+      <CommonButton iconName="edit" :on_click="openResetModal">
+        パスワード再設定
       </CommonButton>
     </SubHeader>
     <Row>
@@ -61,61 +61,50 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="権限の編集"
     >
       <template v-slot:form>
-        <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
-            >
-              {{ category.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
-            <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
-            </option>
-          </select>
-        </div>
+        <label for="developer">Developer</label>
+        <input type="radio" id="developer" value="1" v-model="picked" />
+        <label for="manager">Manager</label>
+        <input type="radio" id="manager" value="2" v-model="picked" />
+        <label for="user">User</label>
+        <input type="radio" id="user" value="3" v-model="picked" />
+        <span>{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="editRole">編集</CommonButton>
       </template>
     </EditModal>
 
-    <DeleteModal
-      @close="closeDeleteModal"
-      v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+    <EditModal
+      @close="closeResetModal"
+      v-if="isOpenResetModal"
+      title="パスワード再設定"
     >
-      <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal"
-          >いいえ</NoButton
-        >
+      <template v-slot:form>
+        <div>
+          <h3>新しいパスワード</h3>
+          <input v-model="password" type="password" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>新しいパスワード再確認</h3>
+          <input v-model="passwordConfirm" type="password" placeholder="入力してください" />
+          <p v-if="passwordConfirm !== '' && password !== passwordConfirm">パスワードが一致しません</p>
+        </div>
       </template>
-    </DeleteModal>
+      <template v-slot:method>
+        <CommonButton v-if="password === passwordConfirm" iconName="edit" :on_click="editPassword">編集</CommonButton>
+        <CommonButton v-else iconName="edit" disabled :on_click="editPassword">編集</CommonButton>
+      </template>
+    </EditModal>
+
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -132,7 +121,16 @@ export default {
   data() {
     return {
       isOpenEditModal: false,
-      isOpenDeleteModal: false,
+      isOpenResetModal: false,
+      picked: '',
+      password: '',
+      passwordConfirm: '',
+      isOpenSnackBar: false,
+      roles: [
+        { id: 1, name: "developer" },
+        { id: 2, name: "manager" },
+        { id: 3, name: "user" },
+      ],
     };
   },
   async asyncData({ $axios, route }) {
@@ -141,6 +139,8 @@ export default {
     const response = await $axios.$get(url);
     return {
       user: response.data,
+      role: response.data.role.id,
+      routeId: routeId,
       route: url,
     };
   },
@@ -148,53 +148,46 @@ export default {
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
+      this.picked = this.role
     },
     closeEditModal() {
       this.isOpenEditModal = false;
     },
-    openDeleteModal() {
-      this.isOpenDeleteModal = false;
-      this.isOpenDeleteModal = true;
+    openResetModal() {
+      this.isOpenResetModal = false;
+      this.isOpenResetModal = true;
     },
-    closeDeleteModal() {
-      this.isOpenDeleteModal = false;
+    closeResetModal() {
+      this.isOpenResetModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
     },
     async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+      const url = "/api/v1/get_user_show_for_admin_view/" + this.routeId;
+      const reUserRes = await this.$axios.$get(url);
+      this.user = reUserRes.data;
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
-
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
+    async editRole() {
+      const url = "/users/" + this.routeId + "?role_id=" + this.picked
+      await this.$axios.$put(url).then((res) => {
+        this.role = res.data.role_id
         this.reload();
         this.closeEditModal();
+        this.openSnackBar("権限を編集しました");
       });
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+    async editPassword() {
+      const url = "/api/v1/users/reset_password?user_id=" + this.routeId + "&password=" + this.password + "&password_confirmation=" + this.passwordConfirm
+      await this.$axios.$post(url).then((res) => {
+        this.closeResetModal();
+        this.openSnackBar("パスワードを変更しました");
+      });
     },
   },
 };

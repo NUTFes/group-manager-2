@@ -27,8 +27,8 @@ export default {
   },
 
   publicRuntimeConfig: {
-    apiURL: 'https://group-manager-api.nutfes.net'
-    // apiURL: 'http://localhost:3000'
+    // apiURL: 'https://group-manager-api.nutfes.net'
+    apiURL: 'http://localhost:3000'
   },
 
   router: {

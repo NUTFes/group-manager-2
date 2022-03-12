@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 
   def update
     @user.update(user_params)
-    render json: fmt(created, @user, "Updated user id = "+params[:id])
+    render json: fmt(ok, @user, "Updated user id = "+params[:id])
   end
 
   def destroy
@@ -108,6 +108,7 @@ class UsersController < ApplicationController
     @user.password = reset_password_params[:password]
     @user.password_confirmation = reset_password_params[:password_confirmation]
     @user.save!
+    render json: fmt(ok, [], "Updated password user_id = "+params[:user_id])
   end
 
   private
