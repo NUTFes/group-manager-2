@@ -32,4 +32,8 @@
 .vertical-table tr:last-child th {
   border-bottom: none;
 }
+
+.vertical-table a {
+  color: var(--accent-7);
+}
 </style>

@@ -30,19 +30,31 @@
             </tr>
             <tr>
               <th>ダウンロードパス</th>
-              <td>{{ publicRelations.picture_path }}</td>
+              <td>
+                <div v-if='publicRelations.picture_path === null'>未登録</div>
+                <div v-else @click="DownloadPic(publicRelations.picture_path)">{{ publicRelations.picture_path }}</div>
+              </td>
             </tr>
             <tr>
               <th>PR文</th>
-              <td>{{ publicRelations.blurb }}</td>
+              <td>
+                <div v-if='publicRelations.blurb === null'>未登録</div>
+                <div v-else>{{ publicRelations.blurb }}</div>
+              </td>
             </tr>
             <tr>
               <th>登録日時</th>
-              <td>{{ publicRelations.created_at | formatDate }}</td>
+              <td>
+                <div v-if='publicRelations.blurb === null'>未登録</div>
+                <div v-else>{{ publicRelations.created_at | formatDate }}</div>
+              </td>
             </tr>
             <tr>
               <th>編集日時</th>
-              <td>{{ publicRelations.updated_at | formatDate }}</td>
+              <td>
+                <div v-if='publicRelations.blurb === null'>未登録</div>
+                <div v-else>{{ publicRelations.updated_at | formatDate }}</div>
+              </td>
             </tr>
           </VerticalTable>
         </Row>
@@ -135,6 +147,9 @@ export default {
     }),
   },
   methods: {
+    DownloadPic(url) {
+      window.location.href = url
+    },
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
