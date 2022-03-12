@@ -1,5 +1,5 @@
 <template>
-  <button class="common-button" @click="on_click" :style="CommonButtonOption">
+  <button class="common-button" @click="on_click" :style="CommonButtonOption" :disabled='disabled'>
     <nuxt-link v-if="to !== ''" :to="to">
       <span class="material-icons">{{ iconName }}</span>
       <slot></slot>
@@ -25,6 +25,11 @@ export default {
       type: String,
       required: false,
       default: "",
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
 };

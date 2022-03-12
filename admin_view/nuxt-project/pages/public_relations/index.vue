@@ -103,9 +103,10 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="upload"
-          >登録</CommonButton
+        <CommonButton iconName="add_circle" :on_click="upload" :disabled="isPush.disabled"
+          >{{ buttonState }}</CommonButton
         >
+          {{ state }}
       </template>
     </AddModal>
     <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
@@ -133,15 +134,17 @@ export default {
       refIsFresh: "画像",
       refIsFreshID: 0,
       searchText: "",
-      publicRelationss: [],
+      state: "",
+      publicRelations: [],
       blurb: [],
-      files: [{name: "選択してください"}]
+      files: [{name: "選択してください"}],
+      buttonState: "登録",
+      isPush: {disabled: false},
     };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-
     const url =
       "/api/v1/get_refinement_public_relations?fes_year_id=" +
       currentYearRes.data.fes_year_id;
@@ -179,10 +182,12 @@ export default {
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
-    reload(id) {
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + id;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    reload() {
+      const url =
+        "/api/v1/get_refinement_public_relations?fes_year_id=" + this.refYearID;
+      this.publicRelations = [];
+      this.$axios.$post(url).then((response) => {
+        this.publicRelations = response.data;
       });
     },
     fileUpload(event) {
@@ -204,9 +209,13 @@ export default {
           this.progress = progress * 100;
           switch (snapshot.state) {
             case "paused":
+              this.buttonState = "待機"
+              this.isPush.disabled = true
               this.state = "paused";
               break;
             case "running":
+              this.buttonState = "待機"
+              this.isPush.disabled = true
               this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
               break;
           }
@@ -220,7 +229,7 @@ export default {
                "/public_relations?group_id=" +
                this.appGroup +
                "&picture_name=" +
-               uploadTask.snapshot.ref.name + 
+               uploadTask.snapshot.ref.name +
                "&picture_path=" +
                downloadURL +
                "&blurb=" +
@@ -228,12 +237,13 @@ export default {
              console.log(url)
 
              this.$axios.$post(url).then((response) => {
-               console.log("####")
+               this.reload();
                this.closeAddModal();
                this.openSnackBar("PR画像・文申請を追加しました");
+               this.buttonState = "登録"
+               this.isPush.disabled = false
                this.groupID = null;
                this.blurb = null;
-               //this.reload(response.data.id);
              })
              /*
              const url = "/api/videos?name=" + uploadTask.snapshot.ref.name + "&path=" + downloadURL

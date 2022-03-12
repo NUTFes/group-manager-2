@@ -1,49 +1,38 @@
 class PublicRelationsController < ApplicationController
   before_action :set_public_relation, only: %i[ show update destroy ]
 
-  # GET /public_relations
-  # GET /public_relations.json
   def index
     @public_relations = PublicRelation.all
+    render json: fmt(ok, @public_relations)
   end
 
-  # GET /public_relations/1
-  # GET /public_relations/1.json
   def show
+    render json: fmt(ok, @public_relation)
   end
 
-  # POST /public_relations
-  # POST /public_relations.json
   def create
-    @public_relation = PublicRelation.new(public_relation_params)
-
-    if @public_relation.save
-      render :show, status: :created, location: @public_relation
-    else
-      render json: @public_relation.errors, status: :unprocessable_entity
-    end
+    @public_relation = PublicRelation.create(public_relation_params)
+    render json: fmt(created, @public_relation)
   end
 
-  # PATCH/PUT /public_relations/1
-  # PATCH/PUT /public_relations/1.json
   def update
-    if @public_relation.update(public_relation_params)
-      render :show, status: :ok, location: @public_relation
-    else
-      render json: @public_relation.errors, status: :unprocessable_entity
-    end
+    @public_relation.update(public_relation_params)
+    render json: fmt(created, @public_relations, "Updated public_relation id = "+params[:id])
   end
 
-  # DELETE /public_relations/1
-  # DELETE /public_relations/1.json
   def destroy
     @public_relation.destroy
+    render json: fmt(ok, [], "Deleted public_relation = "+params[:id])
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_public_relation
-      @public_relation = PublicRelation.find(params[:id])
+      if PublicRelation.exists?(params[:id])
+        @public_relation = PublicRelation.find(params[:id])
+      else
+        render json: fmt(not_found, [], "Not found public_relation = "+params[:id])
+      end
     end
 
     # Only allow a list of trusted parameters through.
