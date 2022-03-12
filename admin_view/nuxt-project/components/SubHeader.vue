@@ -35,10 +35,12 @@ export default {
     pageTitle: {
       type: String,
       required: false,
+      default: "pageTitle",
     },
     pageSubTitle: {
       type: String,
       required: false,
+      default: "",
     },
     parentPageLink: {
       type: String,

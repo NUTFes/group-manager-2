@@ -30,12 +30,13 @@ export default {
     pageTitle: {
       type: String,
       required: false,
+      default: "pageTitle",
     },
     pageSubSubTitle: {
       type: String,
       required: false,
     },
-    parentPageLink: {
+   parentPageLink: {
       type: String,
       required: false,
     },
