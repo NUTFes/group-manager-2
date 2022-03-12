@@ -405,6 +405,11 @@ class Group < ApplicationRecord
         }
     end
 
+    # public_relationが存在しないgroupのみ取得する
+    def self.have_no_public_relation(fes_year_id)
+      @records = Group.eager_load(:public_relation).where(groups: {fes_year_id: fes_year_id}).filter_map { |group| group if group.public_relation.nil? } 
+    end
+
     # 指定したfes_yearに対応するgroupとそのpublic_relationを取得する
     def self.with_public_relation_narrow_down_by_fes_year(fes_year_id)
       @record = Group.eager_load(:public_relation).where(groups: {fes_year_id: fes_year_id})

@@ -133,6 +133,7 @@ Rails.application.routes.draw do
       get "get_public_relation_for_admin_view/:id" => "public_relations_api#get_public_relation_for_admin_view"
       post "get_refinement_public_relations" => "public_relations_api#get_refinement_public_relations"
       post "get_search_public_relations" => "public_relations_api#get_search_public_relations"
+      get "get_groups_have_no_public_relation" => "groups_api#get_groups_have_no_public_relation"
 
       #---開催日
       get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"

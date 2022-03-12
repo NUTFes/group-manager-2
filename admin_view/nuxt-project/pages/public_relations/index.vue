@@ -164,7 +164,7 @@ export default {
   },
   methods: {
     async openAddModal() {
-      const url = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const url = "/api/v1/get_groups_have_no_public_relation";
       const resGroups = await this.$axios.$get(url);
       this.groupList = resGroups.data;
 
