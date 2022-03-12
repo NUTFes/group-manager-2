@@ -5,6 +5,30 @@
         追加
       </CommonButton>
     </SubHeader>
+
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="roles"
+          :on_click="refinementUsers"
+          value="name"
+        >
+          {{ refRole }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchUsers"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -76,7 +100,16 @@ export default {
   data() {
     return {
       headers: ["ID", "名前", "権限", "日時", "編集日時"],
+      roles: [
+        { id: 1, name: "developer" },
+        { id: 2, name: "manager" },
+        { id: 3, name: "user" },
+      ],
       isOpenAddModal: false,
+      refRole: "Role",
+      refRoleID: 0,
+      searchText: "",
+      users: [],
     };
   },
   async asyncData({ $axios }) {
@@ -90,6 +123,28 @@ export default {
     };
   },
   methods: {
+    async refinementUsers(item_id, name_list) {
+      this.refRoleID = item_id
+      if (item_id == 0){
+        this.refRole = "ALL";
+      } else {
+        this.refRole = name_list[item_id - 1].name;
+      }
+      this.users = [];
+      const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data){
+        this.users.push(res)
+      }
+    },
+    async searchUsers(){
+      this.users = []
+      const searchUrl = "/api/v1/get_search_users?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.users.push(res);
+      }
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;

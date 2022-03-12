@@ -22,11 +22,21 @@ class Api::V1::UsersController < ApplicationController
     render json: fmt(ok, @user)
   end
 
+  #admin_pageのviewの形に整える
+  def fit_user_index_for_admin_view(users)
+    users.map{
+      |user|
+      {
+        "user": user,
+        "role": user.role
+      }
+    }
+  end
+
   
   # 絞り込み機能
   def get_refinement_users
     role_id = params[:role_id].to_i
-    # 両方ともALL
     if role_id == 0
       @users = User.all
     elsif role_id != 0
@@ -36,7 +46,7 @@ class Api::V1::UsersController < ApplicationController
     if @users.count == 0
       render json: fmt(not_found, [], "Not found users")
     else 
-      render json: fmt(ok, @users)
+      render json: fmt(ok, fit_user_index_for_admin_view(@users))
     end
   end
 
@@ -47,7 +57,7 @@ class Api::V1::UsersController < ApplicationController
     if @users.count == 0
       render json: fmt(not_found, [], "Not found groups")
     else
-      render json: fmt(ok, @users)
+      render json: fmt(ok, fit_user_index_for_admin_view(@users))
     end
   end
 
