@@ -223,10 +223,7 @@ export default {
     async reload() {
       const reUrl = this.route;
       const reStageOptionRes = await this.$axios.$get(reUrl);
-      console.log(reStageOptionRes.data);
-
       this.stageCommonOption = reStageOptionRes.data;
-      console.log(this.stageCommonOption.data);
     },
     async edit() {
       const putStageOptionUrl =
@@ -246,15 +243,14 @@ export default {
         this.stageContent;
       console.log(putStageOptionUrl);
 
-      await this.$axios.$put(putStageOptionUrl).then((response) => {
-        console.log(response);
+      await this.$axios.$put(putStageOptionUrl).then(() => {
         this.reload();
         this.closeEditModal();
       });
     },
     async deleteData() {
       const delUrl = "/stage_common_options/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
+      await this.$axios.$delete(delUrl);
       this.$router.push("/stage_common_options");
     },
   },
