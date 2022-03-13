@@ -38,37 +38,53 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="ステージの追加"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <select v-model="appGroup">
+          <h3>ステージ名</h3>
+          <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>晴れ</h3>
+          <select v-model="enableSunny">
             <option disabled value="">選択してください</option>
             <option
-              v-for="group in groupList"
-              :key="group.id"
-              :value="group.id"
+              v-for="r in isUseList"
+              :key="r"
+              :value="r.value"
             >
-              {{ group.name }}
+              {{ r.text }}
             </option>
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>雨</h3>
+          <select v-model="enableRainy">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="r in isUseList"
+              :key="r"
+              :value="r.value"
+            >
+              {{ r.text }}
+            </option>
+          </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
+
   </div>
 </template>
 
@@ -80,6 +96,14 @@ export default {
     return {
       headers: ["ID", "ステージ名", "晴れ", "雨", "登録日時", "編集日時"],
       isOpenAddModal: false,
+      isUseList: [
+        { text: "使用可能", value: true },
+        { text: "使用不可能", value: false },
+      ],
+      isOpenSnackBar: false,
+      name: "",
+      enableSunny: null,
+      enableRainy: null,
     };
   },
   async asyncData({ $axios }) {
@@ -102,28 +126,36 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/stages/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.stages.push(response.data);
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+    async submit() {
+      const url =
+        "/stages/" +
+        "?name=" +
+        this.name +
+        "&enable_sunny=" +
+        this.enableSunny +
+        "&enable_rainy=" +
+        this.enableRainy;
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+      this.$axios.$post(url).then((response) => {
+        this.openSnackBar(response.data.name + "を追加しました");
+        this.name = "";
+        this.enableSunny = null;
+        this.enableRainy = null;
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },
