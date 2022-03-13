@@ -37,37 +37,38 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="店の追加"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <select v-model="appGroup">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="group in groupList"
-              :key="group.id"
-              :value="group.id"
-            >
-              {{ group.name }}
-            </option>
-          </select>
+          <h3>名前</h3>
+          <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>電話番号</h3>
+          <input v-model="tel" placeholder="入力してください" />
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>開店時間</h3>
+          <input v-model="openingHours" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>住所</h3>
+          <input v-model="address" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -77,8 +78,14 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "名前", "電話番号", "登録日時", "編集日時"],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
+      name: "",
+      tel: "",
+      openingHours: "",
+      address: "",
+      enableSunny: null,
+      enableRainy: null,
     };
   },
   async asyncData({ $axios }) {
@@ -101,28 +108,39 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/shops/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.shops.push(response.data);
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
-        "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+    async submit() {
+      const url =
+        "/shops/" +
+        "?name=" +
+        this.name +
+        "&tel=" +
+        this.tel +
+        "&opening_hours=" +
+        this.openingHours +
+        "&address=" +
+        this.address
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+      this.$axios.$post(url).then((response) => {
+        this.openSnackBar(response.data.name + "を追加しました");
+        this.name = "";
+        this.tel = "";
+        this.openingHours = "";
+        this.address = "";
+        this.reload(response.data.id);
         this.closeAddModal();
       });
     },
