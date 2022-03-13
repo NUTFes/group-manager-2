@@ -59,9 +59,18 @@ export default {
   outline: 0;
 }
 
+.delete-modal__box h2 {
+  color: var(--accent-5);
+}
+
 .delete-modal_content h3 {
+  color: var(--accent-5);
   font-size: 16px;
   font-weight: 300;
+}
+
+.delete-modal_content h4 {
+  color: var(--accent-5);
 }
 
 .delete-modal_content form {
@@ -115,8 +124,8 @@ export default {
   color: #fff;
   background: radial-gradient(
     ellipse at top left,
-    rgba(51, 51, 51, 0.9),
-    rgba(51, 51, 51, 0.8)
+    rgba(251, 251, 251, 0.9),
+    rgba(251, 251, 251, 0.8)
   );
   backdrop-filter: blur(4px);
   gap: 30px;
