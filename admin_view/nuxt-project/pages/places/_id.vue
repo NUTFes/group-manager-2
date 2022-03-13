@@ -1,10 +1,10 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="place.name" pageSubTitle="会場一覧">
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).place.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).place.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -86,6 +86,7 @@ export default {
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
       name: "",
+      roleID: 1, // ここをvuexでとってきてログインユーザーのroleで変化させる
     };
   },
   async asyncData({ $axios, route }) {

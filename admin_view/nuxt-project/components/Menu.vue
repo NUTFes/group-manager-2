@@ -33,7 +33,7 @@
       <nav class="menu">
         <ul>
           <li v-for="item in list_items" :key="item.title">
-            <nuxt-link v-bind:to="item.click"
+            <nuxt-link v-if="item.isShow" v-bind:to="item.click"
               ><span class="material-icons">{{ item.icon }}</span
               >{{ item.title }}</nuxt-link
             >
@@ -47,6 +47,7 @@
 <script>
 export default {
   data() {
+    const roleID = 1 // ここをvuexでとってきてログインユーザーのroleで変化させる
     return {
       icon_src: require("@/assets/symbol-mark.svg"),
       drawer: true,
@@ -65,13 +66,13 @@ export default {
           icon: "people",
           click: "/users",
         },
-        { title: "会場一覧", icon: "place", click: "/places" },
+        { title: "会場一覧", icon: "place", click: "/places", isShow: this.$role(roleID).place.read },
         // {
         //   title: "使用可能会場一覧",
         //   icon: "add_location_alt",
         //   click: "/place_allow_lists",
         // },
-        { title: "物品一覧", icon: "chair", click: "/rental_items" },
+        { title: "物品一覧", icon: "chair", click: "/rental_items", isShow: this.$role(roleID).rental_items.read },
         // {
         //   title: "使用可能物品一覧",
         //   icon: "living",
@@ -96,14 +97,16 @@ export default {
           title: "ステージ一覧",
           icon: "festival",
           click: "/stages",
+          isShow: true
         },
         { title: "店一覧", icon: "storefront", click: "/shops" },
         {
           title: "開催年",
           icon: "calendar_today",
           click: "/fes_years",
+          isShow: true
         },
-        { title: "開催日", icon: "date_range", click: "/fes_dates" },
+        { title: "開催日", icon: "date_range", click: "/fes_dates", isShow: true },
       ],
       // 申請系
       order_items: [

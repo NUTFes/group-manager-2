@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="会場一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(this.roleID).place.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
     </SubHeader>
@@ -71,6 +71,7 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",
+      roleID: 2, // ここをvuexでとってきてログインユーザーのroleで変化させる
     };
   },
   async asyncData({ $axios }) {
