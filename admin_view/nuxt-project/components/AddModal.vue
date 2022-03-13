@@ -31,15 +31,15 @@ export default {
 <style>
 .add-modal_content input,
 .add-modal_content textarea {
-  color: var(--accent-2);
-  border: 1px solid var(--accent-3);
+  color: var(--accent-5);
+  border: 1px solid var(--accent-5);
   padding: 15px;
   width: 500px;
   transition: all 0.5s 0s ease;
 }
 .add-modal label {
-  color: var(--accent-2);
-  border: 1px solid var(--accent-3);
+  color: var(--accent-5);
+  border: 1px solid var(--accent-5);
   padding: 15px;
   width: 500px;
   transition: all 0.5s 0s ease;
@@ -51,28 +51,31 @@ export default {
 
 .add-modal_content input:focus,
 .add-modal_content textarea:focus {
-  border: 1px solid var(--accent-0);
+  border: 1px solid var(--accent-7);
   z-index: 20;
   outline: 0;
 }
 
 .add-modal_content select {
-  color: var(--accent-0);
-  border: 1px solid var(--accent-3);
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
   padding: 15px;
-  width: 500px;
-  transition: all 0.5s 0s ease;
 }
 
 .add-modal_content select:focus {
-  border: 1px solid var(--accent-0);
+  border: 1px solid var(--accent-7);
   z-index: 20;
   outline: 0;
 }
 
+.add-modal__box h2 {
+  color: var(--accent-5);
+}
+
 .add-modal_content h3 {
+  color: var(--accent-5);
   font-size: 16px;
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .add-modal_content form {
@@ -126,8 +129,8 @@ export default {
   color: #fff;
   background: radial-gradient(
     ellipse at top left,
-    rgba(51, 51, 51, 0.9),
-    rgba(51, 51, 51, 0.8)
+    rgba(251, 251, 251, 0.9),
+    rgba(251, 251, 251, 0.8)
   );
   backdrop-filter: blur(4px);
   gap: 30px;
