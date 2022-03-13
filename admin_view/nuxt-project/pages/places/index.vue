@@ -67,7 +67,6 @@ export default {
     return {
       places: [],
       dialog: false,
-      name: [],
       headers: ["ID", "名前", "登録日時", "編集日時"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
