@@ -1,10 +1,10 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="rentalItem.name" pageSubTitle="物品一覧">
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).rental_items.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).rental_items.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -117,7 +117,7 @@ export default {
   },
   computed: {
     ...mapState({
-      selfRoleId: (state) => state.users.role,
+      roleID: (state) => state.users.role,
     }),
   },
   methods: {

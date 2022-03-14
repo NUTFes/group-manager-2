@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="物品申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -161,6 +162,11 @@ export default {
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async refinementRentalOrders(item_id, name_list) {

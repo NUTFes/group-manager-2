@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   async asyncData({ $axios }) {
@@ -85,6 +86,11 @@ export default {
     return {
       currentYearID: currentYearRes.data.fes_year_id,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     downloadPowerPDF: function () {

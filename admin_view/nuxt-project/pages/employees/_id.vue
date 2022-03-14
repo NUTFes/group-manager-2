@@ -4,10 +4,10 @@
       v-bind:pageTitle="employee.employee.name"
       pageSubTitle="従業員申請"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).employees.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).employees.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -106,6 +107,11 @@ export default {
       employee: response.data,
       route: url,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openEditModal() {

@@ -66,7 +66,7 @@ export default {
           icon: "people",
           click: "/users",
         },
-        { title: "会場一覧", icon: "place", click: "/places", isShow: this.$role(roleID).place.read },
+        { title: "会場一覧", icon: "place", click: "/places", isShow: this.$role(roleID).places.read },
         // {
         //   title: "使用可能会場一覧",
         //   icon: "add_location_alt",

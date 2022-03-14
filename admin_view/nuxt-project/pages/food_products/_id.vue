@@ -4,10 +4,10 @@
       v-bind:pageTitle="foodProduct.food_product.name"
       pageSubTitle="販売食品申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).food_products.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).food_products.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -114,6 +114,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -139,6 +140,11 @@ export default {
       foodProduct: response.data,
       route: url,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openEditModal() {

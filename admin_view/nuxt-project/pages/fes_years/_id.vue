@@ -1,10 +1,10 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="fesYear.year_num" pageSubTitle="開催年一覧">
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).fes_years.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).fes_years.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -86,6 +87,11 @@ export default {
       fesYear: fesYearRes.data,
       routeId: routeId,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openEditModal() {

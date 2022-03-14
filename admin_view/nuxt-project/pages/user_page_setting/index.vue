@@ -526,6 +526,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -589,6 +590,11 @@ export default {
       .then((response) => {
         this.item_list = response.data;
       });
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     update: function () {

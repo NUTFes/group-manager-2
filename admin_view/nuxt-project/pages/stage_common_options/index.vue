@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージオプション申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).stage_common_options.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -190,6 +190,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -269,6 +270,11 @@ export default {
       refYears: currentYears[0].year_num,
       groupList: groupRes.data,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async refinementStageCommonOptions(item_id, name_list) {

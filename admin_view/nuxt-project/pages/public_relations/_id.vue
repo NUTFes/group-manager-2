@@ -4,10 +4,10 @@
       v-bind:pageTitle="publicRelations.group.name"
       pageSubTitle="参加団体PR"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).public_relations.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).public_relations.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -143,7 +143,7 @@ export default {
   },
   computed: {
     ...mapState({
-      selfRoleId: (state) => state.users.role,
+      roleID: (state) => state.users.role,
     }),
   },
   methods: {

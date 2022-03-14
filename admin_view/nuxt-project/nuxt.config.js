@@ -42,8 +42,9 @@ export default {
   plugins: [
     { src: "~/plugins/axios.js", ssr: false },
     { src: "~/plugins/fileter.js", ssr: false },
+    { src: '~/plugins/persistedstate.js', ssr: false},
     { src: "~/plugins/firebase.js" },
-    { src: "~/plugins/role.js" },
+    { src: "~/plugins/role" },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)

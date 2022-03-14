@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="参加団体PR申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).public_relations.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <!--
@@ -116,6 +116,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 export default {
   watchQuery: ["page"],
@@ -161,6 +162,11 @@ export default {
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async openAddModal() {

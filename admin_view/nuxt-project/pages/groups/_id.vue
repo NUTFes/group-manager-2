@@ -4,10 +4,10 @@
       v-bind:pageTitle="group.group.name"
       pageSubTitle="参加団体申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).groups.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).groups.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
       <CommonButton iconName="download" :on_click="printPDF">
@@ -180,6 +180,11 @@ export default {
       yearList: yearsRes.data,
       groupUrl: groupUrl,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openEditModal() {

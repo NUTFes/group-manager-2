@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="店一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).shops.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
     </SubHeader>
@@ -98,6 +98,11 @@ export default {
   computed: {
     ...mapState({
       selfRoleId: (state) => state.users.role,
+    }),
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
     }),
   },
   methods: {
