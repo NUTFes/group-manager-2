@@ -1,4 +1,5 @@
 import axios from "axios";
+import createPersistedState from 'vuex-persistedstate';
 
 /**
  * vuexについて
@@ -13,7 +14,7 @@ import axios from "axios";
  * 外から参照するのは問題ない
  */
 export const state = () => ({
-  role: null,
+  role: 3,
   accessToken: null,
   client: null,
   uid: null,
@@ -58,7 +59,7 @@ export const mutations = {
 export const actions = {
   async getUser({ commit }) {
     try {
-      const response = await this.$axios.$get("api/v1/users/get_user_detail", {
+      const response = await this.$axios.$get("api/v1/users/show", {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
@@ -67,11 +68,11 @@ export const actions = {
         },
       });
 
-      console.log(response);
-      commit("setRole", response.user.role_id);
-      commit("setAccessToken", response.user.accessToken);
-      commit("setClient", response.user.client);
-      commit("setUid", response.user.uid);
+      console.log(response.data);
+      commit("setRole", response.data.role_id);
+      commit("setAccessToken", response.data.accessToken);
+      commit("setClient", response.data.client);
+      commit("setUid", response.data.uid);
     } catch (error) {
       commit("setRole", null);
       commit("setAccessToken", null);
