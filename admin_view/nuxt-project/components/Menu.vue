@@ -33,7 +33,7 @@
       <nav class="menu">
         <ul>
           <li v-for="item in list_items" :key="item.title">
-            <nuxt-link v-if="item.isShow" v-bind:to="item.click"
+            <nuxt-link v-bind:to="item.click"
               ><span class="material-icons">{{ item.icon }}</span
               >{{ item.title }}</nuxt-link
             >
@@ -66,13 +66,13 @@ export default {
           icon: "people",
           click: "/users",
         },
-        { title: "会場一覧", icon: "place", click: "/places", isShow: this.$role(roleID).places.read },
+        { title: "会場一覧", icon: "place", click: "/places" },
         // {
         //   title: "使用可能会場一覧",
         //   icon: "add_location_alt",
         //   click: "/place_allow_lists",
         // },
-        { title: "物品一覧", icon: "chair", click: "/rental_items", isShow: this.$role(roleID).rental_items.read },
+        { title: "物品一覧", icon: "chair", click: "/rental_items" },
         // {
         //   title: "使用可能物品一覧",
         //   icon: "living",
@@ -106,7 +106,7 @@ export default {
           click: "/fes_years",
           isShow: true
         },
-        { title: "開催日", icon: "date_range", click: "/fes_dates", isShow: true },
+        { title: "開催日", icon: "date_range", click: "/fes_dates" },
       ],
       // 申請系
       order_items: [
