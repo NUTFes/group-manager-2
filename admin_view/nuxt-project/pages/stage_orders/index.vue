@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージ申請一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).stage_orders.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -125,6 +125,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -191,6 +192,9 @@ export default {
         (this.performanceEndTime.HH - this.performanceStartTime.HH) * 60;
       return hour + minute;
     },
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async refinementStageOrders(item_id, name_list) {

@@ -4,10 +4,10 @@
       v-bind:pageTitle="purchaseList.purchase_list.items"
       pageSubTitle="購入食品申請一覧"
     >
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).purchase_lists.update" iconName="edit" :on_click="openEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openDeleteModal">
+      <CommonButton v-if="this.$role(this.roleID).purchase_lists.delete" iconName="delete" :on_click="openDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -144,7 +144,7 @@ export default {
   },
   computed: {
     ...mapState({
-      selfRoleId: (state) => state.users.role,
+      roleID: (state) => state.users.role,
     }),
   },
   methods: {

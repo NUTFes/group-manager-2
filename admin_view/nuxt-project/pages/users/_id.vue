@@ -1,10 +1,10 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="user.user.name" pageSubTitle="ユーザー一覧">
-      <CommonButton iconName="edit" :on_click="openEditModal">
+      <CommonButton v-if="this.$role(this.roleID).users.update" iconName="edit" :on_click="openEditModal">
         権限編集
       </CommonButton>
-      <CommonButton iconName="edit" :on_click="openResetModal">
+      <CommonButton v-if="this.$role(this.roleID).users.update" iconName="edit" :on_click="openResetModal">
         パスワード再設定
       </CommonButton>
     </SubHeader>
@@ -143,6 +143,11 @@ export default {
       routeId: routeId,
       route: url,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openEditModal() {

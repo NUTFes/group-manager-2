@@ -403,6 +403,11 @@ export default {
         this.group_category = response.data.group_category.id;
       });
   },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
     reload: function () {
       console.log("reload");

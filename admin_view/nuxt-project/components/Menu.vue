@@ -47,6 +47,7 @@
 <script>
 export default {
   data() {
+    const roleID = 1 // ここをvuexでとってきてログインユーザーのroleで変化させる
     return {
       icon_src: require("@/assets/symbol-mark.svg"),
       drawer: true,
@@ -96,12 +97,14 @@ export default {
           title: "ステージ一覧",
           icon: "festival",
           click: "/stages",
+          isShow: true
         },
         { title: "店一覧", icon: "storefront", click: "/shops" },
         {
           title: "開催年",
           icon: "calendar_today",
           click: "/fes_years",
+          isShow: true
         },
         { title: "開催日", icon: "date_range", click: "/fes_dates" },
       ],

@@ -5,14 +5,14 @@
       pageSubTitle="代表者一覧"
     >
       <CommonButton
-        v-if="representative.sub_rep.id != null"
+        v-if="representative.sub_rep.id != null && this.$role(this.roleID).representatives.update"
         iconName="edit"
         :on_click="openEditModal"
       >
         編集
       </CommonButton>
       <CommonButton
-        v-if="representative.sub_rep.id != null"
+        v-if="representative.sub_rep.id != null && this.$role(this.roleID).representatives.delete"
         iconName="delete"
         :on_click="openDeleteModal"
       >
@@ -127,6 +127,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -191,6 +192,11 @@ export default {
       tel: null,
       studentID: null,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openEditModal() {

@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -83,6 +84,11 @@ export default {
       users: userRes.data,
       yearList: yearsRes.data,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async refinementUsers(item_id, name_list) {

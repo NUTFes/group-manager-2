@@ -1,7 +1,9 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="企画名申請一覧">
-      <CommonButton iconName="add_circle"> 追加 </CommonButton>
+      <CommonButton v-if="this.$role(roleID).project_names.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
     </SubHeader>
     <SubSubHeader>
       <SearchDropDown> All Years </SearchDropDown>
@@ -12,13 +14,8 @@
 </template>
 
 <script>
-import Header from "~/components/Header.vue";
-import Menu from "~/components/Menu.vue";
+import { mapState } from "vuex";
 export default {
-  components: {
-    Header,
-    Menu,
-  },
   data() {
     return {
       groups: [],
@@ -30,6 +27,11 @@ export default {
         { text: "編集日時", value: "updated_at" },
       ],
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   mounted() {
     this.$axios

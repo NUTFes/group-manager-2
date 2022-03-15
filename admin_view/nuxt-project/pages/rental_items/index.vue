@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="物品一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
     </SubHeader>
@@ -98,9 +98,9 @@ export default {
       yearList: yearsRes.data,
     };
   },
-  compouted: {
+  computed: {
     ...mapState({
-      selfRoleId: (state) => state.users.role,
+      roleID: (state) => state.users.role,
     }),
   },
   methods: {

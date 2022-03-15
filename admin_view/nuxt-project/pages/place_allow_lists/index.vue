@@ -264,6 +264,11 @@ export default {
         this.place_allow_list = response.data;
       });
   },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
     reload: function () {
       this.$axios

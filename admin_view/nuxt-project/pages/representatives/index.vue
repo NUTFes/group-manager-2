@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="代表者一覧">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).representatives.create" iconName="add_circle" :on_click="openAddModal">
         副代表追加
       </CommonButton>
     </SubHeader>
@@ -134,6 +134,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -214,6 +215,11 @@ export default {
       refYears: currentYears[0].year_num,
       currentYearID: currentYears,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     async refinementRepresentatives(item_id, name_list) {

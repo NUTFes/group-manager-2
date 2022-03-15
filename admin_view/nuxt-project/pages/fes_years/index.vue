@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="開催年">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).fes_years.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
     </SubHeader>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {
@@ -70,6 +71,11 @@ export default {
     return {
       fesYears: fesYearsRes.data,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openAddModal() {

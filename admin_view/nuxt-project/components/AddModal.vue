@@ -60,6 +60,8 @@ export default {
   color: var(--accent-7);
   border: 1px solid var(--accent-5);
   padding: 15px;
+  width: 500px;
+  transition: all 0.5s 0s ease;
 }
 
 .add-modal_content select:focus {

@@ -12,6 +12,7 @@
 <script>
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
+import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Header,
@@ -45,6 +46,7 @@ export default {
     },
   },
   mounted() {
+    this.getUser()
     this.$axios
       .get("api/v1/users/show", {
         headers: {
@@ -54,8 +56,7 @@ export default {
           uid: localStorage.getItem("uid"),
         },
       })
-      .then((response) => {
-        this.user = response.data.data;
+      .then((response) => { this.user = response.data.data;
       });
 
     this.$axios
@@ -69,6 +70,7 @@ export default {
       });
   },
   methods: {
+    ...mapActions('users', ['getUser']),
     submit: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();

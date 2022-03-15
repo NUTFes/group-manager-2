@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -52,6 +53,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('users', ['getUser']),
     async loginWithAuthModule() {
       // this.formHasErrors = false;
       // Object.keys(this.form).forEach((f) => {
@@ -75,6 +77,7 @@ export default {
             localStorage.setItem("client", response.headers.client);
             localStorage.setItem("uid", response.headers.uid);
             localStorage.setItem("token-type", response.headers["token-type"]);
+            this.getUser()
             return response;
           },
           (error) => {
