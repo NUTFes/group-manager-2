@@ -1,57 +1,43 @@
 <template>
-  <v-row>
-    <v-col cols="2" />
-    <v-col cols="8" align="center">
-      <v-card-title class="justify-center">
-        <h1 style="color: #333333">ユーザー情報</h1>
-      </v-card-title>
-      <br />
-      <v-divider />
-      <br />
-
-      <v-card-title class="justify-center">
-        <h2>{{ user.user.name }}<br /></h2>
-      </v-card-title>
-
-      <v-card class="mx-auto" outlined>
-        <v-card-title class="justify-center">
-          <h3 style="color: #333333">
-            メールアドレス<br />
-            <v-icon class="mr-2">mdi-email</v-icon>{{ user.user.email }}<br />
-          </h3>
-        </v-card-title>
-
-        <v-card-title class="justify-center">
-          <h3 style="color: #333333">
-            学籍番号<br />
-            <v-icon class="mr-2">mdi-card-account-details-outline</v-icon>{{ user.student_id }}<br />
-          </h3>
-        </v-card-title>
-
-        <v-card-title class="justify-center">
-          <h3 style="color: #333333">
-            電話番号<br />
-            <v-icon class="mr-2">mdi-phone</v-icon>{{ user.tel }}<br />
-          </h3>
-        </v-card-title>
-
-        <v-card-title class="justify-center">
-          <h3 style="color: #333333">
-            学科<br />
-            <v-icon class="mr-2"> mdi-fireplace-off</v-icon>{{ user.department }}<br />
-          </h3>
-        </v-card-title>
-
-        <v-card-title class="justify-center">
-          <h3 style="color: #333333">
-            学年<br />
-            <v-icon class="mr-2">mdi-school</v-icon>{{ user.grade }}<br />
-          </h3>
-        </v-card-title>
-      </v-card>
-    </v-col>
-    <v-col cols="4" />
-  </v-row>
+  <div id="app">
+    <h1 class="tytle">
+      ユーザー情報
+      {{ user.user.name }}様
+    </h1>
+    <div class="Blank">
+      <span>
+        メールアドレス:
+      </span>
+      <nobr>{{ user.user.email }}</nobr>
+    </div>
+    <div class="Blank">
+      <span>
+        学籍番号:
+      </span>
+      <nobr>{{ user.student_id }}</nobr>
+    </div>
+    <div class="Blank">
+      <span>
+        電話番号:
+      </span>
+      <nobr>{{ user.tel }}</nobr>
+    </div>
+    <div class="Blank">
+      <span>
+        学科:
+      </span>
+      <nobr>{{ user.department }}</nobr>
+    </div>
+    <div class="Blank">
+      <span>
+        学年:
+      </span>
+      <nobr>{{ user.grade }}</nobr>
+    </div>
+    <div class="Blank">
+      <router-link to="/mypage"><button>←マイページに戻る</button></router-link>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -76,6 +62,61 @@ export default {
       .then((response) => {
         this.user = response.data;
       });
+    const setting =
+    process.env.VUE_APP_URL + "/user_page_settings";
+    axios
+      .get(setting, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then((response) => {
+        this.setting=response.data.data[0];
+      });
   },
 };
 </script>
+
+<style scoped>
+  #app{
+    margin: 1%;
+  }
+  span {
+    display: inline-block;
+    width: 200;
+    padding-right: 10px;
+  }
+  .tytle{
+    text-align:center;
+    padding:1%;
+  }
+  .Blank{
+    text-align: center;
+    margin:1%;
+  }
+  nobr {
+    text-align: center;
+    width: 30%;
+    height:40px;
+    font-size: 25px;
+  }
+  button{
+  color: black;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 1%;
+  padding:1%;
+  }
+  button:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
+  }
+  button:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
+</style>

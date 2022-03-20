@@ -1,27 +1,17 @@
 <template>
   <div id="app">
-    <h2>代表者の詳細情報の登録</h2>
-    <div>
-      <div class="cp_iptxt">
-        <h3>名前</h3>
-        <input type="text" name="name" placeholder="名前を入力してください" v-model="name">
-      </div>
-      <div class="cp_iptxt">
-        <h3>学籍番号</h3>
-        <input type="text" name="studentId" placeholder="学籍番号を入力してください" v-model="studentIdd">
-      </div>
-      <div class="cp_iptxt">
-        <h3>電話番号</h3>
-        <input type="text" name="phone" placeholder="電話番号を入力してください" v-model="phone">
-      </div>
-      <div class="cp_iptxt">
-        <h3>Eメール</h3>
-        <input type="text" name="email" placeholder="Emailを入力してください" v-model="email">
-      </div>
+    <h1 class="tytle">代表者の詳細情報の登録</h1>
+    <div class="Blank">
+      <span>名前</span>
+      <input id="name" type="text" v-model="name" @change="validationName" />
     </div>
-    <div>
-      <h3>学科</h3>
-      <select>
+    <div class="Blank">
+      <span>学籍番号</span>
+      <input id="studentId" v-model="student_id" maxlength="8" @change="validationStudentId" />
+    </div>
+    <div class="Blank">
+      <span>学科</span>
+      <select v-model="department_id" @change="validationGrade" id="department">
         <option
           v-for="item in departments"
           :value="item.id"
@@ -31,9 +21,9 @@
         </option>
       </select>
     </div>
-    <div>
-      <h3>学年</h3>
-      <select>
+    <div class="Blank">
+      <span>学年</span>
+      <select v-model="grade_id" @change="validationDepartment" id="grade">
         <option
           v-for="item in grades"
           :value="item.id"
@@ -43,14 +33,39 @@
         </option>
       </select>
     </div>
+    <div class="Blank">
+      <span>電話番号</span>
+      <input id="tel" v-model="tel" maxlength="11" placeholder="ハイフンなし" @change="validationTel" />
+    </div>
+    <div class="Blank">
+      <span>Eメール</span>
+      <input id="email" v-model="email" placeholder="～@～.～" @change="validationEmail" />
+    </div>
+    <div  class="Blank">
+      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
+      <button @click="register" style="margin-left:15%;">登録する→</button>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: "App",
   data() {
     return {
+      resultName: false,
+      resultStudentId: false,
+      resultDepartment: false,
+      resultGrade: false,
+      resultTel: false,
+      resultEmail: false,
+      user: [],
+      name: [],
+      student_id: [],
+      department_id: [],
+      grade_id: [],
+      tel: [],
+      email: [],
       departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
@@ -92,39 +107,227 @@ export default {
       ],
     };
   },
+  computed: {
+    validationName(){
+      if (this.name.length) {
+        this.onNameValidation();
+      } else {
+        this.offNameValidation();
+      }
+      return this.resultName
+    },
+    validationStudentId(){
+      const pattern = /[0-9０-９]{8}/;
+      if (pattern.test(this.student_id)==true) {
+        this.onStuentIdValidation();
+      } else {
+        this.offStudentIdValidation();
+      }
+      return this.resultStudentId
+    },
+    validationDepartment(){
+      if (this.department_id != 0) {
+        this.onDepartmentValidation();
+      } else {
+        this.offDepartmentValidation();
+      }
+      return this.resultDepartment
+    },
+    validationGrade(){
+      if (this.grade_id != 0) {
+        this.onGradeValidation();
+      } else {
+        this.offGradeValidation();
+      }
+      return this.resultGrade
+    },
+    validationTel(){
+      const pattern = /[0-9０-９]{10}/;
+      if (pattern.test(this.tel)==true) {
+        this.onTelValidation();
+      } else {
+        this.offTelValidation();
+      }
+      return this.resultTel
+    },
+    validationEmail(){
+      const pattern = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
+      if (pattern.test(this.email)==true) {
+        this.onEmailValidation();
+      } else {
+        this.offEmailValidation();
+      }
+      return this.resultEmail
+    },
+  },
+  methods: {
+    onNameValidation: function() {
+      this.resultName = true;
+    },
+    offNameValidation: function() {
+      this.resultName = false;
+    },
+    onStuentIdValidation: function() {
+      this.resultStudentId = true;
+    },
+    offStudentIdValidation: function() {
+      this.resultStudentId = false;
+    },
+    onDepartmentValidation: function() {
+      this.resultDepartment = true;
+    },
+    offDepartmentValidation: function() {
+      this.resultDepartment = false;
+    },
+    onGradeValidation: function() {
+      this.resultGrade = true;
+    },
+    offGradeValidation: function() {
+      this.resultGrade = false;
+    },
+    onTelValidation: function() {
+      this.resultTel = true;
+    },
+    offTelValidation: function() {
+      this.resultTel = false;
+    },
+    onEmailValidation: function() {
+      this.resultEmail = true;
+    },
+    offEmailValidation: function() {
+      this.resultEmail = false;
+    },
+    register: function () {
+      if (this.resultName && this.resultDepartment && this.resultGrade && this.resultEmail && this.resultTel && this.resultStudentId) {
+        const url = process.env.VUE_APP_URL + "/user_details";
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        let params = new URLSearchParams();
+        params.append("student_id", this.student_id);
+        params.append("tel", this.tel);
+        params.append("department_id", this.department_id);
+        params.append("grade_id", this.grade_id);
+        params.append("user_id", this.user.id);
+        axios.post(url, params).then(
+          () => {
+            this.$router.push("regist_model");
+          },
+          (error) => {
+            return error;
+          }
+        );
+      } else {
+        if (this.resultName==false) {
+          const nameError = document.getElementById("name");
+          nameError.style.border="2px solid red";
+        } else {
+          const nameError = document.getElementById("name");
+          nameError.style.border="2px solid black";
+        }
+        if (this.resultDepartment==false) {
+          const departmentError = document.getElementById("department");
+          departmentError.style.border="2px solid red";
+        } else {
+          const departmentError = document.getElementById("department");
+          departmentError.style.border="2px solid black";
+        }
+        if (this.resultGrade==false) {
+          const gradeError = document.getElementById("grade");
+          gradeError.style.border="2px solid red";
+        } else {
+          const gradeError = document.getElementById("grade");
+          gradeError.style.border="2px solid black";
+        }
+        if (this.resultEmail==false) {
+          const emailError = document.getElementById("email");
+          emailError.style.border="2px solid red";
+        } else {
+          const emailError = document.getElementById("email");
+          emailError.style.border="2px solid black";
+        }
+        if (this.resultTel==false) {
+          const telError = document.getElementById("tel");
+          telError.style.border="2px solid red";
+        } else {
+          const telError = document.getElementById("tel");
+          telError.style.border="2px solid black";
+        }
+        if (this.resultStudentId==false) {
+          const studentIdError = document.getElementById("studentId");
+          studentIdError.style.border="2px solid red";
+        } else {
+          const studentIdError = document.getElementById("studentId");
+          studentIdError.style.border="2px solid black";
+        }
+      }
+    },
+  },
+  mounted() {
+    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
+    axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then((response) => {
+        this.user = response.data.data;
+      });
+  },
 };
 </script>
 
 <style scoped>
-  select{
-    outline:solid 1px #242424;
-    border-radius: 7px;
-  }
-  input{
-    outline:solid 1px #242424;
-  }
   #app{
     margin: 1%;
   }
-  .cp_iptxt {
-    position: relative;
-    width: 80%;
-    margin: 40px 3%;
+  span {
+    display: inline-block;
+    width: 100px;
+    padding-right: 10px;
   }
-  .cp_iptxt input[type=text] {
-    margin: 0;
-    padding: 1%;
-    border: 1px solid #1b2538;
+  .tytle{
+     text-align:center;
+     padding:1%;
   }
-  .cp_iptxt input[type=text]:focus {
-    border-color: #da3c41;
+  .Blank{
+    text-align: center;
+    margin:1%;
+  }
+  select,input{
+    text-align: center;
+    width: 30%;
+    height:40px;
+    border-radius: 7px;
+    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
+    font-size: 25px;
+  }
+  select,input:required{
+    border: 2px solid red;
+  }
+  select,input:invalid{
+    border: 2px solid red;
+  }
+  select,input:valid{
+    border: 2px solid black;
   }
   button{
-    background-color: teal;
-    color:white;
-    padding:1%;
-    margin: 0;
-    border:none;
-    border-radius:10px;
-}
+  color: black;
+  font-weight: bold;
+  border: solid 2px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 1%;
+  padding:1%;
+  }
+  button:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
+  }
+  button:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
 </style>

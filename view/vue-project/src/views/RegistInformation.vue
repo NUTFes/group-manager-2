@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <h1>参加団体登録</h1>
+    <a href="./mypage" style="color:black;">
+      <h3 style="display: flex;">マイページに戻る</h3>
+    </a>
+    <h1 style="display: flex;">参加団体登録と編集</h1>
     <section class="tab_contents">
       <div class="tab_wrap">
         <span class="bubble"></span>
@@ -18,6 +21,10 @@
         <input id="tab4" type="radio" name="check">
         <span class="bubble"></span>
         <label for="tab4" class="tab_lab4">ステージ申請</label>
+
+        <input id="tab8" type="radio" name="check">
+        <span class="bubble"></span>
+        <label for="tab8" class="tab_lab8">ステージオプション申請</label>
 
         <input id="tab5" type="radio" name="check">
         <span class="bubble"></span>
@@ -71,17 +78,33 @@
                 <h3>備考</h3>
                 <input type="text" name="remark" placeholder="入力欄" v-model="remark">
               </div>
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
             </div>
 
             <div style="width:49%; float:right; display:block;" class="card">
-              <span v-for="(regist, i) in regist_info" :key="i">
+              <span v-for="(list, i) in new_info" :key="i">
                 <h1>あなたの登録情報</h1>
                 <h3>第1希望</h3>
-                <h1 style="color:gold; text-decoration: underline;">{{regist.first_place_order}}</h1>
+                <h1 style="color:gold; text-decoration: underline;">{{list.place_order.first}}</h1>
+                <div>
+                  <button type="button">編集</button>
+                  <button type="button">削除</button>
+                </div>
                 <h3>第2希望</h3>
-                <h1 style="color:silver; text-decoration: underline;">{{regist.second_place_order}}</h1>
+                <h1 style="color:silver; text-decoration: underline;">{{list.place_order.second}}</h1>
+                <div>
+                  <button type="button">編集</button>
+                  <button type="button">削除</button>
+                </div>
                 <h3>第3希望</h3>
-                <h1 style="color:#C47222; text-decoration: underline;">{{regist.third_place_order}}</h1>
+                <h1 style="color:#C47222; text-decoration: underline;">{{list.place_order.third}}</h1>
+                <div>
+                  <button type="button">編集</button>
+                  <button type="button">削除</button>
+                </div>
               </span>
             </div>
           </div>
@@ -99,17 +122,25 @@
               <input type="text" name="power_manufacturer" placeholder="型番" v-model="power_manufacturer">
               <h3>URL</h3>
               <input type="text" name="power_url" placeholder="URL" v-model="power_url">
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
             </div>
             <div style="width:49%; float:right; display:block;" class="card">
-              <div  v-for="(regist, i) in regist_info" :key="i">
+              <div  v-for="(regist, i) in new_info" :key="i">
                 <h1>あなたの登録情報</h1>
-                <span v-for="(power_order, i) in regist.power_orders" :key="i">
-                <h1>使用物品名：{{power_order.item}}</h1>
-                <h1>最大定格電力：{{power_order.power}}[W]</h1>
-                <h1>メーカー：{{power_order.manufacturer}}</h1>
-                <h1>型番：{{power_order.model}}</h1>
-                <h1>URL：{{power_order.item_url}}</h1>
-                <br>
+                <span v-for="(list, i) in regist.power_orders" :key="i">
+                  <h1>使用物品名：{{list.power_order.item}}</h1>
+                  <h1>最大定格電力：{{list.power_order.power}}[W]</h1>
+                  <h1>メーカー：{{list.power_order.manufacturer}}</h1>
+                  <h1>型番：{{list.power_order.model}}</h1>
+                  <h1>URL：{{list.power_order.item_url}}</h1>
+                  <div>
+                    <button type="button">編集</button>
+                    <button type="button">削除</button>
+                  </div>
+                  <br>
                 </span>
               </div>
             </div>
@@ -130,13 +161,21 @@
               </select>
               <h3>数量</h3>
               <input type="text" name="number of rental" placeholder="数量の入力" v-model="num">
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
             </div>
             <div style="width:49%; float:right; display:block;" class="card">
-              <div  v-for="(regist, i) in regist_info" :key="i">
+              <div  v-for="(regist, i) in new_info" :key="i">
                 <h1>あなたの登録情報</h1>
                 <span v-for="(rental_order, i) in regist.rental_orders" :key="i">
-                <h1>貸出物品：{{rental_order.name}}</h1>
-                <h1>貸出個数；{{rental_order.num}}</h1>
+                <h1>貸出物品：{{rental_order.rental_item.name}}</h1>
+                <h1>貸出個数；{{rental_order.rental_item.num}}</h1>
+                <div>
+                  <button type="button">編集</button>
+                  <button type="button">削除</button>
+                </div>
                 <br>
                 </span>
               </div>
@@ -183,6 +222,154 @@
                 </option>
               </select>
 
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
+            </div>
+            <div style="width:49%; float:right; display:block;" class="card">
+              <h1>あなたの登録情報</h1>
+              <div v-for="(regist, i) in new_info" :key="i">
+                <span v-for="(list, i) in regist.stage_orders" :key="i">
+                  <h1>ステージ希望日程：{{list.stage_order.year}}</h1>
+                  <h1>ステージ希望曜日：{{list.stage_order.date}}</h1>
+                  <h1>ステージ第一希望：{{list.stage_order.day}}</h1>
+                  <h1>ステージ第二希望：{{list.stage_order.stage_first}}</h1>
+                  <h1>ステージ準備時間：{{list.stage_order.stage_second}}</h1>
+                  <h1>ステージ使用時間：{{list.stage_order.use_time_interval}}</h1>
+                  <h1>ステージ掃除時間：{{list.stage_order.cleanup_time_interval}}</h1>
+                  <h1>ステージ準備開始：{{list.stage_order.prepare_start_time}}</h1>
+                  <h1>ステージ開演時間：{{list.stage_order.performance_start_time}}</h1>
+                  <h1>ステージ終了時間：{{list.stage_order.performance_end_time}}</h1>
+                  <h1>ステージ撤退時間：{{list.stage_order.cleanup_end_time}}</h1>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 従業員申請 -->
+          <div id="area5" class="panel">
+            <div style="width:49%; float:left; display:block;" class="card">
+              <h3>名前</h3>
+              <input type="text" name="name" placeholder="名前を入力してください" v-model="name">
+              <h3>学籍番号</h3>
+              <input type="text" name="studentId" placeholder="学籍番号を入力してください" v-model="studentIdd">
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
+            </div>
+            <div style="width:49%; float:right; display:block;" class="card">
+              <div  v-for="(regist, i) in new_info" :key="i">
+                <h1>あなたの登録情報</h1>
+                <span v-for="(list, i) in regist.employees" :key="i">
+                  <h1>従業員名：{{list.employee.name}}</h1>
+                  <h1>学籍番号：{{list.employee.student_id}}</h1>
+                  <div>
+                    <button type="button">編集</button>
+                    <button type="button">削除</button>
+                  </div>
+                  <br>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 食品申請 -->
+          <div id="area6" class="panel">
+            <div style="width:49%; float:left; display:block;" class="card">
+              <h3>料理名</h3>
+              <input type="text" name="food_name" placeholder="料理名を入力してください" v-model="food_name">
+              <h3>仕込み個数（一日目）</h3>
+              <input type="text" name="food_name" placeholder="料理名を入力してください" v-model="food_name">
+              <h3>仕込み個数（二日目）</h3>
+              <input type="text" name="food_name" placeholder="料理名を入力してください" v-model="food_name">
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
+            </div>
+            <div style="width:49%; float:right; display:block;" class="card">
+              <div  v-for="(regist, i) in new_info" :key="i">
+                <h1>あなたの登録情報</h1>
+                <span v-for="(list, i) in regist.food_products" :key="i">
+                  <h1>料理名：{{list.food_product.name}}</h1>
+                  <h1 v-if="list.food_product.is_cooking==true">料理の有無：有</h1>
+                  <h1 v-else>料理の有無：無</h1>
+                  <h1>仕込み個数（一日目）：{{list.food_product.first_day_num}}</h1>
+                  <h1>仕込み個数（二日目）：{{list.food_product.second_day_num}}</h1>
+                  <div>
+                    <button type="button">編集</button>
+                    <button type="button">削除</button>
+                  </div>
+                  <br>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 購入品申請 -->
+          <div id="area7" class="panel">
+            <div style="width:49%; float:left; display:block;" class="card">
+              <div  v-for="(regist, i) in new_info" :key="i">
+                <h3>対象食品</h3>
+                <select>
+                  <option v-for="(list, i) in regist.food_products" :key="i">
+                    {{ list.food_product.name }}
+                  </option>
+                </select>
+              </div>
+              <h3>購入場所</h3>
+              <select>
+                <option
+                  v-for="list in shops"
+                  :value="list.id"
+                  :key="list.id"
+                >
+                  {{ list.name }}
+                </option>
+              </select>
+              <h3>購入品</h3>
+              <input type="text" name="purchaseName" placeholder="購入品名の入力" v-model="purchaseList">
+              <h3>生ものの扱い</h3>
+              <select>
+                <option
+                  v-for="list in isFreshList"
+                  :value="list.id"
+                  :key="list.id"
+                >
+                  {{ list.label }}
+                </option>
+              </select>
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
+            </div>
+            <div style="width:49%; float:right; display:block;" class="card">
+              <div  v-for="(regist, i) in new_info" :key="i">
+                <h1>あなたの登録情報</h1>
+                <span v-for="(food_product, i) in regist.food_products" :key="i">
+                   <h1 style="text-decoration:underline;">対象商品：{{food_product.food_product.name}}</h1>
+                  <span v-for="(list, i) in food_product.purchase_lists" :key="i">
+                    <h1>購入品：{{list.purchase_list.items}}</h1>
+                    <h1>購入場所：{{list.purchase_list.food_product}}</h1>
+                    <h1 v-if="list.purchase_list.is_fresh==true">生もの：有</h1>
+                    <h1 v-else>生もの：無</h1>
+                    <div>
+                      <button type="button">編集</button>
+                      <button type="button">削除</button>
+                    </div>
+                    <br>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 購入品申請 -->
+          <div id="area8" class="panel">
+            <div style="width:49%; float:left; display:block;" class="card">
               <h3>所持機器の利用</h3>
               <select>
                 <option
@@ -223,29 +410,16 @@
                   {{ list.label }}
                 </option>
               </select>
-
               <h3>ステージ内容</h3>
               <input type="text" name="stageContent" placeholder="ステージ内容" v-model="stageContent">
 
+              <div>
+                <button type="button">←リセット</button>
+                <button type="button">登録する→</button>
+              </div>
             </div>
             <div style="width:49%; float:right; display:block;" class="card">
-              <div v-for="(regist, i) in regist_info" :key="i">
-                <span v-for="(stage_order, i) in regist.stage_orders" :key="i">
-                  <h1>ステージ希望日程：{{stage_order.stage_date.date}}</h1>
-                  <h1>ステージ希望曜日：{{stage_order.stage_date.day}}</h1>
-                  <h1>ステージ第一希望：{{stage_order.first_stage_order.name}}</h1>
-                  <h1>ステージ第二希望：{{stage_order.second_stage_order.name}}</h1>
-                  <h1>ステージ準備時間：{{stage_order.prepare_time_interval}}</h1>
-                  <h1>ステージ使用時間：{{stage_order.use_time_interval}}</h1>
-                  <h1>ステージ掃除時間：{{stage_order.cleanup_time_interval}}</h1>
-                  <h1>ステージ掃除時間：{{stage_order.cleanup_time_interval}}</h1>
-                  <h1>ステージ準備開始：{{stage_order.prepare_start_time}}</h1>
-                  <h1>ステージ開演時間：{{stage_order.performance_start_time}}</h1>
-                  <h1>ステージ終了時間：{{stage_order.performance_end_time}}</h1>
-                  <h1>ステージ撤退時間：{{stage_order.cleanup_end_time}}</h1>
-                </span>
-              </div>
-              <div  v-for="(regist, i) in regist_info" :key="i">
+              <div  v-for="(regist, i) in new_info" :key="i">
                 <h1 v-if="regist.stage_common_option.own_equipment==true">所持機器の利用：有</h1>
                 <h1 v-else>所持機器の利用：無</h1>
                 <h1 v-if="regist.stage_common_option.bgm==true">音楽：有</h1>
@@ -255,103 +429,6 @@
                 <h1 v-if="regist.stage_common_option.loud_sound==true">騒音：有</h1>
                 <h1 v-else>騒音：無</h1>
                 <h1>ステージ内容：{{regist.stage_common_option.stage_content}}</h1>
-              </div>
-            </div>
-          </div>
-
-          <!-- 従業員申請 -->
-          <div id="area5" class="panel">
-            <div style="width:49%; float:left; display:block;" class="card">
-              <h3>名前</h3>
-              <input type="text" name="name" placeholder="名前を入力してください" v-model="name">
-              <h3>学籍番号</h3>
-              <input type="text" name="studentId" placeholder="学籍番号を入力してください" v-model="studentIdd">
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
-              <div  v-for="(regist, i) in regist_info" :key="i">
-                <h1>あなたの登録情報</h1>
-                <span v-for="(employees, i) in regist.employees" :key="i">
-                  <h1>従業員名：{{employees.name}}</h1>
-                  <h1>学籍番号：{{employees.student_id}}</h1>
-                  <br>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 食品申請 -->
-          <div id="area6" class="panel">
-            <div style="width:49%; float:left; display:block;" class="card">
-              <h3>料理名</h3>
-              <input type="text" name="food_name" placeholder="料理名を入力してください" v-model="food_name">
-              <h3>仕込み個数（一日目）</h3>
-              <input type="text" name="food_name" placeholder="料理名を入力してください" v-model="food_name">
-              <h3>仕込み個数（二日目）</h3>
-              <input type="text" name="food_name" placeholder="料理名を入力してください" v-model="food_name">
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
-              <div  v-for="(regist, i) in regist_info" :key="i">
-                <h1>あなたの登録情報</h1>
-                <span v-for="(food_product, i) in regist.food_products" :key="i">
-                  <h1>料理名：{{food_product.name}}</h1>
-                  <h1 v-if="food_product.name==true">料理の有無：有</h1>
-                  <h1 v-else>料理の有無：無</h1>
-                  <h1>仕込み個数（一日目）：{{food_product.first_day_num}}</h1>
-                  <h1>仕込み個数（二日目）：{{food_product.second_day_num}}</h1>
-                  <br>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 購入品申請 -->
-          <div id="area7" class="panel">
-            <div style="width:49%; float:left; display:block;" class="card">
-              <div  v-for="(regist, i) in regist_info" :key="i">
-                <h3>対象食品</h3>
-                <select>
-                  <option v-for="(food_product, i) in regist.food_products" :key="i">
-                    {{ food_product.name }}
-                  </option>
-                </select>
-              </div>
-              <h3>購入場所</h3>
-              <select>
-                <option
-                  v-for="list in shops"
-                  :value="list.id"
-                  :key="list.id"
-                >
-                  {{ list.name }}
-                </option>
-              </select>
-              <h3>購入品</h3>
-              <input type="text" name="purchaseName" placeholder="購入品名の入力" v-model="purchaseList">
-              <h3>生ものの扱い</h3>
-              <select>
-                <option
-                  v-for="list in isFreshList"
-                  :value="list.id"
-                  :key="list.id"
-                >
-                  {{ list.label }}
-                </option>
-              </select>
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
-              <div  v-for="(regist, i) in regist_info" :key="i">
-                <h1>あなたの登録情報</h1>
-                <span v-for="(purchase_list, i) in regist.purchase_lists" :key="i">
-                  <h1 v-if="purchase_list.id==-9999">失敗</h1>
-                  <span v-else>
-                    <h1>対象食品：{{purchase_list.food_product}}</h1>
-                    <h1>購入場所：{{purchase_list.shop}}</h1>
-                    <h1>購入品：{{purchase_list.item}}</h1>
-                    <h1 v-if="purchase_list.is_fresh==true">生もの：有</h1>
-                    <h1 v-else>生もの：無</h1>
-                  </span>
-                  <br>
-                </span>
               </div>
             </div>
           </div>
@@ -369,12 +446,17 @@ export default {
     return {
       fes_dates: [],
       regist_info: [],
+      new_info: [],
       power_orders: [],
       placeList: [],
       stageList: [],
       itemList: [],
       shops: [],
       isFreshList: [
+        { label: "はい", value: true },
+        { label: "いいえ", value: false },
+      ],
+      isCooking: [
         { label: "はい", value: true },
         { label: "いいえ", value: false },
       ],
@@ -397,10 +479,10 @@ export default {
     };
   },
   mounted() {
-    const regist_info_url =
-    process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
+    const new_info =
+    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
-      .get(regist_info_url, {
+      .get(new_info, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
@@ -410,7 +492,7 @@ export default {
       })
       .then((response) => {
         console.log(response);
-        this.regist_info = response.data;
+        this.new_info = response.data.data;
       });
 
     const fes_dates =
@@ -419,9 +501,6 @@ export default {
       .get(fes_dates, {
         headers: {
           "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -498,12 +577,28 @@ export default {
     border-radius: 7px;
   }
   .card {
-  padding: 1%;
-  background: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgb(87, 77, 77);
+    padding: 1%;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgb(87, 77, 77);
   }
-
+  button{
+    color: black;
+    font-weight: bold;
+    border: solid 2px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 1%;
+    padding:1%;
+  }
+  button:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
+  }
+  button:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
   #tab1:checked~.panels #area1 {
     display: block;
   }
@@ -528,6 +623,10 @@ export default {
   }
 
   #tab7:checked~.panels #area7 {
+    display: block;
+  }
+
+  #tab8:checked~.panels #area8 {
     display: block;
   }
 
@@ -566,6 +665,11 @@ export default {
     background:linear-gradient(transparent 70%, #FFFF00 0%);
   }
 
+  #tab8:checked~.tab_lab8 {
+    color: #242424;
+    background:linear-gradient(transparent 70%, #FFFF00 0%);
+  }
+
   input[name="check"] {
     display: none;
   }
@@ -574,9 +678,9 @@ export default {
     display: none;
   }
 
-  .tab_lab1, .tab_lab2, .tab_lab3, .tab_lab4, .tab_lab5, .tab_lab6 ,.tab_lab7{
-    padding-left: 3.5%;
-    padding-right: 3.5%;
+  .tab_lab1, .tab_lab2, .tab_lab3, .tab_lab4, .tab_lab5, .tab_lab6 ,.tab_lab7, .tab_lab8{
+    padding-left: 3%;
+    padding-right: 3%;
   }
   .tab_wrap{
     margin: 1%;

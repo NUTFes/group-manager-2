@@ -19,6 +19,7 @@ class StageOrder < ApplicationRecord
         "prepare_start_time": self.prepare_start_time,
         "performance_start_time": self.performance_start_time,
         "performance_end_time": self.performance_end_time,
+        "cleanup_end_time": self.cleanup_end_time
       }
     end
 end

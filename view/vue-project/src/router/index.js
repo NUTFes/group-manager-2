@@ -1,22 +1,22 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Welcome from "../views/Welcome.vue";
-import About from "../views/About.vue";
 import MyPage from "../views/Mypage.vue";
 import UserDetail from "../views/UserDetail.vue";
-import SubRep from "../views/SubRep.vue";
-import Place from "../views/Place.vue";
 import Group from "../views/Group.vue";
-import Power from "../views/Power.vue";
 
 import RegistInformation from "../views/RegistInformation.vue";
 import RegistRep from "../views/RegistRep.vue";
 import RegistSubRep from "../views/RegistSubRep.vue";
+import RegistGroupModel from "../views/RegistGroupModel.vue";
+import RegistPlace from "../views/RegistPlace.vue";
+import RegistPower from "../views/RegistPower.vue";
+import RegistStage from "../views/RegistStage.vue";
+import RegistEmployees from "../views/RegistEmployees.vue";
+import RegistPurchaseList from "../views/RegistPurchaseList.vue";
+import RegistFoodProduct from "../views/RegistFoodProduct.vue";
+import RegistStageOption from "../views/RegistStageOption.vue";
 
-import RegistShop from "../views/RegistShop.vue";
-import RegistGroup from "../views/RegistGroup.vue";
-import RegistFoodBooths from "../views/RegistFoodBooths.vue";
-import RegistPurchase from "../views/RegistPurchase.vue";
 import Firstcustomer from "../views/FirstCustomer.vue";
 import EditUserInfo from "../views/EditUserInfo.vue";
 import PasswordReset from "../views/PasswordReset.vue";
@@ -43,11 +43,6 @@ const routes = [
     component: Welcome,
   },
   {
-    path: "/about",
-    name: "About",
-    component: About,
-  },
-  {
     path: "/mypage",
     name: "MyPage",
     component: MyPage,
@@ -61,21 +56,6 @@ const routes = [
     path: "/group",
     name: "Group",
     component: Group,
-  },
-  {
-    path: "/place",
-    name: "Place",
-    component: Place,
-  },
-  {
-    path: "/power",
-    name: "Power",
-    component: Power,
-  },
-  {
-    path: "/sub_rep",
-    name: "SubRep",
-    component: SubRep,
   },
   {
     path: "/regist_information",
@@ -93,26 +73,45 @@ const routes = [
     component: RegistSubRep,
   },
   {
-    path: "/regist_shop",
-    name: "RegistShop",
-    component: RegistShop,
+    path: "/regist_model",
+    name: "RegistGroupModel",
+    component: RegistGroupModel,
   },
   {
-    path: "/regist_group",
-    name: "RegistGroup",
-    component: RegistGroup,
+    path: "/regist_place",
+    name: "RegistPlace",
+    component: RegistPlace,
   },
   {
-    path: "/regist_food_booths",
-    name: "RegistFoodBooths",
-    component: RegistFoodBooths,
+    path: "/regist_power",
+    name: "RegistPower",
+    component: RegistPower,
   },
   {
-    path: "/regist_purchase",
-    name: "RegistPurchase",
-    component: RegistPurchase,
+    path: "/regist_stage",
+    name: "RegistStage",
+    component: RegistStage,
   },
-
+  {
+    path: "/regist_Employees",
+    name: "RegistEmployees",
+    component: RegistEmployees,
+  },
+  {
+    path: "/regist_purchaseList",
+    name: "RegistPurchaseList",
+    component: RegistPurchaseList,
+  },
+  {
+    path: "/regist_foodProduct",
+    name: "RegistFoodProduct",
+    component: RegistFoodProduct,
+  },
+  {
+    path: "/regist_stageOption",
+    name: "RegistStageOption",
+    component: RegistStageOption,
+  },
   {
     path: "/firstcustomer",
     name: "Firstcustomer",
