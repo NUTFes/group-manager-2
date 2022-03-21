@@ -1,19 +1,18 @@
 <template>
-  <v-app :style="{ background: $vuetify.theme.themes.light.background }">
-    <Menu v-if="main && print" />
+  <div>
     <Header v-if="main && print" />
-    <v-main>
-      <v-container class="py-7">
-        <transition mode="in-out">
-          <nuxt />
-        </transition>
-      </v-container>
-    </v-main>
-  </v-app>
+    <Menu v-if="main && print" />
+    <main>
+      <transition name="page">
+        <nuxt />
+      </transition>
+    </main>
+  </div>
 </template>
 <script>
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
+import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Header,
@@ -47,6 +46,7 @@ export default {
     },
   },
   mounted() {
+    this.getUser()
     this.$axios
       .get("api/v1/users/show", {
         headers: {
@@ -56,8 +56,7 @@ export default {
           uid: localStorage.getItem("uid"),
         },
       })
-      .then((response) => {
-        this.user = response.data.data;
+      .then((response) => { this.user = response.data.data;
       });
 
     this.$axios
@@ -71,6 +70,7 @@ export default {
       });
   },
   methods: {
+    ...mapActions('users', ['getUser']),
     submit: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();

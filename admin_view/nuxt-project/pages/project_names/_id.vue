@@ -155,7 +155,9 @@ export default {
     store.dispatch("getRights");
   },
   computed: {
-    ...mapState(["rights"]),
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   data() {
     return {

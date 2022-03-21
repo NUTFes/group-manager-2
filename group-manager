@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [[ " $1" == ' up' ]]; then
+  make prod-up
+elif [[ " $1" == ' down' ]]; then
+  make prod-down
+elif [[ " $1" == ' restart' ]]; then
+  make prod-restart
+
+elif [[ " $1" == ' update' ]]; then
+  git pull origin develop
+elif [[ " $1" == ' upgrade' ]]; then
+  make prod-down
+  make prod-build
+  make prod-up
+elif [[ " $1" == ' upgrade-no-install' ]]; then
+  make prod-down
+  make prod-build-no-install
+  make prod-up
+
+elif [[ " $1" == ' deploy' ]]; then
+  make prod-down
+  git pull origin develop
+  make prod-build
+  make prod-up
+
+elif [[ " $1" == ' logs' ]]; then
+  make prod-logs
+
+else
+  echo "デプロイしっぱい～～！！"
+
+fi

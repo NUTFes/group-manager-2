@@ -1,0 +1,39 @@
+<h1>販売食品リスト</h1>
+<table>
+  <tr>
+    <th>団体番号</th>
+    <th>団体名</th>
+    <th>企画名</th>
+    <th>販売食品</th>
+    <th>調理の有無</th>
+    <th>仕入れ品</th>
+    <th>仕入れ先</th>
+    <th>なまもの</th>
+  </tr>
+  <% @groups.each do |group| %>
+  <tr>
+    <td rowspan=<%= group.count_purchase_lists %>><%= group.number %></td>
+    <td rowspan=<%= group.count_purchase_lists %>><%= group.name %></td>
+    <td rowspan=<%= group.count_purchase_lists %>><%= group.project_name %></td>
+    <% if group.food_products.exists? %>
+    <% group.food_products.each do |food_product| %>
+      <td rowspan=<%= food_product.purchase_lists.count %>><%= food_product.name %></td>
+      <td rowspan=<%= food_product.purchase_lists.count %>><%= food_product.is_cooking ? "有" : "無" %></td>
+      <% if food_product.purchase_lists.exists? %>
+      <% food_product.purchase_lists.each do |purchase_list| %>
+      <td><%= purchase_list.items %></td>
+      <td><%= purchase_list.shop.name %></td>
+      <td><%= purchase_list.is_fresh ? "YES" : "NO" %></td>
+    </tr>
+      <% end %>
+      <% else %>
+      <td colspan=3>なし</td>
+    </tr>
+      <% end %>
+  </tr>
+    <% end %>
+  <% else %>
+    <td colspan=5>なし</td>
+  <% end %>
+  <% end %>
+</table>

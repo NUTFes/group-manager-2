@@ -1,0 +1,50 @@
+User.seed( :id,
+    { id: 1 ,   name: '管理者' ,
+                email: 'admin@email.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 2 ,   name: '大場雅士' ,
+                email: 'm.oba.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 3 ,   name: '久々江耀平' ,
+                email: 'y.kugue.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 4 ,   name: '安田巴' ,
+                email: 't.yasuda.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 5 ,   name: '五十嵐和亜' ,
+                email: '21.n.ikarashi.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 6 ,   name: '榑林丈' ,
+                email: '21.j.kurebayashi.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 7 ,   name: '小武壮太' ,
+                email: '21.s.kotake.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+    { id: 8 ,   name: '大浦翼' ,
+                email: '20.t.oura.nutfes@gmail.com' ,
+                password: 'gidaifes' ,
+                password_confirmation: 'gidaifes' ,
+                role_id: 1
+    },
+)

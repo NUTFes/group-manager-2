@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_143233) do
+ActiveRecord::Schema.define(version: 2022_03_05_120323) do
 
   create_table "assign_group_places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
@@ -88,6 +88,13 @@ ActiveRecord::Schema.define(version: 2021_03_23_143233) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "group_identifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "group_id"
+    t.integer "number"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "project_name"
@@ -121,6 +128,13 @@ ActiveRecord::Schema.define(version: 2021_03_23_143233) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "place_numbers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "place_id"
+    t.integer "group_identification_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "place_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
     t.integer "first"
@@ -146,6 +160,15 @@ ActiveRecord::Schema.define(version: 2021_03_23_143233) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "item_url"
+  end
+
+  create_table "public_relations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "group_id"
+    t.string "picture_name"
+    t.string "picture_path"
+    t.text "blurb"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "purchase_lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -210,6 +233,13 @@ ActiveRecord::Schema.define(version: 2021_03_23_143233) do
     t.boolean "camera_permission"
     t.boolean "loud_sound"
     t.text "stage_content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "stage_numbers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "stage_id"
+    t.integer "group_identification_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

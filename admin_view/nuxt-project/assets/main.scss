@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700&display=swap');
+
+:root {
+  --primary: #ffac5d;
+  --secondary: #ffffff;
+
+  --accent-0: #fff;
+  --accent-1: #fafafa;
+  --accent-2: #eaeaea;
+  --accent-3: #999999;
+  --accent-4: #888888;
+  --accent-5: #666666;
+  --accent-6: #444444;
+  --accent-7: #333333;
+
+  --button-primary: #3485FF;
+  --button-secondary: #E38AD5;
+  --button-radius: 50px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  font-family: 'Noto Sans JP', sans-serif;
+  scrollbar-width: none;
+  box-sizing: border-box;
+  min-height: 100%;
+  overscroll-behavior: none;
+  background-color: var(--accent-0);
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  height: 100%;
+}
+
+main {
+  margin-top: 60px;
+  margin-left: 260px;
+  padding: 20px 60px;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+}
+
+h4 {
+  font-weight: 500;
+}
+
+a {
+  color: var(--accent-0);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+li {
+  list-style-type:none;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+hr {
+  display: block;
+  border: 0;
+  height: 1px;
+  width: 100%;
+  background-color: var(--accent-2);
+  animation: border_anim .4s linear forwards;
+}
+
+@keyframes border_anim {
+  0%{
+    width: 0%;
+  }
+  100%{
+    width: 100%;
+  }
+}
+
+.main-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  gap: 20px;
+}
+
+.material-icons {
+  display: inline-flex;
+  font-size: 24px;
+  font-weight: 300;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-enter, .page-leave-to{
+  opacity: 0;
+}
+
+.page-enter-active, .page-leave-active{
+  transition: opacity .6s;
+}
+
+.layout-enter, .layout-leave-active{
+  opacity: 0;
+}
+
+.layout-enter-active, .layout-leave-active{
+  transition: opacity .6s;
+}

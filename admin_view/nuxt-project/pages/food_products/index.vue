@@ -1,265 +1,291 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-baguette</v-icon>販売食品申請一覧
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="dialog = true"
-                  >
-                    <v-icon dark>mdi-plus-circle-outline</v-icon>
-                  </v-btn>
-                </template>
-                <span>販売食品の追加</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="reload"
-                  >
-                    <v-icon dark>mdi-reload</v-icon>
-                  </v-btn>
-                </template>
-                <span>更新する</span>
-              </v-tooltip>
-            </v-card-title>
+  <div class="main-content">
+    <SubHeader pageTitle="販売食品申請一覧">
+      <CommonButton v-if="this.$role(roleID).food_products.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+    </SubHeader>
 
-            <v-dialog v-model="dialog" max-width="500">
-              <v-card>
-                <v-card-title class="headline blue-grey darken-3">
-                  <div style="color: white">
-                    <v-icon class="ma-5" dark>mdi-baguette</v-icon
-                    >販売食品の追加
-                  </div>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = false" fab dark>
-                    ​ <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-card-title>
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementFoodProducts"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="isCookingList"
+          :on_click="refinementFoodProducts"
+          value="text"
+        >
+          {{ refIsCooking }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchFoodProducts"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
 
-                <v-card-text>
-                  <v-row>
-                    <v-col>
-                      <v-form ref="form">
-                        <v-select
-                          label="参加団体名"
-                          v-model="Group"
-                          :items="groups"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true,
-                          }"
-                          item-text="name"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                        <v-text-field
-                          class="body-1"
-                          label="販売食品名"
-                          v-model="productName"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-text-field>
-                        <v-select
-                          class="body-1"
-                          label="調理の有無"
-                          v-model="isCooking"
-                          :items="cooking_available"
-                          item-text="label"
-                          item-value="value"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-select>
-                        <v-text-field
-                          class="body-1"
-                          label="1日目の個数"
-                          v-model="firstDayNum"
-                          background-color="white"
-                          outlined
-                          clearable
-                          type="number"
-                        >
-                        </v-text-field>
-                        <v-text-field
-                          class="body-1"
-                          label="2日目の個数"
-                          v-model="secondDayNum"
-                          background-color="white"
-                          outlined
-                          clearable
-                          type="number"
-                        >
-                        </v-text-field>
-                      </v-form>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(foodProduct, index) in foodProducts"
+            @click="
+              () =>
+                $router.push({
+                  path: `/food_products/` + foodProduct.food_product.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ foodProduct.food_product.id }}</td>
+            <td>{{ foodProduct.group.name }}</td>
+            <td>{{ foodProduct.food_product.name }}</td>
+            <td>{{ foodProduct.food_product.first_day_num }}</td>
+            <td>{{ foodProduct.food_product.second_day_num }}</td>
+            <td>{{ foodProduct.food_product.is_cooking }}</td>
+            <td>{{ foodProduct.food_product.created_at | formatDate }}</td>
+            <td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-                <v-divider></v-divider>
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="販売食品申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="groupID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>食品名</h3>
+          <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>調理するか</h3>
+          <select v-model="isCooking">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="isCook in isCookingList"
+              :key="isCook.id"
+              :value="isCook.value"
+            >
+              {{ isCook.text }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>1日目の個数</h3>
+          <input v-model="first" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>2日目の個数</h3>
+          <input
+            v-model="second"
+            type="number"
+            placeholder="入力してください"
+          />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn depressed dark color="btn" @click="register()"
-                    >登録
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-            <hr class="mt-n3" />
-            <template>
-              <div class="text-center" v-if="food_products.length === 0">
-                <br /><br />
-                <v-progress-circular
-                  indeterminate
-                  color="#009688"
-                ></v-progress-circular>
-                <br /><br />
-              </div>
-              <div v-else>
-                <v-data-table
-                  :headers="headers"
-                  :items="food_products"
-                  class="elevation-0 my-9"
-                  @click:row="
-                    (data) =>
-                      $router.push({
-                        path: `/food_products/${data.food_product.id}`,
-                      })
-                  "
-                >
-                  <template v-slot:item.food_product.is_cooking="{ item }">
-                    <v-chip
-                      v-if="item.food_product.is_cooking == true"
-                      color="red"
-                      text-color="white"
-                      small
-                      >する</v-chip
-                    >
-                    <v-chip
-                      v-if="item.food_product.is_cooking == false"
-                      color="blue"
-                      text-color="white"
-                      small
-                      >しない</v-chip
-                    >
-                  </template>
-                  <template v-slot:item.food_product.created_at="{ item }">
-                    {{ item.food_product.created_at | formatDate }}
-                  </template>
-                  <template v-slot:item.food_product.updated_at="{ item }">
-                    {{ item.food_product.updated_at | formatDate }}
-                  </template>
-                </v-data-table>
-              </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
+  </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      food_products: [],
-      groups: [],
-      dialog: false,
-      Group: [],
-      productName: [],
-      isCooking: [],
-      firstDayNum: [],
-      secondDayNum: [],
       headers: [
-        { text: "ID", value: "food_product.id" },
-        { text: "group_id", value: "group" },
-        { text: "名前", value: "food_product.name" },
-        { text: "1日目の個数", value: "food_product.first_day_num" },
-        { text: "2日目の個数", value: "food_product.second_day_num" },
-        { text: "調理の有無", value: "food_product.is_cooking" },
-        { text: "日時", value: "food_product.created_at" },
-        { text: "編集日時", value: "food_product.updated_at" },
+        "ID",
+        "参加団体",
+        "名前",
+        "1日目の個数",
+        "2日目の個数",
+        "調理の有無",
+        "登録日時",
+        "編集日時",
       ],
-      cooking_available: [
-        { label: "する", value: true },
-        { label: "しない", value: false },
+      isOpenAddModal: false,
+      isCookingList: [
+        { id: 1, text: "調理あり", value: true },
+        { id: 2, text: "調理なし", value: false },
       ],
+      foodProducts: [],
+      refYears: "Year",
+      refYearID: 0,
+      refIsCooking: "調理あり/なし",
+      refIsCookingID: 0,
+      searchText: "",
+      groupID: null,
+      name: "",
+      isCooking: null,
+      first: null,
+      second: null,
+      isOpenSnackBar: false,
     };
   },
-  mounted() {
-    this.$axios
-      .get("/api/v1/get_food_products", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.food_products = response.data;
-      });
-    this.$axios
-      .get("/groups", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups = response.data;
-      });
-  },
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
 
+    // const url = "/api/v1/get_food_product_index_for_admin_view";
+    const url =
+      "/api/v1/get_refinement_food_products?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&is_cooking=0";
+    const foodProductRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      foodProducts: foodProductRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+    };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_food_products", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.food_products = response.data;
-        });
+    async refinementFoodProducts(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+        // 調理の有無で絞り込むとき
+      } else if (name_list.toString() == this.isCookingList.toString()) {
+        this.refIsCookingID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsCooking == "ALL";
+        } else {
+          this.refIsCooking = name_list[item_id - 1].text;
+        }
+      }
+      this.foodProducts = [];
+      const refUrl =
+        "/api/v1/get_refinement_food_products?fes_year_id=" +
+        this.refYearID +
+        "&is_cooking=" +
+        this.refIsCookingID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.foodProducts.push(res);
+      }
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("name", this.productName);
-      params.append("is_cooking", this.isCooking);
-      params.append("first_day_num", this.firstDayNum);
-      params.append("second_day_num", this.secondDayNum);
-      this.$axios.post("/food_products", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
-        this.productName = "";
-        this.isCooking = "";
-        this.firstDayNum = "";
-        this.secondDayNum = "";
+    async searchFoodProducts() {
+      this.foodProducts = [];
+      const searchUrl =
+        "/api/v1/get_search_food_products?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.foodProducts.push(res);
+      }
+    },
+    async openAddModal() {
+      const url = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(url);
+      this.groupList = resGroups.data;
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/api/v1/get_food_product_show_for_admin_view/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.foodProducts.push(response.data);
       });
+    },
+    async submit() {
+      const url =
+        "/food_products?group_id=" +
+        this.groupID +
+        "&name=" +
+        this.name +
+        "&is_cooking=" +
+        this.isCooking +
+        "&first_day_num=" +
+        this.first +
+        "&second_day_num=" +
+        this.second;
+
+      this.$axios.$post(url).then((response) => {
+        this.openSnackBar(this.name + "を追加しました");
+        this.groupID = null;
+        this.name = "";
+        this.isCooking = null;
+        this.first = null;
+        this.second = null;
+        this.reload(response.data.id);
+        this.closeAddModal();
+      });
+    },
+    async downloadCSV() {
+      const url =
+        this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
+      window.open(url, "販売食品申請_CSV");
     },
   },
 };

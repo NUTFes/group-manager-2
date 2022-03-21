@@ -1,74 +1,161 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-printer</v-icon>印刷
-              <v-spacer></v-spacer>
-            </v-card-title>
-            <hr class="mt-n3" />
-            <v-simple-table>
-              <template v-slot:default>
-                <thead>
-                  <tr>
-                    <th class="text-left">項目</th>
-                    <th class="text-left">印刷</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in item_list" :key="item.text">
-                    <td class="text-left">{{ item.text }}</td>
-                    <td class="text-left">
-                      <v-btn
-                        :to="item.url"
-                        style="box-shadow: none"
-                        color="blue"
-                        ><v-icon color="white">mdi-printer</v-icon></v-btn
-                      >
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="text-left">参加団体一覧CSV出力</td>
-                    <td class="text-left">
-                      <v-btn
-                        @click="getGroupsOutputCSV"
-                        style="box-shadow: none"
-                        color="blue"
-                        ><v-icon color="white">mdi-printer</v-icon></v-btn
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div class="main-content">
+    <SubHeader pageTitle="書類印刷"></SubHeader>
+    <Card width="100%">
+      <VerticalTable>
+        <tr>
+          <td>使用電力リスト</td>
+          <td>
+            <InTableButton iconName="file_download" :on_click="downloadPowerPDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>従業員リスト</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadEmployeePDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>貸出物品リスト</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsPDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>販売食品リスト</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadFoodProductsPDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>連絡先リスト</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadContactsPDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>参加団体情報リストまとめ</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadGroupInfoPDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+        <tr>
+          <td>物品貸し出し表まとめ</td>
+          <td>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsAllPDF"
+              >ダウンロード</InTableButton
+            >
+          </td>
+        </tr>
+      </VerticalTable>
+    </Card>
+  </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
-  data() {
+  watchQuery: ["page"],
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
     return {
-      item_list: [
-        { text: "従業員リスト", url: "/print/employees" },
-        { text: "販売食品リスト", url: "/print/products" },
-        { text: "貸出物品リスト", url: "/print/items" },
-        { text: "使用電力リスト", url: "/print/powers" },
-        { text: "連絡先リスト", url: "/print/address" },
-      ],
+      currentYearID: currentYearRes.data.fes_year_id,
     };
   },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
-    getGroupsOutputCSV: function() {
-      window.open("http://localhost:3000/api/v1/get_groups_csv", "参加団体一覧CSV出力")
-    }
-  }
+    downloadPowerPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/power/" +
+          this.currentYearID +
+          "/output.pdf",
+        "使用電力リスト"
+      );
+    },
+    downloadEmployeePDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/employees/" +
+          this.currentYearID +
+          "/output.pdf",
+        "従業員リスト"
+      );
+    },
+    downloadRentalItemsPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/rental_items_list/" +
+          this.currentYearID +
+          "/output.pdf",
+        "貸出物品リスト"
+      );
+    },
+    downloadFoodProductsPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/food_products/" +
+          this.currentYearID +
+          "/output.pdf",
+        "従業員リスト"
+      );
+    },
+    downloadContactsPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/contacts/" +
+          this.currentYearID +
+          "/output.pdf",
+        "連絡先リスト"
+      );
+    },
+    downloadGroupInfoPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/all_groups_info/" +
+          this.currentYearID +
+          "/output.pdf",
+        "参加団体情報リスト"
+      );
+    },
+    downloadRentalItemsAllPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/group_all/" +
+          this.currentYearID +
+          "/output.pdf",
+        "物品貸し出し表まとめ"
+      );
+    },
+  },
 };
 </script>

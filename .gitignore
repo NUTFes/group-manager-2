@@ -5,15 +5,19 @@
 /api/tmp
 /admin_api/tmp
 .DS_Store
-/view/dist
-/admin_view/dist
+/view/vue-project/dist
+/inside_view/vue-project/dist
+*.env
 
 # Log files
 /view/npm-debug.log*
+/inside_view/npm-debug.log*
 /admin_view/npm-debug.log*
 /view/yarn-debug.log*
+/inside_view/yarn-debug.log*
 /admin_view/yarn-debug.log*
 /view/yarn-error.log*
+/inside_view/yarn-error.log*
 /admin_view/yarn-error.log*
 
 # Editor directories and files

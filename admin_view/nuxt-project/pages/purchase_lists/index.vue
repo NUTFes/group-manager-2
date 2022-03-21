@@ -1,319 +1,245 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-cart</v-icon>購入品申請一覧
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="openModal"
-                  >
-                    <v-icon dark>mdi-plus-circle-outline</v-icon>
-                  </v-btn>
-                </template>
-                <span>購入品の追加</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="reload"
-                  >
-                    <v-icon dark>mdi-reload</v-icon>
-                  </v-btn>
-                </template>
-                <span>更新する</span>
-              </v-tooltip>
-            </v-card-title>
+  <div class="main-content">
+    <SubHeader pageTitle="購入食品申請一覧">
+      <CommonButton v-if="this.$role(roleID).purchase_lists.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+    </SubHeader>
 
-            <v-dialog v-model="dialog" max-width="500">
-              <v-card>
-                <v-card-title class="headline blue-grey darken-3">
-                  <div style="color: white">
-                    <v-icon class="ma-2" dark>mdi-cart</v-icon>購入品の追加
-                  </div>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = false" fab dark>
-                    ​ <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-card-title>
-                <v-card-text>
-                  <v-row>
-                    <v-col>
-                      <v-form ref="form">
-                        <v-select
-                          label="参加団体名"
-                          v-model="Group"
-                          :items="groups"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true,
-                          }"
-                          item-text="name"
-                          item-value="id"
-                          outlined
-                          @change="getPurchaseList(Group)"
-                        ></v-select>
-                        <v-select
-                          label="販売食品"
-                          v-model="foodProductId"
-                          :items="food_products"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true,
-                          }"
-                          item-text="name"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                        <v-text-field
-                          class="body-1"
-                          label="購入品"
-                          v-model="item"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-text-field>
-                        <v-select
-                          label="なまもの"
-                          :items="isFresh"
-                          item-text="label"
-                          item-value="value"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true,
-                          }"
-                          outlined
-                        ></v-select>
-                        <v-select
-                          label="開催日"
-                          v-model="fesDateId"
-                          :items="fes_dates"
-                          item-text="date"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                        <v-select
-                          label="店"
-                          v-model="shopId"
-                          :items="shops"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true,
-                          }"
-                          item-text="name"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                      </v-form>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementPurchaseLists"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="isFreshList"
+          :on_click="refinementPurchaseLists"
+          value="value"
+        >
+          {{ refIsFresh }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchPurchaseLists"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
 
-                <v-divider></v-divider>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(purchaseList, index) in purchaseLists"
+            @click="
+              () =>
+                $router.push({
+                  path: `/purchase_lists/` + purchaseList.purchase_list.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ purchaseList.purchase_list.id }}</td>
+            <td>{{ purchaseList.group.name }}</td>
+            <td>{{ purchaseList.purchase_list_info.food_product }}</td>
+            <td>{{ purchaseList.purchase_list.items }}</td>
+            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
+            <td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn depressed dark color="btn" @click="register()"
-                    >登録
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-            <hr class="mt-n3" />
-            <template>
-              <div class="text-center" v-if="purchase_lists.length === 0">
-                <br /><br />
-                <v-progress-circular
-                  indeterminate
-                  color="#009688"
-                ></v-progress-circular>
-                <br /><br />
-              </div>
-              <div v-else>
-                <v-data-table
-                  :headers="headers"
-                  :items="purchase_lists"
-                  class="elevation-0 my-9"
-                  @click:row="
-                    (data) =>
-                      $router.push({
-                        path: `/purchase_lists/${data.purchase_list.id}`,
-                      })
-                  "
-                >
-                  <template v-slot:item.purchase_list.is_fresh="{ item }">
-                    <v-chip
-                      v-if="item.purchase_list.is_fresh == true"
-                      color="red"
-                      text-color="white"
-                      small
-                      >はい</v-chip
-                    >
-                    <v-chip
-                      v-if="item.purchase_list.is_fresh == false"
-                      color="blue"
-                      text-color="white"
-                      small
-                      >いいえ</v-chip
-                    >
-                  </template>
-                  <template v-slot:item.purchase_list.created_at="{ item }">
-                    {{ item.purchase_list.created_at | formatDate }}
-                  </template>
-                  <template v-slot:item.purchase_list.updated_at="{ item }">
-                    {{ item.purchase_list.updated_at | formatDate }}
-                  </template>
-                </v-data-table>
-              </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
+  </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      purchase_lists: [],
-      food_products: [],
-      groups: [],
-      fes_dates: [],
-      shops: [],
-      dialog: false,
-      Group: [],
-      foodProductId: [],
-      fesDateId: [],
-      shopId: [],
-      item: [],
-      isFresh: [
-        { label: "はい", value: "true" },
-        { label: "いいえ", value: "false" },
-      ],
       headers: [
-        { text: "ID", value: "purchase_list.id" },
-        { text: "参加団体", value: "group" },
-        { text: "販売食品", value: "food_product" },
-        { text: "購入品", value: "purchase_list.items" },
-        // { text: '店名', value: 'shop' },
-        // { text: '開催日', value: 'fes_date.date' },
-        { text: "なまもの", value: "purchase_list.is_fresh" },
-        { text: "日時", value: "purchase_list.created_at" },
-        { text: "編集日時", value: "purchase_list.updated_at" },
+        "ID",
+        "参加団体",
+        "販売食品",
+        "購入品",
+        "なまもの",
+        "登録日時",
+        "編集日時",
       ],
+      isOpenAddModal: false,
+      isFreshList: [
+        { id: 1, value: "はい" },
+        { id: 2, value: "いいえ" },
+      ],
+      refYears: "Years",
+      refYearID: 0,
+      refIsFresh: "なまもの",
+      refIsFreshID: 0,
+      searchText: "",
+      purchaseLists: [],
     };
   },
-  mounted() {
-    this.$axios
-      .get("/api/v1/get_purchase_lists", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.purchase_lists = response.data;
-      });
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+
+    // const url = "/api/v1/get_purchase_list_index_for_admin_view";
+    const url =
+      "/api/v1/get_refinement_purchase_lists?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&is_fresh=0";
+    const purchaseListsRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      purchaseLists: purchaseListsRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+    };
   },
-
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
-    openModal: function () {
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groups = response.data;
-        });
-      this.$axios
-        .get("/fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_dates = response.data;
-        });
-      this.$axios
-        .get("/shops", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.shops = response.data;
-        });
-
-      this.dialog = true;
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-
-    getPurchaseList: function (groupId) {
-      const url = "/api/v1/get_food_products_from_group/" + groupId;
-      this.$axios
-        .get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.food_products = response.data;
-          console.log(this.group);
-        });
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_purchase_lists", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.purchase_lists = response.data;
-        });
+    async refinementPurchaseLists(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+        // is_freshで絞り込むとき
+      } else if (Object.is(name_list, this.isFreshList)) {
+        this.refIsFreshID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsFresh = "ALL";
+        } else {
+          this.refIsFresh = name_list[item_id - 1].value;
+        }
+      }
+      this.purchaseLists = [];
+      const refUrl =
+        "/api/v1/get_refinement_purchase_lists?fes_year_id=" +
+        this.refYearID +
+        "&is_fresh=" +
+        this.refIsFreshID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.purchaseLists.push(res);
+      }
     },
-
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("food_product_id", this.foodProductId);
-      params.append("fes_date_id", this.fesDateId);
-      params.append("shop_id", this.shopId);
-      params.append("items", this.item);
-      params.append("is_fresh", this.isFresh);
-      this.$axios.post("/purchase_lists", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
-        this.foodProductId = "";
-        this.fesDateId = "";
-        this.shopId = "";
-        this.item = "";
-        this.isFresh = "";
+    async searchPurchaseLists() {
+      this.purchaseLists = [];
+      const searchUrl =
+        "/api/v1/get_search_purchase_lists?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.purchaseLists.push(res);
+      }
+    },
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
       });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
+        this.reload();
+        this.closeAddModal();
+      });
+    },
+    async downloadCSV() {
+      const url =
+        this.$config.apiURL +
+        "/api/v1/get_purchase_lists_csv/" +
+        this.refYearID;
+      window.open(url, "購入品申請_CSV");
     },
   },
 };

@@ -1,231 +1,160 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-calendar-multiple</v-icon>開催日
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs  }">
-                  <v-btn 
-                          class="mx-2" 
-                          fab 
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="openModal()"
-                          >
-                          <v-icon dark>mdi-plus-circle-outline</v-icon>
-                  </v-btn>
-                </template>
-                <span>開催日の追加</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs  }">
-                  <v-btn 
-                          class="mx-2" 
-                          fab 
-                          text
-                          v-bind="attrs"
-                          v-on="on"
-                          @click="reload"
-                          >
-                          <v-icon dark>mdi-reload</v-icon>
-                  </v-btn>
-                </template>
-                <span>更新する</span>
-              </v-tooltip>
-            </v-card-title>
-            <v-dialog v-model="dialog" max-width="500">
-              <v-card>
-                <v-card-title class="headline blue-grey darken-3">
-                  <div style="color: white">
-                    <v-icon class="ma-5" dark>mdi-calendar-multiple</v-icon>
-                    開催日の追加 
-                  </div>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = false" fab dark>
-                    <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-card-title>
-                <v-row>
-                  <v-col cols="1"></v-col>
-                  <v-col cols="10">
-                    <v-select
-                      class="body-1"
-                      label="開催年"
-                      background-color="white"
-                      outlined
-                      v-model="fes_year_id"
-                      :items="fes_years"
-                      item-text="year_num"
-                      item-value="id"
-                      clearable
-                    >
-                    </v-select>
-                    <v-select
-                      class="body-1"
-                      label="days_num"
-                      background-color="white"
-                      outlined
-                      v-model="days_num"
-                      :items="days_num_list"
-                      clearable
-                    >
-                    </v-select>
-                    <v-text-field
-                      class="body-1"
-                      label="開催日"
-                      background-color="white"
-                      outlined
-                      v-model="date"
-                      clearable
-                    >
-                    </v-text-field>
-                    <v-text-field
-                      class="body-1"
-                      label="曜日"
-                      background-color="white"
-                      outlined
-                      v-model="day"
-                      clearable
-                    >
-                    </v-text-field>
-                  </v-col>
-                  <v-col cols="1"></v-col>
-                </v-row>
+  <div class="main-content">
+    <SubHeader pageTitle="開催日">
+      <CommonButton v-if="this.$role(roleID).fes_dates.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+    </SubHeader>
 
-                <v-divider></v-divider>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(fesDate, index) in fesDates"
+            :key="index"
+            @click="
+              () =>
+                $router.push({
+                  path: `/fes_dates/` + fesDate.fes_date.id,
+                })
+            "
+          >
+            <td>{{ fesDate.fes_date.id }}</td>
+            <td>{{ fesDate.fes_year.year_num }}</td>
+            <td>{{ fesDate.fes_date.days_num }}</td>
+            <td>{{ fesDate.fes_date.date }}</td>
+            <td>{{ fesDate.fes_date.day }}</td>
+            <td>{{ fesDate.fes_date.created_at | formatDate }}</td>
+            <td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        depressed
-                        dark
-                        color="btn"
-                        @click="register()"
-                      >登録
-                      </v-btn>
-                    </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-            <hr class="mt-n3">
-            <template>
-              <div class="text-center" v-if="fes_dates.length === 0">
-                <br><br>
-                <v-progress-circular
-                  indeterminate
-                  color="#009688"
-                  ></v-progress-circular>
-                <br><br>
-              </div>
-              <div v-else>
-                <v-data-table
-                  :headers="headers"
-                  :items="fes_dates"
-                  class="elevation-0 my-9"
-                  @click:row="
-                              (data) =>
-                              $router.push({ path: `/fes_dates/${data.fes_date.id}`})
-                              "
-                  >
-                  <template v-slot:item.fes_date.created_at="{ item }">
-                    {{ item.fes_date.created_at | formatDate }}
-                  </template>
-                  <template v-slot:item.fes_date.updated_at="{ item }">
-                    {{ item.fes_date.updated_at | formatDate }}
-                  </template>
-                </v-data-table>                      
-              </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+    <AddModal @close="closeAddModal" v-if="isOpenAddModal" title="開催日の追加">
+      <template v-slot:form>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="fesYearID">
+            <option disabled value="">選択してください</option>
+            <option v-for="year in yearsList" :key="year.id" :value="year.id">
+              {{ year.year_num }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>開催日</h3>
+          <input v-model="date" type="text" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>曜日</h3>
+          <input v-model="day" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>何日目</h3>
+          <select v-model="daysNum">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="daysNum in daysNumList"
+              :key="daysNum.id"
+              :value="daysNum.value"
+            >
+              {{ daysNum.text }}
+            </option>
+          </select>
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      fes_dates: [],
-      fes_years: [],
-      days_num: [],
-      date: [],
-      day: [],
-      fes_year_id: [],
-      dialog:false,
-      headers:[
-        { text: 'ID', value: 'fes_date.id' },
-        { text: '開催年', value: 'fes_year' },
-        { text: 'num', value: 'fes_date.days_num' },
-        { text: '開催日', value: 'fes_date.date' },
-        { text: '曜日', value: 'fes_date.day' },
-        { text: '日時', value: 'fes_date.created_at' },
-        { text: '編集日時', value: 'fes_date.updated_at' },
+      headers: [
+        "ID",
+        "開催年",
+        "何日目",
+        "開催日",
+        "曜日",
+        "登録日時",
+        "編集日時",
       ],
-      days_num_list: [0, 1, 2],
-    }
+      daysNumList: [
+        { id: 1, text: "準備日", value: 0 },
+        { id: 2, text: "1日目", value: 1 },
+        { id: 3, text: "2日目", value: 2 },
+        { id: 4, text: "片付け日", value: 3 },
+      ],
+      isOpenAddModal: false,
+      fesYearID: null,
+      date: null,
+      day: null,
+      daysNum: null,
+    };
   },
-  mounted() {
-    this.$axios.get('/api/v1/get_fes_dates', {
-      headers: { 
-        "Content-Type": "application/json", 
-      },
-    }
-    )
-      .then(response => {
-        this.fes_dates = response.data
-      })
+  async asyncData({ $axios }) {
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const fesDateUrl = "/fes_dates";
+    const fesDatesRes = await $axios.$get(fesDateUrl);
+    return {
+      fesDates: fesDatesRes.data,
+      yearsList: yearsRes.data,
+    };
   },
-
-  methods:{
-    openModal: function(){
-      this.$axios
-        .get("/fes_years", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_years = response.data;
-        })
-      this.dialog = true
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
+  methods: {
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function() {
-      this.$axios.get('/api/v1/get_fes_dates', {
-        headers: { 
-          "Content-Type": "application/json", 
-        },
-      }
-      )
-        .then(response => {
-          this.fes_dates = response.data
-        })
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-    register: function() {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("days_num", this.year_num);
-      params.append("date", this.date);
-      params.append("day", this.day);
-      params.append("fes_year_id", this.fes_year_id);
-      this.$axios.post('/fes_dates', params).then(response => {
-        this.reload()
-        this.dialog = false
-      })
-      this.fes_year_id = []
-      this.days_num = []
-      this.date = []
-      this.day = []
+    reload(id) {
+      const refUrl = "/fes_dates/" + id;
+      this.$axios.$get(refUrl).then((response) => {
+        this.fesDates.push(response.data);
+      });
     },
-  }
-}
+    async submit() {
+      const url =
+        "/fes_dates?fes_year_id=" +
+        this.fesYearID +
+        "&date=" +
+        this.date +
+        "&day=" +
+        this.day +
+        "&days_num=" +
+        this.daysNum;
+      console.log(url);
+      this.$axios.$post(url).then((response) => {
+        this.fesYearID = null;
+        this.date = null;
+        this.day = null;
+        this.daysNum = null;
+        this.reload(response.data.id);
+        this.closeAddModal();
+      });
+    },
+  },
+};
 </script>

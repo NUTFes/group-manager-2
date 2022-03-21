@@ -2,12 +2,23 @@ class FesDatesController < ApplicationController
     before_action :set_fes_date, only: [:show, :update, :destroy]
   
     def index
-      @fes_dates = FesDate.all
+      @fes_dates = FesDate.preload(:fes_year)
+        .map{
+          |fes_date|
+          {
+            "fes_date": fes_date,
+            "fes_year": fes_date.fes_year
+          }
+        }
       render json: fmt(ok, @fes_dates)
     end
   
     def show
-      render json: fmt(ok, @fes_date)
+      fes_date = {
+        "fes_date": @fes_date,
+        "fes_year": @fes_date.fes_year
+      }
+      render json: fmt(ok, fes_date)
     end
   
     def create

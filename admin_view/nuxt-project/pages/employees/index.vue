@@ -1,219 +1,220 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card flat class="mx-15">
-        <v-row>
-          <v-col cols="1"></v-col>
-          <v-col cols="10">
-            <v-card-title class="font-weight-bold mt-3">
-              <v-icon class="mr-5">mdi-account</v-icon>従業員申請一覧
-              <v-spacer></v-spacer>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="dialog = true"
-                  >
-                    <v-icon dark>mdi-plus-circle-outline</v-icon>
-                  </v-btn>
-                </template>
-                <span>従業員の追加</span>
-              </v-tooltip>
-              <v-tooltip top>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="reload"
-                  >
-                    <v-icon dark>mdi-reload</v-icon>
-                  </v-btn>
-                </template>
-                <span>更新する</span>
-              </v-tooltip>
-            </v-card-title>
+  <div class="main-content">
+    <SubHeader pageTitle="従業員申請">
+      <CommonButton v-if="this.$role(roleID).employees.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+    </SubHeader>
 
-            <v-dialog v-model="dialog" max-width="500">
-              <v-card>
-                <v-card-title class="headline blue-grey darken-3">
-                  <div style="color: white">
-                    <v-icon class="ma-5" dark>mdi-account</v-icon>従業員の追加
-                  </div>
-                  <v-spacer></v-spacer>
-                  <v-btn text @click="dialog = false" fab dark>
-                    ​ <v-icon>mdi-close</v-icon>
-                  </v-btn>
-                </v-card-title>
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementEmployees"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchEmployees"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
 
-                <v-card-text>
-                  <v-row>
-                    <v-col>
-                      <v-form ref="form">
-                        <v-select
-                          label="参加団体名"
-                          v-model="Group"
-                          :items="groups"
-                          :menu-props="{
-                            top: true,
-                            offsetY: true,
-                          }"
-                          item-text="name"
-                          item-value="id"
-                          outlined
-                        ></v-select>
-                        <v-text-field
-                          class="body-1"
-                          label="名前"
-                          v-model="userName"
-                          background-color="white"
-                          outlined
-                          clearable
-                        >
-                        </v-text-field>
-                        <v-text-field
-                          class="body-1"
-                          label="学籍番号"
-                          v-model="studentId"
-                          :rules="[rules.min8, rules.over8]"
-                          background-color="white"
-                          counter="8"
-                          outlined
-                          clearable
-                        >
-                        </v-text-field>
-                      </v-form>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(employee, index) in employees"
+            :key="index"
+            @click="
+              () => $router.push({ path: `/employees/` + employee.employee.id })
+            "
+          >
+            <td>{{ employee.employee.id }}</td>
+            <td>{{ employee.group.name }}</td>
+            <td>{{ employee.employee.name }}</td>
+            <td>{{ employee.employee.student_id }}</td>
+            <td>{{ employee.employee.created_at | formatDate }}</td>
+            <td>{{ employee.employee.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-                <v-divider></v-divider>
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="groupId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
 
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn depressed dark color="btn" @click="register()"
-                    >登録
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
-            <hr class="mt-n3" />
-            <template>
-              <div class="text-center" v-if="employees.length === 0">
-                <br /><br />
-                <v-progress-circular
-                  indeterminate
-                  color="#009688"
-                ></v-progress-circular>
-                <br /><br />
-              </div>
-              <div v-else>
-                <v-data-table
-                  :headers="headers"
-                  :items="employees"
-                  class="elevation-0 my-9"
-                  @click:row="
-                    (data) =>
-                      $router.push({ path: `/employees/${data.employee.id}` })
-                  "
-                >
-                  <template v-slot:item.employee.created_at="{ item }">
-                    {{ item.employee.created_at | formatDate }}
-                  </template>
-                  <template v-slot:item.employee.updated_at="{ item }">
-                    {{ item.employee.updated_at | formatDate }}
-                  </template>
-                </v-data-table>
-              </div>
-            </template>
-          </v-col>
-          <v-col cols="1"></v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
+  </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      rules: {
-        required: (value) => !!value || "入力してください",
-        min8: (v) => v.length >= 8 || "8桁かどうかを確認してください",
-        over8: (v) => v.length <= 8 || "8桁かどうかを確認してください",
-        max: (value) => value <= 1000 || "大きすぎます",
-      },
+      headers: ["ID", "参加団体", "名前", "学籍番号", "登録日時", "編集日時"],
+      isOpenAddModal: false,
+      isOpenSnackBar: false,
+      groupId: "",
+      employeeName: "",
+      employeeStudentId: "",
       employees: [],
-      groups: [],
-      dialog: false,
-      Group: [],
-      userName: [],
-      studentId: [],
-      headers: [
-        { text: "ID", value: "employee.id" },
-        { text: "参加団体", value: "group" },
-        { text: "名前", value: "employee.name" },
-        { text: "学籍番号", value: "employee.student_id" },
-        { text: "日時", value: "employee.created_at" },
-        { text: "編集日時", value: "employee.updated_at" },
-      ],
+      refYears: "Year",
+      refYearID: 0,
+      searchText: "",
+      groupList: [],
     };
   },
-  mounted() {
-    this.$axios
-      .get("/api/v1/get_employees", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.employees = response.data;
-      });
-    this.$axios
-      .get("/groups", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups = response.data;
-      });
-  },
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
 
+    const url =
+      "/api/v1/get_refinement_employees?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
+    const employeesRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      employees: employeesRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+    };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_employees", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.employees = response.data;
-        });
+    async refinementEmployees(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      this.refYearID = item_id;
+      // ALLの時
+      if (item_id == 0) {
+        this.refYears = "ALL";
+      } else {
+        this.refYears = name_list[item_id - 1].year_num;
+      }
+      this.employess = [];
+      const refUrl =
+        "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.employees.push(res);
+      }
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("name", this.userName);
-      params.append("student_id", this.studentId);
-      this.$axios.post("/employees", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
-        this.userName = "";
-        this.studentId = "";
+    async searchEmployees() {
+      this.employees = [];
+      const searchUrl = "/api/v1/get_search_employees?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.employees.push(res);
+      }
+    },
+    async openAddModal() {
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupRes = await this.$axios.$get(groupUrl);
+      this.groupList = groupRes.data;
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + id;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
       });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.groupId +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.openSnackBar(this.employeeName + "を追加しました");
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
+        this.reload(response.data.id);
+        this.closeAddModal();
+      });
+    },
+    async downloadCSV() {
+      const url =
+        this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
+      window.open(url, "従業員一覧_CSV");
     },
   },
 };

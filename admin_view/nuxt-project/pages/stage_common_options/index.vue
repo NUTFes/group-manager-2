@@ -1,363 +1,396 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
-        <v-card flat class="mx-15">
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-text-to-speech</v-icon
-                >ステージオプション申請一覧
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="dialog = true"
-                    >
-                      <v-icon dark>mdi-plus-circle-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>ステージオプション申請の追加</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="reload"
-                    >
-                      <v-icon dark>mdi-reload</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>更新する</span>
-                </v-tooltip>
-              </v-card-title>
+  <div class="main-content">
+    <SubHeader pageTitle="ステージオプション申請一覧">
+      <CommonButton v-if="this.$role(roleID).stage_common_options.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+    </SubHeader>
 
-              <v-dialog v-model="dialog" max-width="500">
-                <v-card>
-                  <v-card-title class="headline blue-grey darken-3">
-                    <div style="color: white">
-                      <v-icon class="ma-2" dark>mdi-text-to-speech</v-icon
-                      >ステージオプション申請の追加
-                    </div>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab dark>
-                      ​ <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                  </v-card-title>
-                  <v-card-text>
-                    <v-row>
-                      <v-col>
-                        <v-form ref="form">
-                          <v-select
-                            label="参加団体名"
-                            v-model="Group"
-                            :items="groups"
-                            :menu-props="{
-                              top: true,
-                              offsetY: true,
-                            }"
-                            item-text="name"
-                            item-value="id"
-                            outlined
-                          ></v-select>
-                          <v-select
-                            label="所持機器の使用"
-                            v-model="ownEquipment"
-                            :items="items_available"
-                            :menu-props="{ top: true, offsetY: true }"
-                            item-text="label"
-                            item-value="value"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-select
-                            label="音楽"
-                            v-model="Bgm"
-                            :items="items_available"
-                            item-text="label"
-                            item-value="value"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-select
-                            label="撮影許可"
-                            v-model="cameraPermission"
-                            :items="photo_available"
-                            item-text="label"
-                            item-value="value"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-select
-                            label="騒音"
-                            v-model="loudSound"
-                            :items="loud_able"
-                            item-text="label"
-                            item-value="value"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-textarea
-                            class="body-1"
-                            label="ステージ内容"
-                            v-model="stageContent"
-                            background-color="white"
-                            outlined
-                            clearable
-                          >
-                          </v-textarea>
-                        </v-form>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementStageCommonOptions"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
 
-                  <v-divider></v-divider>
+        <SearchDropDown
+          :nameList="isOwnEquipmentList"
+          :on_click="refinementStageCommonOptions"
+          value="value"
+        >
+          {{ refIsOwnEquipment }}
+        </SearchDropDown>
 
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn depressed dark color="btn" @click="register()"
-                      >登録
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
+        <SearchDropDown
+          :nameList="isBgmList"
+          :on_click="refinementStageCommonOptions"
+          value="value"
+        >
+          {{ refIsBgm }}
+        </SearchDropDown>
 
-              <hr class="mt-n3" />
-              <template>
-                <div
-                  class="text-center"
-                  v-if="stage_common_options.length === 0"
-                >
-                  <br /><br />
-                  <v-progress-circular
-                    indeterminate
-                    color="#009688"
-                  ></v-progress-circular>
-                  <br /><br />
-                </div>
-                <div v-else>
-                  <v-data-table
-                    :headers="headers"
-                    :items="stage_common_options"
-                    class="elevation-0 my-9"
-                    @click:row="
-                      (data) =>
-                        $router.push({
-                          path: `/stage_common_options/${data.stage_common_option.id}`,
-                        })
-                    "
-                  >
-                    <template
-                      v-slot:item.stage_common_option.own_equipment="{ item }"
-                    >
-                      <v-chip
-                        v-if="item.stage_common_option.own_equipment == true"
-                        color="red"
-                        text-color="white"
-                        small
-                        >使用</v-chip
-                      >
-                      <v-chip
-                        v-if="item.stage_common_option.own_equipment == false"
-                        color="blue"
-                        text-color="white"
-                        small
-                        >使用しない</v-chip
-                      >
-                    </template>
-                    <template v-slot:item.stage_common_option.bgm="{ item }">
-                      <v-chip
-                        v-if="item.stage_common_option.bgm == true"
-                        color="red"
-                        text-color="white"
-                        small
-                        >使用</v-chip
-                      >
-                      <v-chip
-                        v-if="item.stage_common_option.bgm == false"
-                        color="blue"
-                        text-color="white"
-                        small
-                        >使用しない</v-chip
-                      >
-                    </template>
-                    <template
-                      v-slot:item.stage_common_option.camera_permission="{
-                        item,
-                      }"
-                    >
-                      <v-chip
-                        v-if="
-                          item.stage_common_option.camera_permission == true
-                        "
-                        color="red"
-                        text-color="white"
-                        small
-                        >許可</v-chip
-                      >
-                      <v-chip
-                        v-if="
-                          item.stage_common_option.camera_permission == false
-                        "
-                        color="blue"
-                        text-color="white"
-                        small
-                        >許可しない</v-chip
-                      >
-                    </template>
-                    <template
-                      v-slot:item.stage_common_option.loud_sound="{ item }"
-                    >
-                      <v-chip
-                        v-if="item.stage_common_option.loud_sound == true"
-                        color="red"
-                        text-color="white"
-                        small
-                        >出す</v-chip
-                      >
-                      <v-chip
-                        v-if="item.stage_common_option.loud_sound == false"
-                        color="blue"
-                        text-color="white"
-                        small
-                        >出さない</v-chip
-                      >
-                    </template>
-                    <template
-                      v-slot:item.stage_common_option.created_at="{ item }"
-                    >
-                      {{ item.stage_common_option.created_at | formatDate }}
-                    </template>
-                    <template
-                      v-slot:item.stage_common_option.updated_at="{ item }"
-                    >
-                      {{ item.stage_common_option.updated_at | formatDate }}
-                    </template>
-                  </v-data-table>
-                </div>
-              </template>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+        <SearchDropDown
+          :nameList="isCameraPermissionList"
+          :on_click="refinementStageCommonOptions"
+          value="value"
+        >
+          {{ refIsCameraPermission }}
+        </SearchDropDown>
+
+        <SearchDropDown
+          :nameList="isLoudSoundList"
+          :on_click="refinementStageCommonOptions"
+          value="value"
+        >
+          {{ refIsLoudSound }}
+        </SearchDropDown>
+      </template>
+
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchStageCommonOptions"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(stageCommonOption, index) in stageCommonOption"
+            @click="
+              () =>
+                $router.push({
+                  path:
+                    `/stage_common_options/` +
+                    stageCommonOption.stage_common_option.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ stageCommonOption.stage_common_option.id }}</td>
+            <td>{{ stageCommonOption.group.name }}</td>
+            <td>{{ stageCommonOption.stage_common_option.own_equipment }}</td>
+            <td>{{ stageCommonOption.stage_common_option.bgm }}</td>
+            <td>
+              {{ stageCommonOption.stage_common_option.camera_permission }}
+            </td>
+            <td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
+            <td>
+              {{
+                stageCommonOption.stage_common_option.created_at | formatDate
+              }}
+            </td>
+            <td>
+              {{
+                stageCommonOption.stage_common_option.updated_at | formatDate
+              }}
+            </td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
+
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="ステージオプション申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>所持機器の使用</h3>
+          <select v-model="ownEquipment">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isOwnEquipmentList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>音楽をかける</h3>
+          <select v-model="bgm">
+            <option disabled value="">選択してください</option>
+            <option v-for="item in isBgmList" :key="item.id" :value="item.bool">
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>撮影許可</h3>
+          <select v-model="cameraPermission">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isCameraPermissionList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>騒音</h3>
+          <select v-model="loudSound">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="item in isLoudSoundList"
+              :key="item.id"
+              :value="item.bool"
+            >
+              {{ item.value }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>ステージ内容</h3>
+          <textarea v-model="stageContent" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      rules: {
-        required: (value) => !!value || "入力してください",
-      },
-      stage_common_options: [],
-      groups: [],
-      dialog: false,
-      Group: [],
-      ownEquipment: [],
-      Bgm: [],
-      cameraPermission: [],
-      loudSound: [],
-      stageContent: [],
       headers: [
-        { text: "ID", value: "stage_common_option.id" },
-        { text: "参加団体", value: "group" },
-        { text: "所持機器の使用", value: "stage_common_option.own_equipment" },
-        { text: "音楽をかける", value: "stage_common_option.bgm" },
-        { text: "撮影許可", value: "stage_common_option.camera_permission" },
-        { text: "大きな音", value: "stage_common_option.loud_sound" },
-        { text: "日時", value: "stage_common_option.created_at" },
-        { text: "編集日時", value: "stage_common_option.updated_at" },
+        "ID",
+        "参加団体",
+        "所持機器の使用",
+        "音楽をかける",
+        "撮影許可",
+        "大きな音",
+        "登録日時",
+        "編集日時",
       ],
-      items_available: [
-        { label: "使用", value: true },
-        { label: "不使用", value: false },
+      isOwnEquipmentList: [
+        { id: 1, value: "使用する", bool: true },
+        { id: 2, value: "使用しない", bool: false },
       ],
-      photo_available: [
-        { label: "許可", value: true },
-        { label: "禁止", value: false },
+      isBgmList: [
+        { id: 1, value: "かける", bool: true },
+        { id: 2, value: "かけない", bool: false },
       ],
-      loud_able: [
-        { label: "出す", value: true },
-        { label: "出さない", value: false },
+      isCameraPermissionList: [
+        { id: 1, value: "許可", bool: true },
+        { id: 2, value: "許可しない", bool: false },
       ],
+      isLoudSoundList: [
+        { id: 1, value: "出す", bool: true },
+        { id: 2, value: "出さない", bool: false },
+      ],
+      isOpenAddModal: false,
+      //v-model
+      appGroup: "",
+      ownEquipment: "",
+      bgm: "",
+      cameraPermission: "",
+      loudSound: "",
+      stageContent: "",
+      //refinement
+      stageCommonOption: [],
+      searchText: "",
+      //other
+      refYears: "Years",
+      refYearID: 0,
+      refIsOwnEquipment: "所持機器の使用",
+      refIsOwnEquipmentID: 0,
+      refIsBgm: "音楽をかける",
+      refIsBgmID: 0,
+      refIsCameraPermission: "撮影許可",
+      refIsCameraPermissionID: 0,
+      refIsLoudSound: "大きな音",
+      refIsLoudSoundID: 0,
     };
   },
-  mounted() {
-    this.$axios
-      .get("api/v1/get_stage_common_options_with_group", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.stage_common_options = response.data;
-        this.ownEquipment = stage_common_options.own_equipment;
-        console.log(response.data);
-      });
-    this.$axios
-      .get("/groups", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.groups = response.data;
-      });
-  },
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
 
+    const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+    const groupRes = await $axios.$get(groupUrl);
+
+    // const url = "/api/v1/get_stage_common_option_index_for_admin_view";
+    const url =
+      "/api/v1/get_refinement_stage_common_options?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&own_equipment=0&bgm=0&camera_permission=0&loud_sound=0";
+    const stageCommonOptionRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      stageCommonOption: stageCommonOptionRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+      groupList: groupRes.data,
+    };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
   methods: {
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_stage_common_options_with_group", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stage_common_options = response.data;
-        });
+    async refinementStageCommonOptions(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (Object.is(name_list, this.yearList)) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+        // own_equipmentで絞り込むとき
+      } else if (Object.is(name_list, this.isOwnEquipmentList)) {
+        this.refIsOwnEquipmentID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsOwnEquipment = "ALL";
+        } else {
+          this.refIsOwnEquipment = name_list[item_id - 1].value;
+        }
+        // bgmで絞り込むとき
+      } else if (Object.is(name_list, this.isBgmList)) {
+        this.refIsBgmID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsBgm = "ALL";
+        } else {
+          this.refIsBgm = name_list[item_id - 1].value;
+        }
+        // camera_permissionで絞り込むとき
+      } else if (Object.is(name_list, this.isCameraPermissionList)) {
+        this.refIsCameraPermissionID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsCameraPermission = "ALL";
+        } else {
+          this.refIsCameraPermission = name_list[item_id - 1].value;
+        }
+        // loud_soundで絞り込むとき
+      } else if (Object.is(name_list, this.isLoudSoundList)) {
+        this.refIsLoudSoundID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsLoudSound = "ALL";
+        } else {
+          this.refIsLoudSound = name_list[item_id - 1].value;
+        }
+      }
+      this.stageCommonOption = [];
+      const refUrl =
+        "/api/v1/get_refinement_stage_common_options?fes_year_id=" +
+        this.refYearID +
+        "&own_equipment=" +
+        this.refIsOwnEquipmentID +
+        "&bgm=" +
+        this.refIsBgmID +
+        "&camera_permission=" +
+        this.refIsCameraPermissionID +
+        "&loud_sound=" +
+        this.refIsLoudSoundID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.stageCommonOption.push(res);
+      }
     },
-    register: function () {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("own_equipment", this.ownEquipment);
-      params.append("bgm", this.Bgm);
-      params.append("camera_permission", this.cameraPermission);
-      params.append("loud_sound", this.loudSound);
-      params.append("stage_content", this.stageContent);
-      this.$axios.post("/stage_common_options", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
+    async searchStageCommonOptions() {
+      this.stageCommonOption = [];
+      const searchUrl =
+        "/api/v1/get_search_stage_common_options?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.stageCommonOption.push(res);
+      }
+    },
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
+    },
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    async submitEmployee() {
+      const postStageOptionUrl =
+        "/stage_common_options/" +
+        "?group_id=" +
+        this.appGroup +
+        "&own_equipment=" +
+        this.ownEquipment +
+        "&bgm=" +
+        this.bgm +
+        "&camera_permission=" +
+        this.cameraPermission +
+        "&loud_sound=" +
+        this.loudSound +
+        "&stage_content=" +
+        this.stageContent;
+      console.log(postStageOptionUrl);
+
+      await this.$axios.$post(postStageOptionUrl).then((response) => {
+        this.groupID = "";
         this.ownEquipment = "";
-        this.Bgm = "";
+        this.bgm = "";
         this.cameraPermission = "";
         this.loudSound = "";
         this.stageContent = "";
+        this.refinementStageCommonOptions(0, this.yearList);
+        this.closeAddModal();
       });
+    },
+    async downloadCSV() {
+      const url =
+        this.$config.apiURL +
+        "/api/v1/get_stage_common_options_csv/" +
+        this.refYearID;
+      window.open(url, "ステージオプション申請_CSV");
     },
   },
 };

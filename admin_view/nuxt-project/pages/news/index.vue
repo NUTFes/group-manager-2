@@ -1,193 +1,131 @@
 <template>
-  <v-row>
-    <v-col>
-        <v-card flat class="mx-15">
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-newspaper-variant</v-icon>お知らせ
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                            class="mx-2" 
-                            fab 
-                            text
-                            v-bind="attrs"
-                            v-on="on"
-                            @click="dialog=true"
-                            >
-                            <v-icon dark>mdi-plus-circle-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>お知らせの追加</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs  }">
-                    <v-btn 
-                            class="mx-2" 
-                            fab 
-                            text
-                            v-bind="attrs"
-                            v-on="on"
-                            @click="reload"
-                            >
-                            <v-icon dark>mdi-reload</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>更新する</span>
-                </v-tooltip>
-              </v-card-title>
-              <v-dialog v-model="dialog" max-width="500">
-                <v-card>
-                  <v-card-title class="headline blue-grey darken-3">
-                    <div style="color: white">
-                      <v-icon class="ma-5" dark>mdi-bell-plus-outline</v-icon>
-                      お知らせの追加 
-                    </div>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab dark>
-                      <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                  </v-card-title>
-                  <v-row>
-                    <v-col cols="1"></v-col>
-                    <v-col cols="10">
-                      <v-text-field
-                        class="body-1"
-                        label="タイトル"
-                        background-color="white"
-                        outlined
-                        v-model="title"
-                        clearable
-                      >
-                      </v-text-field>
-                    </v-col>
-                    <v-col cols="1"></v-col>
-                  </v-row>
-                  <v-row>
-                    ​ <v-col cols="1"></v-col>
-                    <v-col cols="10">
-                      <v-textarea
-                        class="body-1"
-                        label="内容"
-                        background-color="white"
-                        outlined
-                        height="100"
-                        v-model="body"
-                        clearable
-                     />
-                    </v-col>
-                     <v-col cols="1"></v-col>
-                  </v-row>
+  <div class="main-content">
+    <SubHeader pageTitle="お知らせ一覧">
+      <CommonButton v-if="this.$role(roleID).news.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+    </SubHeader>
 
-                  <v-divider></v-divider>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(n, index) in news"
+            :key="index"
+            @click="
+              () =>
+                $router.push({
+                  path: `/news/` + n.id,
+                })
+            "
+          >
+            <td>{{ n.id }}</td>
+            <td>{{ n.title }}</td>
+            <td>{{ n.created_at | formatDate }}</td>
+            <td>{{ n.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          depressed
-                          dark
-                          color="btn"
-                          @click="
-                            register();
-                            dialog = false;
-                            reload;
-                          "
-                        >登録
-                        </v-btn>
-                      </v-card-actions>
-                </v-card>
-              </v-dialog>
-
-              <hr class="mt-n3">
-              <template>
-                <div class="text-center" v-if="news.length === 0">
-                  <br><br>
-                  <v-progress-circular
-                    indeterminate
-                    color="#009688"
-                    ></v-progress-circular>
-                  <br><br>
-                </div>
-                <div v-else>
-                  <v-data-table
-                    :headers="headers"
-                    :items="news"
-                    class="elevation-0 my-9"
-                    @click:row="
-                                (data) =>
-                                $router.push({ path: `/news/${data.id}`})
-                                "
-                    >
-                    <template v-slot:item.created_at="{ item }">
-                      {{ item.created_at | formatDate }}
-                    </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.updated_at | formatDate }}
-                    </template>
-                  </v-data-table>                      
-                </div>
-              </template>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-    </v-col>
-  </v-row>
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="お知らせの追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>タイトル</h3>
+          <input v-model="title" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>内容</h3>
+          <textarea v-model="body" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  watchQuery: ["page"],
   data() {
     return {
-      news: [],
-      title:[],
-      body:[],
-      dialog:false,
-      headers:[
-        { text: 'ID', value: 'id' },
-        { text: 'タイトル', value: 'title' },
-        { text: '日時', value: 'created_at' },
-        { text: '編集日時', value: 'updated_at' },
-      ],
-    }
+      headers: ["ID", "タイトル", "日時", "編集日時"],
+      isOpenAddModal: false,
+      isOpenSnackBar: false,
+      title: "",
+      body: ""
+    };
   },
-  mounted() {
-    this.$axios.get('/news', {
-      headers: { 
-        "Content-Type": "application/json", 
-        dialog: false,
-      },
-    }
-    )
-      .then(response => {
-        this.news = response.data
-      })
+  async asyncData({ $axios }) {
+    const newsUrl = "/news";
+    const newsRes = await $axios.$get(newsUrl);
+    return {
+      news: newsRes.data,
+    };
   },
-
-  methods:{
-    register: function() {
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("title", this.title);
-      params.append("body", this.body);
-      this.$axios.post('/news', params)
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
+  methods: {
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function() {
-      this.$axios.get('/news', {
-      headers: { 
-        "Content-Type": "application/json", 
-        dialog: false,
-      },
-    }
-    )
-      .then(response => {
-        this.news = response.data
-      })
-    }
-  }
-}
+    closeAddModal() {
+      this.isOpenAddModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    reload(id) {
+      const url = "/news/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.news.unshift(response.data);
+      });
+    },
+    async submit() {
+      const url =
+        "/news/" +
+        "?title=" +
+        this.title +
+        "&body=" +
+        this.body
+
+      this.$axios.$post(url).then((res) => {
+        this.title = "";
+        this.body = "";
+        this.reload(res.data.id);
+        this.closeAddModal();
+        this.openSnackBar("お知らせを作成しました")
+      });
+    },
+  },
+};
 </script>

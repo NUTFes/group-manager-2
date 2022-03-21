@@ -11,32 +11,66 @@ class User < ActiveRecord::Base
   has_many :groups, dependent: :destroy
   has_many :memos
 
+
+  # sub_repがない場合はnilが入ったsub_repみたいなのを返す
+  @@no_sub_rep = {
+      id: nil,
+      name: nil,
+      department_id: nil,
+      grade_id: nil,
+      tel: nil,
+      email: nil,
+      created_at: nil,
+      updated_at: nil,
+      student_id: nil
+    }
+
+  def self.with_sub_reps
+    @record = Group.preload(:user, :sub_rep)
+      .map{
+        |group|
+        {
+          "user": group.user,
+          "group": group,
+          "sub_rep": group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
+        }
+      }
+  end
+
+  def self.with_sub_rep(group_id)
+    group = Group.find(group_id)
+    return {
+      "user": group.user,
+      "group": group,
+      "sub_rep": group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
+    }
+  end
+
   ### user_detail (ユーザー詳細情報)
   #
   # 全てのuserとそのuser_detailを取得する
   def self.with_user_details
-    @records = User.preload(:user_detail)
+    @records = User.preload(:role)
       .map{ 
         |user| 
         { 
           "user": user, 
-          "user_detail": user.user_detail,
-          "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
+          "role": user.role,
+          # "user_detail": user.user_detail,
+          # "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
         } 
       }
   end
 
   # 指定したIDのuserとそのuser_detailを取得する
   def self.with_user_detail(user_id)
-    @record = User.eager_load(:user_detail).where(users: {id: user_id})
-      .map{ 
-        |user| 
-        { 
-          "user": user, 
-          "user_detail": user.user_detail,
-          "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
-        } 
-      }
+    user = User.find(user_id)
+    return { 
+      "user": user, 
+      "role": user.role,
+      "user_detail": user.user_detail,
+      "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
+    } 
   end
 
   ### ユーザーが登録している情報の全てを取得する
@@ -90,5 +124,8 @@ class User < ActiveRecord::Base
     }
     return @record
   end
+
+  private
+
 
 end

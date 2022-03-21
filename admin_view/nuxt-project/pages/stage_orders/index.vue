@@ -1,356 +1,189 @@
 <template>
-  <div>
-    <v-row>
-      <v-col>
-        <v-card flat class="mx-15">
-          <v-row>
-            <v-col cols="1"></v-col>
-            <v-col cols="10">
-              <v-card-title class="font-weight-bold mt-3">
-                <v-icon class="mr-5">mdi-microphone</v-icon>ステージ申請一覧
-                <v-spacer></v-spacer>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="open_dialog"
-                    >
-                      <v-icon dark>mdi-plus-circle-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>ステージ申請の追加</span>
-                </v-tooltip>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      class="mx-2"
-                      fab
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="reload"
-                    >
-                      <v-icon dark>mdi-reload</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>更新する</span>
-                </v-tooltip>
-              </v-card-title>
+  <div class="main-content">
+    <SubHeader pageTitle="ステージ申請一覧">
+      <CommonButton v-if="this.$role(roleID).stage_orders.create" iconName="add_circle" :on_click="openAddModal">
+        追加
+      </CommonButton>
+      <CommonButton iconName="file_download" :on_click="downloadCSV">
+        CSVダウンロード
+      </CommonButton>
+    </SubHeader>
 
-              <v-dialog v-model="dialog" max-width="500">
-                <v-card>
-                  <v-card-title class="headline blue-grey darken-3">
-                    <div style="color: white">
-                      <v-icon class="ma-5" dark>mdi-microphone</v-icon
-                      >ステージの追加
-                    </div>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="dialog = false" fab dark>
-                      <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                  </v-card-title>
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementStageOrders"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
 
-                  <v-card-text>
-                    <v-row>
-                      <v-col>
-                        <v-form ref="form">
-                          <v-select
-                            label="参加団体名"
-                            v-model="Group"
-                            :items="groups"
-                            :menu-props="{
-                              top: true,
-                              offsetY: true,
-                            }"
-                            item-text="name"
-                            item-value="id"
-                            outlined
-                          ></v-select>
-                          <v-select
-                            label="天気"
-                            v-model="isSunny"
-                            :items="is_sunny_list"
-                            item-text="label"
-                            item-value="value"
-                            text
-                            outlined
-                            clearable
-                          />
-                          <v-select
-                            label="開催日"
-                            v-model="fesDateId"
-                            background-color="white"
-                            :items="fes_date_list"
-                            item-text="date"
-                            item-value="id"
-                            outlined
-                            clearable
-                          >
-                          </v-select>
-                          <v-select
-                            label="第一希望"
-                            v-model="stageFirst"
-                            :items="stages_list"
-                            item-text="name"
-                            item-value="id"
-                            text
-                            outlined
-                            clearable
-                          />
-                          <v-select
-                            label="第二希望"
-                            v-model="stageSecond"
-                            :items="stages_list"
-                            item-text="name"
-                            item-value="id"
-                            text
-                            outlined
-                            clearable
-                          />
-                          <v-radio-group v-model="radioGroup">
-                            <v-radio label="時間幅で登録" :value="1"></v-radio>
-                            <v-radio label="時刻で登録" :value="2"></v-radio>
-                          </v-radio-group>
-                          <div v-if="radioGroup === 1">
-                            <v-select
-                              label="使用時間"
-                              v-model="useTimeInterval"
-                              :items="time_interval"
-                              text
-                              outlined
-                              clearable
-                            />
-                            <v-select
-                              label="準備時間"
-                              v-model="prepareTimeInterval"
-                              :items="time_interval"
-                              text
-                              outlined
-                              clearable
-                            />
-                            <v-select
-                              label="掃除時間"
-                              v-model="cleanupTimeInterval"
-                              :items="time_interval"
-                              text
-                              outlined
-                              clearable
-                            />
-                          </div>
+        <SearchDropDown
+          :nameList="isSunnyList"
+          :on_click="refinementStageOrders"
+          value="value"
+        >
+          {{ refIsSunny }}
+        </SearchDropDown>
 
-                          <div v-if="radioGroup === 2">
-                            <v-select
-                              label="準備開始時刻"
-                              v-model="prepareStartTime"
-                              :items="time_range"
-                              text
-                              outlined
-                              clearable
-                            />
-                            <v-select
-                              label="パフォーマンス開始時刻"
-                              v-model="performanceStartTime"
-                              :items="time_range"
-                              text
-                              outlined
-                              clearable
-                            />
-                            <v-select
-                              label="パフォーマンス終了時刻"
-                              v-model="performanceEndTime"
-                              :items="time_range"
-                              text
-                              outlined
-                              clearable
-                            />
-                            <v-select
-                              label="掃除終了時刻"
-                              v-model="cleanupEndTime"
-                              :items="time_range"
-                              text
-                              outlined
-                              clearable
-                            />
-                          </div>
-                        </v-form>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
+        <SearchDropDown
+          :nameList="daysNumList"
+          :on_click="refinementStageOrders"
+          value="days_num"
+        >
+          {{ refDaysNum }}
+        </SearchDropDown>
 
-                  <v-divider></v-divider>
+        <SearchDropDown
+          :nameList="stageList"
+          :on_click="refinementStageOrders"
+          value="name"
+        >
+          {{ refStage }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchStageOrders"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
 
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn depressed dark color="btn" @click="register()"
-                      >登録
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr
+            v-for="(stageOrder, index) in stageOrders"
+            @click="
+              () =>
+                $router.push({
+                  path: `/stage_orders/` + stageOrder.stage_order.id,
+                })
+            "
+            :key="index"
+          >
+            <td>{{ stageOrder.stage_order.id }}</td>
+            <td>{{ stageOrder.group.name }}</td>
+            <td>{{ stageOrder.stage_order.is_sunny }}</td>
+            <td>{{ stageOrder.stage_order_info.date }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_first }}</td>
+            <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
+            <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
 
-              <hr class="mt-n3" />
-              <template>
-                <div class="text-center" v-if="stage_orders.length === 0">
-                  <br /><br />
-                  <v-progress-circular
-                    indeterminate
-                    color="#009688"
-                  ></v-progress-circular>
-                  <br /><br />
-                </div>
-                <div v-else>
-                  <v-data-table
-                    :headers="headers"
-                    :items="stage_orders"
-                    class="elevation-0 my-9"
-                    @click:row="
-                      (data) =>
-                        $router.push({
-                          path: `/stage_orders/${data.stage_order.id}`,
-                        })
-                    "
-                  >
-                    <template v-slot:item.is_sunny="{ item }">
-                      <v-chip
-                        v-if="item.stage_order.is_sunny == true"
-                        color="red"
-                        text-color="white"
-                        small
-                        >はい</v-chip
-                      >
-                      <v-chip
-                        v-if="item.stage_order.is_sunny == false"
-                        color="blue"
-                        text-color="white"
-                        small
-                        >いいえ</v-chip
-                      >
-                    </template>
-                    <template v-slot:item.created_at="{ item }">
-                      {{ item.stage_order.created_at | formatDate }}
-                    </template>
-                    <template v-slot:item.updated_at="{ item }">
-                      {{ item.stage_order.updated_at | formatDate }}
-                    </template>
-                  </v-data-table>
-                </div>
-              </template>
-            </v-col>
-            <v-col cols="1"></v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="従業員申請の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>氏名</h3>
+          <input v-model="employeeName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>学籍番号</h3>
+          <input v-model="employeeStudentId" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
   </div>
 </template>
 
 <script>
-import vueTimepicker from "vue2-timepicker";
-import "vue2-timepicker/dist/VueTimepicker.css";
-import VueTimepicker from "vue2-timepicker";
-
+import { mapState } from "vuex";
 export default {
-  components: {
-    "vue-timepicker": vueTimepicker,
-    VueTimepicker,
-  },
+  watchQuery: ["page"],
   data() {
     return {
-      rules: {
-        required: (value) => !!value || "入力してください",
-      },
-      stage_orders: [],
-      stages: [],
-      stages_list: [],
-      groups: [],
-      Group: [],
-      dialog: false,
-      isSunny: [],
-      fesDateId: [],
-      stageFirst: [],
-      stageSecond: [],
-      radioGroup: 1,
-      useTimeInterval: [],
-      prepareTimeInterval: [],
-      cleanupTimeInterval: [],
-      prepareStartTime: [],
-      performanceStartTime: [],
-      performanceEndTime: [],
-      cleanupEndTime: [],
       headers: [
-        { text: "ID", value: "stage_order.id" },
-        { text: "参加団体", value: "group" },
-        { text: "晴れ希望", value: "is_sunny" },
-        { text: "開催日", value: "fes_date.date" },
-        { text: "第一希望", value: "stage_first" },
-        { text: "第二希望", value: "stage_second" },
-        // { text: '総合時間幅', value: 'use_time_interval' },
-        { text: "日時", value: "created_at" },
-        { text: "編集日時", value: "updated_at" },
+        "ID",
+        "参加団体",
+        "晴れ希望",
+        "希望日",
+        "第一希望",
+        "第二希望",
+        "登録日時",
+        "編集日時",
       ],
-      is_sunny_list: [
-        { label: "晴れ", value: true },
-        { label: "雨", value: false },
+      isOpenAddModal: false,
+      isSunnyList: [
+        { id: 1, value: "はい" },
+        { id: 2, value: "いいえ" },
       ],
-      fes_date_list: [],
-      hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17"],
-      minute_range: [
-        "00",
-        "05",
-        "10",
-        "15",
-        "20",
-        "25",
-        "30",
-        "35",
-        "40",
-        "45",
-        "50",
-        "55",
+      daysNumList: [
+        { id: 1, days_num: "1日目" },
+        { id: 2, days_num: "2日目" },
       ],
-      time_range: [],
-      time_interval: [
-        "5分",
-        "10分",
-        "15分",
-        "20分",
-        "25分",
-        "30分",
-        "35分",
-        "40分",
-        "45分",
-        "50分",
-        "55分",
-        "60分",
-        "65分",
-        "70分",
-        "75分",
-        "80分",
-        "90分",
-        "95分",
-        "100分",
-        "105分",
-        "110分",
-        "115分",
-        "120分",
-      ],
+      refYears: "Years",
+      refYearID: 0,
+      refIsSunny: "晴れ希望",
+      refIsSunnyID: 0,
+      refDaysNum: "何日目",
+      refDaysNumID: 0,
+      refStage: "Stages",
+      refStageID: 0,
+      stageOrders: [],
     };
   },
-  mounted() {
-    this.$axios
-      .get("api/v1/get_stage_orders_details", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.stage_orders = response.data;
-      });
-    this.set_time_range();
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+
+    // const url = "/api/v1/get_stage_order_index_for_admin_view";
+    const url =
+      "/api/v1/get_refinement_stage_orders?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&stage_id=0&days_num=0&is_sunny=0";
+    const stageOrdersRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const stagesUrl = "/stages";
+    const stagesRes = await $axios.$get(stagesUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      stageOrders: stageOrdersRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+      stageList: stagesRes.data,
+    };
   },
   computed: {
     useInterval() {
@@ -359,8 +192,73 @@ export default {
         (this.performanceEndTime.HH - this.performanceStartTime.HH) * 60;
       return hour + minute;
     },
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
+    async refinementStageOrders(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+        // is_sunnyで絞り込むとき
+      } else if (Object.is(name_list, this.isSunnyList)) {
+        this.refIsSunnyID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refIsSunny = "ALL";
+        } else {
+          this.refIsSunny = name_list[item_id - 1].value;
+        }
+        // days_numで絞り込むとき
+      } else if (Object.is(name_list, this.daysNumList)) {
+        this.refDaysNumID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refDaysNum = "ALL";
+        } else {
+          this.refDaysNum = name_list[item_id - 1].days_num;
+        }
+        // stage_idで絞り込むとき
+      } else if (name_list.toString() == this.stageList.toString()) {
+        this.refStageID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refStage = "ALL";
+        } else {
+          this.refStage = name_list[item_id - 1].name;
+        }
+      }
+      this.stageOrders = [];
+      const refUrl =
+        "/api/v1/get_refinement_stage_orders?fes_year_id=" +
+        this.refYearID +
+        "&stage_id=" +
+        this.refStageID +
+        "&days_num=" +
+        this.refDaysNumID +
+        "&is_sunny=" +
+        this.refIsSunnyID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.stageOrders.push(res);
+      }
+    },
+    async searchStageOrders() {
+      this.stageOrders = [];
+      const searchUrl =
+        "/api/v1/get_search_stage_orders?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.stageOrders.push(res);
+      }
+    },
     set_time_range: function () {
       for (var hour of this.hour_range) {
         for (var minute of this.minute_range) {
@@ -368,119 +266,42 @@ export default {
         }
       }
     },
-    open_dialog: function () {
-      this.$axios
-        .get("/stages", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stages_list = response.data;
-        });
-      this.$axios
-        .get("/groups", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.groups = response.data;
-        });
-      this.$axios
-        .get("/fes_dates", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.fes_date_list = response.data;
-        });
-      this.dialog = true;
+    openAddModal() {
+      this.isOpenAddModal = false;
+      this.isOpenAddModal = true;
     },
-    reload: function () {
-      this.$axios
-        .get("/api/v1/get_stage_orders_details", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stage_orders = response.data;
-        });
+    closeAddModal() {
+      this.isOpenAddModal = false;
     },
-    register: function () {
-      if (this.prepareTimeInterval.length == 0) {
-        this.prepareTimeInterval = "-9999";
-      }
-      if (this.useTimeInterval.length == 0) {
-        this.useTimeInterval = "-9999";
-      }
-      if (this.cleanupTimeInterval.length == 0) {
-        this.cleanupTimeInterval = "-9999";
-      }
-      if (this.prepareStartTime.length == 0) {
-        this.prepareStartTime = "00:00";
-      }
-      if (this.prepareStartTime.HH == "" && this.prepareStartTime.mm == "") {
-        this.prepareStartTime = "00:00";
-      }
-      if (this.performanceStartTime.length == 0) {
-        this.performanceStartTime = "00:00";
-      }
-      if (
-        this.performanceStartTime.HH == "" &&
-        this.performanceStartTime.mm == ""
-      ) {
-        this.performanceStartTime = "00:00";
-      }
-      if (this.performanceEndTime.length == 0) {
-        this.performanceEndTime = "00:00";
-      }
-      if (
-        this.performanceEndTime.HH == "" &&
-        this.performanceEndTime.mm == ""
-      ) {
-        this.performanceEndTime = "00:00";
-      }
-      if (this.cleanupEndTime.length == 0) {
-        this.cleanupEndTime = "00:00";
-      }
-      if (this.cleanupEndTime.HH == "" && this.cleanupEndTime.mm == "") {
-        this.cleanupEndTime = "00:00";
-      }
-      this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-      var params = new URLSearchParams();
-      params.append("group_id", this.Group);
-      params.append("is_sunny", this.isSunny);
-      params.append("fes_date_id", this.fesDateId);
-      params.append("stage_first", this.stageFirst);
-      params.append("stage_second", this.stageSecond);
-      params.append("use_time_interval", this.useTimeInterval);
-      params.append("prepare_time_interval", this.prepareTimeInterval);
-      params.append("cleanup_time_interval", this.cleanupTimeInterval);
-      params.append("prepare_start_time", this.prepareStartTime);
-      params.append("performance_start_time", this.performanceStartTime);
-      params.append("performance_end_time", this.performanceEndTime);
-      params.append("cleanup_end_time", this.cleanupEndTime);
-
-      this.$axios.post("/stage_orders", params).then((response) => {
-        console.log(response);
-        this.dialog = false;
-        this.reload();
-        this.Group = "";
-        this.isSunny = "";
-        this.fesDateId = "";
-        this.stageFirst = "";
-        this.stageSecond = "";
-        this.useTimeInterval = "";
-        this.prepareTimeInterval = "";
-        this.cleanupTimeInterval = "";
-        this.prepareStartTime = "";
-        this.performanceStartTime = "";
-        this.performanceEndTime = "";
-        this.cleanupEndTime = "";
+    reload() {
+      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
+      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
+      this.$axios.$get(reUrl).then((response) => {
+        this.employees.push(response.data);
       });
+    },
+    async submitEmployee() {
+      const postEmployeeUrl =
+        "/employees/" +
+        "?group_id=" +
+        this.appGroup +
+        "&name=" +
+        this.employeeName +
+        "&student_id=" +
+        this.employeeStudentId;
+
+      this.$axios.$post(postEmployeeUrl).then((response) => {
+        this.appGroup = "";
+        this.employeeName = "";
+        this.employeeStudentId = "";
+        this.reload();
+        this.closeAddModal();
+      });
+    },
+    async downloadCSV() {
+      const url =
+        this.$config.apiURL + "/api/v1/get_stage_orders_csv/" + this.refYearID;
+      window.open(url, "ステージ申請一覧_CSV");
     },
   },
 };
