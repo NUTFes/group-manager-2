@@ -2,7 +2,6 @@
   <div id="app">
     <h1 class="tytle">ステージ申請の登録</h1>
     <div class="Blank">
-      {{ fesDateList }}
       <span>日程</span>
       <select v-model="date" id="date">
         <option
@@ -13,7 +12,6 @@
           {{ list.date }}
         </option>
       </select>
-      {{ date }}
     </div>
     <div class="Blank">
       <span>天気</span>
@@ -285,7 +283,7 @@ export default {
       });
 
     axios
-      .get(process.env.VUE_APP_URL + "/fes_dates", {
+      .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates", {
         headers: {
           "Content-Type": "application/json",
         },

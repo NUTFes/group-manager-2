@@ -160,7 +160,7 @@ export default {
   },
   mounted() {
     axios
-      .get(process.env.VUE_APP_URL + "/fes_dates", {
+      .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates", {
         headers: {
           "Content-Type": "application/json",
         },
