@@ -10,4 +10,11 @@ class Api::V1::FesDatesApiController < ApplicationController
       render json: fmt(ok, @fes_dates)
     end
   end
+
+  def get_current_fes_dates
+    current_fes_year_id = UserPageSetting.find(1).fes_year_id
+    @fes_dates = FesDate.where(fes_year_id: current_fes_year_id)
+    render json: fmt(ok, @fes_dates)
+  end
 end
+
