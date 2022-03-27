@@ -22,6 +22,11 @@ export default {
       required: false,
       default: "center",
     },
+    gap: {
+      type: String,
+      required: false,
+      default: "20px",
+    },
   },
   computed: {
     RowOption() {
@@ -29,6 +34,7 @@ export default {
         "--row-width": this.width,
         "--row-align": this.align,
         "--row-justify": this.justify,
+        "--row-gap": this.gap,
       };
     },
   },
@@ -41,6 +47,6 @@ export default {
   align-items: var(--row-align);
   justify-content: var(--row-justify);
   flex-wrap: wrap;
-  gap: 20px;
+  gap: var(--row-gap);
 }
 </style>

@@ -66,61 +66,61 @@
         <tr>
           <td>貸出物品の追加</td>
           <td>
-            <p v-if="is_edit_sub_rep === true">募集中</p>
+            <p v-if="add_rental_order === true">募集中</p>
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton v-model="add_rental_order" :isOn="add_rental_order" :on_click="() => {this.add_rental_order = !this.add_rental_order}" />
           </td>
         </tr>
         <tr>
           <td>物品申請情報編集・削除</td>
           <td>
-            <p v-if="is_edit_sub_rep === true">募集中</p>
+            <p v-if="is_edit_rental_order === true">募集中</p>
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton v-model="is_edit_rental_order" :isOn="is_edit_rental_order" :on_click="() => {this.is_edit_rental_order = !this.is_edit_rental_order}" />
           </td>
         </tr>
         <tr>
           <td>ステージ申請情報編集</td>
           <td>
-            <p v-if="is_edit_sub_rep === true">募集中</p>
+            <p v-if="is_edit_stage_order === true">募集中</p>
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton v-model="is_edit_stage_order" :isOn="is_edit_stage_order" :on_click="() => {this.is_edit_stage_order = !this.is_edit_stage_order}" />
           </td>
         </tr>
         <tr>
           <td>従業員の追加</td>
           <td>
-            <p v-if="is_edit_sub_rep === true">募集中</p>
+            <p v-if="add_employee === true">募集中</p>
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton v-model="add_employee" :isOn="add_employee" :on_click="() => {this.add_employee = !this.add_employee}" />
           </td>
         </tr>
         <tr>
           <td>従業員情報編集・削除</td>
           <td>
-            <p v-if="is_edit_sub_rep === true">募集中</p>
+            <p v-if="is_edit_employee === true">募集中</p>
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton v-model="is_edit_employee" :isOn="is_edit_employee" :on_click="() => {this.is_edit_employee = !this.is_edit_employee}" />
           </td>
         </tr>
         <tr>
           <td>販売食品の追加</td>
           <td>
-            <p v-if="is_edit_sub_rep === true">募集中</p>
+            <p v-if="add_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <SwitchButton v-model="add_food_product" :isOn="add_food_product" :on_click="() => {this.add_food_product = !this.add_food_product}" />
           </td>
         </tr>
         <tr>
@@ -153,10 +153,29 @@
             <SwitchButton v-model="is_edit_purchase_list" :isOn="is_edit_purchase_list" :on_click="() => {this.is_edit_purchase_list = !this.is_edit_purchase_list}" />
           </td>
         </tr>
+        <tr>
+          <td>開催年</td>
+          <td>
+            <Row gap="0px">
+              <span class="material-icons">expand_more</span>
+              <select v-model="fes_year_id">
+                <option
+                  v-for="item in fes_year_list"
+                  :key="item.id"
+                  :value="item.id"
+                >
+                  {{ item.year_num }}
+                </option>
+              </select>
+            </Row>
+          </td>
+        </tr>
       </VerticalTable>
     </Card>
-    <CommonButton>保存</CommonButton>
-    <CommonButton>キャンセル</CommonButton>
+    <Row>
+      <CommonButton iconName="save" :on_click="update">保存</CommonButton>
+      <InTableButton iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
+    </Row>
   </div>
   <!--
   <div class="main-content">
@@ -687,24 +706,24 @@ export default {
   data() {
     return {
       data: [],
-      is_regist_group: [],
-      is_regist_food_product: [],
-      is_edit_group: [],
-      is_edit_sub_rep: [],
-      is_edit_place: [],
-      is_edit_power_order: [],
-      is_edit_rental_order: [],
-      is_edit_stage_order: [],
-      is_edit_employee: [],
-      is_edit_food_product: [],
-      is_edit_purchase_list: [],
-      add_power_order: [],
-      add_rental_order: [],
-      add_employee: [],
-      add_food_product: [],
-      add_purchase_list: [],
-      fes_year_id: [],
-      item_list: [],
+      is_regist_group: false,
+      is_regist_food_product: false,
+      is_edit_group: false,
+      is_edit_sub_rep: false,
+      is_edit_place: false,
+      is_edit_power_order: false,
+      is_edit_rental_order: false,
+      is_edit_stage_order: false,
+      is_edit_employee: false,
+      is_edit_food_product: false,
+      is_edit_purchase_list: false,
+      add_power_order: false,
+      add_rental_order: false,
+      add_employee: false,
+      add_food_product: false,
+      add_purchase_list: false,
+      fes_year_id: "",
+      fes_year_list: [],
       multiLine: true,
       snackbar: false,
       text: `I'm a multi-line snackbar.`,
@@ -713,11 +732,7 @@ export default {
 
   mounted() {
     this.$axios
-      .get("/user_page_settings", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .get("/user_page_settings")
       .then((response) => {
         this.data = response.data[0];
         this.is_regist_group = response.data[0].is_regist_group;
@@ -744,7 +759,7 @@ export default {
         },
       })
       .then((response) => {
-        this.item_list = response.data;
+        this.fes_year_list = response.data;
       });
   },
   computed: {
