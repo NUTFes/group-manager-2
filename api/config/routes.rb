@@ -166,7 +166,7 @@ Rails.application.routes.draw do
       get "users/get_user_detail" => "users#get_user_detail"
 
       # 現在のユーザーについて
-      get "current_user/show" => "current_user_api#show"
+      get "current_user" => "current_user_api#get_current_user_with_user_detail"
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
