@@ -90,12 +90,12 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="従業員申請の追加"
+      title="ステージ申請の追加"
     >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="groupID">
             <option disabled value="">選択してください</option>
             <option
               v-for="group in groupList"
@@ -107,20 +107,161 @@
           </select>
         </div>
         <div>
-          <h3>氏名</h3>
-          <input v-model="employeeName" placeholder="入力してください" />
+          <h3>晴れ希望</h3>
+          <select v-model="isSunny">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in isSunnyList"
+              :key="list.id"
+              :value="list.value"
+            >
+              {{ list.text }}
+            </option>
+          </select>
         </div>
         <div>
-          <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <h3>希望日</h3>
+          <select v-model="fesDateID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in fesDatesList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.date }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第一希望</h3>
+          <select v-model="first">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in stageList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第二希望</h3>
+          <select v-model="second">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in stageList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>準備時間幅</h3>
+          <select v-model="prepareTimeInterval">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeBox"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>使用時間幅</h3>
+          <select v-model="useTimeInterval">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeBox"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>掃除時間幅</h3>
+          <select v-model="cleanUpTimeInterval">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeBox"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>準備開始時刻</h3>
+          <select v-model="prepareStartTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>パフォーマンス開始時刻</h3>
+          <select v-model="performanceStartTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>パフォーマンス終了時刻</h3>
+          <select v-model="performanceEndTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>掃除終了時刻</h3>
+          <select v-model="cleanUpEndTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
+        <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -141,14 +282,24 @@ export default {
         "編集日時",
       ],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
+      isIntervalMode: true,
       isSunnyList: [
-        { id: 1, value: "はい" },
-        { id: 2, value: "いいえ" },
+        { id: 1, text: "はい", value: true },
+        { id: 2, text: "いいえ", value: false },
       ],
       daysNumList: [
         { id: 1, days_num: "1日目" },
         { id: 2, days_num: "2日目" },
       ],
+      fesDatesList: [],
+      stageList: [],
+      timeBox: ["5分","10分","15分","20分","25分","30分","35分","40分","45分","50分","55分","60分",
+        "65分","70分","75分","80分","90分","95分","100分","105分","110分","115分","120分",
+      ],
+      hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
+      minute_range: ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50","55"],
+      timeRange: [],
       refYears: "Years",
       refYearID: 0,
       refIsSunny: "晴れ希望",
@@ -158,6 +309,18 @@ export default {
       refStage: "Stages",
       refStageID: 0,
       stageOrders: [],
+      groupID: null,
+      isSunny: null,
+      fesDateID: null,
+      first: null,
+      second: null,
+      prepareTimeInterval: "指定なし",
+      useTimeInterval: "指定なし",
+      cleanUpTimeInterval: "指定なし",
+      prepareStartTime: "指定なし",
+      performanceStartTime: "指定なし",
+      performanceEndTime: "指定なし",
+      cleanUpEndTime: "指定なし"
     };
   },
   async asyncData({ $axios }) {
@@ -185,6 +348,14 @@ export default {
       stageList: stagesRes.data,
     };
   },
+  mounted() {
+    // 時間を作る
+    for (let hour of this.hour_range) {
+      for (let minute of this.minute_range) {
+        this.timeRange.push(hour + ":" + minute);
+      }
+    }
+  },
   computed: {
     useInterval() {
       let minute = this.performanceEndTime.mm - this.performanceStartTime.mm;
@@ -197,6 +368,9 @@ export default {
     }),
   },
   methods: {
+    changeMode() {
+      this.isIntervalMode = !this.isIntervalMode
+    },
     async refinementStageOrders(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
@@ -259,42 +433,79 @@ export default {
         this.stageOrders.push(res);
       }
     },
-    set_time_range: function () {
-      for (var hour of this.hour_range) {
-        for (var minute of this.minute_range) {
-          this.time_range.push(hour + ":" + minute);
-        }
-      }
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
     },
-    openAddModal() {
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async openAddModal() {
+      const groupsListUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(groupsListUrl);
+      const fesDatesListUrl = "/api/v1/get_current_fes_dates";
+      const resFesDates = await this.$axios.$get(fesDatesListUrl);
+      const stageUrl = "/stages";
+      const resStages = await this.$axios.$get(stageUrl);
+      this.groupList = resGroups.data;
+      this.fesDatesList = resFesDates.data;
+      this.stageList = resStages.data;
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    reload() {
-      const employeeId = this.employees.slice(-1)[0].employee.id + 1;
-      const reUrl = "/api/v1/get_employee_show_for_admin_view/" + employeeId;
-      this.$axios.$get(reUrl).then((response) => {
-        this.employees.push(response.data);
+    reload(id) {
+      const url = "/api/v1/get_stage_order_show_for_admin_view/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.stageOrders.push(response.data);
       });
     },
-    async submitEmployee() {
-      const postEmployeeUrl =
-        "/employees/" +
+    async submit() {
+      const url =
+        "/stage_orders/" +
         "?group_id=" +
-        this.appGroup +
-        "&name=" +
-        this.employeeName +
-        "&student_id=" +
-        this.employeeStudentId;
+        this.groupID +
+        "&is_sunny=" +
+        this.isSunny +
+        "&fes_date_id=" +
+        this.fesDateID +
+        "&stage_first=" +
+        this.first +
+        "&stage_second=" +
+        this.second +
+        "&use_time_interval=" +
+        this.useTimeInterval +
+        "&prepare_time_interval=" +
+        this.prepareTimeInterval +
+        "&cleanup_time_interval=" +
+        this.cleanUpTimeInterval +
+        "&prepare_start_time=" +
+        this.prepareStartTime +
+        "&performance_start_time=" +
+        this.performanceStartTime +
+        "&performance_end_time=" +
+        this.performanceEndTime +
+        "&cleanup_end_time=" +
+        this.cleanUpEndTime;
 
-      this.$axios.$post(postEmployeeUrl).then((response) => {
-        this.appGroup = "";
-        this.employeeName = "";
-        this.employeeStudentId = "";
-        this.reload();
+      this.$axios.$post(url).then((response) => {
+        this.reload(response.data.id)
+        this.groupID = null;
+        this.isSunny = null;
+        this.fesDateID = null;
+        this.first = null;
+        this.second = null;
+        this.useTimeInterval = null;
+        this.prepareTimeInterval = null;
+        this.cleanUpTimeInterval = null;
+        this.prepareStartTime = null;
+        this.performanceStartTime = null;
+        this.performanceEndTime = null;
+        this.cleanUpEndTime = null;
+        this.openSnackBar("追加しました");
         this.closeAddModal();
       });
     },

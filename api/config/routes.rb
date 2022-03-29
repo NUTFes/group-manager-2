@@ -137,7 +137,7 @@ Rails.application.routes.draw do
 
       #---開催日
       get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"
-
+      get "get_current_fes_dates" => "fes_dates_api#get_current_fes_dates"
 
       #---CSV出力
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
@@ -180,7 +180,6 @@ Rails.application.routes.draw do
       # --- 新規ユーザー周りのAPI --- 
       get "get_user_with_user_details" => "users_api#get_user_with_user_details"
       get "get_user_with_user_detail" => "user_api#get_user_with_user_detail"
-
     end
   end
 

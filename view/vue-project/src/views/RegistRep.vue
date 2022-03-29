@@ -1,0 +1,333 @@
+<template>
+  <div id="app">
+    <h1 class="tytle">代表者の詳細情報の登録</h1>
+    <div class="Blank">
+      <span>名前</span>
+      <input id="name" type="text" v-model="name" @change="validationName" />
+    </div>
+    <div class="Blank">
+      <span>学籍番号</span>
+      <input id="studentId" v-model="student_id" maxlength="8" @change="validationStudentId" />
+    </div>
+    <div class="Blank">
+      <span>学科</span>
+      <select v-model="department_id" @change="validationGrade" id="department">
+        <option
+          v-for="item in departments"
+          :value="item.id"
+          :key="item.id"
+        >
+          {{ item.name }}
+        </option>
+      </select>
+    </div>
+    <div class="Blank">
+      <span>学年</span>
+      <select v-model="grade_id" @change="validationDepartment" id="grade">
+        <option
+          v-for="item in grades"
+          :value="item.id"
+          :key="item.id"
+        >
+          {{ item.name }}
+        </option>
+      </select>
+    </div>
+    <div class="Blank">
+      <span>電話番号</span>
+      <input id="tel" v-model="tel" maxlength="11" placeholder="ハイフンなし" @change="validationTel" />
+    </div>
+    <div class="Blank">
+      <span>Eメール</span>
+      <input id="email" v-model="email" placeholder="～@～.～" @change="validationEmail" />
+    </div>
+    <div  class="Blank">
+      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
+      <button @click="register" style="margin-left:15%;">登録する→</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+export default {
+  data() {
+    return {
+      resultName: false,
+      resultStudentId: false,
+      resultDepartment: false,
+      resultGrade: false,
+      resultTel: false,
+      resultEmail: false,
+      user: [],
+      name: [],
+      student_id: [],
+      department_id: [],
+      grade_id: [],
+      tel: [],
+      email: [],
+      departments: [
+        { name: "機械創造工学課程", id: 1 },
+        { name: "電気電子情報工学課程", id: 2 },
+        { name: "物質材料工学課程", id: 3 },
+        { name: "環境社会基盤工学課程", id: 4 },
+        { name: "生物機能工学課程", id: 5 },
+        { name: "情報・経営システム工学課程", id: 6 },
+        { name: "機械創造工学専攻", id: 7 },
+        { name: "電気電子情報工学専攻", id: 8 },
+        { name: "物質材料工学専攻", id: 9 },
+        { name: "環境社会基盤工学専攻", id: 10 },
+        { name: "生物機能工学専攻", id: 11 },
+        { name: "情報・経営システム工学専攻", id: 12 },
+        { name: "原子力システム安全工学専攻", id: 13 },
+        { name: "システム安全専攻", id: 14 },
+        { name: "技術科学イノベーション専攻", id: 15 },
+        { name: "情報・制御工学専攻", id: 16 },
+        { name: "材料工学専攻", id: 17 },
+        { name: "エネルギー・環境工学専攻", id: 18 },
+        { name: "生物統合工学専攻", id: 19 },
+        { name: "その他", id: 20 },
+      ],
+      grades: [
+        { name: "B1[学部1年]", id: 1 },
+        { name: "B2[学部2年]", id: 2 },
+        { name: "B3[学部3年]", id: 3 },
+        { name: "B4[学部4年]", id: 4 },
+        { name: "M1[修士1年]", id: 5 },
+        { name: "M2[修士2年]", id: 6 },
+        { name: "D1[博士1年]", id: 7 },
+        { name: "D2[博士2年]", id: 8 },
+        { name: "D3[博士3年]", id: 9 },
+        { name: "GD1[イノベ1年]", id: 10 },
+        { name: "GD2[イノベ2年]", id: 11 },
+        { name: "GD3[イノベ3年]", id: 12 },
+        { name: "GD4[イノベ4年]", id: 13 },
+        { name: "GD5[イノベ5年]", id: 14 },
+        { name: "その他", id: 15 },
+      ],
+    };
+  },
+  computed: {
+    validationName(){
+      if (this.name.length) {
+        this.onNameValidation();
+      } else {
+        this.offNameValidation();
+      }
+      return this.resultName
+    },
+    validationStudentId(){
+      const pattern = /[0-9０-９]{8}/;
+      if (pattern.test(this.student_id)==true) {
+        this.onStuentIdValidation();
+      } else {
+        this.offStudentIdValidation();
+      }
+      return this.resultStudentId
+    },
+    validationDepartment(){
+      if (this.department_id != 0) {
+        this.onDepartmentValidation();
+      } else {
+        this.offDepartmentValidation();
+      }
+      return this.resultDepartment
+    },
+    validationGrade(){
+      if (this.grade_id != 0) {
+        this.onGradeValidation();
+      } else {
+        this.offGradeValidation();
+      }
+      return this.resultGrade
+    },
+    validationTel(){
+      const pattern = /[0-9０-９]{10}/;
+      if (pattern.test(this.tel)==true) {
+        this.onTelValidation();
+      } else {
+        this.offTelValidation();
+      }
+      return this.resultTel
+    },
+    validationEmail(){
+      const pattern = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
+      if (pattern.test(this.email)==true) {
+        this.onEmailValidation();
+      } else {
+        this.offEmailValidation();
+      }
+      return this.resultEmail
+    },
+  },
+  methods: {
+    onNameValidation: function() {
+      this.resultName = true;
+    },
+    offNameValidation: function() {
+      this.resultName = false;
+    },
+    onStuentIdValidation: function() {
+      this.resultStudentId = true;
+    },
+    offStudentIdValidation: function() {
+      this.resultStudentId = false;
+    },
+    onDepartmentValidation: function() {
+      this.resultDepartment = true;
+    },
+    offDepartmentValidation: function() {
+      this.resultDepartment = false;
+    },
+    onGradeValidation: function() {
+      this.resultGrade = true;
+    },
+    offGradeValidation: function() {
+      this.resultGrade = false;
+    },
+    onTelValidation: function() {
+      this.resultTel = true;
+    },
+    offTelValidation: function() {
+      this.resultTel = false;
+    },
+    onEmailValidation: function() {
+      this.resultEmail = true;
+    },
+    offEmailValidation: function() {
+      this.resultEmail = false;
+    },
+    register: function () {
+      if (this.resultName && this.resultDepartment && this.resultGrade && this.resultEmail && this.resultTel && this.resultStudentId) {
+        const url = process.env.VUE_APP_URL + "/user_details";
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        let params = new URLSearchParams();
+        params.append("student_id", this.student_id);
+        params.append("tel", this.tel);
+        params.append("department_id", this.department_id);
+        params.append("grade_id", this.grade_id);
+        params.append("user_id", this.user.id);
+        axios.post(url, params).then(
+          () => {
+            this.$router.push("regist_model");
+          },
+          (error) => {
+            return error;
+          }
+        );
+      } else {
+        if (this.resultName==false) {
+          const nameError = document.getElementById("name");
+          nameError.style.border="2px solid red";
+        } else {
+          const nameError = document.getElementById("name");
+          nameError.style.border="2px solid black";
+        }
+        if (this.resultDepartment==false) {
+          const departmentError = document.getElementById("department");
+          departmentError.style.border="2px solid red";
+        } else {
+          const departmentError = document.getElementById("department");
+          departmentError.style.border="2px solid black";
+        }
+        if (this.resultGrade==false) {
+          const gradeError = document.getElementById("grade");
+          gradeError.style.border="2px solid red";
+        } else {
+          const gradeError = document.getElementById("grade");
+          gradeError.style.border="2px solid black";
+        }
+        if (this.resultEmail==false) {
+          const emailError = document.getElementById("email");
+          emailError.style.border="2px solid red";
+        } else {
+          const emailError = document.getElementById("email");
+          emailError.style.border="2px solid black";
+        }
+        if (this.resultTel==false) {
+          const telError = document.getElementById("tel");
+          telError.style.border="2px solid red";
+        } else {
+          const telError = document.getElementById("tel");
+          telError.style.border="2px solid black";
+        }
+        if (this.resultStudentId==false) {
+          const studentIdError = document.getElementById("studentId");
+          studentIdError.style.border="2px solid red";
+        } else {
+          const studentIdError = document.getElementById("studentId");
+          studentIdError.style.border="2px solid black";
+        }
+      }
+    },
+  },
+  mounted() {
+    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
+    axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then((response) => {
+        this.user = response.data.data;
+      });
+  },
+};
+</script>
+
+<style scoped>
+  #app{
+    margin: 1%;
+  }
+  span {
+    display: inline-block;
+    width: 100px;
+    padding-right: 10px;
+  }
+  .tytle{
+     text-align:center;
+     padding:1%;
+  }
+  .Blank{
+    text-align: center;
+    margin:1%;
+  }
+  select,input{
+    text-align: center;
+    width: 30%;
+    height:40px;
+    border-radius: 7px;
+    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
+    font-size: 25px;
+  }
+  select,input:required{
+    border: 2px solid red;
+  }
+  select,input:invalid{
+    border: 2px solid red;
+  }
+  select,input:valid{
+    border: 2px solid black;
+  }
+  button{
+  color: black;
+  font-weight: bold;
+  border: solid 2px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 1%;
+  padding:1%;
+  }
+  button:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
+  }
+  button:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
+</style>

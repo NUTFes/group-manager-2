@@ -43,7 +43,7 @@
                 <v-list-item to="/edit_user_info">
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-account-edit</v-icon>ユーザー情報編集
+                      <v-icon class="pr-2" size="30">mdi-account-edit</v-icon>プロフィール編集
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
