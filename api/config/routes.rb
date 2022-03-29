@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :memos
   resources :news
   resources :purchase_lists
+  post "/purchase_lists" => "purchase_lists#create"
   resources :food_products
   resources :assign_rental_items
   resources :rentable_items
@@ -122,6 +123,7 @@ Rails.application.routes.draw do
       get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
       post "get_refinement_food_products" => "food_products_api#get_refinement_food_products"
       post "get_search_food_products" => "food_products_api#get_search_food_products"
+      get "get_food_products_by_group_id/:group_id" => "food_products_api#get_food_products_by_group_id"
       
       #---購入品申請ページ
       get "get_purchase_list_index_for_admin_view" => "purchase_lists_api#get_purchase_list_index_for_admin_view"
