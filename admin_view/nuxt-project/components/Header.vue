@@ -28,6 +28,7 @@
     <AccountModal @close="closeAccountModal" v-if="isOpenAccountModal">
       <IconButton icon_name="close" :on_click="closeAccountModal" />
     </AccountModal>
+
   </div>
 </template>
 
