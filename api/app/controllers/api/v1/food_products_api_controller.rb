@@ -60,4 +60,15 @@ class Api::V1::FoodProductsApiController < ApplicationController
     end
   end
 
+  # group_idに紐づいたfood_productsの取得
+  def get_food_products_by_group_id
+    group_id = params[:group_id]
+    @food_products = FoodProduct.where(group_id: group_id)
+    if @food_products.count == 0
+      render json: fmt(not_found, [], "Not found food_products")
+    else
+      render json: fmt(ok, @food_products)
+    end
+  end
+
 end

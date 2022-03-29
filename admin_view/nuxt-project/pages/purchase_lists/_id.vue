@@ -65,61 +65,76 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="購入品申請の編集"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
+          <h3>品名</h3>
+          <input v-model="items" placeholder="入力してください" />
         </div>
         <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <h3>購入店</h3>
+          <select v-model="shopID">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="list in shopList"
+              :key="list.id"
+              :value="list.id"
             >
-              {{ category.name }}
+              {{ list.name }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
+          <h3>購入日</h3>
+          <select v-model="fesDateID">
             <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
+            <option
+              v-for="list in fesDatesList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.date }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>なまものか</h3>
+          <select v-model="isFresh">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in isFreshList"
+              :key="list.id"
+              :value="list.value"
+            >
+              {{ list.text }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
       </template>
     </EditModal>
 
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+      title="購入品申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
       </template>
     </DeleteModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -131,6 +146,17 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
+      isFreshList: [
+        { id: 1, text: "はい", value: true },
+        { id: 2, text: "いいえ", value: false },
+      ],
+      items: null,
+      shopID: null,
+      fesDateID: null,
+      isFresh: null,
+      shopList: [],
+      fesDatesList: [],
     };
   },
   async asyncData({ $axios, route }) {
@@ -140,6 +166,7 @@ export default {
     return {
       purchaseList: response.data,
       route: url,
+      routeId: routeId,
     };
   },
   computed: {
@@ -148,7 +175,17 @@ export default {
     }),
   },
   methods: {
-    openEditModal() {
+    async openEditModal() {
+      const shopUrl = "/shops";
+      const resShops = await this.$axios.$get(shopUrl);
+      this.shopList = resShops.data;
+      const fesDatesListUrl = "/api/v1/get_current_fes_dates";
+      const resFesDates = await this.$axios.$get(fesDatesListUrl);
+      this.fesDatesList = resFesDates.data;
+      this.items = this.purchaseList.purchase_list.items
+      this.shopID = this.purchaseList.purchase_list.shop_id
+      this.fesDateID = this.purchaseList.purchase_list.fes_date_id
+      this.isFresh = this.purchaseList.purchase_list.is_fresh
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -162,42 +199,49 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async reload(id) {
+      const url = "/api/v1/get_purchase_list_show_for_admin_view/" + id;
+      const res = await this.$axios.$get(url);
+      this.purchaseList = res.data;
+    },
+    async edit() {
+      const url =
+        "/purchase_lists/" + this.purchaseList.purchase_list.id +
+        "?food_product_id=" + 
+        this.purchaseList.purchase_list.food_product_id +
+        "&shop_id=" +
+        this.shopID +
+        "&fes_date_id=" +
+        this.fesDateID +
+        "&items=" +
+        this.items +
+        "&is_fresh=" + 
+        this.isFresh;
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload();
+        console.log(url)
+
+      await this.$axios.$put(url).then((response) => {
+        this.openSnackBar(this.items + "を編集しました");
+        this.items = null
+        this.fesDateID = null
+        this.shopID = null
+        this.isFresh = null
+        this.reload(response.data.id);
         this.closeEditModal();
       });
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+    async destroy() {
+      const url = "/purchase_lists/" + this.routeId;
+      await this.$axios.$delete(url);
+      this.$router.push("/purchase_lists");
     },
   },
 };

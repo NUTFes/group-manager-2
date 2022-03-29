@@ -128,7 +128,7 @@
               :key="list.id"
               :value="list.id"
             >
-              {{ list.date }}
+              {{ list.date }} - {{ list.days_num }}日目
             </option>
           </select>
         </div>
