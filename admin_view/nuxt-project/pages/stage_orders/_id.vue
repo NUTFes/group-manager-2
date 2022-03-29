@@ -46,12 +46,12 @@
             <td>{{ stageOrder.stage_order_info.stage_second }}</td>
           </tr>
           <tr>
-            <th>使用時間幅</th>
-            <td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
-          </tr>
-          <tr>
             <th>準備時間幅</th>
             <td>{{ stageOrder.stage_order_info.prepare_time_interval }}</td>
+          </tr>
+          <tr>
+            <th>使用時間幅</th>
+            <td>{{ stageOrder.stage_order_info.use_time_interval }}</td>
           </tr>
           <tr>
             <th>掃除時間幅</th>
@@ -88,61 +88,176 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="参加団体申請の編集"
+      title="ステージ申請の編集"
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
+          <h3>晴れ希望</h3>
+          <select v-model="isSunny">
             <option disabled value="">選択してください</option>
             <option
-              v-for="category in groupCategories"
-              :key="category.id"
-              :value="category.id"
+              v-for="list in isSunnyList"
+              :key="list.id"
+              :value="list.value"
             >
-              {{ category.name }}
+              {{ list.text }}
             </option>
           </select>
         </div>
         <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>活動内容</h3>
-          <textarea v-model="activity" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
+          <h3>希望日</h3>
+          <select v-model="fesDateID">
             <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
+            <option
+              v-for="list in fesDatesList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.date }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第一希望</h3>
+          <select v-model="first">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in stageList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>第二希望</h3>
+          <select v-model="second">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in stageList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>準備時間幅</h3>
+          <select v-model="prepareTimeInterval">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeBox"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>使用時間幅</h3>
+          <select v-model="useTimeInterval">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeBox"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>掃除時間幅</h3>
+          <select v-model="cleanUpTimeInterval">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeBox"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>準備開始時刻</h3>
+          <select v-model="prepareStartTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>パフォーマンス開始時刻</h3>
+          <select v-model="performanceStartTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>パフォーマンス終了時刻</h3>
+          <select v-model="performanceEndTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>掃除終了時刻</h3>
+          <select v-model="cleanUpEndTime">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in timeRange"
+              :key="list"
+              :value="list"
+            >
+              {{ list }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
       </template>
     </EditModal>
 
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="参加団体申請の削除"
+      title="ステージ申請の削除"
     >
       <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
           >いいえ</NoButton
         >
       </template>
     </DeleteModal>
+    <SnackBar
+      v-if="isOpenSnackBar"
+      @close="closeSnackBar"
+    >
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -154,6 +269,40 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
+      fesDatesList: [],
+      stageList: [],
+      isSunnyList: [
+        { id: 1, text: "はい", value: true },
+        { id: 2, text: "いいえ", value: false },
+      ],
+      timeBox: ["5分","10分","15分","20分","25分","30分","35分","40分","45分","50分","55分","60分",
+        "65分","70分","75分","80分","90分","95分","100分","105分","110分","115分","120分",
+      ],
+      hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
+      minute_range: ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50","55"],
+      timeRange: [],
+      refYears: "Years",
+      refYearID: 0,
+      refIsSunny: "晴れ希望",
+      refIsSunnyID: 0,
+      refDaysNum: "何日目",
+      refDaysNumID: 0,
+      refStage: "Stages",
+      refStageID: 0,
+      stageOrders: [],
+      groupID: null,
+      isSunny: null,
+      fesDateID: null,
+      first: null,
+      second: null,
+      prepareTimeInterval: "指定なし",
+      useTimeInterval: "指定なし",
+      cleanUpTimeInterval: "指定なし",
+      prepareStartTime: "指定なし",
+      performanceStartTime: "指定なし",
+      performanceEndTime: "指定なし",
+      cleanUpEndTime: "指定なし"
     };
   },
   async asyncData({ $axios, route }) {
@@ -163,6 +312,7 @@ export default {
     return {
       stageOrder: response.data,
       route: url,
+      routeId: routeId,
     };
   },
   computed: {
@@ -170,8 +320,39 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    // 時間を作る
+    for (let hour of this.hour_range) {
+      for (let minute of this.minute_range) {
+        this.timeRange.push(hour + ":" + minute);
+      }
+    }
+  },
   methods: {
-    openEditModal() {
+    async openEditModal() {
+      const groupsListUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const resGroups = await this.$axios.$get(groupsListUrl);
+      const fesDatesListUrl = "/api/v1/get_current_fes_dates";
+      const resFesDates = await this.$axios.$get(fesDatesListUrl);
+      const stageUrl = "/stages";
+      const resStages = await this.$axios.$get(stageUrl);
+      this.groupList = resGroups.data;
+      this.fesDatesList = resFesDates.data;
+      this.stageList = resStages.data;
+      let stageOrder = this.stageOrder.stage_order
+      console.log(stageOrder)
+      this.groupID = stageOrder.group_id
+      this.isSunny = stageOrder.is_sunny
+      this.fesDateID = stageOrder.fes_date_id
+      this.first = stageOrder.stage_first
+      this.second = stageOrder.stage_second
+      this.prepareTimeInterval = stageOrder.prepare_time_interval
+      this.useTimeInterval = stageOrder.use_time_interval
+      this.cleanUpTimeInterval = stageOrder.cleanup_time_interval
+      this.prepareStartTime = stageOrder.prepare_start_time
+      this.performanceStartTime = stageOrder.performance_start_time
+      this.performanceEndTime = stageOrder.performance_end_time
+      this.cleanUpEndTime = stageOrder.cleanup_end_time
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -185,42 +366,71 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
     },
-    async editGroup() {
-      console.log(this.group.group.id);
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId;
-      console.log(putGroupUrl);
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
+    async reload(id) {
+      const url = "/api/v1/get_stage_order_show_for_admin_view/" + id;
+      const res = await this.$axios.$get(url);
+      this.stageOrder = res.data;
+    },
+    async edit() {
+      const url =
+        "/stage_orders/"+ this.routeId +
+        "?group_id=" +
+        this.groupID +
+        "&is_sunny=" +
+        this.isSunny +
+        "&fes_date_id=" +
+        this.fesDateID +
+        "&stage_first=" +
+        this.first +
+        "&stage_second=" +
+        this.second +
+        "&use_time_interval=" +
+        this.useTimeInterval +
+        "&prepare_time_interval=" +
+        this.prepareTimeInterval +
+        "&cleanup_time_interval=" +
+        this.cleanUpTimeInterval +
+        "&prepare_start_time=" +
+        this.prepareStartTime +
+        "&performance_start_time=" +
+        this.performanceStartTime +
+        "&performance_end_time=" +
+        this.performanceEndTime +
+        "&cleanup_end_time=" +
+        this.cleanUpEndTime;
 
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.groupName = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.reload();
+        console.log(url)
+
+      await this.$axios.$put(url).then((response) => {
+        this.reload(response.data.id);
+        this.groupID = null;
+        this.isSunny = null;
+        this.fesDateID = null;
+        this.first = null;
+        this.second = null;
+        this.useTimeInterval = null;
+        this.prepareTimeInterval = null;
+        this.cleanUpTimeInterval = null;
+        this.prepareStartTime = null;
+        this.performanceStartTime = null;
+        this.performanceEndTime = null;
+        this.cleanUpEndTime = null;
+        this.openSnackBar("編集しました");
         this.closeEditModal();
       });
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
+    async destroy() {
+      const delUrl = "/stage_orders/" + this.routeId;
+      await this.$axios.$delete(delUrl);
+      this.$router.push("/stage_orders");
     },
   },
 };
