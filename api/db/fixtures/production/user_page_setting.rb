@@ -1,5 +1,6 @@
 UserPageSetting.seed( :id,
     { id: 1 ,   is_regist_group: true,
+                is_regist_food_product: true,
                 is_edit_group: true, 
                 is_edit_sub_rep: true,
                 is_edit_place: true,
