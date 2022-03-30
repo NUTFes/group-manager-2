@@ -114,6 +114,16 @@
           </td>
         </tr>
         <tr>
+          <td>販売食品の登録</td>
+          <td>
+            <p v-if="is_regist_food_product === true">募集中</p>
+            <p v-else>募集締め切り</p>
+          </td>
+          <td>
+            <SwitchButton v-model="is_regist_food_product" :isOn="is_regist_food_product" :on_click="() => {this.is_regist_food_product = !this.is_regist_food_product}" />
+          </td>
+        </tr>
+        <tr>
           <td>販売食品の追加</td>
           <td>
             <p v-if="add_food_product === true">募集中</p>
@@ -213,8 +223,10 @@ export default {
     this.$axios
       .get("/user_page_settings")
       .then((response) => {
-        console.log(response.data.data[0].fes_year_id)
+        console.log(response.data.data[0])
         this.is_regist_group = response.data.data[0].is_regist_group;
+        this.is_regist_food_product = response.data.data[0].is_regist_food_product;
+        console.log(response.data.data[0].is_regist_food_product)
         this.is_edit_group = response.data.data[0].is_edit_group;
         this.is_edit_sub_rep = response.data.data[0].is_edit_sub_rep;
         this.is_edit_place = response.data.data[0].is_edit_place;
@@ -251,6 +263,7 @@ export default {
       const update_url = "/user_page_settings/1";
       let params = new URLSearchParams();
       params.append("is_regist_group", this.is_regist_group);
+      params.append("is_regist_food_product", this.is_regist_food_product);
       params.append("is_edit_group", this.is_edit_group);
       params.append("is_edit_sub_rep", this.is_edit_sub_rep);
       params.append("is_edit_place", this.is_edit_place);
