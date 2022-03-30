@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   resources :memos
   resources :news
   resources :purchase_lists
+  post "/purchase_lists" => "purchase_lists#create"
   resources :food_products
   resources :assign_rental_items
   resources :rentable_items
@@ -122,6 +123,7 @@ Rails.application.routes.draw do
       get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
       post "get_refinement_food_products" => "food_products_api#get_refinement_food_products"
       post "get_search_food_products" => "food_products_api#get_search_food_products"
+      get "get_food_products_by_group_id/:group_id" => "food_products_api#get_food_products_by_group_id"
       
       #---購入品申請ページ
       get "get_purchase_list_index_for_admin_view" => "purchase_lists_api#get_purchase_list_index_for_admin_view"
@@ -137,7 +139,7 @@ Rails.application.routes.draw do
 
       #---開催日
       get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"
-
+      get "get_current_fes_dates" => "fes_dates_api#get_current_fes_dates"
 
       #---CSV出力
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
@@ -164,7 +166,7 @@ Rails.application.routes.draw do
       get "users/get_user_detail" => "users#get_user_detail"
 
       # 現在のユーザーについて
-      get "current_user/show" => "current_user_api#show"
+      get "current_user" => "current_user_api#get_current_user_with_user_detail"
       get "current_user/groups" => "current_user_api#get_groups"
       get "current_user/groups/places" => "current_user_api#get_groups_place_allow_list"
       get "current_user/regist_info" => "current_user_api#get_regist_info"
@@ -180,7 +182,6 @@ Rails.application.routes.draw do
       # --- 新規ユーザー周りのAPI --- 
       get "get_user_with_user_details" => "users_api#get_user_with_user_details"
       get "get_user_with_user_detail" => "user_api#get_user_with_user_detail"
-
     end
   end
 

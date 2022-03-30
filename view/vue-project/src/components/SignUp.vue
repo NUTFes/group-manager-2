@@ -150,7 +150,7 @@ export default {
           localStorage.setItem("client", response.headers["client"]);
           localStorage.setItem("uid", response.headers["uid"]);
           localStorage.setItem("token-type", response.headers["token-type"]);
-          this.$router.push("user_detail");
+          this.$router.push("regist_rep");
         },
         (error) => {
           this.message = "登録に失敗しました。<br>Failed to SignUp";

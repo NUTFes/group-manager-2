@@ -64,13 +64,13 @@
       title="権限の編集"
     >
       <template v-slot:form>
-        <label for="developer">Developer</label>
+        <label for="developer" style="color:black">Developer</label>
         <input type="radio" id="developer" value="1" v-model="picked" />
-        <label for="manager">Manager</label>
+        <label for="manager" style="color:black">Manager</label>
         <input type="radio" id="manager" value="2" v-model="picked" />
-        <label for="user">User</label>
+        <label for="user" style="color:black">User</label>
         <input type="radio" id="user" value="3" v-model="picked" />
-        <span>{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
+        <span style="color:black">{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
       </template>
       <template v-slot:method>
         <CommonButton iconName="edit" :on_click="editRole">編集</CommonButton>

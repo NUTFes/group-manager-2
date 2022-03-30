@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="2" />
-      <v-col>
+      <v-col cols="8">
         <DashBoard />
       </v-col>
       <v-col cols="2" />
@@ -10,48 +10,50 @@
     <v-row>
       <v-col cols="2" />
       <v-col cols="8">
-        <v-row>
-          <v-col>
-            <News />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <div v-for="(regist, i) in regist_info" :key="i">
-              <Regist :num="i" :regist="regist" @reload="reload()" />
-              <v-container>
-                <v-row>
-                  <v-col cols="4" />
-                  <v-col cols="4">
-                    <v-btn
-                      v-if="
-                        regist.group.group_category_id === 1 &&
-                        regist.employees[0].name === '-9999' &&
-                        addEmployee &&
-                        addFoodProduct &&
-                        addPurchaseList
-                      "
-                      block
-                      dark
-                      color="purple accent-2"
-                      rounded
-                      elevation="0"
-                      @click="set_group_id(regist.group.id)"
-                    >
-                      <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>
-                      {{ regist.group.name }}の販売食品を追加する
-                    </v-btn>
-                  </v-col>
-                  <v-col cols="4" />
-                </v-row>
-              </v-container>
-            </div>
-          </v-col>
-        </v-row>
+        <News />
       </v-col>
       <v-col cols="2" />
     </v-row>
-    <v-container>
+    <v-row>
+      <v-col cols="2" />
+      <v-col cols="8">
+        <RegistAlarm />
+      </v-col>
+      <v-col cols="2" />
+    </v-row>
+    <v-row>
+      <v-col cols="2" />
+      <v-col cols="8">
+        <div v-for="(regist, i) in regist_info" :key="i">
+          <Regist :num="i" :regist="regist" @reload="reload()" />
+            <v-row>
+              <v-col cols="4" />
+              <v-col cols="4">
+                <v-btn
+                  v-if="
+                    regist.group.group_category_id === 1 &&
+                    regist.employees[0].name === '-9999' &&
+                    addEmployee &&
+                    addFoodProduct &&
+                    addPurchaseList
+                  "
+                  block
+                  dark
+                  color="purple accent-2"
+                  rounded
+                  elevation="0"
+                  @click="set_group_id(regist.group.id)"
+                >
+                  <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>
+                  {{ regist.group.name }}の販売食品を追加する
+                </v-btn>
+              </v-col>
+              <v-col cols="4" />
+            </v-row>
+        </div>
+      </v-col>
+      <v-col cols="2" />
+    </v-row>
       <v-row>
         <v-col cols="4" />
         <v-col cols="4">
@@ -62,27 +64,44 @@
             color="purple accent-2"
             rounded
             elevation="0"
-            to="/group"
+            to="/regist_model"
           >
             <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
           </v-btn>
         </v-col>
         <v-col cols="4" />
       </v-row>
-    </v-container>
-    <br />
+      <v-row>
+        <v-col cols="4" />
+        <v-col cols="4">
+          <v-btn
+            v-if="isRegistGroup"
+            block
+            dark
+            color="purple accent-2"
+            rounded
+            elevation="0"
+            to="/regist_information"
+          >
+            <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
+          </v-btn>
+        </v-col>
+        <v-col cols="4" />
+      </v-row>
   </div>
 </template>
 
 <script>
 import DashBoard from "@/components/DashBoard.vue";
 import News from "@/components/News.vue";
+import RegistAlarm from "@/components/RegistAlarm.vue";
 import Regist from "@/components/Regist.vue";
 import axios from "axios";
 export default {
   components: {
     DashBoard,
     News,
+    RegistAlarm,
     Regist,
   },
   data() {

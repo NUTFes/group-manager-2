@@ -100,7 +100,6 @@
 <style>
 h1 {
   text-align: center;
-  color: purple;
 }
 </style>
 
