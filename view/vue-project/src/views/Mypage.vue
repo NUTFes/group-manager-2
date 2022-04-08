@@ -81,7 +81,7 @@
             color="purple accent-2"
             rounded
             elevation="0"
-            to="/regist_information"
+            to="/registEdit"
           >
             <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
           </v-btn>

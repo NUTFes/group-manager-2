@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 class="tytle">電力申請フォーム{{resultPower}}</h1>
+    <h1 class="tytle">電力申請フォーム</h1>
     <div class="Blank">
     <span>使用物品名</span>
       <input type="text" v-model="item" id="item">
