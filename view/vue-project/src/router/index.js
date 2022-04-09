@@ -5,6 +5,7 @@ import MyPage from "../views/Mypage.vue";
 import UserDetail from "../views/UserDetail.vue";
 import Group from "../views/Group.vue";
 
+import RegistEdit from "../views/RegistEdit.vue";
 import RegistInformation from "../views/RegistInformation.vue";
 import RegistRep from "../views/RegistRep.vue";
 import RegistSubRep from "../views/RegistSubRep.vue";
@@ -56,6 +57,11 @@ const routes = [
     path: "/group",
     name: "Group",
     component: Group,
+  },
+  {
+    path: "/registEdit",
+    name: "RegistEdit",
+    component: RegistEdit,
   },
   {
     path: "/regist_information",

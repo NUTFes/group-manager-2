@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-    <a href="./mypage" style="color:black;">
-      <h3 style="display: flex;">マイページに戻る</h3>
-    </a>
-    <h1 style="display: flex;">参加団体登録と編集</h1>
+    <router-link to="/mypage"><button>←マイページに戻る</button></router-link>
+    <p>参加団体登録と編集</p>
+    <select>
+      <option>
+      </option>
+    </select>
     <section class="tab_contents">
       <div class="tab_wrap">
         <span class="bubble"></span>
@@ -445,6 +447,7 @@ export default {
   data() {
     return {
       fes_dates: [],
+      projectList: [],
       regist_info: [],
       new_info: [],
       power_orders: [],
@@ -479,6 +482,22 @@ export default {
     };
   },
   mounted() {
+    const regist_info_url =
+    process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
+    axios
+      .get(regist_info_url, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        this.regist_info = response.data;
+      });
+
     const new_info =
     process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
@@ -566,8 +585,10 @@ export default {
     text-align: left;
   }
   p{
+    display: inline-block;
+    font-size: 30px;
     margin: 0;
-    padding: 0;
+    padding: 0% 0% 0% 10%;
   }
   input{
     outline:solid 1px #242424;
@@ -679,8 +700,8 @@ export default {
   }
 
   .tab_lab1, .tab_lab2, .tab_lab3, .tab_lab4, .tab_lab5, .tab_lab6 ,.tab_lab7, .tab_lab8{
-    padding-left: 3%;
-    padding-right: 3%;
+    padding-left: 1%;
+    padding-right: 1%;
   }
   .tab_wrap{
     margin: 1%;

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 class="tytle">会場申請フォーム{{resultSecond }}</h1>
+    <h1 class="tytle">会場申請フォーム</h1>
     <div class="Blank">
       <span>第1希望</span>
       <select v-model="first" @change="validationFirst" id="first">
