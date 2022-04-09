@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 class="tytle">購入品申請フォーム{{product}}</h1>
+    <h1 class="tytle">購入品申請フォーム</h1>
     <div class="Blank">
       <span>対象食品</span>
       <select v-model="product" id="product">
@@ -107,16 +107,14 @@ export default {
       if (this.product >= 0 && this.resultShop && this.purchase.length > 0 && this.resultShop && this.resultFesDate) {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
         params.append("food_product_id", this.product);
-        params.append("fes_date_id", this.fesDateId);
+        params.append("fes_date_id", this.fesDate);
         params.append("shop_id", this.shop);
         params.append("items", this.purchase);
         params.append("is_fresh", this.fresh);
         axios
           .post(process.env.VUE_APP_URL + "/purchase_lists", params)
-          .then((response) => {
-            console.log(response);
+          .then(() => {
             this.$router.push("mypage");
           });
       } else {
