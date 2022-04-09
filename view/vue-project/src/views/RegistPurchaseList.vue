@@ -4,7 +4,7 @@
     <div class="Blank">
       <span>対象食品</span>
       <select v-model="product" id="product">
-        <option v-for="(list, i) in new_info.food_products" :key="i">
+        <option v-for="(list, i) in new_info.food_products" :key="i" :value="list.food_product.id">
           {{ list.food_product.name }}
         </option>
       </select>
@@ -104,19 +104,17 @@ export default {
       return this.resultFesDate
     },
     register: function () {
-      if (this.product.length > 0 && this.resultShop && this.purchase.length > 0 && this.resultShop && this.resultFesDate) {
+      if (this.product >= 0 && this.resultShop && this.purchase.length > 0 && this.resultShop && this.resultFesDate) {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
         params.append("food_product_id", this.product);
-        params.append("fes_date_id", this.fesDateId);
+        params.append("fes_date_id", this.fesDate);
         params.append("shop_id", this.shop);
         params.append("items", this.purchase);
         params.append("is_fresh", this.fresh);
         axios
           .post(process.env.VUE_APP_URL + "/purchase_lists", params)
-          .then((response) => {
-            console.log(response);
+          .then(() => {
             this.$router.push("mypage");
           });
       } else {
