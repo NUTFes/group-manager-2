@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <h1 class="tytle">購入品申請フォーム</h1>
+    <h1 class="tytle">購入品申請フォーム{{product}}</h1>
     <div class="Blank">
       <span>対象食品</span>
       <select v-model="product" id="product">
-        <option v-for="(list, i) in new_info.food_products" :key="i">
+        <option v-for="(list, i) in new_info.food_products" :key="i" :value="list.food_product.id">
           {{ list.food_product.name }}
         </option>
       </select>
@@ -104,7 +104,7 @@ export default {
       return this.resultFesDate
     },
     register: function () {
-      if (this.product.length > 0 && this.resultShop && this.purchase.length > 0 && this.resultShop && this.resultFesDate) {
+      if (this.product >= 0 && this.resultShop && this.purchase.length > 0 && this.resultShop && this.resultFesDate) {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         let params = new URLSearchParams();
         params.append("group_id", this.new_info.group.id);
