@@ -34,6 +34,10 @@
             <td>{{ employee.employee.student_id }}</td>
           </tr>
           <tr>
+            <th>検便</th>
+            <td>{{ employee.stool_test.status }}</td>
+          </tr>
+          <tr>
             <th>登録日時</th>
             <td>{{ employee.employee.created_at | formatDate }}</td>
           </tr>
