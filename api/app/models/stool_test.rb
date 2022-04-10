@@ -1,0 +1,2 @@
+class StoolTest < ApplicationRecord
+end

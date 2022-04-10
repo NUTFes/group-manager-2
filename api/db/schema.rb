@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_10_030808) do
+ActiveRecord::Schema.define(version: 2022_04_10_050932) do
 
   create_table "assign_group_places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2022_04_10_030808) do
     t.integer "student_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "stool_test_id"
   end
 
   create_table "fes_dates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -285,6 +286,12 @@ ActiveRecord::Schema.define(version: 2022_04_10_030808) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stock_item_status"
     t.integer "assign_item_status"
+  end
+
+  create_table "stool_tests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "sub_reps", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

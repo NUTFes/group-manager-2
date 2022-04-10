@@ -51,6 +51,7 @@
             <td>{{ employee.group.name }}</td>
             <td>{{ employee.employee.name }}</td>
             <td>{{ employee.employee.student_id }}</td>
+            <td>{{ employee.employee.stool_test_id }}</td>
             <td>{{ employee.employee.created_at | formatDate }}</td>
             <td>{{ employee.employee.updated_at | formatDate }}</td>
           </tr>
