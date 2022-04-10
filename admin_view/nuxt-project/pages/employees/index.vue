@@ -85,6 +85,19 @@
           <h3>学籍番号</h3>
           <input v-model="employeeStudentId" placeholder="入力してください" />
         </div>
+        <div>
+          <h3>検便</h3>
+          <select v-model="stoolTestID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in stoolTestList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.value }}
+            </option>
+          </select>
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitEmployee"
@@ -116,6 +129,12 @@ export default {
       refYearID: 0,
       searchText: "",
       groupList: [],
+      stoolTestList: null,
+      stoolTestList: [
+        { id: 1, value: "検便準備中" },
+        { id: 2, value: "検便無" },
+        { id: 3, value: "検便有" }
+      ]
     };
   },
   async asyncData({ $axios }) {
@@ -200,13 +219,16 @@ export default {
         "&name=" +
         this.employeeName +
         "&student_id=" +
-        this.employeeStudentId;
+        this.employeeStudentId +
+        "&stool_test_id=" +
+        this.stoolTestID;
 
       this.$axios.$post(postEmployeeUrl).then((response) => {
         this.openSnackBar(this.employeeName + "を追加しました");
         this.appGroup = "";
         this.employeeName = "";
         this.employeeStudentId = "";
+        this.stoolTestID = null;
         this.reload(response.data.id);
         this.closeAddModal();
       });
