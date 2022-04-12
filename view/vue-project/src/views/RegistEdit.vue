@@ -54,10 +54,14 @@
             <div class="card">
               <h1>Registration Form(place)</h1>
               <EditPlace />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
+              <br />
               <h1>your information(place)</h1>
-              <ConfirmationPlace :regist="new_info" />
+              <button type="button" onclick="document.getElementById('dialog').show()" style="display: block; margin: 0 0 0 auto; background-color: red;">開く</button>
+
+              <dialog id="dialog" style="margin-left:30%; margin-right:30%; width:40%;">
+                <ConfirmationPlace :regist="new_info" />
+                <button type="button" onclick="document.getElementById('dialog').close()">閉じる</button>
+              </dialog>
             </div>
           </div>
 
@@ -66,8 +70,7 @@
             <div class="card">
               <h1>Registration Form(power)</h1>
               <EditPower />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
+              <br />
               <h1>your information(power)</h1>
               <ConfirmationPower :regist="new_info" />
             </div>
@@ -78,8 +81,6 @@
             <div class="card">
               <h1>Registration Form(item)</h1>
               <EditItem />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
               <h1>your information(item)</h1>
               <ConfirmationItem :regist="new_info" />
             </div>
@@ -90,8 +91,6 @@
             <div class="card">
               <h1>Registration Form(stage)</h1>
               <EditStage />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
               <h1>your information(stage)</h1>
               <ConfirmationStage :regist="new_info" />
             </div>
@@ -102,8 +101,6 @@
             <div class="card">
               <h1>Registration Form(employee)</h1>
               <EditEmployee />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
               <h1>your information(employee)</h1>
               <ConfirmationEmployee :regist="new_info" />
             </div>
@@ -114,8 +111,6 @@
             <div class="card">
               <h1>Registration Form(food)</h1>
               <EditFood />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
               <h1>your information(food)</h1>
               <ConfirmationFood :regist="new_info" />
             </div>
@@ -126,8 +121,6 @@
             <div class="card">
               <h1>Registration Form(purchase)</h1>
               <EditPurchase />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
               <h1>your information(purchase)</h1>
               <ConfirmationPurchase :regist="new_info" />
             </div>
@@ -138,8 +131,6 @@
             <div class="card">
               <h1>Registration Form(option)</h1>
               <EditOption />
-            </div>
-            <div style="width:49%; float:right; display:block;" class="card">
               <h1>your information(option)</h1>
               <ConfirmationOption :regist="new_info" />
             </div>
@@ -238,6 +229,9 @@ export default {
 #app{
     margin: 1%;
   }
+#buton {
+  align:rihgt;
+}
 #btn {
     position: relative;
     display: inline-block;
@@ -271,7 +265,9 @@ export default {
     cursor: pointer;
   }
   .card {
-    width: 49%;
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
     float: left;
     display: block;
     padding: 1%;
