@@ -52,46 +52,35 @@
           <!-- 会場申請 -->
           <div id="area1" class="panel">
             <div class="card">
-              <h1>Registration Form(place)</h1>
-              <EditPlace />
-              <br />
-              <h1>your information(place)</h1>
-              <button type="button" onclick="document.getElementById('dialog').show()" style="display: block; margin: 0 0 0 auto; background-color: red;">開く</button>
-
-              <dialog id="dialog" style="margin-left:30%; margin-right:30%; width:40%;">
-                <ConfirmationPlace :regist="new_info" />
-                <button type="button" onclick="document.getElementById('dialog').close()">閉じる</button>
-              </dialog>
+              <ConfirmationPlace :regist="new_info" />
             </div>
           </div>
 
           <!-- 電力申請 -->
           <div id="area2" class="panel">
             <div class="card">
-              <h1>Registration Form(power)</h1>
-              <EditPower />
-              <br />
-              <h1>your information(power)</h1>
               <ConfirmationPower :regist="new_info" />
             </div>
+            <button id="btn1" type="button" onclick="document.getElementById('addPower').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+            <dialog id="addPower" style="margin-left:30%; margin-right:30%; width:40%;">
+              <AddPower />
+            </dialog>
           </div>
 
           <!-- 物品申請 -->
           <div id="area3" class="panel">
             <div class="card">
-              <h1>Registration Form(item)</h1>
-              <EditItem />
-              <h1>your information(item)</h1>
               <ConfirmationItem :regist="new_info" />
             </div>
+            <button id="btn1" type="button" onclick="document.getElementById('addItem').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+            <dialog id="addItem" style="margin-left:30%; margin-right:30%; width:40%;">
+              <AddItem />
+            </dialog>
           </div>
 
           <!-- ステージ申請 -->
           <div id="area4" class="panel">
             <div class="card">
-              <h1>Registration Form(stage)</h1>
-              <EditStage />
-              <h1>your information(stage)</h1>
               <ConfirmationStage :regist="new_info" />
             </div>
           </div>
@@ -99,39 +88,42 @@
           <!-- 従業員申請 -->
           <div id="area5" class="panel">
             <div class="card">
-              <h1>Registration Form(employee)</h1>
-              <EditEmployee />
-              <h1>your information(employee)</h1>
               <ConfirmationEmployee :regist="new_info" />
+
             </div>
+              <button id="btn1" type="button" onclick="document.getElementById('addEmployee').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <dialog id="addEmployee" style="margin-left:30%; margin-right:30%; width:40%;">
+                <AddEmployee />
+              </dialog>
           </div>
 
           <!-- 食品申請 -->
           <div id="area6" class="panel">
             <div class="card">
-              <h1>Registration Form(food)</h1>
-              <EditFood />
-              <h1>your information(food)</h1>
               <ConfirmationFood :regist="new_info" />
+
             </div>
+            <button id="btn1" type="button" onclick="document.getElementById('addFood').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+            <dialog id="addFood" style="margin-left:30%; margin-right:30%; width:40%;">
+                <AddFood />
+            </dialog>
           </div>
 
           <!-- 購入品申請 -->
           <div id="area7" class="panel">
             <div class="card">
-              <h1>Registration Form(purchase)</h1>
-              <EditPurchase />
-              <h1>your information(purchase)</h1>
               <ConfirmationPurchase :regist="new_info" />
+
             </div>
+            <button id="btn1" type="button" onclick="document.getElementById('addPurchase').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <dialog id="addPurchase" style="margin-left:30%; margin-right:30%; width:40%;">
+                <AddPurchase />
+              </dialog>
           </div>
 
           <!-- ステージオプション -->
           <div id="area8" class="panel">
             <div class="card">
-              <h1>Registration Form(option)</h1>
-              <EditOption />
-              <h1>your information(option)</h1>
               <ConfirmationOption :regist="new_info" />
             </div>
           </div>
@@ -146,28 +138,23 @@
 <script>
 import axios from "axios";
 
-import EditPlace from "@/components/AllEdit/EditPlace.vue";
 import ConfirmationPlace from "@/components/AllEdit/ConfirmationPlace.vue";
-import EditPower from "@/components/AllEdit/EditPower.vue";
+import AddPower from "@/components/AllEdit/AddPower.vue";
 import ConfirmationPower from "@/components/AllEdit/ConfirmationPower.vue";
-import EditItem from "@/components/AllEdit/EditItem.vue";
+import AddItem from "@/components/AllEdit/AddItem.vue";
 import ConfirmationItem from "@/components/AllEdit/ConfirmationItem.vue";
-import EditStage from "@/components/AllEdit/EditStage.vue";
 import ConfirmationStage from "@/components/AllEdit/ConfirmationStage.vue";
-import EditOption from "@/components/AllEdit/EditOption.vue";
 import ConfirmationOption from "@/components/AllEdit/ConfirmationOption.vue";
-import EditEmployee from "@/components/AllEdit/EditEmployee.vue";
+import AddEmployee from "@/components/AllEdit/AddEmployee.vue";
 import ConfirmationEmployee from "@/components/AllEdit/ConfirmationEmployee.vue";
-import EditFood from "@/components/AllEdit/EditFood.vue";
+import AddFood from "@/components/AllEdit/AddFood.vue";
 import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
-import EditPurchase from "@/components/AllEdit/EditPurchase.vue";
+import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
 import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
 
 export default {
   components: {
-    EditPlace,
     ConfirmationPlace,
-    EditPower,
     ConfirmationPower,
     ConfirmationItem,
     ConfirmationStage,
@@ -175,12 +162,11 @@ export default {
     ConfirmationEmployee,
     ConfirmationFood,
     ConfirmationPurchase,
-    EditItem,
-    EditStage,
-    EditOption,
-    EditEmployee,
-    EditFood,
-    EditPurchase,
+    AddPower,
+    AddItem,
+    AddEmployee,
+    AddFood,
+    AddPurchase,
   },
   data() {
     return {
@@ -226,13 +212,10 @@ export default {
 </script>
 
 <style scoped>
-#app{
+  #app{
     margin: 1%;
   }
-#buton {
-  align:rihgt;
-}
-#btn {
+  #btn {
     position: relative;
     display: inline-block;
     font-weight: bold;
@@ -246,6 +229,62 @@ export default {
   #btn:hover {
     background: #00bcd4;
     color: white;
+  }
+  #btn:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
+  #btn1{
+    background: #032030;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius:100%;
+    cursor: pointer;
+    width:70px;
+    height:70px;
+    display: block;
+    margin: 3% 3% 3% auto;
+  }
+  #btn1:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
+  }
+  #btn1:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
+  #btn2{
+    background: #62A7FF;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 141px;
+    height: 41.98px;
+    display: block;
+    margin: 3% 3% 3% auto;
+  }
+  #btn2:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
+  }
+  #btn2:active{
+    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+  }
+  #button{
+    color: black;
+    font-weight: bold;
+    border: solid 2px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 1%;
+    padding:1%;
+  }
+  #button:hover {
+    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+    border: white;
   }
   #button:active{
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;

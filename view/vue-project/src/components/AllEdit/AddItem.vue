@@ -1,6 +1,6 @@
 <template>
   <div id="card">
-    <h1 class="tytle">貸出物品編集</h1>
+    <h1 class="tytle">貸出物品追加</h1>
     <div class="Blank">
     <div>貸出物品</div>
       <input type="text" v-model="item">
@@ -10,8 +10,8 @@
       <input type="text" v-model="num">
     </div>
     <div style="display:flex;">
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">閉じる</button>
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">登録する</button>
+      <button id="btn" type="button" onclick="document.getElementById('addItem').close()">閉じる</button>
+      <button id="btn" type="button" onclick="document.getElementById('addItem').close()">登録する</button>
     </div></div>
 </template>
 

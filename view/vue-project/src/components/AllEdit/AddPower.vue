@@ -1,17 +1,29 @@
 <template>
   <div id="card">
-    <h1 class="tytle">貸出物品編集</h1>
+    <h1 class="tytle">電力追加</h1>
     <div class="Blank">
-    <div>貸出物品</div>
+    <div>使用物品名</div>
       <input type="text" v-model="item">
     </div>
     <div class="Blank">
-      <div>個数</div>
-      <input type="text" v-model="num">
+      <div>最大定格電力</div>
+      <input type="text" v-model="power">
+    </div>
+    <div class="Blank">
+      <div>メーカー</div>
+      <input type="text" v-model="model">
+    </div>
+    <div class="Blank">
+      <div>型番</div>
+      <input type="text" v-model="manufacturer">
+    </div>
+    <div class="Blank">
+      <div>URL</div>
+      <input type="text" v-model="url">
     </div>
     <div style="display:flex;">
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">閉じる</button>
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">登録する</button>
+      <button id="btn" type="button" onclick="document.getElementById('addPower').close()">閉じる</button>
+      <button id="btn" type="button" onclick="document.getElementById('addPower').close()">登録する</button>
     </div></div>
 </template>
 
