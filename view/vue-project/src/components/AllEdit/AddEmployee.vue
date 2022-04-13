@@ -1,18 +1,19 @@
 <template>
   <div id="card">
-    <h1 class="tytle">貸出物品編集</h1>
+    <h1 class="tytle">従業員追加申請</h1>
     <div class="Blank">
-    <div>貸出物品</div>
-      <input type="text" v-model="item">
+    <div>氏名</div>
+      <input type="text" v-model="name">
     </div>
     <div class="Blank">
-      <div>個数</div>
-      <input type="text" v-model="num">
+      <div>学籍番号</div>
+      <input type="text" v-model="student_id">
     </div>
     <div style="display:flex;">
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">閉じる</button>
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">登録する</button>
-    </div></div>
+      <button id="btn" type="button" onclick="document.getElementById('addEmployee').close()">閉じる</button>
+      <button id="btn" type="button" onclick="document.getElementById('addEmployee').close()">登録する</button>
+    </div>
+  </div>
 </template>
 
 <style scoped>

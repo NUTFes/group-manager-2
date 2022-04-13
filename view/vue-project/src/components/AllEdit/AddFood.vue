@@ -1,17 +1,25 @@
 <template>
   <div id="card">
-    <h1 class="tytle">貸出物品編集</h1>
+    <h1 class="tytle">販売食品追加</h1>
     <div class="Blank">
-    <div>貸出物品</div>
-      <input type="text" v-model="item">
+    <div>食品名</div>
+      <input type="text" v-model="food">
     </div>
     <div class="Blank">
-      <div>個数</div>
-      <input type="text" v-model="num">
+      <div>調理の有無</div>
+      <input type="text" v-model="is_cooking">
+    </div>
+    <div class="Blank">
+      <div>１日目の販売個数</div>
+      <input type="text" v-model="first_num">
+    </div>
+    <div class="Blank">
+      <div>２日目の販売個数</div>
+      <input type="text" v-model="second_num">
     </div>
     <div style="display:flex;">
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">閉じる</button>
-      <button id="btn" type="button" onclick="document.getElementById('editItem').close()">登録する</button>
+      <button id="btn" type="button" onclick="document.getElementById('addFood').close()">閉じる</button>
+      <button id="btn" type="button" onclick="document.getElementById('addFood').close()">登録する</button>
     </div></div>
 </template>
 
