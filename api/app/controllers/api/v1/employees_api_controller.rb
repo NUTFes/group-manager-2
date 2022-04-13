@@ -15,7 +15,8 @@ class Api::V1::EmployeesApiController < ApplicationController
       |employee|
       {
         "employee": employee,
-        "group": employee.group
+        "group": employee.group,
+        "stool_test": employee.stool_test
       }
     }
   end

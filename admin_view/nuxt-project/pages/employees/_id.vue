@@ -34,6 +34,10 @@
             <td>{{ employee.employee.student_id }}</td>
           </tr>
           <tr>
+            <th>検便</th>
+            <td>{{ employee.stool_test.status }}</td>
+          </tr>
+          <tr>
             <th>登録日時</th>
             <td>{{ employee.employee.created_at | formatDate }}</td>
           </tr>
@@ -58,6 +62,19 @@
         <div>
           <h3>学籍番号</h3>
           <input v-model="studentId" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>検便</h3>
+          <select v-model="stoolTestID">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="list in stoolTestList"
+              :key="list.id"
+              :value="list.id"
+            >
+              {{ list.value }}
+            </option>
+          </select>
         </div>
       </template>
       <template v-slot:method>
@@ -97,6 +114,12 @@ export default {
       name: null,
       studentId: null,
       employee: null,
+      stoolTestID: null,
+      stoolTestList: [
+        { id: 1, value: "検便準備中" },
+        { id: 2, value: "検便無" },
+        { id: 3, value: "検便有" }
+      ]
     };
   },
   async asyncData({ $axios, route }) {
@@ -118,6 +141,7 @@ export default {
       this.groupId = this.employee.employee.group_id;
       this.name = this.employee.employee.name;
       this.studentId = this.employee.employee.student_id;
+      this.stoolTestID = this.employee.employee.stool_test_id;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -152,13 +176,16 @@ export default {
         "&name=" +
         this.name +
         "&student_id=" +
-        this.studentId;
+        this.studentId + 
+        "&stool_test_id=" +
+        this.stoolTestID;
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.name + "を編集しました");
         this.groupId = null;
         this.name = null;
         this.studentId = null;
+        this.stoolTestID = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });
