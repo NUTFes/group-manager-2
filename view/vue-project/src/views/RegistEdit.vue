@@ -54,6 +54,9 @@
             <div class="card">
               <ConfirmationPlace :regist="new_info" />
             </div>
+            <div >
+              <CardPlaceInfo />
+            </div>
           </div>
 
           <!-- 電力申請 -->
@@ -91,9 +94,9 @@
               <ConfirmationEmployee :regist="new_info" />
 
             </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addEmployee').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addEmployee" style="margin-left:30%; margin-right:30%; width:40%;">
-                <AddEmployee />
+              <button id="btn1" type="button" onclick="document.getElementById('addEmployee').show()" style="display: block; margin: 0 0 0 auto;">申請</button>
+              <dialog id="addEmployee" style="margin-left:30%; margin-right:30%; width:40%; border: 0; border-radius: 10px; box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.4);">
+                <AddEmployee  :groupId="projectName"/>
               </dialog>
           </div>
 
@@ -151,6 +154,7 @@ import AddFood from "@/components/AllEdit/AddFood.vue";
 import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
 import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
+import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue"
 
 export default {
   components: {
@@ -167,6 +171,7 @@ export default {
     AddEmployee,
     AddFood,
     AddPurchase,
+    CardPlaceInfo,
   },
   data() {
     return {
