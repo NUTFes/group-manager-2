@@ -54,7 +54,7 @@
             <div class="card">
               <ConfirmationPlace :regist="new_info" />
             </div>
-            <div >
+            <div>
               <CardPlaceInfo />
             </div>
           </div>

@@ -1,28 +1,34 @@
 <template>
-<div>
-  <div class="card">
-    <span class="red"/>
-    <div class="choice">
-      第1希望
+<body id="font">
+  <div>
+    <div class="card">
+      <span class="red"/>
+      <div class="choice">
+        第1希望
+      </div>
+      <span class="line"/>
+      <div class="area">
+        事務棟エリア
+      </div>
+      <div class="ps">
+        追記：
+      </div>
+      <div class="notes">
+        火を使います。例の如く火事になるかもしれません。ご了承ください。
+      </div>
+      <button class="button">
+        <div class="edit">編集</div>
+      </button>
     </div>
-    <span class="line"/>
-    <div class="area">
-      事務棟エリア
-    </div>
-    <div class="ps">
-      追記：
-    </div>
-    <div class="notes">
-      火を使います。例の如く火事になるかもしれません。ご了承ください。
-    </div>
-    <button class="button">
-      <div class="edit">編集</div>
-    </button>
   </div>
-</div>
+</body>
 </template>
 
 <style scoped>
+#font{
+  font-family: 'Noto Sans JP';
+  font-style: normal;
+}
 .card {
   display: flex;
   width: 1026px;
@@ -86,7 +92,6 @@
 .button
 {
   display: flex;
-  align-items: center;
   width: 131px;
   height: 39px;
   margin-top: 55px;
@@ -94,6 +99,7 @@
   border-radius: 5px;
 }
 .edit{
+  margin-top: 5px;
   margin-left: 14px;
   font-weight: 350;
   font-size: 18px;
