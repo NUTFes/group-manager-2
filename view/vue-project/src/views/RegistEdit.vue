@@ -4,7 +4,7 @@
       <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
       <h3>参加団体登録＆編集ページ</h3>
       <select v-model="projectName">
-        <option hidden>選択してください</option>
+        <option v-if="value==''">選択してください</option>
         <option
           v-for="list in new_info"
           :key="list.group.id"
@@ -221,7 +221,7 @@ export default {
     margin-bottom: 10px;
   }
   #btn:hover {
-    background: #00bcd4;
+    background: #cccccc;
     color: white;
   }
   #btn:active{
@@ -294,13 +294,12 @@ export default {
   select{
     position: relative;
     display: inline-block;
-    font-weight: bold;
     padding: 0.25em 0.5em;
     text-decoration: none;
-    color: black;
-    background: #ECECEC;
     transition: .4s;
     margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
   }
   .card {
     width: 60%;

@@ -200,9 +200,10 @@ export default {
     color: black;
     background: radial-gradient(
       ellipse at top left,
-      rgba(251, 251, 251, 0.9),
+      rgba(204,204,204,1),
       rgba(251, 251, 251, 0.8)
     );
+    background-color: #DADADA;
     backdrop-filter: blur(4px);
     gap: 30px;
     border-radius: 10px;
