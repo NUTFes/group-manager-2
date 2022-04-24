@@ -4,8 +4,9 @@
       <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
       <h3>参加団体登録＆編集ページ</h3>
       <select v-model="projectName">
+        <option hidden>選択してください</option>
         <option
-          v-for="list in regist_info"
+          v-for="list in new_info"
           :key="list.group.id"
           :value="list.group.id"
           >{{list.group.project_name}}
@@ -59,12 +60,14 @@
           <!-- 電力申請 -->
           <div id="area2" class="panel">
             <div class="card">
-              <ConfirmationPower :regist="new_info" />
+              <ConfirmationPower :regist="new_info" :projectName="groupId" />
             </div>
-            <button id="btn1" type="button" onclick="document.getElementById('addPower').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-            <dialog id="addPower" style="margin-left:30%; margin-right:30%; width:40%;">
-              <AddPower />
-            </dialog>
+            <button id="btn1" type="button" @click="display=true" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <AddPower
+                v-if="display"
+                :groupId="projectName"
+                @closeAddPower="closeAddPower"
+                />
           </div>
 
           <!-- 物品申請 -->
@@ -170,27 +173,19 @@ export default {
   },
   data() {
     return {
-      regist_info: [],
       new_info: [],
       projectName: [],
+      display: false,
     };
   },
+
+  methods: {
+    closeAddPower: function () {
+      this.display=false
+    }
+  },
+
   mounted() {
-    const regist_info_url =
-    process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
-    axios
-      .get(regist_info_url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.regist_info = response.data;
-      });
     const new_info =
     process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
@@ -205,7 +200,6 @@ export default {
       .then((response) => {
         console.log(response);
         this.new_info = response.data.data;
-
       });
   },
 };
@@ -298,10 +292,15 @@ export default {
     outline:solid 1px #242424;
   }
   select{
-    width: 10%;
-    text-align: center;
-    background-color: #E5E5E5;
-    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.25em 0.5em;
+    text-decoration: none;
+    color: black;
+    background: #ECECEC;
+    transition: .4s;
+    margin-bottom: 10px;
   }
   .card {
     width: 60%;

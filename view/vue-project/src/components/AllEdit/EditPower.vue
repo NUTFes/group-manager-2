@@ -22,10 +22,57 @@
       <input type="text" v-model="url">
     </div>
     <div style="display:flex;">
-      <button id="btn" type="button" onclick="document.getElementById('editPower').close()">閉じる</button>
       <button id="btn" type="button" onclick="document.getElementById('editPower').close()">登録する</button>
+      <button id="btn" type="button" onclick="document.getElementById('editPower').close()">閉じる</button>
     </div></div>
 </template>
+
+<script>
+import axios from "axios";
+export default {
+  props: {
+    regist: String,
+    id: Number,
+    groupId: Number,
+    item: String,
+    power: Number,
+    manufacturer: String,
+    model: String,
+    url: String,
+  },
+
+  methods: {
+    onPowerValidation: function() {
+      this.resultPower = true;
+    },
+    offPowerValidation: function() {
+      this.resultPower = false;
+    },
+    register: function () {
+      const post_url = process.env.VUE_APP_URL + "/power_orders";
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+      let params = new URLSearchParams();
+      params.append("group_id", this.regist.group.id);
+      params.append("item", this.item);
+      params.append("power", this.power);
+      params.append("manufacturer", this.manufacturer);
+      params.append("model", this.model);
+      params.append("item_url", this.url);
+      axios.post(post_url, params).then(
+        (response) => {
+          document.getElementById("editPower").close()
+          console.log(response.status);
+        },
+        (error) => {
+          console.log(post_url)
+          return error;
+        });
+
+    },
+
+  },
+};
+</script>
 
 <style scoped>
   #card{

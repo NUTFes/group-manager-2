@@ -22,6 +22,7 @@ class PowerOrder < ApplicationRecord
 
     def to_info_h
       return {
+        "id": self.id,
         "item": self.item,
         "power": self.power,
         "manufacturer": self.manufacturer,
