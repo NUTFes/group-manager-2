@@ -4,7 +4,7 @@
       <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
       <h3>参加団体登録＆編集ページ</h3>
       <select v-model="projectName">
-        <option v-if="value==''">選択してください</option>
+        <option disabled value="">選択してください</option>
         <option
           v-for="list in new_info"
           :key="list.group.id"
@@ -174,7 +174,7 @@ export default {
   data() {
     return {
       new_info: [],
-      projectName: [],
+      projectName: "",
       display: false,
     };
   },
