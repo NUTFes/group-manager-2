@@ -60,11 +60,14 @@
           <!-- 電力申請 -->
           <div id="area2" class="panel">
             <div class="card">
-              <ConfirmationPower :regist="new_info" :projectName="groupId" />
+              <ConfirmationPower
+                :regist="new_info"
+                :groupId="projectName"
+                />
             </div>
-            <button id="btn1" type="button" @click="display=true" style="display: block; margin: 0 0 0 auto;">追加</button>
+            <button id="btn1" type="button" @click="addPowerDisplay=true" style="display: block; margin: 0 0 0 auto;">追加</button>
               <AddPower
-                v-if="display"
+                v-if="addPowerDisplay"
                 :groupId="projectName"
                 @closeAddPower="closeAddPower"
                 />
@@ -175,14 +178,14 @@ export default {
     return {
       new_info: [],
       projectName: "",
-      display: false,
+      addPowerDisplay: false,
     };
   },
 
   methods: {
     closeAddPower: function () {
-      this.display=false
-    }
+      this.addPowerDisplay=false
+    },
   },
 
   mounted() {

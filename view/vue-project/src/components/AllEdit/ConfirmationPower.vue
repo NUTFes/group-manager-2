@@ -10,11 +10,12 @@
             <h4>モデル：{{list.power_order.model}}</h4>
             <h4>URL：{{list.power_order.item_url}}</h4>
             <div style="display:flex;">
-              <button id="btn" type="button" onclick="document.getElementById('editPower').show()">編集する</button>
-              <button id="btn" type="button" onclick="document.getElementById('deletePower').show()">削除する</button>
+              <button id="btn" type="button" @click="editPowerDisplay=true">編集する</button>
+              <button id="btn" type="button" v-on:click="$emit('closeEditPower')">削除する</button>
             </div>
             <dialog id="editPower" style="margin-left:30%; margin-right:30%; width:40%;">
               <EditPower
+                v-if="editPowerDisplay"
                 :regist="regist"
                 :id="list.power_order.id"
                 :item="list.power_order.item"
@@ -22,6 +23,7 @@
                 :manufacturer="list.power_order.manufacturer"
                 :model="list.power_order.model"
                 :url="list.power_order.item_url"
+                @closeEditPower="closeEditPower"
               />
             </dialog>
             <dialog id="deletePower" style="margin-left:30%; margin-right:30%; width:40%; border-color: red;">
@@ -47,6 +49,16 @@ export default {
   },
   props: {
     regist: String,
+  },
+  data() {
+    return {
+      editPowerDisplay: false,
+    };
+  },
+  methods: {
+    closeAddPower: function () {
+      this.editPowerDisplay=false
+    },
   },
 };
 </script>
