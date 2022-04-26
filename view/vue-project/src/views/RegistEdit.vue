@@ -83,6 +83,9 @@
             <div class="card">
               <ConfirmationStage :regist="new_info" />
             </div>
+            <div>
+              <CardStageInfo />
+            </div>
           </div>
 
           <!-- 従業員申請 -->
@@ -126,6 +129,9 @@
             <div class="card">
               <ConfirmationOption :regist="new_info" />
             </div>
+            <div>
+              <CardStageOptionInfo />
+            </div>
           </div>
 
         </div>
@@ -151,6 +157,8 @@ import AddFood from "@/components/AllEdit/AddFood.vue";
 import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
 import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
+import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
+import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
 
 export default {
   components: {
@@ -167,6 +175,8 @@ export default {
     AddEmployee,
     AddFood,
     AddPurchase,
+    CardStageInfo,
+    CardStageOptionInfo,
   },
   data() {
     return {
