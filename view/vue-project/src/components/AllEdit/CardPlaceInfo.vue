@@ -25,29 +25,28 @@
 </template>
 
 <style scoped>
-#font{
-  font-family: 'Noto Sans JP';
-  font-style: normal;
-}
 .card {
   display: flex;
+  align-items: center;
+  position: relative;
   width: 1026px;
   height: 149px;
-  margin: auto;
+  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
 .red{
+  position: absolute;
+  left: 0;
   display: inline-block;
   width: 18px;
+  height: 100%;
   background: #F71E35;
 }
 .choice{
-  margin-top: 14px;
-  margin-left: 21px;
-  margin-right: 16px;
-  font-family: 'Noto Sans JP';
-  font-style: normal;
+  position: absolute;
+  top: 14px;
+  left: 39px;
   font-weight: 300;
   font-size: 30px;
   line-height: 43px;
@@ -55,16 +54,16 @@
   color: #333333;
 }
 .line{
+  position: absolute;
+  left: 189px;
   display: inline-block;
   width: 1px;
   height: 95.5px;
-  margin-top: 29px;
   background: #333333;
 }
 .area{
-  display: flex;
-  align-items: center;
-  margin-left: 30px;
+  position: absolute;
+  left: 219px;
   font-weight: 300;
   font-size: 48px;
   line-height: 70px;
@@ -72,8 +71,9 @@
   color: #333333;
 }
 .ps{
-  margin-top: 27px;
-  margin-left: 4px;
+  position: absolute;
+  top: 27px;
+  left: 543px;
   font-weight: 300;
   font-size: 18px;
   line-height: 26px;
@@ -81,9 +81,11 @@
   color: #333333;
 }
 .notes{
+  position: absolute;
+  top: 27px;
+  left: 604px;
   width: 238px;
   height: 95px;
-  margin-top: 27px;
   font-weight: 300;
   font-size: 18px;
   line-height: 26px;
@@ -92,10 +94,11 @@
 }
 .button
 {
+  position: absolute;
+  left: 860px;
   display: flex;
   width: 131px;
   height: 39px;
-  margin-top: 55px;
   background: #62A7FF;
   border-radius: 5px;
 }
