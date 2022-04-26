@@ -114,7 +114,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 カテゴリー 製品 URL 電力 メーカー 型番)
+      column_name = %w(参加団体名 代表者 メールアドレス カテゴリー 製品 URL 電力 メーカー 型番)
       csv << column_name
       @power_orders.each do |group|
         # データが存在しない場合はスキップする
@@ -128,6 +128,8 @@ class Api::V1::OutputCsvController < ApplicationController
           end
           column_values = [
             power_order.group.name,
+            power_order.group.user.name,
+            power_order.group.user.email,
             power_order.group.group_category.name,
             power_order.item,
             power_order.item_url,
