@@ -93,7 +93,22 @@
               <div class="card">
                 <ConfirmationStage :regist="new_info" />
               </div>
+            
+            <div>
+              <CardStageInfo />
             </div>
+          </div>
+
+            <!-- ステージオプション -->
+            <div id="area8" class="panel">
+              <div class="card">
+                <ConfirmationOption :regist="new_info" />
+              </div>
+
+            <div>
+              <CardStageOptionInfo />
+            </div>
+          </div>
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
@@ -131,13 +146,6 @@
                 </dialog>
             </div>
 
-            <!-- ステージオプション -->
-            <div id="area8" class="panel">
-              <div class="card">
-                <ConfirmationOption :regist="new_info" />
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
@@ -164,6 +172,8 @@ import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue"
 import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
 import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
+import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
+import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
 
 export default {
   components: {
@@ -183,6 +193,8 @@ export default {
     CardPlaceInfo,
     CardPowerInfo,
     CardItemInfo,
+    CardStageInfo,
+    CardStageOptionInfo,
   },
   data() {
     return {
