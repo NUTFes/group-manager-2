@@ -25,7 +25,8 @@
           >
             <td>{{ rentalItem.id }}</td>
             <td>{{ rentalItem.name }}</td>
-            <td>{{ rentalItem.is_rentable }}</td>
+            <td>{{ rentalItem.is_shop_rentable }}</td>
+            <td>{{ rentalItem.is_stage_rentable }}</td>
             <td>{{ rentalItem.created_at | formatDate }}</td>
             <td>{{ rentalItem.updated_at | formatDate }}</td>
           </tr>
@@ -44,8 +45,21 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>貸出可否</h3>
-          <select v-model="isRentable">
+          <h3>模擬店貸出可否</h3>
+          <select v-model="isShopRentable">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="r in isRentableList"
+              :key="r"
+              :value="r.value"
+            >
+              {{ r.text }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>ステージ貸出可否</h3>
+          <select v-model="isStageRentable">
             <option disabled value="">選択してください</option>
             <option
               v-for="r in isRentableList"
@@ -78,7 +92,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      headers: ["ID", "名前", "貸し出し", "登録日時", "編集日時"],
+      headers: ["ID", "名前", "模擬店貸出", "ステージ貸出", "登録日時", "編集日時"],
       isRentableList: [
         { text: "貸出可能", value: true },
         { text: "貸出不可能", value: false },
@@ -130,13 +144,16 @@ export default {
         "/rental_items/" +
         "?name=" +
         this.name +
-        "&is_rentable=" +
-        this.isRentable
+        "&is_shop_rentable=" +
+        this.isShopRentable +
+        "&is_stage_rentable=" +
+        this.isStageRentable
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
-        this.isRentable = "";
+        this.isShopRentable = "";
+        this.isStageRentable = "";
         this.reload(response.data.id);
         this.closeAddModal();
       });
