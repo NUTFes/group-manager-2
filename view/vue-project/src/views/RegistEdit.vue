@@ -1,137 +1,147 @@
 <template>
   <div id="app">
-    <div id="line">
-      <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
-      <h3>参加団体登録＆編集ページ</h3>
-      <select v-model="projectName">
-        <option
-          v-for="list in regist_info"
-          :key="list.group.id"
-          :value="list.group.id"
-          >{{list.group.project_name}}
-        </option>
-      </select>
-    </div>
-
-    <section class="tab_contents">
-      <div class="tab_wrap">
-        <span class="bubble"></span>
-        <input id="tab1" type="radio" name="check" checked>
-        <label for="tab1" class="tab_lab1">会場申請</label>
-
-        <input id="tab2" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab2" class="tab_lab2">電力申請</label>
-
-        <input id="tab3" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab3" class="tab_lab3">物品申請</label>
-
-        <input id="tab4" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab4" class="tab_lab4">ステージ申請</label>
-
-        <input id="tab8" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab8" class="tab_lab8">ステージオプション申請</label>
-
-        <input id="tab5" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab5" class="tab_lab5">従業員申請</label>
-
-        <input id="tab6" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab6" class="tab_lab6">食品申請</label>
-
-        <input id="tab7" type="radio" name="check">
-        <span class="bubble"></span>
-        <label for="tab7" class="tab_lab7">購入品申請</label>
-
-        <div class="panels">
-
-          <!-- 会場申請 -->
-          <div id="area1" class="panel">
-            <div class="card">
-              <ConfirmationPlace :regist="new_info" />
-            </div>
-          </div>
-
-          <!-- 電力申請 -->
-          <div id="area2" class="panel">
-            <div class="card">
-              <ConfirmationPower :regist="new_info" />
-            </div>
-            <button id="btn1" type="button" onclick="document.getElementById('addPower').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-            <dialog id="addPower" style="margin-left:30%; margin-right:30%; width:40%;">
-              <AddPower />
-            </dialog>
-          </div>
-
-          <!-- 物品申請 -->
-          <div id="area3" class="panel">
-            <div class="card">
-              <ConfirmationItem :regist="new_info" />
-            </div>
-            <button id="btn1" type="button" onclick="document.getElementById('addItem').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-            <dialog id="addItem" style="margin-left:30%; margin-right:30%; width:40%;">
-              <AddItem />
-            </dialog>
-          </div>
-
-          <!-- ステージ申請 -->
-          <div id="area4" class="panel">
-            <div class="card">
-              <ConfirmationStage :regist="new_info" />
-            </div>
-          </div>
-
-          <!-- 従業員申請 -->
-          <div id="area5" class="panel">
-            <div class="card">
-              <ConfirmationEmployee :regist="new_info" />
-
-            </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addEmployee').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addEmployee" style="margin-left:30%; margin-right:30%; width:40%;">
-                <AddEmployee />
-              </dialog>
-          </div>
-
-          <!-- 食品申請 -->
-          <div id="area6" class="panel">
-            <div class="card">
-              <ConfirmationFood :regist="new_info" />
-
-            </div>
-            <button id="btn1" type="button" onclick="document.getElementById('addFood').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-            <dialog id="addFood" style="margin-left:30%; margin-right:30%; width:40%;">
-                <AddFood />
-            </dialog>
-          </div>
-
-          <!-- 購入品申請 -->
-          <div id="area7" class="panel">
-            <div class="card">
-              <ConfirmationPurchase :regist="new_info" />
-
-            </div>
-            <button id="btn1" type="button" onclick="document.getElementById('addPurchase').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addPurchase" style="margin-left:30%; margin-right:30%; width:40%;">
-                <AddPurchase />
-              </dialog>
-          </div>
-
-          <!-- ステージオプション -->
-          <div id="area8" class="panel">
-            <div class="card">
-              <ConfirmationOption :regist="new_info" />
-            </div>
-          </div>
-
-        </div>
+    <div id="font">
+      <div id="line">
+        <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
+        <h3>参加団体登録＆編集ページ</h3>
+        <select v-model="projectName">
+          <option
+            v-for="list in regist_info"
+            :key="list.group.id"
+            :value="list.group.id"
+            >{{list.group.project_name}}
+          </option>
+        </select>
       </div>
-    </section>
 
+      <section class="tab_contents">
+        <div class="tab_wrap">
+          <span class="bubble"></span>
+          <input id="tab1" type="radio" name="check" checked>
+          <label for="tab1" class="tab_lab1">会場申請</label>
+
+          <input id="tab2" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab2" class="tab_lab2">電力申請</label>
+
+          <input id="tab3" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab3" class="tab_lab3">物品申請</label>
+
+          <input id="tab4" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab4" class="tab_lab4">ステージ申請</label>
+
+          <input id="tab8" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab8" class="tab_lab8">ステージオプション申請</label>
+
+          <input id="tab5" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab5" class="tab_lab5">従業員申請</label>
+
+          <input id="tab6" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab6" class="tab_lab6">食品申請</label>
+
+          <input id="tab7" type="radio" name="check">
+          <span class="bubble"></span>
+          <label for="tab7" class="tab_lab7">購入品申請</label>
+
+          <div class="panels">
+
+            <!-- 会場申請 -->
+            <div id="area1" class="panel">
+              <div class="card">
+                <ConfirmationPlace :regist="new_info" />
+              </div>
+              <div>
+                <CardPlaceInfo />
+              </div>
+            </div>
+
+            <!-- 電力申請 -->
+            <div id="area2" class="panel">
+              <div class="card">
+                <ConfirmationPower :regist="new_info" />
+              </div>
+              <div>
+                <CardPowerInfo />
+              </div>
+              <button id="btn1" type="button" onclick="document.getElementById('addPower').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <dialog id="addPower" style="margin-left:30%; margin-right:30%; width:40%;">
+                <AddPower />
+              </dialog>
+            </div>
+
+            <!-- 物品申請 -->
+            <div id="area3" class="panel">
+              <div class="card">
+                <ConfirmationItem :regist="new_info" />
+              </div>
+              <button id="btn1" type="button" onclick="document.getElementById('addItem').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <dialog id="addItem" style="margin-left:30%; margin-right:30%; width:40%;">
+                <AddItem />
+              </dialog>
+              <div>
+                <CardItemInfo />
+              </div>
+            </div>
+
+            <!-- ステージ申請 -->
+            <div id="area4" class="panel">
+              <div class="card">
+                <ConfirmationStage :regist="new_info" />
+              </div>
+            </div>
+
+            <!-- 従業員申請 -->
+            <div id="area5" class="panel">
+              <div class="card">
+                <ConfirmationEmployee :regist="new_info" />
+
+              </div>
+                <button id="btn1" type="button" onclick="document.getElementById('addEmployee').show()" style="display: block; margin: 0 0 0 auto;">申請</button>
+                <dialog id="addEmployee" style="margin-left:30%; margin-right:30%; width:40%; border: 0; border-radius: 10px; box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.4);">
+                  <AddEmployee  :groupId="projectName"/>
+                </dialog>
+            </div>
+
+            <!-- 食品申請 -->
+            <div id="area6" class="panel">
+              <div class="card">
+                <ConfirmationFood :regist="new_info" />
+
+              </div>
+              <button id="btn1" type="button" onclick="document.getElementById('addFood').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <dialog id="addFood" style="margin-left:30%; margin-right:30%; width:40%;">
+                  <AddFood />
+              </dialog>
+            </div>
+
+            <!-- 購入品申請 -->
+            <div id="area7" class="panel">
+              <div class="card">
+                <ConfirmationPurchase :regist="new_info" />
+
+              </div>
+              <button id="btn1" type="button" onclick="document.getElementById('addPurchase').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
+                <dialog id="addPurchase" style="margin-left:30%; margin-right:30%; width:40%;">
+                  <AddPurchase />
+                </dialog>
+            </div>
+
+            <!-- ステージオプション -->
+            <div id="area8" class="panel">
+              <div class="card">
+                <ConfirmationOption :regist="new_info" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -151,6 +161,9 @@ import AddFood from "@/components/AllEdit/AddFood.vue";
 import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
 import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
+import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
+import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
+import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
 
 export default {
   components: {
@@ -167,6 +180,9 @@ export default {
     AddEmployee,
     AddFood,
     AddPurchase,
+    CardPlaceInfo,
+    CardPowerInfo,
+    CardItemInfo,
   },
   data() {
     return {
@@ -214,6 +230,10 @@ export default {
 <style scoped>
   #app{
     margin: 1%;
+  }
+  #font{
+    font-family: 'Noto Sans JP';
+    font-style: normal;
   }
   #btn {
     position: relative;
