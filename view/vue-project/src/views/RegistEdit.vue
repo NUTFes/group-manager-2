@@ -93,10 +93,20 @@
               <div class="card">
                 <ConfirmationStage :regist="new_info" />
               </div>
-            </div>
             
             <div>
               <CardStageInfo />
+            </div>
+          </div>
+
+            <!-- ステージオプション -->
+            <div id="area8" class="panel">
+              <div class="card">
+                <ConfirmationOption :regist="new_info" />
+              </div>
+
+            <div>
+              <CardStageOptionInfo />
             </div>
           </div>
 
@@ -135,18 +145,6 @@
                   <AddPurchase />
                 </dialog>
             </div>
-
-            <!-- ステージオプション -->
-            <div id="area8" class="panel">
-              <div class="card">
-                <ConfirmationOption :regist="new_info" />
-              </div>
-            </div>
-
-            <div>
-              <CardStageOptionInfo />
-            </div>
-          </div>
 
           </div>
         </div>
