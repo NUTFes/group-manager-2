@@ -78,7 +78,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 カテゴリー  物品名 数 開催年)
+      column_name = %w(参加団体名 代表者 メールアドレス カテゴリー 物品名 数 開催年)
       csv << column_name
       @rental_orders.each do |group|
         # データが存在しない場合はスキップする
@@ -92,6 +92,8 @@ class Api::V1::OutputCsvController < ApplicationController
           end
           column_values = [
             rental_order.group.name,
+            rental_order.group.user.name,
+            rental_order.group.user.email,
             rental_order.group.group_category.name,
             rental_order.rental_item.name,
             rental_order.num,
@@ -114,7 +116,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 カテゴリー 製品 URL 電力 メーカー 型番)
+      column_name = %w(参加団体名 代表者 メールアドレス カテゴリー 製品 URL 電力 メーカー 型番)
       csv << column_name
       @power_orders.each do |group|
         # データが存在しない場合はスキップする
@@ -128,6 +130,8 @@ class Api::V1::OutputCsvController < ApplicationController
           end
           column_values = [
             power_order.group.name,
+            power_order.group.user.name,
+            power_order.group.user.email,
             power_order.group.group_category.name,
             power_order.item,
             power_order.item_url,
@@ -152,7 +156,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 カテゴリー 第1希望 第2希望 第3希望 備考)
+      column_name = %w(参加団体名 代表者 メールアドレス カテゴリー 第1希望 第2希望 第3希望 備考)
       csv << column_name
       @place_orders.each do |place_order|
         # データが存在しない場合はスキップする
@@ -161,6 +165,8 @@ class Api::V1::OutputCsvController < ApplicationController
         end
         column_values = [
           place_order.group.name,
+          place_order.group.user.name,
+          place_order.group.user.email,
           place_order.group.group_category.name,
           Place.find(place_order.first).name,
           Place.find(place_order.second).name,
