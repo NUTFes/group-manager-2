@@ -37,6 +37,6 @@ class RentalItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def rental_item_params
-      params.permit(:name, :is_rentable)
+      params.permit(:name, :is_shop_rentable, :is_stage_rentable)
     end
 end
