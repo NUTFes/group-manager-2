@@ -84,7 +84,7 @@
               <ConfirmationStage :regist="new_info" />
             </div>
             <div>
-              <CardStageInfo />
+              <CardStageInfo :regist="new_info" />
             </div>
           </div>
 
