@@ -3,11 +3,11 @@
       <div class="card">
         <span class="red" />
         <div class="item">
-          パーテーション足
+          {{regist}}
         </div>
         <p class="box">
           <span class="number">
-            100
+          {{regist}}
           </span>
           <span class="pieces">
             個
@@ -24,6 +24,14 @@
       </div>
   </body>
 </template>
+
+<script>
+export default {
+  props: {
+    regist: String,
+  },
+};
+</script>
 
 <style scoped>
 .card {

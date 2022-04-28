@@ -8,7 +8,7 @@
       </div>
       <span class="line"/>
       <div class="area">
-        事務棟エリア
+        {{regist}}
       </div>
       <div class="ps">
         追記：
@@ -23,6 +23,14 @@
   </div>
 </body>
 </template>
+
+<script>
+export default {
+  props: {
+    regist: String,
+  },
+};
+</script>
 
 <style scoped>
 .card {
