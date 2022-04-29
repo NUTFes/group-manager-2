@@ -4,11 +4,11 @@
     <div class="card">
       <span class="red"/>
       <div class="date">
-        11月11日
+        {{regist}}
       </div>
       <span class="line"/>
       <div class="weather">
-        晴
+        晴{{regist}}
       </div>
       <span class="line"/>
       <div class="notes">
@@ -24,29 +24,41 @@
 </body>
 </template>
 
+<script>
+export default {
+  props: {
+    regist: String,
+  },
+};
+</script>
+
 <style scoped>
 #font{
   font-family: 'Noto Sans JP';
   font-style: normal;
 }
 .card {
-  margin-left: 15px;
-  margin-right: 15px;
   display: flex;
+  align-items: center;
+  position: relative;
   width: 1026px;
   height: 149px;
+  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
 .red{
+  position: absolute;
+  left: 0;
   display: inline-block;
   width: 18px;
+  height: 100%;
   background: #F71E35;
 }
 .date{
   display: flex;
   align-items: center;
-  margin-left: 20px;
+  margin-left: 25px;
   margin-right: 20px;
   font-style: normal;
   font-weight: 300;
@@ -90,8 +102,9 @@
 .button
 {
   width: 120px;
-  height: 39px;
-  margin-top: 35px;
+  height: 80px;
+  margin-top: 5px;
+  margin-left: 18px;
   border-radius: 5px;
 }
 .edit{
@@ -110,4 +123,4 @@
   background: #FF6262;
   color: #FFFFFF;
 }
-</style> 
+</style>  

@@ -84,7 +84,7 @@
                 <AddItem />
               </dialog>
               <div>
-                <CardItemInfo />
+                <CardItemInfo :regist="new_info" />
               </div>
             </div>
 
@@ -106,7 +106,7 @@
               </div>
 
             <div>
-              <CardStageOptionInfo />
+              <CardStageOptionInfo :regist="new_info" />
             </div>
           </div>
 

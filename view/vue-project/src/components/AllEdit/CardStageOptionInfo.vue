@@ -4,13 +4,13 @@
     <div class="card">
       <span class="red"/>
       <div class="devices">
-        <div class="upper">機器▾</div>
+        <div class="upper">機器▾ {{regist}} </div>
         <div class="lower">使用</div>
       </div>
       <span class="line"/>
       <div class="music">
         <div class="upper">音楽▾</div>
-        <div class="lower">使用</div>
+        <div class="lower">使用 {{regist}} </div>
       </div>
       <span class="line"/>
       <div class="permission">
@@ -36,31 +36,42 @@
 </body>
 </template>
 
+<script>
+export default {
+  props: {
+    regist: String,
+  },
+};
+</script>
+
 <style scoped>
 #font{
   font-family: 'Noto Sans JP';
   font-style: normal;
 }
 .card {
-  margin-left: 15px;
-  margin-right: 15px;
   display: flex;
+  align-items: center;
+  position: relative;
   width: 1026px;
   height: 149px;
+  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
 .red{
+  position: absolute;
+  left: 0;
   display: inline-block;
   width: 18px;
+  height: 100%;
   background: #F71E35;
 }
 .devices{
   width: 80px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 25px;
   margin-right: 20px;
   font-style: normal;
   font-weight: 300;
@@ -88,7 +99,6 @@
   width: 80px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 20px;
   margin-right: 20px;
   font-style: normal;
@@ -101,7 +111,6 @@
   width: 80px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -114,7 +123,6 @@
   width: 50px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -126,7 +134,6 @@
 .content{
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -142,8 +149,8 @@
 .button
 {
   width: 120px;
-  height: 39px;
-  margin-top: 35px;
+  height: 80px;
+  margin-top: 5px;
   border-radius: 5px;
 }
 .edit{
