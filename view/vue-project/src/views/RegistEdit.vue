@@ -79,10 +79,13 @@
               <div class="card">
                 <ConfirmationItem :regist="new_info" />
               </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addItem').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addItem" style="margin-left:30%; margin-right:30%; width:40%;">
-                <AddItem />
-              </dialog>
+              <button id="btn1" type="button" @click="addItemDisplay=true" style="display: block; margin: 0 0 0 auto;">追加</button>
+              <AddItem
+                v-if="addItemDisplay"
+                :groupId="projectName"
+                @closeAddItem="closeAddItem"
+              />
+
               <div>
                 <CardItemInfo />
               </div>
@@ -201,7 +204,13 @@ export default {
       regist_info: [],
       new_info: [],
       projectName: [],
+      addItemDisplay: false,
     };
+  },
+  methods: {
+    closeAddItem: function () {
+      this.addItemDisplay=false
+    },
   },
   mounted() {
     const regist_info_url =
@@ -232,7 +241,7 @@ export default {
       })
       .then((response) => {
         console.log(response);
-        this.new_info = response.data.data;
+        this.new_info = response.data;
 
       });
   },
