@@ -138,6 +138,9 @@
         >
       </template>
     </AddModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -157,6 +160,7 @@ export default {
         "編集日時",
       ],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
       placeList: [],
       appGroup: "",
       placeOrders: [],
@@ -254,6 +258,14 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     reload(id) {
       const placeOrderUrl = "/api/v1/get_place_order_show_for_admin_view/" + id;
       this.$axios.$get(placeOrderUrl).then((response) => {
@@ -275,6 +287,7 @@ export default {
         this.remark;
 
       this.$axios.$post(postPlaceOrderUrl).then((response) => {
+        this.openSnackBar(this.addGroup + "の申請を追加しました");
         this.appGroup = "";
         this.firstPlaceOrder = "";
         this.secondPlaceOrder = "";
