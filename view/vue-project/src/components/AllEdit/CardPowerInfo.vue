@@ -3,7 +3,7 @@
       <div class="card">
         <span class="red"/>
         <div class="product">
-          nutfes-sample
+          {{regist}}
         </div>
         <span class="span1"/>
         <button class="button1">
@@ -11,16 +11,16 @@
         <span class="span2"/>
         <span class="line"/>
         <div class="power">
-          <div class="number">100</div>
+          <div class="number">{{regist}}</div>
           <div class="watt">[W]</div>
         </div>
         <span class="line"/>
         <div>
           <div class="detail">
-            <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">nutfes</div>
+            <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">{{regist}}</div>
           </div>
           <div class="detail">
-            <div class="character1">型番</div><canvas class="triangle"/><div class="character2">nutfes</div>
+            <div class="character1">型番</div><canvas class="triangle"/><div class="character2">{{regist}}</div>
           </div>
         </div>
         <span class="span3"/>
@@ -35,6 +35,14 @@
       </div>
   </body>
 </template>
+
+<script>
+export default {
+  props: {
+    regist: String,
+  },
+};
+</script>
 
 <style scoped>
 #font1{

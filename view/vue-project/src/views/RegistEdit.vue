@@ -56,7 +56,7 @@
                 <ConfirmationPlace :regist="new_info" />
               </div>
               <div>
-                <CardPlaceInfo />
+                <CardPlaceInfo :regist="new_info" />
               </div>
             </div>
 
@@ -66,7 +66,7 @@
                 <ConfirmationPower :regist="new_info" />
               </div>
               <div>
-                <CardPowerInfo />
+                <CardPowerInfo :regist="new_info" />
               </div>
               <button id="btn1" type="button" onclick="document.getElementById('addPower').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
               <dialog id="addPower" style="margin-left:30%; margin-right:30%; width:40%;">
@@ -84,7 +84,7 @@
                 <AddItem />
               </dialog>
               <div>
-                <CardItemInfo />
+                <CardItemInfo :regist="new_info" />
               </div>
             </div>
 
