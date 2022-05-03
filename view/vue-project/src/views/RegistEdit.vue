@@ -95,7 +95,7 @@
               </div>
             
             <div>
-              <CardStageInfo :regist="new_info" />
+              <CardStageInfo :regist="test" />
             </div>
           </div>
 

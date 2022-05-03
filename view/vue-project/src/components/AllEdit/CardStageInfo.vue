@@ -1,29 +1,23 @@
 <template>
   <body id="font">
     <div>
-      <div v-for="lists in regist" :key="lists.group.id">
-        <div v-for="list in lists.stage_orders" :key="list.id">
-          <div class="card">
-            <span class="red" />
-            <div class="date">
-              {{list.stage_order.year}}
-              {{list.stage_order.date}}
-            </div>
-            <span class="line" />
-            <div class="weather">
-              {{list.stage_order.is_sunny ? "晴" : "雨"}}
-            </div>
-            <span class="line" />
-            <div class="stage">
-              <div class="first">第一希望‣{{list.stage_order.stage_first}}</div>
-              <div class="second">第二希望‣{{list.stage_order.stage_second}}</div> 
-            </div>
-            <button class="button">
-              <div class="edit">編集</div><br>
-              <div class="delete">削除</div>
-            </button>
-          </div>
+      <div class="card">
+        <span class="red" />
+        <div class="date">
+          11月11日
         </div>
+        <span class="line" />
+        <div class="weather">
+          晴
+        </div>
+        <span class="line" />
+        <div class="stage">
+          {{regist}}
+        </div>
+        <button class="button">
+          <div class="edit">編集</div><br>
+          <div class="delete">削除</div>
+        </button>
       </div>
     </div>
   </body>
