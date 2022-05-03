@@ -1,27 +1,32 @@
 <template>
-<body id="font">
-  <div>
-    <div class="card">
-      <span class="red"/>
-      <div class="date">
-        {{regist}}
+  <body id="font">
+    <div>
+      <div v-for="lists in regist" :key="lists.group.id">
+        <div v-for="list in lists.stage_orders" :key="list.id">
+          <div class="card">
+            <span class="red" />
+            <div class="date">
+              {{list.stage_order.year}}
+              {{list.stage_order.date}}
+            </div>
+            <span class="line" />
+            <div class="weather">
+              {{list.stage_order.is_sunny ? "晴" : "雨"}}
+            </div>
+            <span class="line" />
+            <div class="stage">
+              <div class="first">第一希望‣{{list.stage_order.stage_first}}</div>
+              <div class="second">第二希望‣{{list.stage_order.stage_second}}</div> 
+            </div>
+            <button class="button">
+              <div class="edit">編集</div><br>
+              <div class="delete">削除</div>
+            </button>
+          </div>
+        </div>
       </div>
-      <span class="line"/>
-      <div class="weather">
-        晴{{regist}}
-      </div>
-      <span class="line"/>
-      <div class="notes">
-        <div>第1希望 ‣ メインステージ</div>
-        <div>第2希望 ‣ メインステージ</div> 
-      </div>
-      <button class="button">
-        <div class="edit">編集</div><br>
-        <div class="delete">削除</div>
-      </button>
     </div>
-  </div>
-</body>
+  </body>
 </template>
 
 <script>
@@ -33,8 +38,8 @@ export default {
 </script>
 
 <style scoped>
-#font{
-  font-family: 'Noto Sans JP';
+#font {
+  font-family: "Noto Sans JP";
   font-style: normal;
 }
 .card {
@@ -47,19 +52,19 @@ export default {
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
-.red{
+.red {
   position: absolute;
   left: 0;
   display: inline-block;
   width: 18px;
   height: 100%;
-  background: #F71E35;
+  background: #f71e35;
 }
-.date{
+.date {
   display: flex;
   align-items: center;
-  margin-left: 25px;
-  margin-right: 20px;
+  margin-left: 30px;
+  margin-right: 25px;
   font-style: normal;
   font-weight: 300;
   font-size: 56px;
@@ -67,31 +72,26 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.line{
+.line {
   display: inline-block;
   width: 1px;
   height: 95.5px;
-  margin-top: 29px;
   background: #333333;
 }
-.weather{
+.weather {
   display: flex;
-  align-items: center;
   margin-left: 20px;
   margin-right: 20px;
   font-weight: 300;
   font-size: 56px;
-  line-height: 70px;
+  line-height: 80px;
   letter-spacing: 0.1em;
   color: #333333;
 }
-.notes{
+.stage {
   width: 300x;
-  height: 95px;
-  margin-top: 27px;
   margin-right: 27px;
   margin-left: 27px;
-  padding-top: 20px;
   font-weight: 300;
   font-size: 25px;
   line-height: 26px;
@@ -99,28 +99,34 @@ export default {
   text-align: center;
   color: #333333;
 }
-.button
-{
+.first { 
+  text-align: left;
+}
+.second {
+  margin-top: 15px;
+  text-align: left;
+}
+.button {
   width: 120px;
   height: 80px;
   margin-top: 5px;
   margin-left: 18px;
   border-radius: 5px;
 }
-.edit{
+.edit {
   font-weight: 350;
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.3em;
-  background: #62A7FF;
-  color: #FFFFFF;
+  background: #62a7ff;
+  color: #ffffff;
 }
-.delete{
+.delete {
   font-weight: 350;
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.3em;
   background: #FF6262;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 </style>  
