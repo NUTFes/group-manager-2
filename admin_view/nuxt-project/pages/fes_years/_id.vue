@@ -66,6 +66,9 @@
         >
       </template>
     </DeleteModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -77,6 +80,7 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
     };
   },
   async asyncData({ $axios, route }) {
@@ -109,6 +113,14 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async reload(id) {
       const url = "/fes_years/" + id;
       const res = await this.$axios.$get(url);
@@ -118,6 +130,7 @@ export default {
       const url = "/fes_years/" + this.routeId + "?year_num=" + this.year_num;
       console.log(url);
       await this.$axios.$put(url).then(() => {
+        this.openSnackBar("登録情報を編集しました");
         this.year_num = null;
         this.reload(this.routeId);
         this.closeEditModal();

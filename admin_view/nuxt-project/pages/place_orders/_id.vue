@@ -122,6 +122,9 @@
         >
       </template>
     </DeleteModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -142,6 +145,7 @@ export default {
       ],
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
       firstPlaceOrder: null,
       secondPlaceOrder: null,
       thirdPlaceOrder: "",
@@ -178,6 +182,7 @@ export default {
         "&remark=" +
         this.remark;
       this.$axios.$put(url).then((response) => {
+        this.openSnackBar("申請情報を編集しました");
         this.reload(response.data.id);
         this.closeEditModal();
       });
@@ -211,6 +216,14 @@ export default {
     },
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
+    },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
     },
   },
 };

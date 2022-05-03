@@ -143,6 +143,9 @@
         >
       </template>
     </DeleteModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -154,6 +157,7 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
       isOwnEquipmentList: [
         { id: 1, value: "使用する", bool: true },
         { id: 2, value: "使用しない", bool: false },
@@ -220,6 +224,14 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async reload() {
       const reUrl = this.route;
       const reStageOptionRes = await this.$axios.$get(reUrl);
@@ -244,6 +256,7 @@ export default {
       console.log(putStageOptionUrl);
 
       await this.$axios.$put(putStageOptionUrl).then(() => {
+        this.openSnackBar("申請を編集しました");
         this.reload();
         this.closeEditModal();
       });

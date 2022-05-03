@@ -75,6 +75,9 @@
         >
       </template>
     </AddModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -100,6 +103,7 @@ export default {
         { id: 4, text: "片付け日", value: 3 },
       ],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
       fesYearID: null,
       date: null,
       day: null,
@@ -129,6 +133,14 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     reload(id) {
       const refUrl = "/fes_dates/" + id;
       this.$axios.$get(refUrl).then((response) => {
@@ -147,6 +159,7 @@ export default {
         this.daysNum;
       console.log(url);
       this.$axios.$post(url).then((response) => {
+        this.openSnackBar("登録情報を追加しました");
         this.fesYearID = null;
         this.date = null;
         this.day = null;
