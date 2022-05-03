@@ -1,66 +1,79 @@
 <template>
-<body id="font">
-  <div>
-    <div class="card">
-      <span class="red"/>
-      <div class="devices">
-        <div class="upper">機器▾</div>
-        <div class="lower">使用</div>
+  <body id="font">
+    <div>
+      <div class="card">
+        <span class="red" />
+        <div class="devices">
+          <div class="upper">機器▾</div>
+          <div class="lower">使用</div>
+        </div>
+        <span class="line" />
+        <div class="music">
+          <div class="upper">音楽▾</div>
+          <div class="lower">使用</div>
+        </div>
+        <span class="line" />
+        <div class="permission">
+          <div class="upper">撮影▾</div>
+          <div class="lower">許可</div>
+        </div>
+        <span class="line" />
+        <div class="loud_voice">
+          <div class="upper">騒音</div>
+          <div class="lower">有</div>
+        </div>
+        <span class="line" />
+        <div class="content">
+            <div class="upper">ステージ内容▾</div>
+            <div class="performance">
+              {{regist}}
+            </div>
+        </div>
+        <button class="button">
+          <div class="edit">編集</div><br>
+          <div class="delete">削除</div>
+        </button>
       </div>
-      <span class="line"/>
-      <div class="music">
-        <div class="upper">音楽▾</div>
-        <div class="lower">使用</div>
-      </div>
-      <span class="line"/>
-      <div class="permission">
-        <div class="upper">撮影▾</div>
-        <div class="lower">許可</div>
-      </div>
-      <span class="line"/>
-      <div class="loud_voice">
-        <div class="upper">騒音</div>
-        <div class="lower">有</div>
-      </div>
-      <span class="line"/>
-      <div class="content">
-          <div class="upper">ステージ内容▾</div>
-          <div class="performance">ダンスパフォーマンス</div>
-      </div>
-      <button class="button">
-        <div class="edit">編集</div><br>
-        <div class="delete">削除</div>
-      </button>
     </div>
-  </div>
-</body>
+  </body>
 </template>
 
+<script>
+export default {
+  props: {
+    regist: String,
+  },
+};
+</script>
+
 <style scoped>
-#font{
+#font {
   font-family: 'Noto Sans JP';
   font-style: normal;
 }
 .card {
-  margin-left: 15px;
-  margin-right: 15px;
   display: flex;
+  align-items: center;
+  position: relative;
   width: 1026px;
   height: 149px;
+  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
-.red{
+.red {
+  position: absolute;
+  left: 0;
   display: inline-block;
   width: 18px;
-  background: #F71E35;
+  height: 100%;
+  background: #f71e35;
 }
-.devices{
+.devices {
   width: 80px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 25px;
   margin-right: 20px;
   font-style: normal;
   font-weight: 300;
@@ -68,27 +81,26 @@
   letter-spacing: 0.1em;
   color: #333333;
 }
-.upper{
+.upper {
   margin-top: 10px;
   font-size: 18px;
 }
-.lower{
+.lower {
   font-size: 35px;
   margin: center;
   text-align:center;
 }
-.line{
+.line {
   display: inline-block;
   width: 1px;
   height: 95.5px;
   margin-top: 29px;
   background: #333333;
 }
-.music{
+.music {
   width: 80px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 20px;
   margin-right: 20px;
   font-style: normal;
@@ -97,11 +109,10 @@
   letter-spacing: 0.1em;
   color: #333333;
 }
-.permission{
+.permission {
   width: 80px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -110,11 +121,10 @@
   letter-spacing: 0.1em;
   color: #333333;
 }
-.loud_voice{
+.loud_voice {
   width: 50px;
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -123,10 +133,9 @@
   letter-spacing: 0.1em;
   color: #333333;
 }
-.content{
+.content {
   align-items: center;
   font-family: 'Noto Sans JP';
-  margin-top: 10px;
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -136,30 +145,29 @@
   letter-spacing: 0.1em;
   color: #333333;
 }
-.performance{
+.performance {
   font-size: 30px;
 }
-.button
-{
+.button {
   width: 120px;
-  height: 39px;
-  margin-top: 35px;
+  height: 80px;
+  margin-top: 5px;
   border-radius: 5px;
 }
-.edit{
+.edit {
   font-weight: 350;
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.3em;
-  background: #62A7FF;
-  color: #FFFFFF;
+  background: #62a7ff;
+  color: #ffffff;
 }
 .delete{
   font-weight: 350;
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.3em;
-  background: #FF6262;
-  color: #FFFFFF;
+  background: #ff6262;
+  color: #ffffff;
 }
 </style> 

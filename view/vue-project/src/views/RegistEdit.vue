@@ -112,9 +112,9 @@
               <div class="card">
                 <ConfirmationStage :regist="new_info" />
               </div>
-
+            
               <div>
-                <CardStageInfo />
+                <CardStageInfo :regist="test" />
               </div>
             </div>
 
@@ -123,8 +123,9 @@
               <div class="card">
                 <ConfirmationOption :regist="new_info" />
               </div>
+
               <div>
-                <CardStageOptionInfo />
+                <CardStageOptionInfo :regist="test" />
               </div>
             </div>
 
@@ -197,6 +198,7 @@
                 <AddPurchase />
               </dialog>
             </div>
+
           </div>
         </div>
       </section>
@@ -252,6 +254,7 @@ export default {
       new_info: [],
       projectName: "",
       addPowerDisplay: false,
+      test: "aaaaa",
     };
   },
 
