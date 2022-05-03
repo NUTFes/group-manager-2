@@ -12,7 +12,7 @@
             :key="list.group.id"
             :value="list.group.id"
           >
-            {{ list.group.project_name }}
+            {{ list.group.name }}
           </option>
         </select>
       </div>
@@ -55,17 +55,17 @@
             <!-- 会場申請 -->
             <div id="area1" class="panel">
               <div class="card">
-                <ConfirmationPlace :regist="new_info" />
+                <ConfirmationPlace :regist="test" />
               </div>
               <div>
-                <CardPlaceInfo :regist="new_info" />
+                <CardPlaceInfo :regist="test" />
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
               <div class="card">
-                <ConfirmationPower :regist="new_info" :groupId="projectName" />
+                <ConfirmationPower :regist="test" :groupId="projectName" />
               </div>
               <button
                 id="btn1"
@@ -85,7 +85,7 @@
             <!-- 物品申請 -->
             <div id="area3" class="panel">
               <div class="card">
-                <ConfirmationItem :regist="new_info" />
+                <ConfirmationItem :regist="test" />
               </div>
               <button
                 id="btn1"
@@ -102,14 +102,14 @@
               />
 
               <div>
-                <CardItemInfo :regist="new_info" />
+                <CardItemInfo :regist="test" />
               </div>
             </div>
 
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
               <div class="card">
-                <ConfirmationStage :regist="new_info" />
+                <ConfirmationStage :regist="test" />
               </div>
             
               <div>
@@ -120,7 +120,7 @@
             <!-- ステージオプション -->
             <div id="area8" class="panel">
               <div class="card">
-                <ConfirmationOption :regist="new_info" />
+                <ConfirmationOption :regist="test" />
               </div>
 
               <div>
@@ -131,7 +131,7 @@
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
               <div class="card">
-                <ConfirmationEmployee :regist="new_info" />
+                <ConfirmationEmployee :regist="test" />
               </div>
               <button
                 id="btn1"
@@ -159,7 +159,7 @@
             <!-- 食品申請 -->
             <div id="area6" class="panel">
               <div class="card">
-                <ConfirmationFood :regist="new_info" />
+                <ConfirmationFood :regist="test" />
               </div>
               <button
                 id="btn1"
@@ -180,7 +180,7 @@
             <!-- 購入品申請 -->
             <div id="area7" class="panel">
               <div class="card">
-                <ConfirmationPurchase :regist="new_info" />
+                <ConfirmationPurchase :regist="test" />
               </div>
               <button
                 id="btn1"
@@ -250,11 +250,12 @@ export default {
   },
   data() {
     return {
-      new_info: [],
+      regist_info: null,
       projectName: "",
       addPowerDisplay: false,
       test: "aaaaa",
       addItemDisplay: false,
+      test: "aaa"
     };
   },
 
@@ -267,20 +268,20 @@ export default {
     },
   },
   mounted() {
-    const new_info =
-      process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+    const regist_info = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
-      .get(new_info, {
+      .get(regist_info, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
-        console.log(response);
-        this.new_info = response.data;
+        this.regist_info = response.data.data;
+        // デフォルトで一番最初のgroupが選択される
+        this.projectName = response.data.data[0].group.id;
       });
   },
 };
