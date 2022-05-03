@@ -106,7 +106,7 @@
               </div>
 
             <div>
-              <CardStageOptionInfo :regist="new_info" />
+              <CardStageOptionInfo :regist="test" />
             </div>
           </div>
 
@@ -201,6 +201,7 @@ export default {
       regist_info: [],
       new_info: [],
       projectName: [],
+      test: "aaaaa",
     };
   },
   mounted() {
