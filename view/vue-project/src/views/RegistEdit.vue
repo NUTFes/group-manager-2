@@ -2,14 +2,17 @@
   <div id="app">
     <div id="font">
       <div id="line">
-        <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
+        <router-link to="/mypage"
+          ><button id="btn">Mypageに戻る</button></router-link
+        >
         <h3>参加団体登録＆編集ページ</h3>
         <select v-model="projectName">
           <option
             v-for="list in regist_info"
             :key="list.group.id"
             :value="list.group.id"
-            >{{list.group.project_name}}
+          >
+            {{ list.group.project_name }}
           </option>
         </select>
       </div>
@@ -63,15 +66,21 @@
             <!-- 電力申請 -->
             <div id="area2" class="panel">
               <div class="card">
-                <ConfirmationPower :regist="new_info" />
+                <ConfirmationPower :regist="new_info" :groupId="projectName" />
               </div>
-              <div>
-                <CardPowerInfo :regist="new_info" />
-              </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addPower').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addPower" style="margin-left:30%; margin-right:30%; width:40%;">
-                <AddPower />
-              </dialog>
+              <button
+                id="btn1"
+                type="button"
+                @click="addPowerDisplay = true"
+                style="display: block; margin: 0 0 0 auto"
+              >
+                追加
+              </button>
+              <AddPower
+                v-if="addPowerDisplay"
+                :groupId="projectName"
+                @closeAddPower="closeAddPower"
+              />
             </div>
 
             <!-- 物品申請 -->
@@ -79,8 +88,18 @@
               <div class="card">
                 <ConfirmationItem :regist="new_info" />
               </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addItem').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addItem" style="margin-left:30%; margin-right:30%; width:40%;">
+              <button
+                id="btn1"
+                type="button"
+                onclick="document.getElementById('addItem').show()"
+                style="display: block; margin: 0 0 0 auto"
+              >
+                追加
+              </button>
+              <dialog
+                id="addItem"
+                style="margin-left: 30%; margin-right: 30%; width: 40%"
+              >
                 <AddItem />
               </dialog>
               <div>
@@ -93,44 +112,68 @@
               <div class="card">
                 <ConfirmationStage :regist="new_info" />
               </div>
-            
-            <div>
-              <CardStageInfo />
+
+              <div>
+                <CardStageInfo />
+              </div>
             </div>
-          </div>
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
               <div class="card">
                 <ConfirmationOption :regist="new_info" />
               </div>
-
-            <div>
-              <CardStageOptionInfo />
+              <div>
+                <CardStageOptionInfo />
+              </div>
             </div>
-          </div>
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
               <div class="card">
                 <ConfirmationEmployee :regist="new_info" />
-
               </div>
-                <button id="btn1" type="button" onclick="document.getElementById('addEmployee').show()" style="display: block; margin: 0 0 0 auto;">申請</button>
-                <dialog id="addEmployee" style="margin-left:30%; margin-right:30%; width:40%; border: 0; border-radius: 10px; box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.4);">
-                  <AddEmployee  :groupId="projectName"/>
-                </dialog>
+              <button
+                id="btn1"
+                type="button"
+                onclick="document.getElementById('addEmployee').show()"
+                style="display: block; margin: 0 0 0 auto"
+              >
+                申請
+              </button>
+              <dialog
+                id="addEmployee"
+                style="
+                  margin-left: 30%;
+                  margin-right: 30%;
+                  width: 40%;
+                  border: 0;
+                  border-radius: 10px;
+                  box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.4);
+                "
+              >
+                <AddEmployee :groupId="projectName" />
+              </dialog>
             </div>
 
             <!-- 食品申請 -->
             <div id="area6" class="panel">
               <div class="card">
                 <ConfirmationFood :regist="new_info" />
-
               </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addFood').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-              <dialog id="addFood" style="margin-left:30%; margin-right:30%; width:40%;">
-                  <AddFood />
+              <button
+                id="btn1"
+                type="button"
+                onclick="document.getElementById('addFood').show()"
+                style="display: block; margin: 0 0 0 auto"
+              >
+                追加
+              </button>
+              <dialog
+                id="addFood"
+                style="margin-left: 30%; margin-right: 30%; width: 40%"
+              >
+                <AddFood />
               </dialog>
             </div>
 
@@ -138,14 +181,22 @@
             <div id="area7" class="panel">
               <div class="card">
                 <ConfirmationPurchase :regist="new_info" />
-
               </div>
-              <button id="btn1" type="button" onclick="document.getElementById('addPurchase').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
-                <dialog id="addPurchase" style="margin-left:30%; margin-right:30%; width:40%;">
-                  <AddPurchase />
-                </dialog>
+              <button
+                id="btn1"
+                type="button"
+                onclick="document.getElementById('addPurchase').show()"
+                style="display: block; margin: 0 0 0 auto"
+              >
+                追加
+              </button>
+              <dialog
+                id="addPurchase"
+                style="margin-left: 30%; margin-right: 30%; width: 40%"
+              >
+                <AddPurchase />
+              </dialog>
             </div>
-
           </div>
         </div>
       </section>
@@ -170,7 +221,7 @@ import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
 import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
 import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
-import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
+// import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
 import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
 import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
@@ -191,34 +242,26 @@ export default {
     AddFood,
     AddPurchase,
     CardPlaceInfo,
-    CardPowerInfo,
+    // CardPowerInfo,
     CardItemInfo,
     CardStageInfo,
     CardStageOptionInfo,
   },
   data() {
     return {
-      regist_info: [],
       new_info: [],
-      projectName: [],
+      projectName: "",
+      addPowerDisplay: false,
     };
   },
+
+  methods: {
+    closeAddPower: function () {
+      this.addPowerDisplay=false
+    },
+  },
+
   mounted() {
-    const regist_info_url =
-    process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
-    axios
-      .get(regist_info_url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.regist_info = response.data;
-      });
     const new_info =
     process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
@@ -233,7 +276,6 @@ export default {
       .then((response) => {
         console.log(response);
         this.new_info = response.data.data;
-
       });
   },
 };
@@ -259,7 +301,7 @@ export default {
     margin-bottom: 10px;
   }
   #btn:hover {
-    background: #00bcd4;
+    background: #cccccc;
     color: white;
   }
   #btn:active{
@@ -330,10 +372,14 @@ export default {
     outline:solid 1px #242424;
   }
   select{
-    width: 10%;
-    text-align: center;
-    background-color: #E5E5E5;
-    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    text-decoration: none;
+    transition: .4s;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
   }
   .card {
     width: 60%;
