@@ -13,6 +13,7 @@ import RegistGroupModel from "../views/RegistGroupModel.vue";
 import RegistPlace from "../views/RegistPlace.vue";
 import RegistPower from "../views/RegistPower.vue";
 import RegistStage from "../views/RegistStage.vue";
+import RegistRentalOrder from "../views/RegistRentalOrder.vue";
 import RegistEmployees from "../views/RegistEmployees.vue";
 import RegistPurchaseList from "../views/RegistPurchaseList.vue";
 import RegistFoodProduct from "../views/RegistFoodProduct.vue";
@@ -97,6 +98,11 @@ const routes = [
     path: "/regist_stage",
     name: "RegistStage",
     component: RegistStage,
+  },
+  {
+    path: "/regist_rentalOrder",
+    name: "RegistRentalOrder",
+    component: RegistRentalOrder,
   },
   {
     path: "/regist_Employees",
