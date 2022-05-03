@@ -20,39 +20,38 @@
       <section class="tab_contents">
         <div class="tab_wrap">
           <span class="bubble"></span>
-          <input id="tab1" type="radio" name="check" checked>
+          <input id="tab1" type="radio" name="check" checked />
           <label for="tab1" class="tab_lab1">会場申請</label>
 
-          <input id="tab2" type="radio" name="check">
+          <input id="tab2" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab2" class="tab_lab2">電力申請</label>
 
-          <input id="tab3" type="radio" name="check">
+          <input id="tab3" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab3" class="tab_lab3">物品申請</label>
 
-          <input id="tab4" type="radio" name="check">
+          <input id="tab4" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab4" class="tab_lab4">ステージ申請</label>
 
-          <input id="tab8" type="radio" name="check">
+          <input id="tab8" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab8" class="tab_lab8">ステージオプション申請</label>
 
-          <input id="tab5" type="radio" name="check">
+          <input id="tab5" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab5" class="tab_lab5">従業員申請</label>
 
-          <input id="tab6" type="radio" name="check">
+          <input id="tab6" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab6" class="tab_lab6">食品申請</label>
 
-          <input id="tab7" type="radio" name="check">
+          <input id="tab7" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab7" class="tab_lab7">購入品申請</label>
 
           <div class="panels">
-
             <!-- 会場申請 -->
             <div id="area1" class="panel">
               <div class="card">
@@ -91,17 +90,17 @@
               <button
                 id="btn1"
                 type="button"
-                onclick="document.getElementById('addItem').show()"
+                @click="addItemDisplay = true"
                 style="display: block; margin: 0 0 0 auto"
               >
                 追加
               </button>
-              <dialog
-                id="addItem"
-                style="margin-left: 30%; margin-right: 30%; width: 40%"
-              >
-                <AddItem />
-              </dialog>
+              <AddItem
+                v-if="addItemDisplay"
+                :groupId="projectName"
+                @closeAddItem="closeAddItem"
+              />
+
               <div>
                 <CardItemInfo :regist="new_info" />
               </div>
@@ -252,18 +251,21 @@ export default {
       new_info: [],
       projectName: "",
       addPowerDisplay: false,
+      addItemDisplay: false,
     };
   },
 
   methods: {
     closeAddPower: function () {
-      this.addPowerDisplay=false
+      this.addPowerDisplay = false;
+    },
+    closeAddItem: function () {
+      this.addItemDisplay = false;
     },
   },
-
   mounted() {
     const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+      process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
       .get(new_info, {
         headers: {
@@ -275,281 +277,300 @@ export default {
       })
       .then((response) => {
         console.log(response);
-        this.new_info = response.data.data;
+        this.new_info = response.data;
       });
   },
 };
 </script>
 
 <style scoped>
-  #app{
-    margin: 1%;
-  }
-  #font{
-    font-family: 'Noto Sans JP';
-    font-style: normal;
-  }
-  #btn {
-    position: relative;
-    display: inline-block;
-    font-weight: bold;
-    padding: 0.25em 0.5em;
-    text-decoration: none;
-    color: black;
-    background: #ECECEC;
-    transition: .4s;
-    margin-bottom: 10px;
-  }
-  #btn:hover {
-    background: #cccccc;
-    color: white;
-  }
-  #btn:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-  }
-  #btn1{
-    background: #032030;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius:100%;
-    cursor: pointer;
-    width:70px;
-    height:70px;
-    display: block;
-    margin: 3% 3% 3% auto;
-  }
-  #btn1:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  #btn1:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-  }
-  #btn2{
-    background: #62A7FF;
-    color: white;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 141px;
-    height: 41.98px;
-    display: block;
-    margin: 3% 3% 3% auto;
-  }
-  #btn2:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  #btn2:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-  }
-  #button{
-    color: black;
-    font-weight: bold;
-    border: solid 2px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 1%;
-    padding:1%;
-  }
-  #button:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  #button:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-  }
-  #line {
-    display: inline-block;
-    display: flex;
-    justify-content: space-evenly;
-  }
-  input{
-    outline:solid 1px #242424;
-  }
-  select{
-    position: relative;
-    display: inline-block;
-    padding: 0.25em 0.5em;
-    text-decoration: none;
-    transition: .4s;
-    margin-bottom: 10px;
-    border: 1px solid black;
-    border-radius: 10px;
-  }
-  .card {
-    width: 60%;
-    margin-left: 20%;
-    margin-right: 20%;
-    float: left;
-    display: block;
-    padding: 1%;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgb(87, 77, 77);
-  }
-  #tab1:checked~.panels #area1 {
-    display: block;
-  }
+#app {
+  margin: 1%;
+}
+#font {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+}
+#btn {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  color: black;
+  background: #ececec;
+  transition: 0.4s;
+  margin-bottom: 10px;
+}
+#btn:hover {
+  background: #cccccc;
+  color: white;
+}
+#btn:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+#btn1 {
+  background: #032030;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 100%;
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  display: block;
+  margin: 3% 3% 3% auto;
+}
+#btn1:hover {
+  box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 93, 139, 1),
+    rgba(254, 220, 64, 1)
+  );
+  border: white;
+}
+#btn1:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+#btn2 {
+  background: #62a7ff;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 141px;
+  height: 41.98px;
+  display: block;
+  margin: 3% 3% 3% auto;
+}
+#btn2:hover {
+  box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 93, 139, 1),
+    rgba(254, 220, 64, 1)
+  );
+  border: white;
+}
+#btn2:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+#button {
+  color: black;
+  font-weight: bold;
+  border: solid 2px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 1%;
+  padding: 1%;
+}
+#button:hover {
+  box-shadow: -2px -2px 5px #fff, 2px 2px 5px #babecc;
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 93, 139, 1),
+    rgba(254, 220, 64, 1)
+  );
+  border: white;
+}
+#button:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
+}
+#line {
+  display: inline-block;
+  display: flex;
+  justify-content: space-evenly;
+}
+input {
+  outline: solid 1px #242424;
+}
+select {
+  position: relative;
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  text-decoration: none;
+  transition: 0.4s;
+  margin-bottom: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.card {
+  width: 60%;
+  margin-left: 20%;
+  margin-right: 20%;
+  float: left;
+  display: block;
+  padding: 1%;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgb(87, 77, 77);
+}
+#tab1:checked ~ .panels #area1 {
+  display: block;
+}
 
-  #tab2:checked~.panels #area2 {
-    display: block;
-  }
+#tab2:checked ~ .panels #area2 {
+  display: block;
+}
 
-  #tab3:checked~.panels #area3 {
-    display: block;
-  }
-  #tab4:checked~.panels #area4 {
-    display: block;
-  }
+#tab3:checked ~ .panels #area3 {
+  display: block;
+}
+#tab4:checked ~ .panels #area4 {
+  display: block;
+}
 
-  #tab5:checked~.panels #area5 {
-    display: block;
-  }
+#tab5:checked ~ .panels #area5 {
+  display: block;
+}
 
-  #tab6:checked~.panels #area6 {
-    display: block;
-  }
+#tab6:checked ~ .panels #area6 {
+  display: block;
+}
 
-  #tab7:checked~.panels #area7 {
-    display: block;
-  }
+#tab7:checked ~ .panels #area7 {
+  display: block;
+}
 
-  #tab8:checked~.panels #area8 {
-    display: block;
-  }
+#tab8:checked ~ .panels #area8 {
+  display: block;
+}
 
-  #tab1:checked~.tab_lab1 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab1:checked ~ .tab_lab1 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab2:checked~.tab_lab2 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab2:checked ~ .tab_lab2 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab3:checked~.tab_lab3 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab3:checked ~ .tab_lab3 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab4:checked~.tab_lab4 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab4:checked ~ .tab_lab4 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab5:checked~.tab_lab5 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab5:checked ~ .tab_lab5 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab6:checked~.tab_lab6 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab6:checked ~ .tab_lab6 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab7:checked~.tab_lab7 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab7:checked ~ .tab_lab7 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
 
-  #tab8:checked~.tab_lab8 {
-    color: #242424;
-    background-color: #D0DFE6;
-    left: 0%;
-    right: 87.5%;
-    top: 6.84%;
-    bottom: 84.66%;
+#tab8:checked ~ .tab_lab8 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
 
-    background: #D0DFE6;
-    box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-  }
-  input[name="check"] {
-    display: none;
-  }
-  .panel {
-    padding: 3%;
-    display: none;
-    min-height: 100vh;
-    background-color: #D0DFE6;
-  }
-  .tab_lab1, .tab_lab2, .tab_lab3, .tab_lab4, .tab_lab5, .tab_lab6 ,.tab_lab7, .tab_lab8{
-    padding: 1%;
-    left: 12.5%;
-    right: 75%;
-    top: 6.84%;
-    bottom: 84.66%;
-    background: #EAEAEA;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 20px 20px 0px 0px;
-    font-family: 'Noto Sans JP';
-    font-style: normal;
-    letter-spacing: 0.1em;
-    color: #333333;
-  }
-  .tab_wrap{
-    margin: 1%;
-  }
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
+input[name="check"] {
+  display: none;
+}
+.panel {
+  padding: 3%;
+  display: none;
+  min-height: 100vh;
+  background-color: #d0dfe6;
+}
+.tab_lab1,
+.tab_lab2,
+.tab_lab3,
+.tab_lab4,
+.tab_lab5,
+.tab_lab6,
+.tab_lab7,
+.tab_lab8 {
+  padding: 1%;
+  left: 12.5%;
+  right: 75%;
+  top: 6.84%;
+  bottom: 84.66%;
+  background: #eaeaea;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  letter-spacing: 0.1em;
+  color: #333333;
+}
+.tab_wrap {
+  margin: 1%;
+}
 </style>
