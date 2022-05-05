@@ -1,7 +1,7 @@
 <template>
   <div style="border-radius:2px; background-color: #ffd1d0;">
-      <h2>未登録</h2>
-      <ul class="horizontal-list">
+    <h2>未登録</h2>
+    <ul class="horizontal-list">
 
       <div v-if="is_regist_group == true">
         <li v-if="new_info.group == null">
@@ -12,86 +12,88 @@
         </li>
       </div>
 
-      <div v-if="is_regist_group == true">
-        <li v-if="new_info.sub_rep == null">
-          <router-link to="/regist_subrep">
-            <button class="card">副代表者の詳細情報</button>
-          </router-link>
-          <span style="margin-left:1%;">副代表者が登録されていません</span>
-        </li>
-      </div>
+      <div v-else>
+        <div v-if="is_regist_group == true">
+          <li v-if="new_info.sub_rep == null">
+            <router-link to="/regist_subrep">
+              <button class="card">副代表者の詳細情報</button>
+            </router-link>
+            <span style="margin-left:1%;">副代表者が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.place_order == null">
-          <router-link to="/regist_place">
-            <button class="card">会場申請</button>
-          </router-link>
-          <span style="margin-left:1%;">会場申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li v-if="new_info.place_order == null">
+            <router-link to="/regist_place">
+              <button class="card">会場申請</button>
+            </router-link>
+            <span style="margin-left:1%;">会場申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.power_orders == null">
-          <router-link to="/regist_power">
-            <button class="card">電力申請</button>
-          </router-link>
-          <span style="margin-left:1%;">電力申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li v-if="new_info.power_orders == null">
+            <router-link to="/regist_power">
+              <button class="card">電力申請</button>
+            </router-link>
+            <span style="margin-left:1%;">電力申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.stage_orders == null">
-          <router-link to="/regist_stage">
-            <button class="card">ステージ申請</button>
-          </router-link>
-          <span style="margin-left:1%;">ステージ申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li v-if="new_info.stage_orders == null">
+            <router-link to="/regist_stage">
+              <button class="card">ステージ申請</button>
+            </router-link>
+            <span style="margin-left:1%;">ステージ申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.stage_common_option == null">
-          <router-link to="/regist_stageOption">
-            <button class="card">ステージオプション申請</button>
-          </router-link>
-          <span style="margin-left:1%;">ステージオプション申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li v-if="new_info.stage_common_option == null">
+            <router-link to="/regist_stageOption">
+              <button class="card">ステージオプション申請</button>
+            </router-link>
+            <span style="margin-left:1%;">ステージオプション申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li>
-          <router-link to="/regist_rentalOrder">
-            <button class="card">物品申請</button>
-          </router-link>
-          <span style="margin-left:1%;">物品申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li>
+            <router-link to="/regist_rentalOrder">
+              <button class="card">物品申請</button>
+            </router-link>
+            <span style="margin-left:1%;">物品申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.employees == null">
-          <router-link to="/regist_employees">
-            <button class="card">従業員情報</button>
-          </router-link>
-          <span style="margin-left:1%;">従業員申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li v-if="new_info.employees == null">
+            <router-link to="/regist_employees">
+              <button class="card">従業員情報</button>
+            </router-link>
+            <span style="margin-left:1%;">従業員申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.food_products == null">
-          <router-link to="/regist_foodProduct">
-            <button class="card">食品申請</button>
-          </router-link>
-          <span style="margin-left:1%;">食品申請が登録されていません</span>
-        </li>
-      </div>
+        <div>
+          <li v-if="new_info.food_products == null">
+            <router-link to="/regist_foodProduct">
+              <button class="card">食品申請</button>
+            </router-link>
+            <span style="margin-left:1%;">食品申請が登録されていません</span>
+          </li>
+        </div>
 
-      <div>
-        <li v-if="new_info.food_products == null"></li>
-        <li v-else-if="checkPurchase.purchase_lists.length === 0">
-          <router-link to="/regist_purchaseList">
-            <button class="card">購入品申請</button>
-          </router-link>
-          <span style="margin-left:1%;">購入品申請が登録されていません</span>
-        </li>
+        <div>
+          <li v-if="new_info.food_products == null"></li>
+          <li v-else-if="checkPurchase.purchase_lists.length === 0">
+            <router-link to="/regist_purchaseList">
+              <button class="card">購入品申請</button>
+            </router-link>
+            <span style="margin-left:1%;">購入品申請が登録されていません</span>
+          </li>
+        </div>
       </div>
 
     </ul>
