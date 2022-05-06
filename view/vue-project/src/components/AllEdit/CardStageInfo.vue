@@ -4,7 +4,7 @@
       <div class="card">
         <span class="red" />
         <div class="date">
-          11月11日
+          11月11日 
         </div>
         <span class="line" />
         <div class="weather">
@@ -12,7 +12,8 @@
         </div>
         <span class="line" />
         <div class="stage">
-          {{regist}}
+          <div class="first">第1希望‣{{regist}}</div> 
+          <div class="second">第2希望‣{{regist}}</div>
         </div>
         <button class="button">
           <div class="edit">編集</div><br>
@@ -83,7 +84,7 @@ export default {
   color: #333333;
 }
 .stage {
-  width: 300x;
+  width: 350px;
   margin-right: 27px;
   margin-left: 27px;
   font-weight: 300;
@@ -101,11 +102,10 @@ export default {
   text-align: left;
 }
 .button {
-  width: 120px;
+  width: 126px;
   height: 80px;
   margin-top: 5px;
   margin-left: 18px;
-  border-radius: 5px;
 }
 .edit {
   font-weight: 350;
@@ -114,6 +114,7 @@ export default {
   letter-spacing: 0.3em;
   background: #62a7ff;
   color: #ffffff;
+  border-radius: 5px;
 }
 .delete {
   font-weight: 350;
@@ -122,5 +123,6 @@ export default {
   letter-spacing: 0.3em;
   background: #FF6262;
   color: #ffffff;
+  border-radius: 5px;
 }
 </style>  
