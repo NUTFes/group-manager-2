@@ -1,15 +1,13 @@
 <template>
   <v-app>
     <MobileHeader />
-    <Header />
-    <main>
+    <Header v-if="this.$route.path != '/'" />
+    <main v-if="this.$route.path == '/'" class="top">
       <router-view />
     </main>
-    <!-- <v-main class="overflow-hidden">
-      <transition mode="out-in">
-        <router-view />
-      </transition>
-    </v-main> -->
+    <main v-else class="no-top">
+      <router-view />
+    </main>
     <Footer />
   </v-app>
 </template>
@@ -62,7 +60,13 @@ export default {
 .v-leave-active {
   transition: all 0.5s 0s ease;
 }
-main {
+.top {
+  padding-top: 0vh;
+  padding-left: 0vh;
+  padding-right: 0vh;
+  padding-bottom: 0vh;
+}
+.no-top {
   padding-top: 10vh;
   padding-left: 40vh;
   padding-right: 40vh;
