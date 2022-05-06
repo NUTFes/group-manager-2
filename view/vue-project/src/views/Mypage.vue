@@ -1,93 +1,66 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="2" />
-      <v-col cols="8">
-        <DashBoard />
-      </v-col>
-      <v-col cols="2" />
-    </v-row>
-    <v-row>
-      <v-col cols="2" />
-      <v-col cols="8">
-        <News />
-      </v-col>
-      <v-col cols="2" />
-    </v-row>
-    <v-row>
-      <v-col cols="2" />
-      <v-col cols="8">
-        <RegistAlarm />
-      </v-col>
-      <v-col cols="2" />
-    </v-row>
-    <v-row>
-      <v-col cols="2" />
-      <v-col cols="8">
-        <div v-for="(regist, i) in regist_info" :key="i">
-          <Regist :num="i" :regist="regist" @reload="reload()" />
-            <v-row>
-              <v-col cols="4" />
-              <v-col cols="4">
-                <v-btn
-                  v-if="
-                    regist.group.group_category_id === 1 &&
-                    regist.employees[0].name === '-9999' &&
-                    addEmployee &&
-                    addFoodProduct &&
-                    addPurchaseList
-                  "
-                  block
-                  dark
-                  color="purple accent-2"
-                  rounded
-                  elevation="0"
-                  @click="set_group_id(regist.group.id)"
-                >
-                  <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>
-                  {{ regist.group.name }}の販売食品を追加する
-                </v-btn>
-              </v-col>
-              <v-col cols="4" />
-            </v-row>
+    <div class="mypage-card">
+      <DashBoard />
+    </div>
+    <div class="mypage-card">
+      <News />
+    </div>
+    <div class="mypage-card">
+      <RegistAlarm />
+    </div>
+    <div class="mypage-card">
+      <div v-for="(regist, i) in regist_info" :key="i">
+        <Regist :num="i" :regist="regist" @reload="reload()" />
+          <v-row>
+            <v-col cols="4" />
+            <v-col cols="4">
+              <v-btn
+                v-if="
+                  regist.group.group_category_id === 1 &&
+                  regist.employees[0].name === '-9999' &&
+                  addEmployee &&
+                  addFoodProduct &&
+                  addPurchaseList
+                "
+                block
+                dark
+                color="purple accent-2"
+                rounded
+                elevation="0"
+                @click="set_group_id(regist.group.id)"
+              >
+                <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>
+                {{ regist.group.name }}の販売食品を追加する
+              </v-btn>
+            </v-col>
+            <v-col cols="4" />
+          </v-row>
         </div>
-      </v-col>
-      <v-col cols="2" />
-    </v-row>
-      <v-row>
-        <v-col cols="4" />
-        <v-col cols="4">
-          <v-btn
-            v-if="isRegistGroup"
-            block
-            dark
-            color="purple accent-2"
-            rounded
-            elevation="0"
-            to="/regist_model"
-          >
-            <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
-          </v-btn>
-        </v-col>
-        <v-col cols="4" />
-      </v-row>
-      <v-row>
-        <v-col cols="4" />
-        <v-col cols="4">
-          <v-btn
-            v-if="isRegistGroup"
-            block
-            dark
-            color="purple accent-2"
-            rounded
-            elevation="0"
-            to="/registEdit"
-          >
-            <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
-          </v-btn>
-        </v-col>
-        <v-col cols="4" />
-      </v-row>
+    </div>
+    <v-btn
+      v-if="isRegistGroup"
+      block
+      dark
+      color="purple accent-2"
+      rounded
+      elevation="0"
+      to="/regist_model"
+    >
+      <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
+    </v-btn>
+    <br>
+    <v-btn
+      v-if="isRegistGroup"
+      block
+      dark
+      color="purple accent-2"
+      rounded
+      elevation="0"
+      to="/registEdit"
+    >
+      <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
+    </v-btn>
   </div>
 </template>
 
@@ -207,3 +180,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.mypage-card {
+  padding-bottom: 2vh;
+}
+</style>

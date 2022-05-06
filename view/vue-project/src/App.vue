@@ -2,11 +2,14 @@
   <v-app>
     <MobileHeader />
     <Header />
-    <v-main class="overflow-hidden">
+    <main>
+      <router-view />
+    </main>
+    <!-- <v-main class="overflow-hidden">
       <transition mode="out-in">
         <router-view />
       </transition>
-    </v-main>
+    </v-main> -->
     <Footer />
   </v-app>
 </template>
@@ -58,5 +61,11 @@ export default {
 }
 .v-leave-active {
   transition: all 0.5s 0s ease;
+}
+main {
+  padding-top: 10vh;
+  padding-left: 40vh;
+  padding-right: 40vh;
+  padding-bottom: 10vh;
 }
 </style>

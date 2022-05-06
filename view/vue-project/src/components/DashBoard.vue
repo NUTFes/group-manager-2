@@ -5,6 +5,9 @@
       <div class="dashboard-detail">
         <p>技大祭に参加していただき誠にありがとうございます。<br />登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
       </div>
+      <li><router-link to="/profile">ユーザー情報</router-link></li>
+      <li><router-link to="/edit_user_info">ユーザー情報編集</router-link></li>
+      <li><router-link to="/password_reset">パスワード変更</router-link></li>
     </div>
   </div>
 </template>
@@ -52,5 +55,8 @@ export default {
   color: #333333;
   padding-top: 2%;
   font-size: 16px;
+}
+li {
+  list-style: none;
 }
 </style>

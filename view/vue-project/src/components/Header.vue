@@ -1,74 +1,13 @@
 <template>
-  <div
-    v-if="
-      this.$route.path === '/' ||
-      this.$route.path === '/Firstcustomer' ||
-      this.$route.path === '/MyPage' ||
-      this.$route.path === '/mypage'
-    "
-  >
-    <v-app-bar app color="header" dark>
-      <v-container>
-        <v-row>
-          <v-col cols="2" />
-          <v-col cols="7" class="d-inline-flex flex-row align-center">
-            <router-link to="/mypage" tabindex="-1">
-              技大祭Web
-            </router-link>
-          </v-col>
-          <v-col cols="1" align-self="center">
-            <v-menu
-              open-on-hover
-              offset-y
-              v-if="
-                this.$route.path === '/Firstcustomer' ||
-                this.$route.path === '/MyPage' ||
-                this.$route.path === '/mypage'
-              "
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn text color="#757575" dark v-bind="attrs" v-on="on">
-                  <v-icon large>mdi-account-circle-outline</v-icon>
-                  <v-icon>mdi-chevron-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list dense>
-                <v-list-item to="/profile">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-account-details</v-icon>プロフィール
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item to="/edit_user_info">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-account-edit</v-icon>プロフィール編集
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-
-                <v-list-item to="/password_reset">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-lock-reset</v-icon>パスワード変更
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item @click="signOut">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-logout</v-icon>ログアウト
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-col>
-          <v-col cols="2" />
-        </v-row>
-      </v-container>
-    </v-app-bar>
+  <div>
+    <header>
+      <span class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
+      <nav class="gnav">
+        <ul class="menu">
+          <li @click="signOut">ログアウト</li>
+        </ul>
+      </nav>
+    </header>
   </div>
 </template>
 
@@ -86,9 +25,12 @@ export default {
       ],
       users: [],
       logoImage: logo,
+      year: null,
     };
   },
   mounted() {
+    let currentTime = new Date();
+    this.year = currentTime.getFullYear();
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {
@@ -104,6 +46,9 @@ export default {
       });
   },
   methods: {
+    backMyPage: function () {
+      this.$router.push("/mypage");
+    },
     signOut: function () {
       const url = process.env.VUE_APP_URL + "/api/auth/sign_out";
       axios
@@ -125,3 +70,38 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+header {
+  width: 100%;
+  height: 6vh;
+  background: #ffffff;
+  border-bottom: solid 1px #d3d3d3;
+  padding: 20px 50px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 40vh;
+  padding-right: 40vh;
+}
+header .gnav .menu {
+  display: flex;
+}
+header .gnav .menu li {
+  list-style: none;
+  cursor: pointer;
+}
+header .gnav .menu li + li {
+  text-align: right;
+  margin-left: 40px;
+}
+.header-title {
+  font-size: 24px;
+  color: #333333;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>

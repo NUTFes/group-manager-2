@@ -94,4 +94,28 @@ export default {
   text-align: right;
   margin-top: 1%;
 }
+.acd-check{
+  display: none;
+}
+.acd-label{
+  background: #333;
+  color: #fff;
+  display: block;
+  margin-bottom: 1px;
+  padding: 10px;
+}
+.acd-content{
+  border: 1px solid #333;
+  height: 0;
+  opacity: 0;
+  padding: 0 10px;
+  transition: .5s;
+  visibility: hidden;
+}
+.acd-check:checked + .acd-label + .acd-content{
+  height: 40px;
+  opacity: 1;
+  padding: 10px;
+  visibility: visible;
+}
 </style>
