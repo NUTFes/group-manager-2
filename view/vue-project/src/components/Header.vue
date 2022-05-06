@@ -3,7 +3,7 @@
     <header>
       <div class="header-content">
         <span class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
-        <span class="header-menu"><li>ログアウト</li></span>
+        <span class="header-menu"><li @click="signOut">ログアウト</li></span>
       </div>
     </header>
   </div>
@@ -105,5 +105,6 @@ header {
   margin-top: auto;
   margin-bottom: auto;
   margin-left: auto;
+  cursor: pointer;
 }
 </style>

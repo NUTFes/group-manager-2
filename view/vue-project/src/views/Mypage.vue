@@ -3,11 +3,51 @@
     <div class="mypage-card">
       <DashBoard />
     </div>
-    <div class="mypage-card">
-      <News />
-    </div>
-    <div class="mypage-card">
-      <RegistAlarm />
+    <div class="mypage-tabs">
+      <input id="news" type="radio" name="mypage-tab-item" checked>
+      <label class="mypage-tab-item" for="news">お知らせ</label>
+      <input id="regist" type="radio" name="mypage-tab-item">
+      <label class="mypage-tab-item" for="regist">登録情報</label>
+      <input id="alert" type="radio" name="mypage-tab-item">
+      <label class="mypage-tab-item" for="alert">未登録</label>
+
+      <div class="mypage-tab-content" id="news-content">
+        <div class="mypage-tab-content-description">
+          <News />
+        </div>
+      </div>
+      <div class="mypage-tab-content" id="regist-content">
+        <div class="mypage-tab-content-description">
+        <v-btn
+          v-if="isRegistGroup"
+          block
+          dark
+          color="purple accent-2"
+          rounded
+          elevation="0"
+          to="/regist_model"
+        >
+          <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
+        </v-btn>
+        <br>
+        <v-btn
+          v-if="isRegistGroup"
+          block
+          dark
+          color="purple accent-2"
+          rounded
+          elevation="0"
+          to="/registEdit"
+        >
+          <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
+        </v-btn>
+        </div>
+      </div>
+      <div class="mypage-tab-content" id="alert-content">
+        <div class="mypage-tab-content-description">
+          <RegistAlarm />
+        </div>
+      </div>
     </div>
     <div class="mypage-card">
       <div v-for="(regist, i) in regist_info" :key="i">
@@ -38,29 +78,6 @@
           </v-row>
         </div>
     </div>
-    <v-btn
-      v-if="isRegistGroup"
-      block
-      dark
-      color="purple accent-2"
-      rounded
-      elevation="0"
-      to="/regist_model"
-    >
-      <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
-    </v-btn>
-    <br>
-    <v-btn
-      v-if="isRegistGroup"
-      block
-      dark
-      color="purple accent-2"
-      rounded
-      elevation="0"
-      to="/registEdit"
-    >
-      <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
-    </v-btn>
   </div>
 </template>
 
@@ -184,5 +201,52 @@ export default {
 <style scoped>
 .mypage-card {
   padding-bottom: 2vh;
+}
+.mypage-tabs {
+  margin-top: 50px;
+  padding-bottom: 40px;
+  background-color: #fff;
+  width: 1000px;
+  margin: 0 auto;
+}
+.mypage-tab-item {
+  width: calc(100%/3);
+  height: 50px;
+  border-bottom: 2px solid #e040fb;;
+  background-color: #ffffff;
+  line-height: 50px;
+  font-size: 16px;
+  text-align: center;
+  color: #565656;
+  display: block;
+  float: left;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+.mypage-tab-item:hover {
+  opacity: 0.75;
+}
+/*ラジオボタンを全て消す*/
+input[name="mypage-tab-item"] {
+  display: none;
+}
+.mypage-tab-content {
+  display: none;
+  padding-top: 20px;
+  clear: both;
+  overflow: hidden;
+}
+/*選択されているタブのコンテンツのみを表示*/
+#news:checked ~ #news-content,
+#regist:checked ~ #regist-content,
+#alert:checked ~ #alert-content {
+  display: block;
+}
+
+/*選択されているタブのスタイルを変える*/
+.mypage-tabs input:checked + .mypage-tab-item {
+  background-color: #eceff1;
+  color: #e040fb;
 }
 </style>
