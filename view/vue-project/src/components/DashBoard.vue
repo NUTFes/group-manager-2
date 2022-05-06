@@ -1,19 +1,12 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card elevation="0" color="#ECEFF1">
-        <v-row align="center">
-          <v-col>
-            <v-card-text class="font-weight-bold subtitle-1">
-              <h2>{{ user.name }} 様</h2>
-              <v-divider class="my-3" />
-              技大祭に参加していただき誠に<br />ありがとうございます。<br />登録情報の確認や変更が行えます。<br />入力締め切りはお守りいただくよう、<br />よろしくお願いします。
-            </v-card-text>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div class="dashboard-card">
+    <div class="dashboard-content">
+      <span class="dashboard-title">{{ user.name }} 様</span>
+      <div class="dashboard-detail">
+        <p>技大祭に参加していただき誠にありがとうございます。<br />登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -31,8 +24,8 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -41,3 +34,24 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.dashboard-card {
+  background-color: #eceff1;
+  border-radius: 5px;
+}
+.dashboard-content {
+  text-align: left;
+  padding: 2%;
+}
+.dashboard-title {
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+}
+.dashboard-detail {
+  color: #333333;
+  padding-top: 2%;
+  font-size: 16px;
+}
+</style>
