@@ -1,12 +1,10 @@
 <template>
   <div>
     <header>
-      <span class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
-      <nav class="gnav">
-        <ul class="menu">
-          <li @click="signOut">ログアウト</li>
-        </ul>
-      </nav>
+      <div class="header-content">
+        <span class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
+        <span class="header-menu"><li>ログアウト</li></span>
+      </div>
     </header>
   </div>
 </template>
@@ -74,34 +72,38 @@ export default {
 <style scoped>
 header {
   width: 100%;
-  height: 6vh;
+  height: 60px;
   background: #ffffff;
   border-bottom: solid 1px #d3d3d3;
-  padding: 20px 50px;
   box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
   display: flex;
   align-items: center;
-  padding-left: 40vh;
-  padding-right: 40vh;
 }
-header .gnav .menu {
+.header-content {
+  text-align: center;
   display: flex;
-}
-header .gnav .menu li {
-  list-style: none;
-  cursor: pointer;
-}
-header .gnav .menu li + li {
-  text-align: right;
-  margin-left: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1000px;
+  overflow: hidden;
 }
 .header-title {
+  text-align: left;
   font-size: 24px;
   color: #333333;
   font-weight: bold;
   cursor: pointer;
+  float: left;
+}
+.header-menu {
+  color: #333333;
+  float: left;
+  list-style: none;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
 }
 </style>

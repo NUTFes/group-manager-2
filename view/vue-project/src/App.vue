@@ -67,9 +67,10 @@ export default {
   padding-bottom: 0vh;
 }
 .no-top {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1000px; 
   padding-top: 10vh;
-  padding-left: 40vh;
-  padding-right: 40vh;
-  padding-bottom: 10vh;
 }
 </style>
