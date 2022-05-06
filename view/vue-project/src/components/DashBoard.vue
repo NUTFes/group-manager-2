@@ -38,7 +38,6 @@ export default {
 <style scoped>
 .dashboard-card {
   background-color: #eceff1;
-  border-radius: 5px;
 }
 .dashboard-content {
   text-align: left;

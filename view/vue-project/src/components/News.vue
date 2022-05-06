@@ -1,52 +1,15 @@
 <template>
   <div>
-    <v-card class="mx-auto" outlined>
-      <v-card-title style="background-color: #eceff1" class="title">
-        <v-icon class="pr-2" size="30">mdi-bell</v-icon>
-        <b>お知らせ</b>
-      </v-card-title>
-
-      <v-list v-for="n in news" :key="n.id">
-        <v-list-item v-if="isDisplayNews(n.id)" @click.stop="onClickBtn(n)">
-          <v-list-item-content class="font-weight-medium">
-            <v-col cols="4">{{ n.created_at | moment }}</v-col>
-            <v-col cols="8">
-              <v-list-item-title>{{ n.title }}</v-list-item-title>
-            </v-col>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-      <v-dialog v-model="dialog" v-if="currentNews" activator max-width="1000">
-        <v-card>
-          <v-card-title class="headline grey lighten-2">
-            <v-icon class="pr-2" size="40">mdi-bell-outline</v-icon>
-            {{ currentNews.title }}
-            <v-spacer />
-            <v-btn text @click="dialog = false" fab>
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-row>
-            <v-col cols="2" />
-            <v-col cols="8">
-              <v-card-text class="body-1">
-                {{ currentNews.body }}
-              </v-card-text>
-            </v-col>
-            <v-col cols="2" />
-          </v-row>
-          <v-row>
-            <v-col cols="8" />
-            <v-col cols="4">
-              <v-card-text>
-                {{ currentNews.created_at | moment }}<br />
-                技大祭実行委員会
-              </v-card-text>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-dialog>
-    </v-card>
+    <div class="news-card">
+      <div class="news-header">
+        <span>お知らせ</span>
+      </div>
+      <div v-for="n in news" :key="n.id" class="news-content">
+        <div class="news-title">{{ n.title }}</div>
+        <div class="news-body">{{ n.body }}</div>
+        <div class="news-date">更新日： {{ n.updated_at | moment }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,7 +37,7 @@ export default {
         },
       })
       .then((response) => {
-        this.news = response.data;
+        this.news = response.data.data;
       });
   },
 
@@ -96,3 +59,39 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.news-card {
+  border-radius: 5px;
+}
+.news-header {
+  color: #333333;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #eceff1;
+  padding: 1% 1% 1% 2%; 
+}
+.news-content {
+  background-color: #ffffff;
+  border-left: solid 1px #d3d3d3;
+  border-right: solid 1px #d3d3d3;
+  border-bottom: solid 1px #d3d3d3;
+  padding: 1% 1% 1% 2%; 
+}
+.news-title {
+  font-size: 18px;
+  color: #333333;
+  font-weight: bold;
+}
+.news-body {
+  font-size: 16px;
+  background-color: #f5f5f5;
+  margin-top: 1%;
+  padding: 1% 1% 1% 1%;
+}
+.news-date {
+  font-size: 12px;
+  text-align: right;
+  margin-top: 1%;
+}
+</style>

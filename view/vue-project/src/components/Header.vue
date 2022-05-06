@@ -13,7 +13,7 @@
           <v-col cols="2" />
           <v-col cols="7" class="d-inline-flex flex-row align-center">
             <router-link to="/mypage" tabindex="-1">
-              <v-img contain :src="logoImage" />
+              技大祭Web
             </router-link>
           </v-col>
           <v-col cols="1" align-self="center">

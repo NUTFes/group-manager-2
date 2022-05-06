@@ -113,6 +113,7 @@ export default {
       ],
       users: [],
       regist_info: [],
+      info: [],
       isRegistGroup: [],
       addEmployee: [],
       addFoodProduct: [],
@@ -140,18 +141,17 @@ export default {
     },
     reload() {
       const regist_info_url =
-        process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
+        process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
       axios
         .get(regist_info_url, {
           headers: {
             "Content-Type": "application/json",
             "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
+            "client": localStorage.getItem("client"),
+            "uid": localStorage.getItem("uid"),
           },
         })
         .then((response) => {
-          console.log(response);
           this.regist_info = response.data;
         });
     },
@@ -167,27 +167,25 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
         this.users = response;
       });
 
-    const regist_info_url =
-      process.env.VUE_APP_URL + "/api/v1/current_user/regist_info";
+    const regist_info_url = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
       .get(regist_info_url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
-        console.log(response);
         this.regist_info = response.data;
       });
 
@@ -197,7 +195,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
+          "client": localStorage.getItem("client"),
         },
       })
       .then((response) => {
@@ -205,10 +203,7 @@ export default {
         this.addEmployee = response.data[0].add_employee;
         this.addFoodProduct = response.data[0].add_food_product;
         this.addPurchaseList = response.data[0].add_purchase_list;
-        console.log(response);
       });
-
-    console.log(this.isRegistGroup);
   },
 };
 </script>
