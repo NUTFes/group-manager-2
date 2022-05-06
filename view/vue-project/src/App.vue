@@ -71,6 +71,6 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 1000px; 
-  padding-top: 10vh;
+  padding-top: 80px;
 }
 </style>
