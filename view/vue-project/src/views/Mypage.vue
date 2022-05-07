@@ -83,8 +83,7 @@
             elevation="0"
             to="/registEdit"
           >
-            <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
-          </v-btn>
+          <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更</v-btn>
         </v-col>
         <v-col cols="4" />
       </v-row>
@@ -112,6 +111,7 @@ export default {
         localStorage.getItem("uid"),
       ],
       users: [],
+      setting: [],
       regist_info: [],
       isRegistGroup: [],
       addEmployee: [],
@@ -201,6 +201,7 @@ export default {
         },
       })
       .then((response) => {
+        this.setting = response.data.data[0];
         this.isRegistGroup = response.data[0].is_regist_group;
         this.addEmployee = response.data[0].add_employee;
         this.addFoodProduct = response.data[0].add_food_product;
