@@ -14,19 +14,40 @@
         <div class="stage">
           {{regist}}
         </div>
-        <button class="button">
-          <div class="edit">編集</div><br>
-          <div class="delete">削除</div>
-        </button>
+        <div class="button">
+          <button class="edit" @click="openEditStage">編集</button>
+          <button class="delete">削除</button>
+        </div>
       </div>
+      <EditStage
+        v-if="editStageisplay"
+        @closeEditStage="closeEditStage"
+      />
     </div>
   </body>
 </template>
 
 <script>
+import EditStage from "@/components/AllEdit/EditStage.vue";
 export default {
+  components: {
+    EditStage
+  },
   props: {
     regist: String,
+  },
+  data() {
+    return {
+      editStageisplay: false,
+    };
+  },
+  methods: {
+    openEditStage: function () {
+      this.editStageisplay = true;
+    },
+    closeEditStage: function () {
+      this.editStageisplay = false;
+    },
   },
 };
 </script>
@@ -114,13 +135,17 @@ export default {
   letter-spacing: 0.3em;
   background: #62a7ff;
   color: #ffffff;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
-.delete {
+.delete{
   font-weight: 350;
   font-size: 18px;
   line-height: 30px;
   letter-spacing: 0.3em;
-  background: #FF6262;
+  background: #ff6262;
   color: #ffffff;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
 </style>  

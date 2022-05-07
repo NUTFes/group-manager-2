@@ -255,7 +255,6 @@ export default {
       addPowerDisplay: false,
       test: "aaaaa",
       addItemDisplay: false,
-      test: "aaa"
     };
   },
 
