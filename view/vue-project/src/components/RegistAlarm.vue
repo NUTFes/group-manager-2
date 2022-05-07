@@ -12,7 +12,6 @@
         </li>
       </div>
 
-      <div v-else>
         <div v-if="is_regist_group == true">
           <li v-if="new_info.sub_rep == null">
             <router-link to="/regist_subrep">
@@ -94,7 +93,6 @@
             <span style="margin-left:1%;">購入品申請が登録されていません</span>
           </li>
         </div>
-      </div>
 
     </ul>
   </div>
