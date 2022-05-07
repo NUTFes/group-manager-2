@@ -24,13 +24,18 @@
             <div class="regist-card-content-question-label">商品URL</div>
             <input type="text" placeholder="URL" v-model="inputData[i].url" :id="inputData[i].url_id">
           </div>
+          <div style="text-align:right">
+            <button v-if="inputData.length >= 2" class="regist-submit-button" @click="removeAddComponent(i)">このフォーム削除</button>
+          </div>
         </div>
       </div>
     </div>
-
-    <button class="regist-submit-button" @click="plusAddComponent">追加</button>
-    <button class="regist-submit-button" @click="removeAddComponent">削除</button>
-    <button class="regist-submit-button" @click="register">登録</button>
+    <div style="text-align: center">
+      <button class="regist-submit-button" @click="plusAddComponent">フォームの追加</button>
+    </div>
+    <div class="regist-button">
+      <button class="regist-submit-button" @click="register">登録</button>
+    </div>
   </div>
 </template>
 
@@ -79,8 +84,8 @@ export default {
       this.inputData.push(newInputData)
       this.count += 1; // 要素のid番号になる
     },
-    removeAddComponent: function() {
-      this.inputData.pop()
+    removeAddComponent: function(index) {
+      this.inputData.splice(index, 1)
     },
     confirmValidation: function() {
       this.submitFlag = true;
