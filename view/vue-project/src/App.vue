@@ -31,9 +31,6 @@ export default {
       mobile: [],
     };
   },
-  mounted() {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaa")
-  },
 };
 </script>
 

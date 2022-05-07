@@ -308,6 +308,6 @@ export default {
     border: 1px solid red;
   }
   select,input:valid{
-    border: 1px solid black;
+    border: 1px solid #333333;
   }
 </style>
