@@ -101,6 +101,7 @@ export default {
         localStorage.getItem("uid"),
       ],
       users: [],
+      setting: [],
       regist_info: [],
       info: [],
       isRegistGroup: [],
@@ -196,6 +197,7 @@ export default {
         },
       })
       .then((response) => {
+        this.setting = response.data.data[0];
         this.isRegistGroup = response.data[0].is_regist_group;
         this.addEmployee = response.data[0].add_employee;
         this.addFoodProduct = response.data[0].add_food_product;

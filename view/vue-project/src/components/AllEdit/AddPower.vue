@@ -1,22 +1,25 @@
 <template>
   <transition name="fade" appear>
     <div class="add-modal">
-      <div class="add-modal_box">
-        <h1>電力追加<button id="btn2" v-on:click="$emit('closeAddPower')">✖</button></h1>
-        <div>使用物品名</div>
-        <input type="text" v-model="item" id="item">
-        <div>最大定格電力[W]</div>
-        <input type="text" v-model="power" id="power" @change="validationPower">
-        <div>メーカー</div>
-        <input type="text" v-model="model" id="model">
-        <div>型番</div>
-        <input type="text" v-model="manufacturer" id="manufacturer">
-        <div>URL</div>
-        <input type="text" v-model="url" id="url">
-        <span style="display:flex;">
-          <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button" @click="register">✓登録</button>
-        </span>
+        <div class="add-modal_box">
+          <div id="btnContainer">
+            <button v-on:click="$emit('closeAddPower')">✖</button>
+          </div>
+          <h1>電力追加</h1>
+          <div>使用物品名</div>
+          <input type="text" v-model="item" id="item">
+          <div>最大定格電力[W]</div>
+          <input type="text" v-model="power" id="power" @change="validationPower">
+          <div>メーカー</div>
+          <input type="text" v-model="model" id="model">
+          <div>型番</div>
+          <input type="text" v-model="manufacturer" id="manufacturer">
+          <div>URL</div>
+          <input type="text" v-model="url" id="url">
+          <span style="display:flex;">
+            <button id="btn" type="button" @click="reset">リセット</button>
+            <button id="btn" type="button" @click="register">✓登録</button>
+          </span>
       </div>
     </div>
   </transition>
@@ -149,19 +152,16 @@ export default {
   #btn:active{
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
   }
-  #btn2{
-    position: relative;
-    right: -30%;
+  #btnContainer {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    margin-bottom: -1.5rem;
+    z-index: 0;
   }
   input{
     border: 1px solid silver;
     width: 100%;
-  }
-  .add-modal_box div {
-    justify-content: center;
-    flex-flow: column;
-    width: 80%;
-    margin-top: 3%;
   }
   .add-modal_box {
     display: flex;

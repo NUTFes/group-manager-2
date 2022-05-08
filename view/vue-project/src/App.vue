@@ -2,7 +2,7 @@
   <v-app>
     <MobileHeader />
     <Header />
-    <main v-if="this.$route.path == '/'" class="top">
+    <main v-if="this.$route.path == '/' || this.$route.path == '/registEdit'" class="top">
       <router-view />
     </main>
     <main v-else class="no-top">

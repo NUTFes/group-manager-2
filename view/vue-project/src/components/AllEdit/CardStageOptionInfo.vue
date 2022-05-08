@@ -29,19 +29,41 @@
               {{regist}}
             </div>
         </div>
-        <button class="button">
-          <div class="edit">編集</div><br>
-          <div class="delete">削除</div>
-        </button>
+        <div class="button">
+          <button class="edit" @click="openEditOption">編集</button>
+          <button class="delete">削除</button>
+        </div>
+        <EditOption
+          v-if="editOptionisplay"
+          @closeEditOption="closeEditOption"
+        />
       </div>
     </div>
   </body>
 </template>
 
 <script>
+import EditOption from "@/components/AllEdit/EditOption.vue";
 export default {
+  components: {
+    EditOption
+  },
   props: {
     regist: String,
+  },
+  data() {
+    return {
+      editOptionisplay: false,
+    };
+  },
+
+  methods: {
+    openEditOption: function () {
+      this.editOptionisplay = true;
+    },
+    closeEditOption: function () {
+      this.editOptionisplay = false;
+    },
   },
 };
 </script>
@@ -153,6 +175,7 @@ export default {
   height: 80px;
   margin-top: 5px;
   border-radius: 5px;
+  text-align: center;
 }
 .edit {
   font-weight: 350;
@@ -161,6 +184,8 @@ export default {
   letter-spacing: 0.3em;
   background: #62a7ff;
   color: #ffffff;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
 .delete{
   font-weight: 350;
@@ -169,5 +194,7 @@ export default {
   letter-spacing: 0.3em;
   background: #ff6262;
   color: #ffffff;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
 </style> 
