@@ -1,0 +1,57 @@
+.regist-back-link {
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.regist-button {
+  text-align: right;
+}
+.regist-submit-button {
+  font-size: 20px;
+  color: #333333;
+  background-color: #eceff1;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 2%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-right: 5%;
+  padding-left: 5%;
+}
+.regist-submit-button:hover {
+  color: #333333;
+  background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+}
+.regist-submit-button:active{
+  color: #333333;
+  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+}
+.regist-title {
+  width: 1000px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #eceff1;
+  padding: 1% 1% 1% 2%;
+  margin-top: 2%;
+}
+.regist-card {
+  width: 1000px;
+}
+.regist-card-content {
+  border: solid 1px #d3d3d3;
+  margin-top: 2%;
+  padding: 5% 1% 5% 1%;
+}
+.regist-card-content-question {
+  text-align: center;
+  width: 800px;
+  margin-bottom: 3%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.regist-card-content-question-label {
+  font-size: 18px;
+  text-align: left;
+  margin-bottom: 1%;
+}

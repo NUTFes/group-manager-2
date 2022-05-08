@@ -1,74 +1,12 @@
 <template>
-  <div
-    v-if="
-      this.$route.path === '/' ||
-      this.$route.path === '/Firstcustomer' ||
-      this.$route.path === '/MyPage' ||
-      this.$route.path === '/mypage'
-    "
-  >
-    <v-app-bar app color="header" dark>
-      <v-container>
-        <v-row>
-          <v-col cols="2" />
-          <v-col cols="7" class="d-inline-flex flex-row align-center">
-            <router-link to="/mypage" tabindex="-1">
-              <v-img contain :src="logoImage" />
-            </router-link>
-          </v-col>
-          <v-col cols="1" align-self="center">
-            <v-menu
-              open-on-hover
-              offset-y
-              v-if="
-                this.$route.path === '/Firstcustomer' ||
-                this.$route.path === '/MyPage' ||
-                this.$route.path === '/mypage'
-              "
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn text color="#757575" dark v-bind="attrs" v-on="on">
-                  <v-icon large>mdi-account-circle-outline</v-icon>
-                  <v-icon>mdi-chevron-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list dense>
-                <v-list-item to="/profile">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-account-details</v-icon>プロフィール
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item to="/edit_user_info">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-account-edit</v-icon>プロフィール編集
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-
-                <v-list-item to="/password_reset">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-lock-reset</v-icon>パスワード変更
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item @click="signOut">
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">
-                      <v-icon class="pr-2" size="30">mdi-logout</v-icon>ログアウト
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-col>
-          <v-col cols="2" />
-        </v-row>
-      </v-container>
-    </v-app-bar>
+  <div>
+    <header>
+      <div class="header-content">
+        <span v-if="this.$route.path == '/' || this.$route.path == '/regist_rep'" class="header-title" @click="backTop">技大祭 {{ year }}</span>
+        <span v-else class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
+        <span v-if="this.$route.path != '/'" class="header-menu"><li @click="signOut">ログアウト</li></span>
+      </div>
+    </header>
   </div>
 </template>
 
@@ -86,17 +24,20 @@ export default {
       ],
       users: [],
       logoImage: logo,
+      year: null,
     };
   },
   mounted() {
+    let currentTime = new Date();
+    this.year = currentTime.getFullYear();
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -104,6 +45,12 @@ export default {
       });
   },
   methods: {
+    backMyPage: function () {
+      this.$router.push("/mypage");
+    },
+    backTop: function () {
+      this.$router.push("/");
+    },
     signOut: function () {
       const url = process.env.VUE_APP_URL + "/api/auth/sign_out";
       axios
@@ -111,17 +58,60 @@ export default {
           headers: {
             "Content-Type": "application/json",
             "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
+            "client": localStorage.getItem("client"),
+            "uid": localStorage.getItem("uid"),
           },
         })
         .then(
-          this.$router.push("/"),
           localStorage.removeItem("access-token"),
           localStorage.removeItem("client"),
-          localStorage.removeItem("uid")
+          localStorage.removeItem("uid"),
+          localStorage.setItem("myPagePermission", 0),
+          this.$store.commit("rejectMypagePermission"),
+          this.$router.push("/"),
         );
     },
   },
 };
 </script>
+
+<style scoped>
+header {
+  width: 100%;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: solid 1px #d3d3d3;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1000000;
+}
+.header-content {
+  text-align: center;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1000px;
+  overflow: hidden;
+}
+.header-title {
+  text-align: left;
+  font-size: 24px;
+  color: #333333;
+  font-weight: bold;
+  cursor: pointer;
+  float: left;
+}
+.header-menu {
+  color: #333333;
+  float: left;
+  list-style: none;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  cursor: pointer;
+}
+</style>

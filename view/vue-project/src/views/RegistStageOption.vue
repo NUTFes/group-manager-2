@@ -1,61 +1,66 @@
 <template>
-  <div id="app">
-    <h1 class="tytle">ステージオプション申請の登録</h1>
-    <div class="Blank">
-      <span>所持機器の利用</span>
-      <select v-model="item" @change="validationItem" id="item">
-        <option
-          v-for="list in itemsAvailable"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
+  <div>
+      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+    <div class="regist-title">ステージオプションの登録</div>
+    <div class="regist-card">
+      <div class="regist-card-content">
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">所持機器の利用</div>
+          <select v-model="item" @change="validationItem" id="item">
+            <option
+              v-for="list in itemsAvailable"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">音楽をかける</div>
+          <select v-model="music" @change="validationMusic" id="music">
+            <option
+              v-for="list in musicAvailable"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">撮影を許可する</div>
+          <select v-model="picture" @change="validationPicture" id="picture">
+            <option
+              v-for="list in photoAvailable"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">騒音</div>
+          <select v-model="noise" @change="validationNoise" id="noise">
+            <option
+              v-for="list in loudAble"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">ステージの内容</div>
+          <input type="text" v-model="stageContent" id="content">
+        </div>
+
+      </div>
     </div>
-    <div class="Blank">
-      <span>音楽</span>
-      <select v-model="music" @change="validationMusic" id="music">
-        <option
-          v-for="list in musicAvailable"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>撮影許可</span>
-      <select v-model="picture" @change="validationPicture" id="picture">
-        <option
-          v-for="list in photoAvailable"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>騒音</span>
-      <select v-model="noise" @change="validationNoise" id="noise">
-        <option
-          v-for="list in loudAble"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>ステージ内容</span>
-      <input type="text" v-model="stageContent" id="content">
-    </div>
-    <div  class="Blank">
-      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
-      <button @click="register" style="margin-left:15%;">登録する→</button>
+    <div  class="regist-button">
+      <button @click="register" class="regist-submit-button">登録する→</button>
     </div>
   </div>
 </template>
@@ -210,29 +215,14 @@ export default {
 </script>
 
 <style scoped>
-  #app{
-    margin: 1%;
-  }
-  span {
-    display: inline-block;
-    width: 100px;
-    padding-right: 10px;
-  }
-  .tytle{
-    text-align:center;
-    padding:1%;
-  }
-  .Blank{
-    text-align: center;
-    margin:1%;
-  }
-  select,input{
-    text-align: center;
-    width: 30%;
-    height:40px;
+  select, input{
+    text-align: left;
+    padding: 1%;
+    height: 50px;
+    width: 800px;
     border-radius: 7px;
-    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
-    font-size: 25px;
+    font-size: 18px;
+    vertical-align: top;
   }
   select,input:required{
     border: 2px solid red;
@@ -242,22 +232,5 @@ export default {
   }
   select,input:valid{
     border: 2px solid black;
-  }
-  button{
-  color: black;
-  font-weight: bold;
-  border: solid 2px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 1%;
-  padding:1%;
-  }
-  button:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  button:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
   }
 </style>
