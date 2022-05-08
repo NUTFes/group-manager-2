@@ -64,6 +64,10 @@ export default {
     };
   },
   mounted() {
+    // 直リンク対策
+    if (!this.$store.state.registGroupPermission) {
+      this.$router.push("/mypage");
+    }
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {

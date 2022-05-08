@@ -21,7 +21,7 @@
             <div class="login-form-button">
               <button class="login-button" @click="submit">ログイン</button>
             </div>
-            <button class="signup-button">新規登録はこちら</button>
+            <button class="signup-button" @click="signup">新規登録はこちら</button>
           </div>
         </div>
       </div>
@@ -67,8 +67,10 @@ export default {
   computed: {
   },
   methods: {
+    signup: function() {
+      this.$router.push("/regist_rep");
+    },
     submit: function () {
-      console.log("submit");
       const url = process.env.VUE_APP_URL + "/api/auth/sign_in";
       let params = new URLSearchParams();
       params.append("email", this.email);
@@ -83,6 +85,8 @@ export default {
           localStorage.setItem("client", response.headers["client"]);
           localStorage.setItem("uid", response.headers["uid"]);
           localStorage.setItem("token-type", response.headers["token-type"]);
+          // Mypageへのアクセスを許可する
+          this.$store.commit("acceptMypagePermission");
           this.$router.push("mypage");
         },
         (error) => {

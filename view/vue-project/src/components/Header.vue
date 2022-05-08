@@ -2,7 +2,7 @@
   <div>
     <header>
       <div class="header-content">
-        <span v-if="this.$route.path == '/'" class="header-title" >技大祭 {{ year }}</span>
+        <span v-if="this.$route.path == '/' || this.$route.path == '/regist_rep'" class="header-title" @click="backTop">技大祭 {{ year }}</span>
         <span v-else class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
         <span v-if="this.$route.path != '/'" class="header-menu"><li @click="signOut">ログアウト</li></span>
       </div>
@@ -47,6 +47,9 @@ export default {
   methods: {
     backMyPage: function () {
       this.$router.push("/mypage");
+    },
+    backTop: function () {
+      this.$router.push("/");
     },
     signOut: function () {
       const url = process.env.VUE_APP_URL + "/api/auth/sign_out";

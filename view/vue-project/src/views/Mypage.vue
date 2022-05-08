@@ -10,7 +10,6 @@
       <label class="mypage-tab-item" for="regist">登録情報</label>
       <input id="alert" type="radio" name="mypage-tab-item">
       <label class="mypage-tab-item" for="alert">未登録</label>
-
       <div class="mypage-tab-content" id="news-content">
         <div class="mypage-tab-content-description">
           <News />
@@ -151,6 +150,14 @@ export default {
     },
   },
   mounted() {
+    // 直リンク対策
+    if (this.$store.state.myPagePermission) {
+      console.log("ok");
+    } else {
+      console.log("reject");
+      this.$router.push("/");
+    }
+
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {

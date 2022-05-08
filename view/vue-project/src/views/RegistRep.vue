@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="regist-title">ユーザー登録</div>
+    <div class="regist-title">新規ユーザー登録</div>
     <div class="regist-card">
       <div class="regist-card-content">
         <div class="regist-card-content-question">
