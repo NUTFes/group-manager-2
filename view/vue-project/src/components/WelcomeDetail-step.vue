@@ -15,8 +15,7 @@
           <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h4 text-no-wrap">
-              <p>開催日時：2021年9月14日(土) 15日(日)<br /></p>
-              <p>募集締切：2021年7月30日(月)</p>
+              <p>開催日時：2022年9月17日(土) 18日(日)<br /></p>
             </div>
           </v-col>
           <v-col cols="2" />

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <MobileHeader />
-    <Header v-if="this.$route.path != '/'" />
+    <Header />
     <main v-if="this.$route.path == '/'" class="top">
       <router-view />
     </main>

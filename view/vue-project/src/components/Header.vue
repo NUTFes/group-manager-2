@@ -2,8 +2,9 @@
   <div>
     <header>
       <div class="header-content">
-        <span class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
-        <span class="header-menu"><li @click="signOut">ログアウト</li></span>
+        <span v-if="this.$route.path == '/'" class="header-title" >技大祭 {{ year }}</span>
+        <span v-else class="header-title" @click="backMyPage">技大祭 {{ year }}</span>
+        <span v-if="this.$route.path != '/'" class="header-menu"><li @click="signOut">ログアウト</li></span>
       </div>
     </header>
   </div>
