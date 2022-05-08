@@ -132,7 +132,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 80px;
+  font-size: 5vw;
   font-family:serif;
   font-weight: bold;
 }
