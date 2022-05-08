@@ -36,8 +36,8 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -58,15 +58,17 @@ export default {
           headers: {
             "Content-Type": "application/json",
             "access-token": localStorage.getItem("access-token"),
-            client: localStorage.getItem("client"),
-            uid: localStorage.getItem("uid"),
+            "client": localStorage.getItem("client"),
+            "uid": localStorage.getItem("uid"),
           },
         })
         .then(
-          this.$router.push("/"),
           localStorage.removeItem("access-token"),
           localStorage.removeItem("client"),
-          localStorage.removeItem("uid")
+          localStorage.removeItem("uid"),
+          localStorage.setItem("myPagePermission", 0),
+          this.$store.commit("rejectMypagePermission"),
+          this.$router.push("/"),
         );
     },
   },
@@ -85,6 +87,7 @@ header {
   left: 0;
   display: flex;
   align-items: center;
+  z-index: 1000000;
 }
 .header-content {
   text-align: center;

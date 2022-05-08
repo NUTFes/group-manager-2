@@ -8,13 +8,10 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    myPagePermission: true,
+    myPagePermission: false,
     registGroupPermission: false
   },
   mutations: {
-    increment(state) {
-      state.count ++
-    },
     acceptMypagePermission(state) {
       state.myPagePermission = true
     },

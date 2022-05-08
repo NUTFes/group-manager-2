@@ -36,6 +36,8 @@ import MobileRegistShop from "../views/Mobile/RegistShop.vue";
 import MobilePlace from "../views/Mobile/Place.vue";
 import MobileEditUserInfo from "../views/Mobile/EditUserInfo.vue";
 
+import NotFound from "../views/404.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -204,6 +206,12 @@ const routes = [
     name: "MobileEditUserInfo",
     component: MobileEditUserInfo,
   },
+  // Not Found
+  {
+    path: "/*",
+    name: "Not Found",
+    component: NotFound,
+  }
 ];
 
 const router = new VueRouter({

@@ -59,6 +59,10 @@ export default {
     };
   },
   mounted() {
+    // Mypageへのアクセス許可があればMypageに飛ばす
+    if (localStorage.getItem("myPagePermission") == 1) {
+      this.$router.push("/mypage");
+    }
     window.addEventListener("resize", this.calculateWindowWidth);
   },
   beforeDestroy() {
@@ -86,6 +90,7 @@ export default {
           localStorage.setItem("uid", response.headers["uid"]);
           localStorage.setItem("token-type", response.headers["token-type"]);
           // Mypageへのアクセスを許可する
+          localStorage.setItem("myPagePermission", 1);
           this.$store.commit("acceptMypagePermission");
           this.$router.push("mypage");
         },

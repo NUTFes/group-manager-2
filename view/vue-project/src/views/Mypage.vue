@@ -152,7 +152,8 @@ export default {
   },
   mounted() {
     // 直リンク対策
-    if (this.$store.state.myPagePermission) {
+    console.log(localStorage.getItem("myPagePermission") == 1)
+    if (localStorage.getItem("myPagePermission") == 1) {
       console.log("ok");
     } else {
       console.log("reject");
