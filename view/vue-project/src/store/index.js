@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 // import Vuex, { Store } from "vuex";
 // import current_user from "./modules/current_user";
-// import createPersistedState from "vuex-persistedstate";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
@@ -23,7 +23,8 @@ const store = new Vuex.Store({
     getCount: state => {
       return state.count
     }
-  }
+  },
+  plugins: [createPersistedState()],
 })
 
 export default store

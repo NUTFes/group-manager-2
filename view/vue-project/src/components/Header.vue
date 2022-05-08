@@ -66,7 +66,6 @@ export default {
           localStorage.removeItem("access-token"),
           localStorage.removeItem("client"),
           localStorage.removeItem("uid"),
-          localStorage.setItem("myPagePermission", 0),
           this.$store.commit("rejectMypagePermission"),
           this.$router.push("/"),
         );
