@@ -9,7 +9,7 @@
             v-for="list in regist_info"
             :key="list.group.id"
             :value="list.group.id"
-            >{{list.group.project_name}}
+            >
           </option>
         </select>
       </div>
@@ -52,19 +52,13 @@
 
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-              <div class="card">
-                <ConfirmationPlace :regist="new_info" />
-              </div>
-              <div>
+              <div >
                 <CardPlaceInfo :regist="new_info" />
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div class="card">
-                <ConfirmationPower :regist="new_info" />
-              </div>
               <div>
                 <CardPowerInfo :regist="new_info" />
               </div>
@@ -76,9 +70,6 @@
 
             <!-- 物品申請 -->
             <div id="area3" class="panel">
-              <div class="card">
-                <ConfirmationItem :regist="new_info" />
-              </div>
               <button id="btn1" type="button" onclick="document.getElementById('addItem').show()" style="display: block; margin: 0 0 0 auto;">追加</button>
               <dialog id="addItem" style="margin-left:30%; margin-right:30%; width:40%;">
                 <AddItem />
@@ -156,11 +147,8 @@
 <script>
 import axios from "axios";
 
-import ConfirmationPlace from "@/components/AllEdit/ConfirmationPlace.vue";
 import AddPower from "@/components/AllEdit/AddPower.vue";
-import ConfirmationPower from "@/components/AllEdit/ConfirmationPower.vue";
 import AddItem from "@/components/AllEdit/AddItem.vue";
-import ConfirmationItem from "@/components/AllEdit/ConfirmationItem.vue";
 import ConfirmationStage from "@/components/AllEdit/ConfirmationStage.vue";
 import ConfirmationOption from "@/components/AllEdit/ConfirmationOption.vue";
 import AddEmployee from "@/components/AllEdit/AddEmployee.vue";
@@ -177,9 +165,6 @@ import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
 
 export default {
   components: {
-    ConfirmationPlace,
-    ConfirmationPower,
-    ConfirmationItem,
     ConfirmationStage,
     ConfirmationOption,
     ConfirmationEmployee,
