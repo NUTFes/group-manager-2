@@ -54,9 +54,6 @@
           <div class="panels">
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-              <div class="card">
-                <ConfirmationPlace :regist="test" />
-              </div>
               <div>
                 <CardPlaceInfo :regist="test" />
               </div>
@@ -64,9 +61,6 @@
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div class="card">
-                <ConfirmationPower :regist="test" :groupId="projectName" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -80,13 +74,14 @@
                 :groupId="projectName"
                 @closeAddPower="closeAddPower"
               />
+
+              <div>
+                <CardPowerInfo :regist="test" />
+              </div>
             </div>
 
             <!-- 物品申請 -->
             <div id="area3" class="panel">
-              <div class="card">
-                <ConfirmationItem :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -108,31 +103,20 @@
 
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
-              <div class="card">
-                <ConfirmationStage :regist="test" />
-              </div>
-            
-              <div>
-                <CardStageInfo :regist="test" />
+              <div v-for="list in regist_info" :key="list.id">
+                <CardStageInfo :regist="list" />
               </div>
             </div>
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
-              <div class="card">
-                <ConfirmationOption :regist="test" />
-              </div>
-
-              <div>
-                <CardStageOptionInfo :regist="test" />
+              <div v-for="list in regist_info" :key="list.id">
+                <CardStageOptionInfo :regist="list" />
               </div>
             </div>
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
-              <div class="card">
-                <ConfirmationEmployee :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -158,9 +142,6 @@
 
             <!-- 食品申請 -->
             <div id="area6" class="panel">
-              <div class="card">
-                <ConfirmationFood :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -179,9 +160,6 @@
 
             <!-- 購入品申請 -->
             <div id="area7" class="panel">
-              <div class="card">
-                <ConfirmationPurchase :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -208,42 +186,26 @@
 <script>
 import axios from "axios";
 
-import ConfirmationPlace from "@/components/AllEdit/ConfirmationPlace.vue";
 import AddPower from "@/components/AllEdit/AddPower.vue";
-import ConfirmationPower from "@/components/AllEdit/ConfirmationPower.vue";
 import AddItem from "@/components/AllEdit/AddItem.vue";
-import ConfirmationItem from "@/components/AllEdit/ConfirmationItem.vue";
-import ConfirmationStage from "@/components/AllEdit/ConfirmationStage.vue";
-import ConfirmationOption from "@/components/AllEdit/ConfirmationOption.vue";
 import AddEmployee from "@/components/AllEdit/AddEmployee.vue";
-import ConfirmationEmployee from "@/components/AllEdit/ConfirmationEmployee.vue";
 import AddFood from "@/components/AllEdit/AddFood.vue";
-import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
-import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
 import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
-// import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
+import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
 import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
 import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
 
 export default {
   components: {
-    ConfirmationPlace,
-    ConfirmationPower,
-    ConfirmationItem,
-    ConfirmationStage,
-    ConfirmationOption,
-    ConfirmationEmployee,
-    ConfirmationFood,
-    ConfirmationPurchase,
     AddPower,
     AddItem,
     AddEmployee,
     AddFood,
     AddPurchase,
     CardPlaceInfo,
-    // CardPowerInfo,
+    CardPowerInfo,
     CardItemInfo,
     CardStageInfo,
     CardStageOptionInfo,
@@ -255,7 +217,7 @@ export default {
       addPowerDisplay: false,
       test: "aaaaa",
       addItemDisplay: false,
-      test1: "aaa"
+      stageOrderInfo: "",
     };
   },
 
@@ -282,6 +244,7 @@ export default {
         this.regist_info = response.data.data;
         // デフォルトで一番最初のgroupが選択される
         this.projectName = response.data.data[0].group.id;
+        this.stageOrderInfo = response.data.data[0].stage_orders;
       });
   },
 };

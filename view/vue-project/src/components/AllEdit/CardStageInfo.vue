@@ -4,16 +4,17 @@
       <div class="card">
         <span class="red" />
         <div class="date">
-          11月11日 
+          <div v-for="list in regist.stage_orders" :key="list.id">
+            {{list.stage_order.date}}
+          </div>
         </div>
         <span class="line" />
         <div class="weather">
-          晴
         </div>
         <span class="line" />
         <div class="stage">
-          <div class="first">第1希望‣{{regist}}</div> 
-          <div class="second">第2希望‣{{regist}}</div>
+          <div class="first">第1希望‣</div> 
+          <div class="second">第2希望‣</div>
         </div>
         <button class="button">
           <div class="edit">編集</div><br>
