@@ -50,6 +50,9 @@
         >
       </template>
     </AddModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -61,6 +64,7 @@ export default {
     return {
       headers: ["ID", "開催年", "登録日時", "編集日時"],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
       year_num: null,
       fesYears: [],
     };
@@ -85,6 +89,14 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     reload(id) {
       const reUrl = "/fes_years/" + id;
       this.$axios.$get(reUrl).then((response) => {
@@ -94,6 +106,7 @@ export default {
     async submit() {
       const url = "/fes_years?year_num=" + this.year_num;
       this.$axios.$post(url).then((response) => {
+        this.openSnackBar("登録情報を追加しました");
         this.year_num = null;
         this.reload(response.data.id);
         this.closeAddModal();

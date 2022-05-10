@@ -26,7 +26,8 @@ class RentalOrder < ApplicationRecord
     def to_rental_item_info_h
       return {
         "name": self.rental_item.name,
-        "is_rentable": self.rental_item.is_rentable,
+        "is_shop_rentable": self.rental_item.is_shop_rentable,
+        "is_stage_rentable": self.rental_item.is_stage_rentable,
         "num": self.num
       }
     end

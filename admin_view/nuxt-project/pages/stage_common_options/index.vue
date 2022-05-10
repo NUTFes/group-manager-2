@@ -186,6 +186,9 @@
         >
       </template>
     </AddModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -222,6 +225,7 @@ export default {
         { id: 2, value: "出さない", bool: false },
       ],
       isOpenAddModal: false,
+      isOpenSnackBar: false,
       //v-model
       appGroup: "",
       ownEquipment: "",
@@ -357,6 +361,14 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async submitEmployee() {
       const postStageOptionUrl =
         "/stage_common_options/" +
@@ -375,6 +387,7 @@ export default {
       console.log(postStageOptionUrl);
 
       await this.$axios.$post(postStageOptionUrl).then((response) => {
+        this.openSnackBar("申請を追加しました");
         this.groupID = "";
         this.ownEquipment = "";
         this.bgm = "";

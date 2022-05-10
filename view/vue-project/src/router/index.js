@@ -13,6 +13,7 @@ import RegistGroupModel from "../views/RegistGroupModel.vue";
 import RegistPlace from "../views/RegistPlace.vue";
 import RegistPower from "../views/RegistPower.vue";
 import RegistStage from "../views/RegistStage.vue";
+import RegistRentalOrder from "../views/RegistRentalOrder.vue";
 import RegistEmployees from "../views/RegistEmployees.vue";
 import RegistPurchaseList from "../views/RegistPurchaseList.vue";
 import RegistFoodProduct from "../views/RegistFoodProduct.vue";
@@ -34,6 +35,8 @@ import MobileRegistGroup from "../views/Mobile/RegistGroup.vue";
 import MobileRegistShop from "../views/Mobile/RegistShop.vue";
 import MobilePlace from "../views/Mobile/Place.vue";
 import MobileEditUserInfo from "../views/Mobile/EditUserInfo.vue";
+
+import NotFound from "../views/404.vue";
 
 Vue.use(VueRouter);
 
@@ -97,6 +100,11 @@ const routes = [
     path: "/regist_stage",
     name: "RegistStage",
     component: RegistStage,
+  },
+  {
+    path: "/regist_rentalOrder",
+    name: "RegistRentalOrder",
+    component: RegistRentalOrder,
   },
   {
     path: "/regist_Employees",
@@ -198,6 +206,12 @@ const routes = [
     name: "MobileEditUserInfo",
     component: MobileEditUserInfo,
   },
+  // Not Found
+  {
+    path: "/*",
+    name: "Not Found",
+    component: NotFound,
+  }
 ];
 
 const router = new VueRouter({

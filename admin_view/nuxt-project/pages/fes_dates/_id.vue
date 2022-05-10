@@ -103,6 +103,9 @@
         >
       </template>
     </DeleteModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -114,6 +117,7 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
       fesDate: [],
       fesYearID: null,
       date: null,
@@ -164,6 +168,14 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async reload(id) {
       const reUrl = "/fes_dates/" + id;
       const resFesDate = await this.$axios.$get(reUrl);
@@ -183,6 +195,7 @@ export default {
         this.daysNum;
 
       await this.$axios.$put(url).then((res) => {
+        this.openSnackBar("登録情報を編集しました");
         this.fesYearID = null;
         this.date = null;
         this.day = null;

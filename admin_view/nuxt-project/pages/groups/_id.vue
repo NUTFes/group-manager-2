@@ -122,6 +122,10 @@
         >
       </template>
     </DeleteModal>
+
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ message }}
+    </SnackBar>
   </div>
 </template>
 
@@ -147,6 +151,7 @@ export default {
 
       isOpenEditModal: false,
       isOpenDeleteModal: false,
+      isOpenSnackBar: false,
 
       groupCategories: [],
       yearList: [],
@@ -201,6 +206,14 @@ export default {
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
+    openSnackBar(message) {
+      this.message = message;
+      this.isOpenSnackBar = true;
+      setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async reload() {
       const reUrl = this.groupUrl;
       const reGroupRes = await this.$axios.$get(reUrl);
@@ -224,6 +237,7 @@ export default {
       console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
+        this.openSnackBar(this.groupName + "を編集しました");
         this.groupName = "";
         this.projectName = "";
         this.activity = "";

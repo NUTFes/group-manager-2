@@ -2,11 +2,12 @@
   <v-app>
     <MobileHeader />
     <Header />
-    <v-main class="overflow-hidden">
-      <transition mode="out-in">
-        <router-view />
-      </transition>
-    </v-main>
+    <main v-if="this.$route.path == '/' || this.$route.path == '/registEdit'" class="top">
+      <router-view />
+    </main>
+    <main v-else class="no-top">
+      <router-view />
+    </main>
     <Footer />
   </v-app>
 </template>
@@ -58,5 +59,18 @@ export default {
 }
 .v-leave-active {
   transition: all 0.5s 0s ease;
+}
+.top {
+  padding-top: 0vh;
+  padding-left: 0vh;
+  padding-right: 0vh;
+  padding-bottom: 0vh;
+}
+.no-top {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1000px; 
+  padding-top: 80px;
 }
 </style>

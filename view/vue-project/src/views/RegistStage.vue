@@ -1,158 +1,162 @@
 <template>
-  <div id="app">
-    <h1 class="tytle">ステージ申請の登録</h1>
-    <div class="Blank">
-      <span>日程</span>
-      <select v-model="date" id="date">
-        <option
-          v-for="list in fesDateList"
-          :value="list.id"
-          :key="list.id"
-        >
-          {{ list.date }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>天気</span>
-      <select v-model="weather" @change="validationWeather" id="weather">
-        <option
-          v-for="list in isSunnyList"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>第一希望場所</span>
-      <select v-model="first" id="first">
-        <option
-          v-for="list in stageList"
-          :value="list.id"
-          :key="list.id"
-        >
-          {{ list.name }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>第二希望場所</span>
-      <select v-model="second" id="second">
-        <option
-          v-for="list in stageList"
-          :value="list.id"
-          :key="list.id"
-        >
-          {{ list.name }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <section class="tab_contents">
-        <div class="tab_wrap">
-          <span class="bubble"></span>
-          <input id="tab1" type="radio" name="check" checked>
-          <label for="tab1" class="tab_lab1">時間指定なし</label>
+  <div>
+      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+    <div class="regist-title">ステージの登録</div>
+    <div class="regist-card">
+      <div class="regist-card-content">
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">日程</div>
+          <select v-model="date" id="date">
+            <option
+              v-for="list in fesDateList"
+              :value="list.id"
+              :key="list.id"
+            >
+              {{ list.date }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">天気</div>
+          <select v-model="weather" @change="validationWeather" id="weather">
+            <option
+              v-for="list in isSunnyList"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">第1希望場所</div>
+          <select v-model="first" id="first">
+            <option
+              v-for="list in stageList"
+              :value="list.id"
+              :key="list.id"
+            >
+              {{ list.name }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">第2希望場所</div>
+          <select v-model="second" id="second">
+            <option
+              v-for="list in stageList"
+              :value="list.id"
+              :key="list.id"
+            >
+              {{ list.name }}
+            </option>
+          </select>
+        </div>
+        <div class="Blank">
+          <section class="tab_contents">
+            <div class="tab_wrap">
+              <span class="bubble"></span>
+              <input id="tab1" type="radio" name="check" checked>
+              <label for="tab1" class="tab_lab1">時間指定なし</label>
 
-          <input id="tab2" type="radio" name="check">
-          <span class="bubble"></span>
-          <label for="tab2" class="tab_lab2">時間指定あり</label>
+              <input id="tab2" type="radio" name="check">
+              <span class="bubble"></span>
+              <label for="tab2" class="tab_lab2">時間指定あり</label>
 
-          <div class="panels">
+              <div class="panels">
 
-            <!-- 時間軸 -->
-            <div id="area1" class="panel">
-              <div class="Blank">
-                <span>準備時間幅</span>
-                  <select v-model="readyInterval">
-                    <option
-                      v-for="list in timeBox"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
+                <!-- 時間軸 -->
+                <div id="area1" class="panel">
+                <div class="regist-card-content-question">
+                  <div class="regist-card-content-question-label">準備時間幅</div>
+                      <select v-model="readyInterval">
+                        <option
+                          v-for="list in timeBox"
+                          :key="list"
+                        >
+                          {{ list }}
+                        </option>
+                      </select>
+                    </div>
+                  <div class="regist-card-content-question">
+                    <div class="regist-card-content-question-label">使用時間幅</div>
+                      <select v-model="useInterval" id="useInterval">
+                        <option
+                          v-for="list in timeBox"
+                          :key="list"
+                        >
+                          {{ list }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="regist-card-content-question">
+                      <div class="regist-card-content-question-label">片付け時間幅</div>
+                      <select v-model="cleanUpInterval" id="cleanUpInterval">
+                        <option
+                          v-for="list in timeBox"
+                          :key="list"
+                        >
+                          {{ list }}
+                        </option>
+                      </select>
+                  </div>
                 </div>
-                <div class="Blank">
-                <span>使用時間幅</span>
-                  <select v-model="useInterval" id="useInterval">
-                    <option
-                      v-for="list in timeBox"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
-                </div>
-                <div class="Blank">
-                <span>片付け時間幅</span>
-                  <select v-model="cleanUpInterval" id="cleanUpInterval">
-                    <option
-                      v-for="list in timeBox"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
+
+                <!-- 時刻軸 -->
+                  <div id="area2" class="panel">
+                    <div class="regist-card-content-question">
+                      <div class="regist-card-content-question-label">準備開始時間</div>
+                        <select v-model="readyTime" id="readyTime">
+                          <option
+                            v-for="list in timeRange"
+                            :key="list"
+                          >
+                            {{ list }}
+                          </option>
+                      </select>
+                    </div>
+                  <div class="regist-card-content-question">
+                    <div class="regist-card-content-question-label">パフォーマンス開始時間</div>
+                      <select v-model="peformanceTime" id="peformanceTime">
+                        <option
+                          v-for="list in timeRange"
+                          :key="list"
+                        >
+                          {{ list }}
+                        </option>
+                      </select>
+                  </div>
+                  <div class="regist-card-content-question">
+                    <div class="regist-card-content-question-label">パフォーマンス終了時間</div>
+                      <select v-model="endTime" id="endTime">
+                        <option
+                          v-for="list in timeRange"
+                          :key="list"
+                        >
+                          {{ list }}
+                        </option>
+                      </select>
+                  </div>
+                  <div class="regist-card-content-question">
+                    <div class="regist-card-content-question-label">片付け終了時間</div>
+                      <select v-model="cleanUpTime" id="cleanUpTime">
+                        <option
+                          v-for="list in timeRange"
+                          :key="list"
+                        >
+                          {{ list }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
               </div>
             </div>
-
-            <!-- 時刻軸 -->
-            <div id="area2" class="panel">
-              <div class="Blank">
-                <span>準備開始時間</span>
-                <select v-model="readyTime" id="readyTime">
-                    <option
-                      v-for="list in timeRange"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
-              </div>
-              <div class="Blank">
-                <span>パフォーマンス開始時間</span>
-                <select v-model="peformanceTime" id="peformanceTime">
-                    <option
-                      v-for="list in timeRange"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
-              </div>
-              <div class="Blank">
-                <span>パフォーマンス終了時間</span>
-                <select v-model="endTime" id="endTime">
-                    <option
-                      v-for="list in timeRange"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
-              </div>
-              <div class="Blank">
-                <span>片付け終了時間</span>
-                <select v-model="cleanUpTime" id="cleanUpTime">
-                    <option
-                      v-for="list in timeRange"
-                      :key="list"
-                    >
-                      {{ list }}
-                    </option>
-                  </select>
-              </div>
-              </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
-    <div class="Blank">
-      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
-      <button @click="register" style="margin-left:15%;">登録する→</button>
+    <div class="regist-button">
+      <button @click="register" class="regist-submit-button">登録する→</button>
     </div>
   </div>
 </template>
@@ -307,29 +311,14 @@ export default {
 </script>
 
 <style scoped>
-  #app{
-    margin: 1%;
-  }
-  span {
-    display: inline-block;
-    width: 125px;
-    padding-right: 10px;
-  }
-  .tytle{
-    text-align:center;
-    padding:1%;
-  }
-  .Blank{
-    text-align: center;
-    margin:1%;
-  }
-  select,input{
-    text-align: center;
-    width: 30%;
-    height:40px;
+  select, input{
+    text-align: left;
+    padding: 1%;
+    height: 50px;
+    width: 800px;
     border-radius: 7px;
-    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
-    font-size: 25px;
+    font-size: 18px;
+    vertical-align: top;
   }
   select,input:required{
     border: 2px solid red;
@@ -340,24 +329,6 @@ export default {
   select,input:valid{
     border: 2px solid black;
   }
-  button{
-  color: black;
-  font-weight: bold;
-  border: solid 2px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 1%;
-  padding:1%;
-  }
-  button:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  button:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-  }
-
   #tab1:checked~.panels #area1 {
     display: block;
   }

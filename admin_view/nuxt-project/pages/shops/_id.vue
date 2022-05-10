@@ -176,7 +176,7 @@ export default {
         this.address
 
       await this.$axios.$put(url).then((response) => {
-        this.openSnackBar(response.data.name + "を追加しました");
+        this.openSnackBar(response.data.name + "を編集しました");
         this.name = "";
         this.tel = "";
         this.openingHours = "";
