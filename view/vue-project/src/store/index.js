@@ -29,6 +29,8 @@ const store = new Vuex.Store({
     // 4: マイページから新規登録で片方だけ登録してない場合) 雨 → マイページ
     // 5: 新規登録の場合) 晴れ → 雨 → ステージオプション
     typeStage: 0,
+    // マイページから飛んだか新規登録からか
+    fromMypage: false
   },
   mutations: {
     typeStage1(state) {
@@ -45,6 +47,12 @@ const store = new Vuex.Store({
     },
     typeStage5(state) {
       state.typeStage = 5
+    },
+    onFromMypage(state) {
+      state.fromMypage = true
+    },
+    offFromMypage(state) {
+      state.fromMypage = false
     },
     // ユーザー登録画面 
     acceptRegistRepPermission(state) {

@@ -144,9 +144,13 @@ export default {
         placeParams.append("remark", this.remark);
         axios.post(placeUrl, placeParams).then(
           () => {
-            this.$store.commit("acceptRegistRentalOrderPermission");
-            this.$store.commit("rejectRegistPlaceOrderPermission");
-            this.$router.push("/regist_rental_order");
+            if (this.$store.state.fromMypage == true) {
+              this.$router.push("/mypage")
+            } else {
+              this.$store.commit("acceptRegistRentalOrderPermission");
+              this.$store.commit("rejectRegistPlaceOrderPermission");
+              this.$router.push("/regist_rental_order");
+            }
           },
           (error) => {
             return error;

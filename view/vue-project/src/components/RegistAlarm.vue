@@ -15,7 +15,7 @@
         </div>
 
         <!-- 会場申請 -->
-        <div>
+        <div v-if="registInfo.group.group_category_id !== 3">
           <li v-if="registInfo.place_order == null">
             <router-link to="/regist_place">
               <button class="card" @click="goRegistPlace">会場申請</button>
@@ -138,42 +138,51 @@ export default {
     goRegistSubRep() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("acceptRegistSubRepPermission");
+      this.$store.commit("onFromMypage");
     },
     goRegistPlace() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("acceptRegistPlaceOrderPermission");
+      this.$store.commit("onFromMypage");
     },
     goRegistPower() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("acceptRegistPowerOrderPermission");
+      this.$store.commit("onFromMypage");
     },
     goBothRegistStageSunny() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("typeStage1");
       this.$store.commit("acceptRegistStageOrderSunnyPermission");
+      this.$store.commit("onFromMypage");
     },
     goBothRegistStageRainy() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("typeStage2");
       this.$store.commit("acceptRegistStageOrderRainyPermission");
+      this.$store.commit("onFromMypage");
     },
     goOneRegistStageSunny() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("typeStage3");
       this.$store.commit("acceptRegistStageOrderSunnyPermission");
+      this.$store.commit("onFromMypage");
     },
     goOneRegistStageRainy() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("typeStage4");
       this.$store.commit("acceptRegistStageOrderRainyPermission");
+      this.$store.commit("onFromMypage");
     },
     goRegistStageOption() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("acceptRegistStageCommonOptionPermission");
+      this.$store.commit("onFromMypage");
     },
     goRegistRentalOrder() {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("acceptRegistRentalOrderPermission");
+      this.$store.commit("onFromMypage");
     }
 
     // 食品関係は後で作る

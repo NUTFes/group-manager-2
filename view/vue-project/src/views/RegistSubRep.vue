@@ -216,14 +216,18 @@ export default {
         subRepParams.append("student_id", this.student_id);
         axios.post(subRepUrl, subRepParams).then(
           () => {
-            if (localStorage.getItem("group_category_id") == 3){
-              this.$store.commit("acceptRegistStageOrderSunnyPermission");
-              this.$store.commit("rejectRegistSubRepPermission");
-              this.$router.push("/regist_stage_sunny");
+            if (this.$store.state.fromMypage == true) {
+              this.$router.push("/mypage")
             } else {
-              this.$store.commit("acceptRegistPlaceOrderPermission");
-              this.$store.commit("rejectRegistSubRepPermission");
-              this.$router.push("/regist_place");
+              if (localStorage.getItem("group_category_id") == 3){
+                this.$store.commit("acceptRegistStageOrderSunnyPermission");
+                this.$store.commit("rejectRegistSubRepPermission");
+                this.$router.push("/regist_stage_sunny");
+              } else {
+                this.$store.commit("acceptRegistPlaceOrderPermission");
+                this.$store.commit("rejectRegistSubRepPermission");
+                this.$router.push("/regist_place");
+              }
             }
           },
           (error) => {

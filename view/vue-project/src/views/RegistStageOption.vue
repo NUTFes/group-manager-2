@@ -145,9 +145,13 @@ export default {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
           () => {
-            this.$store.commit("acceptRegistPowerOrderPermission");
-            this.$store.commit("rejectRegistStageCommonOptionPermission");
-            this.$router.push("/regist_power");
+            if (this.$store.state.fromMypage == true) {
+              this.$router.push("/mypage")
+            } else {
+              this.$store.commit("acceptRegistRentalOrderPermission");
+              this.$store.commit("rejectRegistStageCommonOptionPermission");
+              this.$router.push("/regist_rental_order");
+            }
           },
           (error) => {
             console.log("登録できませんでした");

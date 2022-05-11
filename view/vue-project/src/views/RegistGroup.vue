@@ -171,10 +171,11 @@ export default {
           (response) => {
             localStorage.setItem("group_id", response.data.data.id);
             localStorage.setItem("group_category_id", response.data.data.group_category_id);
+            this.$store.commit("offFromMypage");
             this.$store.commit("typeStage5");
             this.$store.commit("acceptRegistSubRepPermission");
             this.$store.commit("rejectRegistGroupPermission");
-            this.$router.push("regist_subrep");
+            this.$router.push("/regist_subrep");
           },
           (error) => {
             console.log("登録できませんでした");

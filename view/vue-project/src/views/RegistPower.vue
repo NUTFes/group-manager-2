@@ -152,8 +152,12 @@ export default {
           params.append("item_url", data.url);
           axios.post(post_url, params).then(
             () => {
-              this.$store.commit("rejectRegistPowerOrderPermission");
-              this.$router.push("/mypage");
+              if (this.$store.state.fromMypage == true) {
+                this.$router.push("/mypage")
+              } else {
+                this.$store.commit("rejectRegistPowerOrderPermission");
+                this.$router.push("/mypage");
+              }
             },
             (error) => {
               return error;

@@ -109,9 +109,13 @@ export default {
           axios
             .post(process.env.VUE_APP_URL + "/rental_orders", params)
             .then(() => {
-              this.$store.commit("acceptRegistPowerOrderPermission");
-              this.$store.commit("rejectRegistRentalOrderPermission");
-              this.$router.push("/regist_power");
+              if (this.$store.state.fromMypage == true) {
+                this.$router.push("/mypage")
+              } else {
+                this.$store.commit("acceptRegistPowerOrderPermission");
+                this.$store.commit("rejectRegistRentalOrderPermission");
+                this.$router.push("/regist_power");
+              }
             },
             (error) => {
               return error;
