@@ -1,6 +1,6 @@
 <template>
   <div style="border-radius:2px; background-color: #ffd1d0;">
-    <h2>「{{ registInfo.group.name }}」 の未登録情報</h2>
+    <!-- <h2>「{{ registInfo.group.name }}」 の未登録情報</h2> -->
     <div v-if="setting.is_regist_group">
       <ul class="horizontal-list">
 
@@ -8,9 +8,9 @@
         <div>
           <li v-if="registInfo.sub_rep == null">
             <router-link to="/regist_subrep">
-              <button class="card" @click="goRegistSubRep">副代表者の詳細情報</button>
+              <button class="card" @click="goRegistSubRep">副代表の登録</button>
             </router-link>
-            <span style="margin-left:1%;">副代表者が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の副代表者が登録されていません</span>
           </li>
         </div>
 
@@ -20,7 +20,7 @@
             <router-link to="/regist_place">
               <button class="card" @click="goRegistPlace">会場申請</button>
             </router-link>
-            <span style="margin-left:1%;">会場申請が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の会場が申請されていません</span>
           </li>
         </div>
 
@@ -28,9 +28,9 @@
         <div v-if="setting.add_power_order == true">
           <li v-if="registInfo.power_orders == null">
             <router-link to="/regist_power">
-              <button class="card" @click="goRegistPower">電力申請</button>
+              <button class="card" @click="goRegistPower">電力物品申請</button>
             </router-link>
-            <span style="margin-left:1%;">電力申請が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の電力物品が申請されていません</span>
           </li>
         </div>
 
@@ -40,13 +40,13 @@
             <router-link to="/regist_stage_sunny">
               <button class="card" @click="goBothRegistStageSunny">ステージ申請 (晴れ)</button>
             </router-link>
-            <span style="margin-left:1%;">ステージ申請(晴れ)が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の晴れの場合のステージが申請されていません</span>
           </li>
           <li v-if="registInfo.stage_orders == null">
             <router-link to="/regist_stage_rainy">
               <button class="card" @click="goBothRegistStageRainy">ステージ申請 (雨)</button>
             </router-link>
-            <span style="margin-left:1%;">ステージ申請(雨)が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の雨の場合のステージが申請されていません</span>
           </li>
         </div>
 
@@ -58,13 +58,13 @@
                 <router-link to="/regist_stage_rainy">
                   <button class="card" @click="goOneRegistStageRainy">ステージ申請 (雨)</button>
                 </router-link>
-                <span style="margin-left:1%;">ステージ申請(雨)が登録されていません</span>
+                <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の雨の場合のステージが申請されていません</span>
               </li>
               <li v-if="registInfo.stage_orders[0].stage_order.is_sunny == false">
                 <router-link to="/regist_stage_sunny">
                   <button class="card" @click="goOneRegistStageSunny">ステージ申請 (晴れ)</button>
                 </router-link>
-                <span style="margin-left:1%;">ステージ申請(晴れ)が登録されていません</span>
+                <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の晴れの場合のステージが申請されていません</span>
               </li>
             </div>
           </div>
@@ -76,7 +76,7 @@
             <router-link to="/regist_stage_option">
               <button class="card" @click="goRegistStageOption">ステージオプション申請</button>
             </router-link>
-            <span style="margin-left:1%;">ステージオプション申請が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」のステージオプションが申請されていません</span>
           </li>
         </div>
 
@@ -86,7 +86,7 @@
             <router-link to="/regist_rental_order">
               <button class="card" @click="goRegistRentalOrder">物品申請</button>
             </router-link>
-            <span style="margin-left:1%;">物品申請が登録されていません</span>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の物品が申請されていません</span>
           </li>
         </div>
 
@@ -97,7 +97,7 @@
               <router-link to="/regist_employees">
                 <button class="card" @click="goRegistEmployee">従業員情報</button>
               </router-link>
-              <span style="margin-left:1%;">従業員申請が登録されていません</span>
+              <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の従業員が申請されていません</span>
             </li>
           </div>
 
@@ -107,7 +107,7 @@
               <router-link to="/regist_food_product">
                 <button class="card" @click="goRegistFoodProduct">食品申請</button>
               </router-link>
-              <span style="margin-left:1%;">食品申請が登録されていません</span>
+              <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の食品が申請されていません</span>
             </li>
           </div>
 
@@ -117,7 +117,7 @@
               <router-link to="/regist_purchaseList">
                 <button class="card" @click="goRegistPurchaseList">購入品申請</button>
               </router-link>
-              <span style="margin-left:1%;">購入品申請が登録されていません</span>
+              <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の購入品が申請されていません</span>
             </li>
           </div>
         </div>

@@ -3,13 +3,23 @@
     <div class="mypage-card">
       <DashBoard />
     </div>
+    <div v-for="r in regist_info" :key="r" style="padding-bottom: 10px">
+      <RegistAlarm :registInfo="r" :setting="setting" />
+    </div>
     <div class="mypage-tabs">
+      <!-- <input id="alert" type="radio" name="mypage-tab-item" checked>
+      <label class="mypage-tab-item" for="alert">未登録</label> -->
       <input id="news" type="radio" name="mypage-tab-item" checked>
       <label class="mypage-tab-item" for="news">お知らせ</label>
       <input id="regist" type="radio" name="mypage-tab-item">
       <label class="mypage-tab-item" for="regist">登録情報</label>
-      <input id="alert" type="radio" name="mypage-tab-item">
-      <label class="mypage-tab-item" for="alert">未登録</label>
+      <!-- <div class="mypage-tab-content" id="alert-content">
+        <div class="mypage-tab-content-description">
+          <div v-for="r in regist_info" :key="r" style="padding-bottom: 10px">
+            <RegistAlarm :registInfo="r" :setting="setting" />
+          </div>
+        </div>
+      </div> -->
       <div class="mypage-tab-content" id="news-content">
         <div class="mypage-tab-content-description">
           <News />
@@ -41,13 +51,6 @@
         >
           <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
         </v-btn>
-        </div>
-      </div>
-      <div class="mypage-tab-content" id="alert-content">
-        <div class="mypage-tab-content-description">
-          <div v-for="r in regist_info" :key="r" style="padding-bottom: 10px">
-            <RegistAlarm :registInfo="r" :setting="setting" />
-          </div>
         </div>
       </div>
     </div>
@@ -179,7 +182,7 @@ export default {
   margin: 0 auto;
 }
 .mypage-tab-item {
-  width: calc(100%/3);
+  width: calc(100% / 2);
   height: 50px;
   border-bottom: 2px solid #e040fb;;
   background-color: #ffffff;
