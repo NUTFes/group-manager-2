@@ -178,7 +178,6 @@ export default {
       peformanceTime: [],
       endTime: [],
       cleanUpTime: [],
-      new_info: [],
       fesDateList: [],
       stageList: [],
       isSunnyList: [
@@ -214,7 +213,7 @@ export default {
       if (this.date>0 && this.resultWeather && this.first>0 && this.second>0 && this.first!=this.second) {
         const url = process.env.VUE_APP_URL + "/stage_orders";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
+        params.append("group_id", localStorage.getItem("group_id"));
         params.append("is_sunny", this.weather);
         params.append("fes_date_id", this.date);
         params.append("stage_first", this.first);
@@ -271,21 +270,10 @@ export default {
   },
 
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registStageOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
 
     axios
       .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates", {

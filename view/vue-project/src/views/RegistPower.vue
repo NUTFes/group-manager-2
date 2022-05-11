@@ -61,7 +61,6 @@ export default {
       inputDataNum: 1,
       maxPower: 1000,
       minPower: 0,
-      new_info: [],
       submitFlag: true,
       count: 1
     };
@@ -145,7 +144,7 @@ export default {
           const post_url = process.env.VUE_APP_URL + "/power_orders";
           axios.defaults.headers.common["Content-Type"] = "application/json";
           let params = new URLSearchParams();
-          params.append("group_id", this.new_info.group.id);
+          params.append("group_id", localStorage.getItem("group_id"));
           params.append("item", data.item);
           params.append("power", data.power);
           params.append("manufacturer", data.manufacturer);
@@ -164,21 +163,9 @@ export default {
     },
   },
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    if (this.$store.state.registPowerOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
   },
 }
 </script>

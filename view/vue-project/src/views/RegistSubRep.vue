@@ -65,7 +65,6 @@ export default {
       resultGrade: false,
       resultTel: false,
       resultEmail: false,
-      new_info: [],
       name: [],
       student_id: [],
       department_id: [],
@@ -208,7 +207,7 @@ export default {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         const subRepUrl = process.env.VUE_APP_URL + "/sub_reps";
         let subRepParams = new URLSearchParams();
-        subRepParams.append("group_id", this.new_info.group.id);
+        subRepParams.append("group_id", localStorage.getItem("group_id"));
         subRepParams.append("name", this.name);
         subRepParams.append("department_id", this.department_id);
         subRepParams.append("grade_id", this.grade_id);
@@ -279,21 +278,10 @@ export default {
   },
 
   mounted() {
-    const newInfoUrl =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(newInfoUrl, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registSubRepPermission == false) {
+      this.$router.push("/mypage");
+    }
   }
 };
 </script>

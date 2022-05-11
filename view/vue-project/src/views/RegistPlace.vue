@@ -60,7 +60,6 @@ export default {
       resultFirst: false,
       resultSecond: false,
       resultThird: false,
-      new_info: [],
       first: [],
       second: [],
       third: [],
@@ -69,37 +68,10 @@ export default {
     };
   },
   mounted() {
-    const placeUrl = process.env.VUE_APP_URL + "/places";
-    axios
-      .get(placeUrl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(
-        (response) => {
-          this.placeList = response.data.data;
-        },
-        (error) => {
-          console.error(error);
-          return error;
-        });
-
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registPlaceOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
   },
   computed: {
     validationFirst() {
@@ -150,7 +122,7 @@ export default {
       if (this.resultFirst && this.resultSecond && this.resultThird && this.first!=this.second && this.first!=this.third && this.second!=this.third) {
         const placeUrl = process.env.VUE_APP_URL + "/place_orders";
         let placeParams = new URLSearchParams();
-        placeParams.append("group_id", this.new_info.group.id);
+        placeParams.append("group_id", localStorage.getItem("group_id"));
         placeParams.append("first", this.first);
         placeParams.append("second", this.second);
         placeParams.append("third", this.third);

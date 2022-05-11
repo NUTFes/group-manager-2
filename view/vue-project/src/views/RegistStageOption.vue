@@ -75,7 +75,6 @@ export default {
       resultMusic: false,
       resultPicture: false,
       resultNoise: false,
-      new_info: [],
       item: [],
       music: [],
       picture: [],
@@ -195,21 +194,10 @@ export default {
   },
 
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registStageCommonOptionPermission == false) {
+      this.$router.push("/mypage");
+    }
   },
 };
 </script>

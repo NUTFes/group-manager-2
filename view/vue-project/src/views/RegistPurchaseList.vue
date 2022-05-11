@@ -157,6 +157,9 @@ export default {
     },
   },
   mounted() {
+    if (this.$store.state.registPurchaseListPermission == false) {
+      this.$router.push("/mypage");
+    }
     axios
       .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates", {
         headers: {

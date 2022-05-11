@@ -54,7 +54,6 @@ export default {
       inputDataNum: 1,
       maxNum: 100,
       minNum: 0,
-      new_info: [],
       submitFlag: true,
       count: 1
     };
@@ -122,22 +121,10 @@ export default {
     },
   },
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data;
-      });
-
+    // 直リンク対策
+    if (this.$store.state.registRentalOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
     const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
     axios
       .get(shopUrl, {
