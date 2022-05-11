@@ -3,31 +3,29 @@
     <div>
       <div class="card">
         <span class="red" />
-        <div class="devices">
+        <div class="device">
           <div class="upper">機器▾</div>
-          <div class="lower">使用</div>
+          <div class="lower">{{ ownEquipment }}</div>
         </div>
         <span class="line" />
         <div class="music">
           <div class="upper">音楽▾</div>
-          <div class="lower">使用</div>
+          <div class="lower">{{ bgm }}</div>
         </div>
         <span class="line" />
         <div class="permission">
           <div class="upper">撮影▾</div>
-          <div class="lower">許可</div>
+          <div class="lower">{{ cameraPermission }}</div>
         </div>
         <span class="line" />
-        <div class="loud_voice">
+        <div class="loud_sound">
           <div class="upper">騒音</div>
-          <div class="lower">有</div>
+        <div class="lower">{{ loudSound }}</div>
         </div>
         <span class="line" />
         <div class="content">
-            <div class="upper">ステージ内容▾</div>
-            <div class="performance">
-              {{regist}}
-            </div>
+          <div class="upper">ステージ内容▾</div>
+          <div class="performance">{{ stageContent }}</div>
         </div>
         <button class="button">
           <div class="edit">編集</div><br>
@@ -41,7 +39,11 @@
 <script>
 export default {
   props: {
-    regist: String,
+    ownEquipment: Boolean,
+    bgm: Boolean,
+    cameraPermission: Boolean,
+    loudSound: String,
+    stageContent: String,
   },
 };
 </script>
@@ -69,7 +71,7 @@ export default {
   height: 100%;
   background: #f71e35;
 }
-.devices {
+.device {
   width: 98px;
   height: 95.5px;
   align-items: center;
@@ -119,7 +121,7 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.loud_voice {
+.loud_sound {
   width: 50px;
   height: 95.5px;
   align-items: center;

@@ -3,18 +3,13 @@
     <div>
       <div class="card">
         <span class="red" />
-        <div class="date">
-          <div v-for="list in regist.stage_orders" :key="list.id">
-            {{list.stage_order.date}}
-          </div>
-        </div>
+        <div class="date">{{date}}</div>
         <span class="line" />
-        <div class="weather">
-        </div>
+        <div class="weather">{{isSunny? "晴" : "雨"}}</div>
         <span class="line" />
         <div class="stage">
-          <div class="first">第1希望‣</div> 
-          <div class="second">第2希望‣</div>
+          <div class="first">第1希望‣ {{firstStage}} </div> 
+          <div class="second">第2希望‣ {{secondStage}} </div>
         </div>
         <button class="button">
           <div class="edit">編集</div><br>
@@ -28,7 +23,10 @@
 <script>
 export default {
   props: {
-    regist: String,
+    firstStage: String,
+    secondStage: String,
+    date: String,
+    isSunny: Boolean,
   },
 };
 </script>
@@ -41,6 +39,7 @@ export default {
 .card {
   display: flex;
   align-items: center;
+  margin: 3%;
   position: relative;
   width: 1026px;
   height: 149px;
@@ -85,7 +84,7 @@ export default {
   color: #333333;
 }
 .stage {
-  width: 350px;
+  width: 460px;
   margin-right: 27px;
   margin-left: 27px;
   font-weight: 300;

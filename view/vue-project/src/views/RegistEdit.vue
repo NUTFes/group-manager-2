@@ -104,16 +104,36 @@
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
               <div v-for="list in regist_info" :key="list.id">
-                <CardStageInfo :regist="list" />
+              {{list.stage_orders}}
+                <div v-for="stage_order in list.stage_orders" :key="stage_order">
+                {{stage_order}}
+                  <CardStageInfo 
+                  :firstStage="stage_order.stage_order.stage_first" 
+                  :secondStage="stage_order.stage_order.stage_second" 
+                  :date="stage_order.stage_order.date" 
+                  :isSunny="stage_order.stage_order.is_sunny" />
+                </div>
               </div>
             </div>
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
               <div v-for="list in regist_info" :key="list.id">
-                <CardStageOptionInfo :regist="list" />
+                {{list.stage_orders.stage_common_option}}
+                <div v-for="stage_common_option in list.stage_common_option" :key="stage_common_option">
+                {{stage_common_option}}
+                  <CardStageOptionInfo 
+                  :ownEquipment="own_equipment"
+                  :bgm="bgm"
+                  :cameraPermission="list.camera_permission"
+                  :loudSound="loud_sound" 
+                  :stageContent="stage_content" />
+                </div>
               </div>
             </div>
+
+            <!-- :ownEquipment="stage_common_option.own_equipment":bgm="stage_common_option.bgm":cameraPermission="stage_common_option.camera_permission":loudSound="stage_common_option.loud_sound" :stageContent="stage_common_option.stage_content" -->
+            <!-- <div v-for="list in regist_info" :key="list.id"><div v-for="stage_common_option in list.stage_common_options" :key="stage_common_option" -->
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
@@ -217,7 +237,6 @@ export default {
       addPowerDisplay: false,
       test: "aaaaa",
       addItemDisplay: false,
-      stageOrderInfo: "",
     };
   },
 
@@ -244,7 +263,6 @@ export default {
         this.regist_info = response.data.data;
         // デフォルトで一番最初のgroupが選択される
         this.projectName = response.data.data[0].group.id;
-        this.stageOrderInfo = response.data.data[0].stage_orders;
       });
   },
 };
