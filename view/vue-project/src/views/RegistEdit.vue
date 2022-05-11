@@ -54,18 +54,15 @@
           <div class="panels">
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-              <div class="card">
-                <ConfirmationPlace :regist="test" />
-              </div>
-              <div>
-                <CardPlaceInfo :regist="test" />
+              <div >
+                <CardPlaceInfo :regist="new_info" />
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div class="card">
-                <ConfirmationPower :regist="test" :groupId="projectName" />
+              <div>
+                <CardPowerInfo :regist="new_info" />
               </div>
               <button
                 id="btn1"
@@ -100,7 +97,6 @@
                 :groupId="projectName"
                 @closeAddItem="closeAddItem"
               />
-
               <div>
                 <CardItemInfo :regist="test" />
               </div>
@@ -208,11 +204,8 @@
 <script>
 import axios from "axios";
 
-import ConfirmationPlace from "@/components/AllEdit/ConfirmationPlace.vue";
 import AddPower from "@/components/AllEdit/AddPower.vue";
-import ConfirmationPower from "@/components/AllEdit/ConfirmationPower.vue";
 import AddItem from "@/components/AllEdit/AddItem.vue";
-import ConfirmationItem from "@/components/AllEdit/ConfirmationItem.vue";
 import ConfirmationStage from "@/components/AllEdit/ConfirmationStage.vue";
 import ConfirmationOption from "@/components/AllEdit/ConfirmationOption.vue";
 import AddEmployee from "@/components/AllEdit/AddEmployee.vue";
@@ -229,9 +222,6 @@ import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
 
 export default {
   components: {
-    ConfirmationPlace,
-    ConfirmationPower,
-    ConfirmationItem,
     ConfirmationStage,
     ConfirmationOption,
     ConfirmationEmployee,
