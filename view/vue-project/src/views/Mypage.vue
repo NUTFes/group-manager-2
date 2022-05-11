@@ -17,6 +17,7 @@
       </div>
       <div class="mypage-tab-content" id="regist-content">
         <div class="mypage-tab-content-description">
+          {{ regist_info }}
         <v-btn
           v-if="isRegistGroup"
           block
@@ -44,38 +45,9 @@
       </div>
       <div class="mypage-tab-content" id="alert-content">
         <div class="mypage-tab-content-description">
-          <RegistAlarm />
+          <RegistAlarm :registInfo="regist_info[0]" :setting="setting" />
         </div>
       </div>
-    </div>
-    <div class="mypage-card">
-      <div v-for="(regist, i) in regist_info" :key="i">
-        <Regist :num="i" :regist="regist" @reload="reload()" />
-          <v-row>
-            <v-col cols="4" />
-            <v-col cols="4">
-              <v-btn
-                v-if="
-                  regist.group.group_category_id === 1 &&
-                  regist.employees[0].name === '-9999' &&
-                  addEmployee &&
-                  addFoodProduct &&
-                  addPurchaseList
-                "
-                block
-                dark
-                color="purple accent-2"
-                rounded
-                elevation="0"
-                @click="set_group_id(regist.group.id)"
-              >
-                <v-icon class="pr-2 pb-1">mdi-baguette</v-icon>
-                {{ regist.group.name }}の販売食品を追加する
-              </v-btn>
-            </v-col>
-            <v-col cols="4" />
-          </v-row>
-        </div>
     </div>
   </div>
 </template>
@@ -84,14 +56,14 @@
 import DashBoard from "@/components/DashBoard.vue";
 import News from "@/components/News.vue";
 import RegistAlarm from "@/components/RegistAlarm.vue";
-import Regist from "@/components/Regist.vue";
+// import Regist from "@/components/Regist.vue";
 import axios from "axios";
 export default {
   components: {
     DashBoard,
     News,
     RegistAlarm,
-    Regist,
+    // Regist,
   },
   data() {
     return {
@@ -101,7 +73,7 @@ export default {
         localStorage.getItem("uid"),
       ],
       users: [],
-      setting: [],
+      setting: null,
       regist_info: [],
       info: [],
       isRegistGroup: [],
@@ -128,26 +100,6 @@ export default {
           localStorage.removeItem("client"),
           localStorage.removeItem("uid")
         );
-    },
-    reload() {
-      const regist_info_url =
-        process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-      axios
-        .get(regist_info_url, {
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": localStorage.getItem("access-token"),
-            "client": localStorage.getItem("client"),
-            "uid": localStorage.getItem("uid"),
-          },
-        })
-        .then((response) => {
-          this.regist_info = response.data;
-        });
-    },
-    set_group_id: function (group_id) {
-      localStorage.setItem("group_id", group_id);
-      this.$router.push("regist_food_booths");
     },
   },
   mounted() {
@@ -184,7 +136,7 @@ export default {
         },
       })
       .then((response) => {
-        this.regist_info = response.data;
+        this.regist_info = response.data.data;
       });
 
     const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
