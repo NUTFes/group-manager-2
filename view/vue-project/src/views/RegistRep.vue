@@ -119,6 +119,15 @@ export default {
       ],
     };
   },
+  mounted() {
+    // 直リンク対策
+    if (this.$store.state.registRepPermission) {
+      console.log("ok");
+    } else {
+      console.log("reject");
+      this.$router.push("/");
+    }
+  },
   computed: {
     validationName(){
       if (this.name.length) {

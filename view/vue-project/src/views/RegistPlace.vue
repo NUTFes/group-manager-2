@@ -156,9 +156,10 @@ export default {
         placeParams.append("third", this.third);
         placeParams.append("remark", this.remark);
         axios.post(placeUrl, placeParams).then(
-          (response) => {
-            console.log(response.data);
-            this.$router.push("mypage");
+          () => {
+            this.$store.commit("acceptRegistRentalOrderPermission");
+            this.$store.commit("rejectRegistPlaceOrderPermission");
+            this.$router.push("/regist_rental_order");
           },
           (error) => {
             return error;

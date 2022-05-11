@@ -216,9 +216,16 @@ export default {
         subRepParams.append("email", this.email);
         subRepParams.append("student_id", this.student_id);
         axios.post(subRepUrl, subRepParams).then(
-          (response) => {
-            console.log(response.status);
-            this.$router.push("mypage");
+          () => {
+            if (localStorage.getItem("group_category_id") == 3){
+              this.$store.commit("acceptRegistStageOrderPermission");
+              this.$store.commit("rejectRegistSubRepPermission");
+              this.$router.push("/regist_stage");
+            } else {
+              this.$store.commit("acceptRegistPlaceOrderPermission");
+              this.$store.commit("rejectRegistSubRepPermission");
+              this.$router.push("/regist_place");
+            }
           },
           (error) => {
             return error;

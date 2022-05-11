@@ -228,9 +228,10 @@ export default {
         params.append("cleanup_end_time", this.cleanUpTime);
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
-          (response) => {
-            console.log("response:", response);
-            this.$router.push("mypage");
+          () => {
+            this.$store.commit("acceptRegistStageCommonOptionPermission");
+            this.$store.commit("rejectRegistStageOrderPermission");
+            this.$router.push("/regist_stage_option");
           },
           (error) => {
             console.log("登録できませんでした");

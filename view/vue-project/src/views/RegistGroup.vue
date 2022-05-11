@@ -169,7 +169,10 @@ export default {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
           (response) => {
-            console.log("response:", response);
+            localStorage.setItem("group_id", response.data.data.id);
+            localStorage.setItem("group_category_id", response.data.data.group_category_id);
+            this.$store.commit("acceptRegistSubRepPermission");
+            this.$store.commit("rejectRegistGroupPermission");
             this.$router.push("regist_subrep");
           },
           (error) => {

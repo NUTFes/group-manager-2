@@ -137,7 +137,7 @@ export default {
       if (this.resultItem && this.resultMusic && this.resultPicture && this.resultNoise && this.stageContent.length > 0) {
         const url = process.env.VUE_APP_URL + "/stage_common_options";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
+        params.append("group_id", localStorage.getItem("group_id"));
         params.append("own_equipment", this.item);
         params.append("bgm", this.music);
         params.append("camera_permission", this.picture);
@@ -145,16 +145,16 @@ export default {
         params.append("stage_content", this.stageContent);
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
-          (response) => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa", response);
-            this.$router.push("mypage");
+          () => {
+            this.$store.commit("acceptRegistPowerOrderPermission");
+            this.$store.commit("rejectRegistStageCommonOptionPermission");
+            this.$router.push("/regist_power");
           },
           (error) => {
             console.log("登録できませんでした");
             return error;
           });
       } else {
-        console.log("zzzzzzzzzzzzzzzz");
         if (this.resultItem==false) {
           const itemError = document.getElementById("item");
           itemError.style.border="2px solid red";

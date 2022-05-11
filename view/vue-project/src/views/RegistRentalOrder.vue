@@ -104,14 +104,15 @@ export default {
         for (let data of this.inputData) {
           axios.defaults.headers.common["Content-Type"] = "application/json";
           let params = new URLSearchParams();
-          params.append("group_id", this.new_info.group.id);
+          params.append("group_id", localStorage.getItem("group_id"));
           params.append("rental_item_id", data.item);
           params.append("num", data.num);
           axios
             .post(process.env.VUE_APP_URL + "/rental_orders", params)
-            .then((response) => {
-              console.log(response);
-              this.$router.push("mypage");
+            .then(() => {
+              this.$store.commit("acceptRegistPowerOrderPermission");
+              this.$store.commit("rejectRegistRentalOrderPermission");
+              this.$router.push("/regist_power");
             },
             (error) => {
               return error;

@@ -25,7 +25,7 @@
           color="purple accent-2"
           rounded
           elevation="0"
-          to="/regist_group"
+          @click="goRegistGroup"
         >
           <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
         </v-btn>
@@ -101,6 +101,10 @@ export default {
           localStorage.removeItem("uid")
         );
     },
+    goRegistGroup: function() {
+      this.$store.commit("acceptRegistGroupPermission");
+      this.$router.push("/regist_group");
+    }
   },
   mounted() {
     // 直リンク対策
@@ -110,6 +114,8 @@ export default {
       console.log("reject");
       this.$router.push("/");
     }
+
+    this.$store.commit("rejectAllPermission");
 
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios

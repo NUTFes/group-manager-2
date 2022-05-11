@@ -153,7 +153,8 @@ export default {
           params.append("item_url", data.url);
           axios.post(post_url, params).then(
             () => {
-              this.$router.push("mypage");
+              this.$store.commit("rejectRegistPowerOrderPermission");
+              this.$router.push("/mypage");
             },
             (error) => {
               return error;

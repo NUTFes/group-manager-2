@@ -72,6 +72,7 @@ export default {
   },
   methods: {
     signup: function() {
+      this.$store.commit("acceptRegistRepPermission");
       this.$router.push("/regist_rep");
     },
     submit: function () {
