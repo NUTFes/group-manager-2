@@ -72,6 +72,21 @@ export default {
     if (this.$store.state.registPlaceOrderPermission == false) {
       this.$router.push("/mypage");
     }
+    const placeUrl = process.env.VUE_APP_URL + "/places";
+    axios
+      .get(placeUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(
+        (response) => {
+          this.placeList = response.data.data;
+        },
+        (error) => {
+          console.error(error);
+          return error;
+        });
   },
   computed: {
     validationFirst() {
