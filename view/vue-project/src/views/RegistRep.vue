@@ -43,6 +43,14 @@
           <div class="regist-card-content-question-label">メールアドレス</div>
           <input id="email" v-model="email" placeholder="～@～.～" @change="validationEmail" />
         </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">パスワード</div>
+          <input id="password" v-model="password" type="password" />
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">パスワード確認</div>
+          <input id="passwordConfirmation" v-model="passwordConfirmation" type="password" placeholder="パスワード再入力" />
+        </div>
       </div>
     </div>
     <div  class="regist-button">
@@ -69,6 +77,7 @@ export default {
       grade_id: [],
       tel: [],
       email: [],
+      user_id: null,
       departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
@@ -202,22 +211,43 @@ export default {
     },
     register: function () {
       if (this.resultName && this.resultDepartment && this.resultGrade && this.resultEmail && this.resultTel && this.resultStudentId) {
-        const url = process.env.VUE_APP_URL + "/user_details";
+        // ユーザー新規登録
+        const authUrl = process.env.VUE_APP_URL + "/api/auth" ;
+        let authParams = new URLSearchParams();
+        console.log(this.name, this.email, this.password, this.passwordConfirmation)
+        authParams.append("name", this.name);
+        authParams.append("email", this.email);
+        authParams.append("role_id", 3);
+        authParams.append("password", this.password);
+        authParams.append("password_confirmation", this.passwordConfirmation);
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        let params = new URLSearchParams();
-        params.append("student_id", this.student_id);
-        params.append("tel", this.tel);
-        params.append("department_id", this.department_id);
-        params.append("grade_id", this.grade_id);
-        params.append("user_id", this.user.id);
-        axios.post(url, params).then(
-          () => {
-            this.$router.push("regist_model");
-          },
-          (error) => {
-            return error;
+        axios.post(authUrl, authParams).then(
+          (response) => {
+            localStorage.setItem("access-token", response.headers["access-token"]);
+            localStorage.setItem("client", response.headers["client"]);
+            localStorage.setItem("uid", response.headers["uid"]);
+            localStorage.setItem("token-type", response.headers["token-type"]);
+            this.user_id = response.data.data.id
+            const url = process.env.VUE_APP_URL + "/user_details";
+            let params = new URLSearchParams();
+            params.append("student_id", this.student_id);
+            params.append("tel", this.tel);
+            params.append("department_id", this.department_id);
+            params.append("grade_id", this.grade_id);
+            params.append("user_id", this.user_id);
+            axios.defaults.headers.common["Content-Type"] = "application/json";
+            axios.post(url, params).then(
+              () => {
+                this.$store.commit("acceptRegistGroupPermission");
+                this.$store.commit("acceptMypagePermission");
+                this.$router.push("regist_group");
+              },
+              (error) => {
+                return error;
+              }
+            );
           }
-        );
+        )
       } else {
         if (this.resultName==false) {
           const nameError = document.getElementById("name");
@@ -263,21 +293,6 @@ export default {
         }
       }
     },
-  },
-  mounted() {
-    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
-    axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.user = response.data.data;
-      });
   },
 };
 </script>

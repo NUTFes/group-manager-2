@@ -17,6 +17,12 @@ const store = new Vuex.Store({
     },
     rejectMypagePermission(state) {
       state.myPagePermission = false
+    },
+    acceptRegistGroupPermission(state) {
+      state.registGroupPermission = true
+    },
+    rejectRegistGroupPermission(state) {
+      state.registGroupPermission = false
     }
   },
   getters: {

@@ -25,7 +25,7 @@
           color="purple accent-2"
           rounded
           elevation="0"
-          to="/regist_model"
+          to="/regist_group"
         >
           <v-icon class="pr-2 pb-1">mdi-plus</v-icon>参加団体を追加する
         </v-btn>

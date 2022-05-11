@@ -47,7 +47,7 @@
         <!-- ステージオプション申請-->
         <div v-if="registInfo.group.group_category_id == 3">
           <li v-if="registInfo.stage_common_option == null">
-            <router-link to="/regist_stageOption">
+            <router-link to="/regist_stage_option">
               <button class="card">ステージオプション申請</button>
             </router-link>
             <span style="margin-left:1%;">ステージオプション申請が登録されていません</span>
@@ -57,7 +57,7 @@
         <!-- 物品申請-->
         <div v-if="setting.add_rental_order == true">
           <li v-if="registInfo.rental_orders == null">
-            <router-link to="/regist_rentalOrder">
+            <router-link to="/regist_rental_order">
               <button class="card">物品申請</button>
             </router-link>
             <span style="margin-left:1%;">物品申請が登録されていません</span>
@@ -78,7 +78,7 @@
           <!-- 食品申請-->
           <div v-if="registInfo.group.group_category_id !== 3 && setting.add_food_product == true">
             <li v-if="registInfo.food_products == null">
-              <router-link to="/regist_foodProduct">
+              <router-link to="/regist_food_product">
                 <button class="card">食品申請</button>
               </router-link>
               <span style="margin-left:1%;">食品申請が登録されていません</span>
