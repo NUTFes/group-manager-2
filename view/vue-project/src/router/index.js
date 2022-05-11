@@ -12,7 +12,8 @@ import RegistSubRep from "../views/RegistSubRep.vue";
 import RegistGroup from "../views/RegistGroup.vue";
 import RegistPlace from "../views/RegistPlace.vue";
 import RegistPower from "../views/RegistPower.vue";
-import RegistStage from "../views/RegistStage.vue";
+import RegistStageSunny from "../views/RegistStageSunny.vue";
+import RegistStageRainy from "../views/RegistStageRainy.vue";
 import RegistRentalOrder from "../views/RegistRentalOrder.vue";
 import RegistEmployees from "../views/RegistEmployees.vue";
 import RegistPurchaseList from "../views/RegistPurchaseList.vue";
@@ -97,9 +98,14 @@ const routes = [
     component: RegistPower,
   },
   {
-    path: "/regist_stage",
-    name: "RegistStage",
-    component: RegistStage,
+    path: "/regist_stage_sunny",
+    name: "RegistStageSunny",
+    component: RegistStageSunny,
+  },
+  {
+    path: "/regist_stage_rainy",
+    name: "RegistStageRainy",
+    component: RegistStageRainy,
   },
   {
     path: "/regist_rental_order",

@@ -217,9 +217,9 @@ export default {
         axios.post(subRepUrl, subRepParams).then(
           () => {
             if (localStorage.getItem("group_category_id") == 3){
-              this.$store.commit("acceptRegistStageOrderPermission");
+              this.$store.commit("acceptRegistStageOrderSunnyPermission");
               this.$store.commit("rejectRegistSubRepPermission");
-              this.$router.push("/regist_stage");
+              this.$router.push("/regist_stage_sunny");
             } else {
               this.$store.commit("acceptRegistPlaceOrderPermission");
               this.$store.commit("rejectRegistSubRepPermission");

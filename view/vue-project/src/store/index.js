@@ -15,13 +15,37 @@ const store = new Vuex.Store({
     registRentalOrderPermission: false, // 物品登録
     registPowerOrderPermission: false, // 電力登録
     registPlaceOrderPermission: false, // 会場登録
-    registStageOrderPermission: false, // ステージ登録
+    registStageOrderSunnyPermission: false, // ステージ登録(晴れ)
+    registStageOrderRainyPermission: false, // ステージ登録(雨)
     registStageCommonOptionPermission: false, // ステージオプション登録
     registFoodProductPermission: false, // 販売食品登録
     registPurchaseListPermission: false, // 購入食品登録
     registEmployeePermission: false, // 従業員登録
+
+    // ステージの晴れ/雨の分岐用のパラメータ
+    // 1: マイページから新規登録で両方登録してない場合）晴れ → 雨 → マイページ
+    // 2: マイページから新規登録で両方登録してない場合）雨 → 晴れ → マイページ
+    // 3: マイページから新規登録で片方だけ登録していない場合) 晴れ → マイページ
+    // 4: マイページから新規登録で片方だけ登録してない場合) 雨 → マイページ
+    // 5: 新規登録の場合) 晴れ → 雨 → ステージオプション
+    typeStage: 0,
   },
   mutations: {
+    typeStage1(state) {
+      state.typeStage = 1
+    },
+    typeStage2(state) {
+      state.typeStage = 2
+    },
+    typeStage3(state) {
+      state.typeStage = 3
+    },
+    typeStage4(state) {
+      state.typeStage = 4
+    },
+    typeStage5(state) {
+      state.typeStage = 5
+    },
     // ユーザー登録画面 
     acceptRegistRepPermission(state) {
       state.registRepPermission = true
@@ -78,12 +102,20 @@ const store = new Vuex.Store({
       state.registPlaceOrderPermission = false
     },
 
-    // ステージ登録画面
-    acceptRegistStageOrderPermission(state) {
-      state.registStageOrderPermission = true
+    // ステージ登録画面（晴れ)
+    acceptRegistStageOrderSunnyPermission(state) {
+      state.registStageOrderSunnyPermission = true
     },
-    rejectRegistStageOrderPermission(state) {
-      state.registStageOrderPermission = false
+    rejectRegistStageOrderSunnyPermission(state) {
+      state.registStageOrderSunnyPermission = false
+    },
+
+    // ステージ登録画面(雨)
+    acceptRegistStageOrderRainyPermission(state) {
+      state.registStageOrderRainyPermission = true
+    },
+    rejectRegistStageOrderRainyPermission(state) {
+      state.registStageOrderRainyPermission = false
     },
 
     // ステージオプション登録画面

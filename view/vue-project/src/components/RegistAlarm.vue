@@ -34,14 +34,40 @@
           </li>
         </div>
 
-        <!-- ステージ申請-->
+        <!-- ステージ申請両方ない場合 -->
         <div v-if="registInfo.group.group_category_id == 3">
           <li v-if="registInfo.stage_orders == null">
-            <router-link to="/regist_stage">
-              <button class="card" @click="goRegistStage">ステージ申請</button>
+            <router-link to="/regist_stage_sunny">
+              <button class="card" @click="goBothRegistStageSunny">ステージ申請 (晴れ)</button>
             </router-link>
-            <span style="margin-left:1%;">ステージ申請が登録されていません</span>
+            <span style="margin-left:1%;">ステージ申請(晴れ)が登録されていません</span>
           </li>
+          <li v-if="registInfo.stage_orders == null">
+            <router-link to="/regist_stage_rainy">
+              <button class="card" @click="goBothRegistStageRainy">ステージ申請 (雨)</button>
+            </router-link>
+            <span style="margin-left:1%;">ステージ申請(雨)が登録されていません</span>
+          </li>
+        </div>
+
+        <!-- ステージ申請片方ない場合 -->
+        <div v-if="registInfo.group.group_category_id == 3">
+          <div v-if="registInfo.stage_orders != null">
+            <div v-if="registInfo.stage_orders.length == 1">
+              <li v-if="registInfo.stage_orders.length == 1 && registInfo.stage_orders[0].stage_order.is_sunny == true">
+                <router-link to="/regist_stage_rainy">
+                  <button class="card" @click="goOneRegistStageRainy">ステージ申請 (雨)</button>
+                </router-link>
+                <span style="margin-left:1%;">ステージ申請(雨)が登録されていません</span>
+              </li>
+              <li v-if="registInfo.stage_orders[0].stage_order.is_sunny == false">
+                <router-link to="/regist_stage_sunny">
+                  <button class="card" @click="goOneRegistStageSunny">ステージ申請 (晴れ)</button>
+                </router-link>
+                <span style="margin-left:1%;">ステージ申請(晴れ)が登録されていません</span>
+              </li>
+            </div>
+          </div>
         </div>
 
         <!-- ステージオプション申請-->
@@ -121,9 +147,25 @@ export default {
       localStorage.setItem("group_id", this.registInfo.group.id)
       this.$store.commit("acceptRegistPowerOrderPermission");
     },
-    goRegistStage() {
+    goBothRegistStageSunny() {
       localStorage.setItem("group_id", this.registInfo.group.id)
-      this.$store.commit("acceptRegistStageOrderPermission");
+      this.$store.commit("typeStage1");
+      this.$store.commit("acceptRegistStageOrderSunnyPermission");
+    },
+    goBothRegistStageRainy() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage2");
+      this.$store.commit("acceptRegistStageOrderRainyPermission");
+    },
+    goOneRegistStageSunny() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage3");
+      this.$store.commit("acceptRegistStageOrderSunnyPermission");
+    },
+    goOneRegistStageRainy() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage4");
+      this.$store.commit("acceptRegistStageOrderRainyPermission");
     },
     goRegistStageOption() {
       localStorage.setItem("group_id", this.registInfo.group.id)
