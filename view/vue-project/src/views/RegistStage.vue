@@ -1,6 +1,6 @@
 <template>
   <div>
-      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
     <div class="regist-title">ステージの登録</div>
     <div class="regist-card">
       <div class="regist-card-content">

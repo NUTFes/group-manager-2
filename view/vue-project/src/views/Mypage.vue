@@ -45,7 +45,9 @@
       </div>
       <div class="mypage-tab-content" id="alert-content">
         <div class="mypage-tab-content-description">
-          <RegistAlarm :registInfo="regist_info[0]" :setting="setting" />
+          <div v-for="r in regist_info" :key="r" style="padding-bottom: 10px">
+            <RegistAlarm :registInfo="r" :setting="setting" />
+          </div>
         </div>
       </div>
     </div>

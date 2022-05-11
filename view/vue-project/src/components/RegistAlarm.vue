@@ -1,6 +1,6 @@
 <template>
   <div style="border-radius:2px; background-color: #ffd1d0;">
-    <h2>未登録</h2>
+    <h2>「{{ registInfo.group.name }}」 の未登録情報</h2>
     <div v-if="setting.is_regist_group">
       <ul class="horizontal-list">
 
@@ -8,7 +8,7 @@
         <div>
           <li v-if="registInfo.sub_rep == null">
             <router-link to="/regist_subrep">
-              <button class="card">副代表者の詳細情報</button>
+              <button class="card" @click="goRegistSubRep">副代表者の詳細情報</button>
             </router-link>
             <span style="margin-left:1%;">副代表者が登録されていません</span>
           </li>
@@ -18,7 +18,7 @@
         <div>
           <li v-if="registInfo.place_order == null">
             <router-link to="/regist_place">
-              <button class="card">会場申請</button>
+              <button class="card" @click="goRegistPlace">会場申請</button>
             </router-link>
             <span style="margin-left:1%;">会場申請が登録されていません</span>
           </li>
@@ -28,7 +28,7 @@
         <div v-if="setting.add_power_order == true">
           <li v-if="registInfo.power_orders == null">
             <router-link to="/regist_power">
-              <button class="card">電力申請</button>
+              <button class="card" @click="goRegistPower">電力申請</button>
             </router-link>
             <span style="margin-left:1%;">電力申請が登録されていません</span>
           </li>
@@ -38,7 +38,7 @@
         <div v-if="registInfo.group.group_category_id == 3">
           <li v-if="registInfo.stage_orders == null">
             <router-link to="/regist_stage">
-              <button class="card">ステージ申請</button>
+              <button class="card" @click="goRegistStage">ステージ申請</button>
             </router-link>
             <span style="margin-left:1%;">ステージ申請が登録されていません</span>
           </li>
@@ -48,7 +48,7 @@
         <div v-if="registInfo.group.group_category_id == 3">
           <li v-if="registInfo.stage_common_option == null">
             <router-link to="/regist_stage_option">
-              <button class="card">ステージオプション申請</button>
+              <button class="card" @click="goRegistStageOption">ステージオプション申請</button>
             </router-link>
             <span style="margin-left:1%;">ステージオプション申請が登録されていません</span>
           </li>
@@ -58,7 +58,7 @@
         <div v-if="setting.add_rental_order == true">
           <li v-if="registInfo.rental_orders == null">
             <router-link to="/regist_rental_order">
-              <button class="card">物品申請</button>
+              <button class="card" @click="goRegistRentalOrder">物品申請</button>
             </router-link>
             <span style="margin-left:1%;">物品申請が登録されていません</span>
           </li>
@@ -69,7 +69,7 @@
           <div v-if="registInfo.group.group_category_id !== 3 && setting.add_employee == true">
             <li v-if="registInfo.employees == null">
               <router-link to="/regist_employees">
-                <button class="card">従業員情報</button>
+                <button class="card" @click="goRegistEmployee">従業員情報</button>
               </router-link>
               <span style="margin-left:1%;">従業員申請が登録されていません</span>
             </li>
@@ -79,7 +79,7 @@
           <div v-if="registInfo.group.group_category_id !== 3 && setting.add_food_product == true">
             <li v-if="registInfo.food_products == null">
               <router-link to="/regist_food_product">
-                <button class="card">食品申請</button>
+                <button class="card" @click="goRegistFoodProduct">食品申請</button>
               </router-link>
               <span style="margin-left:1%;">食品申請が登録されていません</span>
             </li>
@@ -89,7 +89,7 @@
           <div v-if="registInfo.group.group_category_id !== 3 && setting.add_purchase_list == true">
             <li v-if="registInfo.purchase_lists == null">
               <router-link to="/regist_purchaseList">
-                <button class="card">購入品申請</button>
+                <button class="card" @click="goRegistPurchaseList">購入品申請</button>
               </router-link>
               <span style="margin-left:1%;">購入品申請が登録されていません</span>
             </li>
@@ -108,6 +108,34 @@ export default {
     registInfo: Object,
     setting: Object
   },
+  methods: {
+    goRegistSubRep() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistSubRepPermission");
+    },
+    goRegistPlace() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistPlaceOrderPermission");
+    },
+    goRegistPower() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistPowerOrderPermission");
+    },
+    goRegistStage() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistStageOrderPermission");
+    },
+    goRegistStageOption() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistStageCommonOptionPermission");
+    },
+    goRegistRentalOrder() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistRentalOrderPermission");
+    }
+
+    // 食品関係は後で作る
+  }
 };
 </script>
 
