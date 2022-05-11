@@ -1,24 +1,36 @@
 <template>
-  <div id="app">
-    <h1 class="tytle">物品申請フォーム</h1>
-    <div class="Blank">
-    <span>使用物品名</span>
-      <select v-model="item" id="item">
-        <option
-          v-for="list in item_list"
-          :value="list.id"
-          :key="list.id">
-          {{list.name}}
-        </option>
-      </select>
+  <div>
+    <div class="regist-title">使用する貸出物品の登録</div>
+    <div v-for="(n, i) in inputData" :key="i">
+      <div class="regist-card">
+        <div class="regist-card-content">
+          <div class="regist-card-content-question">
+            <div class="regist-card-content-question-label">貸出物品名</div>
+            <select v-model="inputData[i].item" :id="inputData[i].item_id">
+              <option
+                v-for="list in shopList"
+                :key="list.id"
+                :value="list.id"
+                >
+                {{list.name}}
+              </option>
+            </select>
+          </div>
+          <div class="regist-card-content-question">
+            <div class="regist-card-content-question-label">個数</div>
+            <input type="number" v-model="inputData[i].num" :id="inputData[i].num_id">
+          </div>
+          <div style="text-align:right">
+            <button v-if="inputData.length >= 2" class="regist-submit-button" @click="removeAddComponent(i)">このフォーム削除</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="Blank">
-      <span>個数</span>
-      <input type="text" v-model="num" @change="validationNum" id="num">
+    <div style="text-align: center">
+      <button class="regist-submit-button" @click="plusAddComponent">フォームの追加</button>
     </div>
-    <div class="Blank">
-      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
-      <button @click="register" style="margin-left:15%;">登録する→</button>
+    <div class="regist-button">
+      <button class="regist-submit-button" @click="register">登録</button>
     </div>
   </div>
 </template>
@@ -28,58 +40,82 @@ import axios from "axios";
 export default {
   data() {
     return {
-      item_list: [],
-      resultNum: false,
+      shopList: [],
+      stageList: [],
+      rentableList: [],
+      inputData: [
+        {
+          item_id: "item_id_0",
+          num_id: "power_id_0",
+          item: "",
+          num: 0,
+        },
+      ],
+      inputDataNum: 1,
+      maxNum: 100,
+      minNum: 0,
       new_info: [],
-      item: [],
-      num: [],
+      submitFlag: true,
+      count: 1
     };
   },
-  computed: {
-    validationPower(){
-      const pattern = /[0-9０-９]/;
-      if (pattern.test(this.num)==true) {
-        this.onNumValidation();
-      } else {
-        this.offNumValidation();
-      }
-      return this.resultNum
-    },
-  },
   methods: {
-    onNumValidation: function() {
-      this.resultNum = true;
+    plusAddComponent: function() {
+      let newInputData =
+        {
+          item_id: "item_id_" + this.count,
+          num_id: "power_id_" + this.count,
+          item: "",
+          num: 0
+        };
+      this.inputData.push(newInputData)
+      this.count += 1; // 要素のid番号になる
     },
-    offNumValidation: function() {
-      this.resultNum = false;
+    removeAddComponent: function(index) {
+      this.inputData.splice(index, 1)
     },
-    register: function () {
-      if (this.item > 0 && this.resultNum) {
-        axios.defaults.headers.common["Content-Type"] = "application/json";
-        let params = new URLSearchParams();
-        params.append("group_id", this.groupId);
-        params.append("rental_item_id", this.item_id);
-        params.append("num", this.item_num);
-        axios
-          .post(process.env.VUE_APP_URL + "/rental_orders", params)
-          .then((response) => {
-            console.log(response);
-            this.$router.push("mypage");
-          });
-      } else {
-        if (this.item.length == 0) {
-          const itemError = document.getElementById("item");
+    confirmValidation: function() {
+      this.submitFlag = true;
+      for (let data of this.inputData) {
+
+        // itemが未入力か確認
+        if (data.item.length == 0) {
+          this.submitFlag = false;
+          const itemError = document.getElementById(data.item_id);
           itemError.style.border="2px solid red";
         } else {
-          const itemError = document.getElementById("item");
+          const itemError = document.getElementById(data.item_id);
           itemError.style.border="2px solid black";
         }
-        if (this.resultNum==false) {
-          const powerError = document.getElementById("num");
+        // 電力が正しく入力されているか確認
+        if (this.minNum >= Number(data.num) || Number(data.num) > this.maxNum) {
+          this.submitFlag = false;
+          const powerError = document.getElementById(data.num_id);
           powerError.style.border="2px solid red";
         } else {
-          const powerError = document.getElementById("num");
+          const powerError = document.getElementById(data.num_id);
           powerError.style.border="2px solid black";
+        }
+      }
+    },
+    register: function () {
+      this.confirmValidation()
+      if (this.submitFlag) {
+        for (let data of this.inputData) {
+          axios.defaults.headers.common["Content-Type"] = "application/json";
+          let params = new URLSearchParams();
+          params.append("group_id", this.new_info.group.id);
+          params.append("rental_item_id", data.item);
+          params.append("num", data.num);
+          axios
+            .post(process.env.VUE_APP_URL + "/rental_orders", params)
+            .then((response) => {
+              console.log(response);
+              this.$router.push("mypage");
+            },
+            (error) => {
+              return error;
+            });
         }
       }
     },
@@ -92,8 +128,8 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -101,69 +137,48 @@ export default {
         this.new_info = response.data.data;
       });
 
-    const itemurl = process.env.VUE_APP_URL + "/rental_items";
+    const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
     axios
-      .get(itemurl, {
+      .get(shopUrl, {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        this.item_list = response.data.data;
+        this.shopList = response.data.data;
+      });
+
+    const stageUrl = process.env.VUE_APP_URL + "/api/v1/stage/rental_items";
+    axios
+      .get(stageUrl, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.stageList = response.data.data;
       });
   },
 }
 </script>
 
 <style scoped>
-  #app{
-    margin: 1%;
-  }
-  span {
-    display: inline-block;
-    width: 110px;
-    padding-right: 10px;
-  }
-  .tytle{
-    text-align:center;
-    padding:1%;
-  }
-  .Blank{
-    text-align: center;
-    margin:1%;
-  }
-  select,input{
-    text-align: center;
-    width: 30%;
-    height:40px;
+  select, input{
+    text-align: left;
+    padding: 1%;
+    height: 50px;
+    width: 800px;
     border-radius: 7px;
-    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
-    font-size: 25px;
+    font-size: 18px;
+    vertical-align: top;
   }
   select,input:required{
-    border: 2px solid red;
+    border: 1px solid red;
   }
   select,input:invalid{
-    border: 2px solid red;
+    border: 1px solid red;
   }
   select,input:valid{
-    border: 2px solid black;
-  }
-  button{
-  color: black;
-  font-weight: bold;
-  border: solid 2px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 1%;
-  padding:1%;
-  }
-  button:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  button:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+    border: 1px solid #333333;
   }
 </style>
