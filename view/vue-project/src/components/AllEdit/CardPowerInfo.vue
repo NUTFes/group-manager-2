@@ -3,7 +3,7 @@
       <div class="card">
         <span class="red"/>
         <div class="product">
-          {{regist}}
+          {{item}}
         </div>
         <span class="span1"/>
         <button class="button1">
@@ -11,16 +11,16 @@
         <span class="span2"/>
         <span class="line"/>
         <div class="power">
-          <div class="number">{{regist}}</div>
+          <div class="number">{{power}}</div>
           <div class="watt">[W]</div>
         </div>
         <span class="line"/>
         <div>
           <div class="detail">
-            <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">{{regist}}</div>
+            <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">{{manufacturer}}</div>
           </div>
           <div class="detail">
-            <div class="character1">型番</div><canvas class="triangle"/><div class="character2">{{regist}}</div>
+            <div class="character1">型番</div><canvas class="triangle"/><div class="character2">{{model}}</div>
           </div>
         </div>
         <span class="span3"/>
@@ -39,7 +39,10 @@
 <script>
 export default {
   props: {
-    regist: String,
+    item: String,
+    power: Number,
+    manufacturer: String,
+    model: String,
   },
 };
 </script>
