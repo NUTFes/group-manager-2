@@ -54,14 +54,20 @@
             <!-- 会場申請 -->
             <div id="area1" class="panel">
               <div >
-                <CardPlaceInfo :regist="new_info" />
+                <CardPlaceInfo :n="1" :place="regist_info[0].place_order.first" :remark="regist_info[0].place_order.remark" />
+              </div>
+              <div >
+                <CardPlaceInfo :n="2" :place="regist_info[0].place_order.second" :remark="regist_info[0].place_order.remark" />
+              </div>
+              <div >
+                <CardPlaceInfo :n="3" :place="regist_info[0].place_order.third" :remark="regist_info[0].place_order.remark" />
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div>
-                <CardPowerInfo :regist="new_info" />
+              <div v-for="p in regist_info[0].power_orders" :key="p" >
+                <CardPowerInfo :item="p.power_order.item" :power="p.power_order.power" :manufacturer="p.power_order.manufacturer" :model="p.power_order.model"/>
               </div>
               <button
                 id="btn1"
@@ -80,7 +86,7 @@
 
             <!-- 物品申請 -->
             <div id="area3" class="panel">
-              <div class="card">
+              <div>
                 <ConfirmationItem :regist="test" />
               </div>
               <button
@@ -96,8 +102,8 @@
                 :groupId="projectName"
                 @closeAddItem="closeAddItem"
               />
-              <div>
-                <CardItemInfo :regist="test" />
+              <div v-for="item in regist_info[0].rental_orders" :key="item">
+                <CardItemInfo :name="item.rental_item.name" :num="item.rental_item.num" />
               </div>
             </div>
 
@@ -214,7 +220,7 @@ import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
 import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
 import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
-// import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
+import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
 import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
 import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
@@ -232,7 +238,7 @@ export default {
     AddFood,
     AddPurchase,
     CardPlaceInfo,
-    // CardPowerInfo,
+    CardPowerInfo,
     CardItemInfo,
     CardStageInfo,
     CardStageOptionInfo,
