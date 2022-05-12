@@ -5,22 +5,22 @@
         <span class="red" />
         <div class="device">
           <div class="upper">機器▾</div>
-          <div class="lower">{{ ownEquipment }}</div>
+          <div class="lower">{{ ownEquipment? "使用" : "不使用" }}</div>
         </div>
         <span class="line" />
         <div class="music">
           <div class="upper">音楽▾</div>
-          <div class="lower">{{ bgm }}</div>
+          <div class="lower">{{ bgm? "使用" : "不使用" }}</div>
         </div>
         <span class="line" />
         <div class="permission">
           <div class="upper">撮影▾</div>
-          <div class="lower">{{ cameraPermission }}</div>
+          <div class="lower">{{ cameraPermission? "許可" : "禁止" }}</div>
         </div>
         <span class="line" />
         <div class="loud_sound">
           <div class="upper">騒音</div>
-        <div class="lower">{{ loudSound }}</div>
+        <div class="lower">{{ loudSound? "有" : "無" }}</div>
         </div>
         <span class="line" />
         <div class="content">
@@ -42,7 +42,7 @@ export default {
     ownEquipment: Boolean,
     bgm: Boolean,
     cameraPermission: Boolean,
-    loudSound: String,
+    loudSound: Boolean,
     stageContent: String,
   },
 };
@@ -72,7 +72,7 @@ export default {
   background: #f71e35;
 }
 .device {
-  width: 98px;
+  width: 120px;
   height: 95.5px;
   align-items: center;
   font-family: 'Noto Sans JP';
@@ -98,7 +98,7 @@ export default {
   background: #333333;
 }
 .music {
-  width: 80px;
+  width: 120px;
   height: 95.5px;
   align-items: center;
   font-family: 'Noto Sans JP';
@@ -134,7 +134,7 @@ export default {
   color: #333333;
 }
 .content {
-  width: 380px;
+  width: 320px;
   height: 95.5px;
   align-items: center;
   font-family: 'Noto Sans JP';

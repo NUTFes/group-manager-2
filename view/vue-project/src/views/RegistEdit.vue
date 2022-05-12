@@ -104,9 +104,7 @@
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
               <div v-for="list in regist_info" :key="list.id">
-              {{list.stage_orders}}
                 <div v-for="stage_order in list.stage_orders" :key="stage_order">
-                {{stage_order}}
                   <CardStageInfo 
                   :firstStage="stage_order.stage_order.stage_first" 
                   :secondStage="stage_order.stage_order.stage_second" 
@@ -119,21 +117,14 @@
             <!-- ステージオプション -->
             <div id="area8" class="panel">
               <div v-for="list in regist_info" :key="list.id">
-                {{list.stage_orders.stage_common_option}}
-                <div v-for="stage_common_option in list.stage_common_option" :key="stage_common_option">
-                {{stage_common_option}}
-                  <CardStageOptionInfo 
-                  :ownEquipment="own_equipment"
-                  :bgm="bgm"
-                  :cameraPermission="list.camera_permission"
-                  :loudSound="loud_sound" 
-                  :stageContent="stage_content" />
-                </div>
+                <CardStageOptionInfo 
+                :ownEquipment="list.stage_common_option.own_equipment"
+                :bgm="list.stage_common_option.bgm"
+                :cameraPermission="list.stage_common_option.camera_permission"
+                :loudSound="list.stage_common_option.loud_sound" 
+                :stageContent="list.stage_common_option.stage_content" />
               </div>
             </div>
-
-            <!-- :ownEquipment="stage_common_option.own_equipment":bgm="stage_common_option.bgm":cameraPermission="stage_common_option.camera_permission":loudSound="stage_common_option.loud_sound" :stageContent="stage_common_option.stage_content" -->
-            <!-- <div v-for="list in regist_info" :key="list.id"><div v-for="stage_common_option in list.stage_common_options" :key="stage_common_option" -->
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">

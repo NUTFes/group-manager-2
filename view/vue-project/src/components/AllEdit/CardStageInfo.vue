@@ -3,13 +3,13 @@
     <div>
       <div class="card">
         <span class="red" />
-        <div class="date">{{date}}</div>
+        <div class="date">{{ date }}</div>
         <span class="line" />
-        <div class="weather">{{isSunny? "晴" : "雨"}}</div>
+        <div class="weather">{{ isSunny? "晴" : "雨" }}</div>
         <span class="line" />
         <div class="stage">
-          <div class="first">第1希望‣ {{firstStage}} </div> 
-          <div class="second">第2希望‣ {{secondStage}} </div>
+          <div class="first">第1希望‣ {{ firstStage }} </div> 
+          <div class="second">第2希望‣ {{ secondStage }} </div>
         </div>
         <button class="button">
           <div class="edit">編集</div><br>
