@@ -101,6 +101,10 @@ export default {
         );
     },
   },
-  mounted() {},
+  mounted() {
+    if (this.$store.state.resetPasswordPermission == false) {
+      this.$router.push("/");
+    }
+  },
 };
 </script>

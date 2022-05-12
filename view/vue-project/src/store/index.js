@@ -21,6 +21,12 @@ const store = new Vuex.Store({
     registFoodProductPermission: false, // 販売食品登録
     registPurchaseListPermission: false, // 購入食品登録
     registEmployeePermission: false, // 従業員登録
+    registEditPermission: false, // まとめて編集ページ
+
+    completePermission: false, // 確認画面
+    userInfoPermission: false, // ユーザー情報画面
+    editUserInfoPermission: false, // ユーザー情報確認画面
+    resetPasswordPermission: false, // パスワード変更ページ
 
     // ステージの晴れ/雨の分岐用のパラメータ
     // 1: マイページから新規登録で両方登録してない場合）晴れ → 雨 → マイページ
@@ -133,6 +139,46 @@ const store = new Vuex.Store({
     rejectRegistStageCommonOptionPermission(state) {
       state.registStageCommonOptionPermission = false
     },
+
+    // まとめて編集画面
+    acceptRegistEditPermission(state) {
+      state.registEditPermission = true
+    },
+    rejectRegistEditPermission(state) {
+      state.registEditPermission = false
+    },
+
+    // 確認画面
+    acceptCompletePermission(state) {
+      state.completePermission = true
+    },
+    rejectCompletePermission(state) {
+      state.completePermission = false
+    },
+
+    // ユーザー情報
+    acceptUserInfoPermission(state) {
+      state.userInfoPermission = true
+    },
+    rejectUserInfoPermission(state) {
+      state.userInfoPermission = false
+    },
+
+    // ユーザー情報編集
+    acceptEditUserInfoPermission(state) {
+      state.editUserInfoPermission = true
+    },
+    rejectEditUserInfoPermission(state) {
+      state.editUserInfoPermission = false
+    },
+
+    // パスワードリセット
+    acceptResetPasswordPermission(state) {
+      state.resetPasswordPermission = true
+    },
+    rejectResetPasswordPermission(state) {
+      state.resetPasswordPermission = false
+    },
     
     rejectAllPermission(state) {
       state.registRepPermission = false
@@ -146,6 +192,9 @@ const store = new Vuex.Store({
       state.registFoodProductPermission = false // 販売食品登録
       state.registPurchaseListPermission = false // 購入食品登録
       state.registEmployeePermission = false // 従業員登録
+      state.userInfoPermission = false
+      state.editUserInfoPermission = false
+      state.resetPasswordPermission = false
     }
   },
   getters: {

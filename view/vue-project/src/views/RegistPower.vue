@@ -163,8 +163,9 @@ export default {
               if (this.$store.state.fromMypage == true) {
                 this.$router.push("/mypage")
               } else {
+                this.$store.commit("acceptCompletePermission");
                 this.$store.commit("rejectRegistPowerOrderPermission");
-                this.$router.push("/mypage");
+                this.$router.push("/complete");
               }
             },
             (error) => {
@@ -176,7 +177,7 @@ export default {
   },
   mounted() {
     if (this.$store.state.registPowerOrderPermission == false) {
-      this.$router.push("/mypage");
+      this.$router.push("/");
     }
   },
 }

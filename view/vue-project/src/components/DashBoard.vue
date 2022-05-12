@@ -5,9 +5,9 @@
       <div class="dashboard-detail">
         <p>技大祭に参加していただき誠にありがとうございます。<br />登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
       </div>
-      <li><router-link to="/profile">ユーザー情報</router-link></li>
-      <li><router-link to="/edit_user_info">ユーザー情報編集</router-link></li>
-      <li><router-link to="/password_reset">パスワード変更</router-link></li>
+      <li @click="toUserInfo" class="dashboard-link">ユーザー情報</li>
+      <li @click="toEditUserInfo" class="dashboard-link">ユーザー情報編集</li>
+      <li @click="toResetPassword" class="dashboard-link">パスワード変更</li>
     </div>
   </div>
 </template>
@@ -19,6 +19,20 @@ export default {
     return {
       user: [],
     };
+  },
+  methods: {
+    toUserInfo() {
+      this.$store.commit("acceptUserInfoPermission");
+      this.$router.push("/profile");
+    },
+    toEditUserInfo() {
+      this.$store.commit("acceptEditUserInfoPermission");
+      this.$router.push("/edit_user_info");
+    },
+    toResetPassword() {
+      this.$store.commit("acceptResetPasswordReset");
+      this.$router.push("/password_reset");
+    },
   },
   mounted() {
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
@@ -56,7 +70,14 @@ export default {
   padding-top: 2%;
   font-size: 16px;
 }
-li {
+.dashboard-link {
+  font-size: 18px;
   list-style: none;
+  color: #e040fb;
+  cursor: pointer;
+}
+.dashboard-link:hover {
+  color: #e040fb;
+  font-weight: bold;
 }
 </style>
