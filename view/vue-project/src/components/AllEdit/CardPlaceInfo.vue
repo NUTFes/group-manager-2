@@ -16,19 +16,23 @@
         <div class="notes">
           {{ remark }}
         </div>
-        <button class="button">
+        <button class="button" @click="openEditPlace">
           <div class="edit">編集</div>
         </button>
       </div>
+      <EditPlace
+        v-if="editPlaceDisplay"
+        @closeEditPlace="closeEditPlace"
+      />
     </div>
   </body>
 </template>
 
 <script>
-// import EditPlace from "@/components/AllEdit/EditPlace.vue";
+import EditPlace from "@/components/AllEdit/EditPlace.vue";
 export default {
   components: {
-    // EditPlace
+    EditPlace
   },
   props: {
     n: Number,
@@ -37,15 +41,15 @@ export default {
   },
   data() {
     return {
-      editPlaceisplay: false,
+      editPlaceDisplay: false,
     };
   },
   methods: {
     openEditPlace: function () {
-      this.editPlaceisplay = true;
+      this.editPlaceDisplay = true;
     },
     closeEditPlace: function () {
-      this.editPlaceisplay = false;
+      this.editPlaceDisplay = false;
     },
   },
 };

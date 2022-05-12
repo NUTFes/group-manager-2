@@ -17,7 +17,7 @@
         </div>
       </div>
       <EditStage
-        v-if="editStageisplay"
+        v-if="editStageDisplay"
         @closeEditStage="closeEditStage"
       />
     </div>
@@ -38,15 +38,15 @@ export default {
   },
   data() {
     return {
-      editStageisplay: false,
+      editStageDisplay: false,
     };
   },
   methods: {
     openEditStage: function () {
-      this.editStageisplay = true;
+      this.editStageDisplay = true;
     },
     closeEditStage: function () {
-      this.editStageisplay = false;
+      this.editStageDisplay = false;
     },
   },
 };

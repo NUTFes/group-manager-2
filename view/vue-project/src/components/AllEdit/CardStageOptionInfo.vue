@@ -32,7 +32,7 @@
           <button class="delete">削除</button>
         </div>
         <EditOption
-          v-if="editOptionisplay"
+          v-if="editOptionDisplay"
           @closeEditOption="closeEditOption"
         />
       </div>
@@ -55,16 +55,16 @@ export default {
   },
   data() {
     return {
-      editOptionisplay: false,
+      editOptionDisplay: false,
     };
   },
 
   methods: {
     openEditOption: function () {
-      this.editOptionisplay = true;
+      this.editOptionDisplay = true;
     },
     closeEditOption: function () {
-      this.editOptionisplay = false;
+      this.editOptionDisplay = false;
     },
   },
 };

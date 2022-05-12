@@ -33,11 +33,11 @@
         </button>
       </div>
       <EditPower
-        v-if="editPowerisplay"
+        v-if="editPowerDisplay"
         @closeEditPower="closeEditPower"
       />
       <DeletePower
-        v-if="deletePowerisplay"
+        v-if="deletePowerDisplay"
         @closeDeletePower="closeDeletePower"
       />
     </div>
@@ -60,22 +60,22 @@ export default {
   },
   data() {
     return {
-      editPowerisplay: false,
-      deletePowerisplay: false,
+      editPowerDisplay: false,
+      deletePowerDisplay: false,
     };
   },
   methods: {
     openEditPower: function () {
-      this.editPowerisplay = true;
+      this.editPowerDisplay = true;
     },
     closeEditPower: function () {
-      this.editPowerisplay = false;
+      this.editPowerDisplay = false;
     },
     openDeletePower: function () {
-      this.deletePowerisplay = true;
+      this.deletePowerDisplay = true;
     },
     closeDeletePower: function () {
-      this.deletePowerisplay = false;
+      this.deletePowerDisplay = false;
     },
   },
 };

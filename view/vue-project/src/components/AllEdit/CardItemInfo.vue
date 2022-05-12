@@ -22,11 +22,11 @@
           </button>
         </div>
         <EditItem
-          v-if="editItemisplay"
+          v-if="editItemDisplay"
           @closeEditItem="closeEditItem"
         />
         <DeleteItem
-          v-if="deleteItemisplay"
+          v-if="deleteItemDisplay"
           @closeDeleteItem="closeDeleteItem"
         />
       </div>
@@ -47,22 +47,22 @@ export default {
   },
   data() {
     return {
-      editItemisplay: false,
-      deleteItemisplay: false,
+      editItemDisplay: false,
+      deleteItemDisplay: false,
     };
   },
   methods: {
     openEditItem: function () {
-      this.editItemisplay = true;
+      this.editItemDisplay = true;
     },
     closeEditItem: function () {
-      this.editItemisplay = false;
+      this.editItemDisplay = false;
     },
     openDeleteItem: function () {
-      this.deleteItemisplay = true;
+      this.deleteItemDisplay = true;
     },
     closeDeleteItem: function () {
-      this.deleteItemisplay = false;
+      this.deleteItemDisplay = false;
     },
   },
 };
