@@ -82,10 +82,6 @@
                 :groupId="projectName"
                 @closeAddPower="closeAddPower"
               />
-
-              <div>
-                <CardPowerInfo :regist="test" />
-              </div>
             </div>
 
             <!-- 物品申請 -->
