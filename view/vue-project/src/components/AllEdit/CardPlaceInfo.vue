@@ -1,41 +1,39 @@
 <template>
-<body id="font">
-  <div>
-    <div class="card">
-      <span class="red"/>
-      <div class="choice">
-        第1希望
+  <body id="font">
+    <div>
+      <div class="card">
+        <span class="red"/>
+        <div class="choice">
+          第{{ n }}希望
+        </div>
+        <span class="line"/>
+        <div class="area">
+          {{ place }}
+        </div>
+        <div class="ps">
+          追記：
+        </div>
+        <div class="notes">
+          {{ remark }}
+        </div>
+        <button class="button">
+          <div class="edit">編集</div>
+        </button>
       </div>
-      <span class="line"/>
-      <div class="area">
-        {{regist}}
-      </div>
-      <div class="ps">
-        追記：
-      </div>
-      <div class="notes">
-        火を使います。例の如く火事になるかもしれません。ご了承ください。
-      </div>
-      <div class="button">
-        <button class="edit" @click="openEditPlace">編集</button>
-      </div>
-      <EditPlace
-          v-if="editPlaceisplay"
-          @closeEditPlace="closeEditPlace"
-      />
     </div>
-  </div>
-</body>
+  </body>
 </template>
 
 <script>
-import EditPlace from "@/components/AllEdit/EditPlace.vue";
+// import EditPlace from "@/components/AllEdit/EditPlace.vue";
 export default {
   components: {
-    EditPlace
+    // EditPlace
   },
   props: {
-    regist: String,
+    n: Number,
+    place: String,
+    remark: String,
   },
   data() {
     return {

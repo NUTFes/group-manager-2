@@ -3,11 +3,11 @@
       <div class="card">
         <span class="red" />
         <div class="item">
-          {{regist}}
+          {{name}}
         </div>
         <p class="box">
           <span class="number">
-          {{regist}}
+          {{num}}
           </span>
           <span class="pieces">
             個
@@ -42,7 +42,8 @@ export default {
     DeleteItem
   },
   props: {
-    regist: String,
+    name: String,
+    num: Number,
   },
   data() {
     return {
