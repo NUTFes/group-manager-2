@@ -54,7 +54,6 @@ export default {
       inputDataNum: 1,
       maxNum: 100,
       minNum: 0,
-      new_info: [],
       submitFlag: true,
       count: 1
     };
@@ -104,14 +103,19 @@ export default {
         for (let data of this.inputData) {
           axios.defaults.headers.common["Content-Type"] = "application/json";
           let params = new URLSearchParams();
-          params.append("group_id", this.new_info.group.id);
+          params.append("group_id", localStorage.getItem("group_id"));
           params.append("rental_item_id", data.item);
           params.append("num", data.num);
           axios
             .post(process.env.VUE_APP_URL + "/rental_orders", params)
-            .then((response) => {
-              console.log(response);
-              this.$router.push("mypage");
+            .then(() => {
+              if (this.$store.state.fromMypage == true) {
+                this.$router.push("/mypage")
+              } else {
+                this.$store.commit("acceptRegistPowerOrderPermission");
+                this.$store.commit("rejectRegistRentalOrderPermission");
+                this.$router.push("/regist_power");
+              }
             },
             (error) => {
               return error;
@@ -121,22 +125,10 @@ export default {
     },
   },
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data;
-      });
-
+    // 直リンク対策
+    if (this.$store.state.registRentalOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
     const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
     axios
       .get(shopUrl, {

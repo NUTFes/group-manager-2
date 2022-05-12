@@ -60,7 +60,6 @@ export default {
       resultFirst: false,
       resultSecond: false,
       resultThird: false,
-      new_info: [],
       first: [],
       second: [],
       third: [],
@@ -69,6 +68,10 @@ export default {
     };
   },
   mounted() {
+    // 直リンク対策
+    if (this.$store.state.registPlaceOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
     const placeUrl = process.env.VUE_APP_URL + "/places";
     axios
       .get(placeUrl, {
@@ -84,22 +87,6 @@ export default {
           console.error(error);
           return error;
         });
-
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
   },
   computed: {
     validationFirst() {
@@ -150,15 +137,20 @@ export default {
       if (this.resultFirst && this.resultSecond && this.resultThird && this.first!=this.second && this.first!=this.third && this.second!=this.third) {
         const placeUrl = process.env.VUE_APP_URL + "/place_orders";
         let placeParams = new URLSearchParams();
-        placeParams.append("group_id", this.new_info.group.id);
+        placeParams.append("group_id", localStorage.getItem("group_id"));
         placeParams.append("first", this.first);
         placeParams.append("second", this.second);
         placeParams.append("third", this.third);
         placeParams.append("remark", this.remark);
         axios.post(placeUrl, placeParams).then(
-          (response) => {
-            console.log(response.data);
-            this.$router.push("mypage");
+          () => {
+            if (this.$store.state.fromMypage == true) {
+              this.$router.push("/mypage")
+            } else {
+              this.$store.commit("acceptRegistRentalOrderPermission");
+              this.$store.commit("rejectRegistPlaceOrderPermission");
+              this.$router.push("/regist_rental_order");
+            }
           },
           (error) => {
             return error;

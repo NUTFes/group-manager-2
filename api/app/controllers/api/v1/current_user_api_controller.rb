@@ -17,8 +17,8 @@ class Api::V1::CurrentUserApiController < ApplicationController
 
   def get_current_user_with_user_detail
     @user = current_api_user
-    @user_detail = @user.user_detail
-    render json: fmt(ok, {"user": @user, "user_detail": @user_detail})
+    @user_detail = @user.with_user_detail
+    render json: fmt(ok, @user_detail)
   end
 
   def edit_user_info

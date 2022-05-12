@@ -75,7 +75,6 @@ export default {
       resultMusic: false,
       resultPicture: false,
       resultNoise: false,
-      new_info: [],
       item: [],
       music: [],
       picture: [],
@@ -137,7 +136,7 @@ export default {
       if (this.resultItem && this.resultMusic && this.resultPicture && this.resultNoise && this.stageContent.length > 0) {
         const url = process.env.VUE_APP_URL + "/stage_common_options";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
+        params.append("group_id", localStorage.getItem("group_id"));
         params.append("own_equipment", this.item);
         params.append("bgm", this.music);
         params.append("camera_permission", this.picture);
@@ -145,16 +144,20 @@ export default {
         params.append("stage_content", this.stageContent);
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
-          (response) => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa", response);
-            this.$router.push("mypage");
+          () => {
+            if (this.$store.state.fromMypage == true) {
+              this.$router.push("/mypage")
+            } else {
+              this.$store.commit("acceptRegistRentalOrderPermission");
+              this.$store.commit("rejectRegistStageCommonOptionPermission");
+              this.$router.push("/regist_rental_order");
+            }
           },
           (error) => {
             console.log("登録できませんでした");
             return error;
           });
       } else {
-        console.log("zzzzzzzzzzzzzzzz");
         if (this.resultItem==false) {
           const itemError = document.getElementById("item");
           itemError.style.border="2px solid red";
@@ -195,21 +198,10 @@ export default {
   },
 
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registStageCommonOptionPermission == false) {
+      this.$router.push("/mypage");
+    }
   },
 };
 </script>
