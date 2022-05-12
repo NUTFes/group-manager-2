@@ -3,16 +3,13 @@
     <div>
       <div class="card">
         <span class="red" />
-        <div class="date">
-          11月11日
-        </div>
+        <div class="date">{{ date }}</div>
         <span class="line" />
-        <div class="weather">
-          晴
-        </div>
+        <div class="weather">{{ isSunny? "晴" : "雨" }}</div>
         <span class="line" />
         <div class="stage">
-          {{regist}}
+          <div class="first">第1希望‣ {{ firstStage }} </div> 
+          <div class="second">第2希望‣ {{ secondStage }} </div>
         </div>
         <div class="button">
           <button class="edit" @click="openEditStage">編集</button>
@@ -34,7 +31,10 @@ export default {
     EditStage
   },
   props: {
-    regist: String,
+    firstStage: String,
+    secondStage: String,
+    date: String,
+    isSunny: Boolean,
   },
   data() {
     return {
@@ -60,6 +60,7 @@ export default {
 .card {
   display: flex;
   align-items: center;
+  margin: 3%;
   position: relative;
   width: 1026px;
   height: 149px;
@@ -104,7 +105,7 @@ export default {
   color: #333333;
 }
 .stage {
-  width: 300x;
+  width: 460px;
   margin-right: 27px;
   margin-left: 27px;
   font-weight: 300;
@@ -122,11 +123,10 @@ export default {
   text-align: left;
 }
 .button {
-  width: 120px;
+  width: 126px;
   height: 80px;
   margin-top: 5px;
   margin-left: 18px;
-  border-radius: 5px;
 }
 .edit {
   font-weight: 350;
@@ -135,6 +135,7 @@ export default {
   letter-spacing: 0.3em;
   background: #62a7ff;
   color: #ffffff;
+  border-radius: 5px;
   margin: 0.5rem;
   padding: 0 1rem;
 }
@@ -145,6 +146,7 @@ export default {
   letter-spacing: 0.3em;
   background: #ff6262;
   color: #ffffff;
+  border-radius: 5px;
   margin: 0.5rem;
   padding: 0 1rem;
 }

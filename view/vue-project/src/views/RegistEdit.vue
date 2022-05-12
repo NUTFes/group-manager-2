@@ -82,13 +82,14 @@
                 :groupId="projectName"
                 @closeAddPower="closeAddPower"
               />
+
+              <div>
+                <CardPowerInfo :regist="test" />
+              </div>
             </div>
 
             <!-- 物品申請 -->
             <div id="area3" class="panel">
-              <div>
-                <ConfirmationItem :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -109,31 +110,31 @@
 
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
-              <div class="card">
-                <ConfirmationStage :regist="test" />
-              </div>
-            
-              <div>
-                <CardStageInfo :regist="test" />
+              <div v-for="list in regist_info" :key="list.id">
+                <div v-for="stage_order in list.stage_orders" :key="stage_order">
+                  <CardStageInfo 
+                  :firstStage="stage_order.stage_order.stage_first" 
+                  :secondStage="stage_order.stage_order.stage_second" 
+                  :date="stage_order.stage_order.date" 
+                  :isSunny="stage_order.stage_order.is_sunny" />
+                </div>
               </div>
             </div>
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
-              <div class="card">
-                <ConfirmationOption :regist="test" />
-              </div>
-
-              <div>
-                <CardStageOptionInfo :regist="test" />
+              <div v-for="list in regist_info" :key="list.id">
+                <CardStageOptionInfo 
+                :ownEquipment="list.stage_common_option.own_equipment"
+                :bgm="list.stage_common_option.bgm"
+                :cameraPermission="list.stage_common_option.camera_permission"
+                :loudSound="list.stage_common_option.loud_sound" 
+                :stageContent="list.stage_common_option.stage_content" />
               </div>
             </div>
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
-              <div class="card">
-                <ConfirmationEmployee :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -159,9 +160,6 @@
 
             <!-- 食品申請 -->
             <div id="area6" class="panel">
-              <div class="card">
-                <ConfirmationFood :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -180,9 +178,6 @@
 
             <!-- 購入品申請 -->
             <div id="area7" class="panel">
-              <div class="card">
-                <ConfirmationPurchase :regist="test" />
-              </div>
               <button
                 id="btn1"
                 type="button"
@@ -211,14 +206,9 @@ import axios from "axios";
 
 import AddPower from "@/components/AllEdit/AddPower.vue";
 import AddItem from "@/components/AllEdit/AddItem.vue";
-import ConfirmationStage from "@/components/AllEdit/ConfirmationStage.vue";
-import ConfirmationOption from "@/components/AllEdit/ConfirmationOption.vue";
 import AddEmployee from "@/components/AllEdit/AddEmployee.vue";
-import ConfirmationEmployee from "@/components/AllEdit/ConfirmationEmployee.vue";
 import AddFood from "@/components/AllEdit/AddFood.vue";
-import ConfirmationFood from "@/components/AllEdit/ConfirmationFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
-import ConfirmationPurchase from "@/components/AllEdit/ConfirmationPurchase.vue";
 import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
 import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
@@ -227,11 +217,6 @@ import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
 
 export default {
   components: {
-    ConfirmationStage,
-    ConfirmationOption,
-    ConfirmationEmployee,
-    ConfirmationFood,
-    ConfirmationPurchase,
     AddPower,
     AddItem,
     AddEmployee,
