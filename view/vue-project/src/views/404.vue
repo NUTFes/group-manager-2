@@ -3,8 +3,8 @@
     <div class="notfound-message">
       お探しのページは見つかりません
     </div>
-    <div class="notfound-button">
-      <button @click="backTopPage">トップページに戻る</button>
+    <div style="text-align:center">
+      <button @click="backTopPage" class="notfound-button">トップページに戻る</button>
     </div>
   </div>
 </template>

@@ -4,8 +4,8 @@
       登録が完了しました<br>
       技大祭へのご参加ありがとうございます
     </div>
-    <div class="complete-button">
-      <button @click="backTopPage">マイページへ</button>
+    <div style="text-align:center">
+      <button @click="backTopPage" class="complete-button">マイページへ</button>
     </div>
     
   </div>
