@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <div class="regist-title">ステージの登録 - 晴れの場合</div>
     <!-- 晴れの場合 -->
     <div class="regist-card">
@@ -159,6 +159,9 @@
     <div class="regist-button">
       <button @click="register" class="regist-submit-button">登録する→</button>
     </div>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
+    </div>
   </div>
 </template>
 
@@ -209,6 +212,11 @@ export default {
           this.timeRange.push(hour + ":" + minute);
         }
       }
+    },
+    skip: function() {
+      this.$store.commit("acceptRegistStageOrderRainyPermission");
+      this.$store.commit("rejectRegistStageOrderSunnyPermission");
+      this.$router.push("/regist_stage_rainy");
     },
     register: function() {
       if (this.date>0 && this.first>0 && this.second>0 && this.first!=this.second) {

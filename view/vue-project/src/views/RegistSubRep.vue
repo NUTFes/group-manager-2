@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">戻る</span></router-link>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <div class="regist-title">副代表者の登録</div>
     <div class="regist-card">
       <div class="regist-card">
@@ -50,6 +50,9 @@
     </div>
     <div class="regist-button">
       <button @click="register" class="regist-submit-button">登録する</button>
+    </div>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
     </div>
   </div>
 </template>
@@ -201,6 +204,17 @@ export default {
     },
     offEmailValidation: function() {
       this.resultEmail = false;
+    },
+    skip: function() {
+      if (localStorage.getItem("group_category_id") == 3){
+        this.$store.commit("acceptRegistStageOrderSunnyPermission");
+        this.$store.commit("rejectRegistSubRepPermission");
+        this.$router.push("/regist_stage_sunny");
+      } else {
+        this.$store.commit("acceptRegistPlaceOrderPermission");
+        this.$store.commit("rejectRegistSubRepPermission");
+        this.$router.push("/regist_place");
+      }
     },
     register: function () {
       if (this.resultName && this.resultDepartment && this.resultGrade && this.resultEmail && this.resultTel && this.resultStudentId) {

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <div class="regist-title">使用する電力物品の登録</div>
     <div v-for="(n, i) in inputData" :key="i">
       <div class="regist-card">
@@ -35,6 +36,9 @@
     </div>
     <div class="regist-button">
       <button class="regist-submit-button" @click="register">登録</button>
+    </div>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
     </div>
   </div>
 </template>
@@ -136,6 +140,10 @@ export default {
           urlError.style.border="2px solid black";
         }
       }
+    },
+    skip: function() {
+      this.$store.commit("rejectRegistPowerOrderPermission");
+      this.$router.push("/mypage");
     },
     register: function () {
       this.confirmValidation()
