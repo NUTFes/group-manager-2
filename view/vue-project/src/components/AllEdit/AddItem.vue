@@ -2,7 +2,10 @@
   <transition name="fade" appear>
     <div class="add-modal">
       <div class="add-modal_box">
-        <h1>物品申請<button id="btn2" v-on:click="$emit('closeAddItem')">✖</button></h1>
+        <div id="btnContainer">
+          <button v-on:click="$emit('closeAddItem')">✖</button>
+        </div>
+        <h1>物品申請</h1>
         <div>貸出物品</div>
         <select v-model="item" id="item">
           <option
@@ -13,7 +16,7 @@
           </option>
         </select>
         <div>個数</div>
-        <input type="number" v-model="num" id="num" @change="validationPower">
+        <input type="number" v-model="num" id="num" @change="validationItem">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
           <button id="btn" type="button" @click="register">✓登録</button>
@@ -39,7 +42,7 @@ export default {
     };
   },
   computed: {
-    validationPower(){
+    validationItem(){
       const pattern = /[0-9０-９]/;
       if (pattern.test(this.num)==true) {
         this.onNumValidation();
@@ -131,9 +134,12 @@ export default {
   #btn:active{
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
   }
-  #btn2{
-    position: relative;
-    right: -30%;
+    #btnContainer {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    margin-bottom: -1.5rem;
+    z-index: 0;
   }
   input{
     border: 1px solid silver;
@@ -142,12 +148,6 @@ export default {
   select{
     border: 1px solid silver;
     width: 100%;
-  }
-  .add-modal_box div {
-    justify-content: center;
-    flex-flow: column;
-    width: 80%;
-    margin-top: 3%;
   }
   .add-modal_box {
     display: flex;

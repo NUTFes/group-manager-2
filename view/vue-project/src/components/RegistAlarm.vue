@@ -1,93 +1,191 @@
 <template>
   <div style="border-radius:2px; background-color: #ffd1d0;">
-      <h2>未登録</h2>
+    <!-- <h2>「{{ registInfo.group.name }}」 の未登録情報</h2> -->
+    <div v-if="setting.is_regist_group">
       <ul class="horizontal-list">
-      <li v-if="new_info.group == null">
-        <router-link to="/regist_rep">
-          <button  class="card">代表者の詳細情報</button>
-        </router-link>
-        <span style="margin-left:1%;">代表者が登録されていません</span>
-      </li>
-      <li v-if="new_info.sub_rep == null">
-        <router-link to="/regist_subrep">
-          <button class="card">副代表者の詳細情報</button>
-        </router-link>
-        <span style="margin-left:1%;">副代表者が登録されていません</span>
-      </li>
-      <li v-if="new_info.place_order == null">
-        <router-link to="/regist_place">
-          <button class="card">会場申請</button>
-        </router-link>
-        <span style="margin-left:1%;">会場申請が登録されていません</span>
-      </li>
-      <li v-if="new_info.power_orders == null">
-        <router-link to="/regist_power">
-          <button class="card">電力申請</button>
-        </router-link>
-        <span style="margin-left:1%;">電力申請が登録されていません</span>
-      </li>
-      <li v-if="new_info.stage_orders == null">
-        <router-link to="/regist_stage">
-          <button class="card">ステージ申請</button>
-        </router-link>
-        <span style="margin-left:1%;">ステージ申請が登録されていません</span>
-      </li>
-      <li v-if="new_info.stage_common_option == null">
-        <router-link to="/regist_stageOption">
-          <button class="card">ステージオプション申請</button>
-        </router-link>
-        <span style="margin-left:1%;">ステージオプション申請が登録されていません</span>
-      </li>
-      <li v-if="new_info.employees == null">
-        <router-link to="/regist_employees">
-          <button class="card">従業員情報</button>
-        </router-link>
-        <span style="margin-left:1%;">従業員申請が登録されていません</span>
-      </li>
-      <li v-if="new_info.food_products == null">
-        <router-link to="/regist_foodProduct">
-          <button class="card">食品申請</button>
-        </router-link>
-        <span style="margin-left:1%;">食品申請が登録されていません</span>
-      </li>
-      <li v-if="new_info.food_products == null">
-      </li>
-      <li v-else-if="checkPurchase.purchase_lists.length === 0">
-        <router-link to="/regist_purchaseList">
-          <button class="card">購入品申請</button>
-        </router-link>
-        <span style="margin-left:1%;">購入品申請が登録されていません</span>
-      </li>
-    </ul>
+
+        <!-- 副代表 -->
+        <div>
+          <li v-if="registInfo.sub_rep == null">
+            <router-link to="/regist_subrep">
+              <button class="card" @click="goRegistSubRep">副代表の登録</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の副代表者が登録されていません</span>
+          </li>
+        </div>
+
+        <!-- 会場申請 -->
+        <div v-if="registInfo.group.group_category_id !== 3">
+          <li v-if="registInfo.place_order == null">
+            <router-link to="/regist_place">
+              <button class="card" @click="goRegistPlace">会場申請</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の会場が申請されていません</span>
+          </li>
+        </div>
+
+        <!-- 電力申請-->
+        <div v-if="setting.add_power_order == true">
+          <li v-if="registInfo.power_orders == null">
+            <router-link to="/regist_power">
+              <button class="card" @click="goRegistPower">電力物品申請</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の電力物品が申請されていません</span>
+          </li>
+        </div>
+
+        <!-- ステージ申請両方ない場合 -->
+        <div v-if="registInfo.group.group_category_id == 3">
+          <li v-if="registInfo.stage_orders == null">
+            <router-link to="/regist_stage_sunny">
+              <button class="card" @click="goBothRegistStageSunny">ステージ申請 (晴れ)</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の晴れの場合のステージが申請されていません</span>
+          </li>
+          <li v-if="registInfo.stage_orders == null">
+            <router-link to="/regist_stage_rainy">
+              <button class="card" @click="goBothRegistStageRainy">ステージ申請 (雨)</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の雨の場合のステージが申請されていません</span>
+          </li>
+        </div>
+
+        <!-- ステージ申請片方ない場合 -->
+        <div v-if="registInfo.group.group_category_id == 3">
+          <div v-if="registInfo.stage_orders != null">
+            <div v-if="registInfo.stage_orders.length == 1">
+              <li v-if="registInfo.stage_orders.length == 1 && registInfo.stage_orders[0].stage_order.is_sunny == true">
+                <router-link to="/regist_stage_rainy">
+                  <button class="card" @click="goOneRegistStageRainy">ステージ申請 (雨)</button>
+                </router-link>
+                <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の雨の場合のステージが申請されていません</span>
+              </li>
+              <li v-if="registInfo.stage_orders[0].stage_order.is_sunny == false">
+                <router-link to="/regist_stage_sunny">
+                  <button class="card" @click="goOneRegistStageSunny">ステージ申請 (晴れ)</button>
+                </router-link>
+                <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の晴れの場合のステージが申請されていません</span>
+              </li>
+            </div>
+          </div>
+        </div>
+
+        <!-- ステージオプション申請-->
+        <div v-if="registInfo.group.group_category_id == 3">
+          <li v-if="registInfo.stage_common_option == null">
+            <router-link to="/regist_stage_option">
+              <button class="card" @click="goRegistStageOption">ステージオプション申請</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」のステージオプションが申請されていません</span>
+          </li>
+        </div>
+
+        <!-- 物品申請-->
+        <div v-if="setting.add_rental_order == true">
+          <li v-if="registInfo.rental_orders == null">
+            <router-link to="/regist_rental_order">
+              <button class="card" @click="goRegistRentalOrder">物品申請</button>
+            </router-link>
+            <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の物品が申請されていません</span>
+          </li>
+        </div>
+
+        <div v-if="setting.is_regist_food_product == true">
+          <!-- 従業員申請-->
+          <div v-if="registInfo.group.group_category_id !== 3 && setting.add_employee == true">
+            <li v-if="registInfo.employees == null">
+              <router-link to="/regist_employees">
+                <button class="card" @click="goRegistEmployee">従業員情報</button>
+              </router-link>
+              <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の従業員が申請されていません</span>
+            </li>
+          </div>
+
+          <!-- 食品申請-->
+          <div v-if="registInfo.group.group_category_id !== 3 && setting.add_food_product == true">
+            <li v-if="registInfo.food_products == null">
+              <router-link to="/regist_food_product">
+                <button class="card" @click="goRegistFoodProduct">食品申請</button>
+              </router-link>
+              <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の食品が申請されていません</span>
+            </li>
+          </div>
+
+          <!-- 購入品申請-->
+          <div v-if="registInfo.group.group_category_id !== 3 && setting.add_purchase_list == true">
+            <li v-if="registInfo.purchase_lists == null">
+              <router-link to="/regist_purchaseList">
+                <button class="card" @click="goRegistPurchaseList">購入品申請</button>
+              </router-link>
+              <span style="margin-left:1%;">「 {{ registInfo.group.name }} 」の購入品が申請されていません</span>
+            </li>
+          </div>
+        </div>
+
+      </ul>
+
+    </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 export default {
-  data() {
-    return {
-      new_info: [],
-      checkPurchase: [],
-    };
+  props: {
+    registInfo: Object,
+    setting: Object
   },
-  mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-        this.checkPurchase = response.data.data[0].food_products[0];
-      });
+  methods: {
+    goRegistSubRep() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistSubRepPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goRegistPlace() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistPlaceOrderPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goRegistPower() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistPowerOrderPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goBothRegistStageSunny() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage1");
+      this.$store.commit("acceptRegistStageOrderSunnyPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goBothRegistStageRainy() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage2");
+      this.$store.commit("acceptRegistStageOrderRainyPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goOneRegistStageSunny() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage3");
+      this.$store.commit("acceptRegistStageOrderSunnyPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goOneRegistStageRainy() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("typeStage4");
+      this.$store.commit("acceptRegistStageOrderRainyPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goRegistStageOption() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistStageCommonOptionPermission");
+      this.$store.commit("onFromMypage");
+    },
+    goRegistRentalOrder() {
+      localStorage.setItem("group_id", this.registInfo.group.id)
+      this.$store.commit("acceptRegistRentalOrderPermission");
+      this.$store.commit("onFromMypage");
+    }
+
+    // 食品関係は後で作る
   }
 };
 </script>

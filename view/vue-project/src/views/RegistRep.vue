@@ -1,49 +1,60 @@
 <template>
-  <div id="app">
-    <h1 class="tytle">代表者の詳細情報の登録</h1>
-    <div class="Blank">
-      <span>名前</span>
-      <input id="name" type="text" v-model="name" @change="validationName" />
+  <div>
+    <div class="regist-title">新規ユーザー登録</div>
+    <div class="regist-card">
+      <div class="regist-card-content">
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">名前</div>
+          <input id="name" type="text" v-model="name" @change="validationName" />
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">学籍番号</div>
+          <input id="studentId" v-model="student_id" maxlength="8" @change="validationStudentId" />
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">学科</div>
+          <select v-model="department_id" @change="validationGrade" id="department">
+            <option
+              v-for="item in departments"
+              :value="item.id"
+              :key="item.id"
+            >
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">学年</div>
+          <select v-model="grade_id" @change="validationDepartment" id="grade">
+            <option
+              v-for="item in grades"
+              :value="item.id"
+              :key="item.id"
+            >
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">電話番号</div>
+          <input id="tel" v-model="tel" maxlength="11" placeholder="ハイフンなし" @change="validationTel" />
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">メールアドレス</div>
+          <input id="email" v-model="email" placeholder="～@～.～" @change="validationEmail" />
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">パスワード</div>
+          <input id="password" v-model="password" type="password" />
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">パスワード確認</div>
+          <input id="passwordConfirmation" v-model="passwordConfirmation" type="password" placeholder="パスワード再入力" />
+        </div>
+      </div>
     </div>
-    <div class="Blank">
-      <span>学籍番号</span>
-      <input id="studentId" v-model="student_id" maxlength="8" @change="validationStudentId" />
-    </div>
-    <div class="Blank">
-      <span>学科</span>
-      <select v-model="department_id" @change="validationGrade" id="department">
-        <option
-          v-for="item in departments"
-          :value="item.id"
-          :key="item.id"
-        >
-          {{ item.name }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>学年</span>
-      <select v-model="grade_id" @change="validationDepartment" id="grade">
-        <option
-          v-for="item in grades"
-          :value="item.id"
-          :key="item.id"
-        >
-          {{ item.name }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>電話番号</span>
-      <input id="tel" v-model="tel" maxlength="11" placeholder="ハイフンなし" @change="validationTel" />
-    </div>
-    <div class="Blank">
-      <span>Eメール</span>
-      <input id="email" v-model="email" placeholder="～@～.～" @change="validationEmail" />
-    </div>
-    <div  class="Blank">
-      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
-      <button @click="register" style="margin-left:15%;">登録する→</button>
+    <div  class="regist-button">
+      <button @click="register" class="regist-submit-button">登録する</button>
     </div>
   </div>
 </template>
@@ -66,6 +77,7 @@ export default {
       grade_id: [],
       tel: [],
       email: [],
+      user_id: null,
       departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
@@ -106,6 +118,15 @@ export default {
         { name: "その他", id: 15 },
       ],
     };
+  },
+  mounted() {
+    // 直リンク対策
+    if (this.$store.state.registRepPermission) {
+      console.log("ok");
+    } else {
+      console.log("reject");
+      this.$router.push("/");
+    }
   },
   computed: {
     validationName(){
@@ -199,22 +220,43 @@ export default {
     },
     register: function () {
       if (this.resultName && this.resultDepartment && this.resultGrade && this.resultEmail && this.resultTel && this.resultStudentId) {
-        const url = process.env.VUE_APP_URL + "/user_details";
+        // ユーザー新規登録
+        const authUrl = process.env.VUE_APP_URL + "/api/auth" ;
+        let authParams = new URLSearchParams();
+        console.log(this.name, this.email, this.password, this.passwordConfirmation)
+        authParams.append("name", this.name);
+        authParams.append("email", this.email);
+        authParams.append("role_id", 3);
+        authParams.append("password", this.password);
+        authParams.append("password_confirmation", this.passwordConfirmation);
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        let params = new URLSearchParams();
-        params.append("student_id", this.student_id);
-        params.append("tel", this.tel);
-        params.append("department_id", this.department_id);
-        params.append("grade_id", this.grade_id);
-        params.append("user_id", this.user.id);
-        axios.post(url, params).then(
-          () => {
-            this.$router.push("regist_model");
-          },
-          (error) => {
-            return error;
+        axios.post(authUrl, authParams).then(
+          (response) => {
+            localStorage.setItem("access-token", response.headers["access-token"]);
+            localStorage.setItem("client", response.headers["client"]);
+            localStorage.setItem("uid", response.headers["uid"]);
+            localStorage.setItem("token-type", response.headers["token-type"]);
+            this.user_id = response.data.data.id
+            const url = process.env.VUE_APP_URL + "/user_details";
+            let params = new URLSearchParams();
+            params.append("student_id", this.student_id);
+            params.append("tel", this.tel);
+            params.append("department_id", this.department_id);
+            params.append("grade_id", this.grade_id);
+            params.append("user_id", this.user_id);
+            axios.defaults.headers.common["Content-Type"] = "application/json";
+            axios.post(url, params).then(
+              () => {
+                this.$store.commit("acceptRegistGroupPermission");
+                this.$store.commit("acceptMypagePermission");
+                this.$router.push("regist_group");
+              },
+              (error) => {
+                return error;
+              }
+            );
           }
-        );
+        )
       } else {
         if (this.resultName==false) {
           const nameError = document.getElementById("name");
@@ -261,48 +303,18 @@ export default {
       }
     },
   },
-  mounted() {
-    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
-    axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.user = response.data.data;
-      });
-  },
 };
 </script>
 
 <style scoped>
-  #app{
-    margin: 1%;
-  }
-  span {
-    display: inline-block;
-    width: 100px;
-    padding-right: 10px;
-  }
-  .tytle{
-     text-align:center;
-     padding:1%;
-  }
-  .Blank{
-    text-align: center;
-    margin:1%;
-  }
-  select,input{
-    text-align: center;
-    width: 30%;
-    height:40px;
+  select, input{
+    text-align: left;
+    padding: 1%;
+    height: 50px;
+    width: 800px;
     border-radius: 7px;
-    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
-    font-size: 25px;
+    font-size: 18px;
+    vertical-align: top;
   }
   select,input:required{
     border: 2px solid red;
@@ -312,22 +324,5 @@ export default {
   }
   select,input:valid{
     border: 2px solid black;
-  }
-  button{
-  color: black;
-  font-weight: bold;
-  border: solid 2px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 1%;
-  padding:1%;
-  }
-  button:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  button:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
   }
 </style>

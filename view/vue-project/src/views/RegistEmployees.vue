@@ -84,6 +84,9 @@ export default {
     },
   },
   mounted() {
+    if (this.$store.state.registEmployeePermission == false) {
+      this.$router.push("/mypage");
+    }
     const new_info =
     process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios

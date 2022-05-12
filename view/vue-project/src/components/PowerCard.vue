@@ -1,171 +1,86 @@
 <template>
-  <v-container class="justify-content-center">
-    <v-row>
-      <v-col cols="12" align="center">
-        <v-card-text>
-          <v-form ref="form">
-            <v-text-field
-              label="製品名"
-              ref="item"
-              v-model="item"
-              v-bind:value="n"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            />
-            <v-text-field
-              label="電力量（ワット）"
-              ref="power"
-              v-model="power"
-              type="number"
-              :rules="[rules.required, rules.max]"
-              text
-              outlined
-              required
-            />
-            <v-text-field
-              label="メーカー"
-              ref="manufacturer"
-              v-model="manufacturer"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            />
-            <v-text-field
-              label="型番"
-              ref="model"
-              v-model="model"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            />
-            <v-text-field
-              label="製品URL"
-              ref="itemUrl"
-              v-model="itemUrl"
-              :rules="[rules.required]"
-              text
-              outlined
-              required
-            />
-          </v-form>
-        </v-card-text>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <div class="regist-card">
+      <div class="regist-card-content">
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">使用電力物品名</div>
+          <input type="text" v-model="item" id="item">
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">最大定格電力</div>
+          <input type="text" v-model="power" @change="validationPower" id="power">
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">メーカー</div>
+          <input type="text" v-model="manufacturer" id="manufacturer">
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">型番・モデル</div>
+          <input type="text" v-model="model"  id="model">
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">商品URL</div>
+          <input type="text" placeholder="URL" v-model="url" id="url">
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
 export default {
-  props: { groupId: Number },
   data() {
     return {
-      rules: {
-        required: (value) => !!value || "入力してください",
-        max: (value) => value <= 1000 || "大きすぎます",
-      },
-      group: [],
-      valid: false,
-    };
+      text: "",
+      item: "",
+      power: "",
+      manufacturer: "",
+      model: "",
+      url: ""
+    }
   },
-
-  computed: {
-    form() {
-      return {
-        item: "",
-        power: "",
-        manufacturer: "",
-        model: "",
-        itemUrl: "",
-      };
-    },
+  props: {
+    groupID: Number
   },
   methods: {
-    cancel() {
-      this.$refs.form.reset();
+    test: function() {
+      let inputData = {
+        "item": this.item,
+        "power": this.power,
+        "manufacturer": this.manufacturer,
+        "model": this.model,
+        "url": this.url
+      };
+      return inputData
     },
-    /*
-    validate() {
-      if (!this.$refs.form.validate()) {
-        valid = false;
-        return false;
-      }
-      return true;
-    },
-    */
-    submit() {
-      const url = process.env.VUE_APP_URL + "/power_orders";
-      let params = new URLSearchParams();
-      params.append("group_id", this.groupId);
-      params.append("item", this.item);
-      params.append("power", this.power);
-      params.append("manufacturer", this.manufacturer);
-      params.append("model", this.model);
-      params.append("item_url", this.itemUrl);
-
-      axios.defaults.headers.common["Content-Type"] = "application/json";
-      axios.post(url, params).then(
-        (response) => {
-          console.log("response:", response);
-          //          this.$router.push("MyPage");
-          return "ok";
-        },
-        (error) => {
-          console.log("登録できませんでした");
-          return error;
-        }
-      );
-    },
-  },
-
-  mounted() {
-    const url = process.env.VUE_APP_URL + "/api/v1/users/show";
-    axios
-      .get(url, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then(
-        (response) => {
-          this.user = response.data.data;
-          console.log(this.user);
-          console.log(this.user.id);
-        },
-        (error) => {
-          console.error(error);
-          return error;
-        }
-      );
-    const groupUrl = process.env.VUE_APP_URL + "/api/v1/current_user/groups";
-    axios
-      .get(groupUrl, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then(
-        (response) => {
-          for (let i = 0; i < response.data.length; i++) {
-            this.group.push(response.data[i]);
-          }
-          console.log(this.group);
-        },
-        (error) => {
-          console.error(error);
-          return error;
-        }
-      );
-  },
-};
+    reset: function() {
+      this.item = "";
+      this.power = "";
+      this.manufacturer = "";
+      this.model = "";
+      this.url = "";
+    }
+  }
+}
 </script>
+
+<style scoped>
+  select, input{
+    text-align: left;
+    padding: 1%;
+    height: 50px;
+    width: 800px;
+    border-radius: 7px;
+    font-size: 18px;
+    vertical-align: top;
+  }
+  select,input:required{
+    border: 1px solid red;
+  }
+  select,input:invalid{
+    border: 1px solid red;
+  }
+  select,input:valid{
+    border: 1px solid #333333;
+  }
+</style>

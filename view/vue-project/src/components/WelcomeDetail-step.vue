@@ -15,8 +15,7 @@
           <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h4 text-no-wrap">
-              <p>開催日時：2021年9月14日(土) 15日(日)<br /></p>
-              <p>募集締切：2021年7月30日(月)</p>
+              <p>開催日時：2022年9月17日(土) 18日(日)<br /></p>
             </div>
           </v-col>
           <v-col cols="2" />
@@ -24,17 +23,17 @@
       </div>
 
       <!-- 参加実績 -->
-      <div class="my-16">
+      <!-- <div class="my-16">
         <v-row>
           <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h3 text-no-wrap stroke">開催実績</div>
           </v-col>
           <v-col cols="2" />
-        </v-row>
+        </v-row> -->
 
         <!-- 参加団体数 -->
-        <v-row>
+        <!-- <v-row>
           <v-col cols="2.5" />
           <v-col cols="2">
             <v-row>
@@ -45,10 +44,10 @@
             <v-row>
               <v-img src="../assets/group.svg" class="mt-n5" />
             </v-row>
-          </v-col>
+          </v-col> -->
 
           <!-- 継続参加率 -->
-          <v-col cols="0.5" />
+          <!-- <v-col cols="0.5" />
           <v-col cols="2" class="">
             <v-row>
               <v-col class="text-center text-h5">
@@ -59,10 +58,10 @@
               <div class="pie mt-2">92.7%</div>
             </v-row>
           </v-col>
-          <v-col cols="0.5" />
+          <v-col cols="0.5" /> -->
 
           <!-- 参加団体増加率 -->
-          <v-col cols="2">
+          <!-- <v-col cols="2">
             <v-row>
               <v-col class="text-center text-h5">
                 <p>参加団体増加率</p>
@@ -74,7 +73,7 @@
           </v-col>
           <v-col cols="2.5" />
         </v-row>
-      </div>
+      </div> -->
 
       <!-- 登録の流れ -->
       <div class="my-16">

@@ -22,6 +22,10 @@ Rails.application.routes.draw do
   put "/users/:id" => "users#update"
   delete "/users/:id" => "users#destroy"
 
+  # ステージ
+  get "/sunny/stages" => "stages#show_sunny"
+  get "/rainy/stages" => "stages#show_rainy"
+
   # CRUD (/...)
   resources :user_page_settings
   resources :memos
@@ -135,6 +139,11 @@ Rails.application.routes.draw do
       post "get_refinement_public_relations" => "public_relations_api#get_refinement_public_relations"
       post "get_search_public_relations" => "public_relations_api#get_search_public_relations"
       get "get_groups_have_no_public_relation" => "groups_api#get_groups_have_no_public_relation"
+
+      #---申請情報ページ
+      get "get_order_info_for_admin_view/:id" => "order_infos_api#get_order_info_for_admin_view"
+      post "get_refinement_order_infos" => "order_infos_api#get_refinement_order_infos"
+      post "get_search_order_infos" => "order_infos_api#get_search_order_infos"
 
       #---開催日
       get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"

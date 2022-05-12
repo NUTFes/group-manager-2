@@ -27,23 +27,45 @@
           <div class="upper">ステージ内容▾</div>
           <div class="performance">{{ stageContent }}</div>
         </div>
-        <button class="button">
-          <div class="edit">編集</div><br>
-          <div class="delete">削除</div>
-        </button>
+        <div class="button">
+          <button class="edit" @click="openEditOption">編集</button>
+          <button class="delete">削除</button>
+        </div>
+        <EditOption
+          v-if="editOptionisplay"
+          @closeEditOption="closeEditOption"
+        />
       </div>
     </div>
   </body>
 </template>
 
 <script>
+import EditOption from "@/components/AllEdit/EditOption.vue";
 export default {
+  components: {
+    EditOption
+  },
   props: {
     ownEquipment: Boolean,
     bgm: Boolean,
     cameraPermission: Boolean,
     loudSound: Boolean,
     stageContent: String,
+  },
+  data() {
+    return {
+      editOptionisplay: false,
+    };
+  },
+
+  methods: {
+    openEditOption: function () {
+      this.editOptionisplay = true;
+    },
+    closeEditOption: function () {
+      this.editOptionisplay = false;
+    },
   },
 };
 </script>
@@ -153,6 +175,8 @@ export default {
   width: 126px;
   height: 80px;
   margin-top: 5px;
+  border-radius: 5px;
+  text-align: center;
 }
 .edit {
   font-weight: 350;
@@ -162,6 +186,8 @@ export default {
   background: #62a7ff;
   color: #ffffff;
   border-radius: 5px;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
 .delete{
   font-weight: 350;
@@ -171,5 +197,7 @@ export default {
   background: #ff6262;
   color: #ffffff;
   border-radius: 5px;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
 </style>

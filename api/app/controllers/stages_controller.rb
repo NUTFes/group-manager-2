@@ -10,6 +10,16 @@ class StagesController < ApplicationController
      render json: fmt(ok, @stage)
   end
 
+  def show_sunny
+    @stage = Stage.where(enable_sunny: true)
+    render json: fmt(ok, @stage)
+  end
+
+  def show_rainy
+    @stage = Stage.where(enable_rainy: true)
+    render json: fmt(ok, @stage)
+  end
+
   def create
     @stage = Stage.create(stage_params)
     render json: fmt(created, @stage)

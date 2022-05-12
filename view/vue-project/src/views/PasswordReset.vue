@@ -1,63 +1,43 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="2" />
-    <v-col cols="8">
-      <v-card flat>
-        <v-container class="justify-content-center">
-          <v-row>
-            <v-col cols="2" />
-            <v-col cols="8" align="center">
-              <v-card-title class="justify-center">
-                <h1 style="color: #333333">パスワード再設定</h1>
-              </v-card-title>
-              <br /> /
-              <br />
-              <v-card-text>
-                <v-form ref="form">
-                  <v-text-field
-                    label="パスワード"
-                    ref="password"
-                    outlined
-                    v-model="password"
-                    :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
-                    :rules="[rules.requied, rules.min]"
-                    :type="show_pass ? 'password' : 'text'"
-                    hint="8文字以上"
-                    counter
-                    @click:append="show_pass = !show_pass"
-                    required
-                  />
-                  <v-text-field
-                    label="パスワードの再入力"
-                    outlined
-                    ref="password_confirmation"
-                    v-model="password_confirmation"
-                    :append-icon="
-                      show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'
-                    "
-                    :rules="[rules.requied, rules.min, rules.match]"
-                    :type="show_pass_confirmation ? 'password' : 'text'"
-                    hint="8文字以上"
-                    counter
-                    @click:append="
-                      show_pass_confirmation = !show_pass_confirmation
-                    "
-                    required
-                  />
-                </v-form>
-              </v-card-text>
-              <v-card-action>
-                <v-btn color="btn" rounded depressed dark block @click="submit">変更登録</v-btn>
-                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
-              </v-card-action>
-            </v-col>
-            <v-col cols="2" />
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
-    <v-col cols="2" />
-  </v-row>
+  <div>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
+    <h1 style="color: #333333; padding-bottom: 50px">パスワード再設定</h1>
+      <v-form ref="form">
+        <v-text-field
+          label="新しいパスワードを入力"
+          ref="password"
+          outlined
+          v-model="password"
+          :append-icon="show_pass ? 'mdi-eye-off' : 'mdi-eye'"
+          :rules="[rules.requied, rules.min]"
+          :type="show_pass ? 'password' : 'text'"
+          hint="8文字以上"
+          counter
+          @click:append="show_pass = !show_pass"
+          required
+        />
+        <v-text-field
+          label="新しいパスワードの再入力"
+          outlined
+          ref="password_confirmation"
+          v-model="password_confirmation"
+          :append-icon="
+            show_pass_confirmation ? 'mdi-eye-off' : 'mdi-eye'
+          "
+          :rules="[rules.requied, rules.min, rules.match]"
+          :type="show_pass_confirmation ? 'password' : 'text'"
+          hint="8文字以上"
+          counter
+          @click:append="
+            show_pass_confirmation = !show_pass_confirmation
+          "
+          required
+        />
+      </v-form>
+      <div class="regist-button">
+        <button class="regist-submit-button" @click="submit">登録</button>
+      </div>
+  </div>
 </template>
 
 <script>
@@ -121,6 +101,10 @@ export default {
         );
     },
   },
-  mounted() {},
+  mounted() {
+    if (this.$store.state.resetPasswordPermission == false) {
+      this.$router.push("/");
+    }
+  },
 };
 </script>

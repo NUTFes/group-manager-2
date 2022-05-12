@@ -130,6 +130,10 @@ export default {
     },
   },
   mounted() {
+    // 直リンク対策
+    if (this.$store.state.registFoodProductPermission == false) {
+      this.$router.push("/mypage");
+    }
     const new_info =
     process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios

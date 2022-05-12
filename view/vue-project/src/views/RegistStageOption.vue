@@ -1,61 +1,69 @@
 <template>
-  <div id="app">
-    <h1 class="tytle">ステージオプション申請の登録</h1>
-    <div class="Blank">
-      <span>所持機器の利用</span>
-      <select v-model="item" @change="validationItem" id="item">
-        <option
-          v-for="list in itemsAvailable"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
+  <div>
+      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
+    <div class="regist-title">ステージオプションの登録</div>
+    <div class="regist-card">
+      <div class="regist-card-content">
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">所持機器の利用</div>
+          <select v-model="item" @change="validationItem" id="item">
+            <option
+              v-for="list in itemsAvailable"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">音楽をかける</div>
+          <select v-model="music" @change="validationMusic" id="music">
+            <option
+              v-for="list in musicAvailable"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">撮影を許可する</div>
+          <select v-model="picture" @change="validationPicture" id="picture">
+            <option
+              v-for="list in photoAvailable"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">騒音</div>
+          <select v-model="noise" @change="validationNoise" id="noise">
+            <option
+              v-for="list in loudAble"
+              :value="list.value"
+              :key="list.value"
+            >
+              {{ list.label }}
+            </option>
+          </select>
+        </div>
+        <div class="regist-card-content-question">
+          <div class="regist-card-content-question-label">ステージの内容</div>
+          <input type="text" v-model="stageContent" id="content">
+        </div>
+
+      </div>
     </div>
-    <div class="Blank">
-      <span>音楽</span>
-      <select v-model="music" @change="validationMusic" id="music">
-        <option
-          v-for="list in musicAvailable"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
+    <div  class="regist-button">
+      <button @click="register" class="regist-submit-button">登録する→</button>
     </div>
-    <div class="Blank">
-      <span>撮影許可</span>
-      <select v-model="picture" @change="validationPicture" id="picture">
-        <option
-          v-for="list in photoAvailable"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>騒音</span>
-      <select v-model="noise" @change="validationNoise" id="noise">
-        <option
-          v-for="list in loudAble"
-          :value="list.value"
-          :key="list.value"
-        >
-          {{ list.label }}
-        </option>
-      </select>
-    </div>
-    <div class="Blank">
-      <span>ステージ内容</span>
-      <input type="text" v-model="stageContent" id="content">
-    </div>
-    <div  class="Blank">
-      <router-link to="/mypage"><button style="margin-left:8%;">←戻る</button></router-link>
-      <button @click="register" style="margin-left:15%;">登録する→</button>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
     </div>
   </div>
 </template>
@@ -70,7 +78,6 @@ export default {
       resultMusic: false,
       resultPicture: false,
       resultNoise: false,
-      new_info: [],
       item: [],
       music: [],
       picture: [],
@@ -128,11 +135,16 @@ export default {
       }
       return this.resultNoise
     },
+    skip: function() {
+      this.$store.commit("acceptRegistRentalOrderPermission");
+      this.$store.commit("rejectRegistStageCommonOptionPermission");
+      this.$router.push("/regist_rental_order");
+    },
     register: function () {
       if (this.resultItem && this.resultMusic && this.resultPicture && this.resultNoise && this.stageContent.length > 0) {
         const url = process.env.VUE_APP_URL + "/stage_common_options";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
+        params.append("group_id", localStorage.getItem("group_id"));
         params.append("own_equipment", this.item);
         params.append("bgm", this.music);
         params.append("camera_permission", this.picture);
@@ -140,16 +152,20 @@ export default {
         params.append("stage_content", this.stageContent);
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
-          (response) => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaa", response);
-            this.$router.push("mypage");
+          () => {
+            if (this.$store.state.fromMypage == true) {
+              this.$router.push("/mypage")
+            } else {
+              this.$store.commit("acceptRegistRentalOrderPermission");
+              this.$store.commit("rejectRegistStageCommonOptionPermission");
+              this.$router.push("/regist_rental_order");
+            }
           },
           (error) => {
             console.log("登録できませんでした");
             return error;
           });
       } else {
-        console.log("zzzzzzzzzzzzzzzz");
         if (this.resultItem==false) {
           const itemError = document.getElementById("item");
           itemError.style.border="2px solid red";
@@ -190,49 +206,23 @@ export default {
   },
 
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registStageCommonOptionPermission == false) {
+      this.$router.push("/mypage");
+    }
   },
 };
 </script>
 
 <style scoped>
-  #app{
-    margin: 1%;
-  }
-  span {
-    display: inline-block;
-    width: 100px;
-    padding-right: 10px;
-  }
-  .tytle{
-    text-align:center;
-    padding:1%;
-  }
-  .Blank{
-    text-align: center;
-    margin:1%;
-  }
-  select,input{
-    text-align: center;
-    width: 30%;
-    height:40px;
+  select, input{
+    text-align: left;
+    padding: 1%;
+    height: 50px;
+    width: 800px;
     border-radius: 7px;
-    box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF;
-    font-size: 25px;
+    font-size: 18px;
+    vertical-align: top;
   }
   select,input:required{
     border: 2px solid red;
@@ -242,22 +232,5 @@ export default {
   }
   select,input:valid{
     border: 2px solid black;
-  }
-  button{
-  color: black;
-  font-weight: bold;
-  border: solid 2px;
-  border-radius: 10px;
-  cursor: pointer;
-  margin: 1%;
-  padding:1%;
-  }
-  button:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  button:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
   }
 </style>
