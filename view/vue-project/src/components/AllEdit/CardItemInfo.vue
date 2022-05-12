@@ -14,21 +14,55 @@
           </span>
         </p>
         <div class="button">
-          <button class="button1">
+          <button class="button1" @click="openEditItem">
             <div class="edit">編集</div>
           </button>
-          <button class="button2">
+          <button class="button2" @click="openDeleteItem">
             <div class="edit">削除</div>
           </button>
         </div>
+        <EditItem
+          v-if="editItemisplay"
+          @closeEditItem="closeEditItem"
+        />
+        <DeleteItem
+          v-if="deleteItemisplay"
+          @closeDeleteItem="closeDeleteItem"
+        />
       </div>
   </body>
 </template>
 
 <script>
+import EditItem from "@/components/AllEdit/EditItem.vue";
+import DeleteItem from "@/components/AllEdit/DeleteItem.vue";
 export default {
+  components: {
+    EditItem,
+    DeleteItem
+  },
   props: {
     regist: String,
+  },
+  data() {
+    return {
+      editItemisplay: false,
+      deleteItemisplay: false,
+    };
+  },
+  methods: {
+    openEditItem: function () {
+      this.editItemisplay = true;
+    },
+    closeEditItem: function () {
+      this.editItemisplay = false;
+    },
+    openDeleteItem: function () {
+      this.deleteItemisplay = true;
+    },
+    closeDeleteItem: function () {
+      this.deleteItemisplay = false;
+    },
   },
 };
 </script>
