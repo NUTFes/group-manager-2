@@ -1,38 +1,25 @@
 <template>
   <transition name="fade" appear>
     <div class="add-modal">
-      <div class="add-modal__container">
-        <div class="add-modal__box">
-          <div class="add-modal_content">
-            <div id="card">
-              <h1>電力追加</h1>
-              <div class="Blank">
-              <div>使用物品名</div>
-                <input type="text" v-model="item" id="item">
-              </div>
-              <div class="Blank">
-                <div>最大定格電力[W]</div>
-                <input type="text" v-model="power" id="power" @change="validationPower">
-              </div>
-              <div class="Blank">
-                <div>メーカー</div>
-                <input type="text" v-model="model" id="model">
-              </div>
-              <div class="Blank">
-                <div>型番</div>
-                <input type="text" v-model="manufacturer" id="manufacturer">
-              </div>
-              <div class="Blank">
-                <div>URL</div>
-                <input type="text" v-model="url" id="url">
-              </div>
-            </div>
-          </div>
-          <div style="display:flex;">
-            <button id="btn" type="button" v-on:click="$emit('closeEditPower')">リセット</button>
-            <button id="btn" type="button" @click="register">✓登録</button>
-          </div>
+      <div class="add-modal_box">
+        <div id="btnContainer">
+          <button v-on:click="$emit('closeEditPower')">✖</button>
         </div>
+        <h1>電力編集</h1>
+        <div>使用物品名</div>
+        <input type="text" v-model="item" id="item">
+        <div>最大定格電力[W]</div>
+        <input type="text" v-model="power" id="power" @change="validationPower">
+        <div>メーカー</div>
+        <input type="text" v-model="model" id="model">
+        <div>型番</div>
+        <input type="text" v-model="manufacturer" id="manufacturer">
+        <div>URL</div>
+        <input type="text" v-model="url" id="url">
+        <span style="display:flex;">
+          <button id="btn" type="button" @click="reset">リセット</button>
+          <button id="btn" type="button" @click="register">✓登録</button>
+        </span>
       </div>
     </div>
   </transition>
@@ -137,21 +124,20 @@ export default {
 </script>
 
 <style scoped>
-  #card{
-    margin-right: 15%;
-    margin-left: 15%;
-  }
   #btn{
     background: #032030;
     color: white;
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    width: 80px;
+    width: 30%;
     height: 30px;
     display: block;
-    margin: 3%;
-  }
+    margin-right: 10%;
+    margin-left: 10%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
     background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
@@ -160,17 +146,30 @@ export default {
   #btn:active{
     box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
   }
+    #btnContainer {
+    display: flex;
+    justify-content: end;
+    width: 100%;
+    margin-bottom: -1.5rem;
+    z-index: 0;
+  }
   input{
     border: 1px solid silver;
     width: 100%;
   }
-  .add-modal_content div {
+  select{
+    border: 1px solid silver;
+    width: 100%;
+  }
+  .add-modal_box {
     display: flex;
-    align-items: start;
+    padding: 10px 10px;
+    margin: 0 25%;
     justify-content: center;
     flex-flow: column;
-    gap: 10px;
-    width: 100%;
+    background-color: #DADADA;
+    border-radius: 10px;
+    margin: 0 30%;
   }
   .add-modal {
     top: 0;
@@ -182,31 +181,5 @@ export default {
     z-index: 11;
     background-color: rgba(51, 51, 51, 0.3);
     overflow: auto;
-  }
-  .add-modal__container {
-    width: 100%;
-    min-height: 100%;
-    margin: 3% 0 ;
-    justify-content: center;
-    align-items: center;
-  }
-  .add-modal__box {
-    z-index: 15;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-flow: column;
-    padding: 10px 10px;
-    margin: 0 25%;
-    color: black;
-    background: radial-gradient(
-      ellipse at top left,
-      rgba(204,204,204,1),
-      rgba(251, 251, 251, 0.8)
-    );
-    background-color: #DADADA;
-    backdrop-filter: blur(4px);
-    gap: 30px;
-    border-radius: 10px;
   }
 </style>

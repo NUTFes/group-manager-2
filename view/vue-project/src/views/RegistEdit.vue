@@ -1,11 +1,10 @@
 <template>
   <div id="app">
+    <br><br><br>
     <div id="font">
       <div id="line">
-        <router-link to="/mypage"
-          ><button id="btn">Mypageに戻る</button></router-link
-        >
-        <h3>参加団体登録＆編集ページ</h3>
+        <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
+        <h3>参加団体登録＆編集ページ{{regist_info}}</h3>
         <select v-model="projectName">
           <option
             v-for="list in regist_info"
@@ -240,7 +239,7 @@ export default {
   },
   data() {
     return {
-      regist_info: null,
+      regist_info: [],
       projectName: "",
       addPowerDisplay: false,
       test: "aaaaa",

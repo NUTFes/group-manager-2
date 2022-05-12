@@ -47,105 +47,87 @@
           </option>
         </select>
 
-        <section class="tab_contents">
-          <div class="tab_wrap">
-            <span class="bubble"></span>
-            <input id="tab1" type="radio" name="check" checked>
-            <label for="tab1" class="tab_lab1">時間指定なし</label>
+        <div class="tabs">
+          <input id="tab-1" type="radio" name="tab-radio" checked>
+          <label class="tab-label" for="tab-1">時間指定なし</label>
+          <input id="tab-2" type="radio" name="tab-radio">
+          <label class="tab-label" for="tab-2">時間指定あり</label>
 
-            <input id="tab2" type="radio" name="check">
-            <span class="bubble"></span>
-            <label for="tab2" class="tab_lab2">時間指定あり</label>
-
-            <div class="panels">
-
-              <!-- 時間軸 -->
-              <div id="area1" class="panel">
-                <div class="Blank">
-                  <span>準備時間幅</span>
-                    <select v-model="readyInterval">
-                      <option
-                        v-for="list in timeBox"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="Blank">
-                  <span>使用時間幅</span>
-                    <select v-model="useInterval" id="useInterval">
-                      <option
-                        v-for="list in timeBox"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="Blank">
-                  <span>片付け時間幅</span>
-                    <select v-model="cleanUpInterval" id="cleanUpInterval">
-                      <option
-                        v-for="list in timeBox"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                </div>
-              </div>
-
-              <!-- 時刻軸 -->
-              <div id="area2" class="panel">
-                <div class="Blank">
-                  <span>準備開始時間</span>
-                  <select v-model="readyTime" id="readyTime">
-                      <option
-                        v-for="list in timeRange"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                </div>
-                <div class="Blank">
-                  <span>パフォーマンス開始時間</span>
-                  <select v-model="peformanceTime" id="peformanceTime">
-                      <option
-                        v-for="list in timeRange"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                </div>
-                <div class="Blank">
-                  <span>パフォーマンス終了時間</span>
-                  <select v-model="endTime" id="endTime">
-                      <option
-                        v-for="list in timeRange"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                </div>
-                <div class="Blank">
-                  <span>片付け終了時間</span>
-                  <select v-model="cleanUpTime" id="cleanUpTime">
-                      <option
-                        v-for="list in timeRange"
-                        :key="list"
-                      >
-                        {{ list }}
-                      </option>
-                    </select>
-                </div>
-                </div>
+          <div class="tab-content tab-1-content">
+            <!-- 時間軸 -->
+            <div id="area1" class="panel">
+              <div>準備時間幅</div>
+              <select v-model="readyInterval">
+                <option
+                  v-for="list in timeBox"
+                  :key="list"
+                >
+                  {{ list }}
+                </option>
+              </select>
+              <div>使用時間幅</div>
+              <select v-model="useInterval" id="useInterval">
+                <option
+                  v-for="list in timeBox"
+                  :key="list"
+                >
+                  {{ list }}
+                </option>
+              </select>
+              <div>片付け時間幅</div>
+              <select v-model="cleanUpInterval" id="cleanUpInterval">
+                <option
+                  v-for="list in timeBox"
+                  :key="list"
+                >
+                  {{ list }}
+                </option>
+              </select>
             </div>
           </div>
-        </section>
+          <div class="tab-content tab-2-content">
+            <!-- 時刻軸 -->
+            <div id="area2" class="panel">
+              <div>準備開始時間</div>
+              <select v-model="readyTime" id="readyTime">
+                <option
+                  v-for="list in timeRange"
+                  :key="list"
+                >
+                  {{ list }}
+                </option>
+              </select>
+              <div>パフォーマンス開始時間</div>
+              <select v-model="peformanceTime" id="peformanceTime">
+                <option
+                  v-for="list in timeRange"
+                  :key="list"
+                >
+                  {{ list }}
+                </option>
+              </select>
+              <div>パフォーマンス終了時間</div>
+              <select v-model="endTime" id="endTime">
+                <option
+                  v-for="list in timeRange"
+                  :key="list"
+                >
+                  {{ list }}
+                </option>
+              </select>
+            <div>片付け終了時間</div>
+            <select v-model="cleanUpTime" id="cleanUpTime">
+              <option
+                v-for="list in timeRange"
+                :key="list"
+              >
+                {{ list }}
+              </option>
+            </select>
+            </div>
+          </div>
+        </div>
+
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
           <button id="btn" type="button">✓登録</button>
@@ -156,6 +138,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -187,6 +170,7 @@ export default {
       timeRange: [],
     }
   },
+
   methods: {
     reset: function() {
       this.date = [],
@@ -201,6 +185,52 @@ export default {
       this.endTime = [],
       this.cleanUpTime = []
     },
+    set_time_range: function () {
+      for (let hour of this.hour_range) {
+        for (let minute of this.minute_range) {
+          this.timeRange.push(hour + ":" + minute);
+        }
+      }
+    },
+  },
+
+  mounted() {
+    const new_info =
+    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+    axios
+      .get(new_info, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        this.new_info = response.data.data[0];
+      });
+
+    axios
+      .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.fesDateList = response.data.data;
+      });
+
+    axios
+      .get(process.env.VUE_APP_URL + "/stages", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.stageList = response.data.data;
+      });
+    this.set_time_range();
   },
 };
 </script>
@@ -263,5 +293,46 @@ export default {
     z-index: 11;
     background-color: rgba(51, 51, 51, 0.3);
     overflow: auto;
+  }
+
+  .tabs {
+    margin-top: 12px;
+  }
+
+  /* タブのスタイル */
+  .tabs .tab-label {
+    margin: 0 15%;
+    background-color: #DADADA;
+    border-bottom: none;
+    font-size: 0.9em;
+  }
+
+  /* タブにマウスカーソルがのったときフッター */
+  .tabs .tab-label:hover {
+    opacity: 0.7;
+  }
+
+  /* ラジオボタンと内容を非表示 */
+  .tabs input[name="tab-radio"],
+  .tabs .tab-content {
+    display: none;
+  }
+
+  /* タブ内容のスタイル */
+  .tabs .tab-content{
+    padding: 10px;
+  }
+
+  /* 選択されているタブのコンテンツのみを表示 */
+  .tabs #tab-1:checked ~ .tab-1-content,
+  .tabs #tab-2:checked ~ .tab-2-content{
+    display: block;
+  }
+
+  /* 選択されているタブのスタイルを変える */
+  .tabs input[name="tab-radio"]:checked + .tab-label {
+    background-color: silver;
+    border-radius: 0.3rem;
+    padding: 0.2rem;
   }
 </style>
