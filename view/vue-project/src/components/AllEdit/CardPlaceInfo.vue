@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import EditPlace from "@/components/AllEdit/EditPlace.vue";
+// import EditPlace from "@/components/AllEdit/EditPlace.vue";
 export default {
   components: {
-    EditPlace
+    // EditPlace
   },
   props: {
     n: Number,
