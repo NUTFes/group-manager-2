@@ -47,7 +47,7 @@
           color="purple accent-2"
           rounded
           elevation="0"
-          to="/registEdit"
+          @click="goRegistEdit"
         >
           <v-icon class="pr-2 pb-1">mdi-pen</v-icon>登録情報をまとめて変更
         </v-btn>
@@ -109,6 +109,10 @@ export default {
     goRegistGroup: function() {
       this.$store.commit("acceptRegistGroupPermission");
       this.$router.push("/regist_group");
+    },
+    goRegistEdit: function() {
+      this.$store.commit("acceptRegistEditPermission");
+      this.$router.push("regist_edit");
     }
   },
   mounted() {

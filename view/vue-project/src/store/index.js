@@ -192,6 +192,7 @@ const store = new Vuex.Store({
       state.registFoodProductPermission = false // 販売食品登録
       state.registPurchaseListPermission = false // 購入食品登録
       state.registEmployeePermission = false // 従業員登録
+      state.registEditPermission = false // まとめて編集
       state.userInfoPermission = false
       state.editUserInfoPermission = false
       state.resetPasswordPermission = false

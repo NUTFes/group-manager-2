@@ -64,7 +64,7 @@ const routes = [
     component: Group,
   },
   {
-    path: "/registEdit",
+    path: "/regist_edit",
     name: "RegistEdit",
     component: RegistEdit,
   },
