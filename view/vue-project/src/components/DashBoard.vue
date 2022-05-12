@@ -30,7 +30,7 @@ export default {
       this.$router.push("/edit_user_info");
     },
     toResetPassword() {
-      this.$store.commit("acceptResetPasswordReset");
+      this.$store.commit("acceptResetPasswordPermission");
       this.$router.push("/password_reset");
     },
   },
