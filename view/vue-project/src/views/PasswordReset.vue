@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <h1 style="color: #333333; padding-bottom: 50px">パスワード再設定</h1>
       <v-form ref="form">
         <v-text-field
@@ -101,6 +101,10 @@ export default {
         );
     },
   },
-  mounted() {},
+  mounted() {
+    if (this.$store.state.resetPasswordPermission == false) {
+      this.$router.push("/");
+    }
+  },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <div class="regist-title">会場の登録</div>
     <div class="regist-card">
       <div class="regist-card-content">
@@ -48,6 +48,9 @@
     </div>
     <div class="regist-button">
       <button @click="register" class="regist-submit-button">登録する→</button>
+    </div>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
     </div>
   </div>
 </template>
@@ -132,6 +135,11 @@ export default {
     },
     offThirdValidation: function() {
       this.resultThird = false;
+    },
+    skip: function() {
+      this.$store.commit("acceptRegistRentalOrderPermission");
+      this.$store.commit("rejectRegistPlaceOrderPermission");
+      this.$router.push("/regist_rental_order");
     },
     register: function () {
       if (this.resultFirst && this.resultSecond && this.resultThird && this.first!=this.second && this.first!=this.third && this.second!=this.third) {
