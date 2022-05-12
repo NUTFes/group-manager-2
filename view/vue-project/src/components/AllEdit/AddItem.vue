@@ -16,7 +16,7 @@
           </option>
         </select>
         <div>個数</div>
-        <input type="number" v-model="num" id="num" @change="validationPower">
+        <input type="number" v-model="num" id="num" @change="validationItem">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
           <button id="btn" type="button" @click="register">✓登録</button>
@@ -42,7 +42,7 @@ export default {
     };
   },
   computed: {
-    validationPower(){
+    validationItem(){
       const pattern = /[0-9０-９]/;
       if (pattern.test(this.num)==true) {
         this.onNumValidation();

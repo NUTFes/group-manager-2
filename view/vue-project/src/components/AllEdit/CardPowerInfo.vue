@@ -25,21 +25,55 @@
         </div>
         <span class="span3"/>
         <div class="column">
-          <button class="button2">
+          <button class="button2" @click="openEditPower">
             <div class="edit">編集</div>
           </button>
-          <button class="button3">
+          <button class="button3" @click="openDeletePower">
             <div class="edit">削除</div>
           </button>
         </div>
+        <EditPower
+          v-if="editPowerisplay"
+          @closeEditPower="closeEditPower"
+        />
+        <DeletePower
+          v-if="deletePowerisplay"
+          @closeDeletePower="closeDeletePower"
+        />
       </div>
   </body>
 </template>
 
 <script>
+import EditPower from "@/components/AllEdit/EditPower.vue";
+import DeletePower from "@/components/AllEdit/DeletePower.vue";
 export default {
+    components: {
+    EditPower,
+    DeletePower
+  },
   props: {
     regist: String,
+  },
+  data() {
+    return {
+      editPowerisplay: false,
+      deletePowerisplay: false,
+    };
+  },
+  methods: {
+    openEditPower: function () {
+      this.editPowerisplay = true;
+    },
+    closeEditPower: function () {
+      this.editPowerisplay = false;
+    },
+    openDeletePower: function () {
+      this.deletePowerisplay = true;
+    },
+    closeDeletePower: function () {
+      this.deletePowerisplay = false;
+    },
   },
 };
 </script>

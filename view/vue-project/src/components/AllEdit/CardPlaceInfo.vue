@@ -16,18 +16,39 @@
       <div class="notes">
         火を使います。例の如く火事になるかもしれません。ご了承ください。
       </div>
-      <button class="button">
-        <div class="edit">編集</div>
-      </button>
+      <div class="button">
+        <button class="edit" @click="openEditPlace">編集</button>
+      </div>
+      <EditPlace
+          v-if="editPlaceisplay"
+          @closeEditPlace="closeEditPlace"
+      />
     </div>
   </div>
 </body>
 </template>
 
 <script>
+import EditPlace from "@/components/AllEdit/EditPlace.vue";
 export default {
+  components: {
+    EditPlace
+  },
   props: {
     regist: String,
+  },
+  data() {
+    return {
+      editPlaceisplay: false,
+    };
+  },
+  methods: {
+    openEditPlace: function () {
+      this.editPlaceisplay = true;
+    },
+    closeEditPlace: function () {
+      this.editPlaceisplay = false;
+    },
   },
 };
 </script>
@@ -100,19 +121,18 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.button
-{
+.button{
   position: absolute;
   left: 860px;
   display: flex;
-  width: 131px;
-  height: 39px;
+
   background: #62A7FF;
   border-radius: 5px;
 }
 .edit{
-  margin-top: 5px;
-  margin-left: 14px;
+  width: 131px;
+  height: 39px;
+  margin: auto;
   font-weight: 350;
   font-size: 18px;
   line-height: 26px;
