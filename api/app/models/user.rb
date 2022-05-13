@@ -73,6 +73,13 @@ class User < ActiveRecord::Base
     } 
   end
 
+  def with_user_detail
+    return {
+      "user": self,
+      "user_detail": self.user_detail.nil? ? nil : self.user_detail.to_info_h
+    }
+  end
+
   ### ユーザーが登録している情報の全てを取得する
   def with_regist_info
     @groups = self.groups
