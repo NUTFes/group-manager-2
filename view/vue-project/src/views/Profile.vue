@@ -7,14 +7,14 @@
     <br>
     <h1>{{ user.user.name }}</h1>
     <br>
-    <h2 style="text-align:center">
+    <div style="font-size:32px;text-align:center">
       <p>{{ user.user_detail.department }}</p>
       <p>学籍番号:{{ user.user_detail.student_id }}</p>
       <p>{{ user.user_detail.grade }}</p>
       <br>
       <p>{{ user.user_detail.tel }}</p>
       <p>{{ user.user.email }}</p>
-    </h2>
+    </div>
     <br>
     <h5 style="text-align:center">
       <button @click="backMypage" class="profile-button">
