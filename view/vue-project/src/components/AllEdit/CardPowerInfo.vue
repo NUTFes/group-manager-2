@@ -35,9 +35,17 @@
       <EditPower
         v-if="editPowerDisplay"
         @closeEditPower="closeEditPower"
+        :groupId="groupId"
+        :id="id"
+        :item="item"
+        :power="power"
+        :manufacturer="manufacturer"
+        :model="model"
+        :url="url"
       />
       <DeletePower
         v-if="deletePowerDisplay"
+        :id="id"
         @closeDeletePower="closeDeletePower"
       />
     </div>
@@ -53,10 +61,13 @@ export default {
     DeletePower
   },
   props: {
+    groupId: Number,
+    id: Number,
     item: String,
     power: Number,
     manufacturer: String,
     model: String,
+    url: String
   },
   data() {
     return {

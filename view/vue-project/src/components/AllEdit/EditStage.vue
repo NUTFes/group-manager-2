@@ -5,9 +5,9 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditStage')">✖</button>
         </div>
-        <h1>ステージ申請</h1>
+        <h1>ステージ申請[{{ isSunny? "晴" : "雨" }}]</h1>
         <div>日程</div>
-        <select v-model="date" id="date">
+        <select v-model="stageDateId" id="date">
           <option
             v-for="list in fesDateList"
             :value="list.id"
@@ -16,8 +16,8 @@
             {{ list.date }}
           </option>
         </select>
-        <div>天気</div>
-        <select v-model="weather" @change="validationWeather" id="weather">
+        <!-- <div>天気</div>
+        <select v-model="isSunny" id="weather">
           <option
             v-for="list in isSunnyList"
             :value="list.value"
@@ -25,9 +25,9 @@
           >
             {{ list.label }}
           </option>
-        </select>
+        </select> -->
         <div>第一希望場所</div>
-        <select v-model="first" id="first">
+        <select v-model="stageFirst" id="first">
           <option
             v-for="list in stageList"
             :value="list.id"
@@ -37,7 +37,7 @@
           </option>
         </select>
         <div>第二希望場所</div>
-        <select v-model="second" id="second">
+        <select v-model="stageSecond" id="second">
           <option
             v-for="list in stageList"
             :value="list.id"
@@ -57,7 +57,7 @@
             <!-- 時間軸 -->
             <div id="area1" class="panel">
               <div>準備時間幅</div>
-              <select v-model="readyInterval">
+              <select v-model="prepareTimeInterval">
                 <option
                   v-for="list in timeBox"
                   :key="list"
@@ -66,7 +66,7 @@
                 </option>
               </select>
               <div>使用時間幅</div>
-              <select v-model="useInterval" id="useInterval">
+              <select v-model="useTimeInterval" id="useInterval">
                 <option
                   v-for="list in timeBox"
                   :key="list"
@@ -75,7 +75,7 @@
                 </option>
               </select>
               <div>片付け時間幅</div>
-              <select v-model="cleanUpInterval" id="cleanUpInterval">
+              <select v-model="cleanupTimeInterval" id="cleanUpInterval">
                 <option
                   v-for="list in timeBox"
                   :key="list"
@@ -89,7 +89,7 @@
             <!-- 時刻軸 -->
             <div id="area2" class="panel">
               <div>準備開始時間</div>
-              <select v-model="readyTime" id="readyTime">
+              <select v-model="prepareStartTime" id="readyTime">
                 <option
                   v-for="list in timeRange"
                   :key="list"
@@ -98,7 +98,7 @@
                 </option>
               </select>
               <div>パフォーマンス開始時間</div>
-              <select v-model="peformanceTime" id="peformanceTime">
+              <select v-model="performanceStartTime" id="peformanceTime">
                 <option
                   v-for="list in timeRange"
                   :key="list"
@@ -107,7 +107,7 @@
                 </option>
               </select>
               <div>パフォーマンス終了時間</div>
-              <select v-model="endTime" id="endTime">
+              <select v-model="performanceEndTime" id="endTime">
                 <option
                   v-for="list in timeRange"
                   :key="list"
@@ -116,7 +116,7 @@
                 </option>
               </select>
             <div>片付け終了時間</div>
-            <select v-model="cleanUpTime" id="cleanUpTime">
+            <select v-model="cleanupEndTime" id="cleanUpTime">
               <option
                 v-for="list in timeRange"
                 :key="list"
@@ -130,7 +130,7 @@
 
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button">✓登録</button>
+          <button id="btn" type="button" @click="register">✓登録</button>
         </span>
       </div>
     </div>
@@ -140,24 +140,26 @@
 <script>
 import axios from "axios";
 export default {
+  props: {
+    id: Number,
+    groupId: Number,
+    isSunny: Boolean,
+    stageDateId: Number,
+    stageFirst: Number,
+    stageSecond: Number,
+    useTimeInterval: String,
+    prepareTimeInterval: String,
+    cleanupTimeInterval: String,
+    prepareStartTime: String,
+    performanceStartTime: String,
+    performanceEndTime: String,
+    cleanupEndTime: String,
+  },
   data() {
     return {
-      new_info: [],
+      resultWeather: false,
       fesDateList: [],
       stageList: [],
-
-      date: [],
-      weather: [],
-      first: [],
-      second: [],
-      readyInterval: [],
-      useInterval: [],
-      cleanUpInterval: [],
-      readyTime: [],
-      peformanceTime: [],
-      endTime: [],
-      cleanUpTime: [],
-
       isSunnyList: [
         { label: "晴れ", value: true },
         { label: "雨", value: false },
@@ -173,17 +175,66 @@ export default {
 
   methods: {
     reset: function() {
-      this.date = [],
-      this.weather = [],
-      this.first = [],
-      this.second = [],
-      this.readyInterval = [],
-      this.useInterval = [],
-      this.cleanUpInterval = [],
-      this.readyTime = [],
-      this.peformanceTime = [],
-      this.endTime = [],
-      this.cleanUpTime = []
+      this.stageDateId = [],
+      this.isSunny = [],
+      this.stageFirst = [],
+      this.stageSecond = [],
+      this.prepareTimeInterval = [],
+      this.useTimeInterval = [],
+      this.cleanupTimeInterval = [],
+      this.prepareStartTime = [],
+      this.performanceStartTime = [],
+      this.performanceEndTime = [],
+      this.cleanupEndTime = []
+    },
+    register: function () {
+      if (this.stageDateId>0 && this.stageFirst>0 && this.stageSecond>0 && this.stageFirst!=this.stageSecond) {
+        const url = process.env.VUE_APP_URL + "/stage_orders/" + this.id +
+        "?group_id=" + this.groupId +
+        "&is_sunny=" + this.isSunny +
+        "&fes_date_id=" + this.stageDateId +
+        "&stage_first=" + this.stageFirst +
+        "&stage_second=" + this.stageSecond +
+        "&use_time_interval=" + this.useTimeInterval +
+        "&prepare_time_interval=" + this.prepareTimeInterval +
+        "&cleanup_time_interval=" + this.cleanupTimeInterval +
+        "&prepare_start_time=" + this.prepareStartTime +
+        "&performance_start_time=" + this.performanceStartTime +
+        "&performance_end_time=" + this.performanceEndTime +
+        "&cleanup_end_time=" + this.cleanupEndTime;
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        axios.put(url).then(
+          (response) => {
+            console.log(response);
+            this.$emit("closeEditStage");
+          },
+          (error) => {
+            return error;
+          }
+        );
+      } else {
+        if (this.stageDateId == 0) {
+          const dateError = document.getElementById("date");
+          dateError.style.border="2px solid red";
+        } else {
+          const dateError = document.getElementById("date");
+          dateError.style.border="2px solid black";
+        }
+        if (this.stageFirst == 0 || this.first==this.second) {
+          const firstError = document.getElementById("first");
+          firstError.style.border="2px solid red";
+        } else {
+          const firstError = document.getElementById("first");
+          firstError.style.border="2px solid black";
+        }
+        if (this.stageSecond == 0 || this.first==this.second) {
+          const secondError = document.getElementById("second");
+          secondError.style.border="2px solid red";
+        } else {
+          const secondError = document.getElementById("second");
+          secondError.style.border="2px solid black";
+        }
+      }
     },
     set_time_range: function () {
       for (let hour of this.hour_range) {

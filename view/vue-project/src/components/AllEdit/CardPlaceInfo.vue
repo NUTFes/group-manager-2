@@ -22,6 +22,11 @@
       </div>
       <EditPlace
         v-if="editPlaceDisplay"
+        :groupId="groupId"
+        :first="regist.first"
+        :second="regist.second"
+        :third="regist.third"
+        :remark="remark"
         @closeEditPlace="closeEditPlace"
       />
     </div>
@@ -35,6 +40,8 @@ export default {
     EditPlace
   },
   props: {
+    regist: String,
+    groupId: Number,
     n: Number,
     place: String,
     remark: String,

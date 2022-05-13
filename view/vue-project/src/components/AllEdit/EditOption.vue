@@ -7,7 +7,7 @@
         </div>
         <h1>オプション申請</h1>
         <div>所持機器の利用</div>
-        <select v-model="item" @change="validationItem" id="item">
+        <select v-model="ownEquipment" @change="validationItem" id="item">
           <option
             v-for="list in itemsAvailable"
             :value="list.value"
@@ -17,7 +17,7 @@
           </option>
         </select>
         <div>音楽</div>
-        <select v-model="music" @change="validationMusic" id="music">
+        <select v-model="bgm" @change="validationMusic" id="music">
           <option
             v-for="list in musicAvailable"
             :value="list.value"
@@ -27,7 +27,7 @@
           </option>
         </select>
         <div>撮影許可</div>
-        <select v-model="picture" @change="validationPicture" id="picture">
+        <select v-model="cameraPermission" @change="validationPicture" id="picture">
           <option
             v-for="list in photoAvailable"
             :value="list.value"
@@ -37,7 +37,7 @@
           </option>
         </select>
         <div>騒音</div>
-        <select v-model="noise" @change="validationNoise" id="noise">
+        <select v-model="loudSound" @change="validationNoise" id="noise">
           <option
             v-for="list in loudAble"
             :value="list.value"
@@ -50,7 +50,7 @@
         <input type="text" v-model="stageContent" id="content">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button">✓登録</button>
+          <button id="btn" type="button" @click="register">✓登録</button>
         </span>
       </div>
     </div>
@@ -58,14 +58,23 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
+  props: {
+    groupId: Number,
+    id: Number,
+    ownEquipment: Boolean,
+    bgm: Boolean,
+    cameraPermission: Boolean,
+    loudSound: Boolean,
+    stageContent: String,
+  },
   data() {
     return {
-      item: [],
-      music: [],
-      picture: [],
-      noise: [],
-      stageContent: [],
+      resultItem: false,
+      resultMusic: false,
+      resultPicture: false,
+      resultNoise: false,
       itemsAvailable: [
         { label: "使用", value: true },
         { label: "使用しない", value: false },
@@ -85,11 +94,100 @@ export default {
     }
   },
   methods: {
+    validationItem: function() {
+      if (this.ownEquipment==true || this.ownEquipment==false) {
+        this.resultItem = true;
+      } else {
+        this.resultItem = false;
+      }
+      return this.resultItem
+    },
+    validationMusic: function() {
+      if (this.bgm==true || this.bgm==false) {
+        this.resultMusic = true;
+      } else {
+        this.resultMusic = false;
+      }
+      return this.resultMusic
+    },
+    validationPicture: function() {
+      if (this.cameraPermission==true || this.cameraPermission==false) {
+        this.resultPicture = true;
+      } else {
+        this.resultPicture = false;
+      }
+      return this.resultPicture
+    },
+    validationNoise: function() {
+      if (this.loudSound==true || this.loudSound==false) {
+        this.resultNoise = true;
+      } else {
+        this.resultNoise = false;
+      }
+      return this.resultNoise
+    },
+    register: function () {
+      if (this.resultItem && this.resultMusic && this.resultPicture && this.resultNoise && this.stageContent.length > 0) {
+        const url = process.env.VUE_APP_URL + "/stage_common_options" + "/" + this.id +
+        "?group_id=" + this.groupId +
+        "&own_equipment=" + this.ownEquipment +
+        "&bgm=" + this.bgm +
+        "&camera_permission=" + this.cameraPermission +
+        "&loud_sound=" + this.loudSound +
+        "&stage_content=" + this.stageContent;
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        axios.put(url).then(
+          (response) => {
+            console.log(response.status);
+            this.$emit("closeEditOption");
+          },
+          (error) => {
+            return error;
+          }
+        );
+      } else {
+        if (this.resultItem==false) {
+          const itemError = document.getElementById("item");
+          itemError.style.border="2px solid red";
+        } else {
+          const itemError = document.getElementById("item");
+          itemError.style.border="2px solid black";
+        }
+        if (this.resultMusic==false) {
+          const musicError = document.getElementById("music");
+          musicError.style.border="2px solid red";
+        } else {
+          const musicError = document.getElementById("music");
+          musicError.style.border="2px solid black";
+        }
+        if (this.resultPicture==false) {
+          const pictureError = document.getElementById("picture");
+          pictureError.style.border="2px solid red";
+        } else {
+          const pictureError = document.getElementById("picture");
+          pictureError.style.border="2px solid black";
+        }
+        if (this.resultNoise==false) {
+          const noiseError = document.getElementById("noise");
+          noiseError.style.border="2px solid red";
+        } else {
+          const noiseError = document.getElementById("noise");
+          noiseError.style.border="2px solid black";
+        }
+        if (this.stageContent.length == 0) {
+          const contentError = document.getElementById("content");
+          contentError.style.border="2px solid red";
+        } else {
+          const contentError = document.getElementById("content");
+          contentError.style.border="2px solid black";
+        }
+      }
+    },
     reset: function() {
-      this.item = [],
-      this.music = [],
-      this.picture = [],
-      this.noise = [],
+      this.ownEquipment = [],
+      this.bgm = [],
+      this.cameraPermission = [],
+      this.loudSound = [],
       this.stageContent = []
     },
   },

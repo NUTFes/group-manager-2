@@ -29,24 +29,23 @@
 import axios from "axios";
 export default {
   props: {
-    regist: String,
     groupId: Number,
+    id: Number,
+    item: String,
+    power: Number,
+    manufacturer: String,
+    model: String,
+    url: String
   },
   data() {
     return {
-      new_info: [],
-      item: [],
-      power: [],
-      model: [],
-      manufacturer: [],
-      url: [],
       resultPower: false,
     };
   },
   computed: {
     validationPower(){
       const pattern = /[0-9０-９]/;
-      if (pattern.test(this.power)==true) {
+      if (pattern.test(this.power)==true && this.power < 10000) {
         this.onPowerValidation();
       } else {
         this.offPowerValidation();
@@ -55,6 +54,13 @@ export default {
     },
   },
   methods: {
+    reset: function() {
+      this.item = [],
+      this.power = [],
+      this.manufacturer = [],
+      this.model = [],
+      this.url = []
+    },
     onPowerValidation: function() {
       this.resultPower = true;
     },
@@ -63,22 +69,18 @@ export default {
     },
     register: function () {
       if (this.item.length > 0 && this.resultPower > 0 && this.model.length > 0 && this.manufacturer.length > 0 && this.url.length > 0){
-        const post_url = process.env.VUE_APP_URL + "/power_orders";
-        axios.defaults.headers.common["Content-Type"] = "application/json";
-        let params = new URLSearchParams();
-        params.append("group_id", this.groupId);
-        params.append("item", this.item);
-        params.append("power", this.power);
-        params.append("manufacturer", this.manufacturer);
-        params.append("model", this.model);
-        params.append("item_url", this.url);
-        axios.post(post_url, params).then(
+        const url = process.env.VUE_APP_URL + "/power_orders" + "/" + this.id + "?group_id=" + this.groupId +
+        "&item=" + this.item +
+        "&power=" + this.power +
+        "&manufacturer=" + this.manufacturer +
+        "&model=" + this.model +
+        "&item_url=" + this.url;
+        axios.put(url).then(
           (response) => {
-            console.log(response);
-            this.$emit("closeAddPower");
+            console.log(response.status);
+            this.$emit("closeEditPower");
           },
           (error) => {
-            console.log(post_url)
             return error;
           });
       } else {
