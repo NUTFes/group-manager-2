@@ -1,92 +1,71 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="2" />
-    <v-col cols="8">
-      <v-card flat>
-        <v-container class="justify-content-center">
-          <v-row>
-            <v-col cols="2" />
-            <v-col cols="8" align="center">
-              <v-card-title class="justify-center">
-                <h1 style="color: #333333">ユーザー情報変更</h1>
-              </v-card-title>
-              <br />
-              <v-divider />
-              <br />
-              <v-card-text>
-                <v-form ref="form">
-                  <v-text-field
-                    label="フルネーム"
-                    v-model="name"
-                    :rules="[rules.requied]"
-                    outlined
-                    clearable
-                  />
-                  <br />
-                  <v-text-field
-                    label="メールアドレス"
-                    v-model="email"
-                    :rules="[rules.requied, rules.email]"
-                    outlined
-                    clearable
-                  />
-                  <br />
-                  <v-text-field
-                    label="学籍番号８桁"
-                    v-model="student_id"
-                    :rules="[rules.requied, rules.student_id_length]"
-                    hint="お持ちでない方：0を8桁入力"
-                    counter="8"
-                    outlined
-                    clearable
-                  />
-                  <br />
-                  <v-text-field
-                    label="TEL"
-                    v-model="tel"
-                    :rules="[rules.requied, rules.tel_length]"
-                    counter="11"
-                    hint="ハイフンなしで半角入力"
-                    persistent-hint
-                    outlined
-                    clearable
-                  />
-                  <br />
-                  <v-select
-                    label="学科"
-                    v-model.number="department_id"
-                    :rules="[rules.requied]"
-                    :items="departments"
-                    item-text="name"
-                    item-value="id"
-                    :menu-props="{ top: true, offsetY: true }"
-                    outlined
-                  />
-                  <br />
-                  <v-select
-                    label="学年"
-                    v-model.number="grade_id"
-                    :rules="[rules.requied]"
-                    :items="grades"
-                    item-text="name"
-                    item-value="id"
-                    :menu-props="{ top: true, offsetY: true }"
-                    outlined
-                  />
-                </v-form>
-              </v-card-text>
-              <v-card-action>
-                <v-btn color="btn" dark block rounded depressed @click="submit">登録</v-btn>
-                <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
-              </v-card-action>
-            </v-col>
-            <v-col cols="2" />
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-col>
-    <v-col cols="2" />
-  </v-row>
+  <div>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
+    <h1 style="color: #333333; padding-bottom: 50px">ユーザー情報変更</h1>
+    <v-form ref="form">
+      <v-text-field
+        label="フルネーム"
+        v-model="name"
+        :rules="[rules.requied]"
+        outlined
+        clearable
+      />
+      <br />
+      <v-text-field
+        label="メールアドレス"
+        v-model="email"
+        :rules="[rules.requied, rules.email]"
+        outlined
+        clearable
+      />
+      <br />
+      <v-text-field
+        label="学籍番号８桁"
+        v-model="student_id"
+        :rules="[rules.requied, rules.student_id_length]"
+        hint="お持ちでない方：0を8桁入力"
+        counter="8"
+        outlined
+        clearable
+      />
+      <br />
+      <v-text-field
+        label="TEL"
+        v-model="tel"
+        :rules="[rules.requied, rules.tel_length]"
+        counter="11"
+        hint="ハイフンなしで半角入力"
+        persistent-hint
+        outlined
+        clearable
+      />
+      <br />
+      <v-select
+        label="学科"
+        v-model.number="department_id"
+        :rules="[rules.requied]"
+        :items="departments"
+        item-text="name"
+        item-value="id"
+        :menu-props="{ top: true, offsetY: true }"
+        outlined
+      />
+      <br />
+      <v-select
+        label="学年"
+        v-model.number="grade_id"
+        :rules="[rules.requied]"
+        :items="grades"
+        item-text="name"
+        item-value="id"
+        :menu-props="{ top: true, offsetY: true }"
+        outlined
+      />
+    </v-form>
+    <div class="regist-button">
+      <button class="regist-submit-button" @click="submit">登録</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -156,6 +135,9 @@ export default {
   },
   computed: {},
   methods: {
+    goMypage: function() {
+      this.$router.push("/mypage")
+    },
     cancel: function () {
       this.$refs.form.reset();
     },
@@ -209,27 +191,26 @@ export default {
       this.$router.push("/mypage");
     }
     const get_url =
-      process.env.VUE_APP_URL + "/api/v1/current_user/get_user_detail_raw";
+      process.env.VUE_APP_URL + "/api/v1/current_user";
     axios
       .get(get_url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
         },
       })
       .then(
         (response) => {
-          console.log(response.data);
-          this.name = response.data.user.name;
-          this.email = response.data.user.email;
+          this.name = response.data.data.user.name;
+          this.email = response.data.data.user.email;
           this.student_id = String(
-            this.zeropadding(response.data.user_detail.student_id)
+            this.zeropadding(response.data.data.user_detail.student_id)
           );
-          this.tel = response.data.user_detail.tel;
-          this.department_id = response.data.user_detail.department_id;
-          this.grade_id = response.data.user_detail.grade_id;
+          this.tel = response.data.data.user_detail.tel;
+          this.department_id = response.data.data.user_detail.department_id;
+          this.grade_id = response.data.data.user_detail.grade_id;
         },
         (error) => {
           console.error(error);

@@ -7,7 +7,9 @@ class UserDetail < ApplicationRecord
   def to_info_h
     return {
       "student_id": self.student_id,
+      "department_id": self.department.id,
       "department": self.department.name,
+      "grade_id": self.grade_id,
       "grade": self.grade.name,
       "tel": self.tel
     }
