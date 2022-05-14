@@ -25,38 +25,34 @@
  </font>
 </template>
 
-
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
-      user:null
+      user: null
     }
   },
   mounted() {
     const url = process.env.VUE_APP_URL + "/api/v1/current_user";
-    axios
-    .get(url, {
+    axios.get(url, {
       headers: {
         "Content-Type": "application/json",
         "access-token": localStorage.getItem("access-token"), 
         "client": localStorage.getItem("client"),
         "uid": localStorage.getItem("uid"),
       },
-    })
-    .then((response) => {
+    }).then((response) => {
       this.user = response.data.data
     })
   },
   methods: {
     backMypage() {
-      this.$router.push("/mypage")
+      this.$router.push("/mypage");
     }
   }
 }
 </script>
-
 
 <style scoped>
 hr {
