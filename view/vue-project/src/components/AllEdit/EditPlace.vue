@@ -7,7 +7,7 @@
           </div>
           <h1>会場申請</h1>
           <div>第1希望</div>
-            <select v-model="first">
+            <select v-model="first" @change="validationFirst" id="first">
               <option
                 v-for="list in placeList"
                 :value="list.id"
@@ -17,7 +17,7 @@
               </option>
             </select>
             <div>第2希望</div>
-            <select v-model="second">
+            <select v-model="second" @change="validationSecond" id="second">
               <option
                 v-for="list in placeList"
                 :value="list.id"
@@ -27,7 +27,7 @@
               </option>
             </select>
             <div>第3希望</div>
-            <select v-model="third">
+            <select v-model="third" @change="validationThird" id="third">
               <option
                 v-for="list in placeList"
                 :value="list.id"
@@ -52,15 +52,44 @@ import axios from "axios";
 export default {
   props: {
     groupId: Number,
+    first: String,
+    second: String,
+    third: String,
+    remark: String
   },
   data() {
     return {
-      first: [],
-      second: [],
-      third: [],
-      remark: [],
       placeList: [],
+      resultFirst: false,
+      resultSecond: false,
+      resultThird: false,
     };
+  },
+  computed: {
+    validationFirst() {
+      if (this.first != 0) {
+        this.onFirstValidation();
+      } else {
+        this.offFirstValidation();
+      }
+      return this.resultFirst
+    },
+    validationSecond() {
+      if (this.second != 0) {
+        this.onSecondValidation();
+      } else {
+        this.offSecondValidation();
+      }
+      return this.resultSecond
+    },
+    validationThird() {
+      if (this.third != 0) {
+        this.onThirdValidation();
+      } else {
+        this.offThirdValidation();
+      }
+      return this.resultThird
+    },
   },
   mounted() {
     const placeUrl = process.env.VUE_APP_URL + "/places";
@@ -72,7 +101,7 @@ export default {
       })
       .then(
         (response) => {
-          this.placeList = response.data;
+          this.placeList = response.data.data;
         },
         (error) => {
           console.error(error);
@@ -80,6 +109,24 @@ export default {
         });
   },
   methods: {
+    onFirstValidation: function() {
+      this.resultFirst = true;
+    },
+    offFirstValidation: function() {
+      this.resultFirst = false;
+    },
+    onSecondValidation: function() {
+      this.resultSecond = true;
+    },
+    offSecondValidation: function() {
+      this.resultSecond = false;
+    },
+    onThirdValidation: function() {
+      this.resultThird = true;
+    },
+    offThirdValidation: function() {
+      this.resultThird = false;
+    },
     reset: function() {
       this.first = [],
       this.second = [],
@@ -87,31 +134,45 @@ export default {
       this.remark = []
     },
     register: function () {
-      const url =
-        process.env.VUE_APP_URL +
-        "/place_orders" +
-        "/" +
-        this.groupId +
-        "?" +
-        "first=" +
-        this.first +
-        "&second=" +
-        this.second +
-        "&third=" +
-        this.third +
-        "&remark=" +
-        this.remark;
-      axios.put(url).then(
-        (response) => {
-          console.log("response:", response);
-          this.isDisplay = false;
-          this.$emit("reload");
-          this.$emit("openPlaceSnackbar");
-        },
-        (error) => {
-          console.log("登録できませんでした");
-          return error;
-        });
+      if (this.resultFirst && this.resultSecond && this.resultThird && this.first!=this.second && this.first!=this.third && this.second!=this.third) {
+        const url =
+          process.env.VUE_APP_URL +
+          "/place_orders" + "/" + this.groupId + "?" +
+          "first=" + this.first +
+          "&second=" + this.second +
+          "&third=" + this.third +
+          "&remark=" + this.remark;
+        axios.put(url).then(
+          (response) => {
+            console.log("response:", response);
+            this.$emit("closeEditPlace");
+          },
+          (error) => {
+            return error;
+          });
+      } else {
+        if (this.resultFirst==false || this.first==this.second || this.first==this.third) {
+          const firstError = document.getElementById("first");
+          firstError.style.border="2px solid red";
+        } else {
+          const firstError = document.getElementById("first");
+          firstError.style.border="2px solid black";
+        }
+        if (this.resultSecond==false || this.second==this.first || this.second==this.third) {
+          const secondError = document.getElementById("second");
+          secondError.style.border="2px solid red";
+        } else {
+          const secondError = document.getElementById("second");
+          secondError.style.border="2px solid black";
+        }
+        if (this.resultThird==false || this.third==this.first || this.third==this.second) {
+          const thirdError = document.getElementById("third");
+          thirdError.style.border="2px solid red";
+        } else {
+          const thirdError = document.getElementById("third");
+          thirdError.style.border="2px solid black";
+        }
+      }
     },
   },
 };

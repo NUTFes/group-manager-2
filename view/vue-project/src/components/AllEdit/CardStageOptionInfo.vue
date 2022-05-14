@@ -33,6 +33,13 @@
         </div>
         <EditOption
           v-if="editOptionDisplay"
+          :groupId="groupId"
+          :id="id"
+          :ownEquipment="ownEquipment"
+          :bgm="bgm"
+          :cameraPermission="cameraPermission"
+          :loudSound="loudSound"
+          :stageContent="stageContent"
           @closeEditOption="closeEditOption"
         />
       </div>
@@ -47,6 +54,8 @@ export default {
     EditOption
   },
   props: {
+    groupId: Number,
+    id: Number,
     ownEquipment: Boolean,
     bgm: Boolean,
     cameraPermission: Boolean,

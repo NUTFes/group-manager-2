@@ -27,6 +27,7 @@ class StageOrder < ApplicationRecord
     def to_info_h
       @stages = Stage.all
       return {
+        "stage_order": self.nil? ? nil : self,
         "is_sunny": self.is_sunny,
         "year": self.fes_date.fes_year.year_num,
         "date": self.fes_date.date,
