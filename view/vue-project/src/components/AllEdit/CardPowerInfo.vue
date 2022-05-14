@@ -42,6 +42,7 @@
         :manufacturer="manufacturer"
         :model="model"
         :url="url"
+        @reload="reload"
       />
       <DeletePower
         v-if="deletePowerDisplay"
@@ -87,6 +88,9 @@ export default {
     },
     closeDeletePower: function () {
       this.deletePowerDisplay = false;
+    },
+    reload: function () {
+      this.$emit("reload");
     },
   },
 };

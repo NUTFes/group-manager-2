@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       item_list: [],
-      resultNum: false,
+      resultNum: true,
     };
   },
   computed: {
@@ -84,6 +84,7 @@ export default {
           (response) => {
             console.log(response.status);
             this.$emit("closeEditItem");
+            this.$emit("reload");
           },
           (error) => {
             return error;

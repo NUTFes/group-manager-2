@@ -60,9 +60,9 @@ export default {
   data() {
     return {
       placeList: [],
-      resultFirst: false,
-      resultSecond: false,
-      resultThird: false,
+      resultFirst: true,
+      resultSecond: true,
+      resultThird: true,
     };
   },
   computed: {
@@ -146,6 +146,7 @@ export default {
           (response) => {
             console.log("response:", response);
             this.$emit("closeEditPlace");
+            this.$emit("reload");
           },
           (error) => {
             return error;

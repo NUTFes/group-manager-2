@@ -157,7 +157,6 @@ export default {
   },
   data() {
     return {
-      resultWeather: false,
       fesDateList: [],
       stageList: [],
       isSunnyList: [
@@ -207,6 +206,7 @@ export default {
           (response) => {
             console.log(response);
             this.$emit("closeEditStage");
+            this.$emit("reload");
           },
           (error) => {
             return error;

@@ -41,6 +41,7 @@
           :loudSound="loudSound"
           :stageContent="stageContent"
           @closeEditOption="closeEditOption"
+          @reload="reload"
         />
       </div>
     </div>
@@ -74,6 +75,9 @@ export default {
     },
     closeEditOption: function () {
       this.editOptionDisplay = false;
+    },
+    reload: function () {
+      this.$emit("reload");
     },
   },
 };
