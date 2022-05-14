@@ -5,8 +5,7 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditItem')">✖</button>
         </div>
-        <h1>物品申請{{name}}</h1>
-        <div>貸出物品</div>
+        <h1>物品申請[{{name}}]</h1>
         <select v-model="item" id="item">
           <option
             v-for="list in item_list.data"
@@ -15,11 +14,11 @@
             >{{list.name}}
           </option>
         </select>
-        <div>個数</div>
-        <input type="number" v-model="num" id="num" @change="validationItem">
+        <div class="num">個数</div>
+        <input class="quantity" type="number" v-model="num" id="num" @change="validationItem">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button" @click="register">✓登録</button>
+          <button id="btn" type="button" @click="register">✓編集</button>
         </span>
       </div>
     </div>
@@ -123,9 +122,10 @@ export default {
     display: block;
     margin-right: 10%;
     margin-left: 10%;
-    margin-top: 5%;
+    margin-top: 15%;
     margin-bottom: 5%;
-}
+    border-radius: 5px;
+  }
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
     background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
@@ -142,12 +142,39 @@ export default {
     z-index: 0;
   }
   input{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;  
   }
   select{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
+  }
+  h1 {
+    margin: 5%;
+  }
+  .item {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .num {    
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .quantity {
+    width: 25%;
+    margin-left: 10%;
   }
   .add-modal_box {
     display: flex;

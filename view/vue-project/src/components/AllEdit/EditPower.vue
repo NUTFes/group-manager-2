@@ -6,19 +6,19 @@
           <button v-on:click="$emit('closeEditPower')">✖</button>
         </div>
         <h1>電力編集</h1>
-        <div>使用物品名</div>
+        <div class="entry">使用物品名</div>
         <input type="text" v-model="item" id="item">
-        <div>最大定格電力[W]</div>
-        <input type="text" v-model="power" id="power" @change="validationPower">
-        <div>メーカー</div>
+        <div class="entry">最大定格電力[W]</div>
+        <input class="maxpower" type="text" v-model="power" id="power" @change="validationPower">
+        <div class="entry">メーカー</div>
         <input type="text" v-model="model" id="model">
-        <div>型番</div>
+        <div class="entry">型番</div>
         <input type="text" v-model="manufacturer" id="manufacturer">
-        <div>URL</div>
+        <div class="entry">URL</div>
         <input type="text" v-model="url" id="url">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button" @click="register">✓登録</button>
+          <button id="btn" type="button" @click="register">✓編集</button>
         </span>
       </div>
     </div>
@@ -137,9 +137,10 @@ export default {
     display: block;
     margin-right: 10%;
     margin-left: 10%;
-    margin-top: 5%;
+    margin-top: 15%;
     margin-bottom: 5%;
-}
+    border-radius: 5px;
+  }
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
     background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
@@ -156,12 +157,34 @@ export default {
     z-index: 0;
   }
   input{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
   }
   select{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
+  }
+  h1 {
+    margin: 5%;
+  }
+  .entry {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .maxpower {
+    width: 25%;
+    margin-left: 10%;
   }
   .add-modal_box {
     display: flex;
