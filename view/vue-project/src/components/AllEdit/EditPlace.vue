@@ -5,8 +5,8 @@
           <div id="btnContainer">
             <button v-on:click="$emit('closeEditPlace')">✖</button>
           </div>
-          <h1>会場申請</h1>
-          <div>第1希望</div>
+          <h1>会場編集</h1>
+          <div class="entry">第1希望</div>
             <select v-model="first">
               <option
                 v-for="list in placeList"
@@ -16,7 +16,7 @@
                 {{ list.name }}
               </option>
             </select>
-            <div>第2希望</div>
+            <div class="entry">第2希望</div>
             <select v-model="second">
               <option
                 v-for="list in placeList"
@@ -26,7 +26,7 @@
                 {{ list.name }}
               </option>
             </select>
-            <div>第3希望</div>
+            <div class="entry">第3希望</div>
             <select v-model="third">
               <option
                 v-for="list in placeList"
@@ -36,11 +36,11 @@
                 {{ list.name }}
               </option>
             </select>
-            <div>備考</div>
+            <div class="tuiki">追記することがあればこちらにお書きください</div>
             <input type="text" v-model="remark">
           <span style="display:flex;">
             <button id="btn" type="button" @click="reset">リセット</button>
-            <button id="btn" type="button" @click="register">✓登録</button>
+            <button id="btn" type="button" @click="register">✓編集</button>
           </span>
       </div>
     </div>
@@ -129,9 +129,10 @@ export default {
     display: block;
     margin-right: 10%;
     margin-left: 10%;
-    margin-top: 5%;
+    margin-top: 15%;
     margin-bottom: 5%;
-}
+    border-radius: 5px;
+  }
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
     background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
@@ -148,12 +149,36 @@ export default {
     z-index: 0;
   }
   input{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
   }
   select{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
+  }
+  h1 {
+    margin: 5%;
+  }
+  .entry {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .tuiki {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 12px;
   }
   .add-modal_box {
     display: flex;
