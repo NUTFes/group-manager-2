@@ -34,6 +34,9 @@ export default {
     }
   },
   mounted() {
+    if (this.$store.state.userInfoPermission == false) {
+      this.$router.push("/mypage");
+    }
     const url = process.env.VUE_APP_URL + "/api/v1/current_user";
     axios.get(url, {
       headers: {
@@ -48,6 +51,7 @@ export default {
   },
   methods: {
     backMypage() {
+      this.$store.commit("acceptUserInfoPermission");
       this.$router.push("/mypage");
     }
   }
