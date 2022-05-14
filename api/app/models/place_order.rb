@@ -27,6 +27,7 @@ class PlaceOrder < ApplicationRecord
     def to_place_name_h
       @places = Place.all
       return { 
+        "place_order": self.nil? ? nil : self,
         "first": self.first.nil? ? nil : @places[self.first-1].name,
         "second": self.second.nil? ? nil : @places[self.second-1].name,
         "third": self.third.nil? ? nil : @places[self.third-1].name,

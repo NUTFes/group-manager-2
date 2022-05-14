@@ -1,7 +1,8 @@
 <template>
   <div>
-      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
-    <div class="regist-title">ステージの登録</div>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
+    <div class="regist-title">ステージの登録 - 雨の場合</div>
+    <!-- 雨の場合 -->
     <div class="regist-card">
       <div class="regist-card-content">
         <div class="regist-card-content-question">
@@ -12,11 +13,11 @@
               :value="list.id"
               :key="list.id"
             >
-              {{ list.date }}
+              {{ list.date }} - {{ list.days_num }}日目
             </option>
           </select>
         </div>
-        <div class="regist-card-content-question">
+        <!-- <div class="regist-card-content-question">
           <div class="regist-card-content-question-label">天気</div>
           <select v-model="weather" @change="validationWeather" id="weather">
             <option
@@ -27,7 +28,7 @@
               {{ list.label }}
             </option>
           </select>
-        </div>
+        </div> -->
         <div class="regist-card-content-question">
           <div class="regist-card-content-question-label">第1希望場所</div>
           <select v-model="first" id="first">
@@ -158,6 +159,9 @@
     <div class="regist-button">
       <button @click="register" class="regist-submit-button">登録する→</button>
     </div>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
+    </div>
   </div>
 </template>
 
@@ -178,7 +182,6 @@ export default {
       peformanceTime: [],
       endTime: [],
       cleanUpTime: [],
-      new_info: [],
       fesDateList: [],
       stageList: [],
       isSunnyList: [
@@ -210,12 +213,17 @@ export default {
         }
       }
     },
+    skip: function() {
+      this.$store.commit("acceptRegistStageCommonOptionPermission");
+      this.$store.commit("rejectRegistStageOrderRainyPermission");
+      this.$router.push("/regist_stage_option");
+    },
     register: function() {
-      if (this.date>0 && this.resultWeather && this.first>0 && this.second>0 && this.first!=this.second) {
+      if (this.date>0 && this.first>0 && this.second>0 && this.first!=this.second) {
         const url = process.env.VUE_APP_URL + "/stage_orders";
         let params = new URLSearchParams();
-        params.append("group_id", this.new_info.group.id);
-        params.append("is_sunny", this.weather);
+        params.append("group_id", localStorage.getItem("group_id"));
+        params.append("is_sunny", false);
         params.append("fes_date_id", this.date);
         params.append("stage_first", this.first);
         params.append("stage_second", this.second);
@@ -228,9 +236,29 @@ export default {
         params.append("cleanup_end_time", this.cleanUpTime);
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
-          (response) => {
-            console.log("response:", response);
-            this.$router.push("mypage");
+          () => {
+            if (this.$store.state.typeStage == 1) {
+              // 1: マイページから新規登録で両方登録してない場合）晴れ → 雨 → マイページ
+              this.$store.commit("rejectRegistStageOrderRainyPermission");
+              this.$router.push("/mypage");
+            } else if (this.$store.state.typeStage == 2) {
+              // 2: マイページから新規登録で両方登録してない場合）雨 → 晴れ → マイページ
+              this.$store.commit("acceptRegistStageOrderSunnyPermission");
+              this.$store.commit("rejectRegistStageOrderRainyPermission");
+              this.$router.push("/regist_stage_sunny");
+            } else if (this.$store.state.typeStage == 4) {
+              // 4: マイページから新規登録で片方だけ登録してない場合) 雨 → マイページ
+              this.$store.commit("rejectRegistStageOrderRainyPermission");
+              this.$router.push("/mypage");
+            } else if (this.$store.state.typeStage == 5) {
+              // 5: 新規登録の場合) 晴れ → 雨 → ステージオプション
+              this.$store.commit("acceptRegistStageCommonOptionPermission");
+              this.$store.commit("rejectRegistStageOrderRainyPermission");
+              this.$router.push("/regist_stage_option");
+            } else {
+              this.$router.push("/mypage");
+            }
+            
           },
           (error) => {
             console.log("登録できませんでした");
@@ -270,21 +298,10 @@ export default {
   },
 
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data[0];
-      });
+    // 直リンク対策
+    if (this.$store.state.registStageOrderRainyPermission == false) {
+      this.$router.push("/mypage");
+    }
 
     axios
       .get(process.env.VUE_APP_URL + "/api/v1/get_current_fes_dates", {
@@ -293,11 +310,11 @@ export default {
         },
       })
       .then((response) => {
-        this.fesDateList = response.data.data;
+        this.fesDateList = response.data.data.filter(fesDate => fesDate.days_num >= 1);
       });
 
     axios
-      .get(process.env.VUE_APP_URL + "/stages", {
+      .get(process.env.VUE_APP_URL + "/rainy/stages", {
         headers: {
           "Content-Type": "application/json",
         },

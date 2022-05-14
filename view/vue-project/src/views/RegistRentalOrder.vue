@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <div class="regist-title">使用する貸出物品の登録</div>
     <div v-for="(n, i) in inputData" :key="i">
       <div class="regist-card">
@@ -32,6 +33,9 @@
     <div class="regist-button">
       <button class="regist-submit-button" @click="register">登録</button>
     </div>
+    <div v-if="this.$store.state.fromMypage == false" class="skip-button">
+      <button @click="skip" class="regist-skip-button">スキップしてあとで登録する</button>
+    </div>
   </div>
 </template>
 
@@ -54,7 +58,6 @@ export default {
       inputDataNum: 1,
       maxNum: 100,
       minNum: 0,
-      new_info: [],
       submitFlag: true,
       count: 1
     };
@@ -98,20 +101,30 @@ export default {
         }
       }
     },
+    skip: function() {
+      this.$store.commit("acceptRegistPowerOrderPermission");
+      this.$store.commit("rejectRegistRentalOrderPermission");
+      this.$router.push("/regist_power");
+    },
     register: function () {
       this.confirmValidation()
       if (this.submitFlag) {
         for (let data of this.inputData) {
           axios.defaults.headers.common["Content-Type"] = "application/json";
           let params = new URLSearchParams();
-          params.append("group_id", this.new_info.group.id);
+          params.append("group_id", localStorage.getItem("group_id"));
           params.append("rental_item_id", data.item);
           params.append("num", data.num);
           axios
             .post(process.env.VUE_APP_URL + "/rental_orders", params)
-            .then((response) => {
-              console.log(response);
-              this.$router.push("mypage");
+            .then(() => {
+              if (this.$store.state.fromMypage == true) {
+                this.$router.push("/mypage")
+              } else {
+                this.$store.commit("acceptRegistPowerOrderPermission");
+                this.$store.commit("rejectRegistRentalOrderPermission");
+                this.$router.push("/regist_power");
+              }
             },
             (error) => {
               return error;
@@ -121,22 +134,10 @@ export default {
     },
   },
   mounted() {
-    const new_info =
-    process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
-    axios
-      .get(new_info, {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        this.new_info = response.data.data;
-      });
-
+    // 直リンク対策
+    if (this.$store.state.registRentalOrderPermission == false) {
+      this.$router.push("/mypage");
+    }
     const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
     axios
       .get(shopUrl, {

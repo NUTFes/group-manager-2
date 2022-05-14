@@ -1,45 +1,93 @@
 <template>
   <body id="font">
-      <div class="card">
-        <span class="red"/>
-        <div class="product">
-          {{regist}}
+    <div class="card">
+      <span class="red"/>
+      <div class="product">
+        {{item}}
+      </div>
+      <span class="span1"/>
+      <button class="button1">
+      </button>
+      <span class="span2"/>
+      <span class="line"/>
+      <div class="power">
+        <div class="number">{{power}}</div>
+        <div class="watt">[W]</div>
+      </div>
+      <span class="line"/>
+      <div>
+        <div class="detail">
+          <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">{{manufacturer}}</div>
         </div>
-        <span class="span1"/>
-        <button class="button1">
-        </button>
-        <span class="span2"/>
-        <span class="line"/>
-        <div class="power">
-          <div class="number">{{regist}}</div>
-          <div class="watt">[W]</div>
-        </div>
-        <span class="line"/>
-        <div>
-          <div class="detail">
-            <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">{{regist}}</div>
-          </div>
-          <div class="detail">
-            <div class="character1">型番</div><canvas class="triangle"/><div class="character2">{{regist}}</div>
-          </div>
-        </div>
-        <span class="span3"/>
-        <div class="column">
-          <button class="button2">
-            <div class="edit">編集</div>
-          </button>
-          <button class="button3">
-            <div class="edit">削除</div>
-          </button>
+        <div class="detail">
+          <div class="character1">型番</div><canvas class="triangle"/><div class="character2">{{model}}</div>
         </div>
       </div>
+      <span class="span3"/>
+      <div class="column">
+        <button class="button2" @click="openEditPower">
+          <div class="edit">編集</div>
+        </button>
+        <button class="button3" @click="openDeletePower">
+          <div class="edit">削除</div>
+        </button>
+      </div>
+      <EditPower
+        v-if="editPowerDisplay"
+        @closeEditPower="closeEditPower"
+        :groupId="groupId"
+        :id="id"
+        :item="item"
+        :power="power"
+        :manufacturer="manufacturer"
+        :model="model"
+        :url="url"
+      />
+      <DeletePower
+        v-if="deletePowerDisplay"
+        :id="id"
+        @closeDeletePower="closeDeletePower"
+      />
+    </div>
   </body>
 </template>
 
 <script>
+import EditPower from "@/components/AllEdit/EditPower.vue";
+import DeletePower from "@/components/AllEdit/DeletePower.vue";
 export default {
+  components: {
+    EditPower,
+    DeletePower
+  },
   props: {
-    regist: String,
+    groupId: Number,
+    id: Number,
+    item: String,
+    power: Number,
+    manufacturer: String,
+    model: String,
+    url: String
+  },
+  data() {
+    return {
+      editPowerDisplay: false,
+      deletePowerDisplay: false,
+    };
+  },
+  methods: {
+    openEditPower: function () {
+      this.editPowerDisplay = true;
+    },
+    closeEditPower: function () {
+      this.editPowerDisplay = false;
+    },
+    openDeletePower: function () {
+      this.deletePowerDisplay = true;
+    },
+    closeDeletePower: function () {
+      this.deletePowerDisplay = false;
+    },
   },
 };
 </script>
@@ -72,7 +120,7 @@ export default {
   margin-left: 22px;
 }
 .span1{
-width: 5px;
+  width: 5px;
 }
 .button1{
   width: 60px;

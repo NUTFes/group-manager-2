@@ -22,6 +22,10 @@ Rails.application.routes.draw do
   put "/users/:id" => "users#update"
   delete "/users/:id" => "users#destroy"
 
+  # ステージ
+  get "/sunny/stages" => "stages#show_sunny"
+  get "/rainy/stages" => "stages#show_rainy"
+
   # CRUD (/...)
   resources :user_page_settings
   resources :memos

@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div class="notfound-message">
-      お探しのページは見つかりません
+    <div class="complete-message">
+      登録が完了しました<br>
+      技大祭へのご参加ありがとうございます
     </div>
     <div style="text-align:center">
-      <button @click="backTopPage" class="notfound-button">トップページに戻る</button>
+      <button @click="backTopPage" class="complete-button">マイページへ</button>
     </div>
+    
   </div>
 </template>
 
@@ -13,19 +15,20 @@
 export default {
   methods: {
     backTopPage: function() {
-      this.$router.push("/")
+      this.$store.commit("rejectCompletePermission");
+      this.$router.push("/mypage")
     }
   }
 }
 </script>
 
 <style scoped>
-.notfound-message {
+.complete-message {
   font-size: 48px;
   text-align: center;
   margin-top: 50px;
 }
-.notfound-button {
+.complete-button {
   text-align: center;
   background-color: #00AFCC;
   border-radius: 5px;

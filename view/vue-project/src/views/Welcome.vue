@@ -60,7 +60,7 @@ export default {
   },
   mounted() {
     // Mypageへのアクセス許可があればMypageに飛ばす
-    if (localStorage.getItem("myPagePermission") == 1) {
+    if (this.$store.state.myPagePermission) {
       this.$router.push("/mypage");
     }
     window.addEventListener("resize", this.calculateWindowWidth);
@@ -72,6 +72,7 @@ export default {
   },
   methods: {
     signup: function() {
+      this.$store.commit("acceptRegistRepPermission");
       this.$router.push("/regist_rep");
     },
     submit: function () {
@@ -90,7 +91,6 @@ export default {
           localStorage.setItem("uid", response.headers["uid"]);
           localStorage.setItem("token-type", response.headers["token-type"]);
           // Mypageへのアクセスを許可する
-          localStorage.setItem("myPagePermission", 1);
           this.$store.commit("acceptMypagePermission");
           this.$router.push("mypage");
         },
@@ -133,7 +133,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 80px;
+  font-size: 5vw;
   font-family:serif;
   font-weight: bold;
 }

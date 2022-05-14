@@ -3,32 +3,74 @@
       <div class="card">
         <span class="red" />
         <div class="item">
-          {{regist}}
+          {{name}}
         </div>
         <p class="box">
           <span class="number">
-          {{regist}}
+          {{num}}
           </span>
           <span class="pieces">
             個
           </span>
         </p>
         <div class="button">
-          <button class="button1">
+          <button class="button1" @click="openEditItem">
             <div class="edit">編集</div>
           </button>
-          <button class="button2">
+          <button class="button2" @click="openDeleteItem">
             <div class="edit">削除</div>
           </button>
         </div>
+        <EditItem
+          v-if="editItemDisplay"
+          :groupId="groupId"
+          :id="regist.id"
+          :item="regist.rental_item_id"
+          :num="regist.num"
+          @closeEditItem="closeEditItem"
+        />
+        <DeleteItem
+          v-if="deleteItemDisplay"
+          :id="regist.id"
+          @closeDeleteItem="closeDeleteItem"
+        />
       </div>
   </body>
 </template>
 
 <script>
+import EditItem from "@/components/AllEdit/EditItem.vue";
+import DeleteItem from "@/components/AllEdit/DeleteItem.vue";
 export default {
+  components: {
+    EditItem,
+    DeleteItem
+  },
   props: {
+    groupId: String,
     regist: String,
+    name: String,
+    num: Number,
+  },
+  data() {
+    return {
+      editItemDisplay: false,
+      deleteItemDisplay: false,
+    };
+  },
+  methods: {
+    openEditItem: function () {
+      this.editItemDisplay = true;
+    },
+    closeEditItem: function () {
+      this.editItemDisplay = false;
+    },
+    openDeleteItem: function () {
+      this.deleteItemDisplay = true;
+    },
+    closeDeleteItem: function () {
+      this.deleteItemDisplay = false;
+    },
   },
 };
 </script>

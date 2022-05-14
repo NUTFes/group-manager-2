@@ -1,6 +1,6 @@
 <template>
   <div>
-      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページに戻る</span></router-link>
+      <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <div class="regist-title">参加団体の登録</div>
     <div class="regist-card">
       <div class="regist-card-content">
@@ -169,8 +169,13 @@ export default {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post(url, params).then(
           (response) => {
-            console.log("response:", response);
-            this.$router.push("regist_subrep");
+            localStorage.setItem("group_id", response.data.data.id);
+            localStorage.setItem("group_category_id", response.data.data.group_category_id);
+            this.$store.commit("offFromMypage");
+            this.$store.commit("typeStage5");
+            this.$store.commit("acceptRegistSubRepPermission");
+            this.$store.commit("rejectRegistGroupPermission");
+            this.$router.push("/regist_subrep");
           },
           (error) => {
             console.log("登録できませんでした");

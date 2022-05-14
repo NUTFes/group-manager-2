@@ -10,8 +10,8 @@
       <input type="text" v-model="student_id">
     </div>
     <div style="display:flex;">
-      <button id="btn" type="button" onclick="document.getElementById('addEmployee').close()">閉じる</button>
-      <button id="btn" type="button" onclick="document.getElementById('addEmployee').close()">登録する</button>
+      <button id="btn" type="button">閉じる</button>
+      <button id="btn" type="button">登録する</button>
     </div>
   </div>
 </template>

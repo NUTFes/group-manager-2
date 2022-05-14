@@ -205,6 +205,9 @@ export default {
     },
   },
   mounted() {
+    if (this.$store.state.editUserInfoPermission == false) {
+      this.$router.push("/mypage");
+    }
     const get_url =
       process.env.VUE_APP_URL + "/api/v1/current_user/get_user_detail_raw";
     axios

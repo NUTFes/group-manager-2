@@ -1,33 +1,63 @@
 <template>
-<body id="font">
-  <div>
-    <div class="card">
-      <span class="red"/>
-      <div class="choice">
-        第1希望
+  <body id="font">
+    <div>
+      <div class="card">
+        <span class="red"/>
+        <div class="choice">
+          第{{ n }}希望
+        </div>
+        <span class="line"/>
+        <div class="area">
+          {{ place }}
+        </div>
+        <div class="ps">
+          追記：
+        </div>
+        <div class="notes">
+          {{ remark }}
+        </div>
+        <button class="button" @click="openEditPlace">
+          <div class="edit">編集</div>
+        </button>
       </div>
-      <span class="line"/>
-      <div class="area">
-        {{regist}}
-      </div>
-      <div class="ps">
-        追記：
-      </div>
-      <div class="notes">
-        火を使います。例の如く火事になるかもしれません。ご了承ください。
-      </div>
-      <button class="button">
-        <div class="edit">編集</div>
-      </button>
+      <EditPlace
+        v-if="editPlaceDisplay"
+        :groupId="groupId"
+        :first="regist.first"
+        :second="regist.second"
+        :third="regist.third"
+        :remark="remark"
+        @closeEditPlace="closeEditPlace"
+      />
     </div>
-  </div>
-</body>
+  </body>
 </template>
 
 <script>
+import EditPlace from "@/components/AllEdit/EditPlace.vue";
 export default {
+  components: {
+    EditPlace
+  },
   props: {
     regist: String,
+    groupId: Number,
+    n: Number,
+    place: String,
+    remark: String,
+  },
+  data() {
+    return {
+      editPlaceDisplay: false,
+    };
+  },
+  methods: {
+    openEditPlace: function () {
+      this.editPlaceDisplay = true;
+    },
+    closeEditPlace: function () {
+      this.editPlaceDisplay = false;
+    },
   },
 };
 </script>
@@ -100,19 +130,18 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.button
-{
+.button{
   position: absolute;
   left: 860px;
   display: flex;
-  width: 131px;
-  height: 39px;
+
   background: #62A7FF;
   border-radius: 5px;
 }
 .edit{
-  margin-top: 5px;
-  margin-left: 14px;
+  width: 131px;
+  height: 39px;
+  margin: auto;
   font-weight: 350;
   font-size: 18px;
   line-height: 26px;

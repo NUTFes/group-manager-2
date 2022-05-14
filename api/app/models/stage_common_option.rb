@@ -22,6 +22,7 @@ class StageCommonOption < ApplicationRecord
 
   def to_info_h
     return {
+      "id": self.id,
       "own_equipment": self.own_equipment,
       "bgm": self.bgm,
       "camera_permission": self.camera_permission,

@@ -3,16 +3,13 @@
     <div>
       <div class="card">
         <span class="red" />
-        <div class="date">
-          11月11日
-        </div>
+        <div class="date">{{ date }}</div>
         <span class="line" />
-        <div class="weather">
-          晴
-        </div>
+        <div class="weather">{{ isSunny? "晴" : "雨" }}</div>
         <span class="line" />
         <div class="stage">
-          {{regist}}
+          <div class="first">第1希望‣ {{ firstStage }} </div> 
+          <div class="second">第2希望‣ {{ secondStage }} </div>
         </div>
         <div class="button">
           <button class="edit" @click="openEditStage">編集</button>
@@ -20,7 +17,20 @@
         </div>
       </div>
       <EditStage
-        v-if="editStageisplay"
+        v-if="editStageDisplay"
+        :groupId="groupId"
+        :id="regist.id"
+        :stageDateId="regist.fes_date_id"
+        :isSunny="regist.is_sunny"
+        :stageFirst="regist.stage_first"
+        :stageSecond="regist.stage_second"
+        :useTimeInterval="regist.use_time_interval"
+        :prepareTimeInterval="regist.prepare_time_interval"
+        :cleanupTimeInterval="regist.cleanup_time_interval"
+        :prepareStartTime="regist.prepare_start_time"
+        :performanceStartTime="regist.performance_start_time"
+        :performanceEndTime="regist.performance_end_time"
+        :cleanupEndTime="regist.cleanup_end_time"
         @closeEditStage="closeEditStage"
       />
     </div>
@@ -34,19 +44,24 @@ export default {
     EditStage
   },
   props: {
+    groupId: Number,
     regist: String,
+    firstStage: String,
+    secondStage: String,
+    date: String,
+    isSunny: Boolean,
   },
   data() {
     return {
-      editStageisplay: false,
+      editStageDisplay: false,
     };
   },
   methods: {
     openEditStage: function () {
-      this.editStageisplay = true;
+      this.editStageDisplay = true;
     },
     closeEditStage: function () {
-      this.editStageisplay = false;
+      this.editStageDisplay = false;
     },
   },
 };
@@ -60,6 +75,7 @@ export default {
 .card {
   display: flex;
   align-items: center;
+  margin: 3%;
   position: relative;
   width: 1026px;
   height: 149px;
@@ -104,7 +120,7 @@ export default {
   color: #333333;
 }
 .stage {
-  width: 300x;
+  width: 460px;
   margin-right: 27px;
   margin-left: 27px;
   font-weight: 300;
@@ -122,11 +138,10 @@ export default {
   text-align: left;
 }
 .button {
-  width: 120px;
+  width: 126px;
   height: 80px;
   margin-top: 5px;
   margin-left: 18px;
-  border-radius: 5px;
 }
 .edit {
   font-weight: 350;
@@ -135,6 +150,7 @@ export default {
   letter-spacing: 0.3em;
   background: #62a7ff;
   color: #ffffff;
+  border-radius: 5px;
   margin: 0.5rem;
   padding: 0 1rem;
 }
@@ -145,6 +161,7 @@ export default {
   letter-spacing: 0.3em;
   background: #ff6262;
   color: #ffffff;
+  border-radius: 5px;
   margin: 0.5rem;
   padding: 0 1rem;
 }

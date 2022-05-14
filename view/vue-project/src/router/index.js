@@ -9,10 +9,11 @@ import RegistEdit from "../views/RegistEdit.vue";
 import RegistInformation from "../views/RegistInformation.vue";
 import RegistRep from "../views/RegistRep.vue";
 import RegistSubRep from "../views/RegistSubRep.vue";
-import RegistGroupModel from "../views/RegistGroupModel.vue";
+import RegistGroup from "../views/RegistGroup.vue";
 import RegistPlace from "../views/RegistPlace.vue";
 import RegistPower from "../views/RegistPower.vue";
-import RegistStage from "../views/RegistStage.vue";
+import RegistStageSunny from "../views/RegistStageSunny.vue";
+import RegistStageRainy from "../views/RegistStageRainy.vue";
 import RegistRentalOrder from "../views/RegistRentalOrder.vue";
 import RegistEmployees from "../views/RegistEmployees.vue";
 import RegistPurchaseList from "../views/RegistPurchaseList.vue";
@@ -36,6 +37,7 @@ import MobileRegistShop from "../views/Mobile/RegistShop.vue";
 import MobilePlace from "../views/Mobile/Place.vue";
 import MobileEditUserInfo from "../views/Mobile/EditUserInfo.vue";
 
+import Complete from "../views/Complete.vue";
 import NotFound from "../views/404.vue";
 
 Vue.use(VueRouter);
@@ -62,7 +64,7 @@ const routes = [
     component: Group,
   },
   {
-    path: "/registEdit",
+    path: "/regist_edit",
     name: "RegistEdit",
     component: RegistEdit,
   },
@@ -82,9 +84,9 @@ const routes = [
     component: RegistSubRep,
   },
   {
-    path: "/regist_model",
-    name: "RegistGroupModel",
-    component: RegistGroupModel,
+    path: "/regist_group",
+    name: "RegistGroup",
+    component: RegistGroup,
   },
   {
     path: "/regist_place",
@@ -97,17 +99,22 @@ const routes = [
     component: RegistPower,
   },
   {
-    path: "/regist_stage",
-    name: "RegistStage",
-    component: RegistStage,
+    path: "/regist_stage_sunny",
+    name: "RegistStageSunny",
+    component: RegistStageSunny,
   },
   {
-    path: "/regist_rentalOrder",
+    path: "/regist_stage_rainy",
+    name: "RegistStageRainy",
+    component: RegistStageRainy,
+  },
+  {
+    path: "/regist_rental_order",
     name: "RegistRentalOrder",
     component: RegistRentalOrder,
   },
   {
-    path: "/regist_Employees",
+    path: "/regist_employees",
     name: "RegistEmployees",
     component: RegistEmployees,
   },
@@ -117,12 +124,12 @@ const routes = [
     component: RegistPurchaseList,
   },
   {
-    path: "/regist_foodProduct",
+    path: "/regist_food_product",
     name: "RegistFoodProduct",
     component: RegistFoodProduct,
   },
   {
-    path: "/regist_stageOption",
+    path: "/regist_stage_option",
     name: "RegistStageOption",
     component: RegistStageOption,
   },
@@ -205,6 +212,11 @@ const routes = [
     path: "/mobile_edit_user_info",
     name: "MobileEditUserInfo",
     component: MobileEditUserInfo,
+  },
+  {
+    path: "/complete",
+    name: "Complete",
+    component: Complete,
   },
   // Not Found
   {
