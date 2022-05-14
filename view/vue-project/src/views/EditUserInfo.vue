@@ -62,8 +62,9 @@
         outlined
       />
     </v-form>
-    <v-btn color="btn" dark block rounded depressed @click="submit">登録</v-btn>
-    <v-btn color="btn" text block rounded to="/mypage">マイページに戻る</v-btn>
+    <div class="regist-button">
+      <button class="regist-submit-button" @click="submit">登録</button>
+    </div>
   </div>
 </template>
 
@@ -134,6 +135,9 @@ export default {
   },
   computed: {},
   methods: {
+    goMypage: function() {
+      this.$router.push("/mypage")
+    },
     cancel: function () {
       this.$refs.form.reset();
     },

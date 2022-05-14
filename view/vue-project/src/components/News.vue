@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="news-card">
-      <!-- <div class="news-header">
+      <div class="news-header">
         <span>お知らせ</span>
-      </div> -->
+      </div>
       <div v-for="n in news" :key="n.id" class="news-content">
         <div class="news-title">{{ n.title }}</div>
         <div class="news-body">{{ n.body }}</div>

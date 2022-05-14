@@ -1,6 +1,7 @@
 <template>
   <font face="Noto Sans JP" size="5" >
   <div>
+    <router-link to="/mypage" style="text-decoration: none"><span class="regist-back-link">マイページへ</span></router-link>
     <h2 style="text-align:center"> ユーザー情報</h2>
     <br>
     <hr noshade>
@@ -16,11 +17,6 @@
       <p>{{ user.user.email }}</p>
     </div>
     <br>
-    <h5 style="text-align:center">
-      <button @click="backMypage" class="profile-button">
-        マイページに戻る
-      </button>
-    </h5>
   </div>
  </font>
 </template>
@@ -65,12 +61,5 @@ hr {
 }
 h5{
   color: #CF4DF3;
-}
-.profile-button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #CF4DF3;
-  border-radius: 20rem;
 }
 </style>
