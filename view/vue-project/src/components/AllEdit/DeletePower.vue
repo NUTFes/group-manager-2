@@ -8,12 +8,30 @@
         <h1>電力申請の削除</h1>
         <span style="display:flex;">
           <button id="btn" type="button" v-on:click="$emit('closeDeletePower')">戻る</button>
-          <button id="btn" type="button" @click="register">削除</button>
+          <button id="btn" type="button" @click="deletePower">削除</button>
         </span>
       </div>
     </div>
   </transition>
 </template>
+
+<script>
+import axios from "axios";
+export default {
+  props: {
+    id: Number,
+  },
+  methods: {
+    deletePower() {
+      const url =
+        process.env.VUE_APP_URL + "/power_orders/" + this.id;
+      axios.delete(url);
+      this.$emit("closeDeletePower");
+    },
+  },
+
+};
+</script>
 
 <style scoped>
   #btn{

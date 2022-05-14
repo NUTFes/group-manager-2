@@ -5,8 +5,7 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditItem')">✖</button>
         </div>
-        <h1>物品編集</h1>
-        <div class="item">貸出物品</div>
+        <h1>物品申請[{{name}}]</h1>
         <select v-model="item" id="item">
           <option
             v-for="list in item_list.data"
@@ -31,12 +30,12 @@ import axios from "axios";
 export default {
   props: {
     groupId: Number,
+    id: Number,
+    item: Number,
+    num: Number
   },
   data() {
     return {
-      new_info: [],
-      item: [],
-      num: [],
       item_list: [],
       resultNum: false,
     };
@@ -77,19 +76,19 @@ export default {
     },
     register: function () {
       if (this.item > 0 && this.resultNum > 0){
-        axios.defaults.headers.common["Content-Type"] = "application/json";
-        let params = new URLSearchParams();
-        params.append("group_id", this.groupId);
-        params.append("rental_item_id", this.item);
-        params.append("num", this.num);
-        axios
-          .post(process.env.VUE_APP_URL + "/rental_orders", params)
-          .then((response) => {
-            console.log(response);
-            this.$emit("closeAddItem");
-            this.item = "";
-            this.num = "";
-          });
+        const url = process.env.VUE_APP_URL + "/rental_orders" + "/" +
+        this.id + "?group_id=" + this.groupId +
+        "&rental_item_id=" + this.item +
+        "&num=" + this.num;
+        axios.put(url).then(
+          (response) => {
+            console.log(response.status);
+            this.$emit("closeEditItem");
+          },
+          (error) => {
+            return error;
+          }
+        );
       } else {
         if (this.item.length == 0) {
           const itemError = document.getElementById("item");

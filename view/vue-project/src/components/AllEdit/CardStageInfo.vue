@@ -18,6 +18,19 @@
       </div>
       <EditStage
         v-if="editStageDisplay"
+        :groupId="groupId"
+        :id="regist.id"
+        :stageDateId="regist.fes_date_id"
+        :isSunny="regist.is_sunny"
+        :stageFirst="regist.stage_first"
+        :stageSecond="regist.stage_second"
+        :useTimeInterval="regist.use_time_interval"
+        :prepareTimeInterval="regist.prepare_time_interval"
+        :cleanupTimeInterval="regist.cleanup_time_interval"
+        :prepareStartTime="regist.prepare_start_time"
+        :performanceStartTime="regist.performance_start_time"
+        :performanceEndTime="regist.performance_end_time"
+        :cleanupEndTime="regist.cleanup_end_time"
         @closeEditStage="closeEditStage"
       />
     </div>
@@ -31,6 +44,8 @@ export default {
     EditStage
   },
   props: {
+    groupId: Number,
+    regist: String,
     firstStage: String,
     secondStage: String,
     date: String,

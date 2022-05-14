@@ -8,12 +8,30 @@
         <h1>物品申請の削除</h1>
         <span style="display:flex;">
           <button id="btn" type="button" v-on:click="$emit('closeDeleteItem')">戻る</button>
-          <button id="btn" type="button" @click="register">✓削除</button>
+          <button id="btn" type="button" @click="deleteItem">✓削除</button>
         </span>
       </div>
     </div>
   </transition>
 </template>
+
+<script>
+import axios from "axios";
+export default {
+  props: {
+    id: Number,
+  },
+  methods: {
+    deleteItem() {
+      const url =
+        process.env.VUE_APP_URL + "/rental_orders/" + this.id;
+      axios.delete(url);
+      this.$emit("closeDeleteItem");
+    },
+  },
+
+};
+</script>
 
 <style scoped>
   #btn{

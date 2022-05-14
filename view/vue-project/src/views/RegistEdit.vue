@@ -53,21 +53,47 @@
           <div class="panels">
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-              <div >
-                <CardPlaceInfo :n="1" :place="regist_info[0].place_order.first" :remark="regist_info[0].place_order.remark" />
+              <div>
+                <CardPlaceInfo
+                  :regist="regist_info[0].place_order.place_order"
+                  :groupId="regist_info[0].group.id"
+                  :n="1"
+                  :place="regist_info[0].place_order.first"
+                  :remark="regist_info[0].place_order.remark"
+                />
               </div>
-              <div >
-                <CardPlaceInfo :n="2" :place="regist_info[0].place_order.second" :remark="regist_info[0].place_order.remark" />
+              <div>
+                <CardPlaceInfo
+                  :regist="regist_info[0].place_order.place_order"
+                  :groupId="regist_info[0].group.id"
+                  :n="2"
+                  :place="regist_info[0].place_order.second"
+                  :remark="regist_info[0].place_order.remark"
+                />
               </div>
-              <div >
-                <CardPlaceInfo :n="3" :place="regist_info[0].place_order.third" :remark="regist_info[0].place_order.remark" />
+              <div>
+                <CardPlaceInfo
+                  :regist="regist_info[0].place_order.place_order"
+                  :groupId="regist_info[0].group.id"
+                  :n="3"
+                  :place="regist_info[0].place_order.third"
+                  :remark="regist_info[0].place_order.remark"
+                />
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
               <div v-for="p in regist_info[0].power_orders" :key="p" >
-                <CardPowerInfo :item="p.power_order.item" :power="p.power_order.power" :manufacturer="p.power_order.manufacturer" :model="p.power_order.model"/>
+                <CardPowerInfo
+                  :groupId="regist_info[0].group.id"
+                  :id="p.power_order.id"
+                  :item="p.power_order.item"
+                  :power="p.power_order.power"
+                  :manufacturer="p.power_order.manufacturer"
+                  :model="p.power_order.model"
+                  :url="p.power_order.item_url"
+                />
               </div>
               <button
                 id="btn1"
@@ -94,14 +120,19 @@
               >
                 追加
               </button>
+              <div v-for="item in regist_info[0].rental_orders" :key="item">
+                <CardItemInfo
+                  :groupId="regist_info[0].group.id"
+                  :regist="item.rental_item.rental_item"
+                  :name="item.rental_item.name"
+                  :num="item.rental_item.num"
+                />
+              </div>
               <AddItem
                 v-if="addItemDisplay"
                 :groupId="projectName"
                 @closeAddItem="closeAddItem"
               />
-              <div v-for="item in regist_info[0].rental_orders" :key="item">
-                <CardItemInfo :name="item.rental_item.name" :num="item.rental_item.num" />
-              </div>
             </div>
 
             <!-- ステージ申請 -->
@@ -109,10 +140,13 @@
               <div v-for="list in regist_info" :key="list.id">
                 <div v-for="stage_order in list.stage_orders" :key="stage_order">
                   <CardStageInfo 
-                  :firstStage="stage_order.stage_order.stage_first" 
-                  :secondStage="stage_order.stage_order.stage_second" 
-                  :date="stage_order.stage_order.date" 
-                  :isSunny="stage_order.stage_order.is_sunny" />
+                    :groupId="regist_info[0].group.id"
+                    :regist="stage_order.stage_order.stage_order"
+                    :firstStage="stage_order.stage_order.stage_first"
+                    :secondStage="stage_order.stage_order.stage_second"
+                    :date="stage_order.stage_order.date"
+                    :isSunny="stage_order.stage_order.is_sunny"
+                  />
                 </div>
               </div>
             </div>
@@ -121,6 +155,8 @@
             <div id="area8" class="panel">
               <div v-for="list in regist_info" :key="list.id">
                 <CardStageOptionInfo 
+                :groupId="regist_info[0].group.id"
+                :id="list.stage_common_option.id"
                 :ownEquipment="list.stage_common_option.own_equipment"
                 :bgm="list.stage_common_option.bgm"
                 :cameraPermission="list.stage_common_option.camera_permission"

@@ -23,10 +23,15 @@
         </div>
         <EditItem
           v-if="editItemDisplay"
+          :groupId="groupId"
+          :id="regist.id"
+          :item="regist.rental_item_id"
+          :num="regist.num"
           @closeEditItem="closeEditItem"
         />
         <DeleteItem
           v-if="deleteItemDisplay"
+          :id="regist.id"
           @closeDeleteItem="closeDeleteItem"
         />
       </div>
@@ -42,6 +47,8 @@ export default {
     DeleteItem
   },
   props: {
+    groupId: String,
+    regist: String,
     name: String,
     num: Number,
   },
