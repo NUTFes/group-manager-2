@@ -15,7 +15,7 @@
           <v-col cols="2" />
           <v-col cols="8">
             <div class="text-center text-h4 text-no-wrap">
-              <p>開催日時：2022年9月17日(土) 18日(日)<br /></p>
+              <p>開催日時：2022年9月10日(土) 11日(日)<br /></p>
             </div>
           </v-col>
           <v-col cols="2" />

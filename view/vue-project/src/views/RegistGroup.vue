@@ -16,7 +16,7 @@
           <div class="regist-card-content-question-label">カテゴリ</div>
           <select v-model="groupCategoryId" @change="validationCategory" id="category">
             <option
-              v-for="item in groupCategories"
+              v-for="item in groupCategoryList"
               :value="item.id"
               :key="item.id"
             >
@@ -38,6 +38,7 @@
 
 <script>
 import axios from "axios";
+import groupCategoryList from "../plugins/group_category";
 export default {
   name: "App",
   data() {
@@ -53,14 +54,7 @@ export default {
       groupCategoryId: [],
       activity: [],
       fesYearId: [],
-      groupCategories: [
-        // { id: 1, name: "模擬店(食品販売)" },
-        // { id: 2, name: "模擬店(物品販売)" },
-        { id: 3, name: "ステージ企画" },
-        { id: 4, name: "展示・体験" },
-        // { id: 5, name: "研究室公開" },
-        { id: 6, name: "その他" },
-      ],
+      groupCategoryList: groupCategoryList
     };
   },
   mounted() {
