@@ -15,7 +15,6 @@ UserPageSetting.seed( :id,
                 add_employee: true, 
                 add_food_product: true, 
                 add_purchase_list: true, 
-                fes_year_id: 3,
-
+                fes_year_id: 1,
             }
 )
