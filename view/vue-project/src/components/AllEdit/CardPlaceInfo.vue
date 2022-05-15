@@ -22,7 +22,7 @@
       </div>
       <EditPlace
         v-if="editPlaceDisplay"
-        :groupId="groupId"
+        :placeOrderId="placeOrderId"
         :first="regist.first"
         :second="regist.second"
         :third="regist.third"
@@ -42,7 +42,7 @@ export default {
   },
   props: {
     regist: String,
-    groupId: Number,
+    placeOrderId: Number,
     n: Number,
     place: String,
     remark: String,
