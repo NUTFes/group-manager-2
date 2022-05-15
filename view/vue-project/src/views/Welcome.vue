@@ -1,38 +1,51 @@
 <template>
   <div>
-    <div style="margin-top: 60px">
-      <div class="welcome-top">
-        <div class="welcome-banner">
-          <span class="welcome-banner-message">ようこそ技大祭へ</span>
-          <div class="welcome-banner-img"></div>
-          <img src="../assets/uniform.svg" width="800px" height="400px" style="margin-top: 10px">
-        </div>
+    <div v-if="isMobile().phone" style="margin-top: 80px">
+      <div class="pc-access">
+        <p>技大祭への申し込みはPCサイトにてのみ行えます</p>
+        <p>お手数おかけしますがお手持ちのPCにて再度アクセスし申し込みを行うようお願い申し上げます</p>
+        <br>
+        <p>質問やご要望等ございましたら以下のメールアドレスにてご連絡ください</p>
+        <p>nutfes.soumu@gmail.com</p>
+        <p>技大祭実行委員会</p>
       </div>
-      <div class="welcome-login">
-        <div class="welcome-login-content">
-          <div class="welcome-login-content-form">
-            <div class="login-form">
-              <input type="email" placeholder="メールアドレス" class="login-input" v-model="email">
+    </div>
+    <div v-else>
+      <div style="margin-top: 60px">
+        <div class="welcome-top">
+          <div class="welcome-banner">
+            <span class="welcome-banner-message">ようこそ技大祭へ</span>
+            <div class="welcome-banner-img"></div>
+            <img src="../assets/uniform.svg" width="800px" height="400px" style="margin-top: 10px">
+          </div>
+        </div>
+        <div class="welcome-login">
+          <div class="welcome-login-content">
+            <div class="welcome-login-content-form">
+              <div class="login-form">
+                <input type="email" placeholder="メールアドレス" class="login-input" v-model="email">
+              </div>
+              <div class="login-form">
+                <input type="password" placeholder="パスワード" class="login-input" v-model="password">
+              </div>
+              <p style="color: red">{{ message }}</p>
+              <div class="login-form-button">
+                <button class="login-button" @click="submit">ログイン</button>
+              </div>
+              <button class="signup-button" @click="signup">新規登録はこちら</button>
             </div>
-            <div class="login-form">
-              <input type="password" placeholder="パスワード" class="login-input" v-model="password">
-            </div>
-            <p style="color: red">{{ message }}</p>
-            <div class="login-form-button">
-              <button class="login-button" @click="submit">ログイン</button>
-            </div>
-            <button class="signup-button" @click="signup">新規登録はこちら</button>
           </div>
         </div>
       </div>
+      <WelcomeDetailStep style="margin-top: 360px;" />
     </div>
-    <WelcomeDetailStep style="margin-top: 360px;" />
   </div>
 </template>
 
 <script>
 import WelcomeDetailStep from "@/components/WelcomeDetail-step.vue";
 import axios from "axios";
+import isMobile from "ismobilejs";
 export default {
   name: "Welcome",
   components: {
@@ -40,6 +53,7 @@ export default {
   },
   data() {
     return {
+      isMobile: isMobile,
       show: true,
       isStep: 1,
       windowWidth: window.innerWidth,
@@ -112,7 +126,6 @@ export default {
     },
     calculateWindowWidth() {
       this.windowWidth = window.innerWidth;
-      console.log(this.windowWidth);
     },
   },
 };
@@ -247,5 +260,15 @@ v-sheet {
 }
 .logo {
   fill: #ffffff;
+}
+.pc-access {
+  width: 80%;
+  font-size: 20px;
+  border: solid 1px #333333;
+  margin-top: 50px;
+  text-align: center;
+  padding: 5%;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
