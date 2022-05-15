@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isMobile().phone" style="margin-top: 80px">
+    <div v-if="isMobile().phone || isMobile().tablet" style="margin-top: 80px">
       <div class="pc-access">
         <p>技大祭への申し込みはPCサイトにてのみ行えます</p>
         <p>お手数おかけしますがお手持ちのPCにて再度アクセスし申し込みを行うようお願い申し上げます</p>
