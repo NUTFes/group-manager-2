@@ -5,8 +5,8 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditOption')">✖</button>
         </div>
-        <h1>オプション申請</h1>
-        <div>所持機器の利用</div>
+        <h1>オプション編集</h1>
+        <div class="entry">所持機器の利用</div>
         <select v-model="ownEquipment" @change="validationItem" id="item">
           <option
             v-for="list in itemsAvailable"
@@ -16,7 +16,7 @@
             {{ list.label }}
           </option>
         </select>
-        <div>音楽</div>
+        <div class="entry">音楽</div>
         <select v-model="bgm" @change="validationMusic" id="music">
           <option
             v-for="list in musicAvailable"
@@ -26,7 +26,7 @@
             {{ list.label }}
           </option>
         </select>
-        <div>撮影許可</div>
+        <div class="entry">撮影許可</div>
         <select v-model="cameraPermission" @change="validationPicture" id="picture">
           <option
             v-for="list in photoAvailable"
@@ -36,7 +36,7 @@
             {{ list.label }}
           </option>
         </select>
-        <div>騒音</div>
+        <div class="entry">騒音</div>
         <select v-model="loudSound" @change="validationNoise" id="noise">
           <option
             v-for="list in loudAble"
@@ -46,11 +46,11 @@
             {{ list.label }}
           </option>
         </select>
-        <div>ステージ内容</div>
+        <div class="entry">ステージ内容</div>
         <input type="text" v-model="stageContent" id="content">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button" @click="register">✓登録</button>
+          <button id="btn" type="button" @click="register">✓編集</button>
         </span>
       </div>
     </div>
@@ -206,8 +206,9 @@ export default {
     display: block;
     margin-right: 10%;
     margin-left: 10%;
-    margin-top: 5%;
+    margin-top: 15%;
     margin-bottom: 5%;
+    border-radius: 5px;
 }
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
@@ -225,12 +226,30 @@ export default {
     z-index: 0;
   }
   input{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
   }
   select{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
+  }
+  h1 {
+    margin: 5%;
+  }
+  .entry {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
   .add-modal_box {
     display: flex;
