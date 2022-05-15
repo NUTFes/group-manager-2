@@ -5,7 +5,7 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditOption')">✖</button>
         </div>
-        <h1>オプション編集</h1>
+        <h1>ステージオプション編集</h1>
         <div class="entry">所持機器の利用</div>
         <select v-model="ownEquipment" @change="validationItem" id="item">
           <option
@@ -235,8 +235,8 @@ export default {
     background-color: white;
   }
   select{
-    width: 80%;
-    margin: 0% auto;
+    width: 30%;
+    margin-left: 10%;
     border: 1px solid silver;
     border-top : solid 1px #717171;
     border-bottom : solid 1px #e0e0e0;
