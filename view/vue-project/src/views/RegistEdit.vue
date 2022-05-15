@@ -5,6 +5,7 @@
       <div id="line">
         <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
         <h3>参加団体登録＆編集ページ</h3>
+        {{ groupCategoryId }}
         <!-- <select v-model="projectName" @change="changeGroup(projectName)">
           <option
             v-for="list in regist_info"
@@ -54,34 +55,34 @@
           <div class="panels">
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-              <div v-if="group_info.place_order != null">
+              <div v-if="regist_info[0].place_order != null">
                 <div>
                   <CardPlaceInfo
-                    :regist="group_info.place_order.place_order"
-                    :groupId="group_info.group.id"
+                    :regist="regist_info[0].place_order.place_order"
+                    :placeOrderId="regist_info[0].place_order.place_order.id"
                     :n="1"
-                    :place="group_info.place_order.first"
-                    :remark="group_info.place_order.remark"
+                    :place="regist_info[0].place_order.first"
+                    :remark="regist_info[0].place_order.remark"
                     @reload="reload"
                   />
                 </div>
                 <div>
                   <CardPlaceInfo
-                    :regist="group_info.place_order.place_order"
-                    :groupId="group_info.group.id"
+                    :regist="regist_info[0].place_order.place_order"
+                    :placeOrderId="regist_info[0].place_order.place_order.id"
                     :n="2"
-                    :place="group_info.place_order.second"
-                    :remark="group_info.place_order.remark"
+                    :place="regist_info[0].place_order.second"
+                    :remark="regist_info[0].place_order.remark"
                     @reload="reload"
                   />
                 </div>
                 <div>
                   <CardPlaceInfo
-                    :regist="group_info.place_order.place_order"
-                    :groupId="group_info.group.id"
+                    :regist="regist_info[0].place_order.place_order"
+                    :placeOrderId="regist_info[0].place_order.place_order.id"
                     :n="3"
-                    :place="group_info.place_order.third"
-                    :remark="group_info.place_order.remark"
+                    :place="regist_info[0].place_order.third"
+                    :remark="regist_info[0].place_order.remark"
                     @reload="reload"
                   />
                 </div>
@@ -90,9 +91,9 @@
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div v-for="p in group_info.power_orders" :key="p" >
+              <div v-for="p in regist_info[0].power_orders" :key="p" >
                 <CardPowerInfo
-                  :groupId="group_info.group.id"
+                  :groupId="regist_info[0].group.id"
                   :id="p.power_order.id"
                   :item="p.power_order.item"
                   :power="p.power_order.power"
@@ -128,10 +129,9 @@
               >
                 追加
               </button>
-              <div v-for="item in group_info.rental_orders" :key="item">
+              <div v-for="item in regist_info[0].rental_orders" :key="item">
                 <CardItemInfo
-                  :groupId="group_info
-                  .group.id"
+                  :groupId="regist_info[0].group.id"
                   :regist="item.rental_item.rental_item"
                   :name="item.rental_item.name"
                   :num="item.rental_item.num"
@@ -148,9 +148,9 @@
 
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
-              <div v-for="stage_order in group_info.stage_orders" :key="stage_order">
+              <div v-for="stage_order in regist_info[0].stage_orders" :key="stage_order">
                 <CardStageInfo
-                  :groupId="group_info.group.id"
+                  :groupId="regist_info[0].group.id"
                   :regist="stage_order.stage_order.stage_order"
                   :firstStage="stage_order.stage_order.stage_first"
                   :secondStage="stage_order.stage_order.stage_second"
@@ -164,14 +164,14 @@
             <!-- ステージオプション -->
             <div id="area8" class="panel">
                 <CardStageOptionInfo
-                  v-if="group_info.stage_common_option != null"
-                  :groupId="group_info.group.id"
-                  :id="group_info.stage_common_option.id"
-                  :ownEquipment="group_info.stage_common_option.own_equipment"
-                  :bgm="group_info.stage_common_option.bgm"
-                  :cameraPermission="group_info.stage_common_option.camera_permission"
-                  :loudSound="group_info.stage_common_option.loud_sound"
-                  :stageContent="group_info.stage_common_option.stage_content"
+                  v-if="regist_info[0].stage_common_option != null"
+                  :groupId="regist_info[0].group.id"
+                  :id="regist_info[0].stage_common_option.id"
+                  :ownEquipment="regist_info[0].stage_common_option.own_equipment"
+                  :bgm="regist_info[0].stage_common_option.bgm"
+                  :cameraPermission="regist_info[0].stage_common_option.camera_permission"
+                  :loudSound="regist_info[0].stage_common_option.loud_sound"
+                  :stageContent="regist_info[0].stage_common_option.stage_content"
                   @reload="reload"
                 />
             </div>
@@ -296,6 +296,7 @@ export default {
         })
         .then((response) => {
           this.regist_info = response.data.data;
+          this.groupCategoryId = this.regist_info[0].group.group_category_id;
         });
     },
     closeAddPower: function () {
@@ -323,9 +324,7 @@ export default {
       .then((response) => {
         this.regist_info = response.data.data;
         // デフォルトで一番最初のgroupが選択される
-        this.group_info = response.data.data[0];
-        this.groupCategoryId = this.group_info.group.group_category_id;
-        console.log(this.groupCategoryId);
+        this.groupCategoryId = this.regist_info[0].group.group_category_id;
         // this.projectName = response.data.data[0].group.id;
       });
   },

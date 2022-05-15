@@ -51,7 +51,7 @@
 import axios from "axios";
 export default {
   props: {
-    groupId: Number,
+    placeOrderId: Number,
     first: String,
     second: String,
     third: String,
@@ -137,11 +137,12 @@ export default {
       if (this.resultFirst && this.resultSecond && this.resultThird && this.first!=this.second && this.first!=this.third && this.second!=this.third) {
         const url =
           process.env.VUE_APP_URL +
-          "/place_orders" + "/" + this.groupId + "?" +
+          "/place_orders" + "/" + this.placeOrderId + "?" +
           "first=" + this.first +
           "&second=" + this.second +
           "&third=" + this.third +
           "&remark=" + this.remark;
+        console.log(url);
         axios.put(url).then(
           (response) => {
             console.log("response:", response);
