@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mypage-card" style="padding-bottom: 10px">
-      <DashBoard :isRegistGroup="isRegistGroup" />
+      <DashBoard :isRegistGroup="isRegistGroup" :registInfo="regist_info" />
     </div>
     <div v-for="r in regist_info" :key="r" style="padding-bottom: 10px">
       <RegistAlarm :registInfo="r" :setting="setting" />

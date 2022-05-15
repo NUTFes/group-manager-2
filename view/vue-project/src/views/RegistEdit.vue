@@ -4,8 +4,8 @@
     <div id="font">
       <div id="line">
         <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
-        <h3>参加団体登録＆編集ページ{{projectName}}</h3>
-        <select v-model="projectName" @change="changeGroup(projectName)">
+        <h3>参加団体登録＆編集ページ</h3>
+        <!-- <select v-model="projectName" @change="changeGroup(projectName)">
           <option
             v-for="list in regist_info"
             :key="list.group.id"
@@ -13,14 +13,23 @@
           >
             {{ list.group.name }}
           </option>
-        </select>
+        </select> -->
       </div>
 
       <section class="tab_contents">
         <div class="tab_wrap">
-          <span class="bubble"></span>
-          <input id="tab1" type="radio" name="check" checked />
-          <label for="tab1" class="tab_lab1">会場申請</label>
+
+          <input v-if="groupCategoryId == 3" id="tab4" type="radio" name="check" checked />
+          <span v-if="groupCategoryId == 3" class="bubble"></span>
+          <label v-if="groupCategoryId == 3" for="tab4" class="tab_lab4">ステージ申請</label>
+
+          <input v-if="groupCategoryId == 3" id="tab8" type="radio" name="check" />
+          <span v-if="groupCategoryId == 3" class="bubble"></span>
+          <label v-if="groupCategoryId == 3" for="tab8" class="tab_lab8">ステージオプション申請</label>
+
+          <input v-if="groupCategoryId != 3" id="tab1" type="radio" name="check" checked />
+          <span v-if="groupCategoryId != 3" class="bubble"></span>
+          <label v-if="groupCategoryId != 3" for="tab1" class="tab_lab1">会場申請</label>
 
           <input id="tab2" type="radio" name="check" />
           <span class="bubble"></span>
@@ -29,14 +38,6 @@
           <input id="tab3" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab3" class="tab_lab3">物品申請</label>
-
-          <input id="tab4" type="radio" name="check" />
-          <span class="bubble"></span>
-          <label for="tab4" class="tab_lab4">ステージ申請</label>
-
-          <input id="tab8" type="radio" name="check" />
-          <span class="bubble"></span>
-          <label for="tab8" class="tab_lab8">ステージオプション申請</label>
 
           <!-- <input id="tab5" type="radio" name="check" />
           <span class="bubble"></span>
@@ -53,35 +54,37 @@
           <div class="panels">
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-              <div>
-                <CardPlaceInfo
-                  :regist="group_info.place_order.place_order"
-                  :groupId="group_info.group.id"
-                  :n="1"
-                  :place="group_info.place_order.first"
-                  :remark="group_info.place_order.remark"
-                  @reload="reload"
-                />
-              </div>
-              <div>
-                <CardPlaceInfo
-                  :regist="group_info.place_order.place_order"
-                  :groupId="group_info.group.id"
-                  :n="2"
-                  :place="group_info.place_order.second"
-                  :remark="group_info.place_order.remark"
-                  @reload="reload"
-                />
-              </div>
-              <div>
-                <CardPlaceInfo
-                  :regist="group_info.place_order.place_order"
-                  :groupId="group_info.group.id"
-                  :n="3"
-                  :place="group_info.place_order.third"
-                  :remark="group_info.place_order.remark"
-                  @reload="reload"
-                />
+              <div v-if="group_info.place_order != null">
+                <div>
+                  <CardPlaceInfo
+                    :regist="group_info.place_order.place_order"
+                    :groupId="group_info.group.id"
+                    :n="1"
+                    :place="group_info.place_order.first"
+                    :remark="group_info.place_order.remark"
+                    @reload="reload"
+                  />
+                </div>
+                <div>
+                  <CardPlaceInfo
+                    :regist="group_info.place_order.place_order"
+                    :groupId="group_info.group.id"
+                    :n="2"
+                    :place="group_info.place_order.second"
+                    :remark="group_info.place_order.remark"
+                    @reload="reload"
+                  />
+                </div>
+                <div>
+                  <CardPlaceInfo
+                    :regist="group_info.place_order.place_order"
+                    :groupId="group_info.group.id"
+                    :n="3"
+                    :place="group_info.place_order.third"
+                    :remark="group_info.place_order.remark"
+                    @reload="reload"
+                  />
+                </div>
               </div>
             </div>
 
@@ -161,6 +164,7 @@
             <!-- ステージオプション -->
             <div id="area8" class="panel">
                 <CardStageOptionInfo
+                  v-if="group_info.stage_common_option != null"
                   :groupId="group_info.group.id"
                   :id="group_info.stage_common_option.id"
                   :ownEquipment="group_info.stage_common_option.own_equipment"
@@ -274,15 +278,11 @@ export default {
       group_info: [],
       projectName: "",
       addPowerDisplay: false,
-      test: "aaaaa",
       addItemDisplay: false,
+      groupCategoryId: null,
     };
   },
-
   methods: {
-    changeGroup: function (id) {
-      this.group_info=this.regist_info.find(e => e.group.id==id)
-    },
     reload: function () {
       const regist_info = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
       axios
@@ -296,7 +296,6 @@ export default {
         })
         .then((response) => {
           this.regist_info = response.data.data;
-          this.group_info=this.regist_info.find(e => e.group.id==this.projectName)
         });
     },
     closeAddPower: function () {
@@ -325,7 +324,9 @@ export default {
         this.regist_info = response.data.data;
         // デフォルトで一番最初のgroupが選択される
         this.group_info = response.data.data[0];
-        this.projectName = response.data.data[0].group.id;
+        this.groupCategoryId = this.group_info.group.group_category_id;
+        console.log(this.groupCategoryId);
+        // this.projectName = response.data.data[0].group.id;
       });
   },
 };
