@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <MobileHeader />
     <Header />
     <main v-if="this.$route.path == '/' || this.$route.path == '/regist_edit'" class="top">
       <router-view />
@@ -14,22 +13,13 @@
 
 <script>
 import Header from "@/components/Header.vue";
-import MobileHeader from "@/components/Mobile/Header.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
   name: "App",
-
   components: {
     Header,
-    MobileHeader,
     Footer,
-  },
-  data() {
-    return {
-      isMobile: false,
-      mobile: [],
-    };
   },
 };
 </script>
