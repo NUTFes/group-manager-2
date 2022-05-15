@@ -4,8 +4,8 @@
     <div id="font">
       <div id="line">
         <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
-        <h3>参加団体登録＆編集ページ</h3>
-        <select v-model="projectName">
+        <h3>参加団体登録＆編集ページ{{projectName}}</h3>
+        <select v-model="projectName" @change="changeGroup(projectName)">
           <option
             v-for="list in regist_info"
             :key="list.group.id"
@@ -38,7 +38,7 @@
           <span class="bubble"></span>
           <label for="tab8" class="tab_lab8">ステージオプション申請</label>
 
-          <input id="tab5" type="radio" name="check" />
+          <!-- <input id="tab5" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab5" class="tab_lab5">従業員申請</label>
 
@@ -48,51 +48,55 @@
 
           <input id="tab7" type="radio" name="check" />
           <span class="bubble"></span>
-          <label for="tab7" class="tab_lab7">購入品申請</label>
+          <label for="tab7" class="tab_lab7">購入品申請</label> -->
 
           <div class="panels">
             <!-- 会場申請 -->
             <div id="area1" class="panel">
               <div>
                 <CardPlaceInfo
-                  :regist="regist_info[0].place_order.place_order"
-                  :groupId="regist_info[0].group.id"
+                  :regist="group_info.place_order.place_order"
+                  :groupId="group_info.group.id"
                   :n="1"
-                  :place="regist_info[0].place_order.first"
-                  :remark="regist_info[0].place_order.remark"
+                  :place="group_info.place_order.first"
+                  :remark="group_info.place_order.remark"
+                  @reload="reload"
                 />
               </div>
               <div>
                 <CardPlaceInfo
-                  :regist="regist_info[0].place_order.place_order"
-                  :groupId="regist_info[0].group.id"
+                  :regist="group_info.place_order.place_order"
+                  :groupId="group_info.group.id"
                   :n="2"
-                  :place="regist_info[0].place_order.second"
-                  :remark="regist_info[0].place_order.remark"
+                  :place="group_info.place_order.second"
+                  :remark="group_info.place_order.remark"
+                  @reload="reload"
                 />
               </div>
               <div>
                 <CardPlaceInfo
-                  :regist="regist_info[0].place_order.place_order"
-                  :groupId="regist_info[0].group.id"
+                  :regist="group_info.place_order.place_order"
+                  :groupId="group_info.group.id"
                   :n="3"
-                  :place="regist_info[0].place_order.third"
-                  :remark="regist_info[0].place_order.remark"
+                  :place="group_info.place_order.third"
+                  :remark="group_info.place_order.remark"
+                  @reload="reload"
                 />
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div v-for="p in regist_info[0].power_orders" :key="p" >
+              <div v-for="p in group_info.power_orders" :key="p" >
                 <CardPowerInfo
-                  :groupId="regist_info[0].group.id"
+                  :groupId="group_info.group.id"
                   :id="p.power_order.id"
                   :item="p.power_order.item"
                   :power="p.power_order.power"
                   :manufacturer="p.power_order.manufacturer"
                   :model="p.power_order.model"
                   :url="p.power_order.item_url"
+                  @reload="reload"
                 />
               </div>
               <button
@@ -107,6 +111,7 @@
                 v-if="addPowerDisplay"
                 :groupId="projectName"
                 @closeAddPower="closeAddPower"
+                @reload="reload"
               />
             </div>
 
@@ -120,49 +125,51 @@
               >
                 追加
               </button>
-              <div v-for="item in regist_info[0].rental_orders" :key="item">
+              <div v-for="item in group_info.rental_orders" :key="item">
                 <CardItemInfo
-                  :groupId="regist_info[0].group.id"
+                  :groupId="group_info
+                  .group.id"
                   :regist="item.rental_item.rental_item"
                   :name="item.rental_item.name"
                   :num="item.rental_item.num"
+                  @reload="reload"
                 />
               </div>
               <AddItem
                 v-if="addItemDisplay"
                 :groupId="projectName"
                 @closeAddItem="closeAddItem"
+                @reload="reload"
               />
             </div>
 
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
-              <div v-for="list in regist_info" :key="list.id">
-                <div v-for="stage_order in list.stage_orders" :key="stage_order">
-                  <CardStageInfo 
-                    :groupId="regist_info[0].group.id"
-                    :regist="stage_order.stage_order.stage_order"
-                    :firstStage="stage_order.stage_order.stage_first"
-                    :secondStage="stage_order.stage_order.stage_second"
-                    :date="stage_order.stage_order.date"
-                    :isSunny="stage_order.stage_order.is_sunny"
-                  />
-                </div>
+              <div v-for="stage_order in group_info.stage_orders" :key="stage_order">
+                <CardStageInfo
+                  :groupId="group_info.group.id"
+                  :regist="stage_order.stage_order.stage_order"
+                  :firstStage="stage_order.stage_order.stage_first"
+                  :secondStage="stage_order.stage_order.stage_second"
+                  :date="stage_order.stage_order.date"
+                  :isSunny="stage_order.stage_order.is_sunny"
+                  @reload="reload"
+                />
               </div>
             </div>
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
-              <div v-for="list in regist_info" :key="list.id">
-                <CardStageOptionInfo 
-                :groupId="regist_info[0].group.id"
-                :id="list.stage_common_option.id"
-                :ownEquipment="list.stage_common_option.own_equipment"
-                :bgm="list.stage_common_option.bgm"
-                :cameraPermission="list.stage_common_option.camera_permission"
-                :loudSound="list.stage_common_option.loud_sound" 
-                :stageContent="list.stage_common_option.stage_content" />
-              </div>
+                <CardStageOptionInfo
+                  :groupId="group_info.group.id"
+                  :id="group_info.stage_common_option.id"
+                  :ownEquipment="group_info.stage_common_option.own_equipment"
+                  :bgm="group_info.stage_common_option.bgm"
+                  :cameraPermission="group_info.stage_common_option.camera_permission"
+                  :loudSound="group_info.stage_common_option.loud_sound"
+                  :stageContent="group_info.stage_common_option.stage_content"
+                  @reload="reload"
+                />
             </div>
 
             <!-- 従業員申請 -->
@@ -262,7 +269,9 @@ export default {
   },
   data() {
     return {
+      index: 0,
       regist_info: [],
+      group_info: [],
       projectName: "",
       addPowerDisplay: false,
       test: "aaaaa",
@@ -271,6 +280,25 @@ export default {
   },
 
   methods: {
+    changeGroup: function (id) {
+      this.group_info=this.regist_info.find(e => e.group.id==id)
+    },
+    reload: function () {
+      const regist_info = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+      axios
+        .get(regist_info, {
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": localStorage.getItem("access-token"),
+            "client": localStorage.getItem("client"),
+            "uid": localStorage.getItem("uid"),
+          },
+        })
+        .then((response) => {
+          this.regist_info = response.data.data;
+          this.group_info=this.regist_info.find(e => e.group.id==this.projectName)
+        });
+    },
     closeAddPower: function () {
       this.addPowerDisplay = false;
     },
@@ -296,6 +324,7 @@ export default {
       .then((response) => {
         this.regist_info = response.data.data;
         // デフォルトで一番最初のgroupが選択される
+        this.group_info = response.data.data[0];
         this.projectName = response.data.data[0].group.id;
       });
   },

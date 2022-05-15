@@ -28,6 +28,7 @@
         :third="regist.third"
         :remark="remark"
         @closeEditPlace="closeEditPlace"
+        @reload="reload"
       />
     </div>
   </body>
@@ -57,6 +58,9 @@ export default {
     },
     closeEditPlace: function () {
       this.editPlaceDisplay = false;
+    },
+    reload: function () {
+      this.$emit("reload");
     },
   },
 };

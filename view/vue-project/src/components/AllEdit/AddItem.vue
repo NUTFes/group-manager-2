@@ -87,8 +87,7 @@ export default {
           .then((response) => {
             console.log(response);
             this.$emit("closeAddItem");
-            this.item = "";
-            this.num = "";
+            this.$emit("reload");
           });
       } else {
         if (this.item.length == 0) {

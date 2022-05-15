@@ -32,6 +32,7 @@
         :performanceEndTime="regist.performance_end_time"
         :cleanupEndTime="regist.cleanup_end_time"
         @closeEditStage="closeEditStage"
+        @reload="reload"
       />
     </div>
   </body>
@@ -62,6 +63,9 @@ export default {
     },
     closeEditStage: function () {
       this.editStageDisplay = false;
+    },
+    reload: function () {
+      this.$emit("reload");
     },
   },
 };

@@ -71,10 +71,10 @@ export default {
   },
   data() {
     return {
-      resultItem: false,
-      resultMusic: false,
-      resultPicture: false,
-      resultNoise: false,
+      resultItem: true,
+      resultMusic: true,
+      resultPicture: true,
+      resultNoise: true,
       itemsAvailable: [
         { label: "使用", value: true },
         { label: "使用しない", value: false },
@@ -140,6 +140,7 @@ export default {
           (response) => {
             console.log(response.status);
             this.$emit("closeEditOption");
+            this.$emit("reload");
           },
           (error) => {
             return error;

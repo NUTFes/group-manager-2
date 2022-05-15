@@ -79,6 +79,7 @@ export default {
           (response) => {
             console.log(response.status);
             this.$emit("closeEditPower");
+            this.$emit("reload");
           },
           (error) => {
             return error;
