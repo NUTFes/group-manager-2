@@ -8,7 +8,9 @@ class SubRep < ApplicationRecord
       return {
         "name": self.name,
         "department": self.department.name,
+        "department_id": self.department.id,
         "grade": self.grade.name,
+        "grade_id": self.grade.id,
         "tel": self.tel,
         "email": self.email,
         "student_id": self.student_id

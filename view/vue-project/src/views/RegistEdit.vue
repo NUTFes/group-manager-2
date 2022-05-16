@@ -4,7 +4,7 @@
     <div id="font">
       <div id="line">
         <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
-        <h3>参加団体登録＆編集ページ</h3>
+        <h3>参加団体登録＆編集ページ{{regist_info}}</h3>
         <select v-model="projectName">
           <option
             v-for="list in regist_info"
@@ -18,8 +18,13 @@
 
       <section class="tab_contents">
         <div class="tab_wrap">
+
+          <input id="tab9" type="radio" name="check" checked />
           <span class="bubble"></span>
-          <input id="tab1" type="radio" name="check" checked />
+          <label for="tab9" class="tab_lab9">副代表申請</label>
+
+          <span class="bubble"></span>
+          <input id="tab1" type="radio" name="check" />
           <label for="tab1" class="tab_lab1">会場申請</label>
 
           <input id="tab2" type="radio" name="check" />
@@ -51,6 +56,17 @@
           <label for="tab7" class="tab_lab7">購入品申請</label>
 
           <div class="panels">
+
+            <!-- 副代表申請 -->
+            <div id="area9" class="panel">
+              <div>
+                <CardSubRepInfo
+                  :regist="regist_info[0].sub_rep"
+                  :groupId="regist_info[0].group.id"
+                />
+              </div>
+            </div>
+
             <!-- 会場申請 -->
             <div id="area1" class="panel">
               <div>
@@ -60,6 +76,7 @@
                   :n="1"
                   :place="regist_info[0].place_order.first"
                   :remark="regist_info[0].place_order.remark"
+                  @reload="reload"
                 />
               </div>
               <div>
@@ -241,6 +258,7 @@ import AddItem from "@/components/AllEdit/AddItem.vue";
 import AddEmployee from "@/components/AllEdit/AddEmployee.vue";
 import AddFood from "@/components/AllEdit/AddFood.vue";
 import AddPurchase from "@/components/AllEdit/AddPurchase.vue";
+import CardSubRepInfo from "@/components/AllEdit/CardSubRepInfo.vue";
 import CardPlaceInfo from "@/components/AllEdit/CardPlaceInfo.vue";
 import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
@@ -254,6 +272,7 @@ export default {
     AddEmployee,
     AddFood,
     AddPurchase,
+    CardSubRepInfo,
     CardPlaceInfo,
     CardPowerInfo,
     CardItemInfo,
@@ -456,6 +475,10 @@ select {
   display: block;
 }
 
+#tab9:checked ~ .panels #area9 {
+  display: block;
+}
+
 #tab1:checked ~ .tab_lab1 {
   color: #242424;
   background-color: #d0dfe6;
@@ -559,6 +582,20 @@ select {
   box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
   border-radius: 20px 20px 0px 0px;
 }
+
+#tab9:checked ~ .tab_lab9 {
+  color: #242424;
+  background-color: #d0dfe6;
+  left: 0%;
+  right: 87.5%;
+  top: 6.84%;
+  bottom: 84.66%;
+
+  background: #d0dfe6;
+  box-shadow: 5px -3px 3px 1px rgba(0, 0, 0, 0.25);
+  border-radius: 20px 20px 0px 0px;
+}
+
 input[name="check"] {
   display: none;
 }
@@ -575,7 +612,8 @@ input[name="check"] {
 .tab_lab5,
 .tab_lab6,
 .tab_lab7,
-.tab_lab8 {
+.tab_lab8,
+.tab_lab9 {
   padding: 1%;
   left: 12.5%;
   right: 75%;
