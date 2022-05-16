@@ -103,7 +103,8 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 1026px;
+  margin-top: 3%;
+  width: 1080px;
   height: 149px;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
@@ -117,7 +118,7 @@ export default {
   background: #f71e35;
 }
 .product {
-  width: 45%;
+  width: 37%;
   text-align: center;
   font-weight: 300;
   font-size: 48px;
@@ -204,17 +205,18 @@ export default {
 }
 .button2 {
   display: flex;
-  width: 80px;
-  height: 39px;
-  margin: 9.5px;
+  width: 70px;
+  height: 35px;
+  margin: 12% auto;
+  text-align: center;
   background: #62A7FF;
   border-radius: 5px;
 }
 .button3 {
   display: flex;
-  width: 80px;
-  height: 39px;
-  margin: 9.5px;
+  width: 70px;
+  height: 35px;
+  margin: 12% auto;
   background: #FF6262;
   border-radius: 5px;
 }
