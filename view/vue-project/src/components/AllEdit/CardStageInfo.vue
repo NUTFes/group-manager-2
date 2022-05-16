@@ -100,7 +100,7 @@ export default {
   margin-right: 25px;
   font-style: normal;
   font-weight: 300;
-  font-size: 56px;
+  font-size: 48px;
   line-height: 43px;
   letter-spacing: 0.1em;
   color: #333333;
