@@ -28,11 +28,13 @@
           :item="regist.rental_item_id"
           :num="regist.num"
           @closeEditItem="closeEditItem"
+          @reload="reload"
         />
         <DeleteItem
           v-if="deleteItemDisplay"
           :id="regist.id"
           @closeDeleteItem="closeDeleteItem"
+          @reload="reload"
         />
       </div>
   </body>
@@ -70,6 +72,9 @@ export default {
     },
     closeDeleteItem: function () {
       this.deleteItemDisplay = false;
+    },
+    reload: function () {
+      this.$emit("reload");
     },
   },
 };

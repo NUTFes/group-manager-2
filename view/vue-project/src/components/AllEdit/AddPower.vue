@@ -82,6 +82,7 @@ export default {
           (response) => {
             console.log(response);
             this.$emit("closeAddPower");
+            this.$emit("reload");
           },
           (error) => {
             console.log(post_url)

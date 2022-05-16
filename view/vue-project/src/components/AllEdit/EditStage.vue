@@ -5,8 +5,8 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditStage')">✖</button>
         </div>
-        <h1>ステージ申請[{{ isSunny? "晴" : "雨" }}]</h1>
-        <div>日程</div>
+        <h1>ステージ編集[{{ isSunny? "晴" : "雨" }}]</h1>
+        <div class="entry">日程</div>
         <select v-model="stageDateId" id="date">
           <option
             v-for="list in fesDateList"
@@ -16,7 +16,7 @@
             {{ list.date }}
           </option>
         </select>
-        <!-- <div>天気</div>
+        <!-- <div class="entry">天気</div>
         <select v-model="isSunny" id="weather">
           <option
             v-for="list in isSunnyList"
@@ -26,7 +26,7 @@
             {{ list.label }}
           </option>
         </select> -->
-        <div>第一希望場所</div>
+        <div class="entry">第一希望場所</div>
         <select v-model="stageFirst" id="first">
           <option
             v-for="list in stageList"
@@ -36,7 +36,7 @@
             {{ list.name }}
           </option>
         </select>
-        <div>第二希望場所</div>
+        <div class="entry">第二希望場所</div>
         <select v-model="stageSecond" id="second">
           <option
             v-for="list in stageList"
@@ -56,7 +56,7 @@
           <div class="tab-content tab-1-content">
             <!-- 時間軸 -->
             <div id="area1" class="panel">
-              <div>準備時間幅</div>
+              <div class="time">準備時間幅</div>
               <select v-model="prepareTimeInterval">
                 <option
                   v-for="list in timeBox"
@@ -65,7 +65,7 @@
                   {{ list }}
                 </option>
               </select>
-              <div>使用時間幅</div>
+              <div class="time">使用時間幅</div>
               <select v-model="useTimeInterval" id="useInterval">
                 <option
                   v-for="list in timeBox"
@@ -74,7 +74,7 @@
                   {{ list }}
                 </option>
               </select>
-              <div>片付け時間幅</div>
+              <div class="time">片付け時間幅</div>
               <select v-model="cleanupTimeInterval" id="cleanUpInterval">
                 <option
                   v-for="list in timeBox"
@@ -88,7 +88,7 @@
           <div class="tab-content tab-2-content">
             <!-- 時刻軸 -->
             <div id="area2" class="panel">
-              <div>準備開始時間</div>
+              <div class="time">準備開始時間</div>
               <select v-model="prepareStartTime" id="readyTime">
                 <option
                   v-for="list in timeRange"
@@ -97,7 +97,7 @@
                   {{ list }}
                 </option>
               </select>
-              <div>パフォーマンス開始時間</div>
+              <div class="time">パフォーマンス開始時間</div>
               <select v-model="performanceStartTime" id="peformanceTime">
                 <option
                   v-for="list in timeRange"
@@ -106,7 +106,7 @@
                   {{ list }}
                 </option>
               </select>
-              <div>パフォーマンス終了時間</div>
+              <div class="time">パフォーマンス終了時間</div>
               <select v-model="performanceEndTime" id="endTime">
                 <option
                   v-for="list in timeRange"
@@ -115,7 +115,7 @@
                   {{ list }}
                 </option>
               </select>
-            <div>片付け終了時間</div>
+            <div class="time">片付け終了時間</div>
             <select v-model="cleanupEndTime" id="cleanUpTime">
               <option
                 v-for="list in timeRange"
@@ -130,7 +130,7 @@
 
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
-          <button id="btn" type="button" @click="register">✓登録</button>
+          <button id="btn" type="button" @click="register">✓編集</button>
         </span>
       </div>
     </div>
@@ -157,7 +157,6 @@ export default {
   },
   data() {
     return {
-      resultWeather: false,
       fesDateList: [],
       stageList: [],
       isSunnyList: [
@@ -207,6 +206,7 @@ export default {
           (response) => {
             console.log(response);
             this.$emit("closeEditStage");
+            this.$emit("reload");
           },
           (error) => {
             return error;
@@ -298,8 +298,9 @@ export default {
     display: block;
     margin-right: 10%;
     margin-left: 10%;
-    margin-top: 5%;
+    margin-top: 15%;
     margin-bottom: 5%;
+    border-radius: 5px;
 }
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
@@ -321,8 +322,24 @@ export default {
     width: 100%;
   }
   select{
+    width: 80%;
+    margin: 0% auto;
     border: 1px solid silver;
-    width: 100%;
+    border-top : solid 1px #717171;
+    border-bottom : solid 1px #e0e0e0;
+    border-radius: 5px;
+    background-color: white;
+  }
+  h1 {
+    margin: 5%;
+  }
+  .entry {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .time {
+    margin-top: 3%;
   }
   .add-modal_box {
     display: flex;
@@ -347,12 +364,12 @@ export default {
   }
 
   .tabs {
-    margin-top: 12px;
+    margin-top: 5%;
   }
 
   /* タブのスタイル */
   .tabs .tab-label {
-    margin: 0 15%;
+    margin: 5% 12%;
     background-color: #DADADA;
     border-bottom: none;
     font-size: 0.9em;
@@ -371,7 +388,7 @@ export default {
 
   /* タブ内容のスタイル */
   .tabs .tab-content{
-    padding: 10px;
+    margin: 5% 10%;
   }
 
   /* 選択されているタブのコンテンツのみを表示 */

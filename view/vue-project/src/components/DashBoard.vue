@@ -7,8 +7,8 @@
       </div>
       <div style="padding-bottom: 20px; padding-top: 30px">
       <p style="font-size: 20px">各種操作</p>
-        <button v-if="isRegistGroup" @click="goRegistEdit" class="dashboard-button">登録情報の確認はこちらから</button>
-        <button @click="goRegistGroup" class="dashboard-button">参加団体の登録はこちらから</button>
+        <button v-if="registInfo.length != 0" @click="goRegistEdit" class="dashboard-button">登録情報の確認はこちらから</button>
+        <button v-if="isRegistGroup && registInfo.length == 0" @click="goRegistGroup" class="dashboard-button">参加団体の登録はこちらから</button>
       </div>
       <div>
         <li @click="toUserInfo" class="dashboard-link">ユーザー情報</li>
@@ -28,7 +28,8 @@ export default {
     };
   },
   props: {
-    isRegistGroup: Boolean
+    isRegistGroup: Boolean,
+    registInfo: Array,
   },
   methods: {
     toUserInfo() {

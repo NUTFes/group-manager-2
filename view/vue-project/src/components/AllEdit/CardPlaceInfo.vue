@@ -22,12 +22,13 @@
       </div>
       <EditPlace
         v-if="editPlaceDisplay"
-        :groupId="groupId"
+        :placeOrderId="placeOrderId"
         :first="regist.first"
         :second="regist.second"
         :third="regist.third"
         :remark="remark"
         @closeEditPlace="closeEditPlace"
+        @reload="reload"
       />
     </div>
   </body>
@@ -41,7 +42,7 @@ export default {
   },
   props: {
     regist: String,
-    groupId: Number,
+    placeOrderId: Number,
     n: Number,
     place: String,
     remark: String,
@@ -57,6 +58,9 @@ export default {
     },
     closeEditPlace: function () {
       this.editPlaceDisplay = false;
+    },
+    reload: function () {
+      this.$emit("reload");
     },
   },
 };
