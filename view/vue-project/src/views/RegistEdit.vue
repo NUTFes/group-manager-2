@@ -121,6 +121,17 @@
 
             <!-- 物品申請 -->
             <div id="area3" class="panel">
+              <div  class="flex">
+                <div v-for="item in regist_info[0].rental_orders" :key="item">
+                  <CardItemInfo
+                    :groupId="regist_info[0].group.id"
+                    :regist="item.rental_item.rental_item"
+                    :name="item.rental_item.name"
+                    :num="item.rental_item.num"
+                    @reload="reload"
+                  />
+                </div>
+              </div>
               <button
                 id="btn1"
                 type="button"
@@ -129,15 +140,6 @@
               >
                 追加
               </button>
-              <div v-for="item in regist_info[0].rental_orders" :key="item">
-                <CardItemInfo
-                  :groupId="regist_info[0].group.id"
-                  :regist="item.rental_item.rental_item"
-                  :name="item.rental_item.name"
-                  :num="item.rental_item.num"
-                  @reload="reload"
-                />
-              </div>
               <AddItem
                 v-if="addItemDisplay"
                 :groupId="projectName"
@@ -454,6 +456,7 @@ select {
   border-radius: 5px;
   box-shadow: 0 2px 5px rgb(87, 77, 77);
 }
+
 #tab1:checked ~ .panels #area1 {
   display: block;
 }
@@ -465,6 +468,12 @@ select {
 #tab3:checked ~ .panels #area3 {
   display: block;
 }
+
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 #tab4:checked ~ .panels #area4 {
   display: block;
 }
