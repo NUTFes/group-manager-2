@@ -29,7 +29,6 @@
         </div>
         <div class="button">
           <button class="edit" @click="openEditOption">編集</button>
-          <button class="delete">削除</button>
         </div>
         <EditOption
           v-if="editOptionDisplay"
@@ -94,7 +93,6 @@ export default {
   position: relative;
   width: 1026px;
   height: 149px;
-  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
@@ -169,7 +167,7 @@ export default {
   color: #333333;
 }
 .content {
-  width: 320px;
+  width: 350px;
   height: 95.5px;
   align-items: center;
   font-family: 'Noto Sans JP';
@@ -177,19 +175,21 @@ export default {
   margin-right: 15px;
   font-style: normal;
   font-weight: 300;
-  font-size: 20px;
+  font-size: 21px;
   letter-spacing: 0.1em;
+  overflow-wrap: break-word;  
   color: #333333;
 }
 .performance {
-  font-size: 30px;
+  width: 100%;
+  height: 100%;
+  margin: auto auto;
+  overflow: auto;
 }
 .button {
   width: 126px;
-  height: 80px;
-  margin-top: 5px;
-  border-radius: 5px;
-  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .edit {
   font-weight: 350;
@@ -197,17 +197,6 @@ export default {
   line-height: 30px;
   letter-spacing: 0.3em;
   background: #62a7ff;
-  color: #ffffff;
-  border-radius: 5px;
-  margin: 0.5rem;
-  padding: 0 1rem;
-}
-.delete{
-  font-weight: 350;
-  font-size: 18px;
-  line-height: 30px;
-  letter-spacing: 0.3em;
-  background: #ff6262;
   color: #ffffff;
   border-radius: 5px;
   margin: 0.5rem;

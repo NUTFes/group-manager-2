@@ -13,7 +13,6 @@
         </div>
         <div class="button">
           <button class="edit" @click="openEditStage">編集</button>
-          <button class="delete">削除</button>
         </div>
       </div>
       <EditStage
@@ -79,11 +78,10 @@ export default {
 .card {
   display: flex;
   align-items: center;
-  margin: 3%;
+  margin-top: 3%;
   position: relative;
   width: 1026px;
   height: 149px;
-  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
@@ -102,7 +100,7 @@ export default {
   margin-right: 25px;
   font-style: normal;
   font-weight: 300;
-  font-size: 56px;
+  font-size: 48px;
   line-height: 43px;
   letter-spacing: 0.1em;
   color: #333333;
@@ -143,9 +141,8 @@ export default {
 }
 .button {
   width: 126px;
-  height: 80px;
-  margin-top: 5px;
-  margin-left: 18px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .edit {
   font-weight: 350;
@@ -153,17 +150,6 @@ export default {
   line-height: 30px;
   letter-spacing: 0.3em;
   background: #62a7ff;
-  color: #ffffff;
-  border-radius: 5px;
-  margin: 0.5rem;
-  padding: 0 1rem;
-}
-.delete{
-  font-weight: 350;
-  font-size: 18px;
-  line-height: 30px;
-  letter-spacing: 0.3em;
-  background: #ff6262;
   color: #ffffff;
   border-radius: 5px;
   margin: 0.5rem;
