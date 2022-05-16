@@ -6,8 +6,6 @@
         {{item}}
       </div>
       <span class="span1"/>
-      <button class="button1">
-      </button>
       <span class="span2"/>
       <span class="line"/>
       <div class="power">
@@ -97,66 +95,65 @@ export default {
 </script>
 
 <style scoped>
-#font1{
+#font1 {
   font-family: 'Noto Sans JP';
   font-style: normal;
 }
 .card {
   display: flex;
   align-items: center;
-  width: 1079px;
+  position: relative;
+  width: 1026px;
   height: 149px;
-  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
-.red{
+.red {
+  position: absolute;
+  left: 0;
+  display: inline-block;
   width: 18px;
-  height: 149px;
-  background: #F71E35;
+  height: 100%;
+  background: #f71e35;
 }
-.product{
-  white-space: nowrap;
+.product {
+  width: 45%;
+  text-align: center;
   font-weight: 300;
   font-size: 48px;
   line-height: 70px;
   letter-spacing: 0.1em;
   margin-left: 22px;
+  white-space: nowrap;
+  overflow: auto;
 }
-.span1{
+.span1 {
   width: 5px;
 }
-.button1{
-  width: 60px;
-  height: 60px;
-  background: #FFFFFF;
-  border: 1px solid rgba(236, 236, 236, 0.63);
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius:100%;
+.span2 {
+  width: 21px;
 }
-.span2{
-width: 21px;
-}
-.line{
+.line {
   display: inline-block;
   width: 1px;
   height: 95.5px;
   background: #333333;
 }
-.power{
+.power {
   display: flex;
+  width: 18%;
+  text-align: center; 
   justify-content: end;
-  margin: 14px;
-  width: 165px;
+  margin: 12px;
 }
-.number{
+.number {
   font-weight: 300;
   font-size: 64px;
   line-height: 93px;
   letter-spacing: 0.1em;
   color: #000000;
 }
-.watt{
+.watt {
   margin-top: 50px;
   font-weight: 300;
   font-size: 18px;
@@ -164,21 +161,21 @@ width: 21px;
   letter-spacing: 0.1em;
   color: #000000;
 }
-.detail{
+.detail {
   display: flex;
   align-items: center;
   margin-left: 15px;
-  margin-bottom: 18px;
+  margin-top: 10px;
 }
-.triangle{
+.triangle {
   width: 0;
 	height: 0;
   margin: 6px;
 	border: 5px solid transparent;
 	border-left: 7px solid #333333;
 }
-.character1{
-  width: 81px;
+.character1 {
+  width: 80px;
   height: 26px;
   font-weight: 300;
   font-size: 18px;
@@ -187,37 +184,41 @@ width: 21px;
   letter-spacing: 0.1em;
   color: #000000;
 }
-.character2{
+.character2 {
+  width: 120px;
+  margin-top: auto;
   font-weight: 300;
   font-size: 18px;
   line-height: 26px;
   letter-spacing: 0.1em;
   color: #000000;
+  white-space: nowrap;
+  overflow: auto;
 }
-.span3{
+.span3 {
   width: 50px;
 }
-.column{
+.column {
   flex-flow: column;
   align-items: center;
 }
-.button2{
+.button2 {
   display: flex;
-  width: 131px;
+  width: 80px;
   height: 39px;
   margin: 9.5px;
   background: #62A7FF;
   border-radius: 5px;
 }
-.button3{
+.button3 {
   display: flex;
-  width: 131px;
+  width: 80px;
   height: 39px;
   margin: 9.5px;
   background: #FF6262;
   border-radius: 5px;
 }
-.edit{
+.edit {
   margin-top: 5px;
   margin-left: 14px;
   font-weight: 350;

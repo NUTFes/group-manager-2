@@ -13,12 +13,14 @@
         <div class="ps">
           追記：
         </div>
-        <div class="notes">
-          {{ remark }}
+        <div class="scroll">
+          <div class="notes">
+            {{ remark }}
+          </div>
         </div>
-        <button class="button" @click="openEditPlace">
-          <div class="edit">編集</div>
-        </button>
+        <div class="button"> 
+          <button class="edit" @click="openEditPlace">編集</button>
+        </div>
       </div>
       <EditPlace
         v-if="editPlaceDisplay"
@@ -71,9 +73,9 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
+  margin-top: 3%;
   width: 1026px;
   height: 149px;
-  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
@@ -86,9 +88,12 @@ export default {
   background: #F71E35;
 }
 .choice{
-  position: absolute;
-  top: 14px;
-  left: 39px;
+  width: 120px;
+  height: 100%;
+  align-items: top;
+  margin-top: 5%;
+  margin-left: 3%;
+  margin-right: 3%;
   font-weight: 300;
   font-size: 30px;
   line-height: 43px;
@@ -96,60 +101,69 @@ export default {
   color: #333333;
 }
 .line{
-  position: absolute;
-  left: 189px;
   display: inline-block;
   width: 1px;
   height: 95.5px;
   background: #333333;
 }
 .area{
-  position: absolute;
-  left: 219px;
+  display: flex;
+  width: 40%;
+  height: 100%;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-style: normal;
+  font-size: 34px;
   font-weight: 300;
-  font-size: 48px;
-  line-height: 70px;
   letter-spacing: 0.1em;
   color: #333333;
+  white-space: nowrap;
+  overflow: auto;
 }
 .ps{
-  position: absolute;
-  top: 27px;
-  left: 543px;
+  width: 7%;
+  height: 100%;
+  align-items: top;
+  margin-top: 5%;
   font-weight: 300;
   font-size: 18px;
   line-height: 26px;
   letter-spacing: 0.1em;
+  color: #333333;
+}
+.scroll {
+  width: 18%;
+  height: 100%;
+  margin-top: 5%;
+  padding-bottom: 3%;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.1em;
+  overflow-wrap: break-word;
   color: #333333;
 }
 .notes{
-  position: absolute;
-  top: 27px;
-  left: 604px;
-  width: 238px;
-  height: 95px;
-  font-weight: 300;
-  font-size: 18px;
-  line-height: 26px;
-  letter-spacing: 0.1em;
-  color: #333333;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 .button{
-  position: absolute;
-  left: 860px;
-  display: flex;
-
+  width: 10%;
+  height: 24%;
+  margin-top: auto; 
+  margin-bottom: auto;
   background: #62A7FF;
   border-radius: 5px;
 }
 .edit{
-  width: 131px;
-  height: 39px;
-  margin: auto;
   font-weight: 350;
   font-size: 18px;
-  line-height: 26px;
   letter-spacing: 0.3em;
-  color: #FFFFFF;
+  line-height: 30px;
+  color: #ffffff;
+  margin: 0.5rem;
+  padding: 0 1rem;
 }
 </style>
