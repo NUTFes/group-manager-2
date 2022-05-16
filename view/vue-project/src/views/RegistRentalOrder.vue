@@ -9,7 +9,7 @@
             <div class="regist-card-content-question-label">貸出物品名</div>
             <select v-model="inputData[i].item" :id="inputData[i].item_id">
               <option
-                v-for="list in shopList"
+                v-for="list in rentalOrderList"
                 :key="list.id"
                 :value="list.id"
                 >
@@ -44,8 +44,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      shopList: [],
-      stageList: [],
+      rentalOrderList: null,
       rentableList: [],
       inputData: [
         {
@@ -138,27 +137,29 @@ export default {
     if (this.$store.state.registRentalOrderPermission == false) {
       this.$router.push("/mypage");
     }
-    const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
-    axios
-      .get(shopUrl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.shopList = response.data.data;
-      });
-
-    const stageUrl = process.env.VUE_APP_URL + "/api/v1/stage/rental_items";
-    axios
-      .get(stageUrl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.stageList = response.data.data;
-      });
+    if (localStorage.getItem("group_category_id") == 3) {
+      const stageUrl = process.env.VUE_APP_URL + "/api/v1/stage/rental_items";
+      axios
+        .get(stageUrl, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.rentalOrderList = response.data.data;
+        });
+    } else {
+      const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
+      axios
+        .get(shopUrl, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.rentalOrderList = response.data.data;
+        });
+    }
   },
 }
 </script>

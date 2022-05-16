@@ -9,7 +9,7 @@
         <div class="item">貸出物品</div>
         <select v-model="item" id="item">
           <option
-            v-for="list in item_list.data"
+            v-for="list in item_list"
             :key="list.id"
             :value="list.id"
             >{{list.name}}
@@ -53,16 +53,29 @@ export default {
     },
   },
   mounted() {
-    const itemurl = process.env.VUE_APP_URL + "/rental_items";
-    axios
-      .get(itemurl, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.item_list = response.data;
-      });
+    if (localStorage.getItem("group_category_id") == 3) {
+      const stageUrl = process.env.VUE_APP_URL + "/api/v1/stage/rental_items";
+      axios
+        .get(stageUrl, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.item_list = response.data.data;
+        });
+    } else {
+      const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
+      axios
+        .get(shopUrl, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          this.item_list = response.data.data;
+        });
+    }
   },
   methods: {
     reset: function() {

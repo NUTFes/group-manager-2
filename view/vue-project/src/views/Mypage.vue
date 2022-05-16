@@ -97,6 +97,7 @@ export default {
       })
       .then((response) => {
         this.regist_info = response.data.data;
+        localStorage.setItem("group_category_id", this.regist_info[0].group.group_category_id);
       });
 
     const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
