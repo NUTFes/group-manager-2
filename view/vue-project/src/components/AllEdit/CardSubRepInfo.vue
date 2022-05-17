@@ -16,6 +16,7 @@
           <div><h6>所属</h6></div>
           <div>{{ regist.department }}</div>
           <div>{{ regist.grade }}</div>
+          <div>{{ regist.student_id }}</div>
         </div>
         <div class="ps">
           <h4>詳細情報</h4>

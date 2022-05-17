@@ -27,6 +27,7 @@ export default {
         process.env.VUE_APP_URL + "/rental_orders/" + this.id;
       axios.delete(url);
       this.$emit("closeDeleteItem");
+      this.$emit("reload");
     },
   },
 

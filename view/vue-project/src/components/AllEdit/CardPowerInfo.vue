@@ -48,6 +48,7 @@
         v-if="deletePowerDisplay"
         :id="id"
         @closeDeletePower="closeDeletePower"
+        @reload="reload"
       />
     </div>
   </body>
