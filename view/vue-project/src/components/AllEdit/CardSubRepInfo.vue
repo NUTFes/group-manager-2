@@ -7,13 +7,13 @@
           <div>
             <h6>名前</h6>
           </div>
-          <div>
+          <div class="notes">
             {{ regist.name }}
           </div>
         </div>
         <div class="area">
           <div><h6>所属</h6></div>
-          <div>{{ regist.department }}</div>
+          <div class="notes">{{ regist.department }}</div>
           <div>{{ regist.grade }}</div>
           <div>{{ regist.student_id }}</div>
         </div>
@@ -21,8 +21,8 @@
         <div class="ps">
           <h4>詳細情報</h4>
           <div class="notes">
-            <div>{{ regist.email }}</div>
-            <div>{{ regist.tel }}</div>
+            <div class="character2">{{regist.email}}</div>
+            <div class="character2">{{regist.tel}}</div>
           </div>
         </div>
         <button class="button" @click="openEditSubRep">
@@ -93,6 +93,7 @@ export default {
   background: #F71E35;
 }
 .choice{
+  width:250px;
   position: absolute;
   top: 10px;
   left: 40px;
@@ -104,7 +105,7 @@ export default {
 }
 .line{
   position: absolute;
-  left: 220px;
+  left: 320px;
   display: inline-block;
   width: 1px;
   height: 95.5px;
@@ -113,7 +114,7 @@ export default {
 .area{
   position: absolute;
   top: 10px;
-  left: 260px;
+  left: 360px;
   font-weight: 300;
   font-size: 20px;
   letter-spacing: 0.1em;
@@ -123,7 +124,7 @@ export default {
   position: absolute;
   top: 10px;
   width:400px;
-  left: 600px;
+  left: 700px;
   font-weight: 300;
   font-size: 15px;
   line-height: 30px;
@@ -147,8 +148,20 @@ export default {
   color: #FFFFFF;
 }
 .notes {
+  padding-top: 10px;
   display: inline-block;
   overflow-x: auto;
   width:100%;
+}
+.character2 {
+  width: 300px;
+  margin-top: auto;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.1em;
+  color: #000000;
+  white-space: nowrap;
+  overflow: auto;
 }
 </style>
