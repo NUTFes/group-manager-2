@@ -5,13 +5,13 @@
         <span class="red" />
         <div class="date">{{ date }}</div>
         <span class="line" />
-        <div class="weather">{{ isSunny? "晴" : "雨" }}</div>
+        <div class="weather">{{ isSunny ? "晴" : "雨" }}</div>
         <span class="line" />
         <div class="stage">
-          <div class="first">第1希望‣ {{ firstStage }} </div> 
-          <div class="second">第2希望‣ {{ secondStage }} </div>
+          <div class="first">第1希望‣ {{ firstStage }}</div>
+          <div class="second">第2希望‣ {{ secondStage }}</div>
         </div>
-        <div class="button">
+        <div v-if="setting" class="button">
           <button class="edit" @click="openEditStage">編集</button>
         </div>
       </div>
@@ -41,7 +41,7 @@
 import EditStage from "@/components/AllEdit/EditStage.vue";
 export default {
   components: {
-    EditStage
+    EditStage,
   },
   props: {
     groupId: Number,
@@ -50,6 +50,7 @@ export default {
     secondStage: String,
     date: String,
     isSunny: Boolean,
+    setting: Boolean,
   },
   data() {
     return {
@@ -132,7 +133,7 @@ export default {
   text-align: center;
   color: #333333;
 }
-.first { 
+.first {
   text-align: left;
 }
 .second {
@@ -155,4 +156,4 @@ export default {
   margin: 0.5rem;
   padding: 0 1rem;
 }
-</style>  
+</style>

@@ -5,29 +5,29 @@
         <span class="red" />
         <div class="device">
           <div class="upper">機器▾</div>
-          <div class="lower">{{ ownEquipment? "使用" : "不使用" }}</div>
+          <div class="lower">{{ ownEquipment ? "使用" : "不使用" }}</div>
         </div>
         <span class="line" />
         <div class="music">
           <div class="upper">音楽▾</div>
-          <div class="lower">{{ bgm? "使用" : "不使用" }}</div>
+          <div class="lower">{{ bgm ? "使用" : "不使用" }}</div>
         </div>
         <span class="line" />
         <div class="permission">
           <div class="upper">撮影▾</div>
-          <div class="lower">{{ cameraPermission? "許可" : "禁止" }}</div>
+          <div class="lower">{{ cameraPermission ? "許可" : "禁止" }}</div>
         </div>
         <span class="line" />
         <div class="loud_sound">
           <div class="upper">騒音</div>
-        <div class="lower">{{ loudSound? "有" : "無" }}</div>
+          <div class="lower">{{ loudSound ? "有" : "無" }}</div>
         </div>
         <span class="line" />
         <div class="content">
           <div class="upper">ステージ内容▾</div>
           <div class="performance">{{ stageContent }}</div>
         </div>
-        <div class="button">
+        <div v-if="setting" class="button">
           <button class="edit" @click="openEditOption">編集</button>
         </div>
         <EditOption
@@ -51,7 +51,7 @@
 import EditOption from "@/components/AllEdit/EditOption.vue";
 export default {
   components: {
-    EditOption
+    EditOption,
   },
   props: {
     groupId: Number,
@@ -61,6 +61,7 @@ export default {
     cameraPermission: Boolean,
     loudSound: Boolean,
     stageContent: String,
+    setting: Boolean,
   },
   data() {
     return {
@@ -84,7 +85,7 @@ export default {
 
 <style scoped>
 #font {
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   font-style: normal;
 }
 .card {
@@ -108,7 +109,7 @@ export default {
   width: 120px;
   height: 95.5px;
   align-items: center;
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   margin-left: 25px;
   margin-right: 20px;
   font-style: normal;
@@ -122,7 +123,7 @@ export default {
 .lower {
   font-size: 35px;
   margin: center;
-  text-align:center;
+  text-align: center;
 }
 .line {
   display: inline-block;
@@ -134,7 +135,7 @@ export default {
   width: 120px;
   height: 95.5px;
   align-items: center;
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   margin-left: 20px;
   margin-right: 20px;
   font-style: normal;
@@ -146,7 +147,7 @@ export default {
   width: 80px;
   height: 95.5px;
   align-items: center;
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -158,7 +159,7 @@ export default {
   width: 50px;
   height: 95.5px;
   align-items: center;
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
@@ -170,14 +171,14 @@ export default {
   width: 350px;
   height: 95.5px;
   align-items: center;
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   margin-left: 15px;
   margin-right: 15px;
   font-style: normal;
   font-weight: 300;
   font-size: 21px;
   letter-spacing: 0.1em;
-  overflow-wrap: break-word;  
+  overflow-wrap: break-word;
   color: #333333;
 }
 .performance {

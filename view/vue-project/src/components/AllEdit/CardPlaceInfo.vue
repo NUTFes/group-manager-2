@@ -2,23 +2,19 @@
   <body id="font">
     <div>
       <div class="card">
-        <span class="red"/>
-        <div class="choice">
-          第{{ n }}希望
-        </div>
-        <span class="line"/>
+        <span class="red" />
+        <div class="choice">第{{ n }}希望</div>
+        <span class="line" />
         <div class="area">
           {{ place }}
         </div>
-        <div class="ps">
-          追記：
-        </div>
+        <div class="ps">追記：</div>
         <div class="scroll">
           <div class="notes">
             {{ remark }}
           </div>
         </div>
-        <div class="button"> 
+        <div v-if="setting" class="button">
           <button class="edit" @click="openEditPlace">編集</button>
         </div>
       </div>
@@ -40,7 +36,7 @@
 import EditPlace from "@/components/AllEdit/EditPlace.vue";
 export default {
   components: {
-    EditPlace
+    EditPlace,
   },
   props: {
     regist: String,
@@ -48,6 +44,7 @@ export default {
     n: Number,
     place: String,
     remark: String,
+    setting: Boolean,
   },
   data() {
     return {
@@ -79,15 +76,15 @@ export default {
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
-.red{
+.red {
   position: absolute;
   left: 0;
   display: inline-block;
   width: 18px;
   height: 100%;
-  background: #F71E35;
+  background: #f71e35;
 }
-.choice{
+.choice {
   width: 120px;
   height: 100%;
   align-items: top;
@@ -100,13 +97,13 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.line{
+.line {
   display: inline-block;
   width: 1px;
   height: 95.5px;
   background: #333333;
 }
-.area{
+.area {
   display: flex;
   width: 40%;
   height: 100%;
@@ -121,7 +118,7 @@ export default {
   white-space: nowrap;
   overflow: auto;
 }
-.ps{
+.ps {
   width: 7%;
   height: 100%;
   align-items: top;
@@ -144,24 +141,26 @@ export default {
   overflow-wrap: break-word;
   color: #333333;
 }
-.notes{
+.notes {
   width: 100%;
   height: 100%;
   overflow: auto;
 }
-.button{
+.button {
   width: 10%;
-  height: 24%;
-  margin-top: auto; 
+  height: 28%;
+  margin-top: auto;
   margin-bottom: auto;
-  background: #62A7FF;
+  background: #62a7ff;
   border-radius: 5px;
 }
-.edit{
+.edit {
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center;
   font-weight: 350;
   font-size: 18px;
   letter-spacing: 0.3em;
-  line-height: 30px;
   color: #ffffff;
   margin: 0.5rem;
   padding: 0 1rem;

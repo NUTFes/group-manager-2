@@ -165,7 +165,7 @@ export default {
               } else {
                 this.$store.commit("acceptCompletePermission");
                 this.$store.commit("rejectRegistPowerOrderPermission");
-                this.$router.push("/complete");
+                this.$router.push("/complete/regist");
               }
             },
             (error) => {

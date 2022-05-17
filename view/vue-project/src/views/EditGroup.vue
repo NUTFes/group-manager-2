@@ -3,7 +3,7 @@
     <router-link to="/mypage" style="text-decoration: none"
       ><span class="regist-back-link">マイページへ</span></router-link
     >
-    <div class="regist-title">参加団体の登録</div>
+    <div class="regist-title">参加団体の編集</div>
     <div class="regist-card">
       <div class="regist-card-content">
         <div class="regist-card-content-question">
@@ -51,7 +51,12 @@
         </div>
       </div>
       <div class="regist-button">
-        <button @click="register" class="regist-submit-button">登録する</button>
+        <button @click="register" class="regist-submit-button">編集する</button>
+      </div>
+      <div class="delete-button">
+        <button @click="destroy" class="regist-submit-button">
+          参加団体を削除する
+        </button>
       </div>
     </div>
   </div>
@@ -76,13 +81,21 @@ export default {
       activity: [],
       fesYearId: [],
       groupCategoryList: groupCategoryList,
+      groupId: localStorage.getItem("group_id"),
     };
   },
   mounted() {
     // 直リンク対策
-    if (!this.$store.state.registGroupPermission) {
+    if (!this.$store.state.editGroupPermission) {
       this.$router.push("/mypage");
     }
+    const groupUrl = process.env.VUE_APP_URL + "/groups/" + this.groupId;
+    axios.get(groupUrl).then((response) => {
+      this.groupName = response.data.data.name;
+      this.projectName = response.data.data.project_name;
+      this.groupCategoryId = response.data.data.group_category_id;
+      this.activity = response.data.data.activity;
+    });
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
     axios
       .get(url, {
@@ -176,7 +189,7 @@ export default {
         this.resultCategory &&
         this.resultActivity
       ) {
-        const url = process.env.VUE_APP_URL + "/groups";
+        const url = process.env.VUE_APP_URL + "/groups/" + this.groupId;
         let params = new URLSearchParams();
         params.append("name", this.groupName);
         params.append("project_name", this.projectName);
@@ -185,7 +198,7 @@ export default {
         params.append("group_category_id", this.groupCategoryId);
         params.append("fes_year_id", this.setting.fes_year_id);
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        axios.post(url, params).then(
+        axios.put(url, params).then(
           (response) => {
             localStorage.setItem("group_id", response.data.data.id);
             localStorage.setItem(
@@ -193,9 +206,7 @@ export default {
               response.data.data.group_category_id
             );
             this.$store.commit("offFromMypage");
-            this.$store.commit("typeStage5");
-            this.$store.commit("acceptRegistSubRepPermission");
-            this.$store.commit("rejectRegistGroupPermission");
+            this.$store.commit("rejectEditGroupPermission");
             this.$router.push("/regist_subrep");
           },
           (error) => {
@@ -234,6 +245,12 @@ export default {
         }
       }
     },
+    destroy: function () {
+      const delUrl = process.env.VUE_APP_URL + "/groups/" + this.groupId;
+      this.$store.commit("acceptCompletePermission");
+      this.$store.commit("rejectEditGroupPermission");
+      axios.delete(delUrl).then(this.$router.push("/complete/delete"));
+    },
   },
 };
 </script>
@@ -264,5 +281,8 @@ input:invalid {
 select,
 input:valid {
   border: 1px solid #333333;
+}
+.delete-button {
+  text-align: center;
 }
 </style>

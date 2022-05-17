@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="complete-message">
-      登録が完了しました<br>
-      技大祭へのご参加ありがとうございます
+      {{ message }}<br>
+      {{ secondMessage }}
     </div>
     <div style="text-align:center">
       <button @click="backTopPage" class="complete-button">マイページへ</button>
@@ -13,6 +13,25 @@
 
 <script>
 export default {
+  data() {
+    return {
+      message: null,
+      secondMessage: null,
+    }
+  },
+  mounted() {
+    if (this.$store.state.completePermission == false) {
+      this.$router.push("/mypage");
+    }
+    if (this.$route.path == "/complete/regist") {
+      this.message = "登録が完了しました";
+      this.secondMessage = "技大祭への登録ありがとうございます";
+    } else {
+      this.message = "参加団体を削除しました";
+      this.secondMessage = "";
+
+    }
+  },
   methods: {
     backTopPage: function() {
       this.$store.commit("rejectCompletePermission");

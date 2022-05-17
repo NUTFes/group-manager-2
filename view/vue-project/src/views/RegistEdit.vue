@@ -1,9 +1,13 @@
 <template>
   <div>
-    <br><br><br>
+    <br /><br /><br />
     <div id="font">
-      <router-link to="/mypage" style="text-decoration: none;"><span class="regist-back-link" style=" margin-left: 3%;">マイページへ</span></router-link>
-      <br><br><br>
+      <router-link to="/mypage" style="text-decoration: none"
+        ><span class="regist-back-link" style="margin-left: 3%"
+          >マイページへ</span
+        ></router-link
+      >
+      <br /><br /><br />
       <div id="line">
         <!-- <select v-model="projectName">
           <option
@@ -18,22 +22,42 @@
 
       <section class="tab_contents">
         <div>
-
           <input id="tab9" type="radio" name="check" checked />
           <span class="bubble"></span>
           <label for="tab9" class="tab_lab9">副代表申請</label>
 
-          <input v-if="groupCategoryId == 3" id="tab4" type="radio" name="check" />
+          <input
+            v-if="groupCategoryId == 3"
+            id="tab4"
+            type="radio"
+            name="check"
+          />
           <span v-if="groupCategoryId == 3" class="bubble"></span>
-          <label v-if="groupCategoryId == 3" for="tab4" class="tab_lab4">ステージ申請</label>
+          <label v-if="groupCategoryId == 3" for="tab4" class="tab_lab4"
+            >ステージ申請</label
+          >
 
-          <input v-if="groupCategoryId == 3" id="tab8" type="radio" name="check" />
+          <input
+            v-if="groupCategoryId == 3"
+            id="tab8"
+            type="radio"
+            name="check"
+          />
           <span v-if="groupCategoryId == 3" class="bubble"></span>
-          <label v-if="groupCategoryId == 3" for="tab8" class="tab_lab8">ステージオプション申請</label>
+          <label v-if="groupCategoryId == 3" for="tab8" class="tab_lab8"
+            >ステージオプション申請</label
+          >
 
-          <input v-if="groupCategoryId != 3" id="tab1" type="radio" name="check" />
+          <input
+            v-if="groupCategoryId != 3"
+            id="tab1"
+            type="radio"
+            name="check"
+          />
           <span v-if="groupCategoryId != 3" class="bubble"></span>
-          <label v-if="groupCategoryId != 3" for="tab1" class="tab_lab1">会場申請</label>
+          <label v-if="groupCategoryId != 3" for="tab1" class="tab_lab1"
+            >会場申請</label
+          >
 
           <input id="tab2" type="radio" name="check" />
           <span class="bubble"></span>
@@ -56,13 +80,13 @@
           <label for="tab7" class="tab_lab7">購入品申請</label> -->
 
           <div class="panels">
-
             <!-- 副代表申請 -->
             <div id="area9" class="panel">
-              <div style=" display: inline-block; overflow-x: auto; width: 100%;">
+              <div style="display: inline-block; overflow-x: auto; width: 100%">
                 <CardSubRepInfo
                   :regist="regist_info[0].sub_rep"
                   :groupId="regist_info[0].group.id"
+                  :setting="setting.is_edit_sub_rep"
                   @reload="reload"
                 />
               </div>
@@ -70,47 +94,56 @@
 
             <!-- 会場申請 -->
             <div id="area1" class="panel">
-
               <div v-if="regist_info[0].place_order != null">
-                <div style=" display: inline-block; overflow-x: auto; width: 100%;">
+                <div
+                  style="display: inline-block; overflow-x: auto; width: 100%"
+                >
                   <CardPlaceInfo
                     :regist="regist_info[0].place_order.place_order"
                     :placeOrderId="regist_info[0].place_order.place_order.id"
                     :n="1"
                     :place="regist_info[0].place_order.first"
                     :remark="regist_info[0].place_order.remark"
+                    :setting="setting.is_edit_place"
                     @reload="reload"
                   />
                 </div>
-                <div style=" display: inline-block; overflow-x: auto; width: 100%;">
+                <div
+                  style="display: inline-block; overflow-x: auto; width: 100%"
+                >
                   <CardPlaceInfo
                     :regist="regist_info[0].place_order.place_order"
                     :placeOrderId="regist_info[0].place_order.place_order.id"
                     :n="2"
                     :place="regist_info[0].place_order.second"
                     :remark="regist_info[0].place_order.remark"
+                    :setting="setting.is_edit_place"
                     @reload="reload"
                   />
                 </div>
-                <div style=" display: inline-block; overflow-x: auto; width: 100%;">
+                <div
+                  style="display: inline-block; overflow-x: auto; width: 100%"
+                >
                   <CardPlaceInfo
                     :regist="regist_info[0].place_order.place_order"
                     :placeOrderId="regist_info[0].place_order.place_order.id"
                     :n="3"
                     :place="regist_info[0].place_order.third"
                     :remark="regist_info[0].place_order.remark"
+                    :setting="setting.is_edit_place"
                     @reload="reload"
                   />
                 </div>
-
               </div>
             </div>
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
               <div
-                style=" display: inline-block; overflow-x: auto; width: 100%;"
-                v-for="p in regist_info[0].power_orders" :key="p" >
+                style="display: inline-block; overflow-x: auto; width: 100%"
+                v-for="p in regist_info[0].power_orders"
+                :key="p"
+              >
                 <CardPowerInfo
                   :groupId="regist_info[0].group.id"
                   :id="p.power_order.id"
@@ -119,10 +152,12 @@
                   :manufacturer="p.power_order.manufacturer"
                   :model="p.power_order.model"
                   :url="p.power_order.item_url"
+                  :setting="setting.is_edit_power_order"
                   @reload="reload"
                 />
               </div>
               <button
+                v-if="setting.add_power_order"
                 id="btn1"
                 type="button"
                 @click="addPowerDisplay = true"
@@ -140,18 +175,20 @@
 
             <!-- 物品申請 -->
             <div id="area3" class="panel">
-              <div  class="flex">
+              <div class="flex">
                 <div v-for="item in regist_info[0].rental_orders" :key="item">
                   <CardItemInfo
                     :groupId="regist_info[0].group.id"
                     :regist="item.rental_item.rental_item"
                     :name="item.rental_item.name"
                     :num="item.rental_item.num"
+                    :setting="setting.is_edit_rental_order"
                     @reload="reload"
                   />
                 </div>
               </div>
               <button
+                v-if="setting.add_rental_order"
                 id="btn1"
                 type="button"
                 @click="addItemDisplay = true"
@@ -170,8 +207,10 @@
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
               <div
-                style="display: inline-block; overflow-x: auto; width: 100%;"
-                v-for="stage_order in regist_info[0].stage_orders" :key="stage_order">
+                style="display: inline-block; overflow-x: auto; width: 100%"
+                v-for="stage_order in regist_info[0].stage_orders"
+                :key="stage_order"
+              >
                 <CardStageInfo
                   :groupId="regist_info[0].group.id"
                   :regist="stage_order.stage_order.stage_order"
@@ -179,6 +218,7 @@
                   :secondStage="stage_order.stage_order.stage_second"
                   :date="stage_order.stage_order.date"
                   :isSunny="stage_order.stage_order.is_sunny"
+                  :setting="setting.is_edit_stage_order"
                   @reload="reload"
                 />
               </div>
@@ -186,16 +226,23 @@
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
-              <div style=" display: inline-block; overflow-x: auto; width: 100%;">
+              <div style="display: inline-block; overflow-x: auto; width: 100%">
                 <CardStageOptionInfo
                   v-if="regist_info[0].stage_common_option != null"
                   :groupId="regist_info[0].group.id"
                   :id="regist_info[0].stage_common_option.id"
-                  :ownEquipment="regist_info[0].stage_common_option.own_equipment"
+                  :ownEquipment="
+                    regist_info[0].stage_common_option.own_equipment
+                  "
                   :bgm="regist_info[0].stage_common_option.bgm"
-                  :cameraPermission="regist_info[0].stage_common_option.camera_permission"
+                  :cameraPermission="
+                    regist_info[0].stage_common_option.camera_permission
+                  "
                   :loudSound="regist_info[0].stage_common_option.loud_sound"
-                  :stageContent="regist_info[0].stage_common_option.stage_content"
+                  :stageContent="
+                    regist_info[0].stage_common_option.stage_content
+                  "
+                  :setting="setting.is_edit_stage_order"
                   @reload="reload"
                 />
               </div>
@@ -261,7 +308,6 @@
                 <AddPurchase />
               </dialog>
             </div>
-
           </div>
         </div>
       </section>
@@ -307,18 +353,20 @@ export default {
       addPowerDisplay: false,
       addItemDisplay: false,
       groupCategoryId: null,
+      setting: null,
     };
   },
   methods: {
     reload: function () {
-      const regist_info = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+      const regist_info =
+        process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
       axios
         .get(regist_info, {
           headers: {
             "Content-Type": "application/json",
             "access-token": localStorage.getItem("access-token"),
-            "client": localStorage.getItem("client"),
-            "uid": localStorage.getItem("uid"),
+            client: localStorage.getItem("client"),
+            uid: localStorage.getItem("uid"),
           },
         })
         .then((response) => {
@@ -338,14 +386,15 @@ export default {
     if (this.$store.state.registEditPermission == false) {
       this.$router.push("/");
     }
-    const regist_info = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+    const regist_info =
+      process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
       .get(regist_info, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -354,6 +403,11 @@ export default {
         this.groupCategoryId = this.regist_info[0].group.group_category_id;
         // this.projectName = response.data.data[0].group.id;
       });
+
+    const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
+    axios.get(settingurl).then((response) => {
+      this.setting = response.data.data[0];
+    });
   },
 };
 </script>
@@ -491,7 +545,7 @@ select {
   display: block;
 }
 
-.flex{
+.flex {
   display: flex;
   flex-wrap: wrap;
 }

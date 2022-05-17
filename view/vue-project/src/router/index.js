@@ -19,6 +19,7 @@ import RegistEmployees from "../views/RegistEmployees.vue";
 import RegistPurchaseList from "../views/RegistPurchaseList.vue";
 import RegistFoodProduct from "../views/RegistFoodProduct.vue";
 import RegistStageOption from "../views/RegistStageOption.vue";
+import EditGroup from "../views/EditGroup.vue";
 
 import Firstcustomer from "../views/FirstCustomer.vue";
 import EditUserInfo from "../views/EditUserInfo.vue";
@@ -134,6 +135,11 @@ const routes = [
     component: RegistStageOption,
   },
   {
+    path: "/edit_group",
+    name: "EditGroup",
+    component: EditGroup,
+  },
+  {
     path: "/firstcustomer",
     name: "Firstcustomer",
     component: Firstcustomer,
@@ -214,7 +220,12 @@ const routes = [
     component: MobileEditUserInfo,
   },
   {
-    path: "/complete",
+    path: "/complete/regist",
+    name: "Complete",
+    component: Complete,
+  },
+  {
+    path: "/complete/delete",
     name: "Complete",
     component: Complete,
   },
@@ -223,6 +234,7 @@ const routes = [
     path: "/*",
     name: "Not Found",
     component: NotFound,
+  // eslint-disable-next-line prettier/prettier
   }
 ];
 
