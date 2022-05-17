@@ -7,7 +7,7 @@
           <div>
             <h6>名前</h6>
           </div>
-          <div>
+          <div class="notes">
             {{ regist.name }}
           </div>
         </div>
@@ -93,6 +93,7 @@ export default {
   background: #F71E35;
 }
 .choice{
+  width:150px;
   position: absolute;
   top: 10px;
   left: 40px;
