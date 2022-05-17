@@ -1,28 +1,32 @@
 <template>
   <body id="font">
     <div class="card">
-      <span class="red"/>
+      <span class="red" />
       <div class="product">
-        {{item}}
+        {{ item }}
       </div>
-      <span class="span1"/>
-      <span class="span2"/>
-      <span class="line"/>
+      <span class="span1" />
+      <span class="span2" />
+      <span class="line" />
       <div class="power">
-        <div class="number">{{power}}</div>
+        <div class="number">{{ power }}</div>
         <div class="watt">[W]</div>
       </div>
-      <span class="line"/>
+      <span class="line" />
       <div>
         <div class="detail">
-          <div class="character1">メーカー</div><canvas class="triangle"/><div class="character2">{{manufacturer}}</div>
+          <div class="character1">メーカー</div>
+          <canvas class="triangle" />
+          <div class="character2">{{ manufacturer }}</div>
         </div>
         <div class="detail">
-          <div class="character1">型番</div><canvas class="triangle"/><div class="character2">{{model}}</div>
+          <div class="character1">型番</div>
+          <canvas class="triangle" />
+          <div class="character2">{{ model }}</div>
         </div>
       </div>
-      <span class="span3"/>
-      <div class="column">
+      <span class="span3" />
+      <div v-if="setting" class="column">
         <button class="button2" @click="openEditPower">
           <div class="edit">編集</div>
         </button>
@@ -58,7 +62,7 @@ import DeletePower from "@/components/AllEdit/DeletePower.vue";
 export default {
   components: {
     EditPower,
-    DeletePower
+    DeletePower,
   },
   props: {
     groupId: Number,
@@ -67,7 +71,8 @@ export default {
     power: Number,
     manufacturer: String,
     model: String,
-    url: String
+    url: String,
+    setting: Boolean,
   },
   data() {
     return {
@@ -97,7 +102,7 @@ export default {
 
 <style scoped>
 #font1 {
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   font-style: normal;
 }
 .card {
@@ -144,7 +149,7 @@ export default {
 .power {
   display: flex;
   width: 18%;
-  text-align: center; 
+  text-align: center;
   justify-content: end;
   margin: 12px;
 }
@@ -171,10 +176,10 @@ export default {
 }
 .triangle {
   width: 0;
-	height: 0;
+  height: 0;
   margin: 6px;
-	border: 5px solid transparent;
-	border-left: 7px solid #333333;
+  border: 5px solid transparent;
+  border-left: 7px solid #333333;
 }
 .character1 {
   width: 80px;
@@ -210,7 +215,7 @@ export default {
   height: 35px;
   margin: 12% auto;
   text-align: center;
-  background: #62A7FF;
+  background: #62a7ff;
   border-radius: 5px;
 }
 .button3 {
@@ -218,7 +223,7 @@ export default {
   width: 70px;
   height: 35px;
   margin: 12% auto;
-  background: #FF6262;
+  background: #ff6262;
   border-radius: 5px;
 }
 .edit {
@@ -228,6 +233,6 @@ export default {
   font-size: 18px;
   line-height: 26px;
   letter-spacing: 0.3em;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 </style>

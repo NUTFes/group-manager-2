@@ -77,27 +77,31 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
         },
       })
       .then((response) => {
         this.users = response;
       });
 
-    const regist_info_url = process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
+    const regist_info_url =
+      process.env.VUE_APP_URL + "/api/v1/current_user/current_regist_info";
     axios
       .get(regist_info_url, {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
         },
       })
       .then((response) => {
         this.regist_info = response.data.data;
-        localStorage.setItem("group_category_id", this.regist_info[0].group.group_category_id);
+        localStorage.setItem(
+          "group_category_id",
+          this.regist_info[0].group.group_category_id
+        );
       });
 
     const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
@@ -106,7 +110,7 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
+          client: localStorage.getItem("client"),
         },
       })
       .then((response) => {

@@ -106,6 +106,7 @@
                     :n="1"
                     :place="regist_info[0].place_order.first"
                     :remark="regist_info[0].place_order.remark"
+                    :setting="setting.is_edit_place"
                     @reload="reload"
                   />
                 </div>
@@ -118,6 +119,7 @@
                     :n="2"
                     :place="regist_info[0].place_order.second"
                     :remark="regist_info[0].place_order.remark"
+                    :setting="setting.is_edit_place"
                     @reload="reload"
                   />
                 </div>
@@ -130,6 +132,7 @@
                     :n="3"
                     :place="regist_info[0].place_order.third"
                     :remark="regist_info[0].place_order.remark"
+                    :setting="setting.is_edit_place"
                     @reload="reload"
                   />
                 </div>
@@ -151,10 +154,12 @@
                   :manufacturer="p.power_order.manufacturer"
                   :model="p.power_order.model"
                   :url="p.power_order.item_url"
+                  :setting="setting.is_edit_power_order"
                   @reload="reload"
                 />
               </div>
               <button
+                v-if="setting.add_power_order"
                 id="btn1"
                 type="button"
                 @click="addPowerDisplay = true"
@@ -346,7 +351,7 @@ export default {
       addPowerDisplay: false,
       addItemDisplay: false,
       groupCategoryId: null,
-      setting: null
+      setting: null,
     };
   },
   methods: {

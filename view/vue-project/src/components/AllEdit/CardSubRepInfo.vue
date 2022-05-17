@@ -2,7 +2,7 @@
   <body id="font">
     <div>
       <div class="card">
-        <span class="red"/>
+        <span class="red" />
         <div class="choice">
           <div>
             <h6>名前</h6>
@@ -17,12 +17,12 @@
           <div>{{ regist.grade }}</div>
           <div>{{ regist.student_id }}</div>
         </div>
-        <span class="line"/>
+        <span class="line" />
         <div class="ps">
           <h4>詳細情報</h4>
           <div class="notes">
-            <div class="character2">{{regist.email}}</div>
-            <div class="character2">{{regist.tel}}</div>
+            <div class="character2">{{ regist.email }}</div>
+            <div class="character2">{{ regist.tel }}</div>
           </div>
         </div>
         <div v-if="setting">
@@ -51,7 +51,7 @@
 import EditSubRep from "@/components/AllEdit/EditSubRep.vue";
 export default {
   components: {
-    EditSubRep
+    EditSubRep,
   },
   props: {
     regist: String,
@@ -87,16 +87,16 @@ export default {
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
-.red{
+.red {
   position: absolute;
   left: 0;
   display: inline-block;
   width: 18px;
   height: 100%;
-  background: #F71E35;
+  background: #f71e35;
 }
-.choice{
-  width:250px;
+.choice {
+  width: 250px;
   position: absolute;
   top: 10px;
   left: 40px;
@@ -106,7 +106,7 @@ export default {
   color: #333333;
   padding: 0 auto;
 }
-.line{
+.line {
   position: absolute;
   left: 320px;
   display: inline-block;
@@ -114,7 +114,7 @@ export default {
   height: 95.5px;
   background: #333333;
 }
-.area{
+.area {
   position: absolute;
   top: 10px;
   left: 360px;
@@ -123,10 +123,10 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.ps{
+.ps {
   position: absolute;
   top: 10px;
-  width:400px;
+  width: 400px;
   left: 700px;
   font-weight: 300;
   font-size: 15px;
@@ -134,27 +134,27 @@ export default {
   letter-spacing: 0.1em;
   color: #333333;
 }
-.button{
+.button {
   position: absolute;
   left: 1050px;
   display: flex;
-  background: #62A7FF;
+  background: #62a7ff;
   border-radius: 5px;
 }
-.edit{
+.edit {
   padding: 5px 30px;
   margin: 0 0 0.2px;
   font-weight: 350;
   font-size: 18px;
   line-height: 26px;
   letter-spacing: 0.3em;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .notes {
   padding-top: 10px;
   display: inline-block;
   overflow-x: auto;
-  width:100%;
+  width: 100%;
 }
 .character2 {
   width: 300px;
