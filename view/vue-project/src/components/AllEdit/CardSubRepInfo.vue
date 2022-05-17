@@ -25,9 +25,11 @@
             <div class="character2">{{regist.tel}}</div>
           </div>
         </div>
-        <button class="button" @click="openEditSubRep">
-          <div class="edit">編集</div>
-        </button>
+        <div v-if="setting">
+          <button class="button" @click="openEditSubRep">
+            <div class="edit">編集</div>
+          </button>
+        </div>
       </div>
       <EditSubRep
         v-if="editSubRepDisplay"
@@ -54,6 +56,7 @@ export default {
   props: {
     regist: String,
     groupId: Number,
+    setting: Boolean,
   },
   data() {
     return {
