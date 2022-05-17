@@ -5,7 +5,7 @@
         <div id="btnContainer">
           <button v-on:click="$emit('closeEditItem')">✖</button>
         </div>
-        <h1>物品申請[{{name}}]</h1>
+        <h1>物品申請</h1>
         <select v-model="item" id="item">
           <option
             v-for="list in item_list.data"
