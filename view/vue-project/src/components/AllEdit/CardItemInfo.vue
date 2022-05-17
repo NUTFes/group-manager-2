@@ -1,42 +1,40 @@
 <template>
   <body id="font">
-      <div class="card">
-        <span class="red" />
-        <div class="item">
-          {{name}}
-        </div>
-        <p class="box">
-          <span class="number">
-          {{num}}
-          </span>
-          <span class="pieces">
-            個
-          </span>
-        </p>
-        <div class="button">
-          <button class="button1" @click="openEditItem">
-            <div class="edit">編集</div>
-          </button>
-          <button class="button2" @click="openDeleteItem">
-            <div class="edit">削除</div>
-          </button>
-        </div>
-        <EditItem
-          v-if="editItemDisplay"
-          :groupId="groupId"
-          :id="regist.id"
-          :item="regist.rental_item_id"
-          :num="regist.num"
-          @closeEditItem="closeEditItem"
-          @reload="reload"
-        />
-        <DeleteItem
-          v-if="deleteItemDisplay"
-          :id="regist.id"
-          @closeDeleteItem="closeDeleteItem"
-          @reload="reload"
-        />
+    <div class="card">
+      <span class="red" />
+      <div class="item">
+        {{ name }}
       </div>
+      <p class="box">
+        <span class="number">
+          {{ num }}
+        </span>
+        <span class="pieces"> 個 </span>
+      </p>
+      <div v-if="setting" class="button">
+        <button class="button1" @click="openEditItem">
+          <div class="edit">編集</div>
+        </button>
+        <button class="button2" @click="openDeleteItem">
+          <div class="edit">削除</div>
+        </button>
+      </div>
+      <EditItem
+        v-if="editItemDisplay"
+        :groupId="groupId"
+        :id="regist.id"
+        :item="regist.rental_item_id"
+        :num="regist.num"
+        @closeEditItem="closeEditItem"
+        @reload="reload"
+      />
+      <DeleteItem
+        v-if="deleteItemDisplay"
+        :id="regist.id"
+        @closeDeleteItem="closeDeleteItem"
+        @reload="reload"
+      />
+    </div>
   </body>
 </template>
 
@@ -46,13 +44,14 @@ import DeleteItem from "@/components/AllEdit/DeleteItem.vue";
 export default {
   components: {
     EditItem,
-    DeleteItem
+    DeleteItem,
   },
   props: {
     groupId: String,
     regist: String,
     name: String,
     num: Number,
+    setting: Boolean,
   },
   data() {
     return {
@@ -89,14 +88,14 @@ export default {
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
-.red{
+.red {
   position: absolute;
   width: 18px;
   height: 239px;
   left: 0;
-  background: #F71E35;
+  background: #f71e35;
 }
-.item{
+.item {
   position: absolute;
   width: 347px;
   height: 72px;
@@ -108,7 +107,7 @@ export default {
   line-height: 52px;
   text-align: center;
 }
-.box{
+.box {
   display: flex;
   justify-content: end;
   align-items: end;
@@ -118,47 +117,46 @@ export default {
   bottom: 15px;
   left: 52px;
 }
-.number{
+.number {
   font-weight: 350;
   font-size: 48px;
   letter-spacing: 0.1em;
   line-height: 34.75px;
-  
 }
-.pieces{
+.pieces {
   font-weight: 350;
   font-size: 24px;
   letter-spacing: 0.1em;
   line-height: 19px;
 }
-.button{
+.button {
   position: absolute;
   right: 12.97px;
   bottom: 8.74px;
 }
-.button1{
+.button1 {
   display: flex;
   width: 126.77px;
   height: 37.74px;
   margin: 6.26px;
-  background: #62A7FF;
+  background: #62a7ff;
   border-radius: 5px;
 }
-.button2{
+.button2 {
   display: flex;
   width: 126.77px;
   height: 37.74px;
   margin: 6.26px;
-  background: #FF6262;
+  background: #ff6262;
   border-radius: 5px;
 }
-.edit{
+.edit {
   margin-top: 5px;
   margin-left: 14px;
   font-weight: 350;
   font-size: 18px;
   line-height: 26px;
   letter-spacing: 0.3em;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 </style>

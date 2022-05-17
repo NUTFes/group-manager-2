@@ -184,11 +184,13 @@
                     :regist="item.rental_item.rental_item"
                     :name="item.rental_item.name"
                     :num="item.rental_item.num"
+                    :setting="setting.is_edit_rental_order"
                     @reload="reload"
                   />
                 </div>
               </div>
               <button
+                v-if="setting.add_rental_order"
                 id="btn1"
                 type="button"
                 @click="addItemDisplay = true"
