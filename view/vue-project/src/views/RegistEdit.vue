@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
+  <div>
     <br><br><br>
     <div id="font">
+      <router-link to="/mypage" style="text-decoration: none;"><span class="regist-back-link" style=" margin-left: 3%;">マイページへ</span></router-link>
+      <br><br><br>
       <div id="line">
-        <router-link to="/mypage"><button id="btn">Mypageに戻る</button></router-link>
-        <h3>参加団体登録＆編集ページ{{regist_info}}</h3>
-        <select v-model="projectName">
+        <!-- <select v-model="projectName">
           <option
             v-for="list in regist_info"
             :key="list.group.id"
@@ -17,9 +17,13 @@
       </div>
 
       <section class="tab_contents">
-        <div class="tab_wrap">
+        <div>
 
-          <input v-if="groupCategoryId == 3" id="tab4" type="radio" name="check" checked />
+          <input id="tab9" type="radio" name="check" checked />
+          <span class="bubble"></span>
+          <label for="tab9" class="tab_lab9">副代表申請</label>
+
+          <input v-if="groupCategoryId == 3" id="tab4" type="radio" name="check" />
           <span v-if="groupCategoryId == 3" class="bubble"></span>
           <label v-if="groupCategoryId == 3" for="tab4" class="tab_lab4">ステージ申請</label>
 
@@ -27,7 +31,7 @@
           <span v-if="groupCategoryId == 3" class="bubble"></span>
           <label v-if="groupCategoryId == 3" for="tab8" class="tab_lab8">ステージオプション申請</label>
 
-          <input v-if="groupCategoryId != 3" id="tab1" type="radio" name="check" checked />
+          <input v-if="groupCategoryId != 3" id="tab1" type="radio" name="check" />
           <span v-if="groupCategoryId != 3" class="bubble"></span>
           <label v-if="groupCategoryId != 3" for="tab1" class="tab_lab1">会場申請</label>
 
@@ -55,10 +59,11 @@
 
             <!-- 副代表申請 -->
             <div id="area9" class="panel">
-              <div>
+              <div style=" display: inline-block; overflow-x: auto; width: 100%;">
                 <CardSubRepInfo
                   :regist="regist_info[0].sub_rep"
                   :groupId="regist_info[0].group.id"
+                  @reload="reload"
                 />
               </div>
             </div>
@@ -67,7 +72,7 @@
             <div id="area1" class="panel">
 
               <div v-if="regist_info[0].place_order != null">
-                <div>
+                <div style=" display: inline-block; overflow-x: auto; width: 100%;">
                   <CardPlaceInfo
                     :regist="regist_info[0].place_order.place_order"
                     :placeOrderId="regist_info[0].place_order.place_order.id"
@@ -77,7 +82,7 @@
                     @reload="reload"
                   />
                 </div>
-                <div>
+                <div style=" display: inline-block; overflow-x: auto; width: 100%;">
                   <CardPlaceInfo
                     :regist="regist_info[0].place_order.place_order"
                     :placeOrderId="regist_info[0].place_order.place_order.id"
@@ -87,7 +92,7 @@
                     @reload="reload"
                   />
                 </div>
-                <div>
+                <div style=" display: inline-block; overflow-x: auto; width: 100%;">
                   <CardPlaceInfo
                     :regist="regist_info[0].place_order.place_order"
                     :placeOrderId="regist_info[0].place_order.place_order.id"
@@ -103,7 +108,9 @@
 
             <!-- 電力申請 -->
             <div id="area2" class="panel">
-              <div v-for="p in regist_info[0].power_orders" :key="p" >
+              <div
+                style=" display: inline-block; overflow-x: auto; width: 100%;"
+                v-for="p in regist_info[0].power_orders" :key="p" >
                 <CardPowerInfo
                   :groupId="regist_info[0].group.id"
                   :id="p.power_order.id"
@@ -125,7 +132,7 @@
               </button>
               <AddPower
                 v-if="addPowerDisplay"
-                :groupId="projectName"
+                :groupId="regist_info[0].group.id"
                 @closeAddPower="closeAddPower"
                 @reload="reload"
               />
@@ -154,7 +161,7 @@
               </button>
               <AddItem
                 v-if="addItemDisplay"
-                :groupId="projectName"
+                :groupId="regist_info[0].group.id"
                 @closeAddItem="closeAddItem"
                 @reload="reload"
               />
@@ -162,7 +169,9 @@
 
             <!-- ステージ申請 -->
             <div id="area4" class="panel">
-              <div v-for="stage_order in regist_info[0].stage_orders" :key="stage_order">
+              <div
+                style="display: inline-block; overflow-x: auto; width: 100%;"
+                v-for="stage_order in regist_info[0].stage_orders" :key="stage_order">
                 <CardStageInfo
                   :groupId="regist_info[0].group.id"
                   :regist="stage_order.stage_order.stage_order"
@@ -177,6 +186,7 @@
 
             <!-- ステージオプション -->
             <div id="area8" class="panel">
+              <div style=" display: inline-block; overflow-x: auto; width: 100%;">
                 <CardStageOptionInfo
                   v-if="regist_info[0].stage_common_option != null"
                   :groupId="regist_info[0].group.id"
@@ -188,6 +198,7 @@
                   :stageContent="regist_info[0].stage_common_option.stage_content"
                   @reload="reload"
                 />
+              </div>
             </div>
 
             <!-- 従業員申請 -->
@@ -348,9 +359,6 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  margin: 1%;
-}
 #font {
   font-family: "Noto Sans JP";
   font-style: normal;
@@ -659,8 +667,5 @@ input[name="check"] {
   font-style: normal;
   letter-spacing: 0.1em;
   color: #333333;
-}
-.tab_wrap {
-  margin: 1%;
 }
 </style>

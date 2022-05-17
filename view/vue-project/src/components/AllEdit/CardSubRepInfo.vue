@@ -16,6 +16,7 @@
           <div><h6>所属</h6></div>
           <div>{{ regist.department }}</div>
           <div>{{ regist.grade }}</div>
+          <div>{{ regist.student_id }}</div>
         </div>
         <div class="ps">
           <h4>詳細情報</h4>
@@ -78,7 +79,6 @@ export default {
   position: relative;
   width: 1026px;
   height: 149px;
-  margin-left: 9.12%;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }

@@ -9,7 +9,7 @@
           <div class="entry">名前</div>
           <input type="text" v-model="name" id="name">
           <div class="entry">学科</div>
-          <select v-model="department_id" @change="validationGrade" id="department_id">
+          <select v-model="department_id" id="department_id">
               <option
                 v-for="item in departments"
                 :value="item.id"
@@ -19,7 +19,7 @@
               </option>
             </select>
           <div class="entry">学年</div>
-          <select v-model="grade_id" @change="validationDepartment" id="grade_id">
+          <select v-model="grade_id" id="grade_id">
             <option
               v-for="item in grades"
               :value="item.id"
