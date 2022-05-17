@@ -11,17 +11,19 @@
             {{ regist.name }}
           </div>
         </div>
-        <span class="line"/>
         <div class="area">
           <div><h6>所属</h6></div>
           <div>{{ regist.department }}</div>
           <div>{{ regist.grade }}</div>
           <div>{{ regist.student_id }}</div>
         </div>
+        <span class="line"/>
         <div class="ps">
           <h4>詳細情報</h4>
-          <div>{{ regist.email }}</div>
-          <div>{{ regist.tel }}</div>
+          <div class="notes">
+            <div>{{ regist.email }}</div>
+            <div>{{ regist.tel }}</div>
+          </div>
         </div>
         <button class="button" @click="openEditSubRep">
           <div class="edit">編集</div>
@@ -77,8 +79,8 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 1026px;
-  height: 149px;
+  width: 1200px;
+  height: 160px;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
 }
@@ -93,7 +95,7 @@ export default {
 .choice{
   position: absolute;
   top: 10px;
-  left: 39px;
+  left: 40px;
   font-weight: 300;
   font-size: 20px;
   letter-spacing: 0.1em;
@@ -102,7 +104,7 @@ export default {
 }
 .line{
   position: absolute;
-  left: 189px;
+  left: 220px;
   display: inline-block;
   width: 1px;
   height: 95.5px;
@@ -111,7 +113,7 @@ export default {
 .area{
   position: absolute;
   top: 10px;
-  left: 219px;
+  left: 260px;
   font-weight: 300;
   font-size: 20px;
   letter-spacing: 0.1em;
@@ -120,7 +122,8 @@ export default {
 .ps{
   position: absolute;
   top: 10px;
-  left: 520px;
+  width:400px;
+  left: 600px;
   font-weight: 300;
   font-size: 15px;
   line-height: 30px;
@@ -129,7 +132,7 @@ export default {
 }
 .button{
   position: absolute;
-  left: 860px;
+  left: 1050px;
   display: flex;
   background: #62A7FF;
   border-radius: 5px;
@@ -142,5 +145,10 @@ export default {
   line-height: 26px;
   letter-spacing: 0.3em;
   color: #FFFFFF;
+}
+.notes {
+  display: inline-block;
+  overflow-x: auto;
+  width:100%;
 }
 </style>
