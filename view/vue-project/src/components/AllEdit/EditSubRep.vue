@@ -29,11 +29,11 @@
             </option>
           </select>
           <div class="entry">電話番号</div>
-          <input type="text" v-model="tel" id="tel">
+          <input type="text" maxlength="11" v-model="tel" id="tel" @change="validationTel">
           <div class="entry">メールアドレス</div>
-          <input type="text" v-model="email" id="email">
+          <input type="text" v-model="email" id="email" @change="validationEmail">
           <div class="entry">学生番号</div>
-          <input type="text" v-model="student_id" id="student_id">
+          <input type="text" maxlength="8" v-model="student_id" id="student_id" @change="validationStudentId">
           <span style="display:flex;">
             <button id="btn" type="button" @click="reset">リセット</button>
             <button id="btn" type="button" @click="register">✓編集</button>
@@ -57,6 +57,9 @@ export default {
   },
   data() {
     return {
+      resultStudentId: true,
+      resultTel: true,
+      resultEmail: true,
       departments: [
         { name: "機械創造工学課程", id: 1 },
         { name: "電気電子情報工学課程", id: 2 },
@@ -107,25 +110,117 @@ export default {
       this.email = [],
       this.student_id = []
     },
+    onStuentIdValidation: function() {
+      this.resultStudentId = true;
+    },
+    offStudentIdValidation: function() {
+      this.resultStudentId = false;
+    },
+    onTelValidation: function() {
+      this.resultTel = true;
+    },
+    offTelValidation: function() {
+      this.resultTel = false;
+    },
+    onEmailValidation: function() {
+      this.resultEmail = true;
+    },
+    offEmailValidation: function() {
+      this.resultEmail = false;
+    },
     register: function () {
-      const url =
-      process.env.VUE_APP_URL +
-      "/sub_reps" + "/" + this.groupId + "?" +
-      "name=" + this.name +
-      "&department_id=" + this.department_id +
-      "&grade_id=" + this.grade_id +
-      "&tel=" + this.tel +
-      "&email=" + this.email +
-      "&student_id=" + this.student_id;
-      axios.put(url).then(
-        (response) => {
-          console.log("response:", response);
-          this.$emit("closeEditSubRep");
-          this.$emit("reload");
-        },
-        (error) => {
-          return error;
-        });
+      if (this.name.length > 0 && this.department_id != 0 && this.grade_id != 0 && this.resultEmail && this.resultTel && this.resultStudentId) {
+        const url =
+        process.env.VUE_APP_URL +
+        "/sub_reps" + "/" + this.groupId + "?" +
+        "name=" + this.name +
+        "&department_id=" + this.department_id +
+        "&grade_id=" + this.grade_id +
+        "&tel=" + this.tel +
+        "&email=" + this.email +
+        "&student_id=" + this.student_id;
+        axios.put(url).then(
+          (response) => {
+            console.log("response:", response);
+            this.$emit("closeEditSubRep");
+            this.$emit("reload");
+          },
+          (error) => {
+            return error;
+          });
+      } else {
+        if (this.name.length == 0) {
+          const nameError = document.getElementById("name");
+          nameError.style.border="2px solid red";
+        } else {
+          const nameError = document.getElementById("name");
+          nameError.style.border="2px solid black";
+        }
+        if (this.department_id == 0) {
+          const departmentError = document.getElementById("department_id");
+          departmentError.style.border="2px solid red";
+        } else {
+          const departmentError = document.getElementById("department_id");
+          departmentError.style.border="2px solid black";
+        }
+        if (this.grade_id == 0) {
+          const gradeError = document.getElementById("grade_id");
+          gradeError.style.border="2px solid red";
+        } else {
+          const gradeError = document.getElementById("grade_id");
+          gradeError.style.border="2px solid black";
+        }
+        if (this.resultEmail==false) {
+          const emailError = document.getElementById("email");
+          emailError.style.border="2px solid red";
+        } else {
+          const emailError = document.getElementById("email");
+          emailError.style.border="2px solid black";
+        }
+        if (this.resultTel==false) {
+          const telError = document.getElementById("tel");
+          telError.style.border="2px solid red";
+        } else {
+          const telError = document.getElementById("tel");
+          telError.style.border="2px solid black";
+        }
+        if (this.resultStudentId==false) {
+          const studentIdError = document.getElementById("student_id");
+          studentIdError.style.border="2px solid red";
+        } else {
+          const studentIdError = document.getElementById("student_id");
+          studentIdError.style.border="2px solid black";
+        }
+      }
+    },
+  },
+  computed: {
+    validationStudentId(){
+      const pattern = /[0-9０-９]{8}/;
+      if (pattern.test(this.student_id)==true) {
+        this.onStuentIdValidation();
+      } else {
+        this.offStudentIdValidation();
+      }
+      return this.resultStudentId
+    },
+    validationTel(){
+      const pattern = /[0-9０-９]{10}/;
+      if (pattern.test(this.tel)==true) {
+        this.onTelValidation();
+      } else {
+        this.offTelValidation();
+      }
+      return this.resultTel
+    },
+    validationEmail(){
+      const pattern = /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
+      if (pattern.test(this.email)==true) {
+        this.onEmailValidation();
+      } else {
+        this.offEmailValidation();
+      }
+      return this.resultEmail
     },
   },
 };
