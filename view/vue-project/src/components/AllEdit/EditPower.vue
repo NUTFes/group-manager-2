@@ -11,9 +11,9 @@
         <div class="entry">最大定格電力[W]</div>
         <input class="maxpower" type="text" v-model="power" id="power" @change="validationPower">
         <div class="entry">メーカー</div>
-        <input type="text" v-model="model" id="model">
+        <input type="text" v-model="manufacturer" id="model">
         <div class="entry">型番</div>
-        <input type="text" v-model="manufacturer" id="manufacturer">
+        <input type="text" v-model="model" id="manufacturer">
         <div class="entry">URL</div>
         <input type="text" v-model="url" id="url">
         <span style="display:flex;">
