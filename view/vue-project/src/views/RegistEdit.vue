@@ -20,8 +20,6 @@
         </select> -->
       </div>
 
-      {{ setting }}
-
       <section class="tab_contents">
         <div>
           <input id="tab9" type="radio" name="check" checked />

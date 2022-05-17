@@ -25,7 +25,7 @@
         </button>
       </div>
       <div>
-        <li v-if="registInfo.length != 0" @click="toEditGroup" class="dashboard-link">参加団体情報の編集</li>
+        <li v-if="isEditGroup && registInfo.length != 0" @click="toEditGroup" class="dashboard-link">参加団体情報の編集</li>
         <li @click="toUserInfo" class="dashboard-link">ユーザー情報</li>
         <li @click="toEditUserInfo" class="dashboard-link">ユーザー情報編集</li>
         <li @click="toResetPassword" class="dashboard-link">パスワード変更</li>
@@ -44,6 +44,7 @@ export default {
   },
   props: {
     isRegistGroup: Boolean,
+    isEditGroup: Boolean,
     registInfo: Array,
   },
   methods: {

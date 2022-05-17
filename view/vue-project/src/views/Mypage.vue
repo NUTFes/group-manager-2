@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mypage-card" style="padding-bottom: 10px">
-      <DashBoard :isRegistGroup="isRegistGroup" :registInfo="regist_info" />
+      <DashBoard :isRegistGroup="isRegistGroup" :isEditGroup="isEditGroup" :registInfo="regist_info" />
     </div>
     <div v-for="r in regist_info" :key="r" style="padding-bottom: 10px">
       <RegistAlarm :registInfo="r" :setting="setting" />
@@ -34,7 +34,8 @@ export default {
       setting: null,
       regist_info: [],
       info: [],
-      isRegistGroup: [],
+      isRegistGroup: null,
+      isEditGroup: null,
       addEmployee: [],
       addFoodProduct: [],
       addPurchaseList: [],
@@ -117,6 +118,7 @@ export default {
       .then((response) => {
         this.setting = response.data.data[0];
         this.isRegistGroup = response.data.data[0].is_regist_group;
+        this.isEditGroup = response.data.data[0].is_edit_group;
         this.addEmployee = response.data.data[0].add_employee;
         this.addFoodProduct = response.data.data[0].add_food_product;
         this.addPurchaseList = response.data.data[0].add_purchase_list;
