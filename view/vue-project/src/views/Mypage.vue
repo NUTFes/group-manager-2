@@ -98,6 +98,7 @@ export default {
       })
       .then((response) => {
         this.regist_info = response.data.data;
+        localStorage.setItem("group_id", this.regist_info[0].group.id);
         localStorage.setItem(
           "group_category_id",
           this.regist_info[0].group.group_category_id

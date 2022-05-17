@@ -3,14 +3,29 @@
     <div class="dashboard-content">
       <span class="dashboard-title">{{ user.name }} 様</span>
       <div class="dashboard-detail">
-        <p>技大祭に参加していただき誠にありがとうございます。<br />登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
+        <p>
+          技大祭に参加していただき誠にありがとうございます。<br />登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。
+        </p>
       </div>
       <div style="padding-bottom: 20px; padding-top: 30px">
-      <p style="font-size: 20px">各種操作</p>
-        <button v-if="registInfo.length != 0" @click="goRegistEdit" class="dashboard-button">登録情報の確認はこちらから</button>
-        <button v-if="isRegistGroup && registInfo.length == 0" @click="goRegistGroup" class="dashboard-button">参加団体の登録はこちらから</button>
+        <p style="font-size: 20px">各種操作</p>
+        <button
+          v-if="registInfo.length != 0"
+          @click="goRegistEdit"
+          class="dashboard-button"
+        >
+          登録情報の確認はこちらから
+        </button>
+        <button
+          v-if="isRegistGroup && registInfo.length == 0"
+          @click="goRegistGroup"
+          class="dashboard-button"
+        >
+          参加団体の登録はこちらから
+        </button>
       </div>
       <div>
+        <li v-if="registInfo.length != 0" @click="toEditGroup" class="dashboard-link">参加団体情報の編集</li>
         <li @click="toUserInfo" class="dashboard-link">ユーザー情報</li>
         <li @click="toEditUserInfo" class="dashboard-link">ユーザー情報編集</li>
         <li @click="toResetPassword" class="dashboard-link">パスワード変更</li>
@@ -32,6 +47,10 @@ export default {
     registInfo: Array,
   },
   methods: {
+    toEditGroup() {
+      this.$store.commit("acceptEditGroupPermission");
+      this.$router.push("/edit_group");
+    },
     toUserInfo() {
       this.$store.commit("acceptUserInfoPermission");
       this.$router.push("/profile");
@@ -44,14 +63,14 @@ export default {
       this.$store.commit("acceptResetPasswordPermission");
       this.$router.push("/password_reset");
     },
-    goRegistGroup: function() {
+    goRegistGroup: function () {
       this.$store.commit("acceptRegistGroupPermission");
       this.$router.push("/regist_group");
     },
-    goRegistEdit: function() {
+    goRegistEdit: function () {
       this.$store.commit("acceptRegistEditPermission");
       this.$router.push("regist_edit");
-    }
+    },
   },
   mounted() {
     const url = process.env.VUE_APP_URL + "/api/v1/users/show";
@@ -60,8 +79,8 @@ export default {
         headers: {
           "Content-Type": "application/json",
           "access-token": localStorage.getItem("access-token"),
-          "client": localStorage.getItem("client"),
-          "uid": localStorage.getItem("uid"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
         },
       })
       .then((response) => {
@@ -112,8 +131,8 @@ export default {
   background-color: #ef4df3;
 }
 .dashboard-button:hover {
-  background-color: #D500F9;
+  background-color: #d500f9;
   color: #ffffff;
-  border: solid 1px #D500F9;
+  border: solid 1px #d500f9;
 }
 </style>

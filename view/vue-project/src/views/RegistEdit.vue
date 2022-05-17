@@ -220,6 +220,7 @@
                   :secondStage="stage_order.stage_order.stage_second"
                   :date="stage_order.stage_order.date"
                   :isSunny="stage_order.stage_order.is_sunny"
+                  :setting="setting.is_edit_stage_order"
                   @reload="reload"
                 />
               </div>
@@ -243,6 +244,7 @@
                   :stageContent="
                     regist_info[0].stage_common_option.stage_content
                   "
+                  :setting="setting.is_edit_stage_order"
                   @reload="reload"
                 />
               </div>
