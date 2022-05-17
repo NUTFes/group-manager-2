@@ -27,6 +27,7 @@ export default {
         process.env.VUE_APP_URL + "/power_orders/" + this.id;
       axios.delete(url);
       this.$emit("closeDeletePower");
+      this.$emit("reload ");
     },
   },
 

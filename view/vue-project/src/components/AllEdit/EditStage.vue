@@ -269,7 +269,7 @@ export default {
         },
       })
       .then((response) => {
-        this.fesDateList = response.data.data;
+        this.fesDateList = response.data.data.filter(fesDate => fesDate.days_num >= 1);
       });
 
     axios
