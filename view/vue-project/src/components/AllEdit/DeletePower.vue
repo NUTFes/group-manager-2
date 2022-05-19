@@ -25,9 +25,16 @@ export default {
     deletePower() {
       const url =
         process.env.VUE_APP_URL + "/power_orders/" + this.id;
-      axios.delete(url);
-      this.$emit("closeDeletePower");
-      this.$emit("reload ");
+      axios.delete(url).then(
+        (response) => {
+          console.log(response.status);
+          this.$emit("closeDeletePower");
+          this.$emit("reload");
+        },
+        (error) => {
+          return error;
+        });
+
     },
   },
 
