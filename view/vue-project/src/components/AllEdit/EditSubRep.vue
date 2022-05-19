@@ -167,7 +167,7 @@ export default {
       return this.resultStudentId
     },
     validationTel(){
-      const pattern = /[0-9０-９]{10}/;
+      const pattern = /[0-9０-９]{10,11}/;
       if (pattern.test(this.tel)==true) {
         this.onTelValidation();
       } else {

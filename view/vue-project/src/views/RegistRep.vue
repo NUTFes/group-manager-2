@@ -156,7 +156,7 @@ export default {
       return this.resultGrade;
     },
     validationTel() {
-      const pattern = /[0-9０-９]{10}/;
+      const pattern = /[0-9０-９]{10,11}/;
       if (pattern.test(this.tel) == true) {
         this.onTelValidation();
       } else {
@@ -273,6 +273,7 @@ export default {
           return error;
         });
       } else {
+        this.errorMessage = "ユーザーの登録に失敗しました";
         if (this.resultName == false) {
           const nameError = document.getElementById("name");
           nameError.style.border = "2px solid red";
