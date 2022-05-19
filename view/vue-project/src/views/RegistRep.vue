@@ -77,6 +77,7 @@
             placeholder="パスワード再入力"
           />
         </div>
+        <div style="text-align:right; color:red; font-size: 24px; margin-right: 30px">{{ errorMessage }}</div>
       </div>
     </div>
     <div class="regist-button">
@@ -108,6 +109,7 @@ export default {
       user_id: null,
       departmentList: departmentList,
       gradeList: gradeList,
+      errorMessage: null,
     };
   },
   mounted() {
@@ -217,7 +219,9 @@ export default {
         this.resultGrade &&
         this.resultEmail &&
         this.resultTel &&
-        this.resultStudentId
+        this.resultStudentId &&
+        this.password.length != 0 &&
+        this.passwordConfirmation.length != 0
       ) {
         // ユーザー新規登録
         const authUrl = process.env.VUE_APP_URL + "/api/auth";
@@ -242,6 +246,7 @@ export default {
           localStorage.setItem("client", response.headers["client"]);
           localStorage.setItem("uid", response.headers["uid"]);
           localStorage.setItem("token-type", response.headers["token-type"]);
+          localStorage.setItem("user_id", response.data.data.id);
           this.user_id = response.data.data.id;
           const url = process.env.VUE_APP_URL + "/user_details";
           let params = new URLSearchParams();
@@ -258,9 +263,14 @@ export default {
               this.$router.push("regist_group");
             },
             (error) => {
+              this.errorMessage = "ユーザー詳細の登録に失敗しました";
               return error;
             }
           );
+        },
+        (error) => {
+          this.errorMessage = "ユーザーの登録に失敗しました";
+          return error;
         });
       } else {
         if (this.resultName == false) {
