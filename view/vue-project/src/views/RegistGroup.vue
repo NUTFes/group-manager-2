@@ -4,6 +4,7 @@
       ><span class="regist-back-link">マイページへ</span></router-link
     >
     <div class="regist-title">参加団体の登録</div>
+    {{ errorMsg }}
     <div class="regist-card">
       <div class="regist-card-content">
         <div class="regist-card-content-question">
@@ -76,6 +77,7 @@ export default {
       activity: [],
       fesYearId: [],
       groupCategoryList: groupCategoryList,
+      errorMsg: null,
     };
   },
   mounted() {
@@ -181,7 +183,7 @@ export default {
         params.append("name", this.groupName);
         params.append("project_name", this.projectName);
         params.append("activity", this.activity);
-        params.append("user_id", this.user.id);
+        params.append("user_id", localStorage.getItem("user_id"));
         params.append("group_category_id", this.groupCategoryId);
         params.append("fes_year_id", this.setting.fes_year_id);
         axios.defaults.headers.common["Content-Type"] = "application/json";
@@ -199,7 +201,7 @@ export default {
             this.$router.push("/regist_subrep");
           },
           (error) => {
-            console.log("登録できませんでした");
+            this.errorMsg = "登録できませんでした";
             return error;
           }
         );

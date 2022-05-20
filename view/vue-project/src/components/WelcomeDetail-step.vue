@@ -339,26 +339,6 @@
       <!-- 以降 各種SNSのリンク、連絡先の表示、よくある質問へのリンク -->
 
       <div class="my-16">
-        <!-- よくある質問 -->
-        <v-row>
-          <v-col cols="2" />
-          <v-col cols="8">
-            <p class="text-center text-h4 text-no-wrap">よくある質問</p>
-          </v-col>
-          <v-col cols="2" />
-        </v-row>
-
-        <v-row class="">
-          <v-col cols="2" />
-          <v-col cols="8">
-            <div class="text-center text-h5 text-no-wrap">
-              <p>
-                ご不明な点がある場合は「<a href="">よくある質問と解答</a>」をご覧ください。
-              </p>
-            </div>
-          </v-col>
-          <v-col cols="2" />
-        </v-row>
       </div>
       <v-col cols="2.5" />
     </v-conteiner>

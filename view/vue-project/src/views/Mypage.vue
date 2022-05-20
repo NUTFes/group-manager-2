@@ -84,6 +84,7 @@ export default {
       })
       .then((response) => {
         this.users = response;
+        localStorage.setItem("user_id", this.users.data.data.id);
       });
 
     const regist_info_url =
