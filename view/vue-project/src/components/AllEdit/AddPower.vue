@@ -45,7 +45,7 @@ export default {
   computed: {
     validationPower(){
       const pattern = /[0-9０-９]/;
-      if (pattern.test(this.power)==true && this.power < 1000) {
+      if (pattern.test(this.power)==true && this.power <= 1500) {
         this.onPowerValidation();
       } else {
         this.offPowerValidation();
