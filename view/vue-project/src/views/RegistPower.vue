@@ -63,7 +63,7 @@ export default {
         },
       ],
       inputDataNum: 1,
-      maxPower: 1000,
+      maxPower: 1500,
       minPower: 0,
       submitFlag: true,
       count: 1
