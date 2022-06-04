@@ -22,8 +22,8 @@
             <td>{{ rentalOrder.rental_order.id }}</td>
           </tr>
           <tr>
-            <th>団体名</th>
-            <td>{{ rentalOrder.group.name }}</td>
+            <th>団体</th>
+            <td>{{ rentalOrder.group.id }}：{{ rentalOrder.group.name }}</td>
           </tr>
           <tr>
             <th>物品名</th>
