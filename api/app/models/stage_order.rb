@@ -25,16 +25,15 @@ class StageOrder < ApplicationRecord
     end
 
     def to_info_h
-      @stages = Stage.all
       return {
         "stage_order": self.nil? ? nil : self,
-        "is_sunny": self.is_sunny,
+        "is_sunny": self.is_sunny.nil? ,
         "year": self.fes_date.fes_year.year_num,
         "date": self.fes_date.date,
         "day": self.fes_date.day,
         "day_num": self.fes_date.days_num,
-        "stage_first": @stages[self.stage_first-1].name,
-        "stage_second": @stages[self.stage_second-1].name,
+        "stage_first": self.stage_first.nil? ? nil : _stage_name(self.stage_first),
+        "stage_second": self.stage_second.nil? ? nil : _stage_name(self.stage_second),
         "use_time_interval": self.use_time_interval,
         "prepare_time_interval": self.prepare_time_interval,
         "cleanup_time_interval": self.cleanup_time_interval,
@@ -43,5 +42,13 @@ class StageOrder < ApplicationRecord
         "performance_end_time": self.performance_end_time,
         "cleanup_end_time": self.cleanup_end_time
       }
+    end
+
+    def _stage_name(stage_id)
+      if Stage.where(id: stage_id).empty?
+        return nil
+      else
+        return Stage.find(stage_id).name
+      end
     end
 end

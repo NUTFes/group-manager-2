@@ -25,14 +25,22 @@ class PlaceOrder < ApplicationRecord
 
     # 会場申請を会場名のハッシュにして返す
     def to_place_name_h
-      @places = Place.all
       return { 
         "place_order": self.nil? ? nil : self,
-        "first": self.first.nil? ? nil : @places[self.first-1].name,
-        "second": self.second.nil? ? nil : @places[self.second-1].name,
-        "third": self.third.nil? ? nil : @places[self.third-1].name,
+        "first": self.first.nil? ? nil : _place_name(self.first),
+        "second": self.second.nil? ? nil : _place_name(self.second),
+        "third": self.third.nil? ? nil : _place_name(self.third),
         "remark": self.remark.nil? ? nil : self.remark
       }
+    end
+
+    # 会場が存在するかを確認したのちnameを返す
+    def _place_name(place_id)
+      if Place.where(id: place_id).empty?
+        return nil
+      else
+        return Place.find(place_id).name
+      end
     end
 
 end

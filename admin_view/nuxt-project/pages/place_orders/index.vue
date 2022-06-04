@@ -287,7 +287,7 @@ export default {
         this.remark;
 
       this.$axios.$post(postPlaceOrderUrl).then((response) => {
-        this.openSnackBar(this.addGroup + "の申請を追加しました");
+        this.openSnackBar("会場の申請を追加しました");
         this.appGroup = "";
         this.firstPlaceOrder = "";
         this.secondPlaceOrder = "";
