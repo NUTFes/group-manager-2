@@ -22,8 +22,8 @@
             <td>{{ powerOrder.power_order.id }}</td>
           </tr>
           <tr>
-            <th>団体名</th>
-            <td>{{ powerOrder.group.name }}</td>
+            <th>団体</th>
+            <td>{{ powerOrder.group.id }}：{{ powerOrder.group.name }}</td>
           </tr>
           <tr>
             <th>製品名</th>
