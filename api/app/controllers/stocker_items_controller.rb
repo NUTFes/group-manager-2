@@ -37,6 +37,28 @@ class StockerItemsController < ApplicationController
     render json: fmt(ok, [], "Deleted stocker_item = "+params[:id])
   end
 
+  def index_with_remaining_num
+    output = []
+    @stocker_items = StockerItem.all
+    if(@stocker_items.length != 0)
+      @stocker_items.each do |stocker_item|
+        remaining_num = stocker_item.num - AssignRentalItem.where(rental_item_id: stocker_item.rental_item_id, stocker_place_id: stocker_item.stocker_place_id).sum(:num)
+        temp = {
+          id: stocker_item.id,
+          fes_year_id: stocker_item.fes_year_id,
+          rental_item: stocker_item.rental_item.name,
+          stocker_place: stocker_item.stocker_place.name,
+          num: stocker_item.num,
+          remaining_num: remaining_num,
+        }
+        output << temp
+      end
+      render json: fmt(ok, output)
+    else
+      render json: fmt(not_found, [], "Not found stocker_items")
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stocker_item

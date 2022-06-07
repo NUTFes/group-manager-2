@@ -26,6 +26,9 @@ Rails.application.routes.draw do
   get "/sunny/stages" => "stages#show_sunny"
   get "/rainy/stages" => "stages#show_rainy"
 
+  # 在庫物品
+  get "stocker_items/index_with_remaining_num" => "stocker_items#index_with_remaining_num"
+
   # CRUD (/...)
   resources :user_page_settings
   resources :memos
