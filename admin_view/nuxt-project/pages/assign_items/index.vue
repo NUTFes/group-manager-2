@@ -2,7 +2,7 @@
   <div class="main-content">
     <SubHeader pageTitle="在庫場所">
       <CommonButton iconName="add_circle" :on_click="openAddModal">
-        追加
+        追加   
       </CommonButton>
     </SubHeader>
     
@@ -15,16 +15,14 @@
         </template>
         <template v-slot:table-body>
           <tr
-            v-for="(stockerPlace, index) in stockerPlaces"
+            v-for="(stocker_place, index) in stocker_place.data"
             :key="index"
-            @click="() => $router.push({ path: `/assign_items/` + stockerPlace.id })"
+            @click="() => $router.push({ path: `/stocker_places/` + stocker_place.id })"
           >
-            <td>{{ stockerPlace.id }}</td>
-            <td>{{ stockerPlace.name }}</td>
-            <td>{{ stockerPlace.stock_item_status }}</td>
-            <td>{{ stockerPlace.assign_item_status }}</td>
-            <td>{{ stockerPlace.created_at | formatDate }}</td>
-            <td>{{ stockerPlace.updated_at | formatDate }}</td>
+            <td>{{ stocker_place.id }}</td>
+            <td>{{ stocker_place.name }}</td>
+            <td>{{ stocker_place.stock_item_status }}</td>
+            <td>{{ stocker_place.assign_item_status }}</td>
           </tr>
         </template>
       </Table>
@@ -38,7 +36,7 @@
       <template v-slot:form>
         <div>
           <h3>部屋名</h3>
-          <input v-model="stockerPlaceName" placeholder="入力してください" />
+          <input v-model="roomName" placeholder="入力してください" />
         </div>
         <div>
           <h3>在庫登録</h3>
@@ -88,20 +86,37 @@ export default {
               "在庫登録",
               "割当",
           ],
-          roomName: "",
           isOpenAddModal: false,
-          stocker_places: [],
+          stocker_place: [],
+          roomName: [],
+          roomNameList: [],
+          stockItemStatus: [],
+          assignItemStatus: [],
           stockItemStatusList: [
             { id: 1, name: "未登録" },
             { id: 2, name: "登録中" },
             { id: 3, name: "登録完了" },
           ],
-        assignItemStatusList: [
-          { id: 1, name: "未登録" },
-          { id: 2, name: "登録中" },
-          { id: 3, name: "登録完了" },
-        ]
+          assignItemStatusList: [
+            { id: 1, name: "未登録" },
+            { id: 2, name: "登録中" },
+            { id: 3, name: "登録完了" },
+          ],
       };
+  },
+
+  mounted() {
+    this.$axios
+      .get("stocker_places/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.stocker_place = response.data;
+        // this.stock_item_status = response.data.stock_item_status;
+        // this.assign_item_status = response.data.assign_item_status;
+      });
   },
   computed: {
     ...mapState({
@@ -117,23 +132,24 @@ export default {
       this.isOpenAddModal = false;
     },
     reload(id) {
-      const url = "/assign_items/" + id;
+      const url = "/assig_items/" + id;
       this.$axios.$get(url).then((response) => {
-        this.assignItems.push(response.data);
+        this.stockdrPlaces.push(response.data);
       });
     },
     async submit() {
-      const url =
-        "/assign_items/" +
+      const postUrl =
+        "/stocker_places/" +
         "?name=" +
-        this.name +
+        this.roomName +
         "&stock_item_status=" +
         this.stockItemStatus +
         "&assign_item_status=" +
-        this.assignItemStatus
+        this.assignItemStatus;
+      console.log(postUrl);
 
-      this.$axios.$post(url).then((response) => {
-        this.name = "";
+      this.$axios.$post(postUrl).then((response) => {
+        this.roomName = "";
         this.stockItemStatus = "";
         this.assignItemStatus = "";
         this.reload(response.data.id);
