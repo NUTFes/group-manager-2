@@ -33,6 +33,27 @@
   padding: 25px;
 }
 
+.normal-table a {
+  background: linear-gradient(
+    135deg,
+    var(--button-primary) 0%,
+    var(--button-secondary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.normal-table a:hover {
+  background: linear-gradient(
+    45deg,
+    var(--button-secondary) 0%,
+    var(--primary) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  box-shadow: 5px 5px 6px #f0f0f0, -5px -5px 3px #fafafa;
+}
+
 .normal-table tr:hover {
   transform: translateY(-1px);
   background-color: white;
