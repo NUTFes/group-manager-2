@@ -1,11 +1,11 @@
 <template>
-  <div class="row-container" :style="RowOption">
+  <div class="column-container" :style="ColumnOption">
     <slot></slot>
   </div>
 </template>
 <script>
 export default {
-  name: "Row",
+  name: "Column",
   props: {
     width: {
       type: String,
@@ -27,32 +27,27 @@ export default {
       required: false,
       default: "20px",
     },
-    wrap: {
-      type: String,
-      required: false,
-      default: "wrap",
-    },
   },
   computed: {
-    RowOption() {
+    ColumnOption() {
       return {
-        "--row-width": this.width,
-        "--row-align": this.align,
-        "--row-justify": this.justify,
-        "--row-gap": this.gap,
-        "--row-wrap": this.wrap,
+        "--column-width": this.width,
+        "--column-align": this.align,
+        "--column-justify": this.justify,
+        "--column-gap": this.gap,
       };
     },
   },
 };
 </script>
 <style scoped>
-.row-container {
-  width: var(--row-width);
+.column-container {
+  width: var(--column-width);
   display: flex;
-  align-items: var(--row-align);
-  justify-content: var(--row-justify);
-  flex-wrap: var(--row-wrap);
-  gap: var(--row-gap);
+  flex-flow: column;
+  align-items: var(--column-align);
+  justify-content: var(--column-justify);
+  flex-wrap: wrap;
+  gap: var(--column-gap);
 }
 </style>
