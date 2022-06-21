@@ -161,4 +161,10 @@ export const developerRole = {
     update: true,
     delete: true,
   },
+  assign_items: {
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
 }

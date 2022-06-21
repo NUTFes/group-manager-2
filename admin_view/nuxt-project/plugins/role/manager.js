@@ -161,4 +161,10 @@ export const managerRole = {
     update: false,
     delete: false,
   },
+  assign_items: {
+    read: true,
+    create: false,
+    update: false,
+    delete: false,
+  },
 }

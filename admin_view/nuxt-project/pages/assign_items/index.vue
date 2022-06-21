@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="在庫場所">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).stocker_places.create" iconName="add_circle" :on_click="openAddModal">
         追加   
       </CommonButton>
     </SubHeader>
@@ -17,12 +17,12 @@
           <tr
             v-for="(stocker_place, index) in stocker_place.data"
             :key="index"
-            @click="() => $router.push({ path: `/stocker_places/` + stocker_place.id })"
+            @click="() => $router.push({ path: `/assign_items/` + stocker_place.id })"
           >
             <td>{{ stocker_place.id }}</td>
             <td>{{ stocker_place.name }}</td>
-            <td>{{ stocker_place.stock_item_status }}</td>
-            <td>{{ stocker_place.assign_item_status }}</td>
+            <td>{{ stocker_place.stock_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
+            <td>{{ stocker_place.assign_item_status === 1 ? "未登録" : stocker_place.assign_item_status === 2 ? "登録中" : "登録完了" }}</td>
           </tr>
         </template>
       </Table>
@@ -60,7 +60,7 @@
               :key="assignItemStatus.id"
               :value="assignItemStatus.id"
             >
-              {{assignItemStatus.name}}
+              {{ assignItemStatus.name }}
             </option>
           </select>
         </div>
@@ -114,8 +114,6 @@ export default {
       })
       .then((response) => {
         this.stocker_place = response.data;
-        // this.stock_item_status = response.data.stock_item_status;
-        // this.assign_item_status = response.data.assign_item_status;
       });
   },
   computed: {
