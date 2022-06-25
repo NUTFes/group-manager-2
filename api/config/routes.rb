@@ -102,6 +102,7 @@ Rails.application.routes.draw do
       get "get_rental_order_show_for_admin_view/:id" => "rental_orders_api#get_rental_order_show_for_admin_view"
       post "get_refinement_rental_orders" => "rental_orders_api#get_refinement_rental_orders"
       post "get_search_rental_orders" => "rental_orders_api#get_search_rental_orders"
+      get "get_rental_orders_with_unassigned_num" => "rental_orders_api#get_rental_orders_with_unassigned_num"
       
       #---ステージ申請ページ
       get "get_stage_order_index_for_admin_view" => "stage_orders_api#get_stage_order_index_for_admin_view"

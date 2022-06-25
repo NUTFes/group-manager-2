@@ -35,28 +35,6 @@ class RentalOrdersController < ApplicationController
     render json: fmt(ok, [], "Deleted rental_order = "+params[:id]) 
   end
 
-  def index_with_unassigned_num
-    @rental_orders = RentalOrder.all
-    if(@rental_orders.length != 0)
-      @rental_orders.each do |rental_order|
-        unassigned_num = rental_order.num - AssignRentalItem.where(group_id: rental_order.group_id, rental_item_id: rental_order.rental_item_id).sum(:num)
-        temp = {
-          id: rental_order.id,
-          group_name: rental_order.group.name,
-          rental_item: rental_order.rental_item.name,
-          num: rental_order.num,
-          unassigned_num: unassigned_num,
-        }
-        output << temp
-      end
-      render json: fmt(ok, output)
-    else
-      render json: fmt(not_found, [], "Not found stocker_items")
-    end
-  end
-
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_rental_order
