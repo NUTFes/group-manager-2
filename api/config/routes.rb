@@ -108,6 +108,9 @@ Rails.application.routes.draw do
       get "get_stage_order_show_for_admin_view/:id" => "stage_orders_api#get_stage_order_show_for_admin_view"
       post "get_refinement_stage_orders" => "stage_orders_api#get_refinement_stage_orders"
       post "get_search_stage_orders" => "stage_orders_api#get_search_stage_orders"
+  
+      # 在庫物品
+      get "get_stocker_items_with_remaining_num" => "stocker_items_api#get_stocker_items_with_remaining_num"
       
       #---ステージオプション申請ページ
       get "get_stage_common_option_index_for_admin_view" => "stage_common_options_api#get_stage_common_option_index_for_admin_view"
