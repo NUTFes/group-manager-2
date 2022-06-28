@@ -1,24 +1,24 @@
 <template>
   <div>
     <SubHeader pageSubTitle="物品申請" pageTitle="物品申請割り当てページ">
-      <CommonButton>
-        編集{{stocker_place}}{{stocker_items}}
+      <CommonButton iconName="edit" :on_click="openPlaceEditModal">
+        編集
       </CommonButton>
-      <CommonButton>
+      <CommonButton iconName="delete" :on_click="openPlaceDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
     <br />
     <Row wrap="nowrap" align="start">
-      <Column width="50%">
-        <Card width="100%">
+      <Column width="100%">
+        <Card width="50%">
           <SubHeader pageTitle="在庫物品">
-            <CommonButton>
+            <CommonButton iconName="add_circle" :on_click="openItemAddModal">
               追加
             </CommonButton>
           </SubHeader>
           <Table>
-            <template v-slot:table-header>
+            <template v-slot:table-header> 
               <th>物品数</th>
               <th>個数</th>
               <th>編集</th>
@@ -26,17 +26,17 @@
             </template>
             <template v-slot:table-body>
               <tr>
-                <td>aaaaaaa</td>
-                <td>aaaaa</td>
-                <td><a>編集</a></td>
-                <td><a>削除</a></td>
-              </tr>
+                <td>aaa</td>
+                <td>aaa</td>
+                <td><CommonButton iconName="edit" :on_click="openItemEditModal">編集</CommonButton></td>
+                <td><CommonButton iconName="delete" :on_click="openItemDeleteModal">削除</CommonButton></td>  
+            </tr>
             </template>
           </Table>
         </Card>
-        <Card width="100%">
+        <Card width="50%">
           <SubHeader pageTitle="割り当て">
-            <CommonButton>
+            <CommonButton iconName="add_circle" :on_click="openAssignAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -50,12 +50,12 @@
             </template>
             <template v-slot:table-body>
               <tr>
-                <td>aaaaaa</td>
-                <td>aaaaaaa</td>
-                <td>aaaaa</td>
-                <td><a>編集</a></td>
-                <td><a>削除</a></td>
-              </tr>
+                <td>aaa</td>
+                <td>aaa</td>
+                <td>aaa</td>
+                <td><CommonButton iconName="edit" :on_click="openAssignEditModal">編集</CommonButton></td>
+                <td><CommonButton iconName="delete" :on_click="openAssignDeleteModal">削除</CommonButton></td>  
+            </tr>
             </template>
           </Table>
         </Card>
@@ -78,11 +78,7 @@
       </Column>
       <Column width="50%">
         <Card width="100%">
-          <SubHeader pageTitle="その他データ">
-            <CommonButton>
-              追加
-            </CommonButton>
-          </SubHeader>
+          <SubHeader pageTitle="その他データ"></SubHeader>
           <Table>
             <template v-slot:table-header>
               <th>団体名</th>
@@ -91,15 +87,161 @@
             </template>
             <template v-slot:table-body>
               <tr>
-                <td>aaaaaa</td>
-                <td>aaaaaaa</td>
-                <td>aaaaa</td>
+                <td>aaa</td>
+                <td>aaa</td>
+                <td>aaa</td>
               </tr>
             </template>
           </Table>
         </Card>
       </Column>
     </Row>
+
+    <AddModal
+      @close="closeItemAddModal"
+      v-if="isOpenItemAddModal"
+      title="在庫物品の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>物品名</h3>
+          <select v-model="items">
+            <option
+              v-for="i in items"
+              :key="i.id"
+              :value="i.id"
+            >
+            {{ i.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>個数</h3>
+          <input v-modal="itemNum" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit">登録</CommonButton>
+      </template>
+    </AddModal>
+
+    <AddModal
+      @close="closeAssignAddModal"
+      v-if="isOpenAssignAddModal"
+      title="割当の追加"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>割当</h3>
+          <input v-modal="itemName" placeholder="入力してください" />
+        </div>
+      </template>
+      <template>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
+      </template>
+    </AddModal>
+
+    <EditModal
+      @close="closePlaceEditModal"
+      v-if="isOpenPlaceEditModal"
+      title="在庫場所編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>在庫場所</h3>
+          <textarea v-modal="stockerPlace" placeholder="入力してください" />
+        </div>
+      </template>
+      <template>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+      </template>
+    </EditModal>
+    
+    <EditModal
+      @close="closeItemEditModal"
+      v-if="isOpenItemEditModal"
+      title="在庫物品編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>物品名</h3>
+          <select v-model="items">
+            <option
+              v-for="i in items"
+              :key="i.id"
+              :value="i.id"
+            >
+            {{ i.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>個数</h3>
+          <input v-modal="itemNum" placeholder="入力してください" />
+        </div>
+      </template>
+      <template v-slot:method>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+      </template>
+    </EditModal>
+     
+    <EditModal
+      @close="closeAssignEditModal"
+      v-if="isOpenAssignEditModal"
+      title="割当編集"
+    >
+      <template v-slot:form>
+        <div>
+          <h3>割当</h3>
+          <input v-modal="editItemName" placeholder="入力してください" />
+        </div>
+      </template>
+      <template>
+        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+      </template>
+    </EditModal>
+    
+    <DeleteModal
+      @close="closePlaceDeleteModal"
+      v-if="isOpenPlaceDeleteModal"
+      title="在庫場所の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
+    
+    <DeleteModal
+      @close="closeItemDeleteModal"
+      v-if="isOpenItemDeleteModal"
+      title="在庫物品の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal>
+
+    <DeleteModal
+      @close="closeAssignDeleteModal"
+      v-if="isOpenAssignDeleteModal"
+      title="割当の削除"
+    >
+      <template v-slot:method>
+        <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
+        <NoButton iconName="close" :on_click="closeDeleteModal"
+          >いいえ</NoButton
+        >
+      </template>
+    </DeleteModal> 
+
   </div>
 </template>
 
@@ -107,25 +249,45 @@
 import axios from "axios";
 import ItemOrders from "~/components/ItemOrders.vue";
 import InTableButton from '../../components/InTableButton.vue';
+import EditModal from "../../components/EditModal.vue";
 export default {
+  watchQuery: ["page"],
   components: {
     ItemOrders,
     InTableButton,
-  },
+    EditModal
+},
   data() {
     return {
       regist_info: [],
       items: [
         { id: 1, name: "机" },
-        { id: 2, name: "椅子" },
-        { id: 3, name: "パーティション" },
-        { id: 4, name: "テント" },
-        { id: 5, name: "おもり" },
+        { id: 2, name: "長机" },
+        { id: 3, name: "木の椅子" },
+        { id: 4, name: "パイプの椅子" },
+        { id: 5, name: "テント" },
+        { id: 6, name: "パーテーション"},
+        { id: 7, name: "掲示板"},
+        { id: 8, name: "暗幕"},
+        { id: 9, name: "椅子"},
+        { id: 10, name: "テント"},
+        { id: 11, name: "パーテーション足"},
       ],
+      // isOpenAddModal: false,
+      // isOpenEditModal: false,
+      // isOpenDeleteModal: false,
+      isOpenItemAddModal: false,
+      isOpenAssignAddModal: false,
+      isOpenPlaceEditModal: false,
+      isOpenItemEditModal: false,
+      isOpenAssignEditModal: false,
+      isOpenPlaceDeleteModal: false,
+      isOpenItemDeleteModal: false,
+      isOpenAssignDeleteModal: false,
       stocker_items: [],
-      stocker_place: [],
+      stockerPlace: [],
       id: 1,
-      item_name: [],
+      itemName: [],
       group_name: [],
       item: [],
       num: [],
@@ -169,7 +331,7 @@ export default {
     };
   },
   mounted() {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    console.log("aaaa")
     axios
       .get("stocker_places/", {
         headers: {
@@ -181,7 +343,7 @@ export default {
       })
       .then((response) => {
         console.log(response)
-        console.log("ccccccccccccccccccccccc")
+        console.log("ccc")
         console.log(URL)
         this.regist_info = response.data;
       },
@@ -191,7 +353,7 @@ export default {
           return error;
         }
       );
-      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+      console.log("bbbbbb")
     this.$axios
       .get("stocker_places/", {
         headers: {
@@ -236,6 +398,62 @@ export default {
   },
 
   methods: {
+    openItemAddModal() {
+      this.isOpenItemAddModal = false;
+      this.isOpenItemAddModal = true;
+    },
+    closeItemAddModal() {
+      this.isOpenItemAddModal = false;
+    },
+    openAssignAddModal() {
+      this.isOpenAssignAddModal = false;
+      this.isOpenAssignAddModal = true;
+    },
+    closeAssignAddModal() {
+      this.isOpenAssignAddModal = false;
+    },
+    openPlaceEditModal() {
+      this.isOpenPlaceEditModal = false;
+      this.isOpenPlaceEditModal = true;
+    },
+    closePlaceEditModal() {
+      this.isOpenPlaceEditModal = false;
+    },
+    openItemEditModal() {
+      this.isOpenItemEditModal = false;
+      this.isOpenItemEditModal = true;
+    },
+    closeItemEditModal() {
+      this.isOpenItemEditModal = false;
+    },
+    openAssignEditModal() {
+      this.isOpenAssignEditModal = false;
+      this.isOpenAssignEditModal = true;
+    },
+    closeAssignEditModal() {
+      this.isOpenAssignEditModal =false;
+    },
+    openPlaceDeleteModal() {
+      this.isOpenPlaceDeleteModal = false;
+      this.isOpenPlaceDeleteModal = true;
+    },
+    closePlaceDeleteModal() {
+      this.isOpenPlaceDeleteModal = false;
+    },
+    openItemDeleteModal() {
+      this.isOpenItemDeleteModal = false;
+      this.isOpenItemDeleteModal = true;
+    },
+    closeItemDeleteModal() {
+      this.isOpenItemDeleteModal = false;
+    },
+    openAssignDeleteModal() {
+      this.isOpenAssignDeleteModal = false;
+      this.isOpenAssignDeleteModal = true;
+    },
+    closeAssignDeleteModal() {
+      this.isOpenAssignDeleteModal = false;
+    },
     get_items: function () {
       this.$axios
         .get("api/v1/get_item_name", {
