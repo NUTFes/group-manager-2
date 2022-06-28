@@ -2,7 +2,7 @@
   <div>
     <SubHeader pageSubTitle="物品申請" pageTitle="物品申請割り当てページ">
       <CommonButton>
-        編集{{stocker_place}}{{stocker_items}}
+        編集
       </CommonButton>
       <CommonButton>
         削除
@@ -19,17 +19,17 @@
           </SubHeader>
           <Table>
             <template v-slot:table-header>
-              <th>物品数</th>
-              <th>個数</th>
-              <th>編集</th>
-              <th>削除</th>
+              <th v-for="(header, index) in rental_headers" v-bind:key="index">
+                {{ header }}
+              </th>
             </template>
             <template v-slot:table-body>
-              <tr>
-                <td>aaaaaaa</td>
-                <td>aaaaa</td>
-                <td><a>編集</a></td>
-                <td><a>削除</a></td>
+              <tr
+                v-for="(list, index) in rental_item.data"
+                :key="index"
+              >
+                <td>{{ list.id }}</td>
+                <td>{{ list.name }}</td>
               </tr>
             </template>
           </Table>
@@ -62,22 +62,23 @@
         <Row>
           <SelectBox
             :nameList="status_name"
-            :on_click="registStatus"
+            on_click="reload"
             value="name"
+            initialValue="完了"
           >
             {{ refRole }}
           </SelectBox>
           <SelectBox
             :nameList="status_name"
-            :on_click="registStatus"
             value="name"
+            initialValue="未登録"
           >
             {{ refRole }}
           </SelectBox>
         </Row>
       </Column>
       <Column width="50%">
-        <Card width="100%">
+        <Card width="50%">
           <SubHeader pageTitle="その他データ">
             <CommonButton>
               追加
@@ -85,15 +86,19 @@
           </SubHeader>
           <Table>
             <template v-slot:table-header>
-              <th>団体名</th>
-              <th>物品数</th>
-              <th>個数</th>
+              <th v-for="(header, index) in stocker_headers" v-bind:key="index">
+                {{ header }}
+              </th>
             </template>
             <template v-slot:table-body>
-              <tr>
-                <td>aaaaaa</td>
-                <td>aaaaaaa</td>
-                <td>aaaaa</td>
+              <tr
+                v-for="(list, index) in stocker_place.data"
+                :key="index"
+              >
+                <td>{{ list.id }}</td>
+                <td>{{ list.name }}</td>
+                <td>{{ list.stock_item_status }}</td>
+                <td>{{ list.assign_item_status }}</td>
               </tr>
             </template>
           </Table>
@@ -104,7 +109,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import ItemOrders from "~/components/ItemOrders.vue";
 import InTableButton from '../../components/InTableButton.vue';
 export default {
@@ -114,7 +118,18 @@ export default {
   },
   data() {
     return {
-      regist_info: [],
+      rental_item: [],
+      rental_headers: [
+        "ID",
+        "物品名",
+      ],
+      stocker_place: [],
+      stocker_headers: [
+        "ID",
+        "部屋名",
+        "在庫状況",
+        "割り当て状況",
+      ],
       items: [
         { id: 1, name: "机" },
         { id: 2, name: "椅子" },
@@ -169,29 +184,6 @@ export default {
     };
   },
   mounted() {
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    axios
-      .get("stocker_places/", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response)
-        console.log("ccccccccccccccccccccccc")
-        console.log(URL)
-        this.regist_info = response.data;
-      },
-      (error) => {
-          console.error(error);
-          console.log(URL)
-          return error;
-        }
-      );
-      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
     this.$axios
       .get("stocker_places/", {
         headers: {
@@ -199,40 +191,19 @@ export default {
         },
       })
       .then((response) => {
-        consple.log(response)
         this.stocker_place = response.data;
-        this.stock_item_status = response.data.stock_item_status;
-        this.assign_item_status = response.data.assign_item_status;
+        consple.log(response)
       });
-
     this.$axios
-      .get(
-        "api/v1/get_stocker_item_for_stocker_place/" + this.id,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .get("rental_items/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
-        this.stocker_items = response.data;
+        this.rental_item = response.data;
+        consple.log(response)
       });
-
-    this.$axios
-      .get(
-        "api/v1/get_assign_rental_item_for_stocker_place/" +
-          this.$route.params.id,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((response) => {
-        this.assign_items = response.data;
-      });
-    this.get_items();
-    this.get_groups();
   },
 
   methods: {

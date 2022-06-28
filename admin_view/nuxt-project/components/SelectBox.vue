@@ -1,25 +1,25 @@
 <template>
-  <div ref="elRoot" class="drop-down-content">
+  <div ref="elRoot" class="select-box-content">
     <button
-      class="drop-down-select"
+      class="select-box-button"
       @click="$data.showContent = !$data.showContent"
       :style="SearchDropDownOption"
     >
       <slot></slot>
-      <span class="material-icons">arrow_drop_down</span>
+      <span class="material-icons">{{initialValue}}</span>
     </button>
     <transition name="fade">
-      <div class="drop-down" v-show="$data.showContent">
-        <div class="drop-down__container" @click.self="closeModal">
-          <div class="drop-down__box">
-            <select
-              class="drop-down-select"
+      <div class="select-box" v-show="$data.showContent">
+        <div class="select-box__container" @click.self="closeModal">
+          <div class="select-box__box">
+            <button
+              class="select-box-button"
               v-for="item in nameList"
               :key="item.id"
               @click="on_click(item.id, nameList)"
             >
               {{ item[value] }}
-            </select>
+            </button>
           </div>
         </div>
       </div>
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: "SelectBox",
+  name: "SearchDropDown",
   data() {
     return {
       showContent: false,
@@ -51,6 +51,11 @@ export default {
       type: String,
       required: false,
     },
+    initialValue: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   mounted() {
     window.addEventListener(
@@ -70,15 +75,15 @@ export default {
 };
 </script>
 <style scoped>
-.drop-down-content {
+.select-box-content {
   width: 160px;
 }
 
-.drop-down__box {
+.select-box__box {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.drop-down-select {
+.select-box-button {
   border-radius: 0px;
   width: 160px;
   height: 35px;
@@ -97,7 +102,7 @@ export default {
   gap: 5px;
 }
 
-.drop-down-select:before {
+.select-box-button:before {
   border-radius: 0px;
   content: "";
   width: 100%;
@@ -110,7 +115,7 @@ export default {
   background: rgba(40, 40, 40, 0.9);
   backdrop-filter: blur(4px);
 }
-.drop-down-button:after {
+.select-box-button:after {
   border-radius: 0px;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
   content: "";
@@ -127,23 +132,23 @@ export default {
     var(--button-secondary) 100%
   );
 }
-.drop-down-button:hover:after {
+.select-box-button:hover:after {
   opacity: 1;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
-.drop-down-button:hover:before {
+.select-box-button:hover:before {
   opacity: 0;
 }
-.drop-down-button:active:after {
+.select-box-button:active:after {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
 }
 
-.drop-down {
+.select-box {
   width: 160px;
   position: absolute;
   z-index: 11;
 }
-.drop-down__container {
+.select-box__container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -151,7 +156,7 @@ export default {
   align-items: start;
 }
 
-.drop-down__box {
+.select-box__box {
   z-index: 12;
   margin-top: 0px;
   display: flex;

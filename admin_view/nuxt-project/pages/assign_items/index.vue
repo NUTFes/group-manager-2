@@ -17,7 +17,7 @@
           <tr
             v-for="(stocker_place, index) in stocker_place.data"
             :key="index"
-            @click="() => $router.push({ path: `/stocker_places/` + stocker_place.id })"
+            @click="() => $router.push({ path: `/assign_items/` + stocker_place.id })"
           >
             <td>{{ stocker_place.id }}</td>
             <td>{{ stocker_place.name }}</td>
