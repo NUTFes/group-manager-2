@@ -18,19 +18,28 @@
             </CommonButton>
           </SubHeader>
           <Table>
-            <template v-slot:table-header> 
-              <th>物品数</th>
-              <th>個数</th>
-              <th>編集</th>
-              <th>削除</th>
+            <template v-slot:table-header>
+              <th v-for="(header, index) in rental_headers" v-bind:key="index">
+                {{ header }}
+              </th>
             </template>
             <template v-slot:table-body>
-              <tr>
-                <td>aaa</td>
-                <td>aaa</td>
+              <tr
+                v-for="(list, index) in stockerItems"
+                :key="index"
+                @click="
+                  () =>
+                    $router.push({
+                      path: '/stocker_items/' + list.stocker_item.id
+                    })
+                
+                "
+              >
+                <td>{{ list.rental_item_id }}</td>
+                <td>{{ list.num }}</td>
                 <td><CommonButton iconName="edit" :on_click="openItemEditModal">編集</CommonButton></td>
-                <td><CommonButton iconName="delete" :on_click="openItemDeleteModal">削除</CommonButton></td>  
-            </tr>
+                <td><CommonButton iconName="delete" :on_click="openItemDeleteModal">削除</CommonButton></td>
+              </tr>
             </template>
           </Table>
         </Card>
@@ -42,17 +51,21 @@
           </SubHeader>
           <Table>
             <template v-slot:table-header>
-              <th>団体名</th>
-              <th>物品数</th>
-              <th>個数</th>
+              <th v-for="(header, index) in stocker_headers" v-bind:key="index">
+                {{ header }}
+              </th>
               <th>編集</th>
               <th>削除</th>
             </template>
             <template v-slot:table-body>
-              <tr>
-                <td>aaa</td>
-                <td>aaa</td>
-                <td>aaa</td>
+              <tr
+                v-for="(list, index) in edited_assign_item"
+                :key="index"
+              >
+                <td>{{ list.id }}</td>  
+                <td>{{ list.name }}</td>  
+                <td>{{ list.item }}</td>  
+                <td>{{ list.num }}</td>  
                 <td><CommonButton iconName="edit" :on_click="openAssignEditModal">編集</CommonButton></td>
                 <td><CommonButton iconName="delete" :on_click="openAssignDeleteModal">削除</CommonButton></td>  
             </tr>
@@ -62,34 +75,43 @@
         <Row>
           <SelectBox
             :nameList="status_name"
-            :on_click="registStatus"
+            on_click="reload"
             value="name"
+            initialValue="完了"
           >
             {{ refRole }}
           </SelectBox>
           <SelectBox
             :nameList="status_name"
-            :on_click="registStatus"
             value="name"
+            initialValue="未登録"
           >
             {{ refRole }}
           </SelectBox>
         </Row>
       </Column>
       <Column width="50%">
-        <Card width="100%">
-          <SubHeader pageTitle="その他データ"></SubHeader>
+        <Card width="50%">
+          <SubHeader pageTitle="その他データ">
+            <CommonButton>
+              追加
+            </CommonButton>
+          </SubHeader>
           <Table>
             <template v-slot:table-header>
-              <th>団体名</th>
-              <th>物品数</th>
-              <th>個数</th>
+              <th v-for="(header, index) in stocker_headers" v-bind:key="index">
+                {{ header }}
+              </th>
             </template>
             <template v-slot:table-body>
-              <tr>
-                <td>aaa</td>
-                <td>aaa</td>
-                <td>aaa</td>
+              <tr
+                v-for="(list, index) in stocker_place.data"
+                :key="index"
+              >
+                <td>{{ list.id }}</td>
+                <td>{{ list.name }}</td>
+                <td>{{ list.stock_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
+                <td>{{ list.assign_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
               </tr>
             </template>
           </Table>
@@ -132,14 +154,37 @@
     >
       <template v-slot:form>
         <div>
-          <h3>割当</h3>
-          <input v-modal="itemName" placeholder="入力してください" />
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>物品名</h3>
+          <select v-model="items">
+            <option
+              v-for="i in items"
+              :key="i.id"
+              :value="i.id"
+            >
+            {{ i.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>個数</h3>
+          <input v-modal="itemNum" placeholder="入力してください" />
         </div>
       </template>
-      <template>
-        <CommonButton iconName="add_circle" :on_click="submit"
-          >登録</CommonButton
-        >
+      <template v-slot:method>
+        <CommonButton iconName="add_circle" :on_click="submit">登録</CommonButton>
       </template>
     </AddModal>
 
@@ -154,7 +199,7 @@
           <textarea v-modal="stockerPlace" placeholder="入力してください" />
         </div>
       </template>
-      <template>
+      <template v-slot:method>
         <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
       </template>
     </EditModal>
@@ -194,11 +239,36 @@
     >
       <template v-slot:form>
         <div>
-          <h3>割当</h3>
-          <input v-modal="editItemName" placeholder="入力してください" />
+          <h3>団体名</h3>
+          <select v-model="appGroup">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>物品名</h3>
+          <select v-model="items">
+            <option
+              v-for="i in items"
+              :key="i.id"
+              :value="i.id"
+            >
+            {{ i.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>個数</h3>
+          <input v-modal="itemNum" placeholder="入力してください" />
         </div>
       </template>
-      <template>
+      <template v-slot:method>
         <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
       </template>
     </EditModal>
@@ -246,7 +316,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import ItemOrders from "~/components/ItemOrders.vue";
 import InTableButton from '../../components/InTableButton.vue';
 import EditModal from "../../components/EditModal.vue";
@@ -259,7 +328,22 @@ export default {
 },
   data() {
     return {
-      regist_info: [],
+      rental_item: [],
+      rental_headers: [
+        "物品名",
+        "個数",
+      ],
+      stocker_place: [],
+      stocker_headers: [
+        "団体名",
+        "物品",
+        "個数",
+      ],
+      assignStatus: [
+        { id: 1, name: "未登録" },
+        { id: 2, name: "登録中" },
+        { id: 3, name: "登録完了" },
+      ],
       items: [
         { id: 1, name: "机" },
         { id: 2, name: "長机" },
@@ -273,9 +357,6 @@ export default {
         { id: 10, name: "テント"},
         { id: 11, name: "パーテーション足"},
       ],
-      // isOpenAddModal: false,
-      // isOpenEditModal: false,
-      // isOpenDeleteModal: false,
       isOpenItemAddModal: false,
       isOpenAssignAddModal: false,
       isOpenPlaceEditModal: false,
@@ -284,13 +365,13 @@ export default {
       isOpenPlaceDeleteModal: false,
       isOpenItemDeleteModal: false,
       isOpenAssignDeleteModal: false,
-      stocker_items: [],
+      stockerItems: [],
       stockerPlace: [],
-      id: 1,
       itemName: [],
       group_name: [],
       item: [],
       num: [],
+      groups: [],
       group_id: [],
       rental_item: [],
       assign_num: [],
@@ -332,28 +413,7 @@ export default {
   },
   mounted() {
     console.log("aaaa")
-    axios
-      .get("stocker_places/", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        console.log(response)
-        console.log("ccc")
-        console.log(URL)
-        this.regist_info = response.data;
-      },
-      (error) => {
-          console.error(error);
-          console.log(URL)
-          return error;
-        }
-      );
-      console.log("bbbbbb")
+    // axios
     this.$axios
       .get("stocker_places/", {
         headers: {
@@ -361,40 +421,29 @@ export default {
         },
       })
       .then((response) => {
-        consple.log(response)
         this.stocker_place = response.data;
-        this.stock_item_status = response.data.stock_item_status;
-        this.assign_item_status = response.data.assign_item_status;
+        consple.log(response)
       });
-
     this.$axios
-      .get(
-        "api/v1/get_stocker_item_for_stocker_place/" + this.id,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .get("rental_items/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
-        this.stocker_items = response.data;
+        this.rental_item = response.data;
+        consple.log(response)
       });
-
     this.$axios
-      .get(
-        "api/v1/get_assign_rental_item_for_stocker_place/" +
-          this.$route.params.id,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .get("groups/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
-        this.assign_items = response.data;
+        this.group = response.data;
+        consple.log(response)
       });
-    this.get_items();
-    this.get_groups();
   },
 
   methods: {
