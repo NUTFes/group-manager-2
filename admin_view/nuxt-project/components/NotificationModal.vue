@@ -40,6 +40,24 @@ export default {
           text: "UIを全く新しくしました",
           created_at: "2022/2/1",
         },
+        {
+          id: 3,
+          status: "RELEASE",
+          text: "バージョン 2.1.0をリリースしました",
+          created_at: "2022/7/1",
+        },
+        {
+          id: 4,
+          status: "NEW",
+          text: "新規ユーザーの登録機能を追加しました",
+          created_at: "2022/7/1",
+        },
+        {
+          id: 5,
+          status: "FIX",
+          text: "csv出力機能を修正しました",
+          created_at: "2022/7/1",
+        },
       ],
     };
   },
