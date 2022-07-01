@@ -24,6 +24,7 @@ class Api::V1::OutputCsvController < ApplicationController
           group.project_name,
           group.activity,
           group.user.name,
+          group.user.email,
           group.group_category.name,
           group.fes_year.year_num
         ]
