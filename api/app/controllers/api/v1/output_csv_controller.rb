@@ -12,7 +12,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 企画名 活動内容 代表者 カテゴリー 開催年)
+      column_name = %w(参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年)
       csv << column_name
       @groups.each do |group|
         # データが存在しない場合はスキップする
