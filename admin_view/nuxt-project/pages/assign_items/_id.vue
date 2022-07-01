@@ -22,21 +22,17 @@
               <th v-for="(header, index) in rental_headers" v-bind:key="index">
                 {{ header }}
               </th>
+              <th>編集</th>
+              <th>削除</th>
             </template>
             <template v-slot:table-body>
               <tr
-                v-for="(list, index) in stockerItems"
+                v-for="(stocker_item, index) in stocker_item.data"
                 :key="index"
-                @click="
-                  () =>
-                    $router.push({
-                      path: '/stocker_items/' + list.stocker_item.id
-                    })
-                
-                "
+                @click="() => $router.push({ path: `/assign_items/id/` + stocker_item.id })"
               >
-                <td>{{ list.rental_item_id }}</td>
-                <td>{{ list.num }}</td>
+                <td>{{ stocker_item.rental_item_id }}</td>
+                <td>{{ stocker_item.num }}</td>
                 <td><CommonButton iconName="edit" :on_click="openItemEditModal">編集</CommonButton></td>
                 <td><CommonButton iconName="delete" :on_click="openItemDeleteModal">削除</CommonButton></td>
               </tr>
@@ -58,17 +54,17 @@
               <th>削除</th>
             </template>
             <template v-slot:table-body>
-              <tr
-                v-for="(list, index) in edited_assign_item"
+              <tr 
+                v-for="(assign_rental_item, index) in assign_rental_item.data"
                 :key="index"
+                @click="() => $router.push({ path: '/assign_itmes/id/' + assign_rental_item.id })"
               >
-                <td>{{ list.id }}</td>  
-                <td>{{ list.name }}</td>  
-                <td>{{ list.item }}</td>  
-                <td>{{ list.num }}</td>  
+                <td>{{ assign_rental_item.group_id }}</td>  
+                <td>{{ assign_rental_item.rental_item_id }}</td>  
+                <td>{{ assign_rental_item.num }}</td>  
                 <td><CommonButton iconName="edit" :on_click="openAssignEditModal">編集</CommonButton></td>
                 <td><CommonButton iconName="delete" :on_click="openAssignDeleteModal">削除</CommonButton></td>  
-            </tr>
+              </tr>
             </template>
           </Table>
         </Card>
@@ -92,11 +88,7 @@
       </Column>
       <Column width="50%">
         <Card width="50%">
-          <SubHeader pageTitle="その他データ">
-            <CommonButton>
-              追加
-            </CommonButton>
-          </SubHeader>
+          <SubHeader pageTitle="その他データ"></SubHeader>
           <Table>
             <template v-slot:table-header>
               <th v-for="(header, index) in stocker_headers" v-bind:key="index">
@@ -210,7 +202,7 @@
       title="在庫物品編集"
     >
       <template v-slot:form>
-        <div>
+        <div> 
           <h3>物品名</h3>
           <select v-model="items">
             <option
@@ -228,7 +220,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+        <CommonButton iconName="edit" :on_click="editItem">編集</CommonButton>
       </template>
     </EditModal>
      
@@ -243,7 +235,7 @@
           <select v-model="appGroup">
             <option disabled value="">選択してください</option>
             <option
-              v-for="group in groupList"
+              v-for="group in group"
               :key="group.id"
               :value="group.id"
             >
@@ -280,7 +272,7 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal"
+        <NoButton iconName="close" :on_click="closePlaceDeleteModal"
           >いいえ</NoButton
         >
       </template>
@@ -293,7 +285,7 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal"
+        <NoButton iconName="close" :on_click="closeItemDeleteModal"
           >いいえ</NoButton
         >
       </template>
@@ -306,7 +298,7 @@
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal"
+        <NoButton iconName="close" :on_click="closeAssignDeleteModal"
           >いいえ</NoButton
         >
       </template>
@@ -365,17 +357,17 @@ export default {
       isOpenPlaceDeleteModal: false,
       isOpenItemDeleteModal: false,
       isOpenAssignDeleteModal: false,
-      stockerItems: [],
+      stockerItem: [],
       stockerPlace: [],
       itemName: [],
       group_name: [],
-      item: [],
-      num: [],
+      itemName: [],
+      itemNum: [],
       groups: [],
       group_id: [],
-      rental_item: [],
       assign_num: [],
-      assign_items: [],
+      assign_rental_item: [],
+      stocker_item: [],
       stock_item_status: [],
       assign_item_status: [],
       stocker_items_headers: [
@@ -413,7 +405,6 @@ export default {
   },
   mounted() {
     console.log("aaaa")
-    // axios
     this.$axios
       .get("stocker_places/", {
         headers: {
@@ -422,6 +413,16 @@ export default {
       })
       .then((response) => {
         this.stocker_place = response.data;
+        consple.log(response)
+      });
+    this.$axios
+      .get("stocker_items/", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        this.stocker_item = response.data;
         consple.log(response)
       });
     this.$axios
@@ -435,17 +436,16 @@ export default {
         consple.log(response)
       });
     this.$axios
-      .get("groups/", {
+      .get("assign_rental_items/", {
         headers: {
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        this.group = response.data;
+        this.assign_rental_item = response.data;
         consple.log(response)
       });
   },
-
   methods: {
     openItemAddModal() {
       this.isOpenItemAddModal = false;
@@ -480,7 +480,7 @@ export default {
       this.isOpenAssignEditModal = true;
     },
     closeAssignEditModal() {
-      this.isOpenAssignEditModal =false;
+      this.isOpenAssignEditModal = false;
     },
     openPlaceDeleteModal() {
       this.isOpenPlaceDeleteModal = false;
@@ -502,6 +502,22 @@ export default {
     },
     closeAssignDeleteModal() {
       this.isOpenAssignDeleteModal = false;
+    },
+    async editItem() {
+      const putItemUrl =
+        "/stocker_items/" +
+        "?rental_item_id" +
+        this.itemName +
+        "&num" +
+        this.itemNum;
+      console.log(putItemUrl);
+      
+      this.$axios.$post(putItemUrl).then((response) => {
+        this.itemName = "";
+        this.itemNum = "";
+        this.reload(response.data.id);
+        this.closeItemEditModal();
+      });
     },
     get_items: function () {
       this.$axios
@@ -766,6 +782,7 @@ export default {
           this.assign_item_status_dialog = false;
         });
     },
+
   },
 };
 </script>
