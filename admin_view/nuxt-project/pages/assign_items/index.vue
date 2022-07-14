@@ -16,8 +16,8 @@
         <template v-slot:table-body>
           <tr
             v-for="(stocker_place, index) in stocker_place.data"
-            :key="index"
-            @click="() => $router.push({ path: `/assign_items/` + stocker_place.id })"
+            @click="() => $router.push({ path: `/assign_items/` + stocker_place.id})"
+            :key="index" 
           >
             <td>{{ stocker_place.id }}</td>
             <td>{{ stocker_place.name }}</td>
@@ -130,13 +130,21 @@ export default {
       this.isOpenAddModal = false;
     },
     reload(id) {
-      const url = "/assig_items/" + id;
+      const url = "/stocker_places/" + id;
       this.$axios.$get(url).then((response) => {
-        this.stockdrPlaces.push(response.data);
-      });
+        this.stocker_place.data.push(response.data);
+        console.log(response)
+      })
+      .catch(error => 
+      {
+        console.log(error)
+      }) 
+      ;
+      console.log(this.stocker_place)
+
     },
     async submit() {
-      const postUrl =
+      const url =
         "/stocker_places/" +
         "?name=" +
         this.roomName +
@@ -144,12 +152,12 @@ export default {
         this.stockItemStatus +
         "&assign_item_status=" +
         this.assignItemStatus;
-      console.log(postUrl);
 
-      this.$axios.$post(postUrl).then((response) => {
+      this.$axios.$post(url).then((response) => {
         this.roomName = "";
         this.stockItemStatus = "";
         this.assignItemStatus = "";
+        console.log(response.data)
         this.reload(response.data.id);
         this.closeAddModal();
       });
