@@ -2,7 +2,7 @@
   <div class="main-content">
     <SubHeader 
       pageSubTitle="物品申請"
-      v-bind:pageTitle="this.id"
+      v-bind:pageTitle="stocker_place.name"
     >
       <CommonButton iconName="edit" :on_click="openPlaceEditModal">
         編集
@@ -569,7 +569,7 @@ export default {
     },
 
     async deleteItem() {
-      const delItemUrl = "/stocker_items/" + this.id.stocker_item.id;
+      const delItemUrl = "/stocker_items/" + stocker_item.id;
       const delItemRes = await this.$axios.$delete(delItemUrl);
       this.$router.push("/assign_items/");
     },
