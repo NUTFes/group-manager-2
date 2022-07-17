@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   resources :food_products
   resources :assign_rental_items
   resources :rentable_items
-  resources :rental_items
+  resources :assign_items
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places

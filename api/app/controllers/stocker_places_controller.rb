@@ -7,7 +7,7 @@ class StockerPlacesController < ApplicationController
   end
 
   def show
-    render json: fmt(ok, @tocker_place)
+    render json: fmt(ok, @stocker_place)
   end
 
   def create
