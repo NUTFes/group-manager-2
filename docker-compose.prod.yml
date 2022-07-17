@@ -2,7 +2,7 @@ version: '3'
 services:
   api:
     build: ./api
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec pumactl start"
+    command: bash -c "bundle exec rails s"
     container_name: 'GM2-API'
     volumes:
       - ./api:/myapp
@@ -10,8 +10,9 @@ services:
       - "3000:3000"
     stdin_open: true
     tty: true
-    environment: 
+    environment:
       - RAILS_ENV=production
+      - RAILS_LOG_TO_STDOUT=ON
     env_file:
       - nutmeg-mysql.env
       - webhook.env
@@ -52,7 +53,8 @@ services:
       - ./inside_view/vue-project/dist:/var/www/vhosts/group-manager-inside.nutfes.net
       - ./view/vue-project/dist:/var/www/vhosts/group-manager.nutfes.net
     ports:
-      - "443:443"
+      - "8080:8080"
+      - "8888:8888"
     depends_on:
       - admin_view
       - api
@@ -60,4 +62,4 @@ services:
 volumes:
   mysql-data:
     driver: local
-  code_share: 
+  code_share:
