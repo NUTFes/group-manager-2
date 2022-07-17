@@ -18,13 +18,11 @@ rails 6.1.3.1<br>
 SPA<br>
 node v12.14.1<br>
 @vue/cli 4.4.4<br>
-vuetify<br>
 
 ### admin_view(管理者画面）
 SSR<br>
 node v12.18.4<br>
 nuxt.js<br>
-vuetify<br>
 
 ## セットアップ
 [git cloneをしたら](https://github.com/NUTFes/group-manager-2/wiki/git-clone-%E3%82%92%E3%81%97%E3%81%9F%E3%82%89)
