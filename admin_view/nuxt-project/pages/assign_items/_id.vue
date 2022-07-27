@@ -1,8 +1,8 @@
 <template>
   <div class="main-content">
     <SubHeader 
+      v-bind:pageTitle="$nuxt.$route.params.id"
       pageSubTitle="物品申請"
-      v-bind:pageTitle="stocker_place.name"
     >
       <CommonButton iconName="edit" :on_click="openPlaceEditModal">
         編集
@@ -30,14 +30,14 @@
             </template>
             <template v-slot:table-body>
               <tr
-                v-for="(stocker_item, index) in stocker_item.data"
+                v-for="(stocker_item, index) in stockerItems"
                 :key="index"
                 @click="() => $router.push({ path: `/assign_items/` + id})"
               >
                 <td>{{ stocker_item.rental_item_id }}</td>
                 <td>{{ stocker_item.num }}</td>
-                <td><CommonButton iconName="edit" :on_click="openItemEditModal">編集</CommonButton></td>
-                <td><CommonButton iconName="delete" :on_click="openItemDeleteModal">削除</CommonButton></td>
+                <td><btn  @click="openItemEditModal(stocker_item.id)">編集</btn></td>
+                <td><btn  @click="openItemDeleteModal(stocker_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
@@ -58,15 +58,15 @@
             </template>
             <template v-slot:table-body>
               <tr 
-                v-for="(assign_rental_item, index) in assign_rental_item.data"
+                v-for="(assign_rental_item, index) in assignRentalItems"
                 :key="index"
                 @click="() => $router.push({ path: '/assign_items/' + id})"
               >
                 <td>{{ assign_rental_item.group_id }}</td>  
                 <td>{{ assign_rental_item.rental_item_id }}</td>  
                 <td>{{ assign_rental_item.num }}</td>  
-                <td><CommonButton iconName="edit" :on_click="openAssignEditModal">編集</CommonButton></td>
-                <td><CommonButton iconName="delete" :on_click="openAssignDeleteModal">削除</CommonButton></td>  
+                <td><btn  @click="openAssignEditModal(assign_rental_item.id)">編集</btn></td>
+                <td><btn  @click="openAssignDeleteModal(assign_rental_item.id)">削除</btn></td>  
               </tr>
             </template>
           </Table>
@@ -105,11 +105,32 @@
       <template v-slot:form>
         <div>
           <h3>物品名</h3>
-          <input v-modal="itemNum" placeholder="入力してください" />
+          <select v-model="stockerItemName">
+            <option
+              v-for="i in rentableItems"
+              :key="i.id"
+              :value="i.id"
+            >
+            {{ i.name }}
+            </option>
+          </select>
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="itemNum" placeholder="入力してください" />
+          <input v-modal="stockerItemNum" type="number" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>開催年</h3>
+          <select v-model="itemFesYear">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="year in itemYear"
+              :key="year.id"
+              :value="year.id"
+            >
+              {{ year.year_num }}
+            </option>
+          </select>
         </div>
       </template>
       <template v-slot:method>
@@ -125,10 +146,10 @@
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="assignGroup">
             <option disabled value="">選択してください</option>
             <option
-              v-for="group in groupList"
+              v-for="group in groups"
               :key="group.id"
               :value="group.id"
             >
@@ -138,9 +159,9 @@
         </div>
         <div>
           <h3>物品名</h3>
-          <select v-model="items">
+          <select v-model="assignItemName">
             <option
-              v-for="i in items"
+              v-for="i in rentableItems"
               :key="i.id"
               :value="i.id"
             >
@@ -150,11 +171,11 @@
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="itemNum" placeholder="入力してください" />
+          <input v-modal="assignItemNum" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submitAssign">登録</CommonButton>
       </template>
     </AddModal>
 
@@ -206,22 +227,21 @@
       title="在庫物品編集"
     >
       <template v-slot:form>
-        <div> 
+        <div>
           <h3>物品名</h3>
-          <select v-model="items">
+          <select v-model="stockerItemName">
             <option
-              v-for="i in items"
+              v-for="i in rentableItems"
               :key="i.id"
               :value="i.id"
             >
             {{ i.name }}
             </option>
           </select>
-            <input v-modal="itemName" placeholder="入力してください" />
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="itemNum" placeholder="入力してください" />
+          <input v-modal="stockerItemNum" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -237,10 +257,10 @@
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="appGroup">
+          <select v-model="assignGroup">
             <option disabled value="">選択してください</option>
             <option
-              v-for="group in group"
+              v-for="group in groups"
               :key="group.id"
               :value="group.id"
             >
@@ -250,9 +270,9 @@
         </div>
         <div>
           <h3>物品名</h3>
-          <select v-model="items">
+          <select v-model="assignItemName">
             <option
-              v-for="i in items"
+              v-for="i in rentableItems"
               :key="i.id"
               :value="i.id"
             >
@@ -262,7 +282,7 @@
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="itemNum" placeholder="入力してください" />
+          <input v-modal="assignItemNum" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -321,6 +341,18 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
+      assignRentalItemId: null,
+      stockerItemId: null,
+      // items: "",
+      assignItemName: "",
+      assignItemNum: [],
+      rentableItems: [],
+      stockerItems: [],
+      assignGroup: "",
+      assignRentalItems: [],
+      itemYear: [],
+      itemFesYear: "",
+      itemStockerPlaceId: "",
       nameList: [],
       refRole: [],
       id: this.$route.params.id,
@@ -347,19 +379,6 @@ export default {
         { id: 2, name: "登録中" },
         { id: 3, name: "登録完了" },
       ],
-      items: [
-        { id: 1, name: "机" },
-        { id: 2, name: "長机" },
-        { id: 3, name: "木の椅子" },
-        { id: 4, name: "パイプの椅子" },
-        { id: 5, name: "テント" },
-        { id: 6, name: "パーテーション"},
-        { id: 7, name: "掲示板"},
-        { id: 8, name: "暗幕"},
-        { id: 9, name: "椅子"},
-        { id: 10, name: "テント"},
-        { id: 11, name: "パーテーション足"},
-      ],
       isOpenItemAddModal: false,
       isOpenAssignAddModal: false,
       isOpenPlaceEditModal: false,
@@ -368,13 +387,13 @@ export default {
       isOpenPlaceDeleteModal: false,
       isOpenItemDeleteModal: false,
       isOpenAssignDeleteModal: false,
-      stockerItem: [],
       stockerPlace: [],
+      placeItem: [],
       edit_stocker_item: [],
       roomName: [],
-      itemName: [],
       group_name: [],
-      itemNum: [],
+      stockerItemName: "",
+      stockerItemNum: [],
       groups: [],
       group_id: [],
       assign_num: [],
@@ -405,10 +424,42 @@ export default {
       },
     };
   },
+  //部屋ごとの物品、割当状況を出力
+  async asyncData({ $axios, params}) {
+    const stockerItemsUrl =
+      "/api/v1/get_refinement_stocker_item?stocker_place_id=" +
+      params.id;  
+    const stockerItemsRes = await $axios.$post(stockerItemsUrl);
+    
+    const assignRentalItemsUrl =
+      "/api/v1/get_refinement_assign_rental_item?stocker_place_id=" +
+      params.id;
+    const assignRentalItemsRes = await $axios.$post(assignRentalItemsUrl);
+    
+    const groupsUrl = "/groups";
+    const groupsRes = await $axios.$get(groupsUrl);
+
+    const rentableItemsUrl = "/api/v1/get_shop_rentable_items";
+    const rentableItemsRes = await $axios.$get(rentableItemsUrl);
+
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      stockerItems: stockerItemsRes.data,
+      assignRentalItems: assignRentalItemsRes.data,
+      groups: groupsRes.data,
+      rentableItems: rentableItemsRes.data,
+      itemYear: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+    };
+  },
   computed: {
-      place() {
-        return this.stocker_place.find(place => stocker_place_id == this.id);
-     },
       ...mapState({
       roleID: (state) => state.users.role,
     }),
@@ -422,80 +473,35 @@ export default {
       })
       .then((response) => {
         this.stocker_place = response.data;
-        consple.log(response)
-      });
-    this.$axios
-      .get("stocker_items/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.stocker_item = response.data;
-        consple.log(response)
-      });
-    this.$axios
-      .get("rental_items/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.rental_item = response.data;
-        consple.log(response)
-      });
-    this.$axios
-      .get("assign_rental_items/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.assign_rental_item = response.data;
-        consple.log(response)
+        consple.log(response.data)
       });
   },
+  
   methods: {
-    stocker_items_reload() {
-      this.$axios
-        .get("/stocker_items/" + this.$route.params.id, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-        })
-        .then((response) => {
-          this.stocker_item = response.data;
-        });
+    
+    stockerPlaceReload(id) {
+      const url = "/stocker_places/" + id;
+      this.$axios.$get(url).then((response) => {
+        this.stocker_place.data.push(response.data);
+      })
     },
-
-    stocker_place_reload() {
-      this.$axios
-        .get("stocker_places/" + this.$route.params.id, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          this.stocker_place = response.data;
-        });
+    stockerItemReload(id) {
+      const url = "/stocker_items/" + stockerItemId;
+      this.$axios.$get(url).then((response) => {
+        this.stocker_item.data.push(response.data);
+        console.log(response.data)
+      });
     },
-
-    assign_reload() {
-      this.$axios
-        .get(
-          "/assign_rental_items/" + this.$route.params.id, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-        })
-        .then((response) => {
-          this.assign_rental_item = response.data;
-        });
+    assignReload(id) {
+      const url = "/assign_rental_items/" + assignRentalItemId;
+      this.$axios.$get(url).then((response) => {
+        this.assign_item.data.push(response.data);
+      })
     },
-
     async editPlace() { 
       const placeUrl =
-        "/stocker_places/" + this.id +
+        "/stocker_places/" + 
+        this.id +
         "?name=" +
         this.roomName +
         "&stock_item_status=" +
@@ -511,43 +517,75 @@ export default {
         console.log(error)
       });
     },
-    submitItem() {
+    async submitItem() {
       const submitItemUrl =
         "/stocker_items/" +
         "?rental_item_id=" +
-        this.itemName +
+        this.stockerItemName +
+        "&fes_year_id=" +
+        this.itemFesYear +
         "&num=" +
-        this.itemNum;
-
-      this.$axios.$post(submitItemUrl).then((response) => {
-        this.itemName = "";
-        this.itemNum = "";
-        this.closeItemAddModal();
-      });
-    },
-    editItem() {
-      const itemUrl =
-        "/stocker_items/" +
-        this.edit_stocker_item.id +
-        "?rental_item_id=" +
-        this.itemName +
-        "&num=" +
-        this.Itemnum +
+        this.stockerItemNum +
         "&stocker_place_id=" +
-        this.stocker_place.id;
-
-      this.$axios.$put(itemUrl).then((response) => { 
-          this.itemNum = "";
-          this.itemName = "";
-          console.log(response);
-          this.closeItemEditModal();
-          this.reload(response.data);
+        this.id;
+        console.log(this.stockerItemNum)
+      this.$axios.$post(submitItemUrl).then((response) => {
+        this.stockerItemName = "";
+        this.itemFesYear = "";
+        this.stockerItemNum = "";
+        this.id;
+        console.log(response.data)
+        // this.stockerItemReload(response.data.id);
+        this.closeItemAddModal();
+      })
+      .catch(error => {
+        console.log(error)
       });
     },
-    editAssign() {
+    async submitAssign() {
       const assignUrl =
         "/assign_rental_items/" +
-        this.edited_assign_item.id +
+        "?group_id=" +
+        this.assignGroup +
+        "&rental_item_id=" +
+        this.assignItemName +
+        "&num=" +
+        this.assignItemNum +
+        "&stocker_place_id=" +
+        this.id;
+
+      this.$axios.$post(assignUrl).then((response) => {
+        this.assignGroup = "";
+        this.assignItemName = "";
+        this.assignItemNum = "";
+        this.id;
+        console.log(response.data)
+        this.closeItemAddModal();
+      })
+      .catch(error => {
+        console.log(error)
+      });
+    },
+    async editItem() {
+      const itemUrl =
+        "/stocker_items/" +
+        this.stockerItemId +
+        "?rental_item_id=" +
+        this.stockerItemName +
+        "&num=" +
+        this.stockerItemNum;
+        // "&stocker_place_id=" +
+        // this.stocker_place.id;
+
+      await this.$axios.$put(itemUrl).then((response) => { 
+          console.log(response.data);
+          this.closeItemEditModal();
+      });
+    },
+    async editAssign() {
+      const assignUrl =
+        "/assign_rental_items/" + 
+        this.assignRentalItemId +
         "?group_id=" +
         this.groupName +
         "&rental_item_id=" +
@@ -556,8 +594,8 @@ export default {
         this.itemNum +
         "&stocker_place_id=" +
         this.stockerPlace;
-      this.$axios.$put(assignUrl).then((response) => {
-        this.reload(response.data);
+      await this.$axios.$put(assignUrl).then((response) => {
+        this.assignReload(response.data.id);
         this.closeItemEditModal();
       });
     },
@@ -569,13 +607,13 @@ export default {
     },
 
     async deleteItem() {
-      const delItemUrl = "/stocker_items/" + stocker_item.id;
+      const delItemUrl = "/stocker_items/" + id;
       const delItemRes = await this.$axios.$delete(delItemUrl);
       this.$router.push("/assign_items/");
     },
 
     async deleteAssign() {
-      const delAssignUrl = "/assign_rental_items/" + assign_rental_item.id;
+      const delAssignUrl = "/assign_rental_items/" + id;
       const delAssignRes = await this.$axios.$delete(delAssignUrl);
       this.$router.push("/assign_items/");
     },
@@ -600,14 +638,18 @@ export default {
     closePlaceEditModal() {
       this.isOpenPlaceEditModal = false;
     },
-    openItemEditModal() {
+    openItemEditModal(id) {
+      this.stockerItemId = id;
+      console.log(this.stockerItemId);
       this.isOpenItemEditModal = false;
       this.isOpenItemEditModal = true;
     },
     closeItemEditModal() {
       this.isOpenItemEditModal = false;
     },
-    openAssignEditModal() {
+    openAssignEditModal(id) {
+      this.assignRentalItemId = id;
+      console.log(this.assignRentalItemId);
       this.isOpenAssignEditModal = false;
       this.isOpenAssignEditModal = true;
     },
@@ -638,282 +680,3 @@ export default {
   },
 };
 </script>
-    // <!-- async editItem() {
-    //   const putItemUrl =
-    //     "/stocker_items/" +
-    //     "?rental_item_id" +
-    //     this.itemName +
-    //     "&num" +
-    //     this.itemNum;
-    //   console.log(putItemUrl);
-      
-    //   this.$axios.$post(putItemUrl).then((response) => {
-    //     this.itemName = "";
-    //     this.itemNum = "";
-    //     this.reload(response.data.id);
-    //     this.closeItemEditModal();
-    //   });
-    // },
-    // get_items: function () {
-    //   this.$axios
-    //     .get("api/v1/get_item_name", {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       this.item_name = response.data;
-    //     });
-    // },
-    // get_groups: function () {
-    //   this.$axios
-    //     .get("api/v1/get_group_name", {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       this.group_name = response.data;
-    //     });
-    // },
-    // open_stocker: function () {
-    //   this.stocker_dialog = true;
-    //   this.get_items();
-    // },
-    // open_assign: function () {
-    //   this.assign_dialog = true;
-    //   this.get_items();
-    //   this.get_groups();
-    // },
-    // stocker_reload: function () {
-    //   this.$axios
-    //     .get(
-    //       "api/v1/get_stocker_item_for_stocker_place/" + this.$route.params.id,
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       this.stocker_items = response.data;
-    //     });
-    // },
-    // stocker_place_reload: function () {
-    //   this.$axios
-    //     .get("stocker_places/" + this.$route.params.id, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       this.stocker_place = response.data;
-    //       this.stock_item_status = response.data.stock_item_status;
-    //       this.assign_item_status = response.data.assign_item_status;
-    //     });
-    // },
-    // assign_reload: function () {
-    //   this.$axios
-    //     .get(
-    //       "api/v1/get_assign_rental_item_for_stocker_place/" +
-    //         this.$route.params.id,
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       this.assign_items = response.data;
-    //     });
-    // },
-    // submit: function () {
-    //   this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-    //   let params = new URLSearchParams();
-    //   params.append("rental_item_id", this.item);
-    //   params.append("stocker_place_id", this.$route.params.id);
-    //   params.append("fes_year_id", 1);
-    //   params.append("num", this.num);
-    //   this.$axios.post("/stocker_items", params).then(
-    //     (response) => {
-    //       console.log("response:", response);
-    //       this.stocker_dialog = false;
-    //       this.stocker_reload();
-    //       this.item = [];
-    //       this.num = [];
-    //     },
-    //     (error) => {
-    //       console.log("登録できませんでした");
-    //       return error;
-    //     }
-    //   );
-    // },
-
-    // // 物品の割り当て
-    // assign: function () {
-    //   this.$axios.defaults.headers.common["Content-Type"] = "application/json";
-    //   let params = new URLSearchParams();
-    //   params.append("group_id", this.group_id);
-    //   params.append("rental_item_id", this.rental_item);
-    //   params.append("num", this.assign_num);
-    //   params.append("stocker_place_id", this.$route.params.id);
-    //   this.$axios.post("/assign_rental_items", params).then(
-    //     (response) => {
-    //       console.log("response:", response);
-    //       this.assign_dialog = false;
-    //       this.group_id = [];
-    //       this.rental_item = [];
-    //       this.assign_num = [];
-    //       this.assign_reload();
-    //     },
-    //     (error) => {
-    //       console.log("登録できませんでした");
-    //       return error;
-    //     }
-    //   );
-    // },
-    // // 在庫物品の編集ダイアログを表示
-    // open_edit_stocker_item: function (item) {
-    //   this.get_items();
-    //   this.edited_stocker_item.id = item.id;
-    //   this.edited_stocker_item.num = item.num;
-    //   for (var i = 0; i < this.item_name.length; i++) {
-    //     if (this.item_name[i].name === item.item) {
-    //       this.edited_stocker_item.item = this.item_name[i].id;
-    //     }
-    //   }
-    //   this.stocker_edit_dialog = true;
-    // },
-    // // 在庫物品の編集
-    // edit_stocker_item: function () {
-    //   const edit_url =
-    //     "/stocker_items/" +
-    //     this.edited_stocker_item.id +
-    //     "?rental_item_id=" +
-    //     this.edited_stocker_item.item +
-    //     "&stocker_place_id=" +
-    //     this.stocker_place.id +
-    //     "&fes_year_id=1&num=" +
-    //     this.edited_stocker_item.num;
-    //   this.$axios
-    //     .put(edit_url, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.stocker_edit_dialog = false;
-    //       this.stocker_reload();
-    //     });
-    // },
-    // // 在庫物品の削除
-    // delete_stocker_item: function (item) {
-    //   console.log(item.id);
-    //   const delete_url = "/stocker_items/" + item.id;
-    //   this.$axios
-    //     .delete(delete_url, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.stocker_reload();
-    //     });
-    // },
-    // // 割り当て物品の編集のダイアログの表示
-    // open_edit_assign_item: function (item) {
-    //   this.get_items();
-    //   for (var i = 0; i < this.item_name.length; i++) {
-    //     if (this.item_name[i].name === item.item) {
-    //       this.edited_assign_item.item = this.item_name[i].id;
-    //     }
-    //   }
-    //   this.get_groups();
-    //   for (var i = 0; i < this.group_name.length; i++) {
-    //     if (this.group_name[i].name === item.group) {
-    //       this.edited_assign_item.group = this.group_name[i].id;
-    //     }
-    //   }
-    //   this.edited_assign_item.id = item.id;
-    //   this.edited_assign_item.num = item.num;
-    //   this.assign_edit_dialog = true;
-    // },
-    // // 物品割り当ての編集
-    // edit_assign_item: function () {
-    //   const edit_url =
-    //     "/assign_rental_items/" +
-    //     this.edited_assign_item.id +
-    //     "?group_id=" +
-    //     this.edited_assign_item.group +
-    //     "&rental_item_id=" +
-    //     this.edited_assign_item.item +
-    //     "&num=" +
-    //     this.edited_assign_item.num +
-    //     "&stocker_place_id=" +
-    //     this.stocker_place.id;
-    //   this.$axios
-    //     .put(edit_url, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.assign_edit_dialog = false;
-    //       this.assign_reload();
-    //     });
-    // },
-    // // 物品割り当ての削除
-    // delete_assign_item: function (item) {
-    //   const delete_url = "/assign_rental_items/" + item.id;
-    //   this.$axios
-    //     .delete(delete_url, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.assign_reload();
-    //     });
-    // },
-    // // 在庫ステータス更新
-    // update_stock_status: function () {
-    //   const update_stock_url =
-    //     "/stocker_places/" +
-    //     this.stocker_place.id +
-    //     "?stock_item_status=" +
-    //     this.stock_item_status;
-    //   this.$axios
-    //     .put(update_stock_url, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.stocker_place_reload();
-    //       this.stock_item_status_dialog = false;
-    //     });
-    // },
-    // // 割り当てステータス更新
-    // update_assign_status: function () {
-    //   const update_assign_url =
-    //     "/stocker_places/" +
-    //     this.stocker_place.id +
-    //     "?assign_item_status=" +
-    //     this.assign_item_status;
-    //   this.$axios
-    //     .put(update_assign_url, {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //       this.stocker_place_reload();
-    //       this.assign_item_status_dialog = false;
-    //     });
-    // }, -->

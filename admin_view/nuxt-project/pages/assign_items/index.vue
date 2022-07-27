@@ -141,7 +141,6 @@ export default {
       }) 
       ;
       console.log(this.stocker_place)
-
     },
     async submit() {
       const url =

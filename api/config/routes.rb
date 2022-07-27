@@ -35,12 +35,12 @@ Rails.application.routes.draw do
   resources :food_products
   resources :assign_rental_items
   resources :rentable_items
-  resources :assign_items
+  resources :rental_items
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places
   resources :rental_orders
-  resources :rental_items
+  resources :assign_items
   resources :assign_stages
   resources :stage_orders
   resources :stages
@@ -64,6 +64,11 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       #---管理者画面用---
+      
+      #---物品割当
+      post "get_refinement_stocker_item" => "assign_rental_items_api#get_refinement_stocker_item"
+      post "get_refinement_assign_rental_item" => "assign_rental_items_api#get_refinement_assign_rental_item"
+
       #---ユーザー一覧ページ
       get "get_user_index_for_admin_view" => "users#get_user_index_for_admin_view"
       get "get_user_show_for_admin_view/:id" => "users#get_user_show_for_admin_view"
@@ -151,8 +156,8 @@ Rails.application.routes.draw do
 
       #---貸出物品
       get "get_rentable_items" => "rental_items_api#get_rentable_items"
-      get "shop/rental_items" => "rental_items_api#get_shop_rentable_items"
-      get "stage/rental_items" => "rental_items_api#get_stage_rentable_items"
+      get "get_shop_rentable_items" => "rental_items_api#get_shop_rentable_items"
+      get "get_stage_rentable_items" => "rental_items_api#get_stage_rentable_items"
 
       #---CSV出力
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
