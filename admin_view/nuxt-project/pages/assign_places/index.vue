@@ -140,6 +140,8 @@ export default {
       });
       this.$axios.$get("/group_identification?fes_year_id=" + this.refYearID).then((res) => {
         this.groupIdentifications = res.data.filter(v => v.place === null)
+        this.groupIdentifications = this.groupIdentifications.filter(v => v.group_category_id !== 3)
+        this.groupIdentifications = this.groupIdentifications.filter(v => v.number !== null)
       });
       this.isAddModal = true;
     },

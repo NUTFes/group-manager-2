@@ -10,6 +10,13 @@
         >
           {{ refYears }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementGroups"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
       </template>
     </SubSubHeader>
     <Card width="100%">
@@ -28,10 +35,12 @@
           >
             <td>{{ gi.group_id }}</td>
             <td>{{ gi.name }}</td>
+            <td>{{ gi.group_category }}</td>
             <td>{{ gi.number }}</td>
             <td>{{ gi.place }}</td>
-            <td>{{ gi.created_at }}</td>
-            <td>{{ gi.updated_at }}</td>
+            <td>{{ gi.stage }}</td>
+            <td>{{ gi.created_at | formatDate }}</td>
+            <td>{{ gi.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -79,7 +88,15 @@
 export default {
   data() {
     return {
-      headers:["参加団体ID", "団体名", "識別番号", "会場", "登録日時", "編集日時"],
+      headers:["参加団体ID", "団体名", "カテゴリ", "識別番号", "会場", "ステージ", "登録日時", "編集日時"],
+      groupCategories: [
+        { id: 1, name: "模擬店(食品販売)" },
+        { id: 2, name: "模擬店(物品販売)" },
+        { id: 3, name: "ステージ企画" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室公開" },
+        { id: 6, name: "その他" },
+      ],
       num: null,
       isAddModal: false,
       isEditModal: false,
@@ -89,7 +106,9 @@ export default {
       groupIdentifications: null,
       yearList: null,
       refYearID: null,
-      refYears: null
+      refYears: null,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
     }
   },
   async asyncData({ $axios }) {
@@ -97,7 +116,7 @@ export default {
     const currentYearRes = await $axios.$get(currentYearUrl);
     const url =
       "/group_identification?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
+      currentYearRes.data.fes_year_id + "&group_category_id=0";
     const groupRes = await $axios.$get(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -161,11 +180,21 @@ export default {
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
+        // group_categoryで絞り込むとき
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
+        }
       }
       this.groupIdentifications = [];
       const refUrl =
         "/group_identification?fes_year_id=" +
-        this.refYearID 
+        this.refYearID + "&group_category_id=" + this.refCategoryID
+      console.log(refUrl)
       const refRes = await this.$axios.$get(refUrl);
       for (const res of refRes.data) {
         this.groupIdentifications.push(res);

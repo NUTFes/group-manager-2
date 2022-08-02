@@ -608,7 +608,7 @@ class Group < ApplicationRecord
 
     # 割り当てられたステージを取得
     def stage
-      return self.group_identification.stage_number.stage
+      return self.group_identification.nil? || self.group_identification.stage_number.nil? ? nil : self.group_identification.stage_number.stage.name
     end
 
     # 割り当てられた会場を取得

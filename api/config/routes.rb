@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   delete 'place_numbers/:id' => "place_number#destroy"
 
   # ステージ割り当て機能
+  get 'stage_numbers' => "stage_number#index"
   post 'stage_numbers' => "stage_number#create"
   put 'stage_numbers/:id' => "stage_number#update"
   delete 'stage_numbers/:id' => "stage_number#destroy"
