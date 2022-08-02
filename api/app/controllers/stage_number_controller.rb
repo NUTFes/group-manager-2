@@ -1,5 +1,5 @@
 class StageNumberController < ApplicationController
-  before_action :set_place_number, only: [:show, :update, :destroy]
+  before_action :set_stage_number, only: [:show, :update, :destroy]
 
   # ステージ割り当て
 

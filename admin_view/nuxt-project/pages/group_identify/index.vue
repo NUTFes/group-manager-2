@@ -147,7 +147,7 @@ export default {
       this.isEditModal = false
     },
     reload() {
-      const url = "/group_identification?fes_year_id=" + this.refYearID;
+      const url = "/group_identification?fes_year_id=" + this.refYearID + "&group_category_id=0";
       this.$axios.$get(url).then((res) => {
         this.groupIdentifications = res.data
       });

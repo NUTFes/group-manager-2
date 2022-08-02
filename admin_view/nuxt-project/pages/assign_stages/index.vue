@@ -138,9 +138,8 @@ export default {
       this.$axios.$get("/stages").then((res) => {
         this.stages = res.data;
       });
-      this.$axios.$get("/group_identification?fes_year_id=" + this.refYearID).then((res) => {
+      this.$axios.$get("/group_identification?fes_year_id=" + this.refYearID + "&group_category_id=3").then((res) => {
         this.groupIdentifications = res.data.filter(v => v.stage === null)
-        this.groupIdentifications = this.groupIdentifications.filter(v => v.group_category_id === 3)
         this.groupIdentifications = this.groupIdentifications.filter(v => v.number !== null)
       });
       this.isAddModal = true;

@@ -138,10 +138,10 @@ export default {
       this.$axios.$get("/places").then((res) => {
         this.places = res.data;
       });
-      this.$axios.$get("/group_identification?fes_year_id=" + this.refYearID).then((res) => {
+      this.$axios.$get("/group_identification?fes_year_id=" + this.refYearID + "&group_category_id=0").then((res) => {
         this.groupIdentifications = res.data.filter(v => v.place === null)
-        this.groupIdentifications = this.groupIdentifications.filter(v => v.group_category_id !== 3)
         this.groupIdentifications = this.groupIdentifications.filter(v => v.number !== null)
+        this.groupIdentifications = this.groupIdentifications.filter(v => v.group_category_id !== 3)
       });
       this.isAddModal = true;
     },
