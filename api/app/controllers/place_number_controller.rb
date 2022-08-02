@@ -3,6 +3,26 @@ class PlaceNumberController < ApplicationController
 
   # 会場割り当て
 
+  def index
+    @places = Place.all
+    @place_numbers = @places.map{
+      |place|
+      {
+        "place": place,
+        "place_numbers": place.place_numbers.nil? ? nil : place.place_numbers.map{
+          |place_number|
+          {
+            "group_identification_id": place_number.group_identification.nil? ? nil : place_number.group_identification.id,
+            "place_number": place_number,
+            "num": place_number.group_identification.nil? ? nil : (place_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? place_number.group_identification.number : nil),
+            "group": place_number.group_identification.nil? ? nil : (place_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? place_number.group_identification.group : nil)
+          }
+        }
+      }
+    }
+    render json: fmt(ok, @place_numbers)
+  end
+
   def create
     @place_number = PlaceNumber.create(place_number_params)
     render json: fmt(created, @place_number)

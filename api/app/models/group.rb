@@ -650,4 +650,5 @@ class Group < ApplicationRecord
       }
       return unallocated_rental_items
     end
+
 end
