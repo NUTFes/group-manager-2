@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader 
-      v-bind:pageTitle="$nuxt.$route.params.id"
+      v-bind:pageTitle="stockerPlaces[this.id-1].name"
       pageSubTitle="物品申請"
     >
       <CommonButton iconName="edit" :on_click="openPlaceEditModal">
@@ -30,14 +30,14 @@
             </template>
             <template v-slot:table-body>
               <tr
-                v-for="(stocker_item, index) in stockerItems"
+                v-for="(stockerItem, index) in stockerItems"
                 :key="index"
                 @click="() => $router.push({ path: `/assign_items/` + id})"
               >
-                <td>{{ stocker_item.rental_item_id }}</td>
-                <td>{{ stocker_item.num }}</td>
-                <td><btn  @click="openItemEditModal(stocker_item.id)">編集</btn></td>
-                <td><btn  @click="openItemDeleteModal(stocker_item.id)">削除</btn></td>
+                <td>{{ stockerItem.rental_item.name }}</td>
+                <td>{{ stockerItem.stocker_item.num }}</td>
+                <td><btn  @click="openItemEditModal(stockerItem.stocker_item.id)">編集</btn></td>
+                <td><btn  @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
@@ -45,7 +45,7 @@
         <Card width="50%">
           <SubHeader pageTitle="割り当て">
             <CommonButton iconName="add_circle" :on_click="openAssignAddModal">
-              追加
+              追加 
             </CommonButton>
           </SubHeader>
           <Table>
@@ -58,15 +58,15 @@
             </template>
             <template v-slot:table-body>
               <tr 
-                v-for="(assign_rental_item, index) in assignRentalItems"
+                v-for="(assignRentalItem, index) in assignRentalItems"
                 :key="index"
                 @click="() => $router.push({ path: '/assign_items/' + id})"
               >
-                <td>{{ assign_rental_item.group_id }}</td>  
-                <td>{{ assign_rental_item.rental_item_id }}</td>  
-                <td>{{ assign_rental_item.num }}</td>  
-                <td><btn  @click="openAssignEditModal(assign_rental_item.id)">編集</btn></td>
-                <td><btn  @click="openAssignDeleteModal(assign_rental_item.id)">削除</btn></td>  
+                <td>{{ assignRentalItem.group.name}}</td>  
+                <td>{{ assignRentalItem.rental_item.name }}</td>  
+                <td>{{ assignRentalItem.assign_rental_item.num }}</td>  
+                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id)">編集</btn></td>
+                <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>  
               </tr>
             </template>
           </Table>
@@ -83,13 +83,13 @@
             </template>
             <template v-slot:table-body>
               <tr
-                v-for="(list, index) in stocker_place.data"
+                v-for="(list, index) in stockerPlaces"
                 :key="index"
               >
                 <td>{{ list.id }}</td>
                 <td>{{ list.name }}</td>
-                <td>{{ list.stock_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
-                <td>{{ list.assign_item_status === 1 ? "未登録" : stocker_place.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
+                <td>{{ list.stock_item_status === 1 ? "未登録" : list.stock_item_status === 2 ? "登録中" : "登録完了" }}</td>
+                <td>{{ list.assign_item_status === 1 ? "未登録" : list.assign_item_status === 2 ? "登録中" : "登録完了" }}</td>
               </tr>
             </template>
           </Table>
@@ -106,6 +106,7 @@
         <div>
           <h3>物品名</h3>
           <select v-model="stockerItemName">
+            <option disabled value="">選択してください</option>
             <option
               v-for="i in rentableItems"
               :key="i.id"
@@ -117,7 +118,7 @@
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="stockerItemNum" type="number" placeholder="入力してください" />
+          <input v-model="stockerItemNum" type="number" placeholder="入力してください" />
         </div>
         <div>
           <h3>開催年</h3>
@@ -160,6 +161,7 @@
         <div>
           <h3>物品名</h3>
           <select v-model="assignItemName">
+            <option disabled value="">選択してください</option>
             <option
               v-for="i in rentableItems"
               :key="i.id"
@@ -171,7 +173,7 @@
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="assignItemNum" type="number" placeholder="入力してください" />
+          <input v-model="assignItemNum" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -230,18 +232,19 @@
         <div>
           <h3>物品名</h3>
           <select v-model="stockerItemName">
+            <option disabled value="">選択してください</option>
             <option
               v-for="i in rentableItems"
               :key="i.id"
               :value="i.id"
             >
-            {{ i.name }}
+              {{ i.name }}
             </option>
           </select>
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="stockerItemNum" type="number" placeholder="入力してください" />
+          <input v-model="stockerItemNum" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -271,18 +274,19 @@
         <div>
           <h3>物品名</h3>
           <select v-model="assignItemName">
+            <option disabled value="">選択してください</option>
             <option
               v-for="i in rentableItems"
               :key="i.id"
               :value="i.id"
             >
-            {{ i.name }}
+              {{ i.name }}
             </option>
           </select>
         </div>
         <div>
           <h3>個数</h3>
-          <input v-modal="assignItemNum" placeholder="入力してください" />
+          <input v-model="assignItemNum" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -343,11 +347,15 @@ export default {
     return {
       assignRentalItemId: null,
       stockerItemId: null,
-      // items: "",
+      stockerItemDeleteId: null,
+      assignRentalItemDeleteId: null,
       assignItemName: "",
-      assignItemNum: [],
+      assignItemNum: null,
+      stockerItemName: "",
+      stockerItemNum: null,
       rentableItems: [],
       stockerItems: [],
+      stockerPlaces: [],
       assignGroup: "",
       assignRentalItems: [],
       itemYear: [],
@@ -356,12 +364,10 @@ export default {
       nameList: [],
       refRole: [],
       id: this.$route.params.id,
-      rental_item: [],
       rental_headers: [
         "物品名",
         "個数",
       ],
-      stocker_place: [],
       stocker_headers: [
         "団体名",
         "物品",
@@ -387,13 +393,10 @@ export default {
       isOpenPlaceDeleteModal: false,
       isOpenItemDeleteModal: false,
       isOpenAssignDeleteModal: false,
-      stockerPlace: [],
       placeItem: [],
       edit_stocker_item: [],
       roomName: [],
       group_name: [],
-      stockerItemName: "",
-      stockerItemNum: [],
       groups: [],
       group_id: [],
       assign_num: [],
@@ -436,6 +439,9 @@ export default {
       params.id;
     const assignRentalItemsRes = await $axios.$post(assignRentalItemsUrl);
     
+    const stockerPlacesUrl = "/stocker_places";
+    const stockerPlacesRes = await $axios.$get(stockerPlacesUrl)
+
     const groupsUrl = "/groups";
     const groupsRes = await $axios.$get(groupsUrl);
 
@@ -450,6 +456,7 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
     });
     return {
+      stockerPlaces: stockerPlacesRes.data,
       stockerItems: stockerItemsRes.data,
       assignRentalItems: assignRentalItemsRes.data,
       groups: groupsRes.data,
@@ -464,21 +471,8 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
-  mounted() {
-    this.$axios
-      .get("stocker_places/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.stocker_place = response.data;
-        consple.log(response.data)
-      });
-  },
-  
+
   methods: {
-    
     stockerPlaceReload(id) {
       const url = "/stocker_places/" + id;
       this.$axios.$get(url).then((response) => {
@@ -486,7 +480,7 @@ export default {
       })
     },
     stockerItemReload(id) {
-      const url = "/stocker_items/" + stockerItemId;
+      const url = "/stocker_items/" + id;
       this.$axios.$get(url).then((response) => {
         this.stocker_item.data.push(response.data);
         console.log(response.data)
@@ -522,20 +516,21 @@ export default {
         "/stocker_items/" +
         "?rental_item_id=" +
         this.stockerItemName +
-        "&fes_year_id=" +
-        this.itemFesYear +
         "&num=" +
         this.stockerItemNum +
+        "&fes_year_id=" +
+        this.itemFesYear +
         "&stocker_place_id=" +
         this.id;
         console.log(this.stockerItemNum)
-      this.$axios.$post(submitItemUrl).then((response) => {
+      console.log(submitItemUrl)
+      await this.$axios.$post(submitItemUrl).then((response) => {
         this.stockerItemName = "";
         this.itemFesYear = "";
-        this.stockerItemNum = "";
+        this.stockerItemNum = null;
         this.id;
         console.log(response.data)
-        // this.stockerItemReload(response.data.id);
+        this.stockerItemReload(response.data.id);
         this.closeItemAddModal();
       })
       .catch(error => {
@@ -553,14 +548,13 @@ export default {
         this.assignItemNum +
         "&stocker_place_id=" +
         this.id;
-
-      this.$axios.$post(assignUrl).then((response) => {
+      await this.$axios.$post(assignUrl).then((response) => {
         this.assignGroup = "";
         this.assignItemName = "";
-        this.assignItemNum = "";
+        this.assignItemNum = null;
         this.id;
         console.log(response.data)
-        this.closeItemAddModal();
+        this.closeAssignAddModal();
       })
       .catch(error => {
         console.log(error)
@@ -573,30 +567,28 @@ export default {
         "?rental_item_id=" +
         this.stockerItemName +
         "&num=" +
-        this.stockerItemNum;
-        // "&stocker_place_id=" +
-        // this.stocker_place.id;
-
+        this.stockerItemNum +
+        "&stocker_place_id=" +
+        this.id;
       await this.$axios.$put(itemUrl).then((response) => { 
-          console.log(response.data);
+          // console.log(response.data);
           this.closeItemEditModal();
       });
     },
     async editAssign() {
       const assignUrl =
-        "/assign_rental_items/" + 
+        "/assign_rental_items/" +
         this.assignRentalItemId +
         "?group_id=" +
-        this.groupName +
+        this.assignGroup +
         "&rental_item_id=" +
-        this.itemName +
+        this.assignItemName +
         "&num=" +
-        this.itemNum +
+        this.assignItemNum +
         "&stocker_place_id=" +
-        this.stockerPlace;
+        this.id;
       await this.$axios.$put(assignUrl).then((response) => {
-        this.assignReload(response.data.id);
-        this.closeItemEditModal();
+        this.closeAssignEditModal();
       });
     },
 
@@ -607,15 +599,18 @@ export default {
     },
 
     async deleteItem() {
-      const delItemUrl = "/stocker_items/" + id;
-      const delItemRes = await this.$axios.$delete(delItemUrl);
-      this.$router.push("/assign_items/");
+      const delItemUrl = "/stocker_items/" + this.stockerItemDeleteId;
+      const delItemRes = await this.$axios.$delete(delItemUrl).then((response) => {
+        this.closeItemEditModal();
+        this.$router.push("/assign_items/"+ this.id);
+      });
     },
 
     async deleteAssign() {
-      const delAssignUrl = "/assign_rental_items/" + id;
+      const delAssignUrl = "/assign_rental_items/" + this.assignRentalItemDeleteId;
       const delAssignRes = await this.$axios.$delete(delAssignUrl);
-      this.$router.push("/assign_items/");
+      this.$router.push("/assign_items/" + this.id);
+      this.closeAssignEditModal();
     },
     openItemAddModal() {
       this.isOpenItemAddModal = false;
@@ -663,14 +658,16 @@ export default {
     closePlaceDeleteModal() {
       this.isOpenPlaceDeleteModal = false;
     },
-    openItemDeleteModal() {
+    openItemDeleteModal(id) {
+      this.stockerItemDeleteId = id;
       this.isOpenItemDeleteModal = false;
       this.isOpenItemDeleteModal = true;
     },
     closeItemDeleteModal() {
       this.isOpenItemDeleteModal = false;
     },
-    openAssignDeleteModal() {
+    openAssignDeleteModal(id) {
+      this.assignRentalItemDeleteId = id;
       this.isOpenAssignDeleteModal = false;
       this.isOpenAssignDeleteModal = true;
     },
