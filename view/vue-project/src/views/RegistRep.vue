@@ -110,6 +110,7 @@ export default {
       departmentList: departmentList,
       gradeList: gradeList,
       errorMessage: null,
+      isRegistGroup: null,
     };
   },
   mounted() {
@@ -120,6 +121,19 @@ export default {
       console.log("reject");
       this.$router.push("/");
     }
+    // 制御
+    const settingurl = process.env.VUE_APP_URL + "/user_page_settings";
+    axios
+      .get(settingurl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+        },
+      })
+      .then((response) => {
+        this.isRegistGroup = response.data.data[0].is_regist_group;
+      });
   },
   computed: {
     validationName() {
@@ -258,9 +272,15 @@ export default {
           axios.defaults.headers.common["Content-Type"] = "application/json";
           axios.post(url, params).then(
             () => {
-              this.$store.commit("acceptRegistGroupPermission");
-              this.$store.commit("acceptMypagePermission");
-              this.$router.push("regist_group");
+              if (this.isRegistGroup === true) {
+                this.$store.commit("acceptRegistGroupPermission");
+                this.$store.commit("acceptMypagePermission");
+                this.$router.push("regist_group");
+              } else {
+                this.$store.commit("acceptRegistGroupPermission");
+                this.$store.commit("acceptMypagePermission");
+                this.$router.push("mypage");
+              }
             },
             (error) => {
               this.errorMessage = "ユーザー詳細の登録に失敗しました";

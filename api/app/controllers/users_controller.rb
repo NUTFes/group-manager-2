@@ -111,6 +111,15 @@ class UsersController < ApplicationController
     render json: fmt(ok, [], "Updated password user_id = "+params[:user_id])
   end
 
+  def simply_user_create
+    @user = User.create(simply_user_create_params)
+    if @user.id == nil
+      render json: fmt(internal_server_error, [], "internal_server_error")
+    else 
+      render json: fmt(created, @user)
+    end
+  end
+
   private
 
     def set_user
@@ -127,5 +136,9 @@ class UsersController < ApplicationController
 
     def reset_password_params
       params.permit(:user_id, :password, :password_confirmation)
+    end
+
+    def simply_user_create_params
+      params.permit(:name, :email, :password, :password_confirmation, :role_id)
     end
 end

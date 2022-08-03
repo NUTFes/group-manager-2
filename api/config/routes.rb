@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get "/current_user" => "users#get_current_user"
   put "/users/:id" => "users#update"
   delete "/users/:id" => "users#destroy"
+  post "/users/simply_user_create" => "users#simply_user_create"
 
   # ステージ
   get "/sunny/stages" => "stages#show_sunny"
