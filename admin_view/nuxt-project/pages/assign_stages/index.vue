@@ -1,32 +1,72 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージ割り当て">
-      <CommonButton iconName="add_circle" :on_click="openAddModal">
-        割り当て
-      </CommonButton>
     </SubHeader>
-    <Card width="50%" v-for="stage in stageNumbers" v-bind:key="stage.stage.id">
-      <Row justify="start">
-        <h4>{{ stage.stage.name }}</h4>
-      </Row>
-      <Table>
-        <template v-slot:table-header>
-          <th v-for="(header, index) in headers" v-bind:key="index">
-            {{ header }}
-          </th>
-        </template>
-        <template v-slot:table-body>
-          <tr
-            v-for="n in stage.stage_numbers"
-            v-bind:key="n.num"
-            @click="openEditModal(n.group_identification_id, n.stage_number.id, n.stage_number.stage_id)"
-          >
-            <td>{{ n.num }}</td>
-            <td>{{ n.group.name }}</td>
-          </tr>
-        </template>
-      </Table>
-    </Card>
+
+    <Row wrap="nowrap" align="start">
+      <Column width="50%" height="800px">
+        <Card width="100%" style="overflow: float">
+          <SubHeader pageTitle="ステージ割り当て">
+            <CommonButton iconName="add_circle" :on_click="openAddModal">
+              割り当て
+            </CommonButton>
+          </SubHeader>
+          <Card width="100%" v-for="stage in stageNumbers" v-bind:key="stage.stage.id">
+            <Row justify="start">
+              <h4>{{ stage.stage.name }}</h4>
+            </Row>
+            <Table>
+              <template v-slot:table-header>
+                <th v-for="(header, index) in headers" v-bind:key="index">
+                  {{ header }}
+                </th>
+              </template>
+              <template v-slot:table-body>
+                <tr
+                  v-for="n in stage.stage_numbers"
+                  v-bind:key="n.num"
+                  @click="openEditModal(n.group_identification_id, n.stage_number.id, n.stage_number.stage_id)"
+                >
+                <td v-if="n.group !== null && n.group.fes_year_id==refYearID">{{ n.num }}</td>
+                <td v-if="n.group !== null && n.group.fes_year_id==refYearID">{{ n.group.name }}</td>
+                </tr>
+              </template>
+            </Table>
+          </Card>
+        </Card>
+      </Column>
+      <Column width="50%" height="800px">
+        <Card width="100%" style="overflow: float">
+          <Card width="100%">
+            <Table>
+              <template v-slot:table-header>
+                <th v-for="(header, index) in stageOrderHeaders" v-bind:key="index">
+                  {{ header }}
+                </th>
+              </template>
+              <template v-slot:table-body>
+                <tr
+                  v-for="(stageOrder, index) in stageOrders"
+                  @click="
+                    () =>
+                      $router.push({
+                        path: `/stage_orders/` + stageOrder.stage_order.id,
+                      })
+                  "
+                  :key="index"
+                >
+                  <td>{{ stageOrder.group.name }}</td>
+                  <td>{{ stageOrder.stage_order.is_sunny }}</td>
+                  <td>{{ stageOrder.stage_order_info.date }}</td>
+                  <td>{{ stageOrder.stage_order_info.stage_first }}</td>
+                  <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+                </tr>
+              </template>
+            </Table>
+          </Card>
+        </Card>
+      </Column>
+    </Row>
 
     <AddModal
       @close="closeAddModal"
@@ -105,6 +145,13 @@ export default {
         "識別番号",
         "団体名"
       ],
+      stageOrderHeaders: [
+        "参加団体",
+        "晴れ希望",
+        "希望日",
+        "第一希望",
+        "第二希望",
+      ],
       isAddModal: false,
       isEditModal: false,
       stageNumbers: null,
@@ -121,16 +168,22 @@ export default {
     const url = "/stage_numbers?fes_year_id=" +
         currentYearRes.data.fes_year_id;
     const stagesRes = await $axios.$get(url);
+    const stageOrderUrl =
+      "/api/v1/get_refinement_stage_orders?fes_year_id=" +
+      currentYearRes.data.fes_year_id +
+      "&stage_id=0&days_num=0&is_sunny=0";
+    const stageOrdersRes = await $axios.$post(stageOrderUrl);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const currentYears = yearsRes.data.filter(function (element) {
         return element.id == currentYearRes.data.fes_year_id;
     });
     return {
-        stageNumbers: stagesRes.data,
-        yearList: yearsRes.data,
-        refYearID: currentYearRes.data.fes_year_id,
-        refYears: currentYears[0].year_num,
+      stageOrders: stageOrdersRes.data,
+      stageNumbers: stagesRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
     };
   },
   methods: {
