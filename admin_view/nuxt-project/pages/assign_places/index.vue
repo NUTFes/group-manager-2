@@ -5,7 +5,7 @@
         割り当て
       </CommonButton>
     </SubHeader>
-    <Card width="50%" v-for="place in placeNumbers" v-bind:key="place.place.id">
+    <Card width="40%" v-for="place in placeNumbers" v-bind:key="place.place.id">
       <Row justify="start">
         <h4>{{ place.place.name }}</h4>
       </Row>
@@ -21,8 +21,8 @@
             v-bind:key="n.num"
             @click="openEditModal(n.group_identification_id, n.place_number.id, n.place_number.place_id)"
           >
-            <td>{{ n.num }}</td>
-            <td>{{ n.group.name }}</td>
+            <td v-if="n.group.fes_year_id==refYearID">{{ n.num }}</td>
+            <td v-if="n.group.fes_year_id==refYearID">{{ n.group.name }}</td>
           </tr>
         </template>
       </Table>

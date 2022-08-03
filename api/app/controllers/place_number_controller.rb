@@ -13,9 +13,9 @@ class PlaceNumberController < ApplicationController
           |place_number|
           {
             "group_identification_id": place_number.group_identification.nil? ? nil : place_number.group_identification.id,
-            "place_number": place_number,
-            "num": place_number.group_identification.nil? ? nil : (place_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? place_number.group_identification.number : nil),
-            "group": place_number.group_identification.nil? ? nil : (place_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? place_number.group_identification.group : nil)
+            "place_number": place_number.nil? ? nil : place_number,
+            "num": place_number.group_identification.nil? ? nil : place_number.group_identification.number,
+            "group": place_number.group_identification.nil? ? nil : place_number.group_identification.group
           }
         }
       }
