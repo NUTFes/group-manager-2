@@ -20,11 +20,11 @@
       </tr>
       <tr>
         <th rowspan=2>活動時間</th>
-        <td><%= @group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : @group.fes_year.fes_dates.where(days_num: 1).first.date %>（1日目）</td>
+        <td><%= group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 1).first.date %>（1日目）</td>
         <td>10:00～17:00</td>
       </tr>
       <tr>
-        <td><%= @group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : @group.fes_year.fes_dates.where(days_num: 2).first.date %>（2日目）</td>
+        <td><%= group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 2).first.date %>（2日目）</td>
         <td>10:00～17:00</td>
       </tr>
       <tr>
@@ -54,8 +54,8 @@
       <td><%= assign_rental_item.rental_item.name %></td>
       <td><%= assign_rental_item.stocker_place.name %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= @group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : @group.fes_year.fes_dates.where(days_num: 0).first.date %>(準備日)</td>
-      <td><%= @group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : @group.fes_year.fes_dates.where(days_num: 3).first.date %>(片付け日)</td>
+      <td><%= group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : group.fes_year.fes_dates.where(days_num: 0).first.date %>(準備日)</td>
+      <td><%= group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : group.fes_year.fes_dates.where(days_num: 3).first.date %>(片付け日)</td>
     </tr>
     <% end %>
   </table>
