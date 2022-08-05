@@ -12,6 +12,11 @@ export default {
       required: false,
       default: "100%",
     },
+    height: {
+      type: String,
+      required: false,
+      default: "100%",
+    },
     align: {
       type: String,
       required: false,
@@ -32,6 +37,7 @@ export default {
     ColumnOption() {
       return {
         "--column-width": this.width,
+        "--column-height": this.height,
         "--column-align": this.align,
         "--column-justify": this.justify,
         "--column-gap": this.gap,
@@ -43,6 +49,7 @@ export default {
 <style scoped>
 .column-container {
   width: var(--column-width);
+  height: var(--column-height);
   display: flex;
   flex-flow: column;
   align-items: var(--column-align);
