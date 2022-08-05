@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   resources :stocker_items
   resources :stocker_places
   resources :rental_orders
-  resources :rental_items
+  resources :assign_items
   resources :assign_stages
   resources :stage_orders
   resources :stages
@@ -65,6 +65,11 @@ Rails.application.routes.draw do
   namespace 'api' do
     namespace 'v1' do
       #---管理者画面用---
+      
+      #---物品割当
+      post "get_refinement_stocker_item" => "assign_rental_items_api#get_refinement_stocker_item"
+      post "get_refinement_assign_rental_item" => "assign_rental_items_api#get_refinement_assign_rental_item"
+
       #---ユーザー一覧ページ
       get "get_user_index_for_admin_view" => "users#get_user_index_for_admin_view"
       get "get_user_show_for_admin_view/:id" => "users#get_user_show_for_admin_view"
@@ -103,16 +108,12 @@ Rails.application.routes.draw do
       get "get_rental_order_show_for_admin_view/:id" => "rental_orders_api#get_rental_order_show_for_admin_view"
       post "get_refinement_rental_orders" => "rental_orders_api#get_refinement_rental_orders"
       post "get_search_rental_orders" => "rental_orders_api#get_search_rental_orders"
-      get "get_rental_orders_with_unassigned_num" => "rental_orders_api#get_rental_orders_with_unassigned_num"
       
       #---ステージ申請ページ
       get "get_stage_order_index_for_admin_view" => "stage_orders_api#get_stage_order_index_for_admin_view"
       get "get_stage_order_show_for_admin_view/:id" => "stage_orders_api#get_stage_order_show_for_admin_view"
       post "get_refinement_stage_orders" => "stage_orders_api#get_refinement_stage_orders"
       post "get_search_stage_orders" => "stage_orders_api#get_search_stage_orders"
-  
-      # 在庫物品
-      get "get_stocker_items_with_remaining_num" => "stocker_items_api#get_stocker_items_with_remaining_num"
       
       #---ステージオプション申請ページ
       get "get_stage_common_option_index_for_admin_view" => "stage_common_options_api#get_stage_common_option_index_for_admin_view"
@@ -156,8 +157,8 @@ Rails.application.routes.draw do
 
       #---貸出物品
       get "get_rentable_items" => "rental_items_api#get_rentable_items"
-      get "shop/rental_items" => "rental_items_api#get_shop_rentable_items"
-      get "stage/rental_items" => "rental_items_api#get_stage_rentable_items"
+      get "get_shop_rentable_items" => "rental_items_api#get_shop_rentable_items"
+      get "get_stage_rentable_items" => "rental_items_api#get_stage_rentable_items"
 
       #---CSV出力
       get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
