@@ -116,6 +116,13 @@ export default {
         this.stocker_place = response.data;
       });
   },
+	async asyncData({ $axios }) {
+		const stockerPlacesUrl = "/stocker_places";
+		const stockerPlacesRes = await $axios.$get(stockerPlacesUrl);
+		return {
+			stockerPlaces: stockerPlacesRes.data
+		}
+	},
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
