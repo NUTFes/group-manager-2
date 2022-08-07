@@ -15,7 +15,7 @@
         </template>
         <template v-slot:table-body>
           <tr
-            v-for="(stocker_place, index) in stocker_place.data"
+            v-for="(stocker_place, index) in stockerPlaces"
             @click="() => $router.push({ path: `/assign_items/` + stocker_place.id})"
             :key="index" 
           >
