@@ -1,7 +1,6 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ダッシュボード" />
-		{{ dashboard_data }}
     <Row>
       <Card>
         <Row justify="start">
