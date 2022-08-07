@@ -105,17 +105,6 @@ export default {
       };
   },
 
-  mounted() {
-    this.$axios
-      .get("stocker_places/", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.stocker_place = response.data;
-      });
-  },
 	async asyncData({ $axios }) {
 		const stockerPlacesUrl = "/stocker_places";
 		const stockerPlacesRes = await $axios.$get(stockerPlacesUrl);
