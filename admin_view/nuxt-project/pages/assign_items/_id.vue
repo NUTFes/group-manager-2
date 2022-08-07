@@ -14,7 +14,7 @@
 
     <Row wrap="nowrap" align="start">
       <Column width="100%">
-        <Card width="50%">
+        <Card width="100%">
           <SubHeader pageTitle="在庫物品">
             <CommonButton iconName="add_circle" :on_click="openItemAddModal">
               追加
@@ -42,7 +42,7 @@
             </template>
           </Table>
         </Card>
-        <Card width="50%">
+        <Card width="100%">
           <SubHeader pageTitle="割り当て">
             <CommonButton iconName="add_circle" :on_click="openAssignAddModal">
               追加 
@@ -72,7 +72,7 @@
           </Table>
         </Card>
       </Column>
-      <Column width="50%">
+      <!-- <Column width="50%">
         <Card width="50%">
           <SubHeader pageTitle="その他データ"></SubHeader>
           <Table>
@@ -94,7 +94,7 @@
             </template>
           </Table>
         </Card>
-      </Column>
+      </Column> -->
     </Row>
 
     <AddModal
