@@ -38,6 +38,8 @@
       <Column width="50%" height="800px">
         <Card width="100%" style="overflow: scroll">
           <Card width="100%">
+						<SubHeader pageTitle="ステージ申請一覧">
+						</SubHeader>
             <Table>
               <template v-slot:table-header>
                 <th v-for="(header, index) in stageOrderHeaders" v-bind:key="index">

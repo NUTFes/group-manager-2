@@ -35,7 +35,7 @@
         </Card>
       </Card>
       </Column>
-      <Column width="50%">
+      <Column width="50%" height="800px">
         <Card width="100%" style="overflow: scroll">
           <SubHeader pageTitle="会場申請一覧">
           </SubHeader>
