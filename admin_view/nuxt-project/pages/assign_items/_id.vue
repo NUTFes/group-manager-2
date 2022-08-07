@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader 
-      v-bind:pageTitle="stockerPlaces[id-1].name"
+      v-bind:pageTitle="placeName.name"
       pageSubTitle="物品申請"
     >
       <CommonButton iconName="edit" :on_click="openPlaceEditModal">
@@ -412,7 +412,8 @@ export default {
     });
     return {
       stockerPlaces: stockerPlacesRes.data,
-      stockerItems: stockerItemsRes.data,
+      stockerItems: stockerItemsRes.data.stocker_items,
+			placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
       groups: groupsRes.data,
       rentableItems: rentableItemsRes.data,
@@ -563,9 +564,9 @@ export default {
       this.isOpenAssignAddModal = false;
     },
     openPlaceEditModal() {
-			this.roomName = this.stockerPlaces[this.id-1].name
-			this.stockItemStatus = this.stockerPlaces[this.id-1].stock_item_status
-			this.assignItemStatus = this.stockerPlaces[this.id-1].assign_item_status
+			this.roomName = this.placeName.name
+			this.stockItemStatus = this.placeName.stock_item_status
+			this.assignItemStatus = this.placeName.assign_item_status
       this.isOpenPlaceEditModal = false;
       this.isOpenPlaceEditModal = true;
     },

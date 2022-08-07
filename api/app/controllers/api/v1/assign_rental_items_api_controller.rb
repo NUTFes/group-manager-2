@@ -29,11 +29,13 @@ class Api::V1::AssignRentalItemsApiController < ApplicationController
         else
             @stocker_items = StockerItem.where(stocker_place_id: stocker_place_id)
         end
+
+				@stocker_place = StockerPlace.find(params[:stocker_place_id])
     
         if @stocker_items.count == 0
-            render json: fmt(not_found, [], "Not found stocker_items")
+            render json: fmt(not_found, { "stocker_place": @stocker_place, "stocker_items": [] }, "Not found stocker_items")
         else
-            render json: fmt(ok, fit_stocker_item_index_for_admin_view(@stocker_items))
+            render json: fmt(ok, { "stocker_place": @stocker_place, "stocker_items": fit_stocker_item_index_for_admin_view(@stocker_items) })
         end
     end
 
