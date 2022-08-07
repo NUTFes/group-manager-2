@@ -52,6 +52,9 @@ export default {
             },
           ],
         },
+				tooltips: {
+					enabled: false,
+				}
       },
     };
   },

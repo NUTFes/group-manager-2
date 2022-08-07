@@ -1,6 +1,7 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ダッシュボード" />
+		{{ dashboard_data }}
     <Row>
       <Card>
         <Row justify="start">
@@ -64,7 +65,6 @@ export default {
   async asyncData({ $axios }) {
     const url = "/api/v1/dashboard";
     const response = await $axios.$get(url);
-    console.log(response);
     return {
       dashboard_data: response,
     };

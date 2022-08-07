@@ -8,7 +8,7 @@ export default {
     return {
       data: {
         // 凡例とツールチップに表示するラベル
-        labels: ["未着手", "入力中", "完了"],
+        labels: ["未登録", "登録中", "登録完了"],
         // 表示するデータ
         datasets: [
           {
@@ -24,24 +24,6 @@ export default {
     };
   },
   mounted() {
-    this.renderChart(this.datas, this.options);
-    this.$axios
-      .get("api/v1/users/get_user_detail", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => {
-        this.user = response.data.user;
-        this.role = response.data.role;
-        this.grade = response.data.grade;
-        this.department = response.data.department;
-        this.student_id = response.data.student_id;
-        this.tel = response.data.tel;
-      });
     this.$axios
       .get("api/v1/dashboard", {
         headers: {

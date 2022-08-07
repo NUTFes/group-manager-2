@@ -8,7 +8,7 @@ export default {
     return {
       data: {
         // 凡例とツールチップに表示するラベル
-        labels: ["未着手", "入力中", "完了"],
+        labels: ["未登録", "登録中", "登録完了"],
         // 表示するデータ
         datasets: [
           {
