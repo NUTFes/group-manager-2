@@ -5,7 +5,7 @@
 
     <Row wrap="nowrap" align="start">
       <Column width="50%" height="800px">
-        <Card width="100%" style="overflow: float">
+        <Card width="100%" style="overflow: scroll">
           <SubHeader pageTitle="ステージ割り当て">
             <CommonButton iconName="add_circle" :on_click="openAddModal">
               割り当て
@@ -36,7 +36,7 @@
         </Card>
       </Column>
       <Column width="50%" height="800px">
-        <Card width="100%" style="overflow: float">
+        <Card width="100%" style="overflow: scroll">
           <Card width="100%">
             <Table>
               <template v-slot:table-header>
