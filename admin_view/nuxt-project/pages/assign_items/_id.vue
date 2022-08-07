@@ -36,7 +36,7 @@
               >
                 <td>{{ stockerItem.rental_item.name }}</td>
                 <td>{{ stockerItem.stocker_item.num }}</td>
-                <td><btn  @click="openItemEditModal(stockerItem.stocker_item.id)">編集</btn></td>
+                <td><btn  @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
                 <td><btn  @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
               </tr>
             </template>
@@ -65,7 +65,7 @@
                 <td>{{ assignRentalItem.group.name}}</td>  
                 <td>{{ assignRentalItem.rental_item.name }}</td>  
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>  
-                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id)">編集</btn></td>
+                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num)">編集</btn></td>
                 <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>  
               </tr>
             </template>
@@ -323,6 +323,7 @@ export default {
       itemYear: [],
       itemFesYear: "",
       itemStockerPlaceId: "",
+			roomName: null,
       refRole: [],
       id: this.$route.params.id,
       rental_headers: [
@@ -437,7 +438,6 @@ export default {
         this.stockItemStatus +
         "&assign_item_status=" +
         this.assignItemStatus;
-        console.log(placeUrl)
     
       await this.$axios.$put(placeUrl).then((response) => {
         this.closePlaceEditModal();
@@ -555,6 +555,7 @@ export default {
       this.isOpenItemAddModal = false;
     },
     openAssignAddModal() {
+			this.itemFesYear = this.refYearID
       this.isOpenAssignAddModal = false;
       this.isOpenAssignAddModal = true;
     },
@@ -562,24 +563,27 @@ export default {
       this.isOpenAssignAddModal = false;
     },
     openPlaceEditModal() {
+			this.roomName = this.stockerPlaces[this.id-1].name
+			this.stockItemStatus = this.stockerPlaces[this.id-1].stock_item_status
+			this.assignItemStatus = this.stockerPlaces[this.id-1].assign_item_status
       this.isOpenPlaceEditModal = false;
       this.isOpenPlaceEditModal = true;
     },
     closePlaceEditModal() {
       this.isOpenPlaceEditModal = false;
     },
-    openItemEditModal(id) {
+    openItemEditModal(id, num) {
       this.stockerItemId = id;
-      console.log(this.stockerItemId);
+      this.stockerItemNum = num;
       this.isOpenItemEditModal = false;
       this.isOpenItemEditModal = true;
     },
     closeItemEditModal() {
       this.isOpenItemEditModal = false;
     },
-    openAssignEditModal(id) {
+    openAssignEditModal(id, num) {
       this.assignRentalItemId = id;
-      console.log(this.assignRentalItemId);
+      this.assignItemNum = num;
       this.isOpenAssignEditModal = false;
       this.isOpenAssignEditModal = true;
     },

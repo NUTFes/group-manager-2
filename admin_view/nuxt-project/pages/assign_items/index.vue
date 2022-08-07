@@ -38,7 +38,7 @@
           <h3>部屋名</h3>
           <input v-model="roomName" placeholder="入力してください" />
         </div>
-        <div>
+        <!-- <div>
           <h3>在庫登録</h3>
           <select v-model="stockItemStatus">
             <option disabled value="">選択してください</option>
@@ -63,7 +63,7 @@
               {{ assignItemStatus.name }}
             </option>
           </select>
-        </div>
+        </div> -->
       </template>  
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
@@ -154,16 +154,12 @@ export default {
         "/stocker_places/" +
         "?name=" +
         this.roomName +
-        "&stock_item_status=" +
-        this.stockItemStatus +
-        "&assign_item_status=" +
-        this.assignItemStatus;
+        "&stock_item_status=1&assign_item_status=1";
 
       this.$axios.$post(url).then((response) => {
         this.roomName = "";
         this.stockItemStatus = "";
         this.assignItemStatus = "";
-        console.log(response.data)
         this.reload(response.data.id);
         this.closeAddModal();
       });
