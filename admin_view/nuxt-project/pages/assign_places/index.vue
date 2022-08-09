@@ -11,7 +11,7 @@
             割り当て
           </CommonButton>
         </SubHeader>
-        <Card width="100%" v-for="place in placeNumbers" v-bind:key="place.place.id">
+        <Card width="100%" style="overflow: scroll" v-for="place in placeNumbers" v-bind:key="place.place.id">
           <Row justify="start">
             <h4>{{ place.place.name }}</h4>
           </Row>
@@ -39,7 +39,7 @@
         <Card width="100%" style="overflow: scroll">
           <SubHeader pageTitle="会場申請一覧">
           </SubHeader>
-          <Card width="100%">
+          <Card width="100%" style="overflow: scroll">
             <Table>
               <template v-slot:table-header>
                 <th v-for="(header, index) in placeOrderHeaders" :key="index">
