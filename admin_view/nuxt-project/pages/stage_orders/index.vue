@@ -66,6 +66,12 @@
         <template v-slot:table-body>
           <tr
             v-for="(stageOrder, index) in stageOrders"
+						@click="
+							() =>
+								$router.push({
+									path: `/stage_orders/` + stageOrder.stage_order.id,
+								})
+						"
             :key="index"
           >
             <td>{{ stageOrder.stage_order.id }}</td>
