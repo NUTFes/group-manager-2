@@ -54,7 +54,7 @@ export default {
   },
   mounted() {
     if (localStorage.getItem("group_category_id") == 3) {
-      const stageUrl = process.env.VUE_APP_URL + "/api/v1/stage/rental_items";
+      const stageUrl = process.env.VUE_APP_URL + "/api/v1/get_stage_rentable_items";
       axios
         .get(stageUrl, {
           headers: {
@@ -65,7 +65,7 @@ export default {
           this.item_list = response.data.data;
         });
     } else {
-      const shopUrl = process.env.VUE_APP_URL + "/api/v1/shop/rental_items";
+      const shopUrl = process.env.VUE_APP_URL + "/api/v1/get_shop_rentable_items";
       axios
         .get(shopUrl, {
           headers: {
