@@ -21,7 +21,6 @@
       </div>
 
       <section class="tab_contents">
-        <div>
           <input id="tab9" type="radio" name="check" checked />
           <span class="bubble"></span>
           <label for="tab9" class="tab_lab9">副代表申請</label>
@@ -67,11 +66,11 @@
           <span class="bubble"></span>
           <label for="tab3" class="tab_lab3">物品申請</label>
 
-          <!-- <input id="tab5" type="radio" name="check" />
+          <input id="tab5" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab5" class="tab_lab5">従業員申請</label>
 
-          <input id="tab6" type="radio" name="check" />
+          <!-- <input id="tab6" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab6" class="tab_lab6">食品申請</label>
 
@@ -250,27 +249,33 @@
 
             <!-- 従業員申請 -->
             <div id="area5" class="panel">
+              <div class="flex">
+                <div v-for="e in regist_info[0].employees" :key="e">
+                <CardEmployeeInfo 
+                  :groupId="regist_info[0].group.id"
+                  :id="e.employee.id"
+                  :name="e.employee.name"
+                  :studentId="e.employee.student_id"
+                  :setting="setting.is_edit_employee"
+                  @reload="reload"
+                />
+                </div>
+              </div>
               <button
+                v-if="setting.add_employee"
                 id="btn1"
                 type="button"
-                onclick="document.getElementById('addEmployee').show()"
+                @click="addEmployeeDisplay = true"
                 style="display: block; margin: 0 0 0 auto"
               >
-                申請
+                追加
               </button>
-              <dialog
-                id="addEmployee"
-                style="
-                  margin-left: 30%;
-                  margin-right: 30%;
-                  width: 40%;
-                  border: 0;
-                  border-radius: 10px;
-                  box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.4);
-                "
-              >
-                <AddEmployee :groupId="projectName" />
-              </dialog>
+              <AddEmployee
+                v-if="addEmployeeDisplay"
+                :groupId="regist_info[0].group.id"
+                @closeAddEmployee="closeAddEmployee"
+                @reload="reload"
+              />
             </div>
 
             <!-- 食品申請 -->
@@ -309,10 +314,9 @@
               </dialog>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -329,6 +333,7 @@ import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
 import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
 import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
+import CardEmployeeInfo from "@/components/AllEdit/CardEmployeeInfo.vue";
 
 export default {
   components: {
@@ -343,6 +348,7 @@ export default {
     CardItemInfo,
     CardStageInfo,
     CardStageOptionInfo,
+    CardEmployeeInfo,
   },
   data() {
     return {
@@ -352,6 +358,7 @@ export default {
       projectName: "",
       addPowerDisplay: false,
       addItemDisplay: false,
+      addEmployeeDisplay: false,
       groupCategoryId: null,
       setting: null,
     };
@@ -379,6 +386,9 @@ export default {
     },
     closeAddItem: function () {
       this.addItemDisplay = false;
+    },
+    closeAddEmployee: function() {
+      this.addEmployeeDisplay = false; 
     },
   },
   mounted() {
