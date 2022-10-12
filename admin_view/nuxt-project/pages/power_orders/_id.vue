@@ -26,6 +26,10 @@
             <td>{{ powerOrder.group.id }}：{{ powerOrder.group.name }}</td>
           </tr>
           <tr>
+            <th>実行委員</th>
+            <td>{{ powerOrder.power_order.is_committee }}</td>
+          </tr>
+          <tr>
             <th>製品名</th>
             <td>{{ powerOrder.power_order.item }}</td>
           </tr>
@@ -122,6 +126,7 @@ export default {
       manufacturer: null,
       model: null,
       itemUrl: null,
+      isCommittee: null,
       isOpenSnackBar: false,
     };
   },
