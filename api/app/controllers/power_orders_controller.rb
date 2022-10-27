@@ -47,6 +47,6 @@ class PowerOrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def power_order_params
-      params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url, :is_committee)
+      params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
     end
 end

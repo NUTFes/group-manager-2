@@ -11,19 +11,30 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-        <SearchDropDown :nameList="yearList" :on_click="refinementPowerOrders" value="year_num">
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementPowerOrders"
+          value="year_num"
+        >
           {{ refYears }}
         </SearchDropDown>
-        <SearchDropDown :nameList="powerList" :on_click="refinementPowerOrders" value="power">
+        <SearchDropDown
+          :nameList="powerList"
+          :on_click="refinementPowerOrders"
+          value="power"
+        >
           {{ refPower }} [w] 以上
-        </SearchDropDown>
-        <SearchDropDown :nameList="isCommitteeList" :on_click="refinementPowerOrders" value="value">
-          {{ refIsCommittee }}
         </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
-          <input v-model="searchText" @keypress.enter="searchPowerOrders" type="text" size="25" placeholder="search" />
+          <input
+            v-model="searchText"
+            @keypress.enter="searchPowerOrders"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
         </SearchBar>
       </template>
     </SubSubHeader>
@@ -36,15 +47,18 @@
           </th>
         </template>
         <template v-slot:table-body>
-          <tr v-for="(powerOrder, index) in powerOrders" @click="
-            () =>
-              $router.push({
-                path: `/power_orders/` + powerOrder.power_order.id,
-              })
-          " :key="index">
+          <tr
+            v-for="(powerOrder, index) in powerOrders"
+            @click="
+              () =>
+                $router.push({
+                  path: `/power_orders/` + powerOrder.power_order.id,
+                })
+            "
+            :key="index"
+          >
             <td>{{ powerOrder.power_order.id }}</td>
             <td>{{ powerOrder.group.name }}</td>
-            <td>{{ powerOrder.power_order.is_committee }}</td>
             <td>{{ powerOrder.power_order.item }}</td>
             <td>{{ powerOrder.power_order.power }}</td>
             <td>{{ powerOrder.power_order.created_at | formatDate }}</td>
@@ -54,23 +68,22 @@
       </Table>
     </Card>
 
-    <AddModal @close="closeAddModal" v-if="isOpenAddModal" title="電力申請の追加">
+    <AddModal
+      @close="closeAddModal"
+      v-if="isOpenAddModal"
+      title="電力申請の追加"
+    >
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
           <select v-model="groupID">
             <option disabled value="">選択してください</option>
-            <option v-for="group in groupList" :key="group.id" :value="group.id">
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
               {{ group.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>申請者</h3>
-          <select v-model="isCommittee">
-            <option disabled value="">選択してください</option>
-            <option v-for="list in isCommitteeList" :key="list.id" :value="list.bool">
-              {{ list.value }}
             </option>
           </select>
         </div>
@@ -96,7 +109,9 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submit"
+          >登録</CommonButton
+        >
       </template>
     </AddModal>
 
@@ -113,13 +128,11 @@ export default {
   data() {
     return {
       powerOrders: [],
-      headers: ["ID", "参加団体", "実行委員", "製品", "電力 [w]", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "製品", "電力 [w]", "登録日時", "編集日時"],
       isOpenAddModal: false,
       refYears: "Years",
       refYearID: 0,
       refPower: "0",
-      refIsCommitteeID : 0,
-      refIsCommittee: "申請者",
       searchText: "",
       powerList: [
         { id: 1, power: 0 },
@@ -134,17 +147,12 @@ export default {
         { id: 10, power: 900 },
         { id: 11, power: 1000 },
       ],
-      isCommitteeList: [
-        { id: 1, value: "実行委員", bool: true },
-        { id: 2, value: "参加団体", bool: false },
-      ],
       groupID: null,
       item: null,
       power: 0,
       manufacturer: null,
       model: null,
       itemUrl: null,
-      isCommittee: null,
       isOpenSnackBar: false,
     };
   },
@@ -194,24 +202,13 @@ export default {
         } else {
           this.refPower = name_list[item_id - 1].power;
         }
-        // is_committeeで絞り込とき
-      } else if (Object.is(name_list, this.isCommitteeList)) {
-        this.refIsCommitteeID = item_id;
-        // ALLの時
-        if (item_id == 0) {
-          this.refIsCommittee = "ALL";
-        } else {
-          this.refIsCommittee = name_list[item_id -1].value;
-        }
       }
       this.powerOrders = [];
       const refUrl =
         "/api/v1/get_refinement_power_orders?fes_year_id=" +
         this.refYearID +
         "&power=" +
-        this.refPower +
-        "&is_committee=" +
-        this.refIsCommitteeID;
+        this.refPower;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.powerOrders.push(res);
@@ -262,10 +259,7 @@ export default {
         "&model=" +
         this.model +
         "&item_url=" +
-        this.itemUrl +
-        "&is_committee=" +
-        this.isCommittee;
-
+        this.itemUrl;
       this.$axios.$post(url).then((response) => {
         this.reload(response.data.id);
         this.openSnackBar(this.item + "を追加しました");
@@ -276,7 +270,6 @@ export default {
         this.manufacturer = null;
         this.model = null;
         this.item_url = null;
-        this.isCommittee = null;
       });
     },
     async downloadCSV() {
