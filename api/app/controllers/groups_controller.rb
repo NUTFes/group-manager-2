@@ -25,17 +25,18 @@ class GroupsController < ApplicationController
       token: ENV['BOT_USER_ACCESS_TOKEN'],
       channel: '#' + ENV['CHANNEL'],
       text: "
-      
+
       参加団体「#{@group.name}」が追加されました
       ーーーーーーーーーーーーーーーー
       代表者：#{@group.user.name}
+      委員: #{@group.committee}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
-  
+
       "
-    )    
+    )
   end
 
   # PATCH/PUT /groups/1
@@ -49,17 +50,18 @@ class GroupsController < ApplicationController
       token: ENV['BOT_USER_ACCESS_TOKEN'],
       channel: '#' + ENV['CHANNEL'],
       text: "
-      
+
       参加団体「#{@group.name}」が編集されました
       ーーーーーーーーーーーーーーーー
       代表者：#{@group.user.name}
+      委員: #{@group.committee}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
-  
+
       "
-    )    
+    )
   end
 
   # DELETE /groups/1
@@ -67,23 +69,24 @@ class GroupsController < ApplicationController
   def destroy
     @group.destroy
     render json: fmt(ok, [], "Deleted group id = "+params[:id])
-    
+
     client = Slack::Web::Client.new
     client.chat_postMessage(
       token: ENV['BOT_USER_ACCESS_TOKEN'],
       channel: '#' + ENV['CHANNEL'],
       text: "
-      
+
       参加団体「#{@group.name}」が削除されました
       ーーーーーーーーーーーーーーーー
       代表者：#{@group.user.name}
+      委員: #{@group.committee}
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
-  
+
       "
-    )        
+    )
   end
 
   private
@@ -100,6 +103,6 @@ class GroupsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def group_params
-      params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id)
+      params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id, :committee)
     end
 end

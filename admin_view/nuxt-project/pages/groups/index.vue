@@ -54,6 +54,7 @@
           >
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
+            <td>{{ group.group.committee }}</td>
             <td>{{ group.group.project_name }}</td>
             <td>{{ group.group_category.name }}</td>
             <td>{{ group.fes_year.year_num }}</td>
@@ -73,6 +74,15 @@
         <div>
           <h3>団体名</h3>
           <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>申請者</h3>
+          <select v-model="committee">
+            <option disabled value="">選択してください</option>
+            <option v-for="applicant in applicantList" :key="applicant.id" :value="applicant.bool">
+              {{ applicant.value }}
+            </option>
+          </select>
         </div>
         <div>
           <h3>カテゴリー</h3>
@@ -136,6 +146,7 @@ export default {
       activity: [],
       groupCategoryId: "",
       fesYearId: "",
+      committee: "",
 
       year_list: [],
       user: [],
@@ -145,6 +156,7 @@ export default {
       refYearID: 0,
       refGroupCategories: "Categories",
       refCategoryID: 0,
+      refCommittee: "委員",
       isOpenAddModal: false,
       isOpenSnackBar: false,
       searchText: "",
@@ -159,11 +171,16 @@ export default {
       headers: [
         "ID",
         "グループ名",
+        "委員",
         "企画名",
         "カテゴリ",
         "開催年",
         "日時",
         "編集日時",
+      ],
+      applicantList: [
+        { id: 1, value: "実行委員", bool: true },
+        { id: 2, value: "参加団体", bool: false },
       ],
     };
   },
@@ -271,6 +288,8 @@ export default {
         CurrentUser.data.data.id +
         "&name=" +
         this.groupName +
+        "&committee=" +
+        this.committee +
         "&project_name=" +
         this.projectName +
         "&activity=" +
@@ -282,6 +301,7 @@ export default {
       this.$axios.$post(postGroupUrl).then((response) => {
         this.openSnackBar(this.groupName + "を追加しました");
         this.groupName = "";
+        this.committee = "";
         this.projectName = "";
         this.activity = "";
         this.groupCategoryId = "";
