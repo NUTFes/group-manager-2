@@ -44,13 +44,17 @@ class Api::V1::GroupsApiController < ApplicationController
   def get_refinement_groups
     fes_year_id = params[:fes_year_id].to_i
     group_category_id = params[:group_category_id].to_i
+    committee = params[:committee].to_i
+
+    option_list = [nil, true, false] # 0: 指定なし(ALL) 1: true 2: false
+
     # 両方ともALL
     if fes_year_id == 0 && group_category_id == 0
       @groups = Group.all
-      # fes_year_idだけ指定 
+      # fes_year_idだけ指定
     elsif fes_year_id != 0 && group_category_id == 0
       @groups = Group.where(fes_year_id: fes_year_id)
-      # group_category_idだけ指定 
+      # group_category_idだけ指定
     elsif fes_year_id == 0 && group_category_id != 0
       @groups = Group.where(group_category_id: group_category_id)
       # 両方とも指定
@@ -58,9 +62,15 @@ class Api::V1::GroupsApiController < ApplicationController
       @groups = Group.where(fes_year_id: fes_year_id).where(group_category_id: group_category_id)
     end
 
+    if committee == 0
+      @groups = Group.all
+    else
+      @groups = Group.where(committee: option_list[committee])
+    end
+
     if @groups.count == 0
       render json: fmt(not_found, [], "Not found groups")
-    else 
+    else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
   end

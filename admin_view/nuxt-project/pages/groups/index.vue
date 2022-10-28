@@ -25,6 +25,13 @@
         >
           {{ refGroupCategories }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="applicantList"
+          :on_click="refinementGroups"
+          value="value"
+        >
+          {{ refCommittee }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -156,7 +163,8 @@ export default {
       refYearID: 0,
       refGroupCategories: "Categories",
       refCategoryID: 0,
-      refCommittee: "委員",
+      refCommittee: "申請者",
+      refCommitteeID: 0,
       isOpenAddModal: false,
       isOpenSnackBar: false,
       searchText: "",
@@ -191,7 +199,7 @@ export default {
     const url =
       "/api/v1/get_refinement_groups?fes_year_id=" +
       currentYearRes.data.fes_year_id +
-      "&group_category_id=0";
+      "&group_category_id=0&committee=0";
     const groupRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -230,13 +238,24 @@ export default {
         } else {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
+        // committeeで絞り込むとき
+      } else if (Object.is(name_list, this.applicantList)) {
+        this.refCommitteeID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refCommittee = "ALL";
+        } else {
+          this.refCommittee = name_list[item_id -1].value;
+        }
       }
       this.groups = [];
       const refUrl =
         "/api/v1/get_refinement_groups?fes_year_id=" +
         this.refYearID +
         "&group_category_id=" +
-        this.refCategoryID;
+        this.refCategoryID +
+        "&committee=" +
+        this.refCommitteeID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.groups.push(res);
