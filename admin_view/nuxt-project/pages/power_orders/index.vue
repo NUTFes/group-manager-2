@@ -25,6 +25,13 @@
         >
           {{ refPower }} [w] 以上
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementPowerOrders"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -133,6 +140,8 @@ export default {
       refYears: "Years",
       refYearID: 0,
       refPower: "0",
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
       searchText: "",
       powerList: [
         { id: 1, power: 0 },
@@ -146,6 +155,14 @@ export default {
         { id: 9, power: 800 },
         { id: 10, power: 900 },
         { id: 11, power: 1000 },
+      ],
+      groupCategories: [
+        { id: 1, name: "模擬店(食品販売)" },
+        { id: 2, name: "模擬店(物品販売)" },
+        { id: 3, name: "ステージ企画" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室公開" },
+        { id: 6, name: "その他" },
       ],
       groupID: null,
       item: null,
@@ -202,13 +219,24 @@ export default {
         } else {
           this.refPower = name_list[item_id - 1].power;
         }
+        // group_categoryで絞り込むとき
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
+        }
       }
       this.powerOrders = [];
       const refUrl =
         "/api/v1/get_refinement_power_orders?fes_year_id=" +
         this.refYearID +
         "&power=" +
-        this.refPower;
+        this.refPower +
+        "&group_category_id=" +
+        this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.powerOrders.push(res);
