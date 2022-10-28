@@ -25,6 +25,13 @@
         >
           {{ refPlaces }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementPlaceOrders"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -172,6 +179,16 @@ export default {
       refYearID: 0,
       refPlaces: "Places",
       refPlaceID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
+      groupCategories: [
+        { id: 1, name: "模擬店(食品販売)" },
+        { id: 2, name: "模擬店(物品販売)" },
+        { id: 3, name: "ステージ企画" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室公開" },
+        { id: 6, name: "その他" },
+      ],
       searchText: "",
       groupList: null,
     };
@@ -227,13 +244,24 @@ export default {
         } else {
           this.refPlaces = name_list[item_id - 1].name;
         }
+        // group_categoryで絞り込むとき
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
+        }
       }
       this.placeOrders = [];
       const refUrl =
         "/api/v1/get_refinement_place_orders?fes_year_id=" +
         this.refYearID +
         "&place_id=" +
-        this.refPlaceID;
+        this.refPlaceID +
+        "&group_category_id=" +
+        this.refCategoryID;
       console.log(refUrl);
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
