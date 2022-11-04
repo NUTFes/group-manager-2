@@ -27,6 +27,10 @@
               <td>{{ placeOrder.group.name }}</td>
             </tr>
             <tr>
+              <th>委員</th>
+              <td>{{ placeOrder.group.committee }}</td>
+            </tr>
+            <tr>
               <th>第一希望</th>
               <td>{{ placeOrder.place_order_name.first }}</td>
             </tr>

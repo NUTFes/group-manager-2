@@ -26,6 +26,10 @@
             <td>{{ powerOrder.group.id }}：{{ powerOrder.group.name }}</td>
           </tr>
           <tr>
+            <th>委員</th>
+            <td>{{ powerOrder.group.committee }}</td>
+          </tr>
+          <tr>
             <th>製品名</th>
             <td>{{ powerOrder.power_order.item }}</td>
           </tr>

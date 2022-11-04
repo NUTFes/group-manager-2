@@ -26,6 +26,10 @@
             <td>{{ rentalOrder.group.id }}：{{ rentalOrder.group.name }}</td>
           </tr>
           <tr>
+            <th>委員</th>
+            <td>{{ rentalOrder.group.committee }}</td>
+          </tr>
+          <tr>
             <th>物品名</th>
             <td>{{ rentalOrder.rental_item.name }}</td>
           </tr>
