@@ -59,6 +59,7 @@
           >
             <td>{{ powerOrder.power_order.id }}</td>
             <td>{{ powerOrder.group.name }}</td>
+            <td>{{ powerOrder.group.committee }}</td>
             <td>{{ powerOrder.power_order.item }}</td>
             <td>{{ powerOrder.power_order.power }}</td>
             <td>{{ powerOrder.power_order.created_at | formatDate }}</td>
@@ -128,7 +129,7 @@ export default {
   data() {
     return {
       powerOrders: [],
-      headers: ["ID", "参加団体", "製品", "電力 [w]", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "委員", "製品", "電力 [w]", "登録日時", "編集日時"],
       isOpenAddModal: false,
       refYears: "Years",
       refYearID: 0,

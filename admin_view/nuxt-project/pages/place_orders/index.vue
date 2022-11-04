@@ -59,6 +59,7 @@
           >
             <td>{{ placeOrder.place_order.id }}</td>
             <td>{{ placeOrder.group.name }}</td>
+            <td>{{ placeOrder.group.committee }}</td>
             <td>{{ placeOrder.place_order_name.first }}</td>
             <td>{{ placeOrder.place_order_name.second }}</td>
             <td>{{ placeOrder.place_order_name.third }}</td>
@@ -153,6 +154,7 @@ export default {
       headers: [
         "ID",
         "参加団体",
+        "委員",
         "第一希望",
         "第二希望",
         "第三希望",
