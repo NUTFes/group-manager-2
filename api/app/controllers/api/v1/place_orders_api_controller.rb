@@ -26,6 +26,7 @@ class Api::V1::PlaceOrdersApiController < ApplicationController
   def get_refinement_place_orders
     fes_year_id = params[:fes_year_id].to_i 
     place_id = params[:place_id].to_i
+    group_category_id = params[:group_category_id].to_i
     #両方ともALL
     if fes_year_id == 0 && place_id == 0
       @place_orders = PlaceOrder.all
@@ -38,6 +39,12 @@ class Api::V1::PlaceOrdersApiController < ApplicationController
       #両方とも指定
     else
       @place_orders = PlaceOrder.where("(first = ?) OR (second = ?) OR (third = ?)", place_id, place_id, place_id).map{ |place_order| place_order if place_order.group.fes_year_id == fes_year_id }.compact 
+    end
+
+    if group_category_id == 0
+      @place_orders = PlaceOrder.all
+    else
+      @place_orders = PlaceOrder.preload(:group).map{ |place_order| place_order if place_order.group.group_category_id == group_category_id }.compact 
     end
 
     if @place_orders.count == 0

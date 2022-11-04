@@ -25,6 +25,13 @@
         >
           {{ refRentalItems }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementRentalOrders"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -59,6 +66,7 @@
           >
             <td>{{ rentalOrder.rental_order.id }}</td>
             <td>{{ rentalOrder.group.name }}</td>
+            <td>{{ rentalOrder.group.committee }}</td>
             <td>{{ rentalOrder.rental_item.name }}</td>
             <td>{{ rentalOrder.rental_order.num }}</td>
           </tr>
@@ -129,6 +137,16 @@ export default {
       refYearID: 0,
       refRentalItems: "Items",
       refRentalItemID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
+      groupCategories: [
+        { id: 1, name: "模擬店(食品販売)" },
+        { id: 2, name: "模擬店(物品販売)" },
+        { id: 3, name: "ステージ企画" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室公開" },
+        { id: 6, name: "その他" },
+      ],
       searchText: "",
       groupID: null,
       rentalItemID: null,
@@ -186,13 +204,24 @@ export default {
         } else {
           this.refRentalItems = name_list[item_id - 1].name;
         }
+        // group_categoryで絞り込むとき
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
+        }
       }
       this.rentalOrders = [];
       const refUrl =
         "/api/v1/get_refinement_rental_orders?fes_year_id=" +
         this.refYearID +
         "&rental_item_id=" +
-        this.refRentalItemID;
+        this.refRentalItemID +
+        "&group_category_id=" +
+        this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.rentalOrders.push(res);

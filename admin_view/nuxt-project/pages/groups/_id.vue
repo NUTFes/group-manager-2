@@ -37,6 +37,10 @@
             <td>{{ group.group.name }}</td>
           </tr>
           <tr>
+            <th>委員</th>
+            <td>{{ group.group.committee }}</td>
+          </tr>
+          <tr>
             <th>企画名</th>
             <td>{{ group.group.project_name }}</td>
           </tr>
@@ -73,6 +77,15 @@
         <div>
           <h3>団体名</h3>
           <input v-model="groupName" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>カテゴリー</h3>
+          <select v-model="committee">
+            <option disabled value="">選択してください</option>
+            <option v-for="applicant in applicantList" :key="applicant.id" :value="applicant.bool">
+              {{ applicant.value }}
+            </option>
+          </select>
         </div>
         <div>
           <h3>カテゴリー</h3>
@@ -148,6 +161,7 @@ export default {
       activity: [],
       groupCategoryId: "",
       fesYearId: "",
+      committee: "",
 
       isOpenEditModal: false,
       isOpenDeleteModal: false,
@@ -155,6 +169,10 @@ export default {
 
       groupCategories: [],
       yearList: [],
+      applicantList: [
+        { id: 1, value: "実行委員", bool: true },
+        { id: 2, value: "参加団体", bool: false },
+      ],
     };
   },
   computed: {
@@ -176,6 +194,7 @@ export default {
 
     return {
       group: groupRes.data,
+      committee: groupRes.data.committee,
       groupName: groupRes.data.group.name,
       projectName: groupRes.data.group.project_name,
       activity: groupRes.data.group.activity,
@@ -226,6 +245,8 @@ export default {
         this.group.group.id +
         "?name=" +
         this.groupName +
+        "&committee=" +
+        this.committee +
         "&project_name=" +
         this.projectName +
         "&group_category_id=" +
@@ -239,6 +260,7 @@ export default {
       await this.$axios.$put(putGroupUrl).then((response) => {
         this.openSnackBar(this.groupName + "を編集しました");
         this.groupName = "";
+        this.committee = "";
         this.projectName = "";
         this.activity = "";
         this.groupCategoryId = "";

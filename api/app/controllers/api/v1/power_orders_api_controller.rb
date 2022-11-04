@@ -25,6 +25,7 @@ class Api::V1::PowerOrdersApiController < ApplicationController
   def get_refinement_power_orders
     fes_year_id = params[:fes_year_id].to_i
     power = params[:power].to_i
+    group_category_id = params[:group_category_id].to_i
     # 両方ともALL
     if fes_year_id == 0 && power == 0
       @power_orders = PowerOrder.all
@@ -37,6 +38,12 @@ class Api::V1::PowerOrdersApiController < ApplicationController
       #両方とも指定
     else
       @power_orders = PowerOrder.preload(:group).where("(power >= ?)", power).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact
+    end
+
+    if group_category_id == 0
+      @power_orders = PowerOrder.all
+    else
+      @power_orders = PowerOrder.preload(:group).map{ |power_order| power_order if power_order.group.group_category_id == group_category_id }.compact 
     end
 
     if @power_orders.count == 0
