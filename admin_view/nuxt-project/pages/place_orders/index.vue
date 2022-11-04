@@ -70,8 +70,6 @@
             <td>{{ placeOrder.place_order_name.first }}</td>
             <td>{{ placeOrder.place_order_name.second }}</td>
             <td>{{ placeOrder.place_order_name.third }}</td>
-            <td>{{ placeOrder.place_order.created_at | formatDate }}</td>
-            <td>{{ placeOrder.place_order.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -165,8 +163,6 @@ export default {
         "第一希望",
         "第二希望",
         "第三希望",
-        "登録日時",
-        "編集日時",
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,

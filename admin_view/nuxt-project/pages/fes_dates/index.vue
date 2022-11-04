@@ -29,8 +29,6 @@
             <td>{{ fesDate.fes_date.days_num }}</td>
             <td>{{ fesDate.fes_date.date }}</td>
             <td>{{ fesDate.fes_date.day }}</td>
-            <td>{{ fesDate.fes_date.created_at | formatDate }}</td>
-            <td>{{ fesDate.fes_date.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -93,8 +91,6 @@ export default {
         "何日目",
         "開催日",
         "曜日",
-        "登録日時",
-        "編集日時",
       ],
       daysNumList: [
         { id: 1, text: "準備日", value: 0 },

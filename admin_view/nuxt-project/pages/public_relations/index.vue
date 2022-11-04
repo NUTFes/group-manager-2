@@ -58,14 +58,6 @@
               <div v-if='publicRelation.blurb === null'>未登録</div>
               <div v-else>登録済み</div>
             </td>
-            <td>
-              <div v-if='publicRelation.blurb === null'>未登録</div>
-              <div v-else>{{ publicRelation.created_at | formatDate }}</div>
-            </td>
-            <td>
-              <div v-if='publicRelation.blurb === null'>未登録</div>
-              <div v-else>{{ publicRelation.updated_at | formatDate }}</div>
-            </td>
           </tr>
         </template>
       </Table>
@@ -122,7 +114,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "申請状況", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "申請状況"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
