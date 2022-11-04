@@ -80,8 +80,6 @@
             <td>{{ stageOrder.stage_order_info.date }}</td>
             <td>{{ stageOrder.stage_order_info.stage_first }}</td>
             <td>{{ stageOrder.stage_order_info.stage_second }}</td>
-            <td>{{ stageOrder.stage_order.created_at | formatDate }}</td>
-            <td>{{ stageOrder.stage_order.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -278,8 +276,6 @@ export default {
         "希望日",
         "第一希望",
         "第二希望",
-        "登録日時",
-        "編集日時",
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,

@@ -26,8 +26,6 @@
           >
             <td>{{ place.id }}</td>
             <td>{{ place.name }}</td>
-            <td>{{ place.created_at | formatDate }}</td>
-            <td>{{ place.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -67,7 +65,7 @@ export default {
     return {
       places: [],
       dialog: false,
-      headers: ["ID", "名前", "登録日時", "編集日時"],
+      headers: ["ID", "名前"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",

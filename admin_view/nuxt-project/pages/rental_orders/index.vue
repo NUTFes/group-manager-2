@@ -61,8 +61,6 @@
             <td>{{ rentalOrder.group.name }}</td>
             <td>{{ rentalOrder.rental_item.name }}</td>
             <td>{{ rentalOrder.rental_order.num }}</td>
-            <td>{{ rentalOrder.rental_order.created_at | formatDate }}</td>
-            <td>{{ rentalOrder.rental_order.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -124,7 +122,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "貸出物品", "個数", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "貸出物品", "個数"],
       isOpenAddModal: false,
       rentalOrders: [],
       refYears: "Year",

@@ -62,8 +62,6 @@
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
             <td>{{ purchaseList.purchase_list.items }}</td>
             <td>{{ purchaseList.purchase_list.is_fresh }}</td>
-            <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
-            <td>{{ purchaseList.purchase_list.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -172,8 +170,6 @@ export default {
         "販売食品",
         "購入品",
         "なまもの",
-        "登録日時",
-        "編集日時",
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,

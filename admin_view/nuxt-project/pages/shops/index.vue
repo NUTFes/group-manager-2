@@ -27,8 +27,8 @@
             <td>{{ shop.id }}</td>
             <td>{{ shop.name }}</td>
             <td>{{ shop.tel }}</td>
-            <td>{{ shop.created_at | formatDate }}</td>
-            <td>{{ shop.updated_at | formatDate }}</td>
+            <td>{{ shop.opening_hours }}</td>
+            <td>{{ shop.address }}</td>
           </tr>
         </template>
       </Table>
@@ -78,6 +78,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
+      headers: ["ID", "名前", "電話番号", "開店時間", "住所"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",

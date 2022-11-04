@@ -51,8 +51,6 @@
             <td>{{ employee.group.name }}</td>
             <td>{{ employee.employee.name }}</td>
             <td>{{ employee.stool_test.status }}</td>
-            <td>{{ employee.employee.created_at | formatDate }}</td>
-            <td>{{ employee.employee.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -118,7 +116,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "名前", "検便", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "名前", "検便"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       groupId: "",

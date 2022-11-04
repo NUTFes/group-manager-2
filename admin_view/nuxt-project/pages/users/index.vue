@@ -50,8 +50,6 @@
             <td>{{ user.user.id }}</td>
             <td>{{ user.user.name }}</td>
             <td>{{ user.role.name }}</td>
-            <td>{{ user.user.created_at | formatDate }}</td>
-            <td>{{ user.user.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -140,7 +138,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "名前", "権限", "日時", "編集日時"],
+      headers: ["ID", "名前", "権限"],
       roles: [
         { id: 1, name: "developer" },
         { id: 2, name: "manager" },

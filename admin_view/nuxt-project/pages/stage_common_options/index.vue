@@ -93,16 +93,6 @@
               {{ stageCommonOption.stage_common_option.camera_permission }}
             </td>
             <td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
-            <td>
-              {{
-                stageCommonOption.stage_common_option.created_at | formatDate
-              }}
-            </td>
-            <td>
-              {{
-                stageCommonOption.stage_common_option.updated_at | formatDate
-              }}
-            </td>
           </tr>
         </template>
       </Table>
@@ -205,8 +195,6 @@ export default {
         "音楽をかける",
         "撮影許可",
         "大きな音",
-        "登録日時",
-        "編集日時",
       ],
       isOwnEquipmentList: [
         { id: 1, value: "使用する", bool: true },

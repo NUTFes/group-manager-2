@@ -57,8 +57,8 @@
             <td>{{ group.group.project_name }}</td>
             <td>{{ group.group_category.name }}</td>
             <td>{{ group.fes_year.year_num }}</td>
-            <td>{{ group.group.created_at | formatDate }}</td>
-            <td>{{ group.group.updated_at | formatDate }}</td>
+            <!-- <td>{{ group.group.created_at | formatDate }}</td>
+            <td>{{ group.group.updated_at | formatDate }}</td> -->
           </tr>
         </template>
       </Table>
@@ -162,8 +162,6 @@ export default {
         "企画名",
         "カテゴリ",
         "開催年",
-        "日時",
-        "編集日時",
       ],
     };
   },

@@ -28,8 +28,6 @@
             <td>{{ stage.name }}</td>
             <td>{{ stage.enable_sunny }}</td>
             <td>{{ stage.enable_rainy }}</td>
-            <td>{{ stage.created_at | formatDate }}</td>
-            <td>{{ stage.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -94,7 +92,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "ステージ名", "晴れ", "雨", "登録日時", "編集日時"],
+      headers: ["ID", "ステージ名", "晴れ", "雨"],
       isOpenAddModal: false,
       isUseList: [
         { text: "使用可能", value: true },

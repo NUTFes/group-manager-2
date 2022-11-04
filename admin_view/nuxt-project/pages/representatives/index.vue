@@ -55,8 +55,6 @@
             <td>{{ representative.group.name }}</td>
             <td>{{ representative.user.name }}</td>
             <td>{{ representative.sub_rep.name }}</td>
-            <td>{{ representative.user.created_at | formatDate }}</td>
-            <td>{{ representative.user.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -139,7 +137,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "代表者", "副代表", "登録日時", "編集日時"],
+      headers: ["ID", "参加団体", "代表者", "副代表"],
       departmentList: [
         { id: 1, name: "機械創造工学課程" },
         { id: 2, name: "電気電子情報工学課程" },

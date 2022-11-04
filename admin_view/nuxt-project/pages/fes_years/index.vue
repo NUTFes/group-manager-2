@@ -26,8 +26,6 @@
           >
             <td>{{ fesYear.id }}</td>
             <td>{{ fesYear.year_num }}</td>
-            <td>{{ fesYear.created_at | formatDate }}</td>
-            <td>{{ fesYear.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -62,7 +60,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "開催年", "登録日時", "編集日時"],
+      headers: ["ID", "開催年"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       year_num: null,

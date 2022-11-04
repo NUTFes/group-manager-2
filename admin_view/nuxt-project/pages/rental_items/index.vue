@@ -27,8 +27,6 @@
             <td>{{ rentalItem.name }}</td>
             <td>{{ rentalItem.is_shop_rentable }}</td>
             <td>{{ rentalItem.is_stage_rentable }}</td>
-            <td>{{ rentalItem.created_at | formatDate }}</td>
-            <td>{{ rentalItem.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -92,7 +90,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      headers: ["ID", "名前", "模擬店貸出", "ステージ貸出", "登録日時", "編集日時"],
+      headers: ["ID", "名前", "模擬店貸出", "ステージ貸出"],
       isRentableList: [
         { text: "貸出可能", value: true },
         { text: "貸出不可能", value: false },

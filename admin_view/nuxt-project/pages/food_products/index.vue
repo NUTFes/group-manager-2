@@ -63,8 +63,6 @@
             <td>{{ foodProduct.food_product.first_day_num }}</td>
             <td>{{ foodProduct.food_product.second_day_num }}</td>
             <td>{{ foodProduct.food_product.is_cooking }}</td>
-            <td>{{ foodProduct.food_product.created_at | formatDate }}</td>
-            <td>{{ foodProduct.food_product.updated_at | formatDate }}</td>
           </tr>
         </template>
       </Table>
@@ -145,8 +143,6 @@ export default {
         "1日目の個数",
         "2日目の個数",
         "調理の有無",
-        "登録日時",
-        "編集日時",
       ],
       isOpenAddModal: false,
       isCookingList: [
