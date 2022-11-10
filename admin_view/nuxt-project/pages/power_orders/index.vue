@@ -134,7 +134,7 @@ export default {
   data() {
     return {
       powerOrders: [],
-      headers: ["ID", "参加団体", "製品", "電力 [w]"],
+      headers: ["ID", "参加団体", "委員", "製品", "電力 [w]"],
       isOpenAddModal: false,
       refYears: "Years",
       refYearID: 0,
