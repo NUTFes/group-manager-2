@@ -130,7 +130,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "貸出物品", "個数"],
+      headers: ["ID", "参加団体", "委員", "貸出物品", "個数"],
       isOpenAddModal: false,
       rentalOrders: [],
       refYears: "Year",

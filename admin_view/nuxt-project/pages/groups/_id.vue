@@ -79,7 +79,7 @@
           <input v-model="groupName" placeholder="入力してください" />
         </div>
         <div>
-          <h3>カテゴリー</h3>
+          <h3>申請者</h3>
           <select v-model="committee">
             <option disabled value="">選択してください</option>
             <option v-for="applicant in applicantList" :key="applicant.id" :value="applicant.bool">
