@@ -7,8 +7,11 @@
           <td>使用電力リスト</td>
           <td>
             <InTableButton iconName="file_download" :on_click="downloadPowerPDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadPowerCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
         <tr>
@@ -17,8 +20,11 @@
             <InTableButton
               iconName="file_download"
               :on_click="downloadEmployeePDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadEmployeeCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
         <tr>
@@ -27,8 +33,11 @@
             <InTableButton
               iconName="file_download"
               :on_click="downloadRentalItemsPDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadRentalItemsCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
         <tr>
@@ -37,8 +46,11 @@
             <InTableButton
               iconName="file_download"
               :on_click="downloadFoodProductsPDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadFoodProductsCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
         <tr>
@@ -47,8 +59,11 @@
             <InTableButton
               iconName="file_download"
               :on_click="downloadContactsPDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadContactsCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
         <tr>
@@ -57,8 +72,11 @@
             <InTableButton
               iconName="file_download"
               :on_click="downloadGroupInfoPDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadGroupInfoCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
         <tr>
@@ -67,8 +85,11 @@
             <InTableButton
               iconName="file_download"
               :on_click="downloadRentalItemsAllPDF"
-              >ダウンロード</InTableButton
+              >PDF</InTableButton
             >
+            <InTableButton iconName="file_download" :on_click="downloadRentalItemsAllCSV">
+              CSV
+            </InTableButton>
           </td>
         </tr>
       </VerticalTable>
@@ -126,7 +147,7 @@ export default {
           "/print_pdf/food_products/" +
           this.currentYearID +
           "/output.pdf",
-        "従業員リスト"
+        "販売食品リスト"
       );
     },
     downloadContactsPDF: function () {
@@ -155,6 +176,41 @@ export default {
           "/output.pdf",
         "物品貸し出し表まとめ"
       );
+    },
+    async downloadPowerCSV() {
+      const url =  //データ不一致
+        this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
+      window.open(url, "使用電力リスト_CSV");
+    },
+    async downloadEmployeeCSV() {
+      const url =
+        this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
+      window.open(url, "従業員リスト_CSV");
+    },
+    async downloadRentalItemsCSV() {
+      const url =  //データ不一致
+        this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
+      window.open(url, "貸出物品リスト_CSV");
+    },
+    async downloadFoodProductsCSV() {
+      const url =
+        this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
+      window.open(url, "販売食品リスト_CSV");
+    },
+    async downloadContactsCSV() {
+      const url =
+        this.$config.apiURL + "/api/v1/get_users_csv/" + this.refYearID;
+      window.open(url, "連絡先リスト_CSV");
+    },
+    async downloadGroupInfoCSV() {
+      const url =  //無し
+        this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
+      window.open(url, "参加団体情報リスト_CSV");
+    },
+    async downloadRentalItemsAllCSV() {
+      const url =  //無し
+        this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
+      window.open(url, "物品貸し出し表まとめ_CSV");
     },
   },
 };
