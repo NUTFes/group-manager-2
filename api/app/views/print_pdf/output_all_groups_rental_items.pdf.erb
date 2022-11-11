@@ -48,6 +48,7 @@
       <th>数量</th>
       <th>貸出日</th>
       <th>返却日</th>
+      <th>返却チェック</th>
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
@@ -56,6 +57,7 @@
       <td><%= assign_rental_item.num %></td>
       <td><%= group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : group.fes_year.fes_dates.where(days_num: 0).first.date %>(準備日)</td>
       <td><%= group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : group.fes_year.fes_dates.where(days_num: 3).first.date %>(片付け日)</td>
+      <td></td>
     </tr>
     <% end %>
   </table>

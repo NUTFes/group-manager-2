@@ -10,6 +10,7 @@
           <th>氏名</th>
           <th>電話番号</th>
           <th>メールアドレス</th>
+          <th>備考欄</th>
         </tr>
         <% category.each do |group| %>
         <tr>
@@ -19,6 +20,7 @@
           <td><%= group.user.name %></td>
           <td><%= group.user.user_detail.tel %></td>
           <td><%= group.user.email %></td>
+          <td rowspan=2></td>
         </tr>
         <tr>
           <td><%= group.sub_rep.nil? ? nil : group.sub_rep.name %></td>
