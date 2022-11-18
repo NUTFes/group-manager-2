@@ -11,6 +11,7 @@
           <th>名称</th>
           <th>メーカー/型番</th>
           <th>電力 [w]</th>
+          <th>備考欄</th>
         </tr>
         <% category.each do |group| %>
           <% if group.power_orders.exists? %>
@@ -23,6 +24,7 @@
                 <td><%= power_order.item %></td>
                 <td><%= power_order.manufacturer %></td>
                 <td><%= power_order.power %></td>
+                <td></td>
               </tr>
               <% end %>
           <% else %>
@@ -32,6 +34,7 @@
               <td><%= group.name %></td>
               <td><%= group.activity %></td>
               <td colspan=3>なし</td>
+              <td></td>
             </tr>
           <% end %>
         <% end %>

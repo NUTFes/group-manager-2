@@ -5,6 +5,7 @@
     <th style="width:8%">団体名</th>
     <th style="width:2%">従業員数</th>
     <th colspan=4>従業員</th>
+    <th style="width:6%">備考欄</th>
   </tr>
   <% @groups.each do |group| %> 
   <tr>
@@ -15,12 +16,14 @@
     <td style="width:8%"><%= group.user.name %></td>
     <td style="width:5%"><%= group.user.email %></td>
     <td style="width:5%"><%= group.user.user_detail.tel %></td>
+    <td></td>
   </tr>
   <tr>
     <td style="width:1%">副</td>
     <td style="width:8%"><%= group.sub_rep.name %></td>
     <td style="width:5%"><%= group.sub_rep.email %></td>
     <td style="width:5%"><%= group.sub_rep.tel %></td>
+    <td></td>
   </tr>
   <tr>
     <td colspan=6 style="text-align:left; padding:1%">

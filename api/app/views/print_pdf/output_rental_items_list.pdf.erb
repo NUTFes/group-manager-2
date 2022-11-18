@@ -11,6 +11,7 @@
         <th>名称</th>
         <th>借用場所</th>
         <th>個数</th>
+        <th>備考欄</th>
       </tr>
       <% category.each do |group| %>
         <tr>
@@ -23,6 +24,7 @@
           <td><%= assign_rental_item.rental_item.name %></td>
           <td><%= assign_rental_item.stocker_place.name %></td>
           <td><%= assign_rental_item.num %></td>
+          <td></td>
         </tr>
           <% end %>
         <% else %>

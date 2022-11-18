@@ -9,6 +9,7 @@
     <th>仕入れ品</th>
     <th>仕入れ先</th>
     <th>なまもの</th>
+    <th>備考欄</th>
   </tr>
   <% @groups.each do |group| %>
   <tr>
@@ -34,6 +35,7 @@
     <% end %>
   <% else %>
     <td colspan=5>なし</td>
+    <td></td>
   <% end %>
   <% end %>
 </table>
