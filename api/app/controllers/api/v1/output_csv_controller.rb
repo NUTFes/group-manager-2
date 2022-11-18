@@ -1,6 +1,6 @@
 class Api::V1::OutputCsvController < ApplicationController
   require 'csv'
-  
+
   def output_groups_csv
     if params[:fes_year_id].to_i == 0
       # 全件選択
@@ -34,6 +34,42 @@ class Api::V1::OutputCsvController < ApplicationController
     send_data(csv_data, filename: "参加団体申請_#{filename_year}年度.csv")
   end
 
+  def output_assign_rental_items_csv
+    if params[:fes_year_id].to_i == 0
+      # 全件選択
+      @assign_rental_items = AssignRentalItem.all
+      filename_year = "全"
+    else
+      @assign_rental_items = Group.where(fes_year_id: params[:fes_year_id])
+      filename_year = FesYear.find(params[:fes_year_id]).year_num
+    end
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量 貸出日 返却日 開催年)
+      csv << column_name
+      @assign_rental_items.each do |assign_rental_item|
+        # データが存在しない場合はスキップする
+        if assign_rental_item.nil?
+          next
+        end
+        column_values = [
+          assign_rental_item.group.number,
+          assign_rental_item.group.name,
+          assign_rental_item.group.group_category.name,
+          assign_rental_item.group.place,
+          assign_rental_item.group.sum_power_orders,
+          assign_rental_item.rental_item.name,
+          assign_rental_item.stocker_place.name,
+          assign_rental_item.num,
+          assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).first.date,
+          assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).first.date,
+          assign_rental_item.group.fes_year.year_num
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename: "参加団体情報リストまとめ_#{filename_year}年度.csv")
+  end
 
   def output_sub_reps_csv
     if params[:fes_year_id].to_id == 0
@@ -99,7 +135,7 @@ class Api::V1::OutputCsvController < ApplicationController
             rental_order.rental_item.name,
             rental_order.num,
             rental_order.group.fes_year.year_num
-          ]  
+          ]
           csv << column_values
         end
       end
@@ -149,10 +185,10 @@ class Api::V1::OutputCsvController < ApplicationController
 
   def output_place_orders_csv
     if params[:fes_year_id].to_i == 0
-      @place_orders = Group.preload(:place_order).map{ |group| group.place_order } 
+      @place_orders = Group.preload(:place_order).map{ |group| group.place_order }
       filename_year = "全"
     else
-      @place_orders = Group.where(fes_year_id:params[:fes_year_id]).preload(:place_order).map{ |group| group.place_order } 
+      @place_orders = Group.where(fes_year_id:params[:fes_year_id]).preload(:place_order).map{ |group| group.place_order }
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
@@ -368,10 +404,10 @@ class Api::V1::OutputCsvController < ApplicationController
 
   def output_users_csv
     if params[:fes_year_id].to_i == 0
-      @users = Group.preload(:user).map{ |group| group.user } 
+      @users = Group.preload(:user).map{ |group| group.user }
       filename_year = "全"
     else
-      @users = Group.where(fes_year_id:params[:fes_year_id]).preload(:user).map{ |group| group.user } 
+      @users = Group.where(fes_year_id:params[:fes_year_id]).preload(:user).map{ |group| group.user }
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"

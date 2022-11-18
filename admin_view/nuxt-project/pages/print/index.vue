@@ -178,7 +178,7 @@ export default {
       );
     },
     async downloadPowerCSV() {
-      const url =  //データ不一致
+      const url =
         this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
       window.open(url, "使用電力リスト_CSV");
     },
@@ -188,7 +188,7 @@ export default {
       window.open(url, "従業員リスト_CSV");
     },
     async downloadRentalItemsCSV() {
-      const url =  //データ不一致
+      const url =
         this.$config.apiURL + "/api/v1/get_rental_orders_csv/" + this.refYearID;
       window.open(url, "貸出物品リスト_CSV");
     },
@@ -203,8 +203,8 @@ export default {
       window.open(url, "連絡先リスト_CSV");
     },
     async downloadGroupInfoCSV() {
-      const url =  //無し
-        this.$config.apiURL + "/api/v1/get_groups_csv/" + this.refYearID;
+      const url =
+        this.$config.apiURL + "/api/v1/get_assign_rental_items_csv/" + this.refYearID;
       window.open(url, "参加団体情報リスト_CSV");
     },
     async downloadRentalItemsAllCSV() {
