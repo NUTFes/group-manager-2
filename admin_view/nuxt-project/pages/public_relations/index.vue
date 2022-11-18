@@ -6,7 +6,7 @@
       </CommonButton>
       <!--
       <CommonButton iconName="file_download" :on_click="downloadCSV">
-        CSVダウンロード
+        CSV
       </CommonButton>
       -->
     </SubHeader>
