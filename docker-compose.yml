@@ -60,6 +60,22 @@ services:
     environment:
       - VUE_APP_URL=http://localhost:3000
 
+  user_view:
+    build: ./user_view
+    container_name: 'GM2-USER-VIEW'
+    ports:
+      - "8082:8082"
+    command: npm run dev
+    volumes:
+      - ./user_view:/app
+        #      - code_share:/app/vue-project/dist
+    stdin_open: true
+    tty: true
+    environment:
+      - VUE_APP_URL=http://localhost:3000
+    depends_on:
+      - api
+
   inside_view:
     build: ./inside_view
     command: npm run serve
