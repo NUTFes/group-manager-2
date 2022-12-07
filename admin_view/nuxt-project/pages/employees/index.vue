@@ -81,26 +81,31 @@
         </div>
         <div>
           <h3>学籍番号</h3>
-          <input v-model="employeeStudentId" placeholder="入力してください" />
+          <input v-model="employeeStudentId" maxlength="8" placeholder="入力してください" />
         </div>
         <div>
           <h3>検便</h3>
           <select v-model="stoolTestID">
             <option disabled value="">選択してください</option>
             <option
-              v-for="list in stoolTestList"
-              :key="list.id"
-              :value="list.id"
+              v-for="stoolTest in stoolTestList"
+              :key="stoolTest.id"
+              :value="stoolTest.id"
             >
-              {{ list.value }}
+              {{ stoolTest.name }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitEmployee"
-          >登録</CommonButton
-        >
+        <CommonButton v-if="
+          groupID !== null &&
+          employeeName !== null && employeeName !== '' &&
+          employeeStudentId !== null && employeeStudentId !== '' &&
+          stoolTestID !== null
+          "
+          iconName="add_circle" :on_click="submitEmployee">登録</CommonButton>
+        <CommonButton v-else iconName="add_circle" disabled :on_click="submitEmployee">登録</CommonButton>
       </template>
     </AddModal>
 
@@ -129,9 +134,9 @@ export default {
       groupList: [],
       stoolTestList: null,
       stoolTestList: [
-        { id: 1, value: "検便準備中" },
-        { id: 2, value: "検便無" },
-        { id: 3, value: "検便有" }
+        { id: 1, name: "検便準備中" },
+        { id: 2, name: "検便無" },
+        { id: 3, name: "検便有" },
       ]
     };
   },
@@ -170,7 +175,7 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
-      this.employess = [];
+      this.employees = [];
       const refUrl =
         "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
       const refRes = await this.$axios.$post(refUrl);

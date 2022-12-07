@@ -91,19 +91,28 @@
         </div>
         <div>
           <h3>メールアドレス</h3>
-          <input v-model="email" placeholder="入力してください" />
+          <input v-model="email" placeholder="～@～.～" />
         </div>
         <div>
           <h3>電話番号</h3>
-          <input v-model="tel" placeholder="入力してください" />
+          <input v-model="tel" maxlength="11" placeholder="入力してください" />
         </div>
         <div>
           <h3>学籍番号</h3>
-          <input v-model="studentID" placeholder="入力してください" />
+          <input v-model="studentID" maxlength="8" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
+        <CommonButton v-if="
+          name !== null && name !== '' &&
+          departmentID !== null &&
+          gradeID !== null &&
+          email !== null && email !== '' &&
+          tel !== null && tel !== '' &&
+          studentID !== null && studentID !== ''
+          "
+          iconName="edit" :on_click="edit">登録</CommonButton>
+        <CommonButton v-else iconName="edit" disabled :on_click="edit">登録</CommonButton>
       </template>
     </EditModal>
 

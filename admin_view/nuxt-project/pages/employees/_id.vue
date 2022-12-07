@@ -61,7 +61,7 @@
         </div>
         <div>
           <h3>学籍番号</h3>
-          <input v-model="studentId" placeholder="入力してください" />
+          <input v-model="studentId" maxlength="8" placeholder="入力してください" />
         </div>
         <div>
           <h3>検便</h3>
@@ -78,7 +78,14 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
+        <CommonButton v-if="
+          name !== null && name !== '' &&
+          studentId !== null && studentId !== '' &&
+          createEmail !== null && createEmail !== '' &&
+          stoolTestID !== null
+          "
+          iconName="edit" :on_click="edit">登録</CommonButton>
+        <CommonButton v-else iconName="edit" disabled :on_click="edit">登録</CommonButton>
       </template>
     </EditModal>
 

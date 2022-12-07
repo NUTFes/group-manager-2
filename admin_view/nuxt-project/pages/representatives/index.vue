@@ -107,21 +107,30 @@
         </div>
         <div>
           <h3>メールアドレス</h3>
-          <input v-model="email" placeholder="入力してください" />
+          <input v-model="email" placeholder="～@～.～" />
         </div>
         <div>
           <h3>電話番号</h3>
-          <input v-model="tel" placeholder="入力してください" />
+          <input v-model="tel" maxlength="11" placeholder="入力してください" />
         </div>
         <div>
           <h3>学籍番号</h3>
-          <input v-model="studentID" placeholder="入力してください" />
+          <input v-model="studentID" maxlength="8" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
-          >登録</CommonButton
-        >
+        <CommonButton v-if="
+          groupID !== null &&
+          name !== null && name !== '' &&
+          departmentID !== null &&
+          createDepartmentId !== null &&
+          gradeID !== null &&
+          email !== null && email !== '' &&
+          tel !== null && tel !== '' &&
+          studentID !== null && studentID !== ''
+          "
+          iconName="add_circle" :on_click="submit">登録</CommonButton>
+        <CommonButton v-else iconName="add_circle" disabled :on_click="submit">登録</CommonButton>
       </template>
     </AddModal>
 
