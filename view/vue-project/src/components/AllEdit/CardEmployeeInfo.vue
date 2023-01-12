@@ -2,39 +2,36 @@
   <body id="font">
     <div class="card">
       <span class="red" />
-        <div class="name">
-          {{ name }}
-        </div>
-        <p class="box">
-          <span class="number">
-            {{ num }}
-          </span>
-          <span class="student_id">学籍番号</span>
-        </p>
-        <div v-if="setting" class="button">
-          <button class="button1" @click="openEditEmployee">
-            <div class="edit">編集</div>
-          </button>
-          <button class="button2" @click="openDeleteEmployee">
-            <div class="edit">削除</div>
-          </button>
-        </div>
-        <EditEmployee
-          v-if="editEmployeeDisplay"
-          :groupId="groupId"
-          :id="regist.id"
-          :name="regist"
-          @closeEditEmployee="closeEditEmployee"
-          @reload="reload"
-        />
-        <DeleteEmployee
-          v-if="deleteEmployeeDisplay"
-          :id="id"
-          @closeDeleteEmployee="closeDeleteEmployee"
-          @reload="reload"
-        />
+      <div class="number">
+        No.{{ studentId }}
       </div>
-    </body>
+      <div v-if="setting" class="button">
+        <button class="button1" @click="openEditEmployee">
+          <div class="edit">編集</div>
+        </button>
+        <button class="button2" @click="openDeleteEmployee">
+          <div class="edit">削除</div>
+        </button>
+      </div>
+      <div class="name">{{ name }}</div>
+      <EditEmployee
+        v-if="editEmployeeDisplay"
+        @closeEditEmployee="closeEditEmployee"
+        :groupId="groupId"
+        :id="id"
+        :name="name"
+        :studentId="studentId"
+        :stoolTestId="stoolTestId"
+        @reload="reload"
+      />
+      <DeleteEmployee
+        v-if="deleteEmployeeDisplay"
+        :id="id"
+        @closeDeleteEmployee="closeDeleteEmployee"
+        @reload="reload"
+      />
+    </div>
+  </body>
 </template>
 
 <script>
@@ -46,10 +43,11 @@ export default {
     DeleteEmployee,
   },
   props: {
-    groupId: String,
-    regist: String,
+    groupId: Number,
+    id: Number,
     name: String,
-    num: Number,
+    studentId: Number,
+    stoolTestId: Number,
     setting: Boolean,
   },
   data() {
@@ -77,7 +75,7 @@ export default {
   },
 };
 </script>
-    
+
 <style scoped>
 .card {
   position: relative;
@@ -94,7 +92,7 @@ export default {
   left: 0;
   background: #f71e35;
 }
-.item {
+/* .item {
   position: absolute;
   width: 347px;
   height: 72px;
@@ -105,8 +103,8 @@ export default {
   font-size: 36px;
   line-height: 52px;
   text-align: center;
-}
-.box {
+} */
+/* .box {
   display: flex;
   justify-content: end;
   align-items: end;
@@ -115,23 +113,28 @@ export default {
   width: 126px;
   bottom: 15px;
   left: 52px;
-}
+} */
 .number {
+  position: relative;
+  top: 10px;
   font-weight: 350;
-  font-size: 48px;
+  font-size: 28px;
   letter-spacing: 0.1em;
   line-height: 34.75px;
+  left: 25px;
 }
-.pieces {
+.name {
+  position: absolute;
   font-weight: 350;
-  font-size: 24px;
+  font-size: 42px;
   letter-spacing: 0.1em;
-  line-height: 19px;
+  bottom: 20px;
+  left: 25px;
 }
 .button {
   position: absolute;
   right: 12.97px;
-  bottom: 8.74px;
+  top: 8.74px;
 }
 .button1 {
   display: flex;
@@ -150,8 +153,7 @@ export default {
   border-radius: 5px;
 }
 .edit {
-  margin-top: 5px;
-  margin-left: 14px;
+  margin: auto;
   font-weight: 350;
   font-size: 18px;
   line-height: 26px;

@@ -6,9 +6,9 @@
           <button v-on:click="$emit('closeAddEmployee')">✖</button>
         </div>
         <h1>従業員追加</h1>
-        <div class="entry">氏名</div>
+        <div class="name">氏名</div>
         <input type="text" v-model="name" id="name">
-        <div class="entry">学籍番号</div>
+        <div class="student_id">学籍番号</div>
         <input type="text" v-model="student_id" id="student_id">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
@@ -30,6 +30,7 @@ export default {
       new_info: [],
       name: [],
       student_id: [],
+      stool_test_id: [],
     };
   },
   methods: {
@@ -42,8 +43,10 @@ export default {
         const post_url = process.env.VUE_APP_URL + "/employees";
         axios.defaults.headers.common["Content-Type"] = "application/json";
         let params = new URLSearchParams();
+        params.append("group_id", this.groupId);
         params.append("name", this.name);
         params.append("student_id", this.student_id);
+        params.append("stool_test_id", 1);
         axios.post(post_url, params).then(
           (response) => {
             console.log(response);
@@ -62,7 +65,7 @@ export default {
           const nameError = document.getElementById("name");
           nameError.style.border="2px solid black";
         }
-        if (this.student_id != 8) {
+        if (this.student_id.length != 0) {
           const student_idError = document.getElementById("student_id");
           student_idError.style.border="2px solid red";
         } else {
@@ -119,7 +122,12 @@ export default {
   h1 {
     margin: 5%;
   }
-  .entry {
+  .name {
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  .student_id {
     margin-top: 3%;
     margin-left: 10%;
     margin-right: 10%;

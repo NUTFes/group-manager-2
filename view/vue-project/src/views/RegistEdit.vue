@@ -251,14 +251,15 @@
             <div id="area5" class="panel">
               <div class="flex">
                 <div v-for="e in regist_info[0].employees" :key="e">
-                <CardEmployeeInfo 
-                  :groupId="regist_info[0].group.id"
-                  :id="e.employee.id"
-                  :name="e.employee.name"
-                  :studentId="e.employee.student_id"
-                  :setting="setting.is_edit_employee"
-                  @reload="reload"
-                />
+                  <CardEmployeeInfo
+                    :groupId="regist_info[0].group.id"
+                    :id="e.employee.id"
+                    :name="e.employee.name"
+                    :studentId="e.employee.student_id"
+                    :stoolTestId="e.employee.stool_test_id"
+                    :setting="setting.is_edit_employee"
+                    @reload="reload"
+                  />
                 </div>
               </div>
               <button
@@ -388,7 +389,7 @@ export default {
       this.addItemDisplay = false;
     },
     closeAddEmployee: function() {
-      this.addEmployeeDisplay = false; 
+      this.addEmployeeDisplay = false;
     },
   },
   mounted() {
