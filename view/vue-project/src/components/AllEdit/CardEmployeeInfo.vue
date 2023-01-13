@@ -79,8 +79,8 @@ export default {
 <style scoped>
 .card {
   position: relative;
-  width: 394px;
-  height: 239px;
+  width: 380px;
+  height: 200px;
   margin: 5px;
   background: #fff;
   box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
@@ -88,48 +88,28 @@ export default {
 .red {
   position: absolute;
   width: 18px;
-  height: 239px;
+  height: 200px;
   left: 0;
   background: #f71e35;
 }
-/* .item {
-  position: absolute;
-  width: 347px;
-  height: 72px;
-  top: 32px;
-  right: 19px;
-  margin: auto;
-  font-weight: 350;
-  font-size: 36px;
-  line-height: 52px;
-  text-align: center;
-} */
-/* .box {
-  display: flex;
-  justify-content: end;
-  align-items: end;
-  position: absolute;
-  height: 74px;
-  width: 126px;
-  bottom: 15px;
-  left: 52px;
-} */
 .number {
   position: relative;
-  top: 10px;
-  font-weight: 350;
-  font-size: 28px;
+  top: 2%;
+  font-weight: 300;
+  font-size: 24px;
   letter-spacing: 0.1em;
   line-height: 34.75px;
   left: 25px;
 }
 .name {
-  position: absolute;
-  font-weight: 350;
-  font-size: 42px;
+  padding: 25% 0 0 5%;
+  text-align: center;
+  font-weight: 300;
+  font-size: 32px;
   letter-spacing: 0.1em;
   bottom: 20px;
   left: 25px;
+  overflow: auto;
 }
 .button {
   position: absolute;

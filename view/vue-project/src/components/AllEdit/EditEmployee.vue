@@ -6,11 +6,10 @@
           <button v-on:click="$emit('closeEditEmployee')">✖</button>
         </div>
         <h1>従業員編集</h1>
-        <h1 class="tytle">従業員編集</h1>
-        <div>氏名</div>
+        <div class="entry">氏名</div>
         <input type="text" v-model="name">
-        <div>学籍番号</div>
-        <input type="text" v-model="student_id">
+        <div class="entry">学籍番号</div>
+        <input type="text" v-model="studentId">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
           <button id="btn" type="button" @click="register">✓編集</button>
@@ -109,30 +108,74 @@ export default {
 </script>
 
 <style scoped>
-  #card{
-    margin-right: 15%;
-    margin-left: 15%;
-  }
-  input {
-    border: 2px solid black;
-  }
-  #btn{
-    background: #032030;
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 80px;
-    height: 30px;
-    display: block;
-    margin: 3% auto 3% auto;
-  }
-  #btn:hover {
-    box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
-    background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-    border: white;
-  }
-  #btn:active{
-    box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-  }
+#btn {
+  background: #032030;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 30%;
+  height: 30px;
+  display: block;
+  margin: 15% 10% 5% 10%;
+}
+
+#btn:hover {
+  box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
+  background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+  border: white;
+}
+
+#btn:active {
+  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+}
+
+#btnContainer {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  margin-bottom: -1.5rem;
+  z-index: 0;
+}
+
+input {
+  width: 80%;
+  margin: 0% auto;
+  border: 1px solid silver;
+  border-top: solid 1px #717171;
+  border-bottom: solid 1px #e0e0e0;
+  border-radius: 5px;
+  background-color: white;
+}
+
+h1 {
+  margin: 5%;
+}
+
+.entry {
+  margin: 3% 10% 0 10%;
+}
+
+.add-modal_box {
+  display: flex;
+  padding: 10px 10px;
+  margin: 0 25%;
+  justify-content: center;
+  flex-flow: column;
+  background-color: #DADADA;
+  border-radius: 10px;
+  margin: 0 30%;
+}
+
+.add-modal {
+  top: 0;
+  left: 0;
+  position: fixed;
+  padding: 100px;
+  height: 100%;
+  width: 100%;
+  z-index: 11;
+  background-color: rgba(51, 51, 51, 0.3);
+  overflow: auto;
+}
 </style>

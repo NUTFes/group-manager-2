@@ -6,9 +6,9 @@
           <button v-on:click="$emit('closeAddEmployee')">✖</button>
         </div>
         <h1>従業員追加</h1>
-        <div class="name">氏名</div>
+        <div class="entry">氏名</div>
         <input type="text" v-model="name" id="name">
-        <div class="student_id">学籍番号</div>
+        <div class="entry">学籍番号</div>
         <input type="text" v-model="student_id" id="student_id">
         <span style="display:flex;">
           <button id="btn" type="button" @click="reset">リセット</button>
@@ -80,7 +80,7 @@ export default {
 </script>
 
 <style scoped>
-  #btn{
+#btn{
     background: #032030;
     color: white;
     font-size: 15px;
@@ -89,11 +89,7 @@ export default {
     width: 30%;
     height: 30px;
     display: block;
-    margin-right: 10%;
-    margin-left: 10%;
-    margin-top: 15%;
-    margin-bottom: 5%;
-    border-radius: 5px;
+    margin: 15% 10% 5% 10%;
   }
   #btn:hover {
     box-shadow: -2px -2px 5px #FFF, 2px 2px 5px #BABECC;
@@ -122,15 +118,8 @@ export default {
   h1 {
     margin: 5%;
   }
-  .name {
-    margin-top: 3%;
-    margin-left: 10%;
-    margin-right: 10%;
-  }
-  .student_id {
-    margin-top: 3%;
-    margin-left: 10%;
-    margin-right: 10%;
+  .entry {
+    margin: 3% 10% 0 10%;
   }
   .add-modal_box {
     display: flex;
