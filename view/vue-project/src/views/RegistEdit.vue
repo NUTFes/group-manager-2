@@ -69,13 +69,13 @@
 
           <!-- <input id="tab5" type="radio" name="check" />
           <span class="bubble"></span>
-          <label for="tab5" class="tab_lab5">従業員申請</label>
+          <label for="tab5" class="tab_lab5">従業員申請</label> -->
 
           <input id="tab6" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab6" class="tab_lab6">食品申請</label>
 
-          <input id="tab7" type="radio" name="check" />
+          <!-- <input id="tab7" type="radio" name="check" />
           <span class="bubble"></span>
           <label for="tab7" class="tab_lab7">購入品申請</label> -->
 
@@ -275,6 +275,23 @@
 
             <!-- 食品申請 -->
             <div id="area6" class="panel">
+              <div
+                style="display: inline-block; overflow-x: auto; width: 100%"
+                v-for="food_prodact in regist_info[0].food_prodacts"
+                :key="food_prodact"
+              >
+                <CardFoodInfo
+                  :groupId="regist_info[0].group.id"
+                  :name="food_prodact.food_prodact.name"
+                  :isCooking="food_prodact.food_prodact.is_cooking"
+                  :firstDayNum="food_prodact.food_prodact.first_day_num"
+                  :secondDayNum="food_prodact.food_prodact.second_day_num"
+                  :createdAt="food_prodact.food_prodact.created_at"
+                  :updatedAt="food_prodact.food_prodact.updated_at"
+                  :setting="setting.is_edit_food_product"
+                  @reload="reload"
+                />
+              </div>
               <button
                 id="btn1"
                 type="button"
@@ -329,6 +346,7 @@ import CardPowerInfo from "@/components/AllEdit/CardPowerInfo.vue";
 import CardItemInfo from "@/components/AllEdit/CardItemInfo.vue";
 import CardStageInfo from "@/components/AllEdit/CardStageInfo.vue";
 import CardStageOptionInfo from "@/components/AllEdit/CardStageOptionInfo.vue";
+import CardFoodInfo from "@/components/AllEdit/CardFoodInfo.vue";
 
 export default {
   components: {
@@ -343,6 +361,7 @@ export default {
     CardItemInfo,
     CardStageInfo,
     CardStageOptionInfo,
+    CardFoodInfo,
   },
   data() {
     return {
