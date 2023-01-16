@@ -170,7 +170,7 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
-      this.employess = [];
+      this.employees = [];
       const refUrl =
         "/api/v1/get_refinement_employees?fes_year_id=" + this.refYearID;
       const refRes = await this.$axios.$post(refUrl);
