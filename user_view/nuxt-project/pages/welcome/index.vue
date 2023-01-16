@@ -1,5 +1,6 @@
 <template>
-  <div class="header-contents">
+  <div>
+    <Row>
     <div class="header-content">
       <span @click="mainPage">技大祭{{year}}</span>
       <span><a>signIn</a><a>SignUp</a></span>
@@ -7,7 +8,13 @@
     <div>
       <span>ようこそ技大祭へ</span>
     </div>
-    <div></div>
+    <div>
+      <MainCard>
+        123456789
+      </MainCard>
+    </div>
+    <div>qwerty</div>
+    </Row>
   </div>
 </template>
 
@@ -18,8 +25,8 @@ export default {
     return {
       year: null,
     };
-
   },
+
   mounted() {
     const currentTime = new Date();
     this.year = currentTime.getFullYear();
