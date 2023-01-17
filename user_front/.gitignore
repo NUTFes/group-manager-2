@@ -6,11 +6,3 @@ node_modules
 .output
 .env
 dist
-
-!assets/
-!components/
-!layouts/
-!middleware/
-!plugins/
-!public/
-!sever/
