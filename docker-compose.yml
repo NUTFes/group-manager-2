@@ -60,6 +60,23 @@ services:
     environment:
       - VUE_APP_URL=http://localhost:3000
 
+  user_front:
+    build: ./user_front
+    container_name: 'GM2-USER-FRONT'
+    ports:
+      - "8001:8001"
+      - "8002:8002"
+    command: npm run dev
+    volumes:
+      - ./user_front:/app
+        #      - code_share:/app/vue-project/dist
+    stdin_open: true
+    tty: true
+    environment:
+      - VUE_APP_URL=http://localhost:3000
+    depends_on:
+      - api
+
   user_view:
     build: ./user_view
     container_name: 'GM2-USER-VIEW'
@@ -96,4 +113,4 @@ services:
 volumes:
   mysql-data:
     driver: local
-  code_share: 
+  code_share:
