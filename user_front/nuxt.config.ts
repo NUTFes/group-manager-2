@@ -5,4 +5,11 @@ export default {
     port: 8001, // デフォルト: 3000
   },
 
+  css: ['@/tailwind.css'],
+  build: {
+    postcss: {
+      postcssOptions: require('./postcss.config.js'),
+    }
+  }
+
 }
