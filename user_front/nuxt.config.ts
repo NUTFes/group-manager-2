@@ -11,5 +11,6 @@ export default {
     }
   },
 
-  modules: ['@nuxtjs/tailwindcss']
+  modules: ['@nuxtjs/tailwindcss'],
+  css: ["@/assets/tailwind.css"]
 }
