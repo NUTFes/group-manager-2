@@ -12,9 +12,9 @@
   @apply font-sans;
   @apply not-italic;
   @apply font-medium;
-  @apply text-5xl;
+  @apply text-4xl;
   @apply text-gray-100;
-  @apply w-40;
-  @apply h-40;
+  @apply w-28;
+  @apply h-28;
 }
 </style>
