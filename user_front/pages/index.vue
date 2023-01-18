@@ -5,5 +5,6 @@
   <div>
     <NuxtLayout>
     </NuxtLayout>
+    <Button />
   </div>
 </template>
