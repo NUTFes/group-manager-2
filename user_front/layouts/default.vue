@@ -2,5 +2,6 @@
   <div>
   <Header/>
   <Button />
+  <Footer />
   </div>
 </template>
