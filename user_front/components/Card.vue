@@ -17,6 +17,11 @@ export default {
       required: false,
       default: "200px",
     },
+    align: {
+      type: String,
+      required: false,
+      default: "center",
+    },
     padding: {
       type: String,
       required: false,
@@ -48,6 +53,7 @@ export default {
       return {
         "--card-width": this.width,
         "--card-height": this.height,
+        "--card-align": this.align,
         "--card-padding": this.padding,
         "--card-flex-grow": this.flexGrow,
         "--card-flex-flow": this.flexFlow,
@@ -63,7 +69,7 @@ export default {
   min-width: var(--card-width);
   min-height: var(--card-height);
   display: flex;
-  align-items: center;
+  align-items: var(--card-align);
   justify-content: start;
   flex-flow: var(--card-flex-flow);
   flex-grow: var(--card-flex-grow);
