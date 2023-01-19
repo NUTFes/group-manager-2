@@ -1,5 +1,7 @@
 <template>
   <div>
-  <Header />
+    <Header/>
+    <Button />
+    <Footer />
   </div>
 </template>
