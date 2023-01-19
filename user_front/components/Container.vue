@@ -1,27 +1,29 @@
+<script setup>
+</script>
+
 <template>
-  <div>
-      <span class="flex m-3 bg-white-100">
-       <button class="px-5 bg-gray-200 rounded-[50%] text-pink-500 text-xl font-bold">マイページに戻る</button>
-       <label class="pl-3 text-xl font-bold">参加団体登録・編集ページ </label>
-      </span>
-    <div class="continar lx bg-gray-200">
-      <ul class="list-reset flex border-b pt-1 px-1">
-        <li class="mr-1">
-          <a class="bg-white inline-block py-2 px-4 rounded-t-xl font-semibold" href="#">Tab</a>
-        </li>
-        <!-- <li class="mr-1">
-          <a class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold" href="#">Tab</a>
-        </li>
-        <li class="mr-1">
-          <a class="bg-white inline-block py-2 px-4 text-blue hover:text-blue-darker font-semibold" href="#">Tab</a>
-        </li>
-        <li class="mr-1">
-          <a class="bg-white inline-block py-2 px-4 text-grey-light font-semibold" href="#">Tab</a>
-        </li> -->
-      </ul>
+  <div class="font-sans">
+    <div class="flex justify-between m-4 bg-white-100 text-xl font-bold">
+      <button class="bg-gray-100 text-pink-500 hover:bg-gray-200 hover:shadow-lg">マイページに戻る</button>
+      <div class="flex-auto ml-8">参加団体登録・編集ページ </div>
+      <select class="bg-gray-100 cursor-pointer">
+        <option value="">PopularMusicClub</option>
+      </select>
     </div>
-    <div class="bg-gray-100 p-3"></div>
-
+    <ul class="flex">
+      <li>
+        <a class="bg-gray-100 inline-block py-2 px-4 rounded-t-xl font-semibold hover:bg-gray-200 hover:shadow-lg cursor-pointer">会場申請</a>
+      </li>
+      <li>
+        <a class="bg-gray-100 inline-block py-2 px-4 rounded-t-xl font-semibold hover:bg-gray-200 hover:shadow-lg cursor-pointer">Tab</a>
+      </li>
+      <li>
+        <a class="bg-gray-100 inline-block py-2 px-4 rounded-t-xl font-semibold hover:bg-gray-200 hover:shadow-lg cursor-pointer">Tab</a>
+      </li>
+      <li>
+        <a class="bg-gray-100 inline-block py-2 px-4 rounded-t-xl font-semibold hover:bg-gray-200 hover:shadow-lg cursor-pointer">Tab</a>
+      </li>
+    </ul>
+      <div class="w-full h-screen bg-gray-200"/>
   </div>
-
 </template>
