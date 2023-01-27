@@ -1,64 +1,56 @@
-<template>
-	<h1 >
-		<!-- <div class="card-shadow bg-red-500 w-20 h-10" >
+<script setup lang="ts">
+interface Order {
+  title: string
+  buttonText: string
+}
+const order = withDefaults(defineProps<Order>(), {
+	title: '電力申請',
+	buttonText: '✔追加'
+})
+</script>
 
-			<button class="bg-indigo-700 font-semibold text-white rounded-[50%] w-5 h-5 ">×</button>
-			<button class="bg-indigo-700 font-semibold text-white rounded w-15 h-5" >リセット</button>
-			<button class="bg-indigo-700 font-semibold text-white rounded w-15 h-5">登録</button>
-		</div> -->
-		<!-- <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
-  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> -->
-  <div class="modal-dialog relative w-auto pointer-events-none">
-    <div
-      class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
-      <div
-        class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
-        <h5 class="text-xl font-medium leading-normal text-gray-800" >申請登録</h5>
-        <button type="button"
-          class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
-          data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-footer 
-	   flex 
-	   flex-shrink-0 
-	   flex-wrap 
-	   items-center 
-	   justify-end 
-	   p-4 
-	   <!-- border-t  -->
-	   border-gray-200 
-	   rounded-b-md">
-    	<button type="button" 
-		class="px-6 py-2.5
-      	bg-blue-600
-     	text-white
-      	font-medium
-      	text-xs
-      	leading-tight
-      	rounded
-      	hover:bg-blue-700 hover:shadow-lg
-      	focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
-      	active:bg-blue-800 active:shadow-lg
-        " data-bs-dismiss="modal">リセット
-		</button> 
-        <button type="button" 
-		class="px-6 py-2.5
-      	bg-blue-600
-     	text-white
-      	font-medium
-      	text-xs
-      	leading-tight
-      	rounded
-      	hover:bg-blue-700 hover:shadow-lg
-      	focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
-      	active:bg-blue-800 active:shadow-lg
-      	">登録
-		</button>
-       </div>
-    </div>
-  </div>
-<!-- </div> -->
-	</h1>
+<template>
+	<transition name="modal" appear>
+		<div class="font-sans m-auto pt-4 w-1/4 h-full" @click.self="$emit('close')">
+			<div class="relative w-auto">
+				<div class="shadow-lg flex flex-col w-full pointer-events-auto bg-gray-100 rounded-md outline-none text-current">
+					<div class="flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+						<div class="text-2xl font-medium">{{ title }}</div>
+						<button type="button"
+							class="w-4 h-4 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+						>✖</button>
+					</div>
+					<div class="mx-auto py-4">
+						<slot name="form"></slot>
+					</div>
+					<div class="flex justify-around p-4 border-t font-medium text-white
+							text-xs border-gray-200 leading-tight rounded-b-md">
+					<slot name="method"></slot>
+						<!-- <button type="button" class="px-8 py-2.5 bg-purple-600
+							rounded
+							shadow-md
+							hover:bg-purple-700 hover:shadow-lg
+							focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0
+							active:bg-purple-800 active:shadow-lg"
+						>
+							リセット
+						</button>
+						<button type="button" class="px-8
+							py-2.5
+							bg-blue-600
+							rounded
+							shadow-md
+							hover:bg-blue-700 hover:shadow-lg
+							focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+							active:bg-blue-800 active:shadow-lg"
+						>
+							{{ buttonText }}
+						</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</transition>
 </template>
 
 <!-- card
