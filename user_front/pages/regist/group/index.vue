@@ -1,4 +1,12 @@
-<script lang="ts">
+<script lang="ts" setup>
+  const formTitle = [
+    "name",
+    "student id",
+    "department",
+    "grade",
+    "mail adress",
+    "phone number",
+  ];
 </script>
 
 <template>
@@ -7,29 +15,9 @@
       <Card>
         <h1 class="text-3xl">Registration of organization</h1>
         <Card border="none" align="end" gap="20px">
-          <div class="flex">
-            <p class="flex-none text-xl pr-5">name</p>
-            <input class="flex-none border-solid border-2" />
-          </div>
-          <div class="flex">
-            <p class="flex-none text-xl  pr-5">student id</p>
-            <input class="flex-none border-solid border-2" />
-          </div>
-          <div class="flex">
-            <p class="flex-none text-xl  pr-5">department</p>
-            <input class="flex-none border-solid border-2" />
-          </div>
-          <div class="flex">
-            <p class="flex-none text-xl  pr-5">grade</p>
-            <input class="flex-none border-solid border-2" />
-          </div>
-          <div class="flex">
-            <p class="flex-none text-xl pr-5">mail adress</p>
-            <input class="flex-none border-solid border-2" />
-          </div>
-          <div class="flex">
-            <p class="flex-none text-xl pr-5">phone number</p>
-            <input class="flex-none border-solid border-2" />
+          <div v-for="title in formTitle" :key="title" class="flex">
+            <p class="label">{{ title }}</p>
+            <input class="form" />
           </div>
         </Card>
         <Button class="ml-[80%]" />
@@ -37,3 +25,18 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+  .label {
+    @apply
+      flex-none
+      text-xl
+      pr-5
+  }
+  .form {
+    @apply
+    flex-none
+    border-solid
+    border-2
+  }
+</style>>
