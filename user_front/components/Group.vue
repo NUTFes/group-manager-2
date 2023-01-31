@@ -1,24 +1,21 @@
 <script lang="ts" setup>
-  import axios, { AxiosInstance } from 'axios'
   import {Group} from '@/types'
 
-  const client: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:3000',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  const groupNameArray = ref<string[]>([])
+  // baseURLの設定
+  const config = useRuntimeConfig()
 
-  client.get('/groups').then((res) => {
-    const groups:Group[] = res.data.data
-    groups.forEach((group:Group)=>{
-      groupNameArray.value.push(group['name'])
-    })
-    console.log(groupNameArray)
+  // useStateで配列を定義
+  const groupNameArray = useState("groupNameArray", () => [] as string[])
+
+  const {data:groups} = await useFetch<Group[]>(config.baseURL+"/groups")
+  !!groups.value && groups.value.forEach((group:Group)=>{
+    groupNameArray.value.push(group['name'])
   })
+  console.log(groupNameArray.value)
 </script>
 
 <template>
-  <div></div>
+  <div>
+    {{ groupNameArray }}
+  </div>
 </template>
