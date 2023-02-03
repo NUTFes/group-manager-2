@@ -1,11 +1,9 @@
 <script setup lang="ts">
 interface Order {
   title: string
-  buttonText: string
 }
 const order = withDefaults(defineProps<Order>(), {
 	title: '電力申請',
-	buttonText: '✔追加'
 })
 </script>
 
@@ -13,18 +11,17 @@ const order = withDefaults(defineProps<Order>(), {
 	<transition name="modal" appear>
 		<div class="font-sans m-auto pt-4 w-1/4 h-full" @click.self="$emit('close')">
 			<div class="relative w-auto">
-				<div class="shadow-lg flex flex-col w-full pointer-events-auto bg-gray-100 rounded-md outline-none text-current">
-					<div class="flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+				<div class="modal-top">
+					<div class="modal-body">
 						<div class="text-2xl font-medium">{{ title }}</div>
 						<button type="button"
-							class="w-4 h-4 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+							class="	w-4 h-4 focus: shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
 						>✖</button>
 					</div>
 					<div class="mx-auto py-4">
 						<slot name="form"></slot>
 					</div>
-					<div class="flex justify-around p-4 border-t font-medium text-white
-							text-xs border-gray-200 leading-tight rounded-b-md">
+					<div class="modal">
 					<slot name="method"></slot>
 						<!-- <button type="button" class="px-8 py-2.5 bg-purple-600
 							rounded
@@ -53,55 +50,21 @@ const order = withDefaults(defineProps<Order>(), {
 	</transition>
 </template>
 
-<!-- card
-	position: absolute;
-left: 66.76%;
-right: 11.42%;
-top: 4.51%;
-bottom: 28.09%;
-
-background: rgba(234, 234, 234, 0.95);
-border-radius: 10px;
- -->
-
-<!-- 申請登録
-position: absolute;
-left: 31.59%;
-right: 31.59%;
-top: 10.69%;
-bottom: 84.01%;
-
-font-family: 'Noto Sans JP';
-font-style: normal;
-font-weight: 300;
-font-size: 36px;
-line-height: 52px;
-text-align: center;
-letter-spacing: 0.1em;
-
-color: #000000;
- -->
-
- <!-- 削除ボタン
-	position: absolute;
-left: 69.46%;
-right: 27.89%;
-top: 9.78%;
-bottom: 86.15%;
-  -->
-
-	<!--  リセット
-		position: absolute;
-left: 38.73%;
-right: 52.61%;
-top: 78.82%;
-bottom: 17.21%;
-	 -->
-
-	 <!--  登録
-		position: absolute;
-left: 52.54%;
-right: 38.8%;
-top: 78.82%;
-bottom: 17.21%;
-	 -->
+<style>
+.modal-top {
+	@apply
+		shadow-lg flex flex-col w-full pointer-events-auto bg-gray-100 rounded-md outline-none text-current
+}
+.modal-body {
+	@apply
+		flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md
+}
+.modal {
+	@apply
+		flex justify-around p-4 border-t font-medium text-white text-xs border-gray-200 leading-tight rounded-b-md
+}
+/* .button {
+	@apply
+		w-4 h-4 focus: shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline
+} */
+</style>
