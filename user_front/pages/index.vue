@@ -3,7 +3,6 @@
 
 <template>
   <div>
-    <NuxtLayout />
-    <NuxtPage />
+    <Group />
   </div>
 </template>
