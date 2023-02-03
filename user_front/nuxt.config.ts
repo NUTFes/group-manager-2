@@ -11,6 +11,12 @@ export default {
     }
   },
 
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.VUE_APP_URL,
+    },
+  },
+
   modules: ['@nuxtjs/tailwindcss'],
   css: ["@/assets/tailwind.css"]
 }
