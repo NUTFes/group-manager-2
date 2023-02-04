@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 const orderList = [
   {title: "副代表申請"},
   {title: "会場申請"},
@@ -23,9 +23,31 @@ const orderList = [
     </div>
     <ul class="flex">
       <li v-for="order in orderList" :key="order.title">
-        <a class="bg-gray-100 inline-block py-2 px-4 rounded-t-xl font-semibold hover:bg-gray-200 hover:shadow-lg cursor-pointer">{{ order.title }}</a>
+        <a class="title">{{ order.title }}</a>
       </li>
     </ul>
-      <div class="w-full h-screen bg-gray-200"/>
+      <div class="height"/>
   </div>
 </template>
+
+<style>
+.title {
+  @apply
+    bg-gray-100
+    inline-block
+    py-2
+    px-4
+    rounded-t-xl
+    font-semibold
+    hover:bg-gray-200
+    hover:shadow-lg
+    cursor-pointer
+}
+
+.height {
+  height: 80vh;
+  @apply
+    w-full
+    bg-gray-200
+}
+</style>
