@@ -17,7 +17,8 @@
       z-10
       sticky
       py-4
-      w-full;
+      w-full
+      fixed;
   }
 
   .header-title{

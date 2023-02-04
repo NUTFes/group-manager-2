@@ -11,7 +11,6 @@
   !!groups.value && groups.value.forEach((group:Group)=>{
     groupNameArray.value.push(group['name'])
   })
-  console.log(groupNameArray.value)
 </script>
 
 <template>
