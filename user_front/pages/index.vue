@@ -4,5 +4,6 @@
 <template>
   <div>
     index
+    <Group />
   </div>
 </template>
