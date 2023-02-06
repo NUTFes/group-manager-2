@@ -1,76 +1,100 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
-  <div class="card-container" :style="CardOption">
-    <slot></slot>
+  <div class="card">
+    <span class="red" />
+    <div class="box"><slot name="card-body"></slot></div>
+    <span class="line" /><slot/>
+    <div>
+      <slot name="card-method"></slot>
+      <button class="ed_btn">
+        <p class="edit">編集</p>
+      </button>
+      <button class="del_btn">
+        <p class="delete">削除</p>
+      </button>
+    </div>
   </div>
 </template>
-<script>
-export default {
-  name: "Card",
-  props: {
-    width: {
-      type: String,
-      required: false,
-      default: "200px",
-    },
-    height: {
-      type: String,
-      required: false,
-      default: "200px",
-    },
-    padding: {
-      type: String,
-      required: false,
-      default: "40px",
-    },
-    flexGrow: {
-      type: String,
-      required: false,
-      default: "1",
-    },
-    flexFlow: {
-      type: String,
-      required: false,
-      default: "column",
-    },
-    gap: {
-      type: String,
-      required: false,
-      default: "10px",
-    },
-    border: {
-      type: String,
-      required: false,
-      default: "1px solid #ebebeb",
-    },
-  },
-  computed: {
-    CardOption() {
-      return {
-        "--card-width": this.width,
-        "--card-height": this.height,
-        "--card-padding": this.padding,
-        "--card-flex-grow": this.flexGrow,
-        "--card-flex-flow": this.flexFlow,
-        "--card-gap": this.gap,
-        "--card-border": this.border,
-      };
-    },
-  },
-};
-</script>
+
 <style scoped>
-.card-container {
-  min-width: var(--card-width);
-  min-height: var(--card-height);
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  flex-flow: var(--card-flex-flow);
-  flex-grow: var(--card-flex-grow);
-  background-color: #fff;
-  color: var(--accent-7);
-  padding: var(--card-padding);
-  gap: var(--card-gap);
-  border: var(--card-border);
-}
+
+  .card{
+    width: 1026px;
+    box-shadow: 0px 4px 10px 1px rgb(0 0 0 / 25%);
+    @apply
+      flex
+      items-center
+      relative
+      mt-0.5
+      h-36
+      bg-white;
+  }
+
+  .red{
+    @apply
+      absolute
+      left-0
+      inline-block
+      w-4
+      h-full
+      bg-red-600;
+  }
+
+  .box{
+    @apply
+      w-32;
+  }
+
+  .line{
+    width: 1px;
+    @apply
+      inline-block
+      h-24
+    bg-gray-700;
+  }
+
+  .ed_btn{
+    @apply
+      flex
+      items-center
+      justify-center
+      w-20
+      h-8
+      m-3
+    bg-blue-400
+      rounded;
+  }
+
+  .edit{
+    letter-spacing: 0.3em;
+    @apply
+      font-normal
+      text-lg
+      leading-6
+    text-white;
+  }
+
+  .del_btn{
+    @apply
+      flex
+      items-center
+      justify-center
+      w-20
+      h-8
+      m-3
+    bg-red-600
+      rounded;
+  }
+
+  .delete{
+    letter-spacing: 0.3em;
+    @apply
+      font-normal
+      text-lg
+      leading-6
+    text-white;
+  }
 </style>
