@@ -6,7 +6,7 @@
   <div class="card">
     <span class="red" />
     <div class="box"><slot name="card-body"></slot></div>
-    <span class="line" /><slot/>
+    <span class="line" />
     <div>
       <slot name="card-method"></slot>
       <button class="ed_btn">
