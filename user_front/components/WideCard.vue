@@ -5,17 +5,8 @@
 <template>
   <div class="card">
     <span class="red" />
-    <div class="box"><slot name="card-body"></slot></div>
-    <span class="line" />
-    <div>
-      <slot name="card-method"></slot>
-      <button class="ed_btn">
-        <p class="edit">編集</p>
-      </button>
-      <button class="del_btn">
-        <p class="delete">削除</p>
-      </button>
-    </div>
+    <slot name="body"></slot>
+    <slot name="method"></slot>
   </div>
 </template>
 
@@ -41,60 +32,5 @@
       w-4
       h-full
       bg-red-600;
-  }
-
-  .box{
-    @apply
-      w-32;
-  }
-
-  .line{
-    width: 1px;
-    @apply
-      inline-block
-      h-24
-    bg-gray-700;
-  }
-
-  .ed_btn{
-    @apply
-      flex
-      items-center
-      justify-center
-      w-20
-      h-8
-      m-3
-    bg-blue-400
-      rounded;
-  }
-
-  .edit{
-    letter-spacing: 0.3em;
-    @apply
-      font-normal
-      text-lg
-      leading-6
-    text-white;
-  }
-
-  .del_btn{
-    @apply
-      flex
-      items-center
-      justify-center
-      w-20
-      h-8
-      m-3
-    bg-red-600
-      rounded;
-  }
-
-  .delete{
-    letter-spacing: 0.3em;
-    @apply
-      font-normal
-      text-lg
-      leading-6
-    text-white;
   }
 </style>
