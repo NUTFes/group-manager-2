@@ -7,10 +7,10 @@
 <style>
   .footer{
     font-family: Noto Sans JP;
-    @apply 
+    @apply
     flex
     justify-center
-    items-center 
+    items-center
     absolute
     inset-x-0
     bottom-0
@@ -19,6 +19,7 @@
     text-xs
     h-[35px]
     font-light
-    leading-4 ;
+    leading-4
+    fixed;
   }
 </style>
