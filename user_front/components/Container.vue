@@ -26,7 +26,9 @@ const orderList = [
         <a class="title">{{ order.title }}</a>
       </li>
     </ul>
-      <div class="height"/>
+      <div class="height">
+        <slot name="body"/>
+      </div>
   </div>
 </template>
 
