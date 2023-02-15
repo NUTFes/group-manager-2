@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <RegistInfoNarrowCard>
+  <RegistInfoWideCard>
     <template #body>
       <div class="item">
         机
@@ -14,28 +14,15 @@
         <span class="pieces"> 個 </span>
       </p>
     </template>
-  </RegistInfoNarrowCard>
+    <template #method>
+      <EditButton />
+
+    </template>
+  </RegistInfoWideCard>
 </template>
 
 
 <style scoped>
-.card {
-  position: relative;
-  width: 394px;
-  height: 239px;
-  margin: 5px;
-  background: #fff;
-  box-shadow: 0px 4px 10px 1px rgba(0, 0, 0, 0.25);
-}
-
-.red {
-  position: absolute;
-  width: 18px;
-  height: 239px;
-  left: 0;
-  background: #f71e35;
-}
-
 .item {
   position: absolute;
   width: 347px;
