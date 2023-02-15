@@ -6,10 +6,10 @@
 
   const currentUser:string = "山田太郎";
   const links: {to:string; text:string}[] = [
-    { to: "/", text: "参加団体情報の編集" },
-    { to: "/", text: "ユーザー情報" },
-    { to: "/", text: "ユーザー情報編集" },
-    { to: "/", text: "パスワード変更" },
+    { to: "/edit_group", text: "参加団体情報の編集" },
+    { to: "/profile", text: "ユーザー情報" },
+    { to: "/edit_user_info", text: "ユーザー情報編集" },
+    { to: "/password_reset", text: "パスワード変更" },
   ];
 </script>
 
@@ -35,9 +35,12 @@
       </template>
     </MypageCard>
   </div>
-    <div class="center">
-      <MypageNews />
-    </div>
+  <div class="center">
+    <MypageRegistAlarm />
+  </div>
+  <div class="center">
+    <MypageNews />
+  </div>
   <Footer />
 </template>
 
