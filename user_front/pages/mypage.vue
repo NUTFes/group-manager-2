@@ -1,23 +1,16 @@
-<script lang="ts">
-import { MypageCard } from '~~/.nuxt/components';
+<script lang="ts" setup>
 
   definePageMeta({
     layout: false,
   });
 
-  // const currentUser: string = "user";
-  export default {
-    setup() {
-      const currentUser: string = "currentUser";
-      const links: {to:string; text:string}[] = [
-        { to: "/", text: "参加団体情報の編集" },
-        { to: "/", text: "ユーザー情報" },
-        { to: "/", text: "ユーザー情報編集" },
-        { to: "/", text: "パスワード変更" },
-      ];
-      return { currentUser, links };
-    },
-  }
+  const currentUser:string = "山田太郎";
+  const links: {to:string; text:string}[] = [
+    { to: "/", text: "参加団体情報の編集" },
+    { to: "/", text: "ユーザー情報" },
+    { to: "/", text: "ユーザー情報編集" },
+    { to: "/", text: "パスワード変更" },
+  ];
 </script>
 
 <template>
@@ -42,6 +35,9 @@ import { MypageCard } from '~~/.nuxt/components';
       </template>
     </MypageCard>
   </div>
+    <div class="justify-center items-center">
+
+    </div>
   <Footer />
 </template>
 
