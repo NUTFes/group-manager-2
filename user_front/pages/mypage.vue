@@ -35,8 +35,8 @@
       </template>
     </MypageCard>
   </div>
-    <div class="justify-center items-center">
-
+    <div class="center">
+      <MypageNews />
     </div>
   <Footer />
 </template>
