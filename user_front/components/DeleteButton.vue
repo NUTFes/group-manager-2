@@ -6,10 +6,10 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .btn{
   background: #FF6262;
-  border-radius: 4.23358px;
+  border-radius: 5px;
   @apply
     tracking-widest
     font-sans
