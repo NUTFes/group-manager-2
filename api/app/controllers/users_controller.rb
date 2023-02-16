@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 
   def get_current_user
     @user = current_api_user
-    render json: fmt(ok, @user)
+    render json: @user
   end
 
   def update
