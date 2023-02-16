@@ -1,4 +1,146 @@
 <script lang="ts" setup>
+//   let email = "";
+//   let password = "";
+//   const signup = () => {
+//   }
+//   const submit = () => {
+//
+//submit: function () {
+//       const url = process.env.VUE_APP_URL + "/api/auth/sign_in";
+//       let params = new URLSearchParams();
+//       params.append("email", this.email);
+//       params.append("password", this.password);
+//       axios.defaults.headers.common["Content-Type"] = "application/json";
+//       axios.post(url, params).then(
+//         (response) => {
+//           localStorage.setItem(
+//             "access-token",
+//             response.headers["access-token"]
+//           );
+//           localStorage.setItem("client", response.headers["client"]);
+//           localStorage.setItem("uid", response.headers["uid"]);
+//           localStorage.setItem("token-type", response.headers["token-type"]);
+//           // Mypageへのアクセスを許可する
+//           this.$store.commit("acceptMypagePermission");
+//           this.$router.push("mypage");
+//         },
+//         (error) => {
+//           this.message = "ログインに失敗しました。(Failed to SignIn)";
+//           return error;
+//         }
+//       );
+
+const config = useRuntimeConfig()
+const email = "nutfes-taro@email.com"
+const password = "password"
+
+// const params = {
+//   email: "nutfes-taro@email.com",
+//   password: "password",
+//   methods: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// }
+const submit = await fetch(config.baseURL + "/api/auth/sign_in",{
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: email,
+    password: password,
+  }),
+});
+
+
+
+// import WelcomeDetailStep from "@/components/WelcomeDetail-step.vue";
+// import axios from "axios";
+// import isMobile from "ismobilejs";
+// export default {
+//   name: "Welcome",
+//   components: {
+//     WelcomeDetailStep,
+//   },
+//   data() {
+//     return {
+//       isMobile: isMobile,
+//       show: true,
+//       isStep: 1,
+//       windowWidth: window.innerWidth,
+//       email: "",
+//       password: "",
+//       formHasErrors: false,
+//       rules: {
+//         requied: (value) => !!value || "入力してください",
+//         min: (v) => v.length >= 8 || "８文字未満です",
+//         email: (v) => {
+//           const pattern =
+//             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//           return pattern.test(v) || "適切なメールアドレスではありません。";
+//         },
+//       },
+//       message: "",
+//     };
+//   },
+//   mounted() {
+//     // Mypageへのアクセス許可があればMypageに飛ばす
+//     if (this.$store.state.myPagePermission) {
+//       this.$router.push("/mypage");
+//     }
+//     window.addEventListener("resize", this.calculateWindowWidth);
+//   },
+//   beforeDestroy() {
+//     window.removeEventListener("resize", this.calculateWindowWidth);
+//   },
+//   computed: {
+//   },
+//   methods: {
+//     signup: function() {
+//       this.$store.commit("acceptRegistRepPermission");
+//       this.$router.push("/regist_rep");
+//     },
+//     submit: function () {
+//       const url = process.env.VUE_APP_URL + "/api/auth/sign_in";
+//       let params = new URLSearchParams();
+//       params.append("email", this.email);
+//       params.append("password", this.password);
+//       axios.defaults.headers.common["Content-Type"] = "application/json";
+//       axios.post(url, params).then(
+//         (response) => {
+//           localStorage.setItem(
+//             "access-token",
+//             response.headers["access-token"]
+//           );
+//           localStorage.setItem("client", response.headers["client"]);
+//           localStorage.setItem("uid", response.headers["uid"]);
+//           localStorage.setItem("token-type", response.headers["token-type"]);
+//           // Mypageへのアクセスを許可する
+//           this.$store.commit("acceptMypagePermission");
+//           this.$router.push("mypage");
+//         },
+//         (error) => {
+//           this.message = "ログインに失敗しました。(Failed to SignIn)";
+//           return error;
+//         }
+//       );
+//     },
+//     toggle_show() {
+//       this.show = !this.show;
+//     },
+//     change() {
+//       if (this.isStep == 1) {
+//         this.isStep = 2;
+//       } else if (this.isStep == 2) {
+//         this.isStep = 1;
+//       }
+//     },
+//     calculateWindowWidth() {
+//       this.windowWidth = window.innerWidth;
+//     },
+//   },
+// };
 </script>
 
 <template>
@@ -32,13 +174,15 @@
     @apply
       flex
       justify-center
-      h-[400px];
-    }
-  .welcome-banner {
-    @apply
+      h-[400px]
       text-center
       relative;
   }
+  /* .welcome-banner {
+    @apply
+      text-center
+      relative;
+  } */
   .welcome-banner-message{
     font-size: 5vw;
     font-family:serif;
@@ -59,24 +203,24 @@
       mx-auto;
   }
   .welcome-login-content-form {
-  box-shadow: 0 4px 10px rgb(149 157 165 / 20%);
-  background: radial-gradient(
-    ellipse at top left,
-    rgba(251, 251, 251, 0.9),
-    rgba(251, 251, 251, 0.8)
-  );
-  backdrop-filter: blur(5px);
-  @apply
-    absolute
-    h-[400px]
-    p-[60px]
-    w-full
-    max-w-[1100px]
-    min-w-[750px]
-    rounded-[10px]
-    -mt-[60px]
-    text-center;
-}
+    box-shadow: 0 4px 10px rgb(149 157 165 / 20%);
+    background: radial-gradient(
+      ellipse at top left,
+      rgba(251, 251, 251, 0.9),
+      rgba(251, 251, 251, 0.8)
+    );
+    backdrop-filter: blur(5px);
+    @apply
+      absolute
+      h-[400px]
+      p-[60px]
+      w-full
+      max-w-[1100px]
+      min-w-[750px]
+      rounded-[10px]
+      -mt-[60px]
+      text-center;
+  }
   .login-form {
     @apply
       text-center
