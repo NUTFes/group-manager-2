@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-  const formTitle = [
-    "name",
-    "student id",
-    "department",
-    "grade",
-    "mail adress",
-    "phone number",
-  ];
+  import {Category} from '@/types'
+  // baseURLの設定
+  const config = useRuntimeConfig()
+  // useStateで配列を定義
+  const categoryArray = useState("categoryArray", () => [] as string[])
+  const {data:categories} = await useFetch<Category[]>(config.baseURL+"/group_categories")
+    !!categories.value.data && categories.value.data.forEach((category:Category)=>{
+      categoryArray.value.push(category['name'])
+  })
 </script>
 
 <template>
@@ -15,8 +16,22 @@
       <Card>
         <h1 class="text-3xl">Registration of organization</h1>
         <Card border="none" align="end" gap="20px">
-          <div v-for="title in formTitle" :key="title" class="flex">
-            <p class="label">{{ title }}</p>
+          <div class="flex">
+            <p class="label">group name</p>
+            <input class="form" />
+          </div>
+          <div class="flex">
+            <p class="label">shop name</p>
+            <input class="form" />
+          </div>
+          <div class="flex">
+            <p class="label">select categories</p>
+            <select style="width:180px;">
+              <option v-for = "category in categoryArray" :key="category">{{category}}</option>
+            </select>
+          </div>
+          <div class="flex">
+            <p class="label">Activity Details</p>
             <input class="form" />
           </div>
         </Card>

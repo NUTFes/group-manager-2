@@ -19,7 +19,9 @@
       bg-white
       z-10
       sticky
-      py-4;
+      py-4
+      w-full
+      fixed;
   }
 
   .header-title{

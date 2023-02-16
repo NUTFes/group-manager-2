@@ -119,3 +119,5 @@ typings/
 
 # SSL server certificate
 /certs/
+
+/user_front/.vite
