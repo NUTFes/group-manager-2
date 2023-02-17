@@ -12,6 +12,9 @@
   .header{
     border-bottom: solid 1px #d3d3d3;
     @apply
+      fixed
+      top-0
+      left-0
       flex
       bg-white
       z-10
