@@ -27,6 +27,7 @@
           <div class="flex">
             <p class="label">select categories</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "category in categoryArray" :key="category">{{category}}</option>
             </select>
           </div>
@@ -35,7 +36,10 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+        </Row>
       </Card>
     </div>
   </div>

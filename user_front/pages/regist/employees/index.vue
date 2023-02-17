@@ -23,11 +23,16 @@
           <div class="flex">
             <p class="label">stool test</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "stool in stooltestList" :key="stool">{{stool.status}}</option>
             </select>
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+          <AddButton />
+        </Row>
       </Card>
     </div>
   </div>

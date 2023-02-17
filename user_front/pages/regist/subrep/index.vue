@@ -65,12 +65,14 @@
           <div class="flex">
             <p class="label">department</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "department in departmentList" :key="department">{{department.name}}</option>
             </select>
           </div>
           <div class="flex">
             <p class="label">grade</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "grade in gradeList" :key="grade">{{grade.name}}</option>
             </select>
           </div>
@@ -83,7 +85,10 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+        </Row>
       </Card>
     </div>
   </div>

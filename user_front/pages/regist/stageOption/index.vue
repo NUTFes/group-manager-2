@@ -10,6 +10,7 @@
           <div class="flex">
             <p class="label">Bringing in private property</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
             </select>
@@ -17,6 +18,7 @@
           <div class="flex">
             <p class="label">Whether speakers are used or not</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
             </select>
@@ -24,6 +26,7 @@
           <div class="flex">
             <p class="label">Whether loud-sound are used or not</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
             </select>
@@ -31,6 +34,7 @@
           <div class="flex">
             <p class="label">Whether camera are used or not</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
             </select>
@@ -40,7 +44,10 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+        </Row>
       </Card>
     </div>
   </div>

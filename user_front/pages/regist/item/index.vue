@@ -19,6 +19,7 @@
           <div class="flex">
             <p class="label">first preference</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "item in itemArray" :key="item">{{item}}</option>
             </select>
           </div>
@@ -27,7 +28,11 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+          <AddButton />
+        </Row>
       </Card>
     </div>
   </div>

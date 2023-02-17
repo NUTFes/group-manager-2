@@ -21,18 +21,21 @@
           <div class="flex">
             <p class="label">first preference</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "place in placeArray" :key="place">{{place}}</option>
             </select>
           </div>
           <div class="flex">
             <p class="label">second preference</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "place in placeArray" :key="place">{{place}}</option>
             </select>
           </div>
           <div class="flex">
             <p class="label">third preference</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option v-for = "place in placeArray" :key="place">{{place}}</option>
             </select>
           </div>
@@ -41,7 +44,10 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+        </Row>
       </Card>
     </div>
   </div>

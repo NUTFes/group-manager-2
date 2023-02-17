@@ -29,7 +29,11 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+          <AddButton />
+        </Row>
       </Card>
     </div>
   </div>

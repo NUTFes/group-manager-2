@@ -20,7 +20,7 @@
   for (var i = 0; i<=36; i++){
     result[i] = i
   }
-  var minuteInterval: number[] = result.map(function( value ) {
+  var minuteInterval = result.map(function( value ) {
     return value * 5;
   });
 </script>

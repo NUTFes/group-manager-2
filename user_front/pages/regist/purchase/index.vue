@@ -29,12 +29,17 @@
           <div class="flex">
             <p class="label">Is it row food?</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
             </select>
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+          <AddButton />
+        </Row>
       </Card>
     </div>
   </div>
