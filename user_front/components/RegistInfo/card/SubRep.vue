@@ -9,8 +9,7 @@
         名前
         <div class="text-2xl">
           技大太郎
-        </div>
-      </div>
+        </div>      </div>
         <RegistInfoDivideBar />
       <div class="m-2 text-base">
         <p class="font-medium text-lg">所属</p>
