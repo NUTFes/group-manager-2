@@ -5,15 +5,13 @@
 <template>
   <RegistInfoWideCard>
     <template #body>
-      <div class="flex">
-        <div class="font-medium">
-          名前
-        </div>
+      <div class="mx-10 pb-8 font-medium">
+        名前
         <div class="text-2xl">
           技大太郎
         </div>
       </div>
-      <RegistInfoDivideBar />
+        <RegistInfoDivideBar />
       <div class="m-2 text-base">
         <p class="font-medium text-lg">所属</p>
         <div class="flex items-center">分野<RegistInfoTriangle />情報・経営システム工学課程</div>
