@@ -74,6 +74,7 @@ services:
     tty: true
     environment:
       - VUE_APP_URL=http://api:3000
+      - VUE_APP_API_URL=http://localhost:3000
     depends_on:
       - api
 
