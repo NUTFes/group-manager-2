@@ -13,15 +13,15 @@
 <style scoped>
 
   .card{
-    width: 1026px;
-    box-shadow: 0px 4px 10px 1px rgb(0 0 0 / 25%);
     @apply
       flex
       items-center
       relative
       mt-0.5
+      w-[1026px]
       h-36
-      bg-white;
+      bg-white
+      shadow-[0_4px_10px_1px_rgba(0,0,0,0.25)];
   }
 
   .red{

@@ -9,9 +9,9 @@
 <style scoped>
 
 .line {
-  width: 1px;
   @apply
     inline-block
+    w-px
     h-24
     mx-4
    bg-gray-700;
