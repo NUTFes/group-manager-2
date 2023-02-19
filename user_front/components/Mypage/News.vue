@@ -15,9 +15,9 @@ const updateDate = new Date(news.value![0].updated_at).toLocaleDateString('ja-JP
       <span>お知らせ</span>
     </div>
     <div class="news-content">
-      <div class="news-title">{{ title }}</div>
-      <div class="news-body">{{ body }}</div>
-      <div class="news-date">更新日： {{ updateDate }}</div>
+      <div class="news-title">{{ "title" }}</div>
+      <div class="news-body">{{ "body" }}</div>
+      <div class="news-date">更新日： {{ "updateDate" }}</div>
     </div>
   </div>
 </template>
