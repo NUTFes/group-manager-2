@@ -1,30 +1,29 @@
 <script lang="ts" setup>
+
 interface Props {
   name: string
-  // to?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  name: '',
-  // to: '/'
+  name: '貸出物品',
 })
+
+const showModal = ref(true)
 </script>
 
 <template>
-    <transition name="fade" appear>
-      <div class="add-modal">
-        <div class="add-modal_box">
-          <div id="btnContainer">
-            <button v-on:click="$emit('closeDeleteItem')">✖</button>
-          </div>
-          <p class="text-2xl text-center font-bold">{{ name }}の削除</p>
-          <!-- <span style="display:flex;">
-            <button id="btn" type="button" v-on:click="$emit('closeDeleteItem')">戻る</button>
-            <button id="btn" type="button" @click="deleteItem">✓削除</button>
-          </span> -->
-        </div>
+  <div class="fixed top-0 left-0 p-24 w-full h-full z-10 bg-[#333]/30" v-if="showModal">
+    <div class="flex mx-[30%] flex-col justify-center rounded-xl bg-[#dadada]">
+      <div class="flex justify-end mr-4">
+        <button class="hover:text-black hover:opacity-75" v-on:click="showModal = false">✖</button>
       </div>
-    </transition>
+      <div class="text-2xl text-center font-bold">{{ props.name }}の削除</div>
+      <span class="flex justify-around mx-16 my-4">
+        <ResetButton />
+        <RegistButton />
+      </span>
+    </div>
+  </div>
 </template>
 
 
