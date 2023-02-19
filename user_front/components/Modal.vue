@@ -1,70 +1,26 @@
 <script setup lang="ts">
+
 interface Order {
   title: string
 }
 const order = withDefaults(defineProps<Order>(), {
 	title: '電力申請',
 })
+
+const showModal = ref(true)
 </script>
 
 <template>
-	<transition name="modal" appear>
-		<div class="font-sans m-auto pt-4 w-1/4 h-full" @click.self="$emit('close')">
-			<div class="relative w-auto">
-				<div class="modal-top">
-					<div class="modal-body">
-						<div class="text-2xl font-medium">{{ title }}</div>
-						<button type="button"
-							class="	w-4 h-4 focus: shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
-						>✖</button>
-					</div>
-					<div class="mx-auto py-4">
-						<slot name="form"></slot>
-					</div>
-					<div class="modal">
-					<slot name="method"></slot>
-						<!-- <button type="button" class="px-8 py-2.5 bg-purple-600
-							rounded
-							shadow-md
-							hover:bg-purple-700 hover:shadow-lg
-							focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0
-							active:bg-purple-800 active:shadow-lg"
-						>
-							リセット
-						</button>
-						<button type="button" class="px-8
-							py-2.5
-							bg-blue-600
-							rounded
-							shadow-md
-							hover:bg-blue-700 hover:shadow-lg
-							focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
-							active:bg-blue-800 active:shadow-lg"
-						>
-							{{ buttonText }}
-						</button> -->
-					</div>
-				</div>
+	<div v-if="showModal" class="fixed top-0 left-0 h-full p-24 w-full z-10 bg-[#333]/30">
+		<div class="flex p-4 mx-[30%] justify-center bg-[#dadada] rounded-lg flex-col">
+			<div class="flex justify-end">
+				<button 
+					class="hover:text-black hover:opacity-75" @click="showModal=false"
+				>✖</button>
 			</div>
+			<div class="text-3xl font-medium text-center">{{ order.title }}</div>
+			<slot name="form"></slot>
+			<slot name="method"></slot>
 		</div>
-	</transition>
+	</div>
 </template>
-
-<style>
-.modal-top {
-	@apply
-		shadow-lg flex flex-col w-full pointer-events-auto bg-gray-100 rounded-md outline-none text-current
-}
-.modal-body {
-	@apply
-		flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md
-}
-.modal {
-	@apply
-		flex justify-around p-4 border-t font-medium text-white text-xs border-gray-200 leading-tight rounded-b-md
-}
-/* .button {
-	@apply
-		w-4 h-4 focus: shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline
-} */
-</style>
