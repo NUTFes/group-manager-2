@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { Head } from '@vueuse/head';
 
 onMounted(() => {
 const config = useRuntimeConfig();
@@ -12,6 +11,7 @@ const { data: currentUser } = useFetch(config.baseURL + "/api/v1/current_user",
     "uid": localStorage.getItem("uid") || ""
   }
 })
+console.log(currentUser);
 });
 
 // console.log(currentUser);
