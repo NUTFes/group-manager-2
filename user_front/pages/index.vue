@@ -3,7 +3,8 @@
 
 <template>
   <div>
-    index
-    <Group />
+    <NuxtLayout>
+    </NuxtLayout>
+    <Button />
   </div>
 </template>
