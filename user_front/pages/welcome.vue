@@ -10,7 +10,7 @@ const config = useRuntimeConfig()
 
 const email = ref("")
 const password = ref("")
-const submit = () => {
+const login = () => {
   const params = new URLSearchParams({
     email: email.value,
     password: password.value,
@@ -25,7 +25,7 @@ const submit = () => {
     localStorage.setItem("client", response.headers["client"]);
     localStorage.setItem("uid", response.headers["uid"]);
     localStorage.setItem("token-type", response.headers["token-type"]);
-    router.push("/")
+    router.push("/mypage")
   },);
 }
 
@@ -52,7 +52,7 @@ const signUp = () =>{
           <input type="password" placeholder="パスワード" class="login-input" v-model="password" />
         </div>
         <div class="login-form-button">
-          <button class="login-button" @click="submit">ログイン</button>
+          <button class="login-button" @click="login">ログイン</button>
         </div>
         <button class="signup-button" @click="signUp">新規登録はこちら</button>
       </div>
