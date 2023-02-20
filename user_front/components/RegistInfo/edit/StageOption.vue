@@ -3,18 +3,18 @@
 </script>
 
 <template>
-  <Modal title="電力申請の編集">
+  <Modal title="ステージオプションの編集">
     <template #form>
-      <div class="text">使用物品名</div>
-      <select class="entry" />
-      <div class="text">最大定格電力[W]</div>
-      <input class="entry" />
-      <div class="text">メーカー</div>
-      <input class="entry" />
-      <div class="text">型番</div>
-      <input class="entry" />
-      <div class="text">URL</div>
-      <input class="entry" />
+      <div class="text">所持機器の利用</div>
+      <select class="entry"></select>
+      <div class="text">音楽</div>
+      <select class="entry"></select>
+      <div class="text">撮影許可</div>
+      <select class="entry"></select>
+      <div class="text">騒音</div>
+      <select class="entry"></select>
+      <div class="text">ステージ内容</div>
+      <textarea class="entry" />
     </template>
     <template #method>
       <div class="flex justify-between mt-8 mx-8">

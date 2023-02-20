@@ -5,12 +5,10 @@
 <template>
   <Modal title="貸出物品の追加">
     <template #form>
-      <div class="mx-8 mt-4">
-        <div class="my-1">貸出物品</div>
-        <select class="entry"></select>
-        <div class="my-1">個数</div>
-        <input class="entry">
-      </div>
+      <div class="text">貸出物品</div>
+      <select class="entry"></select>
+      <div class="text">個数</div>
+      <input class="entry">
     </template>
     <template #method>
       <div class="flex justify-between mt-8 mx-8">
@@ -22,7 +20,12 @@
 </template>
 
 <style scoped>
+
+.text {
+  margin: 3% 10% 0%;
+}
 .entry {
+  margin: 0% 10%;
   border: 1px solid silver;
   border-top : solid 1px #717171;
   border-bottom : solid 1px #e0e0e0;
