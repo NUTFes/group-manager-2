@@ -7,10 +7,11 @@
 
 <style scoped>
 .triangle {
-  width: 0;
-  height: 0;
-  margin: 5px;
   border: 5px solid transparent;
   border-left: 7px solid #333333;
+  @apply
+    w-0
+    h-0
+    m-[5px];
 }
 </style>

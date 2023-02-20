@@ -42,11 +42,13 @@
 
 <style>
 .upper {
-  font-size: 18px;
-  text-align: left;
+  @apply
+    text-[18px]
+    text-left;
 }
 .lower {
-  font-size: 35px;
-  text-align: center;
+  @apply
+    text-[35px]
+    text-center;
 }
 </style>
