@@ -40,7 +40,7 @@ const signUp = () =>{
     <div class="welcome-top">
       <div class="welcome-banner">
         <div class="welcome-banner-message">ようこそ技大祭へ</div>
-        <img class="w-96 h-64" src="../assets/following-step01.svg"/>
+        <img class="w-[800px] h-[400px]" src="../assets/following-step01.svg"/>
       </div>
     </div>
     <div class="welcome-login-content">
@@ -86,14 +86,15 @@ const signUp = () =>{
       w-full
       top-1/2
       right-1/2
-      translate-x-1/2;
+      translate-x-1/2
+      -translate-y-1/2;
   }
   .welcome-login-content {
     @apply
       block
       relative
       w-[1000px]
-      h-auto
+      h-[360px]
       mx-auto;
   }
   .welcome-login-content-form {
