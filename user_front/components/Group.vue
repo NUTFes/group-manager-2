@@ -3,12 +3,14 @@
 
   // baseURLの設定
   const config = useRuntimeConfig()
+  console.log(config)
 
   // useStateで配列を定義
   const groupNameArray = useState("groupNameArray", () => [] as string[])
 
   const {data:groups} = await useFetch<Group[]>(config.baseURL+"/groups")
-  !!groups.value && groups.value.forEach((group:Group)=>{
+  console.log(groups.value?.data)
+  !!groups.value.data && groups.value.data.forEach((group:Group)=>{
     groupNameArray.value.push(group['name'])
   })
 </script>
