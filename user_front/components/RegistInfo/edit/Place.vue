@@ -5,10 +5,14 @@
 <template>
   <Modal title="会場申請の編集">
     <template #form>
-      <div class="text">貸出物品</div>
+      <div class="text">第1希望</div>
       <select class="entry" />
-      <div class="text">個数</div>
-      <input class="entry" />
+      <div class="text">第2希望</div>
+      <select class="entry" />
+      <div class="text">第3希望</div>
+      <select class="entry" />
+      <div class="text">追記することがあればこちらにお書きください</div>
+      <textarea class="entry" />
     </template>
     <template #method>
       <div class="flex justify-between mt-8 mx-8">
