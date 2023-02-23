@@ -9,28 +9,6 @@ const router = useRouter()
 const route = useRoute();
 const config = useRuntimeConfig()
 
-
-// const year = ref(0)
-// const users = ref([''])
-
-// onMounted(() => {
-//     let currentTime = new Date();
-//     year.value = currentTime.getFullYear();
-//     const url = config.APIURL + "/api/v1/users/show";
-//     axios
-//       .get(url, {
-//         headers: {
-//           "Content-Type": "application/json",
-//           "access-token": localStorage.getItem("access-token"),
-//           "client": localStorage.getItem("client"),
-//           "uid": localStorage.getItem("uid"),
-//         },
-//       })
-//       .then((response) => {
-//         users.value = response.data.data;
-//       });
-// },);
-
 const logout = () => {
   axios.delete(config.APIURL+"/api/auth/sign_out", {
     headers: {
@@ -43,7 +21,7 @@ const logout = () => {
     localStorage.removeItem("access-token"),
     localStorage.removeItem("client"),
     localStorage.removeItem("uid"),
-    router.push("/home")
+    router.push("/welcome")
   },
 );
 }
@@ -53,7 +31,7 @@ const logout = () => {
   <div class="header">
     <div class="header-content">
       <button class="header-title">技大祭2023</button>
-      <button v-if="route.path != '/Welcome/'" class ="header-back" @click="logout">ログアウト</button>
+      <button v-if="route.path != '/welcome'" class ="header-back" @click="logout">ログアウト</button>
     </div>
   </div>
 </template>
@@ -96,4 +74,3 @@ const logout = () => {
       ml-auto;
   }
 </style>
-
