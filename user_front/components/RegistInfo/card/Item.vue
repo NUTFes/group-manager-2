@@ -1,16 +1,31 @@
 <script lang="ts" setup>
 
-</script>
+interface Props {
+  groupId: string
+  regist: string
+  name: string
+  num: number | null
+  setting: boolean | null
+}
 
+const item = withDefaults(defineProps<Props>(), {
+  groupId: '',
+  regist: '',
+  name: '',
+  num: null,
+  setting: null
+})
+
+</script>
 <template>
   <RegistInfoNarrowCard>
     <template #body>
       <div class="absolute w-full mt-8 text-4xl font-[350] text-center">
-        パーテーション足
+        {{ item.name }}
       </div>
       <p class="absolute bottom-4 left-16 font-[350]">
         <span class="text-5xl">
-          100
+          {{ item.num }}
         </span>
         <span class="text-2xl">個</span>
       </p>

@@ -1,5 +1,22 @@
 <script lang="ts" setup>
 
+interface Props {
+  regist: string
+  placeOrderId: number | null
+  place: string
+  remark: string
+  n: number | null
+  setting: boolean | null
+}
+
+const item = withDefaults(defineProps<Props>(), {
+  regist: '',
+  placeOrderId: null,
+  place: '',
+  remark: '',
+  n: null,
+  setting: null
+})
 </script>
 
 <template>
@@ -7,15 +24,15 @@
     <RegistInfoWideCard>
       <template #body>
         <div class="w-[15%] h-[90%] ml-8 text-3xl">
-          第3希望
+          第{{ item.n }}希望
         </div>
         <RegistInfoDivideBar />
         <div class="w-[40%] text-center text-4xl">
-          電機棟エリアあああ
+          {{ item.place }}
         </div>
         <div class="w-[7%] h-[80%] text-base">追記：</div>
           <div class="w-[30%] h-[80%] pr-1 break-normal">
-            remarkああああああああああああああああああああああああああああああああああああああああああああああああああああrails
+            {{ item.remark }}
           </div>
       </template>
       <template #method>
