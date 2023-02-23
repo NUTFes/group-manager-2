@@ -1,5 +1,28 @@
 <script lang="ts" setup>
 
+interface Props {
+  groupId: number | null
+  name: string
+  department: string
+  grade: string
+  tel: string
+  email: string
+  student_id: number | null
+  setting: boolean | null
+}
+
+
+const sub = withDefaults(defineProps<Props>(), {
+  groupId: null,
+  name: '',
+  department: '',
+  grade: '',
+  tel: '',
+  email: '',
+  student_id: null,
+  setting: null
+})
+
 </script>
 
 <template>
@@ -8,20 +31,21 @@
       <div class="mx-10 pb-8 font-medium">
         名前
         <div class="text-2xl">
-          技大太郎
-        </div>      </div>
+          {{ sub.name }}
+        </div>
+      </div>
         <RegistInfoDivideBar />
       <div class="m-2 text-base">
         <p class="font-medium text-lg">所属</p>
-        <div class="flex items-center">分野<RegistInfoTriangle />情報・経営システム工学課程</div>
-        <div class="flex items-center">学年<RegistInfoTriangle />B2</div>
-        <div class="flex items-center">学籍<RegistInfoTriangle />21100491</div>
+        <div class="flex items-center">分野<RegistInfoTriangle />{{ sub.department }}</div>
+        <div class="flex items-center">学年<RegistInfoTriangle />{{ sub.grade }}</div>
+        <div class="flex items-center">学籍<RegistInfoTriangle />{{ sub.student_id }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="text-base mb-10">
         <p class="font-medium">詳細情報</p>
-          <div class="character2">email</div>
-          <div class="character2">000-1234-5678</div>
+          <div class="character2">{{ sub.email }}</div>
+          <div class="character2">{{ sub.tel }}</div>
       </div>
     </template>
     <template #method>
