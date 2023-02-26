@@ -4,34 +4,68 @@ import axios from 'axios';
 const config = useRuntimeConfig()
 
 const url = config.APIURL + "/api/v1/current_user/current_regist_info";
-const group = useState("groupNameArray")
-console.log(group.value)
 
 interface RegistInfo {
-  subRep: SubRep
-  placeOrder: PlaceOrder
-  powerOrder: PowerOrder
+  sub_rep: SubRep
+  place_orders: PlaceOrder
+  power_orders: PowerOrder
+  rental_orders: RentalOrder
+}
+
+interface Stage {
+  stage_first: string
+  stage_second: string
+  date: string
+  is_sunny: boolean
+}
+
+interface StageOrder {
+  stage_order: {
+    stage_order:  Stage
+  }
+}
+
+interface StageOption {
+  own_equipment: boolean
+  bgm: boolean
+  camera_permission: boolean
+  loud_sound: boolean
+  stage_content: string
 }
 
 interface PlaceOrder {
-  regist: []
   placeOrderId: number
   n: number
-  palce: string
+  first: string
+  second: string
+  third: string
   remark: string
 }
 
-// interface RentalOrder {
-//   name
-// }
+interface RentalItem {
+  name: string
+  num: number
+}
 
-interface PowerOrder {
-  id: number
+interface RentalOrder {
+  rental_item: {
+    rental_item: RentalItem
+  }
+}
+
+interface PowerItem {
   item: string
   power: number
   manufacturer: string
   model: string
-  url: string
+  item_url: string
+}
+
+interface PowerOrder {
+  // id: number
+  power_order: {
+    power_order: PowerItem;
+  }
 }
 
 interface SubRep {
@@ -42,53 +76,19 @@ interface SubRep {
   email: string
   tel: string
 }
+const registInfo = ref<RegistInfo>()
 
-const rentalOrder = {
-  name: ref(''),
-  num: ref(0),
-  is_shop_rentable: ref<boolean>(),
-  is_stage_rentable: ref<boolean>(),
-}
-const itemArray = ref([""])
+const subRep = ref<SubRep>()
+const rentalOrder = ref<RentalOrder>()
+const placeOrder = ref<PlaceOrder>()
+const powerOrder = ref<PowerOrder>()
+const stageOrder = ref<StageOrder>()
+const stageOption = ref<StageOption>()
 
-const registInfo = useState<RegistInfo>()
-  // data: rentalOrder,
-// const registInfo = reactive([])
-// const groupCategoryId = useState('group_category_id', () => null)
-const setting = ref("")
+// const setting = ref("")
 
-// const num = ref('')
-// const resultNum = ref(0)
-// const groupId = ("")
-
-
-// console.log(subRep.value)
-// const {data} = await useFetch(url, {
-//   onRequest({ response, options}) {
-//     options.headers = {
-//       "Content-Type": "application/json",
-//       "access-token": localStorage.getItem("access-token"),
-//       client: localStorage.getItem("client"),
-//       uid: localStorage.getItem("uid"),
-//     }
-//   }
-// })
- // , { onResponse({response}){return response._data}  }
-
-
-// const {data:d} = await useFetch(url)
-// !!d.value && d.value.forEach((i:) => {
-//   d.value.push(registInfo)
-// })
-// !!data.value && data.value.forEach<Item[]>((d:Item) =>{
-//   data.value.push(registInfo)
-// } )
 
 onMounted(() => {
-  // const {data: regist} = await useFetch(url)
-  // !!regist.value && regist.value.forEach((info:string) => {
-  //   info.value.push(registInfo)
-  // });
   axios
     .get(url, {
       headers: {
@@ -100,15 +100,19 @@ onMounted(() => {
     })
     .then((response) => {
       registInfo.value = response.data.data[0];
-      // const save = registInfo.value[0]
+      subRep.value = response.data.data[0].sub_rep;
+      rentalOrder.value = response.data.data[0].rental_orders;
+      placeOrder.value = response.data.data[0].place_order;
+      powerOrder.value = response.data.data[0].power_orders;
+      stageOrder.value = response.data.data[0].stage_orders;
+      stageOption.value = response.data.data[0].stage_common_option;
       // rentalOrder.value = registInfo
       // groupCategoryId.value = response.data.data[0].group.group_category_id
     });
-  // console.log(registInfo)
-  const settingurl = config.APIURL + "/user_page_settings";
-  axios.get(settingurl).then((response) => {
-    setting.value = response.data.data[0];
-  });
+  // const settingurl = config.APIURL + "/user_page_settings";
+  // axios.get(settingurl).then((response) => {
+  //   setting.value = response.data.data[0];
+  // });
 })
 
 </script>
@@ -117,37 +121,59 @@ onMounted(() => {
 <Container>
   <template #body>
     <div class="ml-12 pt-4">
-      <!-- {{ registInfo }} -->
-      <!-- <div v-for="s in registInfo.sub_rep" :key="s"> -->
-        {{ registInfo }}
-        <!-- <RegistInfoCardSubRep
-          :name="registInfo.sub_rep.name"
-          :department="registInfo.sub_rep.department"
-        /> -->
-      </div>
-      <!-- 会場申請 -->
-        <!-- <RegistInfoCardPlace :n="1" :place="registInfo.place_order" :remark="place.remark" /> -->
-      <!-- 電力申請 -->
-      <div v-for="p in registInfo.powerOrder" :key="p">
-        {{ p }}
-        <RegistInfoCardPower
-          :id="p.id"
-          :item="p.item"
-          :power="p.power"
-          :manufacturer="p.manufacturer"
-          :model="p.model"
-          :url="p.item_url"
+    <!-- ステージ申請 group_category_id === ３ -->
+      <div v-for="s in stageOrder" :key="s">
+        <RegistInfoCardStage
+          :date="s.stage_order.date"
+          :first-stage="s.stage_order.stage_first"
+          :second-stage="s.stage_order.stage_second"
+          :is-sunny="s.stage_order.is_sunny"
         />
       </div>
-      <!-- 物品申請 -->
+    <!-- ステージオプション申請 group_category_id === ３ -->
+      <RegistInfoCardStageOption
+        :own-equipment="stageOption?.own_equipment"
+        :bgm="stageOption?.bgm"
+        :camera-permission="stageOption?.camera_permission"
+        :loud-sound="stageOption?.loud_sound"
+        :stage-content="stageOption?.stage_content"
+      />
+    <!-- 副代表申請  -->
+      <RegistInfoCardSubRep
+        :name="subRep?.name"
+        :department="subRep?.department"
+        :grade="subRep?.grade"
+        :student_id="subRep?.student_id"
+        :email="subRep?.email"
+        :tel="subRep?.tel"
+      />
+
+    <!-- 会場申請 group_category_id !== ３ -->
+      <RegistInfoCardPlace :n="1" :place="placeOrder?.first" :remark="placeOrder?.remark" />
+      <RegistInfoCardPlace :n="2" :place="placeOrder?.second" :remark="placeOrder?.remark" />
+      <RegistInfoCardPlace :n="3" :place="placeOrder?.third" :remark="placeOrder?.remark" />
+
+    <!-- 電力申請 -->
+      <div v-for="p in powerOrder" :key="p">
+        <RegistInfoCardPower
+          :item="p.power_order.item"
+          :power="p.power_order.power"
+          :manufacturer="p.power_order.manufacturer"
+          :model="p.power_order.model"
+          :url="p.power_order.item_url"
+        />
+      </div>
+
+    <!-- 物品申請 -->
       <div class="flex">
-        <div v-for="item in registInfo.rental_orders" :key="item">
-          <!-- {{ item }} -->
+        <div v-for="item in rentalOrder" :key="item">
           <RegistInfoCardItem
-            :name=item.rental_item.name :num=item.rental_item.num
+            :name=item.rental_item.name
+            :num=item.rental_item.num
           />
         </div>
       </div>
+    </div>
   </template>
 </Container>
 </template>
