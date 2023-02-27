@@ -170,13 +170,13 @@ onMounted(() => {
 
       <!-- 会場申請 group_category_id !== ３ -->
       <div v-show="tab === 2">
-        <RegistInfoCardPlace :n="1" :place="placeOrder?.first" :remark="placeOrder?.remark" />
-        <RegistInfoCardPlace :n="2" :place="placeOrder?.second" :remark="placeOrder?.remark" />
-        <RegistInfoCardPlace :n="3" :place="placeOrder?.third" :remark="placeOrder?.remark" />
+        <RegistInfoCardPlace class="my-4" :n="1" :place="placeOrder?.first" :remark="placeOrder?.remark" />
+        <RegistInfoCardPlace class="my-4" :n="2" :place="placeOrder?.second" :remark="placeOrder?.remark" />
+        <RegistInfoCardPlace class="my-4" :n="3" :place="placeOrder?.third" :remark="placeOrder?.remark" />
       </div>
 
       <!-- ステージ申請 group_category_id === ３ -->
-      <div v-show="tab === 3" v-for="s in stageOrder" :key="s.stage_order.date">
+      <div class="mb-8" v-show="tab === 3" v-for="s in stageOrder" :key="s.toString()">
         <RegistInfoCardStage
           :date="s.stage_order.date"
           :first-stage="s.stage_order.stage_first"
@@ -195,7 +195,7 @@ onMounted(() => {
       />
 
       <!-- 電力申請 -->
-      <div v-show="tab === 5" v-for="p in powerOrder" :key="p.power_order.item">
+      <div v-show="tab === 5" v-for="p in powerOrder" :key="p.toString()">
         <RegistInfoCardPower
           :item="p.power_order.item"
           :power="p.power_order.power"
@@ -206,8 +206,8 @@ onMounted(() => {
       </div>
 
       <!-- 物品申請 -->
-      <div v-show="tab === 6" class="flex">
-        <div v-for="item in rentalOrder" :key="item.rental_item.name">
+      <div v-show="tab === 6" class="flex flex-wrap">
+        <div v-for="item in rentalOrder" :key="item.toString()">
           <RegistInfoCardItem
             :name=item.rental_item.name
             :num=item.rental_item.num
