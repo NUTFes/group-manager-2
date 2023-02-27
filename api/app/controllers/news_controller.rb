@@ -5,7 +5,7 @@ class NewsController < ApplicationController
   # GET /news.json
   def index
     @news = News.all.order(id: "DESC")
-    render json: fmt(ok, @news)
+    render json: @news
   end
 
   # GET /news/1

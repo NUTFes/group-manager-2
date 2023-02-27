@@ -4,3 +4,7 @@ export type {default as Stage} from './stage';
 export type {default as Purchase} from './purchase';
 export type {default as Place} from './place';
 export type {default as Group} from './group';
+export type {default as News} from './news';
+export type {default as CurrentUser} from './currentUser';
+export type {default as RegistInfo} from './mypage/registAlarm';
+export type {default as Setting} from './mypage/setting';
