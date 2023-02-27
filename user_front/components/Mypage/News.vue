@@ -2,11 +2,20 @@
 import {News} from '@/types'
 
 const config = useRuntimeConfig();
-const { data: news } = await useFetch<News[]>(config.baseURL + "/news");
+const state = reactive(
+  {
+    title: '',
+    body: '',
+    updateDate: '',
+  }
+);
+onMounted(async()=>{
+  const news = await $fetch<News[]>(config.APIURL + "/news");
+  state.title = news[0].title;
+  state.body = news[0].body;
+  state.updateDate = new Date(news[0].updated_at).toLocaleDateString('ja-JP');
+})
 
-const title = news.value![0].title;
-const body = news.value![0].body;
-const updateDate = new Date(news.value![0].updated_at).toLocaleDateString('ja-JP');
 </script>
 
 <template>
@@ -15,9 +24,9 @@ const updateDate = new Date(news.value![0].updated_at).toLocaleDateString('ja-JP
       <span>お知らせ</span>
     </div>
     <div class="news-content">
-      <div class="news-title">{{ "title" }}</div>
-      <div class="news-body">{{ "body" }}</div>
-      <div class="news-date">更新日： {{ "updateDate" }}</div>
+      <div class="news-title">{{ state.title }}</div>
+      <div class="news-body">{{ state.body }}</div>
+      <div class="news-date">更新日： {{ state.updateDate }}</div>
     </div>
   </div>
 </template>

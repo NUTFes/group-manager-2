@@ -2,8 +2,8 @@
 import axios from "axios";
 
 definePageMeta({
-    layout: false,
-  });
+  layout: false,
+});
 
 const router = useRouter()
 const config = useRuntimeConfig()
@@ -25,7 +25,7 @@ const login = () => {
     localStorage.setItem("client", response.headers["client"]);
     localStorage.setItem("uid", response.headers["uid"]);
     localStorage.setItem("token-type", response.headers["token-type"]);
-    router.push("/mypage")
+    router.push("mypage")
   },);
 }
 
