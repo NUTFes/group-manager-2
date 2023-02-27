@@ -5,14 +5,18 @@ export default {
       type: String,
       required: true,
     },
+    link: {
+      type: String,
+      required: true,
+    },
 },
 }
 </script>
 
 <template>
-  <button class="button">
-    {{ text }}
-  </button>
+    <button @click="$router.push(link)" class="button">
+      {{ text }}
+    </button>
 </template>
 
 <style>

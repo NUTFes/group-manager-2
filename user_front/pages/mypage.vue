@@ -41,7 +41,7 @@ const links: {to:string; text:string}[] = [
           <p >登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
           <p class="text-xl pt-12">各種操作</p>
           <div class="py-4">
-            <MypageButton text="登録情報の確認はこちら"></MypageButton>
+            <MypageButton text="登録情報の確認はこちら" link="/regist_info"></MypageButton>
           </div>
           <div class="flex text-pink-400 ">
             <ui v-for="link in links" :key="link.text">
