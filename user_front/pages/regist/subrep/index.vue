@@ -1,12 +1,18 @@
 <script lang="ts" setup>
-  const formTitle = [
-    "name",
-    "student id",
-    "department",
-    "grade",
-    "mail adress",
-    "phone number",
-  ];
+import { on } from 'events';
+
+
+  const registerParams = reactive(
+    {
+      name: "",
+      studentId: "",
+      tel: "",
+      mail: "",
+      departmentId: "",
+      gradeId: "",
+      groupId: "",
+    }
+  )
   const departmentList = [
         { id: 1, name: "機械創造工学課程" },
         { id: 2, name: "電気電子情報工学課程" },
@@ -46,6 +52,27 @@
         { id: 14, name: "GD4[イノベ5年]" },
         { id: 15, name: "その他" },
       ];
+
+  onMounted(async()=>{
+    registerParams.groupId = localStorage.getItem("group_id") || "";
+  })
+  const config = useRuntimeConfig();
+  const router = useRouter();
+  const registerSubRep = async () => {
+    await $fetch(config.APIURL + "/sub_reps", {
+      method: "POST",
+      params:{
+        name: registerParams.name,
+        student_id: registerParams.studentId,
+        tel: registerParams.tel,
+        mail: registerParams.mail,
+        department_id: registerParams.departmentId,
+        grade_id: registerParams.gradeId,
+        group_id: registerParams.groupId,
+      }
+    })
+    router.push("/regist/place");
+  }
 </script>
 
 <template>
@@ -54,40 +81,54 @@
       <Card>
         <h1 class="text-3xl">Registration of subrepresentative</h1>
         <Card border="none" align="end" gap="20px">
+
           <div class="flex">
             <p class="label">name</p>
-            <input class="form" />
+            <input class="form" v-model = "registerParams.name">
           </div>
+
           <div class="flex">
             <p class="label">student id</p>
-            <input class="form" />
+            <input class="form" v-model = "registerParams.studentId">
           </div>
+
           <div class="flex">
             <p class="label">department</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model = "registerParams.departmentId">
               <option value="" selected disabled></option>
-              <option v-for = "department in departmentList" :key="department">{{department.name}}</option>
+              <option v-for = "department in departmentList" :key="department.id" :value="department.id">{{department.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">grade</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model = "registerParams.gradeId">
               <option value="" selected disabled></option>
-              <option v-for = "grade in gradeList" :key="grade">{{grade.name}}</option>
+              <option v-for = "grade in gradeList" :key="grade.id" :value="grade.id">{{grade.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">mail adress</p>
-            <input class="form" />
+            <input class="form" v-model="registerParams.mail">
           </div>
+
           <div class="flex">
             <p class="label">tell number</p>
-            <input class="form" />
+            <input class="form" v-model="registerParams.tel">
           </div>
+
+          {{registerParams.name}}
+          {{registerParams.studentId}}
+          {{registerParams.departmentId}}
+          {{registerParams.gradeId}}
+          {{registerParams.mail}}
+          {{registerParams.tel}}
+          {{ registerParams.groupId }}
         </Card>
         <Row>
-          <RegistButton />
           <ResetButton />
+          <RegistButton @click="registerSubRep"></RegistButton>
         </Row>
       </Card>
     </div>

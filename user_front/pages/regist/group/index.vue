@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {Setting} from '@/types'
+import { Group } from '@/types/regist/group';
 const categoryArray = [
   {id: 1, name: "模擬店(食品販売)"},
   {id: 2, name: "模擬店(物品販売)"},
@@ -30,7 +31,7 @@ onMounted(async () => {
 })
 
 const registerCategory = async () => {
-  await $fetch(config.APIURL + "/groups", {
+  await $fetch<Group>(config.APIURL + "/groups", {
     method: "POST",
     params: {
       name: registerParams.groupName,
@@ -43,6 +44,9 @@ const registerCategory = async () => {
     headers: {
       "Content-Type": "application/json",
     }
+  }).then((res) => {
+    localStorage.setItem("group_id", res.data.id.toString())
+    localStorage.setItem("group_category_id", res.data.group_category_id.toString())
   })
   router.push("/regist/subrep")
 }
