@@ -13,7 +13,7 @@ interface Status{
   message: string
 }
 
-export interface User{
+interface User{
   allow_password_change: boolean
   created_at: string
   email: string

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {User} from '@/types/currentUser'
+import { User } from "@/types/regist/user"
 
   //v-modelで渡すparamsの定義
   const registerParams = reactive({
@@ -67,7 +67,8 @@ import {User} from '@/types/currentUser'
         password_confirmation: registerParams.passwordConfirm,
       }
     }).then((res) => {
-      registerParams.userId = res.id;
+      registerParams.userId = res.data.id;
+      localStorage.setItem("user_id", registerParams.userId.toString());
     });
     await $fetch(config.APIURL + "/user_details",{
       method: "POST",
