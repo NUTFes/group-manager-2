@@ -139,8 +139,8 @@ import { User } from "@/types/regist/user"
 
         </Card>
         <Row>
-          <ResetButton />
-          <RegistButton @click="registUser"></RegistButton>
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registUser"></RegistPageButton>
         </Row>
       </Card>
     </div>

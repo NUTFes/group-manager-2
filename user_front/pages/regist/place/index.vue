@@ -78,8 +78,8 @@ const registerPlace = async () => {
 
         </Card>
         <Row>
-          <ResetButton />
-          <RegistButton @click="registerPlace"></RegistButton>
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerPlace"></RegistPageButton>
         </Row>
       </Card>
     </div>

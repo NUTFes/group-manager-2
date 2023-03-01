@@ -5,19 +5,20 @@ const config = useRuntimeConfig();
 const router = useRouter();
 const itemList = ref<ItemList[]>([]);
 
+const groupId = ref(0);
 onMounted(async () => {
   const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
     itemData.data.forEach((item) => {
       itemList.value.push(item);
     });
-  const groupId = Number(localStorage.getItem("group_id"));
+  groupId.value = Number(localStorage.getItem("group_id"));
 });
 
 const formCount = ref(1)
 
 let registerParams = [
   reactive({
-    groupId: 0,
+    groupId: groupId.value,
     num: "num1",
     rentalItemId: "item_id1",
   }),]
@@ -32,6 +33,12 @@ const increment = () => {
     })
   )
 }
+
+const decrement = () => {
+  formCount.value--
+  registerParams.pop()
+}
+
 
 const registerItem = async () => {
   for (let i = 0; i < formCount.value; i++) {
@@ -48,7 +55,7 @@ const registerItem = async () => {
       },
     });
   }
-  router.push("/regist_power");
+  router.push("/regist/power");
 };
 
 </script>
@@ -62,7 +69,7 @@ const registerItem = async () => {
 
         <div v-for="count, i in formCount">
           <div class="flex">
-              <p class="label">first preference</p>
+              <p class="label">Necessary items</p>
             <select style="width:180px;" v-model="registerParams[i].rentalItemId">
               <option value="" selected disabled></option>
               <option v-for = "item in itemList" :key="item.id" :value="item.id">{{item.name}}</option>
@@ -77,9 +84,10 @@ const registerItem = async () => {
 
         </Card>
         <Row>
-          <ResetButton />
-          <AddButton @click="increment" />
-          <RegistButton @click="registerItem"></RegistButton>
+          <RegistPageButton text="リセット"></RegistPageButton>
+          <RegistPageButton @click="decrement" text="Delete form"></RegistPageButton>
+          <RegistPageButton @click="increment" text="Add form"></RegistPageButton>
+          <RegistPageButton @click="registerItem" text="登録"></RegistPageButton>
         </Row>
       </Card>
     </div>

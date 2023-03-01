@@ -84,8 +84,8 @@ const registerCategory = async () => {
 
         </Card>
         <Row>
-          <RegistButton @click="registerCategory"></RegistButton>
-          <ResetButton />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
     </div>

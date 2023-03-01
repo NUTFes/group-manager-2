@@ -1,10 +1,13 @@
 <script lang="ts" setup>
+const props = defineProps<{
+  text: string;
+}>();
 
 </script>
 <template>
   <div>
     <button class="btn">
-      リセット
+      {{ props.text }}
     </button>
   </div>
 </template>
