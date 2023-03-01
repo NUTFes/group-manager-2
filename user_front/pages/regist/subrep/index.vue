@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { on } from 'events';
-
 
   const registerParams = reactive(
     {
@@ -117,18 +115,10 @@ import { on } from 'events';
             <p class="label">tell number</p>
             <input class="form" v-model="registerParams.tel">
           </div>
-
-          {{registerParams.name}}
-          {{registerParams.studentId}}
-          {{registerParams.departmentId}}
-          {{registerParams.gradeId}}
-          {{registerParams.mail}}
-          {{registerParams.tel}}
-          {{ registerParams.groupId }}
         </Card>
         <Row>
-          <ResetButton />
-          <RegistButton @click="registerSubRep"></RegistButton>
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerSubRep"></RegistPageButton>
         </Row>
       </Card>
     </div>
