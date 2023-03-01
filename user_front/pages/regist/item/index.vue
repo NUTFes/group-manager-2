@@ -1,13 +1,56 @@
 <script lang="ts" setup>
-  import {Item} from '@/types'
-  // baseURLの設定
-  const config = useRuntimeConfig()
-  // useStateで配列を定義
-  const itemArray = useState("itemArray", () => [] as string[])
-  const {data:items} = await useFetch<Item[]>(config.baseURL+"/rental_items")
-    !!items.value.data && items.value.data.forEach((item:Item)=>{
-    itemArray.value.push(item['name'])
-  })
+import { Item, ItemList } from "@/types/regist/item"
+
+const config = useRuntimeConfig();
+const router = useRouter();
+const itemList = ref<ItemList[]>([]);
+
+onMounted(async () => {
+  const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
+  const groupId = Number(localStorage.getItem("group_id"));
+});
+
+const formCount = ref(1)
+
+let registerParams = [
+  reactive({
+    groupId: 0,
+    num: "num1",
+    rentalItemId: "item_id1",
+  }),]
+
+const increment = () => {
+  formCount.value++
+  registerParams.push(
+    reactive({
+      groupId: 0,
+      num: "num" + formCount.value,
+      rentalItemId: "item_id" + formCount.value,
+    })
+  )
+}
+
+const registerItem = async () => {
+  for (let i = 0; i < formCount.value; i++) {
+    registerParams[i].groupId = Number(localStorage.getItem("group_id"));
+    await $fetch(config.APIURL + "/rental_orders", {
+      method: "POST",
+      params: {
+        group_id: registerParams[i].groupId,
+        num: registerParams[i].num,
+        rental_item_id: registerParams[i].rentalItemId,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  router.push("/regist_power");
+};
+
 </script>
 
 <template>
@@ -16,22 +59,27 @@
       <Card>
         <h1 class="text-3xl">Registration of places</h1>
         <Card border="none" align="end" gap="20px">
+
+        <div v-for="count, i in formCount">
           <div class="flex">
-            <p class="label">first preference</p>
-            <select style="width:180px;">
+              <p class="label">first preference</p>
+            <select style="width:180px;" v-model="registerParams[i].rentalItemId">
               <option value="" selected disabled></option>
-              <option v-for = "item in itemArray" :key="item">{{item}}</option>
+              <option v-for = "item in itemList" :key="item.id" :value="item.id">{{item.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">number of pieces required</p>
-            <input class="form" />
+            <input class="form" v-model="registerParams[i].num">
           </div>
+        </div>
+
         </Card>
         <Row>
-          <RegistButton />
           <ResetButton />
-          <AddButton />
+          <AddButton @click="increment" />
+          <RegistButton @click="registerItem"></RegistButton>
         </Row>
       </Card>
     </div>
