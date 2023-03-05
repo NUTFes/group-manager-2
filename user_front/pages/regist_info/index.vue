@@ -6,10 +6,10 @@ const config = useRuntimeConfig()
 
 const url = config.APIURL + "/api/v1/current_user/current_regist_info";
 
-const tab = useState("tab", () => 1)
+const tab = ref<number>(1)
 
 interface RegistInfo {
-  sub_rep: SubRep
+  sub_rep: SubRep[]
   place_orders: PlaceOrder
   power_orders: PowerOrder[]
   rental_orders: RentalOrder[]
@@ -159,14 +159,16 @@ onMounted(() => {
     <div class="ml-12 pt-4">
 
       <!-- 副代表申請  -->
-      <RegistInfoCardSubRep v-show="tab === 1"
+      <div v-show="tab === 1">
+        <RegistInfoCardSubRep
         :name="subRep?.name"
         :department="subRep?.department"
         :grade="subRep?.grade"
         :student_id="subRep?.student_id"
         :email="subRep?.email"
         :tel="subRep?.tel"
-      />
+        />
+      </div>
 
       <!-- 会場申請 group_category_id !== ３ -->
       <div v-show="tab === 2">
@@ -186,13 +188,15 @@ onMounted(() => {
       </div>
 
       <!-- ステージオプション申請 group_category_id === ３ -->
-      <RegistInfoCardStageOption v-if="groupCategoryId === 3" v-show="tab === 4"
-        :own-equipment="stageOption?.own_equipment"
-        :bgm="stageOption?.bgm"
-        :camera-permission="stageOption?.camera_permission"
-        :loud-sound="stageOption?.loud_sound"
-        :stage-content="stageOption?.stage_content"
-      />
+      <div v-if="groupCategoryId === 3" v-show="tab === 4">
+        <RegistInfoCardStageOption
+          :own-equipment="stageOption?.own_equipment"
+          :bgm="stageOption?.bgm"
+          :camera-permission="stageOption?.camera_permission"
+          :loud-sound="stageOption?.loud_sound"
+          :stage-content="stageOption?.stage_content"
+        />
+      </div>
 
       <!-- 電力申請 -->
       <div v-show="tab === 5" v-for="p in powerOrder" :key="p.toString()">
