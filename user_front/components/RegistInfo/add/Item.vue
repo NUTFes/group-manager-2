@@ -1,9 +1,21 @@
 <script lang="ts" setup>
+const isShow = ref<boolean>()
+
+
+interface Emits {
+  (e: 'update:visible', visible: boolean): void
+}
+
+const emits = defineEmits<Emits>()
+
+const modalClose = () => {
+  emits('update:visible', false)
+}
 
 </script>
 
 <template>
-  <Modal title="貸出物品の追加">
+  <Modal v-model:visible="isShow" title="貸出物品の追加">
     <template #form>
       <div class="text">貸出物品</div>
       <select class="entry"></select>
@@ -13,7 +25,7 @@
     <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <RegistButton />
-        <ResetButton />
+        <ResetButton @click="modalClose()" />
       </div>
     </template>
   </Modal>

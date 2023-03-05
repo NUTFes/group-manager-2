@@ -17,6 +17,12 @@ const item = withDefaults(defineProps<Props>(), {
   n: null,
   setting: null
 })
+
+const isEditPlace = ref<boolean>(false)
+
+const openEditPlace = () => {
+  isEditPlace.value = true
+}
 </script>
 
 <template>
@@ -37,9 +43,13 @@ const item = withDefaults(defineProps<Props>(), {
       </template>
       <template #method>
         <div class="mx-4">
-          <EditButton />
+          <EditButton @click="openEditPlace()" />
         </div>
       </template>
     </RegistInfoWideCard>
   </div>
+  <RegistInfoEditPlace
+    v-if="isEditPlace"
+    v-model:edit-place="isEditPlace"
+  />
 </template>

@@ -22,6 +22,7 @@ const sub = withDefaults(defineProps<Props>(), {
   student_id: null,
   setting: null
 })
+const isShow = ref<boolean>(false)
 
 </script>
 
@@ -51,8 +52,9 @@ const sub = withDefaults(defineProps<Props>(), {
     </template>
     <template #method>
       <div class="absolute right-4">
-        <EditButton />
+        <EditButton @click="isShow=true" />
       </div>
     </template>
   </RegistInfoWideCard>
+  <!-- <RegistInfoEditSubRep v-model:visible="isShow" /> -->
 </template>

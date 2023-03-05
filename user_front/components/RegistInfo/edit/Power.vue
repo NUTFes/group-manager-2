@@ -1,9 +1,25 @@
 <script lang="ts" setup>
 
+interface Emits {
+  (e: 'update:edit-power', isEditPower: boolean): void
+}
+
+const emits = defineEmits<Emits>()
+
+const closeEditPower = () => {
+  emits('update:edit-power', false)
+}
+
 </script>
 
 <template>
   <Modal title="電力申請の編集">
+    <template #close>
+      <div class="flex justify-end">
+        <button @click="closeEditPower()" class="hover:text-black hover:opacity-75"
+        >✖</button>
+      </div>
+    </template>
     <template #form>
       <div class="text">使用物品名</div>
       <select class="entry" />
@@ -15,11 +31,9 @@
       <input class="entry" />
       <div class="text">URL</div>
       <input class="entry" />
-    </template>
-    <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <RegistButton />
+        <RegistButton @click="closeEditPower()" />
       </div>
     </template>
   </Modal>

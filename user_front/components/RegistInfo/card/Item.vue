@@ -16,6 +16,17 @@ const item = withDefaults(defineProps<Props>(), {
   setting: null
 })
 
+const openEditItem = () => {
+  isEditItem.value = true
+}
+
+const openDeleteItem = () => {
+  isDeleteItem.value = true
+}
+
+const isEditItem = ref<boolean>(false)
+const isDeleteItem = ref<boolean>(false)
+
 </script>
 <template>
   <RegistInfoNarrowCard>
@@ -33,10 +44,17 @@ const item = withDefaults(defineProps<Props>(), {
     <template #method>
       <div class="absolute right-4 bottom-2">
         <div class="my-2">
-          <EditButton />
+          <EditButton @click="openEditItem()" />
         </div>
-      <DeleteButton />
+      <DeleteButton @click="openDeleteItem()" />
       </div>
     </template>
   </RegistInfoNarrowCard>
+  <RegistInfoEditItem
+    v-if="isEditItem"
+    v-model:edit-item="isEditItem"
+  />
+  <RegistInfoDeleteItem
+    v-if="isDeleteItem"
+    v-model:deleteItem="isDeleteItem" />
 </template>

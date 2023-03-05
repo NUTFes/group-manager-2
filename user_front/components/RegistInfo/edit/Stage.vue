@@ -1,11 +1,25 @@
 <script lang="ts" setup>
 
-// const showTab = ref(false)
+interface Emits {
+  (e: 'update:editStage', isEditStage: boolean): void
+}
+
+const emits = defineEmits<Emits>()
+
+const closeEditStage = () => {
+  emits('update:editStage', false)
+}
 
 </script>
 
 <template>
   <Modal title="ステージの編集">
+    <template #close>
+      <div class="flex justify-end">
+        <button @click="closeEditStage()" class="hover:text-black hover:opacity-75"
+        >✖</button>
+      </div>
+    </template>
     <template #form>
       <div class="text">日程</div>
       <select class="entry" />
@@ -32,12 +46,9 @@
         <div class="my-1">片付け終了時間</div>
         <input class="entry" />
       </div> -->
-    </template>
-    <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <!-- <button :="showTab=true">test</button> -->
-        <RegistButton />
+        <RegistButton @click="closeEditStage()" />
       </div>
     </template>
   </Modal>

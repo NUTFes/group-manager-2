@@ -1,19 +1,33 @@
 <script lang="ts" setup>
 
+interface Emits {
+  (e: 'update:editItem', isEditItem: boolean): void
+}
+
+const emits = defineEmits<Emits>()
+
+const closeEditItem = () => {
+  emits('update:editItem', false)
+}
+
 </script>
 
 <template>
   <Modal title="貸出物品の編集">
+    <template #close>
+      <div class="flex justify-end">
+        <button @click="closeEditItem()" class="hover:text-black hover:opacity-75"
+        >✖</button>
+      </div>
+    </template>
     <template #form>
       <div class="text">貸出物品</div>
       <select class="entry" />
       <div class="text">個数</div>
       <input class="entry" />
-    </template>
-    <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <RegistButton />
+        <RegistButton @click="closeEditItem()"/>
       </div>
     </template>
   </Modal>

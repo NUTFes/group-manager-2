@@ -1,9 +1,18 @@
 <script lang="ts" setup>
 
+interface Emits {
+  (e: 'update:editStageOption', visible: boolean): void
+}
+
+const emits = defineEmits<Emits>()
+
+const modalClose = () => {
+  emits('update:visible', false)
+}
 </script>
 
 <template>
-  <Modal title="ステージオプションの編集">
+  <Modal v-modal:visible="isShow" title="ステージオプションの編集">
     <template #form>
       <div class="text">所持機器の利用</div>
       <select class="entry"></select>
@@ -19,7 +28,7 @@
     <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <RegistButton />
+        <RegistButton @click="modalClose()" />
       </div>
     </template>
   </Modal>
