@@ -84,15 +84,13 @@ const registerPurchase = async () => {
       return;
     }
 
-    console.log(registerParams[i]);
-
     await $fetch(config.APIURL + "/purchase_lists", {
       method: "POST",
       params: {
         food_product_id: registerParams[i].food_product_id,
         shop_id: registerParams[i].shop_id,
         items: registerParams[i].items,
-        isFresh: registerParams[i].isFresh,
+        is_fresh: registerParams[i].isFresh,
         fes_date_id: registerParams[i].fes_date_id,
       },
       headers: {
