@@ -102,6 +102,7 @@
 .regist-card-content-question {
   @apply
     text-center
+    h-[86px]
     w-[800px]
     mb-[3%]
     mx-auto;
