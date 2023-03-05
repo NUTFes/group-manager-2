@@ -1,4 +1,38 @@
 <script lang="ts" setup>
+const config = useRuntimeConfig();
+const router = useRouter();
+
+const registerParams = reactive({
+  isItem: "",
+  isMusic: "",
+  isCamera: "",
+  isNoise: "",
+  stageContent: "",
+  groupId: 0,
+})
+
+onMounted(async() => {
+  registerParams.groupId = Number(localStorage.getItem("group_id"));
+})
+
+const registerStageOption = async () => {
+  await $fetch(config.APIURL + "/stage_common_options", {
+    method: "POST",
+    params: {
+      group_id: registerParams.groupId,
+      own_equipment: registerParams.isItem,
+      bgm: registerParams.isMusic,
+      camera_permission: registerParams.isCamera,
+      loud_sound: registerParams.isNoise,
+      stage_content: registerParams.stageContent,
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  router.push("/regist/item");
+}
+
 </script>
 
 <template>
@@ -9,7 +43,7 @@
         <Card border="none" align="end" gap="20px">
           <div class="flex">
             <p class="label">Bringing in private property</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model="registerParams.isItem">
               <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
@@ -17,7 +51,7 @@
           </div>
           <div class="flex">
             <p class="label">Whether speakers are used or not</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model="registerParams.isMusic">
               <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
@@ -25,7 +59,7 @@
           </div>
           <div class="flex">
             <p class="label">Whether loud-sound are used or not</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model="registerParams.isNoise">
               <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
@@ -33,7 +67,7 @@
           </div>
           <div class="flex">
             <p class="label">Whether camera are used or not</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model="registerParams.isCamera">
               <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
@@ -41,12 +75,12 @@
           </div>
           <div class="flex">
             <p class="label">Content Details</p>
-            <input class="form" />
+            <input class="form" v-model="registerParams.stageContent">
           </div>
         </Card>
         <Row>
-          <RegistButton />
-          <ResetButton />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerStageOption"></RegistPageButton>
         </Row>
       </Card>
     </div>
