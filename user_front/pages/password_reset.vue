@@ -38,6 +38,7 @@
     text-lg
     text-[#e040fb]
     cursor-pointer
+    w-fit
     mt-5;
 }
 
