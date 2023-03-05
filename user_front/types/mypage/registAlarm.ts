@@ -32,7 +32,15 @@ export interface FoodProducts{
   purchase_lists: PurchaseLists[]
 }
 
-interface FoodProduct{
+export interface FoodProduct {
+  id: number;
+  group_id: number;
+  name: string;
+  is_cooking: boolean;
+  first_day_num: number;
+  second_day_num: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface PurchaseLists{
@@ -70,6 +78,28 @@ export interface PlaceOrders{
   remark: string
   second: string
   third: string
+}
+
+export interface Date {
+  id: number;
+  days_num: number;
+  date: string;
+  day: string;
+  fes_year_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface FesYear {
+  id: number;
+  year_num: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FesDate {
+  fes_date: Date;
+  fes_year: FesYear;
 }
 
 interface PlaceOrder{
