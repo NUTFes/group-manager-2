@@ -144,6 +144,16 @@ const signUp = () =>{
       w-2/5
       mx-auto;
   }
+  .login-button:hover {
+    background-color: #00AFCC;
+    border: solid 1px #00AFCC;
+    color: #ffffff
+  }
+  .login-button:active {
+    background-color: #00AFCC;
+    border: solid 1px #00AFCC;
+    color: #ffffff
+  }
   .signup-button {
     background-color: #00AFCC;
     color: #ffffff;
@@ -155,5 +165,8 @@ const signUp = () =>{
       h-[60px]
       w-2/5
       mx-auto;
+  }
+  .signup-button:hover {
+    opacity: 0.5;
   }
 </style>
