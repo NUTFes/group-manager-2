@@ -7,29 +7,21 @@ const router = useRouter();
 const formCount = ref(1);
 const errorMessage = ref("");
 
-const initialPurchase = {
-  food_product_id: "",
-  shop_id: "",
-  items: "",
-  isFresh: "",
-  fes_date_id: "",
-};
-
 const purchases = ref<Purchase[]>([]);
 const foodProducts = ref<FoodProduct[]>([]);
 const fesDates = ref<Date[]>([]);
 onMounted(async () => {
-  const purchaseData = await $fetch<{data: Purchase[]}>(
+  const purchaseData = await $fetch<{ data: Purchase[] }>(
     config.APIURL + "/shops"
   );
   purchases.value = purchaseData.data;
 
-  const foodProductData = await $fetch<{data: FoodProduct[]}>(
+  const foodProductData = await $fetch<{ data: FoodProduct[] }>(
     config.APIURL + "/food_products"
   );
   foodProducts.value = foodProductData.data;
 
-  const fesDateData = await $fetch<{data: FesDate[]}>(
+  const fesDateData = await $fetch<{ data: FesDate[] }>(
     config.APIURL + "/fes_dates"
   );
   fesDateData.data.forEach((fesDate) => {
@@ -37,9 +29,27 @@ onMounted(async () => {
   });
 });
 
+const registerParams = [
+  reactive({
+    food_product_id: "",
+    shop_id: "",
+    items: "",
+    isFresh: "",
+    fes_date_id: "",
+  }),
+];
+
 const increment = () => {
   formCount.value++;
-  registerParams.push(reactive(initialPurchase));
+  registerParams.push(
+    reactive({
+      food_product_id: "",
+      shop_id: "",
+      items: "",
+      isFresh: "",
+      fes_date_id: "",
+    })
+  );
 };
 
 const decrement = () => {
@@ -47,12 +57,18 @@ const decrement = () => {
   registerParams.pop();
 };
 
-const registerParams = [reactive(initialPurchase)];
-
 const resetPurchase = () => {
   formCount.value = 1;
   registerParams.splice(0, registerParams.length);
-  registerParams.push(reactive(initialPurchase));
+  registerParams.push(
+    reactive({
+      food_product_id: "",
+      shop_id: "",
+      items: "",
+      isFresh: "",
+      fes_date_id: "",
+    })
+  );
 };
 
 const registerPurchase = async () => {
@@ -68,7 +84,7 @@ const registerPurchase = async () => {
       return;
     }
 
-    console.log(registerParams);
+    console.log(registerParams[i]);
 
     await $fetch(config.APIURL + "/purchase_lists", {
       method: "POST",
@@ -82,15 +98,11 @@ const registerPurchase = async () => {
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      .then(() => {
-        resetPurchase();
-        router.push("/mypage");
-      })
-      .catch((error) => {
-        errorMessage.value = "Failed to register (error: " + error + ")";
-      });
+    }).catch((error) => {
+      errorMessage.value = "Failed to register (error: " + error + ")";
+    });
   }
+  router.push("/mypage");
 };
 </script>
 
@@ -150,11 +162,7 @@ const registerPurchase = async () => {
                 v-model="registerParams[i].fes_date_id"
               >
                 <option value="" disabled selected>please select</option>
-                <option
-                  v-for="(list, i) in fesDates"
-                  :key="i"
-                  :value="list.id"
-                >
+                <option v-for="(list, i) in fesDates" :key="i" :value="list.id">
                   {{ list.date }}
                 </option>
               </select>
