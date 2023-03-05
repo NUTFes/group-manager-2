@@ -1,19 +1,24 @@
 <script lang="ts" setup>
-const isShow = ref<boolean>()
 
 interface Emits {
-  (e: 'update:visible', visible: boolean): void
+  (e: 'update:editSubRep', isEditSubRep: boolean): void
 }
 
 const emits = defineEmits<Emits>()
 
-const modalClose = () => {
-  emits('update:visible', false)
+const closeEditSubRep = () => {
+  emits('update:editSubRep', false)
 }
 </script>
 
 <template>
-  <Modal v-model:visible="isShow" title="副代表の編集">
+  <Modal title="副代表の編集">
+    <template #close>
+      <div class="flex justify-end">
+        <button @click="closeEditSubRep()" class="hover:text-black hover:opacity-75"
+        >✖</button>
+      </div>
+    </template>
     <template #form>
       <div class="text">名前</div>
       <input class="entry">
@@ -27,11 +32,9 @@ const modalClose = () => {
       <input class="entry">
       <div class="text">学籍番号</div>
       <input class="entry">
-    </template>
-    <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <RegistButton @click="modalClose()" />
+        <RegistButton @click="closeEditSubRep()" />
       </div>
     </template>
   </Modal>

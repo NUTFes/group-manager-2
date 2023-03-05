@@ -1,18 +1,24 @@
 <script lang="ts" setup>
 
 interface Emits {
-  (e: 'update:editStageOption', visible: boolean): void
+  (e: 'update:editStageOption', isEditStageOption: boolean): void
 }
 
 const emits = defineEmits<Emits>()
 
-const modalClose = () => {
-  emits('update:visible', false)
+const closeEditStageOption = () => {
+  emits('update:editStageOption', false)
 }
 </script>
 
 <template>
-  <Modal v-modal:visible="isShow" title="ステージオプションの編集">
+  <Modal title="ステージオプションの編集">
+    <template #close>
+      <div class="flex justify-end">
+        <button @click="closeEditStageOption()" class="hover:text-black hover:opacity-75"
+        >✖</button>
+      </div>
+    </template>
     <template #form>
       <div class="text">所持機器の利用</div>
       <select class="entry"></select>
@@ -24,11 +30,9 @@ const modalClose = () => {
       <select class="entry"></select>
       <div class="text">ステージ内容</div>
       <textarea class="entry" />
-    </template>
-    <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <RegistButton @click="modalClose()" />
+        <RegistButton @click="closeEditStageOption()" />
       </div>
     </template>
   </Modal>

@@ -20,8 +20,11 @@ const stage = withDefaults(defineProps<Props>(), {
   isSunny: null,
   setting: null
 })
-const isShow = ref<boolean>()
+const isEditStage = ref<boolean>(false)
 
+const openEditStage = () => {
+  isEditStage.value = true
+}
 </script>
 
 <template>
@@ -39,10 +42,12 @@ const isShow = ref<boolean>()
     </template>
     <template #method>
       <div class="absolute right-8">
-        <EditButton @click="isShow = true" />
+        <EditButton @click="openEditStage()" />
       </div>
     </template>
   </RegistInfoWideCard>
   </div>
-  <RegistInfoEditStage v-model:visible="isShow" />
+  <RegistInfoEditStage
+    v-if="isEditStage"
+    v-model:edit-stage="isEditStage" />
 </template>

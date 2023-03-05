@@ -16,16 +16,15 @@ const item = withDefaults(defineProps<Props>(), {
   setting: null
 })
 
+const isEditItem = ref<boolean>(false)
+const isDeleteItem = ref<boolean>(false)
+
 const openEditItem = () => {
   isEditItem.value = true
 }
-
 const openDeleteItem = () => {
   isDeleteItem.value = true
 }
-
-const isEditItem = ref<boolean>(false)
-const isDeleteItem = ref<boolean>(false)
 
 </script>
 <template>
@@ -56,5 +55,6 @@ const isDeleteItem = ref<boolean>(false)
   />
   <RegistInfoDeleteItem
     v-if="isDeleteItem"
-    v-model:deleteItem="isDeleteItem" />
+    v-model:delete-item="isDeleteItem"
+  />
 </template>

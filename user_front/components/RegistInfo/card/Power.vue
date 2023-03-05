@@ -22,8 +22,16 @@ const power = withDefaults(defineProps<Props>(), {
   setting: null
 })
 
-const isShow = ref<boolean>()
+const isEditPower = ref<boolean>(false)
+const isDeletePower = ref<boolean>(false)
 
+const openEditPower = () => {
+  isEditPower.value = true
+}
+
+const openDeletePower = () => {
+  isDeletePower.value = true
+}
 </script>
 
 <template>
@@ -55,12 +63,20 @@ const isShow = ref<boolean>()
     <template #method>
       <div class="absolute right-4">
         <div class="my-2">
-          <EditButton @click="isShow = true" />
+          <EditButton @click="openEditPower()" />
         </div>
-        <DeleteButton />
+        <DeleteButton @click="openDeletePower()" />
       </div>
     </template>
   </RegistInfoWideCard>
-  <RegistInfoEditPower v-model:visible="isShow"/>
+  <RegistInfoEditPower
+    v-if="isEditPower"
+    v-model:edit-power="isEditPower"
+  />
+  <RegistInfoDeletePower
+    v-if="isDeletePower"
+    v-model:delete-power="isDeletePower"
+  />
+
 </div>
 </template>

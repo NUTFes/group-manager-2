@@ -1,28 +1,27 @@
 <script lang="ts" setup>
 
 interface Emits {
-  (e: 'update:DeleteItem', isDeleteItem: boolean): void
+  (e: 'update:DeletePower', isDeletePower: boolean): void
 }
 const emits = defineEmits<Emits>()
 
-const closeDeleteItem = () => {
-  emits('update:DeleteItem', false)
+const closeDeletePower = () => {
+  emits('update:DeletePower', false)
 }
 
 </script>
 
 <template>
-  <Modal title="貸出物品の削除">
+  <Modal title="電力申請の削除">
     <template #close>
       <div class="flex justify-end">
-        <button @click="closeDeleteItem()" class="hover:text-black hover:opacity-75"
-        >✖</button>
+        <button @click="closeDeletePower()" class="hover:text-black hover:opacity-75">✖</button>
       </div>
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
         <ResetButton />
-        <RegistButton @click="closeDeleteItem()" />
+        <RegistButton @click="closeDeletePower()" />
       </div>
     </template>
   </Modal>

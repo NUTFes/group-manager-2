@@ -13,7 +13,7 @@ const modalClose = () => {
 </script>
 
 <template>
-  <Modal v-model:visible="isShow" title="従業員申請の削除">
+  <Modal title="従業員申請の削除">
     <template #method>
       <div class="flex justify-around mx-8 mt-4">
         <ResetButton />
