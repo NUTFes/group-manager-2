@@ -30,7 +30,7 @@ const login = () => {
 }
 
 const signUp = () =>{
-  router.push("/")
+  router.push("/regist/user")
 }
 </script>
 

@@ -29,7 +29,7 @@
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of stage on a sunny day</h1>
+        <h1 class="text-3xl">Registration of stage on a rain day</h1>
         <Card border="none" align="end" gap="10px">
           <div class="flex">
             <p class="label">first preference</p>

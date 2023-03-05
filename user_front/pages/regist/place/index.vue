@@ -1,15 +1,43 @@
 <script lang="ts" setup>
-  import {Place} from '@/types'
-  // baseURLの設定
-  const config = useRuntimeConfig()
-  // useStateで配列を定義
-  const placeArray = useState("placeArray", () => [] as string[])
-  const placeId = useState("placeId", () => [] as number[])
-  const {data:places} = await useFetch<Place[]>(config.baseURL+"/places")
-    !!places.value.data && places.value.data.forEach((place:Place)=>{
-    placeArray.value.push(place['name'])
-    placeId.value.push(place['id'])
-  })
+import { Place, PlaceList } from "@/types/regist/place"
+
+
+const config = useRuntimeConfig();
+const router = useRouter();
+const placeList = ref<PlaceList[]>([]);
+const registerParams = reactive({
+  first: "",
+  second: "",
+  third: "",
+  remark: "",
+  groupId: 0,
+});
+
+onMounted(async () => {
+  const placeData = await $fetch<Place>(config.APIURL + "/places");
+  placeData.data.forEach((place) => {
+    placeList.value.push(place);
+  });
+  registerParams.groupId = Number(localStorage.getItem("group_id"));
+});
+
+const registerPlace = async () => {
+  await $fetch<Place>(config.APIURL + "/place_orders", {
+    method: "POST",
+    params: {
+      group_id: registerParams.groupId,
+      first: registerParams.first,
+      second: registerParams.second,
+      third: registerParams.third,
+      remark: registerParams.remark,
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  router.push("/regist/item");
+};
+
 </script>
 
 <template>
@@ -18,30 +46,41 @@
       <Card>
         <h1 class="text-3xl">Registration of places</h1>
         <Card border="none" align="end" gap="20px">
+
           <div class="flex">
             <p class="label">first preference</p>
-            <select style="width:180px;">
-              <option v-for = "place in placeArray" :key="place">{{place}}</option>
+            <select style="width:180px;" v-model="registerParams.first">
+              <option value="" selected disabled></option>
+              <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">second preference</p>
-            <select style="width:180px;">
-              <option v-for = "place in placeArray" :key="place">{{place}}</option>
+            <select style="width:180px;" v-model="registerParams.second">
+              <option value="" selected disabled></option>
+              <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">third preference</p>
-            <select style="width:180px;">
-              <option v-for = "place in placeArray" :key="place">{{place}}</option>
+            <select style="width:180px;" v-model="registerParams.third">
+              <option value="" selected disabled></option>
+              <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">free description</p>
-            <input class="form" />
+            <input class="form" v-model="registerParams.remark">
           </div>
+
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerPlace"></RegistPageButton>
+        </Row>
       </Card>
     </div>
   </div>

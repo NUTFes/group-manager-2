@@ -1,9 +1,4 @@
 <script lang="ts" setup>
-  const stooltestList = [
-    { id: 1, status: '検便準備中' },
-    { id: 2, status: '検便無' },
-    { id: 3, status: '検便有' },
-  ]
 </script>
 
 <template>
@@ -19,6 +14,7 @@
           <div class="flex">
             <p class="label">Do you cook?</p>
             <select style="width:180px;">
+              <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
             </select>
@@ -32,7 +28,11 @@
             <input class="form" />
           </div>
         </Card>
-        <Button class="ml-[80%]" />
+        <Row>
+          <RegistButton />
+          <ResetButton />
+          <AddButton />
+        </Row>
       </Card>
     </div>
   </div>
