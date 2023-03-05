@@ -21,6 +21,11 @@ const option = withDefaults(defineProps<Props>(), {
   stageContent: '',
   setting: null
 })
+const isEditStageOption = ref<boolean>(false)
+
+const openEditStgeOption = () => {
+  isEditStageOption.value = true
+}
 
 </script>
 
@@ -55,11 +60,15 @@ const option = withDefaults(defineProps<Props>(), {
     </template>
     <template #method>
       <div class="absolute right-8">
-        <EditButton />
+        <EditButton @click="openEditStgeOption()" />
       </div>
     </template>
   </RegistInfoWideCard>
-</div>
+  </div>
+  <RegistInfoEditStageOption
+    v-if="isEditStageOption"
+    v-model:edit-stage-option="isEditStageOption"
+  />
 </template>
 
 <style>

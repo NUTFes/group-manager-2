@@ -22,6 +22,11 @@ const sub = withDefaults(defineProps<Props>(), {
   student_id: null,
   setting: null
 })
+const isEditSubRep = ref<boolean>(false)
+
+const openEditSubRep = () => {
+  isEditSubRep.value = true
+}
 
 </script>
 
@@ -37,9 +42,10 @@ const sub = withDefaults(defineProps<Props>(), {
         <RegistInfoDivideBar />
       <div class="m-2 text-base">
         <p class="font-medium text-lg">所属</p>
-        <div class="flex items-center">分野<RegistInfoTriangle />{{ sub.department }}</div>
-        <div class="flex items-center">学年<RegistInfoTriangle />{{ sub.grade }}</div>
-        <div class="flex items-center">学籍<RegistInfoTriangle />{{ sub.student_id }}</div>
+        <!--　propsが読み込めなくなるので一旦削除 <RegistInfoTriangle /> -->
+        <div class="flex items-center">分野‣{{ sub.department }}</div>
+        <div class="flex items-center">学年‣{{ sub.grade }}</div>
+        <div class="flex items-center">学籍‣{{ sub.student_id }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="text-base mb-10">
@@ -50,8 +56,11 @@ const sub = withDefaults(defineProps<Props>(), {
     </template>
     <template #method>
       <div class="absolute right-4">
-        <EditButton />
+        <EditButton @click="openEditSubRep()" />
       </div>
     </template>
   </RegistInfoWideCard>
+  <RegistInfoEditSubRep
+    v-if="isEditSubRep"
+    v-model:edit-sub-rep="isEditSubRep" />
 </template>

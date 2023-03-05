@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 
+const isShow = ref<boolean>()
+
 </script>
 
 <template>
-  <Modal title="電力申請の追加">
+  <Modal v-model:visible="isShow" title="電力申請の追加">
     <template #form>
       <div class="text">使用物品名</div>
       <input class="entry">
@@ -18,7 +20,7 @@
     </template>
     <template #method>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistButton />
+        <RegistButton @close="isShow = false"/>
         <ResetButton />
       </div>
     </template>

@@ -1,9 +1,24 @@
 <script lang="ts" setup>
 
+interface Emits {
+  (e: 'update:editSubRep', isEditSubRep: boolean): void
+}
+
+const emits = defineEmits<Emits>()
+
+const closeEditSubRep = () => {
+  emits('update:editSubRep', false)
+}
 </script>
 
 <template>
   <Modal title="副代表の編集">
+    <template #close>
+      <div class="flex justify-end">
+        <button @click="closeEditSubRep()" class="hover:text-black hover:opacity-75"
+        >✖</button>
+      </div>
+    </template>
     <template #form>
       <div class="text">名前</div>
       <input class="entry">
@@ -17,11 +32,9 @@
       <input class="entry">
       <div class="text">学籍番号</div>
       <input class="entry">
-    </template>
-    <template #method>
       <div class="flex justify-between mt-8 mx-8">
         <ResetButton />
-        <RegistButton />
+        <RegistButton @click="closeEditSubRep()" />
       </div>
     </template>
   </Modal>
