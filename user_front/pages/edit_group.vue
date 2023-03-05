@@ -11,6 +11,7 @@
       <div class="regist-card-content-question">
         <div class="regist-card-content-question-label">団体名</div>
         <input
+          class="input"
           id="group"
           type="text"
         />
@@ -18,6 +19,7 @@
       <div class="regist-card-content-question">
         <div class="regist-card-content-question-label">企画名</div>
         <input
+          class="input"
           id="project"
           type="text"
         />
@@ -25,6 +27,7 @@
       <div class="regist-card-content-question">
         <div class="regist-card-content-question-label">カテゴリ</div>
         <select
+          class="input"
           id="category"
         >
           <option>
@@ -35,6 +38,7 @@
       <div class="regist-card-content-question">
         <div class="regist-card-content-question-label">活動内容</div>
         <input
+          class="input"
           id="activity"
           type="text"
         />
@@ -110,8 +114,8 @@
     mb-[1%];
 }
 
-select,
-input {
+
+.input {
   @apply
     text-left
     p-[1%]
@@ -119,18 +123,16 @@ input {
     w-[800px]
     rounded-[7px]
     text-lg
-    align-top;
+    align-top
+    box-border;
 }
-select,
-input:required {
+.input:required {
   border: 1px solid red;
 }
-select,
-input:invalid {
+.input:invalid {
   border: 1px solid red;
 }
-select,
-input:valid {
+.input:valid {
   border: 1px solid #333333;
 }
 
