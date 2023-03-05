@@ -1,4 +1,34 @@
 <script lang="ts" setup>
+const config = useRuntimeConfig();
+const router = useRouter();
+
+const registerParams = reactive({
+  item: "",
+  music: "",
+  picture: "",
+  noise: "",
+  stageContent: "",
+  groupId: 0,
+})
+
+const registerStageOption = async () => {
+  await $fetch(config.APIURL + "/stage_common_options", {
+    method: "POST",
+    params: {
+      group_id: registerParams.groupId,
+      item: registerParams.item,
+      music: registerParams.music,
+      picture: registerParams.picture,
+      noise: registerParams.noise,
+      stage_content: registerParams.stageContent,
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  router.push("/regist/item");
+}
+
 </script>
 
 <template>
@@ -45,8 +75,8 @@
           </div>
         </Card>
         <Row>
-          <RegistButton />
-          <ResetButton />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerStageOption"></RegistPageButton>
         </Row>
       </Card>
     </div>
