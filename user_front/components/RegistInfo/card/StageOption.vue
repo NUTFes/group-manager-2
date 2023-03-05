@@ -65,9 +65,10 @@ const openEditStgeOption = () => {
     </template>
   </RegistInfoWideCard>
   </div>
-  <RegistInfoEditStage
+  <RegistInfoEditStageOption
     v-if="isEditStageOption"
-    v-model:edit-stage="isEditStageOption" />
+    v-model:edit-stage-option="isEditStageOption"
+  />
 </template>
 
 <style>
