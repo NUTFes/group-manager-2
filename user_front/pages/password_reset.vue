@@ -12,7 +12,7 @@
       <input type="password" placeholder="新しいパスワードの再入力">
     </div>
     <div class="regist-button">
-      <button class="regist-submit-button" @click="submit">登録</button>
+      <button class="regist-submit-button">登録</button>
     </div>
   </div>
 </template>

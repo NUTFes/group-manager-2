@@ -14,7 +14,7 @@
       <input type="tel" placeholder="TEL">
     </div>
     <div class="regist-button">
-      <button class="regist-submit-button" @click="submit">登録</button>
+      <button class="regist-submit-button">登録</button>
     </div>
   </div>
 </template>

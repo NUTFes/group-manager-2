@@ -13,8 +13,6 @@
         <input
           id="group"
           type="text"
-          v-model="groupName"
-          @change="validationGroup"
         />
       </div>
       <div class="regist-card-content-question">
@@ -22,23 +20,15 @@
         <input
           id="project"
           type="text"
-          v-model="projectName"
-          @change="validationProject"
         />
       </div>
       <div class="regist-card-content-question">
         <div class="regist-card-content-question-label">カテゴリ</div>
         <select
-          v-model="groupCategoryId"
-          @change="validationCategory"
           id="category"
         >
-          <option
-            v-for="item in groupCategoryList"
-            :value="item.id"
-            :key="item.id"
-          >
-            {{ item.name }}
+          <option>
+            カテゴリ
           </option>
         </select>
       </div>
@@ -47,16 +37,14 @@
         <input
           id="activity"
           type="text"
-          v-model="activity"
-          @change="validationActivity"
         />
       </div>
     </div>
     <div class="regist-button">
-      <button @click="register" class="regist-submit-button">編集する</button>
+      <button class="regist-submit-button">編集する</button>
     </div>
     <div class="delete-button">
-      <button @click="destroy" class="regist-submit-button">
+      <button class="regist-submit-button">
         参加団体を削除する
       </button>
     </div>
@@ -101,8 +89,9 @@
 }
 
 .regist-card-content {
+  @apply
+    mt-[2%];
   border: solid 1px #d3d3d3;
-  margin-top: 2%;
   padding: 5% 1% 5% 1%;
 }
 
