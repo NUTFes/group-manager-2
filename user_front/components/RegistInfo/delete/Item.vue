@@ -21,8 +21,8 @@ const closeDeleteItem = () => {
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
-        <ResetButton />
-        <RegistButton @click="closeDeleteItem()" />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="closeDeleteItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

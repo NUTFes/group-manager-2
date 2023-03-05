@@ -32,8 +32,8 @@ const closeEditPower = () => {
       <div class="text">URL</div>
       <input class="entry" />
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditPower()" />
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="register" @click="closeEditPower()"></RegistPageButton>
       </div>
     </template>
   </Modal>

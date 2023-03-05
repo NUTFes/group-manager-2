@@ -31,8 +31,8 @@ const closeEditStageOption = () => {
       <div class="text">ステージ内容</div>
       <textarea class="entry" />
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditStageOption()" />
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="register" @click="closeEditStageOption()"></RegistPageButton>
       </div>
     </template>
   </Modal>

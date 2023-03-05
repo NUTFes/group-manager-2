@@ -47,8 +47,8 @@ const closeEditStage = () => {
         <input class="entry" />
       </div> -->
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditStage()" />
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="register" @click="closeEditStage()"></RegistPageButton>
       </div>
     </template>
   </Modal>

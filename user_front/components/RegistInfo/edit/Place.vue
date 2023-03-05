@@ -30,8 +30,8 @@ const closeEditPlace = () => {
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" />
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditPlace()" />
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="register" @click="closeEditPlace()"></RegistPageButton>
       </div>
     </template>
   </Modal>

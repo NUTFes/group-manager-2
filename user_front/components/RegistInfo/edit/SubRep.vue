@@ -33,8 +33,8 @@ const closeEditSubRep = () => {
       <div class="text">学籍番号</div>
       <input class="entry">
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditSubRep()" />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="closeEditSubRep()"></RegistPageButton>
       </div>
     </template>
   </Modal>

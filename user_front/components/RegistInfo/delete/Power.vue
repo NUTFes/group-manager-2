@@ -20,8 +20,8 @@ const closeDeletePower = () => {
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
-        <ResetButton />
-        <RegistButton @click="closeDeletePower()" />
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="register" @click="closeDeletePower()"></RegistPageButton>
       </div>
     </template>
   </Modal>

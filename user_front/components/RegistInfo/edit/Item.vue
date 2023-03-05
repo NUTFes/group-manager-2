@@ -26,8 +26,8 @@ const closeEditItem = () => {
       <div class="text">個数</div>
       <input class="entry" />
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditItem()"/>
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="register" @click="closeEditItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>
