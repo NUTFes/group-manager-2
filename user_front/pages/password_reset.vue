@@ -36,10 +36,16 @@
   @apply
     block
     text-lg
-    font-bold
     text-[#e040fb]
     cursor-pointer
+    w-fit
     mt-5;
+}
+
+.regist-back-link:hover {
+  @apply
+    font-bold
+    text-[#e040fb];
 }
 
 .user-info {

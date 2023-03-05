@@ -75,11 +75,16 @@
   @apply
     block
     text-lg
-    font-bold
     text-[#e040fb]
     cursor-pointer
-    mt-5
-    ;
+    w-fit
+    mt-5;
+}
+
+.regist-back-link:hover {
+  @apply
+    font-bold
+    text-[#e040fb];
 }
 
 .regist-title {
