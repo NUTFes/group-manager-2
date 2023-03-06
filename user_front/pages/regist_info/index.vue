@@ -172,9 +172,15 @@ onMounted(() => {
 
       <!-- 会場申請 group_category_id !== ３ -->
       <div v-show="tab === 2">
-        <RegistInfoCardPlace class="my-4" :n="1" :place="placeOrder?.first" :remark="placeOrder?.remark" />
-        <RegistInfoCardPlace class="my-4" :n="2" :place="placeOrder?.second" :remark="placeOrder?.remark" />
-        <RegistInfoCardPlace class="my-4" :n="3" :place="placeOrder?.third" :remark="placeOrder?.remark" />
+        <div class="mb-4">
+          <RegistInfoCardPlace :n="1" :place="placeOrder?.first" :remark="placeOrder?.remark" />
+        </div>
+        <div class="my-4">
+          <RegistInfoCardPlace :n="2" :place="placeOrder?.second" :remark="placeOrder?.remark" />
+        </div>
+        <div class="my-4">
+          <RegistInfoCardPlace :n="3" :place="placeOrder?.third" :remark="placeOrder?.remark" />
+        </div>
       </div>
 
       <!-- ステージ申請 group_category_id === ３ -->
