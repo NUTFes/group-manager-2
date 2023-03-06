@@ -1,9 +1,55 @@
 <script lang="ts" setup>
-  const stooltestList = [
-    { id: 1, status: '検便準備中' },
-    { id: 2, status: '検便無' },
-    { id: 3, status: '検便有' },
-  ]
+
+const config = useRuntimeConfig();
+const router = useRouter();
+const formCount = ref(1);
+
+const state = reactive({
+  groupId: 0,
+});
+
+onMounted(async () => {
+  state.groupId = Number(localStorage.getItem("group_id"));
+})
+
+const registerParams = [reactive({
+  employeeName: "",
+  studentId: "",
+  stooltest: 0,
+})];
+
+const increment = () => {
+  formCount.value++
+  registerParams.push(reactive({
+    employeeName: "",
+    studentId: "",
+    stooltest: 0,
+  }))
+}
+
+const decrement = () => {
+  formCount.value--
+  registerParams.pop()
+}
+
+const registerEmployee = async () => {
+  for (let i = 0; i < formCount.value; i++) {
+    await $fetch(config.APIURL + "/employees", {
+      method: "POST",
+      params: {
+        group_id: state.groupId,
+        name: registerParams[i].employeeName,
+        student_id: registerParams[i].studentId,
+        stool_test_id: 1,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  router.push("/mypage");
+};
+
 </script>
 
 <template>
@@ -12,26 +58,28 @@
       <Card>
         <h1 class="text-3xl">Registration of employees</h1>
         <Card border="none" align="end" gap="20px">
-          <div class="flex">
-            <p class="label">name</p>
-            <input class="form" />
+
+          <div v-for="count, i in formCount">
+            <div class="flex">
+              <p class="label">name</p>
+              <input class="form" v-model="registerParams[i].employeeName">
+            </div>
+
+            <div class="flex">
+              <p class="label">student id</p>
+              <input class="form" v-model="registerParams[i].studentId">
+            </div>
+
+            <div v-if="i != 0">
+              <RegistPageButton text="remove form" @click="decrement"></RegistPageButton>
+            </div>
           </div>
-          <div class="flex">
-            <p class="label">student id</p>
-            <input class="form" />
-          </div>
-          <div class="flex">
-            <p class="label">stool test</p>
-            <select style="width:180px;">
-              <option value="" selected disabled></option>
-              <option v-for = "stool in stooltestList" :key="stool">{{stool.status}}</option>
-            </select>
-          </div>
+
         </Card>
         <Row>
-          <RegistButton />
-          <ResetButton />
-          <AddButton />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="register" @click="registerEmployee"></RegistPageButton>
+          <RegistPageButton text="Add form" @click="increment"></RegistPageButton>
         </Row>
       </Card>
     </div>
