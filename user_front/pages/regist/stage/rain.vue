@@ -50,7 +50,7 @@ const registerRainStage = async () => {
   }).then((res) => {
     console.log(res);
   });
-  //router.push("/regist/stage");
+  router.push("/mypage");
 };
 
 
