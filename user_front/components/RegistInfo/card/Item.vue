@@ -1,16 +1,34 @@
 <script lang="ts" setup>
 
+interface Regist {
+  id: number
+  rental_item_id: number
+  num: number
+  // groupId: number
+}
+
 interface Props {
-  groupId: string
-  regist: string
+  groupId: number
+  regist: Regist | null
   name: string
   num: number | null
   setting: boolean | null
 }
 
+
+
+interface Emits {
+  (e: 'update:reload', registInfo: Regist): void
+}
+const emits = defineEmits<Emits>()
+
+const update = (registInfo: Partial<Regist>) => {
+  emits('update:reload', { ...item.regist, ...registInfo })
+}
+
 const item = withDefaults(defineProps<Props>(), {
-  groupId: '',
-  regist: '',
+  groupId: 0,
+  regist: null,
   name: '',
   num: null,
   setting: null
@@ -52,6 +70,11 @@ const openDeleteItem = () => {
   <RegistInfoEditItem
     v-if="isEditItem"
     v-model:edit-item="isEditItem"
+    v-model:reload="item.regist"
+    :group-id="groupId"
+    :id="regist?.id"
+    :item="regist?.rental_item_id"
+    :num="regist?.num"
   />
   <RegistInfoDeleteItem
     v-if="isDeleteItem"

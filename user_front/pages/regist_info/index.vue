@@ -49,12 +49,21 @@ interface PlaceOrder {
 interface RentalItem {
   name: string
   num: number
+  rental_item: RegistItem
+}
+
+interface RegistItem {
+  id: number
+  group_id: number
+  rental_item_id: number
+  num: number
 }
 
 interface RentalOrder {
   rental_item: {
     rental_item: RentalItem
   }
+
 }
 
 interface PowerItem {
@@ -81,14 +90,14 @@ interface SubRep {
   tel: string
 }
 const registInfo = ref<RegistInfo>()
-
+const group = ref<Group>()
 const subRep = ref<SubRep>()
 const rentalOrder = ref<RentalOrder>()
 const placeOrder = ref<PlaceOrder>()
 const powerOrder = ref<PowerOrder>()
 const stageOrder = ref<StageOrder>()
 const stageOption = ref<StageOption>()
-
+const regist = ref<RegistItem>()
 // const setting = ref("")
 
 const groupCategoryId = ref(null)
@@ -105,13 +114,13 @@ onMounted(() => {
     })
     .then((response) => {
       registInfo.value = response.data.data[0];
+      group.value = response.data.data[0].group;
       subRep.value = response.data.data[0].sub_rep;
       rentalOrder.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrder.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
-      // rentalOrder.value = registInfo
       groupCategoryId.value = response.data.data[0].group.group_category_id
     });
   // const settingurl = config.APIURL + "/user_page_settings";
@@ -120,11 +129,32 @@ onMounted(() => {
   // });
 })
 
+const reload = () => {
+  const regist_info =
+     url;
+  axios
+    .get(regist_info, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid"),
+      },
+    })
+    .then((response) => {
+      registInfo.value = response.data.data;
+      groupCategoryId.value = response.data.data[0].group.group_category_id;
+    });
+}
+
 </script>
 
 <template>
 <Container :name="registInfo?.group.name">
   <template #tabs>
+    <div v-for="i in rentalOrder" class="whitespace-pre">
+      {{ i.rental_item.rental_item }}
+    </div>
     <ul class="flex">
       <li @click="tab = 1">
         <div :class="{ select: tab === 1 }" class="title">副代表申請</div>
@@ -157,7 +187,6 @@ onMounted(() => {
   </template>
   <template #body>
     <div class="ml-12 pt-4">
-
       <!-- 副代表申請  -->
       <div v-show="tab === 1">
         <RegistInfoCardSubRep
@@ -219,8 +248,11 @@ onMounted(() => {
       <div v-show="tab === 6" class="flex flex-wrap">
         <div v-for="item in rentalOrder" :key="item.toString()">
           <RegistInfoCardItem
-            :name=item.rental_item.name
-            :num=item.rental_item.num
+            :group-id="group?.id"
+            :regist="item.rental_item.rental_item"
+            :name="item.rental_item.name"
+            :num="item.rental_item.num"
+            @reload="reload()"
           />
         </div>
       </div>
