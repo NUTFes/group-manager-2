@@ -16,3 +16,12 @@ export interface RainStage{
   name: string
   updated_at: string
 }
+
+export interface SunnyStage {
+  created_at: string
+  enable_rainy: boolean
+  enable_sunny: boolean
+  id: number
+  name: string
+  updated_at: string
+}

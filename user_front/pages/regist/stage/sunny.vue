@@ -1,28 +1,59 @@
 <script lang="ts" setup>
-  import {Stage} from '@/types'
-  // baseURLの設定
-  const config = useRuntimeConfig();
-  // useStateで配列を定義
-  const stageArray = useState("stageArray", () => [] as string[])
-  const {data:stages} = await useFetch<Stage[]>(config.baseURL+"/stages");
-    !!stages.value!.data && stages.value!.data.forEach((stage:Stage)=>{
-    stageArray.value.push(stage['name'])
-  })
-  var minuteNumber: number[] = new Array( 60 );
-  for (var i = 0; i<=60; i++){
-    minuteNumber[i] = i
-  }
-  var hourNumber: number[] = new Array( 24 );
-  for (var i = 0; i<=24; i++){
-    hourNumber[i] = i
-  }
-  var result: number[] = new Array( 36 );
-  for (var i = 0; i<=36; i++){
-    result[i] = i
-  }
-  var minuteInterval = result.map(function( value ) {
-    return value * 5;
+import { FesYear, SunnyStage } from '@/types/regist/stage'
+
+const config = useRuntimeConfig();
+const router = useRouter();
+const state = reactive({
+  groupId: 0,
+});
+const fesDateList = ref<FesYear[]>([]);
+const sunnyStageList = ref<SunnyStage[]>([]);
+
+const registerParams = reactive({
+  fesDateId: 0,
+  firstPreference: 0,
+  secondPreference: 0,
+  performanceTime: "",
+  preparationTime: "",
+  cleanUpTime: "",
+});
+
+onMounted(async()=>{
+state.groupId = Number(localStorage.getItem("group_id"));
+const fesDate = await $fetch<{data : FesYear[]}>(
+  config.APIURL + "/api/v1/get_current_fes_dates"
+);
+fesDateList.value = fesDate.data;
+
+const sunnyStage = await $fetch<{data:SunnyStage[]}>(
+  config.APIURL + "/sunny/stages"
+)
+sunnyStageList.value = sunnyStage.data;
+})
+
+const registerRainStage = async () => {
+  await $fetch(config.APIURL + "/stage_orders", {
+    method: "POST",
+    params: {
+      group_id: state.groupId,
+      is_sunny: true,
+      fes_date_id: registerParams.fesDateId,
+      stage_first: registerParams.firstPreference,
+      stage_second: registerParams.secondPreference,
+      use_time_interval: registerParams.performanceTime,
+      prepare_time_interval: registerParams.preparationTime,
+      cleanup_time_interval: registerParams.cleanUpTime,
+    },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    console.log(response);
   });
+  router.push("/regist/stage/rain");
+};
+
+
 </script>
 
 <template>
@@ -31,114 +62,53 @@
       <Card>
         <h1 class="text-3xl">Registration of stage on a sunny day</h1>
         <Card border="none" align="end" gap="10px">
+
+          <div class="flex">
+            <p class="label">date</p>
+            <select style="width:180px;" v-model="registerParams.fesDateId">
+              <option value="" selected disabled></option>
+              <option v-for = "fesDate in fesDateList" >{{fesDate.date}}</option>
+            </select>
+          </div>
+
           <div class="flex">
             <p class="label">first preference</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model="registerParams.firstPreference">
               <option value="" selected disabled></option>
-              <option v-for = "stage in stageArray" :key="stage">{{stage}}</option>
+              <option v-for = "sunnyStage in sunnyStageList">{{sunnyStage.name}}</option>
             </select>
           </div>
+
           <div class="flex">
             <p class="label">second preference</p>
-            <select style="width:180px;">
+            <select style="width:180px;" v-model="registerParams.secondPreference">
               <option value="" selected disabled></option>
-              <option v-for = "stage in stageArray" :key="stage">{{stage}}</option>
+              <option v-for = "sunnyStage in sunnyStageList">{{sunnyStage.name}}</option>
             </select>
           </div>
-          <div class="flex">
-            <p class="label">preparation start time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in hourNumber" :key="time">{{time}}</option>
-              </select>
-              <p>時</p>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteNumber" :key="time">{{time}}</option>
-              </select>
-              <p>分</p>
-            </Row>
-          </div>
-          <div class="flex">
-            <p class="label">performance start time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in hourNumber" :key="time">{{time}}</option>
-              </select>
-              <p>時</p>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteNumber" :key="time">{{time}}</option>
-              </select>
-              <p>分</p>
-            </Row>
-          </div>
-          <div class="flex">
-            <p class="label">preparation end time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in hourNumber" :key="time">{{time}}</option>
-              </select>
-              <p>時</p>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteNumber" :key="time">{{time}}</option>
-              </select>
-              <p>分</p>
-            </Row>
-          </div>
-          <div class="flex">
-            <p class="label">clean-up end time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in hourNumber" :key="time">{{time}}</option>
-              </select>
-              <p>時</p>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteNumber" :key="time">{{time}}</option>
-              </select>
-              <p>分</p>
-            </Row>
-          </div>
+
           <div class="flex">
             <p class="label">performance time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteInterval" :key="time">{{time}}</option>
-              </select>
-              <p>分間</p>
-            </Row>
+            <input class="form" v-model="registerParams.performanceTime">
+            <p>min</p>
           </div>
+
           <div class="flex">
             <p class="label">preparation time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteInterval" :key="time">{{time}}</option>
-              </select>
-              <p>分間</p>
-            </Row>
+            <input class="form" v-model="registerParams.preparationTime">
+            <p>min</p>
           </div>
+
           <div class="flex">
             <p class="label">clean-up time</p>
-            <Row>
-              <select style="width:50px;">
-                <option value="" selected disabled></option>
-                <option v-for = "time in minuteInterval" :key="time">{{time}}</option>
-              </select>
-              <p>分間</p>
-            </Row>
+            <input class="form" v-model="registerParams.cleanUpTime">
+            <p>min</p>
           </div>
+
         </Card>
         <Row>
-          <RegistButton />
-          <ResetButton />
+          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton @click="registerRainStage" text="登録"></RegistPageButton>
         </Row>
       </Card>
     </div>

@@ -47,9 +47,7 @@ const registerRainStage = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((res) => {
-    console.log(res);
-  });
+  })
   router.push("/mypage");
 };
 
