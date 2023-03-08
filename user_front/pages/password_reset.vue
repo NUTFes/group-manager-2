@@ -31,7 +31,6 @@ const submit = () =>{
     )
     .then(
       (response) =>{
-        console.log(response);
         router.push("MyPage");
       }
     )
