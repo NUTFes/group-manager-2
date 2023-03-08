@@ -1,4 +1,41 @@
 <script lang="ts" setup>
+import axios from "axios";
+
+definePageMeta({
+  layout: false,
+});
+
+const router = useRouter()
+const config = useRuntimeConfig()
+
+const password = ref("")
+const password_confirmation = ref("")
+
+const submit = () =>{
+  const url = config.APIURL+"/api/v1/current_user/password_reset";
+  axios
+    .post(
+      url,
+      {
+        password: password.value,
+        password_confirmation: password_confirmation.value,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          "client": localStorage.getItem("client"),
+          "uid": localStorage.getItem("uid"),
+        },
+      }
+    )
+    .then(
+      (response) =>{
+        router.push("MyPage");
+      }
+    )
+}
+
 </script>
 
 <template>
@@ -8,11 +45,11 @@
       <div class="user-info">パスワード再設定</div>
     </div>
     <div>
-      <input type="password" placeholder="新しいパスワードを入力">
-      <input type="password" placeholder="新しいパスワードの再入力">
+      <input type="password" placeholder="新しいパスワードを入力" v-model="password" />
+      <input type="password" placeholder="新しいパスワードの再入力" v-model="password_confirmation" />
     </div>
     <div class="regist-button">
-      <button class="regist-submit-button">登録</button>
+      <button class="regist-submit-button" @click="submit">登録</button>
     </div>
   </div>
 </template>
