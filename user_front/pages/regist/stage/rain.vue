@@ -47,7 +47,11 @@ const registerRainStage = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-  })
+  }).then(
+    (res) => {
+      console.log(res);
+    },
+  )
   router.push("/mypage");
 };
 
@@ -65,7 +69,7 @@ const registerRainStage = async () => {
             <p class="label">date</p>
             <select style="width:180px;" v-model="registerParams.fesDateId">
               <option value="" selected disabled></option>
-              <option v-for = "fesDate in fesDateList" >{{fesDate.date}}</option>
+              <option v-for = "fesDate in fesDateList" :value="fesDate.id">{{fesDate.date}}</option>
             </select>
           </div>
 
@@ -73,15 +77,16 @@ const registerRainStage = async () => {
             <p class="label">first preference</p>
             <select style="width:180px;" v-model="registerParams.firstPreference">
               <option value="" selected disabled></option>
-              <option v-for = "rainStage in rainStageList">{{rainStage.name}}</option>
+              <option v-for = "rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
             </select>
+            {{ registerParams.firstPreference }}
           </div>
 
           <div class="flex">
             <p class="label">second preference</p>
             <select style="width:180px;" v-model="registerParams.secondPreference">
               <option value="" selected disabled></option>
-              <option v-for = "rainStage in rainStageList">{{rainStage.name}}</option>
+              <option v-for = "rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
             </select>
           </div>
 
