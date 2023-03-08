@@ -65,7 +65,7 @@ const registerRainStage = async () => {
             <p class="label">date</p>
             <select style="width:180px;" v-model="registerParams.fesDateId">
               <option value="" selected disabled></option>
-              <option v-for = "fesDate in fesDateList" >{{fesDate.date}}</option>
+              <option v-for = "fesDate in fesDateList" :value="fesDate.id">{{fesDate.date}}</option>
             </select>
           </div>
 
@@ -73,7 +73,7 @@ const registerRainStage = async () => {
             <p class="label">first preference</p>
             <select style="width:180px;" v-model="registerParams.firstPreference">
               <option value="" selected disabled></option>
-              <option v-for = "sunnyStage in sunnyStageList">{{sunnyStage.name}}</option>
+              <option v-for = "sunnyStage in sunnyStageList" :value="sunnyStage.id">{{sunnyStage.name}}</option>
             </select>
           </div>
 
@@ -81,7 +81,7 @@ const registerRainStage = async () => {
             <p class="label">second preference</p>
             <select style="width:180px;" v-model="registerParams.secondPreference">
               <option value="" selected disabled></option>
-              <option v-for = "sunnyStage in sunnyStageList">{{sunnyStage.name}}</option>
+              <option v-for = "sunnyStage in sunnyStageList" :value="sunnyStage.id">{{sunnyStage.name}}</option>
             </select>
           </div>
 
