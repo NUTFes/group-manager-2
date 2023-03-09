@@ -42,6 +42,7 @@ const newEmail = ref<string>('')
 const newStudentId = ref<number>()
 // const newSetting = ref<boolean>()
 
+// TODO 共通化させたい utils/, plugins/
 const departmentList = [
   { id: 1, name: "機械創造工学課程" },
   { id: 2, name: "電気電子情報工学課程" },
@@ -82,6 +83,8 @@ const gradeList = [
   { id: 15, name: "その他" },
 ];
 
+
+// TODO props.id(sub_rep.id)が取得できるようにapiを修正
 const registerSubRep = async () => {
   await $fetch(config.APIURL + "/sub_reps/" + props.id, {
     method: "PUT",
