@@ -20,46 +20,16 @@ interface Emits {
   (e: 'update:editItem', isEditItem: boolean): void
   (e: 'update:reload', registInfo: Regist): void
 }
+
 const emits = defineEmits<Emits>()
 
 const closeEditItem = () => {
   emits('update:editItem', false)
 }
-
-const update = (registInfo: Partial<Regist>) => {
-  emits('update:reload', {...props, ...registInfo})
-}
-
-const num = computed({
-  get(): number {
-    return props.num
-  },
-  set(num: number) {
-    update({ num })
-  }
-})
-
-const item = computed({
-  get(): number {
-    return props.item
-  },
-  set(item: number) {
-    update({ item })
-  }
-})
-
-// interface Props {
-//   itemValue: Regist
-// }
-
-
 const itemList = ref<ItemList[]>([]);
 
-interface RentalItem {
-  num: number
-  name: string
-}
-const rentalItem = ref<RentalItem>()
+const newItem = ref<number>()
+const newNum = ref<number>()
 
 onMounted(async () => {
   const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
@@ -69,18 +39,14 @@ onMounted(async () => {
 })
 
 const registerItem = async () => {
-  await $fetch(config.APIURL + "/rental_orders/" + props.id, {
+  await $fetch(config.APIURL + "/rental_orders" + "/" + props.id, {
     method: "PUT",
     params: {
       group_id: props.groupId,
-      rental_item_id: item,
-      num: num,
+      rental_item_id: newItem.value,
+      num: newNum.value,
     },
-    // headers: {
-    //   "Content-Type": "application/json",
-    // },
   })
-  emits('update:reload', props)
   closeEditItem()
 };
 </script>
@@ -88,17 +54,14 @@ const registerItem = async () => {
 <template>
   <Modal title="貸出物品の編集">
     <template #close>
-      {{ rentalItem }}
       <div class="flex justify-end">
         <button @click="closeEditItem()" class="hover:text-black hover:opacity-75"
         >✖</button>
       </div>
     </template>
     <template #form>
-      groupID{{ props.groupId }}<br>
-      id:{{ props.id }}<br>
       <div class="text">貸出物品</div>
-      <select class="entry" v-model="item">
+      <select class="entry" v-model="newItem">
         <option
           v-for="list in itemList"
           :key="list.id"
@@ -106,10 +69,8 @@ const registerItem = async () => {
         >{{ list.name }}
         </option>
       </select>
-      {{ props.item }}
       <div class="text">個数</div>
-      <input class="entry" v-model="num" />
-      {{ props.num }}
+      <input class="entry" v-model="newNum" />
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="reset"></RegistPageButton>
         <RegistPageButton text="register" @click="registerItem()"></RegistPageButton>

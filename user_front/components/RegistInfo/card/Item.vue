@@ -4,35 +4,36 @@ interface Regist {
   id: number
   rental_item_id: number
   num: number
-  // groupId: number
 }
 
 interface Props {
   groupId: number
   regist: Regist | null
   name: string
-  num: number | null
+  num: number
   setting: boolean | null
 }
 
-
-
-interface Emits {
-  (e: 'update:reload', registInfo: Regist): void
-}
-const emits = defineEmits<Emits>()
-
-const update = (registInfo: Partial<Regist>) => {
-  emits('update:reload', { ...item.regist, ...registInfo })
-}
-
+// interface Emits {
+//   (e: 'update:reload', registInfo: Regist): void
+// }
 const item = withDefaults(defineProps<Props>(), {
   groupId: 0,
   regist: null,
   name: '',
-  num: null,
+  num: 0,
   setting: null
 })
+
+// const emits = defineEmits<Emits>()
+
+// const reload = () => {
+//   emits('update:reload', item.regist)
+// }
+
+// const update = (registInfo: Partial<Regist>) => {
+//   emits('update:reload', { ...item.regist, ...registInfo })
+// }
 
 const isEditItem = ref<boolean>(false)
 const isDeleteItem = ref<boolean>(false)
@@ -70,7 +71,6 @@ const openDeleteItem = () => {
   <RegistInfoEditItem
     v-if="isEditItem"
     v-model:edit-item="isEditItem"
-    v-model:reload="item.regist"
     :group-id="groupId"
     :id="regist?.id"
     :item="regist?.rental_item_id"
