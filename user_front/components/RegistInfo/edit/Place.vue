@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { Place, PlaceList } from '~~/types/regist/place';
-
 const config = useRuntimeConfig()
 
 interface Props {
@@ -27,6 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const placeList = ref<PlaceList[]>([])
+const newFirst = ref<string>()
+const newSecond = ref<string>()
+const newThird = ref<string>()
+const newRemark = ref<string>()
 
 const closeEditPlace = () => {
   emits('update:editPlace', false)
@@ -39,11 +42,23 @@ onMounted(async () => {
   })
 })
 
+const editPlace = async () => {
+  await useFetch(config.APIURL + "/place_orders/" + props.id, {
+    method: "PUT",
+    params: {
+      first: newFirst.value,
+      second: newSecond.value,
+      third: newThird.value,
+      remark: newRemark.value,
+    }
+  })
+  closeEditPlace()
+}
+
 </script>
 
 <template>
   <Modal title="会場申請の編集">
-    {{ placeList }}
     <template #close>
       <div class="flex justify-end">
         <button @click="closeEditPlace()" class="hover:text-black hover:opacity-75"
@@ -51,8 +66,9 @@ onMounted(async () => {
       </div>
     </template>
     <template #form>
+      id: {{ props.id }}
       <div class="text">第1希望</div>
-      <select class="entry">
+      <select class="entry" v-model="newFirst">
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -62,7 +78,7 @@ onMounted(async () => {
         </option>
       </select>
       <div class="text">第2希望</div>
-      <select class="entry">
+      <select class="entry" v-model="newSecond">
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -72,7 +88,7 @@ onMounted(async () => {
         </option>
       </select>
       <div class="text">第3希望</div>
-      <select class="entry">
+      <select class="entry" v-model="newThird">
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -82,10 +98,10 @@ onMounted(async () => {
         </option>
       </select>
       <div class="text">追記することがあればこちらにお書きください</div>
-      <textarea class="entry" />
+      <textarea class="entry" v-model="newRemark"/>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="reset"></RegistPageButton>
-        <RegistPageButton text="register" @click="closeEditPlace()"></RegistPageButton>
+        <RegistPageButton text="register" @click="editPlace()"></RegistPageButton>
       </div>
     </template>
   </Modal>
