@@ -75,7 +75,6 @@ const registerRainStage = async () => {
               <option value="" selected disabled></option>
               <option v-for = "rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
             </select>
-            {{ registerParams.firstPreference }}
           </div>
 
           <div class="flex">
