@@ -10,7 +10,7 @@ const tab = ref<number>(1)
 
 interface RegistInfo {
   sub_rep: SubRep[]
-  place_orders: PlaceOrder
+  place_orders: RegistPlace[]
   power_orders: PowerOrder[]
   rental_orders: RentalOrder[]
   group: Group
@@ -37,9 +37,20 @@ interface StageOption {
   stage_content: string
 }
 
-interface PlaceOrder {
+interface Place {
   id: number
+}
+
+interface PlaceOrderList {
+  first: string
+  second: string
+  third: string
+}
+
+interface RegistPlace {
+  place_order: Place
   n: number
+  regist: PlaceOrderList
   first: string
   second: string
   third: string
@@ -63,7 +74,6 @@ interface RentalOrder {
   rental_item: {
     rental_item: RentalItem
   }
-
 }
 
 interface PowerItem {
@@ -94,7 +104,7 @@ const registInfo = ref<RegistInfo>()
 const group = ref<Group>()
 const subRep = ref<SubRep>()
 const rentalOrder = ref<RentalOrder>()
-const placeOrder = ref<PlaceOrder>()
+const placeOrder = ref<RegistPlace>()
 const powerOrder = ref<PowerOrder>()
 const stageOrder = ref<StageOrder>()
 const stageOption = ref<StageOption>()
@@ -151,6 +161,7 @@ const reload = () => {
 <template>
 <Container :name="registInfo?.group.name">
   <template #tabs>
+    <!-- {{ registInfo }} -->
     <div v-for="i in rentalOrder" class="whitespace-pre">
       <!-- {{ i.rental_item.rental_item }} -->
     </div>
@@ -201,11 +212,11 @@ const reload = () => {
       </div>
 
       <!-- 会場申請 group_category_id !== ３ -->
-      {{ placeOrder }}
       <div v-show="tab === 2">
         <div class="mb-4">
           <RegistInfoCardPlace
-            :id="placeOrder?.id"
+            :id="placeOrder?.place_order.id"
+            :regist="placeOrder"
             :n="1"
             :place="placeOrder?.first"
             :remark="placeOrder?.remark"
@@ -213,6 +224,8 @@ const reload = () => {
         </div>
         <div class="my-4">
           <RegistInfoCardPlace
+            :id="placeOrder?.place_order.id"
+            :regist="placeOrder"
             :n="2"
             :place="placeOrder?.second"
             :remark="placeOrder?.remark"
@@ -220,6 +233,8 @@ const reload = () => {
         </div>
         <div class="my-4">
           <RegistInfoCardPlace
+            :id="placeOrder?.place_order.id"
+            :regist="placeOrder"
             :n="3"
             :place="placeOrder?.third"
             :remark="placeOrder?.remark"

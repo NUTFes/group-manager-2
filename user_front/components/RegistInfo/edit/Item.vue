@@ -28,8 +28,8 @@ const closeEditItem = () => {
 }
 const itemList = ref<ItemList[]>([]);
 
-const newItem = ref<number>()
-const newNum = ref<number>()
+const newItem = ref<number>(props.item)
+const newNum = ref<number>(props.num)
 
 onMounted(async () => {
   const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
@@ -38,8 +38,8 @@ onMounted(async () => {
   });
 })
 
-const registerItem = async () => {
-  await $fetch(config.APIURL + "/rental_orders" + "/" + props.id, {
+const editItem = async () => {
+  await useFetch(config.APIURL + "/rental_orders" + "/" + props.id, {
     method: "PUT",
     params: {
       group_id: props.groupId,
@@ -70,10 +70,10 @@ const registerItem = async () => {
         </option>
       </select>
       <div class="text">個数</div>
-      <input class="entry" v-model="newNum" />
+      <input type="number" class="entry" v-model="newNum" />
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="reset"></RegistPageButton>
-        <RegistPageButton text="register" @click="registerItem()"></RegistPageButton>
+        <RegistPageButton text="register" @click="editItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

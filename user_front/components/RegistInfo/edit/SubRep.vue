@@ -85,8 +85,8 @@ const gradeList = [
 
 
 // TODO props.id(sub_rep.id)が取得できるようにapiを修正
-const registerSubRep = async () => {
-  await $fetch(config.APIURL + "/sub_reps/" + props.id, {
+const editSubRep = async () => {
+  await useFetch(config.APIURL + "/sub_reps/" + props.id, {
     method: "PUT",
     params: {
       group_id: props.groupId,
@@ -142,7 +142,7 @@ const registerSubRep = async () => {
       <input class="entry" v-model="newStudentId" />
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="reset"></RegistPageButton>
-        <RegistPageButton text="register" @click="registerSubRep()"></RegistPageButton>
+        <RegistPageButton text="register" @click="editSubRep()"></RegistPageButton>
       </div>
     </template>
   </Modal>
