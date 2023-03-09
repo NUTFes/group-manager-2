@@ -77,6 +77,7 @@ interface RentalOrder {
 }
 
 interface PowerItem {
+  id: number
   item: string
   power: number
   manufacturer: string
@@ -85,7 +86,6 @@ interface PowerItem {
 }
 
 interface PowerOrder {
-  // id: number
   power_order: {
     power_order: PowerItem;
   }
@@ -263,9 +263,12 @@ const reload = () => {
         />
       </div>
 
+      {{ powerOrder }}
       <!-- 電力申請 -->
       <div v-show="tab === 5" v-for="p in powerOrder" :key="p.toString()">
         <RegistInfoCardPower
+          :group-id="group?.id"
+          :id="p.power_order.id"
           :item="p.power_order.item"
           :power="p.power_order.power"
           :manufacturer="p.power_order.manufacturer"

@@ -72,10 +72,18 @@ const openDeletePower = () => {
   <RegistInfoEditPower
     v-if="isEditPower"
     v-model:edit-power="isEditPower"
+    :group-id="groupId"
+    :id="id"
+    :item="item"
+    :power="power"
+    :manufacturer="manufacturer"
+    :model="model"
+    :url="url"
   />
   <RegistInfoDeletePower
     v-if="isDeletePower"
     v-model:delete-power="isDeletePower"
+
   />
 
 </div>

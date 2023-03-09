@@ -1,13 +1,55 @@
 <script lang="ts" setup>
 
+const config = useRuntimeConfig()
+
+interface Props {
+  groupId: number | null
+  id: number | null
+  item: string
+  power: number | null
+  manufacturer: string
+  model: string
+  url: string
+}
+
 interface Emits {
   (e: 'update:edit-power', isEditPower: boolean): void
 }
 
+const props = withDefaults(defineProps<Props>(),{
+  groupId: null,
+  id: null,
+  item: '',
+  power: null,
+  manufacturer: '',
+  model: '',
+  url: '',
+})
 const emits = defineEmits<Emits>()
+
+const newItem = ref<string>()
+const newPower = ref<number>()
+const newManufacturer = ref<string>()
+const newModel = ref<string>()
+const newUrl = ref<string>()
 
 const closeEditPower = () => {
   emits('update:edit-power', false)
+}
+
+const editPower = async () => {
+  await useFetch(config.APIURL + "/power_orders/" + props.id, {
+    method: "PUT",
+    params: {
+      group_id: props.groupId,
+      item: newItem,
+      power: newPower,
+      manufacturer: newManufacturer,
+      model: newModel,
+      url: newUrl,
+    },
+  })
+  closeEditPower()
 }
 
 </script>
@@ -22,18 +64,18 @@ const closeEditPower = () => {
     </template>
     <template #form>
       <div class="text">使用物品名</div>
-      <select class="entry" />
+      <input class="entry" v-model="newItem"/>
       <div class="text">最大定格電力[W]</div>
-      <input class="entry" />
+      <input class="entry" v-model="newPower"/>
       <div class="text">メーカー</div>
-      <input class="entry" />
+      <input class="entry" v-model="newManufacturer"/>
       <div class="text">型番</div>
-      <input class="entry" />
+      <input class="entry" v-model="newModel"/>
       <div class="text">URL</div>
-      <input class="entry" />
+      <input class="entry" v-model="newUrl"/>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="reset"></RegistPageButton>
-        <RegistPageButton text="register" @click="closeEditPower()"></RegistPageButton>
+        <RegistPageButton text="register" @click="editPower()"></RegistPageButton>
       </div>
     </template>
   </Modal>
