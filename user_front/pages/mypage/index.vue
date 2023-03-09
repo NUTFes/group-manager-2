@@ -22,10 +22,10 @@ const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_u
 })
 
 const links: {to:string; text:string}[] = [
-  { to: "/edit_group", text: "参加団体情報の編集" },
-  { to: "/profile", text: "ユーザー情報" },
-  { to: "/edit_user_info", text: "ユーザー情報編集" },
-  { to: "/password_reset", text: "パスワード変更" },
+  { to: "/mypage/edit_group", text: "参加団体情報の編集" },
+  { to: "/mypage/profile", text: "ユーザー情報" },
+  { to: "/mypage/edit_user_info", text: "ユーザー情報編集" },
+  { to: "/mypage/password_reset", text: "パスワード変更" },
 ];
 
 </script>
