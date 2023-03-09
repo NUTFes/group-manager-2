@@ -38,7 +38,7 @@ interface StageOption {
 }
 
 interface PlaceOrder {
-  placeOrderId: number
+  id: number
   n: number
   first: string
   second: string
@@ -82,8 +82,9 @@ interface PowerOrder {
 }
 
 interface SubRep {
+  id: number
   name: string
-  department: string
+  department: number
   grade: string
   student_id: number
   email: string
@@ -130,10 +131,8 @@ onMounted(() => {
 })
 
 const reload = () => {
-  const regist_info =
-     url;
   axios
-    .get(regist_info, {
+    .get(url, {
       headers: {
         "Content-Type": "application/json",
         "access-token": localStorage.getItem("access-token"),
@@ -153,7 +152,7 @@ const reload = () => {
 <Container :name="registInfo?.group.name">
   <template #tabs>
     <div v-for="i in rentalOrder" class="whitespace-pre">
-      {{ i.rental_item.rental_item }}
+      <!-- {{ i.rental_item.rental_item }} -->
     </div>
     <ul class="flex">
       <li @click="tab = 1">
@@ -190,25 +189,41 @@ const reload = () => {
       <!-- 副代表申請  -->
       <div v-show="tab === 1">
         <RegistInfoCardSubRep
+        :group-id="group?.id"
+        :id="subRep?.id"
         :name="subRep?.name"
         :department="subRep?.department"
         :grade="subRep?.grade"
-        :student_id="subRep?.student_id"
+        :studentId="subRep?.student_id"
         :email="subRep?.email"
         :tel="subRep?.tel"
         />
       </div>
 
       <!-- 会場申請 group_category_id !== ３ -->
+      {{ placeOrder }}
       <div v-show="tab === 2">
         <div class="mb-4">
-          <RegistInfoCardPlace :n="1" :place="placeOrder?.first" :remark="placeOrder?.remark" />
+          <RegistInfoCardPlace
+            :id="placeOrder?.id"
+            :n="1"
+            :place="placeOrder?.first"
+            :remark="placeOrder?.remark"
+          />
         </div>
         <div class="my-4">
-          <RegistInfoCardPlace :n="2" :place="placeOrder?.second" :remark="placeOrder?.remark" />
+          <RegistInfoCardPlace
+            :n="2"
+            :place="placeOrder?.second"
+            :remark="placeOrder?.remark"
+          />
         </div>
         <div class="my-4">
-          <RegistInfoCardPlace :n="3" :place="placeOrder?.third" :remark="placeOrder?.remark" />
+          <RegistInfoCardPlace
+            :n="3"
+            :place="placeOrder?.third"
+            :remark="placeOrder?.remark"
+          />
         </div>
       </div>
 

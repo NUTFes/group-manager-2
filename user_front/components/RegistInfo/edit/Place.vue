@@ -1,19 +1,49 @@
 <script lang="ts" setup>
+import { Place, PlaceList } from '~~/types/regist/place';
+
+const config = useRuntimeConfig()
+
+interface Props {
+  id: number
+  // placeOrderId: number
+  first: string
+  second: string
+  third: string
+  remark: string
+}
 
 interface Emits {
   (e: 'update:editPlace', isEditePlace: boolean): void
 }
 
+const props = withDefaults(defineProps<Props>(), {
+  id: 0,
+  first: '',
+  second: '',
+  third: '',
+  remark: '',
+})
+
 const emits = defineEmits<Emits>()
+
+const placeList = ref<PlaceList[]>([])
 
 const closeEditPlace = () => {
   emits('update:editPlace', false)
 }
 
+onMounted(async () => {
+  const placeData = await $fetch<Place>(config.APIURL + "/places");
+  !!placeData.data && placeData.data.forEach((place) => {
+    placeList.value.push(place)
+  })
+})
+
 </script>
 
 <template>
   <Modal title="会場申請の編集">
+    {{ placeList }}
     <template #close>
       <div class="flex justify-end">
         <button @click="closeEditPlace()" class="hover:text-black hover:opacity-75"
@@ -22,11 +52,35 @@ const closeEditPlace = () => {
     </template>
     <template #form>
       <div class="text">第1希望</div>
-      <select class="entry" />
+      <select class="entry">
+        <option
+          v-for="place in placeList"
+          :value="place.id"
+          :key="place.id"
+        >
+          {{ place.name }}
+        </option>
+      </select>
       <div class="text">第2希望</div>
-      <select class="entry" />
+      <select class="entry">
+        <option
+          v-for="place in placeList"
+          :value="place.id"
+          :key="place.id"
+        >
+          {{ place.name }}
+        </option>
+      </select>
       <div class="text">第3希望</div>
-      <select class="entry" />
+      <select class="entry">
+        <option
+          v-for="place in placeList"
+          :value="place.id"
+          :key="place.id"
+        >
+          {{ place.name }}
+        </option>
+      </select>
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" />
       <div class="flex justify-between mt-8 mx-8">
