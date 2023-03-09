@@ -1,25 +1,26 @@
 <script lang="ts" setup>
 
 interface Props {
-  groupId: number | null
+  id: number
+  groupId: number
   name: string
-  department: string
+  department: number
   grade: string
   tel: string
   email: string
-  student_id: number | null
+  studentId: number
   setting: boolean | null
 }
 
-
 const sub = withDefaults(defineProps<Props>(), {
-  groupId: null,
+  id: 0,
+  groupId: 0,
   name: '',
-  department: '',
+  department: 0,
   grade: '',
   tel: '',
   email: '',
-  student_id: null,
+  studentId: 0,
   setting: null
 })
 const isEditSubRep = ref<boolean>(false)
@@ -42,10 +43,9 @@ const openEditSubRep = () => {
         <RegistInfoDivideBar />
       <div class="m-2 text-base">
         <p class="font-medium text-lg">所属</p>
-        <!--　propsが読み込めなくなるので一旦削除 <RegistInfoTriangle /> -->
         <div class="flex items-center">分野‣{{ sub.department }}</div>
         <div class="flex items-center">学年‣{{ sub.grade }}</div>
-        <div class="flex items-center">学籍‣{{ sub.student_id }}</div>
+        <div class="flex items-center">学籍‣{{ sub.studentId }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="text-base mb-10">
@@ -62,5 +62,11 @@ const openEditSubRep = () => {
   </RegistInfoWideCard>
   <RegistInfoEditSubRep
     v-if="isEditSubRep"
-    v-model:edit-sub-rep="isEditSubRep" />
+    v-model:edit-sub-rep="isEditSubRep"
+    :id="sub.id"
+    :group-id="sub.groupId"
+    :name="sub.name"
+    :department_id="sub.department"
+    :grade_id="sub.studentId"
+  />
 </template>
