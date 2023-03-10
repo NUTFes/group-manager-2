@@ -16,18 +16,30 @@ interface RegistInfo {
   group: Group
 }
 
+// interface RegistStage {
+//   stage_order: {
+//     id: number
+//     is_sunny: boolean
+//   }
+// }
+
 interface Stage {
   stage_first: string
   stage_second: string
   date: string
-  is_sunny: boolean
+  stage_order:{
+    id: number
+    is_sunny: boolean
+  }
 }
+
 
 interface StageOrder {
   stage_order: {
-    stage_order:  Stage
+    stage_order: Stage
   }
 }
+
 
 interface StageOption {
   own_equipment: boolean
@@ -241,14 +253,15 @@ const reload = () => {
           />
         </div>
       </div>
-
       <!-- ステージ申請 group_category_id === ３ -->
       <div class="mb-8" v-show="tab === 3" v-for="s in stageOrder" :key="s.toString()">
         <RegistInfoCardStage
+          :group-id="group?.id"
+          :id="s.stage_order.stage_order.id"
           :date="s.stage_order.date"
           :first-stage="s.stage_order.stage_first"
           :second-stage="s.stage_order.stage_second"
-          :is-sunny="s.stage_order.is_sunny"
+          :is-sunny="s.stage_order.stage_order.is_sunny"
         />
       </div>
 
@@ -263,7 +276,6 @@ const reload = () => {
         />
       </div>
 
-      {{ powerOrder }}
       <!-- 電力申請 -->
       <div v-show="tab === 5" v-for="p in powerOrder" :key="p.toString()">
         <RegistInfoCardPower
