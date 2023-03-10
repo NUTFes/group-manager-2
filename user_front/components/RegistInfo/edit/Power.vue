@@ -42,11 +42,11 @@ const editPower = async () => {
     method: "PUT",
     params: {
       group_id: props.groupId,
-      item: newItem,
-      power: newPower,
-      manufacturer: newManufacturer,
-      model: newModel,
-      url: newUrl,
+      item: newItem.value,
+      power: newPower.value,
+      manufacturer: newManufacturer.value,
+      model: newModel.value,
+      url: newUrl.value,
     },
   })
   closeEditPower()
