@@ -49,6 +49,7 @@ const registerCategory = async () => {
   })
   router.push("/regist/subrep")
 }
+
 </script>
 
 <template>

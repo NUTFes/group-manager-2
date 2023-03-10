@@ -102,6 +102,11 @@ const registerPurchase = async () => {
   }
   router.push("/mypage");
 };
+
+const skip = () =>{
+  router.push("/mypage");
+}
+
 </script>
 
 <template>
@@ -174,15 +179,10 @@ const registerPurchase = async () => {
           </div>
         </Card>
         <Row>
-          <RegistPageButton
-            @click="resetPurchase"
-            text="reset"
-          ></RegistPageButton>
-          <RegistPageButton
-            @click="increment"
-            text="Add form"
-          ></RegistPageButton>
+          <RegistPageButton @click="resetPurchase" text="reset" ></RegistPageButton>
+          <RegistPageButton @click="increment" text="Add form" ></RegistPageButton>
           <RegistPageButton @click="registerPurchase" text="Regist" />
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
         <p class="text-red-500">{{ errorMessage }}</p>
       </Card>

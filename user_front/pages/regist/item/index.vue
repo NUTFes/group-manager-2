@@ -58,6 +58,10 @@ const registerItem = async () => {
   router.push("/regist/power");
 };
 
+const skip = () =>{
+  router.push("/regist/power");
+}
+
 </script>
 
 <template>
@@ -91,6 +95,7 @@ const registerItem = async () => {
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton @click="increment" text="Add form"></RegistPageButton>
           <RegistPageButton @click="registerItem" text="登録"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

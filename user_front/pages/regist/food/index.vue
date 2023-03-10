@@ -34,9 +34,13 @@ const registerFood = async () => {
       "Content-Type": "application/json",
     },
   });
-  router.push("/mypage");
+  router.push("/regist/purchase");
   }
 };
+
+const skip = () =>{
+  router.push("/regist/purchase");
+}
 
 const increment = () => {
   formCount.value++;
@@ -96,6 +100,7 @@ const decrement = () => {
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton text="Add form" @click="increment"></RegistPageButton>
           <RegistPageButton @click="registerFood" text="登録"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

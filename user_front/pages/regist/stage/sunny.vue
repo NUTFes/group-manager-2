@@ -51,6 +51,10 @@ const registerRainStage = async () => {
   router.push("/regist/stage/rain");
 };
 
+const skip = () =>{
+  router.push("/regist/stage/rain");
+}
+
 
 </script>
 
@@ -107,6 +111,7 @@ const registerRainStage = async () => {
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton @click="registerRainStage" text="登録"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

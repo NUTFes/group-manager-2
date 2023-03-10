@@ -69,7 +69,18 @@
         group_id: registerParams.groupId,
       }
     })
-    router.push("/regist/place");
+    if (registerParams.groupId == "3"){
+      router.push("/regist/stage/sunny");
+    } else {
+      router.push("/regist/place");
+    }
+  }
+  const skip = () =>{
+    if (registerParams.groupId == "3"){
+      router.push("/regist/stage/sunny");
+    } else {
+      router.push("/regist/place");
+    }
   }
 </script>
 
@@ -119,6 +130,7 @@
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton text="register" @click="registerSubRep"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

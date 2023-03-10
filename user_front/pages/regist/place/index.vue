@@ -38,6 +38,10 @@ const registerPlace = async () => {
   router.push("/regist/item");
 };
 
+const skip = () =>{
+  router.push("/regist/item");
+}
+
 </script>
 
 <template>
@@ -80,6 +84,7 @@ const registerPlace = async () => {
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton text="register" @click="registerPlace"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>
