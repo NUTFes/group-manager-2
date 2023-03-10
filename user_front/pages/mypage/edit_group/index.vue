@@ -85,7 +85,7 @@ const register = () => {
           "group_category_id",
           response.data.data.group_category_id
         );
-        router.push("/mypage");
+        router.push("/regist/subrep");
       },
       (error) => {
         console.log("登録できませんでした");
@@ -97,7 +97,7 @@ const register = () => {
 const destroy = () => {
   const delUrl = config.APIURL+"/groups/"+groupId;
   axios.delete(delUrl).then(() => {
-    router.push("/mypage")
+    router.push("/regist/group")
   });
 }
 </script>
