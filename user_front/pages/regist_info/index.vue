@@ -42,6 +42,7 @@ interface StageOrder {
 
 
 interface StageOption {
+  id: number
   own_equipment: boolean
   bgm: boolean
   camera_permission: boolean
@@ -173,10 +174,6 @@ const reload = () => {
 <template>
 <Container :name="registInfo?.group.name">
   <template #tabs>
-    <!-- {{ registInfo }} -->
-    <div v-for="i in rentalOrder" class="whitespace-pre">
-      <!-- {{ i.rental_item.rental_item }} -->
-    </div>
     <ul class="flex">
       <li @click="tab = 1">
         <div :class="{ select: tab === 1 }" class="title">副代表申請</div>
@@ -268,6 +265,8 @@ const reload = () => {
       <!-- ステージオプション申請 group_category_id === ３ -->
       <div v-if="groupCategoryId === 3" v-show="tab === 4">
         <RegistInfoCardStageOption
+          :group-id="group?.id"
+          :id="stageOption?.id"
           :own-equipment="stageOption?.own_equipment"
           :bgm="stageOption?.bgm"
           :camera-permission="stageOption?.camera_permission"
