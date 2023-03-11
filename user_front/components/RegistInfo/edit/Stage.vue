@@ -49,12 +49,12 @@ const props = withDefaults(defineProps<Props>(), {
   cleanupTimeInterval: '',
 })
 
-const newStageDateId = ref<number>()
-const newStageFirst = ref<number>()
-const newStageSecond = ref<number>()
-const newUseTimeInterval = ref<string>()
-const newPrepareTimeInterval = ref<string>()
-const newCleanupTimeInterval = ref<string>()
+const newStageDateId = ref<Props['date']>()
+const newStageFirst = ref<Props['stageFirst']>()
+const newStageSecond = ref<Props['stageSecond']>()
+const newUseTimeInterval = ref<Props['useTimeInterval']>()
+const newPrepareTimeInterval = ref<Props['prepareTimeInterval']>()
+const newCleanupTimeInterval = ref<Props['cleanupTimeInterval']>()
 
 const closeEditStage = () => {
   emits('update:editStage', false)
@@ -102,6 +102,14 @@ const editStage = async () => {
   closeEditStage()
 }
 
+const reset = () => {
+  newStageDateId.value = ''
+  newStageFirst.value = null
+  newStageSecond.value = null
+  newUseTimeInterval.value = ''
+  newPrepareTimeInterval.value = ''
+  newCleanupTimeInterval.value = ''
+}
 </script>
 
 <template>
@@ -123,7 +131,6 @@ const editStage = async () => {
           {{ fesDate.date }}
         </option>
       </select>
-
       <div class="text">第一希望場所</div>
       <select class="entry" v-model="newStageFirst">
         <option
@@ -153,7 +160,7 @@ const editStage = async () => {
         <input class="entry" v-model="newCleanupTimeInterval" />
       </div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
         <RegistPageButton text="register" @click="editStage()"></RegistPageButton>
       </div>
     </template>

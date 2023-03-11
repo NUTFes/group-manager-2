@@ -10,11 +10,11 @@ interface Props {
   id: number
   groupId: number
   name: string
-  department_id: number
-  grade_id: number
+  department_id: number | null
+  grade_id: number | null
   tel: string
   email: string
-  student_id: number
+  student_id: number | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,12 +34,12 @@ const closeEditSubRep = () => {
   emits('update:editSubRep', false)
 }
 
-const newName = ref<string>('')
-const newDepartment = ref<number>()
-const newGrade = ref<string>('')
-const newTel = ref<string>('')
-const newEmail = ref<string>('')
-const newStudentId = ref<number>()
+const newName = ref<Props['name']>()
+const newDepartment = ref<Props['department_id']>()
+const newGrade = ref<Props['grade_id']>()
+const newTel = ref<Props['tel']>()
+const newEmail = ref<Props['email']>()
+const newStudentId = ref<Props['student_id']>()
 // const newSetting = ref<boolean>()
 
 // TODO 共通化させたい utils/, plugins/
@@ -83,8 +83,6 @@ const gradeList = [
   { id: 15, name: "その他" },
 ];
 
-
-// TODO props.id(sub_rep.id)が取得できるようにapiを修正
 const editSubRep = async () => {
   await useFetch(config.APIURL + "/sub_reps/" + props.id, {
     method: "PUT",
@@ -100,6 +98,15 @@ const editSubRep = async () => {
   })
   closeEditSubRep()
 };
+
+const reset = () => {
+  newName.value = ''
+  newDepartment.value = null
+  newGrade.value = null
+  newTel.value = ''
+  newEmail.value = ''
+  newStudentId.value = null
+}
 
 </script>
 
@@ -141,7 +148,7 @@ const editSubRep = async () => {
       <div class="text">学籍番号</div>
       <input class="entry" v-model="newStudentId" />
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
         <RegistPageButton text="register" @click="editSubRep()"></RegistPageButton>
       </div>
     </template>

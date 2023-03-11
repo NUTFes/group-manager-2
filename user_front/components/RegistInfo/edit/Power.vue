@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 const config = useRuntimeConfig()
 
 interface Props {
@@ -27,11 +26,11 @@ const props = withDefaults(defineProps<Props>(),{
 })
 const emits = defineEmits<Emits>()
 
-const newItem = ref<string>()
-const newPower = ref<number>()
-const newManufacturer = ref<string>()
-const newModel = ref<string>()
-const newUrl = ref<string>()
+const newItem = ref<Props['item']>()
+const newPower = ref<Props['power']>()
+const newManufacturer = ref<Props['manufacturer']>()
+const newModel = ref<Props['model']>()
+const newUrl = ref<Props['url']>()
 
 const closeEditPower = () => {
   emits('update:edit-power', false)
@@ -50,6 +49,14 @@ const editPower = async () => {
     },
   })
   closeEditPower()
+}
+
+const reset = () => {
+  newItem.value = ''
+  newPower.value = null
+  newManufacturer.value = ''
+  newModel.value = ''
+  newUrl.value = ''
 }
 
 </script>
@@ -74,7 +81,7 @@ const editPower = async () => {
       <div class="text">URL</div>
       <input class="entry" v-model="newUrl"/>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
         <RegistPageButton text="register" @click="editPower()"></RegistPageButton>
       </div>
     </template>

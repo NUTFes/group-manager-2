@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 const config = useRuntimeConfig()
 
 interface Props {
@@ -26,11 +25,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emits = defineEmits<Emits>()
 
-const newOwnEquipment = ref<boolean>()
-const newBgm = ref<boolean>()
-const newCameraPermission = ref<boolean>()
-const newLoudSound = ref<boolean>()
-const newStageContent = ref<string>()
+const newOwnEquipment = ref<Props['ownEquipment']>()
+const newBgm = ref<Props['bgm']>()
+const newCameraPermission = ref<Props['cameraPermission']>()
+const newLoudSound = ref<Props['loudSound']>()
+const newStageContent = ref<Props['stageContent']>()
 
 const itemsAvailable = [
   {id: 1, label: "使用", value: true },
@@ -44,7 +43,7 @@ const cameraAvailable = [
   {id: 1, label: "許可", value: true },
   {id: 2, label: "許可しない", value: false },
 ]
-const loudAble = [
+const loudAvailable = [
   {id: 1, label: "出す", value: true },
   {id: 2, label: "出さない", value: false },
 ]
@@ -66,6 +65,14 @@ const editStageOption = async () => {
     }
   })
   closeEditStageOption()
+}
+
+const reset = () => {
+  newOwnEquipment.value = null
+  newBgm.value = null
+  newCameraPermission.value = null
+  newLoudSound.value = null
+  newStageContent.value = ''
 }
 
 </script>
@@ -112,7 +119,7 @@ const editStageOption = async () => {
       <div class="text">騒音</div>
       <select class="entry" v-model="newLoudSound">
         <option
-          v-for="l in loudAble"
+          v-for="l in loudAvailable"
           :value="l.value"
           :key="l.toString()"
         >
@@ -122,7 +129,7 @@ const editStageOption = async () => {
       <div class="text">ステージ内容</div>
       <textarea class="entry" v-model="newStageContent"/>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
         <RegistPageButton text="register" @click="editStageOption()"></RegistPageButton>
       </div>
     </template>

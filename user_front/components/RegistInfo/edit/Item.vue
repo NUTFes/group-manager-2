@@ -5,8 +5,8 @@ const config = useRuntimeConfig();
 interface Regist {
   groupId: number
   id: number
-  item: number
-  num: number
+  item: number | null
+  num: number | null
 }
 
 const props = withDefaults(defineProps<Regist>(), {
@@ -18,7 +18,6 @@ const props = withDefaults(defineProps<Regist>(), {
 
 interface Emits {
   (e: 'update:editItem', isEditItem: boolean): void
-  (e: 'update:reload', registInfo: Regist): void
 }
 
 const emits = defineEmits<Emits>()
@@ -28,8 +27,8 @@ const closeEditItem = () => {
 }
 const itemList = ref<ItemList[]>([]);
 
-const newItem = ref<number>(props.item)
-const newNum = ref<number>(props.num)
+const newItem = ref<Regist['item']>(props.item)
+const newNum = ref<Regist['num']>(props.num)
 
 onMounted(async () => {
   const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
@@ -49,6 +48,12 @@ const editItem = async () => {
   })
   closeEditItem()
 };
+
+const reset = () => {
+  newItem.value = null
+  newNum.value = null
+}
+
 </script>
 
 <template>
@@ -72,7 +77,7 @@ const editItem = async () => {
       <div class="text">個数</div>
       <input type="number" class="entry" v-model="newNum" />
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
         <RegistPageButton text="register" @click="editItem()"></RegistPageButton>
       </div>
     </template>

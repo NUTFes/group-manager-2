@@ -3,8 +3,8 @@ import { Place, PlaceList } from '~~/types/regist/place';
 const config = useRuntimeConfig()
 
 interface Props {
+  groupId: number 
   id: number
-  // placeOrderId: number
   first: string
   second: string
   third: string
@@ -26,10 +26,10 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const placeList = ref<PlaceList[]>([])
-const newFirst = ref<string>()
-const newSecond = ref<string>()
-const newThird = ref<string>()
-const newRemark = ref<string>()
+const newFirst = ref<Props['first']>()
+const newSecond = ref<Props['second']>()
+const newThird = ref<Props['third']>()
+const newRemark = ref<Props['remark']>()
 
 const closeEditPlace = () => {
   emits('update:editPlace', false)
@@ -55,6 +55,13 @@ const editPlace = async () => {
   closeEditPlace()
 }
 
+const reset = () => {
+  newFirst.value = ''
+  newSecond.value = ''
+  newThird.value = ''
+  newRemark.value = ''
+}
+
 </script>
 
 <template>
@@ -66,7 +73,6 @@ const editPlace = async () => {
       </div>
     </template>
     <template #form>
-      id: {{ props.id }}
       <div class="text">第1希望</div>
       <select class="entry" v-model="newFirst">
         <option
@@ -100,7 +106,7 @@ const editPlace = async () => {
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" v-model="newRemark"/>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
         <RegistPageButton text="register" @click="editPlace()"></RegistPageButton>
       </div>
     </template>
