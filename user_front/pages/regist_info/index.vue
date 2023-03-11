@@ -209,14 +209,14 @@ const reload = () => {
       <!-- 副代表申請  -->
       <div v-show="tab === 1">
         <RegistInfoCardSubRep
-        :group-id="group?.id"
-        :id="subRep?.id"
-        :name="subRep?.name"
-        :department="subRep?.department"
-        :grade="subRep?.grade"
-        :studentId="subRep?.student_id"
-        :email="subRep?.email"
-        :tel="subRep?.tel"
+          :group-id="group?.id"
+          :id="subRep?.id"
+          :name="subRep?.name"
+          :department="subRep?.department"
+          :grade="subRep?.grade"
+          :studentId="subRep?.student_id"
+          :email="subRep?.email"
+          :tel="subRep?.tel"
         />
       </div>
 
