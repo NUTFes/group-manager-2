@@ -3,8 +3,7 @@ import { Place, PlaceList } from '~~/types/regist/place';
 const config = useRuntimeConfig()
 
 interface Props {
-  groupId: number 
-  id: number
+  id: number | null
   first: string
   second: string
   third: string
@@ -16,7 +15,7 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  id: 0,
+  id: null,
   first: '',
   second: '',
   third: '',
