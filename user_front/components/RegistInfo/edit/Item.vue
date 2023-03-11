@@ -3,17 +3,17 @@ import { Item, ItemList } from "@/types/regist/item"
 const config = useRuntimeConfig();
 
 interface Regist {
-  groupId: number
-  id: number
+  groupId: number | null
+  id: number | null
   item: number | null
   num: number | null
 }
 
 const props = withDefaults(defineProps<Regist>(), {
-  groupId: 0,
-  id: 0,
-  item: 0,
-  num: 0
+  groupId: null,
+  id: null,
+  item: null,
+  num: null
 })
 
 interface Emits {

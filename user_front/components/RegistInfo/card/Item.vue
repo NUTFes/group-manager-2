@@ -79,5 +79,6 @@ const openDeleteItem = () => {
   <RegistInfoDeleteItem
     v-if="isDeleteItem"
     v-model:delete-item="isDeleteItem"
+    :id="regist?.id"
   />
 </template>
