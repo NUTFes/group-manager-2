@@ -7,8 +7,8 @@ interface Emits {
 }
 
 interface Props {
-  id: number
-  groupId: number
+  id: number | null
+  groupId: number | null
   name: string
   department_id: number | null
   grade_id: number | null
@@ -18,18 +18,17 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  id: 0,
-  groupId: 0,
+  id: null,
+  groupId: null,
   name: '',
-  department_id: 0,
-  grade_id: 0,
+  department_id: null,
+  grade_id: null,
   tel: '',
   email: '',
-  student_id: 0,
+  student_id: null,
 })
 
 const emits = defineEmits<Emits>()
-
 const closeEditSubRep = () => {
   emits('update:editSubRep', false)
 }

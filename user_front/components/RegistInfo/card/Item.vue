@@ -14,9 +14,6 @@ interface Props {
   setting: boolean | null
 }
 
-// interface Emits {
-//   (e: 'update:reload', registInfo: Regist): void
-// }
 const item = withDefaults(defineProps<Props>(), {
   groupId: 0,
   regist: null,
@@ -24,16 +21,6 @@ const item = withDefaults(defineProps<Props>(), {
   num: 0,
   setting: null
 })
-
-// const emits = defineEmits<Emits>()
-
-// const reload = () => {
-//   emits('update:reload', item.regist)
-// }
-
-// const update = (registInfo: Partial<Regist>) => {
-//   emits('update:reload', { ...item.regist, ...registInfo })
-// }
 
 const isEditItem = ref<boolean>(false)
 const isDeleteItem = ref<boolean>(false)

@@ -7,7 +7,7 @@ interface orderList {
 }
 
 interface Props {
-  id: number
+  id: number | null
   regist: orderList | null
   place: string
   remark: string
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const place = withDefaults(defineProps<Props>(), {
-  id: 0,
+  id: null,
   regist: null,
   place: '',
   remark: '',

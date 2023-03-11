@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 
 interface Props {
-  id: number
-  groupId: number
+  id: number | null
+  groupId: number | null
   name: string
-  department: number
+  department: number | null
   grade: string
   tel: string
   email: string
-  studentId: number
+  studentId: number | null
   setting: boolean | null
 }
 
 const sub = withDefaults(defineProps<Props>(), {
-  id: 0,
-  groupId: 0,
+  id: null,
+  groupId: null,
   name: '',
-  department: 0,
+  department: null,
   grade: '',
   tel: '',
   email: '',
-  studentId: 0,
+  studentId: null,
   setting: null
 })
 const isEditSubRep = ref<boolean>(false)
