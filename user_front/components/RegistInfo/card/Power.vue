@@ -83,7 +83,7 @@ const openDeletePower = () => {
   <RegistInfoDeletePower
     v-if="isDeletePower"
     v-model:delete-power="isDeletePower"
-
+    :id="id"
   />
 
 </div>
