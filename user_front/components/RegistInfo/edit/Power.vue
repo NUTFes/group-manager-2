@@ -81,8 +81,8 @@ const reset = () => {
       <div class="text">URL</div>
       <input class="entry" v-model="newUrl"/>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="register" @click="editPower()"></RegistPageButton>
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton text="✓編集" @click="editPower()"></RegistPageButton>
       </div>
     </template>
   </Modal>

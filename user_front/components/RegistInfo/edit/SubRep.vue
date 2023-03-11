@@ -148,8 +148,8 @@ const reset = () => {
       <div class="text">学籍番号</div>
       <input class="entry" v-model="newStudentId" />
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="register" @click="editSubRep()"></RegistPageButton>
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton text="✓編集" @click="editSubRep()"></RegistPageButton>
       </div>
     </template>
   </Modal>

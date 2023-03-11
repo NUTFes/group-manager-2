@@ -129,8 +129,8 @@ const reset = () => {
       <div class="text">ステージ内容</div>
       <textarea class="entry" v-model="newStageContent"/>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="register" @click="editStageOption()"></RegistPageButton>
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton text="✓編集" @click="editStageOption()"></RegistPageButton>
       </div>
     </template>
   </Modal>

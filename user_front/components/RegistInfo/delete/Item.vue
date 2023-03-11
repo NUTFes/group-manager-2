@@ -37,8 +37,8 @@ const deleteItem = async() => {
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
-          <RegistPageButton text="reset"></RegistPageButton>
-          <RegistPageButton text="register" @click="deleteItem()"></RegistPageButton>
+          <RegistPageButton text="戻る" @click="closeDeleteItem()"></RegistPageButton>
+          <RegistPageButton text="✓削除" @click="deleteItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

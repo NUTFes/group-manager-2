@@ -105,8 +105,8 @@ const reset = () => {
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" v-model="newRemark"/>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="register" @click="editPlace()"></RegistPageButton>
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton text="✓編集" @click="editPlace()"></RegistPageButton>
       </div>
     </template>
   </Modal>

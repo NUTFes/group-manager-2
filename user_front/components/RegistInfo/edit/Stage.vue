@@ -160,8 +160,8 @@ const reset = () => {
         <input class="entry" v-model="newCleanupTimeInterval" />
       </div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="reset" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="register" @click="editStage()"></RegistPageButton>
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton text="✓編集" @click="editStage()"></RegistPageButton>
       </div>
     </template>
   </Modal>
