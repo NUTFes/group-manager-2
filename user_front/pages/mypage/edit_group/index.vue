@@ -12,16 +12,15 @@ const groupCategoryList = [
   { id: 5, name: "研究室公開" },
 ]
 
-const groupName = ref<String>("")
-const projectName = ref<String>("")
-const groupCategoryId = ref<Number>()
-const activity = ref<String>("")
+const groupName = ref<string>("")
+const projectName = ref<string>("")
+const groupCategoryId = ref<number>()
+const activity = ref<string>("")
 const user = ref("")
 const setting = ref("")
-const userId = ref<Number>()
-const fesYearId = ref<Number>()
+const userId = ref<number>()
+const fesYearId = ref<number>()
 const groupId = localStorage.getItem("group_id")
-
 
 onMounted( () =>{
   const groupUrl = config.APIURL + "/groups/" + groupId;
@@ -162,7 +161,6 @@ const destroy = () => {
       </button>
     </div>
   </div>
-
 </template>
 
 <style>
@@ -229,7 +227,6 @@ const destroy = () => {
     mb-[1%];
 }
 
-
 .input {
   @apply
     text-left
@@ -261,7 +258,6 @@ const destroy = () => {
     mb-8;
 }
 
-
 .regist-submit-button {
   @apply
     text-xl
@@ -284,5 +280,4 @@ const destroy = () => {
     text-[#333333];
   box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
 }
-
 </style>
