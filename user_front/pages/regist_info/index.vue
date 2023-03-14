@@ -33,13 +33,11 @@ interface Stage {
   }
 }
 
-
 interface StageOrder {
   stage_order: {
     stage_order: Stage
   }
 }
-
 
 interface StageOption {
   id: number
@@ -167,6 +165,12 @@ const reload = () => {
       registInfo.value = response.data.data;
       groupCategoryId.value = response.data.data[0].group.group_category_id;
     });
+}
+
+const isAddItem = ref<boolean>(false)
+
+const openAddItem = () => {
+  isAddItem.value = true
 }
 
 </script>
@@ -299,6 +303,12 @@ const reload = () => {
             @reload="reload()"
           />
         </div>
+        <Button class="ml-auto my-auto" @click="openAddItem()"/>
+        <RegistInfoAddItem
+          v-if="isAddItem"
+          v-model:add-item="isAddItem"
+          :group-id="group?.id"
+        />
       </div>
     </div>
   </template>
