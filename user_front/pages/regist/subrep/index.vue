@@ -9,6 +9,7 @@
       departmentId: "",
       gradeId: "",
       groupId: "",
+      groupCategoryId: "",
     }
   )
   const departmentList = [
@@ -53,6 +54,7 @@
 
   onMounted(async()=>{
     registerParams.groupId = localStorage.getItem("group_id") || "";
+    registerParams.groupCategoryId = localStorage.getItem("group_category_id") || "";
   })
   const config = useRuntimeConfig();
   const router = useRouter();
