@@ -47,8 +47,12 @@ const registerEmployee = async () => {
       },
     });
   }
-  router.push("/mypage");
+  router.push("/regist/food");
 };
+
+const skip = () =>{
+  router.push("/regist/food");
+}
 
 </script>
 
@@ -80,6 +84,7 @@ const registerEmployee = async () => {
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton text="register" @click="registerEmployee"></RegistPageButton>
           <RegistPageButton text="Add form" @click="increment"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

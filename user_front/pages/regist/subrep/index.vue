@@ -9,6 +9,7 @@
       departmentId: "",
       gradeId: "",
       groupId: "",
+      groupCategoryId: "",
     }
   )
   const departmentList = [
@@ -53,6 +54,7 @@
 
   onMounted(async()=>{
     registerParams.groupId = localStorage.getItem("group_id") || "";
+    registerParams.groupCategoryId = localStorage.getItem("group_category_id") || "";
   })
   const config = useRuntimeConfig();
   const router = useRouter();
@@ -69,7 +71,18 @@
         group_id: registerParams.groupId,
       }
     })
-    router.push("/regist/place");
+    if (registerParams.groupCategoryId === "3"){
+      router.push("/regist/stage/sunny");
+    } else {
+      router.push("/regist/place");
+    }
+  }
+  const skip = () =>{
+    if (registerParams.groupCategoryId === "3"){
+      router.push("/regist/stage/sunny");
+    } else {
+      router.push("/regist/place");
+    }
   }
 </script>
 
@@ -119,6 +132,7 @@
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
           <RegistPageButton text="register" @click="registerSubRep"></RegistPageButton>
+          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>
