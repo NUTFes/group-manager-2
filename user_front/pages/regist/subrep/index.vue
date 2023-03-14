@@ -69,14 +69,14 @@
         group_id: registerParams.groupId,
       }
     })
-    if (registerParams.groupId == "3"){
+    if (registerParams.groupCategoryId === "3"){
       router.push("/regist/stage/sunny");
     } else {
       router.push("/regist/place");
     }
   }
   const skip = () =>{
-    if (registerParams.groupId == "3"){
+    if (registerParams.groupCategoryId === "3"){
       router.push("/regist/stage/sunny");
     } else {
       router.push("/regist/place");
