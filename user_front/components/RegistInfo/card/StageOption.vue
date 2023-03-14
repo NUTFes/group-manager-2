@@ -68,6 +68,13 @@ const openEditStgeOption = () => {
   <RegistInfoEditStageOption
     v-if="isEditStageOption"
     v-model:edit-stage-option="isEditStageOption"
+    :group-id="groupId"
+    :id="id"
+    :own-equipment="ownEquipment"
+    :camera-permission="cameraPermission"
+    :bgm="bgm"
+    :loud-sound="loudSound"
+    :stage-content="stageContent"
   />
 </template>
 

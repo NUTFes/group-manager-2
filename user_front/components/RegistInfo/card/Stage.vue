@@ -1,25 +1,33 @@
 <script lang="ts" setup>
 
 interface Props {
+  id: number | null
   groupId: number | null
+  date: string
   regist: string
   firstStage: string
   secondStage: string
-  date: string
+  useTimeInterval: string,
+  prepareTimeInterval: string,
+  cleanupTimeInterval: string,
   isSunny: boolean | null
   setting: boolean | null
 }
 
-
 const stage = withDefaults(defineProps<Props>(), {
+  id: null,
   groupId: null,
   regist: '',
+  date: '',
   firstStage: '',
   secondStage: '',
-  date: '',
   isSunny: null,
-  setting: null
+  setting: null,
+  useTimeInterval: '',
+  prepareTimeInterval: '',
+  cleanupTimeInterval: '',
 })
+
 const isEditStage = ref<boolean>(false)
 
 const openEditStage = () => {
@@ -49,5 +57,14 @@ const openEditStage = () => {
   </div>
   <RegistInfoEditStage
     v-if="isEditStage"
-    v-model:edit-stage="isEditStage" />
+    v-model:edit-stage="isEditStage"
+    :group-id="groupId"
+    :date="date"
+    :id="id"
+    :is-sunny="isSunny"
+    :prepare-time-interval="prepareTimeInterval"
+    :use-time-interval="useTimeInterval"
+    :cleanup-time-interval="cleanupTimeInterval"
+
+  />
 </template>

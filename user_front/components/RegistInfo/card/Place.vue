@@ -1,17 +1,23 @@
 <script lang="ts" setup>
 
+interface orderList {
+  first: string
+  second: string
+  third: string
+}
+
 interface Props {
-  regist: string
-  placeOrderId: number | null
+  id: number | null
+  regist: orderList | null
   place: string
   remark: string
   n: number | null
   setting: boolean | null
 }
 
-const item = withDefaults(defineProps<Props>(), {
-  regist: '',
-  placeOrderId: null,
+const place = withDefaults(defineProps<Props>(), {
+  id: null,
+  regist: null,
   place: '',
   remark: '',
   n: null,
@@ -26,19 +32,19 @@ const openEditPlace = () => {
 </script>
 
 <template>
-  <div class="text-[#333333] font-light tracking-widest">
+  <div class="text-[#333] font-light tracking-widest">
     <RegistInfoWideCard>
       <template #body>
         <div class="w-[15%] h-[90%] ml-8 text-3xl">
-          第{{ item.n }}希望
+          第{{ place.n }}希望
         </div>
         <RegistInfoDivideBar />
         <div class="w-[40%] text-center text-4xl">
-          {{ item.place }}
+          {{ place.place }}
         </div>
         <div class="w-[7%] h-[80%] text-base">追記：</div>
           <div class="w-[30%] h-[80%] pr-1 break-normal">
-            {{ item.remark }}
+            {{ place.remark }}
           </div>
       </template>
       <template #method>
@@ -51,5 +57,10 @@ const openEditPlace = () => {
   <RegistInfoEditPlace
     v-if="isEditPlace"
     v-model:edit-place="isEditPlace"
+    :id="place.id"
+    :first="regist?.first"
+    :second="regist?.second"
+    :third="regist?.third"
+    :remark="remark"
   />
 </template>

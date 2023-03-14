@@ -1,18 +1,24 @@
 <script lang="ts" setup>
 
+interface Regist {
+  id: number
+  rental_item_id: number
+  num: number
+}
+
 interface Props {
-  groupId: string
-  regist: string
+  groupId: number
+  regist: Regist | null
   name: string
-  num: number | null
+  num: number
   setting: boolean | null
 }
 
 const item = withDefaults(defineProps<Props>(), {
-  groupId: '',
-  regist: '',
+  groupId: 0,
+  regist: null,
   name: '',
-  num: null,
+  num: 0,
   setting: null
 })
 
@@ -52,9 +58,14 @@ const openDeleteItem = () => {
   <RegistInfoEditItem
     v-if="isEditItem"
     v-model:edit-item="isEditItem"
+    :group-id="groupId"
+    :id="regist?.id"
+    :item="regist?.rental_item_id"
+    :num="regist?.num"
   />
   <RegistInfoDeleteItem
     v-if="isDeleteItem"
     v-model:delete-item="isDeleteItem"
+    :id="regist?.id"
   />
 </template>

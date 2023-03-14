@@ -1,4 +1,20 @@
 <script lang="ts" setup>
+import { Item, ItemList } from "@/types/regist/item"
+const config = useRuntimeConfig();
+
+interface Regist {
+  groupId: number | null
+  id: number | null
+  item: number | null
+  num: number | null
+}
+
+const props = withDefaults(defineProps<Regist>(), {
+  groupId: null,
+  id: null,
+  item: null,
+  num: null
+})
 
 interface Emits {
   (e: 'update:editItem', isEditItem: boolean): void
@@ -8,6 +24,34 @@ const emits = defineEmits<Emits>()
 
 const closeEditItem = () => {
   emits('update:editItem', false)
+}
+const itemList = ref<ItemList[]>([]);
+
+const newItem = ref<Regist['item']>(props.item)
+const newNum = ref<Regist['num']>(props.num)
+
+onMounted(async () => {
+  const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
+  itemData.data.forEach((item) => {
+    itemList.value.push(item);
+  });
+})
+
+const editItem = async () => {
+  await useFetch(config.APIURL + "/rental_orders" + "/" + props.id, {
+    method: "PUT",
+    params: {
+      group_id: props.groupId,
+      rental_item_id: newItem.value,
+      num: newNum.value,
+    },
+  })
+  closeEditItem()
+};
+
+const reset = () => {
+  newItem.value = null
+  newNum.value = null
 }
 
 </script>
@@ -22,12 +66,19 @@ const closeEditItem = () => {
     </template>
     <template #form>
       <div class="text">貸出物品</div>
-      <select class="entry" />
+      <select class="entry" v-model="newItem">
+        <option
+          v-for="list in itemList"
+          :key="list.id"
+          :value="list.id"
+        >{{ list.name }}
+        </option>
+      </select>
       <div class="text">個数</div>
-      <input class="entry" />
+      <input type="number" class="entry" v-model="newNum" />
       <div class="flex justify-between mt-8 mx-8">
-        <ResetButton />
-        <RegistButton @click="closeEditItem()"/>
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton text="✓編集" @click="editItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

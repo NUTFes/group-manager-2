@@ -6,6 +6,7 @@ class SubRep < ApplicationRecord
     # 副代表の情報の日本語をハッシュにして返す
     def to_info_h
       return {
+        "id": self.id,
         "name": self.name,
         "department": self.department.name,
         "department_id": self.department.id,
