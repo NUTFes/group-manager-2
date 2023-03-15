@@ -172,6 +172,11 @@ const isAddItem = ref<boolean>(false)
 const openAddItem = () => {
   isAddItem.value = true
 }
+const isAddPower = ref<boolean>(false)
+
+const openAddPower = () => {
+  isAddPower.value = true
+}
 
 </script>
 
@@ -280,15 +285,23 @@ const openAddItem = () => {
       </div>
 
       <!-- 電力申請 -->
-      <div v-show="tab === 5" v-for="p in powerOrder" :key="p.toString()">
-        <RegistInfoCardPower
+      <div v-show="tab === 5">
+        <div class="my-8" v-for="p in powerOrder" :key="p.toString()">
+          <RegistInfoCardPower
+            :group-id="group?.id"
+            :id="p.power_order.id"
+            :item="p.power_order.item"
+            :power="p.power_order.power"
+            :manufacturer="p.power_order.manufacturer"
+            :model="p.power_order.model"
+            :url="p.power_order.item_url"
+          />
+        </div>
+        <Button class="text-right" @click="openAddPower()"/>
+        <RegistInfoAddPower
+          v-if="isAddPower"
+          v-model:add-power="isAddPower"
           :group-id="group?.id"
-          :id="p.power_order.id"
-          :item="p.power_order.item"
-          :power="p.power_order.power"
-          :manufacturer="p.power_order.manufacturer"
-          :model="p.power_order.model"
-          :url="p.power_order.item_url"
         />
       </div>
 
@@ -303,7 +316,7 @@ const openAddItem = () => {
             @reload="reload()"
           />
         </div>
-        <Button class="ml-auto my-auto" @click="openAddItem()"/>
+        <Button class="ml-auto" @click="openAddItem()"/>
         <RegistInfoAddItem
           v-if="isAddItem"
           v-model:add-item="isAddItem"

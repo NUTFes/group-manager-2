@@ -4,8 +4,6 @@ const config = useRuntimeConfig()
 
 interface Props {
   groupId: number | null
-  rentalItemId: number | null
-  num: number | null
 }
 
 interface Emits {
@@ -14,8 +12,6 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   groupId: null,
-  rentalItemId: null,
-  num: null,
 })
 
 const emits = defineEmits<Emits>()
@@ -28,8 +24,8 @@ onMounted(async () => {
   });
 })
 
-const newItem = ref<Props['rentalItemId']>()
-const newNum = ref<Props['num']>()
+const newItem = ref<number | null>()
+const newNum = ref<number | null>()
 
 const addItemClose = () => {
   emits('update:addItem', false)
