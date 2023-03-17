@@ -25,10 +25,10 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const placeList = ref<PlaceList[]>([])
-const newFirst = ref<Props['first']>()
-const newSecond = ref<Props['second']>()
-const newThird = ref<Props['third']>()
-const newRemark = ref<Props['remark']>()
+const newFirst = ref<Props['first']>('')
+const newSecond = ref<Props['second']>('')
+const newThird = ref<Props['third']>('')
+const newRemark = ref<Props['remark']>(props.remark)
 
 const closeEditPlace = () => {
   emits('update:editPlace', false)
@@ -74,6 +74,7 @@ const reset = () => {
     <template #form>
       <div class="text">第1希望</div>
       <select class="entry" v-model="newFirst">
+        <option value="" selected disabled>選択してください</option>
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -84,6 +85,7 @@ const reset = () => {
       </select>
       <div class="text">第2希望</div>
       <select class="entry" v-model="newSecond">
+        <option value="" selected disabled>選択してください</option>
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -94,6 +96,7 @@ const reset = () => {
       </select>
       <div class="text">第3希望</div>
       <select class="entry" v-model="newThird">
+        <option value="" selected disabled>選択してください</option>
         <option
           v-for="place in placeList"
           :value="place.id"

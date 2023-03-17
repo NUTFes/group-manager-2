@@ -27,6 +27,9 @@ interface Stage {
   stage_first: string
   stage_second: string
   date: string
+  use_time_interval: string
+  prepare_time_interval: string
+  cleanup_time_interval: string
   stage_order:{
     id: number
     is_sunny: boolean
@@ -260,6 +263,7 @@ const openAddPower = () => {
         </div>
       </div>
       <!-- ステージ申請 group_category_id === ３ -->
+      {{ stageOrder }}
       <div class="mb-8" v-show="tab === 3" v-for="s in stageOrder" :key="s.toString()">
         <RegistInfoCardStage
           :group-id="group?.id"
@@ -268,6 +272,9 @@ const openAddPower = () => {
           :first-stage="s.stage_order.stage_first"
           :second-stage="s.stage_order.stage_second"
           :is-sunny="s.stage_order.stage_order.is_sunny"
+          :cleanup-time-interval="s.stage_order.cleanup_time_interval"
+          :use-time-interval="s.stage_order.use_time_interval"
+          :prepare-time-interval="s.stage_order.prepare_time_interval"
         />
       </div>
 

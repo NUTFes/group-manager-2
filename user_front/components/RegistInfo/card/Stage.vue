@@ -59,12 +59,12 @@ const openEditStage = () => {
     v-if="isEditStage"
     v-model:edit-stage="isEditStage"
     :group-id="groupId"
-    :date="date"
     :id="id"
     :is-sunny="isSunny"
     :prepare-time-interval="prepareTimeInterval"
     :use-time-interval="useTimeInterval"
     :cleanup-time-interval="cleanupTimeInterval"
+    :fes_date_id="1"
 
   />
 </template>

@@ -50,8 +50,8 @@ const openEditSubRep = () => {
       <RegistInfoDivideBar />
       <div class="text-base mb-10">
         <p class="font-medium">詳細情報</p>
-          <div class="character2">{{ sub.email }}</div>
-          <div class="character2">{{ sub.tel }}</div>
+          <div class="character2">e-mail‣{{ sub.email }}</div>
+          <div class="character2">tel‣{{ sub.tel }}</div>
       </div>
     </template>
     <template #method>
@@ -67,6 +67,8 @@ const openEditSubRep = () => {
     :group-id="sub.groupId"
     :name="sub.name"
     :department_id="sub.department"
-    :grade_id="sub.studentId"
+    :student_id="sub.studentId"
+    :email="sub.email"
+    :tel="sub.tel"
   />
 </template>

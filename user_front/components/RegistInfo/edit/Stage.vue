@@ -1,35 +1,18 @@
 <script lang="ts" setup>
+import { FesYear } from '@/types/regist/stage'
+import { Stage } from '~~/types';
 const config = useRuntimeConfig()
 
 interface Props {
   id: number | null,
   groupId: number | null,
   isSunny: boolean | null,
-  date: string,
+  fes_date_id: number | null,
   stageFirst: number | null,
   stageSecond: number | null,
   useTimeInterval: string,
   prepareTimeInterval: string,
   cleanupTimeInterval: string,
-}
-
-interface FesYear {
-  created_at: string
-  date: string
-  day: string
-  days_num: number
-  fes_year_id: number
-  id: number
-  updated_at: string
-}
-
-interface Stage {
-  created_at: string
-  enable_rainy: boolean
-  enable_sunny: boolean
-  id: number
-  name: string
-  updated_at: string
 }
 
 interface Emits {
@@ -49,12 +32,12 @@ const props = withDefaults(defineProps<Props>(), {
   cleanupTimeInterval: '',
 })
 
-const newStageDateId = ref<Props['date']>()
-const newStageFirst = ref<Props['stageFirst']>()
-const newStageSecond = ref<Props['stageSecond']>()
-const newUseTimeInterval = ref<Props['useTimeInterval']>()
-const newPrepareTimeInterval = ref<Props['prepareTimeInterval']>()
-const newCleanupTimeInterval = ref<Props['cleanupTimeInterval']>()
+const newStageDateId = ref<Props['fes_date_id']>(null)
+const newStageFirst = ref<Props['stageFirst']>(props.stageFirst)
+const newStageSecond = ref<Props['stageSecond']>(props.stageSecond)
+const newUseTimeInterval = ref<Props['useTimeInterval']>(props.useTimeInterval)
+const newPrepareTimeInterval = ref<Props['prepareTimeInterval']>(props.prepareTimeInterval)
+const newCleanupTimeInterval = ref<Props['cleanupTimeInterval']>(props.cleanupTimeInterval)
 
 const closeEditStage = () => {
   emits('update:editStage', false)
@@ -103,7 +86,7 @@ const editStage = async () => {
 }
 
 const reset = () => {
-  newStageDateId.value = ''
+  newStageDateId.value = null
   newStageFirst.value = null
   newStageSecond.value = null
   newUseTimeInterval.value = ''

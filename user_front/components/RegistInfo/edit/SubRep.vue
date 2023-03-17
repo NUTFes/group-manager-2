@@ -33,12 +33,12 @@ const closeEditSubRep = () => {
   emits('update:editSubRep', false)
 }
 
-const newName = ref<Props['name']>()
-const newDepartment = ref<Props['department_id']>()
-const newGrade = ref<Props['grade_id']>()
-const newTel = ref<Props['tel']>()
-const newEmail = ref<Props['email']>()
-const newStudentId = ref<Props['student_id']>()
+const newName = ref<Props['name']>(props.name)
+const newDepartment = ref<Props['department_id']>(null)
+const newGrade = ref<Props['grade_id']>(null)
+const newTel = ref<Props['tel']>(props.tel)
+const newEmail = ref<Props['email']>(props.email)
+const newStudentId = ref<Props['student_id']>(props.student_id)
 // const newSetting = ref<boolean>()
 
 // TODO 共通化させたい utils/, plugins/
@@ -122,6 +122,7 @@ const reset = () => {
       <input class="entry" v-model="newName" />
       <div class="text">学科</div>
       <select class="entry" v-model="newDepartment">
+        <option value="" selected disabled>選択してください</option>
         <option
           v-for="department in departmentList"
           :value="department.id"
@@ -132,6 +133,7 @@ const reset = () => {
       </select>
       <div class="text">学年</div>
       <select class="entry" v-model="newGrade">
+        <option value="" selected disabled>選択してください</option>
         <option
           v-for="grade in gradeList"
           :value="grade.id"
