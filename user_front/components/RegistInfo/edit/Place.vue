@@ -4,9 +4,9 @@ const config = useRuntimeConfig()
 
 interface Props {
   id: number | null
-  first: string
-  second: string
-  third: string
+  first: number | null
+  second: number | null
+  third: number | null
   remark: string
 }
 
@@ -16,18 +16,18 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   id: null,
-  first: '',
-  second: '',
-  third: '',
+  first: null,
+  second: null,
+  third: null,
   remark: '',
 })
 
 const emits = defineEmits<Emits>()
 
 const placeList = ref<PlaceList[]>([])
-const newFirst = ref<Props['first']>('')
-const newSecond = ref<Props['second']>('')
-const newThird = ref<Props['third']>('')
+const newFirst = ref<Props['first']>(props.first)
+const newSecond = ref<Props['second']>(props.second)
+const newThird = ref<Props['third']>(props.third)
 const newRemark = ref<Props['remark']>(props.remark)
 
 const closeEditPlace = () => {
@@ -55,9 +55,9 @@ const editPlace = async () => {
 }
 
 const reset = () => {
-  newFirst.value = ''
-  newSecond.value = ''
-  newThird.value = ''
+  newFirst.value = null
+  newSecond.value = null
+  newThird.value = null
   newRemark.value = ''
 }
 
@@ -74,7 +74,6 @@ const reset = () => {
     <template #form>
       <div class="text">第1希望</div>
       <select class="entry" v-model="newFirst">
-        <option value="" selected disabled>選択してください</option>
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -85,7 +84,6 @@ const reset = () => {
       </select>
       <div class="text">第2希望</div>
       <select class="entry" v-model="newSecond">
-        <option value="" selected disabled>選択してください</option>
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -96,7 +94,6 @@ const reset = () => {
       </select>
       <div class="text">第3希望</div>
       <select class="entry" v-model="newThird">
-        <option value="" selected disabled>選択してください</option>
         <option
           v-for="place in placeList"
           :value="place.id"

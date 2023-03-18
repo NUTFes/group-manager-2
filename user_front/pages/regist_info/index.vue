@@ -6,7 +6,8 @@ const config = useRuntimeConfig()
 
 const url = config.APIURL + "/api/v1/current_user/current_regist_info";
 
-const tab = ref<number>(1)
+const selectTab = ref<number>(1);
+const tab = ref<number>(selectTab.value);
 
 interface RegistInfo {
   sub_rep: SubRep[]
@@ -15,13 +16,6 @@ interface RegistInfo {
   rental_orders: RentalOrder[]
   group: Group
 }
-
-// interface RegistStage {
-//   stage_order: {
-//     id: number
-//     is_sunny: boolean
-//   }
-// }
 
 interface Stage {
   stage_first: string
@@ -33,6 +27,9 @@ interface Stage {
   stage_order:{
     id: number
     is_sunny: boolean
+    fes_date_id: number
+    stage_first: number
+    stage_second: number
   }
 }
 
@@ -53,6 +50,9 @@ interface StageOption {
 
 interface Place {
   id: number
+  first: number
+  second: number
+  third: number
 }
 
 interface PlaceOrderList {
@@ -108,8 +108,10 @@ interface PowerOrder {
 interface SubRep {
   id: number
   name: string
-  department: number
+  department: string
+  department_id: number
   grade: string
+  grade_id: number
   student_id: number
   email: string
   tel: string
@@ -225,19 +227,20 @@ const openAddPower = () => {
           :id="subRep?.id"
           :name="subRep?.name"
           :department="subRep?.department"
+          :department_id="subRep?.department_id"
           :grade="subRep?.grade"
+          :grade_id="subRep?.grade_id"
           :studentId="subRep?.student_id"
           :email="subRep?.email"
           :tel="subRep?.tel"
         />
       </div>
-
       <!-- 会場申請 group_category_id !== ３ -->
       <div v-show="tab === 2">
         <div class="mb-4">
           <RegistInfoCardPlace
             :id="placeOrder?.place_order.id"
-            :regist="placeOrder"
+            :regist="placeOrder?.place_order"
             :n="1"
             :place="placeOrder?.first"
             :remark="placeOrder?.remark"
@@ -246,7 +249,7 @@ const openAddPower = () => {
         <div class="my-4">
           <RegistInfoCardPlace
             :id="placeOrder?.place_order.id"
-            :regist="placeOrder"
+            :regist="placeOrder?.place_order"
             :n="2"
             :place="placeOrder?.second"
             :remark="placeOrder?.remark"
@@ -255,7 +258,7 @@ const openAddPower = () => {
         <div class="my-4">
           <RegistInfoCardPlace
             :id="placeOrder?.place_order.id"
-            :regist="placeOrder"
+            :regist="placeOrder?.place_order"
             :n="3"
             :place="placeOrder?.third"
             :remark="placeOrder?.remark"
@@ -263,14 +266,16 @@ const openAddPower = () => {
         </div>
       </div>
       <!-- ステージ申請 group_category_id === ３ -->
-      {{ stageOrder }}
       <div class="mb-8" v-show="tab === 3" v-for="s in stageOrder" :key="s.toString()">
         <RegistInfoCardStage
           :group-id="group?.id"
           :id="s.stage_order.stage_order.id"
           :date="s.stage_order.date"
+          :fes-date-id="s.stage_order.stage_order.fes_date_id"
           :first-stage="s.stage_order.stage_first"
+          :first-id="s.stage_order.stage_order.stage_first"
           :second-stage="s.stage_order.stage_second"
+          :second-id="s.stage_order.stage_order.stage_second"
           :is-sunny="s.stage_order.stage_order.is_sunny"
           :cleanup-time-interval="s.stage_order.cleanup_time_interval"
           :use-time-interval="s.stage_order.use_time_interval"

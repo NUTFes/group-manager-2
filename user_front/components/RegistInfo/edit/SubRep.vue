@@ -34,8 +34,8 @@ const closeEditSubRep = () => {
 }
 
 const newName = ref<Props['name']>(props.name)
-const newDepartment = ref<Props['department_id']>(null)
-const newGrade = ref<Props['grade_id']>(null)
+const newDepartment = ref<Props['department_id']>(props.department_id)
+const newGrade = ref<Props['grade_id']>(props.grade_id)
 const newTel = ref<Props['tel']>(props.tel)
 const newEmail = ref<Props['email']>(props.email)
 const newStudentId = ref<Props['student_id']>(props.student_id)
@@ -122,7 +122,6 @@ const reset = () => {
       <input class="entry" v-model="newName" />
       <div class="text">学科</div>
       <select class="entry" v-model="newDepartment">
-        <option value="" selected disabled>選択してください</option>
         <option
           v-for="department in departmentList"
           :value="department.id"
@@ -133,7 +132,6 @@ const reset = () => {
       </select>
       <div class="text">学年</div>
       <select class="entry" v-model="newGrade">
-        <option value="" selected disabled>選択してください</option>
         <option
           v-for="grade in gradeList"
           :value="grade.id"

@@ -7,7 +7,7 @@ interface Props {
   id: number | null,
   groupId: number | null,
   isSunny: boolean | null,
-  fes_date_id: number | null,
+  fesDateId: number | null,
   stageFirst: number | null,
   stageSecond: number | null,
   useTimeInterval: string,
@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
   isSunny: null,
+  fesDateId: null,
   date: '',
   stageFirst: null,
   stageSecond: null,
@@ -32,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   cleanupTimeInterval: '',
 })
 
-const newStageDateId = ref<Props['fes_date_id']>(null)
+const newStageDateId = ref<Props['fesDateId']>(props.fesDateId)
 const newStageFirst = ref<Props['stageFirst']>(props.stageFirst)
 const newStageSecond = ref<Props['stageSecond']>(props.stageSecond)
 const newUseTimeInterval = ref<Props['useTimeInterval']>(props.useTimeInterval)
@@ -105,6 +106,8 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">日程</div>
+      <div>
+      </div>
       <select class="entry" v-model="newStageDateId">
         <option
           v-for="fesDate in fesDateList"

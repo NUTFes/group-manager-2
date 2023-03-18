@@ -4,8 +4,10 @@ interface Props {
   id: number | null
   groupId: number | null
   name: string
-  department: number | null
+  department: string
+  department_id: number | null
   grade: string
+  grade_id: number | null
   tel: string
   email: string
   studentId: number | null
@@ -16,8 +18,10 @@ const sub = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
   name: '',
-  department: null,
+  department: '',
+  department_id: null,
   grade: '',
+  grade_id: null,
   tel: '',
   email: '',
   studentId: null,
@@ -66,7 +70,8 @@ const openEditSubRep = () => {
     :id="sub.id"
     :group-id="sub.groupId"
     :name="sub.name"
-    :department_id="sub.department"
+    :department_id="sub.department_id"
+    :grade_id="sub.grade_id"
     :student_id="sub.studentId"
     :email="sub.email"
     :tel="sub.tel"
