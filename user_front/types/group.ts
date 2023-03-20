@@ -12,4 +12,3 @@ interface Group {
 }
 
 export default Group;
-

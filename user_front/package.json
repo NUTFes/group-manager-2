@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "vee-validate": "^4.5.8",
-    "yup": "^1.0.0"
+    "yup": "^1.0.0",
+    "axios": "^1.3.3"
   }
 }

@@ -1,7 +1,13 @@
+<script lang="ts" setup>
+const props = defineProps<{
+  text: string;
+}>();
+
+</script>
 <template>
   <div>
     <button class="btn">
-      登録
+      {{ props.text }}
     </button>
   </div>
 </template>
