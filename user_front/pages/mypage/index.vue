@@ -1,14 +1,20 @@
 <script lang="ts" setup>
-import {CurrentUser} from '@/types'
+import {CurrentUser, Group, RegistInfo} from '@/types'
 
 definePageMeta({
   layout: false,
 });
 
+const currentInfo = ref<RegistInfo>()
+
 const state = reactive({currentUserName: '',});
+// const registGroupId = ref<Group['id'] | null>(null);
+// const registGroupCategoryId = ref<Group['group_category_id']>();
+const registGroupId = ref<string>();
+const registGroupCategoryId = ref<string>();
+const config = useRuntimeConfig();
 
 onMounted(async()=>{
-const config = useRuntimeConfig();
 const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
   {
     headers:{
@@ -19,6 +25,22 @@ const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_u
     },
   },)
   state.currentUserName = currentUser.data.user.name
+const registInfo = await $fetch<RegistInfo>(config.APIURL + "/api/v1/current_user/current_regist_info",
+  {
+    headers:{
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("access-token") || "",
+      "client": localStorage.getItem("client") || "",
+      "uid": localStorage.getItem("uid") || ""
+    },
+  },)
+  .then((response) => {
+    // currentInfo.value = response.data
+    registGroupId.value = "response.data[0].group.id"
+    registGroupCategoryId.value = "response.data[0].group.group_category_id"
+    // localStorage.setItem("group_id", registGroupId.value);
+    // localStorage.setItem("group_category_id", registGroupCategoryId.value);
+  });
 })
 
 const links: {to:string; text:string}[] = [
@@ -27,12 +49,12 @@ const links: {to:string; text:string}[] = [
   { to: "/mypage/edit_user_info", text: "ユーザー情報編集" },
   { to: "/mypage/password_reset", text: "パスワード変更" },
 ];
-
 </script>
 
 <template>
   <Header />
   <div class="center">
+    <div>{{ registGroupId }}</div>
     <MypageCard>
       <template #mypageCard>
         <div class="p-5  mb-2">
@@ -76,6 +98,4 @@ const links: {to:string; text:string}[] = [
       text-2xl
       font-bold
   }
-
-
 </style>
