@@ -1,8 +1,5 @@
 import {CurrentUser} from '@/types'
 
-const dt = new Date()
-const ts = dt.getTime()
-
 export const getCurrentUser = async () => {
   const config = useRuntimeConfig();
   const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
