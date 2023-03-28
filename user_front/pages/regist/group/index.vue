@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import {Setting} from '@/types'
 import { Group } from '@/types/regist/group';
+import { loginCheck } from "@/utils/methods";
+
 const categoryArray = [
   {id: 1, name: "模擬店(食品販売)"},
   {id: 2, name: "模擬店(物品販売)"},
@@ -24,6 +26,7 @@ const config = useRuntimeConfig()
 const router = useRouter()
 
 onMounted(async () => {
+  loginCheck();
   registerParams.userId = localStorage.getItem("user_id") || ''
   const setting = await $fetch<Setting>(config.APIURL + "/user_page_settings")
   registerParams.fesYearId = setting.data[0].fes_year_id

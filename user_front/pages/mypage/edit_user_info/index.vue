@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+import { loginCheck } from "@/utils/methods";
+
+onMounted(async () => {
+  loginCheck();
+});
 </script>
 
 <template>

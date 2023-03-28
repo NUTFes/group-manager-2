@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Place, PlaceList } from "@/types/regist/place"
-
+import { loginCheck } from "@/utils/methods"
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -14,6 +14,7 @@ const registerParams = reactive({
 });
 
 onMounted(async () => {
+  loginCheck();
   const placeData = await $fetch<Place>(config.APIURL + "/places");
   placeData.data.forEach((place) => {
     placeList.value.push(place);

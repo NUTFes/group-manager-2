@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { loginCheck } from "@/utils/methods";
 
   const registerParams = reactive(
     {
@@ -53,6 +54,7 @@
       ];
 
   onMounted(async()=>{
+    loginCheck();
     registerParams.groupId = localStorage.getItem("group_id") || "";
     registerParams.groupCategoryId = localStorage.getItem("group_category_id") || "";
   })

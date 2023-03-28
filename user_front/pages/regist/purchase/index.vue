@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Purchase } from "@/types";
 import { FoodProduct, FesDate, Date } from "~~/types/mypage/registAlarm";
+import { loginCheck } from "@/utils/methods";
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -11,6 +12,7 @@ const purchases = ref<Purchase[]>([]);
 const foodProducts = ref<FoodProduct[]>([]);
 const fesDates = ref<Date[]>([]);
 onMounted(async () => {
+  loginCheck()
   const purchaseData = await $fetch<{ data: Purchase[] }>(
     config.APIURL + "/shops"
   );

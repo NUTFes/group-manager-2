@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { loginCheck } from "@/utils/methods";
+
 const config = useRuntimeConfig();
 const router = useRouter();
 
@@ -12,6 +14,7 @@ const registerParams = reactive({
 })
 
 onMounted(async() => {
+  loginCheck();
   registerParams.groupId = Number(localStorage.getItem("group_id"));
 })
 

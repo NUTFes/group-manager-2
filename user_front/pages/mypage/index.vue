@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import {CurrentUser} from '@/types'
+import {loginCheck} from '@/utils/methods'
 
 definePageMeta({
   layout: false,
 });
 
 const state = reactive({currentUserName: '',});
+const router = useRouter();
 
 onMounted(async()=>{
-const config = useRuntimeConfig();
-const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
+  loginCheck();
+
+  const config = useRuntimeConfig();
+  const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
   {
     headers:{
       "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { FesYear, RainStage } from '@/types/regist/stage'
+import { loginCheck } from '@/utils/methods'
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -19,6 +20,7 @@ const registerParams = reactive({
 });
 
 onMounted(async()=>{
+loginCheck();
 state.groupId = Number(localStorage.getItem("group_id"));
 const fesDate = await $fetch<{data : FesYear[]}>(
   config.APIURL + "/api/v1/get_current_fes_dates"
