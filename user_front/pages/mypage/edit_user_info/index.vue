@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { loginCheck } from "@/utils/methods";
 
-onMounted(async () => {
-  loginCheck();
-});
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
 </script>
 
 <template>

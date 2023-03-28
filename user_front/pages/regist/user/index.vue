@@ -4,6 +4,7 @@ import { useForm, useField } from "vee-validate";
 import { userSchema } from "~~/utils/validate";
 import { loginCheck } from "@/utils/methods"
 
+
 const { meta, isSubmitting } = useForm({
   validationSchema: userSchema,
 });
@@ -71,10 +72,6 @@ const registerParams = reactive({
       ];
   const config = useRuntimeConfig();
   const router = useRouter();
-
-onMounted(async () => {
-  loginCheck();
-});
 
   const registUser = (async () => {
     await $fetch<User>(config.APIURL + "/api/auth",{

@@ -34,6 +34,15 @@ class Api::V1::CurrentUserApiController < ApplicationController
 		@user_detail.save!
   end
 
+  def is_login
+    @user = current_api_user
+    if @user
+      render json: true
+    else
+      render json: false
+    end
+  end
+
   private
     def edit_user_info_params
       params.permit(:name, :email, :student_id, :tel, :department_id, :grade_id)

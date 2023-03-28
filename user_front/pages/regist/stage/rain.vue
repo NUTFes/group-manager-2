@@ -2,6 +2,9 @@
 import { FesYear, RainStage } from '@/types/regist/stage'
 import { loginCheck } from '@/utils/methods'
 
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
+
 const config = useRuntimeConfig();
 const router = useRouter();
 const state = reactive({
@@ -20,7 +23,7 @@ const registerParams = reactive({
 });
 
 onMounted(async()=>{
-loginCheck();
+
 state.groupId = Number(localStorage.getItem("group_id"));
 const fesDate = await $fetch<{data : FesYear[]}>(
   config.APIURL + "/api/v1/get_current_fes_dates"

@@ -2,6 +2,9 @@
 import { Place, PlaceList } from "@/types/regist/place"
 import { loginCheck } from "@/utils/methods"
 
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
+
 const config = useRuntimeConfig();
 const router = useRouter();
 const placeList = ref<PlaceList[]>([]);
@@ -14,7 +17,7 @@ const registerParams = reactive({
 });
 
 onMounted(async () => {
-  loginCheck();
+  
   const placeData = await $fetch<Place>(config.APIURL + "/places");
   placeData.data.forEach((place) => {
     placeList.value.push(place);

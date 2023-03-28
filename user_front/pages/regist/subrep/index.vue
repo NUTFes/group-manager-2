@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { loginCheck } from "@/utils/methods";
 
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
+
   const registerParams = reactive(
     {
       name: "",
@@ -54,7 +57,7 @@ import { loginCheck } from "@/utils/methods";
       ];
 
   onMounted(async()=>{
-    loginCheck();
+    
     registerParams.groupId = localStorage.getItem("group_id") || "";
     registerParams.groupCategoryId = localStorage.getItem("group_category_id") || "";
   })

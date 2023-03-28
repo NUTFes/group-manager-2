@@ -2,6 +2,9 @@
 import axios from 'axios';
 import { Group } from '~~/types';
 
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
+
 const config = useRuntimeConfig()
 
 const url = config.APIURL + "/api/v1/current_user/current_regist_info";
