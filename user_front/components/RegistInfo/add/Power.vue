@@ -32,7 +32,7 @@ const addPower = async () => {
       power: newPower.value,
       manufacturer: newManufacturer.value,
       model: newModel.value,
-      url: newUrl.value,
+      item_url: newUrl.value,
     },
   })
   addPowerClose()

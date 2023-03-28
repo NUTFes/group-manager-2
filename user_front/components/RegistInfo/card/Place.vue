@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 
-interface orderList {
-  first: string
-  second: string
-  third: string
+interface OrderList {
+  first: number
+  second: number
+  third: number
 }
 
 interface Props {
   id: number | null
-  regist: orderList | null
+  regist: OrderList | null
   place: string
   remark: string
   n: number | null

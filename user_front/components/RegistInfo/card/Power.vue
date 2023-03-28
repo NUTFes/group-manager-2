@@ -11,7 +11,7 @@ interface Props {
   setting: boolean | null
 }
 
-const power = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   groupId: null,
   id: null,
   item: '',
@@ -39,11 +39,11 @@ const openDeletePower = () => {
     <RegistInfoWideCard>
       <template #body>
         <div class="w-[37%] text-center pl-8 text-5xl font-light">
-        {{ power.item }}
+        {{ props.item }}
       </div>
       <RegistInfoDivideBar />
       <div class="flex w-28 justify-end m-4 text-center">
-        <div class="text-6xl font-light">{{ power.power }}</div>
+        <div class="text-6xl font-light">{{ props.power }}</div>
         <div class="mt-12 font-light text-ms">[W]</div>
       </div>
       <RegistInfoDivideBar />
@@ -51,12 +51,12 @@ const openDeletePower = () => {
         <div class="flex items-center text-lg">
           <div class="w-20 ">メーカー</div>
           <RegistInfoTriangle />
-          <div class="w-32 ">{{ power.manufacturer }}</div>
+          <div class="w-32 ">{{ props.manufacturer }}</div>
         </div>
         <div class="flex items-center">
           <div class="w-20 h-6">型番</div>
           <RegistInfoTriangle />
-          <div class="w-32 break-normal">{{ power.model }}</div>
+          <div class="w-32 break-normal">{{ props.model }}</div>
         </div>
       </div>
     </template>

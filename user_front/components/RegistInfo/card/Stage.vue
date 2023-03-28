@@ -4,9 +4,11 @@ interface Props {
   id: number | null
   groupId: number | null
   date: string
-  regist: string
+  fesDateId: number | null
   firstStage: string
+  firstId: number | null
   secondStage: string
+  secondId: number | null
   useTimeInterval: string,
   prepareTimeInterval: string,
   cleanupTimeInterval: string,
@@ -17,10 +19,12 @@ interface Props {
 const stage = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
-  regist: '',
   date: '',
+  fesDateId: null,
   firstStage: '',
+  firstId: null,
   secondStage: '',
+  secondId: null,
   isSunny: null,
   setting: null,
   useTimeInterval: '',
@@ -59,12 +63,13 @@ const openEditStage = () => {
     v-if="isEditStage"
     v-model:edit-stage="isEditStage"
     :group-id="groupId"
-    :date="date"
     :id="id"
     :is-sunny="isSunny"
     :prepare-time-interval="prepareTimeInterval"
     :use-time-interval="useTimeInterval"
     :cleanup-time-interval="cleanupTimeInterval"
-
+    :fes-date-id="fesDateId"
+    :stage-first="firstId"
+    :stage-second="secondId"
   />
 </template>

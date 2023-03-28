@@ -26,11 +26,11 @@ const props = withDefaults(defineProps<Props>(),{
 })
 const emits = defineEmits<Emits>()
 
-const newItem = ref<Props['item']>()
-const newPower = ref<Props['power']>()
-const newManufacturer = ref<Props['manufacturer']>()
-const newModel = ref<Props['model']>()
-const newUrl = ref<Props['url']>()
+const newItem = ref<Props['item']>(props.item)
+const newPower = ref<Props['power']>(props.power)
+const newManufacturer = ref<Props['manufacturer']>(props.manufacturer)
+const newModel = ref<Props['model']>(props.model)
+const newUrl = ref<Props['url']>(props.url)
 
 const closeEditPower = () => {
   emits('update:edit-power', false)
@@ -45,7 +45,7 @@ const editPower = async () => {
       power: newPower.value,
       manufacturer: newManufacturer.value,
       model: newModel.value,
-      url: newUrl.value,
+      item_url: newUrl.value,
     },
   })
   closeEditPower()

@@ -25,11 +25,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emits = defineEmits<Emits>()
 
-const newOwnEquipment = ref<Props['ownEquipment']>()
-const newBgm = ref<Props['bgm']>()
-const newCameraPermission = ref<Props['cameraPermission']>()
-const newLoudSound = ref<Props['loudSound']>()
-const newStageContent = ref<Props['stageContent']>()
+const newOwnEquipment = ref<Props['ownEquipment']>(props.ownEquipment)
+const newBgm = ref<Props['bgm']>(props.bgm)
+const newCameraPermission = ref<Props['cameraPermission']>(props.cameraPermission)
+const newLoudSound = ref<Props['loudSound']>(props.loudSound)
+const newStageContent = ref<Props['stageContent']>(props.stageContent)
 
 const itemsAvailable = [
   {id: 1, label: "使用", value: true },
@@ -121,7 +121,7 @@ const reset = () => {
         <option
           v-for="l in loudAvailable"
           :value="l.value"
-          :key="l.toString()"
+          :key="l.id"
         >
         {{ l.label }}
       </option>
