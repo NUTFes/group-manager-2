@@ -11,3 +11,9 @@ export const userSchema = object({
   tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください").required("入力してください")
 });
 
+export const groupSchema = object({
+  groupName: string().required("入力してください"),
+  projectName: string().required("入力してください"),
+  category: string().required("入力してください"),
+  activity: string().required("入力してください"),
+});
