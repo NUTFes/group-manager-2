@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { Place, PlaceList } from "@/types/regist/place"
+import { loginCheck } from "@/utils/methods"
 
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -14,6 +17,7 @@ const registerParams = reactive({
 });
 
 onMounted(async () => {
+  
   const placeData = await $fetch<Place>(config.APIURL + "/places");
   placeData.data.forEach((place) => {
     placeList.value.push(place);

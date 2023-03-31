@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 import { Item, ItemList } from "@/types/regist/item"
+import { loginCheck } from "@/utils/methods"
+
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -11,6 +15,7 @@ const state = reactive({
 });
 
 onMounted(async () => {
+  
   const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
     itemData.data.forEach((item) => {
       itemList.value.push(item);
