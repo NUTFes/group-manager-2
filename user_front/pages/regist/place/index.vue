@@ -8,10 +8,10 @@ const { meta, isSubmitting } = useForm({
   validationSchema: placeSchema,
 });
 
-const { handleChange: handleFirst, errorMessage: errorFirst } = useField("first");
-const { handleChange: handleSecond, errorMessage: errorSecond } = useField("second");
-const { handleChange: handleThird, errorMessage: errorThird } = useField("third");
-const { handleChange: handleRemark, errorMessage: errorRemark } = useField("remark");
+const { handleChange: handleFirst, errorMessage: firstPlaceError } = useField("first");
+const { handleChange: handleSecond, errorMessage: secondPlaceError } = useField("second");
+const { handleChange: handleThird, errorMessage: thirdPlaceError } = useField("third");
+const { handleChange: handleRemark, errorMessage: remarkError } = useField("remark");
 
 // ログインしていない場合は/welcomeに遷移させる
 loginCheck();
@@ -67,36 +67,36 @@ const skip = () =>{
         <Card border="none" align="end">
           <div class="flex">
             <p class="label">first preference</p>
-            <select style="width:180px;" v-model="registerParams.first" @change="handleFirst" :class="{'error-border': errorFirst}">
+            <select style="width:180px;" v-model="registerParams.first" @change="handleFirst" :class="{'error-border': firstPlaceError}">
               <option value="" selected disabled></option>
               <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
             </select>
           </div>
-          <div class="text-rose-600">{{ errorFirst }}</div>
+          <div class="text-rose-600">{{ firstPlaceError }}</div>
 
           <div class="flex">
             <p class="label">second preference</p>
-            <select style="width:180px;" v-model="registerParams.second" @change="handleSecond" :class="{'error-border': errorSecond}">
+            <select style="width:180px;" v-model="registerParams.second" @change="handleSecond" :class="{'error-border': secondPlaceError}">
               <option value="" selected disabled></option>
               <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
             </select>
           </div>
-          <div class="text-rose-600">{{ errorSecond }}</div>
+          <div class="text-rose-600">{{ secondPlaceError }}</div>
 
           <div class="flex">
             <p class="label">third preference</p>
-            <select style="width:180px;" v-model="registerParams.third" @change="handleThird" :class="{'error-border': errorThird}">
+            <select style="width:180px;" v-model="registerParams.third" @change="handleThird" :class="{'error-border': thirdPlaceError}">
               <option value="" selected disabled></option>
               <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
             </select>
           </div>
-          <div class="text-rose-600">{{ errorThird }}</div>
+          <div class="text-rose-600">{{ thirdPlaceError }}</div>
 
           <div class="flex">
             <p class="label">free description</p>
-            <input class="form" v-model="registerParams.remark" @change="handleRemark" :class="{'error-border': errorRemark}">
+            <input class="form" v-model="registerParams.remark" @change="handleRemark" :class="{'error-border': remarkError}">
           </div>
-          <div class="text-rose-600">{{ errorRemark }}</div>
+          <div class="text-rose-600">{{ remarkError }}</div>
         </Card>
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
