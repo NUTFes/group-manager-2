@@ -106,16 +106,20 @@ const registerParams = reactive({
     <div class="mx-[20%] my-[5%]">
       <Card>
         <h1 class="text-3xl">Registration of organization</h1>
-        <Card border="none" align="end" gap="20px">
+        <Card border="none" align="end">
           <div class="flex">
             <p class="label">name</p>
             <input class="form" v-model="registerParams.name" @change="handleName">
+          </div>
+          <div>
             <p class="error">{{ nameError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">student id</p>
             <input class="form" v-model="registerParams.studentId" maxlength="8" @change="handleStudentId">
+          </div>
+          <div>
             <p class="error">{{ studentIdError }}</p>
           </div>
 
@@ -125,6 +129,8 @@ const registerParams = reactive({
               <option value="" selected disabled></option>
               <option v-for="department in departmentList" :value=department.name key="department">{{department.name}}</option>
             </select>
+          </div>
+          <div>
             <p class="error">{{ departmentError }}</p>
           </div>
 
@@ -134,30 +140,40 @@ const registerParams = reactive({
               <option value="" selected disabled></option>
               <option v-for="grade in gradeList" :value=grade.name key="grade">{{grade.name}}</option>
             </select>
+          </div>
+          <div>
             <p class="error">{{ gradeError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">mail adress</p>
             <input class="form" v-model="registerParams.mail" placeholder="～@～.～" @change="handleEmail">
+          </div>
+          <div>
             <p class="error">{{ emailError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">tell number</p>
             <input class="form" placeholder="半角数字で10,11桁の番号" maxlength="11" v-model="registerParams.tel" @change="handleTel">
+          </div>
+          <div>
             <p class="error">{{ telError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">password</p>
             <input type="password" class="form" v-model="registerParams.password" @change="handlePassword">
+          </div>
+          <div>
             <p class="error">{{ passwordError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">password confirm</p>
             <input type="password" class="form" v-model="registerParams.passwordConfirm" @change="handlePasswordConfirm">
+          </div>
+          <div>
             <p class="error">{{ passwordConfirmError }}</p>
           </div>
         </Card>
