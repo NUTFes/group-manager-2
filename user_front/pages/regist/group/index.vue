@@ -110,4 +110,4 @@ const registerCategory = async () => {
     border-solid
     border-2
   }
-</style>>
+</style>
