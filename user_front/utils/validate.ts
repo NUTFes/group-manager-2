@@ -40,12 +40,12 @@ export const placeSchema = object({
 
 // stage登録のバリデーション
 export const stageSchema = object({
-  fesDate: string().required("入力してください"),
-  first: string().required("入力してください"),
-  second: string().required("入力してください"),
-  performanceTime: string().required("入力してください"),
-  preparationTime: string().required("入力してください"),
-  clenUpTime: string().required("入力してください"),
+  fesDate: number().required("入力してください"),
+  first: number().required("入力してください"),
+  second: number().required("入力してください"),
+  performanceTime: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+  preparationTime: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+  cleanUpTime: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください')
 });
 
 // stageOption登録のバリデーション

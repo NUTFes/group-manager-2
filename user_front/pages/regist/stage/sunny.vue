@@ -71,7 +71,6 @@ const skip = () =>{
   router.push("/regist/stage/rain");
 }
 
-
 </script>
 
 <template>
@@ -80,7 +79,6 @@ const skip = () =>{
       <Card>
         <h1 class="text-3xl">Registration of stage on a sunny day</h1>
         <Card border="none" align="end">
-
           <div class="flex">
             <p class="label">date</p>
             <select style="width:180px;" v-model="registerParams.fesDateId" @change="handleFesDate">
@@ -88,7 +86,7 @@ const skip = () =>{
               <option v-for = "fesDate in fesDateList" :value="fesDate.id">{{fesDate.date}}</option>
             </select>
           </div>
-          <div>{{ fesDateError }}</div>
+          <div class="text-rose-600">{{ fesDateError }}</div>
 
           <div class="flex">
             <p class="label">first preference</p>
@@ -97,7 +95,7 @@ const skip = () =>{
               <option v-for = "sunnyStage in sunnyStageList" :value="sunnyStage.id">{{sunnyStage.name}}</option>
             </select>
           </div>
-          <div>{{ firstError }}</div>
+          <div class="text-rose-600">{{ firstError }}</div>
 
           <div class="flex">
             <p class="label">second preference</p>
@@ -106,28 +104,28 @@ const skip = () =>{
               <option v-for = "sunnyStage in sunnyStageList" :value="sunnyStage.id">{{sunnyStage.name}}</option>
             </select>
           </div>
-          <div>{{ secondError }}</div>
+          <div class="text-rose-600">{{ secondError }}</div>
 
           <div class="flex">
             <p class="label">performance time</p>
             <input class="form" v-model="registerParams.performanceTime" @change="handlePerformanceTime">
             <p>min</p>
           </div>
-          <div>{{ performanceTimeError }}</div>
+          <div class="text-rose-600">{{ performanceTimeError }}</div>
 
           <div class="flex">
             <p class="label">preparation time</p>
             <input class="form" v-model="registerParams.preparationTime" @change="handlePreparationTime">
             <p>min</p>
           </div>
-          <div>{{ preparationTimeError }}</div>
+          <div class="text-rose-600">{{ preparationTimeError }}</div>
 
           <div class="flex">
             <p class="label">clean-up time</p>
             <input class="form" v-model="registerParams.cleanUpTime" @change="handleCleanUpTime">
             <p>min</p>
           </div>
-          <div>{{ cleanUpTimeError }}</div>
+          <div class="text-rose-600">{{ cleanUpTimeError }}</div>
 
         </Card>
         <Row>
