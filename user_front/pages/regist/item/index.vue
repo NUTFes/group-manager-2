@@ -1,9 +1,24 @@
 <script lang="ts" setup>
 import { Item, ItemList } from "@/types/regist/item"
 import { loginCheck } from "@/utils/methods"
+import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate"
+import { itemSchema } from "~~/utils/validate"
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
+const initialData = {
+  items: [
+    {
+      itemNameId: 0,
+      itemNum: 0,
+    },
+  ],
+};
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: itemSchema,
+  initialValues: initialData,
+});
+
+const { fields: itemValidate, push: addValidate, remove: removeValidate } = useFieldArray('items')
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -15,7 +30,8 @@ const state = reactive({
 });
 
 onMounted(async () => {
-  
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck();
   const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
     itemData.data.forEach((item) => {
       itemList.value.push(item);
@@ -23,12 +39,12 @@ onMounted(async () => {
   state.groupId= Number(localStorage.getItem("group_id"));
 });
 
-
 const registerParams = [
   reactive({
     num: 0,
     rentalItemId: 0,
-  }),]
+  }),
+]
 
 const increment = () => {
   formCount.value++
@@ -38,13 +54,13 @@ const increment = () => {
       rentalItemId: 0,
     })
   )
+  addValidate({ itemNameId: 0, itemNum: 0 })
 }
 
-const decrement = () => {
+const decrement = (idx: number) => {
   formCount.value--
-  registerParams.pop()
+  removeValidate(idx)
 }
-
 
 const registerItem = async () => {
   for (let i = 0; i < formCount.value; i++) {
@@ -66,44 +82,53 @@ const registerItem = async () => {
 const skip = () =>{
   router.push("/regist/power");
 }
-
 </script>
 
 <template>
-  <div>
-    <div class="mx-[20%] my-[5%]">
-      <Card>
-        <h1 class="text-3xl">Registration of places</h1>
-        <Card border="none" align="end" gap="20px">
-
-        <div v-for="count, i in formCount">
+  <div class="mx-[20%] my-[5%]">
+    <Card>
+      <h1 class="text-3xl">Registration of places</h1>
+      <Card border="none" align="end" gap="20px">
+        <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex">
-              <p class="label">Necessary items</p>
-            <select style="width:180px;" v-model="registerParams[i].rentalItemId">
+            <p class="label">Necessary items</p>
+            <Field
+              :id="`itemNameId${idx}`"
+              :name="`items[${idx}].itemNameId`"
+              as="select"
+              style="width:180px;"
+              class="form"
+              v-model="registerParams[idx].rentalItemId"
+            >
               <option value="" selected disabled></option>
               <option v-for = "item in itemList" :key="item.id" :value="item.id">{{item.name}}</option>
-            </select>
+            </Field>
           </div>
+          <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNameId`" />
 
           <div class="flex">
             <p class="label">number of pieces required</p>
-            <input class="form" v-model="registerParams[i].num">
+            <Field
+              :id="`itemNum${idx}`"
+              :name="`items[${idx}].itemNum`"
+              class="form"
+              v-model="registerParams[idx].num"
+            />
           </div>
+          <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
-          <div v-if="i != 0">
-            <RegistPageButton text="remove form" @click="decrement"></RegistPageButton>
+          <div v-if="idx != 0">
+            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
-
-        </Card>
-        <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
-          <RegistPageButton @click="increment" text="Add form"></RegistPageButton>
-          <RegistPageButton @click="registerItem" text="登録"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
-        </Row>
       </Card>
-    </div>
+      <Row>
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton @click="increment" text="Add"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerItem" text="登録"></RegistPageButton>
+        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+      </Row>
+    </Card>
   </div>
 </template>
 
@@ -120,4 +145,4 @@ const skip = () =>{
     border-solid
     border-2
   }
-</style>>
+</style>

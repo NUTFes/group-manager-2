@@ -1,4 +1,4 @@
-import { object, string, ref, boolean, number } from 'yup';
+import { object, string, ref, boolean, number, array } from 'yup';
 
 // user登録のバリデーション
 export const userSchema = object({
@@ -43,9 +43,9 @@ export const stageSchema = object({
   fesDate: string().required("入力してください"),
   first: string().required("入力してください"),
   second: string().required("入力してください"),
-  useTimeInterval: string().required("入力してください"),
-  prepareTimeInterval: string().required("入力してください"),
-  clenupTimeInterval: string().required("入力してください"),
+  performanceTime: string().required("入力してください"),
+  preparationTime: string().required("入力してください"),
+  clenUpTime: string().required("入力してください"),
 });
 
 // stageOption登録のバリデーション
@@ -59,38 +59,62 @@ export const stageOptionSchema = object({
 
 // item登録のバリデーション
 export const itemSchema = object({
-  itemName: string().required("入力してください"),
-  itemNum: number().required("入力してください"),
+  items: array()
+    .of(
+      object().shape({
+        itemNameId: number().required("入力してください"),
+        itemNum: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+      })
+    ).strict(),
 });
 
 // power登録のバリデーション
 export const powerSchema = object({
-  productName: string().required("入力してください"),
-  powerNum: number().max(1500).required("入力してください"),
-  manufacturer: string().required("入力してください"),
-  model: string().required("入力してください"),
-  url: string().required("入力してください"),
+  powers: array()
+    .of(
+      object().shape({
+        productName: string().required("入力してください"),
+        maxPower: string().required("入力してください").matches(/\b^(?!-).*$\b/, '正の数を入力してください').matches(/\b[0-9]\b|\b[1-9][0-9]\b|\b[1-9][0-9][0-9]\b|\b1[0-4][0-9][0-9]\b|\b1500\b/, '1500以下を入力してください'),
+        manufacturer: string().required("入力してください"),
+        model: string().required("入力してください"),
+        url: string().required("入力してください").url("URLを入力してください"),
+      })
+    ).strict(),
 });
 
 // employee登録のバリデーション
 export const employeeSchema = object({
-  name: string().required("入力してください"),
-  studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください").required("入力してください"),
+  employees: array()
+  .of(
+    object().shape({
+      name: string().required("入力してください"),
+      studentId: string().required("入力してください").matches(/^[0-9]{8}$/, "半角数字8桁で入力してください"),
+    })
+  ).strict(),
 });
 
 // purchase登録のバリデーション
 export const purchaseSchema = object({
-  foodProductId: number().required("入力してください"),
-  shopId: number().required("入力してください"),
-  item: string().required("入力してください"),
-  isFresh: boolean().required("入力してください"),
-  fesDateId: number().required("入力してください"),
+  purchaseList: array()
+  .of(
+    object().shape({
+      foodProductId: number().required("選択してください").typeError("選択してください"),
+      shopId: number().required("選択してください").typeError("選択してください"),
+      item: string().required("入力してください").typeError("入力してください"),
+      isFresh: string().required("選択してください").typeError("選択してください"),
+      fesDateId: number().required("選択してください").typeError("選択してください"),
+    })
+  ).strict(),
 });
 
 // food登録のバリデーション
 export const foodSchema = object({
-  dishName: string().required("入力してください"),
-  isCook: boolean().required("入力してください"),
-  numFirstDay: number().required("入力してください"),
-  numSecondDay: number().required("入力してください"),
+  foods: array()
+  .of(
+    object().shape({
+      dishName: string().required("入力してください"),
+      numFirstDay: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+      numSecondDay: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+    })
+  ).strict(),
 });

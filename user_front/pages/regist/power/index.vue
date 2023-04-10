@@ -1,8 +1,26 @@
 <script lang="ts" setup>
+import { powerSchema } from "~~/utils/validate";
+import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate";
 import { loginCheck } from "@/utils/methods";
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
+const initialData = {
+  powers: [
+    {
+      productName: '',
+      maxPower: 0,
+      manufacturer: '',
+      model: '',
+      url: '',
+    },
+  ],
+};
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: powerSchema,
+  initialValues: initialData,
+});
+
+const { fields: powerValidate, push: addValidate, remove: removeValidate } = useFieldArray('powers')
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -10,20 +28,20 @@ const formCount = ref(1)
 
 let registerParams = [
   reactive({
-    prodcutName: "",
+    productName: "",
     maxPower: 0,
     manufacturer: "",
     model: "",
     url: "",
   },)
 ]
-
 const state = reactive({
   groupId: 0,
 });
 
 onMounted(async () => {
-  
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck();
   state.groupId = Number(localStorage.getItem("group_id"));
 });
 
@@ -31,18 +49,19 @@ const increment = () => {
   formCount.value++
   registerParams.push(
     reactive({
-      prodcutName: "",
+      productName: "",
       maxPower: 0,
       manufacturer: "",
       model: "",
       url: "",
     })
   )
+  addValidate({ productName: '', maxPower: 0, manufacturer: '', model: '', url: '' })
 }
 
-const decrement = () => {
+const decrement = (idx: number) => {
   formCount.value--
-  registerParams.pop()
+  removeValidate(idx)
 }
 
 const registerPower = async () => {
@@ -51,7 +70,7 @@ const registerPower = async () => {
       method: "POST",
       params: {
         group_id: state.groupId,
-        item: registerParams[i].prodcutName,
+        item: registerParams[i].productName,
         power: registerParams[i].maxPower,
         manufacturer: registerParams[i].manufacturer,
         model: registerParams[i].model,
@@ -72,52 +91,85 @@ const skip = () =>{
 </script>
 
 <template>
-  <div>
-    <div class="mx-[20%] my-[5%]">
-      <Card>
-        <h1 class="text-3xl">Registration of organization</h1>
-        <Card border="none" align="end" gap="20px">
-        <div v-for="count, i in formCount">
+  <div class="mx-[20%] my-[5%]">
+    <Card>
+      <Card border="none" align="end" gap="20px">
+        <div v-for="(field, idx) in powerValidate" :key="field.key">
           <div class="flex">
             <p class="label">product name</p>
-            <input class="form" v-model="registerParams[i].prodcutName">
+            <Field
+              :id="`productName${idx}`"
+              :name="`powers[${idx}].productName`"
+              type="text"
+              class="form"
+              v-model="registerParams[idx].productName"
+            />
           </div>
-
+          <ErrorMessage class="text-rose-600" :name="`powers[${idx}].productName`" />
           <div class="flex">
             <p class="label">maximum rated power</p>
-            <input class="form" v-model="registerParams[i].maxPower">
+            <Field
+              :id="`maxPower${idx}`"
+              :name="`powers[${idx}].maxPower`"
+              type="number"
+              class="form"
+              v-model="registerParams[idx].maxPower"
+            />
+            <p>[W]</p>
           </div>
-
+          <ErrorMessage class="text-rose-600" :name="`powers[${idx}].maxPower`" />
           <div class="flex">
             <p class="label">maker</p>
-            <input class="form" v-model="registerParams[i].manufacturer">
+            <Field
+              :id="`manufacturer${idx}`"
+              :name="`powers[${idx}].manufacturer`"
+              type="text"
+              class="form"
+              v-model="registerParams[idx].manufacturer"
+            />
           </div>
-
+          <ErrorMessage class="text-rose-600" :name="`powers[${idx}].manufacturer`" />
           <div class="flex">
             <p class="label">model</p>
-            <input class="form" v-model="registerParams[i].model">
+            <Field
+              :id="`model${idx}`"
+              :name="`powers[${idx}].model`"
+              type="text"
+              class="form"
+              v-model="registerParams[idx].model"
+            />
           </div>
-
+          <ErrorMessage class="text-rose-600" :name="`powers[${idx}].model`" />
           <div class="flex">
             <p class="label">product URL</p>
-            <input class="form" v-model="registerParams[i].url">
+            <Field
+              :id="`url${idx}`"
+              :name="`powers[${idx}].url`"
+              type="url"
+              class="form"
+              v-model="registerParams[idx].url"
+            />
           </div>
-          <div v-if="i != 0">
-            <RegistPageButton text="remove form" @click="decrement"></RegistPageButton>
+          <ErrorMessage class="text-rose-600" :name="`powers[${idx}].url`" />
+          <div v-if="idx != 0">
+            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
-        </Card>
-        <Row>
-          <RegistPageButton text="add form" @click="increment"></RegistPageButton>
-          <RegistPageButton text="register" @click="registerPower"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
-        </Row>
       </Card>
-    </div>
+      <Row>
+        <RegistPageButton text="add" @click="increment"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="register" @click="registerPower"></RegistPageButton>
+        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+      </Row>
+    </Card>
   </div>
 </template>
 
 <style scoped>
+  .error-border {
+   @apply
+    border-rose-600
+  }
   .label {
     @apply
       flex-none
@@ -130,4 +182,8 @@ const skip = () =>{
     border-solid
     border-2
   }
-</style>>
+label {
+  display: block;
+  margin-top: 20px;
+}
+</style>

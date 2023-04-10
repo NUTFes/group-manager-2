@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { loginCheck } from "@/utils/methods";
-
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
+import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate";
+import { foodSchema } from "~~/utils/validate";
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -12,8 +11,27 @@ const state = reactive({
   groupId: 0,
 });
 
+const initialData = {
+  foods: [
+    {
+      dishName: '',
+      isCooking: false,
+      numFirstDay: 0,
+      numSecondDay: 0,
+    },
+  ],
+};
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: foodSchema,
+  initialValues: initialData,
+});
+
+const { fields: foodValidate, push: addValidate, remove: removeValidate } = useFieldArray('foods')
+
 onMounted(async () =>{
-  
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck();
   state.groupId = Number(localStorage.getItem("group_id"));
 })
 
@@ -55,31 +73,34 @@ const increment = () => {
     numFirstDay: 0,
     numSecondDay: 0,
   }));
+  addValidate({ dishName: '', isCooking: false, numFirstDay: 0, numSecondDay: 0 })
 };
 
-const decrement = () => {
+const decrement = (idx: number) => {
   formCount.value--;
-  registerParams.pop();
-};
-
+  removeValidate(idx)};
 </script>
 
 <template>
-  <div>
-    <div class="mx-[20%] my-[5%]">
-      <Card>
-        <h1 class="text-3xl">Registration of foodstuffs</h1>
-        <Card border="none" align="end" gap="20px">
-
-        <div v-for="count , i in formCount">
+  <div class="mx-[20%] my-[5%]">
+    <Card>
+      <h1 class="text-3xl">Registration of foodstuffs</h1>
+      <Card border="none" align="end">
+        <div v-for="(field, idx) in foodValidate" :key="field.key">
           <div class="flex">
             <p class="label">name</p>
-            <input class="form" v-model="registerParams[i].dishName">
+            <Field
+              :id="`name${idx}`"
+              :name="`foods[${idx}].dishName`"
+              class="form"
+              v-model="registerParams[idx].dishName"
+            />
           </div>
+          <ErrorMessage class="text-rose-600" :name="`foods[${idx}].dishName`"/>
 
           <div class="flex">
             <p class="label">Do you cook?</p>
-            <select style="width:180px;" v-model="registerParams[i].isCooking">
+            <select style="width:180px;" v-model="registerParams[idx].isCooking">
               <option value="" selected disabled></option>
               <option value='true'>Yes</option>
               <option value='false'>No</option>
@@ -88,27 +109,38 @@ const decrement = () => {
 
           <div class="flex">
             <p class="label">number of products on the first day</p>
-            <input class="form" v-model="registerParams[i].numFirstDay">
+            <Field
+              :id="`numFirstDay${idx}`"
+              :name="`foods[${idx}].numFirstDay`"
+              class="form"
+              v-model="registerParams[idx].numFirstDay"
+            />
           </div>
+          <ErrorMessage class="text-rose-600" :name="`foods[${idx}].numFirstDay`"/>
 
           <div class="flex">
             <p class="label">number of products on the second day</p>
-            <input class="form" v-model="registerParams[i].numSecondDay">
+            <Field
+              :id="`numSecondDay${idx}`"
+              :name="`foods[${idx}].numSecondDay`"
+              class="form"
+              v-model="registerParams[idx].numSecondDay"
+            />
           </div>
-          <div v-if="i != 0">
-            <RegistPageButton @click="decrement" text="削除"></RegistPageButton>
+          <ErrorMessage class="text-rose-600" :name="`foods[${idx}].numSecondDay`"/>
+
+          <div v-if="idx != 0">
+            <RegistPageButton @click="decrement(idx)" text="削除"></RegistPageButton>
           </div>
         </div>
-
-        </Card>
-        <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
-          <RegistPageButton text="Add form" @click="increment"></RegistPageButton>
-          <RegistPageButton @click="registerFood" text="登録"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
-        </Row>
       </Card>
-    </div>
+      <Row>
+        <RegistPageButton text="reset"></RegistPageButton>
+        <RegistPageButton text="Add" @click="increment"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerFood" text="登録"></RegistPageButton>
+        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+      </Row>
+    </Card>
   </div>
 </template>
 
@@ -125,4 +157,4 @@ const decrement = () => {
     border-solid
     border-2
   }
-</style>>
+</style>
