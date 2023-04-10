@@ -74,7 +74,7 @@ export const powerSchema = object({
     .of(
       object().shape({
         productName: string().required("入力してください"),
-        maxPower: string().required("入力してください").matches(/\b^(?!-).*$\b/, '正の数を入力してください').matches(/\b[0-9]\b|\b[1-9][0-9]\b|\b[1-9][0-9][0-9]\b|\b1[0-4][0-9][0-9]\b|\b1500\b/, '1500以下を入力してください'),
+        maxPower: string().required("入力してください").typeError('半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください').matches(/\b[0-9]\b|\b[1-9][0-9]\b|\b[1-9][0-9][0-9]\b|\b1[0-4][0-9][0-9]\b|\b1500\b/, '1500以下を入力してください'),
         manufacturer: string().required("入力してください"),
         model: string().required("入力してください"),
         url: string().required("入力してください").url("URLを入力してください"),
