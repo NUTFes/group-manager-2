@@ -1,17 +1,13 @@
 <script lang="ts" setup>
-import {CurrentUser, Group, RegistInfo} from '@/types'
+import {CurrentUser, RegistInfo} from '@/types'
 
 definePageMeta({
   layout: false,
 });
 
-const currentInfo = ref<RegistInfo>()
-
 const state = reactive({currentUserName: '',});
-// const registGroupId = ref<Group['id'] | null>(null);
-// const registGroupCategoryId = ref<Group['group_category_id']>();
-const registGroupId = ref<string>();
-const registGroupCategoryId = ref<string>();
+const registGroupId = ref<number>(0);
+const registGroupCategoryId = ref<number>(0);
 const config = useRuntimeConfig();
 
 onMounted(async()=>{
@@ -35,11 +31,10 @@ const registInfo = await $fetch<RegistInfo>(config.APIURL + "/api/v1/current_use
     },
   },)
   .then((response) => {
-    // currentInfo.value = response.data
-    registGroupId.value = "response.data[0].group.id"
-    registGroupCategoryId.value = "response.data[0].group.group_category_id"
-    // localStorage.setItem("group_id", registGroupId.value);
-    // localStorage.setItem("group_category_id", registGroupCategoryId.value);
+    registGroupId.value = response.data[0].group.id
+    registGroupCategoryId.value = response.data[0].group.group_category_id
+    localStorage.setItem("group_id", registGroupId.value.toString());
+    localStorage.setItem("group_category_id", registGroupCategoryId.value.toString());
   });
 })
 
@@ -54,7 +49,6 @@ const links: {to:string; text:string}[] = [
 <template>
   <Header />
   <div class="center">
-    <div>{{ registGroupId }}</div>
     <MypageCard>
       <template #mypageCard>
         <div class="p-5  mb-2">
