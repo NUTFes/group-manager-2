@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {CurrentUser} from '@/types'
+import {getCurrentUser, loginCheck} from '@/utils/methods'
 
 definePageMeta({
   layout: false,
@@ -8,17 +8,9 @@ definePageMeta({
 const state = reactive({currentUserName: '',});
 
 onMounted(async()=>{
-const config = useRuntimeConfig();
-const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
-  {
-    headers:{
-      "Content-Type": "application/json",
-      "access-token": localStorage.getItem("access-token") || "",
-      "client": localStorage.getItem("client") || "",
-      "uid": localStorage.getItem("uid") || ""
-    },
-  },)
-  state.currentUserName = currentUser.data.user.name
+  await loginCheck()
+  const currentUser = await getCurrentUser()
+  state.currentUserName = currentUser?.data.user.name || ''
 })
 
 const links: {to:string; text:string}[] = [
@@ -27,7 +19,6 @@ const links: {to:string; text:string}[] = [
   { to: "/mypage/edit_user_info", text: "ユーザー情報編集" },
   { to: "/mypage/password_reset", text: "パスワード変更" },
 ];
-
 </script>
 
 <template>
@@ -61,6 +52,7 @@ const links: {to:string; text:string}[] = [
   </div>
   <Footer />
 </template>
+
 
 <style>
   .center{

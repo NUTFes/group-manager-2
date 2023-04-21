@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import axios from "axios";
+import { loginCheck } from "@/utils/methods";
 
 definePageMeta({
   layout: false,
@@ -36,6 +37,9 @@ const submit = () =>{
     )
 }
 
+onMounted(async () => {
+  loginCheck();
+});
 </script>
 
 <template>

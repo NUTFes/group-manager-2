@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import axios from "axios";
 
+const router = useRouter()
+const config = useRuntimeConfig()
+
 definePageMeta({
   layout: false,
 });
-
-const router = useRouter()
-const config = useRuntimeConfig()
 
 const email = ref("")
 const password = ref("")
