@@ -120,4 +120,4 @@ const skip = () =>{
     border-solid
     border-2
   }
-</style>>
+</style>
