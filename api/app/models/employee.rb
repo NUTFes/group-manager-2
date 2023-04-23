@@ -25,6 +25,7 @@ class Employee < ApplicationRecord
 
   def to_info_h
     return {
+      "id": self.id,
       "name": self.name,
       "student_id": self.student_id,
       "stool_test": self.stool_test.status

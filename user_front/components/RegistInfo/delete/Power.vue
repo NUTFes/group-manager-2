@@ -5,7 +5,7 @@ interface Props {
   id: number | null
 }
 interface Emits {
-  (e: 'update:DeletePower', isDeletePower: boolean): void
+  (e: 'update:deletePower', isDeletePower: boolean): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>()
 
 const closeDeletePower = () => {
-  emits('update:DeletePower', false)
+  emits('update:deletePower', false)
 }
 
 const deletePower = async() => {

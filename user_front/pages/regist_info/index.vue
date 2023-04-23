@@ -108,6 +108,76 @@ interface PowerOrder {
   }
 }
 
+interface Employee {
+  employee : {
+    employee: {
+      id: number
+      name: string
+      student_id: number
+    }
+  }
+}
+
+interface Purchase {
+  purchase_list: PurchaseList
+}
+
+interface PurchaseList {
+  date: string
+  day: string
+  days_num: number
+  food_product: string
+  is_fresh: boolean
+  items: string
+  shop: string
+  year: number
+}
+
+interface FoodProducts {
+  food_product: FoodProduct
+  purchase_lists: Purchase[]
+}
+
+interface FoodProduct {
+  id: number;
+  group_id: number;
+  name: string;
+  is_cooking: boolean;
+  first_day_num: number;
+  second_day_num: number;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Food {
+  food_product: {
+    food_product: {
+      id: number
+      name: string
+      is_cooking: boolean
+      first_day_num: number
+      second_day_num: number
+      setting: boolean
+    }
+  }
+}
+
+// interface Purchase {
+//   purchase_list: {
+//     purchase_list: {
+//       id: number
+//       items: string
+//       is_fresh: boolean
+//       food_product: string
+//       shop: string
+//       days_num: number
+//       date: string
+//       day: string
+//       year: number
+//     }
+//   }
+// }
+
 interface SubRep {
   id: number
   name: string
@@ -127,6 +197,8 @@ const placeOrder = ref<RegistPlace>()
 const powerOrder = ref<PowerOrder>()
 const stageOrder = ref<StageOrder>()
 const stageOption = ref<StageOption>()
+const employee = ref<Employee>()
+const food = ref<Food>()
 const regist = ref<RegistItem>()
 // const setting = ref("")
 
@@ -151,6 +223,8 @@ onMounted(() => {
       powerOrder.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
+      employee.value = response.data.data[0].employees;
+      food.value = response.data.data[0].food_products;
       groupCategoryId.value = response.data.data[0].group.group_category_id
     });
   // const settingurl = config.APIURL + "/user_page_settings";
@@ -176,16 +250,29 @@ const reload = () => {
 }
 
 const isAddItem = ref<boolean>(false)
-
 const openAddItem = () => {
   isAddItem.value = true
 }
-const isAddPower = ref<boolean>(false)
 
+const isAddPower = ref<boolean>(false)
 const openAddPower = () => {
   isAddPower.value = true
 }
 
+const isAddEmployee = ref<boolean>(false)
+const openAddEmployee = () => {
+  isAddEmployee.value = true
+}
+
+const isAddFood = ref<boolean>(false)
+const openAddFood = () => {
+  isAddFood.value = true
+}
+
+const isAddPurchase = ref<boolean>(false)
+const openAddPurchase = () => {
+  isAddPurchase.value = true
+}
 </script>
 
 <template>
@@ -223,6 +310,7 @@ const openAddPower = () => {
   </template>
   <template #body>
     <div class="ml-12 pt-4">
+      <div class="whitespace-pre">{{ food }}</div>
       <!-- 副代表申請  -->
       <div v-show="tab === 1">
         <RegistInfoCardSubRep
@@ -301,7 +389,7 @@ const openAddPower = () => {
 
       <!-- 電力申請 -->
       <div v-show="tab === 5">
-        <div class="my-8" v-for="p in powerOrder" :key="p.toString()">
+        <div class="mb-8" v-for="p in powerOrder" :key="p.toString()">
           <RegistInfoCardPower
             :group-id="group?.id"
             :id="p.power_order.id"
@@ -338,6 +426,61 @@ const openAddPower = () => {
           :group-id="group?.id"
         />
       </div>
+
+      <!-- 従業員申請 -->
+      <div v-show="tab === 7" class="flex flex-wrap">
+        <div v-for="e in employee" :key="e.toString()">
+          <RegistInfoCardEmployee
+            :group-id="group?.id"
+            :id="e.employee.id"
+            :name="e.employee.name"
+            :student-id="e.employee.student_id"
+            @reload="reload()"
+          />
+        </div>
+        <Button class="ml-auto" @click="openAddEmployee()"/>
+        <RegistInfoAddEmployee
+          v-if="isAddEmployee"
+          v-model:add-employee="isAddEmployee"
+          :group-id="group?.id"
+        />
+      </div>
+
+      <!-- 販売食品申請 -->
+      <div v-show="tab === 8">
+        <div class="mb-8" v-for="f in food" :key="f.toString()">
+          <RegistInfoCardFood
+            :group-id="group?.id"
+            :id="f.food_product.id"
+            :name="f.food_product.name"
+            :is-cooking="f.food_product.is_cooking"
+            :firstNum="f.food_product.first_day_num"
+            :secondNum="f.food_product.second_day_num"
+          />
+        </div>
+          <Button class="text-right" @click="openAddFood()"/>
+          <RegistInfoAddFood
+            v-if="isAddFood"
+            v-model:add-food="isAddFood"
+            :group-id="group?.id"
+          />
+      </div>
+      <!-- {{ registInfo }} -->
+      <!-- 購入品申請 -->
+      <!-- <div v-show="tab === 9">
+        {{ purchase }}
+        <div v-for="p in purchase?.purchase_list" :key="p.toString()">
+          {{ p }}
+          <RegistInfoCardPurchase
+          />
+        </div>
+        <Button class="text-right" @click="openAddPurchase()"/>
+          <RegistInfoAddPurchase
+            v-if="isAddPurchase"
+            v-model:add-purchase="isAddPurchase"
+            :group-id="group?.id"
+          />
+      </div> -->
     </div>
   </template>
 </Container>
