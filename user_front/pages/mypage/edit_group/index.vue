@@ -1,16 +1,9 @@
 <script lang="ts" setup>
 import axios from "axios";
+import { groupCategoryList } from "~~/utils/list";
 
 const router = useRouter()
 const config = useRuntimeConfig()
-
-const groupCategoryList = [
-  { id: 1, name: "模擬店(食品販売)" },
-  { id: 2, name: "模擬店(物品販売)" },
-  { id: 3, name: "ステージ企画" },
-  { id: 4, name: "展示・体験" },
-  { id: 5, name: "研究室公開" },
-]
 
 const groupName = ref<string>("")
 const projectName = ref<string>("")
