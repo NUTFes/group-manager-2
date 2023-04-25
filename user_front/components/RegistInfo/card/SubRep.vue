@@ -4,8 +4,10 @@ interface Props {
   id: number | null
   groupId: number | null
   name: string
-  department: number | null
+  department: string
+  department_id: number | null
   grade: string
+  grade_id: number | null
   tel: string
   email: string
   studentId: number | null
@@ -16,8 +18,10 @@ const sub = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
   name: '',
-  department: null,
+  department: '',
+  department_id: null,
   grade: '',
+  grade_id: null,
   tel: '',
   email: '',
   studentId: null,
@@ -50,8 +54,8 @@ const openEditSubRep = () => {
       <RegistInfoDivideBar />
       <div class="text-base mb-10">
         <p class="font-medium">詳細情報</p>
-          <div class="character2">{{ sub.email }}</div>
-          <div class="character2">{{ sub.tel }}</div>
+          <div class="character2">e-mail‣{{ sub.email }}</div>
+          <div class="character2">tel‣{{ sub.tel }}</div>
       </div>
     </template>
     <template #method>
@@ -66,7 +70,10 @@ const openEditSubRep = () => {
     :id="sub.id"
     :group-id="sub.groupId"
     :name="sub.name"
-    :department_id="sub.department"
-    :grade_id="sub.studentId"
+    :department_id="sub.department_id"
+    :grade_id="sub.grade_id"
+    :student_id="sub.studentId"
+    :email="sub.email"
+    :tel="sub.tel"
   />
 </template>

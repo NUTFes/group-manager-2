@@ -4,9 +4,9 @@ const config = useRuntimeConfig()
 
 interface Props {
   id: number | null
-  first: string
-  second: string
-  third: string
+  first: number | null
+  second: number | null
+  third: number | null
   remark: string
 }
 
@@ -16,19 +16,19 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   id: null,
-  first: '',
-  second: '',
-  third: '',
+  first: null,
+  second: null,
+  third: null,
   remark: '',
 })
 
 const emits = defineEmits<Emits>()
 
 const placeList = ref<PlaceList[]>([])
-const newFirst = ref<Props['first']>()
-const newSecond = ref<Props['second']>()
-const newThird = ref<Props['third']>()
-const newRemark = ref<Props['remark']>()
+const newFirst = ref<Props['first']>(props.first)
+const newSecond = ref<Props['second']>(props.second)
+const newThird = ref<Props['third']>(props.third)
+const newRemark = ref<Props['remark']>(props.remark)
 
 const closeEditPlace = () => {
   emits('update:editPlace', false)
@@ -55,9 +55,9 @@ const editPlace = async () => {
 }
 
 const reset = () => {
-  newFirst.value = ''
-  newSecond.value = ''
-  newThird.value = ''
+  newFirst.value = null
+  newSecond.value = null
+  newThird.value = null
   newRemark.value = ''
 }
 

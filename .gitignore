@@ -121,3 +121,8 @@ typings/
 /certs/
 
 /user_front/.vite
+
+
+# cloudflare
+cloudflare/**/*.json
+cloudflare/**/cert.pem

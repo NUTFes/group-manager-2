@@ -1,0 +1,12 @@
+tunnel: <tunnel-id>
+credentials-file: /home/nonroot/.cloudflared/<tunnel-id>.json
+protocol: http2
+
+ingress:
+  - hostname: group-manager.nutfes.net
+    service: http://web:8080
+  - hostname: group-manager-admin.nutfes.net
+    service: http://admin_view:8000
+  - hostname: group-manager-api.nutfes.net
+    service: http://api:3000
+  - service: http_status:404

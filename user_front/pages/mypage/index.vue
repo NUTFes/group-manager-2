@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {CurrentUser, RegistInfo} from '@/types'
+import {getCurrentUser, loginCheck} from '@/utils/methods'
 
 definePageMeta({
   layout: false,
@@ -36,6 +37,9 @@ const registInfo = await $fetch<RegistInfo>(config.APIURL + "/api/v1/current_use
     localStorage.setItem("group_id", registGroupId.value.toString());
     localStorage.setItem("group_category_id", registGroupCategoryId.value.toString());
   });
+  await loginCheck()
+  const currentUser = await getCurrentUser()
+  state.currentUserName = currentUser?.data.user.name || ''
 })
 
 const links: {to:string; text:string}[] = [
@@ -77,6 +81,7 @@ const links: {to:string; text:string}[] = [
   </div>
   <Footer />
 </template>
+
 
 <style>
   .center{

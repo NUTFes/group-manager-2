@@ -1,19 +1,35 @@
 <script lang="ts" setup>
 import { User } from "@/types/regist/user"
+import { useForm, useField } from "vee-validate";
+import { userSchema } from "~~/utils/validate";
+import { loginCheck } from "@/utils/methods"
 
-  //v-modelで渡すparamsの定義
-  const registerParams = reactive({
-    name: "",
-    studentId: "",
-    tel: "",
-    mail: "",
-    password: "",
-    passwordConfirm: "",
-    departmentId: "",
-    gradeId: "",
-    userId: 0
-  });
 
+const { meta, isSubmitting } = useForm({
+  validationSchema: userSchema,
+});
+
+const { handleChange: handleName, errorMessage: nameError } = useField('name')
+const { handleChange: handleDepartment, errorMessage: departmentError } = useField('department')
+const { handleChange: handleGrade, errorMessage: gradeError } = useField('grade')
+const { handleChange: handleStudentId, errorMessage: studentIdError } = useField('studentId')
+const { handleChange: handlePassword, errorMessage: passwordError } = useField('password')
+const { handleChange: handlePasswordConfirm, errorMessage: passwordConfirmError } = useField('passwordConfirm')
+const { handleChange: handleEmail, errorMessage: emailError } = useField('email')
+const { handleChange: handleTel, errorMessage: telError } = useField('tel')
+
+//v-modelで渡すparamsの定義
+const registerParams = reactive({
+  name: "",
+  studentId: "",
+  tel: "",
+  mail: "",
+  password: "",
+  passwordConfirm: "",
+  departmentId: "",
+  gradeId: "",
+  userId: 0
+});
 
   const departmentList: {id:number; name:string}[] = [
         { id: 1, name: "機械創造工学課程" },
@@ -56,6 +72,7 @@ import { User } from "@/types/regist/user"
       ];
   const config = useRuntimeConfig();
   const router = useRouter();
+
   const registUser = (async () => {
     await $fetch<User>(config.APIURL + "/api/auth",{
       method: "POST",
@@ -89,58 +106,80 @@ import { User } from "@/types/regist/user"
     <div class="mx-[20%] my-[5%]">
       <Card>
         <h1 class="text-3xl">Registration of organization</h1>
-        <Card border="none" align="end" gap="20px">
-
+        <Card border="none" align="end">
           <div class="flex">
             <p class="label">name</p>
-            <input class="form" v-model="registerParams.name" >
+            <input class="form" v-model="registerParams.name" @change="handleName">
+          </div>
+          <div>
+            <p class="error">{{ nameError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">student id</p>
-            <input class="form" v-model="registerParams.studentId">
+            <input class="form" v-model="registerParams.studentId" maxlength="8" @change="handleStudentId">
+          </div>
+          <div>
+            <p class="error">{{ studentIdError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">department</p>
-            <select style="width:180px;" v-model="registerParams.departmentId">
+            <select class="form" style="width:180px;" v-model="registerParams.departmentId" @change="handleDepartment">
               <option value="" selected disabled></option>
-              <option v-for = "department in departmentList" key="department">{{department.name}}</option>
+              <option v-for="department in departmentList" :value=department.name key="department">{{department.name}}</option>
             </select>
+          </div>
+          <div>
+            <p class="error">{{ departmentError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">grade</p>
-            <select style="width:180px;" v-model="registerParams.gradeId">
+            <select class="form" style="width:180px;" v-model="registerParams.gradeId" @change="handleGrade">
               <option value="" selected disabled></option>
-              <option v-for = "grade in gradeList" key="grade">{{grade.name}}</option>
+              <option v-for="grade in gradeList" :value=grade.name key="grade">{{grade.name}}</option>
             </select>
+          </div>
+          <div>
+            <p class="error">{{ gradeError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">mail adress</p>
-            <input class="form" v-model="registerParams.mail">
+            <input class="form" v-model="registerParams.mail" placeholder="～@～.～" @change="handleEmail">
+          </div>
+          <div>
+            <p class="error">{{ emailError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">tell number</p>
-            <input class="form" v-model="registerParams.tel">
+            <input class="form" placeholder="半角数字で10,11桁の番号" maxlength="11" v-model="registerParams.tel" @change="handleTel">
+          </div>
+          <div>
+            <p class="error">{{ telError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">password</p>
-            <input class="form" v-model="registerParams.password">
+            <input type="password" class="form" v-model="registerParams.password" @change="handlePassword">
+          </div>
+          <div>
+            <p class="error">{{ passwordError }}</p>
           </div>
 
           <div class="flex">
             <p class="label">password confirm</p>
-            <input class="form" v-model="registerParams.passwordConfirm">
+            <input type="password" class="form" v-model="registerParams.passwordConfirm" @change="handlePasswordConfirm">
           </div>
-
+          <div>
+            <p class="error">{{ passwordConfirmError }}</p>
+          </div>
         </Card>
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
-          <RegistPageButton text="register" @click="registUser"></RegistPageButton>
+          <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registUser"></RegistPageButton>
         </Row>
       </Card>
     </div>
@@ -148,6 +187,11 @@ import { User } from "@/types/regist/user"
 </template>
 
 <style scoped>
+  .error {
+    @apply
+    text-red-500
+      ml-4
+  }
   .label {
     @apply
       flex-none
@@ -160,4 +204,4 @@ import { User } from "@/types/regist/user"
     border-solid
     border-2
   }
-</style>>
+</style>

@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import {Setting} from '@/types'
 import { Group } from '@/types/regist/group';
+import { loginCheck } from '@/utils/methods'
+
+// ログインしていない場合は/welcomeに遷移させる
+loginCheck();
+
 const categoryArray = [
   {id: 1, name: "模擬店(食品販売)"},
   {id: 2, name: "模擬店(物品販売)"},
@@ -105,4 +110,4 @@ const registerCategory = async () => {
     border-solid
     border-2
   }
-</style>>
+</style>
