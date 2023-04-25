@@ -1,48 +1,38 @@
 <script lang="ts" setup>
-import {CurrentUser, RegistInfo} from '@/types'
-import {getCurrentUser, loginCheck} from '@/utils/methods'
+import { RegistInfo } from '@/types'
+import { getCurrentUser, loginCheck } from '@/utils/methods'
 
 definePageMeta({
   layout: false,
 });
 
-const state = reactive({currentUserName: '',});
+const state = reactive({ currentUserName: '', });
 const registGroupId = ref<number>(0);
 const registGroupCategoryId = ref<number>(0);
 const config = useRuntimeConfig();
 
-onMounted(async()=>{
-const currentUser = await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
-  {
-    headers:{
-      "Content-Type": "application/json",
-      "access-token": localStorage.getItem("access-token") || "",
-      "client": localStorage.getItem("client") || "",
-      "uid": localStorage.getItem("uid") || ""
-    },
-  },)
-  state.currentUserName = currentUser.data.user.name
-const registInfo = await $fetch<RegistInfo>(config.APIURL + "/api/v1/current_user/current_regist_info",
-  {
-    headers:{
-      "Content-Type": "application/json",
-      "access-token": localStorage.getItem("access-token") || "",
-      "client": localStorage.getItem("client") || "",
-      "uid": localStorage.getItem("uid") || ""
-    },
-  },)
-  .then((response) => {
-    registGroupId.value = response.data[0].group.id
-    registGroupCategoryId.value = response.data[0].group.group_category_id
-    localStorage.setItem("group_id", registGroupId.value.toString());
-    localStorage.setItem("group_category_id", registGroupCategoryId.value.toString());
-  });
+onMounted(async () => {
+  await $fetch<RegistInfo>(config.APIURL + "/api/v1/current_user/current_regist_info",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token") || "",
+        "client": localStorage.getItem("client") || "",
+        "uid": localStorage.getItem("uid") || ""
+      },
+    },)
+    .then((response) => {
+      registGroupId.value = response.data[0].group.id
+      registGroupCategoryId.value = response.data[0].group.group_category_id
+      localStorage.setItem("group_id", registGroupId.value.toString());
+      localStorage.setItem("group_category_id", registGroupCategoryId.value.toString());
+    });
   await loginCheck()
   const currentUser = await getCurrentUser()
   state.currentUserName = currentUser?.data.user.name || ''
 })
 
-const links: {to:string; text:string}[] = [
+const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "参加団体情報の編集" },
   { to: "/mypage/profile", text: "ユーザー情報" },
   { to: "/mypage/edit_user_info", text: "ユーザー情報編集" },
@@ -58,7 +48,7 @@ const links: {to:string; text:string}[] = [
         <div class="p-5  mb-2">
           <div class="user-font pb-4">{{ state.currentUserName }}様</div>
           <p>技大祭に参加していただき誠にありがとうございます。</p>
-          <p >登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
+          <p>登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
           <p class="text-xl pt-12">各種操作</p>
           <div class="py-4">
             <MypageButton text="登録情報の確認はこちら" link="/regist_info"></MypageButton>
@@ -84,17 +74,11 @@ const links: {to:string; text:string}[] = [
 
 
 <style>
-  .center{
-    @apply
-      flex
-      justify-center
-      items-center
-      pt-5
-  }
+.center {
+  @apply flex justify-center items-center pt-5
+}
 
-  .user-font{
-    @apply
-      text-2xl
-      font-bold
-  }
+.user-font {
+  @apply text-2xl font-bold
+}
 </style>
