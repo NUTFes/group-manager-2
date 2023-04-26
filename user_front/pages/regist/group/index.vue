@@ -1,19 +1,11 @@
 <script lang="ts" setup>
-import {Setting} from '@/types'
+import { Setting } from '@/types'
 import { Group } from '@/types/regist/group';
+import { groupCategoryList } from '~~/utils/list';
 import { loginCheck } from '@/utils/methods'
 
 // ログインしていない場合は/welcomeに遷移させる
 loginCheck();
-
-const categoryArray = [
-  {id: 1, name: "模擬店(食品販売)"},
-  {id: 2, name: "模擬店(物品販売)"},
-  {id: 3, name: "ステージ企画"},
-  {id: 4, name: "展示・体験"},
-  {id: 5, name: "研究室公開"},
-]
-
 const registerParams = reactive(
   {
     groupName: '',
@@ -78,7 +70,8 @@ const registerCategory = async () => {
             <p class="label">select categories</p>
             <select style="width:180px;" v-model="registerParams.categoryId">
               <option selected disabled></option>
-              <option v-for = "category in categoryArray" :value="category.id" :key="category.id">{{category.name}}</option>
+              <option v-for="category in groupCategoryList" :value="category.id" :key="category.id">{{ category.name }}
+              </option>
             </select>
           </div>
 
@@ -98,16 +91,11 @@ const registerCategory = async () => {
 </template>
 
 <style scoped>
-  .label {
-    @apply
-      flex-none
-      text-xl
-      pr-5
-  }
-  .form {
-    @apply
-    flex-none
-    border-solid
-    border-2
-  }
+.label {
+  @apply flex-none text-xl pr-5
+}
+
+.form {
+  @apply flex-none border-solid border-2
+}
 </style>
