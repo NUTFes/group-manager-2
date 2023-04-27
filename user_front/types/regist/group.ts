@@ -10,7 +10,7 @@ interface Status {
 
 interface Data {
   activity: string
-  committee: string
+  committee: boolean
   created_at: string
   fes_year_id: number
   group_category_id: number
