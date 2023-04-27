@@ -108,7 +108,7 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`employees[${idx}].studentId`" />
 
           <div v-if="idx != 0">
-            <RegistPageButton text="remove" @click="decrement"></RegistPageButton>
+            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
       </Card>
