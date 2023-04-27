@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import {Setting} from '@/types'
+import { Setting } from '@/types'
 import { Group } from '@/types/regist/group';
+import { groupCategoryList } from '~~/utils/list';
 import { loginCheck } from '@/utils/methods'
 import { useField, useForm } from 'vee-validate';
 import { groupSchema } from '~~/utils/validate';
@@ -13,14 +14,6 @@ const { handleChange: handleChangeGroupName, errorMessage: groupNameError } = us
 const { handleChange: handleChangeProjectName, errorMessage: projectNameError } = useField('projectName');
 const { handleChange: handleChangeActivity, errorMessage: activityError } = useField('activity');
 const { handleChange: handleChangeCategory, errorMessage: categoryError } = useField('category');
-
-const categoryArray = [
-  {id: 1, name: "模擬店(食品販売)"},
-  {id: 2, name: "模擬店(物品販売)"},
-  {id: 3, name: "ステージ企画"},
-  {id: 4, name: "展示・体験"},
-  {id: 5, name: "研究室公開"},
-]
 
 const registerParams = reactive(
   {
@@ -89,7 +82,8 @@ const registerCategory = async () => {
             <p class="label">select categories</p>
             <select style="width:180px;" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
-              <option v-for="category in categoryArray" :value="category.id" :key="category.id">{{category.name}}</option>
+              <option v-for="category in groupCategoryList" :value="category.id" :key="category.id">{{ category.name }}
+              </option>
             </select>
           </div>
           <div class="error-msg">{{ categoryError }}</div>
@@ -110,24 +104,24 @@ const registerCategory = async () => {
 </template>
 
 <style scoped>
-  .error-msg {
-    @apply
+.error-msg {
+  @apply
     text-rose-600
-  }
-  .error-border {
-    @apply
+}
+.error-border {
+  @apply
     border-rose-600
-  }
-  .label {
-    @apply
-      flex-none
-      text-xl
-      pr-5
-  }
-  .form {
-    @apply
+}
+.label {
+  @apply
+    flex-none
+    text-xl
+    pr-5
+}
+.form {
+  @apply
     flex-none
     border-solid
     border-2
-  }
+}
 </style>
