@@ -63,7 +63,7 @@ export const itemSchema = object({
     .of(
       object().shape({
         itemNameId: number().required("入力してください"),
-        itemNum: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+        itemNum: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
       })
     ).strict(),
 });
@@ -113,8 +113,8 @@ export const foodSchema = object({
   .of(
     object().shape({
       dishName: string().required("入力してください"),
-      numFirstDay: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
-      numSecondDay: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+      numFirstDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+      numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
     })
   ).strict(),
 });
