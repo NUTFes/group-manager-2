@@ -166,24 +166,20 @@ const skip = () =>{
 </template>
 
 <style scoped>
-  .error-border {
-   @apply
+.error-border {
+  @apply
     border-rose-600
-  }
-  .label {
-    @apply
-      flex-none
-      text-xl
-      pr-5
-  }
-  .form {
-    @apply
+}
+.label {
+  @apply
+    flex-none
+    text-xl
+    pr-5
+}
+.form {
+  @apply
     flex-none
     border-solid
     border-2
-  }
-label {
-  display: block;
-  margin-top: 20px;
 }
 </style>
