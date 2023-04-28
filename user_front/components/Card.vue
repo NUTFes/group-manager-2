@@ -70,7 +70,7 @@ export default {
   min-height: var(--card-height);
   display: flex;
   align-items: var(--card-align);
-  justify-content: start;
+  justify-content: flex-start;
   flex-flow: var(--card-flex-flow);
   flex-grow: var(--card-flex-grow);
   background-color: #fff;
