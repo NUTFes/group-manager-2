@@ -3,7 +3,8 @@ import { User } from "@/types/regist/user"
 import { useForm, useField } from "vee-validate";
 import { userSchema } from "~~/utils/validate";
 import { loginCheck } from "@/utils/methods"
-
+import { departmentList } from "~/utils/list";
+import { gradeList } from "~/utils/list";
 
 const { meta, isSubmitting } = useForm({
   validationSchema: userSchema,
@@ -31,74 +32,35 @@ const registerParams = reactive({
   userId: 0
 });
 
-  const departmentList: {id:number; name:string}[] = [
-        { id: 1, name: "機械創造工学課程" },
-        { id: 2, name: "電気電子情報工学課程" },
-        { id: 3, name: "物質材料工学課程" },
-        { id: 4, name: "環境社会基盤工学課程" },
-        { id: 5, name: "生物機能工学課程" },
-        { id: 6, name: "情報・経営システム工学課程" },
-        { id: 7, name: "機械創造工学専攻" },
-        { id: 8, name: "電気電子情報工学専攻" },
-        { id: 9, name: "物質材料工学専攻" },
-        { id: 10, name: "環境社会基盤工学専攻" },
-        { id: 11, name: "生物機能工学専攻" },
-        { id: 12, name: "情報・経営システム工学専攻" },
-        { id: 13, name: "原子力システム安全工学専攻" },
-        { id: 14, name: "システム安全専攻" },
-        { id: 15, name: "技術科学イノベーション専攻" },
-        { id: 16, name: "情報・制御工学専攻" },
-        { id: 17, name: "材料工学専攻" },
-        { id: 18, name: "エネルギー・環境工学専攻" },
-        { id: 19, name: "生物統合工学専攻" },
-        { id: 20, name: "その他" },
-      ];
-  const gradeList:{id:number; name:string}[] = [
-        { id: 1, name: "B1[学部1年]" },
-        { id: 2, name: "B2[学部2年]" },
-        { id: 3, name: "B3[学部3年]" },
-        { id: 4, name: "B4[学部4年]" },
-        { id: 5, name: "M1[修士1年]" },
-        { id: 6, name: "M2[修士2年]" },
-        { id: 7, name: "D1[博士1年]" },
-        { id: 8, name: "D2[博士2年]" },
-        { id: 9, name: "D3[博士3年]" },
-        { id: 10, name: "GD1[イノベ1年]" },
-        { id: 11, name: "GD2[イノベ2年]" },
-        { id: 12, name: "GD3[イノベ3年]" },
-        { id: 13, name: "GD4[イノベ4年]" },
-        { id: 14, name: "GD4[イノベ5年]" },
-        { id: 15, name: "その他" },
-      ];
-  const config = useRuntimeConfig();
-  const router = useRouter();
+const config = useRuntimeConfig();
+const router = useRouter();
 
-  const registUser = (async () => {
-    await $fetch<User>(config.APIURL + "/api/auth",{
-      method: "POST",
-      params:{
-        name: registerParams.name,
-        email: registerParams.mail,
-        role_id: 3,
-        password: registerParams.password,
-        password_confirmation: registerParams.passwordConfirm,
-      }
-    }).then((res) => {
-      registerParams.userId = res.data.id;
-      localStorage.setItem("user_id", registerParams.userId.toString());
-    });
-    await $fetch(config.APIURL + "/user_details",{
-      method: "POST",
-      params:{
-        student_id: registerParams.studentId,
-        tel: registerParams.tel,
-        department_id: registerParams.departmentId,
-        grade_id: registerParams.gradeId,
-        user_id: registerParams.userId,
-      }
-    });
-    router.push("/regist/group")
-  })
+const registUser = (async () => {
+  await $fetch<User>(config.APIURL + "/api/auth", {
+    method: "POST",
+    params: {
+      name: registerParams.name,
+      email: registerParams.mail,
+      role_id: 3,
+      password: registerParams.password,
+      password_confirmation: registerParams.passwordConfirm,
+    }
+  }).then((res) => {
+    registerParams.userId = res.data.id;
+    localStorage.setItem("user_id", registerParams.userId.toString());
+  });
+  await $fetch(config.APIURL + "/user_details", {
+    method: "POST",
+    params: {
+      student_id: registerParams.studentId,
+      tel: registerParams.tel,
+      department_id: registerParams.departmentId,
+      grade_id: registerParams.gradeId,
+      user_id: registerParams.userId,
+    }
+  });
+  router.push("/regist/group")
+})
 </script>
 
 <template>
@@ -127,7 +89,8 @@ const registerParams = reactive({
             <p class="label">department</p>
             <select class="form" style="width:180px;" v-model="registerParams.departmentId" @change="handleDepartment">
               <option value="" selected disabled></option>
-              <option v-for="department in departmentList" :value=department.name key="department">{{department.name}}</option>
+              <option v-for="department in departmentList" :value=department.name key="department">{{ department.name }}
+              </option>
             </select>
           </div>
           <div>
@@ -138,7 +101,7 @@ const registerParams = reactive({
             <p class="label">grade</p>
             <select class="form" style="width:180px;" v-model="registerParams.gradeId" @change="handleGrade">
               <option value="" selected disabled></option>
-              <option v-for="grade in gradeList" :value=grade.name key="grade">{{grade.name}}</option>
+              <option v-for="grade in gradeList" :value=grade.name key="grade">{{ grade.name }}</option>
             </select>
           </div>
           <div>
@@ -179,7 +142,8 @@ const registerParams = reactive({
         </Card>
         <Row>
           <RegistPageButton text="reset"></RegistPageButton>
-          <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registUser"></RegistPageButton>
+          <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registUser">
+          </RegistPageButton>
         </Row>
       </Card>
     </div>
@@ -187,21 +151,15 @@ const registerParams = reactive({
 </template>
 
 <style scoped>
-  .error {
-    @apply
-    text-red-500
-      ml-4
-  }
-  .label {
-    @apply
-      flex-none
-      text-xl
-      pr-5
-  }
-  .form {
-    @apply
-    flex-none
-    border-solid
-    border-2
-  }
+.error {
+  @apply text-red-500 ml-4
+}
+
+.label {
+  @apply flex-none text-xl pr-5
+}
+
+.form {
+  @apply flex-none border-solid border-2
+}
 </style>
