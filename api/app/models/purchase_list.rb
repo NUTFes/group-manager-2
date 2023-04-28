@@ -26,6 +26,7 @@ class PurchaseList < ApplicationRecord
 
     def to_info_h
       return {
+        "id": self.id,
         "items": self.items,
         "is_fresh": self.is_fresh,
         "food_product": self.food_product.name,
