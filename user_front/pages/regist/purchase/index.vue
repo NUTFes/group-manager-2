@@ -3,9 +3,6 @@ import { Purchase } from "@/types";
 import { FoodProduct, FesDate, Date } from "~~/types/mypage/registAlarm";
 import { loginCheck } from "@/utils/methods";
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
-
 const config = useRuntimeConfig();
 const router = useRouter();
 const formCount = ref(1);
@@ -15,6 +12,7 @@ const purchases = ref<Purchase[]>([]);
 const foodProducts = ref<FoodProduct[]>([]);
 const fesDates = ref<Date[]>([]);
 onMounted(async () => {
+  // ログインしていない場合は/welcomeに遷移させる
   loginCheck()
   const purchaseData = await $fetch<{ data: Purchase[] }>(
     config.APIURL + "/shops"

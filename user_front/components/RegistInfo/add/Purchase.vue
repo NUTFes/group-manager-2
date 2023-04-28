@@ -82,20 +82,28 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">料理名</div>
+      <div class="text">対象商品</div>
       <select class="entry" v-model="newFoodProductId">
-        <option value="" disabled selected>please select</option>
+        <option value="" disabled selected>選択してください</option>
         <option
-          v-for="(list, i) in foodProducts"
-          :key="i"
-          :value="list.id"
+        v-for="(list, i) in foodProducts"
+        :key="i"
+        :value="list.id"
         >
-          {{ list.name }}
-        </option>
+        {{ list.name }}
+      </option>
+      </select>
+      <div class="text">購入品名</div>
+      <input class="entry" type="text" v-model="newItems" />
+      <div class="text">生ものか</div>
+      <select class="entry" v-model="newIsFresh">
+        <option value="" disabled selected>選択してください</option>
+        <option value="true">生もの</option>
+        <option value="false">加工品</option>
       </select>
       <div class="text">購入店舗</div>
       <select class="entry" v-model="newShopId">
-        <option value="" disabled selected>please select</option>
+        <option value="" disabled selected>選択してください</option>
         <option
           v-for="(list, i) in purchases"
           :key="i"
@@ -103,12 +111,6 @@ const reset = () => {
         >
           {{ list.name }}
         </option>
-      </select>
-      <div class="text">生ものか</div>
-      <select class="entry" v-model="newIsFresh">
-        <option value="" disabled selected>選択してください</option>
-        <option value="true">生もの</option>
-        <option value="false">加工品</option>
       </select>
       <div class="text">購入日</div>
       <select class="entry" v-model="newFesDateId">

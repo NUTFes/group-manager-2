@@ -4,7 +4,6 @@ const config = useRuntimeConfig()
 interface Props {
   id: number | null
 }
-
 const props = withDefaults(defineProps<Props>(), {
   id: null
 })
@@ -24,7 +23,6 @@ const deletePurchase = async () => {
   })
   closeDeletePurchase()
 }
-
 </script>
 
 <template>
