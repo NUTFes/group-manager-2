@@ -26,6 +26,15 @@ const registerParams = reactive(
   }
 )
 
+const reset = () => {
+  registerParams.groupName = "",
+  registerParams.projectName = "",
+  registerParams.activity = "",
+  registerParams.categoryId = "",
+  registerParams.userId = "",
+  registerParams.fesYearId = 0
+}
+
 const config = useRuntimeConfig()
 const router = useRouter()
 
@@ -95,7 +104,7 @@ const registerCategory = async () => {
           <div class="error-msg">{{ activityError }}</div>
         </Card>
         <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>

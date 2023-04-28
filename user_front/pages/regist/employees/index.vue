@@ -12,6 +12,12 @@ const initialData = {
   ],
 };
 
+const reset = (idx: number) => {
+  registerParams[idx].employeeName = "",
+  registerParams[idx].studentId = "",
+  registerParams[idx].stooltest = 0
+}
+
 const { meta, isSubmitting } = useForm({
   validationSchema: employeeSchema,
   initialValues: initialData,
@@ -26,7 +32,6 @@ const formCount = ref(1);
 const state = reactive({
   groupId: 0,
 });
-
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -107,13 +112,17 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`employees[${idx}].studentId`" />
 
-          <div v-if="idx != 0">
+          <div v-if="idx == 0">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+          </div>
+
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
             <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton text="reset"></RegistPageButton>
         <RegistPageButton text="register" :disabled="!meta.valid || isSubmitting" @click="registerEmployee"></RegistPageButton>
         <RegistPageButton text="Add" @click="increment"></RegistPageButton>
         <RegistPageButton text="skip" @click="skip"></RegistPageButton>

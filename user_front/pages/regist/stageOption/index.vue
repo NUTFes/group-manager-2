@@ -25,6 +25,15 @@ const registerParams = reactive({
   groupId: 0,
 })
 
+const reset = () => {
+  registerParams.isItem = "",
+  registerParams.isMusic = "",
+  registerParams.isCamera = "",
+  registerParams.isNoise = "",
+  registerParams.stageContent = "",
+  registerParams.groupId = 0
+}
+
 onMounted(async() => {
   loginCheck(); // ログインしていない場合は/welcomeに遷移させる
   registerParams.groupId = Number(localStorage.getItem("group_id"));
@@ -108,7 +117,7 @@ const skip = () =>{
 
         </Card>
         <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" text="register" @click="registerStageOption"></RegistPageButton>
           <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>
