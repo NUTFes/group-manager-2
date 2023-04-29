@@ -116,13 +116,15 @@ interface Purchase {
 
 interface PurchaseList {
   id: number
-  date: string
+  date_id: number
   day: string
   days_num: number
-  food_product: number
+  food_product_id: number
+  food_product: string
   is_fresh: boolean
   items: string
-  shop: number
+  shop_id: number
+  shop: string
   year: number
 }
 
@@ -438,10 +440,13 @@ const openAddPurchase = () => {
             <RegistInfoCardPurchase
               :id="p.purchase_list.id"
               :group-id="group?.id"
-              :food-product-id="p.purchase_list.food_product"
-              :shop-id="p.purchase_list.shop"
+              :food-product-id="p.purchase_list.food_product_id"
+              :food-product="p.purchase_list.food_product"
+              :shop-id="p.purchase_list.shop_id"
+              :shop="p.purchase_list.shop"
               :name="p.purchase_list.items"
               :is-fresh="p.purchase_list.is_fresh"
+              :fes-date-id="p.purchase_list.date_id"
             />
           </div>
         </div>

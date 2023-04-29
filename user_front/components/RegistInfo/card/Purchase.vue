@@ -4,7 +4,9 @@ interface Props {
   id: number
   groupId: number
   foodProductId: number | null
+  foodProduct: string | null
   shopId: number | null
+  shop: string | null
   fesDateId: number | null
   name: string
   isFresh: boolean
@@ -15,7 +17,9 @@ const purchase = withDefaults(defineProps<Props>(), {
   id: 0,
   groupId: 0,
   foodProductId: null,
+  foodProduct: null,
   shopId: null,
+  shop: null,
   fesDateId: null,
   name: '',
   isFresh: false,
@@ -41,8 +45,8 @@ const openDeletePurchase = () => {
       </div>
       ▸
       <div class="w-[20%] ml-4 text-3xl text-center">
-        <div class="mr-1 my-1 text-xl underline">
-          {{ purchase.foodProductId }}の
+        <div class="mr-1 my-1 text-xl">
+          <span class="underline">{{ purchase.foodProduct }}</span>の
         </div>
         <div class="mr-1">
           {{ purchase.name }}
@@ -55,7 +59,7 @@ const openDeletePurchase = () => {
       ▸
       <div class="w-[20%] mx-4 text-3xl text-center">
         <div class="mr-1 text-center">
-          {{ purchase.shopId }}
+          {{ purchase.shop }}
         </div>
       </div>
       <RegistInfoDivideBar />
@@ -78,7 +82,9 @@ const openDeletePurchase = () => {
     :id="id"
     :group-id="groupId"
     :food-product-id="foodProductId"
+    :food-product="foodProduct"
     :shop-id="shopId"
+    :shop="shop"
     :fes-date-id="fesDateId"
     :name="name"
     :is-fresh="isFresh"
