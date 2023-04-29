@@ -27,6 +27,14 @@ const registerParams = reactive({
   groupId: 0,
 });
 
+const reset = () => {
+  registerParams.first = "",
+  registerParams.second = "",
+  registerParams.third = "",
+  registerParams.remark = "",
+  registerParams.groupId = 0
+}
+
 onMounted(async () => {
 
   const placeData = await $fetch<Place>(config.APIURL + "/places");
@@ -99,7 +107,7 @@ const skip = () =>{
           <div class="text-rose-600">{{ remarkError }}</div>
         </Card>
         <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" text="register" @click="registerPlace"></RegistPageButton>
           <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>

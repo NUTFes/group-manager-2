@@ -32,6 +32,18 @@ const registerParams = reactive({
   userId: 0
 });
 
+const reset = () => {
+  registerParams.name = "",
+  registerParams.studentId = "",
+  registerParams.tel = "",
+  registerParams.mail = "",
+  registerParams.password = "",
+  registerParams.passwordConfirm = "",
+  registerParams.departmentId = "",
+  registerParams.gradeId = "",
+  registerParams.userId = 0
+}
+
 const config = useRuntimeConfig();
 const router = useRouter();
 
@@ -141,7 +153,7 @@ const registUser = (async () => {
           </div>
         </Card>
         <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registUser">
           </RegistPageButton>
         </Row>

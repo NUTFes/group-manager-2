@@ -32,6 +32,15 @@ const registerParams = reactive({
   cleanUpTime: "",
 });
 
+const reset = () => {
+  registerParams.fesDateId = 0,
+  registerParams.firstPreference = 0,
+  registerParams.secondPreference = 0,
+  registerParams.performanceTime = "",
+  registerParams.preparationTime = "",
+  registerParams.cleanUpTime = ""
+}
+
 onMounted(async()=>{
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
@@ -129,7 +138,7 @@ const skip = () =>{
 
         </Card>
         <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerRainStage" text="登録"></RegistPageButton>
           <RegistPageButton text="skip" @click="skip"></RegistPageButton>
         </Row>

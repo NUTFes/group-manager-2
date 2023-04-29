@@ -15,6 +15,14 @@ const initialData = {
   ],
 };
 
+const reset = (idx: number) => {
+  registerParams[idx].productName = "",
+  registerParams[idx].maxPower = 0,
+  registerParams[idx].manufacturer = "",
+  registerParams[idx].model = "",
+  registerParams[idx].url = ""
+}
+
 const { meta, isSubmitting } = useForm({
   validationSchema: powerSchema,
   initialValues: initialData,
@@ -151,7 +159,11 @@ const skip = () =>{
             />
           </div>
           <ErrorMessage class="text-rose-600" :name="`powers[${idx}].url`" />
-          <div v-if="idx != 0">
+          <div v-if="idx == 0">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+          </div>
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
             <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
