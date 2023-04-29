@@ -2,16 +2,6 @@
 import axios from 'axios';
 import { Group } from '~~/types';
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
-
-const config = useRuntimeConfig()
-
-const url = config.APIURL + "/api/v1/current_user/current_regist_info";
-
-const selectTab = ref<number>(1);
-const tab = ref<number>(selectTab.value);
-
 interface RegistInfo {
   sub_rep: SubRep[]
   place_orders: RegistPlace[]
@@ -108,6 +98,50 @@ interface PowerOrder {
   }
 }
 
+interface Employee {
+  employee : {
+    employee: {
+      id: number
+      name: string
+      student_id: number
+    }
+  }
+}
+
+interface Purchase {
+  purchase_list: {
+    purchase_list: PurchaseList
+  }
+}
+
+interface PurchaseList {
+  id: number
+  date_id: number
+  day: string
+  days_num: number
+  food_product_id: number
+  food_product: string
+  is_fresh: boolean
+  items: string
+  shop_id: number
+  shop: string
+  year: number
+}
+
+interface Food {
+  food_product: {
+    food_product: {
+      id: number
+      name: string
+      is_cooking: boolean
+      first_day_num: number
+      second_day_num: number
+      setting: boolean
+    },
+    purchase_lists: Purchase
+  }
+}
+
 interface SubRep {
   id: number
   name: string
@@ -119,6 +153,7 @@ interface SubRep {
   email: string
   tel: string
 }
+
 const registInfo = ref<RegistInfo>()
 const group = ref<Group>()
 const subRep = ref<SubRep>()
@@ -127,12 +162,20 @@ const placeOrder = ref<RegistPlace>()
 const powerOrder = ref<PowerOrder>()
 const stageOrder = ref<StageOrder>()
 const stageOption = ref<StageOption>()
+const employee = ref<Employee>()
+const food = ref<Food>()
 const regist = ref<RegistItem>()
 // const setting = ref("")
+const groupCategoryId = ref<Group['group_category_id']>()
 
-const groupCategoryId = ref(null)
+const selectTab = ref<number>(1);
+const tab = ref<number>(selectTab.value);
 
+const config = useRuntimeConfig()
+const url = config.APIURL + "/api/v1/current_user/current_regist_info";
 onMounted(() => {
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck();
   axios
     .get(url, {
       headers: {
@@ -151,6 +194,8 @@ onMounted(() => {
       powerOrder.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
+      employee.value = response.data.data[0].employees;
+      food.value = response.data.data[0].food_products;
       groupCategoryId.value = response.data.data[0].group.group_category_id
     });
   // const settingurl = config.APIURL + "/user_page_settings";
@@ -159,33 +204,46 @@ onMounted(() => {
   // });
 })
 
-const reload = () => {
-  axios
-    .get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        client: localStorage.getItem("client"),
-        uid: localStorage.getItem("uid"),
-      },
-    })
-    .then((response) => {
-      registInfo.value = response.data.data;
-      groupCategoryId.value = response.data.data[0].group.group_category_id;
-    });
-}
+// const reload = () => {
+//   axios
+//     .get(url, {
+//       headers: {
+//         "Content-Type": "application/json",
+//         "access-token": localStorage.getItem("access-token"),
+//         client: localStorage.getItem("client"),
+//         uid: localStorage.getItem("uid"),
+//       },
+//     })
+//     .then((response) => {
+//       registInfo.value = response.data.data;
+//       groupCategoryId.value = response.data.data[0].group.group_category_id;
+//     });
+// }
 
 const isAddItem = ref<boolean>(false)
-
 const openAddItem = () => {
   isAddItem.value = true
 }
-const isAddPower = ref<boolean>(false)
 
+const isAddPower = ref<boolean>(false)
 const openAddPower = () => {
   isAddPower.value = true
 }
 
+const isAddEmployee = ref<boolean>(false)
+const openAddEmployee = () => {
+  isAddEmployee.value = true
+}
+
+const isAddFood = ref<boolean>(false)
+const openAddFood = () => {
+  isAddFood.value = true
+}
+
+const isAddPurchase = ref<boolean>(false)
+const openAddPurchase = () => {
+  isAddPurchase.value = true
+}
 </script>
 
 <template>
@@ -301,7 +359,7 @@ const openAddPower = () => {
 
       <!-- 電力申請 -->
       <div v-show="tab === 5">
-        <div class="my-8" v-for="p in powerOrder" :key="p.toString()">
+        <div class="mb-8" v-for="p in powerOrder" :key="p.toString()">
           <RegistInfoCardPower
             :group-id="group?.id"
             :id="p.power_order.id"
@@ -328,7 +386,6 @@ const openAddPower = () => {
             :regist="item.rental_item.rental_item"
             :name="item.rental_item.name"
             :num="item.rental_item.num"
-            @reload="reload()"
           />
         </div>
         <Button class="ml-auto" @click="openAddItem()"/>
@@ -337,6 +394,68 @@ const openAddPower = () => {
           v-model:add-item="isAddItem"
           :group-id="group?.id"
         />
+      </div>
+
+      <!-- 従業員申請 -->
+      <div v-show="tab === 7" class="flex flex-wrap">
+        <div v-for="e in employee" :key="e.toString()">
+          <RegistInfoCardEmployee
+            :group-id="group?.id"
+            :id="e.employee.id"
+            :name="e.employee.name"
+            :student-id="e.employee.student_id"
+          />
+        </div>
+        <Button class="ml-auto" @click="openAddEmployee()"/>
+        <RegistInfoAddEmployee
+          v-if="isAddEmployee"
+          v-model:add-employee="isAddEmployee"
+          :group-id="group?.id"
+        />
+      </div>
+
+      <!-- 販売食品申請 -->
+      <div v-show="tab === 8">
+        <div class="mb-8" v-for="f in food" :key="f.toString()">
+          <RegistInfoCardFood
+            :group-id="group?.id"
+            :id="f.food_product.id"
+            :name="f.food_product.name"
+            :is-cooking="f.food_product.is_cooking"
+            :firstNum="f.food_product.first_day_num"
+            :secondNum="f.food_product.second_day_num"
+          />
+        </div>
+          <Button class="text-right" @click="openAddFood()"/>
+          <RegistInfoAddFood
+            v-if="isAddFood"
+            v-model:add-food="isAddFood"
+            :group-id="group?.id"
+          />
+      </div>
+      <!-- 購入品申請 -->
+      <div v-show="tab === 9">
+        <div v-for="f in food" :key="f.toString()">
+          <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
+            <RegistInfoCardPurchase
+              :id="p.purchase_list.id"
+              :group-id="group?.id"
+              :food-product-id="p.purchase_list.food_product_id"
+              :food-product="p.purchase_list.food_product"
+              :shop-id="p.purchase_list.shop_id"
+              :shop="p.purchase_list.shop"
+              :name="p.purchase_list.items"
+              :is-fresh="p.purchase_list.is_fresh"
+              :fes-date-id="p.purchase_list.date_id"
+            />
+          </div>
+        </div>
+        <Button class="text-right" @click="openAddPurchase()"/>
+          <RegistInfoAddPurchase
+            v-if="isAddPurchase"
+            v-model:add-purchase="isAddPurchase"
+            :group-id="group?.id"
+          />
       </div>
     </div>
   </template>

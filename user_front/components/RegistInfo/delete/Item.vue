@@ -10,12 +10,12 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 interface Emits {
-  (e: 'update:DeleteItem', isDeleteItem: boolean): void
+  (e: 'update:deleteItem', isDeleteItem: boolean): void
 }
 const emits = defineEmits<Emits>()
 
 const closeDeleteItem = () => {
-  emits('update:DeleteItem', false)
+  emits('update:deleteItem', false)
 }
 
 const deleteItem = async() => {
