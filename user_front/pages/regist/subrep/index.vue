@@ -32,6 +32,17 @@ const registerParams = reactive(
   }
 )
 
+const reset = () => {
+  registerParams.name = "",
+  registerParams.studentId = "",
+  registerParams.tel = "",
+  registerParams.mail = "",
+  registerParams.departmentId = "",
+  registerParams.gradeId = "",
+  registerParams.groupId = "",
+  registerParams.groupCategoryId = ""
+}
+
 onMounted(async () => {
 
   registerParams.groupId = localStorage.getItem("group_id") || "";
@@ -122,7 +133,7 @@ const skip = () => {
           <div class="error_msg">{{ telError }}</div>
         </Card>
         <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
+          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
           <RegistPageButton text="register" :disabled='!meta.valid || isSubmitting' @click="registerSubRep">
           </RegistPageButton>
           <RegistPageButton text="skip" @click="skip"></RegistPageButton>

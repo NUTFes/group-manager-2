@@ -22,6 +22,13 @@ const initialData = {
   ],
 };
 
+const reset = (idx: number) => {
+  registerParams[idx].dishName = "",
+  registerParams[idx].isCooking = false,
+  registerParams[idx].numFirstDay = 0,
+  registerParams[idx].numSecondDay = 0
+}
+
 const { meta, isSubmitting } = useForm({
   validationSchema: foodSchema,
   initialValues: initialData,
@@ -129,13 +136,17 @@ const decrement = (idx: number) => {
           </div>
           <ErrorMessage class="text-rose-600" :name="`foods[${idx}].numSecondDay`"/>
 
-          <div v-if="idx != 0">
-            <RegistPageButton @click="decrement(idx)" text="削除"></RegistPageButton>
+          <div v-if="idx == 0">
+            <RegistPageButton @click="reset(idx)" text="reset"></RegistPageButton>
+          </div>
+
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton @click="reset(idx)" text="reset"></RegistPageButton>
+            <RegistPageButton @click="decrement(idx)" text="remove"></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton text="reset"></RegistPageButton>
         <RegistPageButton text="Add" @click="increment"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerFood" text="登録"></RegistPageButton>
         <RegistPageButton text="skip" @click="skip"></RegistPageButton>

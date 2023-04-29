@@ -17,6 +17,14 @@ const initialData = {
   ],
 };
 
+const reset = (idx: number) => {
+  registerParams[idx].food_product_id = "",
+  registerParams[idx].shop_id = "",
+  registerParams[idx].items = "",
+  registerParams[idx].isFresh = "",
+  registerParams[idx].fes_date_id = ""
+}
+
 const { meta, isSubmitting } = useForm({
   validationSchema: purchaseSchema,
   initialValues: initialData,
@@ -88,20 +96,6 @@ const increment = () => {
 const decrement = (idx: number) => {
   formCount.value--;
   removeValidate(idx);
-};
-
-const resetPurchase = () => {
-  formCount.value = 1;
-  registerParams.splice(0, registerParams.length);
-  registerParams.push(
-    reactive({
-      food_product_id: "",
-      shop_id: "",
-      items: "",
-      isFresh: "",
-      fes_date_id: "",
-    })
-  );
 };
 
 const registerPurchase = async () => {
@@ -238,16 +232,17 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].fesDateId`" />
 
-          <div v-if="idx != 0">
-            <RegistPageButton
-              text="remove"
-              @click="decrement(idx)"
-            ></RegistPageButton>
+          <div v-if="idx == 0">
+            <RegistPageButton text="reset" @click="reset(idx)" ></RegistPageButton>
+          </div>
+
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton text="reset" @click="reset(idx)" ></RegistPageButton>
+            <RegistPageButton text="remove" @click="decrement(idx)" ></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton @click="resetPurchase" text="reset" ></RegistPageButton>
         <RegistPageButton @click="increment" text="Add" ></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerPurchase" text="Regist" />
         <RegistPageButton text="skip" @click="skip"></RegistPageButton>

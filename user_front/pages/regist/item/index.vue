@@ -13,6 +13,11 @@ const initialData = {
   ],
 };
 
+const reset = (idx: number) => {
+  registerParams[idx].rentalItemId = 0,
+  registerParams[idx].num = 0
+}
+
 const { meta, isSubmitting } = useForm({
   validationSchema: itemSchema,
   initialValues: initialData,
@@ -117,13 +122,17 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
-          <div v-if="idx != 0">
-            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
+          <div v-if="idx == 0">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+          </div>
+
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton text="remove" @click="decrement(idx) "></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton text="reset"></RegistPageButton>
         <RegistPageButton @click="increment" text="Add"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerItem" text="登録"></RegistPageButton>
         <RegistPageButton text="skip" @click="skip"></RegistPageButton>
