@@ -14,8 +14,7 @@ const initialData = {
 
 const reset = (idx: number) => {
   registerParams[idx].employeeName = "",
-  registerParams[idx].studentId = "",
-  registerParams[idx].stooltest = 0
+  registerParams[idx].studentId = ""
 }
 
 const { meta, isSubmitting } = useForm({
@@ -42,7 +41,6 @@ onMounted(async () => {
 const registerParams = [reactive({
   employeeName: "",
   studentId: "",
-  stooltest: 0,
 })];
 
 const increment = () => {
@@ -50,7 +48,6 @@ const increment = () => {
   registerParams.push(reactive({
     employeeName: "",
     studentId: "",
-    stooltest: 0,
   }))
   addValidate({ name: '', studentId: '' })
 }
