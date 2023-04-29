@@ -29,6 +29,6 @@ export const loginCheck = async () => {
     }
   })
   if (isLogin == false) {
-    router.push("/welcome")
+    router.push("/")
   }
 }
