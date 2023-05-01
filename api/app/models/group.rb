@@ -14,6 +14,7 @@ class Group < ApplicationRecord
     has_one :group_identification, dependent: :destroy
     has_one :public_relation
     has_one :venue_map
+    has_one :announcement
 
     ### group_category (参加団体カテゴリ)
 

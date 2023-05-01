@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   resources :fes_years
   resources :public_relations
   resources :venue_maps
+  resources :announcements
 
   # /api/v1/...
   namespace 'api' do
