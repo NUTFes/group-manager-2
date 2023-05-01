@@ -11,7 +11,6 @@ const selectedFile = ref<File|null>(null)
 const fileName = [{ name: "選択してください" }]
 const pictureName = ref<string>("")
 const blurb = ref<string>("")
-const announcement = ref<string>("")
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -48,13 +47,12 @@ const getImageURL = () =>{
           picture_name: pictureName.value,
           picture_path: url,
           blurb: blurb.value,
-          announcement: announcement.value,
         },
         headers: {
           "Content-Type": "application/json",
         },
     })
-    })
+  })
 }
 </script>
 
@@ -72,10 +70,6 @@ const getImageURL = () =>{
         <label>
           <input type="file" @change="fileUpload">
         </label>
-      </div>
-      <div class="flex my-4 items-center">
-        <span class="text-3xl mr-4">会場アナウンス文</span>
-        <textarea class="border-2" v-model="announcement"></textarea>
       </div>
       <RegistPageButton text="登録" @click="getImageURL"></RegistPageButton>
     </Card>
