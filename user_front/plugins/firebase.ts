@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { FirebaseStorage, getStorage } from "firebase/storage";
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA5xmYvoQPI9T4ruBG0CYZ30lKCUU4g6VI",
@@ -13,7 +13,7 @@ const firebaseConfig = {
 const APP = initializeApp(firebaseConfig);
 const STORAGE = getStorage(APP);
 
-export default defineNuxtPlugin(({  }) => {
+export default defineNuxtPlugin(() => {
   inject("firebase", APP);
   inject("storage", STORAGE);
 });

@@ -8,7 +8,7 @@ const state = reactive({
 });
 
 const selectedFile = ref<File|null>(null)
-const fileName = [{ name: "選択してください" }]
+const fileName = ref<string>('選択してください')
 const pictureName = ref<string>("")
 const blurb = ref<string>("")
 
@@ -23,11 +23,11 @@ const fileUpload = (e: Event) => {
   const files = target.files
   const file = files![0]
   selectedFile.value = file
-  fileName[0].name = file.name
+  fileName.value = file.name
 }
 
 const storage = getStorage();
-const storageRef = fireRef(storage, fileName[0].name);
+const storageRef = fireRef(storage, fileName.value);
 
 const getImageURL = () =>{
   selectedFile.value &&
@@ -57,14 +57,14 @@ const getImageURL = () =>{
 </script>
 
 <template>
-  <NuxtLink to="/mypage" class="ml-4 text-left text-2xl">マイページに戻る</NuxtLink>
+  <NuxtLink to="/mypage" class="ml-4 text-left text-xl text-pink-500">マイページに戻る</NuxtLink>
   <div class="mx-[10%] my-[5%]">
-    <h1 class="text-4xl ">パンフレット用PR・会場アナウンス文</h1>
+    <h1 class="text-4xl ">パンフレット用PR</h1>
     <Card>
-      <div class="flex mb-4 items-center">
-        <span class="text-3xl mr-4">PR文(40文字程度)</span>
-        <textarea class="border-2" v-model="blurb"></textarea>
+      <div class="left text-3xl">
+        PR文(40文字程度)
       </div>
+      <textarea class="border-2 w-[60%]" v-model="blurb"></textarea>
       <div class="flex my-4 items-center">
         <span class="text-3xl mr-4">イラスト</span>
         <label>
