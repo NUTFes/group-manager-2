@@ -35,7 +35,7 @@ const postImageURL = () => {
     });
   getDownloadURL(fireRef(storage, pictureName.value)).then((url) => {
     const postUrl =
-      "/public_relations?group_id=" +
+      "/venue_maps?group_id=" +
       state.groupId;
 
     useFetch(config.APIURL + postUrl, {
@@ -61,7 +61,6 @@ const postImageURL = () => {
         <span class="text-3xl mr-4">配置図(pdf, png, jpgのみ)</span>
         <label>
           <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload">
-          {{ fileName  }}
         </label>
       </div>
       <RegistPageButton text="登録" @click="postImageURL"></RegistPageButton>
