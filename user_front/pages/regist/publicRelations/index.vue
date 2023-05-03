@@ -44,7 +44,7 @@ const getImageURL = () =>{
       useFetch(config.APIURL + postUrl,{
         method: "POST",
         params: {
-          picture_name: pictureName.value,
+          picture_name: fileName.value,
           picture_path: url,
           blurb: blurb.value,
         },
@@ -57,7 +57,7 @@ const getImageURL = () =>{
 </script>
 
 <template>
-  <NuxtLink to="/mypage" class="ml-4 text-left text-xl text-pink-500">マイページに戻る</NuxtLink>
+  <NuxtLink to="/mypage" class="ml-4 text-left text-xl text-pink-500 hover:font-bold">マイページに戻る</NuxtLink>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl ">パンフレット用PR</h1>
     <Card>
@@ -65,9 +65,9 @@ const getImageURL = () =>{
         PR文(40文字程度)
       </div>
       <textarea class="border-2 w-[60%]" v-model="blurb"></textarea>
-      <div class="flex my-4 items-center">
-        <span class="text-3xl mr-4">イラスト</span>
+      <div class="my-4 items-center">
         <label>
+          <span class="text-3xl mr-4">イラスト</span>
           <input type="file" @change="fileUpload">
         </label>
       </div>
