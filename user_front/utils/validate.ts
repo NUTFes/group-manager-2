@@ -12,6 +12,15 @@ export const userSchema = object({
   tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください").required("入力してください")
 });
 
+export const userDetailSchema = object({
+  name: string().required("入力してください"),
+  department: string().required("入力してください"),
+  grade: string().required("入力してください"),
+  studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください").required("入力してください"),
+  email: string().email('メールアドレスをご確認ください').required("入力してください"),
+  tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください").required("入力してください")
+})
+
 // group登録のバリデーション
 export const groupSchema = object({
   groupName: string().required("入力してください"),
