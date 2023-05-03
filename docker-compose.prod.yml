@@ -1,5 +1,12 @@
 version: "3"
 services:
+  cloudflare:
+    image: cloudflare/cloudflared
+    container_name: "GM2-CLOUDFLARE"
+    volumes:
+      - ./cloudflare/prod:/home/nonroot/.cloudflared
+    command: tunnel run
+
   api:
     build: ./api
     command: bash -c "bundle exec rails s"
