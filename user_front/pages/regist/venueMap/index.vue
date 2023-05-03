@@ -58,8 +58,8 @@ const postImageURL = () => {
     <h1 class="text-4xl ">会場配置図の申請</h1>
     <Card>
       <div class="flex my-4 items-center">
-        <span class="text-3xl mr-4">配置図(pdf, png, jpgのみ)</span>
         <label>
+          <span class="text-3xl mr-4">配置図(pdf, png, jpgのみ)</span>
           <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload">
         </label>
       </div>

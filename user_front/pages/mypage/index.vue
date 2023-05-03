@@ -36,6 +36,9 @@ const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "参加団体情報の編集" },
   { to: "/mypage/edit_user_info", text: "ユーザー情報確認＆編集" },
   { to: "/mypage/password_reset", text: "パスワード変更" },
+  { to: "/regist/publicRelations", text: "PR登録" },
+  { to: "/regist/announcement", text: "アナウンス文登録" },
+  { to: "/regist/venueMap", text: "会場配置図登録" },
 ];
 </script>
 
@@ -52,9 +55,9 @@ const links: { to: string; text: string }[] = [
           <div class="py-4">
             <MypageButton text="登録情報の確認はこちら" link="/regist_info"></MypageButton>
           </div>
-          <div class="flex text-pink-400 ">
+          <div class="flex text-pink-400">
             <ui v-for="link in links" :key="link.text">
-              <nuxt-link :to="link.to" class="pr-5 text-xl">{{ link.text }}</nuxt-link>
+              <nuxt-link :to="link.to" class="pr-5 text-xl hover:font-bold">{{ link.text }}</nuxt-link>
             </ui>
           </div>
         </div>
