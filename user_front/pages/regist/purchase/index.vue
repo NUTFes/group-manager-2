@@ -2,6 +2,37 @@
 import { Purchase } from "@/types";
 import { FoodProduct, FesDate, Date } from "~~/types/mypage/registAlarm";
 import { loginCheck } from "@/utils/methods";
+import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate";
+import { purchaseSchema } from "~~/utils/validate";
+
+const initialData = {
+  purchaseList: [
+    {
+      foodProductId: "",
+      shopId: "",
+      items: "",
+      isFresh: "",
+      fesDateId: "",
+    },
+  ],
+};
+
+const reset = (idx: number) => {
+  registerParams[idx].food_product_id = "",
+  registerParams[idx].shop_id = "",
+  registerParams[idx].items = "",
+  registerParams[idx].isFresh = "",
+  registerParams[idx].fes_date_id = ""
+}
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: purchaseSchema,
+  initialValues: initialData,
+});
+
+const { fields: purchaseValidate, push: addValidate, remove: removeValidate } = useFieldArray(
+  "purchaseList"
+);
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -53,25 +84,18 @@ const increment = () => {
       fes_date_id: "",
     })
   );
+  addValidate({
+    foodProductId: "",
+    shopId: "",
+    items: "",
+    isFresh: "",
+    fesDateId: "",
+  });
 };
 
-const decrement = () => {
+const decrement = (idx: number) => {
   formCount.value--;
-  registerParams.pop();
-};
-
-const resetPurchase = () => {
-  formCount.value = 1;
-  registerParams.splice(0, registerParams.length);
-  registerParams.push(
-    reactive({
-      food_product_id: "",
-      shop_id: "",
-      items: "",
-      isFresh: "",
-      fes_date_id: "",
-    })
-  );
+  removeValidate(idx);
 };
 
 const registerPurchase = async () => {
@@ -109,87 +133,122 @@ const registerPurchase = async () => {
 const skip = () =>{
   router.push("/mypage");
 }
-
 </script>
 
 <template>
-  <div>
-    <div class="mx-[20%] my-[5%]">
-      <Card>
-        <h1 class="text-3xl">Registration of purchase</h1>
-        <Card border="none" align="end" gap="20px">
-          <div v-for="(count, i) in formCount" class="flex flex-col gap-2">
-            <p class="text-2xl border-b-2">Purchase {{ i + 1 }}</p>
-            <div class="flex">
-              <p class="label">Target food</p>
-              <select
-                style="width: 180px"
-                v-model="registerParams[i].food_product_id"
+  <div class="mx-[20%] my-[5%]">
+    <Card>
+      <h1 class="text-3xl">Registration of purchase</h1>
+      <Card border="none" align="end">
+        <div v-for="(field, idx) in purchaseValidate" :key="field.key" class="flex flex-col gap-2">
+          <p class="text-2xl border-b-2">Purchase {{ idx + 1 }}</p>
+          <div class="flex">
+            <p class="label">Target food</p>
+            <Field
+              :id="`foodName[${idx}]`"
+              :name="`purchaseList[${idx}].foodProductId`"
+              as="select"
+              style="width: 180px"
+              class="form"
+              v-model="registerParams[idx].food_product_id"
+            >
+              <option value="" disabled selected>please select</option>
+              <option
+                v-for="(list, i) in foodProducts"
+                :key="i"
+                :value="list.id"
               >
-                <option value="" disabled selected>please select</option>
-                <option
-                  v-for="(list, i) in foodProducts"
-                  :key="i"
-                  :value="list.id"
-                >
-                  {{ list.name }}
-                </option>
-              </select>
-            </div>
-            <div class="flex">
-              <p class="label">Place of purchase</p>
-              <select style="width: 180px" v-model="registerParams[i].shop_id">
-                <option value="" disabled selected>please select</option>
-                <option
-                  v-for="(list, i) in purchases"
-                  :key="i"
-                  :value="list.id"
-                >
-                  {{ list.name }}
-                </option>
-              </select>
-            </div>
-            <div class="flex">
-              <p class="label">purchased item</p>
-              <input class="form" v-model="registerParams[i].items" />
-            </div>
-            <div class="flex">
-              <p class="label">Is it row food?</p>
-              <select style="width: 180px" v-model="registerParams[i].isFresh">
-                <option value="" disabled selected>please select</option>
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </select>
-            </div>
-            <div class="flex">
-              <p class="label">Fes Date</p>
-              <select
-                style="width: 180px"
-                v-model="registerParams[i].fes_date_id"
-              >
-                <option value="" disabled selected>please select</option>
-                <option v-for="(list, i) in fesDates" :key="i" :value="list.id">
-                  {{ list.date }}
-                </option>
-              </select>
-            </div>
-            <div v-if="i != 0">
-              <RegistPageButton
-                text="remove form"
-                @click="decrement"
-              ></RegistPageButton>
-            </div>
+                {{ list.name }}
+              </option>
+            </Field>
           </div>
-        </Card>
-        <Row>
-          <RegistPageButton @click="resetPurchase" text="reset" ></RegistPageButton>
-          <RegistPageButton @click="increment" text="Add form" ></RegistPageButton>
-          <RegistPageButton @click="registerPurchase" text="Regist" />
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
-        </Row>
-        <p class="text-red-500">{{ errorMessage }}</p>
+          <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].foodProductId`" />
+
+          <div class="flex">
+            <p class="label">Place of purchase</p>
+            <Field
+              :id="`shopId${idx}`"
+              :name="`purchaseList[${idx}].shopId`"
+              as="select"
+              style="width: 180px"
+              class="form"
+              v-model="registerParams[idx].shop_id"
+            >
+              <option value="" disabled selected>please select</option>
+              <option
+                v-for="(list, i) in purchases"
+                :key="i"
+                :value="list.id"
+              >
+                {{ list.name }}
+              </option>
+            </Field>
+          </div>
+          <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].shopId`" />
+
+          <div class="flex">
+            <p class="label">purchased item</p>
+            <Field
+              :id="`item${idx}`"
+              :name="`purchaseList[${idx}].item`"
+              class="form"
+              v-model="registerParams[idx].items"
+            />
+          </div>
+          <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].item`" />
+
+          <div class="flex">
+            <p class="label">Is it row food?</p>
+            <Field
+              :id="`isFresh${idx}`"
+              :name="`purchaseList[${idx}].isFresh`"
+              as="select"
+              style="width: 180px"
+              class="form"
+              v-model="registerParams[idx].isFresh"
+            >
+              <option value="" disabled selected>please select</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </Field>
+          </div>
+          <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].isFresh`" />
+
+          <div class="flex">
+            <p class="label">Fes Date</p>
+            <Field
+              :id="`fesDateId${idx}`"
+              :name="`purchaseList[${idx}].fesDateId`"
+              as="select"
+              style="width: 180px"
+              class="form"
+              v-model="registerParams[idx].fes_date_id"
+            >
+              <option value="" disabled selected>please select</option>
+              <option v-for="(list, i) in fesDates" :key="i" :value="list.id">
+                {{ list.date }}
+              </option>
+            </Field>
+          </div>
+          <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].fesDateId`" />
+
+          <div v-if="idx == 0">
+            <RegistPageButton text="reset" @click="reset(idx)" ></RegistPageButton>
+          </div>
+
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton text="reset" @click="reset(idx)" ></RegistPageButton>
+            <RegistPageButton text="remove" @click="decrement(idx)" ></RegistPageButton>
+          </div>
+        </div>
       </Card>
-    </div>
+      <Row>
+        <RegistPageButton @click="increment" text="Add" ></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerPurchase" text="Regist" />
+        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+      </Row>
+      <p class="text-red-500">{{ errorMessage }}</p>
+    </Card>
   </div>
 </template>
 

@@ -1,8 +1,28 @@
 <script lang="ts" setup>
-import {loginCheck} from '@/utils/methods'
+import { loginCheck } from '@/utils/methods'
+import { useFieldArray, useForm, Field, ErrorMessage } from 'vee-validate'
+import { employeeSchema } from '~~/utils/validate'
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck()
+const initialData = {
+  employees: [
+    {
+      name: '',
+      studentId: '',
+    },
+  ],
+};
+
+const reset = (idx: number) => {
+  registerParams[idx].employeeName = "",
+  registerParams[idx].studentId = ""
+}
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: employeeSchema,
+  initialValues: initialData,
+});
+
+const { fields: employeeValidate, push: addValidate, remove: removeValidate } = useFieldArray('employees')
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -13,14 +33,14 @@ const state = reactive({
 });
 
 onMounted(async () => {
-  
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck()
   state.groupId = Number(localStorage.getItem("group_id"));
 })
 
 const registerParams = [reactive({
   employeeName: "",
   studentId: "",
-  stooltest: 0,
 })];
 
 const increment = () => {
@@ -28,13 +48,13 @@ const increment = () => {
   registerParams.push(reactive({
     employeeName: "",
     studentId: "",
-    stooltest: 0,
   }))
+  addValidate({ name: '', studentId: '' })
 }
 
-const decrement = () => {
+const decrement = (idx: number) => {
   formCount.value--
-  registerParams.pop()
+  removeValidate(idx)
 }
 
 const registerEmployee = async () => {
@@ -62,37 +82,49 @@ const skip = () =>{
 </script>
 
 <template>
-  <div>
-    <div class="mx-[20%] my-[5%]">
-      <Card>
-        <h1 class="text-3xl">Registration of employees</h1>
-        <Card border="none" align="end" gap="20px">
+  <div class="mx-[20%] my-[5%]">
+    <Card>
+      <h1 class="text-3xl">Registration of employees</h1>
+      <Card border="none" align="end">
+        <div v-for="(field, idx) in employeeValidate" :key="field.key">
+          <div class="flex">
+            <p class="label">name</p>
+            <Field class="form"
+              :id="`employees[${idx}].name`"
+              :name="`employees[${idx}].name`"
+              v-model="registerParams[idx].employeeName"
+            />
+          </div>
+          <ErrorMessage class="text-rose-600" :name="`employees[${idx}].name`" />
 
-          <div v-for="count, i in formCount">
-            <div class="flex">
-              <p class="label">name</p>
-              <input class="form" v-model="registerParams[i].employeeName">
-            </div>
+          <div class="flex">
+            <p class="label">student id</p>
+            <Field
+              :id="`employees[${idx}].studentId`"
+              :name="`employees[${idx}].studentId`"
+              class="form"
+              v-model="registerParams[idx].studentId"
+              maxlength="8"
+            />
+          </div>
+          <ErrorMessage class="text-rose-600" :name="`employees[${idx}].studentId`" />
 
-            <div class="flex">
-              <p class="label">student id</p>
-              <input class="form" v-model="registerParams[i].studentId">
-            </div>
-
-            <div v-if="i != 0">
-              <RegistPageButton text="remove form" @click="decrement"></RegistPageButton>
-            </div>
+          <div v-if="idx == 0">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
           </div>
 
-        </Card>
-        <Row>
-          <RegistPageButton text="reset"></RegistPageButton>
-          <RegistPageButton text="register" @click="registerEmployee"></RegistPageButton>
-          <RegistPageButton text="Add form" @click="increment"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
-        </Row>
+          <div v-if="idx != 0" class="flex gap-3">
+            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
+          </div>
+        </div>
       </Card>
-    </div>
+      <Row>
+        <RegistPageButton text="register" :disabled="!meta.valid || isSubmitting" @click="registerEmployee"></RegistPageButton>
+        <RegistPageButton text="Add" @click="increment"></RegistPageButton>
+        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+      </Row>
+    </Card>
   </div>
 </template>
 

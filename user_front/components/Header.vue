@@ -21,7 +21,10 @@ const logout = () => {
     localStorage.removeItem("access-token"),
     localStorage.removeItem("client"),
     localStorage.removeItem("uid"),
-    router.push("/welcome")
+    localStorage.removeItem("group_id"),
+    localStorage.removeItem("group_category_id"),
+    localStorage.removeItem("token-type"),
+    router.push("/")
   },
 );
 }
@@ -31,7 +34,7 @@ const logout = () => {
   <div class="header">
     <div class="header-content">
       <button class="header-title">技大祭2023</button>
-      <button v-if="route.path != '/welcome'" class ="header-back" @click="logout">ログアウト</button>
+      <button v-if="route.path != '/'" class ="header-back" @click="logout">ログアウト</button>
     </div>
   </div>
 </template>
