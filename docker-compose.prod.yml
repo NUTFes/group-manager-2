@@ -19,7 +19,7 @@ services:
     build: ./user_front
     container_name: "GM2-USER-FRONT"
     ports:
-      - "8002:8002"
+      - "8002:3000"
       - "24678:24678"
     command: npm run start
     volumes: [./user_front:/app]
