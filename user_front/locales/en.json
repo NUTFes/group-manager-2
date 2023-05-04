@@ -1,4 +1,141 @@
 {
-  "hello": "Hello, {name}!",
-  "language": "Language"
+  "hello": "Hello, {name}！",
+  "language": "Language",
+
+  "Header":{
+    "header": "NUTFES2023",
+    "logOut": "Log Out"
+  },
+
+  "Home":{
+    "welcome": "Welcome to NUTFES",
+    "mail": "Email Address",
+    "password": "Password",
+    "logIn": "Log in",
+    "signIn": "Sign in",
+    "overview": "Participation Overview",
+    "overviewDetails": "Date & Time：September 16(Sat), 17(Sun), 2023",
+    "regist": "Registration Process",
+    "regist1": "User Information Registration",
+    "regist1Details": "Please enter the student ID number, telephone number, department and grade of the representative.",
+    "regist2": "Participating Organization Registration",
+    "regist2Details": "Please register your organization's name, category, activity, and project name.",
+    "regist3": "Sub-Representative Registration",
+    "regist3Details": "Please register the name, student ID number, department, grade, phone number, and email address of the deputy.",
+    "regist4": "registering as an article",
+    "regist4Details": "Please register the type and number of items your organization would like to borrow.",
+    "regist5": "Electricity Application",
+    "regist5Details": "Please register the product name, power consumption, manufacturer, model number, and product URL of the product your organization will use on the day of the Technical University Festival.",
+    "regist6": "Venue and Stage Registration",
+    "regist6Details": "Please register your organization's first to third choice of stall locations."
+  },
+
+  "RegistUser":{
+    "Representative": "Representative Registration",
+    "name": "name",
+    "studentId": "student id",
+    "department": "department",
+    "grade": "grade",
+    "mail": "mail adress",
+    "tel": "tel number",
+    "password": "password",
+    "passwordConfirm": "password confirm",
+    "reset": "reset",
+    "register": "register"
+  },
+
+  "RegistGroup":{
+    "group": "Registration of group",
+    "groupName": "group name",
+    "shopName": "shop name",
+    "category": "select category",
+    "activityDetails": "Activity Details",
+    "reset": "reset",
+    "register": "register"
+  },
+
+  "RegistSubrep":{
+    "subrepresentative": "Registration of subrepresentative",
+    "name": "name",
+    "studentId": "student id",
+    "department": "department",
+    "grade": "grade",
+    "mail": "mail adress",
+    "tel": "tel number",
+    "reset": "reset",
+    "register": "register",
+    "skip": "skip"
+  },
+
+  "RegistPlace":{
+    "place": "Registration of places",
+    "first": "first preference",
+    "second": "second preference",
+    "third": "third preference",
+    "free": "free description",
+    "reset": "reset",
+    "register": "register",
+    "skip": "skip"
+  },
+
+  "RegistItem":{
+    "item": "Registration of item",
+    "necessary": "Necessary items",
+    "number": "number of pieces required",
+    "reset": "reset",
+    "add": "add",
+    "register": "register",
+    "skip": "skip"
+  },
+
+  "RegistPower":{
+    "power": "Registration of power",
+    "name": "product name",
+    "maximum": "maximum rated power",
+    "maker": "maker",
+    "URL": "product URL",
+    "reset": "reset",
+    "add": "add",
+    "register": "register",
+    "skip": "skip"
+  },
+
+  "RegistEmployees":{
+    "employees": "Registration of employees",
+    "name": "name",
+    "studentId": "studentId",
+    "reset": "reset",
+    "add": "add",
+    "register": "register",
+    "skip": "skip"
+  },
+
+  "RegistFood":{
+    "food": "Registration of foods for sale",
+    "name": "Name of food sold",
+    "cook": "Do you cook?",
+    "yes": "Yes",
+    "no": "No",
+    "numberFirstDay": "number of products on the first day",
+    "NUmberSecondDay": "number of products on the second day",
+    "reset": "reset",
+    "add": "add",
+    "register": "register",
+    "skip": "skip"
+  },
+
+  "RegistPurchase":{
+    "parchase": "parchase",
+    "target": "料理名",
+    "name": "購入材料",
+    "place": "購入場所",
+    "date": "購入日",
+    "rowFood": "生ものか否か",
+    "yes": "生ものです",
+    "no": "違います",
+    "reset": "リセット",
+    "add": "追加",
+    "register": "登録",
+    "skip": "スキップ"
+  }
 }
