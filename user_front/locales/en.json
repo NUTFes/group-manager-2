@@ -1,5 +1,4 @@
 {
-  "hello": "Hello, {name}！",
   "language": "Language",
 
   "Header":{
@@ -7,7 +6,20 @@
     "logOut": "Log Out"
   },
 
-  "Home":{
+  "Footer": "©︎NUTFES Executive Committee",
+
+  "Button":{
+    "reset": "reset",
+    "register": "register",
+    "edit": "edit",
+    "return": "return",
+    "delete": "delete",
+    "skip": "skip",
+    "add": "add",
+    "request": "request"
+  },
+
+  "Welcome":{
     "welcome": "Welcome to NUTFES",
     "mail": "Email Address",
     "password": "Password",
@@ -30,8 +42,41 @@
     "regist6Details": "Please register your organization's first to third choice of stall locations."
   },
 
-  "RegistUser":{
-    "Representative": "Representative Registration",
+  "Mypage":{
+    "toMypage": "Go to Mypage",
+    "userName": "",
+    "greeting1": "Thank you very much for participating in NUTFES.",
+    "greeting2": "You can review and change your registration information. Please be sure to meet the deadlines.",
+    "operations": "Various operations",
+    "check": "Confirmation of registration information",
+    "editGroup": "Edit group Information",
+    "editUserInfo": "Check & Edit User Information",
+    "editPassword": "Password Change",
+    "regitstPR": "public relations Registration",
+    "regitstAnnouncemant": "Announcement text registration",
+    "regitstVenueMap": "Venue MAP Registration"
+  },
+
+  "PR":{
+    "regitstPR": "Registration of PR for brochure",
+    "select": "Please select",
+    "text": "PR statement(About 40 characters)",
+    "illustration": "illustration"
+  },
+
+  "Announcement":{
+    "regitstAnnouncemant": "Registration of venue announcement text",
+    "text": "Announcement text at the venue"
+  },
+
+  "VenueMap":{
+    "regitstVenueMap": "Registration of Venue MAP",
+    "select": "Please select",
+    "map": "layout plan(pdf,png,jpg only)"
+  },
+
+  "User":{
+    "registRepresentative": "Representative Registration",
     "name": "name",
     "studentId": "student id",
     "department": "department",
@@ -40,102 +85,203 @@
     "tel": "tel number",
     "password": "password",
     "passwordConfirm": "password confirm",
-    "reset": "reset",
-    "register": "register"
+    "userInfo": "User Information",
+    "colon": "：",
+    "editUser": "Edit User Information",
+    "editName": "full name",
+    "editStudentId": "StudentID 8 digits",
+    "editTel": "10- or 11-digit number in half-width characters",
+    "resetPassword": "Password reset",
+    "newPassword": "Enter new password",
+    "newPasswordConfirm": "Retype new password (for confirmation)"
   },
 
-  "RegistGroup":{
-    "group": "Registration of group",
+  "Group":{
+    "editGroup": "Edit group Information",
+    "registGroup": "Registration of group",
     "groupName": "group name",
     "shopName": "shop name",
     "category": "select category",
-    "activityDetails": "Activity Details",
-    "reset": "reset",
-    "register": "register"
+    "activityDetails": "Activity Details"
   },
 
-  "RegistSubrep":{
-    "subrepresentative": "Registration of subrepresentative",
+  "Stage":{
+    "registStageSunny": "Registration of stage on a sunny day",
+    "registStageRain": "Registration of stage on a rainy day",
+    "editStage": "Edit stage",
+    "sunny": "sunny",
+    "rain": "rainy",
+    "date": "date",
+    "firstPreference": "first preference place",
+    "secondPreference": "second preference place",
+    "performanceTime": "performance time",
+    "preparationTime": "preparation time",
+    "clean-upTime": "clean-up time"
+  },
+
+  "StageOption":{
+    "registStageOption": "Registration of stage Details",
+    "editStageOption": "Edit Stage Details",
+    "privateProperty": "Whether equipment in possession are used or not",
+    "speaker": "Whether speakers are used or not",
+    "loudSound": "Whether loud-sound are used or not",
+    "camera": "Whether camera are used or not",
+    "contentDetails": "Content Details",
+    "use": "Use",
+    "notUse": "Not used",
+    "permit": "permit",
+    "prohibition": "prohibition",
+    "yes": "yes",
+    "no": "no",
+    "equipment": "equipment",
+    "music": "music",
+    "photo": "photo",
+    "noise": "noise",
+    "content": "Stage Contents"
+  },
+
+  "Subrep":{
+    "registSubrepresentative": "Registration of subrepresentative",
+    "Subrepresentative": "Edit subrepresentative",
     "name": "name",
     "studentId": "student id",
     "department": "department",
     "grade": "grade",
     "mail": "mail adress",
     "tel": "tel number",
-    "reset": "reset",
-    "register": "register",
-    "skip": "skip"
+    "details": "details"
   },
 
-  "RegistPlace":{
-    "place": "Registration of places",
-    "first": "first preference",
-    "second": "second preference",
-    "third": "third preference",
-    "free": "free description",
-    "reset": "reset",
-    "register": "register",
-    "skip": "skip"
+  "Place":{
+    "registPlace": "Registration of places",
+    "editPlace": "edit places",
+    "first": "first choice",
+    "second": "second choice",
+    "third": "third choice",
+    "free": "free description"
   },
 
-  "RegistItem":{
-    "item": "Registration of item",
-    "necessary": "Necessary items",
+  "Item":{
+    "registItem": "Registration of loaned items",
+    "addItem": "Additional loaned items",
+    "deleteItem": "Deletion of loaned items",
+    "editItem": "Editing loaned items",
+    "item": "Necessary items",
     "number": "number of pieces required",
-    "reset": "reset",
-    "add": "add",
-    "register": "register",
-    "skip": "skip"
+    "count": ""
   },
 
-  "RegistPower":{
-    "power": "Registration of power",
+  "Power":{
+    "registPower": "Registration of power",
+    "addPower": "Additional power",
+    "deletePower": "Deletion power",
+    "eidtPower": "Edit power",
     "name": "product name",
     "maximum": "maximum rated power",
     "maker": "maker",
-    "URL": "product URL",
-    "reset": "reset",
-    "add": "add",
-    "register": "register",
-    "skip": "skip"
+    "model": "model",
+    "URL": "product URL"
   },
 
-  "RegistEmployees":{
-    "employees": "Registration of employees",
+  "Employees":{
+    "registEmployees": "Registration of employees",
+    "addEmployees": "Adding Employees",
+    "editEmployees": "Employee editing",
     "name": "name",
-    "studentId": "studentId",
-    "reset": "reset",
-    "add": "add",
-    "register": "register",
-    "skip": "skip"
+    "studentId": "studentId"
   },
 
-  "RegistFood":{
-    "food": "Registration of foods for sale",
+  "Food":{
+    "registFood": "Registration of foods for sale",
+    "addFood": "Additional foods for sale",
+    "deleteFood": "Deletion foods for sale",
+    "editFood": "Edit foods for Sale",
     "name": "Name of food sold",
-    "cook": "Do you cook?",
-    "yes": "Yes",
-    "no": "No",
-    "numberFirstDay": "number of products on the first day",
-    "NUmberSecondDay": "number of products on the second day",
-    "reset": "reset",
-    "add": "add",
-    "register": "register",
-    "skip": "skip"
+    "cook": "Cooked or not",
+    "select": "Please select",
+    "yes": "Cooked",
+    "no": "uncooked",
+    "numberFirstDay": "Estimated number of products to be sold on Day１",
+    "nUmberSecondDay": "Estimated number of products to be sold on Day２",
+    "firstDay": "Day１",
+    "secondDay": "Day２",
+    "count": "",
+    "sold": "Estimated number",
+    "toBe": "of products to be sold"
   },
 
-  "RegistPurchase":{
+  "Purchase":{
+    "registPurchase": "Registration of purchase",
+    "addPurchase": "Add purchase",
+    "deletePurchase": "Deletion of purchase",
+    "editPurchase": "Edit Purchases",
     "parchase": "parchase",
-    "target": "料理名",
-    "name": "購入材料",
-    "place": "購入場所",
-    "date": "購入日",
-    "rowFood": "生ものか否か",
-    "yes": "生ものです",
-    "no": "違います",
-    "reset": "リセット",
-    "add": "追加",
-    "register": "登録",
-    "skip": "スキップ"
+    "target": "Name of food sold",
+    "select": "Please select",
+    "name": "Material name",
+    "place": "Place of purchase",
+    "date": "Date of purchase",
+    "rowFood": "raw or not",
+    "yes": "Raw food",
+    "no": "not raw",
+    "of": "",
+    "parchasePlace1": "Place",
+    "parchasePlace2": "of purchase"
+  },
+
+  "Validate":{
+    "type": "Please type",
+    "singleEight": "Please enter 8 single-byte numbers.",
+    "leastEight": "Please enter at least 8 digits",
+    "retypePassword": "Please retype your password",
+    "notMatch": "Password did not match",
+    "check": "Please check your mail address",
+    "tenOrEleven": "Please enter 10 or 11 half-digits",
+    "oneByte": "Please enter one-byte numbers",
+    "positive": "Please enter a positive number",
+    "lessThan": "Please enter less than 1500",
+    "select": "Please select"
+  },
+
+  "List":{
+    "food": "Food booth (food sales)",
+    "goods": "Vendor booth (goods sales)",
+    "stage": "Stage Project",
+    "ediExhibitst": "Exhibits & Experiences",
+    "laboratory": "Open Laboratory",
+    "b1": "B1[1st year undergraduate]",
+    "b2": "B2[2nd year undergraduate]",
+    "b3": "B3[3rd year undergraduate]",
+    "b4": "B4[4th year undergraduate]",
+    "n1": "M1[Master 1 year]",
+    "m2": "M2[Master 2 years]",
+    "d1": "D1[Doctor of Philosophy 1st year]",
+    "d2": "D2[Doctor of Philosophy 2nd year]",
+    "d3": "D3[Doctor of Philosophy 3rd year]",
+    "gd1": "GD1[Innovation 1st year]",
+    "gd2": "GD2[Innovation 2nd year]",
+    "gd3": "GD3[Innovation 3rd year]",
+    "gd4": "GD4[Innovation 4th year]",
+    "gd5": "GD5[Innovation 5th year]",
+    "other": "Other",
+    "mechanical": "Mechanical Engineering",
+    "electrical": " Electrical, Electronics and Information Engineering",
+    "materials": " Materials Science and Technology",
+    "environmental": "Civil and Environmental Engineering",
+    "bio": "Bioengineering",
+    "information": "Information and Management Systems Engineering",
+    "mechanical2": " Mechanical Engineering",
+    "electrical2": "Electrical,Electronics and Information Engineering",
+    "materials2": " Materials Science and Technology",
+    "environmental2": "Civil and Environmental Engineering",
+    "bio2": "Bioengineering",
+    "information2": " Information and Management Systems Engineering",
+    "nuclear": "Nuclear System Safety Engineering",
+    "system": "System Safety",
+    "innovation": "Department of Science of Technology Innovation",
+    "informationControl": "Information Science and Control Engineering",
+    "materialsScience": "Materials Science",
+    "energy": "Energy and Environment Science",
+    "IntegratedBio": "Integrated Bioscience and Technology"
   }
 }

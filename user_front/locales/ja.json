@@ -1,5 +1,4 @@
 {
-  "hello": "こんにちは、{name}！",
   "language": "言語",
 
   "Header":{
@@ -7,7 +6,20 @@
     "logOut": "ログアウト"
   },
 
-  "Home":{
+  "Footer": "©︎長岡技術科学大学技大祭実行員会",
+
+  "Button":{
+    "reset": "リセット",
+    "register": "登録",
+    "edit": "編集",
+    "return": "戻る",
+    "delete": "削除",
+    "skip": "スキップ",
+    "add": "追加",
+    "request": "申請"
+  },
+
+  "Welcome":{
     "welcome": "Welcome to NUTFES",
     "mail": "メールアドレス",
     "password": "パスワード",
@@ -30,8 +42,54 @@
     "regist6Details": "あなたの団体の第一希望から第三希望までの出店希望場所を登録してください。"
   },
 
-  "RegistUser":{
-    "representative": "代表者登録",
+  "Mypage":{
+    "goToMypage": "マイページへ",
+    "userName": "様",
+    "greeting1": "技大祭に参加していただき誠にありがとうございます。",
+    "greeting2": "登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。",
+    "operations": "各種操作",
+    "check": "登録情報の確認はこちら",
+    "editGroup": "参加団体情報の編集",
+    "editUserInfo": "ユーザー情報確認＆編集",
+    "editPassword": "パスワード変更",
+    "regitstPR": "PR登録",
+    "regitstAnnouncemant": "アナウンス文登録",
+    "regitstVenueMap": "会場配置図登録"
+  },
+
+  "PR":{
+    "regitstPR": "パンフレット用PRの登録",
+    "select": "選択してください",
+    "text": "PR文(40文字程度)",
+    "illustration": "イラスト"
+  },
+
+  "Announcement":{
+    "regitstAnnouncemant": "会場アナウンス文の登録",
+    "text": "会場アナウンス文"
+  },
+
+  "VenueMap":{
+    "regitstVenueMap": "会場配置図の登録",
+    "select": "選択してください",
+    "map": "配置図(pdf,png,jpgのみ)"
+  },
+
+  "RegistInfo":{
+    "registAndEdit": "参加団体登録・編集ページ",
+    "subrepresentative": "副代表申請",
+    "place": "会場申請",
+    "stage": "ステージ申請",
+    "StageOption": "ステージオプション申請",
+    "power": "電力申請",
+    "item": "物品申請",
+    "employees": "従業員申請",
+    "food": "食品申請",
+    "purchase": "購入品申請"
+  },
+
+  "User":{
+    "registRepresentative": "代表者登録",
     "name": "氏名",
     "studentId": "学籍番号",
     "department": "所属",
@@ -40,102 +98,203 @@
     "tel": "電話番号",
     "password": "パスワード",
     "passwordConfirm": "パスワード（確認用）",
-    "reset": "リセット",
-    "register": "登録"
+    "userInfo": "ユーザ情報",
+    "colon": "：",
+    "editUser": "ユーザ情報の編集",
+    "editName": "フルネーム",
+    "editStudentId": "学籍番号８桁",
+    "editTel": "半角数字で１０,１１桁の番号",
+    "resetPassword": "パスワード再設定",
+    "newPassword": "新しいパスワードを入力",
+    "newPasswordConfirm": "新しいパスワードの再入力（確認用）"
   },
 
-  "RegistGroup":{
-    "group": "団体登録",
+  "Group":{
+    "editGroup": "参加団体情報の編集",
+    "registGroup": "団体登録",
     "groupName": "団体名",
     "shopName": "企画名",
     "category": "参加形式",
-    "ActivityDetails": "活動内容",
-    "reset": "リセット",
-    "register": "登録"
+    "ActivityDetails": "活動内容"
   },
 
-  "RegistSubrep":{
-    "subrepresentative": "副代表登録",
+  "Stage":{
+    "registStageSunny": "晴天時のステージ登録",
+    "registStageRain": "雨天時のステージ登録",
+    "editStage": "ステージ編集",
+    "sunny": "晴",
+    "rain": "雨",
+    "date": "開催日",
+    "firstPreference": "第一希望場所",
+    "secondPreference": "第二希望場所",
+    "performanceTime": "利用時間",
+    "preparationTime": "準備時間",
+    "clean-upTime": "片付け時間"
+  },
+
+  "StageOption":{
+    "registStageOption": "ステージ詳細の登録",
+    "editStageOption": "ステージ詳細の編集",
+    "privateProperty": "所持機器の使用の有無",
+    "speaker": "スピーカー使用の有無",
+    "loudSound": "大音響使用の有無",
+    "camera": "カメラ使用の有無",
+    "contentDetails": "詳細",
+    "use": "使用",
+    "notUse": "不使用",
+    "permit": "許可",
+    "prohibition": "禁止",
+    "yes": "有",
+    "no": "無",
+    "equipment": "機器",
+    "music": "音楽",
+    "photo": "撮影",
+    "noise": "騒音",
+    "content": "ステージ内容"
+  },
+
+  "Subrep":{
+    "registSubrepresentative": "副代表登録",
+    "editSubrepresentative": "副代表の編集",
     "name": "氏名",
     "studentId": "学籍番号",
     "department": "所属",
     "grade": "学年",
     "mail": "メールアドレス",
     "tel": "電話番号",
-    "reset": "リセット",
-    "register": "登録",
-    "skip": "スキップ"
+    "details": "詳細情報"
   },
 
-  "RegistPlace":{
-    "place": "実施場所の登録",
+  "Place":{
+    "registPlace": "実施場所の登録",
+    "editPlace": "実施場所の編集",
     "first": "第一希望",
     "second": "第二希望",
     "third": "第三希望",
-    "free": "備考",
-    "reset": "リセット",
-    "register": "登録",
-    "skip": "スキップ"
+    "free": "備考"
   },
 
-  "RegistItem":{
-    "item": "貸出物品の登録",
-    "necessary": "貸出物品",
+  "Item":{
+    "registItem": "貸出物品の登録",
+    "addItem": "貸出物品の追加",
+    "deleteItem": "貸出物品の削除",
+    "editItem": "貸出物品の編集",
+    "item": "貸出物品",
     "number": "数量",
-    "reset": "リセット",
-    "add": "追加",
-    "register": "登録",
-    "skip": "スキップ"
+    "count": "個"
   },
 
-  "RegistPower":{
-    "power": "使用電力の登録",
+  "Power":{
+    "registPower": "使用電力の登録",
+    "addPower": "使用電力の追加",
+    "deletePower": "使用電力の削除",
+    "editPower": "使用電力の編集",
     "name": "機器の名称",
     "maximum": "電力",
     "maker": "メーカ",
-    "URL": "製品URL",
-    "reset": "リセット",
-    "add": "追加",
-    "register": "登録",
-    "skip": "スキップ"
+    "model": "型番",
+    "URL": "製品URL"
   },
 
-  "RegistEmployees":{
-    "employees": "従業員登録",
+  "Employees":{
+    "registEmployees": "従業員登録",
+    "addEmployees": "従業員の追加",
+    "editEmployees": "従業員の編集",
     "name": "氏名",
-    "studentId": "学籍番号",
-    "reset": "リセット",
-    "add": "追加",
-    "register": "登録",
-    "skip": "スキップ"
+    "studentId": "学籍番号"
   },
 
-  "RegistFood":{
-    "food": "販売食品の登録",
+  "Food":{
+    "registFood": "販売食品の登録",
+    "addFood": "販売食品の追加",
+    "deleteFood": "販売食品の削除",
+    "editFood": "販売食品の編集",
     "name": "販売食品名",
     "cook": "調理の有無",
+    "select": "選択してください",
     "yes": "調理あり",
     "no": "調理無し",
-    "numberFirstDay": "一日目の数量",
-    "NUmberSecondDay": "二日目の数量",
-    "reset": "リセット",
-    "add": "追加",
-    "register": "登録",
-    "skip": "スキップ"
+    "numberFirstDay": "１日目の販売予定数",
+    "numberSecondDay": "２日目の販売予定数",
+    "firstDay": "１日目",
+    "secondDay": "２日目",
+    "count": "個",
+    "sold": "販売",
+    "toBe": "予定数"
   },
 
-  "RegistPurchase":{
+  "Purchase":{
+    "registPurchase": "購入品の登録",
+    "addPurchase": "購入品の追加",
+    "deletePurchase": "購入品の削除",
+    "editPurchase": "購入品の編集",
     "parchase": "購入品",
     "target": "販売食品名",
-    "name": "材料名",
+    "select": "選択してください",
+    "name": "購入材料名",
     "place": "購入場所",
     "date": "購入日",
     "rowFood": "生ものか否か",
     "yes": "生ものです",
     "no": "違います",
-    "reset": "リセット",
-    "add": "追加",
-    "register": "登録",
-    "skip": "スキップ"
+    "of": "の",
+    "parchasePlace1": "購入",
+    "parchasePlace2": "場所"
+  },
+
+  "Validate":{
+    "type": "入力してください",
+    "singleEight": "半角数字8桁で入力してください",
+    "leastEight": "8桁以上入力してください",
+    "retypePassword": "パスワードを再入力してください",
+    "notMatch": "パスワードが一致しませんでした",
+    "check": "メールアドレスをご確認ください",
+    "tenOrEleven": "10桁または11桁の半角数字で入力してください",
+    "oneByte": "半角数字を入力してください",
+    "positive": "正の数を入力してください",
+    "lessThan": "1500以下を入力してください",
+    "select": "選択してください"
+  },
+
+  "List":{
+    "food": "模擬店(食品販売)",
+    "goods": "模擬店(物品販売)",
+    "stage": "ステージ企画",
+    "ediExhibitst": "展示・体験",
+    "laboratory": "研究室公開",
+    "b1": "B1[学部1年]",
+    "b2": "B2[学部2年]",
+    "b3": "B3[学部3年]",
+    "b4": "B4[学部4年]",
+    "n1": "M1[修士1年]",
+    "m2": "M2[修士2年]",
+    "d1": "D1[博士1年]",
+    "d2": "D2[博士2年]",
+    "d3": "D3[博士3年]",
+    "gd1": "GD1[イノベ1年]",
+    "gd2": "GD2[イノベ2年]",
+    "gd3": "GD3[イノベ3年]",
+    "gd4": "GD4[イノベ4年]",
+    "gd5": "GD5[イノベ5年]",
+    "other": "その他",
+    "mechanical": "機械創造工学課程",
+    "electrical": "電気電子情報工学課程",
+    "materials": "物質材料工学課程",
+    "environmental": "環境社会基盤工学課程",
+    "bio": "生物機能工学課程",
+    "information": "情報・経営システム工学課程",
+    "mechanical2": "機械創造工学専攻",
+    "electrical2": "電気電子情報工学専攻",
+    "materials2": "物質材料工学専攻",
+    "environmental2": "環境社会基盤工学専攻",
+    "bio2": "生物機能工学専攻",
+    "information2": "情報・経営システム工学専攻",
+    "nuclear": "原子力システム安全工学専攻",
+    "system": "システム安全専攻",
+    "innovation": "技術科学イノベーション専攻",
+    "informationControl": "情報・制御工学専攻",
+    "materialsScience": "材料工学専攻",
+    "energy": "エネルギー・環境工学専攻",
+    "IntegratedBio": "生物統合工学専攻"
   }
 }
