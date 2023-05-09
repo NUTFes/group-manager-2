@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    ︎©︎長岡技術科学大学技大祭実行員
+    {{ $t('Footer') }}
   </div>
 </template>
 
