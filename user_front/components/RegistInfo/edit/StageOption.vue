@@ -10,10 +10,6 @@ interface Props {
   loudSound: boolean | null,
   stageContent: string,
 }
-interface Emits {
-  (e: 'update:editStageOption', isEditStageOption: boolean): void
-}
-
 const props = withDefaults(defineProps<Props>(), {
   groupId: null,
   id: null,
@@ -23,8 +19,6 @@ const props = withDefaults(defineProps<Props>(), {
   loudSound: null,
   stageContent: '',
 })
-const emits = defineEmits<Emits>()
-
 const newOwnEquipment = ref<Props['ownEquipment']>(props.ownEquipment)
 const newBgm = ref<Props['bgm']>(props.bgm)
 const newCameraPermission = ref<Props['cameraPermission']>(props.cameraPermission)
@@ -48,6 +42,14 @@ const loudAvailable = [
   {id: 2, label: "出さない", value: false },
 ]
 
+interface Emits {
+  (e: 'update:editStageOption', isEditStageOption: boolean): void
+  (e: 'reloadStageOption', v: null): void
+}
+const emits = defineEmits<Emits>()
+const reloadStageOption = () => {
+  emits('reloadStageOption', null)
+}
 const closeEditStageOption = () => {
   emits('update:editStageOption', false)
 }
@@ -64,6 +66,7 @@ const editStageOption = async () => {
       stage_content: newStageContent.value,
     }
   })
+  reloadStageOption()
   closeEditStageOption()
 }
 

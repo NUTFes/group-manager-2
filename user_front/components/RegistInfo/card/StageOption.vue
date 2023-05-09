@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 interface Props {
-  groupId: number | null
+  groupId: number
   id: number | null
   ownEquipment: boolean | null
   bgm: boolean | null
@@ -10,9 +10,8 @@ interface Props {
   stageContent: string
   setting: boolean | null
 }
-
 const option = withDefaults(defineProps<Props>(), {
-  groupId: null,
+  groupId: 0,
   id: null,
   ownEquipment: null,
   bgm: null,
@@ -21,12 +20,19 @@ const option = withDefaults(defineProps<Props>(), {
   stageContent: '',
   setting: null
 })
-const isEditStageOption = ref<boolean>(false)
 
+interface Emits {
+  (e: 'reloadStageOption', v: null): void
+}
+const emits = defineEmits<Emits>()
+const reloadStageOption = () => {
+  emits('reloadStageOption', null)
+}
+
+const isEditStageOption = ref<boolean>(false)
 const openEditStgeOption = () => {
   isEditStageOption.value = true
 }
-
 </script>
 
 <template>
@@ -75,6 +81,7 @@ const openEditStgeOption = () => {
     :bgm="bgm"
     :loud-sound="loudSound"
     :stage-content="stageContent"
+    @reload-stage-option="reloadStageOption"
   />
 </template>
 
