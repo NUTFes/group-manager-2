@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    ︎{{ $t('Footer') }}
+    {{ $t('Footer') }}
   </div>
 </template>
 
