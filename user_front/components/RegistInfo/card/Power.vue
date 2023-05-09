@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 interface Props {
   groupId: number | null
   id: number | null
@@ -10,7 +9,6 @@ interface Props {
   url: string
   setting: boolean | null
 }
-
 const props = withDefaults(defineProps<Props>(), {
   groupId: null,
   id: null,
@@ -22,13 +20,19 @@ const props = withDefaults(defineProps<Props>(), {
   setting: null
 })
 
-const isEditPower = ref<boolean>(false)
-const isDeletePower = ref<boolean>(false)
+interface Emits {
+  (e: 'reloadPower', v: null): void
+}
+const emits = defineEmits<Emits>()
+const reloadPower = () => {
+  emits('reloadPower', null)
+}
 
+const isEditPower = ref<boolean>(false)
 const openEditPower = () => {
   isEditPower.value = true
 }
-
+const isDeletePower = ref<boolean>(false)
 const openDeletePower = () => {
   isDeletePower.value = true
 }
@@ -79,11 +83,13 @@ const openDeletePower = () => {
     :manufacturer="manufacturer"
     :model="model"
     :url="url"
+    @reload-power="reloadPower()"
   />
   <RegistInfoDeletePower
     v-if="isDeletePower"
     v-model:delete-power="isDeletePower"
     :id="id"
+    @reload-power="reloadPower()"
   />
 
 </div>
