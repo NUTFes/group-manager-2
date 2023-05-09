@@ -18,12 +18,17 @@ const props = withDefaults(defineProps<Regist>(), {
 
 interface Emits {
   (e: 'update:editItem', isEditItem: boolean): void
+  (e: 'reloadItem', v: null): void
 }
 
 const emits = defineEmits<Emits>()
 
 const closeEditItem = () => {
   emits('update:editItem', false)
+}
+
+const reloadItem = () => {
+  emits('reloadItem', null)
 }
 const itemList = ref<ItemList[]>([]);
 
@@ -46,6 +51,7 @@ const editItem = async () => {
       num: newNum.value,
     },
   })
+  reloadItem()
   closeEditItem()
 };
 

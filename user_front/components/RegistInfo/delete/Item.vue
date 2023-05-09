@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:deleteItem', isDeleteItem: boolean): void
+  (e: 'reloadItem', v: null): void
 }
 const emits = defineEmits<Emits>()
 
@@ -18,10 +19,15 @@ const closeDeleteItem = () => {
   emits('update:deleteItem', false)
 }
 
+const reloadItem = () => {
+  emits('reloadItem', null)
+}
+
 const deleteItem = async() => {
   await useFetch(config.APIURL + "/rental_orders/" + props.id, {
     method: "DELETE"
   })
+  reloadItem()
   closeDeleteItem()
 }
 

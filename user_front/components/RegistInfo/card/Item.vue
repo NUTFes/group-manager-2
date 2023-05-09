@@ -14,6 +14,15 @@ interface Props {
   setting: boolean | null
 }
 
+interface Emits {
+  (e: 'reloadItem', v: null): void
+}
+const emits = defineEmits<Emits>()
+
+const reloadItem = () => {
+  emits('reloadItem', null)
+}
+
 const item = withDefaults(defineProps<Props>(), {
   groupId: 0,
   regist: null,
@@ -39,14 +48,12 @@ const openDeleteItem = () => {
       <div class="absolute w-full mt-8 text-4xl font-[350] text-center">
         {{ item.name }}
       </div>
-      <p class="absolute bottom-4 left-16 font-[350]">
+      <div class="absolute bottom-4 left-16 font-[350]">
         <span class="text-5xl">
           {{ item.num }}
         </span>
         <span class="text-2xl">個</span>
-      </p>
-    </template>
-    <template #method>
+      </div>
       <div class="absolute right-4 bottom-2">
         <div class="my-2">
           <EditButton @click="openEditItem()" />
@@ -62,10 +69,12 @@ const openDeleteItem = () => {
     :id="regist?.id"
     :item="regist?.rental_item_id"
     :num="regist?.num"
+    @reload-item="reloadItem"
   />
   <RegistInfoDeleteItem
     v-if="isDeleteItem"
     v-model:delete-item="isDeleteItem"
     :id="regist?.id"
+    @reload-item="reloadItem"
   />
 </template>

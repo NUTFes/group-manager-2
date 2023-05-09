@@ -8,6 +8,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:addItem', isAddItem: boolean): void
+  (e: 'reloadItem', v: null): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,6 +32,10 @@ const addItemClose = () => {
   emits('update:addItem', false)
 }
 
+const reloadItem = () => {
+  emits('reloadItem', null)
+}
+
 const addItem = async () => {
   await useFetch(config.APIURL + "/rental_orders", {
     method: "POST",
@@ -40,6 +45,7 @@ const addItem = async () => {
       num: newNum.value,
     },
   })
+  reloadItem()
   addItemClose()
 };
 
