@@ -1,20 +1,29 @@
 <script lang="ts" setup>
 
 interface Props {
-  id: number | null
+  id: number
   groupId: number
   name: string
   studentId: number
   setting: boolean | null
 }
+interface Emits {
+  (e: 'reloadEmployee', v: null): void
+}
 
 const employee = withDefaults(defineProps<Props>(), {
-  id: null,
+  id: 0,
   groupId: 0,
   name: '',
   studentId: 0,
   setting: null
 })
+
+const emits = defineEmits<Emits>()
+
+const reloadEmployee = () => {
+  emits('reloadEmployee', null)
+}
 
 const isEditEmployee = ref<boolean>(false)
 const isDeleteEmployee = ref<boolean>(false)
@@ -48,6 +57,7 @@ const openDeleteItem = () => {
     v-if="isDeleteEmployee"
     v-model:delete-employee="isDeleteEmployee"
     :id="id"
+    @reload-employee="reloadEmployee()"
   />
   <RegistInfoEditEmployee
     v-if="isEditEmployee"
@@ -56,5 +66,6 @@ const openDeleteItem = () => {
     :group-id="groupId"
     :name="name"
     :student-id="studentId"
+    @reload-employee="reloadEmployee()"
   />
 </template>

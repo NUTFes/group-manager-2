@@ -17,12 +17,17 @@ const props = withDefaults(defineProps<Regist>(), {
 
 interface Emits {
   (e: 'update:editEmployee', isEditEmployee: boolean): void
+  (e: 'reloadEmployee', v: null): void
 }
 
 const emits = defineEmits<Emits>()
 
 const closeEditEmployee = () => {
   emits('update:editEmployee', false)
+}
+
+const reloadEmployee = () => {
+  emits('reloadEmployee', null)
 }
 
 const newName = ref<string>(props.name)
@@ -38,6 +43,7 @@ const editEmployee = async () => {
       stool_test_id: 1
     },
   })
+  reloadEmployee()
   closeEditEmployee()
 };
 

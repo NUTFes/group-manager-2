@@ -7,6 +7,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:addEmployee', isAddEmployee: boolean): void
+  (e: 'reloadEmployee', reload: null): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -15,12 +16,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits<Emits>()
 
-// onMounted(async () => {
-//   const employeeData = await $fetch<employee>(config.APIURL + "/api/v1/get_stage_rentable_employees");
-//   employeeData.data.forEach((employee) => {
-//     employeeList.value.push(employee);
-//   });
-// })
+const reloadEmployee = () => {
+  emits('reloadEmployee', null)
+}
 
 const newName = ref<string>()
 const newStudentId = ref<string>()
@@ -39,6 +37,7 @@ const addEmployee = async () => {
       stool_test_id: 1
     },
   })
+  reloadEmployee()
   addEmployeeClose()
 };
 
