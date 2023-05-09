@@ -13,6 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:addPurchase', isAddPurchase: boolean): void
+  (e: 'reloadPurchase', v: null): void
 }
 const emits = defineEmits<Emits>()
 
@@ -49,6 +50,10 @@ const addPurchaseClose = () => {
   emits('update:addPurchase', false)
 }
 
+const reloadPurchase = () => {
+  emits('reloadPurchase', null)
+}
+
 const addPurchase = async () => {
   await useFetch(config.APIURL + "/purchase_lists/", {
     method: "POST",
@@ -61,6 +66,7 @@ const addPurchase = async () => {
       items: newItems.value,
     },
   })
+  reloadPurchase()
   addPurchaseClose()
 }
 
