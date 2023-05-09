@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:deletePurchase', isDeletePurchase: boolean): void
+  (e: 'reloadPurchase', v: null): void
 }
 const emits = defineEmits<Emits>()
 
@@ -17,10 +18,15 @@ const closeDeletePurchase = () => {
   emits('update:deletePurchase', false)
 }
 
+const reloadPurchase = () => {
+  emits('reloadPurchase', null)
+}
+
 const deletePurchase = async () => {
   await useFetch(config.APIURL + "/purchase_lists/" + props.id, {
     method: "DELETE"
   })
+  reloadPurchase()
   closeDeletePurchase()
 }
 </script>

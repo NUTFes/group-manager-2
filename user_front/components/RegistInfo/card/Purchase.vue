@@ -12,7 +12,6 @@ interface Props {
   isFresh: boolean
   setting: boolean | null
 }
-
 const purchase = withDefaults(defineProps<Props>(), {
   id: 0,
   groupId: 0,
@@ -25,6 +24,14 @@ const purchase = withDefaults(defineProps<Props>(), {
   isFresh: false,
   setting: null,
 })
+
+interface Emits {
+  (e: 'reloadPurchase', v: null): void
+}
+const emits = defineEmits<Emits>()
+const reloadPurchase = () => {
+  emits('reloadPurchase', null)
+}
 
 const isEditPurchase = ref<boolean>(false)
 const isDeletePurchase = ref<boolean>(false)
@@ -88,11 +95,12 @@ const openDeletePurchase = () => {
     :fes-date-id="fesDateId"
     :name="name"
     :is-fresh="isFresh"
-    :setting="setting"
+    @reload-purchase="reloadPurchase"
   />
   <RegistInfoDeletePurchase
     v-if="isDeletePurchase"
     v-model:delete-Purchase="isDeletePurchase"
     :id="id"
+    @reload-purchase="reloadPurchase"
     />
 </template>

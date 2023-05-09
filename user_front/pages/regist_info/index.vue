@@ -154,7 +154,7 @@ interface SubRep {
   tel: string
 }
 
-const registInfo = ref<RegistInfo>()
+const registInfo = ref<RegistInfo | []>([])
 const group = ref<Group>()
 const subRep = ref<SubRep>()
 const rentalOrder = ref<RentalOrder>()
@@ -164,7 +164,7 @@ const stageOrder = ref<StageOrder>()
 const stageOption = ref<StageOption>()
 const employee = ref<Employee>()
 const food = ref<Food>()
-const regist = ref<RegistItem>()
+// const regist = ref<RegistItem>()
 // const setting = ref("")
 const groupCategoryId = ref<Group['group_category_id']>()
 
@@ -204,21 +204,28 @@ onMounted(() => {
   // });
 })
 
-// const reload = () => {
-//   axios
-//     .get(url, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         "access-token": localStorage.getItem("access-token"),
-//         client: localStorage.getItem("client"),
-//         uid: localStorage.getItem("uid"),
-//       },
-//     })
-//     .then((response) => {
-//       registInfo.value = response.data.data;
-//       groupCategoryId.value = response.data.data[0].group.group_category_id;
-//     });
-// }
+const reload = () => {
+  axios
+    .get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid"),
+      },
+    })
+    .then((response) => {
+      registInfo.value = response.data.data[0];
+      employee.value = response.data.data[0].employees;
+      subRep.value = response.data.data[0].sub_rep;
+      rentalOrder.value = response.data.data[0].rental_orders;
+      placeOrder.value = response.data.data[0].place_order;
+      powerOrder.value = response.data.data[0].power_orders;
+      stageOrder.value = response.data.data[0].stage_orders;
+      stageOption.value = response.data.data[0].stage_common_option;
+      food.value = response.data.data[0].food_products;
+    });
+}
 
 const isAddItem = ref<boolean>(false)
 const openAddItem = () => {
@@ -247,7 +254,7 @@ const openAddPurchase = () => {
 </script>
 
 <template>
-<Container :name="registInfo?.group.name">
+<Container :name="group?.name">
   <template #tabs>
     <ul class="flex">
       <li @click="tab = 1">
@@ -294,8 +301,10 @@ const openAddPurchase = () => {
           :studentId="subRep?.student_id"
           :email="subRep?.email"
           :tel="subRep?.tel"
+          @reload-sub-rep="reload"
         />
       </div>
+
       <!-- 会場申請 group_category_id !== ３ -->
       <div v-show="tab === 2">
         <div class="mb-4">
@@ -305,6 +314,7 @@ const openAddPurchase = () => {
             :n="1"
             :place="placeOrder?.first"
             :remark="placeOrder?.remark"
+            @reload-place="reload"
           />
         </div>
         <div class="my-4">
@@ -314,6 +324,7 @@ const openAddPurchase = () => {
             :n="2"
             :place="placeOrder?.second"
             :remark="placeOrder?.remark"
+            @reload-place="reload"
           />
         </div>
         <div class="my-4">
@@ -323,9 +334,11 @@ const openAddPurchase = () => {
             :n="3"
             :place="placeOrder?.third"
             :remark="placeOrder?.remark"
+            @reload-place="reload"
           />
         </div>
       </div>
+
       <!-- ステージ申請 group_category_id === ３ -->
       <div class="mb-8" v-show="tab === 3" v-for="s in stageOrder" :key="s.toString()">
         <RegistInfoCardStage
@@ -341,6 +354,7 @@ const openAddPurchase = () => {
           :cleanup-time-interval="s.stage_order.cleanup_time_interval"
           :use-time-interval="s.stage_order.use_time_interval"
           :prepare-time-interval="s.stage_order.prepare_time_interval"
+          @reload-stage="reload"
         />
       </div>
 
@@ -354,6 +368,7 @@ const openAddPurchase = () => {
           :camera-permission="stageOption?.camera_permission"
           :loud-sound="stageOption?.loud_sound"
           :stage-content="stageOption?.stage_content"
+          @reload-stage-option="reload"
         />
       </div>
 
@@ -368,6 +383,7 @@ const openAddPurchase = () => {
             :manufacturer="p.power_order.manufacturer"
             :model="p.power_order.model"
             :url="p.power_order.item_url"
+            @reload-power="reload"
           />
         </div>
         <Button class="text-right" @click="openAddPower()"/>
@@ -375,6 +391,7 @@ const openAddPurchase = () => {
           v-if="isAddPower"
           v-model:add-power="isAddPower"
           :group-id="group?.id"
+          @reload-power="reload"
         />
       </div>
 
@@ -386,6 +403,7 @@ const openAddPurchase = () => {
             :regist="item.rental_item.rental_item"
             :name="item.rental_item.name"
             :num="item.rental_item.num"
+            @reload-item="reload"
           />
         </div>
         <Button class="ml-auto" @click="openAddItem()"/>
@@ -393,6 +411,7 @@ const openAddPurchase = () => {
           v-if="isAddItem"
           v-model:add-item="isAddItem"
           :group-id="group?.id"
+          @reload-item="reload"
         />
       </div>
 
@@ -404,6 +423,7 @@ const openAddPurchase = () => {
             :id="e.employee.id"
             :name="e.employee.name"
             :student-id="e.employee.student_id"
+            @reload-employee="reload"
           />
         </div>
         <Button class="ml-auto" @click="openAddEmployee()"/>
@@ -411,6 +431,7 @@ const openAddPurchase = () => {
           v-if="isAddEmployee"
           v-model:add-employee="isAddEmployee"
           :group-id="group?.id"
+          @reload-employee="reload"
         />
       </div>
 
@@ -424,6 +445,7 @@ const openAddPurchase = () => {
             :is-cooking="f.food_product.is_cooking"
             :firstNum="f.food_product.first_day_num"
             :secondNum="f.food_product.second_day_num"
+            @reload-food="reload"
           />
         </div>
           <Button class="text-right" @click="openAddFood()"/>
@@ -431,8 +453,10 @@ const openAddPurchase = () => {
             v-if="isAddFood"
             v-model:add-food="isAddFood"
             :group-id="group?.id"
+            @reload-food="reload"
           />
       </div>
+
       <!-- 購入品申請 -->
       <div v-show="tab === 9">
         <div v-for="f in food" :key="f.toString()">
@@ -447,6 +471,7 @@ const openAddPurchase = () => {
               :name="p.purchase_list.items"
               :is-fresh="p.purchase_list.is_fresh"
               :fes-date-id="p.purchase_list.date_id"
+              @reload-purchase="reload"
             />
           </div>
         </div>
@@ -455,6 +480,7 @@ const openAddPurchase = () => {
             v-if="isAddPurchase"
             v-model:add-purchase="isAddPurchase"
             :group-id="group?.id"
+            @reload-purchase="reload"
           />
       </div>
     </div>

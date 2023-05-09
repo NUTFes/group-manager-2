@@ -25,13 +25,16 @@ const props = withDefaults(defineProps<Regist>(), {
 
 interface Emits {
   (e: 'update:editPurchase', isEditPurchase: boolean): void
+  (e: 'reloadPurchase', v: null): void
 }
 const emits = defineEmits<Emits>()
 
 const editPurchaseClose = () => {
   emits('update:editPurchase', false)
 }
-
+const editPurchaseReload = () => {
+  emits('reloadPurchase', null)
+}
 const newName = ref<string>(props.name)
 const newIsFresh = ref<boolean>(props.isFresh)
 const newFoodProductId = ref<number | null>(props.foodProductId)
@@ -73,6 +76,7 @@ const editPurchase = async () => {
       fes_date_id: newFesDateId.value,
     },
   })
+  editPurchaseReload()
   editPurchaseClose()
 };
 

@@ -13,6 +13,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:edit-power', isEditPower: boolean): void
+  (e: 'reloadPower', v: null): void
 }
 
 const props = withDefaults(defineProps<Props>(),{
@@ -36,6 +37,10 @@ const closeEditPower = () => {
   emits('update:edit-power', false)
 }
 
+const reloadPower = () => {
+  emits('reloadPower', null)
+}
+
 const editPower = async () => {
   await useFetch(config.APIURL + "/power_orders/" + props.id, {
     method: "PUT",
@@ -48,6 +53,7 @@ const editPower = async () => {
       item_url: newUrl.value,
     },
   })
+  reloadPower()
   closeEditPower()
 }
 

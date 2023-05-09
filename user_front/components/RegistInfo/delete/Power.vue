@@ -6,6 +6,7 @@ interface Props {
 }
 interface Emits {
   (e: 'update:deletePower', isDeletePower: boolean): void
+  (e: 'reloadPower', v: null): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,10 +18,15 @@ const closeDeletePower = () => {
   emits('update:deletePower', false)
 }
 
+const reloadPower = () => {
+  emits('reloadPower', null)
+}
+
 const deletePower = async() => {
   await useFetch(config.APIURL + "/power_orders/" + props.id, {
     method: 'DELETE'
   })
+  reloadPower()
   closeDeletePower()
 }
 

@@ -15,6 +15,10 @@ interface Props {
   setting: boolean | null
 }
 
+interface Emits {
+  (e: 'reloadPlace', v: null): void
+}
+
 const place = withDefaults(defineProps<Props>(), {
   id: null,
   regist: null,
@@ -24,8 +28,12 @@ const place = withDefaults(defineProps<Props>(), {
   setting: null
 })
 
-const isEditPlace = ref<boolean>(false)
+const emits = defineEmits<Emits>()
+const reloadPlace = () => {
+  emits('reloadPlace', null)
+}
 
+const isEditPlace = ref<boolean>(false)
 const openEditPlace = () => {
   isEditPlace.value = true
 }
@@ -62,5 +70,6 @@ const openEditPlace = () => {
     :second="regist?.second"
     :third="regist?.third"
     :remark="remark"
+    @reload-place="reloadPlace()"
   />
 </template>

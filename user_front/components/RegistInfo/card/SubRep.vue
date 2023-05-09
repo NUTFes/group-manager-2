@@ -13,7 +13,6 @@ interface Props {
   studentId: number | null
   setting: boolean | null
 }
-
 const sub = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
@@ -27,8 +26,16 @@ const sub = withDefaults(defineProps<Props>(), {
   studentId: null,
   setting: null
 })
-const isEditSubRep = ref<boolean>(false)
 
+interface Emits {
+  (e: 'reloadSubRep', v: null): void
+}
+const emits = defineEmits<Emits>()
+const reloadSubRep = () => {
+  emits('reloadSubRep', null)
+}
+
+const isEditSubRep = ref<boolean>(false)
 const openEditSubRep = () => {
   isEditSubRep.value = true
 }
@@ -75,5 +82,6 @@ const openEditSubRep = () => {
     :student_id="sub.studentId"
     :email="sub.email"
     :tel="sub.tel"
+    @reload-sub-rep="reloadSubRep"
   />
 </template>

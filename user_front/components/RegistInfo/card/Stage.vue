@@ -15,7 +15,6 @@ interface Props {
   isSunny: boolean | null
   setting: boolean | null
 }
-
 const stage = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
@@ -32,8 +31,15 @@ const stage = withDefaults(defineProps<Props>(), {
   cleanupTimeInterval: '',
 })
 
-const isEditStage = ref<boolean>(false)
+interface Emits {
+  (e: 'reloadStage', v: null): void
+}
+const emits = defineEmits<Emits>()
+const reloadStage = () => {
+  emits('reloadStage', null)
+}
 
+const isEditStage = ref<boolean>(false)
 const openEditStage = () => {
   isEditStage.value = true
 }
@@ -71,5 +77,6 @@ const openEditStage = () => {
     :fes-date-id="fesDateId"
     :stage-first="firstId"
     :stage-second="secondId"
+    @reload-stage="reloadStage()"
   />
 </template>

@@ -12,6 +12,7 @@ interface Props {
 
 interface Emits {
   (e: 'update:editPlace', isEditePlace: boolean): void
+  (e: 'reloadPlace', v: null): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -29,6 +30,10 @@ const newFirst = ref<Props['first']>(props.first)
 const newSecond = ref<Props['second']>(props.second)
 const newThird = ref<Props['third']>(props.third)
 const newRemark = ref<Props['remark']>(props.remark)
+
+const reloadPlace = () => {
+  emits('reloadPlace', null)
+}
 
 const closeEditPlace = () => {
   emits('update:editPlace', false)
@@ -51,6 +56,7 @@ const editPlace = async () => {
       remark: newRemark.value,
     }
   })
+  reloadPlace()
   closeEditPlace()
 }
 

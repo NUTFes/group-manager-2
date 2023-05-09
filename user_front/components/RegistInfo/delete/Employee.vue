@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:deleteEmployee', isDeleteEmployee: boolean): void
+  (e: 'reloadEmployee', v: null): void
 }
 const emits = defineEmits<Emits>()
 
@@ -18,10 +19,15 @@ const closeDeleteEmployee = () => {
   emits('update:deleteEmployee', false)
 }
 
+const reloadEmployee = () => {
+  emits('reloadEmployee', null)
+}
+
 const deleteEmployee = async () => {
   await useFetch(config.APIURL + "/employees/" + props.id, {
     method: "DELETE"
   })
+  reloadEmployee()
   closeDeleteEmployee()
 }
 

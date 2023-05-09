@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:addFood', isAddFood: boolean): void
+  (e: 'reloadFood', reload: null): void
 }
 const emits = defineEmits<Emits>()
 
@@ -20,6 +21,9 @@ const isCooking = ref<boolean>(false)
 
 const addFoodClose = () => {
   emits('update:addFood', false)
+}
+const reloadFood = () => {
+  emits('reloadFood', null)
 }
 
 const addFood = async () => {
@@ -33,6 +37,7 @@ const addFood = async () => {
       second_day_num: numSecondDay.value,
     },
   })
+  reloadFood()
   addFoodClose()
 }
 

@@ -4,10 +4,6 @@ import { gradeList } from "~/utils/list";
 
 const config = useRuntimeConfig();
 
-interface Emits {
-  (e: 'update:editSubRep', isEditSubRep: boolean): void
-}
-
 interface Props {
   id: number | null
   groupId: number | null
@@ -18,7 +14,6 @@ interface Props {
   email: string
   student_id: number | null
 }
-
 const props = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
@@ -30,9 +25,16 @@ const props = withDefaults(defineProps<Props>(), {
   student_id: null,
 })
 
+interface Emits {
+  (e: 'update:editSubRep', isEditSubRep: boolean): void
+  (e: 'reloadSubRep', v: null): void
+}
 const emits = defineEmits<Emits>()
 const closeEditSubRep = () => {
   emits('update:editSubRep', false)
+}
+const reloadSubRep = () => {
+  emits('reloadSubRep', null)
 }
 
 const newName = ref<Props['name']>(props.name)
@@ -56,6 +58,7 @@ const editSubRep = async () => {
       student_id: newStudentId.value,
     },
   })
+  reloadSubRep()
   closeEditSubRep()
 };
 
@@ -67,7 +70,6 @@ const reset = () => {
   newEmail.value = ''
   newStudentId.value = null
 }
-
 </script>
 
 <template>

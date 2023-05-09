@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:deleteFood', isDeleteFood: boolean): void
+  (e: 'reloadFood', v: null): void
 }
 const emits = defineEmits<Emits>()
 
@@ -18,10 +19,15 @@ const closeDeleteFood = () => {
   emits('update:deleteFood', false)
 }
 
+const reloadFood = () => {
+  emits('reloadFood', null)
+}
+
 const deleteFood = async () => {
   await useFetch(config.APIURL + "/food_products/" + props.id, {
     method: "DELETE"
   })
+  reloadFood()
   closeDeleteFood()
 }
 
