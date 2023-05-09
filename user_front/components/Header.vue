@@ -33,8 +33,15 @@ const logout = () => {
 <template>
   <div class="header">
     <div class="header-content">
-      <button class="header-title">技大祭2023</button>
-      <button v-if="route.path != '/'" class ="header-back" @click="logout">ログアウト</button>
+      <button class="header-title">{{ $t('Header.header') }}</button>
+      <form class="flex items-center w-40">
+        <label for="locale-select">{{ $t('language') }}： </label>
+        <select class="w-auto m-auto ml-0 h-auto border-none" id="locale-select" v-model="$i18n.locale">
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+        </select>
+      </form>
+      <button v-if="route.path != '/'" class ="header-back" @click="logout">{{ $t('Header.logOut') }}</button>
     </div>
   </div>
 </template>
@@ -58,6 +65,7 @@ const logout = () => {
   .header-content {
     @apply
       flex
+      gap-5
       w-[1000px]
       mx-auto;
   }
