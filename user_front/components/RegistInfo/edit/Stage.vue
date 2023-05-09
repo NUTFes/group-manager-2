@@ -17,8 +17,8 @@ interface Props {
 
 interface Emits {
   (e: 'update:editStage', isEditStage: boolean): void
+  (e: 'reloadStage', v: null): void
 }
-
 const emits = defineEmits<Emits>()
 const props = withDefaults(defineProps<Props>(), {
   id: null,
@@ -42,6 +42,10 @@ const newCleanupTimeInterval = ref<Props['cleanupTimeInterval']>(props.cleanupTi
 
 const closeEditStage = () => {
   emits('update:editStage', false)
+}
+
+const reloadStage = () => {
+  emits('reloadStage', null)
 }
 
 const fesDateList = ref<FesYear[]>([]);
@@ -83,6 +87,7 @@ const editStage = async () => {
       cleanup_time_interval: newCleanupTimeInterval.value,
     }
   })
+  reloadStage()
   closeEditStage()
 }
 
