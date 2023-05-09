@@ -1,4 +1,4 @@
-interface CurrentUser{
+export interface CurrentUser{
   status: Status
   data: Data
 }
@@ -13,7 +13,7 @@ interface Status{
   message: string
 }
 
-interface User{
+export interface User{
   allow_password_change: boolean
   created_at: string
   email: string
@@ -25,7 +25,7 @@ interface User{
   updated_at: string
 }
 
-interface UserDetail{
+export interface UserDetail{
   department: string
   department_id: number
   grade: string
@@ -34,4 +34,13 @@ interface UserDetail{
   tel: string
 }
 
-export default CurrentUser
+export interface EditUser{
+  department: string
+  department_id: number
+  grade: string
+  grade_id: number
+  student_id: number
+  tel: string
+  email: string
+  name: string
+}

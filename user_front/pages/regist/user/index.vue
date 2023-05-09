@@ -27,8 +27,8 @@ const registerParams = reactive({
   mail: "",
   password: "",
   passwordConfirm: "",
-  departmentId: "",
-  gradeId: "",
+  departmentId: 0,
+  gradeId: 0,
   userId: 0
 });
 
@@ -101,7 +101,7 @@ const registUser = (async () => {
             <p class="label">department</p>
             <select class="form" style="width:180px;" v-model="registerParams.departmentId" @change="handleDepartment">
               <option value="" selected disabled></option>
-              <option v-for="department in departmentList" :value=department.name key="department">{{ department.name }}
+              <option v-for="department in departmentList" :value=department.id key="department">{{ department.name }}
               </option>
             </select>
           </div>
@@ -113,7 +113,7 @@ const registUser = (async () => {
             <p class="label">grade</p>
             <select class="form" style="width:180px;" v-model="registerParams.gradeId" @change="handleGrade">
               <option value="" selected disabled></option>
-              <option v-for="grade in gradeList" :value=grade.name key="grade">{{ grade.name }}</option>
+              <option v-for="grade in gradeList" :value=grade.id key="grade">{{ grade.name }}</option>
             </select>
           </div>
           <div>

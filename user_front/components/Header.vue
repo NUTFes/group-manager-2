@@ -18,12 +18,7 @@ const logout = () => {
       "uid": localStorage.getItem("uid"),
     },
   }).then( () => {
-    localStorage.removeItem("access-token"),
-    localStorage.removeItem("client"),
-    localStorage.removeItem("uid"),
-    localStorage.removeItem("group_id"),
-    localStorage.removeItem("group_category_id"),
-    localStorage.removeItem("token-type"),
+    localStorage.clear()
     router.push("/")
   },
 );

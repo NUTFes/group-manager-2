@@ -34,8 +34,7 @@ onMounted(async () => {
 
 const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "参加団体情報の編集" },
-  { to: "/mypage/profile", text: "ユーザー情報" },
-  { to: "/mypage/edit_user_info", text: "ユーザー情報編集" },
+  { to: "/mypage/edit_user_info", text: "ユーザー情報確認＆編集" },
   { to: "/mypage/password_reset", text: "パスワード変更" },
 ];
 </script>
