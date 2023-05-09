@@ -21,12 +21,17 @@ const props = withDefaults(defineProps<Regist>(), {
 
 interface Emits {
   (e: 'update:editFood', isEditFood: boolean): void
+  (e: 'reloadFood', v: null): void
 }
 
 const emits = defineEmits<Emits>()
 
 const editFoodClose = () => {
   emits('update:editFood', false)
+}
+
+const editFoodReload = () => {
+  emits('reloadFood', null)
 }
 
 const newDishName = ref<string>(props.dishName)
@@ -45,6 +50,7 @@ const editFood = async () => {
       second_day_num: newNumSecondDay.value,
     },
   })
+  editFoodReload()
   editFoodClose()
 };
 

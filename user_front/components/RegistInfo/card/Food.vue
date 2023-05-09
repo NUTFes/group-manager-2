@@ -10,6 +10,10 @@ interface Props {
   setting: boolean | null
 }
 
+interface Emits {
+  (e: 'reloadFood', v: null): void
+}
+
 const food = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: 0,
@@ -20,6 +24,8 @@ const food = withDefaults(defineProps<Props>(), {
   setting: null,
 })
 
+const emits = defineEmits<Emits>()
+
 const isEditFood = ref<boolean>(false)
 const isDeleteFood = ref<boolean>(false)
 
@@ -28,6 +34,10 @@ const openEditFood = () => {
 }
 const openDeleteFood = () => {
   isDeleteFood.value = true
+}
+
+const reloadFood = () => {
+  emits('reloadFood', null)
 }
 
 </script>
@@ -82,11 +92,13 @@ const openDeleteFood = () => {
     :is-cooking="isCooking"
     :first-day-num="firstNum"
     :second-day-num="secondNum"
+    @reload-food="reloadFood()"
   />
   <RegistInfoDeleteFood
     v-if="isDeleteFood"
     v-model:delete-food="isDeleteFood"
     :id="id"
+    @reload-food="reloadFood()"
   />
 </template>
 <!--
