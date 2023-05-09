@@ -4,7 +4,7 @@ protocol: http2
 
 ingress:
   - hostname: group-manager.nutfes.net
-    service: http://web:8080
+    service: http://user_front:8002
   - hostname: group-manager-admin.nutfes.net
     service: http://admin_view:8000
   - hostname: group-manager-api.nutfes.net

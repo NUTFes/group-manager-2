@@ -1,65 +1,35 @@
-version: '3'
+version: "3"
 services:
+  cloudflare:
+    image: cloudflare/cloudflared
+    container_name: "GM2-CLOUDFLARE"
+    volumes:
+      - ./cloudflare/prod:/home/nonroot/.cloudflared
+    command: tunnel run
+
   api:
     build: ./api
     command: bash -c "bundle exec rails s"
-    container_name: 'GM2-API'
-    volumes:
-      - ./api:/myapp
+    container_name: "GM2-API"
+    volumes: [./api:/myapp]
+    ports: ["3000:3000"]
+    env_file: [group-manager-2.env]
+
+  user_front:
+    build: ./user_front
+    container_name: "GM2-USER-FRONT"
     ports:
-      - "3000:3000"
-    stdin_open: true
-    tty: true
-    environment:
-      - RAILS_ENV=production
-      - RAILS_LOG_TO_STDOUT=ON
-    env_file:
-      - nutmeg-mysql.env
-      - webhook.env
-
-  view: #  build only
-    build: ./view
-    container_name: 'GM2-VIEW'
-    volumes:
-      - ./view:/app
-    environment:
-      - VUE_APP_URL=https://group-manager-api.nutfes.net
-
-  inside_view: #  build only
-    build: ./inside_view
-    container_name: 'GM2-INSIDE-VIEW'
-    volumes:
-      - ./inside_view:/app
-    environment:
-      - VUE_APP_URL=https://group-manager-api.nutfes.net
+      - "8002:3000"
+      - "24678:24678"
+    command: npm run start
+    volumes: [./user_front:/app]
+    env_file: [group-manager-2.env]
+    depends_on: [api]
 
   admin_view:
     build: ./admin_view
-    container_name: 'GM2-ADMIN-VIEW'
-    ports:
-      - "8000:8000"
+    container_name: "GM2-ADMIN-VIEW"
+    ports: ["8000:8000"]
     command: npm run start
-    volumes:
-      - ./admin_view:/app
-    tty: true
-    environment:
-      - VUE_APP_URL=https://group-manager-api.nutfes.net
-
-  web:
-    image: nginx:1.17
-    container_name: 'GM2-WEB'
-    volumes:
-      - ./web/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./inside_view/vue-project/dist:/var/www/vhosts/group-manager-inside.nutfes.net
-      - ./view/vue-project/dist:/var/www/vhosts/group-manager.nutfes.net
-    ports:
-      - "8080:8080"
-      - "8888:8888"
-    depends_on:
-      - admin_view
-      - api
-
-volumes:
-  mysql-data:
-    driver: local
-  code_share:
+    volumes: [./admin_view:/app]
+    env_file: [group-manager-2.env]
