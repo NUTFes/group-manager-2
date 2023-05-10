@@ -1,6 +1,14 @@
 <script lang="ts" setup>
 import { Item, ItemList } from "@/types/regist/item"
+import { useField, useForm } from 'vee-validate'
+import { editItemSchema } from '~/utils/validate'
 const config = useRuntimeConfig()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editItemSchema,
+})
+const { handleChange: handleName, errorMessage: nameError } = useField('itemNameId')
+const { handleChange: handleNum, errorMessage: numError } = useField('itemNum')
 
 interface Props {
   groupId: number | null
@@ -66,7 +74,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">貸出物品</div>
-      <select class="entry" v-model="newItem">
+      <select class="entry" v-model="newItem" @change="handleName" :class="{'error_border': nameError}">
         <option
           v-for="list in itemList"
           :key="list.id"
@@ -74,17 +82,25 @@ const reset = () => {
         >{{ list.name }}
         </option>
       </select>
+      <div class="error_msg">{{ nameError }}</div>
       <div class="text">個数</div>
-      <input class="entry" v-model="newNum">
+      <input class="entry" v-model="newNum" @change="handleNum" :class="{'error_border': numError}">
+      <div class="error_msg">{{ numError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton text="✓追加" @click="addItem()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓追加" @click="addItem()" />
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
