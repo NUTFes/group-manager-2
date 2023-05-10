@@ -1,7 +1,19 @@
 <script lang="ts" setup>
 import { FesYear } from '@/types/regist/stage'
 import { Stage } from '~~/types';
+import { useField, useForm } from 'vee-validate'
+import { stageSchema } from '~~/utils/validate';
 const config = useRuntimeConfig()
+
+const { meta } = useForm({
+  validationSchema: stageSchema,
+})
+const { handleChange: handleDate, errorMessage: dateError } = useField('fesDate')
+const { handleChange: handleStageFirst, errorMessage: stageFirstError } = useField('first')
+const { handleChange: handleStageSecond, errorMessage: stageSecondError } = useField('second')
+const { handleChange: handleUseTimeInterval, errorMessage: useTimeIntervalError } = useField('performanceTime')
+const { handleChange: handlePrepareTimeInterval, errorMessage: prepareTimeIntervalError } = useField('preparationTime')
+const { handleChange: handleCleanupTimeInterval, errorMessage: cleanupTimeIntervalError } = useField('cleanUpTime')
 
 interface Props {
   id: number | null,
@@ -111,9 +123,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">日程</div>
-      <div>
-      </div>
-      <select class="entry" v-model="newStageDateId">
+      <select class="entry" v-model="newStageDateId" @change="handleDate" :class="{'error_border': dateError}">
         <option
           v-for="fesDate in fesDateList"
           :value="fesDate.id"
@@ -122,8 +132,9 @@ const reset = () => {
           {{ fesDate.date }}
         </option>
       </select>
+      <div class="error_msg">{{ dateError }}</div>
       <div class="text">第一希望場所</div>
-      <select class="entry" v-model="newStageFirst">
+      <select class="entry" v-model="newStageFirst" @change="handleStageFirst" :class="{'error_border': stageFirstError}">
         <option
           v-for="stageFirst in stageList"
           :key="stageFirst.id"
@@ -132,8 +143,9 @@ const reset = () => {
           {{ stageFirst.name }}
         </option>
       </select>
+      <div class="error_msg">{{ stageFirstError }}</div>
       <div class="text">第二希望場所</div>
-      <select class="entry" v-model="newStageSecond">
+      <select class="entry" v-model="newStageSecond" @change="handleStageSecond" :class="{'error_border': stageSecondError}">
         <option
           v-for="stageSecond in stageList"
           :key="stageSecond.id"
@@ -142,13 +154,17 @@ const reset = () => {
           {{ stageSecond.name }}
         </option>
       </select>
+      <div class="error_msg">{{ stageSecondError }}</div>
       <div>
         <div class="text">準備時間幅</div>
-        <input class="entry" v-model="newPrepareTimeInterval" />
+        <input type="number" class="entry" v-model="newPrepareTimeInterval" @change="handlePrepareTimeInterval" :class="{'error_border': prepareTimeInterval}" />
+        <div class="error_msg">{{ prepareTimeIntervalError }}</div>
         <div class="text">使用時間幅</div>
-        <input class="entry" v-model="newUseTimeInterval" />
+        <input type="number" class="entry" v-model="newUseTimeInterval" @change="handleUseTimeInterval" :class="{'error_border': useTimeIntervalError}" />
+        <div class="error_msg">{{ useTimeIntervalError }}</div>
         <div class="text">片付け時間幅</div>
-        <input class="entry" v-model="newCleanupTimeInterval" />
+        <input type="number" class="entry" v-model="newCleanupTimeInterval" @change="handleCleanupTimeInterval" :class="{'error_border': cleanupTimeIntervalError}" />
+        <div class="error_msg">{{ cleanupTimeIntervalError }}</div>
       </div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
@@ -159,6 +175,12 @@ const reset = () => {
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
