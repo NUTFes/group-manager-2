@@ -1,5 +1,14 @@
 <script lang="ts" setup>
-const config = useRuntimeConfig();
+import { useField, useForm } from 'vee-validate'
+import { editFoodSchema } from '~/utils/validate'
+const config = useRuntimeConfig()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editFoodSchema,
+})
+const { handleChange: handleDishName, errorMessage: dishNameError } = useField('dishName')
+const { handleChange: handleNumFirstDay, errorMessage: numFirstDayError } = useField('numFirstDay')
+const { handleChange: handleNumSecondDay, errorMessage: numSecondDayError } = useField('numSecondDay')
 
 interface Regist {
   groupId: number | null
@@ -71,7 +80,8 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">料理名</div>
-      <input class="entry" v-model="newDishName"/>
+      <input class="entry" v-model="newDishName" @change="handleDishName" :class="{'error_border': dishNameError}"/>
+      <div class="error_msg">{{ dishNameError }}</div>
       <div class="text">調理の有無</div>
       <select class="entry" v-model="newIsCooking">
         <option value="" disabled selected>選択してください</option>
@@ -79,18 +89,26 @@ const reset = () => {
         <option value="false">調理しない</option>
       </select>
       <div class="text">1日目の販売予定数</div>
-      <input type="number" class="entry" v-model="newNumFirstDay"/>
+      <input type="number" class="entry" v-model="newNumFirstDay" @change="handleNumFirstDay" :class="{'error_border': numFirstDayError}"/>
+      <div class="error_msg">{{ numFirstDayError }}</div>
       <div class="text">2日目の販売予定数</div>
-      <input type="number" class="entry" v-model="newNumSecondDay"/>
+      <input type="number" class="entry" v-model="newNumSecondDay" @change="handleNumSecondDay" :class="{'error_border': numSecondDayError}"/>
+      <div class="error_msg">{{ numSecondDayError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton text="✓編集" @click="editFood()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editFood()" />
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
