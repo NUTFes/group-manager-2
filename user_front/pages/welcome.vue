@@ -40,7 +40,7 @@ const signUp = () =>{
     <div class="welcome-top">
       <div class="welcome-banner">
         <div class="welcome-banner-message">ようこそ技大祭へ</div>
-        <img class="w-[800px] h-[400px]" src="../assets/following-step01.svg"/>
+        <img class="w-full h-full" src="../assets/2023logo.svg"/>
       </div>
     </div>
     <div class="welcome-login-content">
