@@ -9,6 +9,7 @@ const formCount = ref(1);
 
 const state = reactive({
   groupId: 0,
+  groupCategoryId: 0,
 });
 
 const initialData = {
@@ -40,6 +41,7 @@ onMounted(async () =>{
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
   state.groupId = Number(localStorage.getItem("group_id"));
+  state.groupCategoryId = Number(localStorage.getItem("group_category_id"));
 })
 
 const registerParams = [reactive({
@@ -52,25 +54,32 @@ const registerParams = [reactive({
 const registerFood = async () => {
   for (let i =0; i < formCount.value; i++){
     await $fetch(config.APIURL + "/food_products", {
-    method: "POST",
-    params: {
-      group_id: state.groupId,
-      name: registerParams[i].dishName,
-      is_cooking: registerParams[i].isCooking,
-      first_day_num: registerParams[i].numFirstDay,
-      second_day_num: registerParams[i].numSecondDay,
-    },
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  router.push("/regist/purchase");
+      method: "POST",
+      params: {
+        group_id: state.groupId,
+        name: registerParams[i].dishName,
+        is_cooking: registerParams[i].isCooking,
+        first_day_num: registerParams[i].numFirstDay,
+        second_day_num: registerParams[i].numSecondDay,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+  if (state.groupCategoryId === 1){
+    router.push("/regist/purchase");
+  } else {
+    router.push("/mypage");
   }
 };
-
-const skip = () =>{
-  router.push("/regist/purchase");
-}
+const skip = () => {
+  if (state.groupCategoryId === 1){
+    router.push("/regist/purchase");
+  } else {
+    router.push("/mypage");
+  }
+};
 
 const increment = () => {
   formCount.value++;
