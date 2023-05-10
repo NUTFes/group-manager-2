@@ -20,4 +20,14 @@ interface Data {
   updated_at: string
 }
 
-export default User
+export interface RegisterParams {
+  name: string;
+  studentId: string;
+  tel: string;
+  mail: string;
+  departmentId: number | null;
+  gradeId: number | null;
+  password: string;
+  passwordConfirm: string;
+  userId: number;
+}
