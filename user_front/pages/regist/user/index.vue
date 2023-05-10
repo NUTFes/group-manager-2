@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { User } from "@/types/regist/user"
+import { User, RegisterParams } from "@/types/regist/user"
 import { useForm, useField } from "vee-validate";
 import { userSchema } from "~~/utils/validate";
 import { loginCheck } from "@/utils/methods"
@@ -20,15 +20,15 @@ const { handleChange: handleEmail, errorMessage: emailError } = useField('email'
 const { handleChange: handleTel, errorMessage: telError } = useField('tel')
 
 //v-modelで渡すparamsの定義
-const registerParams = reactive({
+const registerParams = reactive<RegisterParams>({
   name: "",
   studentId: "",
   tel: "",
   mail: "",
   password: "",
   passwordConfirm: "",
-  departmentId: 0,
-  gradeId: 0,
+  departmentId: null,
+  gradeId: null,
   userId: 0
 });
 
@@ -39,8 +39,8 @@ const reset = () => {
   registerParams.mail = "",
   registerParams.password = "",
   registerParams.passwordConfirm = "",
-  registerParams.departmentId = "",
-  registerParams.gradeId = "",
+  registerParams.departmentId = null,
+  registerParams.gradeId = null,
   registerParams.userId = 0
 }
 
