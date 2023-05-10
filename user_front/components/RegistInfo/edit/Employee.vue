@@ -1,5 +1,13 @@
 <script lang="ts" setup>
+import { useField, useForm } from 'vee-validate';
+import { editEmployeeSchema } from '~~/utils/validate';
 const config = useRuntimeConfig();
+
+const {meta} = useForm({
+  validationSchema: editEmployeeSchema,
+})
+const { handleChange: handleName, errorMessage: nameError } = useField('name')
+const { handleChange: handleStudentId, errorMessage: studentIdError } = useField('studentId')
 
 interface Regist {
   groupId: number | null
@@ -63,9 +71,11 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">氏名</div>
-      <input class="entry" v-model="newName">
+      <input class="entry" v-model="newName" @change="handleName" :class="{'error_border': nameError}">
+      <div class="error_msg">{{ nameError }}</div>
       <div class="text">学籍番号</div>
-      <input class="entry" v-model="newStudentId" />
+      <input class="entry" v-model="newStudentId" maxlength="8" @change="handleStudentId" :class="{'error_border': studentIdError}" />
+      <div class="error_msg">{{ studentIdError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
         <RegistPageButton text="✓編集" @click="editEmployee()"></RegistPageButton>
@@ -75,6 +85,12 @@ const reset = () => {
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
