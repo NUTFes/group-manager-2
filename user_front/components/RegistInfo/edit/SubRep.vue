@@ -1,6 +1,18 @@
 <script lang="ts" setup>
 import { departmentList } from "~/utils/list";
 import { gradeList } from "~/utils/list";
+import { useField, useForm } from "vee-validate";
+import { subRepSchema } from "~/utils/validate";
+
+const { meta } = useForm({
+  validationSchema: subRepSchema,
+});
+const { handleChange: handleName, errorMessage: nameError } = useField("name");
+const { handleChange: handleStudentId, errorMessage: studentIdError } = useField("studentId");
+const { handleChange: handleTel, errorMessage: telError } = useField("tel");
+const { handleChange: handleMail, errorMessage: mailError } = useField("email");
+const { handleChange: handleDepartmentId, errorMessage: departmentIdError } = useField("department");
+const { handleChange: handleGradeId, errorMessage: gradeIdError } = useField("grade");
 
 const config = useRuntimeConfig();
 
@@ -81,25 +93,31 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">名前</div>
-      <input class="entry" v-model="newName" />
+      <input class="entry" v-model="newName" @change="handleName" :class="{'error_border': nameError}" />
+      <div class="error_msg">{{ nameError }}</div>
+      <div class="text">学籍番号</div>
+      <input class="entry" v-model="newStudentId" maxlength="8" @change="handleStudentId" :class="{'error_border': studentIdError }" />
+      <div class="error_msg">{{ studentIdError }}</div>
       <div class="text">学科</div>
-      <select class="entry" v-model="newDepartment">
+      <select class="entry" v-model="newDepartment" @change="handleDepartmentId" :class="{ 'error_border': departmentIdError }">
         <option v-for="department in departmentList" :value="department.id" :key="department.id">
           {{ department.name }}
         </option>
       </select>
+      <div class="error_msg">{{ departmentIdError }}</div>
       <div class="text">学年</div>
-      <select class="entry" v-model="newGrade">
+      <select class="entry" v-model="newGrade" @change="handleGradeId" :class="{ 'error_border': gradeIdError }">
         <option v-for="grade in gradeList" :value="grade.id" :key="grade.id">
           {{ grade.name }}
         </option>
       </select>
-      <div class="text">電話番号</div>
-      <input class="entry" v-model="newTel" />
+      <div class="error_msg">{{ gradeIdError }}</div>
       <div class="text">メールアドレス</div>
-      <input class="entry" v-model="newEmail" />
-      <div class="text">学籍番号</div>
-      <input class="entry" v-model="newStudentId" />
+      <input class="entry" v-model="newEmail" @change="handleMail" :class="{ 'error_border': mailError }" />
+      <div class="error_msg">{{ mailError }}</div>
+      <div class="text">電話番号</div>
+      <input class="entry" v-model="newTel" @change="handleTel" maxlength="11" :class="{ 'error_border': telError }" />
+      <div class="error_msg">{{ telError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
         <RegistPageButton text="✓編集" @click="editSubRep()"></RegistPageButton>
@@ -109,10 +127,15 @@ const reset = () => {
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
-
 .entry {
   margin: 0% 10%;
   border: 1px solid silver;
