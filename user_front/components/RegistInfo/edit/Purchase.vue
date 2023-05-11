@@ -5,15 +5,6 @@ import { useField, useForm } from "vee-validate";
 import { editPurchaseSchema } from "~/utils/validate";
 const config = useRuntimeConfig();
 
-const { meta } = useForm({
-  validationSchema: editPurchaseSchema,
-});
-const { handleChange: handleFoodProduct, errorMessage: foodProductError } = useField("foodProductId");
-const { handleChange: handleShop, errorMessage: shopError } = useField("shopId");
-const { handleChange: handleItem, errorMessage: itemError } = useField("item");
-const { handleChange: handleIsFresh, errorMessage: isFreshError } = useField("isFresh");
-const { handleChange: handleFesDate, errorMessage: fesDateError } = useField("fesDateId");
-
 interface Regist {
   id: number | null
   groupId: number | null
@@ -32,6 +23,22 @@ const props = withDefaults(defineProps<Regist>(), {
   shopId: null,
   fesDateId: null,
 })
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editPurchaseSchema,
+  initialValues: {
+    item: props.name,
+    foodProductId: props.foodProductId,
+    shopId: props.shopId,
+    isFresh: props.isFresh,
+    fesDateId: props.fesDateId,
+  },
+});
+const { handleChange: handleFoodProduct, errorMessage: foodProductError } = useField("foodProductId");
+const { handleChange: handleShop, errorMessage: shopError } = useField("shopId");
+const { handleChange: handleItem, errorMessage: itemError } = useField("item");
+const { handleChange: handleIsFresh, errorMessage: isFreshError } = useField("isFresh");
+const { handleChange: handleFesDate, errorMessage: fesDateError } = useField("fesDateId");
 
 interface Emits {
   (e: 'update:editPurchase', isEditPurchase: boolean): void
@@ -155,7 +162,7 @@ const reset = () => {
         <div class="error_msg">{{ fesDateError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton text="✓編集" @click="editPurchase()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPurchase()" />
       </div>
     </template>
   </Modal>

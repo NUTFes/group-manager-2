@@ -4,12 +4,6 @@ import { useField, useForm } from 'vee-validate'
 import { editItemSchema } from '~/utils/validate'
 const config = useRuntimeConfig();
 
-const { meta } = useForm({
-  validationSchema: editItemSchema,
-})
-const { handleChange: handleName, errorMessage: nameError } = useField('itemNameId')
-const { handleChange: handleNum, errorMessage: numError } = useField('itemNum')
-
 interface Regist {
   groupId: number | null
   id: number | null
@@ -23,6 +17,16 @@ const props = withDefaults(defineProps<Regist>(), {
   item: null,
   num: null
 })
+const { meta, isSubmitting } = useForm({
+  validationSchema: editItemSchema,
+  initialValues: {
+    itemNameId: props.item,
+    itemNum: props.num
+  }
+})
+const { handleChange: handleName, errorMessage: nameError } = useField('itemNameId')
+const { handleChange: handleNum, errorMessage: numError } = useField('itemNum')
+
 
 interface Emits {
   (e: 'update:editItem', isEditItem: boolean): void
@@ -79,6 +83,7 @@ const reset = () => {
       </div>
     </template>
     <template #form>
+      {{ meta }}
       <div class="text">貸出物品</div>
       <select class="entry" v-model="newItem" @change="handleName" :class="{'error_border': nameError}">
         <option
@@ -94,7 +99,7 @@ const reset = () => {
       <div class="error_msg">{{ numError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editItem()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

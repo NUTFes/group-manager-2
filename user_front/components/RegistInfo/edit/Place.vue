@@ -4,25 +4,12 @@ import { useField, useForm } from 'vee-validate';
 import { placeSchema } from '~~/utils/validate';
 const config = useRuntimeConfig()
 
-const {meta} = useForm({
-  validationSchema: placeSchema,
-})
-const {handleChange: handleFirstPlace, errorMessage: firstPlaceError} = useField('first')
-const {handleChange: handleSecondPlace, errorMessage: secondPlaceError} = useField('second')
-const {handleChange: handleThirdPlace, errorMessage: thirdPlaceError} = useField('third')
-const {handleChange: handleRemark, errorMessage: remarkError} = useField('remark')
-
 interface Props {
   id: number | null
   first: number | null
   second: number | null
   third: number | null
   remark: string
-}
-
-interface Emits {
-  (e: 'update:editPlace', isEditePlace: boolean): void
-  (e: 'reloadPlace', v: null): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,8 +19,25 @@ const props = withDefaults(defineProps<Props>(), {
   third: null,
   remark: '',
 })
-
+interface Emits {
+  (e: 'update:editPlace', isEditePlace: boolean): void
+  (e: 'reloadPlace', v: null): void
+}
 const emits = defineEmits<Emits>()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: placeSchema,
+  initialValues: {
+    first: props.first,
+    second: props.second,
+    third: props.third,
+    remark: props.remark
+  }
+})
+const {handleChange: handleFirstPlace, errorMessage: firstPlaceError} = useField('first')
+const {handleChange: handleSecondPlace, errorMessage: secondPlaceError} = useField('second')
+const {handleChange: handleThirdPlace, errorMessage: thirdPlaceError} = useField('third')
+const {handleChange: handleRemark, errorMessage: remarkError} = useField('remark')
 
 const placeList = ref<PlaceList[]>([])
 const newFirst = ref<Props['first']>(props.first)
@@ -126,7 +130,7 @@ const reset = () => {
       <div class="error_msg">{{ remarkError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editPlace()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPlace()"></RegistPageButton>
       </div>
     </template>
   </Modal>

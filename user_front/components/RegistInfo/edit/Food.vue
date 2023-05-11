@@ -3,13 +3,6 @@ import { useField, useForm } from 'vee-validate'
 import { editFoodSchema } from '~/utils/validate'
 const config = useRuntimeConfig()
 
-const { meta, isSubmitting } = useForm({
-  validationSchema: editFoodSchema,
-})
-const { handleChange: handleDishName, errorMessage: dishNameError } = useField('dishName')
-const { handleChange: handleNumFirstDay, errorMessage: numFirstDayError } = useField('numFirstDay')
-const { handleChange: handleNumSecondDay, errorMessage: numSecondDayError } = useField('numSecondDay')
-
 interface Regist {
   groupId: number | null
   id: number | null
@@ -18,7 +11,6 @@ interface Regist {
   firstDayNum: number | null
   secondDayNum: number | null
 }
-
 const props = withDefaults(defineProps<Regist>(), {
   groupId: null,
   id: null,
@@ -27,6 +19,18 @@ const props = withDefaults(defineProps<Regist>(), {
   firstDayNum: null,
   secondDayNum: null
 })
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editFoodSchema,
+  initialValues: {
+    dishName: props.dishName,
+    numFirstDay: props.firstDayNum,
+    numSecondDay: props.secondDayNum
+  }
+})
+const { handleChange: handleDishName, errorMessage: dishNameError } = useField('dishName')
+const { handleChange: handleNumFirstDay, errorMessage: numFirstDayError } = useField('numFirstDay')
+const { handleChange: handleNumSecondDay, errorMessage: numSecondDayError } = useField('numSecondDay')
 
 interface Emits {
   (e: 'update:editFood', isEditFood: boolean): void

@@ -3,12 +3,6 @@ import { useField, useForm } from 'vee-validate';
 import { editEmployeeSchema } from '~~/utils/validate';
 const config = useRuntimeConfig();
 
-const {meta} = useForm({
-  validationSchema: editEmployeeSchema,
-})
-const { handleChange: handleName, errorMessage: nameError } = useField('name')
-const { handleChange: handleStudentId, errorMessage: studentIdError } = useField('studentId')
-
 interface Regist {
   groupId: number | null
   id: number | null
@@ -22,6 +16,16 @@ const props = withDefaults(defineProps<Regist>(), {
   name: '',
   studentId: null
 })
+
+const {meta, isSubmitting} = useForm({
+  validationSchema: editEmployeeSchema,
+  initialValues: {
+    name: props.name,
+    studentId: props.studentId
+  }
+})
+const { handleChange: handleName, errorMessage: nameError } = useField('name')
+const { handleChange: handleStudentId, errorMessage: studentIdError } = useField('studentId')
 
 interface Emits {
   (e: 'update:editEmployee', isEditEmployee: boolean): void
@@ -78,7 +82,7 @@ const reset = () => {
       <div class="error_msg">{{ studentIdError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editEmployee()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editEmployee()"></RegistPageButton>
       </div>
     </template>
   </Modal>

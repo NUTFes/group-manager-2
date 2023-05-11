@@ -3,17 +3,6 @@ import { departmentList } from "~/utils/list";
 import { gradeList } from "~/utils/list";
 import { useField, useForm } from "vee-validate";
 import { subRepSchema } from "~/utils/validate";
-
-const { meta } = useForm({
-  validationSchema: subRepSchema,
-});
-const { handleChange: handleName, errorMessage: nameError } = useField("name");
-const { handleChange: handleStudentId, errorMessage: studentIdError } = useField("studentId");
-const { handleChange: handleTel, errorMessage: telError } = useField("tel");
-const { handleChange: handleMail, errorMessage: mailError } = useField("email");
-const { handleChange: handleDepartmentId, errorMessage: departmentIdError } = useField("department");
-const { handleChange: handleGradeId, errorMessage: gradeIdError } = useField("grade");
-
 const config = useRuntimeConfig();
 
 interface Props {
@@ -36,6 +25,24 @@ const props = withDefaults(defineProps<Props>(), {
   email: '',
   student_id: null,
 })
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: subRepSchema,
+  initialValues: {
+    name: props.name,
+    studentId: props.student_id,
+    tel: props.tel,
+    email: props.email,
+    department: props.department_id,
+    grade: props.grade_id,
+  }
+});
+const { handleChange: handleName, errorMessage: nameError } = useField("name");
+const { handleChange: handleStudentId, errorMessage: studentIdError } = useField("studentId");
+const { handleChange: handleTel, errorMessage: telError } = useField("tel");
+const { handleChange: handleMail, errorMessage: mailError } = useField("email");
+const { handleChange: handleDepartmentId, errorMessage: departmentIdError } = useField("department");
+const { handleChange: handleGradeId, errorMessage: gradeIdError } = useField("grade");
 
 interface Emits {
   (e: 'update:editSubRep', isEditSubRep: boolean): void
@@ -120,7 +127,7 @@ const reset = () => {
       <div class="error_msg">{{ telError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editSubRep()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editSubRep()"></RegistPageButton>
       </div>
     </template>
   </Modal>

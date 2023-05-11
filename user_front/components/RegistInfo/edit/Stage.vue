@@ -5,16 +5,6 @@ import { useField, useForm } from 'vee-validate'
 import { stageSchema } from '~~/utils/validate';
 const config = useRuntimeConfig()
 
-const { meta } = useForm({
-  validationSchema: stageSchema,
-})
-const { handleChange: handleDate, errorMessage: dateError } = useField('fesDate')
-const { handleChange: handleStageFirst, errorMessage: stageFirstError } = useField('first')
-const { handleChange: handleStageSecond, errorMessage: stageSecondError } = useField('second')
-const { handleChange: handleUseTimeInterval, errorMessage: useTimeIntervalError } = useField('performanceTime')
-const { handleChange: handlePrepareTimeInterval, errorMessage: prepareTimeIntervalError } = useField('preparationTime')
-const { handleChange: handleCleanupTimeInterval, errorMessage: cleanupTimeIntervalError } = useField('cleanUpTime')
-
 interface Props {
   id: number | null,
   groupId: number | null,
@@ -26,12 +16,6 @@ interface Props {
   prepareTimeInterval: string,
   cleanupTimeInterval: string,
 }
-
-interface Emits {
-  (e: 'update:editStage', isEditStage: boolean): void
-  (e: 'reloadStage', v: null): void
-}
-const emits = defineEmits<Emits>()
 const props = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
@@ -44,6 +28,30 @@ const props = withDefaults(defineProps<Props>(), {
   prepareTimeInterval: '',
   cleanupTimeInterval: '',
 })
+
+interface Emits {
+  (e: 'update:editStage', isEditStage: boolean): void
+  (e: 'reloadStage', v: null): void
+}
+const emits = defineEmits<Emits>()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: stageSchema,
+  initialValues: {
+    fesDateId: props.fesDateId,
+    first: props.stageFirst,
+    second: props.stageSecond,
+    performanceTime: props.useTimeInterval,
+    preparationTime: props.prepareTimeInterval,
+    cleanUpTime: props.cleanupTimeInterval
+  }
+})
+const { handleChange: handleDate, errorMessage: dateError } = useField('fesDate')
+const { handleChange: handleStageFirst, errorMessage: stageFirstError } = useField('first')
+const { handleChange: handleStageSecond, errorMessage: stageSecondError } = useField('second')
+const { handleChange: handleUseTimeInterval, errorMessage: useTimeIntervalError } = useField('performanceTime')
+const { handleChange: handlePrepareTimeInterval, errorMessage: prepareTimeIntervalError } = useField('preparationTime')
+const { handleChange: handleCleanupTimeInterval, errorMessage: cleanupTimeIntervalError } = useField('cleanUpTime')
 
 const newStageDateId = ref<Props['fesDateId']>(props.fesDateId)
 const newStageFirst = ref<Props['stageFirst']>(props.stageFirst)
@@ -168,7 +176,7 @@ const reset = () => {
       </div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editStage()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editStage()"></RegistPageButton>
       </div>
     </template>
   </Modal>

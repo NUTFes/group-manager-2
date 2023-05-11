@@ -3,16 +3,6 @@ import { useField, useForm } from 'vee-validate'
 import { stageOptionSchema } from '~~/utils/validate'
 const config = useRuntimeConfig()
 
-const { meta } = useForm({
-  validationSchema: stageOptionSchema,
-})
-
-const { handleChange: handleOwnEquipment, errorMessage: ownEquipmentError } = useField('isItem')
-const { handleChange: handleBgm, errorMessage: bgmError } = useField('isMusic')
-const { handleChange: handleCameraPermission, errorMessage: cameraPermissionError } = useField('isCamera')
-const { handleChange: handleLoudSound, errorMessage: loudSoundError } = useField('isNoise')
-const { handleChange: handleStageContent, errorMessage: stageContentError } = useField('stageContent')
-
 interface Props {
   groupId: number | null,
   id: number | null,
@@ -31,6 +21,23 @@ const props = withDefaults(defineProps<Props>(), {
   loudSound: null,
   stageContent: '',
 })
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: stageOptionSchema,
+  initialValues: {
+    isItem: props.ownEquipment,
+    isMusic: props.bgm,
+    isCamera: props.cameraPermission,
+    isNoise: props.loudSound,
+    stageContent: props.stageContent
+  }
+})
+const { handleChange: handleOwnEquipment, errorMessage: ownEquipmentError } = useField('isItem')
+const { handleChange: handleBgm, errorMessage: bgmError } = useField('isMusic')
+const { handleChange: handleCameraPermission, errorMessage: cameraPermissionError } = useField('isCamera')
+const { handleChange: handleLoudSound, errorMessage: loudSoundError } = useField('isNoise')
+const { handleChange: handleStageContent, errorMessage: stageContentError } = useField('stageContent')
+
 const newOwnEquipment = ref<Props['ownEquipment']>(props.ownEquipment)
 const newBgm = ref<Props['bgm']>(props.bgm)
 const newCameraPermission = ref<Props['cameraPermission']>(props.cameraPermission)
@@ -150,7 +157,7 @@ const reset = () => {
       <div class="error_msg">{{ stageContentError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editStageOption()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editStageOption()"></RegistPageButton>
       </div>
     </template>
   </Modal>

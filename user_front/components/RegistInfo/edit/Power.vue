@@ -3,15 +3,6 @@ import { useField, useForm } from 'vee-validate'
 import { editPowerSchema } from '~~/utils/validate'
 const config = useRuntimeConfig()
 
-const {meta} = useForm({
-  validationSchema: editPowerSchema,
-})
-const { handleChange: handleItem, errorMessage: itemError } = useField('productName')
-const { handleChange: handlePower, errorMessage: powerError } = useField('maxPower')
-const { handleChange: handleManufacturer, errorMessage: manufacturerError } = useField('manufacturer')
-const { handleChange: handleModel, errorMessage: modelError } = useField('model')
-const { handleChange: handleUrl, errorMessage: urlError } = useField('url')
-
 interface Props {
   groupId: number | null
   id: number | null
@@ -21,12 +12,6 @@ interface Props {
   model: string
   url: string
 }
-
-interface Emits {
-  (e: 'update:edit-power', isEditPower: boolean): void
-  (e: 'reloadPower', v: null): void
-}
-
 const props = withDefaults(defineProps<Props>(),{
   groupId: null,
   id: null,
@@ -36,7 +21,28 @@ const props = withDefaults(defineProps<Props>(),{
   model: '',
   url: '',
 })
+
+interface Emits {
+  (e: 'update:edit-power', isEditPower: boolean): void
+  (e: 'reloadPower', v: null): void
+}
 const emits = defineEmits<Emits>()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editPowerSchema,
+  initialValues: {
+    productName: props.item,
+    maxPower: props.power,
+    manufacturer: props.manufacturer,
+    model: props.model,
+    url: props.url
+  }
+})
+const { handleChange: handleItem, errorMessage: itemError } = useField('productName')
+const { handleChange: handlePower, errorMessage: powerError } = useField('maxPower')
+const { handleChange: handleManufacturer, errorMessage: manufacturerError } = useField('manufacturer')
+const { handleChange: handleModel, errorMessage: modelError } = useField('model')
+const { handleChange: handleUrl, errorMessage: urlError } = useField('url')
 
 const newItem = ref<Props['item']>(props.item)
 const newPower = ref<Props['power']>(props.power)
@@ -104,7 +110,7 @@ const reset = () => {
       <div class="error_msg">{{ urlError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editPower()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPower()"></RegistPageButton>
       </div>
     </template>
   </Modal>
