@@ -39,7 +39,7 @@ const signUp = () =>{
     <Header/>
     <div class="welcome-top">
       <div class="welcome-banner">
-        <div class="welcome-banner-message">ようこそ技大祭へ</div>
+        <div class="welcome-banner-message">{{ $t('Welcome.welcome') }}</div>
         <img class="w-[800px] h-[400px]" src="../assets/following-step01.svg"/>
       </div>
     </div>
@@ -52,9 +52,9 @@ const signUp = () =>{
           <input type="password" placeholder="パスワード" class="login-input" v-model="password" />
         </div>
         <div class="login-form-button">
-          <button class="login-button" @click="login">ログイン</button>
+          <button class="login-button" @click="login">{{ $t('Welcome.logIn') }}</button>
         </div>
-        <button class="signup-button" @click="signUp">新規登録はこちら</button>
+        <button class="signup-button" @click="signUp">{{ $t('Welcome.signIn') }}</button>
       </div>
     </div>
     <WelcomeDetail />
