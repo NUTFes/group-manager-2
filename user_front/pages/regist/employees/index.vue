@@ -74,7 +74,7 @@ const registerEmployee = async () => {
       },
     });
   }
-  if (state.groupCategoryId === (1 || 2)) {
+  if (state.groupCategoryId === 1 || state.groupCategoryId === 2) {
     router.push("/regist/food");
   } else {
     router.push("/mypage");
@@ -82,7 +82,7 @@ const registerEmployee = async () => {
 };
 
 const skip = () =>{
-  if (state.groupCategoryId === (1 || 2)) {
+  if (state.groupCategoryId === 1 || state.groupCategoryId === 2) {
     router.push("/regist/food");
   } else {
     router.push("/mypage");
