@@ -83,7 +83,6 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      {{ meta }}
       <div class="text">貸出物品</div>
       <select class="entry" v-model="newItem" @change="handleName" :class="{'error_border': nameError}">
         <option
