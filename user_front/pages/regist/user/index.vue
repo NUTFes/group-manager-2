@@ -1,8 +1,8 @@
 <script lang="ts" setup>
+import axios from "axios";
 import { User, RegisterParams } from "@/types/regist/user"
 import { useForm, useField } from "vee-validate";
 import { userSchema } from "~~/utils/validate";
-import { loginCheck } from "@/utils/methods"
 import { departmentList } from "~/utils/list";
 import { gradeList } from "~/utils/list";
 
@@ -47,6 +47,24 @@ const reset = () => {
 const config = useRuntimeConfig();
 const router = useRouter();
 
+const login = () => {
+  const params = new URLSearchParams({
+    email: registerParams.mail,
+    password: registerParams.password,
+  })
+  axios.defaults.headers.common["Content-Type"] = "application/json";
+  axios.post(config.APIURL + "/api/auth/sign_in", params).then(
+    (response) => {
+      localStorage.setItem(
+        "access-token",
+        response.headers["access-token"]
+      );
+      localStorage.setItem("client", response.headers["client"]);
+      localStorage.setItem("uid", response.headers["uid"]);
+      localStorage.setItem("token-type", response.headers["token-type"]);
+    },);
+}
+
 const registUser = (async () => {
   await $fetch<User>(config.APIURL + "/api/auth", {
     method: "POST",
@@ -71,6 +89,8 @@ const registUser = (async () => {
       user_id: registerParams.userId,
     }
   });
+  login();
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   router.push("/regist/group")
 })
 </script>

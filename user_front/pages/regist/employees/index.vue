@@ -30,12 +30,14 @@ const formCount = ref(1);
 
 const state = reactive({
   groupId: 0,
+  groupCategoryId: 0,
 });
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck()
   state.groupId = Number(localStorage.getItem("group_id"));
+  state.groupCategoryId = Number(localStorage.getItem("group_category_id"));
 })
 
 const registerParams = [reactive({
@@ -72,11 +74,19 @@ const registerEmployee = async () => {
       },
     });
   }
-  router.push("/regist/food");
+  if (state.groupCategoryId === 1 || state.groupCategoryId === 2) {
+    router.push("/regist/food");
+  } else {
+    router.push("/mypage");
+  }
 };
 
 const skip = () =>{
-  router.push("/regist/food");
+  if (state.groupCategoryId === 1 || state.groupCategoryId === 2) {
+    router.push("/regist/food");
+  } else {
+    router.push("/mypage");
+  }
 }
 
 </script>

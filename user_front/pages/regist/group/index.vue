@@ -40,7 +40,7 @@ const router = useRouter()
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
-  // loginCheck();
+  loginCheck();
   registerParams.userId = localStorage.getItem("user_id") || ''
   const setting = await $fetch<Setting>(config.APIURL + "/user_page_settings")
   registerParams.fesYearId = setting.data[0].fes_year_id

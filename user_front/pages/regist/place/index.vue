@@ -13,9 +13,6 @@ const { handleChange: handleSecond, errorMessage: secondPlaceError } = useField(
 const { handleChange: handleThird, errorMessage: thirdPlaceError } = useField("third");
 const { handleChange: handleRemark, errorMessage: remarkError } = useField("remark");
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
-
 const config = useRuntimeConfig();
 const router = useRouter();
 const placeList = ref<PlaceList[]>([]);
@@ -36,7 +33,8 @@ const reset = () => {
 }
 
 onMounted(async () => {
-
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck();
   const placeData = await $fetch<Place>(config.APIURL + "/places");
   placeData.data.forEach((place) => {
     placeList.value.push(place);

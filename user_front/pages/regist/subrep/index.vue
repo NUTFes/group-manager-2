@@ -16,9 +16,6 @@ const { handleChange: handleMail, errorMessage: mailError } = useField("email");
 const { handleChange: handleDepartmentId, errorMessage: departmentIdError } = useField("department");
 const { handleChange: handleGradeId, errorMessage: gradeIdError } = useField("grade");
 
-// ログインしていない場合は/welcomeに遷移させる
-loginCheck();
-
 const registerParams = reactive(
   {
     name: "",
@@ -44,7 +41,8 @@ const reset = () => {
 }
 
 onMounted(async () => {
-
+  // ログインしていない場合は/welcomeに遷移させる
+  loginCheck();
   registerParams.groupId = localStorage.getItem("group_id") || "";
   registerParams.groupCategoryId = localStorage.getItem("group_category_id") || "";
 })
