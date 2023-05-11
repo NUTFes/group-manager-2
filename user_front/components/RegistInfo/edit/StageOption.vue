@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useField, useForm } from 'vee-validate'
+import { stageOptionSchema } from '~~/utils/validate'
 const config = useRuntimeConfig()
 
 interface Props {
@@ -19,6 +21,23 @@ const props = withDefaults(defineProps<Props>(), {
   loudSound: null,
   stageContent: '',
 })
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: stageOptionSchema,
+  initialValues: {
+    isItem: props.ownEquipment,
+    isMusic: props.bgm,
+    isCamera: props.cameraPermission,
+    isNoise: props.loudSound,
+    stageContent: props.stageContent
+  }
+})
+const { handleChange: handleOwnEquipment, errorMessage: ownEquipmentError } = useField('isItem')
+const { handleChange: handleBgm, errorMessage: bgmError } = useField('isMusic')
+const { handleChange: handleCameraPermission, errorMessage: cameraPermissionError } = useField('isCamera')
+const { handleChange: handleLoudSound, errorMessage: loudSoundError } = useField('isNoise')
+const { handleChange: handleStageContent, errorMessage: stageContentError } = useField('stageContent')
+
 const newOwnEquipment = ref<Props['ownEquipment']>(props.ownEquipment)
 const newBgm = ref<Props['bgm']>(props.bgm)
 const newCameraPermission = ref<Props['cameraPermission']>(props.cameraPermission)
@@ -90,7 +109,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">所持機器の利用</div>
-      <select class="entry" v-model="newOwnEquipment">
+      <select class="entry" v-model="newOwnEquipment" @change="handleOwnEquipment" :class="{'error_border': ownEquipmentError}">
         <option
           v-for="i in itemsAvailable"
           :value="i.value"
@@ -99,8 +118,9 @@ const reset = () => {
           {{ i.label }}
         </option>
       </select>
+      <div class="error_msg">{{ ownEquipmentError }}</div>
       <div class="text">音楽</div>
-      <select class="entry" v-model="newBgm">
+      <select class="entry" v-model="newBgm" @change="handleBgm" :class="{ 'error_border': bgmError }">
         <option
           v-for="m in musicAvailable"
           :value="m.value"
@@ -109,8 +129,9 @@ const reset = () => {
         {{ m.label }}
       </option>
       </select>
+      <div class="error_msg">{{ bgmError }}</div>
       <div class="text">撮影許可</div>
-      <select class="entry" v-model="newCameraPermission">
+      <select class="entry" v-model="newCameraPermission" @change="handleCameraPermission" :class="{ 'error_border': cameraPermissionError }">
         <option
           v-for="c in cameraAvailable"
           :value="c.value"
@@ -119,8 +140,9 @@ const reset = () => {
           {{ c.label }}
         </option>
       </select>
+      <div class="error_msg">{{ cameraPermissionError }}</div>
       <div class="text">騒音</div>
-      <select class="entry" v-model="newLoudSound">
+      <select class="entry" v-model="newLoudSound" @change="handleLoudSound" :class="{ 'error_border': loudSoundError }">
         <option
           v-for="l in loudAvailable"
           :value="l.value"
@@ -129,17 +151,25 @@ const reset = () => {
         {{ l.label }}
       </option>
       </select>
+      <div class="error_msg">{{ loudSoundError }}</div>
       <div class="text">ステージ内容</div>
-      <textarea class="entry" v-model="newStageContent"/>
+      <textarea class="entry" v-model="newStageContent" @chage="handleStageContent" :class="{ 'error_border': stageContentError }"/>
+      <div class="error_msg">{{ stageContentError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editStageOption()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editStageOption()"></RegistPageButton>
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }

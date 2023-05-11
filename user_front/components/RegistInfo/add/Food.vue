@@ -1,5 +1,14 @@
 <script lang="ts" setup>
+import { useField, useForm } from 'vee-validate'
+import { editFoodSchema } from '~/utils/validate'
 const config = useRuntimeConfig()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editFoodSchema,
+})
+const { handleChange: handleDishName, errorMessage: dishNameError } = useField('dishName')
+const { handleChange: handleNumFirstDay, errorMessage: numFirstDayError } = useField('numFirstDay')
+const { handleChange: handleNumSecondDay, errorMessage: numSecondDayError } = useField('numSecondDay')
 
 interface Props {
   groupId: number | null
@@ -58,7 +67,8 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">料理名</div>
-      <input class="entry" v-model="dishName"/>
+      <input class="entry" v-model="dishName" @change="handleDishName" :class="{'error_border': dishNameError}"/>
+      <div class="error_msg">{{ dishNameError }}</div>
       <div class="text">調理の有無</div>
       <select class="entry" v-model="isCooking">
         <option value="" disabled selected>選択してください</option>
@@ -66,18 +76,26 @@ const reset = () => {
         <option value="false">調理しない</option>
       </select>
       <div class="text">1日目の販売予定数</div>
-      <input type="number" class="entry" v-model="numFirstDay"/>
+      <input type="number" class="entry" v-model="numFirstDay" @change="handleNumFirstDay" :class="{ 'error_border': numFirstDayError }"/>
+      <div class="error_msg">{{ numFirstDayError }}</div>
       <div class="text">2日目の販売予定数</div>
-      <input type="number" class="entry" v-model="numSecondDay"/>
+      <input type="number" class="entry" v-model="numSecondDay" @change="handleNumSecondDay" :class="{'error_border': numSecondDayError}"/>
+      <div class="error_msg">{{ numSecondDayError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton text="✓追加" @click="addFood()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓追加" @click="addFood()" />
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }

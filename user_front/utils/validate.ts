@@ -76,6 +76,10 @@ export const itemSchema = object({
       })
     ).strict(),
 });
+export const editItemSchema = object({
+  itemNameId: number().required("入力してください"),
+  itemNum: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+});
 
 // power登録のバリデーション
 export const powerSchema = object({
@@ -90,6 +94,13 @@ export const powerSchema = object({
       })
     ).strict(),
 });
+export const editPowerSchema = object({
+  productName: string().required("入力してください"),
+  maxPower: string().required("入力してください").typeError('半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください').matches(/\b[0-9]\b|\b[1-9][0-9]\b|\b[1-9][0-9][0-9]\b|\b1[0-4][0-9][0-9]\b|\b1500\b/, '1500以下を入力してください'),
+  manufacturer: string().required("入力してください"),
+  model: string().required("入力してください"),
+  url: string().required("入力してください").url("URLを入力してください"),
+});
 
 // employee登録のバリデーション
 export const employeeSchema = object({
@@ -100,6 +111,10 @@ export const employeeSchema = object({
       studentId: string().required("入力してください").matches(/^[0-9]{8}$/, "半角数字8桁で入力してください"),
     })
   ).strict(),
+});
+export const editEmployeeSchema = object({
+  name: string().required("入力してください"),
+  studentId: string().required("入力してください").matches(/^[0-9]{8}$/, "半角数字8桁で入力してください"),
 });
 
 // purchase登録のバリデーション
@@ -115,6 +130,12 @@ export const purchaseSchema = object({
     })
   ).strict(),
 });
+export const editPurchaseSchema = object({
+  foodProductId: string().required("選択してください").typeError("選択してください"),
+  shopId: string().required("選択してください").typeError("選択してください"),
+  item: string().required("入力してください").typeError("入力してください"),
+  fesDateId: string().required("選択してください").typeError("選択してください"),
+});
 
 // food登録のバリデーション
 export const foodSchema = object({
@@ -126,4 +147,9 @@ export const foodSchema = object({
       numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
     })
   ).strict(),
+});
+export const editFoodSchema = object({
+  dishName: string().required("入力してください"),
+  numFirstDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+  numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
 });
