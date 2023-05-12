@@ -31,13 +31,11 @@ const { meta, isSubmitting } = useForm({
     first: props.first,
     second: props.second,
     third: props.third,
-    remark: props.remark
   }
 })
 const {handleChange: handleFirstPlace, errorMessage: firstPlaceError} = useField('first')
 const {handleChange: handleSecondPlace, errorMessage: secondPlaceError} = useField('second')
 const {handleChange: handleThirdPlace, errorMessage: thirdPlaceError} = useField('third')
-const {handleChange: handleRemark, errorMessage: remarkError} = useField('remark')
 
 const placeList = ref<PlaceList[]>([])
 const newFirst = ref<Props['first']>(props.first)
@@ -126,8 +124,7 @@ const reset = () => {
       </select>
       <div class="error_msg">{{ thirdPlaceError }}</div>
       <div class="text">追記することがあればこちらにお書きください</div>
-      <textarea class="entry" v-model="newRemark" @change="handleRemark" :class="{'error_border': remark}"/>
-      <div class="error_msg">{{ remarkError }}</div>
+      <textarea class="entry" v-model="newRemark"/>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPlace()"></RegistPageButton>
