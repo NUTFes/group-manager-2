@@ -75,7 +75,7 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal title="貸出物品の編集">
+  <Modal :title="$t('Item.editItem')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeEditItem()" class="hover:text-black hover:opacity-75"
@@ -83,7 +83,7 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">貸出物品</div>
+      <div class="text">{{ $t('Item.item') }}</div>
       <select class="entry" v-model="newItem" @change="handleName" :class="{'error_border': nameError}">
         <option
           v-for="list in itemList"
@@ -93,12 +93,12 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ nameError }}</div>
-      <div class="text">個数</div>
+      <div class="text">{{ $t('Item.number') }}</div>
       <input type="number" class="entry" v-model="newNum" @change="handleNum" :class="{'error_border': numError}"/>
       <div class="error_msg">{{ numError }}</div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editItem()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

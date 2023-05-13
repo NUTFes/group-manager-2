@@ -34,7 +34,7 @@ const deleteItem = async() => {
 </script>
 
 <template>
-  <Modal title="貸出物品の削除">
+  <Modal :title="$t('Item.deleteItem')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeDeleteItem()" class="hover:text-black hover:opacity-75"
@@ -43,8 +43,8 @@ const deleteItem = async() => {
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
-          <RegistPageButton text="戻る" @click="closeDeleteItem()"></RegistPageButton>
-          <RegistPageButton text="✓削除" @click="deleteItem()"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.return')" @click="closeDeleteItem()"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.delete')" @click="deleteItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>

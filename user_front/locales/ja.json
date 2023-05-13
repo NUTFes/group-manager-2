@@ -82,11 +82,12 @@
   },
 
   "RegistInfo":{
+    "return": "マイページに戻る",
     "registAndEdit": "参加団体登録・編集ページ",
     "subrepresentative": "副代表申請",
     "place": "会場申請",
     "stage": "ステージ申請",
-    "StageOption": "ステージオプション申請",
+    "stageOption": "ステージオプション申請",
     "power": "電力申請",
     "item": "物品申請",
     "employees": "従業員申請",
@@ -135,7 +136,7 @@
     "secondPreference": "第二希望場所",
     "performanceTime": "利用時間",
     "preparationTime": "準備時間",
-    "clean-upTime": "片付け時間"
+    "cleanUpTime": "片付け時間"
   },
 
   "StageOption":{
@@ -177,7 +178,9 @@
     "first": "第一希望",
     "second": "第二希望",
     "third": "第三希望",
-    "free": "備考"
+    "free": "備考",
+    "hope1": "第",
+    "hope2": "希望"
   },
 
   "Item":{
@@ -205,6 +208,7 @@
   "Employees":{
     "registEmployees": "従業員登録",
     "addEmployees": "従業員の追加",
+    "deleteEmployees": "従業員の削除",
     "editEmployees": "従業員の編集",
     "name": "氏名",
     "studentId": "学籍番号"
@@ -218,8 +222,8 @@
     "name": "販売食品名",
     "cook": "調理の有無",
     "select": "選択してください",
-    "yes": "調理あり",
-    "no": "調理無し",
+    "yes": "有",
+    "no": "無",
     "numberFirstDay": "１日目の販売予定数",
     "numberSecondDay": "２日目の販売予定数",
     "firstDay": "１日目",
@@ -241,8 +245,8 @@
     "place": "購入場所",
     "date": "購入日",
     "rowFood": "生ものか否か",
-    "yes": "生ものです",
-    "no": "違います",
+    "yes": "生もの",
+    "no": "加工品",
     "of": "の",
     "parchasePlace1": "購入",
     "parchasePlace2": "場所"

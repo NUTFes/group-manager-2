@@ -53,12 +53,12 @@ const openDeletePower = () => {
       <RegistInfoDivideBar />
       <div>
         <div class="flex items-center text-lg">
-          <div class="w-20 ">メーカー</div>
+          <div class="w-20 ">{{ $t('Power.maker') }}</div>
           <RegistInfoTriangle />
           <div class="w-32 ">{{ props.manufacturer }}</div>
         </div>
         <div class="flex items-center">
-          <div class="w-20 h-6">型番</div>
+          <div class="w-20 h-6">{{ $t('Power.model') }}</div>
           <RegistInfoTriangle />
           <div class="w-32 break-normal">{{ props.model }}</div>
         </div>

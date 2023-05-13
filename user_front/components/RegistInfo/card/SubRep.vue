@@ -46,21 +46,21 @@ const openEditSubRep = () => {
   <RegistInfoWideCard>
     <template #body>
       <div class="mx-10 pb-8 font-medium">
-        名前
+        {{ $t('Subrep.name') }}
         <div class="text-2xl">
           {{ sub.name }}
         </div>
       </div>
         <RegistInfoDivideBar />
       <div class="m-2 text-base">
-        <p class="font-medium text-lg">所属</p>
-        <div class="flex items-center">分野‣{{ sub.department }}</div>
-        <div class="flex items-center">学年‣{{ sub.grade }}</div>
-        <div class="flex items-center">学籍‣{{ sub.studentId }}</div>
+        <p class="font-medium text-lg">{{ $t('Subrep.department') }}</p>
+        <div class="flex items-center">{{ $t('Subrep.department') }}‣{{ sub.department }}</div>
+        <div class="flex items-center">{{ $t('Subrep.grade') }}‣{{ sub.grade }}</div>
+        <div class="flex items-center">{{ $t('Subrep.studentId') }}‣{{ sub.studentId }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="text-base mb-10">
-        <p class="font-medium">詳細情報</p>
+        <p class="font-medium">{{ $t('Subrep.details') }}</p>
           <div class="character2">e-mail‣{{ sub.email }}</div>
           <div class="character2">tel‣{{ sub.tel }}</div>
       </div>

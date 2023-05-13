@@ -4,7 +4,7 @@
       <p class="plus">
         +
       </p>
-      申請
+      {{ $t('Button.request') }}
       </button>
   </div>
 </template>
@@ -14,11 +14,11 @@
 	border-radius: 50%;
   background: linear-gradient(-30deg, #032030, #1f4174);
   @apply
-    tracking-widest
+    /* tracking-widest */
     font-sans
     not-italic
     font-medium
-    text-4xl
+    text-2xl
     text-gray-100
     w-28
     h-28;

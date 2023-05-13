@@ -107,16 +107,16 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal title="販売食品の編集">
+  <Modal :title="$t('Purchase.editPurchase')">
     <template #close>
       <div class="flex justify-end">
         <button @click="editPurchaseClose()" class="hover:text-black hover:opacity-75">✖</button>
       </div>
     </template>
     <template #form>
-      <div class="text">対象商品</div>
+      <div class="text">{{ $t('Purchase.target') }}</div>
       <select class="entry" v-model="newFoodProductId" @change="handleFoodProduct" :class="{'error_border': foodProductError}">
-        <option value="" disabled selected>選択してください</option>
+        <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
         <option
           v-for="(list, i) in foodProducts"
           :key="i"
@@ -126,19 +126,19 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ foodProductError }}</div>
-      <div class="text">購入品名</div>
+      <div class="text">{{ $t('Purchase.name') }}</div>
       <input class="entry" v-model="newName" @change="handleItem" :class="{'error_border': itemError}"/>
       <div class="error_msg">{{ itemError }}</div>
-      <div class="text">生ものか</div>
+      <div class="text">{{ $t('Purchase.rowFood') }}</div>
       <select class="entry" v-model="newIsFresh" @change="handleIsFresh" :class="{'error_border': isFreshError}">
-        <option value="" disabled selected>選択してください</option>
-        <option value="true">生もの</option>
-        <option value="false">加工品</option>
+        <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
+        <option value="true">{{ $t('Purchase.yes') }}</option>
+        <option value="false">{{ $t('Purchase.no') }}</option>
       </select>
       <div class="error_msg">{{ isFreshError }}</div>
-      <div class="text">購入店舗</div>
+      <div class="text">{{ $t('Purchase.place') }}</div>
       <select class="entry" v-model="newShopId" @change="handleShop" :class="{'error_border': shopError}">
-        <option value="" disabled selected>選択してください</option>
+        <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
         <option
           v-for="(list, i) in purchases"
           :key="i"
@@ -148,9 +148,9 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ shopError }}</div>
-      <div class="text">購入日</div>
+      <div class="text">{{ $t('Purchase.date') }}</div>
         <select class="entry" v-model="newFesDateId" @change="handleFesDate" :class="{'error_border': fesDateError}">
-          <option value="" disabled selected>選択してください</option>
+          <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
           <option
             v-for="dateId in fesDates"
             :key="dateId.id"
@@ -161,8 +161,8 @@ const reset = () => {
         </select>
         <div class="error_msg">{{ fesDateError }}</div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPurchase()" />
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editPurchase()" />
       </div>
     </template>
   </Modal>

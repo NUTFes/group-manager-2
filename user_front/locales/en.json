@@ -81,6 +81,20 @@
     "map": "layout plan(pdf,png,jpg only)"
   },
 
+  "RegistInfo":{
+    "return": "Return to Mypage",
+    "registAndEdit": "Group Registration and Editing Page",
+    "subrepresentative": "Subrepresentative",
+    "place": "Places",
+    "stage": "Stage",
+    "stageOption": "StageOption",
+    "power": "Power",
+    "item": "Item",
+    "employees": "Employees",
+    "food": "Food",
+    "purchase": "Purchase"
+  },
+
   "User":{
     "registRepresentative": "Representative Registration",
     "name": "name",
@@ -122,7 +136,7 @@
     "secondPreference": "second preference place",
     "performanceTime": "performance time",
     "preparationTime": "preparation time",
-    "clean-upTime": "clean-up time"
+    "cleanUpTime": "clean-up time"
   },
 
   "StageOption":{
@@ -148,7 +162,7 @@
 
   "Subrep":{
     "registSubrepresentative": "Registration of subrepresentative",
-    "Subrepresentative": "Edit subrepresentative",
+    "editSubrepresentative": "Edit subrepresentative",
     "name": "name",
     "studentId": "student id",
     "department": "department",
@@ -164,7 +178,9 @@
     "first": "first choice",
     "second": "second choice",
     "third": "third choice",
-    "free": "free description"
+    "free": "free description",
+    "hope1": "No.",
+    "hope2": ""
   },
 
   "Item":{
@@ -181,7 +197,7 @@
     "registPower": "Registration of power",
     "addPower": "Additional power",
     "deletePower": "Deletion power",
-    "eidtPower": "Edit power",
+    "editPower": "Edit power",
     "name": "product name",
     "maximum": "maximum rated power",
     "maker": "maker",
@@ -191,6 +207,7 @@
 
   "Employees":{
     "registEmployees": "Registration of employees",
+    "deleteEmployees": "Deletion of employee",
     "addEmployees": "Adding Employees",
     "editEmployees": "Employee editing",
     "name": "name",
@@ -208,7 +225,7 @@
     "yes": "Cooked",
     "no": "uncooked",
     "numberFirstDay": "Estimated number of products to be sold on Day１",
-    "nUmberSecondDay": "Estimated number of products to be sold on Day２",
+    "numberSecondDay": "Estimated number of products to be sold on Day２",
     "firstDay": "Day１",
     "secondDay": "Day２",
     "count": "",
@@ -229,7 +246,7 @@
     "date": "Date of purchase",
     "rowFood": "raw or not",
     "yes": "Raw food",
-    "no": "not raw",
+    "no": "Processed food",
     "of": "",
     "parchasePlace1": "Place",
     "parchasePlace2": "of purchase"
