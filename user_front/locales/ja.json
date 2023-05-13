@@ -123,7 +123,7 @@
     "groupName": "団体名",
     "shopName": "企画名",
     "category": "参加形式",
-    "ActivityDetails": "活動内容"
+    "activityDetails": "活動内容"
   },
 
   "Stage":{

@@ -43,6 +43,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Header />
   <div class="regist-card">
     <NuxtLink to="/mypage" class="regist-back-link">{{ $t('Mypage.goToMypage') }}</NuxtLink>
     <div class="reist-title-content">

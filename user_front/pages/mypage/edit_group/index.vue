@@ -136,7 +136,7 @@ const destroy = () => {
         </select>
       </div>
       <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">{{ $t('Group.ActivityDetails') }}</div>
+        <div class="regist-card-content-question-label">{{ $t('Group.activityDetails') }}</div>
         <input
           class="input"
           id="activity"
@@ -217,7 +217,7 @@ const destroy = () => {
   @apply
     text-lg
     text-left
-    mb-[1%];
+    mt-[1%];
 }
 
 .input {
