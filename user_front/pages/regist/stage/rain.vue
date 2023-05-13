@@ -86,11 +86,11 @@ const skip = () =>{
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of stage on a rain day</h1>
+        <h1 class="text-3xl">{{ $t('Stage.registStageRain') }}</h1>
         <Card border="none" align="end">
 
           <div class="flex">
-            <p class="label">date</p>
+            <p class="label">{{ $t('Stage.date') }}</p>
             <select style="width:180px;" v-model="registerParams.fesDateId" @change="handleFesDate">
               <option value="" selected disabled></option>
               <option v-for = "fesDate in fesDateList" :value="fesDate.id">{{fesDate.date}}</option>
@@ -99,7 +99,7 @@ const skip = () =>{
           <div class="text-rose-600">{{ fesDateError }}</div>
 
           <div class="flex">
-            <p class="label">first preference</p>
+            <p class="label">{{ $t('Stage.firstPreference') }}</p>
             <select style="width:180px;" v-model="registerParams.firstPreference" @change="handleFirst">
               <option value="" selected disabled></option>
               <option v-for = "rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
@@ -108,7 +108,7 @@ const skip = () =>{
           <div class="text-rose-600">{{ firstError }}</div>
 
           <div class="flex">
-            <p class="label">second preference</p>
+            <p class="label">{{ $t('Stage.secondPreference') }}</p>
             <select style="width:180px;" v-model="registerParams.secondPreference" @change="handleSecond">
               <option value="" selected disabled></option>
               <option v-for = "rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
@@ -117,21 +117,21 @@ const skip = () =>{
           <div class="text-rose-600">{{ secondError }}</div>
 
           <div class="flex">
-            <p class="label">performance time</p>
+            <p class="label">{{ $t('Stage.performanceTime') }}</p>
             <input class="form" v-model="registerParams.performanceTime" @change="handlePerformanceTime">
             <p>min</p>
           </div>
           <div class="text-rose-600">{{ performanceTimeError }}</div>
 
           <div class="flex">
-            <p class="label">preparation time</p>
+            <p class="label">{{ $t('Stage.preparationTime') }}</p>
             <input class="form" v-model="registerParams.preparationTime" @change="handlePreparationTime">
             <p>min</p>
           </div>
           <div class="text-rose-600">{{ preparationTimeError }}</div>
 
           <div class="flex">
-            <p class="label">clean-up time</p>
+            <p class="label">{{ $t('Stage.cleanUpTime') }}</p>
             <input class="form" v-model="registerParams.cleanUpTime" @change="handleCleanUpTime">
             <p>min</p>
           </div>
@@ -139,9 +139,9 @@ const skip = () =>{
 
         </Card>
         <Row>
-          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
-          <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerRainStage" text="登録"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerRainStage" :text="$t('Button.register')"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>
