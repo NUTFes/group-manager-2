@@ -45,12 +45,12 @@ const links: { to: string; text: string }[] = [
     <MypageCard>
       <template #mypageCard>
         <div class="p-5  mb-2">
-          <div class="user-font pb-4">{{ state.currentUserName }}様</div>
-          <p>技大祭に参加していただき誠にありがとうございます。</p>
-          <p>登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。</p>
-          <p class="text-xl pt-12">各種操作</p>
+          <div class="user-font pb-4">{{ state.currentUserName }}{{ $t('Mypage.userName') }}</div>
+          <p>{{ $t('Mypage.greeting1') }}</p>
+          <p>{{ $t('Mypage.greeting2') }}</p>
+          <p class="text-xl pt-12">{{ $t('Mypage.operations') }}</p>
           <div class="py-4">
-            <MypageButton text="登録情報の確認はこちら" link="/regist_info"></MypageButton>
+            <MypageButton :text="$t('Mypage.check')" link="/regist_info"></MypageButton>
           </div>
           <div class="flex text-pink-400 ">
             <ui v-for="link in links" :key="link.text">

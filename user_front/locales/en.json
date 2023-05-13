@@ -49,7 +49,7 @@
   },
 
   "Mypage":{
-    "toMypage": "Go to Mypage",
+    "goToMypage": "Go to Mypage",
     "userName": "",
     "greeting1": "Thank you very much for participating in NUTFES.",
     "greeting2": "You can review and change your registration information. Please be sure to meet the deadlines.",
@@ -60,7 +60,9 @@
     "editPassword": "Password Change",
     "regitstPR": "public relations Registration",
     "regitstAnnouncemant": "Announcement text registration",
-    "regitstVenueMap": "Venue MAP Registration"
+    "regitstVenueMap": "Venue MAP Registration",
+    "notice": "Notice",
+    "updateDate": "update date"
   },
 
   "PR":{
