@@ -68,10 +68,10 @@ const skip = () =>{
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of places</h1>
+        <h1 class="text-3xl">{{ $t('Place.registPlace') }}</h1>
         <Card border="none" align="end">
           <div class="flex">
-            <p class="label">first preference</p>
+            <p class="label">{{ $t('Place.first') }}</p>
             <select style="width:180px;" v-model="registerParams.first" @change="handleFirst" :class="{'error-border': firstPlaceError}">
               <option value="" selected disabled></option>
               <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
@@ -80,7 +80,7 @@ const skip = () =>{
           <div class="text-rose-600">{{ firstPlaceError }}</div>
 
           <div class="flex">
-            <p class="label">second preference</p>
+            <p class="label">{{ $t('Place.second') }}</p>
             <select style="width:180px;" v-model="registerParams.second" @change="handleSecond" :class="{'error-border': secondPlaceError}">
               <option value="" selected disabled></option>
               <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
@@ -89,7 +89,7 @@ const skip = () =>{
           <div class="text-rose-600">{{ secondPlaceError }}</div>
 
           <div class="flex">
-            <p class="label">third preference</p>
+            <p class="label">{{ $t('Place.third') }}</p>
             <select style="width:180px;" v-model="registerParams.third" @change="handleThird" :class="{'error-border': thirdPlaceError}">
               <option value="" selected disabled></option>
               <option v-for = "place in placeList" :key="place.id" :value="place.id">{{place.name}}</option>
@@ -98,14 +98,14 @@ const skip = () =>{
           <div class="text-rose-600">{{ thirdPlaceError }}</div>
 
           <div class="flex">
-            <p class="label">free description</p>
-            <input class="form" v-model="registerParams.remark">
+            <p class="label">{{ $t('Place.free') }}</p>
+            <input class="form" v-model="registerParams.remark" @change="handleRemark" :class="{'error-border': remarkError}">
           </div>
         </Card>
         <Row>
-          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
-          <RegistPageButton :disabled="!meta.valid || isSubmitting" text="register" @click="registerPlace"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')" @click="registerPlace"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

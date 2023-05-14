@@ -105,7 +105,7 @@
     "mail": "メールアドレス",
     "tel": "電話番号",
     "password": "パスワード",
-    "passwordConfirm": "パスワード（確認用）",
+    "passwordConfirm": "パスワード(確認用)",
     "userInfo": "ユーザ情報",
     "colon": "：",
     "editUser": "ユーザ情報の編集",
@@ -114,7 +114,7 @@
     "editTel": "半角数字で１０,１１桁の番号",
     "resetPassword": "パスワード再設定",
     "newPassword": "新しいパスワードを入力",
-    "newPasswordConfirm": "新しいパスワードの再入力（確認用）"
+    "newPasswordConfirm": "新しいパスワードの再入力(確認用)"
   },
 
   "Group":{
@@ -137,7 +137,7 @@
     "secondPreference": "第二希望場所",
     "performanceTime": "利用時間",
     "preparationTime": "準備時間",
-    "clean-upTime": "片付け時間"
+    "cleanUpTime": "片付け時間"
   },
 
   "StageOption":{
@@ -236,7 +236,7 @@
     "addPurchase": "購入品の追加",
     "deletePurchase": "購入品の削除",
     "editPurchase": "購入品の編集",
-    "parchase": "購入品",
+    "purchase": "購入品",
     "target": "販売食品名",
     "select": "選択してください",
     "name": "購入材料名",
