@@ -28,7 +28,7 @@ export default {
 
   publicRuntimeConfig: {
     // apiURL: 'https://group-manager-api.nutfes.net'
-    apiURL: 'http://localhost:3000'
+    apiURL: process.env.VUE_APP_URL
   },
 
   router: {
@@ -59,7 +59,7 @@ export default {
 
   axios: {
     // baseURL: 'http://localhost:3000'
-    baseURL: "http://api:3000",
+    baseURL: process.env.VUE_APP_URL,
     browserBaseURL: process.env.VUE_APP_URL,
   },
 

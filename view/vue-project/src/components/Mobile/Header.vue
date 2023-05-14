@@ -103,7 +103,7 @@ export default {
   methods: {
     signOut: function () {
       axios
-        .delete("http://localhost/api/auth/sign_out", {
+        .delete(process.env.VUE_APP_URL + "/api/auth/sign_out", {
           headers: {
             "Content-Type": "application/json",
             "access-token": localStorage.getItem("access-token"),
