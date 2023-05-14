@@ -150,7 +150,7 @@ const registUser = (async () => {
 
           <div class="flex">
             <p class="label">{{ $t('User.tel') }}</p>
-            <input class="form" placeholder="半角数字で10,11桁の番号" maxlength="11" v-model="registerParams.tel" @change="handleTel">
+            <input class="form" :placeholder="$t('User.editTel')" maxlength="11" v-model="registerParams.tel" @change="handleTel">
           </div>
           <div>
             <p class="error">{{ telError }}</p>
