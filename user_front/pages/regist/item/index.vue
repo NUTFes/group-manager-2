@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { Item, ItemList } from "@/types/regist/item"
-import { loginCheck } from "@/utils/methods"
-import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate"
-import { itemSchema } from "~~/utils/validate"
+import { Item, ItemList } from "@/types/regist/item";
+import { loginCheck } from "@/utils/methods";
+import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate";
+import { itemSchema } from "~~/utils/validate";
 
 const initialData = {
   items: [
@@ -14,21 +14,25 @@ const initialData = {
 };
 
 const reset = (idx: number) => {
-  registerParams[idx].rentalItemId = 0,
-  registerParams[idx].num = 0
-}
+  (registerParams[idx].rentalItemId = 0), (registerParams[idx].num = 0);
+};
 
 const { meta, isSubmitting } = useForm({
   validationSchema: itemSchema,
   initialValues: initialData,
 });
 
-const { fields: itemValidate, push: addValidate, remove: removeValidate } = useFieldArray('items')
+const {
+  fields: itemValidate,
+  push: addValidate,
+  remove: removeValidate,
+} = useFieldArray("items");
 
 const config = useRuntimeConfig();
 const router = useRouter();
 const itemList = ref<ItemList[]>([]);
-const formCount = ref(1)
+const formCount = ref(1);
+const isOverlapItem = ref(false);
 
 const state = reactive({
   groupId: 0,
@@ -37,18 +41,22 @@ const state = reactive({
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
-  if (Number(localStorage.getItem("group_category_id")) === 3 ) {
-    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
-      itemData.data.forEach((item) => {
-        itemList.value.push(item);
-      });
+  if (Number(localStorage.getItem("group_category_id")) === 3) {
+    const itemData = await $fetch<Item>(
+      config.APIURL + "/api/v1/get_stage_rentable_items"
+    );
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
   } else {
-    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_shop_rentable_items");
-      itemData.data.forEach((item) => {
-        itemList.value.push(item);
-      });
+    const itemData = await $fetch<Item>(
+      config.APIURL + "/api/v1/get_shop_rentable_items"
+    );
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
   }
-  state.groupId= Number(localStorage.getItem("group_id"));
+  state.groupId = Number(localStorage.getItem("group_id"));
 });
 
 const registerParams = [
@@ -56,25 +64,35 @@ const registerParams = [
     num: 0,
     rentalItemId: 0,
   }),
-]
+];
 
 const increment = () => {
-  formCount.value++
+  formCount.value++;
   registerParams.push(
     reactive({
       num: 0,
       rentalItemId: 0,
     })
-  )
-  addValidate({ itemNameId: 0, itemNum: 0 })
-}
+  );
+  addValidate({ itemNameId: 0, itemNum: 0 });
+};
 
 const decrement = (idx: number) => {
-  formCount.value--
-  removeValidate(idx)
-}
+  formCount.value--;
+  removeValidate(idx);
+};
 
 const registerItem = async () => {
+  const uniqueRentalItems = new Set();
+  for (let i = 0; i < formCount.value; i++) {
+    const rentalItemId = registerParams[i].rentalItemId;
+    if (uniqueRentalItems.has(rentalItemId)) {
+      isOverlapItem.value = true;
+      return;
+    }
+    uniqueRentalItems.add(rentalItemId);
+  }
+
   for (let i = 0; i < formCount.value; i++) {
     await $fetch(config.APIURL + "/rental_orders", {
       method: "POST",
@@ -91,35 +109,40 @@ const registerItem = async () => {
   router.push("/regist/power");
 };
 
-const skip = () =>{
+const skip = () => {
   router.push("/regist/power");
-}
+};
 </script>
 
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
-      <h1 class="text-3xl">{{ $t('Item.registItem') }}</h1>
+      <h1 class="text-3xl">{{ $t("Item.registItem") }}</h1>
       <Card border="none" align="end" gap="20px">
         <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex">
-            <p class="label">{{ $t('Item.item') }}</p>
+            <p class="label">{{ $t("Item.item") }}</p>
             <Field
               :id="`itemNameId${idx}`"
               :name="`items[${idx}].itemNameId`"
               as="select"
-              style="width:180px;"
+              style="width: 180px"
               class="form"
               v-model="registerParams[idx].rentalItemId"
             >
               <option value="" selected disabled></option>
-              <option v-for = "item in itemList" :key="item.id" :value="item.id">{{item.name}}</option>
+              <option v-for="item in itemList" :key="item.id" :value="item.id">
+                {{ item.name }}
+              </option>
             </Field>
           </div>
-          <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNameId`" />
+          <ErrorMessage
+            class="text-rose-600"
+            :name="`items[${idx}].itemNameId`"
+          />
 
           <div class="flex">
-            <p class="label">{{ $t('Item.number') }}</p>
+            <p class="label">{{ $t("Item.number") }}</p>
             <Field
               :id="`itemNum${idx}`"
               :name="`items[${idx}].itemNum`"
@@ -130,35 +153,55 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
           <div v-if="idx == 0">
-            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton
+              :text="$t('Button.reset')"
+              @click="reset(idx)"
+            ></RegistPageButton>
           </div>
 
           <div v-if="idx != 0" class="flex gap-3">
-            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
-            <RegistPageButton :text="$t('Button.delete')" @click="decrement(idx) "></RegistPageButton>
+            <RegistPageButton
+              :text="$t('Button.reset')"
+              @click="reset(idx)"
+            ></RegistPageButton>
+            <RegistPageButton
+              :text="$t('Button.delete')"
+              @click="decrement(idx)"
+            ></RegistPageButton>
           </div>
         </div>
       </Card>
+      <p v-if="isOverlapItem" class="text-rose-600">
+        {{ $t("Item.overlapItem") }}
+      </p>
       <Row>
-        <RegistPageButton @click="increment" :text="$t('Button.add')"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerItem" :text="$t('Button.register')"></RegistPageButton>
-        <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
+        <RegistPageButton
+          @click="increment"
+          :text="$t('Button.add')"
+        ></RegistPageButton>
+        <RegistPageButton
+          :disabled="!meta.valid || isSubmitting"
+          @click="registerItem"
+          :text="$t('Button.register')"
+        ></RegistPageButton>
+        <RegistPageButton
+          :text="$t('Button.skip')"
+          @click="skip"
+        ></RegistPageButton>
       </Row>
     </Card>
   </div>
 </template>
 
 <style scoped>
-  .label {
-    @apply
-      flex-none
+.label {
+  @apply flex-none
       text-xl
-      pr-5
-  }
-  .form {
-    @apply
-    flex-none
+      pr-5;
+}
+.form {
+  @apply flex-none
     border-solid
-    border-2
-  }
+    border-2;
+}
 </style>

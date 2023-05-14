@@ -190,7 +190,8 @@
     "editItem": "貸出物品の編集",
     "item": "貸出物品",
     "number": "数量",
-    "count": "個"
+    "count": "個",
+    "overlapItem": "貸出物品が重複しています"
   },
 
   "Power":{
