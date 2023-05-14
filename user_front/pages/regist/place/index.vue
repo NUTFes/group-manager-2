@@ -11,7 +11,6 @@ const { meta, isSubmitting } = useForm({
 const { handleChange: handleFirst, errorMessage: firstPlaceError } = useField("first");
 const { handleChange: handleSecond, errorMessage: secondPlaceError } = useField("second");
 const { handleChange: handleThird, errorMessage: thirdPlaceError } = useField("third");
-const { handleChange: handleRemark, errorMessage: remarkError } = useField("remark");
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -102,7 +101,6 @@ const skip = () =>{
             <p class="label">{{ $t('Place.free') }}</p>
             <input class="form" v-model="registerParams.remark" @change="handleRemark" :class="{'error-border': remarkError}">
           </div>
-          <div class="text-rose-600">{{ remarkError }}</div>
         </Card>
         <Row>
           <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>

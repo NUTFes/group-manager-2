@@ -52,7 +52,7 @@
     "goToMypage": "マイページへ",
     "userName": "様",
     "greeting1": "技大祭に参加していただき誠にありがとうございます。",
-    "greeting2": "登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。",
+    "greeting2": "登録情報の確認や変更が行えます。入力締め切りは守りいただくよう、よろしくお願いします。",
     "operations": "各種操作",
     "check": "登録情報の確認はこちら",
     "editGroup": "参加団体情報の編集",
@@ -60,7 +60,9 @@
     "editPassword": "パスワード変更",
     "regitstPR": "PR登録",
     "regitstAnnouncemant": "アナウンス文登録",
-    "regitstVenueMap": "会場配置図登録"
+    "regitstVenueMap": "会場配置図登録",
+    "notice": "お知らせ",
+    "updateDate": "更新日"
   },
 
   "PR":{

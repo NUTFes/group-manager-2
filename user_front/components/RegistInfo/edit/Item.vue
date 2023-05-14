@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { Item, ItemList } from "@/types/regist/item"
+import { useField, useForm } from 'vee-validate'
+import { editItemSchema } from '~/utils/validate'
 const config = useRuntimeConfig();
 
 interface Regist {
@@ -15,6 +17,16 @@ const props = withDefaults(defineProps<Regist>(), {
   item: null,
   num: null
 })
+const { meta, isSubmitting } = useForm({
+  validationSchema: editItemSchema,
+  initialValues: {
+    itemNameId: props.item,
+    itemNum: props.num
+  }
+})
+const { handleChange: handleName, errorMessage: nameError } = useField('itemNameId')
+const { handleChange: handleNum, errorMessage: numError } = useField('itemNum')
+
 
 interface Emits {
   (e: 'update:editItem', isEditItem: boolean): void
@@ -36,10 +48,17 @@ const newItem = ref<Regist['item']>(props.item)
 const newNum = ref<Regist['num']>(props.num)
 
 onMounted(async () => {
-  const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
-  itemData.data.forEach((item) => {
-    itemList.value.push(item);
-  });
+  if (Number(localStorage.getItem("group_category_id")) === 3) {
+    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
+  } else {
+    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_shop_rentable_items");
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
+  }
 })
 
 const editItem = async () => {
@@ -72,7 +91,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">貸出物品</div>
-      <select class="entry" v-model="newItem">
+      <select class="entry" v-model="newItem" @change="handleName" :class="{'error_border': nameError}">
         <option
           v-for="list in itemList"
           :key="list.id"
@@ -80,17 +99,25 @@ const reset = () => {
         >{{ list.name }}
         </option>
       </select>
+      <div class="error_msg">{{ nameError }}</div>
       <div class="text">個数</div>
-      <input type="number" class="entry" v-model="newNum" />
+      <input type="number" class="entry" v-model="newNum" @change="handleNum" :class="{'error_border': numError}"/>
+      <div class="error_msg">{{ numError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editItem()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editItem()"></RegistPageButton>
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }

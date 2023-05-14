@@ -1,8 +1,17 @@
 <script lang="ts" setup>
 import { Purchase } from '~~/types';
 import { FoodProduct, FesDate, Date } from '~~/types/mypage/registAlarm';
-
+import { useField, useForm } from 'vee-validate';
+import { editPurchaseSchema } from '~~/utils/validate';
 const config = useRuntimeConfig()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editPurchaseSchema,
+})
+const { handleChange: handleFoodProductId, errorMessage: foodProductIdError } = useField('foodProductId')
+const { handleChange: handleShopId, errorMessage: shopIdError } = useField('shopId')
+const { handleChange: handleItem, errorMessage: itemError } = useField('item')
+const { handleChange: handleFesDateId, errorMessage: fesDateIdError } = useField('fesDateId')
 
 interface Props {
   groupId: number | null
@@ -89,7 +98,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">対象商品</div>
-      <select class="entry" v-model="newFoodProductId">
+      <select class="entry" v-model="newFoodProductId" @change="handleFoodProductId" :class="{'error_border': foodProductIdError}">
         <option value="" disabled selected>選択してください</option>
         <option
         v-for="(list, i) in foodProducts"
@@ -99,8 +108,10 @@ const reset = () => {
         {{ list.name }}
       </option>
       </select>
+      <div class="error_msg">{{ foodProductIdError }}</div>
       <div class="text">購入品名</div>
-      <input class="entry" type="text" v-model="newItems" />
+      <input class="entry" type="text" v-model="newItems" @change="handleItem" :class="{'error_border': itemError}"/>
+      <div class="error_msg">{{ itemError }}</div>
       <div class="text">生ものか</div>
       <select class="entry" v-model="newIsFresh">
         <option value="" disabled selected>選択してください</option>
@@ -108,7 +119,7 @@ const reset = () => {
         <option value="false">加工品</option>
       </select>
       <div class="text">購入店舗</div>
-      <select class="entry" v-model="newShopId">
+      <select class="entry" v-model="newShopId" @change="handleShopId" :class="{'error_border': shopIdError}">
         <option value="" disabled selected>選択してください</option>
         <option
           v-for="(list, i) in purchases"
@@ -118,22 +129,30 @@ const reset = () => {
           {{ list.name }}
         </option>
       </select>
+      <div class="error_msg">{{ shopIdError }}</div>
       <div class="text">購入日</div>
-      <select class="entry" v-model="newFesDateId">
+      <select class="entry" v-model="newFesDateId" @change="handleFesDateId" :class="{'error_border': fesDateIdError}">
         <option value="" disabled selected>選択してください</option>
         <option v-for="dates in fesDates" :key="dates.id" :value="dates.id">
           {{ dates.date }}
         </option>
       </select>
+      <div class="error_msg">{{ fesDateIdError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton text="✓追加" @click="addPurchase()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓追加" @click="addPurchase()" />
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
