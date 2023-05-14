@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_28_083651) do
+ActiveRecord::Schema.define(version: 2023_05_14_163559) do
 
   create_table "assign_group_places", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "place_order_id"
@@ -200,10 +200,11 @@ ActiveRecord::Schema.define(version: 2022_10_28_083651) do
 
   create_table "rental_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.boolean "is_shop_rentable"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "is_stage_rentable"
+    t.boolean "is_inside_shop_rentable"
+    t.boolean "is_outside_shop_rentable"
   end
 
   create_table "rental_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
