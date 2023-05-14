@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import axios from "axios";
 import { Group } from "~~/types";
+import Rentalorder from "@/components/EditModal/RentalOrder.vue";
 
 interface RegistInfo {
   sub_rep: SubRep[];
@@ -78,9 +79,7 @@ interface RegistItem {
 }
 
 interface RentalOrder {
-  rental_item: {
-    rental_item: RentalItem;
-  };
+  rental_item: RentalItem;
 }
 
 interface PowerItem {
@@ -155,7 +154,7 @@ interface SubRep {
 const registInfo = ref<RegistInfo | []>([]);
 const group = ref<Group>();
 const subRep = ref<SubRep>();
-const rentalOrder = ref<RentalOrder>();
+const rentalOrders = ref<RentalOrder[]>();
 const placeOrder = ref<RegistPlace>();
 const powerOrders = ref<PowerOrder[]>();
 const stageOrder = ref<StageOrder>();
@@ -188,7 +187,7 @@ onMounted(() => {
       registInfo.value = response.data.data[0];
       group.value = response.data.data[0].group;
       subRep.value = response.data.data[0].sub_rep;
-      rentalOrder.value = response.data.data[0].rental_orders;
+      rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrders.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
@@ -217,7 +216,7 @@ const reload = () => {
       registInfo.value = response.data.data[0];
       employee.value = response.data.data[0].employees;
       subRep.value = response.data.data[0].sub_rep;
-      rentalOrder.value = response.data.data[0].rental_orders;
+      rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrders.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
@@ -262,6 +261,29 @@ const totalPower = computed(() => {
 const isOverPower = computed(() => {
   if (!powerOrders.value) return false;
   return totalPower.value > 1500;
+});
+
+const isRentalItemOverlap = computed(() => {
+  if (!rentalOrders.value) return false;
+  const rentalOrder = rentalOrders.value.map((rentalOrder) => {
+    return rentalOrder.rental_item.name;
+  });
+  const rentalOrderSet = new Set(rentalOrder);
+  return rentalOrder.length !== rentalOrderSet.size;
+});
+
+// rentalOrdersで被っているものの名前を取得
+const rentalItemOverlap = computed(() => {
+  if (!rentalOrders.value) return '';
+  const rentalOrder = rentalOrders.value.map((rentalOrder) => {
+    return rentalOrder.rental_item.name;
+  });
+  const rentalOrderSet = new Set(rentalOrder);
+  const rentalOrderArray = Array.from(rentalOrderSet);
+  const rentalOrderArray2 = rentalOrderArray.filter((rentalOrder) => {
+    return rentalOrderSet.has(rentalOrder);
+  });
+  return rentalOrderArray2.join(' / ');
 });
 </script>
 
@@ -418,7 +440,11 @@ const isOverPower = computed(() => {
               @reload-power="reload"
             />
           </div>
-          <Button v-if="!isOverPower" class="text-right" @click="openAddPower()" />
+          <Button
+            v-if="!isOverPower"
+            class="text-right"
+            @click="openAddPower()"
+          />
           <RegistInfoAddPower
             v-if="isAddPower"
             v-model:add-power="isAddPower"
@@ -428,17 +454,27 @@ const isOverPower = computed(() => {
         </div>
 
         <!-- 物品申請 -->
-        <div v-show="tab === 6" class="flex flex-wrap">
-          <div v-for="item in rentalOrder" :key="item.toString()">
-            <RegistInfoCardItem
-              :group-id="group?.id"
-              :regist="item.rental_item.rental_item"
-              :name="item.rental_item.name"
-              :num="item.rental_item.num"
-              @reload-item="reload"
-            />
+        <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <div v-if="isRentalItemOverlap" class="text-red-500">
+            <p>{{rentalItemOverlap}} が重複しています</p>
+            <p>削除してください</p>
           </div>
-          <Button class="ml-auto" @click="openAddItem()" />
+          <div class="flex">
+            <div v-for="item in rentalOrders" :key="item.toString()">
+              <RegistInfoCardItem
+                :group-id="group?.id"
+                :regist="item.rental_item.rental_item"
+                :name="item.rental_item.name"
+                :num="item.rental_item.num"
+                @reload-item="reload"
+              />
+            </div>
+          </div>
+          <Button
+            v-if="!isRentalItemOverlap"
+            class="ml-auto"
+            @click="openAddItem()"
+          />
           <RegistInfoAddItem
             v-if="isAddItem"
             v-model:add-item="isAddItem"

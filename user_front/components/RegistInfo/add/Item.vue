@@ -2,6 +2,7 @@
 import { Item, ItemList } from "@/types/regist/item"
 import { useField, useForm } from 'vee-validate'
 import { editItemSchema } from '~/utils/validate'
+import { RentalOrders } from "~~/types/mypage/registAlarm"
 const config = useRuntimeConfig()
 
 const { meta, isSubmitting } = useForm({
