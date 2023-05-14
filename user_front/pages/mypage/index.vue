@@ -33,9 +33,9 @@ onMounted(async () => {
 })
 
 const links: { to: string; text: string }[] = [
-  { to: "/mypage/edit_group", text: "参加団体情報の編集" },
-  { to: "/mypage/edit_user_info", text: "ユーザー情報確認＆編集" },
-  { to: "/mypage/password_reset", text: "パスワード変更" },
+  { to: "/mypage/edit_group", text: "Mypage.editGroup" },
+  { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
+  { to: "/mypage/password_reset", text: "Mypage.editPassword" },
 ];
 </script>
 
@@ -54,7 +54,7 @@ const links: { to: string; text: string }[] = [
           </div>
           <div class="flex text-pink-400 ">
             <ui v-for="link in links" :key="link.text">
-              <nuxt-link :to="link.to" class="pr-5 text-xl">{{ link.text }}</nuxt-link>
+              <nuxt-link :to="link.to" class="pr-5 text-xl">{{ $t(link.text) }}</nuxt-link>
             </ui>
           </div>
         </div>
