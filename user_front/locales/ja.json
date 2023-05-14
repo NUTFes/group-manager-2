@@ -179,7 +179,8 @@
     "first": "第一希望",
     "second": "第二希望",
     "third": "第三希望",
-    "free": "備考"
+    "free": "備考",
+    "overlapPlace": "場所が重複しています"
   },
 
   "Item":{

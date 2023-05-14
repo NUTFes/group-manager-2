@@ -166,7 +166,8 @@
     "first": "first choice",
     "second": "second choice",
     "third": "third choice",
-    "free": "free description"
+    "free": "free description",
+    "overlapPlace": "The place is duplicated"
   },
 
   "Item":{

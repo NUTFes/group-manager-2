@@ -11,6 +11,7 @@ const { meta, isSubmitting } = useForm({
 const { handleChange: handleFirst, errorMessage: firstPlaceError } = useField("first");
 const { handleChange: handleSecond, errorMessage: secondPlaceError } = useField("second");
 const { handleChange: handleThird, errorMessage: thirdPlaceError } = useField("third");
+const { handleChange: handleRemark, errorMessage: remarkError } = useField("remark");
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -41,7 +42,14 @@ onMounted(async () => {
   registerParams.groupId = Number(localStorage.getItem("group_id"));
 });
 
+const isOverlapPlace = ref(false);
 const registerPlace = async () => {
+  if (registerParams.first === registerParams.second || registerParams.first === registerParams.third || registerParams.second === registerParams.third) {
+    isOverlapPlace.value = true;
+    return;
+  }
+  isOverlapPlace.value = false;
+
   await $fetch<Place>(config.APIURL + "/place_orders", {
     method: "POST",
     params: {
@@ -102,6 +110,7 @@ const skip = () =>{
             <input class="form" v-model="registerParams.remark" @change="handleRemark" :class="{'error-border': remarkError}">
           </div>
         </Card>
+        <div class="text-rose-600" v-if="isOverlapPlace">{{ $t('Place.overlapPlace') }}</div>
         <Row>
           <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')" @click="registerPlace"></RegistPageButton>
