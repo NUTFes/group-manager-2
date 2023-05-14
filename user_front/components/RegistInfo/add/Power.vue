@@ -111,5 +111,6 @@ const reset = () => {
   border-bottom : solid 1px #e0e0e0;
   border-radius: 5px;
   background-color: white;
+  width:80%;
 }
 </style>
