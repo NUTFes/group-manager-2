@@ -45,6 +45,7 @@ const newFirst = ref<Props["first"]>(props.first);
 const newSecond = ref<Props["second"]>(props.second);
 const newThird = ref<Props["third"]>(props.third);
 const newRemark = ref<Props["remark"]>(props.remark);
+const isOverlapPlace = ref(false);
 
 const isDuplicate = computed(() => {
   if (
@@ -76,9 +77,10 @@ onMounted(async () => {
 
 const editPlace = async () => {
   if (isDuplicate.value) {
-    alert("同じ会場を選択しています。");
+    isOverlapPlace.value = true;
     return;
   }
+  isOverlapPlace.value = false;
 
   await useFetch(config.APIURL + "/place_orders/" + props.id, {
     method: "PUT",
@@ -152,6 +154,9 @@ const reset = () => {
       <div class="error_msg">{{ thirdPlaceError }}</div>
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" v-model="newRemark" />
+      <p v-if="isOverlapPlace" class="error_msg">
+        同じ会場を選択しています。選択し直してください。
+      </p>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
         <RegistPageButton
