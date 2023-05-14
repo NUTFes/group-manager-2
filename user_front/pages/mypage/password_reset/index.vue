@@ -43,17 +43,18 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Header />
   <div class="regist-card">
-    <NuxtLink to="/mypage" class="regist-back-link">マイページへ</NuxtLink>
+    <NuxtLink to="/mypage" class="regist-back-link">{{ $t('Mypage.goToMypage') }}</NuxtLink>
     <div class="reist-title-content">
-      <div class="user-info">パスワード再設定</div>
+      <div class="user-info">{{ $t('User.resetPassword') }}</div>
     </div>
     <div>
-      <input type="password" placeholder="新しいパスワードを入力" v-model="password" />
-      <input type="password" placeholder="新しいパスワードの再入力" v-model="password_confirmation" />
+      <input type="password" :placeholder="$t('User.newPassword')" v-model="password" />
+      <input type="password" :placeholder="$t('User.newPasswordConfirm')" v-model="password_confirmation" />
     </div>
     <div class="regist-button">
-      <button class="regist-submit-button" @click="submit">登録</button>
+      <button class="regist-submit-button" @click="submit">{{ $t('Button.register') }}</button>
     </div>
   </div>
 </template>
