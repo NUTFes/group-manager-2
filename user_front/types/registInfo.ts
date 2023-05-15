@@ -109,7 +109,8 @@ interface Rental_orders{
     rental_item: Rental_item
   }
   name: string;
-  is_shop_rentable: boolean;
+  is_inside_shop_rentable: boolean;
+  is_outside_shop_rentable: boolean;
   is_stage_rentable: boolean;
   num: number;
 }

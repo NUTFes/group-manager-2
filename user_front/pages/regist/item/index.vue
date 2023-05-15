@@ -13,8 +13,6 @@ const initialData = {
   ],
 };
 
-const locationTypes = ["屋内団体", "屋外団体", "ステージ団体"];
-
 const reset = (idx: number) => {
   (registerParams[idx].rentalItemId = 0), (registerParams[idx].num = 0);
 };
@@ -32,12 +30,21 @@ const {
 
 const config = useRuntimeConfig();
 const router = useRouter();
-const itemList = ref<ItemList[]>([]);
+const insideRentableItemList = ref<ItemList[]>([]);
+const outsideRentableItemList = ref<ItemList[]>([]);
+const stageRentableItemList = ref<ItemList[]>([]);
 const formCount = ref(1);
 
 const state = reactive({
   groupId: 0,
 });
+
+// 場所と物品を制限するための変数
+const locationTypes = ref<string[]>([]);
+const selectedLocation = ref<string>("屋内団体");
+const shopLocationTypes = ref<string[]>(["屋内団体", "屋外団体"]);
+const stageLocationTypes = ref<string[]>(["ステージ団体"]);
+const selectableItemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -47,14 +54,29 @@ onMounted(async () => {
       config.APIURL + "/api/v1/get_stage_rentable_items"
     );
     itemData.data.forEach((item) => {
-      itemList.value.push(item);
+      stageRentableItemList.value.push(item);
+    });
+    stageLocationTypes.value.forEach((item) => {
+      locationTypes.value.push(item);
     });
   } else {
-    const itemData = await $fetch<Item>(
-      config.APIURL + "/api/v1/get_shop_rentable_items"
+    const insideRentableItemData = await $fetch<Item>(
+      config.APIURL + "/api/v1/get_inside_shop_rentable_items"
     );
-    itemData.data.forEach((item) => {
-      itemList.value.push(item);
+    insideRentableItemData.data.forEach((item) => {
+      insideRentableItemList.value.push(item);
+    });
+    const outsideRentableItemData = await $fetch<Item>(
+      config.APIURL + "/api/v1/get_outside_shop_rentable_items"
+    );
+    outsideRentableItemData.data.forEach((item) => {
+      outsideRentableItemList.value.push(item);
+    });
+    shopLocationTypes.value.forEach((item) => {
+      locationTypes.value.push(item);
+    });
+    insideRentableItemList.value.forEach((item) => {
+      selectableItemList.value.push(item);
     });
   }
   state.groupId = Number(localStorage.getItem("group_id"));
@@ -104,6 +126,22 @@ const skip = () => {
   router.push("/regist/power");
 };
 
+const updateSelectedLocation = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+
+  switch (target.value) {
+    case "屋内団体":
+      insideRentableItemList.value.forEach((item) => {
+        selectableItemList.value.push(item);
+      });
+      break;
+    case "屋外団体":
+      outsideRentableItemList.value.forEach((item) => {
+        selectableItemList.value.push(item);
+      });
+      break;
+  }
+};
 </script>
 
 <template>
@@ -113,17 +151,40 @@ const skip = () => {
       <Card border="none" align="end" gap="20px">
         <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex gap-3">
-            <div v-for="(field, id) in locationTypes" :key="id">
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  value="屋内団体"
+                  v-model="selectedLocation"
+                  :checked="selectedLocation === '屋内団体'"
+                  @click="updateSelectedLocation"
+                />
+                屋内団体
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="屋外団体"
+                  v-model="selectedLocation"
+                  :checked="selectedLocation === '屋外団体'"
+                  @click="updateSelectedLocation"
+                />
+                屋外団体
+              </label>
+            </div>
+            <!-- <div v-for="(field, id) in locationTypes" :key="id">
               <label>
                 <input
                   type="radio"
                   name="example"
                   :value="field"
                   :checked="id === 0"
+                  @change="updateSelectedLocation"
                 />
                 {{ field }}
               </label>
-            </div>
+            </div> -->
           </div>
           <div class="flex">
             <p class="label">Necessary items</p>
@@ -136,7 +197,11 @@ const skip = () => {
               v-model="registerParams[idx].rentalItemId"
             >
               <option value="" selected disabled></option>
-              <option v-for="item in itemList" :key="item.id" :value="item.id">
+              <option
+                v-for="item in selectableItemList"
+                :key="item.id"
+                :value="item.id"
+              >
                 {{ item.name }}
               </option>
             </Field>

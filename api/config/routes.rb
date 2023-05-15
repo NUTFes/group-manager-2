@@ -161,6 +161,8 @@ Rails.application.routes.draw do
       #---貸出物品
       get "get_rentable_items" => "rental_items_api#get_rentable_items"
       get "get_shop_rentable_items" => "rental_items_api#get_shop_rentable_items"
+      get "get_inside_shop_rentable_items" => "rental_items_api#get_inside_shop_rentable_items"
+      get "get_outside_shop_rentable_items" => "rental_items_api#get_outside_shop_rentable_items"
       get "get_stage_rentable_items" => "rental_items_api#get_stage_rentable_items"
 
       #---CSV出力

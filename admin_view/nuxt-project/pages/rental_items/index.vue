@@ -25,7 +25,8 @@
           >
             <td>{{ rentalItem.id }}</td>
             <td>{{ rentalItem.name }}</td>
-            <td>{{ rentalItem.is_shop_rentable }}</td>
+            <td>{{ rentalItem.is_inside_shop_rentable }}</td>
+            <td>{{ rentalItem.is_outside_shop_rentable }}</td>
             <td>{{ rentalItem.is_stage_rentable }}</td>
           </tr>
         </template>
@@ -43,8 +44,21 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>模擬店貸出可否</h3>
-          <select v-model="isShopRentable">
+          <h3>屋内模擬店貸出可否</h3>
+          <select v-model="isInsideShopRentable">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="r in isRentableList"
+              :key="r"
+              :value="r.value"
+            >
+              {{ r.text }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>屋外模擬店貸出可否</h3>
+          <select v-model="isOutsideShopRentable">
             <option disabled value="">選択してください</option>
             <option
               v-for="r in isRentableList"
@@ -142,15 +156,18 @@ export default {
         "/rental_items/" +
         "?name=" +
         this.name +
-        "&is_shop_rentable=" +
-        this.isShopRentable +
+        "&is_inside_rentable=" +
+        this.isInsideShopRentable +
+        "&is_outside_rentable=" +
+        this.isOutsideShopRentable +
         "&is_stage_rentable=" +
         this.isStageRentable
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
-        this.isShopRentable = "";
+        this.isInsideShopRentable = "";
+        this.isOutsideShopRentable = "";
         this.isStageRentable = "";
         this.reload(response.data.id);
         this.closeAddModal();

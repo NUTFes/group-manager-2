@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <SubHeader 
+    <SubHeader
       v-bind:pageTitle="placeName.name"
       pageSubTitle="物品申請"
     >
@@ -45,7 +45,7 @@
         <Card width="100%">
           <SubHeader pageTitle="割り当て">
             <CommonButton iconName="add_circle" :on_click="openAssignAddModal">
-              追加 
+              追加
             </CommonButton>
           </SubHeader>
           <Table>
@@ -57,16 +57,16 @@
               <th>削除</th>
             </template>
             <template v-slot:table-body>
-              <tr 
+              <tr
                 v-for="(assignRentalItem, index) in assignRentalItems"
                 :key="index"
                 @click="() => $router.push({ path: '/assign_items/' + id})"
               >
-                <td>{{ assignRentalItem.group.name}}</td>  
-                <td>{{ assignRentalItem.rental_item.name }}</td>  
-                <td>{{ assignRentalItem.assign_rental_item.num }}</td>  
+                <td>{{ assignRentalItem.group.name}}</td>
+                <td>{{ assignRentalItem.rental_item.name }}</td>
+                <td>{{ assignRentalItem.assign_rental_item.num }}</td>
                 <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num)">編集</btn></td>
-                <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>  
+                <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
               </tr>
             </template>
           </Table>
@@ -222,7 +222,7 @@
         <CommonButton iconName="edit" :on_click="editPlace">編集</CommonButton>
       </template>
     </EditModal>
-    
+
     <EditModal
       @close="closeItemEditModal"
       v-if="isOpenItemEditModal"
@@ -238,7 +238,7 @@
         <CommonButton iconName="edit" :on_click="editItem">編集</CommonButton>
       </template>
     </EditModal>
-     
+
     <EditModal
       @close="closeAssignEditModal"
       v-if="isOpenAssignEditModal"
@@ -254,7 +254,7 @@
         <CommonButton iconName="edit" :on_click="editAssign">編集</CommonButton>
       </template>
     </EditModal>
-    
+
     <DeleteModal
       @close="closePlaceDeleteModal"
       v-if="isOpenPlaceDeleteModal"
@@ -267,7 +267,7 @@
         >
       </template>
     </DeleteModal>
-    
+
     <DeleteModal
       @close="closeItemDeleteModal"
       v-if="isOpenItemDeleteModal"
@@ -292,7 +292,7 @@
           >いいえ</NoButton
         >
       </template>
-    </DeleteModal> 
+    </DeleteModal>
 
   </div>
 </template>
@@ -381,27 +381,30 @@ export default {
       },
     };
   },
-  
+
   //部屋ごとの物品、割当状況を出力
   async asyncData({ $axios, params}) {
     const stockerItemsUrl =
       "/api/v1/get_refinement_stocker_item?stocker_place_id=" +
-      params.id;  
+      params.id;
     const stockerItemsRes = await $axios.$post(stockerItemsUrl);
-    
+
     const assignRentalItemsUrl =
       "/api/v1/get_refinement_assign_rental_item?stocker_place_id=" +
       params.id;
     const assignRentalItemsRes = await $axios.$post(assignRentalItemsUrl);
-    
+
     const stockerPlacesUrl = "/stocker_places";
     const stockerPlacesRes = await $axios.$get(stockerPlacesUrl)
 
     const groupsUrl = "/groups";
     const groupsRes = await $axios.$get(groupsUrl);
 
-    const rentableItemsUrl = "/api/v1/get_shop_rentable_items";
-    const rentableItemsRes = await $axios.$get(rentableItemsUrl);
+    const insideRentableItemsUrl = "/api/v1/get_inside_shop_rentable_items";
+    const insideRentableItemsRes = await $axios.$get(insideRentableItemsUrl);
+
+    const outsideRentableItemsUrl = "/api/v1/get_outside_shop_rentable_items";
+    const outsideRentableItemsRes = await $axios.$get(outsideRentableItemsUrl);
 
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
@@ -416,7 +419,8 @@ export default {
 			placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
       groups: groupsRes.data,
-      rentableItems: rentableItemsRes.data,
+      insideRentableItems: insideRentableItemsRes.data,
+      outsideRentableItems: outsideRentableItemsRes.data,
       itemYear: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
@@ -429,9 +433,9 @@ export default {
   },
 
   methods: {
-    async editPlace() { 
+    async editPlace() {
       const placeUrl =
-        "/stocker_places/" + 
+        "/stocker_places/" +
         this.id +
         "?name=" +
         this.roomName +
@@ -439,7 +443,7 @@ export default {
         this.stockItemStatus +
         "&assign_item_status=" +
         this.assignItemStatus;
-    
+
       await this.$axios.$put(placeUrl).then((response) => {
         this.closePlaceEditModal();
         this.$router.push("/assign_items")
@@ -478,7 +482,7 @@ export default {
       .catch(error => {
         console.log(error)
       });
-    }, 
+    },
 
     async editItem() {
       const itemUrl =
@@ -489,7 +493,7 @@ export default {
         "&stocker_place_id=" +
         this.id;
 
-      await this.$axios.$put(itemUrl).then((response) => { 
+      await this.$axios.$put(itemUrl).then((response) => {
           location.reload();
           this.closeItemEditModal();
       });
