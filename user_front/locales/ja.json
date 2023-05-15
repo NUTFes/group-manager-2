@@ -180,7 +180,8 @@
     "second": "第二希望",
     "third": "第三希望",
     "free": "備考",
-    "overlapPlace": "場所が重複しています"
+    "overlapPlace": "場所が重複しています",
+    "eatingArea": "模擬店(食品販売) での参加をする場合、実施場所が絞られます"
   },
 
   "Item":{

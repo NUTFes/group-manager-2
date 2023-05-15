@@ -167,7 +167,8 @@
     "second": "second choice",
     "third": "third choice",
     "free": "free description",
-    "overlapPlace": "The place is duplicated"
+    "overlapPlace": "The place is duplicated",
+    "eatingArea": "If you participate in the food sales, the place will be narrowed down"
   },
 
   "Item":{

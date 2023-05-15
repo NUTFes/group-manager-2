@@ -3,6 +3,7 @@ import { Place, PlaceList } from "~~/types/regist/place";
 import { useField, useForm } from "vee-validate";
 import { placeSchema } from "~~/utils/validate";
 const config = useRuntimeConfig();
+import axios from "axios";
 
 interface Props {
   id: number | null;
@@ -40,11 +41,23 @@ const { handleChange: handleSecondPlace, errorMessage: secondPlaceError } =
 const { handleChange: handleThirdPlace, errorMessage: thirdPlaceError } =
   useField("third");
 
+const EATING_AREA = [
+  "事務棟エリア",
+  "図書館エリア",
+  "電気棟エリア",
+  "機械・建設エリア",
+  "メインステージエリア",
+];
+const isEatingArea = (place: string) => {
+  return EATING_AREA.includes(place);
+};
+
 const placeList = ref<PlaceList[]>([]);
 const newFirst = ref<Props["first"]>(props.first);
 const newSecond = ref<Props["second"]>(props.second);
 const newThird = ref<Props["third"]>(props.third);
 const newRemark = ref<Props["remark"]>(props.remark);
+const groupCategoryId = ref<number>();
 const isOverlapPlace = ref(false);
 
 const isDuplicate = computed(() => {
@@ -68,11 +81,23 @@ const closeEditPlace = () => {
 };
 
 onMounted(async () => {
-  const placeData = await $fetch<Place>(config.APIURL + "/places");
-  !!placeData.data &&
+  const groupUrl =
+    config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
+
+  axios.get(groupUrl).then(async (response) => {
+    groupCategoryId.value = response.data.data.group_category_id;
+
+    const placeData = await $fetch<Place>(config.APIURL + "/places");
     placeData.data.forEach((place) => {
-      placeList.value.push(place);
+      if (groupCategoryId.value === 1) {
+        if (isEatingArea(place.name)) {
+          placeList.value.push(place);
+        }
+      } else {
+        placeList.value.push(place);
+      }
     });
+  });
 });
 
 const editPlace = async () => {
@@ -116,6 +141,9 @@ const reset = () => {
       </div>
     </template>
     <template #form>
+      <p v-if="groupCategoryId === 1" class="text-rose-600 text-sm text-center my-2">
+        {{ $t("Place.eatingArea") }}
+      </p>
       <div class="text">第1希望</div>
       <select
         class="entry"
