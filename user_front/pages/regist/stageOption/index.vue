@@ -67,59 +67,59 @@ const skip = () =>{
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of additional option</h1>
+        <h1 class="text-3xl">{{ $t('StageOption.registStageOption') }}</h1>
         <Card border="none" align="end">
           <div class="flex">
-            <p class="label">Bringing in private property</p>
+            <p class="label">{{ $t('StageOption.privateProperty') }}</p>
             <select style="width:180px;" v-model="registerParams.isItem" @change="handleItem">
               <option value="" selected disabled></option>
-              <option value='true'>Yes</option>
-              <option value='false'>No</option>
+              <option value='true'>{{ $t('StageOption.yes') }}</option>
+              <option value='false'>{{ $t('StageOption.no') }}</option>
             </select>
           </div>
           <div>{{ itemError }}</div>
 
           <div class="flex">
-            <p class="label">Whether speakers are used or not</p>
+            <p class="label">{{ $t('StageOption.speaker') }}</p>
             <select style="width:180px;" v-model="registerParams.isMusic" @change="handleMusic">
               <option value="" selected disabled></option>
-              <option value='true'>Yes</option>
-              <option value='false'>No</option>
+              <option value='true'>{{ $t('StageOption.yes') }}</option>
+              <option value='false'>{{ $t('StageOption.no') }}</option>
             </select>
           </div>
           <div>{{ musicError }}</div>
 
           <div class="flex">
-            <p class="label">Whether loud-sound are used or not</p>
+            <p class="label">{{ $t('StageOption.loudSound') }}</p>
             <select style="width:180px;" v-model="registerParams.isNoise" @change="handleNoise">
               <option value="" selected disabled></option>
-              <option value='true'>Yes</option>
-              <option value='false'>No</option>
+              <option value='true'>{{ $t('StageOption.yes') }}</option>
+              <option value='false'>{{ $t('StageOption.no') }}</option>
             </select>
           </div>
           <div>{{ noiseError }}</div>
 
           <div class="flex">
-            <p class="label">Whether camera are used or not</p>
+            <p class="label">{{ $t('StageOption.camera') }}</p>
             <select style="width:180px;" v-model="registerParams.isCamera" @change="handleCamera">
               <option value="" selected disabled></option>
-              <option value='true'>Yes</option>
-              <option value='false'>No</option>
+              <option value='true'>{{ $t('StageOption.yes') }}</option>
+              <option value='false'>{{ $t('StageOption.no') }}</option>
             </select>
           </div>
           <div>{{ cameraError }}</div>
 
           <div class="flex">
-            <p class="label">Content Details</p>
+            <p class="label">{{ $t('StageOption.content') }}</p>
             <input class="form" v-model="registerParams.stageContent" @change="handleContent">
           </div>
           <div class="text-rose-600">{{ contentError }}</div>
 
         </Card>
         <Row>
-          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
-          <RegistPageButton :disabled="!meta.valid || isSubmitting" text="register" @click="registerStageOption"></RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')" @click="registerStageOption"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

@@ -94,11 +94,11 @@ const skip = () =>{
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
-      <h1 class="text-3xl">Registration of employees</h1>
+      <h1 class="text-3xl">{{ $t('Employees.registEmployees') }}</h1>
       <Card border="none" align="end">
         <div v-for="(field, idx) in employeeValidate" :key="field.key">
           <div class="flex">
-            <p class="label">name</p>
+            <p class="label">{{ $t('Employees.name') }}</p>
             <Field class="form"
               :id="`employees[${idx}].name`"
               :name="`employees[${idx}].name`"
@@ -108,7 +108,7 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`employees[${idx}].name`" />
 
           <div class="flex">
-            <p class="label">student id</p>
+            <p class="label">{{ $t('Employees.studentId') }}</p>
             <Field
               :id="`employees[${idx}].studentId`"
               :name="`employees[${idx}].studentId`"
@@ -120,19 +120,19 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`employees[${idx}].studentId`" />
 
           <div v-if="idx == 0">
-            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
           </div>
 
           <div v-if="idx != 0" class="flex gap-3">
-            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
-            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.delete')" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton text="register" :disabled="!meta.valid || isSubmitting" @click="registerEmployee"></RegistPageButton>
-        <RegistPageButton text="Add" @click="increment"></RegistPageButton>
-        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.add')" @click="increment"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.register')" :disabled="!meta.valid || isSubmitting" @click="registerEmployee"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
       </Row>
     </Card>
   </div>
