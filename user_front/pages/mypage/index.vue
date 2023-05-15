@@ -36,6 +36,9 @@ const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "Mypage.editGroup" },
   { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
   { to: "/mypage/password_reset", text: "Mypage.editPassword" },
+  { to: "/regist/publicRelations", text: "Mypage.regitstPR" },
+  { to: "/regist/announcement", text: "Mypage.regitstAnnouncemant" },
+  { to: "/regist/venueMap", text: "Mypage.regitstVenueMap" },
 ];
 </script>
 
@@ -52,7 +55,7 @@ const links: { to: string; text: string }[] = [
           <div class="py-4">
             <MypageButton :text="$t('Mypage.check')" link="/regist_info"></MypageButton>
           </div>
-          <div class="flex text-pink-400 ">
+          <div class="flex text-pink-400">
             <ui v-for="link in links" :key="link.text">
               <nuxt-link :to="link.to" class="pr-5 text-xl">{{ $t(link.text) }}</nuxt-link>
             </ui>
