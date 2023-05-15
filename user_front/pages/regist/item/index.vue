@@ -32,18 +32,15 @@ const config = useRuntimeConfig();
 const router = useRouter();
 const insideRentableItemList = ref<ItemList[]>([]);
 const outsideRentableItemList = ref<ItemList[]>([]);
-const stageRentableItemList = ref<ItemList[]>([]);
 const formCount = ref(1);
 
 const state = reactive({
   groupId: 0,
+  groupCategoryId: 0,
 });
 
 // 場所と物品を制限するための変数
-const locationTypes = ref<string[]>([]);
 const selectedLocation = ref<string>("屋内団体");
-const shopLocationTypes = ref<string[]>(["屋内団体", "屋外団体"]);
-const stageLocationTypes = ref<string[]>(["ステージ団体"]);
 const selectableItemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
@@ -54,11 +51,9 @@ onMounted(async () => {
       config.APIURL + "/api/v1/get_stage_rentable_items"
     );
     itemData.data.forEach((item) => {
-      stageRentableItemList.value.push(item);
+      selectableItemList.value.push(item);
     });
-    stageLocationTypes.value.forEach((item) => {
-      locationTypes.value.push(item);
-    });
+    selectedLocation.value = "ステージ団体";
   } else {
     const insideRentableItemData = await $fetch<Item>(
       config.APIURL + "/api/v1/get_inside_shop_rentable_items"
@@ -72,14 +67,12 @@ onMounted(async () => {
     outsideRentableItemData.data.forEach((item) => {
       outsideRentableItemList.value.push(item);
     });
-    shopLocationTypes.value.forEach((item) => {
-      locationTypes.value.push(item);
-    });
     insideRentableItemList.value.forEach((item) => {
       selectableItemList.value.push(item);
     });
   }
   state.groupId = Number(localStorage.getItem("group_id"));
+  state.groupCategoryId = Number(localStorage.getItem("group_category_id"));
 });
 
 const registerParams = [
@@ -151,7 +144,7 @@ const updateSelectedLocation = (event: Event) => {
       <Card border="none" align="end" gap="20px">
         <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex gap-3">
-            <div>
+            <div v-if="Number(state.groupCategoryId) !== 3">
               <label>
                 <input
                   type="radio"
@@ -173,18 +166,18 @@ const updateSelectedLocation = (event: Event) => {
                 屋外団体
               </label>
             </div>
-            <!-- <div v-for="(field, id) in locationTypes" :key="id">
+            <div v-if="Number(state.groupCategoryId) === 3">
               <label>
                 <input
                   type="radio"
-                  name="example"
-                  :value="field"
-                  :checked="id === 0"
-                  @change="updateSelectedLocation"
+                  value="ステージ団体"
+                  v-model="selectedLocation"
+                  :checked="selectedLocation === 'ステージ団体'"
+                  @click="updateSelectedLocation"
                 />
-                {{ field }}
+                ステージ団体
               </label>
-            </div> -->
+            </div>
           </div>
           <div class="flex">
             <p class="label">Necessary items</p>
