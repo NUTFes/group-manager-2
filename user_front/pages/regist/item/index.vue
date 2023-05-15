@@ -37,10 +37,17 @@ const state = reactive({
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
-  const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
-    itemData.data.forEach((item) => {
-      itemList.value.push(item);
-    });
+  if (Number(localStorage.getItem("group_category_id")) === 3 ) {
+    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
+      itemData.data.forEach((item) => {
+        itemList.value.push(item);
+      });
+  } else {
+    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_shop_rentable_items");
+      itemData.data.forEach((item) => {
+        itemList.value.push(item);
+      });
+  }
   state.groupId= Number(localStorage.getItem("group_id"));
 });
 
@@ -92,11 +99,11 @@ const skip = () =>{
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
-      <h1 class="text-3xl">Registration of places</h1>
+      <h1 class="text-3xl">{{ $t('Item.registItem') }}</h1>
       <Card border="none" align="end" gap="20px">
         <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex">
-            <p class="label">Necessary items</p>
+            <p class="label">{{ $t('Item.item') }}</p>
             <Field
               :id="`itemNameId${idx}`"
               :name="`items[${idx}].itemNameId`"
@@ -112,7 +119,7 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNameId`" />
 
           <div class="flex">
-            <p class="label">number of pieces required</p>
+            <p class="label">{{ $t('Item.number') }}</p>
             <Field
               :id="`itemNum${idx}`"
               :name="`items[${idx}].itemNum`"
@@ -123,19 +130,19 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
           <div v-if="idx == 0">
-            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
           </div>
 
           <div v-if="idx != 0" class="flex gap-3">
-            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
-            <RegistPageButton text="remove" @click="decrement(idx) "></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.delete')" @click="decrement(idx) "></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton @click="increment" text="Add"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerItem" text="登録"></RegistPageButton>
-        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+        <RegistPageButton @click="increment" :text="$t('Button.add')"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerItem" :text="$t('Button.register')"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
       </Row>
     </Card>
   </div>

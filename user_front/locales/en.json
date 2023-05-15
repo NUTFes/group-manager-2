@@ -49,7 +49,7 @@
   },
 
   "Mypage":{
-    "toMypage": "Go to Mypage",
+    "goToMypage": "Go to Mypage",
     "userName": "",
     "greeting1": "Thank you very much for participating in NUTFES.",
     "greeting2": "You can review and change your registration information. Please be sure to meet the deadlines.",
@@ -60,7 +60,9 @@
     "editPassword": "Password Change",
     "regitstPR": "public relations Registration",
     "regitstAnnouncemant": "Announcement text registration",
-    "regitstVenueMap": "Venue MAP Registration"
+    "regitstVenueMap": "Venue MAP Registration",
+    "notice": "Notice",
+    "updateDate": "update date"
   },
 
   "PR":{
@@ -122,7 +124,7 @@
     "secondPreference": "second preference place",
     "performanceTime": "performance time",
     "preparationTime": "preparation time",
-    "clean-upTime": "clean-up time"
+    "cleanUpTime": "clean-up time"
   },
 
   "StageOption":{
@@ -208,7 +210,7 @@
     "yes": "Cooked",
     "no": "uncooked",
     "numberFirstDay": "Estimated number of products to be sold on Day１",
-    "nUmberSecondDay": "Estimated number of products to be sold on Day２",
+    "numberSecondDay": "Estimated number of products to be sold on Day２",
     "firstDay": "Day１",
     "secondDay": "Day２",
     "count": "",
@@ -221,7 +223,7 @@
     "addPurchase": "Add purchased Products",
     "deletePurchase": "Deletion of purchased Products",
     "editPurchase": "Edit purchased Products",
-    "parchase": "purchased Products",
+    "purchase": "purchased Products",
     "target": "Name of food sold",
     "select": "Please select",
     "name": "Material name",

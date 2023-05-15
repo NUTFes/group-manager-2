@@ -99,10 +99,10 @@ const registUser = (async () => {
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of organization</h1>
+        <h1 class="text-3xl">{{ $t('User.registRepresentative') }}</h1>
         <Card border="none" align="end">
           <div class="flex">
-            <p class="label">name</p>
+            <p class="label">{{ $t('User.name') }}</p>
             <input class="form" v-model="registerParams.name" @change="handleName">
           </div>
           <div>
@@ -110,7 +110,7 @@ const registUser = (async () => {
           </div>
 
           <div class="flex">
-            <p class="label">student id</p>
+            <p class="label">{{ $t('User.studentId') }}</p>
             <input class="form" v-model="registerParams.studentId" maxlength="8" @change="handleStudentId">
           </div>
           <div>
@@ -118,7 +118,7 @@ const registUser = (async () => {
           </div>
 
           <div class="flex">
-            <p class="label">department</p>
+            <p class="label">{{ $t('User.department') }}</p>
             <select class="form" style="width:180px;" v-model="registerParams.departmentId" @change="handleDepartment">
               <option value="" selected disabled></option>
               <option v-for="department in departmentList" :value=department.id key="department">{{ department.name }}
@@ -130,7 +130,7 @@ const registUser = (async () => {
           </div>
 
           <div class="flex">
-            <p class="label">grade</p>
+            <p class="label">{{ $t('User.grade') }}</p>
             <select class="form" style="width:180px;" v-model="registerParams.gradeId" @change="handleGrade">
               <option value="" selected disabled></option>
               <option v-for="grade in gradeList" :value=grade.id key="grade">{{ grade.name }}</option>
@@ -141,7 +141,7 @@ const registUser = (async () => {
           </div>
 
           <div class="flex">
-            <p class="label">mail adress</p>
+            <p class="label">{{ $t('User.mail') }}</p>
             <input class="form" v-model="registerParams.mail" placeholder="～@～.～" @change="handleEmail">
           </div>
           <div>
@@ -149,15 +149,15 @@ const registUser = (async () => {
           </div>
 
           <div class="flex">
-            <p class="label">tell number</p>
-            <input class="form" placeholder="半角数字で10,11桁の番号" maxlength="11" v-model="registerParams.tel" @change="handleTel">
+            <p class="label">{{ $t('User.tel') }}</p>
+            <input class="form" :placeholder="$t('User.editTel')" maxlength="11" v-model="registerParams.tel" @change="handleTel">
           </div>
           <div>
             <p class="error">{{ telError }}</p>
           </div>
 
           <div class="flex">
-            <p class="label">password</p>
+            <p class="label">{{ $t('User.password') }}</p>
             <input type="password" class="form" v-model="registerParams.password" @change="handlePassword">
           </div>
           <div>
@@ -165,7 +165,7 @@ const registUser = (async () => {
           </div>
 
           <div class="flex">
-            <p class="label">password confirm</p>
+            <p class="label">{{ $t('User.passwordConfirm') }}</p>
             <input type="password" class="form" v-model="registerParams.passwordConfirm" @change="handlePasswordConfirm">
           </div>
           <div>
@@ -173,8 +173,8 @@ const registUser = (async () => {
           </div>
         </Card>
         <Row>
-          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
-          <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registUser">
+          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registUser">
           </RegistPageButton>
         </Row>
       </Card>

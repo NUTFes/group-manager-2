@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { Purchase } from "@/types";
 import { FoodProduct, FesDate, Date } from "~~/types/mypage/registAlarm";
+import { useField, useForm } from "vee-validate";
+import { editPurchaseSchema } from "~/utils/validate";
 const config = useRuntimeConfig();
 
 interface Regist {
@@ -12,7 +14,6 @@ interface Regist {
   shopId: number | null
   fesDateId: number | null
 }
-
 const props = withDefaults(defineProps<Regist>(), {
   id: null,
   groupId: null,
@@ -22,6 +23,22 @@ const props = withDefaults(defineProps<Regist>(), {
   shopId: null,
   fesDateId: null,
 })
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: editPurchaseSchema,
+  initialValues: {
+    item: props.name,
+    foodProductId: props.foodProductId,
+    shopId: props.shopId,
+    isFresh: props.isFresh,
+    fesDateId: props.fesDateId,
+  },
+});
+const { handleChange: handleFoodProduct, errorMessage: foodProductError } = useField("foodProductId");
+const { handleChange: handleShop, errorMessage: shopError } = useField("shopId");
+const { handleChange: handleItem, errorMessage: itemError } = useField("item");
+const { handleChange: handleIsFresh, errorMessage: isFreshError } = useField("isFresh");
+const { handleChange: handleFesDate, errorMessage: fesDateError } = useField("fesDateId");
 
 interface Emits {
   (e: 'update:editPurchase', isEditPurchase: boolean): void
@@ -98,7 +115,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">対象商品</div>
-      <select class="entry" v-model="newFoodProductId">
+      <select class="entry" v-model="newFoodProductId" @change="handleFoodProduct" :class="{'error_border': foodProductError}">
         <option value="" disabled selected>選択してください</option>
         <option
           v-for="(list, i) in foodProducts"
@@ -108,16 +125,19 @@ const reset = () => {
           {{ list.name }}
         </option>
       </select>
+      <div class="error_msg">{{ foodProductError }}</div>
       <div class="text">購入品名</div>
-      <input class="entry" v-model="newName" />
+      <input class="entry" v-model="newName" @change="handleItem" :class="{'error_border': itemError}"/>
+      <div class="error_msg">{{ itemError }}</div>
       <div class="text">生ものか</div>
-      <select class="entry" v-model="newIsFresh">
+      <select class="entry" v-model="newIsFresh" @change="handleIsFresh" :class="{'error_border': isFreshError}">
         <option value="" disabled selected>選択してください</option>
         <option value="true">生もの</option>
         <option value="false">加工品</option>
       </select>
+      <div class="error_msg">{{ isFreshError }}</div>
       <div class="text">購入店舗</div>
-      <select class="entry" v-model="newShopId">
+      <select class="entry" v-model="newShopId" @change="handleShop" :class="{'error_border': shopError}">
         <option value="" disabled selected>選択してください</option>
         <option
           v-for="(list, i) in purchases"
@@ -127,8 +147,9 @@ const reset = () => {
           {{ list.name }}
         </option>
       </select>
+      <div class="error_msg">{{ shopError }}</div>
       <div class="text">購入日</div>
-        <select class="entry" v-model="newFesDateId">
+        <select class="entry" v-model="newFesDateId" @change="handleFesDate" :class="{'error_border': fesDateError}">
           <option value="" disabled selected>選択してください</option>
           <option
             v-for="dateId in fesDates"
@@ -138,15 +159,22 @@ const reset = () => {
             {{ dateId.date }}
           </option>
         </select>
+        <div class="error_msg">{{ fesDateError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton text="✓編集" @click="editPurchase()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPurchase()" />
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }

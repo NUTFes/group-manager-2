@@ -52,7 +52,7 @@
     "goToMypage": "マイページへ",
     "userName": "様",
     "greeting1": "技大祭に参加していただき誠にありがとうございます。",
-    "greeting2": "登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。",
+    "greeting2": "登録情報の確認や変更が行えます。入力締め切りは守りいただくよう、よろしくお願いします。",
     "operations": "各種操作",
     "check": "登録情報の確認はこちら",
     "editGroup": "参加団体情報の編集",
@@ -60,7 +60,9 @@
     "editPassword": "パスワード変更",
     "regitstPR": "PR登録",
     "regitstAnnouncemant": "アナウンス文登録",
-    "regitstVenueMap": "会場配置図登録"
+    "regitstVenueMap": "会場配置図登録",
+    "notice": "お知らせ",
+    "updateDate": "更新日"
   },
 
   "PR":{
@@ -103,7 +105,7 @@
     "mail": "メールアドレス",
     "tel": "電話番号",
     "password": "パスワード",
-    "passwordConfirm": "パスワード（確認用）",
+    "passwordConfirm": "パスワード(確認用)",
     "userInfo": "ユーザ情報",
     "colon": "：",
     "editUser": "ユーザ情報の編集",
@@ -112,7 +114,7 @@
     "editTel": "半角数字で１０,１１桁の番号",
     "resetPassword": "パスワード再設定",
     "newPassword": "新しいパスワードを入力",
-    "newPasswordConfirm": "新しいパスワードの再入力（確認用）"
+    "newPasswordConfirm": "新しいパスワードの再入力(確認用)"
   },
 
   "Group":{
@@ -121,7 +123,7 @@
     "groupName": "団体名",
     "shopName": "企画名",
     "category": "参加形式",
-    "ActivityDetails": "活動内容"
+    "activityDetails": "活動内容"
   },
 
   "Stage":{
@@ -135,7 +137,7 @@
     "secondPreference": "第二希望場所",
     "performanceTime": "利用時間",
     "preparationTime": "準備時間",
-    "clean-upTime": "片付け時間"
+    "cleanUpTime": "片付け時間"
   },
 
   "StageOption":{
@@ -234,7 +236,7 @@
     "addPurchase": "購入品の追加",
     "deletePurchase": "購入品の削除",
     "editPurchase": "購入品の編集",
-    "parchase": "購入品",
+    "purchase": "購入品",
     "target": "販売食品名",
     "select": "選択してください",
     "name": "購入材料名",

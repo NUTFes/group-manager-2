@@ -21,12 +21,12 @@ onMounted(async()=>{
 <template>
   <div class="news-card">
     <div class="news-header">
-      <span>お知らせ</span>
+      <span>{{ $t('Mypage.notice') }}</span>
     </div>
     <div class="news-content">
       <div class="news-title">{{ state.title }}</div>
       <div class="news-body">{{ state.body }}</div>
-      <div class="news-date">更新日： {{ state.updateDate }}</div>
+      <div class="news-date">{{ $t('Mypage.updateDate') }}： {{ state.updateDate }}</div>
     </div>
   </div>
 </template>

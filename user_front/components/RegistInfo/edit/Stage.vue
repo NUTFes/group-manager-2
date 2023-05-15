@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { FesYear } from '@/types/regist/stage'
 import { Stage } from '~~/types';
+import { useField, useForm } from 'vee-validate'
+import { stageSchema } from '~~/utils/validate';
 const config = useRuntimeConfig()
 
 interface Props {
@@ -14,12 +16,6 @@ interface Props {
   prepareTimeInterval: string,
   cleanupTimeInterval: string,
 }
-
-interface Emits {
-  (e: 'update:editStage', isEditStage: boolean): void
-  (e: 'reloadStage', v: null): void
-}
-const emits = defineEmits<Emits>()
 const props = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: null,
@@ -32,6 +28,30 @@ const props = withDefaults(defineProps<Props>(), {
   prepareTimeInterval: '',
   cleanupTimeInterval: '',
 })
+
+interface Emits {
+  (e: 'update:editStage', isEditStage: boolean): void
+  (e: 'reloadStage', v: null): void
+}
+const emits = defineEmits<Emits>()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: stageSchema,
+  initialValues: {
+    fesDate: props.fesDateId,
+    first: props.stageFirst,
+    second: props.stageSecond,
+    performanceTime: props.useTimeInterval,
+    preparationTime: props.prepareTimeInterval,
+    cleanUpTime: props.cleanupTimeInterval
+  }
+})
+const { handleChange: handleDate, errorMessage: dateError } = useField('fesDate')
+const { handleChange: handleStageFirst, errorMessage: stageFirstError } = useField('first')
+const { handleChange: handleStageSecond, errorMessage: stageSecondError } = useField('second')
+const { handleChange: handleUseTimeInterval, errorMessage: useTimeIntervalError } = useField('performanceTime')
+const { handleChange: handlePrepareTimeInterval, errorMessage: prepareTimeIntervalError } = useField('preparationTime')
+const { handleChange: handleCleanupTimeInterval, errorMessage: cleanupTimeIntervalError } = useField('cleanUpTime')
 
 const newStageDateId = ref<Props['fesDateId']>(props.fesDateId)
 const newStageFirst = ref<Props['stageFirst']>(props.stageFirst)
@@ -72,7 +92,6 @@ onMounted(async () => {
   stageList.value = props.isSunny ? sunnyStageList.value : rainStageList.value
 })
 
-
 const editStage = async () => {
   await useFetch(config.APIURL + "/stage_orders/" + props.id, {
     method: 'PUT',
@@ -111,9 +130,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">日程</div>
-      <div>
-      </div>
-      <select class="entry" v-model="newStageDateId">
+      <select class="entry" v-model="newStageDateId" @change="handleDate" :class="{'error_border': dateError}">
         <option
           v-for="fesDate in fesDateList"
           :value="fesDate.id"
@@ -122,8 +139,9 @@ const reset = () => {
           {{ fesDate.date }}
         </option>
       </select>
+      <div class="error_msg">{{ dateError }}</div>
       <div class="text">第一希望場所</div>
-      <select class="entry" v-model="newStageFirst">
+      <select class="entry" v-model="newStageFirst" @change="handleStageFirst" :class="{'error_border': stageFirstError}">
         <option
           v-for="stageFirst in stageList"
           :key="stageFirst.id"
@@ -132,8 +150,9 @@ const reset = () => {
           {{ stageFirst.name }}
         </option>
       </select>
+      <div class="error_msg">{{ stageFirstError }}</div>
       <div class="text">第二希望場所</div>
-      <select class="entry" v-model="newStageSecond">
+      <select class="entry" v-model="newStageSecond" @change="handleStageSecond" :class="{'error_border': stageSecondError}">
         <option
           v-for="stageSecond in stageList"
           :key="stageSecond.id"
@@ -142,23 +161,33 @@ const reset = () => {
           {{ stageSecond.name }}
         </option>
       </select>
+      <div class="error_msg">{{ stageSecondError }}</div>
       <div>
         <div class="text">準備時間幅</div>
-        <input class="entry" v-model="newPrepareTimeInterval" />
+        <input type="number" class="entry" v-model="newPrepareTimeInterval" @change="handlePrepareTimeInterval" :class="{'error_border': prepareTimeInterval}" />
+        <div class="error_msg">{{ prepareTimeIntervalError }}</div>
         <div class="text">使用時間幅</div>
-        <input class="entry" v-model="newUseTimeInterval" />
+        <input type="number" class="entry" v-model="newUseTimeInterval" @change="handleUseTimeInterval" :class="{'error_border': useTimeIntervalError}" />
+        <div class="error_msg">{{ useTimeIntervalError }}</div>
         <div class="text">片付け時間幅</div>
-        <input class="entry" v-model="newCleanupTimeInterval" />
+        <input type="number" class="entry" v-model="newCleanupTimeInterval" @change="handleCleanupTimeInterval" :class="{'error_border': cleanupTimeIntervalError}" />
+        <div class="error_msg">{{ cleanupTimeIntervalError }}</div>
       </div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editStage()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editStage()"></RegistPageButton>
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }

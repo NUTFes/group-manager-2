@@ -138,12 +138,12 @@ const skip = () =>{
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
-      <h1 class="text-3xl">Registration of purchase</h1>
+      <h1 class="text-3xl">{{ $t('Purchase.registPurchase') }}</h1>
       <Card border="none" align="end">
         <div v-for="(field, idx) in purchaseValidate" :key="field.key" class="flex flex-col gap-2">
-          <p class="text-2xl border-b-2">Purchase {{ idx + 1 }}</p>
+          <p class="text-2xl border-b-2">{{ $t('Purchase.purchase') }} {{ idx + 1 }}</p>
           <div class="flex">
-            <p class="label">Target food</p>
+            <p class="label">{{ $t('Purchase.target') }}</p>
             <Field
               :id="`foodName[${idx}]`"
               :name="`purchaseList[${idx}].foodProductId`"
@@ -152,7 +152,7 @@ const skip = () =>{
               class="form"
               v-model="registerParams[idx].food_product_id"
             >
-              <option value="" disabled selected>please select</option>
+              <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
               <option
                 v-for="(list, i) in foodProducts"
                 :key="i"
@@ -165,7 +165,7 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].foodProductId`" />
 
           <div class="flex">
-            <p class="label">Place of purchase</p>
+            <p class="label">{{ $t('Purchase.place') }}</p>
             <Field
               :id="`shopId${idx}`"
               :name="`purchaseList[${idx}].shopId`"
@@ -174,7 +174,7 @@ const skip = () =>{
               class="form"
               v-model="registerParams[idx].shop_id"
             >
-              <option value="" disabled selected>please select</option>
+              <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
               <option
                 v-for="(list, i) in purchases"
                 :key="i"
@@ -187,7 +187,7 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].shopId`" />
 
           <div class="flex">
-            <p class="label">purchased item</p>
+            <p class="label">{{ $t('Purchase.purchase') }}</p>
             <Field
               :id="`item${idx}`"
               :name="`purchaseList[${idx}].item`"
@@ -198,7 +198,7 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].item`" />
 
           <div class="flex">
-            <p class="label">Is it row food?</p>
+            <p class="label">{{ $t('Purchase.rowFood') }}</p>
             <Field
               :id="`isFresh${idx}`"
               :name="`purchaseList[${idx}].isFresh`"
@@ -207,15 +207,15 @@ const skip = () =>{
               class="form"
               v-model="registerParams[idx].isFresh"
             >
-              <option value="" disabled selected>please select</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+              <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
+              <option value="true">{{ $t('Purchase.yes') }}</option>
+              <option value="false">{{ $t('Purchase.no') }}</option>
             </Field>
           </div>
           <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].isFresh`" />
 
           <div class="flex">
-            <p class="label">Fes Date</p>
+            <p class="label">{{ $t('Purchase.date') }}</p>
             <Field
               :id="`fesDateId${idx}`"
               :name="`purchaseList[${idx}].fesDateId`"
@@ -224,7 +224,7 @@ const skip = () =>{
               class="form"
               v-model="registerParams[idx].fes_date_id"
             >
-              <option value="" disabled selected>please select</option>
+              <option value="" disabled selected>{{ $t('Purchase.select') }}</option>
               <option v-for="(list, i) in fesDates" :key="i" :value="list.id">
                 {{ list.date }}
               </option>
@@ -233,19 +233,19 @@ const skip = () =>{
           <ErrorMessage class="text-rose-600" :name="`purchaseList[${idx}].fesDateId`" />
 
           <div v-if="idx == 0">
-            <RegistPageButton text="reset" @click="reset(idx)" ></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)" ></RegistPageButton>
           </div>
 
           <div v-if="idx != 0" class="flex gap-3">
-            <RegistPageButton text="reset" @click="reset(idx)" ></RegistPageButton>
-            <RegistPageButton text="remove" @click="decrement(idx)" ></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)" ></RegistPageButton>
+            <RegistPageButton :text="$t('Button.delete')" @click="decrement(idx)" ></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton @click="increment" text="Add" ></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerPurchase" text="Regist" />
-        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+        <RegistPageButton @click="increment" :text="$t('Button.add')" ></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerPurchase" :text="$t('Button.register')" />
+        <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
       </Row>
       <p class="text-red-500">{{ errorMessage }}</p>
     </Card>

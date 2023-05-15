@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { Place, PlaceList } from '~~/types/regist/place';
+import { useField, useForm } from 'vee-validate';
+import { placeSchema } from '~~/utils/validate';
 const config = useRuntimeConfig()
 
 interface Props {
@@ -10,11 +12,6 @@ interface Props {
   remark: string
 }
 
-interface Emits {
-  (e: 'update:editPlace', isEditePlace: boolean): void
-  (e: 'reloadPlace', v: null): void
-}
-
 const props = withDefaults(defineProps<Props>(), {
   id: null,
   first: null,
@@ -22,8 +19,23 @@ const props = withDefaults(defineProps<Props>(), {
   third: null,
   remark: '',
 })
-
+interface Emits {
+  (e: 'update:editPlace', isEditePlace: boolean): void
+  (e: 'reloadPlace', v: null): void
+}
 const emits = defineEmits<Emits>()
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: placeSchema,
+  initialValues: {
+    first: props.first,
+    second: props.second,
+    third: props.third,
+  }
+})
+const {handleChange: handleFirstPlace, errorMessage: firstPlaceError} = useField('first')
+const {handleChange: handleSecondPlace, errorMessage: secondPlaceError} = useField('second')
+const {handleChange: handleThirdPlace, errorMessage: thirdPlaceError} = useField('third')
 
 const placeList = ref<PlaceList[]>([])
 const newFirst = ref<Props['first']>(props.first)
@@ -79,7 +91,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="text">第1希望</div>
-      <select class="entry" v-model="newFirst">
+      <select class="entry" v-model="newFirst" @change="handleFirstPlace" :class="{'error_border': firstPlaceError}">
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -88,8 +100,9 @@ const reset = () => {
           {{ place.name }}
         </option>
       </select>
+      <div class="error_msg">{{ firstPlaceError }}</div>
       <div class="text">第2希望</div>
-      <select class="entry" v-model="newSecond">
+      <select class="entry" v-model="newSecond" @change="handleSecondPlace" :class="{'error_border' :secondPlaceError}">
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -98,8 +111,9 @@ const reset = () => {
           {{ place.name }}
         </option>
       </select>
+      <div class="error_msg">{{ secondPlaceError }}</div>
       <div class="text">第3希望</div>
-      <select class="entry" v-model="newThird">
+      <select class="entry" v-model="newThird" @change="handleThirdPlace" :class="{'error_border' :thirdPlaceError}">
         <option
           v-for="place in placeList"
           :value="place.id"
@@ -108,17 +122,24 @@ const reset = () => {
           {{ place.name }}
         </option>
       </select>
+      <div class="error_msg">{{ thirdPlaceError }}</div>
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" v-model="newRemark"/>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton text="✓編集" @click="editPlace()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editPlace()"></RegistPageButton>
       </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
+.error_msg {
+  @apply mx-[10%] text-rose-600
+}
+.error_border {
+  @apply border-2 border-rose-600
+}
 .text {
   margin: 3% 10% 0%;
 }
