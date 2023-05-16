@@ -83,16 +83,29 @@ onMounted(async () => {
 });
 
 const editPurchase = async () => {
-  await useFetch(config.APIURL + "/purchase_lists/" + props.id, {
-    method: "PUT",
-    params: {
-      items: newName.value,
-      is_fresh: newIsFresh.value,
-      food_product_id: newFoodProductId.value,
-      shop_id: newShopId.value,
-      fes_date_id: newFesDateId.value,
-    },
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/purchase_lists", {
+      method: "POST",
+      params: {
+        items: newName.value,
+        is_fresh: newIsFresh.value,
+        food_product_id: newFoodProductId.value,
+        shop_id: newShopId.value,
+        fes_date_id: newFesDateId.value,
+      },
+    })
+  }else{
+    await useFetch(config.APIURL + "/purchase_lists/" + props.id, {
+      method: "PUT",
+      params: {
+        items: newName.value,
+        is_fresh: newIsFresh.value,
+        food_product_id: newFoodProductId.value,
+        shop_id: newShopId.value,
+        fes_date_id: newFesDateId.value,
+      },
+    })
+  }
   editPurchaseReload()
   editPurchaseClose()
 };
