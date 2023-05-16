@@ -26,7 +26,11 @@ const login = () => {
     localStorage.setItem("uid", response.headers["uid"]);
     localStorage.setItem("token-type", response.headers["token-type"]);
     router.push("/mypage")
-  },);
+  },).catch(
+    () => {
+      alert("ログインに失敗しました。メールアドレスとパスワードを確認してください。")
+    }
+  );
 }
 
 const signUp = () =>{
