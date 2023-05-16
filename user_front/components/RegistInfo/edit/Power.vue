@@ -59,17 +59,31 @@ const reloadPower = () => {
 }
 
 const editPower = async () => {
-  await useFetch(config.APIURL + "/power_orders/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      item: newItem.value,
-      power: newPower.value,
-      manufacturer: newManufacturer.value,
-      model: newModel.value,
-      item_url: newUrl.value,
-    },
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/power_orders", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        item: newItem.value,
+        power: newPower.value,
+        manufacturer: newManufacturer.value,
+        model: newModel.value,
+        item_url: newUrl.value,
+      },
+    })
+  }else{
+    await useFetch(config.APIURL + "/power_orders/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        item: newItem.value,
+        power: newPower.value,
+        manufacturer: newManufacturer.value,
+        model: newModel.value,
+        item_url: newUrl.value,
+      },
+    })
+  }
   reloadPower()
   closeEditPower()
 }
