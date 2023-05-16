@@ -42,6 +42,7 @@ const newFirst = ref<Props['first']>(props.first)
 const newSecond = ref<Props['second']>(props.second)
 const newThird = ref<Props['third']>(props.third)
 const newRemark = ref<Props['remark']>(props.remark)
+const group_id = ref()
 
 const reloadPlace = () => {
   emits('reloadPlace', null)
@@ -56,18 +57,35 @@ onMounted(async () => {
   !!placeData.data && placeData.data.forEach((place) => {
     placeList.value.push(place)
   })
+  group_id.value = Number(localStorage.getItem("group_id"))
+  console.log(group_id.value)
 })
 
 const editPlace = async () => {
-  await useFetch(config.APIURL + "/place_orders/" + props.id, {
-    method: "PUT",
-    params: {
-      first: newFirst.value,
-      second: newSecond.value,
-      third: newThird.value,
-      remark: newRemark.value,
-    }
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/place_orders", {
+      method: "POST",
+      params: {
+        group_id: group_id.value,
+        first: newFirst.value,
+        second: newSecond.value,
+        third: newThird.value,
+        remark: newRemark.value,
+      }
+    })
+  }
+  else{
+    await useFetch(config.APIURL + "/place_orders/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: group_id.value,
+        first: newFirst.value,
+        second: newSecond.value,
+        third: newThird.value,
+        remark: newRemark.value,
+      }
+    })
+  }
   reloadPlace()
   closeEditPlace()
 }
