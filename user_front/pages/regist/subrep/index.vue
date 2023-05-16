@@ -80,23 +80,23 @@ const skip = () => {
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of subrepresentative</h1>
+        <h1 class="text-3xl">{{ $t('Subrep.registSubrepresentative') }}</h1>
         <Card border="none" align="end">
           <div class="flex">
-            <p class="label">name</p>
+            <p class="label">{{ $t('Subrep.name') }}</p>
             <input class="form" v-model="registerParams.name" @change="handleName" :class="{ 'error_border': nameError }">
           </div>
           <div class="error_msg">{{ nameError }}</div>
 
           <div class="flex">
-            <p class="label">student id</p>
+            <p class="label">{{ $t('Subrep.studentId') }}</p>
             <input class="form" v-model="registerParams.studentId" maxlength="8" @change="handleStudentId"
               :class="{ 'error_border': studentIdError }">
           </div>
           <div class="error_msg">{{ studentIdError }}</div>
 
           <div class="flex">
-            <p class="label">department</p>
+            <p class="label">{{ $t('Subrep.department') }}</p>
             <select style="width:180px;" v-model="registerParams.departmentId" @change="handleDepartmentId"
               :class="{ 'error_border': departmentIdError }">
               <option value="" selected disabled></option>
@@ -108,7 +108,7 @@ const skip = () => {
           <div class="error_msg">{{ departmentIdError }}</div>
 
           <div class="flex">
-            <p class="label">grade</p>
+            <p class="label">{{ $t('Subrep.grade') }}</p>
             <select style="width:180px;" v-model="registerParams.gradeId" @change="handleGradeId"
               :class="{ 'border-rose-600': gradeIdError }">
               <option value="" selected disabled></option>
@@ -118,23 +118,23 @@ const skip = () => {
           <div class="error_msg">{{ gradeIdError }}</div>
 
           <div class="flex">
-            <p class="label">mail adress</p>
+            <p class="label">{{ $t('Subrep.mail') }}</p>
             <input class="form" v-model="registerParams.mail" @change="handleMail" :class="{ 'error_border': mailError }">
           </div>
           <div class="error_msg">{{ mailError }}</div>
 
           <div class="flex">
-            <p class="label">tell number</p>
+            <p class="label">{{ $t('Subrep.tel') }}</p>
             <input class="form" v-model="registerParams.tel" maxlength="11" @change="handleTel"
               :class="{ 'error_border': telError }">
           </div>
           <div class="error_msg">{{ telError }}</div>
         </Card>
         <Row>
-          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
-          <RegistPageButton text="register" :disabled='!meta.valid || isSubmitting' @click="registerSubRep">
+          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.register')" :disabled='!meta.valid || isSubmitting' @click="registerSubRep">
           </RegistPageButton>
-          <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
         </Row>
       </Card>
     </div>

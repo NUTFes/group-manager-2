@@ -100,11 +100,11 @@ const decrement = (idx: number) => {
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
-      <h1 class="text-3xl">Registration of foodstuffs</h1>
+      <h1 class="text-3xl">{{ $t('Food.registFood') }}</h1>
       <Card border="none" align="end">
         <div v-for="(field, idx) in foodValidate" :key="field.key">
           <div class="flex">
-            <p class="label">name</p>
+            <p class="label">{{ $t('Food.name') }}</p>
             <Field
               :id="`name${idx}`"
               :name="`foods[${idx}].dishName`"
@@ -115,16 +115,16 @@ const decrement = (idx: number) => {
           <ErrorMessage class="text-rose-600" :name="`foods[${idx}].dishName`"/>
 
           <div class="flex">
-            <p class="label">Do you cook?</p>
+            <p class="label">{{ $t('Food.cook') }}</p>
             <select style="width:180px;" v-model="registerParams[idx].isCooking">
               <option value="" selected disabled></option>
-              <option value='true'>Yes</option>
-              <option value='false'>No</option>
+              <option value='true'>{{ $t('Food.yes') }}</option>
+              <option value='false'>{{ $t('Food.no') }}</option>
             </select>
           </div>
 
           <div class="flex">
-            <p class="label">number of products on the first day</p>
+            <p class="label">{{ $t('Food.numberFirstDay') }}</p>
             <Field
               :id="`numFirstDay${idx}`"
               :name="`foods[${idx}].numFirstDay`"
@@ -135,7 +135,7 @@ const decrement = (idx: number) => {
           <ErrorMessage class="text-rose-600" :name="`foods[${idx}].numFirstDay`"/>
 
           <div class="flex">
-            <p class="label">number of products on the second day</p>
+            <p class="label">{{ $t('Food.numberSecondDay') }}</p>
             <Field
               :id="`numSecondDay${idx}`"
               :name="`foods[${idx}].numSecondDay`"
@@ -146,19 +146,19 @@ const decrement = (idx: number) => {
           <ErrorMessage class="text-rose-600" :name="`foods[${idx}].numSecondDay`"/>
 
           <div v-if="idx == 0">
-            <RegistPageButton @click="reset(idx)" text="reset"></RegistPageButton>
+            <RegistPageButton @click="reset(idx)" :text="$t('Button.reset')"></RegistPageButton>
           </div>
 
           <div v-if="idx != 0" class="flex gap-3">
-            <RegistPageButton @click="reset(idx)" text="reset"></RegistPageButton>
-            <RegistPageButton @click="decrement(idx)" text="remove"></RegistPageButton>
+            <RegistPageButton @click="reset(idx)" :text="$t('Button.reset')"></RegistPageButton>
+            <RegistPageButton @click="decrement(idx)" :text="$t('Button.delete')"></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton text="Add" @click="increment"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerFood" text="登録"></RegistPageButton>
-        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.add')" @click="increment"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerFood" :text="$t('Button.register')"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
       </Row>
     </Card>
   </div>

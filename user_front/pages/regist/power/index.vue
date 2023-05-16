@@ -101,10 +101,11 @@ const skip = () =>{
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
+      <h1 class="text-3xl">{{ $t('Power.registPower') }}</h1>
       <Card border="none" align="end" gap="20px">
         <div v-for="(field, idx) in powerValidate" :key="field.key">
           <div class="flex">
-            <p class="label">product name</p>
+            <p class="label">{{ $t('Power.name') }}</p>
             <Field
               :id="`productName${idx}`"
               :name="`powers[${idx}].productName`"
@@ -115,7 +116,7 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`powers[${idx}].productName`" />
           <div class="flex">
-            <p class="label">maximum rated power</p>
+            <p class="label">{{ $t('Power.maximum') }}</p>
             <Field
               :id="`maxPower${idx}`"
               :name="`powers[${idx}].maxPower`"
@@ -127,7 +128,7 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`powers[${idx}].maxPower`" />
           <div class="flex">
-            <p class="label">maker</p>
+            <p class="label">{{ $t('Power.maker') }}</p>
             <Field
               :id="`manufacturer${idx}`"
               :name="`powers[${idx}].manufacturer`"
@@ -138,7 +139,7 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`powers[${idx}].manufacturer`" />
           <div class="flex">
-            <p class="label">model</p>
+            <p class="label">{{ $t('Power.model') }}</p>
             <Field
               :id="`model${idx}`"
               :name="`powers[${idx}].model`"
@@ -149,7 +150,7 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`powers[${idx}].model`" />
           <div class="flex">
-            <p class="label">product URL</p>
+            <p class="label">{{ $t('Power.URL') }}</p>
             <Field
               :id="`url${idx}`"
               :name="`powers[${idx}].url`"
@@ -160,18 +161,18 @@ const skip = () =>{
           </div>
           <ErrorMessage class="text-rose-600" :name="`powers[${idx}].url`" />
           <div v-if="idx == 0">
-            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
           </div>
           <div v-if="idx != 0" class="flex gap-3">
-            <RegistPageButton text="reset" @click="reset(idx)"></RegistPageButton>
-            <RegistPageButton text="remove" @click="decrement(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.reset')" @click="reset(idx)"></RegistPageButton>
+            <RegistPageButton :text="$t('Button.delete')" @click="decrement(idx)"></RegistPageButton>
           </div>
         </div>
       </Card>
       <Row>
-        <RegistPageButton text="add" @click="increment"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="register" @click="registerPower"></RegistPageButton>
-        <RegistPageButton text="skip" @click="skip"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.add')" @click="increment"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')" @click="registerPower"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
       </Row>
     </Card>
   </div>

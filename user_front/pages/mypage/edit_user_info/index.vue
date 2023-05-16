@@ -76,18 +76,18 @@ loginCheck();
 
 <template>
   <div class="regist-card">
-    <NuxtLink to="/mypage" class="regist-back-link">マイページへ</NuxtLink>
+    <NuxtLink to="/mypage" class="regist-back-link">{{ $t('Mypage.goToMypage') }}</NuxtLink>
     <div class="reist-title-content">
-      <div class="user-info">ユーザ情報</div>
+      <div class="user-info">{{ $t('User.userInfo') }}</div>
     </div>
     <div class="flex row justify-center gap-3 pb-11">
       <div class="text-xl">
-        <p>名前：</p>
-        <p>メールアドレス：</p>
-        <p>学籍番号：</p>
-        <p>電話番号：</p>
-        <p>学科：</p>
-        <p>学年：</p>
+        <p>{{ $t('User.name') }}：</p>
+        <p>{{ $t('User.mail') }}：</p>
+        <p>{{ $t('User.studentId') }}：</p>
+        <p>{{ $t('User.tel') }}：</p>
+        <p>{{ $t('User.department') }}：</p>
+        <p>{{ $t('User.grade') }}：</p>
       </div>
       <div class="text-lg">
         <p>{{ user?.name }}</p>
@@ -99,30 +99,30 @@ loginCheck();
       </div>
     </div>
     <div class="reist-title-content">
-      <div class="user-info">ユーザ情報変更</div>
+      <div class="user-info">{{ $t('User.editUser') }}</div>
     </div>
     <div>
-      <input placeholder="フルネーム" v-model="editParams.name" @change="handleName">
+      <input :placeholder="$t('User.editName')" v-model="editParams.name" @change="handleName">
       <p class="error">{{ nameError }}</p>
       <input placeholder="～@～.～" v-model="editParams.mail" @change="handleEmail">
       <p class="error">{{ emailError }}</p>
-      <input placeholder="学籍番号８桁" maxlength="8" v-model="editParams.studentId" @change="handleStudentId">
+      <input :placeholder="$t('User.editStudentId')" maxlength="8" v-model="editParams.studentId" @change="handleStudentId">
       <p class="error">{{ studentIdError }}</p>
-      <input placeholder="半角数字で10,11桁の番号" maxlength="11" v-model="editParams.tel" @change="handleTel">
+      <input :placeholder="$t('User.editTel')" maxlength="11" v-model="editParams.tel" @change="handleTel">
       <p class="error">{{ telError }}</p>
-      <select placeholder="学科" v-model="editParams.departmentId" @change="handleDepartment">
+      <select :placeholder="$t('User.department')" v-model="editParams.departmentId" @change="handleDepartment">
         <option value="" selected disabled></option>
         <option v-for="department in departmentList" :value=department.id key="department">{{ department.name }}</option>
       </select>
       <p class="error">{{ departmentError }}</p>
-      <select placeholder="学年" v-model="editParams.gradeId" @change="handleGrade">
+      <select :placeholder="$t('User.grade')" v-model="editParams.gradeId" @change="handleGrade">
         <option value="" selected disabled></option>
         <option v-for="grade in gradeList" :value=grade.id key="grade">{{ grade.name }}</option>
       </select>
       <p class="error">{{ gradeError }}</p>
     </div>
     <div class="regist-button">
-      <RegistPageButton text="編集" :disabled='!meta.valid || isSubmitting' @click="editUser">編集</RegistPageButton>
+      <RegistPageButton :text="$t('Button.edit')" :disabled='!meta.valid || isSubmitting' @click="editUser">{{ $t('Button.edit') }}</RegistPageButton>
     </div>
   </div>
 </template>
