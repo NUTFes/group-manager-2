@@ -74,17 +74,31 @@ const closeEditStageOption = () => {
 }
 
 const editStageOption = async () => {
-  await useFetch(config.APIURL + "/stage_common_options/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      own_equipment: newOwnEquipment.value,
-      bgm: newBgm.value,
-      camera_permission: newCameraPermission.value,
-      loud_sound: newLoudSound.value,
-      stage_content: newStageContent.value,
-    }
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/stage_common_options", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        own_equipment: newOwnEquipment.value,
+        bgm: newBgm.value,
+        camera_permission: newCameraPermission.value,
+        loud_sound: newLoudSound.value,
+        stage_content: newStageContent.value,
+      },
+    })
+  } else {
+    await useFetch(config.APIURL + "/stage_common_options/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        own_equipment: newOwnEquipment.value,
+        bgm: newBgm.value,
+        camera_permission: newCameraPermission.value,
+        loud_sound: newLoudSound.value,
+        stage_content: newStageContent.value,
+      }
+    })
+  }
   reloadStageOption()
   closeEditStageOption()
 }
@@ -153,7 +167,7 @@ const reset = () => {
       </select>
       <div class="error_msg">{{ loudSoundError }}</div>
       <div class="text">{{ $t('StageOption.content') }}</div>
-      <textarea class="entry" v-model="newStageContent" @chage="handleStageContent" :class="{ 'error_border': stageContentError }"/>
+      <textarea class="entry" v-model="newStageContent" @change="handleStageContent" :class="{ 'error_border': stageContentError }"/>
       <div class="error_msg">{{ stageContentError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>

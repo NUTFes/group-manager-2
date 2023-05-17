@@ -46,15 +46,27 @@ const newName = ref<string>(props.name)
 const newStudentId = ref<number | null>(props.studentId)
 
 const editEmployee = async () => {
-  await useFetch(config.APIURL + "/employees/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      name: newName.value,
-      student_id: newStudentId.value,
-      stool_test_id: 1
-    },
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/employees", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        student_id: newStudentId.value,
+        stool_test_id: 1
+      },
+    })
+  }else{
+    await useFetch(config.APIURL + "/employees/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        student_id: newStudentId.value,
+        stool_test_id: 1
+      },
+    })
+  }
   reloadEmployee()
   closeEditEmployee()
 };

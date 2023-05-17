@@ -53,16 +53,29 @@ const newNumFirstDay = ref<number | null>(props.firstDayNum)
 const newNumSecondDay = ref<number | null>(props.secondDayNum)
 
 const editFood = async () => {
-  await useFetch(config.APIURL + "/food_products/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      name: newDishName.value,
-      is_cooking: newIsCooking.value,
-      first_day_num: newNumFirstDay.value,
-      second_day_num: newNumSecondDay.value,
-    },
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/food_products", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        name: newDishName.value,
+        is_cooking: newIsCooking.value,
+        first_day_num: newNumFirstDay.value,
+        second_day_num: newNumSecondDay.value,
+      },
+    })
+  }else{
+    await useFetch(config.APIURL + "/food_products/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        name: newDishName.value,
+        is_cooking: newIsCooking.value,
+        first_day_num: newNumFirstDay.value,
+        second_day_num: newNumSecondDay.value,
+      },
+    })
+  }
   editFoodReload()
   editFoodClose()
 };

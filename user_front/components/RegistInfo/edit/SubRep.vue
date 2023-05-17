@@ -65,18 +65,33 @@ const newStudentId = ref<Props['student_id']>(props.student_id)
 // const newSetting = ref<boolean>()
 
 const editSubRep = async () => {
-  await useFetch(config.APIURL + "/sub_reps/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      name: newName.value,
-      department_id: newDepartment.value,
-      grade_id: newGrade.value,
-      tel: newTel.value,
-      email: newEmail.value,
-      student_id: newStudentId.value,
-    },
-  })
+  if (props.id == null) {
+    await useFetch(config.APIURL + "/sub_reps", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        department_id: newDepartment.value,
+        grade_id: newGrade.value,
+        tel: newTel.value,
+        email: newEmail.value,
+        student_id: newStudentId.value,
+      },
+    })
+  }else {
+    await useFetch(config.APIURL + "/sub_reps/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        department_id: newDepartment.value,
+        grade_id: newGrade.value,
+        tel: newTel.value,
+        email: newEmail.value,
+        student_id: newStudentId.value,
+      },
+    })
+  }
   reloadSubRep()
   closeEditSubRep()
 };

@@ -52,6 +52,7 @@ const isEatingArea = (place: string) => {
   return EATING_AREA.includes(place);
 };
 
+
 const placeList = ref<PlaceList[]>([]);
 const newFirst = ref<Props["first"]>(props.first);
 const newSecond = ref<Props["second"]>(props.second);
@@ -59,7 +60,7 @@ const newThird = ref<Props["third"]>(props.third);
 const newRemark = ref<Props["remark"]>(props.remark);
 const groupCategoryId = ref<number>();
 const isOverlapPlace = ref(false);
-
+const group_id = ref()
 const isDuplicate = computed(() => {
   if (
     newFirst.value === newSecond.value ||
@@ -81,13 +82,16 @@ const closeEditPlace = () => {
 };
 
 onMounted(async () => {
-  const groupUrl =
-    config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
-
+  const placeData = await $fetch<Place>(config.APIURL + "/places");
+  !!placeData.data && placeData.data.forEach((place) => {
+    placeList.value.push(place)
+  })
+  const groupUrl = config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
   axios.get(groupUrl).then(async (response) => {
     groupCategoryId.value = response.data.data.group_category_id;
 
     const placeData = await $fetch<Place>(config.APIURL + "/places");
+
     placeData.data.forEach((place) => {
       if (groupCategoryId.value === 1) {
         if (isEatingArea(place.name)) {
@@ -98,27 +102,36 @@ onMounted(async () => {
       }
     });
   });
-});
+})
 
 const editPlace = async () => {
-  if (isDuplicate.value) {
-    isOverlapPlace.value = true;
-    return;
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/place_orders", {
+      method: "POST",
+      params: {
+        group_id: group_id.value,
+        first: newFirst.value,
+        second: newSecond.value,
+        third: newThird.value,
+        remark: newRemark.value,
+      }
+    })
   }
-  isOverlapPlace.value = false;
-
-  await useFetch(config.APIURL + "/place_orders/" + props.id, {
-    method: "PUT",
-    params: {
-      first: newFirst.value,
-      second: newSecond.value,
-      third: newThird.value,
-      remark: newRemark.value,
-    },
-  });
-  reloadPlace();
-  closeEditPlace();
-};
+  else{
+    await useFetch(config.APIURL + "/place_orders/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: group_id.value,
+        first: newFirst.value,
+        second: newSecond.value,
+        third: newThird.value,
+        remark: newRemark.value,
+      }
+    })
+  }
+  reloadPlace()
+  closeEditPlace()
+}
 
 const reset = () => {
   newFirst.value = null;
