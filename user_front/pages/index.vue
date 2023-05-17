@@ -46,15 +46,15 @@ const signUp = () =>{
     <div class="welcome-login-content">
       <div class="welcome-login-content-form">
         <div class="login-form">
-          <input type="email" placeholder="メールアドレス" class="login-input" v-model="email" />
+          <input type="email" :placeholder= "$t('Welcome.mail')"  class="login-input" v-model="email" />
         </div>
         <div class="login-form">
-          <input type="password" placeholder="パスワード" class="login-input" v-model="password" />
+          <input type="password" :placeholder= "$t('Welcome.password')" class="login-input" v-model="password" />
         </div>
         <div class="login-form-button">
           <button class="login-button" @click="login">{{ $t('Welcome.logIn') }}</button>
         </div>
-        <button class="signup-button" @click="signUp">{{ $t('Welcome.signIn') }}</button>
+        <button class="signup-button" @click="signUp">{{ $t('Welcome.signUp') }}</button>
       </div>
     </div>
     <WelcomeDetail />

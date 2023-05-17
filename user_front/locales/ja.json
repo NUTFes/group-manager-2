@@ -24,7 +24,7 @@
     "mail": "メールアドレス",
     "password": "パスワード",
     "logIn": "ログイン",
-    "signIn": "新規登録はこちら",
+    "signUp": "新規登録はこちら",
     "overview": "参加概要",
     "overviewDetails": "開催日時：2023年9月16日(土) 17日(日)",
     "regist": "登録の流れ",
@@ -307,5 +307,46 @@
     "materialsScience": "材料工学専攻",
     "energy": "エネルギー・環境工学専攻",
     "IntegratedBio": "生物統合工学専攻"
+  },
+
+  "Department":{
+    "b1": "B1[学部1年]",
+    "b2": "B2[学部2年]",
+    "b3": "B3[学部3年]",
+    "b4": "B4[学部4年]",
+    "n1": "M1[修士1年]",
+    "m2": "M2[修士2年]",
+    "d1": "D1[博士1年]",
+    "d2": "D2[博士2年]",
+    "d3": "D3[博士3年]",
+    "gd1": "GD1[イノベ1年]",
+    "gd2": "GD2[イノベ2年]",
+    "gd3": "GD3[イノベ3年]",
+    "gd4": "GD4[イノベ4年]",
+    "gd5": "GD5[イノベ5年]",
+    "other": "その他"
+  },
+
+  "Grade":{
+    "mechanical": "機械創造工学課程",
+    "electrical": "電気電子情報工学課程",
+    "materials": "物質材料工学課程",
+    "environmental": "環境社会基盤工学課程",
+    "bio": "生物機能工学課程",
+    "information": "情報・経営システム工学課程",
+    "mechanical2": "機械創造工学専攻",
+    "electrical2": "電気電子情報工学専攻",
+    "materials2": "物質材料工学専攻",
+    "environmental2": "環境社会基盤工学専攻",
+    "bio2": "生物機能工学専攻",
+    "information2": "情報・経営システム工学専攻",
+    "nuclear": "原子力システム安全工学専攻",
+    "system": "システム安全専攻",
+    "innovation": "技術科学イノベーション専攻",
+    "informationControl": "情報・制御工学専攻",
+    "materialsScience": "材料工学専攻",
+    "energy": "エネルギー・環境工学専攻",
+    "IntegratedBio": "生物統合工学専攻",
+    "other": "その他"
   }
 }

@@ -24,7 +24,7 @@
     "mail": "Email Address",
     "password": "Password",
     "logIn": "Log in",
-    "signIn": "Sign in",
+    "signUp": "Sign up",
     "overview": "Participation Overview",
     "overviewDetails": "Date & Time：September 16(Sat), 17(Sun), 2023",
     "regist": "Registration Process",
@@ -294,5 +294,46 @@
     "materialsScience": "Materials Science",
     "energy": "Energy and Environment Science",
     "IntegratedBio": "Integrated Bioscience and Technology"
+  },
+
+  "Department":{
+    "b1": "B1[1st year undergraduate]",
+    "b2": "B2[2nd year undergraduate]",
+    "b3": "B3[3rd year undergraduate]",
+    "b4": "B4[4th year undergraduate]",
+    "n1": "M1[Master 1 year]",
+    "m2": "M2[Master 2 years]",
+    "d1": "D1[Doctor of Philosophy 1st year]",
+    "d2": "D2[Doctor of Philosophy 2nd year]",
+    "d3": "D3[Doctor of Philosophy 3rd year]",
+    "gd1": "GD1[Innovation 1st year]",
+    "gd2": "GD2[Innovation 2nd year]",
+    "gd3": "GD3[Innovation 3rd year]",
+    "gd4": "GD4[Innovation 4th year]",
+    "gd5": "GD5[Innovation 5th year]",
+    "other": "Other"
+  },
+
+  "Grade":{
+    "mechanical": "Mechanical Engineering",
+    "electrical": " Electrical, Electronics and Information Engineering",
+    "materials": " Materials Science and Technology",
+    "environmental": "Civil and Environmental Engineering",
+    "bio": "Bioengineering",
+    "information": "Information and Management Systems Engineering",
+    "mechanical2": " Mechanical Engineering",
+    "electrical2": "Electrical,Electronics and Information Engineering",
+    "materials2": " Materials Science and Technology",
+    "environmental2": "Civil and Environmental Engineering",
+    "bio2": "Bioengineering",
+    "information2": " Information and Management Systems Engineering",
+    "nuclear": "Nuclear System Safety Engineering",
+    "system": "System Safety",
+    "innovation": "Department of Science of Technology Innovation",
+    "informationControl": "Information Science and Control Engineering",
+    "materialsScience": "Materials Science",
+    "energy": "Energy and Environment Science",
+    "IntegratedBio": "Integrated Bioscience and Technology",
+    "other": "Other"
   }
 }
