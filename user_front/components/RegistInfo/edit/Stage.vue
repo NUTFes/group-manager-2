@@ -93,19 +93,35 @@ onMounted(async () => {
 })
 
 const editStage = async () => {
-  await useFetch(config.APIURL + "/stage_orders/" + props.id, {
-    method: 'PUT',
-    params: {
-      group_id: props.groupId,
-      is_sunny: props.isSunny,
-      fes_date_id: newStageDateId.value,
-      stage_first: newStageFirst.value,
-      stage_second: newStageSecond.value,
-      use_time_interval: newUseTimeInterval.value,
-      prepare_time_interval: newPrepareTimeInterval.value,
-      cleanup_time_interval: newCleanupTimeInterval.value,
-    }
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/stage_orders/", {
+      method: 'POST',
+      params: {
+        group_id: props.groupId,
+        is_sunny: props.isSunny,
+        fes_date_id: newStageDateId.value,
+        stage_first: newStageFirst.value,
+        stage_second: newStageSecond.value,
+        use_time_interval: newUseTimeInterval.value,
+        prepare_time_interval: newPrepareTimeInterval.value,
+        cleanup_time_interval: newCleanupTimeInterval.value,
+      }
+    })
+  }else{
+    await useFetch(config.APIURL + "/stage_orders/" + props.id, {
+      method: 'PUT',
+      params: {
+        group_id: props.groupId,
+        is_sunny: props.isSunny,
+        fes_date_id: newStageDateId.value,
+        stage_first: newStageFirst.value,
+        stage_second: newStageSecond.value,
+        use_time_interval: newUseTimeInterval.value,
+        prepare_time_interval: newPrepareTimeInterval.value,
+        cleanup_time_interval: newCleanupTimeInterval.value,
+      }
+    })
+  }
   reloadStage()
   closeEditStage()
 }

@@ -62,14 +62,25 @@ onMounted(async () => {
 })
 
 const editItem = async () => {
-  await useFetch(config.APIURL + "/rental_orders" + "/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      rental_item_id: newItem.value,
-      num: newNum.value,
-    },
-  })
+  if (props.id === null){
+    await useFetch(config.APIURL + "/rental_orders", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        rental_item_id: newItem.value,
+        num: newNum.value,
+      },
+    })
+  }else{
+    await useFetch(config.APIURL + "/rental_orders" + "/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        rental_item_id: newItem.value,
+        num: newNum.value,
+      },
+    })
+  }
   reloadItem()
   closeEditItem()
 };

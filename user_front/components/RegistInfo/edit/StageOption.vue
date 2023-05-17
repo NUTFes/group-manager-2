@@ -74,17 +74,31 @@ const closeEditStageOption = () => {
 }
 
 const editStageOption = async () => {
-  await useFetch(config.APIURL + "/stage_common_options/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      own_equipment: newOwnEquipment.value,
-      bgm: newBgm.value,
-      camera_permission: newCameraPermission.value,
-      loud_sound: newLoudSound.value,
-      stage_content: newStageContent.value,
-    }
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/stage_common_options", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        own_equipment: newOwnEquipment.value,
+        bgm: newBgm.value,
+        camera_permission: newCameraPermission.value,
+        loud_sound: newLoudSound.value,
+        stage_content: newStageContent.value,
+      },
+    })
+  } else {
+    await useFetch(config.APIURL + "/stage_common_options/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        own_equipment: newOwnEquipment.value,
+        bgm: newBgm.value,
+        camera_permission: newCameraPermission.value,
+        loud_sound: newLoudSound.value,
+        stage_content: newStageContent.value,
+      }
+    })
+  }
   reloadStageOption()
   closeEditStageOption()
 }
