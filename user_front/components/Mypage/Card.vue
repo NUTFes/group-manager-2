@@ -3,21 +3,8 @@
 </script>
 
 <template>
-  <div class="card">
+  <div class="bg-slate-200 p-4 w-full rounded-md">
     <slot name="mypageCard"></slot>
-
   </div>
 </template>
 
-<style>
-  .card{
-    width: 1000px;
-    @apply
-      flex
-      items-center
-      relative
-      mt-0.5
-      h-80
-      bg-slate-200
-  }
-</style>
