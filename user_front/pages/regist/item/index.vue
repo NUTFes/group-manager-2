@@ -99,6 +99,17 @@ const decrement = (idx: number) => {
 };
 
 const registerItem = async () => {
+  // 貸し出し可能物品個数のチェック
+  for (let i = 0; i < formCount.value; i++) {
+    if (
+      getMaxValueByItemId(registerParams[i].rentalItemId) <
+      registerParams[i].num
+    ) {
+      alert("貸し出し可能個数を超過している物品があるので修正してください。");
+      return;
+    }
+  }
+
   for (let i = 0; i < formCount.value; i++) {
     await $fetch(config.APIURL + "/rental_orders", {
       method: "POST",
@@ -119,16 +130,35 @@ const skip = () => {
   router.push("/regist/power");
 };
 
+// 物品のidから物品の情報を取得し、物品の貸し出し可能数を返す
+const getMaxValueByItemId = (id: number) => {
+  const items = selectableItemList.value.find((item) => item.id === id);
+
+  let maxValue = 0;
+  if (selectedLocation.value === "屋外団体" && items?.name === "テント") {
+    maxValue = 1;
+  } else if (
+    selectedLocation.value === "屋外団体" &&
+    (items?.name === "机" || items?.name === "椅子")
+  ) {
+    maxValue = 20;
+  } else {
+    maxValue = 99;
+  }
+  return maxValue;
+};
+
 const updateSelectedLocation = (event: Event) => {
   const target = event.target as HTMLInputElement;
-
   switch (target.value) {
     case "屋内団体":
+      selectableItemList.value = [];
       insideRentableItemList.value.forEach((item) => {
         selectableItemList.value.push(item);
       });
       break;
     case "屋外団体":
+      selectableItemList.value = [];
       outsideRentableItemList.value.forEach((item) => {
         selectableItemList.value.push(item);
       });
@@ -142,43 +172,43 @@ const updateSelectedLocation = (event: Event) => {
     <Card>
       <h1 class="text-3xl">{{ $t("Item.registItem") }}</h1>
       <Card border="none" align="end" gap="20px">
-        <div v-for="(field, idx) in itemValidate" :key="field.key">
-          <div class="flex gap-3">
-            <div v-if="Number(state.groupCategoryId) !== 3">
-              <label>
-                <input
-                  type="radio"
-                  value="屋内団体"
-                  v-model="selectedLocation"
-                  :checked="selectedLocation === '屋内団体'"
-                  @click="updateSelectedLocation"
-                />
-                屋内団体
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="屋外団体"
-                  v-model="selectedLocation"
-                  :checked="selectedLocation === '屋外団体'"
-                  @click="updateSelectedLocation"
-                />
-                屋外団体
-              </label>
-            </div>
-            <div v-if="Number(state.groupCategoryId) === 3">
-              <label>
-                <input
-                  type="radio"
-                  value="ステージ団体"
-                  v-model="selectedLocation"
-                  :checked="selectedLocation === 'ステージ団体'"
-                  @click="updateSelectedLocation"
-                />
-                ステージ団体
-              </label>
-            </div>
+        <div class="flex gap-3">
+          <div v-if="Number(state.groupCategoryId) !== 3">
+            <label>
+              <input
+                type="radio"
+                value="屋内団体"
+                v-model="selectedLocation"
+                :checked="selectedLocation === '屋内団体'"
+                @click="updateSelectedLocation"
+              />
+              屋内団体
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="屋外団体"
+                v-model="selectedLocation"
+                :checked="selectedLocation === '屋外団体'"
+                @click="updateSelectedLocation"
+              />
+              屋外団体
+            </label>
           </div>
+          <div v-if="Number(state.groupCategoryId) === 3">
+            <label>
+              <input
+                type="radio"
+                value="ステージ団体"
+                v-model="selectedLocation"
+                :checked="selectedLocation === 'ステージ団体'"
+                @click="updateSelectedLocation"
+              />
+              ステージ団体
+            </label>
+          </div>
+        </div>
+        <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex">
             <p class="label">{{ $t("Item.item") }}</p>
             <Field
@@ -194,6 +224,7 @@ const updateSelectedLocation = (event: Event) => {
                 v-for="item in selectableItemList"
                 :key="item.id"
                 :value="item.id"
+                :name="item.name"
               >
                 {{ item.name }}
               </option>
@@ -211,8 +242,15 @@ const updateSelectedLocation = (event: Event) => {
               :name="`items[${idx}].itemNum`"
               class="form"
               v-model="registerParams[idx].num"
+              v-validate="
+                'max_value:getMaxValueByItemId(registerParams[idx].rentalItemId)'
+              "
             />
           </div>
+          <p>
+            {{ getMaxValueByItemId(registerParams[idx].rentalItemId) }}
+            個まで貸し出し可能です
+          </p>
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
           <div v-if="idx == 0">
