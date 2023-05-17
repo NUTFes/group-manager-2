@@ -51,9 +51,36 @@ export const stageSchema = object({
   fesDate: number().required("入力してください"),
   first: number().required("入力してください"),
   second: number().required("入力してください"),
-  performanceTime: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
-  preparationTime: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
-  cleanUpTime: string().required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください')
+  performanceTime: number().required("入力してください").min(0, "0分以上を入力してください")
+    .test({
+      name: 'cleanUpTime',
+      message: "合計で120分以内を入力してください",
+      test(value) {
+        const preparationTime = this.resolve(ref("preparationTime")) ?? 0;
+        const cleanUpTime = this.resolve(ref("cleanUpTime")) ?? 0;
+        return value + Number(preparationTime) + Number(cleanUpTime) <= 120;
+      },
+    }),
+  preparationTime: number().required("入力してください").min(0, "0分以上を入力してください")
+  .test({
+    name: 'cleanUpTime',
+    message: "合計で120分以内を入力してください",
+    test(value) {
+      const performanceTime = this.resolve(ref("performanceTime")) ?? 0;
+      const cleanUpTime = this.resolve(ref("cleanUpTime")) ?? 0;
+      return value + Number(performanceTime) + Number(cleanUpTime) <= 120;
+    },
+  }),
+  cleanUpTime: number().required("入力してください").min(0, "0分以上を入力してください")
+    .test({
+      name: 'cleanUpTime',
+      message: "合計で120分以内を入力してください",
+      test(value) {
+        const performanceTime = this.resolve(ref("performanceTime")) ?? 0;
+        const preparationTime = this.resolve(ref("preparationTime")) ?? 0;
+        return value + Number(performanceTime) + Number(preparationTime) <= 120;
+      },
+    }),
 });
 
 // stageOption登録のバリデーション
