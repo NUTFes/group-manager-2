@@ -16,7 +16,7 @@ export default {
 <template>
   <button
     @click="$router.push(link)"
-    class="flex items-center text-lg justify-center bg-[#ef4df3] text-white p-4 rounded-md w-1/2"
+    class="flex items-center text-lg justify-center bg-[#ef4df3] text-white p-4 rounded-md w-4/5 md:w-1/2"
   >
     {{ text }}
   </button>
