@@ -4,7 +4,7 @@
 <template>
   <div>
     <button class="btn">
-      編集
+      {{ $t('Button.edit') }}
     </button>
   </div>
 </template>

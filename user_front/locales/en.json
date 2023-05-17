@@ -83,6 +83,20 @@
     "map": "layout plan(pdf,png,jpg only)"
   },
 
+  "RegistInfo":{
+    "return": "Return to Mypage",
+    "registAndEdit": "Group Registration and Editing Page",
+    "subrepresentative": "Subrepresentative",
+    "place": "Places",
+    "stage": "Stage",
+    "stageOption": "StageOption",
+    "power": "Power",
+    "item": "Item",
+    "employees": "Employees",
+    "food": "Food",
+    "purchase": "Purchase"
+  },
+
   "User":{
     "registRepresentative": "Representative Registration",
     "name": "name",
@@ -150,7 +164,7 @@
 
   "Subrep":{
     "registSubrepresentative": "Registration of subrepresentative",
-    "Subrepresentative": "Edit subrepresentative",
+    "editSubrepresentative": "Edit subrepresentative",
     "name": "name",
     "studentId": "student id",
     "department": "department",
@@ -167,6 +181,8 @@
     "second": "second choice",
     "third": "third choice",
     "free": "free description",
+    "hope1": "No.",
+    "hope2": "",
     "overlapPlace": "The place is duplicated",
     "eatingArea": "If you participate in the food sales, the place will be narrowed down"
   },
@@ -186,7 +202,7 @@
     "registPower": "Registration of power",
     "addPower": "Additional power",
     "deletePower": "Deletion power",
-    "eidtPower": "Edit power",
+    "editPower": "Edit power",
     "name": "product name",
     "maximum": "maximum rated power",
     "maker": "maker",
@@ -196,6 +212,7 @@
 
   "Employees":{
     "registEmployees": "Registration of employees",
+    "deleteEmployees": "Deletion of employee",
     "addEmployees": "Adding Employees",
     "editEmployees": "Employee editing",
     "name": "name",
@@ -234,7 +251,7 @@
     "date": "Date of purchase",
     "rowFood": "raw or not",
     "yes": "Raw food",
-    "no": "not raw",
+    "no": "Processed food",
     "of": "",
     "parchasePlace1": "Place",
     "parchasePlace2": "of purchase"

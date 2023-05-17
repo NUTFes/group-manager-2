@@ -33,7 +33,7 @@ const deletePower = async() => {
 </script>
 
 <template>
-  <Modal title="電力申請の削除">
+  <Modal :title="$t('Power.deletePower')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeDeletePower()" class="hover:text-black hover:opacity-75">✖</button>
@@ -41,8 +41,8 @@ const deletePower = async() => {
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
-        <RegistPageButton text="戻る" @click="closeDeletePower()"></RegistPageButton>
-        <RegistPageButton text="✓削除" @click="deletePower()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.return')" @click="closeDeletePower()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.delete')" @click="deletePower()"></RegistPageButton>
       </div>
     </template>
   </Modal>

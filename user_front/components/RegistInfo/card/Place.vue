@@ -43,15 +43,15 @@ const openEditPlace = () => {
   <div class="text-[#333] font-light tracking-widest">
     <RegistInfoWideCard>
       <template #body>
-        <div class="w-[15%] h-[90%] ml-8 text-3xl">
-          第{{ place.n }}希望
+        <div class="w-[13%] h-[90%] ml-8 text-3xl">
+          {{ $t('Place.hope1') }}{{ place.n }}{{ $t('Place.hope2') }}
         </div>
         <RegistInfoDivideBar />
         <div class="w-[40%] text-center text-4xl">
           {{ place.place }}
         </div>
-        <div class="w-[7%] h-[80%] text-base">追記：</div>
-          <div class="w-[30%] h-[80%] pr-1 break-normal">
+        <div class="w-[13%] h-[80%] text-base">{{ $t('Place.free') }}</div>
+          <div class="w-[25%] h-[80%] pr-1 break-normal">
             {{ place.remark }}
           </div>
       </template>

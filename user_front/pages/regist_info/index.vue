@@ -288,56 +288,67 @@ const rentalItemOverlap = computed(() => {
 </script>
 
 <template>
-  <Container :name="group?.name">
-    <template #tabs>
-      <ul class="flex">
-        <li @click="tab = 1">
-          <div :class="{ select: tab === 1 }" class="title">副代表申請</div>
-        </li>
-        <li v-if="groupCategoryId !== 3" @click="tab = 2">
-          <div :class="{ select: tab === 2 }" class="title">会場申請</div>
-        </li>
-        <li v-if="groupCategoryId === 3" @click="tab = 3">
-          <div :class="{ select: tab === 3 }" class="title">ステージ申請</div>
-        </li>
-        <li v-if="groupCategoryId === 3" @click="tab = 4">
-          <div :class="{ select: tab === 4 }" class="title">
-            ステージオプション申請
-          </div>
-        </li>
-        <li @click="tab = 5">
-          <div :class="{ select: tab === 5 }" class="title">電力申請</div>
-        </li>
-        <li @click="tab = 6">
-          <div :class="{ select: tab === 6 }" class="title">物品申請</div>
-        </li>
-        <li @click="tab = 7">
-          <div :class="{ select: tab === 7 }" class="title">従業員申請</div>
-        </li>
-        <li @click="tab = 8">
-          <div :class="{ select: tab === 8 }" class="title">食品申請</div>
-        </li>
-        <li @click="tab = 9">
-          <div :class="{ select: tab === 9 }" class="title">購入品申請</div>
-        </li>
-      </ul>
-    </template>
-    <template #body>
-      <div class="ml-12 pt-4">
-        <!-- 副代表申請  -->
-        <div v-show="tab === 1">
-          <RegistInfoCardSubRep
-            :group-id="group?.id"
-            :id="subRep?.id"
-            :name="subRep?.name"
-            :department="subRep?.department"
-            :department_id="subRep?.department_id"
-            :grade="subRep?.grade"
-            :grade_id="subRep?.grade_id"
-            :studentId="subRep?.student_id"
-            :email="subRep?.email"
-            :tel="subRep?.tel"
-            @reload-sub-rep="reload"
+<Container :name="group?.name">
+  <template #tabs>
+    <ul class="flex">
+      <li @click="tab = 1">
+        <div :class="{ select: tab === 1 }" class="title">{{ $t('RegistInfo.subrepresentative') }}</div>
+      </li>
+      <li v-if="groupCategoryId !== 3" @click="tab = 2">
+        <div :class="{ select: tab === 2 }" class="title">{{ $t('RegistInfo.place') }}</div>
+      </li>
+      <li v-if="groupCategoryId === 3" @click="tab = 3">
+        <div :class="{ select: tab === 3 }" class="title">{{ $t('RegistInfo.stage') }}</div>
+      </li>
+      <li v-if="groupCategoryId === 3" @click="tab = 4">
+        <div :class="{ select: tab === 4 }" class="title">{{ $t('RegistInfo.stageOption') }}</div>
+      </li>
+      <li @click="tab = 5">
+        <div :class="{ select: tab === 5 }" class="title">{{ $t('RegistInfo.power') }}</div>
+      </li>
+      <li @click="tab = 6">
+        <div :class="{ select: tab === 6 }" class="title">{{ $t('RegistInfo.item') }}</div>
+      </li>
+      <li @click="tab = 7">
+        <div :class="{ select: tab === 7 }" class="title">{{ $t('RegistInfo.employees') }}</div>
+      </li>
+      <li @click="tab = 8">
+        <div :class="{ select: tab === 8 }" class="title">{{ $t('RegistInfo.food') }}</div>
+      </li>
+      <li @click="tab = 9">
+        <div :class="{ select: tab === 9 }" class="title">{{ $t('RegistInfo.purchase') }}</div>
+      </li>
+    </ul>
+  </template>
+  <template #body>
+    <div class="ml-12 pt-4">
+      <!-- 副代表申請  -->
+      <div v-show="tab === 1">
+        <RegistInfoCardSubRep
+          :group-id="group?.id"
+          :id="subRep?.id"
+          :name="subRep?.name"
+          :department="subRep?.department"
+          :department_id="subRep?.department_id"
+          :grade="subRep?.grade"
+          :grade_id="subRep?.grade_id"
+          :studentId="subRep?.student_id"
+          :email="subRep?.email"
+          :tel="subRep?.tel"
+          @reload-sub-rep="reload"
+        />
+      </div>
+
+      <!-- 会場申請 group_category_id !== ３ -->
+      <div v-show="tab === 2">
+        <div class="mb-4">
+          <RegistInfoCardPlace
+            :id="placeOrder?.place_order.id"
+            :regist="placeOrder?.place_order"
+            :n="1"
+            :place="placeOrder?.first"
+            :remark="placeOrder?.remark"
+            @reload-place="reload"
           />
         </div>
 
@@ -552,6 +563,7 @@ const rentalItemOverlap = computed(() => {
           />
         </div>
       </div>
+    </div>
     </template>
   </Container>
 </template>

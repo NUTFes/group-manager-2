@@ -89,31 +89,31 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal title="販売食品の編集">
+  <Modal :title="$t('Food.editFood')">
     <template #close>
       <div class="flex justify-end">
         <button @click="editFoodClose()" class="hover:text-black hover:opacity-75">✖</button>
       </div>
     </template>
     <template #form>
-      <div class="text">料理名</div>
+      <div class="text">{{ $t('Food.name') }}</div>
       <input class="entry" v-model="newDishName" @change="handleDishName" :class="{'error_border': dishNameError}"/>
       <div class="error_msg">{{ dishNameError }}</div>
-      <div class="text">調理の有無</div>
+      <div class="text">{{ $t('Food.cook') }}</div>
       <select class="entry" v-model="newIsCooking">
-        <option value="" disabled selected>選択してください</option>
-        <option value="true">調理する</option>
-        <option value="false">調理しない</option>
+        <option value="" disabled selected>{{ $t('Food.select') }}</option>
+        <option value="true">{{ $t('Food.yes') }}</option>
+        <option value="false">{{ $t('Food.no') }}</option>
       </select>
-      <div class="text">1日目の販売予定数</div>
+      <div class="text">{{ $t('Food.numberFirstDay') }}</div>
       <input type="number" class="entry" v-model="newNumFirstDay" @change="handleNumFirstDay" :class="{'error_border': numFirstDayError}"/>
       <div class="error_msg">{{ numFirstDayError }}</div>
-      <div class="text">2日目の販売予定数</div>
+      <div class="text">{{ $t('Food.numberSecondDay') }}</div>
       <input type="number" class="entry" v-model="newNumSecondDay" @change="handleNumSecondDay" :class="{'error_border': numSecondDayError}"/>
       <div class="error_msg">{{ numSecondDayError }}</div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()" />
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editFood()" />
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()" />
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editFood()" />
       </div>
     </template>
   </Modal>

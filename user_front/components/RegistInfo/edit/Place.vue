@@ -142,7 +142,7 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal title="会場申請の編集">
+  <Modal :title="$t('Place.editPlace')">
     <template #close>
       <div class="flex justify-end">
         <button
@@ -154,45 +154,46 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <p v-if="groupCategoryId === 1" class="text-rose-600 text-sm text-center my-2">
-        {{ $t("Place.eatingArea") }}
-      </p>
-      <div class="text">第1希望</div>
-      <select
-        class="entry"
-        v-model="newFirst"
-        @change="handleFirstPlace"
-        :class="{ error_border: firstPlaceError }"
-      >
-        <option v-for="place in placeList" :value="place.id" :key="place.id">
+      <div class="text">{{ $t('Place.first') }}</div>
+      <select class="entry" v-model="newFirst" @change="handleFirstPlace" :class="{'error_border': firstPlaceError}">
+        <option
+          v-for="place in placeList"
+          :value="place.id"
+          :key="place.id"
+        >
           {{ place.name }}
         </option>
       </select>
       <div class="error_msg">{{ firstPlaceError }}</div>
-      <div class="text">第2希望</div>
-      <select
-        class="entry"
-        v-model="newSecond"
-        @change="handleSecondPlace"
-        :class="{ error_border: secondPlaceError }"
-      >
-        <option v-for="place in placeList" :value="place.id" :key="place.id">
+      <div class="text">{{ $t('Place.second') }}</div>
+      <select class="entry" v-model="newSecond" @change="handleSecondPlace" :class="{'error_border' :secondPlaceError}">
+        <option
+          v-for="place in placeList"
+          :value="place.id"
+          :key="place.id"
+        >
           {{ place.name }}
         </option>
       </select>
       <div class="error_msg">{{ secondPlaceError }}</div>
-      <div class="text">第3希望</div>
-      <select
-        class="entry"
-        v-model="newThird"
-        @change="handleThirdPlace"
-        :class="{ error_border: thirdPlaceError }"
-      >
-        <option v-for="place in placeList" :value="place.id" :key="place.id">
+      <div class="text">{{ $t('Place.third') }}</div>
+      <select class="entry" v-model="newThird" @change="handleThirdPlace" :class="{'error_border' :thirdPlaceError}">
+        <option
+          v-for="place in placeList"
+          :value="place.id"
+          :key="place.id"
+        >
           {{ place.name }}
         </option>
       </select>
       <div class="error_msg">{{ thirdPlaceError }}</div>
+      <div class="text">{{ $t('Place.free') }}</div>
+      <textarea class="entry" v-model="newRemark" @change="handleRemark" :class="{'error_border': remark}"/>
+      <div class="error_msg">{{ remarkError }}</div>
+      <div class="flex justify-between mt-8 mx-8">
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editPlace()"></RegistPageButton>
+      </div>
       <div class="text">追記することがあればこちらにお書きください</div>
       <textarea class="entry" v-model="newRemark" />
       <p v-if="isOverlapPlace" class="error_msg">

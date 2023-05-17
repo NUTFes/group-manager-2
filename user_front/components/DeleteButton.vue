@@ -4,8 +4,8 @@
 <template>
   <div>
     <button class="btn">
-      削除
-      </button>
+      {{ $t('Button.delete') }}
+    </button>
   </div>
 </template>
 
