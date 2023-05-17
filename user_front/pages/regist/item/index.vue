@@ -33,6 +33,8 @@ const router = useRouter();
 const insideRentableItemList = ref<ItemList[]>([]);
 const outsideRentableItemList = ref<ItemList[]>([]);
 const formCount = ref(1);
+const itemList = ref<ItemList[]>([]);
+const isOverlapItem = ref(false);
 
 const state = reactive({
   groupId: 0,
@@ -108,6 +110,13 @@ const registerItem = async () => {
       alert("貸し出し可能個数を超過している物品があるので修正してください。");
       return;
     }
+    const uniqueRentalItems = new Set();
+    const rentalItemId = registerParams[i].rentalItemId;
+    if (uniqueRentalItems.has(rentalItemId)) {
+      isOverlapItem.value = true;
+      return;
+    }
+    uniqueRentalItems.add(rentalItemId);
   }
 
   for (let i = 0; i < formCount.value; i++) {
@@ -272,6 +281,9 @@ const updateSelectedLocation = (event: Event) => {
           </div>
         </div>
       </Card>
+      <p v-if="isOverlapItem" class="text-rose-600">
+        {{ $t("Item.overlapItem") }}
+      </p>
       <Row>
         <RegistPageButton
           @click="increment"

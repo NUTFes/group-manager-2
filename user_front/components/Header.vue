@@ -23,12 +23,17 @@ const logout = () => {
   },
 );
 }
+
+const backHome = () => {
+  router.push("/")
+}
+
 </script>
 
 <template>
   <div class="header">
     <div class="header-content">
-      <button class="header-title">{{ $t('Header.header') }}</button>
+      <button class="header-title" @click="backHome">{{ $t('Header.header') }} </button>
       <form class="flex items-center w-40">
         <label for="locale-select">{{ $t('language') }}： </label>
         <select class="w-auto m-auto ml-0 h-auto border-none" id="locale-select" v-model="$i18n.locale">

@@ -153,7 +153,7 @@ const reset = () => {
       </select>
       <div class="error_msg">{{ loudSoundError }}</div>
       <div class="text">ステージ内容</div>
-      <textarea class="entry" v-model="newStageContent" @chage="handleStageContent" :class="{ 'error_border': stageContentError }"/>
+      <textarea class="entry" v-model="newStageContent" @change="handleStageContent" :class="{ 'error_border': stageContentError }"/>
       <div class="error_msg">{{ stageContentError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
