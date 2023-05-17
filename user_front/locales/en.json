@@ -166,7 +166,9 @@
     "first": "first choice",
     "second": "second choice",
     "third": "third choice",
-    "free": "free description"
+    "free": "free description",
+    "overlapPlace": "The place is duplicated",
+    "eatingArea": "If you participate in the food sales, the place will be narrowed down"
   },
 
   "Item":{
@@ -176,7 +178,8 @@
     "editItem": "Editing loaned items",
     "item": "Necessary items",
     "number": "number of pieces required",
-    "count": ""
+    "count": "",
+    "overlapItem": "The item is duplicated"
   },
 
   "Power":{

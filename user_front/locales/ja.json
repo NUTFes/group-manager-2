@@ -179,7 +179,9 @@
     "first": "第一希望",
     "second": "第二希望",
     "third": "第三希望",
-    "free": "備考"
+    "free": "備考",
+    "overlapPlace": "場所が重複しています",
+    "eatingArea": "模擬店(食品販売) での参加をする場合、実施場所が絞られます"
   },
 
   "Item":{
@@ -189,7 +191,8 @@
     "editItem": "貸出物品の編集",
     "item": "貸出物品",
     "number": "数量",
-    "count": "個"
+    "count": "個",
+    "overlapItem": "貸出物品が重複しています"
   },
 
   "Power":{
