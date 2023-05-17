@@ -73,22 +73,22 @@ const registerCategory = async () => {
   <div>
     <div class="mx-[20%] my-[5%]">
       <Card>
-        <h1 class="text-3xl">Registration of organization</h1>
+        <h1 class="text-3xl">{{ $t('Group.registGroup') }}</h1>
         <Card border="none" align="end">
           <div class="flex">
-            <p class="label">group name</p>
+            <p class="label">{{ $t('Group.groupName') }}</p>
             <input class="form" v-model="registerParams.groupName" @change="handleChangeGroupName" :class="{ 'error-border': groupNameError}">
           </div>
           <div class="error-msg">{{ groupNameError }}</div>
 
           <div class="flex">
-            <p class="label">shop name</p>
+            <p class="label">{{ $t('Group.shopName') }}</p>
             <input class="form" v-model="registerParams.projectName" @change="handleChangeProjectName" :class="{ 'error-border': projectNameError }">
           </div>
           <div class="error-msg">{{ projectNameError }}</div>
 
           <div class="flex">
-            <p class="label">select categories</p>
+            <p class="label">{{ $t('Group.category') }}</p>
             <select style="width:180px;" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
               <option v-for="category in groupCategoryList" :value="category.id" :key="category.id">{{ category.name }}
@@ -98,14 +98,14 @@ const registerCategory = async () => {
           <div class="error-msg">{{ categoryError }}</div>
 
           <div class="flex">
-            <p class="label">Activity Details</p>
+            <p class="label">{{ $t('Group.activityDetails') }}</p>
             <input class="form" v-model="registerParams.activity" @change="handleChangeActivity" :class="{ 'error-border': activityError }">
           </div>
           <div class="error-msg">{{ activityError }}</div>
         </Card>
         <Row>
-          <RegistPageButton text="reset" @click="reset"></RegistPageButton>
-          <RegistPageButton :disabled='!meta.valid || isSubmitting' text="register" @click="registerCategory"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
     </div>

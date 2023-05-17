@@ -38,7 +38,7 @@ const emits = defineEmits<Emits>()
 const { meta, isSubmitting } = useForm({
   validationSchema: stageSchema,
   initialValues: {
-    fesDateId: props.fesDateId,
+    fesDate: props.fesDateId,
     first: props.stageFirst,
     second: props.stageSecond,
     performanceTime: props.useTimeInterval,
@@ -91,7 +91,6 @@ onMounted(async () => {
   sunnyStageList.value = sunnyStage.data
   stageList.value = props.isSunny ? sunnyStageList.value : rainStageList.value
 })
-
 
 const editStage = async () => {
   await useFetch(config.APIURL + "/stage_orders/" + props.id, {

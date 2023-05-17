@@ -49,7 +49,7 @@
   },
 
   "Mypage":{
-    "toMypage": "Go to Mypage",
+    "goToMypage": "Go to Mypage",
     "userName": "",
     "greeting1": "Thank you very much for participating in NUTFES.",
     "greeting2": "You can review and change your registration information. Please be sure to meet the deadlines.",
@@ -60,7 +60,9 @@
     "editPassword": "Password Change",
     "regitstPR": "public relations Registration",
     "regitstAnnouncemant": "Announcement text registration",
-    "regitstVenueMap": "Venue MAP Registration"
+    "regitstVenueMap": "Venue MAP Registration",
+    "notice": "Notice",
+    "updateDate": "update date"
   },
 
   "PR":{
@@ -180,7 +182,9 @@
     "third": "third choice",
     "free": "free description",
     "hope1": "No.",
-    "hope2": ""
+    "hope2": "",
+    "overlapPlace": "The place is duplicated",
+    "eatingArea": "If you participate in the food sales, the place will be narrowed down"
   },
 
   "Item":{
@@ -190,7 +194,8 @@
     "editItem": "Editing loaned items",
     "item": "Necessary items",
     "number": "number of pieces required",
-    "count": ""
+    "count": "",
+    "overlapItem": "The item is duplicated"
   },
 
   "Power":{
@@ -238,7 +243,7 @@
     "addPurchase": "Add purchased Products",
     "deletePurchase": "Deletion of purchased Products",
     "editPurchase": "Edit purchased Products",
-    "parchase": "purchased Products",
+    "purchase": "purchased Products",
     "target": "Name of food sold",
     "select": "Please select",
     "name": "Material name",

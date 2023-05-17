@@ -96,13 +96,13 @@ const destroy = () => {
 
 <template>
   <div class="regidt-card">
-    <NuxtLink to="/mypage" class="regist-back-link">マイページへ</NuxtLink>
+    <NuxtLink to="/mypage" class="regist-back-link">{{ $t('Mypage.goToMypage') }}</NuxtLink>
     <div class="reist-title-content">
-      <div class="regist-title">参加団体の編集</div>
+      <div class="regist-title">{{ $t('Group.editGroup') }}</div>
     </div>
     <div class="regist-card-content">
       <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">団体名</div>
+        <div class="regist-card-content-question-label">{{ $t('Group.groupName') }}</div>
         <input
           class="input"
           id="group"
@@ -111,7 +111,7 @@ const destroy = () => {
         />
       </div>
       <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">企画名</div>
+        <div class="regist-card-content-question-label">{{ $t('Group.shopName') }}</div>
         <input
           class="input"
           id="project"
@@ -120,7 +120,7 @@ const destroy = () => {
         />
       </div>
       <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">カテゴリ</div>
+        <div class="regist-card-content-question-label">{{ $t('Group.category') }}</div>
         <select
           class="input"
           id="category"
@@ -136,7 +136,7 @@ const destroy = () => {
         </select>
       </div>
       <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">活動内容</div>
+        <div class="regist-card-content-question-label">{{ $t('Group.activityDetails') }}</div>
         <input
           class="input"
           id="activity"
@@ -146,11 +146,11 @@ const destroy = () => {
       </div>
     </div>
     <div class="regist-button">
-      <button @click="register" class="regist-submit-button">編集する</button>
+      <button @click="register" class="regist-submit-button">{{ $t('Button.edit') }}</button>
     </div>
     <div class="delete-button">
       <button @click="destroy" class="regist-submit-button">
-        参加団体を削除する
+        {{ $t('Button.delete') }}
       </button>
     </div>
   </div>
@@ -217,7 +217,7 @@ const destroy = () => {
   @apply
     text-lg
     text-left
-    mb-[1%];
+    mt-[1%];
 }
 
 .input {

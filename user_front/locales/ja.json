@@ -52,7 +52,7 @@
     "goToMypage": "マイページへ",
     "userName": "様",
     "greeting1": "技大祭に参加していただき誠にありがとうございます。",
-    "greeting2": "登録情報の確認や変更が行えます。入力締め切りはお守りいただくよう、よろしくお願いします。",
+    "greeting2": "登録情報の確認や変更が行えます。入力締め切りは守りいただくよう、よろしくお願いします。",
     "operations": "各種操作",
     "check": "登録情報の確認はこちら",
     "editGroup": "参加団体情報の編集",
@@ -60,7 +60,9 @@
     "editPassword": "パスワード変更",
     "regitstPR": "PR登録",
     "regitstAnnouncemant": "アナウンス文登録",
-    "regitstVenueMap": "会場配置図登録"
+    "regitstVenueMap": "会場配置図登録",
+    "notice": "お知らせ",
+    "updateDate": "更新日"
   },
 
   "PR":{
@@ -104,7 +106,7 @@
     "mail": "メールアドレス",
     "tel": "電話番号",
     "password": "パスワード",
-    "passwordConfirm": "パスワード（確認用）",
+    "passwordConfirm": "パスワード(確認用)",
     "userInfo": "ユーザ情報",
     "colon": "：",
     "editUser": "ユーザ情報の編集",
@@ -113,7 +115,7 @@
     "editTel": "半角数字で１０,１１桁の番号",
     "resetPassword": "パスワード再設定",
     "newPassword": "新しいパスワードを入力",
-    "newPasswordConfirm": "新しいパスワードの再入力（確認用）"
+    "newPasswordConfirm": "新しいパスワードの再入力(確認用)"
   },
 
   "Group":{
@@ -122,7 +124,7 @@
     "groupName": "団体名",
     "shopName": "企画名",
     "category": "参加形式",
-    "ActivityDetails": "活動内容"
+    "activityDetails": "活動内容"
   },
 
   "Stage":{
@@ -180,7 +182,9 @@
     "third": "第三希望",
     "free": "備考",
     "hope1": "第",
-    "hope2": "希望"
+    "hope2": "希望",
+    "overlapPlace": "場所が重複しています",
+    "eatingArea": "模擬店(食品販売) での参加をする場合、実施場所が絞られます"
   },
 
   "Item":{
@@ -190,7 +194,8 @@
     "editItem": "貸出物品の編集",
     "item": "貸出物品",
     "number": "数量",
-    "count": "個"
+    "count": "個",
+    "overlapItem": "貸出物品が重複しています"
   },
 
   "Power":{
@@ -238,7 +243,7 @@
     "addPurchase": "購入品の追加",
     "deletePurchase": "購入品の削除",
     "editPurchase": "購入品の編集",
-    "parchase": "購入品",
+    "purchase": "購入品",
     "target": "販売食品名",
     "select": "選択してください",
     "name": "購入材料名",

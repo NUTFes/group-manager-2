@@ -1,177 +1,175 @@
 <script lang="ts" setup>
-import axios from 'axios';
-import { Group } from '~~/types';
+import axios from "axios";
+import { Group } from "~~/types";
+import Rentalorder from "@/components/EditModal/RentalOrder.vue";
 
 interface RegistInfo {
-  sub_rep: SubRep[]
-  place_orders: RegistPlace[]
-  power_orders: PowerOrder[]
-  rental_orders: RentalOrder[]
-  group: Group
+  sub_rep: SubRep[];
+  place_orders: RegistPlace[];
+  power_orders: PowerOrder[];
+  rental_orders: RentalOrder[];
+  group: Group;
 }
 
 interface Stage {
-  stage_first: string
-  stage_second: string
-  date: string
-  use_time_interval: string
-  prepare_time_interval: string
-  cleanup_time_interval: string
-  stage_order:{
-    id: number
-    is_sunny: boolean
-    fes_date_id: number
-    stage_first: number
-    stage_second: number
-  }
+  stage_first: string;
+  stage_second: string;
+  date: string;
+  use_time_interval: string;
+  prepare_time_interval: string;
+  cleanup_time_interval: string;
+  stage_order: {
+    id: number;
+    is_sunny: boolean;
+    fes_date_id: number;
+    stage_first: number;
+    stage_second: number;
+  };
 }
 
 interface StageOrder {
   stage_order: {
-    stage_order: Stage
-  }
+    stage_order: Stage;
+  };
 }
 
 interface StageOption {
-  id: number
-  own_equipment: boolean
-  bgm: boolean
-  camera_permission: boolean
-  loud_sound: boolean
-  stage_content: string
+  id: number;
+  own_equipment: boolean;
+  bgm: boolean;
+  camera_permission: boolean;
+  loud_sound: boolean;
+  stage_content: string;
 }
 
 interface Place {
-  id: number
-  first: number
-  second: number
-  third: number
+  id: number;
+  first: number;
+  second: number;
+  third: number;
 }
 
 interface PlaceOrderList {
-  first: string
-  second: string
-  third: string
+  first: string;
+  second: string;
+  third: string;
 }
 
 interface RegistPlace {
-  place_order: Place
-  n: number
-  regist: PlaceOrderList
-  first: string
-  second: string
-  third: string
-  remark: string
+  place_order: Place;
+  n: number;
+  regist: PlaceOrderList;
+  first: string;
+  second: string;
+  third: string;
+  remark: string;
 }
 
 interface RentalItem {
-  name: string
-  num: number
-  rental_item: RegistItem
+  name: string;
+  num: number;
+  rental_item: RegistItem;
 }
 
 interface RegistItem {
-  id: number
-  group_id: number
-  rental_item_id: number
-  num: number
+  id: number;
+  group_id: number;
+  rental_item_id: number;
+  num: number;
 }
 
 interface RentalOrder {
-  rental_item: {
-    rental_item: RentalItem
-  }
+  rental_item: RentalItem;
 }
 
 interface PowerItem {
-  id: number
-  item: string
-  power: number
-  manufacturer: string
-  model: string
-  item_url: string
+  id: number;
+  item: string;
+  power: number;
+  manufacturer: string;
+  model: string;
+  item_url: string;
 }
 
 interface PowerOrder {
-  power_order: {
-    power_order: PowerItem;
-  }
+  power_order: PowerItem;
 }
 
 interface Employee {
-  employee : {
+  employee: {
     employee: {
-      id: number
-      name: string
-      student_id: number
-    }
-  }
+      id: number;
+      name: string;
+      student_id: number;
+    };
+  };
 }
 
 interface Purchase {
   purchase_list: {
-    purchase_list: PurchaseList
-  }
+    purchase_list: PurchaseList;
+  };
 }
 
 interface PurchaseList {
-  id: number
-  date_id: number
-  day: string
-  days_num: number
-  food_product_id: number
-  food_product: string
-  is_fresh: boolean
-  items: string
-  shop_id: number
-  shop: string
-  year: number
+  id: number;
+  date_id: number;
+  day: string;
+  days_num: number;
+  food_product_id: number;
+  food_product: string;
+  is_fresh: boolean;
+  items: string;
+  shop_id: number;
+  shop: string;
+  year: number;
 }
 
 interface Food {
   food_product: {
     food_product: {
-      id: number
-      name: string
-      is_cooking: boolean
-      first_day_num: number
-      second_day_num: number
-      setting: boolean
-    },
-    purchase_lists: Purchase
-  }
+      id: number;
+      name: string;
+      is_cooking: boolean;
+      first_day_num: number;
+      second_day_num: number;
+      setting: boolean;
+    };
+    purchase_lists: Purchase;
+  };
 }
 
 interface SubRep {
-  id: number
-  name: string
-  department: string
-  department_id: number
-  grade: string
-  grade_id: number
-  student_id: number
-  email: string
-  tel: string
+  id: number;
+  name: string;
+  department: string;
+  department_id: number;
+  grade: string;
+  grade_id: number;
+  student_id: number;
+  email: string;
+  tel: string;
 }
 
-const registInfo = ref<RegistInfo | []>([])
-const group = ref<Group>()
-const subRep = ref<SubRep>()
-const rentalOrder = ref<RentalOrder>()
-const placeOrder = ref<RegistPlace>()
-const powerOrder = ref<PowerOrder>()
-const stageOrder = ref<StageOrder>()
-const stageOption = ref<StageOption>()
-const employee = ref<Employee>()
-const food = ref<Food>()
+const registInfo = ref<RegistInfo | []>([]);
+const group = ref<Group>();
+const subRep = ref<SubRep>();
+const rentalOrders = ref<RentalOrder[]>();
+const placeOrder = ref<RegistPlace>();
+const powerOrders = ref<PowerOrder[]>();
+const stageOrder = ref<StageOrder>();
+const stageOption = ref<StageOption>();
+const employee = ref<Employee>();
+const food = ref<Food>();
 // const regist = ref<RegistItem>()
 // const setting = ref("")
-const groupCategoryId = ref<Group['group_category_id']>()
+
+const groupCategoryId = ref<Group["group_category_id"]>();
 
 const selectTab = ref<number>(1);
 const tab = ref<number>(selectTab.value);
 
-const config = useRuntimeConfig()
+const config = useRuntimeConfig();
 const url = config.APIURL + "/api/v1/current_user/current_regist_info";
 onMounted(() => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -189,20 +187,20 @@ onMounted(() => {
       registInfo.value = response.data.data[0];
       group.value = response.data.data[0].group;
       subRep.value = response.data.data[0].sub_rep;
-      rentalOrder.value = response.data.data[0].rental_orders;
+      rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
-      powerOrder.value = response.data.data[0].power_orders;
+      powerOrders.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
       employee.value = response.data.data[0].employees;
       food.value = response.data.data[0].food_products;
-      groupCategoryId.value = response.data.data[0].group.group_category_id
+      groupCategoryId.value = response.data.data[0].group.group_category_id;
     });
   // const settingurl = config.APIURL + "/user_page_settings";
   // axios.get(settingurl).then((response) => {
   //   setting.value = response.data.data[0];
   // });
-})
+});
 
 const reload = () => {
   axios
@@ -218,39 +216,75 @@ const reload = () => {
       registInfo.value = response.data.data[0];
       employee.value = response.data.data[0].employees;
       subRep.value = response.data.data[0].sub_rep;
-      rentalOrder.value = response.data.data[0].rental_orders;
+      rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
-      powerOrder.value = response.data.data[0].power_orders;
+      powerOrders.value = response.data.data[0].power_orders;
       stageOrder.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
       food.value = response.data.data[0].food_products;
     });
-}
+};
 
-const isAddItem = ref<boolean>(false)
+const isAddItem = ref<boolean>(false);
 const openAddItem = () => {
-  isAddItem.value = true
-}
+  isAddItem.value = true;
+};
 
-const isAddPower = ref<boolean>(false)
+const isAddPower = ref<boolean>(false);
 const openAddPower = () => {
-  isAddPower.value = true
-}
+  isAddPower.value = true;
+};
 
-const isAddEmployee = ref<boolean>(false)
+const isAddEmployee = ref<boolean>(false);
 const openAddEmployee = () => {
-  isAddEmployee.value = true
-}
+  isAddEmployee.value = true;
+};
 
-const isAddFood = ref<boolean>(false)
+const isAddFood = ref<boolean>(false);
 const openAddFood = () => {
-  isAddFood.value = true
-}
+  isAddFood.value = true;
+};
 
-const isAddPurchase = ref<boolean>(false)
+const isAddPurchase = ref<boolean>(false);
 const openAddPurchase = () => {
-  isAddPurchase.value = true
-}
+  isAddPurchase.value = true;
+};
+
+const totalPower = computed(() => {
+  if (!powerOrders.value) return 0;
+  return powerOrders.value.reduce(
+    (sum, powerOrder) => sum + powerOrder.power_order.power,
+    0
+  );
+});
+
+const isOverPower = computed(() => {
+  if (!powerOrders.value) return false;
+  return totalPower.value > 1500;
+});
+
+const isRentalItemOverlap = computed(() => {
+  if (!rentalOrders.value) return false;
+  const rentalOrder = rentalOrders.value.map((rentalOrder) => {
+    return rentalOrder.rental_item.name;
+  });
+  const rentalOrderSet = new Set(rentalOrder);
+  return rentalOrder.length !== rentalOrderSet.size;
+});
+
+// rentalOrdersで被っているものの名前を取得
+const rentalItemOverlap = computed(() => {
+  if (!rentalOrders.value) return '';
+  const rentalOrder = rentalOrders.value.map((rentalOrder) => {
+    return rentalOrder.rental_item.name;
+  });
+  const rentalOrderSet = new Set(rentalOrder);
+  const rentalOrderArray = Array.from(rentalOrderSet);
+  const rentalOrderArray2 = rentalOrderArray.filter((rentalOrder) => {
+    return rentalOrderSet.has(rentalOrder);
+  });
+  return rentalOrderArray2.join(' / ');
+});
 </script>
 
 <template>
@@ -317,181 +351,226 @@ const openAddPurchase = () => {
             @reload-place="reload"
           />
         </div>
-        <div class="my-4">
-          <RegistInfoCardPlace
-            :id="placeOrder?.place_order.id"
-            :regist="placeOrder?.place_order"
-            :n="2"
-            :place="placeOrder?.second"
-            :remark="placeOrder?.remark"
-            @reload-place="reload"
-          />
+
+        <!-- 会場申請 group_category_id !== ３ -->
+        <div v-show="tab === 2">
+          <div class="mb-4">
+            <RegistInfoCardPlace
+              :id="placeOrder?.place_order.id"
+              :regist="placeOrder?.place_order"
+              :n="1"
+              :place="placeOrder?.first"
+              :remark="placeOrder?.remark"
+              @reload-place="reload"
+            />
+          </div>
+          <div class="my-4">
+            <RegistInfoCardPlace
+              :id="placeOrder?.place_order.id"
+              :regist="placeOrder?.place_order"
+              :n="2"
+              :place="placeOrder?.second"
+              :remark="placeOrder?.remark"
+              @reload-place="reload"
+            />
+          </div>
+          <div class="my-4">
+            <RegistInfoCardPlace
+              :id="placeOrder?.place_order.id"
+              :regist="placeOrder?.place_order"
+              :n="3"
+              :place="placeOrder?.third"
+              :remark="placeOrder?.remark"
+              @reload-place="reload"
+            />
+          </div>
         </div>
-        <div class="my-4">
-          <RegistInfoCardPlace
-            :id="placeOrder?.place_order.id"
-            :regist="placeOrder?.place_order"
-            :n="3"
-            :place="placeOrder?.third"
-            :remark="placeOrder?.remark"
-            @reload-place="reload"
-          />
-        </div>
-      </div>
 
-      <!-- ステージ申請 group_category_id === ３ -->
-      <div class="mb-8" v-show="tab === 3" v-for="s in stageOrder" :key="s.toString()">
-        <RegistInfoCardStage
-          :group-id="group?.id"
-          :id="s.stage_order.stage_order.id"
-          :date="s.stage_order.date"
-          :fes-date-id="s.stage_order.stage_order.fes_date_id"
-          :first-stage="s.stage_order.stage_first"
-          :first-id="s.stage_order.stage_order.stage_first"
-          :second-stage="s.stage_order.stage_second"
-          :second-id="s.stage_order.stage_order.stage_second"
-          :is-sunny="s.stage_order.stage_order.is_sunny"
-          :cleanup-time-interval="s.stage_order.cleanup_time_interval"
-          :use-time-interval="s.stage_order.use_time_interval"
-          :prepare-time-interval="s.stage_order.prepare_time_interval"
-          @reload-stage="reload"
-        />
-      </div>
-
-      <!-- ステージオプション申請 group_category_id === ３ -->
-      <div v-if="groupCategoryId === 3" v-show="tab === 4">
-        <RegistInfoCardStageOption
-          :group-id="group?.id"
-          :id="stageOption?.id"
-          :own-equipment="stageOption?.own_equipment"
-          :bgm="stageOption?.bgm"
-          :camera-permission="stageOption?.camera_permission"
-          :loud-sound="stageOption?.loud_sound"
-          :stage-content="stageOption?.stage_content"
-          @reload-stage-option="reload"
-        />
-      </div>
-
-      <!-- 電力申請 -->
-      <div v-show="tab === 5">
-        <div class="mb-8" v-for="p in powerOrder" :key="p.toString()">
-          <RegistInfoCardPower
+        <!-- ステージ申請 group_category_id === ３ -->
+        <div
+          class="mb-8"
+          v-show="tab === 3"
+          v-for="s in stageOrder"
+          :key="s.toString()"
+        >
+          <RegistInfoCardStage
             :group-id="group?.id"
-            :id="p.power_order.id"
-            :item="p.power_order.item"
-            :power="p.power_order.power"
-            :manufacturer="p.power_order.manufacturer"
-            :model="p.power_order.model"
-            :url="p.power_order.item_url"
+            :id="s.stage_order.stage_order.id"
+            :date="s.stage_order.date"
+            :fes-date-id="s.stage_order.stage_order.fes_date_id"
+            :first-stage="s.stage_order.stage_first"
+            :first-id="s.stage_order.stage_order.stage_first"
+            :second-stage="s.stage_order.stage_second"
+            :second-id="s.stage_order.stage_order.stage_second"
+            :is-sunny="s.stage_order.stage_order.is_sunny"
+            :cleanup-time-interval="s.stage_order.cleanup_time_interval"
+            :use-time-interval="s.stage_order.use_time_interval"
+            :prepare-time-interval="s.stage_order.prepare_time_interval"
+            @reload-stage="reload"
+          />
+        </div>
+
+        <!-- ステージオプション申請 group_category_id === ３ -->
+        <div v-if="groupCategoryId === 3" v-show="tab === 4">
+          <RegistInfoCardStageOption
+            :group-id="group?.id"
+            :id="stageOption?.id"
+            :own-equipment="stageOption?.own_equipment"
+            :bgm="stageOption?.bgm"
+            :camera-permission="stageOption?.camera_permission"
+            :loud-sound="stageOption?.loud_sound"
+            :stage-content="stageOption?.stage_content"
+            @reload-stage-option="reload"
+          />
+        </div>
+
+        <!-- 電力申請 -->
+        <div v-show="tab === 5">
+          <!-- 電力の合計を計算して表示する -->
+          <div class="mb-4">
+            <div class="text-xl flex gap-3">
+              <p>電力の合計</p>
+              <p>{{ totalPower }} [W]</p>
+            </div>
+            <p v-if="isOverPower" class="text-red-500">
+              電力の合計が<span class="font-bold">1500[W]</span>を超えています
+            </p>
+            <p v-else class="text-gray-500">
+              電力の合計は<span class="font-bold">1500[W]</span>に収めてください
+            </p>
+          </div>
+          <div class="mb-8" v-for="p in powerOrders" :key="p.toString()">
+            <RegistInfoCardPower
+              :group-id="group?.id"
+              :id="p.power_order.id"
+              :item="p.power_order.item"
+              :power="p.power_order.power"
+              :manufacturer="p.power_order.manufacturer"
+              :model="p.power_order.model"
+              :url="p.power_order.item_url"
+              @reload-power="reload"
+            />
+          </div>
+          <Button
+            v-if="!isOverPower"
+            class="text-right"
+            @click="openAddPower()"
+          />
+          <RegistInfoAddPower
+            v-if="isAddPower"
+            v-model:add-power="isAddPower"
+            :group-id="group?.id"
             @reload-power="reload"
           />
         </div>
-        <Button class="text-right" @click="openAddPower()"/>
-        <RegistInfoAddPower
-          v-if="isAddPower"
-          v-model:add-power="isAddPower"
-          :group-id="group?.id"
-          @reload-power="reload"
-        />
-      </div>
 
-      <!-- 物品申請 -->
-      <div v-show="tab === 6" class="flex flex-wrap">
-        <div v-for="item in rentalOrder" :key="item.toString()">
-          <RegistInfoCardItem
+        <!-- 物品申請 -->
+        <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <div v-if="isRentalItemOverlap" class="text-red-500">
+            <p>{{rentalItemOverlap}} が重複しています</p>
+            <p>削除してください</p>
+          </div>
+          <div class="flex">
+            <div v-for="item in rentalOrders" :key="item.toString()">
+              <RegistInfoCardItem
+                :group-id="group?.id"
+                :regist="item.rental_item.rental_item"
+                :name="item.rental_item.name"
+                :num="item.rental_item.num"
+                @reload-item="reload"
+              />
+            </div>
+          </div>
+          <Button
+            v-if="!isRentalItemOverlap"
+            class="ml-auto"
+            @click="openAddItem()"
+          />
+          <RegistInfoAddItem
+            v-if="isAddItem"
+            v-model:add-item="isAddItem"
             :group-id="group?.id"
-            :regist="item.rental_item.rental_item"
-            :name="item.rental_item.name"
-            :num="item.rental_item.num"
             @reload-item="reload"
           />
         </div>
-        <Button class="ml-auto" @click="openAddItem()"/>
-        <RegistInfoAddItem
-          v-if="isAddItem"
-          v-model:add-item="isAddItem"
-          :group-id="group?.id"
-          @reload-item="reload"
-        />
-      </div>
 
-      <!-- 従業員申請 -->
-      <div v-show="tab === 7" class="flex flex-wrap">
-        <div v-for="e in employee" :key="e.toString()">
-          <RegistInfoCardEmployee
+        <!-- 従業員申請 -->
+        <div v-show="tab === 7" class="flex flex-wrap">
+          <div v-for="e in employee" :key="e.toString()">
+            <RegistInfoCardEmployee
+              :group-id="group?.id"
+              :id="e.employee.id"
+              :name="e.employee.name"
+              :student-id="e.employee.student_id"
+              @reload-employee="reload"
+            />
+          </div>
+          <Button class="ml-auto" @click="openAddEmployee()" />
+          <RegistInfoAddEmployee
+            v-if="isAddEmployee"
+            v-model:add-employee="isAddEmployee"
             :group-id="group?.id"
-            :id="e.employee.id"
-            :name="e.employee.name"
-            :student-id="e.employee.student_id"
             @reload-employee="reload"
           />
         </div>
-        <Button class="ml-auto" @click="openAddEmployee()"/>
-        <RegistInfoAddEmployee
-          v-if="isAddEmployee"
-          v-model:add-employee="isAddEmployee"
-          :group-id="group?.id"
-          @reload-employee="reload"
-        />
-      </div>
 
-      <!-- 販売食品申請 -->
-      <div v-show="tab === 8">
-        <div class="mb-8" v-for="f in food" :key="f.toString()">
-          <RegistInfoCardFood
-            :group-id="group?.id"
-            :id="f.food_product.id"
-            :name="f.food_product.name"
-            :is-cooking="f.food_product.is_cooking"
-            :firstNum="f.food_product.first_day_num"
-            :secondNum="f.food_product.second_day_num"
-            @reload-food="reload"
-          />
-        </div>
-          <Button class="text-right" @click="openAddFood()"/>
+        <!-- 販売食品申請 -->
+        <div v-show="tab === 8">
+          <div class="mb-8" v-for="f in food" :key="f.toString()">
+            <RegistInfoCardFood
+              :group-id="group?.id"
+              :id="f.food_product.id"
+              :name="f.food_product.name"
+              :is-cooking="f.food_product.is_cooking"
+              :firstNum="f.food_product.first_day_num"
+              :secondNum="f.food_product.second_day_num"
+              @reload-food="reload"
+            />
+          </div>
+          <Button class="text-right" @click="openAddFood()" />
           <RegistInfoAddFood
             v-if="isAddFood"
             v-model:add-food="isAddFood"
             :group-id="group?.id"
             @reload-food="reload"
           />
-      </div>
-
-      <!-- 購入品申請 -->
-      <div v-show="tab === 9">
-        <div v-for="f in food" :key="f.toString()">
-          <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
-            <RegistInfoCardPurchase
-              :id="p.purchase_list.id"
-              :group-id="group?.id"
-              :food-product-id="p.purchase_list.food_product_id"
-              :food-product="p.purchase_list.food_product"
-              :shop-id="p.purchase_list.shop_id"
-              :shop="p.purchase_list.shop"
-              :name="p.purchase_list.items"
-              :is-fresh="p.purchase_list.is_fresh"
-              :fes-date-id="p.purchase_list.date_id"
-              @reload-purchase="reload"
-            />
-          </div>
         </div>
-        <Button class="text-right" @click="openAddPurchase()"/>
+
+        <!-- 購入品申請 -->
+        <div v-show="tab === 9">
+          <div v-for="f in food" :key="f.toString()">
+            <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
+              <RegistInfoCardPurchase
+                :id="p.purchase_list.id"
+                :group-id="group?.id"
+                :food-product-id="p.purchase_list.food_product_id"
+                :food-product="p.purchase_list.food_product"
+                :shop-id="p.purchase_list.shop_id"
+                :shop="p.purchase_list.shop"
+                :name="p.purchase_list.items"
+                :is-fresh="p.purchase_list.is_fresh"
+                :fes-date-id="p.purchase_list.date_id"
+                @reload-purchase="reload"
+              />
+            </div>
+          </div>
+          <Button class="text-right" @click="openAddPurchase()" />
           <RegistInfoAddPurchase
             v-if="isAddPurchase"
             v-model:add-purchase="isAddPurchase"
             :group-id="group?.id"
             @reload-purchase="reload"
           />
+        </div>
       </div>
     </div>
-  </template>
-</Container>
+    </template>
+  </Container>
 </template>
 
 <style scoped>
 .title {
-  @apply
-    bg-gray-100
+  @apply bg-gray-100
     inline-block
     py-2
     px-4
@@ -499,10 +578,9 @@ const openAddPurchase = () => {
     font-semibold
     hover:bg-gray-200
     hover:shadow-lg
-    cursor-pointer
+    cursor-pointer;
 }
 .select {
-  @apply
-    bg-gray-300
+  @apply bg-gray-300;
 }
 </style>

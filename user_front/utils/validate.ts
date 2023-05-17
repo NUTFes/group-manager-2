@@ -44,7 +44,6 @@ export const placeSchema = object({
   first: string().required("入力してください"),
   second: string().required("入力してください"),
   third: string().required("入力してください"),
-  remark: string().required("入力してください"),
 });
 
 // stage登録のバリデーション

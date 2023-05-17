@@ -27,10 +27,17 @@ const emits = defineEmits<Emits>()
 const itemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
-  const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
-  itemData.data.forEach((item) => {
-    itemList.value.push(item);
-  });
+  if (Number(localStorage.getItem("group_category_id")) === 3) {
+    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_stage_rentable_items");
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
+  } else {
+    const itemData = await $fetch<Item>(config.APIURL + "/api/v1/get_shop_rentable_items");
+    itemData.data.forEach((item) => {
+      itemList.value.push(item);
+    });
+  }
 })
 
 const newItem = ref<number | null>()

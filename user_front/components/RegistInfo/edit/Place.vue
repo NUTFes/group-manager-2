@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import { Place, PlaceList } from '~~/types/regist/place';
-import { useField, useForm } from 'vee-validate';
-import { placeSchema } from '~~/utils/validate';
-const config = useRuntimeConfig()
+import { Place, PlaceList } from "~~/types/regist/place";
+import { useField, useForm } from "vee-validate";
+import { placeSchema } from "~~/utils/validate";
+const config = useRuntimeConfig();
+import axios from "axios";
 
 interface Props {
-  id: number | null
-  first: number | null
-  second: number | null
-  third: number | null
-  remark: string
+  id: number | null;
+  first: number | null;
+  second: number | null;
+  third: number | null;
+  remark: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,13 +18,13 @@ const props = withDefaults(defineProps<Props>(), {
   first: null,
   second: null,
   third: null,
-  remark: '',
-})
+  remark: "",
+});
 interface Emits {
-  (e: 'update:editPlace', isEditePlace: boolean): void
-  (e: 'reloadPlace', v: null): void
+  (e: "update:editPlace", isEditePlace: boolean): void;
+  (e: "reloadPlace", v: null): void;
 }
-const emits = defineEmits<Emits>()
+const emits = defineEmits<Emits>();
 
 const { meta, isSubmitting } = useForm({
   validationSchema: placeSchema,
@@ -31,36 +32,81 @@ const { meta, isSubmitting } = useForm({
     first: props.first,
     second: props.second,
     third: props.third,
-    remark: props.remark
-  }
-})
-const {handleChange: handleFirstPlace, errorMessage: firstPlaceError} = useField('first')
-const {handleChange: handleSecondPlace, errorMessage: secondPlaceError} = useField('second')
-const {handleChange: handleThirdPlace, errorMessage: thirdPlaceError} = useField('third')
-const {handleChange: handleRemark, errorMessage: remarkError} = useField('remark')
+  },
+});
+const { handleChange: handleFirstPlace, errorMessage: firstPlaceError } =
+  useField("first");
+const { handleChange: handleSecondPlace, errorMessage: secondPlaceError } =
+  useField("second");
+const { handleChange: handleThirdPlace, errorMessage: thirdPlaceError } =
+  useField("third");
 
-const placeList = ref<PlaceList[]>([])
-const newFirst = ref<Props['first']>(props.first)
-const newSecond = ref<Props['second']>(props.second)
-const newThird = ref<Props['third']>(props.third)
-const newRemark = ref<Props['remark']>(props.remark)
+const EATING_AREA = [
+  "事務棟エリア",
+  "図書館エリア",
+  "電気棟エリア",
+  "機械・建設エリア",
+  "メインステージエリア",
+];
+const isEatingArea = (place: string) => {
+  return EATING_AREA.includes(place);
+};
+
+const placeList = ref<PlaceList[]>([]);
+const newFirst = ref<Props["first"]>(props.first);
+const newSecond = ref<Props["second"]>(props.second);
+const newThird = ref<Props["third"]>(props.third);
+const newRemark = ref<Props["remark"]>(props.remark);
+const groupCategoryId = ref<number>();
+const isOverlapPlace = ref(false);
+
+const isDuplicate = computed(() => {
+  if (
+    newFirst.value === newSecond.value ||
+    newFirst.value === newThird.value ||
+    newSecond.value === newThird.value
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+});
 
 const reloadPlace = () => {
-  emits('reloadPlace', null)
-}
+  emits("reloadPlace", null);
+};
 
 const closeEditPlace = () => {
-  emits('update:editPlace', false)
-}
+  emits("update:editPlace", false);
+};
 
 onMounted(async () => {
-  const placeData = await $fetch<Place>(config.APIURL + "/places");
-  !!placeData.data && placeData.data.forEach((place) => {
-    placeList.value.push(place)
-  })
-})
+  const groupUrl =
+    config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
+
+  axios.get(groupUrl).then(async (response) => {
+    groupCategoryId.value = response.data.data.group_category_id;
+
+    const placeData = await $fetch<Place>(config.APIURL + "/places");
+    placeData.data.forEach((place) => {
+      if (groupCategoryId.value === 1) {
+        if (isEatingArea(place.name)) {
+          placeList.value.push(place);
+        }
+      } else {
+        placeList.value.push(place);
+      }
+    });
+  });
+});
 
 const editPlace = async () => {
+  if (isDuplicate.value) {
+    isOverlapPlace.value = true;
+    return;
+  }
+  isOverlapPlace.value = false;
+
   await useFetch(config.APIURL + "/place_orders/" + props.id, {
     method: "PUT",
     params: {
@@ -68,27 +114,30 @@ const editPlace = async () => {
       second: newSecond.value,
       third: newThird.value,
       remark: newRemark.value,
-    }
-  })
-  reloadPlace()
-  closeEditPlace()
-}
+    },
+  });
+  reloadPlace();
+  closeEditPlace();
+};
 
 const reset = () => {
-  newFirst.value = null
-  newSecond.value = null
-  newThird.value = null
-  newRemark.value = ''
-}
-
+  newFirst.value = null;
+  newSecond.value = null;
+  newThird.value = null;
+  newRemark.value = "";
+};
 </script>
 
 <template>
   <Modal :title="$t('Place.editPlace')">
     <template #close>
       <div class="flex justify-end">
-        <button @click="closeEditPlace()" class="hover:text-black hover:opacity-75"
-        >✖</button>
+        <button
+          @click="closeEditPlace()"
+          class="hover:text-black hover:opacity-75"
+        >
+          ✖
+        </button>
       </div>
     </template>
     <template #form>
@@ -132,16 +181,29 @@ const reset = () => {
         <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editPlace()"></RegistPageButton>
       </div>
+      <div class="text">追記することがあればこちらにお書きください</div>
+      <textarea class="entry" v-model="newRemark" />
+      <p v-if="isOverlapPlace" class="error_msg">
+        同じ会場を選択しています。選択し直してください。
+      </p>
+      <div class="flex justify-between mt-8 mx-8">
+        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton
+          :disabled="!meta.valid || isSubmitting"
+          text="✓編集"
+          @click="editPlace()"
+        ></RegistPageButton>
+      </div>
     </template>
   </Modal>
 </template>
 
 <style scoped>
 .error_msg {
-  @apply mx-[10%] text-rose-600
+  @apply mx-[10%] text-rose-600;
 }
 .error_border {
-  @apply border-2 border-rose-600
+  @apply border-2 border-rose-600;
 }
 .text {
   margin: 3% 10% 0%;
