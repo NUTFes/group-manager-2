@@ -74,17 +74,31 @@ const closeEditStageOption = () => {
 }
 
 const editStageOption = async () => {
-  await useFetch(config.APIURL + "/stage_common_options/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      own_equipment: newOwnEquipment.value,
-      bgm: newBgm.value,
-      camera_permission: newCameraPermission.value,
-      loud_sound: newLoudSound.value,
-      stage_content: newStageContent.value,
-    }
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/stage_common_options", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        own_equipment: newOwnEquipment.value,
+        bgm: newBgm.value,
+        camera_permission: newCameraPermission.value,
+        loud_sound: newLoudSound.value,
+        stage_content: newStageContent.value,
+      },
+    })
+  } else {
+    await useFetch(config.APIURL + "/stage_common_options/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        own_equipment: newOwnEquipment.value,
+        bgm: newBgm.value,
+        camera_permission: newCameraPermission.value,
+        loud_sound: newLoudSound.value,
+        stage_content: newStageContent.value,
+      }
+    })
+  }
   reloadStageOption()
   closeEditStageOption()
 }
@@ -100,7 +114,7 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal title="ステージオプションの編集">
+  <Modal :title="$t('StageOption.editStageOption')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeEditStageOption()" class="hover:text-black hover:opacity-75"
@@ -108,7 +122,7 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">所持機器の利用</div>
+      <div class="text">{{ $t('StageOption.privateProperty') }}</div>
       <select class="entry" v-model="newOwnEquipment" @change="handleOwnEquipment" :class="{'error_border': ownEquipmentError}">
         <option
           v-for="i in itemsAvailable"
@@ -119,7 +133,7 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ ownEquipmentError }}</div>
-      <div class="text">音楽</div>
+      <div class="text">{{ $t('StageOption.music') }}</div>
       <select class="entry" v-model="newBgm" @change="handleBgm" :class="{ 'error_border': bgmError }">
         <option
           v-for="m in musicAvailable"
@@ -130,7 +144,7 @@ const reset = () => {
       </option>
       </select>
       <div class="error_msg">{{ bgmError }}</div>
-      <div class="text">撮影許可</div>
+      <div class="text">{{ $t('StageOption.photo') }}</div>
       <select class="entry" v-model="newCameraPermission" @change="handleCameraPermission" :class="{ 'error_border': cameraPermissionError }">
         <option
           v-for="c in cameraAvailable"
@@ -141,7 +155,7 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ cameraPermissionError }}</div>
-      <div class="text">騒音</div>
+      <div class="text">{{ $t('StageOption.noise') }}</div>
       <select class="entry" v-model="newLoudSound" @change="handleLoudSound" :class="{ 'error_border': loudSoundError }">
         <option
           v-for="l in loudAvailable"
@@ -152,12 +166,12 @@ const reset = () => {
       </option>
       </select>
       <div class="error_msg">{{ loudSoundError }}</div>
-      <div class="text">ステージ内容</div>
+      <div class="text">{{ $t('StageOption.content') }}</div>
       <textarea class="entry" v-model="newStageContent" @change="handleStageContent" :class="{ 'error_border': stageContentError }"/>
       <div class="error_msg">{{ stageContentError }}</div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editStageOption()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editStageOption()"></RegistPageButton>
       </div>
     </template>
   </Modal>

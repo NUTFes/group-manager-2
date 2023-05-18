@@ -274,7 +274,7 @@ const isRentalItemOverlap = computed(() => {
 
 // rentalOrdersで被っているものの名前を取得
 const rentalItemOverlap = computed(() => {
-  if (!rentalOrders.value) return '';
+  if (!rentalOrders.value) return "";
   const rentalOrder = rentalOrders.value.map((rentalOrder) => {
     return rentalOrder.rental_item.name;
   });
@@ -283,7 +283,7 @@ const rentalItemOverlap = computed(() => {
   const rentalOrderArray2 = rentalOrderArray.filter((rentalOrder) => {
     return rentalOrderSet.has(rentalOrder);
   });
-  return rentalOrderArray2.join(' / ');
+  return rentalOrderArray2.join(" / ");
 });
 </script>
 
@@ -292,33 +292,49 @@ const rentalItemOverlap = computed(() => {
     <template #tabs>
       <ul class="flex">
         <li @click="tab = 1">
-          <div :class="{ select: tab === 1 }" class="title">副代表申請</div>
+          <div :class="{ select: tab === 1 }" class="title">
+            {{ $t("RegistInfo.subrepresentative") }}
+          </div>
         </li>
         <li v-if="groupCategoryId !== 3" @click="tab = 2">
-          <div :class="{ select: tab === 2 }" class="title">会場申請</div>
+          <div :class="{ select: tab === 2 }" class="title">
+            {{ $t("RegistInfo.place") }}
+          </div>
         </li>
         <li v-if="groupCategoryId === 3" @click="tab = 3">
-          <div :class="{ select: tab === 3 }" class="title">ステージ申請</div>
+          <div :class="{ select: tab === 3 }" class="title">
+            {{ $t("RegistInfo.stage") }}
+          </div>
         </li>
         <li v-if="groupCategoryId === 3" @click="tab = 4">
           <div :class="{ select: tab === 4 }" class="title">
-            ステージオプション申請
+            {{ $t("RegistInfo.stageOption") }}
           </div>
         </li>
         <li @click="tab = 5">
-          <div :class="{ select: tab === 5 }" class="title">電力申請</div>
+          <div :class="{ select: tab === 5 }" class="title">
+            {{ $t("RegistInfo.power") }}
+          </div>
         </li>
         <li @click="tab = 6">
-          <div :class="{ select: tab === 6 }" class="title">物品申請</div>
+          <div :class="{ select: tab === 6 }" class="title">
+            {{ $t("RegistInfo.item") }}
+          </div>
         </li>
         <li @click="tab = 7">
-          <div :class="{ select: tab === 7 }" class="title">従業員申請</div>
+          <div :class="{ select: tab === 7 }" class="title">
+            {{ $t("RegistInfo.employees") }}
+          </div>
         </li>
         <li @click="tab = 8">
-          <div :class="{ select: tab === 8 }" class="title">食品申請</div>
+          <div :class="{ select: tab === 8 }" class="title">
+            {{ $t("RegistInfo.food") }}
+          </div>
         </li>
         <li @click="tab = 9">
-          <div :class="{ select: tab === 9 }" class="title">購入品申請</div>
+          <div :class="{ select: tab === 9 }" class="title">
+            {{ $t("RegistInfo.purchase") }}
+          </div>
         </li>
       </ul>
     </template>
@@ -456,7 +472,7 @@ const rentalItemOverlap = computed(() => {
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
           <div v-if="isRentalItemOverlap" class="text-red-500">
-            <p>{{rentalItemOverlap}} が重複しています</p>
+            <p>{{ rentalItemOverlap }} が重複しています</p>
             <p>削除してください</p>
           </div>
           <div class="flex">

@@ -40,27 +40,27 @@ const openEditStgeOption = () => {
     <RegistInfoWideCard>
       <template #body>
         <div class="ml-8 mr-4 h-24">
-        <div class="upper">機器▾</div>
-        <div class="lower">{{ option.ownEquipment ? "使用" : "不使用" }}</div>
+        <div class="upper">{{ $t('StageOption.privateProperty') }}</div>
+        <div class="lower">{{ option.ownEquipment ? $t('StageOption.use') : $t('StageOption.notUse') }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="h-24">
-        <div class="upper">音楽▾</div>
-        <div class="lower">{{ option.bgm ? "使用" : "不使用" }}</div>
+        <div class="upper">{{ $t('StageOption.music') }}</div>
+        <div class="lower">{{ option.bgm ? $t('StageOption.use') : $t('StageOption.notUse') }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="h-24">
-        <div class="upper">撮影▾</div>
-        <div class="lower">{{ option.cameraPermission ? "許可" : "禁止" }}</div>
+        <div class="upper">{{ $t('StageOption.photo') }}</div>
+        <div class="lower">{{ option.cameraPermission ? $t('StageOption.permit') : $t('StageOption.prohibition') }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="h-24">
-        <div class="upper">騒音▾</div>
-        <div class="lower">{{ option.loudSound ? "有" : "無" }}</div>
+        <div class="upper">{{ $t('StageOption.noise') }}</div>
+        <div class="lower">{{ option.loudSound ? $t('StageOption.yes') : $t('StageOption.no') }}</div>
       </div>
       <RegistInfoDivideBar />
       <div class="h-24">
-        <div class="upper">ステージ内容▾</div>
+        <div class="upper">{{ $t('StageOption.content') }}</div>
         <div class="w-80 break-normal">{{ option.stageContent }}</div>
       </div>
     </template>

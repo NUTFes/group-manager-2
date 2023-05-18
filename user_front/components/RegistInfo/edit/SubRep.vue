@@ -65,18 +65,33 @@ const newStudentId = ref<Props['student_id']>(props.student_id)
 // const newSetting = ref<boolean>()
 
 const editSubRep = async () => {
-  await useFetch(config.APIURL + "/sub_reps/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      name: newName.value,
-      department_id: newDepartment.value,
-      grade_id: newGrade.value,
-      tel: newTel.value,
-      email: newEmail.value,
-      student_id: newStudentId.value,
-    },
-  })
+  if (props.id == null) {
+    await useFetch(config.APIURL + "/sub_reps", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        department_id: newDepartment.value,
+        grade_id: newGrade.value,
+        tel: newTel.value,
+        email: newEmail.value,
+        student_id: newStudentId.value,
+      },
+    })
+  }else {
+    await useFetch(config.APIURL + "/sub_reps/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        department_id: newDepartment.value,
+        grade_id: newGrade.value,
+        tel: newTel.value,
+        email: newEmail.value,
+        student_id: newStudentId.value,
+      },
+    })
+  }
   reloadSubRep()
   closeEditSubRep()
 };
@@ -92,42 +107,42 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal title="副代表の編集">
+  <Modal :title="$t('Subrep.editSubrepresentative')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeEditSubRep()" class="hover:text-black hover:opacity-75">✖</button>
       </div>
     </template>
     <template #form>
-      <div class="text">名前</div>
+      <div class="text">{{ $t('Subrep.name') }}</div>
       <input class="entry" v-model="newName" @change="handleName" :class="{'error_border': nameError}" />
       <div class="error_msg">{{ nameError }}</div>
-      <div class="text">学籍番号</div>
+      <div class="text">{{ $t('Subrep.studentId') }}</div>
       <input class="entry" v-model="newStudentId" maxlength="8" @change="handleStudentId" :class="{'error_border': studentIdError }" />
       <div class="error_msg">{{ studentIdError }}</div>
-      <div class="text">学科</div>
+      <div class="text">{{ $t('Subrep.department') }}</div>
       <select class="entry" v-model="newDepartment" @change="handleDepartmentId" :class="{ 'error_border': departmentIdError }">
         <option v-for="department in departmentList" :value="department.id" :key="department.id">
           {{ department.name }}
         </option>
       </select>
       <div class="error_msg">{{ departmentIdError }}</div>
-      <div class="text">学年</div>
+      <div class="text">{{ $t('Subrep.grade') }}</div>
       <select class="entry" v-model="newGrade" @change="handleGradeId" :class="{ 'error_border': gradeIdError }">
         <option v-for="grade in gradeList" :value="grade.id" :key="grade.id">
           {{ grade.name }}
         </option>
       </select>
       <div class="error_msg">{{ gradeIdError }}</div>
-      <div class="text">メールアドレス</div>
+      <div class="text">{{ $t('Subrep.mail') }}</div>
       <input class="entry" v-model="newEmail" @change="handleMail" :class="{ 'error_border': mailError }" />
       <div class="error_msg">{{ mailError }}</div>
-      <div class="text">電話番号</div>
+      <div class="text">{{ $t('Subrep.tel') }}</div>
       <input class="entry" v-model="newTel" @change="handleTel" maxlength="11" :class="{ 'error_border': telError }" />
       <div class="error_msg">{{ telError }}</div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editSubRep()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editSubRep()"></RegistPageButton>
       </div>
     </template>
   </Modal>

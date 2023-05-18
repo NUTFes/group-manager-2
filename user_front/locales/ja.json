@@ -1,14 +1,14 @@
 {
   "language": "言語",
 
-  "Header":{
+  "Header": {
     "header": "技大祭2023",
     "logOut": "ログアウト"
   },
 
   "Footer": "©︎長岡技術科学大学技大祭実行員会",
 
-  "Button":{
+  "Button": {
     "reset": "リセット",
     "register": "登録",
     "edit": "編集",
@@ -19,12 +19,13 @@
     "request": "申請"
   },
 
-  "Welcome":{
+  "Welcome": {
     "welcome": "ようこそ技大祭へ",
     "mail": "メールアドレス",
     "password": "パスワード",
     "logIn": "ログイン",
-    "signIn": "新規登録はこちら",
+    "signUp": "新規登録",
+    "toSignUp": "登録されてない方は",
     "overview": "参加概要",
     "overviewDetails": "開催日時：2023年9月16日(土) 17日(日)",
     "regist": "登録の流れ",
@@ -48,7 +49,7 @@
     "regist9Details": "あなたの団体の購入材料名、購入場所、購入日、生ものか否かの登録をしてください。"
   },
 
-  "Mypage":{
+  "Mypage": {
     "goToMypage": "マイページへ",
     "userName": "様",
     "greeting1": "技大祭に参加していただき誠にありがとうございます。",
@@ -65,30 +66,31 @@
     "updateDate": "更新日"
   },
 
-  "PR":{
+  "PR": {
     "regitstPR": "パンフレット用PRの登録",
     "select": "選択してください",
     "text": "PR文(40文字程度)",
     "illustration": "イラスト"
   },
 
-  "Announcement":{
+  "Announcement": {
     "regitstAnnouncemant": "会場アナウンス文の登録",
     "text": "会場アナウンス文"
   },
 
-  "VenueMap":{
+  "VenueMap": {
     "regitstVenueMap": "会場配置図の登録",
     "select": "選択してください",
     "map": "配置図(pdf,png,jpgのみ)"
   },
 
-  "RegistInfo":{
+  "RegistInfo": {
+    "return": "マイページに戻る",
     "registAndEdit": "参加団体登録・編集ページ",
     "subrepresentative": "副代表申請",
     "place": "会場申請",
     "stage": "ステージ申請",
-    "StageOption": "ステージオプション申請",
+    "stageOption": "ステージオプション申請",
     "power": "電力申請",
     "item": "物品申請",
     "employees": "従業員申請",
@@ -96,7 +98,7 @@
     "purchase": "購入品申請"
   },
 
-  "User":{
+  "User": {
     "registRepresentative": "代表者登録",
     "name": "氏名",
     "studentId": "学籍番号",
@@ -117,7 +119,7 @@
     "newPasswordConfirm": "新しいパスワードの再入力(確認用)"
   },
 
-  "Group":{
+  "Group": {
     "editGroup": "参加団体情報の編集",
     "registGroup": "団体登録",
     "groupName": "団体名",
@@ -126,7 +128,7 @@
     "activityDetails": "活動内容"
   },
 
-  "Stage":{
+  "Stage": {
     "registStageSunny": "晴天時のステージ登録",
     "registStageRain": "雨天時のステージ登録",
     "editStage": "ステージ編集",
@@ -135,12 +137,12 @@
     "date": "開催日",
     "firstPreference": "第一希望場所",
     "secondPreference": "第二希望場所",
-    "performanceTime": "利用時間",
-    "preparationTime": "準備時間",
+    "performanceTime": "準備時間",
+    "preparationTime": "本番時間",
     "cleanUpTime": "片付け時間"
   },
 
-  "StageOption":{
+  "StageOption": {
     "registStageOption": "ステージ詳細の登録",
     "editStageOption": "ステージ詳細の編集",
     "privateProperty": "所持機器の使用の有無",
@@ -161,7 +163,7 @@
     "content": "ステージ内容"
   },
 
-  "Subrep":{
+  "Subrep": {
     "registSubrepresentative": "副代表登録",
     "editSubrepresentative": "副代表の編集",
     "name": "氏名",
@@ -173,18 +175,20 @@
     "details": "詳細情報"
   },
 
-  "Place":{
+  "Place": {
     "registPlace": "実施場所の登録",
     "editPlace": "実施場所の編集",
     "first": "第一希望",
     "second": "第二希望",
     "third": "第三希望",
     "free": "備考",
+    "hope1": "第",
+    "hope2": "希望",
     "overlapPlace": "場所が重複しています",
     "eatingArea": "模擬店(食品販売) での参加をする場合、実施場所が絞られます"
   },
 
-  "Item":{
+  "Item": {
     "registItem": "貸出物品の登録",
     "addItem": "貸出物品の追加",
     "deleteItem": "貸出物品の削除",
@@ -192,10 +196,14 @@
     "item": "貸出物品",
     "number": "数量",
     "count": "個",
-    "overlapItem": "貸出物品が重複しています"
+    "overlapItem": "貸出物品が重複しています",
+    "maxNum": "個まで貸し出し可能です",
+    "insideGroup": "屋内団体",
+    "outsideGroup": "屋外団体",
+    "stageGroup": "ステージ団体"
   },
 
-  "Power":{
+  "Power": {
     "registPower": "使用電力の登録",
     "addPower": "使用電力の追加",
     "deletePower": "使用電力の削除",
@@ -207,15 +215,16 @@
     "URL": "製品URL"
   },
 
-  "Employees":{
+  "Employees": {
     "registEmployees": "従業員登録",
     "addEmployees": "従業員の追加",
+    "deleteEmployees": "従業員の削除",
     "editEmployees": "従業員の編集",
     "name": "氏名",
     "studentId": "学籍番号"
   },
 
-  "Food":{
+  "Food": {
     "registFood": "販売食品の登録",
     "addFood": "販売食品の追加",
     "deleteFood": "販売食品の削除",
@@ -223,8 +232,8 @@
     "name": "販売食品名",
     "cook": "調理の有無",
     "select": "選択してください",
-    "yes": "調理あり",
-    "no": "調理無し",
+    "yes": "有",
+    "no": "無",
     "numberFirstDay": "１日目の販売予定数",
     "numberSecondDay": "２日目の販売予定数",
     "firstDay": "１日目",
@@ -234,7 +243,7 @@
     "toBe": "予定数"
   },
 
-  "Purchase":{
+  "Purchase": {
     "registPurchase": "購入品の登録",
     "addPurchase": "購入品の追加",
     "deletePurchase": "購入品の削除",
@@ -246,14 +255,14 @@
     "place": "購入場所",
     "date": "購入日",
     "rowFood": "生ものか否か",
-    "yes": "生ものです",
-    "no": "違います",
+    "yes": "生もの",
+    "no": "加工品",
     "of": "の",
     "parchasePlace1": "購入",
     "parchasePlace2": "場所"
   },
 
-  "Validate":{
+  "Validate": {
     "type": "入力してください",
     "singleEight": "半角数字8桁で入力してください",
     "leastEight": "8桁以上入力してください",
@@ -267,7 +276,7 @@
     "select": "選択してください"
   },
 
-  "List":{
+  "List": {
     "food": "模擬店(食品販売)",
     "goods": "模擬店(物品販売)",
     "stage": "ステージ企画",

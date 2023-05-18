@@ -28,7 +28,8 @@ class AssignRentalItem < ApplicationRecord
         return {
           "rental_item": self.nil? ? nil : self,
           "name": self.rental_item.name,
-          "is_shop_rentable": self.rental_item.is_shop_rentable,
+          "is_inside_shop_rentable": self.rental_item.is_inside_shop_rentable,
+          "is_outside_shop_rentable": self.rental_item.is_outside_shop_rentable,
           "is_stage_rentable": self.rental_item.is_stage_rentable,
           "num": self.num
         }

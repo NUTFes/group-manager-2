@@ -51,11 +51,11 @@ const openEditStage = () => {
       <template #body>
       <div class="flex text-center mx-8 text-6xl">{{ stage.date }}</div>
       <RegistInfoDivideBar />
-      <div class="flex mx-4 text-6xl">{{ stage.isSunny ? "晴" : "雨" }}</div>
+      <div class="flex mx-4 text-6xl">{{ stage.isSunny ? $t('Stage.sunny') : $t('Stage.rain') }}</div>
       <RegistInfoDivideBar />
       <div class="mx-4 text-xl text-left">
-        <div class="flex items-center">第1希望<RegistInfoTriangle />{{ stage.firstStage }}</div>
-        <div class="flex items-center">第2希望<RegistInfoTriangle />{{ stage.secondStage }}</div>
+        <div class="flex items-center">{{ $t('Stage.firstPreference') }}<RegistInfoTriangle />{{ stage.firstStage }}</div>
+        <div class="flex items-center">{{ $t('Stage.secondPreference') }}<RegistInfoTriangle />{{ stage.secondStage }}</div>
       </div>
     </template>
     <template #method>

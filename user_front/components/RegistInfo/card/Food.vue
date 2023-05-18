@@ -49,28 +49,28 @@ const reloadFood = () => {
       </div>
       <RegistInfoDivideBar />
       <div class="w-[10%] text-center">
-        <p class="text-xl">調理の有無</p>
-        <p class="text-4xl">{{ food.isCooking ? '有' : '無' }}</p>
+        <p class="text-xl">{{ $t('Food.cook') }}</p>
+        <p class="text-2xl">{{ food.isCooking ? $t('Food.yes') : $t('Food.no') }}</p>
       </div>
       <RegistInfoDivideBar />
       <div class="mx-4 text-center text-xl">
-        <span>販売<br>予定数</span>
+        <span>{{ $t('Food.sold') }}<br>{{ $t('Food.toBe') }}</span>
       </div>
         ▶
       <div class="w-[15%] mx-4 text-2xl">
         <div class="mr-1">
-          1日目
+          {{ $t('Food.firstDay') }}
           <span class="w-[10%] text-center text-3xl">
             {{ food.firstNum }}
           </span>
-          個
+          {{ $t('Food.count') }}
         </div>
         <div class="mr-1">
-          2日目
+          {{ $t('Food.secondDay') }}
           <span class="w-[10%] text-center text-3xl">
             {{ food.secondNum }}
           </span>
-          個
+          {{ $t('Food.count') }}
         </div>
       </div>
     </template>
@@ -218,7 +218,8 @@ purchase_lists": [
           "updated_at": "2023-03-31T05:11:15.821Z"
         },
         "name": "机",
-        "is_shop_rentable": true,
+        "is_inside_shop_rentable": true,
+        "is_outside_shop_rentable": true,
         "is_stage_rentable": true,
         "num": 10
       }

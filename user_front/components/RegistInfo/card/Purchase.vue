@@ -48,7 +48,7 @@ const openDeletePurchase = () => {
   <RegistInfoWideCard>
     <template #body>
       <div class="w-[10%] mx-4 text-center text-2xl">
-        <span>購入品</span>
+        <span>{{ $t('Purchase.purchase') }}</span>
       </div>
       ▸
       <div class="w-[20%] ml-4 text-3xl text-center">
@@ -61,7 +61,7 @@ const openDeletePurchase = () => {
       </div>
       <RegistInfoDivideBar />
        <div class="w-[10%] text-center text-2xl">
-          <span>購入<br>場所</span>
+          <span>{{ $t('Purchase.parchasePlace1') }}<br>{{ $t('Purchase.parchasePlace2') }}</span>
         </div>
       ▸
       <div class="w-[20%] mx-4 text-3xl text-center">
@@ -71,7 +71,7 @@ const openDeletePurchase = () => {
       </div>
       <RegistInfoDivideBar />
       <div class="w-[10%] text-center mr-4">
-        <p class="text-3xl">{{ purchase.isFresh ? '生もの' : '加工品' }}</p>
+        <p class="text-3xl">{{ purchase.isFresh ? $t('Purchase.yes') : $t('Purchase.no') }}</p>
       </div>
     </template>
     <template #method>
