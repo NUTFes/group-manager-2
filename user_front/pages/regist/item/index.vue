@@ -185,7 +185,7 @@ const updateSelectedLocation = (event: Event) => {
       <Card border="none" align="end" gap="20px">
         <div class="flex gap-3">
           <div v-if="Number(state.groupCategoryId) !== 3">
-            <label>
+            <label class="mr-2">
               <input
                 type="radio"
                 value="屋内団体"
@@ -193,7 +193,7 @@ const updateSelectedLocation = (event: Event) => {
                 :checked="selectedLocation === '屋内団体'"
                 @click="updateSelectedLocation"
               />
-              屋内団体
+              {{ $t('Item.insideGroup') }}
             </label>
             <label>
               <input
@@ -203,7 +203,7 @@ const updateSelectedLocation = (event: Event) => {
                 :checked="selectedLocation === '屋外団体'"
                 @click="updateSelectedLocation"
               />
-              屋外団体
+              {{ $t('Item.outsideGroup') }}
             </label>
           </div>
           <div v-if="Number(state.groupCategoryId) === 3">
@@ -215,7 +215,7 @@ const updateSelectedLocation = (event: Event) => {
                 :checked="selectedLocation === 'ステージ団体'"
                 @click="updateSelectedLocation"
               />
-              ステージ団体
+              {{ $t('Item.stageGroup') }}
             </label>
           </div>
         </div>
