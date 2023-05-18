@@ -218,7 +218,8 @@ purchase_lists": [
           "updated_at": "2023-03-31T05:11:15.821Z"
         },
         "name": "机",
-        "is_shop_rentable": true,
+        "is_inside_shop_rentable": true,
+        "is_outside_shop_rentable": true,
         "is_stage_rentable": true,
         "num": 10
       }

@@ -30,13 +30,20 @@ const {
 
 const config = useRuntimeConfig();
 const router = useRouter();
-const itemList = ref<ItemList[]>([]);
+const insideRentableItemList = ref<ItemList[]>([]);
+const outsideRentableItemList = ref<ItemList[]>([]);
 const formCount = ref(1);
+const itemList = ref<ItemList[]>([]);
 const isOverlapItem = ref(false);
 
 const state = reactive({
   groupId: 0,
+  groupCategoryId: 0,
 });
+
+// 場所と物品を制限するための変数
+const selectedLocation = ref<string>("屋内団体");
+const selectableItemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -46,17 +53,28 @@ onMounted(async () => {
       config.APIURL + "/api/v1/get_stage_rentable_items"
     );
     itemData.data.forEach((item) => {
-      itemList.value.push(item);
+      selectableItemList.value.push(item);
     });
+    selectedLocation.value = "ステージ団体";
   } else {
-    const itemData = await $fetch<Item>(
-      config.APIURL + "/api/v1/get_shop_rentable_items"
+    const insideRentableItemData = await $fetch<Item>(
+      config.APIURL + "/api/v1/get_inside_shop_rentable_items"
     );
-    itemData.data.forEach((item) => {
-      itemList.value.push(item);
+    insideRentableItemData.data.forEach((item) => {
+      insideRentableItemList.value.push(item);
+    });
+    const outsideRentableItemData = await $fetch<Item>(
+      config.APIURL + "/api/v1/get_outside_shop_rentable_items"
+    );
+    outsideRentableItemData.data.forEach((item) => {
+      outsideRentableItemList.value.push(item);
+    });
+    insideRentableItemList.value.forEach((item) => {
+      selectableItemList.value.push(item);
     });
   }
   state.groupId = Number(localStorage.getItem("group_id"));
+  state.groupCategoryId = Number(localStorage.getItem("group_category_id"));
 });
 
 const registerParams = [
@@ -83,8 +101,16 @@ const decrement = (idx: number) => {
 };
 
 const registerItem = async () => {
-  const uniqueRentalItems = new Set();
+  // 貸し出し可能物品個数のチェック
   for (let i = 0; i < formCount.value; i++) {
+    if (
+      getMaxValueByItemId(registerParams[i].rentalItemId) <
+      registerParams[i].num
+    ) {
+      alert("貸し出し可能個数を超過している物品があるので修正してください。");
+      return;
+    }
+    const uniqueRentalItems = new Set();
     const rentalItemId = registerParams[i].rentalItemId;
     if (uniqueRentalItems.has(rentalItemId)) {
       isOverlapItem.value = true;
@@ -112,6 +138,42 @@ const registerItem = async () => {
 const skip = () => {
   router.push("/regist/power");
 };
+
+// 物品のidから物品の情報を取得し、物品の貸し出し可能数を返す
+const getMaxValueByItemId = (id: number) => {
+  const items = selectableItemList.value.find((item) => item.id === id);
+
+  let maxValue = 0;
+  if (selectedLocation.value === "屋外団体" && items?.name === "テント") {
+    maxValue = 1;
+  } else if (
+    selectedLocation.value === "屋外団体" &&
+    (items?.name === "机" || items?.name === "椅子")
+  ) {
+    maxValue = 20;
+  } else {
+    maxValue = 99;
+  }
+  return maxValue;
+};
+
+const updateSelectedLocation = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  switch (target.value) {
+    case "屋内団体":
+      selectableItemList.value = [];
+      insideRentableItemList.value.forEach((item) => {
+        selectableItemList.value.push(item);
+      });
+      break;
+    case "屋外団体":
+      selectableItemList.value = [];
+      outsideRentableItemList.value.forEach((item) => {
+        selectableItemList.value.push(item);
+      });
+      break;
+  }
+};
 </script>
 
 <template>
@@ -119,6 +181,42 @@ const skip = () => {
     <Card>
       <h1 class="text-3xl">{{ $t("Item.registItem") }}</h1>
       <Card border="none" align="end" gap="20px">
+        <div class="flex gap-3">
+          <div v-if="Number(state.groupCategoryId) !== 3">
+            <label>
+              <input
+                type="radio"
+                value="屋内団体"
+                v-model="selectedLocation"
+                :checked="selectedLocation === '屋内団体'"
+                @click="updateSelectedLocation"
+              />
+              屋内団体
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="屋外団体"
+                v-model="selectedLocation"
+                :checked="selectedLocation === '屋外団体'"
+                @click="updateSelectedLocation"
+              />
+              屋外団体
+            </label>
+          </div>
+          <div v-if="Number(state.groupCategoryId) === 3">
+            <label>
+              <input
+                type="radio"
+                value="ステージ団体"
+                v-model="selectedLocation"
+                :checked="selectedLocation === 'ステージ団体'"
+                @click="updateSelectedLocation"
+              />
+              ステージ団体
+            </label>
+          </div>
+        </div>
         <div v-for="(field, idx) in itemValidate" :key="field.key">
           <div class="flex">
             <p class="label">{{ $t("Item.item") }}</p>
@@ -131,7 +229,12 @@ const skip = () => {
               v-model="registerParams[idx].rentalItemId"
             >
               <option value="" selected disabled></option>
-              <option v-for="item in itemList" :key="item.id" :value="item.id">
+              <option
+                v-for="item in selectableItemList"
+                :key="item.id"
+                :value="item.id"
+                :name="item.name"
+              >
                 {{ item.name }}
               </option>
             </Field>
@@ -148,8 +251,15 @@ const skip = () => {
               :name="`items[${idx}].itemNum`"
               class="form"
               v-model="registerParams[idx].num"
+              v-validate="
+                'max_value:getMaxValueByItemId(registerParams[idx].rentalItemId)'
+              "
             />
           </div>
+          <p>
+            {{ getMaxValueByItemId(registerParams[idx].rentalItemId) }}
+            個まで貸し出し可能です
+          </p>
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
           <div v-if="idx == 0">
