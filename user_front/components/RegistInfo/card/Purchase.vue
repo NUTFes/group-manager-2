@@ -48,7 +48,7 @@ const openDeletePurchase = () => {
   <RegistInfoWideCard>
     <template #body>
       <div class="w-[10%] mx-4 text-center text-2xl">
-        <span>{{ $t('Purchase.parchase') }}</span>
+        <span>{{ $t('Purchase.purchase') }}</span>
       </div>
       ▸
       <div class="w-[20%] ml-4 text-3xl text-center">
