@@ -12,9 +12,9 @@ interface Props {
   fesDateId: number | null,
   stageFirst: number | null,
   stageSecond: number | null,
-  useTimeInterval: string,
-  prepareTimeInterval: string,
-  cleanupTimeInterval: string,
+  useTimeInterval: number | null,
+  prepareTimeInterval: number | null,
+  cleanupTimeInterval: number | null,
 }
 const props = withDefaults(defineProps<Props>(), {
   id: null,
@@ -24,9 +24,9 @@ const props = withDefaults(defineProps<Props>(), {
   date: '',
   stageFirst: null,
   stageSecond: null,
-  useTimeInterval: '',
-  prepareTimeInterval: '',
-  cleanupTimeInterval: '',
+  useTimeInterval: null,
+  prepareTimeInterval: null,
+  cleanupTimeInterval: null,
 })
 
 interface Emits {
@@ -130,9 +130,9 @@ const reset = () => {
   newStageDateId.value = null
   newStageFirst.value = null
   newStageSecond.value = null
-  newUseTimeInterval.value = ''
-  newPrepareTimeInterval.value = ''
-  newCleanupTimeInterval.value = ''
+  newUseTimeInterval.value = null
+  newPrepareTimeInterval.value = null
+  newCleanupTimeInterval.value = null
 }
 </script>
 
