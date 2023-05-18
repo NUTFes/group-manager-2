@@ -3,40 +3,41 @@ import { loginCheck } from "@/utils/methods";
 import { useForm, useField } from "vee-validate";
 import { userDetailSchema } from "~~/utils/validate";
 import { User, UserDetail, EditUser, CurrentUser } from "~~/types/currentUser";
-import { departmentList } from "~/utils/list";
-import { gradeList } from "~/utils/list";
+import { gradeList, GradeWithDepartmentList } from "~/utils/list";
 
-const config = useRuntimeConfig()
+const config = useRuntimeConfig();
 const router = useRouter();
 
-const user = ref<User>()
-const userDetail = ref<UserDetail>()
+const user = ref<User>();
+const userDetail = ref<UserDetail>();
 
 const { meta, isSubmitting } = useForm({
   validationSchema: userDetailSchema,
 });
-const { handleChange: handleName, errorMessage: nameError } = useField('name')
-const { handleChange: handleDepartment, errorMessage: departmentError } = useField('department')
-const { handleChange: handleGrade, errorMessage: gradeError } = useField('grade')
-const { handleChange: handleStudentId, errorMessage: studentIdError } = useField('studentId')
-const { handleChange: handleEmail, errorMessage: emailError } = useField('email')
-const { handleChange: handleTel, errorMessage: telError } = useField('tel')
+const { handleChange: handleName, errorMessage: nameError } = useField("name");
+const { handleChange: handleDepartment, errorMessage: departmentError } =
+  useField("department");
+const { handleChange: handleGrade, errorMessage: gradeError } =
+  useField("grade");
+const { handleChange: handleStudentId, errorMessage: studentIdError } =
+  useField("studentId");
+const { handleChange: handleEmail, errorMessage: emailError } =
+  useField("email");
+const { handleChange: handleTel, errorMessage: telError } = useField("tel");
 
 onMounted(async () => {
-  await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user",
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token") || "",
-        "client": localStorage.getItem("client") || "",
-        "uid": localStorage.getItem("uid") || "",
-      },
-    },)
-    .then((response) => {
-      user.value = response.data.user
-      userDetail.value = response.data.user_detail
-    });
-})
+  await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user", {
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": localStorage.getItem("access-token") || "",
+      client: localStorage.getItem("client") || "",
+      uid: localStorage.getItem("uid") || "",
+    },
+  }).then((response) => {
+    user.value = response.data.user;
+    userDetail.value = response.data.user_detail;
+  });
+});
 
 const editParams = ref({
   name: user.value?.name,
@@ -48,46 +49,58 @@ const editParams = ref({
 });
 
 const editUser = async () => {
-  await $fetch<CurrentUser>(config.APIURL + "/api/v1/current_user/edit_user_info", {
-    method: "POST",
-    params: {
-      name: editParams.value.name,
-      email: editParams.value.mail,
-      student_id: editParams.value.studentId,
-      tel: editParams.value.tel,
-      department_id: editParams.value.departmentId,
-      grade_id: editParams.value.gradeId,
-    },
-    headers: {
-      "Content-Type": "application/json",
-      "access-token": localStorage.getItem("access-token") || "",
-      client: localStorage.getItem("client") || "",
-      uid: localStorage.getItem("uid") || "",
+  await $fetch<CurrentUser>(
+    config.APIURL + "/api/v1/current_user/edit_user_info",
+    {
+      method: "POST",
+      params: {
+        name: editParams.value.name,
+        email: editParams.value.mail,
+        student_id: editParams.value.studentId,
+        tel: editParams.value.tel,
+        department_id: editParams.value.departmentId,
+        grade_id: editParams.value.gradeId,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token") || "",
+        client: localStorage.getItem("client") || "",
+        uid: localStorage.getItem("uid") || "",
+      },
     }
-  }).then(() => {
-    localStorage.setItem("uid", editParams.value.mail || '');
-    router.push("/mypage")
+  ).then(() => {
+    localStorage.setItem("uid", editParams.value.mail || "");
+    router.push("/mypage");
   });
-}
+};
 
 // ログインしていない場合は/welcomeに遷移させる
 loginCheck();
+
+const currentDepartmentList = ref<{ id: number; name: string }[]>([]);
+const createCurrentDepartmentList = (e: any) => {
+  currentDepartmentList.value = GradeWithDepartmentList.filter((grade) => {
+    return grade.id === Number(e.target.value);
+  })[0].departmentList;
+};
 </script>
 
 <template>
   <div class="regist-card">
-    <NuxtLink to="/mypage" class="regist-back-link">{{ $t('Mypage.goToMypage') }}</NuxtLink>
+    <NuxtLink to="/mypage" class="regist-back-link">{{
+      $t("Mypage.goToMypage")
+    }}</NuxtLink>
     <div class="reist-title-content">
-      <div class="user-info">{{ $t('User.userInfo') }}</div>
+      <div class="user-info">{{ $t("User.userInfo") }}</div>
     </div>
     <div class="flex row justify-center gap-3 pb-11">
       <div class="text-xl">
-        <p>{{ $t('User.name') }}：</p>
-        <p>{{ $t('User.mail') }}：</p>
-        <p>{{ $t('User.studentId') }}：</p>
-        <p>{{ $t('User.tel') }}：</p>
-        <p>{{ $t('User.department') }}：</p>
-        <p>{{ $t('User.grade') }}：</p>
+        <p>{{ $t("User.name") }}：</p>
+        <p>{{ $t("User.mail") }}：</p>
+        <p>{{ $t("User.studentId") }}：</p>
+        <p>{{ $t("User.tel") }}：</p>
+        <p>{{ $t("User.department") }}：</p>
+        <p>{{ $t("User.grade") }}：</p>
       </div>
       <div class="text-lg">
         <p>{{ user?.name }}</p>
@@ -99,55 +112,96 @@ loginCheck();
       </div>
     </div>
     <div class="reist-title-content">
-      <div class="user-info">{{ $t('User.editUser') }}</div>
+      <div class="user-info">{{ $t("User.editUser") }}</div>
     </div>
     <div>
-      <input :placeholder="$t('User.editName')" v-model="editParams.name" @change="handleName">
+      <input
+        :placeholder="$t('User.editName')"
+        v-model="editParams.name"
+        @change="handleName"
+      />
       <p class="error">{{ nameError }}</p>
-      <input placeholder="～@～.～" v-model="editParams.mail" @change="handleEmail">
+      <input
+        placeholder="～@～.～"
+        v-model="editParams.mail"
+        @change="handleEmail"
+      />
       <p class="error">{{ emailError }}</p>
-      <input :placeholder="$t('User.editStudentId')" maxlength="8" v-model="editParams.studentId" @change="handleStudentId">
+      <input
+        :placeholder="$t('User.editStudentId')"
+        maxlength="8"
+        v-model="editParams.studentId"
+        @change="handleStudentId"
+      />
       <p class="error">{{ studentIdError }}</p>
-      <input :placeholder="$t('User.editTel')" maxlength="11" v-model="editParams.tel" @change="handleTel">
+      <input
+        :placeholder="$t('User.editTel')"
+        maxlength="11"
+        v-model="editParams.tel"
+        @change="handleTel"
+      />
       <p class="error">{{ telError }}</p>
-      <select :placeholder="$t('User.department')" v-model="editParams.departmentId" @change="handleDepartment">
+      <select
+        :placeholder="$t('User.grade')"
+        v-model="editParams.gradeId"
+        @change="
+          (e) => {
+            handleGrade(e);
+            createCurrentDepartmentList(e);
+          }
+        "
+      >
         <option value="" selected disabled></option>
-        <option v-for="department in departmentList" :value=department.id key="department">{{ department.name }}</option>
-      </select>
-      <p class="error">{{ departmentError }}</p>
-      <select :placeholder="$t('User.grade')" v-model="editParams.gradeId" @change="handleGrade">
-        <option value="" selected disabled></option>
-        <option v-for="grade in gradeList" :value=grade.id key="grade">{{ grade.name }}</option>
+        <option v-for="grade in gradeList" :value="grade.id" key="grade">
+          {{ grade.name }}
+        </option>
       </select>
       <p class="error">{{ gradeError }}</p>
+      <select
+        :placeholder="$t('User.department')"
+        v-model="editParams.departmentId"
+        @change="handleDepartment"
+      >
+        <option value="" selected disabled></option>
+        <option
+          v-for="department in currentDepartmentList"
+          :value="department.id"
+          key="department"
+        >
+          {{ department.name }}
+        </option>
+      </select>
+      <p class="error">{{ departmentError }}</p>
     </div>
     <div class="regist-button">
-      <RegistPageButton :text="$t('Button.edit')" :disabled='!meta.valid || isSubmitting' @click="editUser">{{ $t('Button.edit') }}</RegistPageButton>
+      <RegistPageButton
+        :text="$t('Button.edit')"
+        :disabled="!meta.valid || isSubmitting"
+        @click="editUser"
+        >{{ $t("Button.edit") }}</RegistPageButton
+      >
     </div>
   </div>
 </template>
 
 <style>
 .error {
-  @apply text-red-500 ml-4
+  @apply text-red-500 ml-4;
 }
 .regist-card {
-  @apply
-    w-[1000px]
+  @apply w-[1000px]
     mx-auto;
 }
 
 .reist-title-content {
-  @apply
-    flex
+  @apply flex
     flex-col
     justify-center
     items-center;
 }
 
 .regist-back-link {
-  @apply
-    block
+  @apply block
     text-lg
     text-[#e040fb]
     cursor-pointer
@@ -156,14 +210,12 @@ loginCheck();
 }
 
 .regist-back-link:hover {
-  @apply
-    font-bold
+  @apply font-bold
     text-[#e040fb];
 }
 
 .user-info {
-  @apply
-    text-3xl
+  @apply text-3xl
     font-bold
     mb-1;
   padding: 1% 1% 1% 2%;
@@ -171,8 +223,7 @@ loginCheck();
 
 select,
 input {
-  @apply
-    text-left
+  @apply text-left
     p-[1%]
     h-[50px]
     w-[1000px]
@@ -195,14 +246,12 @@ input:valid {
 }
 
 .regist-button {
-  @apply
-    text-right
+  @apply text-right
     mb-8;
 }
 
 .regist-submit-button {
-  @apply
-    text-xl
+  @apply text-xl
     text-[#333333]
     bg-[#eceff1]
     font-bold
@@ -213,14 +262,15 @@ input:valid {
     cursor-pointer;
 }
 .regist-submit-button:hover {
-  @apply
-    text-[#333333];
-  background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
+  @apply text-[#333333];
+  background-image: linear-gradient(
+    90deg,
+    rgba(247, 93, 139, 1),
+    rgba(254, 220, 64, 1)
+  );
 }
-.regist-submit-button:active{
-  @apply
-    text-[#333333];
-  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
+.regist-submit-button:active {
+  @apply text-[#333333];
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #fff;
 }
-
 </style>
