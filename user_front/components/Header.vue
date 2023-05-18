@@ -32,7 +32,7 @@ const backHome = () => {
 </script>
 
 <template>
-  <div class="sticky top-0 bg-white z-10 w-full border-b border-gray-300">
+  <div class="sticky top-0 bg-white z-50 w-full border-b border-gray-300">
     <div class="flex gap-8 p-2 md:py-4 md:px-8">
       <button class="font-bold text-2xl" @click="backHome">
         {{ $t("Header.header") }}
