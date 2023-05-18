@@ -1,14 +1,14 @@
 {
   "language": "Language",
 
-  "Header":{
+  "Header": {
     "header": "NUTFES2023",
     "logOut": "Log Out"
   },
 
   "Footer": "©︎NUTFES Executive Committee",
 
-  "Button":{
+  "Button": {
     "reset": "reset",
     "register": "register",
     "edit": "edit",
@@ -19,7 +19,7 @@
     "request": "request"
   },
 
-  "Welcome":{
+  "Welcome": {
     "welcome": "Welcome to NUTFES",
     "mail": "Email Address",
     "password": "Password",
@@ -49,7 +49,7 @@
     "regist9Details": "Please register the material name, where it is purchased, the date of purchase, and whether it is raw or not."
   },
 
-  "Mypage":{
+  "Mypage": {
     "goToMypage": "Go to Mypage",
     "userName": "",
     "greeting1": "Thank you very much for participating in NUTFES.",
@@ -66,25 +66,25 @@
     "updateDate": "update date"
   },
 
-  "PR":{
+  "PR": {
     "regitstPR": "Registration of PR for brochure",
     "select": "Please select",
     "text": "PR statement(About 40 characters)",
     "illustration": "illustration"
   },
 
-  "Announcement":{
+  "Announcement": {
     "regitstAnnouncemant": "Registration of venue announcement text",
     "text": "Announcement text at the venue"
   },
 
-  "VenueMap":{
+  "VenueMap": {
     "regitstVenueMap": "Registration of Venue MAP",
     "select": "Please select",
     "map": "layout plan(pdf,png,jpg only)"
   },
 
-  "RegistInfo":{
+  "RegistInfo": {
     "return": "Return to Mypage",
     "registAndEdit": "Group Registration and Editing Page",
     "subrepresentative": "Subrepresentative",
@@ -98,7 +98,7 @@
     "purchase": "Purchase"
   },
 
-  "User":{
+  "User": {
     "registRepresentative": "Representative Registration",
     "name": "name",
     "studentId": "student id",
@@ -119,7 +119,7 @@
     "newPasswordConfirm": "Retype new password (for confirmation)"
   },
 
-  "Group":{
+  "Group": {
     "editGroup": "Edit group Information",
     "registGroup": "Registration of group",
     "groupName": "group name",
@@ -128,7 +128,7 @@
     "activityDetails": "Activity Details"
   },
 
-  "Stage":{
+  "Stage": {
     "registStageSunny": "Registration of stage on a sunny day",
     "registStageRain": "Registration of stage on a rainy day",
     "editStage": "Edit stage",
@@ -142,7 +142,7 @@
     "cleanUpTime": "clean-up time"
   },
 
-  "StageOption":{
+  "StageOption": {
     "registStageOption": "Registration of stage Details",
     "editStageOption": "Edit Stage Details",
     "privateProperty": "Whether equipment in possession are used or not",
@@ -163,7 +163,7 @@
     "content": "Stage Contents"
   },
 
-  "Subrep":{
+  "Subrep": {
     "registSubrepresentative": "Registration of subrepresentative",
     "editSubrepresentative": "Edit subrepresentative",
     "name": "name",
@@ -175,7 +175,7 @@
     "details": "details"
   },
 
-  "Place":{
+  "Place": {
     "registPlace": "Registration of places",
     "editPlace": "edit places",
     "first": "first choice",
@@ -188,7 +188,7 @@
     "eatingArea": "If you participate in the food sales, the place will be narrowed down"
   },
 
-  "Item":{
+  "Item": {
     "registItem": "Registration of loaned items",
     "addItem": "Additional loaned items",
     "deleteItem": "Deletion of loaned items",
@@ -196,10 +196,14 @@
     "item": "Necessary items",
     "number": "number of pieces required",
     "count": "",
-    "overlapItem": "The item is duplicated"
+    "overlapItem": "The item is duplicated",
+    "maxNum": "pieces can be rented",
+    "insideGroup": "Indoor group",
+    "outsideGroup": "Outdoor Group",
+    "stageGroup": "Stage Group"
   },
 
-  "Power":{
+  "Power": {
     "registPower": "Registration of power",
     "addPower": "Additional power",
     "deletePower": "Deletion power",
@@ -211,7 +215,7 @@
     "URL": "product URL"
   },
 
-  "Employees":{
+  "Employees": {
     "registEmployees": "Registration of employees",
     "deleteEmployees": "Deletion of employee",
     "addEmployees": "Adding Employees",
@@ -220,7 +224,7 @@
     "studentId": "studentId"
   },
 
-  "Food":{
+  "Food": {
     "registFood": "Registration of foods for sale",
     "addFood": "Additional foods for sale",
     "deleteFood": "Deletion foods for sale",
@@ -239,7 +243,7 @@
     "toBe": "of products to be sold"
   },
 
-  "Purchase":{
+  "Purchase": {
     "registPurchase": "Registration of purchased Products",
     "addPurchase": "Add purchased Products",
     "deletePurchase": "Deletion of purchased Products",
@@ -258,7 +262,7 @@
     "parchasePlace2": "of purchase"
   },
 
-  "Validate":{
+  "Validate": {
     "type": "Please type",
     "singleEight": "Please enter 8 single-byte numbers.",
     "leastEight": "Please enter at least 8 digits",
@@ -272,7 +276,7 @@
     "select": "Please select"
   },
 
-  "List":{
+  "List": {
     "food": "Food booth (food sales)",
     "goods": "Vendor booth (goods sales)",
     "stage": "Stage Project",

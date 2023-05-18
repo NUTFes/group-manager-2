@@ -107,7 +107,9 @@ const registerItem = async () => {
       getMaxValueByItemId(registerParams[i].rentalItemId) <
       registerParams[i].num
     ) {
-      alert("貸し出し可能個数を超過している物品があるので修正してください。");
+      alert(
+        "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+      );
       return;
     }
     const uniqueRentalItems = new Set();
@@ -183,7 +185,7 @@ const updateSelectedLocation = (event: Event) => {
       <Card border="none" align="end" gap="20px">
         <div class="flex gap-3">
           <div v-if="Number(state.groupCategoryId) !== 3">
-            <label>
+            <label class="mr-2">
               <input
                 type="radio"
                 value="屋内団体"
@@ -191,7 +193,7 @@ const updateSelectedLocation = (event: Event) => {
                 :checked="selectedLocation === '屋内団体'"
                 @click="updateSelectedLocation"
               />
-              屋内団体
+              {{ $t('Item.insideGroup') }}
             </label>
             <label>
               <input
@@ -201,7 +203,7 @@ const updateSelectedLocation = (event: Event) => {
                 :checked="selectedLocation === '屋外団体'"
                 @click="updateSelectedLocation"
               />
-              屋外団体
+              {{ $t('Item.outsideGroup') }}
             </label>
           </div>
           <div v-if="Number(state.groupCategoryId) === 3">
@@ -213,7 +215,7 @@ const updateSelectedLocation = (event: Event) => {
                 :checked="selectedLocation === 'ステージ団体'"
                 @click="updateSelectedLocation"
               />
-              ステージ団体
+              {{ $t('Item.stageGroup') }}
             </label>
           </div>
         </div>
@@ -258,7 +260,7 @@ const updateSelectedLocation = (event: Event) => {
           </div>
           <p>
             {{ getMaxValueByItemId(registerParams[idx].rentalItemId) }}
-            個まで貸し出し可能です
+            {{ $t("Item.maxNum") }}
           </p>
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 
