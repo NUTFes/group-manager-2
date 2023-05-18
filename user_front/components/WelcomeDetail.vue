@@ -4,15 +4,15 @@
   <div class="bg-white">
     <div class="flex flex-col items-center gap-32">
       <div class="flex flex-col items-center gap-16">
-        <div class="stroke text-3xl md:text-5xl whitespace-nowrap">
+        <div class="stroke text-xl sm:text-3xl md:text-5xl whitespace-nowrap">
           {{ $t("Welcome.overview") }}
         </div>
-        <div class="text-lg md:text-4xl whitespace-nowrap">
+        <div class="text-sm sm:text-2xl md:text-4xl whitespace-nowrap">
           {{ $t("Welcome.overviewDetails") }}
         </div>
       </div>
       <div class="flex flex-col items-center">
-        <div class="stroke mb-4 text-3xl md:text-5xl whitespace-nowrap">
+        <div class="stroke mb-4 text-2xl sm:text-3xl md:text-5xl whitespace-nowrap">
           {{ $t("Welcome.regist") }}
         </div>
 
