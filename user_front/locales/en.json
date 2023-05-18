@@ -196,7 +196,8 @@
     "item": "Necessary items",
     "number": "number of pieces required",
     "count": "",
-    "overlapItem": "The item is duplicated"
+    "overlapItem": "The item is duplicated",
+    "maxNum": "pieces can be rented"
   },
 
   "Power":{

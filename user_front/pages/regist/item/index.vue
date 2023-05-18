@@ -107,7 +107,9 @@ const registerItem = async () => {
       getMaxValueByItemId(registerParams[i].rentalItemId) <
       registerParams[i].num
     ) {
-      alert("貸し出し可能個数を超過している物品があるので修正してください。");
+      alert(
+        "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+      );
       return;
     }
     const uniqueRentalItems = new Set();
@@ -258,7 +260,7 @@ const updateSelectedLocation = (event: Event) => {
           </div>
           <p>
             {{ getMaxValueByItemId(registerParams[idx].rentalItemId) }}
-            個まで貸し出し可能です
+            {{ $t("Item.maxNum") }}
           </p>
           <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
 

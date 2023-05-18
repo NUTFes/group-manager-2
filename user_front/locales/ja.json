@@ -196,7 +196,8 @@
     "item": "貸出物品",
     "number": "数量",
     "count": "個",
-    "overlapItem": "貸出物品が重複しています"
+    "overlapItem": "貸出物品が重複しています",
+    "maxNum": "個まで貸し出し可能です"
   },
 
   "Power":{
