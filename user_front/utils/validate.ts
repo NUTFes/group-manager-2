@@ -49,8 +49,22 @@ export const placeSchema = object({
 // stage登録のバリデーション
 export const stageSchema = object({
   fesDate: number().required("入力してください"),
-  first: number().required("入力してください"),
-  second: number().required("入力してください"),
+  first: number().required("入力してください")
+    .test({
+      name: 'first',
+      message: "同じステージを選択しています",
+      test(value) {
+        return value !== this.resolve(ref("second")) ?? 0;
+      },
+    }),
+  second: number().required("入力してください")
+    .test({
+      name: 'second',
+      message: "同じステージを選択しています",
+      test(value) {
+        return value !== this.resolve(ref("first")) ?? 0;
+      },
+    }),
   performanceTime: number().required("入力してください").min(0, "0分以上で入力してください")
     .test({
       name: 'cleanUpTime',
