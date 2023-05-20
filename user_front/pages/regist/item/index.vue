@@ -177,7 +177,11 @@ const updateSelectedLocation = (event: Event) => {
   }
 };
 const back = () =>{
-  router.push("/regist/stageOption");
+  if (Number(state.groupCategoryId) === 3) {
+    router.push("/regist/stageOption");
+  } else {
+    router.push("/regist/place");
+  }
 }
 
 </script>
