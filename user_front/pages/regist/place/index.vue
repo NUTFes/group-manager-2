@@ -105,6 +105,11 @@ const registerPlace = async () => {
 const skip = () => {
   router.push("/regist/item");
 };
+
+const back = () => {
+  router.push("/regist/subrep");
+}
+
 </script>
 
 <template>
@@ -190,6 +195,10 @@ const skip = () => {
           {{ $t("Place.overlapPlace") }}
         </div>
         <Row>
+          <RegistPageButton
+            :text="$t('Button.back')"
+            @click="back">
+          </RegistPageButton>
           <RegistPageButton
             :text="$t('Button.reset')"
             @click="reset"
