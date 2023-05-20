@@ -3,6 +3,8 @@ import { FesYear, SunnyStage } from '@/types/regist/stage'
 import { loginCheck } from '@/utils/methods'
 import { useForm, useField } from 'vee-validate';
 import { stageSchema } from '~~/utils/validate'
+import { back } from '@/utils/methods'
+
 
 const { meta, isSubmitting } = useForm({
   validationSchema: stageSchema,
@@ -80,6 +82,10 @@ const skip = () =>{
   router.push("/regist/stage/rain");
 }
 
+const back = () =>{
+  router.push("/regist/subrep");
+}
+
 </script>
 
 <template>
@@ -138,6 +144,7 @@ const skip = () =>{
 
         </Card>
         <Row>
+          <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
           <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerRainStage" :text="$t('Button.register')"></RegistPageButton>
           <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>

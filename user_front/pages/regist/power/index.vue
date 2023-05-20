@@ -94,6 +94,10 @@ const registerPower = async () => {
 
 const skip = () =>{
   router.push("/regist/employees");
+};
+
+const back = () =>{
+  router.push("/regist/item");
 }
 
 </script>
@@ -170,6 +174,7 @@ const skip = () =>{
         </div>
       </Card>
       <Row>
+        <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
         <RegistPageButton :text="$t('Button.add')" @click="increment"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')" @click="registerPower"></RegistPageButton>
         <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>

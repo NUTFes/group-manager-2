@@ -16,7 +16,8 @@
     "delete": "delete",
     "skip": "skip",
     "add": "add",
-    "request": "request"
+    "request": "request",
+    "back": "back"
   },
 
   "Welcome": {

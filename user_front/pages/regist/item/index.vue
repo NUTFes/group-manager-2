@@ -176,6 +176,14 @@ const updateSelectedLocation = (event: Event) => {
       break;
   }
 };
+const back = () =>{
+  if (Number(state.groupCategoryId) === 3) {
+    router.push("/regist/stageOption");
+  } else {
+    router.push("/regist/place");
+  }
+}
+
 </script>
 
 <template>
@@ -287,6 +295,10 @@ const updateSelectedLocation = (event: Event) => {
         {{ $t("Item.overlapItem") }}
       </p>
       <Row>
+        <RegistPageButton
+          :text="$t('Button.back')"
+          @click="back">
+        </RegistPageButton>
         <RegistPageButton
           @click="increment"
           :text="$t('Button.add')"
