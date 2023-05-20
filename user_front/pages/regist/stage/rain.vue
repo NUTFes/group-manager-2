@@ -78,6 +78,10 @@ const registerRainStage = async () => {
 
 const skip = () =>{
   router.push("/regist/stageOption");
+};
+
+const back = () =>{
+  router.push("/regist/stage/sunny");
 }
 
 </script>
@@ -139,6 +143,7 @@ const skip = () =>{
 
         </Card>
         <Row>
+          <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
           <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerRainStage" :text="$t('Button.register')"></RegistPageButton>
           <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>

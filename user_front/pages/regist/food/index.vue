@@ -81,6 +81,10 @@ const skip = () => {
   }
 };
 
+const back = () =>{
+  router.push("/regist/employees");
+};
+
 const increment = () => {
   formCount.value++;
   registerParams.push(reactive({
@@ -156,6 +160,7 @@ const decrement = (idx: number) => {
         </div>
       </Card>
       <Row>
+        <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
         <RegistPageButton :text="$t('Button.add')" @click="increment"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerFood" :text="$t('Button.register')"></RegistPageButton>
         <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>

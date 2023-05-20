@@ -87,6 +87,10 @@ const skip = () =>{
   } else {
     router.push("/mypage");
   }
+};
+
+const back = () =>{
+  router.push("/regist/power");
 }
 
 </script>
@@ -130,6 +134,7 @@ const skip = () =>{
         </div>
       </Card>
       <Row>
+        <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
         <RegistPageButton :text="$t('Button.add')" @click="increment"></RegistPageButton>
         <RegistPageButton :text="$t('Button.register')" :disabled="!meta.valid || isSubmitting" @click="registerEmployee"></RegistPageButton>
         <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>

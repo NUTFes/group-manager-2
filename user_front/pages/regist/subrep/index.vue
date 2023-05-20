@@ -82,6 +82,10 @@ const createCurrentDepartmentList = (e: any) => {
     return grade.id === Number(e.target.value);
   })[0].departmentList;
 };
+
+const back = () => {
+  router.push("/regist/group");
+}
 </script>
 
 <template>
@@ -182,6 +186,10 @@ const createCurrentDepartmentList = (e: any) => {
           <div class="error_msg">{{ telError }}</div>
         </Card>
         <Row>
+          <RegistPageButton
+            :text="$t('Button.back')"
+            @click="back">
+          </RegistPageButton>
           <RegistPageButton
             :text="$t('Button.reset')"
             @click="reset"

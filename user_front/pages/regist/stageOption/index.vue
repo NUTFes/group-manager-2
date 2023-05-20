@@ -61,6 +61,10 @@ const skip = () =>{
   router.push("/regist/item");
 }
 
+const back = () =>{
+  router.push("/regist/stage/rain");
+}
+
 </script>
 
 <template>
@@ -117,6 +121,7 @@ const skip = () =>{
 
         </Card>
         <Row>
+          <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
           <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
           <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')" @click="registerStageOption"></RegistPageButton>
           <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>

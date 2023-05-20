@@ -133,6 +133,11 @@ const registerPurchase = async () => {
 const skip = () =>{
   router.push("/mypage");
 }
+
+const back = () =>{
+  router.push("/regist/food");
+}
+
 </script>
 
 <template>
@@ -243,6 +248,7 @@ const skip = () =>{
         </div>
       </Card>
       <Row>
+        <RegistPageButton :text="$t('Button.back')" @click="back"></RegistPageButton>
         <RegistPageButton @click="increment" :text="$t('Button.add')" ></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" @click="registerPurchase" :text="$t('Button.register')" />
         <RegistPageButton :text="$t('Button.skip')" @click="skip"></RegistPageButton>
