@@ -118,21 +118,21 @@ const skip = () =>{
 
           <div class="flex">
             <p class="label">{{ $t('Stage.performanceTime') }}</p>
-            <input class="form" v-model="registerParams.performanceTime" @change="handlePerformanceTime">
+            <input type="number" min="0" max="120" class="form" v-model="registerParams.performanceTime" @change="handlePerformanceTime">
             <p>min</p>
           </div>
           <div class="text-rose-600">{{ performanceTimeError }}</div>
 
           <div class="flex">
             <p class="label">{{ $t('Stage.preparationTime') }}</p>
-            <input class="form" v-model="registerParams.preparationTime" @change="handlePreparationTime">
+            <input type="number" min="0" max="120" class="form" v-model="registerParams.preparationTime" @change="handlePreparationTime">
             <p>min</p>
           </div>
           <div class="text-rose-600">{{ preparationTimeError }}</div>
 
           <div class="flex">
             <p class="label">{{ $t('Stage.cleanUpTime') }}</p>
-            <input class="form" v-model="registerParams.cleanUpTime" @change="handleCleanUpTime">
+            <input type="number" min="0" max="120" class="form" v-model="registerParams.cleanUpTime" @change="handleCleanUpTime">
             <p>min</p>
           </div>
           <div class="text-rose-600">{{ cleanUpTimeError }}</div>
