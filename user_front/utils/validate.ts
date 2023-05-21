@@ -54,7 +54,11 @@ export const stageSchema = object({
       name: 'first',
       message: "同じステージを選択しています",
       test(value) {
-        return value !== this.resolve(ref("second")) ?? 0;
+        const second = this.resolve(ref("second")) ?? 1;
+        if (second === 1) {
+          return true;
+        }
+        return value !== second;
       },
     }),
   second: number().required("入力してください")
@@ -62,7 +66,11 @@ export const stageSchema = object({
       name: 'second',
       message: "同じステージを選択しています",
       test(value) {
-        return value !== this.resolve(ref("first")) ?? 0;
+        const first = this.resolve(ref("first")) ?? 1;
+        if (first === 1) {
+          return true;
+        }
+        return value !== first;
       },
     }),
   performanceTime: number().required("入力してください").min(0, "0分以上で入力してください")
