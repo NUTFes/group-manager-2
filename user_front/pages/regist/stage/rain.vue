@@ -82,23 +82,6 @@ const skip = () =>{
 
 const back = () =>{
   router.push("/regist/stage/sunny");
-  $fetch(config.APIURL + "/stage_orders", {
-    method: "POST",
-    params: {
-      group_id: state.groupId,
-      is_sunny: false,
-      fes_date_id: 1,
-      stage_first: 1,
-      stage_second: 2,
-      use_time_interval: "",
-      prepare_time_interval: "",
-      cleanup_time_interval: "",
-    },
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-  router.push("/regist/stageOption");
 }
 
 </script>

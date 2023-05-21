@@ -78,22 +78,6 @@ const registerRainStage = async () => {
 
 const skip = () =>{
   router.push("/regist/stage/rain");
-  $fetch(config.APIURL + "/stage_orders", {
-    method: "POST",
-    params: {
-      group_id: state.groupId,
-      is_sunny: true,
-      fes_date_id: 2,
-      stage_first: 1,
-      stage_second: 2,
-      use_time_interval: "",
-      prepare_time_interval: "",
-      cleanup_time_interval: "",
-    },
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
 }
 
 const back = () =>{
