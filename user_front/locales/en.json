@@ -140,7 +140,8 @@
     "secondPreference": "second preference place",
     "performanceTime": "performance time",
     "preparationTime": "preparation time",
-    "cleanUpTime": "clean-up time"
+    "cleanUpTime": "clean-up time",
+    "weather" :"choose the weather"
   },
 
   "StageOption": {

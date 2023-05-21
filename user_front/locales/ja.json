@@ -140,7 +140,8 @@
     "secondPreference": "第二希望場所",
     "performanceTime": "準備時間",
     "preparationTime": "本番時間",
-    "cleanUpTime": "片付け時間"
+    "cleanUpTime": "片付け時間",
+    "weather" :"天候を選んでください"
   },
 
   "StageOption": {
