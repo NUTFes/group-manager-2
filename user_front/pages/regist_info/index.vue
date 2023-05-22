@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import axios from "axios";
 import { Group } from "~~/types";
-import Rentalorder from "@/components/EditModal/RentalOrder.vue";
 
 interface RegistInfo {
   sub_rep: SubRep[];
@@ -250,6 +249,11 @@ const openAddPurchase = () => {
   isAddPurchase.value = true;
 };
 
+const isAddStage = ref<boolean>(false);
+const openAddStage = () => {
+  isAddStage.value = true;
+};
+
 const totalPower = computed(() => {
   if (!powerOrders.value) return 0;
   return powerOrders.value.reduce(
@@ -393,26 +397,45 @@ const rentalItemOverlap = computed(() => {
 
         <!-- ステージ申請 group_category_id === ３ -->
         <div
-          class="mb-8"
           v-show="tab === 3"
-          v-for="s in stageOrder"
-          :key="s.toString()"
-        >
-          <RegistInfoCardStage
-            :group-id="group?.id"
-            :id="s.stage_order.stage_order.id"
-            :date="s.stage_order.date"
-            :fes-date-id="s.stage_order.stage_order.fes_date_id"
-            :first-stage="s.stage_order.stage_first"
-            :first-id="s.stage_order.stage_order.stage_first"
-            :second-stage="s.stage_order.stage_second"
-            :second-id="s.stage_order.stage_order.stage_second"
-            :is-sunny="s.stage_order.stage_order.is_sunny"
-            :cleanup-time-interval="s.stage_order.cleanup_time_interval"
-            :use-time-interval="s.stage_order.use_time_interval"
-            :prepare-time-interval="s.stage_order.prepare_time_interval"
-            @reload-stage="reload"
-          />
+          class="flex"
+          >
+          <div>
+            <div
+              class="mb-8"
+              v-for="s in stageOrder"
+              :key="s.toString()"
+            >
+              <div>
+                <RegistInfoCardStage
+                  :group-id="group?.id"
+                  :id="s.stage_order.stage_order.id"
+                  :date="s.stage_order.date"
+                  :fes-date-id="s.stage_order.stage_order.fes_date_id"
+                  :first-stage="s.stage_order.stage_first"
+                  :first-id="s.stage_order.stage_order.stage_first"
+                  :second-stage="s.stage_order.stage_second"
+                  :second-id="s.stage_order.stage_order.stage_second"
+                  :is-sunny="s.stage_order.stage_order.is_sunny"
+                  :cleanup-time-interval="s.stage_order.cleanup_time_interval"
+                  :use-time-interval="s.stage_order.use_time_interval"
+                  :prepare-time-interval="s.stage_order.prepare_time_interval"
+                  @reload-stage="reload"
+                />
+              </div>
+            </div>
+          </div>
+          <Button
+            v-if="!isRentalItemOverlap"
+              class="ml-auto"
+              @click="openAddStage()"
+            />
+          <RegistInfoAddStage
+            v-if="isAddStage"
+              v-model:add-stage="isAddStage"
+              :group-id="group?.id"
+              @reload-stage="reload"
+            />
         </div>
 
         <!-- ステージオプション申請 group_category_id === ３ -->

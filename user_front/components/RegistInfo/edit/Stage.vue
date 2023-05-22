@@ -3,6 +3,7 @@ import { FesYear } from '@/types/regist/stage'
 import { Stage } from '~~/types';
 import { useField, useForm } from 'vee-validate'
 import { stageSchema } from '~~/utils/validate';
+import { async } from '@firebase/util';
 const config = useRuntimeConfig()
 
 interface Props {
@@ -134,6 +135,16 @@ const reset = () => {
   newPrepareTimeInterval.value = null
   newCleanupTimeInterval.value = null
 }
+
+const deleteStage = async() => {
+  if (props.id !== null) {
+    await useFetch(config.APIURL + "/stage_orders/" + props.id, {
+      method: 'DELETE',
+    })
+  }
+  reloadStage()
+  closeEditStage()
+}
 </script>
 
 <template>
@@ -190,6 +201,7 @@ const reset = () => {
         <div class="error_msg">{{ cleanupTimeIntervalError }}</div>
       </div>
       <div class="flex justify-between mt-8 mx-8">
+        <RegistPageButton :text="$t('Button.delete')" @click="deleteStage()"></RegistPageButton>
         <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editStage()"></RegistPageButton>
       </div>
