@@ -194,8 +194,7 @@ const back = () => {
             :text="$t('Button.register')"
             :disabled="!meta.valid || isSubmitting"
             @click="registerSubRep"
-          >
-          </RegistPageButton>
+          ></RegistPageButton>
           <RegistPageButton
             :text="$t('Button.skip')"
             @click="skip"
