@@ -187,10 +187,6 @@ const back = () => {
         </Card>
         <Row>
           <RegistPageButton
-            :text="$t('Button.back')"
-            @click="back">
-          </RegistPageButton>
-          <RegistPageButton
             :text="$t('Button.reset')"
             @click="reset"
           ></RegistPageButton>
