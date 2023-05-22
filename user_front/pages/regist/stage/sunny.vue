@@ -3,6 +3,8 @@ import { FesYear, SunnyStage } from '@/types/regist/stage'
 import { loginCheck } from '@/utils/methods'
 import { useForm, useField } from 'vee-validate';
 import { stageSchema } from '~~/utils/validate'
+import { back } from '@/utils/methods'
+
 
 const { meta, isSubmitting } = useForm({
   validationSchema: stageSchema,
