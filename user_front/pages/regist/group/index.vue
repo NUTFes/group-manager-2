@@ -104,7 +104,7 @@ const registerCategory = async () => {
           <div class="error-msg">{{ activityError }}</div>
         </Card>
         <Row>
-          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.reset')" @click="reset" variant="danger"></RegistPageButton>
           <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
