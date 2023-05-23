@@ -32,7 +32,7 @@ const submit = () =>{
     )
     .then(
       (response) =>{
-        router.push("MyPage");
+        router.push("/myPage");
       }
     )
 }

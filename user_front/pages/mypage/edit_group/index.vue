@@ -77,7 +77,7 @@ const register = () => {
           "group_category_id",
           response.data.data.group_category_id
         );
-        router.push("/regist/subrep");
+        router.push("/mypage");
       },
       (error) => {
         console.log("登録できませんでした");

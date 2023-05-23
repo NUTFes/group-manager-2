@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { loginCheck } from "~~/utils/methods";
 
+const router = useRouter()
 const config = useRuntimeConfig();
 const groupId = ref<number>(0)
 const announcement = ref<string>("")
@@ -22,6 +23,11 @@ const postAnnouncement = () => {
       "Content-Type": "application/json",
     },
   })
+  .then(
+    (response) =>{
+      router.push("/myPage");
+    }
+  )
 }
 </script>
 
