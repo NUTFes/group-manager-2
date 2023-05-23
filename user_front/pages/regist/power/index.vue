@@ -82,24 +82,40 @@ const decrement = (idx: number) => {
   removeValidate(idx);
 };
 
-const registerPower = async () => {
+const maxPowerValidate = () => {
+  let totalPower: number = 0;
   for (let i = 0; i < formCount.value; i++) {
-    await $fetch(config.APIURL + "/power_orders", {
-      method: "POST",
-      params: {
-        group_id: state.groupId,
-        item: registerParams[i].productName,
-        power: registerParams[i].maxPower,
-        manufacturer: registerParams[i].manufacturer,
-        model: registerParams[i].model,
-        item_url: registerParams[i].url,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    totalPower += Number(registerParams[i].maxPower);
   }
-  router.push("/regist/employees");
+  if (totalPower > 1500) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const registerPower = async () => {
+  if (maxPowerValidate()) {
+    alert("合計消費電力を1500W以下にしてください");
+  } else {
+    for (let i = 0; i < formCount.value; i++) {
+      await $fetch(config.APIURL + "/power_orders", {
+        method: "POST",
+        params: {
+          group_id: state.groupId,
+          item: registerParams[i].productName,
+          power: registerParams[i].maxPower,
+          manufacturer: registerParams[i].manufacturer,
+          model: registerParams[i].model,
+          item_url: registerParams[i].url,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    router.push("/regist/employees");
+  }
 };
 
 const skip = () => {
