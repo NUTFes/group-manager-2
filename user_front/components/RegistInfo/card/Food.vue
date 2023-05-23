@@ -1,45 +1,43 @@
 <script lang="ts" setup>
-
 interface Props {
-  id: number | null
-  groupId: number
-  name: string
-  isCooking: boolean
-  firstNum: number
-  secondNum: number
-  setting: boolean | null
+  id: number | null;
+  groupId: number;
+  name: string;
+  isCooking: boolean;
+  firstNum: number;
+  secondNum: number;
+  setting: boolean | null;
 }
 
 interface Emits {
-  (e: 'reloadFood', v: null): void
+  (e: "reloadFood", v: null): void;
 }
 
 const food = withDefaults(defineProps<Props>(), {
   id: null,
   groupId: 0,
-  name: '',
+  name: "",
   isCooking: false,
   firstNum: 0,
   secondNum: 0,
   setting: null,
-})
+});
 
-const emits = defineEmits<Emits>()
+const emits = defineEmits<Emits>();
 
-const isEditFood = ref<boolean>(false)
-const isDeleteFood = ref<boolean>(false)
+const isEditFood = ref<boolean>(false);
+const isDeleteFood = ref<boolean>(false);
 
 const openEditFood = () => {
-  isEditFood.value = true
-}
+  isEditFood.value = true;
+};
 const openDeleteFood = () => {
-  isDeleteFood.value = true
-}
+  isDeleteFood.value = true;
+};
 
 const reloadFood = () => {
-  emits('reloadFood', null)
-}
-
+  emits("reloadFood", null);
+};
 </script>
 <template>
   <RegistInfoWideCard>
@@ -49,28 +47,30 @@ const reloadFood = () => {
       </div>
       <RegistInfoDivideBar />
       <div class="w-[10%] text-center">
-        <p class="text-xl">{{ $t('Food.cook') }}</p>
-        <p class="text-2xl">{{ food.isCooking ? $t('Food.yes') : $t('Food.no') }}</p>
+        <p class="text-xl">{{ $t("Food.cook") }}</p>
+        <p class="text-2xl">
+          {{ food.isCooking ? $t("Food.yes") : $t("Food.no") }}
+        </p>
       </div>
       <RegistInfoDivideBar />
       <div class="mx-4 text-center text-xl">
-        <span>{{ $t('Food.sold') }}<br>{{ $t('Food.toBe') }}</span>
+        <span>{{ $t("Food.sold") }}<br />{{ $t("Food.toBe") }}</span>
       </div>
-        ▶
+      ▶
       <div class="w-[15%] mx-4 text-2xl">
         <div class="mr-1">
-          {{ $t('Food.firstDay') }}
+          {{ $t("Food.firstDay") }}
           <span class="w-[10%] text-center text-3xl">
             {{ food.firstNum }}
           </span>
-          {{ $t('Food.count') }}
+          {{ $t("Food.count") }}
         </div>
         <div class="mr-1">
-          {{ $t('Food.secondDay') }}
+          {{ $t("Food.secondDay") }}
           <span class="w-[10%] text-center text-3xl">
             {{ food.secondNum }}
           </span>
-          {{ $t('Food.count') }}
+          {{ $t("Food.count") }}
         </div>
       </div>
     </template>
