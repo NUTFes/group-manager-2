@@ -74,13 +74,11 @@ const openDeletePurchase = () => {
           {{ purchase.shop }}
         </div>
       </div>
-      <div v-if="groupCategoryId === 1">
-        <RegistInfoDivideBar />
-        <div class="w-[10%] text-center mr-4">
-          <p class="text-3xl">
-            {{ purchase.isFresh ? $t("Purchase.yes") : $t("Purchase.no") }}
-          </p>
-        </div>
+      <RegistInfoDivideBar v-if="groupCategoryId === 1" />
+      <div class="w-[10%] text-center mr-4" v-if="groupCategoryId === 1">
+        <p class="text-3xl">
+          {{ purchase.isFresh ? $t("Purchase.yes") : $t("Purchase.no") }}
+        </p>
       </div>
     </template>
     <template #method>
