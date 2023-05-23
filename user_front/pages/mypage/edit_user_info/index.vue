@@ -4,6 +4,7 @@ import { useForm, useField } from "vee-validate";
 import { userDetailSchema } from "~~/utils/validate";
 import { User, UserDetail, EditUser, CurrentUser } from "~~/types/currentUser";
 import { gradeList, GradeWithDepartmentList } from "~/utils/list";
+import { NoScript } from '../../../.nuxt/components';
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -184,7 +185,7 @@ const createCurrentDepartmentList = (e: any) => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .error {
   @apply text-red-500 ml-4;
 }
@@ -221,27 +222,30 @@ const createCurrentDepartmentList = (e: any) => {
   padding: 1% 1% 1% 2%;
 }
 
-select,
-input {
+.regist-card input,
+.regist-card select {
   @apply text-left
     p-[1%]
     h-[50px]
     w-[1000px]
-    mt-5
+    mb-5
     rounded-[7px]
     text-lg
     align-top;
 }
-select,
-input:required {
+
+.regist-card input:required,
+.regist-card select {
   border: 1px solid red;
 }
-select,
-input:invalid {
+
+.regist-card input:invalid,
+.regist-cardselect {
   border: 1px solid red;
 }
-select,
-input:valid {
+
+.regist-card input:valid,
+.regist-card select {
   border: 1px solid #333333;
 }
 
