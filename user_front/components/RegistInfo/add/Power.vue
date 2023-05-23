@@ -59,6 +59,11 @@ const reset = () => {
   newManufacturer.value = ''
   newModel.value = ''
   newUrl.value = ''
+  handleItem(newItem.value)
+  handlePower(newPower.value)
+  handleManufacturer(newManufacturer.value)
+  handleModel(newModel.value)
+  handleUrl(newUrl.value)
 }
 </script>
 
