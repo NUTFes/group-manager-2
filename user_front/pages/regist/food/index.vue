@@ -118,7 +118,13 @@ const decrement = (idx: number) => {
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
-      <h1 class="text-3xl">{{ $t("Food.registFood") }}</h1>
+      <h1 class="text-3xl">
+        {{
+          state.groupCategoryId === 1
+            ? $t("Food.registFood")
+            : $t("SaleGoods.registSaleGoods")
+        }}
+      </h1>
       <Card border="none" align="center">
         <div
           v-for="(field, idx) in foodValidate"
@@ -126,7 +132,13 @@ const decrement = (idx: number) => {
           class="border rounded-md p-2 flex flex-col gap-4 items-center"
         >
           <div class="grid grid-cols-2 gap-y-2">
-            <p class="label">{{ $t("Food.name") }}</p>
+            <p class="label">
+              {{
+                state.groupCategoryId === 1
+                  ? $t("Food.name")
+                  : $t("SaleGoods.name")
+              }}
+            </p>
             <div class="flex flex-col">
               <Field
                 :id="`name${idx}`"
@@ -139,8 +151,10 @@ const decrement = (idx: number) => {
                 :name="`foods[${idx}].dishName`"
               />
             </div>
-            <p class="label">{{ $t("Food.cook") }}</p>
-            <div class="flex flex-col">
+            <p v-if="state.groupCategoryId === 1" class="label">
+              {{ $t("Food.cook") }}
+            </p>
+            <div v-if="state.groupCategoryId === 1" class="flex flex-col">
               <select
                 style="width: 180px"
                 v-model="registerParams[idx].isCooking"
@@ -157,6 +171,7 @@ const decrement = (idx: number) => {
                 :name="`foods[${idx}].numFirstDay`"
                 class="form"
                 v-model="registerParams[idx].numFirstDay"
+                type="number"
               />
               <ErrorMessage
                 class="text-rose-600 text-sm"
@@ -170,6 +185,7 @@ const decrement = (idx: number) => {
                 :name="`foods[${idx}].numSecondDay`"
                 class="form"
                 v-model="registerParams[idx].numSecondDay"
+                type="number"
               />
               <ErrorMessage
                 class="text-rose-600 text-sm"
