@@ -96,6 +96,7 @@
     "item": "Item",
     "employees": "Employees",
     "food": "Food",
+    "saleGoods": "Sale of Goods",
     "purchase": "Purchase"
   },
 
@@ -141,7 +142,7 @@
     "performanceTime": "performance time",
     "preparationTime": "preparation time",
     "cleanUpTime": "clean-up time",
-    "weather" :"choose the weather"
+    "weather": "choose the weather"
   },
 
   "StageOption": {
@@ -232,6 +233,25 @@
     "deleteFood": "Deletion foods for sale",
     "editFood": "Edit foods for Sale",
     "name": "Name of food sold",
+    "cook": "Cooked or not",
+    "select": "Please select",
+    "yes": "Cooked",
+    "no": "uncooked",
+    "numberFirstDay": "Estimated number of products to be sold on Day１",
+    "numberSecondDay": "Estimated number of products to be sold on Day２",
+    "firstDay": "Day１",
+    "secondDay": "Day２",
+    "count": "",
+    "sold": "Estimated number",
+    "toBe": "of products to be sold"
+  },
+
+  "SaleGoods": {
+    "registSaleGoods": "Registration of goods for sale",
+    "addSaleGoods": "Additional goods for sale",
+    "deleteSaleGoods": "Deletion goods for sale",
+    "editSaleGoods": "Edit goods for Sale",
+    "name": "Name of goods sold",
     "cook": "Cooked or not",
     "select": "Please select",
     "yes": "Cooked",
