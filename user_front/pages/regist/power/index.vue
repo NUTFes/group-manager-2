@@ -82,9 +82,9 @@ const decrement = (idx: number) => {
   removeValidate(idx);
 };
 
-let totalPower:number = 0
 let isMaxPowerExceeded = false
 const maxPowerValidate = () =>{
+  let totalPower:number = 0
   for (let i = 0; i < formCount.value; i++) {
     totalPower += Number(registerParams[i].maxPower)
   }
