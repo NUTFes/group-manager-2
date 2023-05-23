@@ -10,6 +10,7 @@ interface Props {
   name: string;
   isFresh: boolean;
   setting: boolean | null;
+  groupCategoryId: number;
 }
 const purchase = withDefaults(defineProps<Props>(), {
   id: 0,
@@ -22,6 +23,7 @@ const purchase = withDefaults(defineProps<Props>(), {
   name: "",
   isFresh: false,
   setting: null,
+  groupCategoryId: 0,
 });
 
 interface Emits {
@@ -72,11 +74,13 @@ const openDeletePurchase = () => {
           {{ purchase.shop }}
         </div>
       </div>
-      <RegistInfoDivideBar />
-      <div class="w-[10%] text-center mr-4">
-        <p class="text-3xl">
-          {{ purchase.isFresh ? $t("Purchase.yes") : $t("Purchase.no") }}
-        </p>
+      <div v-if="groupCategoryId === 1">
+        <RegistInfoDivideBar />
+        <div class="w-[10%] text-center mr-4">
+          <p class="text-3xl">
+            {{ purchase.isFresh ? $t("Purchase.yes") : $t("Purchase.no") }}
+          </p>
+        </div>
       </div>
     </template>
     <template #method>
@@ -100,6 +104,7 @@ const openDeletePurchase = () => {
     :fes-date-id="fesDateId"
     :name="name"
     :is-fresh="isFresh"
+    :group-category-id="groupCategoryId"
     @reload-purchase="reloadPurchase"
   />
   <RegistInfoDeletePurchase

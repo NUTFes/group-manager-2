@@ -577,6 +577,7 @@ const rentalItemOverlap = computed(() => {
                 :name="p.purchase_list.items"
                 :is-fresh="p.purchase_list.is_fresh"
                 :fes-date-id="p.purchase_list.date_id"
+                :group-category-id="groupCategoryId ? groupCategoryId : 0"
                 @reload-purchase="reload"
               />
             </div>
@@ -586,6 +587,7 @@ const rentalItemOverlap = computed(() => {
             v-if="isAddPurchase"
             v-model:add-purchase="isAddPurchase"
             :group-id="group?.id"
+            :group-category-id="groupCategoryId ? groupCategoryId : 0"
             @reload-purchase="reload"
           />
         </div>

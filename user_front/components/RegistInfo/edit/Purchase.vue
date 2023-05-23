@@ -13,6 +13,7 @@ interface Regist {
   foodProductId: number | null;
   shopId: number | null;
   fesDateId: number | null;
+  groupCategoryId: number;
 }
 const props = withDefaults(defineProps<Regist>(), {
   id: null,
@@ -136,7 +137,13 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">{{ $t("Purchase.target") }}</div>
+      <div class="text">
+        {{
+          groupCategoryId === 1
+            ? $t("Purchase.target")
+            : $t("Purchase.targetGoods")
+        }}
+      </div>
       <select
         class="entry"
         v-model="newFoodProductId"
@@ -149,7 +156,11 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ foodProductError }}</div>
-      <div class="text">{{ $t("Purchase.name") }}</div>
+      <div class="text">
+        {{
+          groupCategoryId === 1 ? $t("Purchase.name") : $t("Purchase.goodsName")
+        }}
+      </div>
       <input
         class="entry"
         v-model="newName"
@@ -157,18 +168,22 @@ const reset = () => {
         :class="{ error_border: itemError }"
       />
       <div class="error_msg">{{ itemError }}</div>
-      <div class="text">{{ $t("Purchase.rowFood") }}</div>
-      <select
-        class="entry"
-        v-model="newIsFresh"
-        @change="handleIsFresh"
-        :class="{ error_border: isFreshError }"
-      >
-        <option value="" disabled selected>{{ $t("Purchase.select") }}</option>
-        <option value="true">{{ $t("Purchase.yes") }}</option>
-        <option value="false">{{ $t("Purchase.no") }}</option>
-      </select>
-      <div class="error_msg">{{ isFreshError }}</div>
+      <div v-if="groupCategoryId === 1">
+        <div class="text">{{ $t("Purchase.rowFood") }}</div>
+        <select
+          class="entry"
+          v-model="newIsFresh"
+          @change="handleIsFresh"
+          :class="{ error_border: isFreshError }"
+        >
+          <option value="" disabled selected>
+            {{ $t("Purchase.select") }}
+          </option>
+          <option value="true">{{ $t("Purchase.yes") }}</option>
+          <option value="false">{{ $t("Purchase.no") }}</option>
+        </select>
+        <div class="error_msg">{{ isFreshError }}</div>
+      </div>
       <div class="text">{{ $t("Purchase.place") }}</div>
       <select
         class="entry"
@@ -176,7 +191,9 @@ const reset = () => {
         @change="handleShop"
         :class="{ error_border: shopError }"
       >
-        <option value="" disabled selected>{{ $t("Purchase.select") }}</option>
+        <option value="" disabled selected>
+          {{ $t("Purchase.select") }}
+        </option>
         <option v-for="(list, i) in purchases" :key="i" :value="list.id">
           {{ list.name }}
         </option>
