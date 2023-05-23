@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { powerSchema } from "~~/utils/validate";
-import { useFieldArray, useForm, Field, ErrorMessage} from "vee-validate";
+import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate";
 import { loginCheck } from "@/utils/methods";
 
 const initialData = {
@@ -82,41 +82,40 @@ const decrement = (idx: number) => {
   removeValidate(idx);
 };
 
-let isMaxPowerExceeded = false
-const maxPowerValidate = () =>{
-  let totalPower:number = 0
+let isMaxPowerExceeded = false;
+const maxPowerValidate = () => {
+  let totalPower: number = 0;
   for (let i = 0; i < formCount.value; i++) {
-    totalPower += Number(registerParams[i].maxPower)
+    totalPower += Number(registerParams[i].maxPower);
   }
   if (totalPower > 1500) {
-    isMaxPowerExceeded = true
+    isMaxPowerExceeded = true;
   }
-  return isMaxPowerExceeded
-}
+  return isMaxPowerExceeded;
+};
 
 const registerPower = async () => {
-  isMaxPowerExceeded = maxPowerValidate()
+  isMaxPowerExceeded = maxPowerValidate();
   if (isMaxPowerExceeded === true) {
-    alert("合計消費電力を1500W以下にしてください")
-  }
-  else{
+    alert("合計消費電力を1500W以下にしてください");
+  } else {
     for (let i = 0; i < formCount.value; i++) {
-    await $fetch(config.APIURL + "/power_orders", {
-      method: "POST",
-      params: {
-        group_id: state.groupId,
-        item: registerParams[i].productName,
-        power: registerParams[i].maxPower,
-        manufacturer: registerParams[i].manufacturer,
-        model: registerParams[i].model,
-        item_url: registerParams[i].url,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
-  router.push("/regist/employees");
+      await $fetch(config.APIURL + "/power_orders", {
+        method: "POST",
+        params: {
+          group_id: state.groupId,
+          item: registerParams[i].productName,
+          power: registerParams[i].maxPower,
+          manufacturer: registerParams[i].manufacturer,
+          model: registerParams[i].model,
+          item_url: registerParams[i].url,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    router.push("/regist/employees");
   }
 };
 
