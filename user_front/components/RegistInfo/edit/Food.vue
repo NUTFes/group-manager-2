@@ -10,6 +10,7 @@ interface Regist {
   dishName: string;
   firstDayNum: number | null;
   secondDayNum: number | null;
+  groupCategoryId: number;
 }
 const props = withDefaults(defineProps<Regist>(), {
   groupId: null,
@@ -92,7 +93,13 @@ const reset = () => {
 </script>
 
 <template>
-  <Modal :title="$t('Food.editFood')">
+  <Modal
+    :title="
+      groupCategoryId === 1
+        ? $t('Food.editFood')
+        : $t('SaleGoods.editSaleGoods')
+    "
+  >
     <template #close>
       <div class="flex justify-end">
         <button
@@ -104,7 +111,9 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">{{ $t("Food.name") }}</div>
+      <div class="text">
+        {{ groupCategoryId === 1 ? $t("Food.name") : $t("SaleGoods.name") }}
+      </div>
       <input
         class="entry"
         v-model="newDishName"
@@ -112,12 +121,14 @@ const reset = () => {
         :class="{ error_border: dishNameError }"
       />
       <div class="error_msg">{{ dishNameError }}</div>
-      <div class="text">{{ $t("Food.cook") }}</div>
-      <select class="entry" v-model="newIsCooking">
-        <option value="" disabled selected>{{ $t("Food.select") }}</option>
-        <option value="true">{{ $t("Food.yes") }}</option>
-        <option value="false">{{ $t("Food.no") }}</option>
-      </select>
+      <div v-if="groupCategoryId === 1">
+        <div class="text">{{ $t("Food.cook") }}</div>
+        <select class="entry" v-model="newIsCooking">
+          <option value="" disabled selected>{{ $t("Food.select") }}</option>
+          <option value="true">{{ $t("Food.yes") }}</option>
+          <option value="false">{{ $t("Food.no") }}</option>
+        </select>
+      </div>
       <div class="text">{{ $t("Food.numberFirstDay") }}</div>
       <input
         type="number"

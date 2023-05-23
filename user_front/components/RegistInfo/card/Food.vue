@@ -7,6 +7,7 @@ interface Props {
   firstNum: number;
   secondNum: number;
   setting: boolean | null;
+  groupCategoryId: number;
 }
 
 interface Emits {
@@ -46,13 +47,13 @@ const reloadFood = () => {
         {{ food.name }}
       </div>
       <RegistInfoDivideBar />
-      <div class="w-[10%] text-center">
+      <div v-if="groupCategoryId === 1" class="w-[10%] text-center">
         <p class="text-xl">{{ $t("Food.cook") }}</p>
         <p class="text-2xl">
           {{ food.isCooking ? $t("Food.yes") : $t("Food.no") }}
         </p>
       </div>
-      <RegistInfoDivideBar />
+      <RegistInfoDivideBar v-if="groupCategoryId === 1" />
       <div class="mx-4 text-center text-xl">
         <span>{{ $t("Food.sold") }}<br />{{ $t("Food.toBe") }}</span>
       </div>
@@ -92,6 +93,7 @@ const reloadFood = () => {
     :is-cooking="isCooking"
     :first-day-num="firstNum"
     :second-day-num="secondNum"
+    :group-category-id="groupCategoryId"
     @reload-food="reloadFood()"
   />
   <RegistInfoDeleteFood
