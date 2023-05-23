@@ -96,6 +96,7 @@
     "item": "物品申請",
     "employees": "従業員申請",
     "food": "食品申請",
+    "saleGoods": "物品販売",
     "purchase": "購入品申請"
   },
 
@@ -141,7 +142,7 @@
     "performanceTime": "準備時間",
     "preparationTime": "本番時間",
     "cleanUpTime": "片付け時間",
-    "weather" :"天候を選んでください"
+    "weather": "天候を選んでください"
   },
 
   "StageOption": {
@@ -245,6 +246,24 @@
     "toBe": "予定数"
   },
 
+  "SaleGoods": {
+    "registSaleGoods": "販売物品の登録",
+    "addSaleGoods": "販売物品の追加",
+    "deleteSaleGoods": "販売物品の削除",
+    "editSaleGoods": "販売物品の編集",
+    "name": "販売物品名",
+    "select": "選択してください",
+    "yes": "有",
+    "no": "無",
+    "numberFirstDay": "１日目の販売予定数",
+    "numberSecondDay": "２日目の販売予定数",
+    "firstDay": "１日目",
+    "secondDay": "２日目",
+    "count": "個",
+    "sold": "販売",
+    "toBe": "予定数"
+  },
+
   "Purchase": {
     "registPurchase": "購入品の登録",
     "addPurchase": "購入品の追加",
@@ -252,8 +271,10 @@
     "editPurchase": "購入品の編集",
     "purchase": "購入品",
     "target": "販売食品名",
+    "targetGoods": "販売物品名",
     "select": "選択してください",
     "name": "購入材料名",
+    "goodsName": "購入品",
     "place": "購入場所",
     "date": "購入日",
     "rowFood": "生ものか否か",

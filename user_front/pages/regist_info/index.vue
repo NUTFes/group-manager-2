@@ -332,7 +332,11 @@ const rentalItemOverlap = computed(() => {
         </li>
         <li @click="tab = 8">
           <div :class="{ select: tab === 8 }" class="title">
-            {{ $t("RegistInfo.food") }}
+            {{
+              groupCategoryId === 1
+                ? $t("RegistInfo.food")
+                : $t("RegistInfo.saleGoods")
+            }}
           </div>
         </li>
         <li @click="tab = 9">
@@ -396,16 +400,9 @@ const rentalItemOverlap = computed(() => {
         </div>
 
         <!-- ステージ申請 group_category_id === ３ -->
-        <div
-          v-show="tab === 3"
-          class="flex"
-          >
+        <div v-show="tab === 3" class="flex">
           <div>
-            <div
-              class="mb-8"
-              v-for="s in stageOrder"
-              :key="s.toString()"
-            >
+            <div class="mb-8" v-for="s in stageOrder" :key="s.toString()">
               <div>
                 <RegistInfoCardStage
                   :group-id="group?.id"
@@ -427,15 +424,15 @@ const rentalItemOverlap = computed(() => {
           </div>
           <Button
             v-if="!isRentalItemOverlap"
-              class="ml-auto"
-              @click="openAddStage()"
-            />
+            class="ml-auto"
+            @click="openAddStage()"
+          />
           <RegistInfoAddStage
             v-if="isAddStage"
-              v-model:add-stage="isAddStage"
-              :group-id="group?.id"
-              @reload-stage="reload"
-            />
+            v-model:add-stage="isAddStage"
+            :group-id="group?.id"
+            @reload-stage="reload"
+          />
         </div>
 
         <!-- ステージオプション申請 group_category_id === ３ -->
@@ -552,6 +549,7 @@ const rentalItemOverlap = computed(() => {
               :is-cooking="f.food_product.is_cooking"
               :firstNum="f.food_product.first_day_num"
               :secondNum="f.food_product.second_day_num"
+              :groupCategoryId="groupCategoryId ? groupCategoryId : 0"
               @reload-food="reload"
             />
           </div>
@@ -560,6 +558,7 @@ const rentalItemOverlap = computed(() => {
             v-if="isAddFood"
             v-model:add-food="isAddFood"
             :group-id="group?.id"
+            :groupCategoryId="groupCategoryId ? groupCategoryId : 0"
             @reload-food="reload"
           />
         </div>
@@ -578,6 +577,7 @@ const rentalItemOverlap = computed(() => {
                 :name="p.purchase_list.items"
                 :is-fresh="p.purchase_list.is_fresh"
                 :fes-date-id="p.purchase_list.date_id"
+                :group-category-id="groupCategoryId ? groupCategoryId : 0"
                 @reload-purchase="reload"
               />
             </div>
@@ -587,6 +587,7 @@ const rentalItemOverlap = computed(() => {
             v-if="isAddPurchase"
             v-model:add-purchase="isAddPurchase"
             :group-id="group?.id"
+            :group-category-id="groupCategoryId ? groupCategoryId : 0"
             @reload-purchase="reload"
           />
         </div>
