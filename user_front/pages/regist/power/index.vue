@@ -82,21 +82,20 @@ const decrement = (idx: number) => {
   removeValidate(idx);
 };
 
-let isMaxPowerExceeded = false;
 const maxPowerValidate = () => {
   let totalPower: number = 0;
   for (let i = 0; i < formCount.value; i++) {
     totalPower += Number(registerParams[i].maxPower);
   }
   if (totalPower > 1500) {
-    isMaxPowerExceeded = true;
+    return true;
+  } else {
+    return false;
   }
-  return isMaxPowerExceeded;
 };
 
 const registerPower = async () => {
-  isMaxPowerExceeded = maxPowerValidate();
-  if (isMaxPowerExceeded === true) {
+  if (maxPowerValidate()) {
     alert("合計消費電力を1500W以下にしてください");
   } else {
     for (let i = 0; i < formCount.value; i++) {
