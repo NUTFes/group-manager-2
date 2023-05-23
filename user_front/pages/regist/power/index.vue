@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { powerSchema } from "~~/utils/validate";
-import { useFieldArray, useForm, Field, ErrorMessage } from "vee-validate";
+import { useFieldArray, useForm, Field, ErrorMessage} from "vee-validate";
 import { loginCheck } from "@/utils/methods";
 
 const initialData = {
@@ -72,8 +72,25 @@ const decrement = (idx: number) => {
   removeValidate(idx)
 }
 
-const registerPower = async () => {
+let totalPower:number = 0
+let isMaxPowerExceeded = false
+const maxPowerValidate = () =>{
   for (let i = 0; i < formCount.value; i++) {
+    totalPower += Number(registerParams[i].maxPower)
+  }
+  if (totalPower > 1500) {
+    isMaxPowerExceeded = true
+  }
+  return isMaxPowerExceeded
+}
+
+const registerPower = async () => {
+  isMaxPowerExceeded = maxPowerValidate()
+  if (isMaxPowerExceeded === true) {
+    alert("合計消費電力を1500W以下にしてください")
+  }
+  else{
+    for (let i = 0; i < formCount.value; i++) {
     await $fetch(config.APIURL + "/power_orders", {
       method: "POST",
       params: {
@@ -90,6 +107,7 @@ const registerPower = async () => {
     });
   }
   router.push("/regist/employees");
+  }
 };
 
 const skip = () =>{
