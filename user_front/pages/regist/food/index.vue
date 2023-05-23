@@ -181,16 +181,19 @@ const decrement = (idx: number) => {
             <RegistPageButton
               @click="reset(idx)"
               :text="$t('Button.reset')"
+              variant="danger"
             ></RegistPageButton>
           </div>
           <div v-if="idx != 0" class="flex gap-3">
             <RegistPageButton
               @click="reset(idx)"
               :text="$t('Button.reset')"
+              variant="danger"
             ></RegistPageButton>
             <RegistPageButton
               @click="decrement(idx)"
               :text="$t('Button.delete')"
+              variant="danger"
             ></RegistPageButton>
           </div>
         </div>
@@ -199,10 +202,12 @@ const decrement = (idx: number) => {
         <RegistPageButton
           :text="$t('Button.back')"
           @click="back"
+          variant="secondary"
         ></RegistPageButton>
         <RegistPageButton
           :text="$t('Button.add')"
           @click="increment"
+          variant="success"
         ></RegistPageButton>
         <RegistPageButton
           :disabled="!meta.valid || isSubmitting"
@@ -212,6 +217,7 @@ const decrement = (idx: number) => {
         <RegistPageButton
           :text="$t('Button.skip')"
           @click="skip"
+          variant="secondary"
         ></RegistPageButton>
       </Row>
     </Card>

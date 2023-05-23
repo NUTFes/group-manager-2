@@ -3,10 +3,7 @@ import axios from "axios";
 import { User, RegisterParams } from "@/types/regist/user";
 import { useForm, useField } from "vee-validate";
 import { userSchema } from "~~/utils/validate";
-import {
-  gradeList,
-  GradeWithDepartmentList,
-} from "~/utils/list";
+import { gradeList, GradeWithDepartmentList } from "~/utils/list";
 
 const { meta, isSubmitting } = useForm({
   validationSchema: userSchema,
@@ -240,6 +237,7 @@ const createCurrentDepartmentList = (e: any) => {
         <Row>
           <RegistPageButton
             :text="$t('Button.reset')"
+            variant="danger"
             @click="reset"
           ></RegistPageButton>
           <RegistPageButton

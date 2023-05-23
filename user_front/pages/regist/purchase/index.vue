@@ -268,16 +268,19 @@ const back = () => {
             <RegistPageButton
               :text="$t('Button.reset')"
               @click="reset(idx)"
+              variant="danger"
             ></RegistPageButton>
           </div>
           <div v-if="idx != 0" class="flex gap-3">
             <RegistPageButton
               :text="$t('Button.reset')"
               @click="reset(idx)"
+              variant="danger"
             ></RegistPageButton>
             <RegistPageButton
               :text="$t('Button.delete')"
               @click="decrement(idx)"
+              variant="danger"
             ></RegistPageButton>
           </div>
         </div>
@@ -286,10 +289,12 @@ const back = () => {
         <RegistPageButton
           :text="$t('Button.back')"
           @click="back"
+          variant="secondary"
         ></RegistPageButton>
         <RegistPageButton
           @click="increment"
           :text="$t('Button.add')"
+          variant="success"
         ></RegistPageButton>
         <RegistPageButton
           :disabled="!meta.valid || isSubmitting"
@@ -299,6 +304,7 @@ const back = () => {
         <RegistPageButton
           :text="$t('Button.skip')"
           @click="skip"
+          variant="secondary"
         ></RegistPageButton>
       </Row>
       <p class="text-red-500">{{ errorMessage }}</p>

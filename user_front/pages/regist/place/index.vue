@@ -108,8 +108,7 @@ const skip = () => {
 
 const back = () => {
   router.push("/regist/subrep");
-}
-
+};
 </script>
 
 <template>
@@ -197,11 +196,14 @@ const back = () => {
         <Row>
           <RegistPageButton
             :text="$t('Button.back')"
-            @click="back">
+            @click="back"
+            variant="secondary"
+          >
           </RegistPageButton>
           <RegistPageButton
             :text="$t('Button.reset')"
             @click="reset"
+            variant="danger"
           ></RegistPageButton>
           <RegistPageButton
             :disabled="!meta.valid || isSubmitting"
@@ -211,6 +213,7 @@ const back = () => {
           <RegistPageButton
             :text="$t('Button.skip')"
             @click="skip"
+            variant="secondary"
           ></RegistPageButton>
         </Row>
       </Card>

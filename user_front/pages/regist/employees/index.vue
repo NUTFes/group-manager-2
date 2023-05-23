@@ -144,16 +144,19 @@ const back = () => {
             <RegistPageButton
               :text="$t('Button.reset')"
               @click="reset(idx)"
+              variant="danger"
             ></RegistPageButton>
           </div>
           <div v-if="idx != 0" class="flex gap-3">
             <RegistPageButton
               :text="$t('Button.reset')"
               @click="reset(idx)"
+              variant="danger"
             ></RegistPageButton>
             <RegistPageButton
               :text="$t('Button.delete')"
               @click="decrement(idx)"
+              variant="danger"
             ></RegistPageButton>
           </div>
         </div>
@@ -162,10 +165,12 @@ const back = () => {
         <RegistPageButton
           :text="$t('Button.back')"
           @click="back"
+          variant="secondary"
         ></RegistPageButton>
         <RegistPageButton
           :text="$t('Button.add')"
           @click="increment"
+          variant="success"
         ></RegistPageButton>
         <RegistPageButton
           :text="$t('Button.register')"
@@ -175,6 +180,7 @@ const back = () => {
         <RegistPageButton
           :text="$t('Button.skip')"
           @click="skip"
+          variant="secondary"
         ></RegistPageButton>
       </Row>
     </Card>
