@@ -33,8 +33,6 @@ const router = useRouter();
 const insideRentableItemList = ref<ItemList[]>([]);
 const outsideRentableItemList = ref<ItemList[]>([]);
 const formCount = ref(1);
-const itemList = ref<ItemList[]>([]);
-const isOverlapItem = ref(false);
 
 const state = reactive({
   groupId: 0,
@@ -102,23 +100,27 @@ const decrement = (idx: number) => {
 
 const registerItem = async () => {
   // 貸し出し可能物品個数のチェック
-  for (let i = 0; i < formCount.value; i++) {
-    if (
-      getMaxValueByItemId(registerParams[i].rentalItemId) <
-      registerParams[i].num
-    ) {
-      alert(
-        "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
-      );
-      return;
-    }
-    const uniqueRentalItems = new Set();
-    const rentalItemId = registerParams[i].rentalItemId;
-    if (uniqueRentalItems.has(rentalItemId)) {
-      isOverlapItem.value = true;
-      return;
-    }
-    uniqueRentalItems.add(rentalItemId);
+  const isOverMaxValue = registerParams.some((item) => {
+    const maxValue = getMaxValueByItemId(item.rentalItemId);
+    return item.num > maxValue;
+  });
+  if (isOverMaxValue) {
+    alert(
+      "貸し出し可能数を超えている物品があります。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
+  }
+
+  // registerParamsのrentalItemIdが重複していないかチェック
+  const rentalItemIdList = registerParams.map((item) => item.rentalItemId);
+  const isOverlap = rentalItemIdList.some(
+    (id, i) => rentalItemIdList.indexOf(id) !== i
+  );
+  if (isOverlap) {
+    alert(
+      "同じ物品を複数選択しているので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
   }
 
   for (let i = 0; i < formCount.value; i++) {
@@ -299,9 +301,6 @@ const back = () => {
           </div>
         </div>
       </Card>
-      <p v-if="isOverlapItem" class="text-rose-600">
-        {{ $t("Item.overlapItem") }}
-      </p>
       <Row>
         <RegistPageButton
           :text="$t('Button.back')"
