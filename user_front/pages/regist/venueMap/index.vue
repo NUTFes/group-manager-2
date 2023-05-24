@@ -59,7 +59,6 @@ const postImageURL = () => {
       alert('登録できませんでした')
     }
   )
-  // router.push("/myPage");
 }
 </script>
 
