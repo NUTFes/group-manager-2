@@ -88,6 +88,7 @@ const reset = () => {
   newShopId.value = null;
   newFesDateId.value = null;
   newIsFresh.value = false;
+  newItems.value = '';
 };
 </script>
 
