@@ -403,7 +403,7 @@ const rentalItemOverlap = computed(() => {
         <div v-show="tab === 3" class="flex">
           <Button
             v-if="!isRentalItemOverlap"
-            class="fixed right-0 bottom-0 m-5"
+            class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddStage()"
           />
           <div>
@@ -453,7 +453,7 @@ const rentalItemOverlap = computed(() => {
         <div v-show="tab === 5">
           <Button
             v-if="!isOverPower"
-            class="fixed right-0 bottom-0 m-5"
+            class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddPower()"
           />
           <!-- 電力の合計を計算して表示する -->
@@ -493,7 +493,7 @@ const rentalItemOverlap = computed(() => {
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
           <Button
             v-if="!isRentalItemOverlap"
-            class="fixed right-0 bottom-0 m-5"
+            class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddItem()"
           />
           <div v-if="isRentalItemOverlap" class="text-red-500">
@@ -521,7 +521,7 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 従業員申請 -->
         <div v-show="tab === 7" class="flex flex-wrap flex-col">
-          <Button class="fixed right-0 bottom-0 m-5" @click="openAddEmployee()" />
+          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddEmployee()" />
           <div class="mt--9 flex flex-wrap gap-4">
             <div class="w-1/4" v-for="e in employee" :key="e.toString()">
               <RegistInfoCardEmployee
@@ -543,7 +543,7 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 販売食品申請 -->
         <div v-show="tab === 8">
-          <Button class="fixed right-0 bottom-0 m-5" @click="openAddFood()" />
+          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddFood()" />
           <div class="mb-8" v-for="f in food" :key="f.toString()">
             <RegistInfoCardFood
               :group-id="group?.id"
@@ -567,7 +567,7 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 購入品申請 -->
         <div v-show="tab === 9">
-          <Button class="fixed right-0 bottom-0 m-5" @click="openAddPurchase()" />
+          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddPurchase()" />
           <div v-for="f in food" :key="f.toString()">
             <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
               <RegistInfoCardPurchase
