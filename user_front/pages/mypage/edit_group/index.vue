@@ -77,11 +77,11 @@ const register = () => {
           "group_category_id",
           response.data.data.group_category_id
         );
+        alert('登録できました')
         router.push("/mypage");
       },
       (error) => {
-        console.log("登録できませんでした");
-        return error;
+        alert('登録できませんでした')
       }
     );
 }

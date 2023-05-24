@@ -50,7 +50,16 @@ const postImageURL = () => {
       },
     })
   })
-  router.push("/myPage");
+  .then(
+    (response) =>{
+      alert('登録できました')
+      router.push("/mypage");
+    },
+    (error) => {
+      alert('登録できませんでした')
+    }
+  )
+  // router.push("/myPage");
 }
 </script>
 

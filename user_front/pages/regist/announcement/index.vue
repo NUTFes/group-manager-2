@@ -25,7 +25,11 @@ const postAnnouncement = () => {
   })
   .then(
     (response) =>{
-      router.push("/myPage");
+      alert('登録できました')
+      router.push("/mypage");
+    },
+    (error) => {
+      alert('登録できませんでした')
     }
   )
 }
