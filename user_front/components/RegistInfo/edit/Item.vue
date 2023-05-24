@@ -118,6 +118,8 @@ const editItem = async () => {
 const reset = () => {
   newItem.value = null;
   newNum.value = null;
+  handleName(newItem.value);
+  handleNum(newNum.value);
 };
 
 // 物品のidから物品の情報を取得し、物品の貸し出し可能数を返す

@@ -96,6 +96,7 @@
     "item": "Item",
     "employees": "Employees",
     "food": "Food",
+    "saleGoods": "Sale of Goods",
     "purchase": "Purchase"
   },
 
@@ -141,7 +142,7 @@
     "performanceTime": "performance time",
     "preparationTime": "preparation time",
     "cleanUpTime": "clean-up time",
-    "weather" :"choose the weather"
+    "weather": "choose the weather"
   },
 
   "StageOption": {
@@ -245,6 +246,25 @@
     "toBe": "of products to be sold"
   },
 
+  "SaleGoods": {
+    "registSaleGoods": "Registration of goods for sale",
+    "addSaleGoods": "Additional goods for sale",
+    "deleteSaleGoods": "Deletion goods for sale",
+    "editSaleGoods": "Edit goods for Sale",
+    "name": "Name of goods sold",
+    "cook": "Cooked or not",
+    "select": "Please select",
+    "yes": "Cooked",
+    "no": "uncooked",
+    "numberFirstDay": "Estimated number of products to be sold on Day１",
+    "numberSecondDay": "Estimated number of products to be sold on Day２",
+    "firstDay": "Day１",
+    "secondDay": "Day２",
+    "count": "",
+    "sold": "Estimated number",
+    "toBe": "of products to be sold"
+  },
+
   "Purchase": {
     "registPurchase": "Registration of purchased Products",
     "addPurchase": "Add purchased Products",
@@ -252,8 +272,10 @@
     "editPurchase": "Edit purchased Products",
     "purchase": "purchased Products",
     "target": "Name of food sold",
+    "targetGoods": "Name of products sold",
     "select": "Please select",
     "name": "Material name",
+    "goodsName": "Product name",
     "place": "Place of purchase",
     "date": "Date of purchase",
     "rowFood": "raw or not",

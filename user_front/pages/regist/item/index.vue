@@ -33,8 +33,6 @@ const router = useRouter();
 const insideRentableItemList = ref<ItemList[]>([]);
 const outsideRentableItemList = ref<ItemList[]>([]);
 const formCount = ref(1);
-const itemList = ref<ItemList[]>([]);
-const isOverlapItem = ref(false);
 
 const state = reactive({
   groupId: 0,
@@ -102,23 +100,27 @@ const decrement = (idx: number) => {
 
 const registerItem = async () => {
   // 貸し出し可能物品個数のチェック
-  for (let i = 0; i < formCount.value; i++) {
-    if (
-      getMaxValueByItemId(registerParams[i].rentalItemId) <
-      registerParams[i].num
-    ) {
-      alert(
-        "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
-      );
-      return;
-    }
-    const uniqueRentalItems = new Set();
-    const rentalItemId = registerParams[i].rentalItemId;
-    if (uniqueRentalItems.has(rentalItemId)) {
-      isOverlapItem.value = true;
-      return;
-    }
-    uniqueRentalItems.add(rentalItemId);
+  const isOverMaxValue = registerParams.some((item) => {
+    const maxValue = getMaxValueByItemId(item.rentalItemId);
+    return item.num > maxValue;
+  });
+  if (isOverMaxValue) {
+    alert(
+      "貸し出し可能数を超えている物品があります。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
+  }
+
+  // registerParamsのrentalItemIdが重複していないかチェック
+  const rentalItemIdList = registerParams.map((item) => item.rentalItemId);
+  const isOverlap = rentalItemIdList.some(
+    (id, i) => rentalItemIdList.indexOf(id) !== i
+  );
+  if (isOverlap) {
+    alert(
+      "同じ物品を複数選択しているので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
   }
 
   for (let i = 0; i < formCount.value; i++) {
@@ -176,132 +178,140 @@ const updateSelectedLocation = (event: Event) => {
       break;
   }
 };
-const back = () =>{
+const back = () => {
   if (Number(state.groupCategoryId) === 3) {
     router.push("/regist/stageOption");
   } else {
     router.push("/regist/place");
   }
-}
-
+};
 </script>
 
 <template>
   <div class="mx-[20%] my-[5%]">
     <Card>
       <h1 class="text-3xl">{{ $t("Item.registItem") }}</h1>
-      <Card border="none" align="end" gap="20px">
-        <div class="flex gap-3">
-          <div v-if="Number(state.groupCategoryId) !== 3">
-            <label class="mr-2">
-              <input
-                type="radio"
-                value="屋内団体"
-                v-model="selectedLocation"
-                :checked="selectedLocation === '屋内団体'"
-                @click="updateSelectedLocation"
-              />
-              {{ $t('Item.insideGroup') }}
-            </label>
-            <label>
-              <input
-                type="radio"
-                value="屋外団体"
-                v-model="selectedLocation"
-                :checked="selectedLocation === '屋外団体'"
-                @click="updateSelectedLocation"
-              />
-              {{ $t('Item.outsideGroup') }}
-            </label>
-          </div>
-          <div v-if="Number(state.groupCategoryId) === 3">
-            <label>
-              <input
-                type="radio"
-                value="ステージ団体"
-                v-model="selectedLocation"
-                :checked="selectedLocation === 'ステージ団体'"
-                @click="updateSelectedLocation"
-              />
-              {{ $t('Item.stageGroup') }}
-            </label>
-          </div>
-        </div>
-        <div v-for="(field, idx) in itemValidate" :key="field.key">
-          <div class="flex">
-            <p class="label">{{ $t("Item.item") }}</p>
-            <Field
-              :id="`itemNameId${idx}`"
-              :name="`items[${idx}].itemNameId`"
-              as="select"
-              style="width: 180px"
-              class="form"
-              v-model="registerParams[idx].rentalItemId"
-            >
-              <option value="" selected disabled></option>
-              <option
-                v-for="item in selectableItemList"
-                :key="item.id"
-                :value="item.id"
-                :name="item.name"
-              >
-                {{ item.name }}
-              </option>
-            </Field>
-          </div>
-          <ErrorMessage
-            class="text-rose-600"
-            :name="`items[${idx}].itemNameId`"
+      <div v-if="Number(state.groupCategoryId) !== 3" class="flex gap-2 mt-2">
+        <label>
+          <input
+            type="radio"
+            value="屋内団体"
+            v-model="selectedLocation"
+            :checked="selectedLocation === '屋内団体'"
+            @click="updateSelectedLocation"
           />
-
-          <div class="flex">
-            <p class="label">{{ $t("Item.number") }}</p>
-            <Field
-              :id="`itemNum${idx}`"
-              :name="`items[${idx}].itemNum`"
-              class="form"
-              v-model="registerParams[idx].num"
-              v-validate="
-                'max_value:getMaxValueByItemId(registerParams[idx].rentalItemId)'
-              "
+          {{ $t("Item.insideGroup") }}
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="屋外団体"
+            v-model="selectedLocation"
+            :checked="selectedLocation === '屋外団体'"
+            @click="updateSelectedLocation"
+          />
+          {{ $t("Item.outsideGroup") }}
+        </label>
+      </div>
+      <div class="mt-4">
+        <div v-if="Number(state.groupCategoryId) === 3">
+          <label>
+            <input
+              type="radio"
+              value="ステージ団体"
+              v-model="selectedLocation"
+              :checked="selectedLocation === 'ステージ団体'"
+              @click="updateSelectedLocation"
             />
+            {{ $t("Item.stageGroup") }}
+          </label>
+        </div>
+      </div>
+      <Card border="none" align="center" gap="20px" padding="10px">
+        <div
+          v-for="(field, idx) in itemValidate"
+          :key="field.key"
+          class="border p-4 rounded-md flex flex-col items-center gap-4"
+        >
+          <div class="grid grid-cols-2 gap-y-2">
+            <p class="label">{{ $t("Item.item") }}</p>
+            <div class="flex flex-col">
+              <Field
+                :id="`itemNameId${idx}`"
+                :name="`items[${idx}].itemNameId`"
+                as="select"
+                style="width: 180px"
+                class="form"
+                v-model="registerParams[idx].rentalItemId"
+              >
+                <option value="" selected disabled></option>
+                <option
+                  v-for="item in selectableItemList"
+                  :key="item.id"
+                  :value="item.id"
+                  :name="item.name"
+                >
+                  {{ item.name }}
+                </option>
+              </Field>
+              <ErrorMessage
+                class="text-rose-600"
+                :name="`items[${idx}].itemNameId`"
+              />
+            </div>
+            <p class="label">{{ $t("Item.number") }}</p>
+            <div class="flex flex-col">
+              <Field
+                :id="`itemNum${idx}`"
+                :name="`items[${idx}].itemNum`"
+                class="form"
+                v-model="registerParams[idx].num"
+                v-validate="
+                  'max_value:getMaxValueByItemId(registerParams[idx].rentalItemId)'
+                "
+              />
+              <ErrorMessage
+                class="text-rose-600 text-sm"
+                :name="`items[${idx}].itemNum`"
+              />
+              <p class="text-sm text-gray-500">
+                {{ getMaxValueByItemId(registerParams[idx].rentalItemId) }}
+                {{ $t("Item.maxNum") }}
+              </p>
+            </div>
           </div>
-          <p>
-            {{ getMaxValueByItemId(registerParams[idx].rentalItemId) }}
-            {{ $t("Item.maxNum") }}
-          </p>
-          <ErrorMessage class="text-rose-600" :name="`items[${idx}].itemNum`" />
-
           <div v-if="idx == 0">
             <RegistPageButton
               :text="$t('Button.reset')"
               @click="reset(idx)"
+              variant="danger"
             ></RegistPageButton>
           </div>
-
           <div v-if="idx != 0" class="flex gap-3">
             <RegistPageButton
               :text="$t('Button.reset')"
               @click="reset(idx)"
+              variant="danger"
             ></RegistPageButton>
             <RegistPageButton
               :text="$t('Button.delete')"
               @click="decrement(idx)"
+              variant="danger"
             ></RegistPageButton>
           </div>
         </div>
       </Card>
-      <p v-if="isOverlapItem" class="text-rose-600">
-        {{ $t("Item.overlapItem") }}
-      </p>
       <Row>
         <RegistPageButton
           :text="$t('Button.back')"
-          @click="back">
+          @click="back"
+          variant="secondary"
+        >
         </RegistPageButton>
         <RegistPageButton
           @click="increment"
           :text="$t('Button.add')"
+          variant="success"
         ></RegistPageButton>
         <RegistPageButton
           :disabled="!meta.valid || isSubmitting"
@@ -311,6 +321,7 @@ const back = () =>{
         <RegistPageButton
           :text="$t('Button.skip')"
           @click="skip"
+          variant="secondary"
         ></RegistPageButton>
       </Row>
     </Card>

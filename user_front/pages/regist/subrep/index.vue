@@ -188,21 +188,23 @@ const back = () => {
         <Row>
           <RegistPageButton
             :text="$t('Button.back')"
+            variant="secondary"
             @click="back">
           </RegistPageButton>
           <RegistPageButton
             :text="$t('Button.reset')"
             @click="reset"
+            variant="danger"
           ></RegistPageButton>
           <RegistPageButton
             :text="$t('Button.register')"
             :disabled="!meta.valid || isSubmitting"
             @click="registerSubRep"
-          >
-          </RegistPageButton>
+          ></RegistPageButton>
           <RegistPageButton
             :text="$t('Button.skip')"
             @click="skip"
+            variant="secondary"
           ></RegistPageButton>
         </Row>
       </Card>

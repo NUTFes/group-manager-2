@@ -134,6 +134,12 @@ const reset = () => {
   newUseTimeInterval.value = null
   newPrepareTimeInterval.value = null
   newCleanupTimeInterval.value = null
+  handleDate(newStageDateId.value)
+  handleStageFirst(newStageFirst.value)
+  handleStageSecond(newStageSecond.value)
+  handleUseTimeInterval(newUseTimeInterval.value)
+  handlePrepareTimeInterval(newPrepareTimeInterval.value)
+  handleCleanupTimeInterval(newCleanupTimeInterval.value)
 }
 
 const deleteStage = async() => {
