@@ -495,7 +495,7 @@ const rentalItemOverlap = computed(() => {
             <p>{{ rentalItemOverlap }} が重複しています</p>
             <p>削除してください</p>
           </div>
-          <div class="flex">
+          <div class="flex flex-wrap gap-4">
             <div v-for="item in rentalOrders" :key="item.toString()">
               <RegistInfoCardItem
                 :group-id="group?.id"

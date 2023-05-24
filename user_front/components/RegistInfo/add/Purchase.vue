@@ -89,6 +89,10 @@ const reset = () => {
   newFesDateId.value = null;
   newIsFresh.value = false;
   newItems.value = '';
+  handleFoodProductId(newFoodProductId.value);
+  handleShopId(newShopId.value);
+  handleFesDateId(newFesDateId.value);
+  handleItem(newItems.value);
 };
 </script>
 

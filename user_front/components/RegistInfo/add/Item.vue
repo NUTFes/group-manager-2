@@ -133,6 +133,8 @@ const addItem = async () => {
 const reset = () => {
   newItem.value = null;
   newNum.value = null;
+  handleName(newItem.value);
+  handleNum(newNum.value);
 };
 </script>
 
