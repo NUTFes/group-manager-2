@@ -121,6 +121,11 @@ const reset = () => {
   newFoodProductId.value = null;
   newShopId.value = null;
   newFesDateId.value = null;
+  handleFoodProduct(newFoodProductId.value);
+  handleShop(newShopId.value);
+  handleItem(newName.value);
+  handleIsFresh(newIsFresh.value);
+  handleFesDate(newFesDateId.value);
 };
 </script>
 

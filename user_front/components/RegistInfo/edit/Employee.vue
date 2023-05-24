@@ -74,6 +74,8 @@ const editEmployee = async () => {
 const reset = () => {
   newName.value = ''
   newStudentId.value = null
+  handleName(newName.value)
+  handleStudentId(newStudentId.value)
 }
 
 </script>

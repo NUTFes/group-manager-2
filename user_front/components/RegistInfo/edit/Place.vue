@@ -2,8 +2,9 @@
 import { Place, PlaceList } from "~~/types/regist/place";
 import { useField, useForm } from "vee-validate";
 import { placeSchema } from "~~/utils/validate";
-const config = useRuntimeConfig();
 import axios from "axios";
+
+const config = useRuntimeConfig();
 
 interface Props {
   id: number | null;
@@ -32,6 +33,7 @@ const { meta, isSubmitting } = useForm({
     first: props.first,
     second: props.second,
     third: props.third,
+    remark: props.remark,
   },
 });
 const { handleChange: handleFirstPlace, errorMessage: firstPlaceError } =
@@ -40,6 +42,8 @@ const { handleChange: handleSecondPlace, errorMessage: secondPlaceError } =
   useField("second");
 const { handleChange: handleThirdPlace, errorMessage: thirdPlaceError } =
   useField("third");
+const { handleChange: handleRemark, errorMessage: remarkError } =
+  useField("remark");
 
 const EATING_AREA = [
   "事務棟エリア",
@@ -52,7 +56,6 @@ const isEatingArea = (place: string) => {
   return EATING_AREA.includes(place);
 };
 
-
 const placeList = ref<PlaceList[]>([]);
 const newFirst = ref<Props["first"]>(props.first);
 const newSecond = ref<Props["second"]>(props.second);
@@ -60,7 +63,7 @@ const newThird = ref<Props["third"]>(props.third);
 const newRemark = ref<Props["remark"]>(props.remark);
 const groupCategoryId = ref<number>();
 const isOverlapPlace = ref(false);
-const group_id = ref()
+const group_id = ref();
 const isDuplicate = computed(() => {
   if (
     newFirst.value === newSecond.value ||
@@ -83,10 +86,12 @@ const closeEditPlace = () => {
 
 onMounted(async () => {
   const placeData = await $fetch<Place>(config.APIURL + "/places");
-  !!placeData.data && placeData.data.forEach((place) => {
-    placeList.value.push(place)
-  })
-  const groupUrl = config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
+  !!placeData.data &&
+    placeData.data.forEach((place) => {
+      placeList.value.push(place);
+    });
+  const groupUrl =
+    config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
   axios.get(groupUrl).then(async (response) => {
     groupCategoryId.value = response.data.data.group_category_id;
 
@@ -102,7 +107,7 @@ onMounted(async () => {
       }
     });
   });
-})
+});
 
 const editPlace = async () => {
   if (props.id === null) {
@@ -114,10 +119,9 @@ const editPlace = async () => {
         second: newSecond.value,
         third: newThird.value,
         remark: newRemark.value,
-      }
-    })
-  }
-  else{
+      },
+    });
+  } else {
     await useFetch(config.APIURL + "/place_orders/" + props.id, {
       method: "PUT",
       params: {
@@ -126,18 +130,22 @@ const editPlace = async () => {
         second: newSecond.value,
         third: newThird.value,
         remark: newRemark.value,
-      }
-    })
+      },
+    });
   }
-  reloadPlace()
-  closeEditPlace()
-}
+  reloadPlace();
+  closeEditPlace();
+};
 
 const reset = () => {
   newFirst.value = null;
   newSecond.value = null;
   newThird.value = null;
   newRemark.value = "";
+  handleFirstPlace(newFirst.value);
+  handleSecondPlace(newSecond.value);
+  handleThirdPlace(newThird.value);
+  handleRemark(newRemark.value);
 };
 </script>
 
@@ -154,48 +162,50 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">{{ $t('Place.first') }}</div>
-      <select class="entry" v-model="newFirst" @change="handleFirstPlace" :class="{'error_border': firstPlaceError}">
-        <option
-          v-for="place in placeList"
-          :value="place.id"
-          :key="place.id"
-        >
+      <div class="text">{{ $t("Place.first") }}</div>
+      <select
+        class="entry"
+        v-model="newFirst"
+        @change="handleFirstPlace"
+        :class="{ error_border: firstPlaceError }"
+      >
+        <option v-for="place in placeList" :value="place.id" :key="place.id">
           {{ place.name }}
         </option>
       </select>
       <div class="error_msg">{{ firstPlaceError }}</div>
-      <div class="text">{{ $t('Place.second') }}</div>
-      <select class="entry" v-model="newSecond" @change="handleSecondPlace" :class="{'error_border' :secondPlaceError}">
-        <option
-          v-for="place in placeList"
-          :value="place.id"
-          :key="place.id"
-        >
+      <div class="text">{{ $t("Place.second") }}</div>
+      <select
+        class="entry"
+        v-model="newSecond"
+        @change="handleSecondPlace"
+        :class="{ error_border: secondPlaceError }"
+      >
+        <option v-for="place in placeList" :value="place.id" :key="place.id">
           {{ place.name }}
         </option>
       </select>
       <div class="error_msg">{{ secondPlaceError }}</div>
-      <div class="text">{{ $t('Place.third') }}</div>
-      <select class="entry" v-model="newThird" @change="handleThirdPlace" :class="{'error_border' :thirdPlaceError}">
-        <option
-          v-for="place in placeList"
-          :value="place.id"
-          :key="place.id"
-        >
+      <div class="text">{{ $t("Place.third") }}</div>
+      <select
+        class="entry"
+        v-model="newThird"
+        @change="handleThirdPlace"
+        :class="{ error_border: thirdPlaceError }"
+      >
+        <option v-for="place in placeList" :value="place.id" :key="place.id">
           {{ place.name }}
         </option>
       </select>
       <div class="error_msg">{{ thirdPlaceError }}</div>
-      <div class="text">{{ $t('Place.free') }}</div>
-      <textarea class="entry" v-model="newRemark" @change="handleRemark" :class="{'error_border': remark}"/>
+      <div class="text">{{ $t("Place.free") }}</div>
+      <textarea
+        class="entry"
+        v-model="newRemark"
+        @change="handleRemark"
+        :class="{ error_border: remark }"
+      />
       <div class="error_msg">{{ remarkError }}</div>
-      <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editPlace()"></RegistPageButton>
-      </div>
-      <div class="text">追記することがあればこちらにお書きください</div>
-      <textarea class="entry" v-model="newRemark" />
       <p v-if="isOverlapPlace" class="error_msg">
         同じ会場を選択しています。選択し直してください。
       </p>

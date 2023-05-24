@@ -52,6 +52,8 @@ const addEmployee = async () => {
 const reset = () => {
   newName.value = ''
   newStudentId.value = ''
+  handleName(newName.value)
+  handleStudentId(newStudentId.value)
 }
 
 </script>

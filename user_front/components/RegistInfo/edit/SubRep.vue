@@ -105,6 +105,12 @@ const reset = () => {
   newTel.value = "";
   newEmail.value = "";
   newStudentId.value = null;
+  handleName("");
+  handleDepartmentId("");
+  handleGradeId("");
+  handleTel("");
+  handleMail("");
+  handleStudentId("");
 };
 
 const currentDepartmentList = ref<{ id: number; name: string }[]>([]);

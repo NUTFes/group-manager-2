@@ -59,6 +59,9 @@ const reset = () => {
   numFirstDay.value = null;
   numSecondDay.value = null;
   isCooking.value = false;
+  handleDishName(dishName.value);
+  handleNumFirstDay(numFirstDay.value);
+  handleNumSecondDay(numSecondDay.value);
 };
 </script>
 

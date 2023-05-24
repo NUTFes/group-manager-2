@@ -109,6 +109,11 @@ const reset = () => {
   newCameraPermission.value = null
   newLoudSound.value = null
   newStageContent.value = ''
+  handleOwnEquipment(newOwnEquipment.value)
+  handleBgm(newBgm.value)
+  handleCameraPermission(newCameraPermission.value)
+  handleLoudSound(newLoudSound.value)
+  handleStageContent(newStageContent.value)
 }
 
 </script>
