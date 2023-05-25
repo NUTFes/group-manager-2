@@ -330,7 +330,7 @@ const rentalItemOverlap = computed(() => {
             {{ $t("RegistInfo.employees") }}
           </div>
         </li>
-        <li v-if="groupCategoryId != 4 && groupCategoryId != 5" @click="tab = 8">
+        <li v-if="groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5" @click="tab = 8">
           <div :class="{ select: tab === 8 }" class="title">
             {{
               groupCategoryId === 1
