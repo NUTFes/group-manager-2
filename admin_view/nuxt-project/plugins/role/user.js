@@ -166,5 +166,11 @@ export const userRole = {
     create: false,
     update: false,
     delete: false,
-  }, 
-}
+  },
+  announcements: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
+};
