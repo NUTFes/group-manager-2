@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_ROOT_USER: root
-      MYSQL_USER: group-manager-2 # テスト的にユーザーを作ってみる
+      MYSQL_USER: group-manager-2
       MYSQL_PASSWORD: password
     command: --default-authentication-plugin=mysql_native_password
     ports: ["3306:3306"]
@@ -20,7 +20,7 @@ services:
 
   api:
     build: ./api
-    command: bash -c "bundle exec rails s"
+    command: bash -c "rails db:migrate && rails db:seed_fu && rails db:seed_fu FIXTURE_PATH=db/fixtures/develop && bundle exec rails s"
     container_name: "GM2-API"
     volumes: [./api:/myapp]
     ports: ["3000:3000"]
@@ -32,7 +32,7 @@ services:
     ports:
       - "8002:3000"
       - "24678:24678"
-    command: npm run start
+    command: bash -c "npm i && npm run build && npm run start"
     volumes: [./user_front:/app]
     env_file: [group-manager-2.stg.env]
     depends_on: [api]
@@ -41,7 +41,7 @@ services:
     build: ./admin_view
     container_name: "GM2-ADMIN-VIEW"
     ports: ["8000:8000"]
-    command: npm run start
+    command: bash -c "npm i && npm run build && npm run start"
     volumes: [./admin_view:/app]
     env_file: [group-manager-2.stg.env]
 
