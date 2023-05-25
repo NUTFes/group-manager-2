@@ -27,8 +27,7 @@ export default {
   },
 
   publicRuntimeConfig: {
-    // apiURL: 'https://group-manager-api.nutfes.net'
-    apiURL: 'http://localhost:3000'
+    apiURL: process.env.VUE_APP_URL
   },
 
   router: {

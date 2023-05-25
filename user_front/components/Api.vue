@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data: posts } = await useFetch(
-  'http://localhost:3000/users'
+  process.env.VUE_APP_URL+'/users'
 );
 
 </script>
