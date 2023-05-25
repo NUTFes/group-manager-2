@@ -33,32 +33,33 @@ const postImageURL = () => {
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
-  });
-  getDownloadURL(fireRef(storage, pictureName.value)).then((url) => {
-    const postUrl =
-    "/venue_maps?group_id=" +
-    state.groupId;
 
-    useFetch(config.APIURL + postUrl, {
-      method: "POST",
-      params: {
-        picture_name: fileName.value,
-        picture_path: url,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
+    getDownloadURL(fireRef(storage, pictureName.value)).then((url) => {
+      const postUrl =
+      "/venue_maps?group_id=" +
+      state.groupId;
+
+      useFetch(config.APIURL + postUrl, {
+        method: "POST",
+        params: {
+          picture_name: fileName.value,
+          picture_path: url,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
     })
-  })
-  .then(
-    (response) =>{
-      alert('登録できました')
-      router.push("/mypage");
-    },
-    (error) => {
-      alert('登録できませんでした')
-    }
-  )
+    .then(
+      (response) =>{
+        alert('登録できました')
+        router.push("/mypage");
+      },
+      (error) => {
+        alert('登録できませんでした')
+      }
+    )
+  });
 }
 </script>
 
