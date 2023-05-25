@@ -75,8 +75,11 @@
   },
 
   "Announcement": {
-    "regitstAnnouncemant": "Registration of venue announcement text",
-    "text": "Announcement text at the venue"
+    "regitstAnnouncement": "Registration of venue announcement text",
+    "editAnnouncement": "Editing of venue announcement text",
+    "text": "Announcement text at the venue",
+    "edit": "editing",
+    "regist": "registing"
   },
 
   "VenueMap": {

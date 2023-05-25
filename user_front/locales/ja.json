@@ -75,8 +75,11 @@
   },
 
   "Announcement": {
-    "regitstAnnouncemant": "会場アナウンス文の登録",
-    "text": "会場アナウンス文"
+    "regitstAnnouncement": "会場アナウンス文の登録",
+    "editAnnouncement": "会場アナウンス文の編集",
+    "text": "会場アナウンス文",
+    "edit": "編集",
+    "regist": "新規登録"
   },
 
   "VenueMap": {
