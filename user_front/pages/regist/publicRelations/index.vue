@@ -65,7 +65,7 @@ const skip = () => {
 };
 
 const back = () => {
-  router.push("/regist/purchase");
+  router.push("/regist/announcement");
 };
 </script>
 

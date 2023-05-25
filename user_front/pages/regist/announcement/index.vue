@@ -25,18 +25,13 @@ const postAnnouncement = () => {
   })
   .then(
     (response) =>{
-      alert('登録できました')
-      router.push("/mypage");
-    },
-    (error) => {
-      alert('登録できませんでした')
+      router.push("/regist/publicRelations");
     }
   )
-  router.push("/mypage");
 }
 
 const skip = () => {
-  router.push("/mypage");
+  router.push("/regist/publicRelations");
 };
 
 const back = () => {
