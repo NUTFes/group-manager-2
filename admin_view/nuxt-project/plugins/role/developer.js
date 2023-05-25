@@ -167,4 +167,10 @@ export const developerRole = {
     update: true,
     delete: true,
   },
-}
+  announcements: {
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
+};
