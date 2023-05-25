@@ -154,6 +154,11 @@ export default {
           icon: "badge",
           click: "/public_relations",
         },
+        {
+          title: "会場アナウンス文申請",
+          icon: "campaign",
+          click: "/announcement",
+        },
       ],
       // 操作系
       operation_items: [
