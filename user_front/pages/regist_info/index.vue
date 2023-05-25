@@ -401,6 +401,11 @@ const rentalItemOverlap = computed(() => {
 
         <!-- ステージ申請 group_category_id === ３ -->
         <div v-show="tab === 3" class="flex">
+          <Button
+            v-if="!isRentalItemOverlap"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddStage()"
+          />
           <div>
             <div class="mb-8" v-for="s in stageOrder" :key="s.toString()">
               <div>
@@ -422,11 +427,6 @@ const rentalItemOverlap = computed(() => {
               </div>
             </div>
           </div>
-          <Button
-            v-if="!isRentalItemOverlap"
-            class="ml-auto"
-            @click="openAddStage()"
-          />
           <RegistInfoAddStage
             v-if="isAddStage"
             v-model:add-stage="isAddStage"
@@ -451,6 +451,11 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 電力申請 -->
         <div v-show="tab === 5">
+          <Button
+            v-if="!isOverPower"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddPower()"
+          />
           <!-- 電力の合計を計算して表示する -->
           <div class="mb-4">
             <div class="text-xl flex gap-3">
@@ -476,11 +481,6 @@ const rentalItemOverlap = computed(() => {
               @reload-power="reload"
             />
           </div>
-          <Button
-            v-if="!isOverPower"
-            class="text-right"
-            @click="openAddPower()"
-          />
           <RegistInfoAddPower
             v-if="isAddPower"
             v-model:add-power="isAddPower"
@@ -491,12 +491,17 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <Button
+            v-if="!isRentalItemOverlap"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddItem()"
+          />
           <div v-if="isRentalItemOverlap" class="text-red-500">
             <p>{{ rentalItemOverlap }} が重複しています</p>
             <p>削除してください</p>
           </div>
           <div class="flex flex-wrap gap-4">
-            <div v-for="item in rentalOrders" :key="item.toString()">
+            <div class="w-1/4" v-for="item in rentalOrders" :key="item.toString()">
               <RegistInfoCardItem
                 :group-id="group?.id"
                 :regist="item.rental_item.rental_item"
@@ -506,11 +511,6 @@ const rentalItemOverlap = computed(() => {
               />
             </div>
           </div>
-          <Button
-            v-if="!isRentalItemOverlap"
-            class="ml-auto"
-            @click="openAddItem()"
-          />
           <RegistInfoAddItem
             v-if="isAddItem"
             v-model:add-item="isAddItem"
@@ -520,17 +520,19 @@ const rentalItemOverlap = computed(() => {
         </div>
 
         <!-- 従業員申請 -->
-        <div v-show="tab === 7" class="flex flex-wrap">
-          <div v-for="e in employee" :key="e.toString()">
-            <RegistInfoCardEmployee
-              :group-id="group?.id"
-              :id="e.employee.id"
-              :name="e.employee.name"
-              :student-id="e.employee.student_id"
-              @reload-employee="reload"
-            />
+        <div v-show="tab === 7" class="flex flex-wrap flex-col">
+          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddEmployee()" />
+          <div class="mt--9 flex flex-wrap gap-4">
+            <div class="w-1/4" v-for="e in employee" :key="e.toString()">
+              <RegistInfoCardEmployee
+                :group-id="group?.id"
+                :id="e.employee.id"
+                :name="e.employee.name"
+                :student-id="e.employee.student_id"
+                @reload-employee="reload"
+              />
+            </div>
           </div>
-          <Button class="ml-auto" @click="openAddEmployee()" />
           <RegistInfoAddEmployee
             v-if="isAddEmployee"
             v-model:add-employee="isAddEmployee"
@@ -541,6 +543,7 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 販売食品申請 -->
         <div v-show="tab === 8">
+          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddFood()" />
           <div class="mb-8" v-for="f in food" :key="f.toString()">
             <RegistInfoCardFood
               :group-id="group?.id"
@@ -553,7 +556,6 @@ const rentalItemOverlap = computed(() => {
               @reload-food="reload"
             />
           </div>
-          <Button class="text-right" @click="openAddFood()" />
           <RegistInfoAddFood
             v-if="isAddFood"
             v-model:add-food="isAddFood"
@@ -565,6 +567,7 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 購入品申請 -->
         <div v-show="tab === 9">
+          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddPurchase()" />
           <div v-for="f in food" :key="f.toString()">
             <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
               <RegistInfoCardPurchase
@@ -582,7 +585,6 @@ const rentalItemOverlap = computed(() => {
               />
             </div>
           </div>
-          <Button class="text-right" @click="openAddPurchase()" />
           <RegistInfoAddPurchase
             v-if="isAddPurchase"
             v-model:add-purchase="isAddPurchase"
