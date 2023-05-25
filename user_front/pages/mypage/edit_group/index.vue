@@ -149,9 +149,6 @@ const destroy = () => {
       <button @click="register" class="regist-submit-button">{{ $t('Button.edit') }}</button>
     </div>
     <div class="delete-button">
-      <button @click="destroy" class="regist-submit-button">
-        {{ $t('Button.delete') }}
-      </button>
     </div>
   </div>
 </template>
