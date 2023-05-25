@@ -133,7 +133,7 @@ const registerPurchase = async () => {
 };
 
 const skip = () => {
-  router.push("/mypage");
+  router.push("/regist/publicRelations");
 };
 
 const back = () => {
