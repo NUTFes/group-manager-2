@@ -60,8 +60,8 @@
     "editGroup": "参加団体情報の編集",
     "editUserInfo": "ユーザー情報確認＆編集",
     "editPassword": "パスワード変更",
-    "regitstPR": "PR登録",
-    "regitstAnnouncemant": "アナウンス文登録",
+    "editPR": "PR編集",
+    "editAnnouncemant": "アナウンス文編集",
     "regitstVenueMap": "会場配置図登録",
     "notice": "お知らせ",
     "updateDate": "更新日"
@@ -79,7 +79,7 @@
     "editAnnouncement": "会場アナウンス文の編集",
     "text": "会場アナウンス文",
     "edit": "編集",
-    "regist": "新規登録"
+    "regist": "登録"
   },
 
   "VenueMap": {
