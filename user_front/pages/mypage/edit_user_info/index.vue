@@ -71,6 +71,7 @@ const editUser = async () => {
     }
   ).then(() => {
     localStorage.setItem("uid", editParams.value.mail || "");
+    alert('登録できました')
     router.push("/mypage");
   });
 };

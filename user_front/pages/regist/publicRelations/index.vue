@@ -2,6 +2,7 @@
 import { getDownloadURL, getStorage, ref as fireRef, uploadBytes } from "firebase/storage";
 import { loginCheck } from "~~/utils/methods";
 
+const router = useRouter()
 const config = useRuntimeConfig();
 const state = reactive({
   groupId: 0,
@@ -51,8 +52,17 @@ const getImageURL = () =>{
         headers: {
           "Content-Type": "application/json",
         },
+      })
     })
-  })
+    .then(
+    (response) =>{
+      alert('登録できました')
+      router.push("/mypage");
+    },
+    (error) => {
+      alert('登録できませんでした')
+    }
+  )
 }
 </script>
 

@@ -2,6 +2,7 @@
 import { getDownloadURL, getStorage, ref as fireRef, uploadBytes } from "firebase/storage";
 import { loginCheck } from "~~/utils/methods";
 
+const router = useRouter()
 const config = useRuntimeConfig();
 const state = reactive({
   groupId: 0,
@@ -30,13 +31,13 @@ const storageRef = fireRef(storage, fileName.value);
 
 const postImageURL = () => {
   selectedFile.value &&
-    uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
-      pictureName.value = snapshot.ref.name
-    });
+  uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
+    pictureName.value = snapshot.ref.name
+  });
   getDownloadURL(fireRef(storage, pictureName.value)).then((url) => {
     const postUrl =
-      "/venue_maps?group_id=" +
-      state.groupId;
+    "/venue_maps?group_id=" +
+    state.groupId;
 
     useFetch(config.APIURL + postUrl, {
       method: "POST",
@@ -49,6 +50,15 @@ const postImageURL = () => {
       },
     })
   })
+  .then(
+    (response) =>{
+      alert('登録できました')
+      router.push("/mypage");
+    },
+    (error) => {
+      alert('登録できませんでした')
+    }
+  )
 }
 </script>
 

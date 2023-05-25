@@ -30,10 +30,16 @@ const submit = () => {
         },
       }
     )
-    .then((response) => {
-      router.push("MyPage");
-    });
-};
+    .then(
+      (response) =>{
+        alert('登録できました')
+        router.push("/mypage");
+      },
+      (error) => {
+        alert('登録できませんでした')
+      }
+    )
+}
 
 onMounted(async () => {
   loginCheck();
