@@ -113,6 +113,8 @@ const editPurchase = async () => {
         food_product_id: newFoodProductId.value,
         shop_id: newShopId.value,
         fes_date_id: newFesDateId.value,
+        purchase_date: newPurchaseDate.value,
+        url: newUrl.value,
       },
     });
   }
@@ -126,12 +128,12 @@ const reset = () => {
   newFoodProductId.value = null;
   newShopId.value = null;
   newFesDateId.value = 1;
-  newPurchaseDate.value = '';
+  newPurchaseDate.value = "";
   newUrl.value = 'https://aaa.com';
   handleFoodProduct(newFoodProductId.value);
   handleShop(newShopId.value);
   handleItem(newName.value);
-  handlePurchaseDate(newFesDateId.value);
+  handlePurchaseDate(newPurchaseDate.value);
 };
 </script>
 
