@@ -35,34 +35,35 @@ const getImageURL = () =>{
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
     console.log('Uploaded a blob or file!');
-  });
-  getDownloadURL(fireRef(storage, pictureName.value))
-    .then((url) => {
-      const postUrl =
-      "/public_relations?group_id=" +
-      state.groupId;
+      getDownloadURL(fireRef(storage, pictureName.value))
+      .then((url) => {
+        const postUrl =
+        "/public_relations?group_id=" +
+        state.groupId;
 
-      useFetch(config.APIURL + postUrl,{
-        method: "POST",
-        params: {
-          picture_name: fileName.value,
-          picture_path: url,
-          blurb: blurb.value,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
+        useFetch(config.APIURL + postUrl,{
+          method: "POST",
+          params: {
+            picture_name: fileName.value,
+            picture_path: url,
+            blurb: blurb.value,
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
       })
-    })
-    .then(
-    (response) =>{
-      alert('登録できました')
-      router.push("/mypage");
-    },
-    (error) => {
-      alert('登録できませんでした')
-    }
-  )
+      .then(
+      (response) =>{
+        alert('登録できました')
+        console.log('登録できました ')
+        router.push("/mypage");
+      },
+      (error) => {
+        alert('登録できませんでした')
+      }
+    )
+  });
 }
 </script>
 
