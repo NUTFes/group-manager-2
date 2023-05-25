@@ -65,7 +65,6 @@ const newShopId = ref<number | null>(props.shopId);
 const newFesDateId = ref<number | null>(props.fesDateId);
 const newPurchaseDate = ref<string | null>(props.purchaseDate);
 const newUrl = ref<string | null>(props.url);
-
 const purchases = ref<Purchase[]>([]);
 const foodProducts = ref<FoodProduct[]>([]);
 const fesDates = ref<Date[]>([]);
@@ -129,7 +128,9 @@ const reset = () => {
   newShopId.value = null;
   newFesDateId.value = 1;
   newPurchaseDate.value = "";
-  newUrl.value = 'https://aaa.com';
+  //newUrl.value = 'https://aaa.com';
+  newFesDateId.value = null;
+  newUrl.value = "";
   handleFoodProduct(newFoodProductId.value);
   handleShop(newShopId.value);
   handleItem(newName.value);
@@ -218,6 +219,12 @@ const reset = () => {
         :class="{ error_border: purchaseDateError }"
       >
       <div class="error_msg">{{ purchaseDateError }}</div>
+      <div class="text">{{ $t("Purchase.URL") }}</div>
+        <input
+          class="entry"
+          type="text"
+          v-model="newUrl"
+        />
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()" />
         <RegistPageButton
