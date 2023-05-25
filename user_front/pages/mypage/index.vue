@@ -40,7 +40,7 @@ const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "Mypage.editGroup" },
   { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
   { to: "/mypage/password_reset", text: "Mypage.editPassword" },
-  { to: "/regist/publicRelations", text: "Mypage.editPR" },
+  { to: "/mypage/publicRelations", text: "Mypage.editPR" },
   { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
   { to: "/regist/venueMap", text: "Mypage.regitstVenueMap" },
 ];

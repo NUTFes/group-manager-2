@@ -61,7 +61,7 @@ const registImageURL = () =>{
 }
 
 const skip = () => {
-  router.push("mypage");
+  router.push("/mypage");
 };
 
 const back = () => {
