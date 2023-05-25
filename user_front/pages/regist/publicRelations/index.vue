@@ -34,9 +34,8 @@ const getImageURL = () =>{
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
-    console.log('Uploaded a blob or file!');
-      getDownloadURL(fireRef(storage, pictureName.value))
-      .then((url) => {
+    getDownloadURL(fireRef(storage, pictureName.value))
+    .then((url) => {
         const postUrl =
         "/public_relations?group_id=" +
         state.groupId;
@@ -52,11 +51,10 @@ const getImageURL = () =>{
             "Content-Type": "application/json",
           },
         })
-      })
-      .then(
+    })
+    .then(
       (response) =>{
         alert('登録できました')
-        console.log('登録できました ')
         router.push("/mypage");
       },
       (error) => {
