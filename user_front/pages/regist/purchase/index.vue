@@ -129,11 +129,11 @@ const registerPurchase = async () => {
       errorMessage.value = "Failed to register (error: " + error + ")";
     });
   }
-  router.push("/mypage");
+  router.push("/regist/publicRelations");
 };
 
 const skip = () => {
-  router.push("/mypage");
+  router.push("/regist/publicRelations");
 };
 
 const back = () => {

@@ -60,7 +60,7 @@
     "editGroup": "参加団体情報の編集",
     "editUserInfo": "ユーザー情報確認＆編集",
     "editPassword": "パスワード変更",
-    "editPR": "PR編集",
+    "editPR": "PR文編集",
     "editAnnouncemant": "アナウンス文編集",
     "regitstVenueMap": "会場配置図登録",
     "notice": "お知らせ",
@@ -69,6 +69,7 @@
 
   "PR": {
     "regitstPR": "パンフレット用PRの登録",
+    "PR": "パンフレット用PR",
     "select": "選択してください",
     "text": "PR文(40文字程度)",
     "illustration": "イラスト"
