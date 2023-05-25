@@ -3,10 +3,10 @@ credentials-file: /home/nonroot/.cloudflared/7c8b780f-8330-4419-b24c-8f81f825528
 protocol: http2
 
 ingress:
-  - hostname: group-manager.stg.nutfes.net
-    service: http://web:8080
-  - hostname: group-manager-admin.stg.nutfes.net
+  - hostname: stg-group-manager.nutfes.net
+    service: http://user_front:3000
+  - hostname: stg-group-manager-admin.nutfes.net
     service: http://admin_view:8000
-  - hostname: group-manager-api.stg.nutfes.net
+  - hostname: stg-group-manager-api.nutfes.net
     service: http://api:3000
   - service: http_status:404
