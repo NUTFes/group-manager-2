@@ -7,6 +7,7 @@ interface Props {
   shopId: number | null;
   shop: string | null;
   fesDateId: number | null;
+  purchaseDate: string | null;
   name: string;
   isFresh: boolean;
   setting: boolean | null;
@@ -100,6 +101,7 @@ const openDeletePurchase = () => {
     :shop-id="shopId"
     :shop="shop"
     :fes-date-id="fesDateId"
+    :purchase-date="purchaseDate"
     :name="name"
     :is-fresh="isFresh"
     :group-category-id="groupCategoryId"

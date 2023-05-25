@@ -13,8 +13,8 @@ const { handleChange: handleFoodProductId, errorMessage: foodProductIdError } =
 const { handleChange: handleShopId, errorMessage: shopIdError } =
   useField("shopId");
 const { handleChange: handleItem, errorMessage: itemError } = useField("item");
-const { handleChange: handleFesDateId, errorMessage: fesDateIdError } =
-  useField("fesDateId");
+const { handleChange: handlePurchaseDate, errorMessage: purchaseDateError } =
+  useField("purchaseDate");
 
 interface Props {
   groupId: number | null;
@@ -55,9 +55,11 @@ onMounted(async () => {
 
 const newFoodProductId = ref<number | null>(null);
 const newShopId = ref<number | null>(null);
-const newFesDateId = ref<number | null>(null);
+const newFesDateId = ref<number | null>(1);
 const newIsFresh = ref<boolean>(false);
 const newItems = ref<string>("");
+const newPurchaseDate = ref<string>("");
+const newUrl = ref<string>("https://aaa.com");
 
 const addPurchaseClose = () => {
   emits("update:addPurchase", false);
@@ -68,6 +70,7 @@ const reloadPurchase = () => {
 };
 
 const addPurchase = async () => {
+  console.log(newFoodProductId.value);
   await useFetch(config.APIURL + "/purchase_lists/", {
     method: "POST",
     params: {
@@ -77,6 +80,8 @@ const addPurchase = async () => {
       fes_date_id: newFesDateId.value,
       is_fresh: newIsFresh.value,
       items: newItems.value,
+      purchase_date: newPurchaseDate.value,
+      url: newUrl.value,
     },
   });
   reloadPurchase();
@@ -86,13 +91,15 @@ const addPurchase = async () => {
 const reset = () => {
   newFoodProductId.value = null;
   newShopId.value = null;
-  newFesDateId.value = null;
+  newFesDateId.value = 1;
   newIsFresh.value = false;
   newItems.value = '';
+  newPurchaseDate.value = '';
+  newUrl.value = 'https://aaa.com';
   handleFoodProductId(newFoodProductId.value);
   handleShopId(newShopId.value);
-  handleFesDateId(newFesDateId.value);
   handleItem(newItems.value);
+  handlePurchaseDate(newPurchaseDate.value);
 };
 </script>
 
@@ -167,18 +174,14 @@ const reset = () => {
       </select>
       <div class="error_msg">{{ shopIdError }}</div>
       <div class="text">{{ $t("Purchase.date") }}</div>
-      <select
+      <input
+        type="date"
         class="entry"
-        v-model="newFesDateId"
-        @change="handleFesDateId"
-        :class="{ error_border: fesDateIdError }"
+        v-model="newPurchaseDate"
+        @change="handlePurchaseDate"
+        :class="{ error_border: purchaseDateError }"
       >
-        <option value="" disabled selected>{{ $t("Purchase.select") }}</option>
-        <option v-for="dates in fesDates" :key="dates.id" :value="dates.id">
-          {{ dates.date }}
-        </option>
-      </select>
-      <div class="error_msg">{{ fesDateIdError }}</div>
+      <div class="error_msg">{{ purchaseDateError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()" />
         <RegistPageButton

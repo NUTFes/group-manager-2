@@ -170,11 +170,10 @@ export const purchaseSchema = object({
   purchaseList: array()
   .of(
     object().shape({
-      foodProductId: number().required("選択してください").typeError("選択してください"),
-      shopId: number().required("選択してください").typeError("選択してください"),
+      foodProductId: string().required("選択してください").typeError("選択してください"),
+      shopId: string().required("選択してください").typeError("選択してください"),
       item: string().required("入力してください").typeError("入力してください"),
-      isFresh: string().required("選択してください").typeError("選択してください"),
-      fesDateId: number().required("選択してください").typeError("選択してください"),
+      purchaseDate: string().required("選択してください").typeError("選択してください"),
     })
   ).strict(),
 });
@@ -182,7 +181,7 @@ export const editPurchaseSchema = object({
   foodProductId: string().required("選択してください").typeError("選択してください"),
   shopId: string().required("選択してください").typeError("選択してください"),
   item: string().required("入力してください").typeError("入力してください"),
-  fesDateId: string().required("選択してください").typeError("選択してください"),
+  purchaseDate: string().required("選択してください").typeError("選択してください"),
 });
 
 // food登録のバリデーション

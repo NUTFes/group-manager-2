@@ -13,7 +13,9 @@ interface Regist {
   foodProductId: number | null;
   shopId: number | null;
   fesDateId: number | null;
+  purchaseDate: string | null;
   groupCategoryId: number;
+  url: string | null;
 }
 const props = withDefaults(defineProps<Regist>(), {
   id: null,
@@ -23,6 +25,8 @@ const props = withDefaults(defineProps<Regist>(), {
   foodProductId: null,
   shopId: null,
   fesDateId: null,
+  purchaseDate: "",
+  url: "",
 });
 
 const { meta, isSubmitting } = useForm({
@@ -31,8 +35,7 @@ const { meta, isSubmitting } = useForm({
     item: props.name,
     foodProductId: props.foodProductId,
     shopId: props.shopId,
-    isFresh: props.isFresh,
-    fesDateId: props.fesDateId,
+    purchaseDate: props.purchaseDate,
   },
 });
 const { handleChange: handleFoodProduct, errorMessage: foodProductError } =
@@ -40,10 +43,8 @@ const { handleChange: handleFoodProduct, errorMessage: foodProductError } =
 const { handleChange: handleShop, errorMessage: shopError } =
   useField("shopId");
 const { handleChange: handleItem, errorMessage: itemError } = useField("item");
-const { handleChange: handleIsFresh, errorMessage: isFreshError } =
-  useField("isFresh");
-const { handleChange: handleFesDate, errorMessage: fesDateError } =
-  useField("fesDateId");
+const { handleChange: handlePurchaseDate, errorMessage: purchaseDateError } =
+  useField("purchaseDate");
 
 interface Emits {
   (e: "update:editPurchase", isEditPurchase: boolean): void;
@@ -62,6 +63,8 @@ const newIsFresh = ref<boolean>(props.isFresh);
 const newFoodProductId = ref<number | null>(props.foodProductId);
 const newShopId = ref<number | null>(props.shopId);
 const newFesDateId = ref<number | null>(props.fesDateId);
+const newPurchaseDate = ref<string | null>(props.purchaseDate);
+const newUrl = ref<string | null>(props.url);
 
 const purchases = ref<Purchase[]>([]);
 const foodProducts = ref<FoodProduct[]>([]);
@@ -97,6 +100,8 @@ const editPurchase = async () => {
         food_product_id: newFoodProductId.value,
         shop_id: newShopId.value,
         fes_date_id: newFesDateId.value,
+        purchase_date: newPurchaseDate.value,
+        url: newUrl.value,
       },
     });
   } else {
@@ -120,12 +125,13 @@ const reset = () => {
   newIsFresh.value = false;
   newFoodProductId.value = null;
   newShopId.value = null;
-  newFesDateId.value = null;
+  newFesDateId.value = 1;
+  newPurchaseDate.value = '';
+  newUrl.value = 'https://aaa.com';
   handleFoodProduct(newFoodProductId.value);
   handleShop(newShopId.value);
   handleItem(newName.value);
-  handleIsFresh(newIsFresh.value);
-  handleFesDate(newFesDateId.value);
+  handlePurchaseDate(newFesDateId.value);
 };
 </script>
 
@@ -178,8 +184,6 @@ const reset = () => {
         <select
           class="entry"
           v-model="newIsFresh"
-          @change="handleIsFresh"
-          :class="{ error_border: isFreshError }"
         >
           <option value="" disabled selected>
             {{ $t("Purchase.select") }}
@@ -187,7 +191,6 @@ const reset = () => {
           <option value="true">{{ $t("Purchase.yes") }}</option>
           <option value="false">{{ $t("Purchase.no") }}</option>
         </select>
-        <div class="error_msg">{{ isFreshError }}</div>
       </div>
       <div class="text">{{ $t("Purchase.place") }}</div>
       <select
@@ -205,18 +208,14 @@ const reset = () => {
       </select>
       <div class="error_msg">{{ shopError }}</div>
       <div class="text">{{ $t("Purchase.date") }}</div>
-      <select
+      <input
+        type="date"
         class="entry"
-        v-model="newFesDateId"
-        @change="handleFesDate"
-        :class="{ error_border: fesDateError }"
+        v-model="newPurchaseDate"
+        @change="handlePurchaseDate"
+        :class="{ error_border: purchaseDateError }"
       >
-        <option value="" disabled selected>{{ $t("Purchase.select") }}</option>
-        <option v-for="dateId in fesDates" :key="dateId.id" :value="dateId.id">
-          {{ dateId.date }}
-        </option>
-      </select>
-      <div class="error_msg">{{ fesDateError }}</div>
+      <div class="error_msg">{{ purchaseDateError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()" />
         <RegistPageButton
