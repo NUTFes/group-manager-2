@@ -114,12 +114,12 @@ const registerPower = async () => {
         },
       });
     }
-    router.push("/regist/employees");
+    router.push("/regist/announcement");
   }
 };
 
 const skip = () => {
-  router.push("/regist/employees");
+  router.push("/regist/announcement");
 };
 
 const back = () => {
