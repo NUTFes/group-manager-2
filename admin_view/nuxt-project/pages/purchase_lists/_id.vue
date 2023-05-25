@@ -27,6 +27,10 @@
             <td>{{ purchaseList.group.name }}</td>
           </tr>
           <tr>
+            <th>購入日</th>
+            <td>{{ purchaseList.purchase_list.purchase_date }}</td>
+          </tr>
+          <tr>
             <th>販売食品</th>
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
           </tr>
@@ -43,20 +47,8 @@
             <td>{{ purchaseList.purchase_list_info.shop }}</td>
           </tr>
           <tr>
-            <th>仕入れ日</th>
-            <td>
-              {{ purchaseList.purchase_list_info.date }} -
-              {{ purchaseList.purchase_list_info.day }} -
-              {{ purchaseList.purchase_list.days_num }}
-            </td>
-          </tr>
-          <tr>
-            <th>仕入れ日</th>
-            <td>
-              {{ purchaseList.purchase_list_info.date }} -
-              {{ purchaseList.purchase_list_info.day }} -
-              {{ purchaseList.purchase_list.days_num }}
-            </td>
+            <th>URL</th>
+            <td>{{ purchaseList.purchase_list.url }}</td>
           </tr>
           <tr>
             <th>登録日時</th>
