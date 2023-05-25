@@ -287,7 +287,8 @@
     "no": "Processed food",
     "of": "",
     "parchasePlace1": "Place",
-    "parchasePlace2": "of purchase"
+    "parchasePlace2": "of purchase",
+    "URL": "If you bought it online, please enter the URL"
   },
 
   "Validate": {

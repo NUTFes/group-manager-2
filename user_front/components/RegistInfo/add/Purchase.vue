@@ -59,7 +59,8 @@ const newFesDateId = ref<number | null>(1);
 const newIsFresh = ref<boolean>(false);
 const newItems = ref<string>("");
 const newPurchaseDate = ref<string>("");
-const newUrl = ref<string>("https://aaa.com");
+//const newUrl = ref<string>("https://aaa.com");
+const newUrl = ref<string>("");
 
 const addPurchaseClose = () => {
   emits("update:addPurchase", false);
@@ -95,7 +96,8 @@ const reset = () => {
   newIsFresh.value = false;
   newItems.value = '';
   newPurchaseDate.value = '';
-  newUrl.value = 'https://aaa.com';
+  //newUrl.value = 'https://aaa.com';
+  newUrl.value = '';
   handleFoodProductId(newFoodProductId.value);
   handleShopId(newShopId.value);
   handleItem(newItems.value);
@@ -182,6 +184,12 @@ const reset = () => {
         :class="{ error_border: purchaseDateError }"
       >
       <div class="error_msg">{{ purchaseDateError }}</div>
+      <div class="text">{{ $t("Purchase.URL") }}</div>
+        <input
+          class="entry"
+          type="text"
+          v-model="newUrl"
+        />
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()" />
         <RegistPageButton

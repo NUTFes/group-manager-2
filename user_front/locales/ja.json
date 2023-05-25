@@ -286,7 +286,8 @@
     "no": "加工品",
     "of": "の",
     "parchasePlace1": "購入",
-    "parchasePlace2": "場所"
+    "parchasePlace2": "場所",
+    "URL": "ネットで買った場合はURLを記入してください"
   },
 
   "Validate": {

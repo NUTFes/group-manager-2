@@ -56,6 +56,7 @@ interface PurchaseList{
   items: string
   shop: string
   year: number
+  url: string
 }
 
 export interface Group{

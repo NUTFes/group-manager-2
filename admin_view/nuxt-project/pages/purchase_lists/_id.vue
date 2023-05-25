@@ -51,6 +51,14 @@
             </td>
           </tr>
           <tr>
+            <th>仕入れ日</th>
+            <td>
+              {{ purchaseList.purchase_list_info.date }} -
+              {{ purchaseList.purchase_list_info.day }} -
+              {{ purchaseList.purchase_list.days_num }}
+            </td>
+          </tr>
+          <tr>
             <th>登録日時</th>
             <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
           </tr>
