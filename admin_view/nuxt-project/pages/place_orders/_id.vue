@@ -43,6 +43,13 @@
               <td>{{ placeOrder.place_order_name.third }}</td>
             </tr>
             <tr>
+              <th>ダウンロードパス</th>
+              <td>
+                <div v-if='placeOrder.venue_map.picture_path === null'>未登録</div>
+                <div v-else @click="DownloadPic(placeOrder.venue_map.picture_path)">{{ placeOrder.venue_map.picture_path }}</div>
+              </td>
+            </tr>
+            <tr>
               <th>備考</th>
               <td>{{ placeOrder.place_order.remark }}</td>
             </tr>
