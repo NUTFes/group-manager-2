@@ -60,8 +60,8 @@
     "editGroup": "Edit group Information",
     "editUserInfo": "Check & Edit User Information",
     "editPassword": "Password Change",
-    "regitstPR": "public relations Registration",
-    "regitstAnnouncemant": "Announcement text registration",
+    "editPR": "public relations Edit",
+    "editAnnouncemant": "Announcement text edit",
     "regitstVenueMap": "Venue MAP Registration",
     "notice": "Notice",
     "updateDate": "update date"
@@ -75,8 +75,11 @@
   },
 
   "Announcement": {
-    "regitstAnnouncemant": "Registration of venue announcement text",
-    "text": "Announcement text at the venue"
+    "regitstAnnouncement": "Registration of venue announcement text",
+    "editAnnouncement": "Editing of venue announcement text",
+    "text": "Announcement text at the venue",
+    "edit": "editing",
+    "regist": "registing"
   },
 
   "VenueMap": {
