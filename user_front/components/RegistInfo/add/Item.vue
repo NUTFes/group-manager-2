@@ -152,7 +152,7 @@ const reset = () => {
     </template>
     <template #form>
       <div class="flex mt-4 gap-3 justify-end">
-        <div v-if="Number(groupCategoryId) !== 3">
+        <div v-if="Number(groupCategoryId) !== 1 && Number(groupCategoryId) !== 3">
           <label class="mr-2">
             <input
               type="radio"
@@ -163,6 +163,18 @@ const reset = () => {
             />
             {{ $t("Item.insideGroup") }}
           </label>
+          <label>
+            <input
+              type="radio"
+              value="屋外団体"
+              v-model="selectedLocation"
+              :checked="selectedLocation === '屋外団体'"
+              @click="updateSelectedLocation"
+            />
+            {{ $t("Item.outsideGroup") }}
+          </label>
+        </div>
+        <div v-if="Number(groupCategoryId) === 1">
           <label>
             <input
               type="radio"

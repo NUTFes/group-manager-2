@@ -191,7 +191,7 @@ const back = () => {
   <div class="mx-[20%] my-[5%]">
     <Card>
       <h1 class="text-3xl">{{ $t("Item.registItem") }}</h1>
-      <div v-if="Number(state.groupCategoryId) !== 3" class="flex gap-2 mt-2">
+      <div v-if="Number(state.groupCategoryId) !== 1 && Number(state.groupCategoryId) !== 3" class="flex gap-2 mt-2">
         <label>
           <input
             type="radio"
@@ -212,6 +212,20 @@ const back = () => {
           />
           {{ $t("Item.outsideGroup") }}
         </label>
+      </div>
+      <div class="mt-4">
+        <div v-if="Number(state.groupCategoryId) === 1">
+          <label>
+            <input
+              type="radio"
+              value="屋外団体"
+              v-model="selectedLocation"
+              :checked="selectedLocation === '屋外団体'"
+              @click="updateSelectedLocation"
+            />
+            {{ $t("Item.outsideGroup") }}
+          </label>
+        </div>
       </div>
       <div class="mt-4">
         <div v-if="Number(state.groupCategoryId) === 3">
