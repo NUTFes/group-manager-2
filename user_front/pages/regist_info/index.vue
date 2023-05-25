@@ -119,6 +119,8 @@ interface PurchaseList {
   food_product: string;
   is_fresh: boolean;
   items: string;
+  purchase_date: string;
+  url: string;
   shop_id: number;
   shop: string;
   year: number;
@@ -580,6 +582,8 @@ const rentalItemOverlap = computed(() => {
                 :name="p.purchase_list.items"
                 :is-fresh="p.purchase_list.is_fresh"
                 :fes-date-id="p.purchase_list.date_id"
+                :purchase-date="p.purchase_list.purchase_date"
+                :url="p.purchase_list.url"
                 :group-category-id="groupCategoryId ? groupCategoryId : 0"
                 @reload-purchase="reload"
               />
