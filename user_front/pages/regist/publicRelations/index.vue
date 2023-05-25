@@ -1,6 +1,13 @@
 <script lang="ts" setup>
 import { getDownloadURL, getStorage, ref as fireRef, uploadBytes } from "firebase/storage";
+import { useForm } from "vee-validate";
 import { loginCheck } from "~~/utils/methods";
+import { publicRelationsSchema } from "~~/utils/validate";
+
+
+const { meta, isSubmitting } = useForm({
+  validationSchema: publicRelationsSchema,
+});
 
 const router = useRouter()
 const config = useRuntimeConfig();
@@ -95,6 +102,7 @@ const back = () => {
           variant="secondary"
         ></RegistPageButton>
         <RegistPageButton
+          :disabled="!meta.valid || isSubmitting"
           :text="$t('Button.register')"
           @click="registImageURL"
         ></RegistPageButton>

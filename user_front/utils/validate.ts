@@ -201,3 +201,16 @@ export const editFoodSchema = object({
   numFirstDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
   numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
 });
+
+// publicRelations登録のバリデーション
+export const publicRelationsSchema = object({
+  publicRelations: array()
+  .of(
+    object().shape({
+      publicRelations: string().required("入力してください").typeError("入力してください"),
+    })
+  ).strict(),
+});
+export const editPublicRelationsSchema = object({
+  publicRelations: string().required("入力してください").typeError("入力してください"),
+});
