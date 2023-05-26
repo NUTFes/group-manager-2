@@ -34,7 +34,12 @@ const fileUpload = (e: Event) => {
 const storage = getStorage();
 const storageRef = fireRef(storage, fileName.value);
 
-const editImageURL = () =>{
+const editImageURL = () => {
+  if (blurb.value.length === 0) {
+    alert('PR文を入力してください')
+    return
+  }
+
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
