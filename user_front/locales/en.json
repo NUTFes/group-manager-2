@@ -72,7 +72,8 @@
     "PR": "PR for brochure",
     "select": "Please select",
     "text": "PR statement(About 40 characters)",
-    "illustration": "illustration"
+    "illustration": "illustration",
+    "over": "It is over 40 characters"
   },
 
   "Announcement": {
