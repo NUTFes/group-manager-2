@@ -16,6 +16,7 @@ const fesYearId = ref<number>()
 const groupId = localStorage.getItem("group_id")
 
 onMounted( () =>{
+  loginCheck();
   const groupUrl = config.APIURL + "/groups/" + groupId;
   axios.get(groupUrl).then((response) => {
     projectName.value = response.data.data.project_name;
