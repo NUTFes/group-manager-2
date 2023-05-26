@@ -46,8 +46,8 @@ const openDeletePower = () => {
         {{ props.item }}
       </div>
       <RegistInfoDivideBar />
-      <div class="flex w-28 justify-end m-4 text-center ml-10">
-        <div class="text-6xl font-light">{{ props.power }}</div>
+      <div class="flex w-28 justify-end m-4 text-center ml-8">
+        <div class="text-5xl font-light">{{ props.power }}</div>
         <div class="mt-12 font-light text-ms">[W]</div>
       </div>
       <RegistInfoDivideBar />
