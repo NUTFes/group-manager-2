@@ -20,7 +20,7 @@ const group = withDefaults(defineProps<Props>(), {
       <div class="bg-gray-100 tracking-wide">{{ group.name }}</div>
     </div>
     <slot name="tabs"></slot>
-    <div class="min-h-[100vh] w-full bg-gray-200">
+    <div class="min-h-[100vh] w-full bg-gray-200 pb-3">
       <slot name="body"/>
     </div>
   </div>
