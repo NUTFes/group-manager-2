@@ -29,24 +29,24 @@ export const departmentList: { id: number; name: string }[] = [
   { id: 2, name: "電気電子情報工学分野" },
   { id: 3, name: "物質生物工学分野" },
   { id: 4, name: "環境社会基盤工学分野" },
-  { id: 6, name: "情報・経営システム工学分野" },
-  { id: 7, name: "機械工学分野" },
-  { id: 8, name: "電気電子情報工学分野" },
-  { id: 9, name: "物質生物工学分野" },
-  { id: 10, name: "環境社会基盤工学分野" },
-  { id: 12, name: "情報・経営システム工学分野" },
-  { id: 13, name: "量子・原子力統合工学分野" },
-  { id: 14, name: "システム安全工学専攻" },
-  { id: 15, name: "技術科学イノベーション専攻" },
-  { id: 16, name: "情報・制御工学分野" },
-  { id: 17, name: "材料工学分野" },
-  { id: 18, name: "エネルギー工学分野" },
-  { id: 19, name: "社会環境・生物機能工学分野" },
-  { id: 20, name: "その他" },
+  { id: 5, name: "情報・経営システム工学分野" },
+  { id: 6, name: "機械工学分野" },
+  { id: 7, name: "電気電子情報工学分野" },
+  { id: 8, name: "物質生物工学分野" },
+  { id: 9, name: "環境社会基盤工学分野" },
+  { id: 10, name: "情報・経営システム工学分野" },
+  { id: 11, name: "量子・原子力統合工学分野" },
+  { id: 12, name: "システム安全工学専攻" },
+  { id: 13, name: "技術科学イノベーション専攻" },
+  { id: 14, name: "情報・制御工学分野" },
+  { id: 15, name: "材料工学分野" },
+  { id: 16, name: "エネルギー工学分野" },
+  { id: 17, name: "社会環境・生物機能工学分野" },
+  { id: 18, name: "その他" },
 ]
 
 export const B1AndOtherGradeDepartmentList: { id: number; name: string }[] = [
-  { id: 20, name: "その他" },
+  { id: 18, name: "その他" },
 ];
 
 export const B2toB4GradeDepartmentList: { id: number; name: string }[] = [
@@ -54,28 +54,28 @@ export const B2toB4GradeDepartmentList: { id: number; name: string }[] = [
   { id: 2, name: "電気電子情報工学分野" },
   { id: 3, name: "物質生物工学分野" },
   { id: 4, name: "環境社会基盤工学分野" },
-  { id: 6, name: "情報・経営システム工学分野" },
+  { id: 5, name: "情報・経営システム工学分野" },
 ];
 
 export const M1toM2GradeDepartmentList: { id: number; name: string }[] = [
-  { id: 7, name: "機械工学分野" },
-  { id: 8, name: "電気電子情報工学分野" },
-  { id: 9, name: "物質生物工学分野" },
-  { id: 10, name: "環境社会基盤工学分野" },
-  { id: 12, name: "情報・経営システム工学分野" },
-  { id: 13, name: "量子・原子力統合工学分野" },
-  { id: 14, name: "システム安全工学専攻" },
+  { id: 6, name: "機械工学分野" },
+  { id: 7, name: "電気電子情報工学分野" },
+  { id: 8, name: "物質生物工学分野" },
+  { id: 9, name: "環境社会基盤工学分野" },
+  { id: 10, name: "情報・経営システム工学分野" },
+  { id: 11, name: "量子・原子力統合工学分野" },
+  { id: 12, name: "システム安全工学専攻" },
 ];
 
 export const D1toD3GradeDepartmentList: { id: number; name: string }[] = [
-  { id: 16, name: "情報・制御工学分野" },
-  { id: 17, name: "材料工学分野" },
-  { id: 18, name: "エネルギー工学分野" },
-  { id: 19, name: "社会環境・生物機能工学分野" },
+  { id: 14, name: "情報・制御工学分野" },
+  { id: 15, name: "材料工学分野" },
+  { id: 16, name: "エネルギー工学分野" },
+  { id: 17, name: "社会環境・生物機能工学分野" },
 ];
 
 export const GDGradeDepartmentList: { id: number; name: string }[] = [
-  { id: 15, name: "技術科学イノベーション専攻" },
+  { id: 13, name: "技術科学イノベーション専攻" },
 ];
 
 export const GradeWithDepartmentList: { id: number; departmentList: { id: number; name: string }[] }[] = [
