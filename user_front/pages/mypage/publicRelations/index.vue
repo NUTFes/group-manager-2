@@ -22,6 +22,7 @@ const router = useRouter();
 const config = useRuntimeConfig();
 const state = reactive({
   groupId: 0,
+  language: ''
 });
 
 const currentPublicRelation = ref<PublicRelation | null>(null);
@@ -31,14 +32,12 @@ const fileName = ref<string>("選択してください");
 const pictureName = ref<string>("");
 const blurb = ref<string>("");
 const isSubmitting = ref<boolean>(false);
-
-const isBlurbOver = computed(() => {
-  return blurb.value.length > 40;
-});
+//const language = ref<string>("");
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
+  state.language = localStorage.getItem("local") || "";
   state.groupId = Number(localStorage.getItem("group_id"));
 
   const getPublicRelationUrl = "/public_relations";
@@ -55,6 +54,15 @@ onMounted(async () => {
     .catch((error) => {
       console.log(error);
     });
+});
+
+const isBlurbOver = computed(() => {
+  if(state.language == "en"){
+    const blurbEng = blurb.value.split(" ");
+    return blurbEng.length > 25;
+  } else {
+    return blurb.value.length > 40;
+  }
 });
 
 const fileUpload = (e: Event) => {

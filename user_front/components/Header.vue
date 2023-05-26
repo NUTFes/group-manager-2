@@ -29,6 +29,11 @@ const logout = () => {
 const backHome = () => {
   router.push("/");
 };
+
+const localChageHandler = (e: any) => {
+  localStorage.setItem("local", e.target.value);
+}
+
 </script>
 
 <template>
@@ -45,6 +50,7 @@ const backHome = () => {
           class="w-auto m-auto ml-0 h-auto border-none"
           id="locale-select"
           v-model="$i18n.locale"
+          @change="localChageHandler"
         >
           <option value="ja">日本語</option>
           <option value="en">English</option>
