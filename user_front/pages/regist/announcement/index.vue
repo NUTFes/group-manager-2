@@ -13,6 +13,11 @@ onMounted(async () => {
 })
 
 const postAnnouncement = () => {
+  if (announcement.value.length === 0) {
+    alert('会場アナウンス文を入力してください')
+    return
+  }
+
   useFetch(config.APIURL + "/announcements", {
     method: "POST",
     params: {

@@ -32,6 +32,11 @@ const storage = getStorage();
 const storageRef = fireRef(storage, fileName.value);
 
 const registImageURL = () =>{
+  if (blurb.value.length === 0) {
+    alert('PR文を入力してください')
+    return
+  }
+
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
@@ -67,6 +72,10 @@ const skip = () => {
 const back = () => {
   router.push("/regist/announcement");
 };
+
+const isBlurbOver = computed(() => {
+  return blurb.value.length > 40
+})
 </script>
 
 <template>
@@ -79,6 +88,7 @@ const back = () => {
             <p class="label">{{ $t("PR.text") }}</p>
             <div class="flex flex-col">
               <textarea class="form" v-model="blurb"></textarea>
+              <p v-if="isBlurbOver" class="text-red-500">{{ $t("PR.over") }}</p>
             </div>
             <p class="label">{{ $t("PR.illustration") }}</p>
             <div class="flex flex-col">
@@ -96,6 +106,7 @@ const back = () => {
         <RegistPageButton
           :text="$t('Button.register')"
           @click="registImageURL"
+          :disabled="isBlurbOver"
         ></RegistPageButton>
         <RegistPageButton
           :text="$t('Button.skip')"

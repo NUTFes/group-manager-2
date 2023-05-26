@@ -13,6 +13,10 @@ const fileName = ref<string>('選択してください')
 const pictureName = ref<string>("")
 const blurb = ref<string>("")
 
+const isBlurbOver = computed(() => {
+  return blurb.value.length > 40
+})
+
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck()
@@ -30,7 +34,12 @@ const fileUpload = (e: Event) => {
 const storage = getStorage();
 const storageRef = fireRef(storage, fileName.value);
 
-const editImageURL = () =>{
+const editImageURL = () => {
+  if (blurb.value.length === 0) {
+    alert('PR文を入力してください')
+    return
+  }
+
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
@@ -73,13 +82,14 @@ const editImageURL = () =>{
         {{ $t("PR.text") }}
       </div>
       <textarea class="border-2 w-[60%]" v-model="blurb"></textarea>
+      <p v-if="isBlurbOver" class="text-red-500 text-sm">{{ $t("PR.over") }}</p>
       <div class="my-4 items-center">
         <label>
           <span class="text-3xl mr-4">{{ $t("PR.illustration") }}</span>
           <input type="file" @change="fileUpload">
         </label>
       </div>
-      <RegistPageButton :text="$t('Button.register')" @click="editImageURL"></RegistPageButton>
+      <RegistPageButton :text="$t('Button.register')" @click="editImageURL" :disabled="isBlurbOver"></RegistPageButton>
     </Card>
   </div>
 </template>
