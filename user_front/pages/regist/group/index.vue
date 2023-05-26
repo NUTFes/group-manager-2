@@ -65,7 +65,7 @@ const registerCategory = async () => {
     localStorage.setItem("group_id", res.data.id.toString())
     localStorage.setItem("group_category_id", res.data.group_category_id.toString())
   })
-  router.push("/regist/subrep")
+  router.push("/mypage")
 }
 </script>
 
