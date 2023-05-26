@@ -87,16 +87,7 @@
         </div>
         <div>
           <h3>購入日</h3>
-          <select v-model="fesDateID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in fesDatesList"
-              :key="list.id"
-              :value="list.id"
-            >
-              {{ list.date }}
-            </option>
-          </select>
+          <input v-model="purchase_date" placeholder="入力してください" />
         </div>
         <div>
           <h3>なまものか</h3>
@@ -161,6 +152,7 @@ export default {
       isFresh: null,
       shopList: [],
       fesDatesList: [],
+      purchase_date: null,
       url: null,
     };
   },
@@ -190,7 +182,8 @@ export default {
       this.items = this.purchaseList.purchase_list.items
       this.shopID = this.purchaseList.purchase_list.shop_id
       this.fesDateID = this.purchaseList.purchase_list.fes_date_id
-      this.isFresh = this.purchaseList.purchase_list.is_fresh
+      this.isFresh = this.purchaseList.purchase_list.isFresh
+      this.purchase_date = this.purchaseList.purchase_list.purchase_date
       this.url = this.purchaseList.purchase_list.url
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
@@ -225,16 +218,14 @@ export default {
         this.purchaseList.purchase_list.food_product_id +
         "&shop_id=" +
         this.shopID +
-        "&fes_date_id=" +
-        this.fesDateID +
+        "&purchase_date=" +
+        this.purchase_date +
         "&items=" +
         this.items +
         "&is_fresh=" + 
         this.isFresh +
         "&url=" +
         this.url;
-
-        console.log(url)
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.items + "を編集しました");

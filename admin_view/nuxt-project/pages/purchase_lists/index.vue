@@ -119,16 +119,7 @@
         </div>
         <div>
           <h3>購入日</h3>
-          <select v-model="fesDateID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in fesDatesList"
-              :key="list.id"
-              :value="list.id"
-            >
-              {{ list.date }}
-            </option>
-          </select>
+          <input v-model="purchase_date" placeholder="入力してください" />
         </div>
         <div>
           <h3>なまものか</h3>
@@ -198,6 +189,7 @@ export default {
       items: null,
       shopID: null,
       fesDateID: null,
+      purchase_date: null,
       isFresh: null,
       url: null,
     };
@@ -299,7 +291,7 @@ export default {
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
-    reload(id) {
+    async reload(id) {
       const url = "/api/v1/get_purchase_list_show_for_admin_view/" + id;
       this.$axios.$get(url).then((response) => {
         this.purchaseLists.push(response.data);
@@ -310,14 +302,15 @@ export default {
         "/purchase_lists" +
         "?food_product_id=" + 
         this.foodProductID +
+        "&fes_date_id=1" + 
         "&shop_id=" +
         this.shopID +
-        "&fes_date_id=" +
-        this.fesDateID +
         "&items=" +
         this.items +
         "&is_fresh=" + 
         this.isFresh +
+        "&purchase_date=" +
+        this.purchase_date +
         "&url=" + 
         this.url;
 
@@ -328,6 +321,7 @@ export default {
         this.foodProductID = null
         this.shopID = null
         this.isFresh = null
+        this.purchase_date = null
         this.url = null
         this.reload(response.data.id);
         this.closeAddModal();
