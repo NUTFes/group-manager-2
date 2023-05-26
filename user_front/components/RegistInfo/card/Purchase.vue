@@ -60,7 +60,7 @@ const openDeletePurchase = () => {
           <span class="underline">{{ purchase.foodProduct }}</span
           >の
         </div>
-        <div class="mr-1">
+        <div class="mr-1 truncate hover:text-clip">
           {{ purchase.name }}
         </div>
       </div>
