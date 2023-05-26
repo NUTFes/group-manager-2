@@ -503,7 +503,7 @@ const rentalItemOverlap = computed(() => {
             <p>削除してください</p>
           </div>
           <div class="flex flex-wrap gap-4">
-            <div class="w-1/4" v-for="item in rentalOrders" :key="item.toString()">
+            <div class="w-fit" v-for="item in rentalOrders" :key="item.toString()">
               <RegistInfoCardItem
                 :group-id="group?.id"
                 :regist="item.rental_item.rental_item"
@@ -525,7 +525,7 @@ const rentalItemOverlap = computed(() => {
         <div v-show="tab === 7" class="flex flex-wrap flex-col">
           <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddEmployee()" />
           <div class="mt--9 flex flex-wrap gap-4">
-            <div class="w-1/4" v-for="e in employee" :key="e.toString()">
+            <div class="w-fit" v-for="e in employee" :key="e.toString()">
               <RegistInfoCardEmployee
                 :group-id="group?.id"
                 :id="e.employee.id"

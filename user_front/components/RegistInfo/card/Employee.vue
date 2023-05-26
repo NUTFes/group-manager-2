@@ -48,7 +48,7 @@ const openDeleteItem = () => {
           <DeleteButton @click="openDeleteItem()" />
         </div>
       </div>
-      <div class="h-[80%] pt-28 mx-4 text-5xl text-center">
+      <div class="h-[80%] pt-28 ml-5 mx-4 text-5xl text-center truncate hover:text-clip">
         {{ employee.name }}
       </div>
     </template>

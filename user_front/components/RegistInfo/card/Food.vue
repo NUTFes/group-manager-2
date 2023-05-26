@@ -43,7 +43,7 @@ const reloadFood = () => {
 <template>
   <RegistInfoWideCard>
     <template #body>
-      <div class="w-[40%] text-center text-5xl">
+      <div class="w-[40%] ml-8 text-center text-5xl truncate hover:text-clip">
         {{ food.name }}
       </div>
       <RegistInfoDivideBar />
