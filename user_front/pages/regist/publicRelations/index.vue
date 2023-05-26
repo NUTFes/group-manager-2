@@ -9,7 +9,8 @@ const state = reactive({
 });
 const errorMessage = ref("");
 
-const selectedFile = ref<File|null>(null)
+const selectedFile = ref<File | null>(null)
+const selectedFileUrl = ref<string>("")
 const fileName = ref<string>('選択してください')
 const pictureName = ref<string>("")
 const blurb = ref<string>("")
@@ -25,6 +26,7 @@ const fileUpload = (e: Event) => {
   const files = target.files
   const file = files![0]
   selectedFile.value = file
+  selectedFileUrl.value = URL.createObjectURL(file)
   fileName.value = file.name
 }
 
@@ -34,6 +36,12 @@ const storageRef = fireRef(storage, fileName.value);
 const registImageURL = () =>{
   if (blurb.value.length === 0) {
     alert('PR文を入力してください')
+    return
+  }
+
+  // 画像がない場合はalertを出す
+  if (!selectedFile.value) {
+    alert('画像を選択してください')
     return
   }
 
@@ -94,6 +102,10 @@ const isBlurbOver = computed(() => {
             <div class="flex flex-col">
               <input class="form" type="file" @change="fileUpload">
             </div>
+          </div>
+          <div v-if="selectedFileUrl" class="my-4">
+            <p class="w-fit mx-auto">選択した画像</p>
+            <img :src="selectedFileUrl" class="w-1/2 mx-auto">
           </div>
         </div>
       </Card>

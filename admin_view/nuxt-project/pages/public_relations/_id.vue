@@ -32,7 +32,9 @@
               <th>ダウンロードパス</th>
               <td>
                 <div v-if='publicRelations.picture_path === null'>未登録</div>
-                <div v-else @click="DownloadPic(publicRelations.picture_path)">{{ publicRelations.picture_path }}</div>
+                <div v-else @click="DownloadPic(publicRelations.picture_path)">
+                  <img :src="publicRelations.picture_path" />
+                </div>
               </td>
             </tr>
             <tr>
@@ -211,5 +213,11 @@ td {
 }
 th {
   width: 30%;
+}
+
+img {
+  width:100%;
+  height: 100%;
+  object-fit: contain;
 }
 </style>
