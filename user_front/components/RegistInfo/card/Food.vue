@@ -43,32 +43,32 @@ const reloadFood = () => {
 <template>
   <RegistInfoWideCard>
     <template #body>
-      <div class="w-[40%] text-center text-5xl">
+      <div class="w-[40%] ml-8 text-center text-4xl truncate hover:text-clip">
         {{ food.name }}
       </div>
       <RegistInfoDivideBar />
       <div v-if="groupCategoryId === 1" class="w-[10%] text-center">
-        <p class="text-xl">{{ $t("Food.cook") }}</p>
+        <p class="text-base">{{ $t("Food.cook") }}</p>
         <p class="text-2xl">
           {{ food.isCooking ? $t("Food.yes") : $t("Food.no") }}
         </p>
       </div>
       <RegistInfoDivideBar v-if="groupCategoryId === 1" />
-      <div class="mx-4 text-center text-xl">
+      <div class="mx-4 text-center text-xl w-[9%]">
         <span>{{ $t("Food.sold") }}<br />{{ $t("Food.toBe") }}</span>
       </div>
       ▶
-      <div class="w-[15%] mx-4 text-2xl">
+      <div class="w-[15%] mx-4 text-xl">
         <div class="mr-1">
           {{ $t("Food.firstDay") }}
-          <span class="w-[10%] text-center text-3xl">
+          <span class="w-[10%] text-center text-xl">
             {{ food.firstNum }}
           </span>
           {{ $t("Food.count") }}
         </div>
-        <div class="mr-1">
+        <div class="mr-1 text-xl">
           {{ $t("Food.secondDay") }}
-          <span class="w-[10%] text-center text-3xl">
+          <span class="w-[10%] text-center text-xl">
             {{ food.secondNum }}
           </span>
           {{ $t("Food.count") }}
