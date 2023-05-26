@@ -107,6 +107,7 @@ onMounted(async () => {
       }
     });
   });
+  group_id.value=Number(localStorage.getItem("group_id"))
 });
 
 const editPlace = async () => {
@@ -134,7 +135,7 @@ const editPlace = async () => {
     });
   }
   reloadPlace();
-  closeEditPlace();
+  //closeEditPlace();
 };
 
 const reset = () => {
