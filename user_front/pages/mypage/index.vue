@@ -12,6 +12,7 @@ const registGroupCategoryId = ref<number>(0);
 const config = useRuntimeConfig();
 
 onMounted(async () => {
+  loginCheck();
   await $fetch<RegistInfo>(
     config.APIURL + "/api/v1/current_user/current_regist_info",
     {
