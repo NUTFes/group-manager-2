@@ -29,7 +29,6 @@ class PurchaseList < ApplicationRecord
         "id": self.id,
         "items": self.items,
         "is_fresh": self.is_fresh,
-        "url": self.url,
         "food_product": self.food_product.name,
         "food_product_id": self.food_product.id,
         "shop": self.shop.name,
@@ -38,7 +37,9 @@ class PurchaseList < ApplicationRecord
         "date": self.fes_date.date,
         "date_id": self.fes_date.id,
         "day": self.fes_date.day,
-        "year": self.fes_date.fes_year.year_num
+        "year": self.fes_date.fes_year.year_num,
+        "purchase_date": self.purchase_date,
+        "url": self.url
       }
     end
 end
