@@ -76,7 +76,7 @@ const openDeletePurchase = () => {
         >
       </div>
       ▸
-      <div class="w-[20%] mx-4 text-3xl text-center">
+      <div class="w-[20%] mx-4 text-2xl text-center">
         <div class="mr-1 text-center">
           {{ purchase.shop }}
         </div>
