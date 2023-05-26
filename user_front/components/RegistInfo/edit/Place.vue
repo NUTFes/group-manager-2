@@ -112,7 +112,6 @@ onMounted(async () => {
 
 const editPlace = async () => {
   if (props.id === null) {
-    console.log(group_id.value)
     await useFetch(config.APIURL + "/place_orders", {
       method: "POST",
       params: {
@@ -122,11 +121,8 @@ const editPlace = async () => {
         third: newThird.value,
         remark: newRemark.value,
       },
-    }).then((res)=>{
-      console.log(res.data)
-    })
+    });
   } else {
-    console.log("nullじゃない")
     await useFetch(config.APIURL + "/place_orders/" + props.id, {
       method: "PUT",
       params: {
@@ -139,7 +135,6 @@ const editPlace = async () => {
     });
   }
   reloadPlace();
-  console.log(props.id)
   //closeEditPlace();
 };
 
