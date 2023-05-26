@@ -73,7 +73,7 @@
     "select": "選択してください",
     "text": "PR文(40文字程度)",
     "illustration": "イラスト",
-    "over": "40文字を超えています"
+    "over": "50文字を超えています"
   },
 
   "Announcement": {
