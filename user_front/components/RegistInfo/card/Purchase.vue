@@ -56,9 +56,12 @@ const openDeletePurchase = () => {
       </div>
       ▸
       <div class="w-[20%] ml-4 text-3xl text-center">
-        <div class="mr-1 my-1 text-xl">
-          <span class="underline">{{ purchase.foodProduct }}</span
-          >の
+        <div class="flex justify-center">
+          <div class="mr-1 my-1 text-xl truncate hover:text-clip">
+            <span class="underline">{{ purchase.foodProduct }}</span
+            >
+          </div>
+          <div class="mt-3 text-sm">の</div>
         </div>
         <div class="mr-1 truncate hover:text-clip">
           {{ purchase.name }}
