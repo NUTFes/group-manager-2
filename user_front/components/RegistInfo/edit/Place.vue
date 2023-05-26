@@ -62,9 +62,8 @@ const newSecond = ref<Props["second"]>(props.second);
 const newThird = ref<Props["third"]>(props.third);
 const newRemark = ref<Props["remark"]>(props.remark);
 const groupCategoryId = ref<number>();
-const isOverlapPlace = ref(false);
 const group_id = ref();
-const isDuplicate = computed(() => {
+const isOverlapPlace = computed(() => {
   if (
     newFirst.value === newSecond.value ||
     newFirst.value === newThird.value ||
@@ -213,7 +212,7 @@ const reset = () => {
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
         <RegistPageButton
-          :disabled="!meta.valid || isSubmitting"
+          :disabled="!meta.valid || isSubmitting || isOverlapPlace"
           text="✓編集"
           @click="editPlace()"
         ></RegistPageButton>
