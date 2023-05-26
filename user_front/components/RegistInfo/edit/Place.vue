@@ -134,7 +134,7 @@ const editPlace = async () => {
     });
   }
   reloadPlace();
-  //closeEditPlace();
+  closeEditPlace();
 };
 
 const reset = () => {
