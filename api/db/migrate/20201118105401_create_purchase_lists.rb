@@ -6,6 +6,7 @@ class CreatePurchaseLists < ActiveRecord::Migration[6.0]
       t.integer :fes_date_id
       t.string :items
       t.boolean :is_fresh
+      t.string :url
 
       t.timestamps
     end

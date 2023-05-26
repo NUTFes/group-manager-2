@@ -111,6 +111,10 @@
             </option>
           </select>
         </div>
+        <div>
+          <h3>ネットで買った場合はURLを記入してください</h3>
+          <input v-model="url" placeholder="入力してください" />
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
@@ -157,6 +161,7 @@ export default {
       isFresh: null,
       shopList: [],
       fesDatesList: [],
+      url: null,
     };
   },
   async asyncData({ $axios, route }) {
@@ -186,6 +191,7 @@ export default {
       this.shopID = this.purchaseList.purchase_list.shop_id
       this.fesDateID = this.purchaseList.purchase_list.fes_date_id
       this.isFresh = this.purchaseList.purchase_list.is_fresh
+      this.url = this.purchaseList.purchase_list.url
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -224,7 +230,9 @@ export default {
         "&items=" +
         this.items +
         "&is_fresh=" + 
-        this.isFresh;
+        this.isFresh +
+        "&url=" +
+        this.url;
 
         console.log(url)
 
@@ -234,6 +242,7 @@ export default {
         this.fesDateID = null
         this.shopID = null
         this.isFresh = null
+        this.url = null
         this.reload(response.data.id);
         this.closeEditModal();
       });

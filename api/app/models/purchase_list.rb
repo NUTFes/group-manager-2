@@ -29,6 +29,7 @@ class PurchaseList < ApplicationRecord
         "id": self.id,
         "items": self.items,
         "is_fresh": self.is_fresh,
+        "url": self.url,
         "food_product": self.food_product.name,
         "food_product_id": self.food_product.id,
         "shop": self.shop.name,

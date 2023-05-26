@@ -62,6 +62,7 @@
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
             <td>{{ purchaseList.purchase_list.items }}</td>
             <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td>{{ purchaseList.purchase_list.url }}</td>
           </tr>
         </template>
       </Table>
@@ -142,6 +143,10 @@
             </option>
           </select>
         </div>
+        <div>
+          <h3>ネットで買った場合はURLを記入してください</h3>
+          <input v-model="url" placeholder="入力してください" />
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
@@ -170,6 +175,7 @@ export default {
         "販売食品",
         "購入品",
         "なまもの",
+        "URL"
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,
@@ -193,6 +199,7 @@ export default {
       shopID: null,
       fesDateID: null,
       isFresh: null,
+      url: null,
     };
   },
   async asyncData({ $axios }) {
@@ -310,7 +317,9 @@ export default {
         "&items=" +
         this.items +
         "&is_fresh=" + 
-        this.isFresh;
+        this.isFresh +
+        "&url=" + 
+        this.url;
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(this.items + "を追加しました");
@@ -319,6 +328,7 @@ export default {
         this.foodProductID = null
         this.shopID = null
         this.isFresh = null
+        this.url = null
         this.reload(response.data.id);
         this.closeAddModal();
       });
