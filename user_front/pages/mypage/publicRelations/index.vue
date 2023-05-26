@@ -61,7 +61,7 @@ const isBlurbOver = computed(() => {
     const blurbEng = blurb.value.split(" ");
     return blurbEng.length > 25;
   } else {
-    return blurb.value.length > 40;
+    return blurb.value.length > 50;
   }
 });
 
