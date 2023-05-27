@@ -1,16 +1,31 @@
 <script lang="ts" setup>
 import axios from "axios";
 import { loginCheck } from "@/utils/methods";
+import { useForm, useField } from "vee-validate";
+import { PasswordResetParams } from "~~/types/mypage/passwordReset";
 
 definePageMeta({
   layout: false,
 });
 
+const { meta, isSubmitting } = useForm({
+  validationSchema: passwordResetSchema,
+});
+
+const { handleChange: handlePassword, errorMessage: passwordError } =
+  useField("password");
+const {
+  handleChange: handlePasswordConfirm,
+  errorMessage: passwordConfirmError,
+} = useField("passwordConfirm");
+
 const router = useRouter();
 const config = useRuntimeConfig();
 
-const password = ref("");
-const password_confirmation = ref("");
+const PasswordResetParams = reactive<PasswordResetParams>({
+  password: "",
+  passwordConfirm: "",
+});
 
 const submit = () => {
   const url = config.APIURL + "/api/v1/current_user/password_reset";
@@ -18,8 +33,8 @@ const submit = () => {
     .post(
       url,
       {
-        password: password.value,
-        password_confirmation: password_confirmation.value,
+        password: PasswordResetParams.password,
+        password_confirmation: PasswordResetParams.passwordConfirm,
       },
       {
         headers: {
@@ -56,21 +71,31 @@ onMounted(async () => {
       <div class="user-info">{{ $t("User.resetPassword") }}</div>
     </div>
     <div>
+      <div class="flex">
+        <input
+          type="password"
+          class="form"
+          v-model="PasswordResetParams.password"
+          @change="handlePassword"
+          :placeholder="$t('User.newPassword')"
+        />
+      </div>
+      <div>
+        <p class="error">{{ passwordError }}</p>
+      </div>
       <input
         type="password"
-        :placeholder="$t('User.newPassword')"
-        v-model="password"
-      />
-      <input
-        type="password"
+        class="form"
+        v-model="PasswordResetParams.passwordConfirm"
+        @change="handlePasswordConfirm"
         :placeholder="$t('User.newPasswordConfirm')"
-        v-model="password_confirmation"
       />
+      <div>
+        <p class="error">{{ passwordConfirmError }}</p>
+      </div>
     </div>
     <div class="regist-button">
-      <button class="regist-submit-button" @click="submit">
-        {{ $t("Button.register") }}
-      </button>
+      <RegistPageButton  @click="submit" :disabled="!meta.valid || isSubmitting" :text="$t('Button.register')"/>
     </div>
   </div>
 </template>
@@ -79,6 +104,10 @@ onMounted(async () => {
 .regist-card {
   @apply w-[1000px]
     mx-auto;
+}
+
+.error {
+  @apply text-red-500 ml-4 mb-5;
 }
 
 .reist-title-content {

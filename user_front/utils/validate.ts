@@ -200,3 +200,9 @@ export const editFoodSchema = object({
   numFirstDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
   numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
 });
+
+// passwordReset登録のバリデーション
+export const passwordResetSchema = object({
+  password: string().required("入力してください").min(8, "8桁以上入力してください"),
+  passwordConfirm: string().required("パスワードを再入力してください").oneOf([ref("password")], "パスワードが一致しませんでした")
+});
