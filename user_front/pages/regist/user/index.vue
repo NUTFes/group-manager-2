@@ -139,8 +139,7 @@ const createCurrentDepartmentList = (e: any) => {
           <div class="flex">
             <p class="label">{{ $t("User.grade") }}</p>
             <select
-              class="form"
-              style="width: 180px"
+              class="form w-72"
               v-model="registerParams.gradeId"
               @change="
                 (e) => {
@@ -162,8 +161,7 @@ const createCurrentDepartmentList = (e: any) => {
           <div class="flex">
             <p class="label">{{ $t("User.department") }}</p>
             <select
-              class="form"
-              style="width: 180px"
+              class="form w-72"
               v-model="registerParams.departmentId"
               @change="handleDepartment"
             >
@@ -184,7 +182,7 @@ const createCurrentDepartmentList = (e: any) => {
           <div class="flex">
             <p class="label">{{ $t("User.mail") }}</p>
             <input
-              class="form"
+              class="form w-72"
               v-model="registerParams.mail"
               placeholder="～@～.～"
               @change="handleEmail"
@@ -262,6 +260,6 @@ const createCurrentDepartmentList = (e: any) => {
 }
 
 .form {
-  @apply flex-none border-solid border-2;
+  @apply flex-none border-solid border-2 w-72;
 }
 </style>
