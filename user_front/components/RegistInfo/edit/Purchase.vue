@@ -222,6 +222,7 @@ const reset = () => {
       <div class="text">{{ $t("Purchase.URL") }}</div>
         <input
           class="entry"
+          placeholder="https://sample.com"
           type="text"
           v-model="newUrl"
         />
