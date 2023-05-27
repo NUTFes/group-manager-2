@@ -35,8 +35,19 @@ onMounted(async () => {
       uid: localStorage.getItem("uid") || "",
     },
   }).then((response) => {
-    user.value = response.data.user;
-    userDetail.value = response.data.user_detail;
+    editParams.value.name = response.data.user.name;
+    editParams.value.mail = response.data.user.email;
+    editParams.value.studentId = response.data.user_detail.student_id;
+    editParams.value.tel = response.data.user_detail.tel;
+    editParams.value.departmentId = response.data.user_detail.department_id;
+    editParams.value.gradeId = response.data.user_detail.grade_id;
+    handleName(response.data.user.name);
+    handleEmail(response.data.user.email);
+    handleStudentId(response.data.user_detail.student_id);
+    handleTel(response.data.user_detail.tel);
+    handleDepartment(response.data.user_detail.department_id);
+    handleGrade(response.data.user_detail.grade_id);
+    createCurrentDepartmentList({ target: { value: response.data.user_detail.grade_id } });
   });
 });
 
@@ -92,27 +103,7 @@ const createCurrentDepartmentList = (e: any) => {
     <NuxtLink to="/mypage" class="regist-back-link">{{
       $t("Mypage.goToMypage")
     }}</NuxtLink>
-    <div class="reist-title-content">
-      <div class="user-info">{{ $t("User.userInfo") }}</div>
-    </div>
-    <div class="flex row justify-center gap-3 pb-11">
-      <div class="text-xl">
-        <p>{{ $t("User.name") }}：</p>
-        <p>{{ $t("User.mail") }}：</p>
-        <p>{{ $t("User.studentId") }}：</p>
-        <p>{{ $t("User.tel") }}：</p>
-        <p>{{ $t("User.department") }}：</p>
-        <p>{{ $t("User.grade") }}：</p>
-      </div>
-      <div class="text-lg">
-        <p>{{ user?.name }}</p>
-        <p>{{ user?.email }}</p>
-        <p>{{ userDetail?.student_id }}</p>
-        <p>{{ userDetail?.tel }}</p>
-        <p>{{ userDetail?.department }}</p>
-        <p>{{ userDetail?.grade }}</p>
-      </div>
-    </div>
+  
     <div class="reist-title-content">
       <div class="user-info">{{ $t("User.editUser") }}</div>
     </div>
