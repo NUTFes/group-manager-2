@@ -67,55 +67,51 @@ const postImageURL = () => {
 
   isSubmitting.value = true;
 
-  if (selectedFile.value) {
-    changeImage2base64(selectedFile.value).then((base64Text) => {
-      // textをstringに変換
-      const text = String(base64Text);
-      const base64 = text.replace(new RegExp("data.*base64,"), "");
-      const URL = "https://api.imgur.com/3/image";
-      axios
-        .post(
-          URL,
-          { image: base64 },
-          { headers: { Authorization: `Client-ID ${clientId}` } }
-        )
-        .then((res) => {
-          const imgLink = res.data.data.link;
+  changeImage2base64(selectedFile.value).then((base64Text) => {
+    const text = String(base64Text);
+    const base64 = text.replace(new RegExp("data.*base64,"), "");
+    const URL = "https://api.imgur.com/3/image";
+    axios
+      .post(
+        URL,
+        { image: base64 },
+        { headers: { Authorization: `Client-ID ${clientId}` } }
+      )
+      .then((res) => {
+        const imgLink = res.data.data.link;
 
-          // const postUrl = "/venue_maps?group_id=" + state.groupId;
-          const fetchUrl = currentVenueMap.value
-            ? "/venue_maps/" + currentVenueMap.value.id
-            : "/venue_maps?group_id=" + state.groupId;
-          const fetchMethod = currentVenueMap.value ? "PUT" : "POST";
-          const fetchParams = currentVenueMap.value
-            ? {
-                group_id: state.groupId,
-                picture_name: fileName.value,
-                picture_path: imgLink,
-              }
-            : {
-                picture_name: fileName.value,
-                picture_path: imgLink,
-              };
-          useFetch(config.APIURL + fetchUrl, {
-            method: fetchMethod,
-            params: fetchParams,
-          })
-            .then((response) => {
-              alert("会場配置図を登録しました");
-              router.push("/mypage");
-            })
-            .catch((err) => {
-              alert("会場配置図の登録に失敗しました");
-              router.push("/mypage");
-            });
+        const fetchUrl = currentVenueMap.value
+          ? "/venue_maps/" + currentVenueMap.value.id
+          : "/venue_maps?group_id=" + state.groupId;
+        const fetchMethod = currentVenueMap.value ? "PUT" : "POST";
+        const fetchParams = currentVenueMap.value
+          ? {
+              group_id: state.groupId,
+              picture_name: fileName.value,
+              picture_path: imgLink,
+            }
+          : {
+              picture_name: fileName.value,
+              picture_path: imgLink,
+            };
+        useFetch(config.APIURL + fetchUrl, {
+          method: fetchMethod,
+          params: fetchParams,
         })
-        .catch((err) => {
-          alert("会場配置図の登録に失敗しました");
-          router.push("/mypage");
-        });
-    });
-  }
+          .then((response) => {
+            alert("会場配置図を登録しました");
+            router.push("/mypage");
+          })
+          .catch((err) => {
+            alert("会場配置図の登録に失敗しました");
+            router.push("/mypage");
+          });
+      })
+      .catch((err) => {
+        alert("会場配置図の登録に失敗しました");
+        router.push("/mypage");
+      });
+  });
 };
 </script>
 
