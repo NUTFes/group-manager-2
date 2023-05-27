@@ -11,6 +11,9 @@ const config = useRuntimeConfig();
 const isMenuOpen = ref(false);
 
 const logout = () => {
+  if(localStorage.getItem("client")==null){
+    router.push("/");
+  }
   axios
     .delete(config.APIURL + "/api/auth/sign_out", {
       headers: {
