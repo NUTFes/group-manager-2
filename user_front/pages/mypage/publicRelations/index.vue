@@ -1,10 +1,4 @@
 <script lang="ts" setup>
-import {
-  getDownloadURL,
-  getStorage,
-  ref as fireRef,
-  uploadBytes,
-} from "firebase/storage";
 import { loginCheck } from "~~/utils/methods";
 import axios from "axios";
 
@@ -22,17 +16,29 @@ const router = useRouter();
 const config = useRuntimeConfig();
 const state = reactive({
   groupId: 0,
-  language: ''
+  language: "",
 });
+
+const changeImage2base64 = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      resolve(e.target?.result);
+    };
+    reader.onerror = (e) => {
+      reject(e);
+    };
+    reader.readAsDataURL(file);
+  });
+};
 
 const currentPublicRelation = ref<PublicRelation | null>(null);
 const selectedFile = ref<File | null>(null);
 const selectedFileUrl = ref<string>("");
 const fileName = ref<string>("選択してください");
-const pictureName = ref<string>("");
 const blurb = ref<string>("");
 const isSubmitting = ref<boolean>(false);
-//const language = ref<string>("");
+const clientId = config.IMGUR_CLIENT_ID;
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -57,7 +63,7 @@ onMounted(async () => {
 });
 
 const isBlurbOver = computed(() => {
-  if(state.language == "en"){
+  if (state.language == "en") {
     const blurbEng = blurb.value.split(" ");
     return blurbEng.length > 25;
   } else {
@@ -74,9 +80,6 @@ const fileUpload = (e: Event) => {
   fileName.value = file.name;
 };
 
-const storage = getStorage();
-const storageRef = fireRef(storage, fileName.value);
-
 const editImageURL = () => {
   if (blurb.value.length === 0) {
     alert("PR文を入力してください");
@@ -90,59 +93,74 @@ const editImageURL = () => {
   }
 
   isSubmitting.value = true;
-  // currentPublicRelationがない場合は新規登録する
-  selectedFile.value &&
-    uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
-      pictureName.value = snapshot.ref.name;
-      getDownloadURL(fireRef(storage, pictureName.value))
-        .then((url) => {
-          const postUrl = "/public_relations?group_id=" + state.groupId;
 
-          useFetch(config.APIURL + postUrl, {
-            method: "POST",
-            params: {
-              picture_name: fileName.value,
-              picture_path: url,
-              blurb: blurb.value,
-            },
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+  if (selectedFile.value) {
+    changeImage2base64(selectedFile.value).then((base64Text) => {
+      const text = String(base64Text);
+      const base64 = text.replace(new RegExp("data.*base64,"), "");
+      const URL = "https://api.imgur.com/3/image";
+      axios
+        .post(
+          URL,
+          { image: base64 },
+          { headers: { Authorization: `Client-ID ${clientId}` } }
+        )
+        .then((res) => {
+          const imgLink = res.data.data.link;
+
+          const fetchUrl = currentPublicRelation.value
+            ? "/public_relations/" + currentPublicRelation.value.id
+            : "/public_relations?group_id=" + state.groupId;
+          const fetchMethod = currentPublicRelation.value ? "PUT" : "POST";
+          const fetchParams = currentPublicRelation.value
+            ? {
+                picture_name: fileName.value,
+                picture_path: imgLink,
+                blurb: blurb.value,
+                group_id: state.groupId,
+              }
+            : {
+                picture_name: fileName.value,
+                picture_path: imgLink,
+                blurb: blurb.value,
+              };
+          useFetch(config.APIURL + fetchUrl, {
+            method: fetchMethod,
+            params: fetchParams,
+          })
+            .then(() => {
+              alert("PR文を登録しました");
+              router.push("/mypage");
+            })
+            .catch(() => {
+              alert("PR文の登録に失敗しました");
+              router.push("/mypage");
+            });
         })
-        .then(
-          (response) => {
-            alert("登録しました（画像の反映には数分かかります）");
-            router.push("/mypage");
-          },
-          (error) => {
-            alert("登録できませんでした");
-          }
-        );
+        .catch(() => {
+          alert("PR文の登録に失敗しました");
+          router.push("/mypage");
+        });
     });
-
-  // 画像は選択してないが、currentPublicRelationがある場合はPR文のみ更新する
-  if (!selectedFile.value && currentPublicRelation.value) {
-    const putUrl = "/public_relations/" + currentPublicRelation.value.id;
-    useFetch(config.APIURL + putUrl, {
+  } else {
+    const fetchUrl = "/public_relations/" + currentPublicRelation.value?.id;
+    useFetch(config.APIURL + fetchUrl, {
       method: "PUT",
       params: {
+        picture_name: currentPublicRelation.value?.picture_name,
+        picture_path: currentPublicRelation.value?.picture_path,
         blurb: blurb.value,
-        picture_name: currentPublicRelation.value.picture_name,
-        picture_path: currentPublicRelation.value.picture_path,
+        group_id: state.groupId,
       },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(
-      (response) => {
-        alert("PR文を更新しました");
+    })
+      .then((response) => {
+        alert("PR文を登録しました");
         router.push("/mypage");
-      },
-      (error) => {
-        alert("PR文を更新きませんでした");
-      }
-    );
+      })
+      .catch((err) => {
+        alert("PR文の登録に失敗しました");
+        router.push("/mypage");
+      });
   }
 };
 </script>
@@ -180,6 +198,7 @@ const editImageURL = () => {
         @click="editImageURL"
         :disabled="isBlurbOver || isSubmitting"
       ></RegistPageButton>
+      <p v-if="isSubmitting">登録中です...</p>
     </Card>
   </div>
 </template>
