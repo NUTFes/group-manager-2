@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { FesYear, RainStage, SunnyStage } from '@/types/regist/stage'
 import { useField, useForm } from 'vee-validate'
+import { stageSchema } from '~~/utils/validate';
+
 const config = useRuntimeConfig()
 
 const { meta, isSubmitting } = useForm({
   validationSchema: stageSchema,
 })
 
+const { handleChange: handleWeather, errorMessage: weatherError } = useField('weather')
 const { handleChange: handleFesDate, errorMessage: fesDateError } = useField('fesDate')
 const { handleChange: handleFirst, errorMessage: firstError } = useField('first')
 const { handleChange: handleSecond, errorMessage: secondError } = useField('second')
@@ -28,13 +31,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits<Emits>()
 
-const isSunny = ref<boolean>(true)
-const fesDateId = ref<number>(0)
-const firstPreference = ref<number>(0)
-const secondPreference = ref<number>(0)
-const performanceTime = ref<string>('')
-const preparationTime = ref<string>('')
-const cleanUpTime = ref<string>('')
+const weather = ref<string | null>(null);
+const isSunny = ref<boolean | null>(true);
+const fesDateId = ref<number | null>(null);
+const firstPreference = ref<number | null>(null);
+const secondPreference = ref<number | null>(null);
+const performanceTime = ref<number | null>(null);
+const preparationTime = ref<number | null>(null);
+const cleanUpTime = ref<number | null>(null);
 
 const state = reactive({
   groupId: 0,
@@ -43,7 +47,6 @@ const state = reactive({
 const fesDateList = ref<FesYear[]>([]);
 const rainStageList = ref<RainStage[]>([]);
 const sunnyStageList = ref<SunnyStage[]>([]);
-const weather = ref<string>('')
 const weatherList = ref<string[]>(['sunny', 'rain'])
 
 onMounted(async ()=>{
@@ -91,13 +94,21 @@ const addStage = async () => {
 }
 
 const reset = () => {
-  isSunny.value = true
-  fesDateId.value = 0
-  firstPreference.value = 0
-  secondPreference.value = 0
-  performanceTime.value = ''
-  preparationTime.value = ''
-  cleanUpTime.value = ''
+  isSunny.value = null
+  weather.value = null
+  fesDateId.value = null
+  firstPreference.value = null
+  secondPreference.value = null
+  performanceTime.value = null
+  preparationTime.value = null
+  cleanUpTime.value = null
+  handleWeather(isSunny.value)
+  handleFesDate(fesDateId.value)
+  handleFirst(firstPreference.value)
+  handleSecond(secondPreference.value)
+  handlePerformanceTime(performanceTime.value)
+  handlePreparationTime(preparationTime.value)
+  handleCleanUpTime(cleanUpTime.value)
 }
 
 // wetherがsunnyならisSunnyをtrueに、rainならfalseにする
@@ -119,50 +130,57 @@ watch(weather, (newVal) => {
     </template>
     <template #form>
       <div class="text">{{ $t('Stage.weather') }}</div>
-      <select class="entry" style="width:180px;" v-model="weather">
+      <select class="entry" style="width:180px;" v-model="weather" @change="handleWeather" :class="{'weatherError': weatherError}">
         <option value="" selected disabled></option>
         <option v-for = "weather in weatherList" :value="weather">{{weather}}</option>
       </select>
-
+      <div class="error_msg">{{ weatherError }}</div>
       <div class="text">{{ $t('Stage.date') }}</div>
-      <select class="entry" style="width:180px;" v-model="fesDateId" @change="handleFesDate">
+      <select class="entry" style="width:180px;" v-model="fesDateId" @change="handleFesDate" :class="{'error_border': fesDateError}">
         <option value="" selected disabled></option>
         <option v-for = "fesDate in fesDateList" :value="fesDate.id">{{fesDate.date}}</option>
       </select>
-
+      <div class="error_msg">{{ fesDateError }}</div>
       <div v-if="weather==='sunny'">
         <div class="text">{{ $t('Stage.firstPreference') }}</div>
-        <select class="entry" style="width:180px;" v-model="firstPreference" @change="handleFirst">
+        <select class="entry" style="width:180px;" v-model="firstPreference" @change="handleFirst" :class="{'error_border': firstError}">
           <option value="" selected disabled></option>
           <option v-for="sunnyStage in sunnyStageList" :value="sunnyStage.id">{{sunnyStage.name}}</option>
         </select>
+        <div class="error_msg">{{ firstError }}</div>
         <div class="text">{{ $t('Stage.secondPreference') }}</div>
-        <select class="entry" style="width:180px;" v-model="secondPreference" @change="handleSecond">
+        <select class="entry" style="width:180px;" v-model="secondPreference" @change="handleSecond" :class="{'error_border': secondError}">
           <option value="" selected disabled></option>
           <option v-for="sunnyStage in sunnyStageList" :value="sunnyStage.id">{{sunnyStage.name}}</option>
         </select>
+        <div class="error_msg">{{ secondError }}</div>
       </div>
       <div v-else>
         <div class="text">{{ $t('Stage.firstPreference') }}</div>
-        <select class="entry" style="width:180px;" v-model="firstPreference" @change="handleFirst">
+        <select class="entry" style="width:180px;" v-model="firstPreference" @change="handleFirst" :class="{'error_border': firstError}">
           <option value="" selected disabled></option>
           <option v-for="rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
         </select>
+        <div class="error_msg">{{ firstError }}</div>
         <div class="text">{{ $t('Stage.secondPreference') }}</div>
-        <select class="entry" style="width:180px;" v-model="secondPreference"  @change="handleSecond">
+        <select class="entry" style="width:180px;" v-model="secondPreference"  @change="handleSecond" :class="{'error_border': secondError}">
           <option value="" selected disabled></option>
           <option v-for="rainStage in rainStageList" :value="rainStage.id">{{rainStage.name}}</option>
         </select>
+        <div class="error_msg">{{ secondError }}</div>
       </div>
 
       <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
-        <input class="entry" v-model="performanceTime" @change="handlePerformanceTime">
+      <input class="entry" v-model="performanceTime" @change="handlePerformanceTime" :class="{'error_border': performanceTimeError}">
+      <div class="error_msg">{{ performanceTimeError }}</div>
 
       <div class="text">{{ $t('Stage.preparationTime') }}[min]</div>
-        <input class="entry" v-model="preparationTime" @change="handlePreparationTime">
+      <input class="entry" v-model="preparationTime" @change="handlePreparationTime" :class="{'error_border': preparationTimeError}">
+      <div class="error_msg">{{ preparationTimeError }}</div>
 
       <div class="text">{{ $t('Stage.cleanUpTime') }}[min]</div>
-        <input class="entry" v-model="cleanUpTime" @change="handleCleanUpTime">
+      <input class="entry" v-model="cleanUpTime" @change="handleCleanUpTime" :class="{'error_border': cleanUpTimeError}">
+      <div class="error_msg">{{ cleanUpTimeError }}</div>
 
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()" />

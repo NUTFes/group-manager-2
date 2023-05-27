@@ -48,6 +48,7 @@ export const placeSchema = object({
 
 // stage登録のバリデーション
 export const stageSchema = object({
+  weather: string().typeError('入力してください').required("入力してください"),
   fesDate: number().typeError('入力してください').required("入力してください"),
   first: number().typeError('入力してください').required("入力してください")
     .test({
@@ -78,8 +79,8 @@ export const stageSchema = object({
       name: 'cleanUpTime',
       message: "合計120分以内で入力してください",
       test(value) {
-        const preparationTime = this.resolve(ref("preparationTime")) ?? 0;
-        const cleanUpTime = this.resolve(ref("cleanUpTime")) ?? 0;
+        const preparationTime = this.resolve(ref("preparationTime")) || 0;
+        const cleanUpTime = this.resolve(ref("cleanUpTime")) || 0;
         return value + Number(preparationTime) + Number(cleanUpTime) <= 120;
       },
     }),
@@ -88,8 +89,8 @@ export const stageSchema = object({
     name: 'cleanUpTime',
     message: "合計120分以内で入力してください",
     test(value) {
-      const performanceTime = this.resolve(ref("performanceTime")) ?? 0;
-      const cleanUpTime = this.resolve(ref("cleanUpTime")) ?? 0;
+      const performanceTime = this.resolve(ref("performanceTime")) || 0;
+      const cleanUpTime = this.resolve(ref("cleanUpTime")) || 0;
       return value + Number(performanceTime) + Number(cleanUpTime) <= 120;
     },
   }),
@@ -98,8 +99,8 @@ export const stageSchema = object({
       name: 'cleanUpTime',
       message: "合計120分以内で入力してください",
       test(value) {
-        const performanceTime = this.resolve(ref("performanceTime")) ?? 0;
-        const preparationTime = this.resolve(ref("preparationTime")) ?? 0;
+        const performanceTime = this.resolve(ref("performanceTime")) || 0;
+        const preparationTime = this.resolve(ref("preparationTime")) || 0;
         return value + Number(performanceTime) + Number(preparationTime) <= 120;
       },
     }),
