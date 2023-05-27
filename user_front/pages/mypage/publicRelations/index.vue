@@ -148,11 +148,6 @@ const editImageURL = () => {
 </script>
 
 <template>
-  <NuxtLink
-    to="/mypage"
-    class="ml-4 text-left text-xl text-pink-500 hover:font-bold"
-    >{{ $t("RegistInfo.return") }}</NuxtLink
-  >
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("PR.PR") }}</h1>
     <Card>

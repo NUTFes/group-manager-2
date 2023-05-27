@@ -51,7 +51,6 @@
   },
 
   "Mypage": {
-    "goToMypage": "マイページへ",
     "userName": "様",
     "greeting1": "技大祭に参加していただき誠にありがとうございます。",
     "greeting2": "登録情報の確認や変更が行えます。入力締め切りは守りいただくよう、よろしくお願いします。",
@@ -91,7 +90,6 @@
   },
 
   "RegistInfo": {
-    "return": "マイページに戻る",
     "registAndEdit": "参加団体登録・編集ページ",
     "subrepresentative": "副代表申請",
     "place": "会場申請",

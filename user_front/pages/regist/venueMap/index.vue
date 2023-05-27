@@ -66,7 +66,6 @@ const postImageURL = () => {
 </script>
 
 <template>
-  <NuxtLink to="/mypage" class="ml-4 text-left text-2xl text-pink-500 hover:font-bold">マイページに戻る</NuxtLink>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl ">会場配置図の申請</h1>
     <Card>

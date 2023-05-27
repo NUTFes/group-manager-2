@@ -120,15 +120,7 @@ const buttonDisabled = computed(() => {
 
 <template>
   <div class="w-2/3 mx-auto">
-    <div class="my-4">
-      <NuxtLink
-        to="/mypage"
-        class="text-lg text-[#e040fb] cursor-pointer hover:font-bold"
-      >
-        {{ $t("Mypage.goToMypage") }}
-      </NuxtLink>
-    </div>
-    <div class="w-full text-2xl font-bold bg-[#eceff1] p-2 rounded-md">
+    <div class="w-full text-2xl my-8 font-bold bg-[#eceff1] p-2 rounded-md">
       {{ $t("Group.editGroup") }}
     </div>
     <div class="border p-4 my-4 rounded-md flex flex-col gap-8">
