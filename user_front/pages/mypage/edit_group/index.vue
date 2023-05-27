@@ -1,21 +1,38 @@
 <script lang="ts" setup>
 import axios from "axios";
+import { useForm, useField } from "vee-validate";
 import { groupCategoryList } from "~~/utils/list";
+import { groupSchema } from "~~/utils/validate";
 
-const router = useRouter()
-const config = useRuntimeConfig()
+const router = useRouter();
+const config = useRuntimeConfig();
 
-const groupName = ref<string>("")
-const projectName = ref<string>("")
-const groupCategoryId = ref<number>()
-const activity = ref<string>("")
-const user = ref("")
-const setting = ref("")
-const userId = ref<number>()
-const fesYearId = ref<number>()
-const groupId = localStorage.getItem("group_id")
+const groupName = ref<string>("");
+const projectName = ref<string>("");
+const groupCategoryId = ref<number>();
+const activity = ref<string>("");
+const user = ref("");
+const setting = ref("");
+const userId = ref<number>();
+const fesYearId = ref<number>();
+const groupId = localStorage.getItem("group_id");
 
-onMounted( () =>{
+const { meta } = useForm({
+  validationSchema: groupSchema,
+});
+
+const { handleChange: handleChangeGroupName, errorMessage: groupNameError } =
+  useField("groupName");
+const {
+  handleChange: handleChangeProjectName,
+  errorMessage: projectNameError,
+} = useField("projectName");
+const { handleChange: handleChangeActivity, errorMessage: activityError } =
+  useField("activity");
+const { handleChange: handleChangeCategory, errorMessage: categoryError } =
+  useField("category");
+
+onMounted(() => {
   loginCheck();
   const groupUrl = config.APIURL + "/groups/" + groupId;
   axios.get(groupUrl).then((response) => {
@@ -50,82 +67,110 @@ onMounted( () =>{
     .then((response) => {
       setting.value = response.data.data[0];
     });
-})
+});
 
 const register = () => {
   const registUrl = config.APIURL + "/groups/" + groupId;
   axios.defaults.headers.common["Content-Type"] = "application/json";
-  axios.put(
-    registUrl,
-    {
-      name:groupName.value,
-      project_name: projectName.value,
-      activity: activity.value,
-      user_id: userId.value,
-      group_category_id: groupCategoryId.value,
-      fes_year_id: fesYearId.value
-    }, {
-      headers: {
-        "Content-Type": "application/json",
-        "access-token": localStorage.getItem("access-token"),
-        "client": localStorage.getItem("client"),
-        "uid": localStorage.getItem("uid"),
+  axios
+    .put(
+      registUrl,
+      {
+        name: groupName.value,
+        project_name: projectName.value,
+        activity: activity.value,
+        user_id: userId.value,
+        group_category_id: groupCategoryId.value,
+        fes_year_id: fesYearId.value,
       },
-    }).then(
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      }
+    )
+    .then(
       (response) => {
         localStorage.setItem("group_id", response.data.data.id);
         localStorage.setItem(
           "group_category_id",
           response.data.data.group_category_id
         );
-        alert('登録できました')
+        alert("登録できました");
         router.push("/mypage");
       },
       (error) => {
-        alert('登録できませんでした')
+        alert("登録できませんでした");
       }
     );
-}
+};
 
-const destroy = () => {
-  const delUrl = config.APIURL+"/groups/"+groupId;
-  axios.delete(delUrl).then(() => {
-    router.push("/regist/group")
-  });
-}
+const buttonDisabled = computed(() => {
+  return !!(
+    groupNameError.value ||
+    projectNameError.value ||
+    categoryError.value ||
+    activityError.value
+  );
+});
 </script>
 
 <template>
-  <div class="regidt-card">
-    <NuxtLink to="/mypage" class="regist-back-link">{{ $t('Mypage.goToMypage') }}</NuxtLink>
-    <div class="reist-title-content">
-      <div class="regist-title">{{ $t('Group.editGroup') }}</div>
+  <div class="w-2/3 mx-auto">
+    <div class="my-4">
+      <NuxtLink
+        to="/mypage"
+        class="text-lg text-[#e040fb] cursor-pointer hover:font-bold"
+      >
+        {{ $t("Mypage.goToMypage") }}
+      </NuxtLink>
     </div>
-    <div class="regist-card-content">
-      <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">{{ $t('Group.groupName') }}</div>
+    <div class="w-full text-2xl font-bold bg-[#eceff1] p-2 rounded-md">
+      {{ $t("Group.editGroup") }}
+    </div>
+    <div class="border p-4 my-4 rounded-md flex flex-col gap-8">
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.groupName") }}
+        </div>
         <input
-          class="input"
+          class="rounded-md border border-black p-2 text-xl"
           id="group"
           type="text"
           v-model="groupName"
+          @change="handleChangeGroupName"
         />
+        <p class="text-red-500 text-sm" v-if="groupNameError">
+          {{ groupNameError }}
+        </p>
       </div>
-      <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">{{ $t('Group.shopName') }}</div>
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.shopName") }}
+        </div>
         <input
-          class="input"
+          class="rounded-md border border-black p-2 text-xl"
           id="project"
           type="text"
           v-model="projectName"
+          @change="handleChangeProjectName"
         />
+        <p class="text-red-500 text-sm" v-if="projectNameError">
+          {{ projectNameError }}
+        </p>
       </div>
-      <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">{{ $t('Group.category') }}</div>
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.category") }}
+        </div>
         <select
-          class="input"
+          class="rounded-md border border-black p-2 text-xl"
           id="category"
           v-model="groupCategoryId"
+          @change="handleChangeCategory"
         >
           <option
             v-for="item in groupCategoryList"
@@ -135,140 +180,35 @@ const destroy = () => {
             {{ item.name }}
           </option>
         </select>
+        <p class="text-red-500 text-sm" v-if="categoryError">
+          {{ categoryError }}
+        </p>
       </div>
-      <div class="regist-card-content-question">
-        <div class="regist-card-content-question-label">{{ $t('Group.activityDetails') }}</div>
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.activityDetails") }}
+        </div>
         <input
-          class="input"
+          class="rounded-md border border-black p-2 text-xl"
           id="activity"
           type="text"
           v-model="activity"
+          @change="handleChangeActivity"
         />
+        <p class="text-red-500 text-sm" v-if="activityError">
+          {{ activityError }}
+        </p>
       </div>
     </div>
-    <div class="regist-button">
-      <button @click="register" class="regist-submit-button">{{ $t('Button.edit') }}</button>
-    </div>
-    <div class="delete-button">
+    <div class="w-fit ml-auto mt-4 mb-12">
+      <!-- styleタグないを参考にグラデーションをかける -->
+      <button
+        @click="register"
+        class="text-xl text-gray-800 bg-gray-300 rounded-lg py-2 px-4 font-bold disabled:opacity-50 bg-gradient-to-r hover:from-pink-400 hover:to-yellow-500"
+        :disabled="buttonDisabled"
+      >
+        {{ $t("Button.edit") }}
+      </button>
     </div>
   </div>
 </template>
-
-<style>
-.regidt-card {
-  @apply
-    w-[1000px]
-    mx-auto;
-}
-
-.reist-title-content {
-  @apply
-    flex
-    flex-col
-    justify-center
-    items-center;
-}
-
-.regist-back-link {
-  @apply
-    block
-    text-lg
-    text-[#e040fb]
-    cursor-pointer
-    w-fit
-    mt-5;
-}
-
-.regist-back-link:hover {
-  @apply
-    font-bold
-    text-[#e040fb];
-}
-
-.regist-title {
-  @apply
-    w-[1000px]
-    text-2xl
-    font-bold
-    bg-[#eceff1]
-    mt-[2%];
-  padding: 1% 1% 1% 2%;
-}
-
-.regist-card-content {
-  @apply
-    mt-[2%];
-  border: solid 1px #d3d3d3;
-  padding: 5% 1% 5% 1%;
-}
-
-.regist-card-content-question {
-  @apply
-    text-center
-    h-[86px]
-    w-[800px]
-    mb-[3%]
-    mx-auto;
-}
-
-.regist-card-content-question-label {
-  @apply
-    text-lg
-    text-left
-    mt-[1%];
-}
-
-.input {
-  @apply
-    text-left
-    p-[1%]
-    h-[50px]
-    w-[800px]
-    rounded-[7px]
-    text-lg
-    align-top
-    box-border;
-}
-.input:required {
-  border: 1px solid red;
-}
-.input:invalid {
-  border: 1px solid red;
-}
-.input:valid {
-  border: 1px solid #333333;
-}
-
-.regist-button {
-  @apply
-    text-right;
-}
-.delete-button {
-  @apply
-    text-center
-    mb-8;
-}
-
-.regist-submit-button {
-  @apply
-    text-xl
-    text-[#333333]
-    bg-[#eceff1]
-    font-bold
-    rounded-[5px]
-    mt-[2%]
-    py-[1%]
-    px-[5%]
-    cursor-pointer;
-}
-.regist-submit-button:hover {
-  @apply
-    text-[#333333];
-  background-image: linear-gradient(90deg, rgba(247, 93, 139, 1), rgba(254, 220, 64, 1));
-}
-.regist-submit-button:active{
-  @apply
-    text-[#333333];
-  box-shadow: inset 1px 1px 2px #BABECC, inset -1px -1px 2px #FFF;
-}
-</style>
