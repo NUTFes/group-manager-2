@@ -89,7 +89,7 @@ const registerCategory = async () => {
 
           <div class="flex">
             <p class="label">{{ $t('Group.category') }}</p>
-            <select style="width:180px;" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
+            <select class="w-72" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
               <option v-for="category in groupCategoryList" :value="category.id" :key="category.id">{{ category.name }}
               </option>
@@ -132,5 +132,6 @@ const registerCategory = async () => {
     flex-none
     border-solid
     border-2
+    w-72
 }
 </style>

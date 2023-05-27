@@ -120,7 +120,7 @@
     "editUser": "ユーザ情報の編集",
     "editName": "フルネーム",
     "editStudentId": "学籍番号８桁",
-    "editTel": "半角数字で１０,１１桁の番号",
+    "editTel": "半角数字で10,11桁, ハイフン抜き",
     "resetPassword": "パスワード再設定",
     "newPassword": "新しいパスワードを入力",
     "newPasswordConfirm": "新しいパスワードの再入力(確認用)"

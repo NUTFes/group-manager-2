@@ -120,7 +120,7 @@
     "editUser": "Edit User Information",
     "editName": "full name",
     "editStudentId": "StudentID 8 digits",
-    "editTel": "10- or 11-digit number in half-width characters",
+    "editTel": "11or11 single-byte numbers, without -",
     "resetPassword": "Password reset",
     "newPassword": "Enter new password",
     "newPasswordConfirm": "Retype new password (for confirmation)"
