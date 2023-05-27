@@ -100,10 +100,6 @@ const createCurrentDepartmentList = (e: any) => {
 
 <template>
   <div class="regist-card">
-    <NuxtLink to="/mypage" class="regist-back-link">{{
-      $t("Mypage.goToMypage")
-    }}</NuxtLink>
-  
     <div class="reist-title-content">
       <div class="user-info">{{ $t("User.editUser") }}</div>
     </div>
@@ -190,7 +186,8 @@ const createCurrentDepartmentList = (e: any) => {
   @apply flex
     flex-col
     justify-center
-    items-center;
+    items-center
+    my-8;
 }
 
 .regist-back-link {

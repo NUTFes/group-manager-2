@@ -64,9 +64,6 @@ onMounted(async () => {
 <template>
   <Header />
   <div class="regist-card">
-    <NuxtLink to="/mypage" class="regist-back-link">{{
-      $t("Mypage.goToMypage")
-    }}</NuxtLink>
     <div class="reist-title-content">
       <div class="user-info">{{ $t("User.resetPassword") }}</div>
     </div>
@@ -114,7 +111,8 @@ onMounted(async () => {
   @apply flex
     flex-col
     justify-center
-    items-center;
+    items-center
+    my-8;
 }
 
 .regist-back-link {

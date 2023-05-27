@@ -73,11 +73,6 @@ const postAnnouncement = () => {
 </script>
 
 <template>
-  <NuxtLink
-    to="/mypage"
-    class="ml-4 text-left text-pink-500 text-2xl hover:font-bold"
-    >{{ $t("RegistInfo.return") }}</NuxtLink
-  >
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("Announcement.editAnnouncement") }}</h1>
     <Card>
