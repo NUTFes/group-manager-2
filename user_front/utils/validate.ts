@@ -48,8 +48,8 @@ export const placeSchema = object({
 
 // stage登録のバリデーション
 export const stageSchema = object({
-  fesDate: number().required("入力してください"),
-  first: number().required("入力してください")
+  fesDate: number().typeError('入力してください').required("入力してください"),
+  first: number().typeError('入力してください').required("入力してください")
     .test({
       name: 'first',
       message: "同じステージを選択しています",
@@ -61,7 +61,7 @@ export const stageSchema = object({
         return value !== second;
       },
     }),
-  second: number().required("入力してください")
+  second: number().typeError('入力してください').required("入力してください")
     .test({
       name: 'second',
       message: "同じステージを選択しています",
@@ -73,7 +73,7 @@ export const stageSchema = object({
         return value !== first;
       },
     }),
-  performanceTime: number().required("入力してください").min(0, "0分以上で入力してください")
+  performanceTime: number().typeError('入力してください').required("入力してください").min(0, "0分以上で入力してください")
     .test({
       name: 'cleanUpTime',
       message: "合計120分以内で入力してください",
@@ -83,7 +83,7 @@ export const stageSchema = object({
         return value + Number(preparationTime) + Number(cleanUpTime) <= 120;
       },
     }),
-  preparationTime: number().required("入力してください").min(0, "0分以上で入力してください")
+  preparationTime: number().typeError('入力してください').required("入力してください").min(0, "0分以上で入力してください")
   .test({
     name: 'cleanUpTime',
     message: "合計120分以内で入力してください",
@@ -93,7 +93,7 @@ export const stageSchema = object({
       return value + Number(performanceTime) + Number(cleanUpTime) <= 120;
     },
   }),
-  cleanUpTime: number().required("入力してください").min(0, "0分以上で入力してください")
+  cleanUpTime: number().typeError('入力してください').required("入力してください").min(0, "0分以上で入力してください")
     .test({
       name: 'cleanUpTime',
       message: "合計120分以内で入力してください",
