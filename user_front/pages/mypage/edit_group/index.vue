@@ -205,7 +205,7 @@ const buttonDisabled = computed(() => {
       <button
         @click="register"
         class="text-xl text-gray-800 bg-gray-300 rounded-lg py-2 px-4 font-bold disabled:opacity-50 bg-gradient-to-r hover:from-pink-400 hover:to-yellow-500"
-        :disabled="!meta.valid"
+        :disabled="buttonDisabled"
       >
         {{ $t("Button.edit") }}
       </button>
