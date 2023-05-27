@@ -138,5 +138,10 @@ Shop.seed( :id,
                 tel: '0258-94-5896' ,
                 opening_hours: '09:00 - 22:00' ,
                 address: '新潟県長岡市喜多町土地区画整理事業内 4 街区 3'
-    }
+    },
+    { id: 29,   name: 'ネット注文' ,
+        tel: '' ,
+        opening_hours: '' ,
+        address: ''
+},
 )
