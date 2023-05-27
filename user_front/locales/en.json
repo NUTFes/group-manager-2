@@ -102,7 +102,8 @@
     "employees": "Employees",
     "food": "Food",
     "saleGoods": "Sale of Goods",
-    "purchase": "Purchase"
+    "purchase": "Purchase",
+    "placeMessage": "Please apply for either outdoor or indoor space only."
   },
 
   "User": {

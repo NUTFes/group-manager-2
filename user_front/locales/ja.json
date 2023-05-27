@@ -102,7 +102,8 @@
     "employees": "従業員申請",
     "food": "食品申請",
     "saleGoods": "物品販売",
-    "purchase": "購入品申請"
+    "purchase": "購入品申請",
+    "placeMessage": "野外・室内どちらかのみの申請でお願いいたします。"
   },
 
   "User": {

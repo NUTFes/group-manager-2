@@ -378,6 +378,11 @@ const isStageOverlap = computed(() => {
         <!-- 会場申請 group_category_id !== ３ -->
         <div v-show="tab === 2">
           <div class="mb-4">
+            <div class="text-xl flex gap-3">
+              <p>{{ $t("RegistInfo.placeMessage") }}</p>
+            </div>
+          </div>
+          <div class="mb-4">
             <RegistInfoCardPlace
               :id="placeOrder?.place_order.id"
               :regist="placeOrder?.place_order"
