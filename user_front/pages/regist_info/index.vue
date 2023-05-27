@@ -267,6 +267,11 @@ const isOverPower = computed(() => {
   return totalPower.value > 1500;
 });
 
+const isSamePower = computed(() => {
+  if (!powerOrders.value) return false;
+  return totalPower.value == 1500;
+});
+
 // 物品申請が重複しているかどうか
 const isRentalItemOverlap = computed(() => {
   if (!rentalOrders.value) return false;
@@ -465,7 +470,7 @@ const isStageOverlap = computed(() => {
         <!-- 電力申請 -->
         <div v-show="tab === 5">
           <Button
-            v-if="!isOverPower"
+            v-if="!isOverPower && !isSamePower"
             class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddPower()"
           />
@@ -475,7 +480,10 @@ const isStageOverlap = computed(() => {
               <p>電力の合計</p>
               <p>{{ totalPower }} [W]</p>
             </div>
-            <p v-if="isOverPower" class="text-red-500">
+            <p v-if="isSamePower" class="text-gray-500">
+              電力の合計が上限<span class="font-bold">1500[W]</span>に達成しました
+            </p>
+            <p v-else-if="isOverPower" class="text-red-500">
               電力の合計が<span class="font-bold">1500[W]</span>を超えています
             </p>
             <p v-else class="text-gray-500">
