@@ -4,6 +4,7 @@ export const groupCategoryList: { id: number; name: string }[] = [
   { id: 3, name: "ステージ企画" },
   { id: 4, name: "展示・体験" },
   { id: 5, name: "研究室公開" },
+  { id: 6, name: "その他" },
 ];
 
 export const gradeList: { id: number; name: string }[] = [
@@ -21,7 +22,8 @@ export const gradeList: { id: number; name: string }[] = [
   { id: 12, name: "GD3[イノベ3年]" },
   { id: 13, name: "GD4[イノベ4年]" },
   { id: 14, name: "GD4[イノベ5年]" },
-  { id: 15, name: "その他" },
+  { id: 15, name: "教員" },
+  { id: 16, name: "その他" },
 ];
 
 export const departmentList: { id: number; name: string }[] = [
@@ -93,5 +95,6 @@ export const GradeWithDepartmentList: { id: number; departmentList: { id: number
   { id: 12, departmentList: GDGradeDepartmentList },
   { id: 13, departmentList: GDGradeDepartmentList },
   { id: 14, departmentList: GDGradeDepartmentList },
-  { id: 15, departmentList: B1AndOtherGradeDepartmentList },
+  { id: 15, departmentList: departmentList },
+  { id: 16, departmentList: B1AndOtherGradeDepartmentList },
 ];

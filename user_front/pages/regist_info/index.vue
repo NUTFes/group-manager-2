@@ -332,7 +332,7 @@ const isStageOverlap = computed(() => {
         </li>
         <li
           v-if="
-            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5
+            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 6
           "
           @click="tab = 8"
         >
@@ -346,7 +346,7 @@ const isStageOverlap = computed(() => {
         </li>
         <li
           v-if="
-            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5
+            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5 && groupCategoryId != 6
           "
           @click="tab = 9"
         >
