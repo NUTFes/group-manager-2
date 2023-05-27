@@ -30,6 +30,8 @@ const storage = getStorage();
 const storageRef = fireRef(storage, fileName.value);
 
 const postImageURL = () => {
+  !selectedFile.value && alert("登録できません");
+
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
     pictureName.value = snapshot.ref.name
