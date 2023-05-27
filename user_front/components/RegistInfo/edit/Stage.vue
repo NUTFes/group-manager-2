@@ -2,7 +2,7 @@
 import { FesYear } from '@/types/regist/stage'
 import { Stage } from '~~/types';
 import { useField, useForm } from 'vee-validate'
-import { stageSchema } from '~~/utils/validate';
+import { editStageSchema } from '~~/utils/validate';
 import { async } from '@firebase/util';
 const config = useRuntimeConfig()
 
@@ -37,7 +37,7 @@ interface Emits {
 const emits = defineEmits<Emits>()
 
 const { meta, isSubmitting } = useForm({
-  validationSchema: stageSchema,
+  validationSchema: editStageSchema,
   initialValues: {
     fesDate: props.fesDateId,
     first: props.stageFirst,

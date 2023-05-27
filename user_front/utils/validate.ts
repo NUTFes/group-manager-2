@@ -106,6 +106,65 @@ export const stageSchema = object({
     }),
 });
 
+// stage編集のバリデーション
+export const editStageSchema = object({
+  fesDate: number().typeError('入力してください').required("入力してください"),
+  first: number().typeError('入力してください').required("入力してください")
+    .test({
+      name: 'first',
+      message: "同じステージを選択しています",
+      test(value) {
+        const second = this.resolve(ref("second")) ?? 1;
+        if (second === 1) {
+          return true;
+        }
+        return value !== second;
+      },
+    }),
+  second: number().typeError('入力してください').required("入力してください")
+    .test({
+      name: 'second',
+      message: "同じステージを選択しています",
+      test(value) {
+        const first = this.resolve(ref("first")) ?? 1;
+        if (first === 1) {
+          return true;
+        }
+        return value !== first;
+      },
+    }),
+  performanceTime: number().typeError('入力してください').required("入力してください").min(0, "0分以上で入力してください")
+    .test({
+      name: 'cleanUpTime',
+      message: "合計120分以内で入力してください",
+      test(value) {
+        const preparationTime = this.resolve(ref("preparationTime")) || 0;
+        const cleanUpTime = this.resolve(ref("cleanUpTime")) || 0;
+        return value + Number(preparationTime) + Number(cleanUpTime) <= 120;
+      },
+    }),
+  preparationTime: number().typeError('入力してください').required("入力してください").min(0, "0分以上で入力してください")
+  .test({
+    name: 'cleanUpTime',
+    message: "合計120分以内で入力してください",
+    test(value) {
+      const performanceTime = this.resolve(ref("performanceTime")) || 0;
+      const cleanUpTime = this.resolve(ref("cleanUpTime")) || 0;
+      return value + Number(performanceTime) + Number(cleanUpTime) <= 120;
+    },
+  }),
+  cleanUpTime: number().typeError('入力してください').required("入力してください").min(0, "0分以上で入力してください")
+    .test({
+      name: 'cleanUpTime',
+      message: "合計120分以内で入力してください",
+      test(value) {
+        const performanceTime = this.resolve(ref("performanceTime")) || 0;
+        const preparationTime = this.resolve(ref("preparationTime")) || 0;
+        return value + Number(performanceTime) + Number(preparationTime) <= 120;
+      },
+    }),
+});
+
 // stageOption登録のバリデーション
 export const stageOptionSchema = object({
   isItem: boolean().required("入力してください"),
