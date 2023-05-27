@@ -30,7 +30,11 @@ const logout = () => {
 };
 
 const backHome = () => {
-  router.push("/");
+  if(localStorage.getItem("client")==null){
+    router.push("/");
+  }else{
+    router.push("/mypage");
+  }
 };
 
 const localChageHandler = (e: any) => {
