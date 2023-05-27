@@ -27,9 +27,7 @@ interface Stage {
 }
 
 interface StageOrder {
-  stage_order: {
-    stage_order: Stage;
-  };
+  stage_order: Stage;
 }
 
 interface StageOption {
@@ -158,7 +156,7 @@ const subRep = ref<SubRep>();
 const rentalOrders = ref<RentalOrder[]>();
 const placeOrder = ref<RegistPlace>();
 const powerOrders = ref<PowerOrder[]>();
-const stageOrder = ref<StageOrder>();
+const stageOrders = ref<StageOrder[]>();
 const stageOption = ref<StageOption>();
 const employee = ref<Employee>();
 const food = ref<Food>();
@@ -191,7 +189,7 @@ onMounted(() => {
       rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrders.value = response.data.data[0].power_orders;
-      stageOrder.value = response.data.data[0].stage_orders;
+      stageOrders.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
       employee.value = response.data.data[0].employees;
       food.value = response.data.data[0].food_products;
@@ -220,7 +218,7 @@ const reload = () => {
       rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrders.value = response.data.data[0].power_orders;
-      stageOrder.value = response.data.data[0].stage_orders;
+      stageOrders.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
       food.value = response.data.data[0].food_products;
     });
@@ -269,6 +267,7 @@ const isOverPower = computed(() => {
   return totalPower.value > 1500;
 });
 
+// 物品申請が重複しているかどうか
 const isRentalItemOverlap = computed(() => {
   if (!rentalOrders.value) return false;
   const rentalOrder = rentalOrders.value.map((rentalOrder) => {
@@ -278,18 +277,17 @@ const isRentalItemOverlap = computed(() => {
   return rentalOrder.length !== rentalOrderSet.size;
 });
 
-// rentalOrdersで被っているものの名前を取得
-const rentalItemOverlap = computed(() => {
-  if (!rentalOrders.value) return "";
-  const rentalOrder = rentalOrders.value.map((rentalOrder) => {
-    return rentalOrder.rental_item.name;
+// ステージ申請で日付と天気が重複しているかどうか
+const isStageOverlap = computed(() => {
+  if (!stageOrders.value) return false;
+  const stageOrder = stageOrders.value.map((stageOrder) => {
+    return (
+      stageOrder.stage_order.date + stageOrder.stage_order.stage_order.is_sunny
+    );
   });
-  const rentalOrderSet = new Set(rentalOrder);
-  const rentalOrderArray = Array.from(rentalOrderSet);
-  const rentalOrderArray2 = rentalOrderArray.filter((rentalOrder) => {
-    return rentalOrderSet.has(rentalOrder);
-  });
-  return rentalOrderArray2.join(" / ");
+  console.log(stageOrder);
+  const stageOrderSet = new Set(stageOrder);
+  return stageOrder.length !== stageOrderSet.size;
 });
 </script>
 
@@ -332,7 +330,12 @@ const rentalItemOverlap = computed(() => {
             {{ $t("RegistInfo.employees") }}
           </div>
         </li>
-        <li v-if="groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5" @click="tab = 8">
+        <li
+          v-if="
+            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5
+          "
+          @click="tab = 8"
+        >
           <div :class="{ select: tab === 8 }" class="title">
             {{
               groupCategoryId === 1
@@ -341,7 +344,12 @@ const rentalItemOverlap = computed(() => {
             }}
           </div>
         </li>
-        <li v-if="groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5" @click="tab = 9">
+        <li
+          v-if="
+            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5
+          "
+          @click="tab = 9"
+        >
           <div :class="{ select: tab === 9 }" class="title">
             {{ $t("RegistInfo.purchase") }}
           </div>
@@ -402,14 +410,17 @@ const rentalItemOverlap = computed(() => {
         </div>
 
         <!-- ステージ申請 group_category_id === ３ -->
-        <div v-show="tab === 3" class="flex">
+        <div v-show="tab === 3" class="flex flex-col gap-4">
+          <div v-if="isStageOverlap" class="text-red-500">
+            <p>申請内容が重複しています</p>
+          </div>
           <Button
-            v-if="!isRentalItemOverlap"
+            v-if="!isStageOverlap"
             class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddStage()"
           />
           <div>
-            <div class="mb-8" v-for="s in stageOrder" :key="s.toString()">
+            <div class="mb-8" v-for="s in stageOrders" :key="s.toString()">
               <div>
                 <RegistInfoCardStage
                   :group-id="group?.id"
@@ -499,11 +510,14 @@ const rentalItemOverlap = computed(() => {
             @click="openAddItem()"
           />
           <div v-if="isRentalItemOverlap" class="text-red-500">
-            <p>{{ rentalItemOverlap }} が重複しています</p>
-            <p>削除してください</p>
+            <p>物品が重複しています</p>
           </div>
           <div class="flex flex-wrap gap-4">
-            <div class="w-fit" v-for="item in rentalOrders" :key="item.toString()">
+            <div
+              class="w-fit"
+              v-for="item in rentalOrders"
+              :key="item.toString()"
+            >
               <RegistInfoCardItem
                 :group-id="group?.id"
                 :regist="item.rental_item.rental_item"
@@ -523,7 +537,10 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 従業員申請 -->
         <div v-show="tab === 7" class="flex flex-wrap flex-col">
-          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddEmployee()" />
+          <Button
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddEmployee()"
+          />
           <div class="mt--9 flex flex-wrap gap-4">
             <div class="w-fit" v-for="e in employee" :key="e.toString()">
               <RegistInfoCardEmployee
@@ -545,7 +562,10 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 販売食品申請 -->
         <div v-show="tab === 8">
-          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddFood()" />
+          <Button
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddFood()"
+          />
           <div class="mb-8" v-for="f in food" :key="f.toString()">
             <RegistInfoCardFood
               :group-id="group?.id"
@@ -569,7 +589,10 @@ const rentalItemOverlap = computed(() => {
 
         <!-- 購入品申請 -->
         <div v-show="tab === 9">
-          <Button class="fixed right-0 bottom-0 m-10 mb-14" @click="openAddPurchase()" />
+          <Button
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddPurchase()"
+          />
           <div v-for="f in food" :key="f.toString()">
             <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
               <RegistInfoCardPurchase
