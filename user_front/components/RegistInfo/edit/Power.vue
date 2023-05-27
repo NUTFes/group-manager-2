@@ -125,7 +125,7 @@ const reset = () => {
       <input class="entry" v-model="newModel" @change="handleModel" :class="{'error_border': modelError}"/>
       <div class="error_msg">{{ modelError }}</div>
       <div class="text">{{ $t('Power.URL') }}</div>
-      <input class="entry" v-model="newUrl" @change="handleUrl" :class="{'error_border': urlError}"/>
+      <input class="entry" placeholder="https://sample.com" v-model="newUrl" @change="handleUrl" :class="{'error_border': urlError}"/>
       <div class="error_msg">{{ urlError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
