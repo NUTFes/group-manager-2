@@ -99,6 +99,15 @@ const reset = () => {
   preparationTime.value = ''
   cleanUpTime.value = ''
 }
+
+// wetherがsunnyならisSunnyをtrueに、rainならfalseにする
+watch(weather, (newVal) => {
+  if (newVal === 'sunny') {
+    isSunny.value = true
+  } else {
+    isSunny.value = false
+  }
+})
 </script>
 
 <template>
