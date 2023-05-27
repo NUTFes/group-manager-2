@@ -196,12 +196,12 @@ const deleteStage = async() => {
       </select>
       <div class="error_msg">{{ stageSecondError }}</div>
       <div>
-        <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
-        <input type="number" class="entry" v-model="newUseTimeInterval" @change="handleUseTimeInterval" :class="{'error_border': useTimeIntervalError}" />
-        <div class="error_msg">{{ useTimeIntervalError }}</div>
         <div class="text">{{ $t('Stage.preparationTime') }}[min]</div>
         <input type="number" class="entry" v-model="newPrepareTimeInterval" @change="handlePrepareTimeInterval" :class="{'error_border': prepareTimeInterval}" />
         <div class="error_msg">{{ prepareTimeIntervalError }}</div>
+        <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
+        <input type="number" class="entry" v-model="newUseTimeInterval" @change="handleUseTimeInterval" :class="{'error_border': useTimeIntervalError}" />
+        <div class="error_msg">{{ useTimeIntervalError }}</div>
         <div class="text">{{ $t('Stage.cleanUpTime') }}[min]</div>
         <input type="number" class="entry" v-model="newCleanupTimeInterval" @change="handleCleanupTimeInterval" :class="{'error_border': cleanupTimeIntervalError}" />
         <div class="error_msg">{{ cleanupTimeIntervalError }}</div>

@@ -88,7 +88,11 @@ const addStage = async () => {
       prepare_time_interval: preparationTime.value,
       cleanup_time_interval: cleanUpTime.value,
     },
-  })
+  }).then(
+    (resoponse)=>{
+      console.log(resoponse)
+    }
+  )
   reloadStage()
   addStageClose()
 }
@@ -170,13 +174,13 @@ watch(weather, (newVal) => {
         <div class="error_msg">{{ secondError }}</div>
       </div>
 
-      <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
-      <input class="entry" v-model="performanceTime" @change="handlePerformanceTime" :class="{'error_border': performanceTimeError}">
-      <div class="error_msg">{{ performanceTimeError }}</div>
-
       <div class="text">{{ $t('Stage.preparationTime') }}[min]</div>
       <input class="entry" v-model="preparationTime" @change="handlePreparationTime" :class="{'error_border': preparationTimeError}">
       <div class="error_msg">{{ preparationTimeError }}</div>
+
+      <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
+      <input class="entry" v-model="performanceTime" @change="handlePerformanceTime" :class="{'error_border': performanceTimeError}">
+      <div class="error_msg">{{ performanceTimeError }}</div>
 
       <div class="text">{{ $t('Stage.cleanUpTime') }}[min]</div>
       <input class="entry" v-model="cleanUpTime" @change="handleCleanUpTime" :class="{'error_border': cleanUpTimeError}">
