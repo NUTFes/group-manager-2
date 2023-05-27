@@ -17,14 +17,13 @@
   text-align: left;
   font-weight: 500;
   padding: 25px;
-  padding-left: 30px;
+  width: 25%;
   border-bottom: solid 1px var(--accent-2);
 }
 
 .vertical-table td {
   padding: 25px;
   text-align: left;
-  padding-left: 150px;
   border-bottom: solid 1px var(--accent-2);
 }
 
