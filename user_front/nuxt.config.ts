@@ -35,5 +35,11 @@ export default defineNuxtConfig( {
   },
 
   modules: ['@nuxtjs/tailwindcss'],
-  css: ["@/assets/tailwind.css"]
+  css: ["@/assets/tailwind.css"],
+
+  app: {
+    head: {
+      title: "参加団体管理アプリ"
+    },
+  },
 })
