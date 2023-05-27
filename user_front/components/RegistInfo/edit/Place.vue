@@ -65,6 +65,12 @@ const groupCategoryId = ref<number>();
 const group_id = ref();
 const isOverlapPlace = computed(() => {
   if (
+    newFirst.value === 1 && newSecond.value === 1 ||
+    newFirst.value === 1 && newThird.value === 1 ||
+    newSecond.value === 1 && newThird.value === 1
+  )
+    return false;
+  else if (
     newFirst.value === newSecond.value ||
     newFirst.value === newThird.value ||
     newSecond.value === newThird.value
