@@ -119,6 +119,12 @@ const createCurrentDepartmentList = (e: any) => {
     return grade.id === Number(e.target.value);
   })[0].departmentList;
 };
+
+onMounted(() => {
+  if (props.grade_id != null) {
+    createCurrentDepartmentList({ target: { value: props.grade_id } });
+  }
+});
 </script>
 
 <template>
