@@ -41,6 +41,12 @@ onMounted(async () => {
     editParams.value.tel = response.data.user_detail.tel;
     editParams.value.departmentId = response.data.user_detail.department_id;
     editParams.value.gradeId = response.data.user_detail.grade_id;
+    handleName(response.data.user.name);
+    handleEmail(response.data.user.email);
+    handleStudentId(response.data.user_detail.student_id);
+    handleTel(response.data.user_detail.tel);
+    handleDepartment(response.data.user_detail.department_id);
+    handleGrade(response.data.user_detail.grade_id);
     createCurrentDepartmentList({ target: { value: response.data.user_detail.grade_id } });
   });
 });
