@@ -120,13 +120,13 @@ export const itemSchema = object({
     .of(
       object().shape({
         itemNameId: number().required("入力してください"),
-        itemNum: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+        itemNum: number().typeError('半角数字を入力してください').required("入力してください").min(1, "0以上を入力してください"),
       })
     ).strict(),
 });
 export const editItemSchema = object({
   itemNameId: number().required("入力してください"),
-  itemNum: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+  itemNum: number().typeError('半角数字を入力してください').required("入力してください").min(1, "0以上を入力してください"),
 });
 
 // power登録のバリデーション
@@ -135,7 +135,7 @@ export const powerSchema = object({
     .of(
       object().shape({
         productName: string().required("入力してください"),
-        maxPower: string().required("入力してください").typeError('半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください').matches(/\b[0-9]\b|\b[1-9][0-9]\b|\b[1-9][0-9][0-9]\b|\b1[0-4][0-9][0-9]\b|\b1500\b/, '1500以下を入力してください'),
+        maxPower: number().required("入力してください").min(1, "0以上を入力してください").max(1500,"1500以下に設定してください").typeError('半角数字を入力してください'),
         manufacturer: string().required("入力してください"),
         model: string().required("入力してください"),
         url: string().required("入力してください").url("URLを入力してください"),
@@ -144,7 +144,7 @@ export const powerSchema = object({
 });
 export const editPowerSchema = object({
   productName: string().required("入力してください"),
-  maxPower: string().required("入力してください").typeError('半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください').matches(/\b[0-9]\b|\b[1-9][0-9]\b|\b[1-9][0-9][0-9]\b|\b1[0-4][0-9][0-9]\b|\b1500\b/, '1500以下を入力してください'),
+  maxPower: number().required("入力してください").min(1, "0以上を入力してください").max(1500,"1500以下に設定してください").typeError('半角数字を入力してください'),
   manufacturer: string().required("入力してください"),
   model: string().required("入力してください"),
   url: string().required("入力してください").url("URLを入力してください"),
@@ -190,13 +190,13 @@ export const foodSchema = object({
   .of(
     object().shape({
       dishName: string().required("入力してください"),
-      numFirstDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
-      numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+      numFirstDay: number().typeError('半角数字を入力してください').required("入力してください").min(1,"1以上登録してください"),
+      numSecondDay:number().typeError('半角数字を入力してください').required("入力してください").min(1,"1以上登録してください"),
     })
   ).strict(),
 });
 export const editFoodSchema = object({
   dishName: string().required("入力してください"),
-  numFirstDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
-  numSecondDay: string().typeError('半角数字を入力してください').required("入力してください").matches(/\d+/, '半角数字を入力してください').matches(/\b^(?!-).*$\b/, '正の数を入力してください'),
+  numFirstDay: number().typeError('半角数字を入力してください').required("入力してください").min(1,"1以上登録してください"),
+  numSecondDay: number().typeError('半角数字を入力してください').required("入力してください").min(1,"1以上登録してください"),
 });
