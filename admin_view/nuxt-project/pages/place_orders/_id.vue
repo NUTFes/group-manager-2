@@ -53,7 +53,7 @@
             <tr>
               <th>会場配置図</th>
               <td>
-                <div v-if="placeOrder.venue_map.picture_path === null">
+                <div v-if="placeOrder.venue_map === null">
                   未登録
                 </div>
                 <div v-else>
