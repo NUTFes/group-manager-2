@@ -143,8 +143,8 @@
     "date": "開催日",
     "firstPreference": "第一希望場所",
     "secondPreference": "第二希望場所",
-    "performanceTime": "準備時間",
-    "preparationTime": "本番時間",
+    "performanceTime": "本番時間",
+    "preparationTime": "準備時間",
     "cleanUpTime": "片付け時間",
     "weather": "天候を選んでください"
   },

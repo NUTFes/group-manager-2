@@ -2,7 +2,7 @@
 import { FesYear } from '@/types/regist/stage'
 import { Stage } from '~~/types';
 import { useField, useForm } from 'vee-validate'
-import { stageSchema } from '~~/utils/validate';
+import { editStageSchema } from '~~/utils/validate';
 import { async } from '@firebase/util';
 const config = useRuntimeConfig()
 
@@ -37,7 +37,7 @@ interface Emits {
 const emits = defineEmits<Emits>()
 
 const { meta, isSubmitting } = useForm({
-  validationSchema: stageSchema,
+  validationSchema: editStageSchema,
   initialValues: {
     fesDate: props.fesDateId,
     first: props.stageFirst,
@@ -196,13 +196,13 @@ const deleteStage = async() => {
       </select>
       <div class="error_msg">{{ stageSecondError }}</div>
       <div>
-        <div class="text">{{ $t('Stage.preparationTime') }}</div>
+        <div class="text">{{ $t('Stage.preparationTime') }}[min]</div>
         <input type="number" class="entry" v-model="newPrepareTimeInterval" @change="handlePrepareTimeInterval" :class="{'error_border': prepareTimeInterval}" />
         <div class="error_msg">{{ prepareTimeIntervalError }}</div>
-        <div class="text">{{ $t('Stage.performanceTime') }}</div>
+        <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
         <input type="number" class="entry" v-model="newUseTimeInterval" @change="handleUseTimeInterval" :class="{'error_border': useTimeIntervalError}" />
         <div class="error_msg">{{ useTimeIntervalError }}</div>
-        <div class="text">{{ $t('Stage.cleanUpTime') }}</div>
+        <div class="text">{{ $t('Stage.cleanUpTime') }}[min]</div>
         <input type="number" class="entry" v-model="newCleanupTimeInterval" @change="handleCleanupTimeInterval" :class="{'error_border': cleanupTimeIntervalError}" />
         <div class="error_msg">{{ cleanupTimeIntervalError }}</div>
       </div>
