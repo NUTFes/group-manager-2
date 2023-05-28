@@ -31,6 +31,8 @@ export default defineNuxtConfig( {
     public: {
       baseURL: process.env.VUE_APP_URL,
       APIURL: process.env.VUE_APP_API_URL,
+      IMGUR_CLIENT_ID: process.env.NUXT_IMGUR_CLIENT_ID,
+      IMGUR_CLIENT_SECRET: process.env.NUXT_IMGUR_CLIENT_SECRET,
     },
   },
 

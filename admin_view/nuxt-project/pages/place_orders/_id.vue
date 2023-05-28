@@ -4,10 +4,18 @@
       v-bind:pageTitle="placeOrder.group.name"
       pageSubTitle="会場申請一覧"
     >
-      <CommonButton v-if="this.$role(this.roleID).place_orders.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).place_orders.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).place_orders.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).place_orders.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -43,10 +51,17 @@
               <td>{{ placeOrder.place_order_name.third }}</td>
             </tr>
             <tr>
-              <th>ダウンロードパス</th>
+              <th>会場配置図</th>
               <td>
-                <div v-if='placeOrder.venue_map.picture_path === null'>未登録</div>
-                <div v-else @click="DownloadPic(placeOrder.venue_map.picture_path)">{{ placeOrder.venue_map.picture_path }}</div>
+                <div v-if="placeOrder.venue_map === null">
+                  未登録
+                </div>
+                <div v-else>
+                  <img
+                    :src="placeOrder.venue_map.picture_path"
+                    style="width: 80%; height: 80%"
+                  />
+                </div>
               </td>
             </tr>
             <tr>
