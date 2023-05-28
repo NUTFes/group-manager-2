@@ -195,18 +195,6 @@ const updateSelectedLocation = (event: Event) => {
             {{ $t("Item.outsideGroup") }}
           </label>
         </div>
-        <div v-if="Number(groupCategoryId) === 1">
-          <label>
-            <input
-              type="radio"
-              value="屋外団体"
-              v-model="selectedLocation"
-              :checked="selectedLocation === '屋外団体'"
-              @click="updateSelectedLocation"
-            />
-            {{ $t("Item.outsideGroup") }}
-          </label>
-        </div>
         <div v-if="Number(groupCategoryId) === 3">
           <label>
             <input
@@ -221,20 +209,38 @@ const updateSelectedLocation = (event: Event) => {
         </div>
       </div>
       <div class="text">{{ $t("Item.item") }}</div>
-      <select
-        class="entry"
-        v-model="newItem"
-        @change="handleName"
-        :class="{ error_border: nameError }"
-      >
-        <option
-          v-for="list in selectableItemList"
-          :key="list.id"
-          :value="list.id"
+      <div v-if="Number(groupCategoryId) === 1">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :class="{ error_border: nameError }"
         >
-          {{ list.name }}
-        </option>
-      </select>
+          <option
+            v-for="list in outsideRentableItemList"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+      <div v-else>
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :class="{ error_border: nameError }"
+        >
+          <option
+            v-for="list in selectableItemList"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
       <div class="error_msg">{{ nameError }}</div>
       <div class="text">{{ $t("Item.number") }}</div>
       <input

@@ -91,16 +91,14 @@ const closeEditPlace = () => {
 
 onMounted(async () => {
   const placeData = await $fetch<Place>(config.APIURL + "/places");
-  !!placeData.data &&
-    placeData.data.forEach((place) => {
-      placeList.value.push(place);
-    });
+  // !!placeData.data &&
+  //   placeData.data.forEach((place) => {
+  //     placeList.value.push(place);
+  //   });
   const groupUrl =
     config.APIURL + "/groups/" + Number(localStorage.getItem("group_id"));
   axios.get(groupUrl).then(async (response) => {
     groupCategoryId.value = response.data.data.group_category_id;
-
-    const placeData = await $fetch<Place>(config.APIURL + "/places");
 
     placeData.data.forEach((place) => {
       if (groupCategoryId.value === 1) {
@@ -113,6 +111,7 @@ onMounted(async () => {
     });
   });
   group_id.value=Number(localStorage.getItem("group_id"))
+  console.log(placeList.value)
 });
 
 const editPlace = async () => {
