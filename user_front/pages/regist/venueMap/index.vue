@@ -67,11 +67,11 @@ const postImageURL = () => {
 
 <template>
   <div class="mx-[10%] my-[5%]">
-    <h1 class="text-4xl ">会場配置図の申請</h1>
+    <h1 class="text-4xl ">{{ $t("VenueMap.regitstVenueMap") }}</h1>
     <Card>
       <div class="flex my-4 items-center">
         <label>
-          <span class="text-3xl mr-4">配置図(pdf, png, jpgのみ)</span>
+          <span class="text-3xl mr-4">{{ $t("VenueMap.map") }}</span>
           <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload">
         </label>
       </div>

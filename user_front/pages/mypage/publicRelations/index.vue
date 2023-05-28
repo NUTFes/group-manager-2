@@ -158,7 +158,7 @@ const editImageURL = () => {
       <p v-if="isBlurbOver" class="text-red-500 text-sm">{{ $t("PR.over") }}</p>
       <div class="my-4 items-center">
         <label>
-          <span class="text-3xl mr-4">{{ $t("PR.illustration") }}</span>
+          <span class="text-3xl mr-4">{{ $t("PR.image") }}</span>
           <input type="file" @change="fileUpload" />
         </label>
       </div>
@@ -167,11 +167,11 @@ const editImageURL = () => {
           v-if="currentPublicRelation"
           class="flex flex-col items-center gap-2"
         >
-          <p>現在登録済みの画像</p>
+          <p>{{ $t("PR.registeredImages") }}</p>
           <img :src="currentPublicRelation.picture_path" class="w-1/3" />
         </div>
         <div v-if="selectedFile" class="flex flex-col items-center gap-2">
-          <p>選択中の画像</p>
+          <p>{{ $t("PR.selectingImage") }}</p>
           <img :src="selectedFileUrl" class="w-1/3" />
         </div>
       </div>

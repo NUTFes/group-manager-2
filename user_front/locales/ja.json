@@ -71,8 +71,10 @@
     "PR": "パンフレット用PR",
     "select": "選択してください",
     "text": "PR文(40文字程度)",
-    "illustration": "イラスト",
-    "over": "50文字を超えています"
+    "image": "画像",
+    "over": "50文字を超えています",
+    "registeredImages": "現在登録済みの画像",
+    "selectingImage": "選択中の画像"
   },
 
   "Announcement": {
@@ -86,7 +88,7 @@
   "VenueMap": {
     "regitstVenueMap": "会場配置図の登録",
     "select": "選択してください",
-    "map": "配置図(pdf,png,jpgのみ)"
+    "map": "配置図(png,jpgのみ)"
   },
 
   "RegistInfo": {
