@@ -127,10 +127,9 @@ const getMaxValueByItemId = (id: number) => {
   const items = selectableItemList.value.find((item) => item.id === id);
 
   let maxValue = 0;
-  if (selectedLocation.value === "屋外団体" && items?.name === "テント") {
+  if (items?.name === "テント") {
     maxValue = 1;
   } else if (
-    selectedLocation.value === "屋外団体" &&
     (items?.name === "机" || items?.name === "椅子")
   ) {
     maxValue = 20;
