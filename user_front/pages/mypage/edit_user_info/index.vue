@@ -82,7 +82,7 @@ const editUser = async () => {
     }
   ).then(() => {
     localStorage.setItem("uid", editParams.value.mail || "");
-    alert('登録できました')
+    alert('登録できました\nRegistration Success')
     router.push("/mypage");
   });
 };

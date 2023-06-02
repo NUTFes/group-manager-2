@@ -47,11 +47,11 @@ const submit = () => {
     )
     .then(
       (response) =>{
-        alert('登録できました')
+        alert('登録できました\nRegistration Success')
         router.push("/mypage");
       },
       (error) => {
-        alert('登録できませんでした')
+        alert('登録できませんでした\nRegistration Failure')
       }
     )
 }

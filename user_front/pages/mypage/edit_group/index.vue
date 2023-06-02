@@ -99,11 +99,11 @@ const register = () => {
           "group_category_id",
           response.data.data.group_category_id
         );
-        alert("登録できました");
+        alert("登録できました\nRegistration Success");
         router.push("/mypage");
       },
       (error) => {
-        alert("登録できませんでした");
+        alert("登録できませんでした\nRegistration Failure");
       }
     );
 };

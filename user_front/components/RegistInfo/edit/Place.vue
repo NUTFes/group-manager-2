@@ -212,13 +212,13 @@ const reset = () => {
       />
       <div class="error_msg">{{ remarkError }}</div>
       <p v-if="isOverlapPlace" class="error_msg">
-        同じ会場を選択しています。選択し直してください。
+        {{ $t("Place.overlapPlace") }}
       </p>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
         <RegistPageButton
           :disabled="!meta.valid || isSubmitting || isOverlapPlace"
-          text="✓編集"
+          :text="$t('Button.edit')"
           @click="editPlace()"
         ></RegistPageButton>
       </div>

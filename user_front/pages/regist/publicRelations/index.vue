@@ -11,7 +11,7 @@ const errorMessage = ref("");
 
 const selectedFile = ref<File | null>(null)
 const selectedFileUrl = ref<string>("")
-const fileName = ref<string>('選択してください')
+const fileName = ref<string>('選択してください\nPlease select')
 const pictureName = ref<string>("")
 const blurb = ref<string>("")
 
@@ -35,13 +35,13 @@ const storageRef = fireRef(storage, fileName.value);
 
 const registImageURL = () =>{
   if (blurb.value.length === 0) {
-    alert('PR文を入力してください')
+    alert('PR文を入力してください\nPlease enter your PR statement')
     return
   }
 
   // 画像がない場合はalertを出す
   if (!selectedFile.value) {
-    alert('画像を選択してください')
+    alert('画像を選択してください\nPlease select an image')
     return
   }
 

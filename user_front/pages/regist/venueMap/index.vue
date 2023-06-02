@@ -9,7 +9,7 @@ const state = reactive({
 });
 
 const selectedFile = ref<File | null>(null)
-const fileName = ref<string>("選択してください")
+const fileName = ref<string>("選択してください\nPlease select")
 const pictureName = ref<string>("")
 
 onMounted(async () => {
@@ -30,7 +30,7 @@ const storage = getStorage();
 const storageRef = fireRef(storage, fileName.value);
 
 const postImageURL = () => {
-  !selectedFile.value && alert("登録できません");
+  !selectedFile.value && alert("登録できませんでした\nRegistration Failure");
 
   selectedFile.value &&
   uploadBytes(storageRef, selectedFile.value).then((snapshot) => {
@@ -54,11 +54,11 @@ const postImageURL = () => {
     })
     .then(
       (response) =>{
-        alert('登録できました')
+        alert('登録できました\nRegistration Success')
         router.push("/mypage");
       },
       (error) => {
-        alert('登録できませんでした')
+        alert('登録できませんでした\nRegistration Failure')
       }
     )
   });

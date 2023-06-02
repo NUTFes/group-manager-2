@@ -28,7 +28,7 @@ const state = reactive({
 const currentPublicRelation = ref<PublicRelation | null>(null);
 const selectedFile = ref<File | null>(null);
 const selectedFileUrl = ref<string>("");
-const fileName = ref<string>("選択してください");
+const fileName = ref<string>("選択してください\nPlease select");
 const pictureName = ref<string>("");
 const blurb = ref<string>("");
 const isSubmitting = ref<boolean>(false);
@@ -79,13 +79,13 @@ const storageRef = fireRef(storage, fileName.value);
 
 const editImageURL = () => {
   if (blurb.value.length === 0) {
-    alert("PR文を入力してください");
+    alert("PR文を入力してください\nPlease enter your PR statement");
     return;
   }
 
   // currentPublicRelationがなくて、画像が未選択の場合はエラー
   if (!selectedFile.value && !currentPublicRelation.value) {
-    alert("画像を選択してください");
+    alert("画像を選択してください\nPlease select an image");
     return;
   }
 
@@ -112,11 +112,11 @@ const editImageURL = () => {
         })
         .then(
           (response) => {
-            alert("登録しました（画像の反映には数分かかります）");
+            alert("登録しました（画像の反映には数分かかります）\nRegistration Success(It takes a few minutes for the image to reflect)");
             router.push("/mypage");
           },
           (error) => {
-            alert("登録できませんでした");
+            alert("登録できませんでした\nRegistration Failure");
           }
         );
     });

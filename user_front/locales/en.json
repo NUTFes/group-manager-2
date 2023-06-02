@@ -223,7 +223,11 @@
     "maximum": "maximum rated power",
     "maker": "maker",
     "model": "model",
-    "URL": "product URL"
+    "URL": "product URL",
+    "total": "product URL",
+    "isSamePower": "Total power has reached the limit.",
+    "isOverPower": "Total power exceeds",
+    "isElse": "Keep the total power within the limit"
   },
 
   "Employees": {

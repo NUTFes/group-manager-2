@@ -221,7 +221,11 @@
     "maximum": "電力",
     "maker": "メーカ",
     "model": "型番",
-    "URL": "製品URL"
+    "URL": "製品URL",
+    "total": "電力の合計",
+    "isSamePower": "電力の合計が上限に達成しました",
+    "isOverPower": "電力の合計がを超えています",
+    "isElse": "電力の合計を上限内に収めてください"
   },
 
   "Employees": {
