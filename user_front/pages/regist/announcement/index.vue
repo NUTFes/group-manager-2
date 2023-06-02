@@ -14,7 +14,7 @@ onMounted(async () => {
 
 const postAnnouncement = () => {
   if (announcement.value.length === 0) {
-    alert('会場アナウンス文を入力してください')
+    alert('会場アナウンス文を入力してください\nPlease enter the text of the venue announcement')
     return
   }
 

@@ -45,20 +45,20 @@ const newLoudSound = ref<Props['loudSound']>(props.loudSound)
 const newStageContent = ref<Props['stageContent']>(props.stageContent)
 
 const itemsAvailable = [
-  {id: 1, label: "使用", value: true },
-  {id: 2, label: "使用しない", value: false },
+  {id: 1, label: "使用:use", value: true },
+  {id: 2, label: "使用しない:not use", value: false },
 ]
 const musicAvailable = [
-  {id: 1, label: "使用", value: true },
-  {id: 2, label: "使用しない", value: false },
+  {id: 1, label: "使用:use", value: true },
+  {id: 2, label: "使用しない:not use", value: false },
 ]
 const cameraAvailable = [
-  {id: 1, label: "許可", value: true },
-  {id: 2, label: "許可しない", value: false },
+  {id: 1, label: "許可:permit", value: true },
+  {id: 2, label: "許可しない:not permit", value: false },
 ]
 const loudAvailable = [
-  {id: 1, label: "出す", value: true },
-  {id: 2, label: "出さない", value: false },
+  {id: 1, label: "出す:produce a sound", value: true },
+  {id: 2, label: "出さない:not sound", value: false },
 ]
 
 interface Emits {

@@ -72,8 +72,11 @@
     "PR": "PR for brochure",
     "select": "Please select",
     "text": "PR statement(About 20 characters)",
-    "illustration": "illustration",
-    "over": "It is over 25 characters"
+    "image": "image",
+    "over": "It is over 25 characters",
+    "registeredImages": "Registered Images",
+    "selectingImage": "Selecting Image",
+    "registering": "Now registering..."
   },
 
   "Announcement": {
@@ -85,9 +88,11 @@
   },
 
   "VenueMap": {
-    "regitstVenueMap": "Registration of Venue MAP",
+    "regitstVenueMap": "Application for venue map",
     "select": "Please select",
-    "map": "layout plan(pdf,png,jpg only)"
+    "map": "layout plan(png,jpg only)",
+    "currently": "Currently selected image",
+    "selected": "Selected Image"
   },
 
   "RegistInfo": {
@@ -221,7 +226,11 @@
     "maximum": "maximum rated power",
     "maker": "maker",
     "model": "model",
-    "URL": "product URL"
+    "URL": "product URL",
+    "total": "product URL",
+    "isSamePower": "Total power has reached the limit.",
+    "isOverPower": "Total power exceeds",
+    "isElse": "Keep the total power within the limit"
   },
 
   "Employees": {

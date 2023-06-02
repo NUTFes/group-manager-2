@@ -27,7 +27,7 @@ const login = () => {
     })
     .catch(() => {
       alert(
-        "ログインに失敗しました。メールアドレスとパスワードを確認してください。"
+        "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
       );
     });
 };
@@ -53,13 +53,13 @@ const signUp = () => {
         <div class="flex flex-col gap-8 w-4/5">
           <input
             type="email"
-            placeholder="メールアドレス"
+            placeholder="メールアドレス:mail"
             class="w-full bg-white border border-black rounded-md h-10 p-4 m-0"
             v-model="email"
           />
           <input
             type="password"
-            placeholder="パスワード"
+            placeholder="パスワード:password"
             class="w-full bg-white border border-black rounded-md h-10 p-4 m-0"
             v-model="password"
           />

@@ -19,7 +19,7 @@ const state = reactive({
 
 const selectedFile = ref<File | null>(null);
 const selectedFileUrl = ref<string>("");
-const fileName = ref<string>("選択してください");
+const fileName = ref<string>("選択してください\nPlease select");
 const clientId = config.IMGUR_CLIENT_ID;
 const isSubmitting = ref<boolean>(false);
 const currentVenueMap = ref<VenueMap | null>(null);
@@ -61,7 +61,7 @@ const changeImage2base64 = (file: File) => {
 
 const postImageURL = () => {
   if (!selectedFile.value) {
-    alert("画像を選択してください");
+    alert("画像を選択してください\nPlease select an image");
     return;
   }
 
@@ -99,16 +99,16 @@ const postImageURL = () => {
           params: fetchParams,
         })
           .then((response) => {
-            alert("会場配置図を登録しました");
+            alert("会場配置図を登録しました\nVenue map has been registered.");
             router.push("/mypage");
           })
           .catch((err) => {
-            alert("会場配置図の登録に失敗しました");
+            alert("会場配置図の登録に失敗しました\nFailed to register the venue map");
             router.push("/mypage");
           });
       })
       .catch((err) => {
-        alert("会場配置図の登録に失敗しました");
+        alert("会場配置図の登録に失敗しました\nFailed to register the venue map");
         router.push("/mypage");
       });
   });
@@ -117,26 +117,26 @@ const postImageURL = () => {
 
 <template>
   <div class="mx-[10%] my-[5%]">
-    <h1 class="text-4xl">会場配置図の申請</h1>
+    <h1 class="text-4xl">{{ $t("VenueMap.regitstVenueMap") }}</h1>
     <Card>
       <div class="flex flex-col my-4 items-center gap-4">
-        <span class="text-3xl mr-4">配置図(pdf, png, jpgのみ)</span>
+        <span class="text-3xl mr-4">{{ $t("VenueMap.map") }}</span>
         <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload" />
         <div class="flex flex-col items-center gap-4" v-if="currentVenueMap">
-          <p>現在選択している画像</p>
+          <p>{{ $t("VenueMap.currently") }}</p>
           <img :src="currentVenueMap.picture_path" class="w-[50%]" />
         </div>
         <div class="flex flex-col items-center gap-4" v-if="selectedFileUrl">
-          <p>選択した画像</p>
+          <p>{{ $t("VenueMap.selected") }}</p>
           <img :src="selectedFileUrl" class="w-[50%]" />
         </div>
       </div>
       <RegistPageButton
-        text="登録"
+        :text="$t('Button.register')"
         @click="postImageURL"
         :disabled="isSubmitting"
       ></RegistPageButton>
-      <p v-if="isSubmitting">登録中です...</p>
+      <p v-if="isSubmitting">{{ $t("PR.registering") }}</p>
     </Card>
   </div>
 </template>

@@ -35,7 +35,8 @@ const changeImage2base64 = (file: File) => {
 const currentPublicRelation = ref<PublicRelation | null>(null);
 const selectedFile = ref<File | null>(null);
 const selectedFileUrl = ref<string>("");
-const fileName = ref<string>("選択してください");
+const fileName = ref<string>("選択してください\nPlease select");
+const pictureName = ref<string>("");
 const blurb = ref<string>("");
 const isSubmitting = ref<boolean>(false);
 const clientId = config.IMGUR_CLIENT_ID;
@@ -82,13 +83,13 @@ const fileUpload = (e: Event) => {
 
 const editImageURL = () => {
   if (blurb.value.length === 0) {
-    alert("PR文を入力してください");
+    alert("PR文を入力してください\nPlease enter your PR statement");
     return;
   }
 
   // currentPublicRelationがなくて、画像が未選択の場合はエラー
   if (!selectedFile.value && !currentPublicRelation.value) {
-    alert("画像を選択してください");
+    alert("画像を選択してください\nPlease select an image");
     return;
   }
 
@@ -129,16 +130,16 @@ const editImageURL = () => {
             params: fetchParams,
           })
             .then(() => {
-              alert("PR文を登録しました");
+              alert("PR文を登録しました\nPR statement registered");
               router.push("/mypage");
             })
             .catch(() => {
-              alert("PR文の登録に失敗しました");
+              alert("PR文の登録に失敗しました\nFailed to register PR statement");
               router.push("/mypage");
             });
         })
         .catch(() => {
-          alert("PR文の登録に失敗しました");
+          alert("PR文の登録に失敗しました\nFailed to register PR statement");
           router.push("/mypage");
         });
     });
@@ -154,11 +155,11 @@ const editImageURL = () => {
       },
     })
       .then((response) => {
-        alert("PR文を登録しました");
+        alert("PR文を登録しました\nPR statement registered");
         router.push("/mypage");
       })
       .catch((err) => {
-        alert("PR文の登録に失敗しました");
+        alert("PR文の登録に失敗しました\nFailed to register PR statement");
         router.push("/mypage");
       });
   }
@@ -176,7 +177,7 @@ const editImageURL = () => {
       <p v-if="isBlurbOver" class="text-red-500 text-sm">{{ $t("PR.over") }}</p>
       <div class="my-4 items-center">
         <label>
-          <span class="text-3xl mr-4">{{ $t("PR.illustration") }}</span>
+          <span class="text-3xl mr-4">{{ $t("PR.image") }}</span>
           <input type="file" @change="fileUpload" />
         </label>
       </div>
@@ -185,11 +186,11 @@ const editImageURL = () => {
           v-if="currentPublicRelation"
           class="flex flex-col items-center gap-2"
         >
-          <p>現在登録済みの画像</p>
+          <p>{{ $t("PR.registeredImages") }}</p>
           <img :src="currentPublicRelation.picture_path" class="w-1/3" />
         </div>
         <div v-if="selectedFile" class="flex flex-col items-center gap-2">
-          <p>選択中の画像</p>
+          <p>{{ $t("PR.selectingImage") }}</p>
           <img :src="selectedFileUrl" class="w-1/3" />
         </div>
       </div>
@@ -198,7 +199,7 @@ const editImageURL = () => {
         @click="editImageURL"
         :disabled="isBlurbOver || isSubmitting"
       ></RegistPageButton>
-      <p v-if="isSubmitting">登録中です...</p>
+      <p v-if="isSubmitting">{{ $t("PR.registering") }}</p>
     </Card>
   </div>
 </template>

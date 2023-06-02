@@ -74,8 +74,8 @@ const rainStageList = ref<Stage[]>([]);
 const sunnyStageList = ref<Stage[]>([]);
 const stageList = ref<Stage[]>([]);
 
-const weather = ref<string>(props.isSunny ? '[晴]': '[雨]')
-const title = ref<string>('ステージ編集' + weather.value)
+const weather = ref<string>(props.isSunny ? '[晴:sunny]': '[雨:rain]')
+const title = ref<string>('ステージ編集:Stage Editing\n' + weather.value )
 
 onMounted(async () => {
   const fesDate = await $fetch<{ data: FesYear[] }>(

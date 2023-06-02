@@ -71,8 +71,11 @@
     "PR": "パンフレット用PR",
     "select": "選択してください",
     "text": "PR文(40文字程度)",
-    "illustration": "イラスト",
-    "over": "50文字を超えています"
+    "image": "画像",
+    "over": "50文字を超えています",
+    "registeredImages": "現在登録済みの画像",
+    "selectingImage": "選択中の画像",
+    "registering": "登録中です..."
   },
 
   "Announcement": {
@@ -84,9 +87,11 @@
   },
 
   "VenueMap": {
-    "regitstVenueMap": "会場配置図の登録",
+    "regitstVenueMap": "会場配置図の申請",
     "select": "選択してください",
-    "map": "配置図(pdf,png,jpgのみ)"
+    "map": "配置図(png,jpgのみ)",
+    "currently": "現在選択している画像",
+    "selected": "選択した画像"
   },
 
   "RegistInfo": {
@@ -219,7 +224,11 @@
     "maximum": "電力",
     "maker": "メーカ",
     "model": "型番",
-    "URL": "製品URL"
+    "URL": "製品URL",
+    "total": "電力の合計",
+    "isSamePower": "電力の合計が上限に達成しました",
+    "isOverPower": "電力の合計がを超えています",
+    "isElse": "電力の合計を上限内に収めてください"
   },
 
   "Employees": {

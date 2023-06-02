@@ -37,7 +37,7 @@ onMounted(async () => {
 
 const postAnnouncement = () => {
   if (message.value.length === 0) {
-    alert("会場アナウンス文を入力してください");
+    alert("会場アナウンス文を入力してください\nPlease enter the text of the venue announcement");
     return;
   }
 
@@ -49,11 +49,11 @@ const postAnnouncement = () => {
         message: message.value,
       })
       .then((res) => {
-        alert("会場アナウンスを更新しました");
+        alert("会場アナウンスを更新しました\nVenue announcements have been updated");
         router.push("/mypage");
       })
       .catch((err) => {
-        alert("会場アナウンスの更新に失敗しました");
+        alert("会場アナウンスの更新に失敗しました\nFailed to update venue announcements");
       });
   } else {
     const postUrl = "/announcements?group_id=" + groupId.value;
@@ -62,11 +62,11 @@ const postAnnouncement = () => {
         message: message.value,
       })
       .then((res) => {
-        alert("会場アナウンスを登録しました");
+        alert("会場アナウンスを登録しました\nVenue announcements have been registered");
         router.push("/mypage");
       })
       .catch((err) => {
-        alert("会場アナウンスの登録に失敗しました");
+        alert("会場アナウンスの登録に失敗しました\nFailed to register for venue announcements");
       });
   }
 };

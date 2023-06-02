@@ -422,7 +422,7 @@ const isStageOverlap = computed(() => {
         <!-- ステージ申請 group_category_id === ３ -->
         <div v-show="tab === 3" class="flex flex-col gap-4">
           <div v-if="isStageOverlap" class="text-red-500">
-            <p>申請内容が重複しています</p>
+            <p>{{ $t("Place.overlapPlace") }}</p>
           </div>
           <Button
             v-if="!isStageOverlap"
@@ -482,17 +482,17 @@ const isStageOverlap = computed(() => {
           <!-- 電力の合計を計算して表示する -->
           <div class="mb-4">
             <div class="text-xl flex gap-3">
-              <p>電力の合計</p>
+              <p>{{ $t("Power.total") }}</p>
               <p>{{ totalPower }} [W]</p>
             </div>
             <p v-if="isSamePower" class="text-gray-500">
-              電力の合計が上限<span class="font-bold">1500[W]</span>に達成しました
+              {{ $t("Power.isSamePower") }}<span class="font-bold">1500[W]</span>
             </p>
             <p v-else-if="isOverPower" class="text-red-500">
-              電力の合計が<span class="font-bold">1500[W]</span>を超えています
+              {{ $t("Power.isOverPower") }}<span class="font-bold">1500[W]</span>
             </p>
             <p v-else class="text-gray-500">
-              電力の合計は<span class="font-bold">1500[W]</span>に収めてください
+              {{ $t("Power.isElse") }}<span class="font-bold">1500[W]</span>
             </p>
           </div>
           <div class="mb-8" v-for="p in powerOrders" :key="p.toString()">
@@ -523,7 +523,7 @@ const isStageOverlap = computed(() => {
             @click="openAddItem()"
           />
           <div v-if="isRentalItemOverlap" class="text-red-500">
-            <p>物品が重複しています</p>
+            <p>{{ $t("Item.overlapItem") }}</p>
           </div>
           <div class="flex flex-wrap gap-4">
             <div
