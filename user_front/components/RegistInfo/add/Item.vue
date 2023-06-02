@@ -65,7 +65,7 @@ const getMaxValueByItemId = (id: number) => {
   const items = selectableItemList.value.find((item) => item.id === id);
 
   let maxValue = 0;
-  if (selectedLocation.value === "屋外団体" && items?.name === "テント") {
+  if (items?.name === "テント") {
     maxValue = 1;
   } else if (
     selectedLocation.value === "屋外団体" &&
@@ -193,6 +193,7 @@ const reset = () => {
           class="entry"
           v-model="newItem"
           @change="handleName"
+          :checked="selectedLocation === '屋外団体'"
           :class="{ error_border: nameError }"
         >
           <option
