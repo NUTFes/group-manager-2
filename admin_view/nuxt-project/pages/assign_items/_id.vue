@@ -108,7 +108,7 @@
           <select v-model="stockerItemName">
             <option disabled value="">選択してください</option>
             <option
-              v-for="i in rentableItems"
+              v-for="i in allRentableItems"
               :key="i.id"
               :value="i.id"
             >
@@ -400,6 +400,9 @@ export default {
     const groupsUrl = "/groups";
     const groupsRes = await $axios.$get(groupsUrl);
 
+    const allRentableItemsUrl = "/api/v1/get_all_rentable_items";
+    const allRentableItemsRes = await $axios.$get(allRentableItemsUrl);
+
     const insideRentableItemsUrl = "/api/v1/get_inside_shop_rentable_items";
     const insideRentableItemsRes = await $axios.$get(insideRentableItemsUrl);
 
@@ -419,6 +422,7 @@ export default {
 			placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
       groups: groupsRes.data,
+      allRentableItems: allRentableItemsRes.data,
       insideRentableItems: insideRentableItemsRes.data,
       outsideRentableItems: outsideRentableItemsRes.data,
       itemYear: yearsRes.data,
