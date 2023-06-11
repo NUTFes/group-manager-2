@@ -421,7 +421,7 @@ export default {
       stockerItems: stockerItemsRes.data.stocker_items,
 			placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
-      groups: groupsRes.data,
+      groups: groupsRes,
       allRentableItems: allRentableItemsRes.data,
       insideRentableItems: insideRentableItemsRes.data,
       outsideRentableItems: outsideRentableItemsRes.data,
