@@ -159,6 +159,11 @@ export default {
           icon: "campaign",
           click: "/announcement",
         },
+        {
+          title: "模擬店平面図申請",
+          icon: "map",
+          click: "/venue_maps",
+        },
       ],
       // 操作系
       operation_items: [
