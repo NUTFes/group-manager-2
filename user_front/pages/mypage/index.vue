@@ -12,7 +12,6 @@ const registGroupCategoryId = ref<number>(0);
 const config = useRuntimeConfig();
 
 onMounted(async () => {
-  loginCheck();
   await $fetch<RegistInfo>(
     config.APIURL + "/api/v1/current_user/current_regist_info",
     {
@@ -24,14 +23,17 @@ onMounted(async () => {
       },
     }
   ).then((response) => {
-    registGroupId.value = response.data[0].group.id;
-    registGroupCategoryId.value = response.data[0].group.group_category_id;
-    localStorage.setItem("group_id", registGroupId.value.toString());
-    localStorage.setItem(
-      "group_category_id",
-      registGroupCategoryId.value.toString()
-    );
-  });
+      registGroupId.value = response.data[0].group.id;
+      registGroupCategoryId.value = response.data[0].group.group_category_id;
+      localStorage.setItem("group_id", registGroupId.value.toString());
+      localStorage.setItem(
+        "group_category_id",
+        registGroupCategoryId.value.toString()
+      );
+    })
+    .catch(() => {
+      localStorage.setItem("group_id", "");
+    });
   await loginCheck();
   const currentUser = await getCurrentUser();
   state.currentUserName = currentUser?.data.user.name || "";
@@ -70,7 +72,9 @@ const links: { to: string; text: string }[] = [
           </div>
           <div class="flex flex-col gap-4 items-center">
             <MypageButton :text="$t('Mypage.check')" link="/regist_info" />
-            <div class="grid md:grid-cols-2 justify-items-center my-2 gap-2 text-pink-400">
+            <div
+              class="grid md:grid-cols-2 justify-items-center my-2 gap-2 text-pink-400"
+            >
               <ui v-for="link in links" :key="link.text">
                 <nuxt-link :to="link.to" class="text-lg">{{
                   $t(link.text)
