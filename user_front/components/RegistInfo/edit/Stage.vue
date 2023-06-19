@@ -2,7 +2,8 @@
 import { FesYear } from '@/types/regist/stage'
 import { Stage } from '~~/types';
 import { useField, useForm } from 'vee-validate'
-import { stageSchema } from '~~/utils/validate';
+import { editStageSchema } from '~~/utils/validate';
+import { async } from '@firebase/util';
 const config = useRuntimeConfig()
 
 interface Props {
@@ -12,9 +13,9 @@ interface Props {
   fesDateId: number | null,
   stageFirst: number | null,
   stageSecond: number | null,
-  useTimeInterval: string,
-  prepareTimeInterval: string,
-  cleanupTimeInterval: string,
+  useTimeInterval: number | null,
+  prepareTimeInterval: number | null,
+  cleanupTimeInterval: number | null,
 }
 const props = withDefaults(defineProps<Props>(), {
   id: null,
@@ -24,9 +25,9 @@ const props = withDefaults(defineProps<Props>(), {
   date: '',
   stageFirst: null,
   stageSecond: null,
-  useTimeInterval: '',
-  prepareTimeInterval: '',
-  cleanupTimeInterval: '',
+  useTimeInterval: null,
+  prepareTimeInterval: null,
+  cleanupTimeInterval: null,
 })
 
 interface Emits {
@@ -36,7 +37,7 @@ interface Emits {
 const emits = defineEmits<Emits>()
 
 const { meta, isSubmitting } = useForm({
-  validationSchema: stageSchema,
+  validationSchema: editStageSchema,
   initialValues: {
     fesDate: props.fesDateId,
     first: props.stageFirst,
@@ -73,8 +74,8 @@ const rainStageList = ref<Stage[]>([]);
 const sunnyStageList = ref<Stage[]>([]);
 const stageList = ref<Stage[]>([]);
 
-const weather = ref<string>(props.isSunny ? '[晴]': '[雨]')
-const title = ref<string>('ステージ編集' + weather.value)
+const weather = ref<string>(props.isSunny ? '[晴:sunny]': '[雨:rain]')
+const title = ref<string>('ステージ編集:Stage Editing\n' + weather.value )
 
 onMounted(async () => {
   const fesDate = await $fetch<{ data: FesYear[] }>(
@@ -93,19 +94,35 @@ onMounted(async () => {
 })
 
 const editStage = async () => {
-  await useFetch(config.APIURL + "/stage_orders/" + props.id, {
-    method: 'PUT',
-    params: {
-      group_id: props.groupId,
-      is_sunny: props.isSunny,
-      fes_date_id: newStageDateId.value,
-      stage_first: newStageFirst.value,
-      stage_second: newStageSecond.value,
-      use_time_interval: newUseTimeInterval.value,
-      prepare_time_interval: newPrepareTimeInterval.value,
-      cleanup_time_interval: newCleanupTimeInterval.value,
-    }
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/stage_orders/", {
+      method: 'POST',
+      params: {
+        group_id: props.groupId,
+        is_sunny: props.isSunny,
+        fes_date_id: newStageDateId.value,
+        stage_first: newStageFirst.value,
+        stage_second: newStageSecond.value,
+        use_time_interval: newUseTimeInterval.value,
+        prepare_time_interval: newPrepareTimeInterval.value,
+        cleanup_time_interval: newCleanupTimeInterval.value,
+      }
+    })
+  }else{
+    await useFetch(config.APIURL + "/stage_orders/" + props.id, {
+      method: 'PUT',
+      params: {
+        group_id: props.groupId,
+        is_sunny: props.isSunny,
+        fes_date_id: newStageDateId.value,
+        stage_first: newStageFirst.value,
+        stage_second: newStageSecond.value,
+        use_time_interval: newUseTimeInterval.value,
+        prepare_time_interval: newPrepareTimeInterval.value,
+        cleanup_time_interval: newCleanupTimeInterval.value,
+      }
+    })
+  }
   reloadStage()
   closeEditStage()
 }
@@ -114,9 +131,25 @@ const reset = () => {
   newStageDateId.value = null
   newStageFirst.value = null
   newStageSecond.value = null
-  newUseTimeInterval.value = ''
-  newPrepareTimeInterval.value = ''
-  newCleanupTimeInterval.value = ''
+  newUseTimeInterval.value = null
+  newPrepareTimeInterval.value = null
+  newCleanupTimeInterval.value = null
+  handleDate(newStageDateId.value)
+  handleStageFirst(newStageFirst.value)
+  handleStageSecond(newStageSecond.value)
+  handleUseTimeInterval(newUseTimeInterval.value)
+  handlePrepareTimeInterval(newPrepareTimeInterval.value)
+  handleCleanupTimeInterval(newCleanupTimeInterval.value)
+}
+
+const deleteStage = async() => {
+  if (props.id !== null) {
+    await useFetch(config.APIURL + "/stage_orders/" + props.id, {
+      method: 'DELETE',
+    })
+  }
+  reloadStage()
+  closeEditStage()
 }
 </script>
 
@@ -129,7 +162,7 @@ const reset = () => {
       </div>
     </template>
     <template #form>
-      <div class="text">日程</div>
+      <div class="text">{{ $t('Stage.date') }}</div>
       <select class="entry" v-model="newStageDateId" @change="handleDate" :class="{'error_border': dateError}">
         <option
           v-for="fesDate in fesDateList"
@@ -140,7 +173,7 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ dateError }}</div>
-      <div class="text">第一希望場所</div>
+      <div class="text">{{ $t('Stage.firstPreference') }}</div>
       <select class="entry" v-model="newStageFirst" @change="handleStageFirst" :class="{'error_border': stageFirstError}">
         <option
           v-for="stageFirst in stageList"
@@ -151,7 +184,7 @@ const reset = () => {
         </option>
       </select>
       <div class="error_msg">{{ stageFirstError }}</div>
-      <div class="text">第二希望場所</div>
+      <div class="text">{{ $t('Stage.secondPreference') }}</div>
       <select class="entry" v-model="newStageSecond" @change="handleStageSecond" :class="{'error_border': stageSecondError}">
         <option
           v-for="stageSecond in stageList"
@@ -163,19 +196,20 @@ const reset = () => {
       </select>
       <div class="error_msg">{{ stageSecondError }}</div>
       <div>
-        <div class="text">準備時間幅</div>
+        <div class="text">{{ $t('Stage.preparationTime') }}[min]</div>
         <input type="number" class="entry" v-model="newPrepareTimeInterval" @change="handlePrepareTimeInterval" :class="{'error_border': prepareTimeInterval}" />
         <div class="error_msg">{{ prepareTimeIntervalError }}</div>
-        <div class="text">使用時間幅</div>
+        <div class="text">{{ $t('Stage.performanceTime') }}[min]</div>
         <input type="number" class="entry" v-model="newUseTimeInterval" @change="handleUseTimeInterval" :class="{'error_border': useTimeIntervalError}" />
         <div class="error_msg">{{ useTimeIntervalError }}</div>
-        <div class="text">片付け時間幅</div>
+        <div class="text">{{ $t('Stage.cleanUpTime') }}[min]</div>
         <input type="number" class="entry" v-model="newCleanupTimeInterval" @change="handleCleanupTimeInterval" :class="{'error_border': cleanupTimeIntervalError}" />
         <div class="error_msg">{{ cleanupTimeIntervalError }}</div>
       </div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editStage()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.delete')" @click="deleteStage()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editStage()"></RegistPageButton>
       </div>
     </template>
   </Modal>

@@ -46,15 +46,27 @@ const newName = ref<string>(props.name)
 const newStudentId = ref<number | null>(props.studentId)
 
 const editEmployee = async () => {
-  await useFetch(config.APIURL + "/employees/" + props.id, {
-    method: "PUT",
-    params: {
-      group_id: props.groupId,
-      name: newName.value,
-      student_id: newStudentId.value,
-      stool_test_id: 1
-    },
-  })
+  if (props.id === null) {
+    await useFetch(config.APIURL + "/employees", {
+      method: "POST",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        student_id: newStudentId.value,
+        stool_test_id: 1
+      },
+    })
+  }else{
+    await useFetch(config.APIURL + "/employees/" + props.id, {
+      method: "PUT",
+      params: {
+        group_id: props.groupId,
+        name: newName.value,
+        student_id: newStudentId.value,
+        stool_test_id: 1
+      },
+    })
+  }
   reloadEmployee()
   closeEditEmployee()
 };
@@ -62,27 +74,29 @@ const editEmployee = async () => {
 const reset = () => {
   newName.value = ''
   newStudentId.value = null
+  handleName(newName.value)
+  handleStudentId(newStudentId.value)
 }
 
 </script>
 
 <template>
-  <Modal title="従業員申請の編集">
+  <Modal :title="$t('Employees.editEmployees')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeEditEmployee()" class="hover:text-black hover:opacity-75">✖</button>
       </div>
     </template>
     <template #form>
-      <div class="text">氏名</div>
+      <div class="text">{{ $t('Employees.name') }}</div>
       <input class="entry" v-model="newName" @change="handleName" :class="{'error_border': nameError}">
       <div class="error_msg">{{ nameError }}</div>
-      <div class="text">学籍番号</div>
+      <div class="text">{{ $t('Employees.studentId') }}</div>
       <input class="entry" v-model="newStudentId" maxlength="8" @change="handleStudentId" :class="{'error_border': studentIdError}" />
       <div class="error_msg">{{ studentIdError }}</div>
       <div class="flex justify-between mt-8 mx-8">
-        <RegistPageButton text="リセット" @click="reset()"></RegistPageButton>
-        <RegistPageButton :disabled="!meta.valid || isSubmitting" text="✓編集" @click="editEmployee()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
+        <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editEmployee()"></RegistPageButton>
       </div>
     </template>
   </Modal>

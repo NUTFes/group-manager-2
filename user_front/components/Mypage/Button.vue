@@ -9,25 +9,16 @@ export default {
       type: String,
       required: true,
     },
-},
-}
+  },
+};
 </script>
 
 <template>
-    <button @click="$router.push(link)" class="button">
-      {{ text }}
-    </button>
+  <button
+    @click="$router.push(link)"
+    class="flex items-center text-lg justify-center bg-[#ef4df3] text-white p-4 rounded-md w-4/5 md:w-1/2"
+  >
+    {{ text }}
+  </button>
 </template>
 
-<style>
-.button {
-  text-align: center;
-  width: calc(100% / 2.0);
-  margin-right: 2%;
-  border: solid 1px #ef4df3;
-  border-radius: 5px;
-  padding: 1.5%;
-  color: #ffffff;
-  background-color: #ef4df3;
-}
-</style>

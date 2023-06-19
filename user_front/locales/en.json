@@ -1,14 +1,14 @@
 {
   "language": "Language",
 
-  "Header":{
+  "Header": {
     "header": "NUTFES2023",
     "logOut": "Log Out"
   },
 
   "Footer": "©︎NUTFES Executive Committee",
 
-  "Button":{
+  "Button": {
     "reset": "reset",
     "register": "register",
     "edit": "edit",
@@ -16,15 +16,17 @@
     "delete": "delete",
     "skip": "skip",
     "add": "add",
-    "request": "request"
+    "request": "request",
+    "back": "back"
   },
 
-  "Welcome":{
+  "Welcome": {
     "welcome": "Welcome to NUTFES",
     "mail": "Email Address",
     "password": "Password",
     "logIn": "Log in",
-    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "toSignUp": "If you are not registered,",
     "overview": "Participation Overview",
     "overviewDetails": "Date & Time：September 16(Sat), 17(Sun), 2023",
     "regist": "Registration Process",
@@ -48,7 +50,7 @@
     "regist9Details": "Please register the material name, where it is purchased, the date of purchase, and whether it is raw or not."
   },
 
-  "Mypage":{
+  "Mypage": {
     "goToMypage": "Go to Mypage",
     "userName": "",
     "greeting1": "Thank you very much for participating in NUTFES.",
@@ -58,32 +60,58 @@
     "editGroup": "Edit group Information",
     "editUserInfo": "Check & Edit User Information",
     "editPassword": "Password Change",
-    "regitstPR": "public relations Registration",
-    "regitstAnnouncemant": "Announcement text registration",
+    "editPR": "public relations Edit",
+    "editAnnouncemant": "Announcement text edit",
     "regitstVenueMap": "Venue MAP Registration",
     "notice": "Notice",
     "updateDate": "update date"
   },
 
-  "PR":{
+  "PR": {
     "regitstPR": "Registration of PR for brochure",
+    "PR": "PR for brochure",
     "select": "Please select",
-    "text": "PR statement(About 40 characters)",
-    "illustration": "illustration"
+    "text": "PR statement(About 20 characters)",
+    "image": "image",
+    "over": "It is over 25 characters",
+    "registeredImages": "Registered Images",
+    "selectingImage": "Selecting Image",
+    "registering": "Now registering..."
   },
 
-  "Announcement":{
-    "regitstAnnouncemant": "Registration of venue announcement text",
-    "text": "Announcement text at the venue"
+  "Announcement": {
+    "regitstAnnouncement": "Registration of venue announcement text",
+    "editAnnouncement": "Editing of venue announcement text",
+    "text": "Announcement text at the venue",
+    "edit": "editing",
+    "regist": "registing"
   },
 
-  "VenueMap":{
-    "regitstVenueMap": "Registration of Venue MAP",
+  "VenueMap": {
+    "regitstVenueMap": "Application for venue map",
     "select": "Please select",
-    "map": "layout plan(pdf,png,jpg only)"
+    "map": "layout plan(png,jpg only)",
+    "currently": "Currently selected image",
+    "selected": "Selected Image"
   },
 
-  "User":{
+  "RegistInfo": {
+    "return": "Return to Mypage",
+    "registAndEdit": "Group Registration and Editing Page",
+    "subrepresentative": "Subrepresentative",
+    "place": "Places",
+    "stage": "Stage",
+    "stageOption": "StageOption",
+    "power": "Power",
+    "item": "Item",
+    "employees": "Employees",
+    "food": "Food",
+    "saleGoods": "Sale of Goods",
+    "purchase": "Purchase",
+    "placeMessage": "Please apply for either outdoor or indoor space only."
+  },
+
+  "User": {
     "registRepresentative": "Representative Registration",
     "name": "name",
     "studentId": "student id",
@@ -98,13 +126,13 @@
     "editUser": "Edit User Information",
     "editName": "full name",
     "editStudentId": "StudentID 8 digits",
-    "editTel": "10- or 11-digit number in half-width characters",
+    "editTel": "11or11 single-byte numbers, without -",
     "resetPassword": "Password reset",
     "newPassword": "Enter new password",
     "newPasswordConfirm": "Retype new password (for confirmation)"
   },
 
-  "Group":{
+  "Group": {
     "editGroup": "Edit group Information",
     "registGroup": "Registration of group",
     "groupName": "group name",
@@ -113,7 +141,7 @@
     "activityDetails": "Activity Details"
   },
 
-  "Stage":{
+  "Stage": {
     "registStageSunny": "Registration of stage on a sunny day",
     "registStageRain": "Registration of stage on a rainy day",
     "editStage": "Edit stage",
@@ -124,10 +152,11 @@
     "secondPreference": "second preference place",
     "performanceTime": "performance time",
     "preparationTime": "preparation time",
-    "cleanUpTime": "clean-up time"
+    "cleanUpTime": "clean-up time",
+    "weather": "choose the weather"
   },
 
-  "StageOption":{
+  "StageOption": {
     "registStageOption": "Registration of stage Details",
     "editStageOption": "Edit Stage Details",
     "privateProperty": "Whether equipment in possession are used or not",
@@ -148,9 +177,9 @@
     "content": "Stage Contents"
   },
 
-  "Subrep":{
+  "Subrep": {
     "registSubrepresentative": "Registration of subrepresentative",
-    "Subrepresentative": "Edit subrepresentative",
+    "editSubrepresentative": "Edit subrepresentative",
     "name": "name",
     "studentId": "student id",
     "department": "department",
@@ -160,46 +189,60 @@
     "details": "details"
   },
 
-  "Place":{
+  "Place": {
     "registPlace": "Registration of places",
     "editPlace": "edit places",
     "first": "first choice",
     "second": "second choice",
     "third": "third choice",
-    "free": "free description"
+    "free": "free description",
+    "hope1": "No.",
+    "hope2": "",
+    "overlapPlace": "The place is duplicated",
+    "eatingArea": "If you participate in the food sales, the place will be narrowed down"
   },
 
-  "Item":{
+  "Item": {
     "registItem": "Registration of loaned items",
     "addItem": "Additional loaned items",
     "deleteItem": "Deletion of loaned items",
     "editItem": "Editing loaned items",
     "item": "Necessary items",
     "number": "number of pieces required",
-    "count": ""
+    "count": "",
+    "overlapItem": "The item is duplicated",
+    "maxNum": "pieces can be rented",
+    "insideGroup": "Indoor group",
+    "outsideGroup": "Outdoor Group",
+    "stageGroup": "Stage Group"
   },
 
-  "Power":{
+  "Power": {
     "registPower": "Registration of power",
     "addPower": "Additional power",
     "deletePower": "Deletion power",
-    "eidtPower": "Edit power",
+    "editPower": "Edit power",
     "name": "product name",
     "maximum": "maximum rated power",
     "maker": "maker",
     "model": "model",
-    "URL": "product URL"
+    "URL": "product URL",
+    "total": "product URL",
+    "isSamePower": "Total power has reached the limit.",
+    "isOverPower": "Total power exceeds",
+    "isElse": "Keep the total power within the limit"
   },
 
-  "Employees":{
+  "Employees": {
     "registEmployees": "Registration of employees",
+    "deleteEmployees": "Deletion of employee",
     "addEmployees": "Adding Employees",
     "editEmployees": "Employee editing",
     "name": "name",
     "studentId": "studentId"
   },
 
-  "Food":{
+  "Food": {
     "registFood": "Registration of foods for sale",
     "addFood": "Additional foods for sale",
     "deleteFood": "Deletion foods for sale",
@@ -218,26 +261,48 @@
     "toBe": "of products to be sold"
   },
 
-  "Purchase":{
+  "SaleGoods": {
+    "registSaleGoods": "Registration of goods for sale",
+    "addSaleGoods": "Additional goods for sale",
+    "deleteSaleGoods": "Deletion goods for sale",
+    "editSaleGoods": "Edit goods for Sale",
+    "name": "Name of goods sold",
+    "cook": "Cooked or not",
+    "select": "Please select",
+    "yes": "Cooked",
+    "no": "uncooked",
+    "numberFirstDay": "Estimated number of products to be sold on Day１",
+    "numberSecondDay": "Estimated number of products to be sold on Day２",
+    "firstDay": "Day１",
+    "secondDay": "Day２",
+    "count": "",
+    "sold": "Estimated number",
+    "toBe": "of products to be sold"
+  },
+
+  "Purchase": {
     "registPurchase": "Registration of purchased Products",
     "addPurchase": "Add purchased Products",
     "deletePurchase": "Deletion of purchased Products",
     "editPurchase": "Edit purchased Products",
     "purchase": "purchased Products",
     "target": "Name of food sold",
+    "targetGoods": "Name of products sold",
     "select": "Please select",
     "name": "Material name",
+    "goodsName": "Product name",
     "place": "Place of purchase",
     "date": "Date of purchase",
     "rowFood": "raw or not",
     "yes": "Raw food",
-    "no": "not raw",
+    "no": "Processed food",
     "of": "",
     "parchasePlace1": "Place",
-    "parchasePlace2": "of purchase"
+    "parchasePlace2": "of purchase",
+    "URL": "If you bought it online, please enter the URL"
   },
 
-  "Validate":{
+  "Validate": {
     "type": "Please type",
     "singleEight": "Please enter 8 single-byte numbers.",
     "leastEight": "Please enter at least 8 digits",
@@ -251,7 +316,7 @@
     "select": "Please select"
   },
 
-  "List":{
+  "List": {
     "food": "Food booth (food sales)",
     "goods": "Vendor booth (goods sales)",
     "stage": "Stage Project",

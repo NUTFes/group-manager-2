@@ -27,6 +27,10 @@
             <td>{{ purchaseList.group.name }}</td>
           </tr>
           <tr>
+            <th>購入日</th>
+            <td>{{ purchaseList.purchase_list.purchase_date }}</td>
+          </tr>
+          <tr>
             <th>販売食品</th>
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
           </tr>
@@ -43,12 +47,8 @@
             <td>{{ purchaseList.purchase_list_info.shop }}</td>
           </tr>
           <tr>
-            <th>仕入れ日</th>
-            <td>
-              {{ purchaseList.purchase_list_info.date }} -
-              {{ purchaseList.purchase_list_info.day }} -
-              {{ purchaseList.purchase_list.days_num }}
-            </td>
+            <th>URL</th>
+            <td>{{ purchaseList.purchase_list.url }}</td>
           </tr>
           <tr>
             <th>登録日時</th>
@@ -87,16 +87,7 @@
         </div>
         <div>
           <h3>購入日</h3>
-          <select v-model="fesDateID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in fesDatesList"
-              :key="list.id"
-              :value="list.id"
-            >
-              {{ list.date }}
-            </option>
-          </select>
+          <input v-model="purchase_date" placeholder="入力してください" />
         </div>
         <div>
           <h3>なまものか</h3>
@@ -110,6 +101,10 @@
               {{ list.text }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>ネットで買った場合はURLを記入してください</h3>
+          <input v-model="url" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -157,6 +152,8 @@ export default {
       isFresh: null,
       shopList: [],
       fesDatesList: [],
+      purchase_date: null,
+      url: null,
     };
   },
   async asyncData({ $axios, route }) {
@@ -185,7 +182,9 @@ export default {
       this.items = this.purchaseList.purchase_list.items
       this.shopID = this.purchaseList.purchase_list.shop_id
       this.fesDateID = this.purchaseList.purchase_list.fes_date_id
-      this.isFresh = this.purchaseList.purchase_list.is_fresh
+      this.isFresh = this.purchaseList.purchase_list.isFresh
+      this.purchase_date = this.purchaseList.purchase_list.purchase_date
+      this.url = this.purchaseList.purchase_list.url
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -219,14 +218,14 @@ export default {
         this.purchaseList.purchase_list.food_product_id +
         "&shop_id=" +
         this.shopID +
-        "&fes_date_id=" +
-        this.fesDateID +
+        "&purchase_date=" +
+        this.purchase_date +
         "&items=" +
         this.items +
         "&is_fresh=" + 
-        this.isFresh;
-
-        console.log(url)
+        this.isFresh +
+        "&url=" +
+        this.url;
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.items + "を編集しました");
@@ -234,6 +233,7 @@ export default {
         this.fesDateID = null
         this.shopID = null
         this.isFresh = null
+        this.url = null
         this.reload(response.data.id);
         this.closeEditModal();
       });

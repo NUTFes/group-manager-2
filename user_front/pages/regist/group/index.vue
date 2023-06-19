@@ -65,7 +65,7 @@ const registerCategory = async () => {
     localStorage.setItem("group_id", res.data.id.toString())
     localStorage.setItem("group_category_id", res.data.group_category_id.toString())
   })
-  router.push("/regist/subrep")
+  router.push("/mypage")
 }
 </script>
 
@@ -89,7 +89,7 @@ const registerCategory = async () => {
 
           <div class="flex">
             <p class="label">{{ $t('Group.category') }}</p>
-            <select style="width:180px;" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
+            <select class="w-72" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
               <option v-for="category in groupCategoryList" :value="category.id" :key="category.id">{{ category.name }}
               </option>
@@ -104,7 +104,7 @@ const registerCategory = async () => {
           <div class="error-msg">{{ activityError }}</div>
         </Card>
         <Row>
-          <RegistPageButton :text="$t('Button.reset')" @click="reset"></RegistPageButton>
+          <RegistPageButton :text="$t('Button.reset')" @click="reset" variant="danger"></RegistPageButton>
           <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
@@ -132,5 +132,6 @@ const registerCategory = async () => {
     flex-none
     border-solid
     border-2
+    w-72
 }
 </style>

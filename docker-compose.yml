@@ -6,12 +6,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_ROOT_USER: root
-      MYSQL_USER: group-manager-2 # テスト的にユーザーを作ってみる
       MYSQL_PASSWORD: password
     command: --default-authentication-plugin=mysql_native_password
     ports: ["3306:3306"]
     volumes: [mysql-data:/var/lib/mysql]
-    #platform: linux/x86_64 # M1 Mac用
 
   api:
     build: ./api
@@ -28,7 +26,9 @@ services:
     ports: ["8000:8000"]
     command: npm run dev
     volumes: [./admin_view:/app]
-    environment: [VUE_APP_URL=http://localhost:3000]
+    environment:
+      - VUE_APP_URL=http://localhost:3000
+      - VUE_APP_API_URL=http://api:3000
 
   user_front:
     build: ./user_front

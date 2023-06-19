@@ -27,9 +27,7 @@ interface Stage {
 }
 
 interface StageOrder {
-  stage_order: {
-    stage_order: Stage;
-  };
+  stage_order: Stage;
 }
 
 interface StageOption {
@@ -78,9 +76,7 @@ interface RegistItem {
 }
 
 interface RentalOrder {
-  rental_item: {
-    rental_item: RentalItem;
-  };
+  rental_item: RentalItem;
 }
 
 interface PowerItem {
@@ -121,6 +117,8 @@ interface PurchaseList {
   food_product: string;
   is_fresh: boolean;
   items: string;
+  purchase_date: string;
+  url: string;
   shop_id: number;
   shop: string;
   year: number;
@@ -155,10 +153,10 @@ interface SubRep {
 const registInfo = ref<RegistInfo | []>([]);
 const group = ref<Group>();
 const subRep = ref<SubRep>();
-const rentalOrder = ref<RentalOrder>();
+const rentalOrders = ref<RentalOrder[]>();
 const placeOrder = ref<RegistPlace>();
 const powerOrders = ref<PowerOrder[]>();
-const stageOrder = ref<StageOrder>();
+const stageOrders = ref<StageOrder[]>();
 const stageOption = ref<StageOption>();
 const employee = ref<Employee>();
 const food = ref<Food>();
@@ -188,10 +186,10 @@ onMounted(() => {
       registInfo.value = response.data.data[0];
       group.value = response.data.data[0].group;
       subRep.value = response.data.data[0].sub_rep;
-      rentalOrder.value = response.data.data[0].rental_orders;
+      rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrders.value = response.data.data[0].power_orders;
-      stageOrder.value = response.data.data[0].stage_orders;
+      stageOrders.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
       employee.value = response.data.data[0].employees;
       food.value = response.data.data[0].food_products;
@@ -217,10 +215,10 @@ const reload = () => {
       registInfo.value = response.data.data[0];
       employee.value = response.data.data[0].employees;
       subRep.value = response.data.data[0].sub_rep;
-      rentalOrder.value = response.data.data[0].rental_orders;
+      rentalOrders.value = response.data.data[0].rental_orders;
       placeOrder.value = response.data.data[0].place_order;
       powerOrders.value = response.data.data[0].power_orders;
-      stageOrder.value = response.data.data[0].stage_orders;
+      stageOrders.value = response.data.data[0].stage_orders;
       stageOption.value = response.data.data[0].stage_common_option;
       food.value = response.data.data[0].food_products;
     });
@@ -251,6 +249,11 @@ const openAddPurchase = () => {
   isAddPurchase.value = true;
 };
 
+const isAddStage = ref<boolean>(false);
+const openAddStage = () => {
+  isAddStage.value = true;
+};
+
 const totalPower = computed(() => {
   if (!powerOrders.value) return 0;
   return powerOrders.value.reduce(
@@ -263,6 +266,34 @@ const isOverPower = computed(() => {
   if (!powerOrders.value) return false;
   return totalPower.value > 1500;
 });
+
+const isSamePower = computed(() => {
+  if (!powerOrders.value) return false;
+  return totalPower.value == 1500;
+});
+
+// 物品申請が重複しているかどうか
+const isRentalItemOverlap = computed(() => {
+  if (!rentalOrders.value) return false;
+  const rentalOrder = rentalOrders.value.map((rentalOrder) => {
+    return rentalOrder.rental_item.name;
+  });
+  const rentalOrderSet = new Set(rentalOrder);
+  return rentalOrder.length !== rentalOrderSet.size;
+});
+
+// ステージ申請で日付と天気が重複しているかどうか
+const isStageOverlap = computed(() => {
+  if (!stageOrders.value) return false;
+  const stageOrder = stageOrders.value.map((stageOrder) => {
+    return (
+      stageOrder.stage_order.date + stageOrder.stage_order.stage_order.is_sunny
+    );
+  });
+  console.log(stageOrder);
+  const stageOrderSet = new Set(stageOrder);
+  return stageOrder.length !== stageOrderSet.size;
+});
 </script>
 
 <template>
@@ -270,33 +301,63 @@ const isOverPower = computed(() => {
     <template #tabs>
       <ul class="flex">
         <li @click="tab = 1">
-          <div :class="{ select: tab === 1 }" class="title">副代表申請</div>
+          <div :class="{ select: tab === 1 }" class="title">
+            {{ $t("RegistInfo.subrepresentative") }}
+          </div>
         </li>
         <li v-if="groupCategoryId !== 3" @click="tab = 2">
-          <div :class="{ select: tab === 2 }" class="title">会場申請</div>
+          <div :class="{ select: tab === 2 }" class="title">
+            {{ $t("RegistInfo.place") }}
+          </div>
         </li>
         <li v-if="groupCategoryId === 3" @click="tab = 3">
-          <div :class="{ select: tab === 3 }" class="title">ステージ申請</div>
+          <div :class="{ select: tab === 3 }" class="title">
+            {{ $t("RegistInfo.stage") }}
+          </div>
         </li>
         <li v-if="groupCategoryId === 3" @click="tab = 4">
           <div :class="{ select: tab === 4 }" class="title">
-            ステージオプション申請
+            {{ $t("RegistInfo.stageOption") }}
           </div>
         </li>
         <li @click="tab = 5">
-          <div :class="{ select: tab === 5 }" class="title">電力申請</div>
+          <div :class="{ select: tab === 5 }" class="title">
+            {{ $t("RegistInfo.power") }}
+          </div>
         </li>
         <li @click="tab = 6">
-          <div :class="{ select: tab === 6 }" class="title">物品申請</div>
+          <div :class="{ select: tab === 6 }" class="title">
+            {{ $t("RegistInfo.item") }}
+          </div>
         </li>
         <li @click="tab = 7">
-          <div :class="{ select: tab === 7 }" class="title">従業員申請</div>
+          <div :class="{ select: tab === 7 }" class="title">
+            {{ $t("RegistInfo.employees") }}
+          </div>
         </li>
-        <li @click="tab = 8">
-          <div :class="{ select: tab === 8 }" class="title">食品申請</div>
+        <li
+          v-if="
+            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 6
+          "
+          @click="tab = 8"
+        >
+          <div :class="{ select: tab === 8 }" class="title">
+            {{
+              groupCategoryId === 1
+                ? $t("RegistInfo.food")
+                : $t("RegistInfo.saleGoods")
+            }}
+          </div>
         </li>
-        <li @click="tab = 9">
-          <div :class="{ select: tab === 9 }" class="title">購入品申請</div>
+        <li
+          v-if="
+            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5 && groupCategoryId != 6
+          "
+          @click="tab = 9"
+        >
+          <div :class="{ select: tab === 9 }" class="title">
+            {{ $t("RegistInfo.purchase") }}
+          </div>
         </li>
       </ul>
     </template>
@@ -321,6 +382,11 @@ const isOverPower = computed(() => {
 
         <!-- 会場申請 group_category_id !== ３ -->
         <div v-show="tab === 2">
+          <div class="mb-4">
+            <div class="text-xl flex gap-3">
+              <p>{{ $t("RegistInfo.placeMessage") }}</p>
+            </div>
+          </div>
           <div class="mb-4">
             <RegistInfoCardPlace
               :id="placeOrder?.place_order.id"
@@ -354,25 +420,40 @@ const isOverPower = computed(() => {
         </div>
 
         <!-- ステージ申請 group_category_id === ３ -->
-        <div
-          class="mb-8"
-          v-show="tab === 3"
-          v-for="s in stageOrder"
-          :key="s.toString()"
-        >
-          <RegistInfoCardStage
+        <div v-show="tab === 3" class="flex flex-col gap-4">
+          <div v-if="isStageOverlap" class="text-red-500">
+            <p>{{ $t("Place.overlapPlace") }}</p>
+          </div>
+          <Button
+            v-if="!isStageOverlap"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddStage()"
+          />
+          <div>
+            <div class="mb-8" v-for="s in stageOrders" :key="s.toString()">
+              <div>
+                <RegistInfoCardStage
+                  :group-id="group?.id"
+                  :id="s.stage_order.stage_order.id"
+                  :date="s.stage_order.date"
+                  :fes-date-id="s.stage_order.stage_order.fes_date_id"
+                  :first-stage="s.stage_order.stage_first"
+                  :first-id="s.stage_order.stage_order.stage_first"
+                  :second-stage="s.stage_order.stage_second"
+                  :second-id="s.stage_order.stage_order.stage_second"
+                  :is-sunny="s.stage_order.stage_order.is_sunny"
+                  :cleanup-time-interval="s.stage_order.cleanup_time_interval"
+                  :use-time-interval="s.stage_order.use_time_interval"
+                  :prepare-time-interval="s.stage_order.prepare_time_interval"
+                  @reload-stage="reload"
+                />
+              </div>
+            </div>
+          </div>
+          <RegistInfoAddStage
+            v-if="isAddStage"
+            v-model:add-stage="isAddStage"
             :group-id="group?.id"
-            :id="s.stage_order.stage_order.id"
-            :date="s.stage_order.date"
-            :fes-date-id="s.stage_order.stage_order.fes_date_id"
-            :first-stage="s.stage_order.stage_first"
-            :first-id="s.stage_order.stage_order.stage_first"
-            :second-stage="s.stage_order.stage_second"
-            :second-id="s.stage_order.stage_order.stage_second"
-            :is-sunny="s.stage_order.stage_order.is_sunny"
-            :cleanup-time-interval="s.stage_order.cleanup_time_interval"
-            :use-time-interval="s.stage_order.use_time_interval"
-            :prepare-time-interval="s.stage_order.prepare_time_interval"
             @reload-stage="reload"
           />
         </div>
@@ -393,17 +474,25 @@ const isOverPower = computed(() => {
 
         <!-- 電力申請 -->
         <div v-show="tab === 5">
+          <Button
+            v-if="!isOverPower && !isSamePower"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddPower()"
+          />
           <!-- 電力の合計を計算して表示する -->
           <div class="mb-4">
             <div class="text-xl flex gap-3">
-              <p>電力の合計</p>
+              <p>{{ $t("Power.total") }}</p>
               <p>{{ totalPower }} [W]</p>
             </div>
-            <p v-if="isOverPower" class="text-red-500">
-              電力の合計が<span class="font-bold">1500[W]</span>を超えています
+            <p v-if="isSamePower" class="text-gray-500">
+              {{ $t("Power.isSamePower") }}<span class="font-bold">1500[W]</span>
+            </p>
+            <p v-else-if="isOverPower" class="text-red-500">
+              {{ $t("Power.isOverPower") }}<span class="font-bold">1500[W]</span>
             </p>
             <p v-else class="text-gray-500">
-              電力の合計は<span class="font-bold">1500[W]</span>に収めてください
+              {{ $t("Power.isElse") }}<span class="font-bold">1500[W]</span>
             </p>
           </div>
           <div class="mb-8" v-for="p in powerOrders" :key="p.toString()">
@@ -418,7 +507,6 @@ const isOverPower = computed(() => {
               @reload-power="reload"
             />
           </div>
-          <Button v-if="!isOverPower" class="text-right" @click="openAddPower()" />
           <RegistInfoAddPower
             v-if="isAddPower"
             v-model:add-power="isAddPower"
@@ -428,17 +516,30 @@ const isOverPower = computed(() => {
         </div>
 
         <!-- 物品申請 -->
-        <div v-show="tab === 6" class="flex flex-wrap">
-          <div v-for="item in rentalOrder" :key="item.toString()">
-            <RegistInfoCardItem
-              :group-id="group?.id"
-              :regist="item.rental_item.rental_item"
-              :name="item.rental_item.name"
-              :num="item.rental_item.num"
-              @reload-item="reload"
-            />
+        <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <Button
+            v-if="!isRentalItemOverlap"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddItem()"
+          />
+          <div v-if="isRentalItemOverlap" class="text-red-500">
+            <p>{{ $t("Item.overlapItem") }}</p>
           </div>
-          <Button class="ml-auto" @click="openAddItem()" />
+          <div class="flex flex-wrap gap-4">
+            <div
+              class="w-fit"
+              v-for="item in rentalOrders"
+              :key="item.toString()"
+            >
+              <RegistInfoCardItem
+                :group-id="group?.id"
+                :regist="item.rental_item.rental_item"
+                :name="item.rental_item.name"
+                :num="item.rental_item.num"
+                @reload-item="reload"
+              />
+            </div>
+          </div>
           <RegistInfoAddItem
             v-if="isAddItem"
             v-model:add-item="isAddItem"
@@ -448,17 +549,22 @@ const isOverPower = computed(() => {
         </div>
 
         <!-- 従業員申請 -->
-        <div v-show="tab === 7" class="flex flex-wrap">
-          <div v-for="e in employee" :key="e.toString()">
-            <RegistInfoCardEmployee
-              :group-id="group?.id"
-              :id="e.employee.id"
-              :name="e.employee.name"
-              :student-id="e.employee.student_id"
-              @reload-employee="reload"
-            />
+        <div v-show="tab === 7" class="flex flex-wrap flex-col">
+          <Button
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddEmployee()"
+          />
+          <div class="mt--9 flex flex-wrap gap-4">
+            <div class="w-fit" v-for="e in employee" :key="e.toString()">
+              <RegistInfoCardEmployee
+                :group-id="group?.id"
+                :id="e.employee.id"
+                :name="e.employee.name"
+                :student-id="e.employee.student_id"
+                @reload-employee="reload"
+              />
+            </div>
           </div>
-          <Button class="ml-auto" @click="openAddEmployee()" />
           <RegistInfoAddEmployee
             v-if="isAddEmployee"
             v-model:add-employee="isAddEmployee"
@@ -469,6 +575,10 @@ const isOverPower = computed(() => {
 
         <!-- 販売食品申請 -->
         <div v-show="tab === 8">
+          <Button
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddFood()"
+          />
           <div class="mb-8" v-for="f in food" :key="f.toString()">
             <RegistInfoCardFood
               :group-id="group?.id"
@@ -477,20 +587,25 @@ const isOverPower = computed(() => {
               :is-cooking="f.food_product.is_cooking"
               :firstNum="f.food_product.first_day_num"
               :secondNum="f.food_product.second_day_num"
+              :groupCategoryId="groupCategoryId ? groupCategoryId : 0"
               @reload-food="reload"
             />
           </div>
-          <Button class="text-right" @click="openAddFood()" />
           <RegistInfoAddFood
             v-if="isAddFood"
             v-model:add-food="isAddFood"
             :group-id="group?.id"
+            :groupCategoryId="groupCategoryId ? groupCategoryId : 0"
             @reload-food="reload"
           />
         </div>
 
         <!-- 購入品申請 -->
         <div v-show="tab === 9">
+          <Button
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddPurchase()"
+          />
           <div v-for="f in food" :key="f.toString()">
             <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
               <RegistInfoCardPurchase
@@ -503,15 +618,18 @@ const isOverPower = computed(() => {
                 :name="p.purchase_list.items"
                 :is-fresh="p.purchase_list.is_fresh"
                 :fes-date-id="p.purchase_list.date_id"
+                :purchase-date="p.purchase_list.purchase_date"
+                :url="p.purchase_list.url"
+                :group-category-id="groupCategoryId ? groupCategoryId : 0"
                 @reload-purchase="reload"
               />
             </div>
           </div>
-          <Button class="text-right" @click="openAddPurchase()" />
           <RegistInfoAddPurchase
             v-if="isAddPurchase"
             v-model:add-purchase="isAddPurchase"
             :group-id="group?.id"
+            :group-category-id="groupCategoryId ? groupCategoryId : 0"
             @reload-purchase="reload"
           />
         </div>

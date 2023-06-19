@@ -1,7 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="物品一覧">
-      <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).places.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
     </SubHeader>
@@ -25,32 +29,34 @@
           >
             <td>{{ rentalItem.id }}</td>
             <td>{{ rentalItem.name }}</td>
-            <td>{{ rentalItem.is_shop_rentable }}</td>
+            <td>{{ rentalItem.is_inside_shop_rentable }}</td>
+            <td>{{ rentalItem.is_outside_shop_rentable }}</td>
             <td>{{ rentalItem.is_stage_rentable }}</td>
           </tr>
         </template>
       </Table>
     </Card>
 
-    <AddModal
-      @close="closeAddModal"
-      v-if="isOpenAddModal"
-      title="物品の追加"
-    >
+    <AddModal @close="closeAddModal" v-if="isOpenAddModal" title="物品の追加">
       <template v-slot:form>
         <div>
           <h3>物品名</h3>
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>模擬店貸出可否</h3>
-          <select v-model="isShopRentable">
+          <h3>屋内模擬店貸出可否</h3>
+          <select v-model="isInsideShopRentable">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="r in isRentableList"
-              :key="r"
-              :value="r.value"
-            >
+            <option v-for="r in isRentableList" :key="r" :value="r.value">
+              {{ r.text }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>屋外模擬店貸出可否</h3>
+          <select v-model="isOutsideShopRentable">
+            <option disabled value="">選択してください</option>
+            <option v-for="r in isRentableList" :key="r" :value="r.value">
               {{ r.text }}
             </option>
           </select>
@@ -59,11 +65,7 @@
           <h3>ステージ貸出可否</h3>
           <select v-model="isStageRentable">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="r in isRentableList"
-              :key="r"
-              :value="r.value"
-            >
+            <option v-for="r in isRentableList" :key="r" :value="r.value">
               {{ r.text }}
             </option>
           </select>
@@ -75,13 +77,9 @@
         >
       </template>
     </AddModal>
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -90,7 +88,13 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      headers: ["ID", "名前", "模擬店貸出", "ステージ貸出"],
+      headers: [
+        "ID",
+        "名前",
+        "屋内模擬店貸出",
+        "屋外模擬店貸出",
+        "ステージ貸出",
+      ],
       isRentableList: [
         { text: "貸出可能", value: true },
         { text: "貸出不可能", value: false },
@@ -142,15 +146,18 @@ export default {
         "/rental_items/" +
         "?name=" +
         this.name +
-        "&is_shop_rentable=" +
-        this.isShopRentable +
+        "&is_inside_shop_rentable=" +
+        this.isInsideShopRentable +
+        "&is_outside_shop_rentable=" +
+        this.isOutsideShopRentable +
         "&is_stage_rentable=" +
-        this.isStageRentable
+        this.isStageRentable;
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
-        this.isShopRentable = "";
+        this.isInsideShopRentable = "";
+        this.isOutsideShopRentable = "";
         this.isStageRentable = "";
         this.reload(response.data.id);
         this.closeAddModal();

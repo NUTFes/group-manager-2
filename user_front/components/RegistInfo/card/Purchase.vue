@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-
 interface Props {
-  id: number
-  groupId: number
-  foodProductId: number | null
-  foodProduct: string | null
-  shopId: number | null
-  shop: string | null
-  fesDateId: number | null
-  name: string
-  isFresh: boolean
-  setting: boolean | null
+  id: number;
+  groupId: number;
+  foodProductId: number | null;
+  foodProduct: string | null;
+  shopId: number | null;
+  shop: string | null;
+  fesDateId: number | null;
+  purchaseDate: string | null;
+  url: string | null;
+  name: string;
+  isFresh: boolean;
+  setting: boolean | null;
+  groupCategoryId: number;
 }
 const purchase = withDefaults(defineProps<Props>(), {
   id: 0,
@@ -20,58 +22,70 @@ const purchase = withDefaults(defineProps<Props>(), {
   shopId: null,
   shop: null,
   fesDateId: null,
-  name: '',
+  purchaseDate: "",
+  url: "",
+  name: "",
   isFresh: false,
   setting: null,
-})
+  groupCategoryId: 0,
+});
 
 interface Emits {
-  (e: 'reloadPurchase', v: null): void
+  (e: "reloadPurchase", v: null): void;
 }
-const emits = defineEmits<Emits>()
+const emits = defineEmits<Emits>();
 const reloadPurchase = () => {
-  emits('reloadPurchase', null)
-}
+  emits("reloadPurchase", null);
+};
 
-const isEditPurchase = ref<boolean>(false)
-const isDeletePurchase = ref<boolean>(false)
+const isEditPurchase = ref<boolean>(false);
+const isDeletePurchase = ref<boolean>(false);
 
 const openEditPurchase = () => {
-  isEditPurchase.value = true
-}
+  isEditPurchase.value = true;
+};
 const openDeletePurchase = () => {
-  isDeletePurchase.value = true
-}
-
+  isDeletePurchase.value = true;
+};
 </script>
 <template>
   <RegistInfoWideCard>
     <template #body>
       <div class="w-[10%] mx-4 text-center text-2xl">
-        <span>購入品</span>
+        <span>{{ $t("Purchase.purchase") }}</span>
       </div>
       ▸
       <div class="w-[20%] ml-4 text-3xl text-center">
-        <div class="mr-1 my-1 text-xl">
-          <span class="underline">{{ purchase.foodProduct }}</span>の
+        <div class="flex justify-center">
+          <div class="mr-1 my-1 text-xl truncate hover:text-clip">
+            <span class="underline">{{ purchase.foodProduct }}</span
+            >
+          </div>
+          <div class="mt-3 text-sm">の</div>
         </div>
-        <div class="mr-1">
+        <div class="mr-1 truncate hover:text-clip">
           {{ purchase.name }}
         </div>
       </div>
       <RegistInfoDivideBar />
-       <div class="w-[10%] text-center text-2xl">
-          <span>購入<br>場所</span>
-        </div>
+      <div class="w-[10%] text-center text-2xl">
+        <span
+          >{{ $t("Purchase.parchasePlace1") }}<br />{{
+            $t("Purchase.parchasePlace2")
+          }}</span
+        >
+      </div>
       ▸
-      <div class="w-[20%] mx-4 text-3xl text-center">
+      <div class="w-[20%] mx-4 text-2xl text-center">
         <div class="mr-1 text-center">
           {{ purchase.shop }}
         </div>
       </div>
-      <RegistInfoDivideBar />
-      <div class="w-[10%] text-center mr-4">
-        <p class="text-3xl">{{ purchase.isFresh ? '生もの' : '加工品' }}</p>
+      <RegistInfoDivideBar v-if="groupCategoryId === 1" />
+      <div class="w-[10%] text-center mr-4" v-if="groupCategoryId === 1">
+        <p class="text-3xl">
+          {{ purchase.isFresh ? $t("Purchase.yes") : $t("Purchase.no") }}
+        </p>
       </div>
     </template>
     <template #method>
@@ -93,8 +107,11 @@ const openDeletePurchase = () => {
     :shop-id="shopId"
     :shop="shop"
     :fes-date-id="fesDateId"
+    :purchase-date="purchaseDate"
+    :url="url"
     :name="name"
     :is-fresh="isFresh"
+    :group-category-id="groupCategoryId"
     @reload-purchase="reloadPurchase"
   />
   <RegistInfoDeletePurchase
@@ -102,5 +119,5 @@ const openDeletePurchase = () => {
     v-model:delete-Purchase="isDeletePurchase"
     :id="id"
     @reload-purchase="reloadPurchase"
-    />
+  />
 </template>

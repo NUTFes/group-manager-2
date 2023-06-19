@@ -1,9 +1,10 @@
 export const groupCategoryList: { id: number; name: string }[] = [
-  { id: 1, name: "模擬店(食品販売)" },
-  { id: 2, name: "模擬店(物品販売)" },
-  { id: 3, name: "ステージ企画" },
-  { id: 4, name: "展示・体験" },
-  { id: 5, name: "研究室公開" },
+  { id: 1, name: "模擬店(食品販売):Food stalls" },
+  { id: 2, name: "模擬店(物品販売):Groups selling goods" },
+  { id: 3, name: "ステージ企画:Stage Groups" },
+  { id: 4, name: "展示・体験:Exhibitions and hands-on groups" },
+  { id: 5, name: "研究室公開:Laboratory open house" },
+  { id: 6, name: "その他:organizations other than formal" },
 ];
 
 export const gradeList: { id: number; name: string }[] = [
@@ -21,28 +22,79 @@ export const gradeList: { id: number; name: string }[] = [
   { id: 12, name: "GD3[イノベ3年]" },
   { id: 13, name: "GD4[イノベ4年]" },
   { id: 14, name: "GD4[イノベ5年]" },
-  { id: 15, name: "その他" },
+  { id: 15, name: "教員:university staff" },
+  { id: 16, name: "その他:other" },
 ];
 
 export const departmentList: { id: number; name: string }[] = [
-  { id: 1, name: "機械創造工学課程" },
-  { id: 2, name: "電気電子情報工学課程" },
-  { id: 3, name: "物質材料工学課程" },
-  { id: 4, name: "環境社会基盤工学課程" },
-  { id: 5, name: "生物機能工学課程" },
-  { id: 6, name: "情報・経営システム工学課程" },
-  { id: 7, name: "機械創造工学専攻" },
-  { id: 8, name: "電気電子情報工学専攻" },
-  { id: 9, name: "物質材料工学専攻" },
-  { id: 10, name: "環境社会基盤工学専攻" },
-  { id: 11, name: "生物機能工学専攻" },
-  { id: 12, name: "情報・経営システム工学専攻" },
-  { id: 13, name: "原子力システム安全工学専攻" },
-  { id: 14, name: "システム安全専攻" },
-  { id: 15, name: "技術科学イノベーション専攻" },
-  { id: 16, name: "情報・制御工学専攻" },
-  { id: 17, name: "材料工学専攻" },
-  { id: 18, name: "エネルギー・環境工学専攻" },
-  { id: 19, name: "生物統合工学専攻" },
-  { id: 20, name: "その他" },
+  { id: 1, name: "機械工学分野:Mechanical Engineering" },
+  { id: 2, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
+  { id: 3, name: "物質生物工学分野:Materials Science and Technology" },
+  { id: 4, name: "環境社会基盤工学分野:Civil and Environmental Engineering" },
+  { id: 5, name: "情報・経営システム工学分野:Information and Management Systems Engineering" },
+  { id: 6, name: "機械工学分野:Mechanical Engineering" },
+  { id: 7, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
+  { id: 8, name: "物質生物工学分野:Materials Science and Technology" },
+  { id: 9, name: "環境社会基盤工学分野:Civil and Environmental Engineering" },
+  { id: 10, name: "情報・経営システム工学分野:Information and Management Systems Engineering" },
+  { id: 11, name: "量子・原子力統合工学分野:Integrated Quantum and Nuclear Engineering" },
+  { id: 12, name: "システム安全工学専攻:System Safety Engineering" },
+  { id: 13, name: "技術科学イノベーション専攻:GIGAKU Innovation Group" },
+  { id: 14, name: "情報・制御工学分野:Information Science and Control Engineering" },
+  { id: 15, name: "材料工学分野:Materials Science" },
+  { id: 16, name: "エネルギー工学分野:Energy Engineering" },
+  { id: 17, name: "社会環境・生物機能工学分野:Integrated Bioscience and Technology" },
+  { id: 18, name: "その他:other" },
+]
+
+export const B1AndOtherGradeDepartmentList: { id: number; name: string }[] = [
+  { id: 18, name: "その他:other" },
+];
+
+export const B2toB4GradeDepartmentList: { id: number; name: string }[] = [
+  { id: 1, name: "機械工学分野:Mechanical Engineering" },
+  { id: 2, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
+  { id: 3, name: "物質生物工学分野:Materials Science and Technology" },
+  { id: 4, name: "環境社会基盤工学分野:Civil and Environmental Engineering" },
+  { id: 5, name: "情報・経営システム工学分野:Information and Management Systems Engineering" },
+];
+
+export const M1toM2GradeDepartmentList: { id: number; name: string }[] = [
+  { id: 6, name: "機械工学分野:Mechanical Engineering" },
+  { id: 7, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
+  { id: 8, name: "物質生物工学分野:Materials Science and Technology" },
+  { id: 9, name: "環境社会基盤工学分野:Civil and Environmental Engineering" },
+  { id: 10, name: "情報・経営システム工学分野:Information and Management Systems Engineering" },
+  { id: 11, name: "量子・原子力統合工学分野:Integrated Quantum and Nuclear Engineering" },
+  { id: 12, name: "システム安全工学専攻:System Safety Engineering" },
+];
+
+export const D1toD3GradeDepartmentList: { id: number; name: string }[] = [
+  { id: 14, name: "情報・制御工学分野:Information Science and Control Engineering" },
+  { id: 15, name: "材料工学分野:Materials Science" },
+  { id: 16, name: "エネルギー工学分野:Energy Engineering" },
+  { id: 17, name: "社会環境・生物機能工学分野:Integrated Bioscience and Technology" },
+];
+
+export const GDGradeDepartmentList: { id: number; name: string }[] = [
+  { id: 13, name: "技術科学イノベーション専攻:GIGAKU Innovation Group" },
+];
+
+export const GradeWithDepartmentList: { id: number; departmentList: { id: number; name: string }[] }[] = [
+  { id: 1, departmentList: B1AndOtherGradeDepartmentList },
+  { id: 2, departmentList: B2toB4GradeDepartmentList },
+  { id: 3, departmentList: B2toB4GradeDepartmentList },
+  { id: 4, departmentList: B2toB4GradeDepartmentList },
+  { id: 5, departmentList: M1toM2GradeDepartmentList },
+  { id: 6, departmentList: M1toM2GradeDepartmentList },
+  { id: 7, departmentList: D1toD3GradeDepartmentList },
+  { id: 8, departmentList: D1toD3GradeDepartmentList },
+  { id: 9, departmentList: D1toD3GradeDepartmentList },
+  { id: 10, departmentList: GDGradeDepartmentList },
+  { id: 11, departmentList: GDGradeDepartmentList },
+  { id: 12, departmentList: GDGradeDepartmentList },
+  { id: 13, departmentList: GDGradeDepartmentList },
+  { id: 14, departmentList: GDGradeDepartmentList },
+  { id: 15, departmentList: departmentList },
+  { id: 16, departmentList: B1AndOtherGradeDepartmentList },
 ];

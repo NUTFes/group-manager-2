@@ -42,25 +42,25 @@ const openDeletePower = () => {
   <div class="tracking-widest font-light">
     <RegistInfoWideCard>
       <template #body>
-        <div class="w-[37%] text-center pl-8 text-5xl font-light">
+        <div class="w-[37%] text-center pl-8 text-4xl font-light truncate hover:text-clip">
         {{ props.item }}
       </div>
       <RegistInfoDivideBar />
-      <div class="flex w-28 justify-end m-4 text-center">
-        <div class="text-6xl font-light">{{ props.power }}</div>
+      <div class="flex w-28 justify-end m-4 text-center ml-8">
+        <div class="text-5xl font-light">{{ props.power }}</div>
         <div class="mt-12 font-light text-ms">[W]</div>
       </div>
       <RegistInfoDivideBar />
       <div>
         <div class="flex items-center text-lg">
-          <div class="w-20 ">メーカー</div>
+          <div class="w-20">{{ $t('Power.maker') }}</div>
           <RegistInfoTriangle />
-          <div class="w-32 ">{{ props.manufacturer }}</div>
+          <div class="w-40 truncate hover:text-clip">{{ props.manufacturer }}</div>
         </div>
         <div class="flex items-center">
-          <div class="w-20 h-6">型番</div>
+          <div class="w-20 h-6 ">{{ $t('Power.model') }}</div>
           <RegistInfoTriangle />
-          <div class="w-32 break-normal">{{ props.model }}</div>
+          <div class="w-40 break-normal truncate hover:text-clip">{{ props.model }}</div>
         </div>
       </div>
     </template>

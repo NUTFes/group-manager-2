@@ -31,9 +31,17 @@ export default defineNuxtConfig( {
     public: {
       baseURL: process.env.VUE_APP_URL,
       APIURL: process.env.VUE_APP_API_URL,
+      IMGUR_CLIENT_ID: process.env.NUXT_IMGUR_CLIENT_ID,
+      IMGUR_CLIENT_SECRET: process.env.NUXT_IMGUR_CLIENT_SECRET,
     },
   },
 
   modules: ['@nuxtjs/tailwindcss'],
-  css: ["@/assets/tailwind.css"]
+  css: ["@/assets/tailwind.css"],
+
+  app: {
+    head: {
+      title: "参加団体管理アプリ"
+    },
+  },
 })

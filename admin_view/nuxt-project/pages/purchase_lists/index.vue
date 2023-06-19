@@ -62,6 +62,7 @@
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
             <td>{{ purchaseList.purchase_list.items }}</td>
             <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td>{{ purchaseList.purchase_list.url }}</td>
           </tr>
         </template>
       </Table>
@@ -118,16 +119,7 @@
         </div>
         <div>
           <h3>購入日</h3>
-          <select v-model="fesDateID">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="list in fesDatesList"
-              :key="list.id"
-              :value="list.id"
-            >
-              {{ list.date }}
-            </option>
-          </select>
+          <input v-model="purchase_date" placeholder="入力してください" />
         </div>
         <div>
           <h3>なまものか</h3>
@@ -141,6 +133,10 @@
               {{ list.text }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>ネットで買った場合はURLを記入してください</h3>
+          <input v-model="url" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -170,6 +166,7 @@ export default {
         "販売食品",
         "購入品",
         "なまもの",
+        "URL"
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,
@@ -192,7 +189,9 @@ export default {
       items: null,
       shopID: null,
       fesDateID: null,
+      purchase_date: null,
       isFresh: null,
+      url: null,
     };
   },
   async asyncData({ $axios }) {
@@ -292,7 +291,7 @@ export default {
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
-    reload(id) {
+    async reload(id) {
       const url = "/api/v1/get_purchase_list_show_for_admin_view/" + id;
       this.$axios.$get(url).then((response) => {
         this.purchaseLists.push(response.data);
@@ -303,14 +302,17 @@ export default {
         "/purchase_lists" +
         "?food_product_id=" + 
         this.foodProductID +
+        "&fes_date_id=1" + 
         "&shop_id=" +
         this.shopID +
-        "&fes_date_id=" +
-        this.fesDateID +
         "&items=" +
         this.items +
         "&is_fresh=" + 
-        this.isFresh;
+        this.isFresh +
+        "&purchase_date=" +
+        this.purchase_date +
+        "&url=" + 
+        this.url;
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(this.items + "を追加しました");
@@ -319,6 +321,8 @@ export default {
         this.foodProductID = null
         this.shopID = null
         this.isFresh = null
+        this.purchase_date = null
+        this.url = null
         this.reload(response.data.id);
         this.closeAddModal();
       });

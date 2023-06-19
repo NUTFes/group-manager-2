@@ -52,7 +52,7 @@ const openDeleteItem = () => {
         <span class="text-5xl">
           {{ item.num }}
         </span>
-        <span class="text-2xl">個</span>
+        <span class="text-2xl">{{ $t('Item.count') }}</span>
       </div>
       <div class="absolute right-4 bottom-2">
         <div class="my-2">

@@ -167,4 +167,10 @@ export const managerRole = {
     update: false,
     delete: false,
   },
-}
+  announcements: {
+    read: true,
+    create: false,
+    update: false,
+    delete: false,
+  },
+};

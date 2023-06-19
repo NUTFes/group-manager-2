@@ -46,6 +46,6 @@ class PurchaseListsController < ApplicationController
     end
     # Only allow a list of trusted parameters through.
     def purchase_list_params
-      params.permit(:food_product_id, :shop_id, :fes_date_id, :items, :is_fresh)
+      params.permit(:food_product_id, :shop_id, :fes_date_id, :items, :is_fresh, :purchase_date, :url)
     end
 end

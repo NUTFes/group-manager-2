@@ -34,7 +34,7 @@ const deleteEmployee = async () => {
 </script>
 
 <template>
-  <Modal title="従業員申請の削除">
+  <Modal :title="$t('Employees.deleteEmployees')">
     <template #close>
       <div class="flex justify-end">
         <button @click="closeDeleteEmployee()" class="hover:text-black hover:opacity-75"
@@ -43,8 +43,8 @@ const deleteEmployee = async () => {
     </template>
     <template #form>
       <div class="flex justify-around mx-8 mt-4">
-        <RegistPageButton text="戻る" @click="closeDeleteEmployee()"></RegistPageButton>
-        <RegistPageButton text="✓削除" @click="deleteEmployee()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.return')" @click="closeDeleteEmployee()"></RegistPageButton>
+        <RegistPageButton :text="$t('Button.delete')" @click="deleteEmployee()"></RegistPageButton>
       </div>
     </template>
   </Modal>

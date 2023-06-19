@@ -19,7 +19,8 @@ class PlaceOrder < ApplicationRecord
       return {
         "place_order": place_order,
         "place_order_name": place_order.to_place_name_h,
-        "group": place_order.group
+        "group": place_order.group,
+        "venue_map": place_order.group.venue_map 
       }
     end
 

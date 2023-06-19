@@ -1,75 +1,43 @@
 <script lang="ts" setup>
-import {News} from '@/types'
+import { News } from "@/types";
 
 const config = useRuntimeConfig();
-const state = reactive(
-  {
-    title: '',
-    body: '',
-    updateDate: '',
-  }
-);
-onMounted(async()=>{
-  const news = await $fetch<News[]>(config.APIURL + "/news");
-  state.title = news[0].title;
-  state.body = news[0].body;
-  state.updateDate = new Date(news[0].updated_at).toLocaleDateString('ja-JP');
-})
+const state = reactive({
+  // title: "",
+  // body: "",
+  news: [] as News[],
+  updateDate: [] as string[],
+});
 
+onMounted(async () => {
+  const news = await $fetch<News[]>(config.APIURL + "/news");
+  state.news = news;
+
+  news.forEach((newsItem) => {
+    const date = new Date(newsItem.updated_at);
+    state.updateDate.push(date.toLocaleDateString("ja-JP"));
+  });
+});
 </script>
 
 <template>
-  <div class="news-card">
-    <div class="news-header">
-      <span>{{ $t('Mypage.notice') }}</span>
+  <div class="w-full rounded-md border-slate-300 border">
+    <div class="text-slate-900 text-2xl font-bold p-2 bg-slate-200">
+      <p>{{ $t("Mypage.notice") }}</p>
     </div>
-    <div class="news-content">
-      <div class="news-title">{{ state.title }}</div>
-      <div class="news-body">{{ state.body }}</div>
-      <div class="news-date">{{ $t('Mypage.updateDate') }}： {{ state.updateDate }}</div>
+    <div
+      class="text-slate-800 flex flex-col gap-4 p-4"
+      style="max-height: 300px; overflow-y: auto"
+    >
+      <div v-for="(newsItem, i) in state.news" class="flex flex-col gap-2">
+        <div class="flex flex-row items-center gap-2 border-b">
+          <p class="text-xl">{{ newsItem.title }}</p>
+          <p class="text-xs">{{ state.updateDate[i] }}</p>
+        </div>
+        <div class="bg-slate-200 p-2 rounded-md">
+          <p class="text-lg">{{ newsItem.body }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
-<style>
-  .news-card {
-    border-radius: 5px;
-    width: 1000px;
-  }
-
-  .news-header {
-    color: #333333;
-    font-size: 24px;
-    font-weight: bold;
-    background-color: #eceff1;
-    padding: 1% 1% 1% 2%;
-  }
-
-  .news-content {
-    background-color: #ffffff;
-    border-left: solid 1px #d3d3d3;
-    border-right: solid 1px #d3d3d3;
-    border-bottom: solid 1px #d3d3d3;
-    border-top: solid 1px #d3d3d3;
-    padding: 1% 1% 1% 2%;
-  }
-
-  .news-title {
-    font-size: 18px;
-    color: #333333;
-    font-weight: bold;
-  }
-
-  .news-body {
-    font-size: 16px;
-    background-color: #f5f5f5;
-    margin-top: 1%;
-    padding: 1% 1% 1% 1%;
-  }
-
-  .news-date {
-    font-size: 12px;
-    text-align: right;
-    margin-top: 1%;
-  }
-</style>

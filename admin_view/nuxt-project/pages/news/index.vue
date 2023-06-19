@@ -78,7 +78,7 @@ export default {
   },
   async asyncData({ $axios }) {
     const newsUrl = "/news";
-    const newsRes = await $axios.$get(newsUrl);
+    const newsRes = await $axios.get(newsUrl);
     return {
       news: newsRes.data,
     };

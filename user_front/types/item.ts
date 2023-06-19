@@ -3,7 +3,8 @@ interface Item {
   message: string;
   id: number;
   name: string;
-  is_shop_rentable: boolean;
+  is_inside_shop_rentable: boolean;
+  is_outside_shop_rentable: boolean;
   created_at: string;
   updated_at: string;
 }

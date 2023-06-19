@@ -1,10 +1,18 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="rentalItem.name" pageSubTitle="物品一覧">
-      <CommonButton v-if="this.$role(this.roleID).rental_items.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).rental_items.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).rental_items.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).rental_items.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -23,8 +31,12 @@
             <td>{{ rentalItem.name }}</td>
           </tr>
           <tr>
-            <th>模擬店貸し出し</th>
-            <td>{{ rentalItem.is_shop_rentable }}</td>
+            <th>屋内模擬店貸し出し</th>
+            <td>{{ rentalItem.is_inside_shop_rentable }}</td>
+          </tr>
+          <tr>
+            <th>屋外店貸し出し</th>
+            <td>{{ rentalItem.is_outside_shop_rentable }}</td>
           </tr>
           <tr>
             <th>ステージ貸し出し</th>
@@ -53,14 +65,19 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>模擬店貸出可否</h3>
-          <select v-model="isShopRentable">
+          <h3>屋内模擬店貸出可否</h3>
+          <select v-model="isInsideShopRentable">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="r in isRentableList"
-              :key="r"
-              :value="r.value"
-            >
+            <option v-for="r in isRentableList" :key="r" :value="r.value">
+              {{ r.text }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <h3>屋外模擬店貸出可否</h3>
+          <select v-model="isOutsideShopRentable">
+            <option disabled value="">選択してください</option>
+            <option v-for="r in isRentableList" :key="r" :value="r.value">
               {{ r.text }}
             </option>
           </select>
@@ -69,11 +86,7 @@
           <h3>ステージ貸出可否</h3>
           <select v-model="isStageRentable">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="r in isRentableList"
-              :key="r"
-              :value="r.value"
-            >
+            <option v-for="r in isRentableList" :key="r" :value="r.value">
               {{ r.text }}
             </option>
           </select>
@@ -96,13 +109,9 @@
         >
       </template>
     </DeleteModal>
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
-
   </div>
 </template>
 
@@ -139,9 +148,10 @@ export default {
   },
   methods: {
     openEditModal() {
-      this.name = this.rentalItem.name
-      this.isShopRentable = this.rentalItem.is_shop_rentable
-      this.isStageRentable = this.rentalItem.is_stage_rentable
+      this.name = this.rentalItem.name;
+      this.isInsideShopRentable = this.rentalItem.is_inside_shop_rentable;
+      this.isOutsideShopRentable = this.rentalItem.is_outside_shop_rentable;
+      this.isStageRentable = this.rentalItem.is_stage_rentable;
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -164,28 +174,30 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload(id) {
-      const url = "/rental_items/" + id
+      const url = "/rental_items/" + id;
       const res = await this.$axios.$get(url);
       this.rentalItem = res.data;
     },
     async edit() {
       const url =
         "/rental_items/" +
-        this.routeId + 
+        this.routeId +
         "?name=" +
         this.name +
-        "&is_shop_rentable=" +
-        this.isShopRentable + 
+        "&is_inside_shop_rentable=" +
+        this.isInsideShopRentable +
+        "&is_outside_shop_rentable=" +
+        this.isOutsideShopRentable +
         "&is_stage_rentable=" +
-        this.isStageRentable
+        this.isStageRentable;
 
-      console.log(url)
-
+      console.log(url);
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(response.data.name + "を編集しました");
         this.name = "";
-        this.isShopRentable = "";
+        this.isInsideShopRentable = "";
+        this.isOutsideShopRentable = "";
         this.isStageRentable = "";
         this.reload(response.data.id);
         this.closeEditModal();
