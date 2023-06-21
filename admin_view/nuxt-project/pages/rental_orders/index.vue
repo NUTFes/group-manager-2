@@ -240,7 +240,7 @@ export default {
       const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
       const resGroups = await this.$axios.$get(groupUrl);
       this.groupList = resGroups.data;
-      const rentableItemsUrl = "/api/v1/get_rentable_items";
+      const rentableItemsUrl = "/api/v1/get_all_rentable_items";
       const resRentableItems = await this.$axios.$get(rentableItemsUrl);
       this.rentableItemList = resRentableItems.data;
       this.isOpenAddModal = true;

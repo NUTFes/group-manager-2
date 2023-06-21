@@ -129,7 +129,7 @@ export default {
     async openEditModal() {
       this.rentalItemID = this.rentalOrder.rental_order.rental_item_id;
       this.num = this.rentalOrder.rental_order.num;
-      const rentableItemsUrl = "/api/v1/get_rentable_items";
+      const rentableItemsUrl = "/api/v1/get_all_rentable_items";
       const resRentableItems = await this.$axios.$get(rentableItemsUrl);
       this.rentableItemList = resRentableItems.data;
       this.isOpenEditModal = true;
