@@ -27,11 +27,11 @@ export const gradeList: { id: number; name: string }[] = [
 ];
 
 export const departmentList: { id: number; name: string }[] = [
-  { id: 1, name: "機械工学分野:Mechanical Engineering" },
-  { id: 2, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
-  { id: 3, name: "物質生物工学分野:Materials Science and Technology" },
-  { id: 4, name: "環境社会基盤工学分野:Civil and Environmental Engineering" },
-  { id: 5, name: "情報・経営システム工学分野:Information and Management Systems Engineering" },
+  { id: 1, name: "機械工学分野/機械創造工学過程:Mechanical Engineering" },
+  { id: 2, name: "電気電子情報工学分野/電気電子情報工学過程:Electrical, Electronics and Information Engineering" },
+  { id: 3, name: "物質生物工学分野/物質材料工学過程/生物機能工学過程:Materials Science and Technology" },
+  { id: 4, name: "環境社会基盤工学分野/環境社会基盤工学過程:Civil and Environmental Engineering" },
+  { id: 5, name: "情報・経営システム工学分野/情報・経営システム工学過程:Information and Management Systems Engineering" },
   { id: 6, name: "機械工学分野:Mechanical Engineering" },
   { id: 7, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
   { id: 8, name: "物質生物工学分野:Materials Science and Technology" },
@@ -52,11 +52,11 @@ export const B1AndOtherGradeDepartmentList: { id: number; name: string }[] = [
 ];
 
 export const B2toB4GradeDepartmentList: { id: number; name: string }[] = [
-  { id: 1, name: "機械工学分野:Mechanical Engineering" },
-  { id: 2, name: "電気電子情報工学分野:Electrical, Electronics and Information Engineering" },
-  { id: 3, name: "物質生物工学分野:Materials Science and Technology" },
-  { id: 4, name: "環境社会基盤工学分野:Civil and Environmental Engineering" },
-  { id: 5, name: "情報・経営システム工学分野:Information and Management Systems Engineering" },
+  { id: 1, name: "機械工学分野/機械創造工学過程:Mechanical Engineering" },
+  { id: 2, name: "電気電子情報工学分野/電気電子情報工学過程:Electrical, Electronics and Information Engineering" },
+  { id: 3, name: "物質生物工学分野/物質材料工学過程/生物機能工学過程:Materials Science and Technology" },
+  { id: 4, name: "環境社会基盤工学分野/環境社会基盤工学過程:Civil and Environmental Engineering" },
+  { id: 5, name: "情報・経営システム工学分野/情報・経営システム工学過程:Information and Management Systems Engineering" },
 ];
 
 export const M1toM2GradeDepartmentList: { id: number; name: string }[] = [
