@@ -195,7 +195,7 @@ export default {
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
-        // group_categoryで絞り込むとき
+        // itemで絞り込むとき
       } else if (name_list.toString() == this.rentalItemsList.toString()) {
         this.refRentalItemID = item_id;
         // ALLの時
@@ -204,7 +204,7 @@ export default {
         } else {
           this.refRentalItems = name_list[item_id - 1].name;
         }
-        // group_categoryで絞り込むとき
+      // group_categoryで絞り込むとき
       } else if (name_list.toString() == this.groupCategories.toString()) {
         this.refCategoryID = item_id;
         // ALLの時
@@ -214,6 +214,7 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+
       this.rentalOrders = [];
       const refUrl =
         "/api/v1/get_refinement_rental_orders?fes_year_id=" +
