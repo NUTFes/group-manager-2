@@ -1,7 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="購入食品申請一覧">
-      <CommonButton v-if="this.$role(roleID).purchase_lists.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).purchase_lists.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -57,12 +61,14 @@
             "
             :key="index"
           >
-            <td>{{ purchaseList.purchase_list.id }}</td>
-            <td>{{ purchaseList.group.name }}</td>
-            <td>{{ purchaseList.purchase_list_info.food_product }}</td>
-            <td>{{ purchaseList.purchase_list.items }}</td>
-            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
-            <td>{{ purchaseList.purchase_list.url }}</td>
+            <td class="id">{{ purchaseList.purchase_list.id }}</td>
+            <td class="group">{{ purchaseList.group.name }}</td>
+            <td class="food">
+              {{ purchaseList.purchase_list_info.food_product }}
+            </td>
+            <td class="purchase">{{ purchaseList.purchase_list.items }}</td>
+            <td class="fresh">{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td class="url">{{ purchaseList.purchase_list.url }}</td>
           </tr>
         </template>
       </Table>
@@ -108,11 +114,7 @@
           <h3>購入店</h3>
           <select v-model="shopID">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in shopList"
-              :key="list.id"
-              :value="list.id"
-            >
+            <option v-for="list in shopList" :key="list.id" :value="list.id">
               {{ list.name }}
             </option>
           </select>
@@ -145,10 +147,7 @@
         >
       </template>
     </AddModal>
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -160,14 +159,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "販売食品",
-        "購入品",
-        "なまもの",
-        "URL"
-      ],
+      headers: ["ID", "参加団体", "販売食品", "購入品", "なまもの", "URL"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
@@ -222,10 +214,10 @@ export default {
     }),
   },
   methods: {
-    async getFoodProducts(){
-      const url = "/api/v1/get_food_products_by_group_id/" + this.groupID
-      const res = await this.$axios.$get(url)
-      this.foodProductsList = res.data
+    async getFoodProducts() {
+      const url = "/api/v1/get_food_products_by_group_id/" + this.groupID;
+      const res = await this.$axios.$get(url);
+      this.foodProductsList = res.data;
     },
     async openAddModal() {
       const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
@@ -300,29 +292,29 @@ export default {
     async submit() {
       const url =
         "/purchase_lists" +
-        "?food_product_id=" + 
+        "?food_product_id=" +
         this.foodProductID +
-        "&fes_date_id=1" + 
+        "&fes_date_id=1" +
         "&shop_id=" +
         this.shopID +
         "&items=" +
         this.items +
-        "&is_fresh=" + 
+        "&is_fresh=" +
         this.isFresh +
         "&purchase_date=" +
         this.purchase_date +
-        "&url=" + 
+        "&url=" +
         this.url;
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(this.items + "を追加しました");
-        this.groupID = null
-        this.items = null
-        this.foodProductID = null
-        this.shopID = null
-        this.isFresh = null
-        this.purchase_date = null
-        this.url = null
+        this.groupID = null;
+        this.items = null;
+        this.foodProductID = null;
+        this.shopID = null;
+        this.isFresh = null;
+        this.purchase_date = null;
+        this.url = null;
         this.reload(response.data.id);
         this.closeAddModal();
       });
@@ -337,3 +329,30 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.id {
+  width: 5%;
+  word-break: break-all;
+}
+.group {
+  width: 20%;
+  word-break: break-all;
+}
+.food {
+  width: 20%;
+  word-break: break-all;
+}
+.purchase {
+  width: 20%;
+  word-break: break-all;
+}
+.fresh {
+  width: 10%;
+  word-break: break-all;
+}
+.url {
+  width: 25%;
+  word-break: break-all;
+}
+</style>
