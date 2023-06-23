@@ -48,25 +48,10 @@ class Api::V1::GroupsApiController < ApplicationController
 
     option_list = [nil, true, false] # 0: 指定なし(ALL) 1: true 2: false
 
-    # 両方ともALL
-    if fes_year_id == 0 && group_category_id == 0
-      @groups = Group.all
-      # fes_year_idだけ指定
-    elsif fes_year_id != 0 && group_category_id == 0
-      @groups = Group.where(fes_year_id: fes_year_id)
-      # group_category_idだけ指定
-    elsif fes_year_id == 0 && group_category_id != 0
-      @groups = Group.where(group_category_id: group_category_id)
-      # 両方とも指定
-    else
-      @groups = Group.where(fes_year_id: fes_year_id).where(group_category_id: group_category_id)
-    end
-
-    if committee == 0
-      @groups = Group.all
-    else
-      @groups = Group.where(committee: option_list[committee])
-    end
+    @groups = Group.all
+    @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
+    @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
+    @groups = @groups.where(committee: committee == 1) unless committee == 0
 
     if @groups.count == 0
       render json: fmt(not_found, [], "Not found groups")
@@ -78,7 +63,12 @@ class Api::V1::GroupsApiController < ApplicationController
   # あいまい検索機能
   def get_search_groups
     word = params[:word]
-    @groups = Group.where("name like ?","%#{word}%")
+    groups_name = Group.where("name like ?","%#{word}%")
+    groups_category = Group.where("group_category_id like ?","%#{word}%")
+    project_name = Group.where("project_name like ?","%#{word}%")
+
+    @groups = (groups_name + groups_category + project_name).uniq
+
     if @groups.count == 0
       render json: fmt(not_found, [], "Not found groups")
     else
