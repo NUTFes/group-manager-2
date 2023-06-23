@@ -62,7 +62,7 @@
     "editPassword": "Password Change",
     "editPR": "public relations Edit",
     "editAnnouncemant": "Announcement text edit",
-    "regitstVenueMap": "Venue MAP Registration",
+    "regitstVenueMap": "Booth MAP",
     "notice": "Notice",
     "updateDate": "update date"
   },
@@ -88,9 +88,9 @@
   },
 
   "VenueMap": {
-    "regitstVenueMap": "Application for venue map",
+    "regitstVenueMap": "Application for booth map",
     "select": "Please select",
-    "map": "layout plan(png,jpg only)",
+    "map": "booth plan(png,jpg only)",
     "currently": "Currently selected image",
     "selected": "Selected Image"
   },
