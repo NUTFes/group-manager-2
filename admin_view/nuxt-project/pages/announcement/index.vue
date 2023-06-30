@@ -91,11 +91,11 @@ export default {
   async asyncData({ $axios }) {
     const announcementsUrl = "/announcements";
     const groupsUrl = "/groups";
-    const announcementsRes = await $axios.$get(announcementsUrl);
-    const groupsRes = await $axios.$get(groupsUrl);
+    const announcementsRes = await $axios.get(announcementsUrl);
+    const groupsRes = await $axios.get(groupsUrl);
     return {
-      announcements: announcementsRes.data,
-      groups: groupsRes,
+      announcements: announcementsRes.data.data,
+      groups: groupsRes.data,
     };
   },
   computed: {
@@ -121,7 +121,7 @@ export default {
     },
     reload(id) {
       const url = "/announcements/" + id;
-      this.$axios.$get(url).then((response) => {
+      this.$axios.get(url).then((response) => {
         this.announcements.push(response.data);
       });
     },
