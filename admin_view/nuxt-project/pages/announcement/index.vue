@@ -94,8 +94,8 @@ export default {
     const announcementsRes = await $axios.get(announcementsUrl);
     const groupsRes = await $axios.get(groupsUrl);
     return {
-      announcements: announcementsRes.data,
-      groups: groupsRes,
+      announcements: announcementsRes.data.data,
+      groups: groupsRes.data,
     };
   },
   computed: {
