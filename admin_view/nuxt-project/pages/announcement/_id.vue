@@ -29,20 +29,29 @@
               <td>{{ announcement.id }}</td>
             </tr>
             <tr>
-              <th>団体名</th>
+              <th>参加団体</th>
               <td>{{ groups.find((group) => group.id === announcement.group_id).name }}</td>
             </tr>
             <tr>
               <th>会場アナウンス文</th>
-              <td>{{ announcement.message }}</td>
+              <td>
+                <div v-if='announcement.message === ""'>未登録</div>
+                <div v-else>{{ announcement.message }}</div>
+              </td>
             </tr>
             <tr>
               <th>登録日時</th>
-              <td>{{ announcement.created_at | formatDate }}</td>
+              <td>
+                <div v-if='announcement.message === ""'>未登録</div>
+                <div v-else>{{ announcement.created_at | formatDate }}</div>
+              </td>
             </tr>
             <tr>
               <th>編集日時</th>
-              <td>{{ announcement.updated_at | formatDate }}</td>
+              <td>
+                <div v-if='announcement.message === ""'>未登録</div>
+                <div v-else>{{ announcement.updated_at | formatDate }}</div>
+              </td>
             </tr>
           </VerticalTable>
         </Row>
@@ -64,7 +73,7 @@
           </select>
         </div>
         <div>
-          <h3>会場名</h3>
+          <h3>会場アナウンス文</h3>
           <input v-model="message" placeholder="入力してください" />
         </div>
       </template>

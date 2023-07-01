@@ -10,6 +10,29 @@
       </CommonButton>
     </SubHeader>
 
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementAnnouncements"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchAnnouncements"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -29,12 +52,11 @@
             "
           >
             <td>{{ announcement.id }}</td>
+            <td>{{groups.find((group) => group.id === announcement.group_id).name}}</td>
             <td>
-              {{
-                groups.find((group) => group.id === announcement.group_id).name
-              }}
+              <div v-if='announcement.message === ""'>未登録</div>
+              <div v-else>登録済み</div>
             </td>
-            <td>{{ announcement.message }}</td>
           </tr>
         </template>
       </Table>
@@ -47,7 +69,7 @@
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
+          <h3>参加団体</h3>
           <select v-model="group_id">
             <option v-for="group in groups" :key="group.id" :value="group.id">
               {{ group.name }}
@@ -77,25 +99,46 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
+      headers: ["ID", "参加団体", "申請状況"],
+      isOpenAddModal: false,
+      isOpenSnackBar: false,
+      groupId: "",
       announcements: [],
       groups: [],
       dialog: false,
-      headers: ["ID", "団体名", "会場アナウンス文"],
-      isOpenAddModal: false,
-      isOpenSnackBar: false,
       message: "",
       snackMessage: "",
       group_id: 1,
+      refYears: "Years",
+      refYearID: 0,
+      searchText: ""
     };
   },
   async asyncData({ $axios }) {
-    const announcementsUrl = "/announcements";
+
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    const url =
+      "/api/v1/get_refinement_announcements?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
+    const announcementsRes = await $axios.$get(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+     });
+
+    // const announcementsUrl = "/announcements";
     const groupsUrl = "/groups";
-    const announcementsRes = await $axios.$get(announcementsUrl);
+    // const announcementsRes = await $axios.$get(announcementsUrl);
     const groupsRes = await $axios.$get(groupsUrl);
+
     return {
       announcements: announcementsRes.data,
       groups: groupsRes,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
     };
   },
   computed: {
@@ -140,6 +183,34 @@ export default {
         this.reload(response.data.id);
         this.closeAddModal();
       });
+    },
+    async refinementAnnouncements(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+      }
+      this.announcements = [];
+      const refUrl =
+        "/api/v1/get_refinement_announcements?fes_year_id=" +
+        this.refYearID
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.announcements.push(res);
+      }
+    },
+    async searchAnnouncements() {
+      this.announcements = [];
+      const searchUrl = "/api/v1/get_search_announcements?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.announcements.push(res);
+      }
     },
   },
 };

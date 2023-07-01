@@ -1,3 +1,31 @@
 class Announcement < ApplicationRecord
   belongs_to :group
+  belongs_to :fes_date
+
+def self.with_groups
+  @record = Announcement.preload(:group)
+    .map{
+      |announcement|
+      {
+        "anouncement": announcement,
+        "group": announcement.group
+
+      }
+    }
+end
+
+def self.with_group(announcement_id)
+  announcement = Announcement.find(announcement_id)
+  {
+    "announcement": announcement,
+    "group": announcement.group
+
+  }
+end
+
+def to_info_h
+  return {
+    "id": self.id
+  }
+  end
 end
