@@ -121,7 +121,7 @@ export default {
     const url =
       "/api/v1/get_refinement_announcements?fes_year_id=" +
       currentYearRes.data.fes_year_id;
-    const announcementsRes = await $axios.$get(url);
+    const announcementsRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const currentYears = yearsRes.data.filter(function (element) {
