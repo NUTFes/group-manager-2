@@ -24,7 +24,7 @@
         <SearchBar>
           <input
             v-model="searchText"
-            @keypress.enter="searchPurchaseLists"
+            @keypress.enter="searchAnnouncements"
             type="text"
             size="25"
             placeholder="search"

@@ -40,11 +40,11 @@ class Api::V1::AnnouncementsApiController < ApplicationController
     #あいまい検索
     def get_search_announcements
       word = params[:word]
-      @announcements = Announcement.all.map{ |announcement| announcement if announcement.group.name.include?(word)  }.compact
+      @announcements = Announcement.all.map{ |announcements| announcements if announcements.group.name.include?(word)  }.compact
       if @announcements.count == 0
         render json: fmt(not_found, [], "Not found announcements")
       else
-        render json: fmt(ok, fit_announcements_index_for_admin_view(@announcements))
+        render json: fmt(ok, fit_announcement_index_for_admin_view(@announcements))
       end
     end
   end
