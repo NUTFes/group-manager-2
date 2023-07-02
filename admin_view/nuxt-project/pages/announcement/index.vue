@@ -31,7 +31,7 @@
             <td>{{ announcement.id }}</td>
             <td>
               {{
-                groups.find((group) => group.id === announcement.group_id).name
+                groups.find((group) => group.id === announcement.group_id)
               }}
             </td>
             <td>{{ announcement.message }}</td>
