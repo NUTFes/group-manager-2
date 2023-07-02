@@ -14,7 +14,7 @@
       <template v-slot:refinement>
         <SearchDropDown
           :nameList="yearList"
-          :on_click="refinementPurchaseLists"
+          :on_click="refinementAnnouncements"
           value="year_num"
         >
           {{ refYears }}
@@ -47,14 +47,14 @@
             @click="
               () =>
                 $router.push({
-                  path: `/announcement/` + announcement.id,
+                  path: `/announcement/` + announcement.announcement.id,
                 })
             "
           >
-            <td>{{ announcement.id }}</td>
-            <td>{{groups.name}}</td>
+            <td>{{ announcement.group.id }}</td>
+            <td>{{ announcement.group.name}}</td>
             <td>
-              <div v-if='announcement.message === ""'>未登録</div>
+              <div v-if='announcement.announcement.message === ""'>未登録</div>
               <div v-else>登録済み</div>
             </td>
           </tr>
@@ -185,15 +185,13 @@ export default {
       });
     },
     async refinementAnnouncements(item_id, name_list) {
-      // fes_yearで絞り込むとき
-      if (name_list.toString() == this.yearList.toString()) {
-        this.refYearID = item_id;
-        // ALLの時
-        if (item_id == 0) {
-          this.refYears = "ALL";
-        } else {
-          this.refYears = name_list[item_id - 1].year_num;
-        }
+     // fes_yearで絞り込むとき
+      this.refYearID = item_id;
+      // ALLの時
+      if (item_id == 0) {
+        this.refYears = "ALL";
+      } else {
+        this.refYears = name_list[item_id - 1].year_num;
       }
       this.announcements = [];
       const refUrl =
