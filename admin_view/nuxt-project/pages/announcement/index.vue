@@ -14,7 +14,7 @@
       <template v-slot:refinement>
         <SearchDropDown
           :nameList="yearList"
-          :on_click="refinementAnnouncements"
+          :on_click="refinementPurchaseLists"
           value="year_num"
         >
           {{ refYears }}
@@ -24,7 +24,7 @@
         <SearchBar>
           <input
             v-model="searchText"
-            @keypress.enter="searchAnnouncements"
+            @keypress.enter="searchPurchaseLists"
             type="text"
             size="25"
             placeholder="search"
@@ -52,7 +52,7 @@
             "
           >
             <td>{{ announcement.id }}</td>
-            <td>{{groups.find((group) => group.id === announcement.group_id).name}}</td>
+            <td>{{groups.name}}</td>
             <td>
               <div v-if='announcement.message === ""'>未登録</div>
               <div v-else>登録済み</div>
@@ -198,7 +198,7 @@ export default {
       this.announcements = [];
       const refUrl =
         "/api/v1/get_refinement_announcements?fes_year_id=" +
-        this.refYearID
+        this.refYearID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.announcements.push(res);

@@ -7,9 +7,8 @@ def self.with_groups
     .map{
       |announcement|
       {
-        "anouncement": announcement,
+        "announcement": announcement,
         "group": announcement.group
-
       }
     }
 end
@@ -19,13 +18,13 @@ def self.with_group(announcement_id)
   {
     "announcement": announcement,
     "group": announcement.group
-
   }
 end
 
 def to_info_h
   return {
-    "id": self.id
+    "id": self.id,
+    "group_id": self.group_id,
   }
   end
 end
