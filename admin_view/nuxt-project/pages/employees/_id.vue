@@ -110,7 +110,7 @@ export default {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
-      grouoId: null,
+      groupId: null,
       name: null,
       studentId: null,
       employee: null,

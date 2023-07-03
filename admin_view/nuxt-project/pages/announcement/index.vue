@@ -108,7 +108,7 @@ export default {
       dialog: false,
       message: "",
       snackMessage: "",
-      group_id: 1,
+      group_id: "",
       refYears: "Years",
       refYearID: 0,
       searchText: ""
@@ -143,8 +143,8 @@ export default {
   methods: {
 
     async openAddModal() {
-      const groupsUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
-      const groupRes = await this.$axios.$get(groupsUrl);
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupRes = await this.$axios.$get(groupUrl);
       this.groups = groupRes.data;
       this.isOpenAddModal = true;
     },
@@ -160,24 +160,24 @@ export default {
       this.isOpenSnackBar = false;
     },
     reload(id) {
-      const url = "/api/v1/get_announcement_show_for_admin_view/" + id;
-      this.$axios.$get(url).then((response) => {
-        this.announcements.push(response.data);
+      const reUrl = "/api/v1/get_announcement_show_for_admin_view/" + id;
+      this.$axios.get(reUrl).then((res) => {
+        this.announcements.push(res.data);
       });
     },
     async submit() {
-      const url =
+      const postAnnouncementUrl =
         "/announcements/" +
         "?group_id=" +
         this.group_id +
         "&message=" +
         this.message;
 
-      this.$axios.$post(url).then((response) => {
+      this.$axios.$post(postAnnouncementUrl).then((res) => {
         this.openSnackBar("会場アナウンス文を登録しました");
         this.group_id = "";
         this.message = "";
-        this.reload(response.data.id);
+        this.reload(res.data.id);
         this.closeAddModal();
       });
     },

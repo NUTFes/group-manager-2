@@ -135,7 +135,6 @@ export default {
     openEditModal() {
       this.group_id = this.announcement.announcement.group_id;
       this.message = this.announcement.announcement.message;
-      this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
