@@ -102,7 +102,7 @@ export default {
       headers: ["ID", "参加団体", "申請状況"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
-      groupId: "",
+      group_id: "",
       announcements: [],
       groups: [],
       dialog: false,
@@ -128,14 +128,8 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
      });
 
-    // const announcementsUrl = "/announcements";
-    const groupsUrl = "/groups";
-    // const announcementsRes = await $axios.$get(announcementsUrl);
-    const groupsRes = await $axios.$get(groupsUrl);
-
     return {
       announcements: announcementsRes.data,
-      groups: groupsRes,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
@@ -147,8 +141,11 @@ export default {
     }),
   },
   methods: {
-    openAddModal() {
-      this.isOpenAddModal = false;
+
+    async openAddModal() {
+      const groupsUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupRes = await this.$axios.$get(groupsUrl);
+      this.groups = groupRes.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
@@ -163,7 +160,7 @@ export default {
       this.isOpenSnackBar = false;
     },
     reload(id) {
-      const url = "/announcements/" + id;
+      const url = "/api/v1/get_announcement_show_for_admin_view/" + id;
       this.$axios.$get(url).then((response) => {
         this.announcements.push(response.data);
       });
@@ -178,7 +175,7 @@ export default {
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar("会場アナウンス文を登録しました");
-        this.group_id = 1;
+        this.group_id = "";
         this.message = "";
         this.reload(response.data.id);
         this.closeAddModal();

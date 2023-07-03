@@ -169,7 +169,7 @@ export default {
     },
     async edit() {
       const url =
-        "/employees/" +
+        "/employee/" +
         this.employee.employee.id +
         "?group_id=" +
         this.groupId +
