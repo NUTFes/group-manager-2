@@ -70,7 +70,7 @@
             <td>{{ placeOrder.place_order_name.first }}</td>
             <td>{{ placeOrder.place_order_name.second }}</td>
             <td>{{ placeOrder.place_order_name.third }}</td>
-            <td>
+            <td v-if="venueMaps != null">
               <div v-if="venueMaps[index].venue_map === null">
                 未登録
               </div>
@@ -270,7 +270,6 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
-      this.placeOrders = [];
       const refUrl =
         "/api/v1/get_refinement_place_orders?fes_year_id=" +
         this.refYearID +
@@ -279,14 +278,14 @@ export default {
         "&group_category_id=" +
         this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
+      this.placeOrders = [];
       this.venueMaps = [];
       for (const res of refRes.data) {
-        this.placeOrders.push(res);
         const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
         const response = await this.$axios.$get(url);
+        this.placeOrders.push(res);
         this.venueMaps.push(response.data);
-      }
-      console.log(this.venueMaps)
+      };
     },
     async searchPlaceOrders() {
       this.placeOrders = [];
@@ -295,9 +294,9 @@ export default {
         "/api/v1/get_search_place_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data) {
-        this.placeOrders.push(res);
         const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
         const response = await this.$axios.$get(url);
+        this.placeOrders.push(res);
         this.venueMaps.push(response.data);
       }
     },
