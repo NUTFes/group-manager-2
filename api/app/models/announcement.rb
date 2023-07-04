@@ -1,6 +1,5 @@
 class Announcement < ApplicationRecord
   belongs_to :group
-  belongs_to :fes_date
 
 def self.with_groups
   @record = Announcement.preload(:group)
