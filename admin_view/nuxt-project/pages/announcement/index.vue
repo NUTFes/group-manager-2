@@ -162,7 +162,7 @@ export default {
     reload(id) {
       const reUrl = "/api/v1/get_announcement_show_for_admin_view/" + id;
       this.$axios.get(reUrl).then((res) => {
-        this.announcements.push(res.data);
+        this.announcements.push(res.data.data);
       });
     },
     async submit() {
