@@ -10,6 +10,29 @@
       </CommonButton>
     </SubHeader>
 
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementAnnouncements"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchAnnouncements"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -24,17 +47,16 @@
             @click="
               () =>
                 $router.push({
-                  path: `/announcement/` + announcement.id,
+                  path: `/announcement/` + announcement.announcement.id,
                 })
             "
           >
-            <td>{{ announcement.id }}</td>
+            <td>{{ announcement.group.id }}</td>
+            <td>{{ announcement.group.name}}</td>
             <td>
-              {{
-                groups.find((group) => group.id === announcement.group_id).name
-              }}
+              <div v-if='announcement.announcement.message === ""'>未登録</div>
+              <div v-else>登録済み</div>
             </td>
-            <td>{{ announcement.message }}</td>
           </tr>
         </template>
       </Table>
@@ -47,7 +69,7 @@
     >
       <template v-slot:form>
         <div>
-          <h3>団体名</h3>
+          <h3>参加団体</h3>
           <select v-model="group_id">
             <option v-for="group in groups" :key="group.id" :value="group.id">
               {{ group.name }}
@@ -77,25 +99,40 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
+      headers: ["ID", "参加団体", "申請状況"],
+      isOpenAddModal: false,
+      isOpenSnackBar: false,
+      group_id: "",
       announcements: [],
       groups: [],
       dialog: false,
-      headers: ["ID", "団体名", "会場アナウンス文"],
-      isOpenAddModal: false,
-      isOpenSnackBar: false,
       message: "",
       snackMessage: "",
-      group_id: 1,
+      group_id: "",
+      refYears: "Years",
+      refYearID: 0,
+      searchText: ""
     };
   },
   async asyncData({ $axios }) {
-    const announcementsUrl = "/announcements";
-    const groupsUrl = "/groups";
-    const announcementsRes = await $axios.get(announcementsUrl);
-    const groupsRes = await $axios.get(groupsUrl);
+
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    const url =
+      "/api/v1/get_refinement_announcements?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
+    const announcementsRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+     });
+
     return {
-      announcements: announcementsRes.data.data,
-      groups: groupsRes.data,
+      announcements: announcementsRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
     };
   },
   computed: {
@@ -104,8 +141,11 @@ export default {
     }),
   },
   methods: {
-    openAddModal() {
-      this.isOpenAddModal = false;
+
+    async openAddModal() {
+      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupRes = await this.$axios.$get(groupUrl);
+      this.groups = groupRes.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
@@ -120,26 +160,52 @@ export default {
       this.isOpenSnackBar = false;
     },
     reload(id) {
-      const url = "/announcements/" + id;
-      this.$axios.get(url).then((response) => {
-        this.announcements.push(response.data);
+      const reUrl = "/api/v1/get_announcement_show_for_admin_view/" + id;
+      this.$axios.get(reUrl).then((res) => {
+        this.announcements.push(res.data.data);
       });
     },
     async submit() {
-      const url =
+      const postAnnouncementUrl =
         "/announcements/" +
         "?group_id=" +
         this.group_id +
         "&message=" +
         this.message;
 
-      this.$axios.$post(url).then((response) => {
+      this.$axios.$post(postAnnouncementUrl).then((res) => {
         this.openSnackBar("会場アナウンス文を登録しました");
-        this.group_id = 1;
+        this.group_id = "";
         this.message = "";
-        this.reload(response.data.id);
+        this.reload(res.data.id);
         this.closeAddModal();
       });
+    },
+    async refinementAnnouncements(item_id, name_list) {
+     // fes_yearで絞り込むとき
+      this.refYearID = item_id;
+      // ALLの時
+      if (item_id == 0) {
+        this.refYears = "ALL";
+      } else {
+        this.refYears = name_list[item_id - 1].year_num;
+      }
+      this.announcements = [];
+      const refUrl =
+        "/api/v1/get_refinement_announcements?fes_year_id=" +
+        this.refYearID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.announcements.push(res);
+      }
+    },
+    async searchAnnouncements() {
+      this.announcements = [];
+      const searchUrl = "/api/v1/get_search_announcements?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.announcements.push(res);
+      }
     },
   },
 };

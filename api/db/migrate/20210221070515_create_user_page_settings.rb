@@ -12,6 +12,7 @@ class CreateUserPageSettings < ActiveRecord::Migration[6.0]
       t.boolean :is_edit_employee
       t.boolean :is_edit_food_product
       t.boolean :is_edit_purchase_list
+      t.boolean :is_edit_announcement
 
       t.timestamps
     end
