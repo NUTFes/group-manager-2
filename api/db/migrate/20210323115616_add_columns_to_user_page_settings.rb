@@ -5,6 +5,5 @@ class AddColumnsToUserPageSettings < ActiveRecord::Migration[6.0]
     add_column :user_page_settings, :add_employee, :boolean
     add_column :user_page_settings, :add_food_product, :boolean
     add_column :user_page_settings, :add_purchase_list, :boolean
-    add_column :user_page_settings, :add_announcement, :boolean
   end
 end
