@@ -61,7 +61,7 @@
     "editPassword": "パスワード変更",
     "editPR": "PR文編集",
     "editAnnouncemant": "アナウンス文編集",
-    "regitstVenueMap": "会場配置図登録",
+    "regitstVenueMap": "模擬店平面図",
     "notice": "お知らせ",
     "updateDate": "更新日"
   },
@@ -87,9 +87,9 @@
   },
 
   "VenueMap": {
-    "regitstVenueMap": "会場配置図の申請",
+    "regitstVenueMap": "模擬店平面図の申請",
     "select": "選択してください",
-    "map": "配置図(png,jpgのみ)",
+    "map": "平面図(png,jpgのみ)",
     "currently": "現在選択している画像",
     "selected": "選択した画像"
   },
@@ -283,8 +283,8 @@
     "deletePurchase": "購入品の削除",
     "editPurchase": "購入品の編集",
     "purchase": "購入品",
-    "target": "販売食品名",
-    "targetGoods": "販売物品名",
+    "target": "調理品目名",
+    "targetGoods": "調理品目",
     "select": "選択してください",
     "name": "購入材料名",
     "goodsName": "購入品",

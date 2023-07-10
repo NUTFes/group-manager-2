@@ -110,7 +110,7 @@ export default {
       isOpenEditModal: false,
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
-      grouoId: null,
+      groupId: null,
       name: null,
       studentId: null,
       employee: null,
@@ -176,7 +176,7 @@ export default {
         "&name=" +
         this.name +
         "&student_id=" +
-        this.studentId + 
+        this.studentId +
         "&stool_test_id=" +
         this.stoolTestID;
 

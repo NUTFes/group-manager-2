@@ -70,6 +70,14 @@
             <td>{{ placeOrder.place_order_name.first }}</td>
             <td>{{ placeOrder.place_order_name.second }}</td>
             <td>{{ placeOrder.place_order_name.third }}</td>
+            <td v-if="venueMaps != null">
+              <div v-if="venueMaps[index].venue_map === null">
+                未登録
+              </div>
+              <div v-else>
+                登録済み
+              </div>
+            </td>
           </tr>
         </template>
       </Table>
@@ -163,12 +171,14 @@ export default {
         "第一希望",
         "第二希望",
         "第三希望",
+        "会場配置図"
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       placeList: [],
       appGroup: "",
       placeOrders: [],
+      venueMaps: [],
       firstPlaceOrder: "",
       secondPlaceOrder: "",
       thirdPlaceOrder: "",
@@ -194,11 +204,17 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-    // const placeOrderUrl = "/api/v1/get_place_order_index_for_admin_view";
     const placeOrderUrl =
       "/api/v1/get_refinement_place_orders?fes_year_id=" +
       currentYearRes.data.fes_year_id;
     const placeOrderRes = await $axios.$post(placeOrderUrl);
+
+    let venueMaps = [];
+    for (const res of placeOrderRes.data) {
+      const vennuMapUrl = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
+      const venueMapRes = await $axios.$get(vennuMapUrl);
+      venueMaps.push(venueMapRes.data)
+    }
 
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
@@ -210,8 +226,10 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
     });
 
+    console.log(venueMaps)
     return {
       placeOrders: placeOrderRes.data,
+      venueMaps: venueMaps,
       placeList: placesRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
@@ -252,7 +270,6 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
-      this.placeOrders = [];
       const refUrl =
         "/api/v1/get_refinement_place_orders?fes_year_id=" +
         this.refYearID +
@@ -260,19 +277,27 @@ export default {
         this.refPlaceID +
         "&group_category_id=" +
         this.refCategoryID;
-      console.log(refUrl);
       const refRes = await this.$axios.$post(refUrl);
+      this.placeOrders = [];
+      this.venueMaps = [];
       for (const res of refRes.data) {
+        const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
+        const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
-      }
+        this.venueMaps.push(response.data);
+      };
     },
     async searchPlaceOrders() {
       this.placeOrders = [];
+      this.venueMaps = [];
       const searchUrl =
         "/api/v1/get_search_place_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data) {
+        const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
+        const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
+        this.venueMaps.push(response.data);
       }
     },
     async openAddModal() {
@@ -329,4 +354,5 @@ export default {
     },
   },
 };
+
 </script>

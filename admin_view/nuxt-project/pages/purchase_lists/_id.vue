@@ -3,11 +3,20 @@
     <SubHeader
       v-bind:pageTitle="purchaseList.purchase_list.items"
       pageSubTitle="購入食品申請一覧"
+      class="item"
     >
-      <CommonButton v-if="this.$role(this.roleID).purchase_lists.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).purchase_lists.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).purchase_lists.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).purchase_lists.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -31,7 +40,7 @@
             <td>{{ purchaseList.purchase_list.purchase_date }}</td>
           </tr>
           <tr>
-            <th>販売食品</th>
+            <th>調理品目</th>
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
           </tr>
           <tr>
@@ -76,11 +85,7 @@
           <h3>購入店</h3>
           <select v-model="shopID">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in shopList"
-              :key="list.id"
-              :value="list.id"
-            >
+            <option v-for="list in shopList" :key="list.id" :value="list.id">
               {{ list.name }}
             </option>
           </select>
@@ -124,10 +129,7 @@
         >
       </template>
     </DeleteModal>
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -179,12 +181,12 @@ export default {
       const fesDatesListUrl = "/api/v1/get_current_fes_dates";
       const resFesDates = await this.$axios.$get(fesDatesListUrl);
       this.fesDatesList = resFesDates.data;
-      this.items = this.purchaseList.purchase_list.items
-      this.shopID = this.purchaseList.purchase_list.shop_id
-      this.fesDateID = this.purchaseList.purchase_list.fes_date_id
-      this.isFresh = this.purchaseList.purchase_list.isFresh
-      this.purchase_date = this.purchaseList.purchase_list.purchase_date
-      this.url = this.purchaseList.purchase_list.url
+      this.items = this.purchaseList.purchase_list.items;
+      this.shopID = this.purchaseList.purchase_list.shop_id;
+      this.fesDateID = this.purchaseList.purchase_list.fes_date_id;
+      this.isFresh = this.purchaseList.purchase_list.isFresh;
+      this.purchase_date = this.purchaseList.purchase_list.purchase_date;
+      this.url = this.purchaseList.purchase_list.url;
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -213,8 +215,9 @@ export default {
     },
     async edit() {
       const url =
-        "/purchase_lists/" + this.purchaseList.purchase_list.id +
-        "?food_product_id=" + 
+        "/purchase_lists/" +
+        this.purchaseList.purchase_list.id +
+        "?food_product_id=" +
         this.purchaseList.purchase_list.food_product_id +
         "&shop_id=" +
         this.shopID +
@@ -222,18 +225,18 @@ export default {
         this.purchase_date +
         "&items=" +
         this.items +
-        "&is_fresh=" + 
+        "&is_fresh=" +
         this.isFresh +
         "&url=" +
         this.url;
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.items + "を編集しました");
-        this.items = null
-        this.fesDateID = null
-        this.shopID = null
-        this.isFresh = null
-        this.url = null
+        this.items = null;
+        this.fesDateID = null;
+        this.shopID = null;
+        this.isFresh = null;
+        this.url = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });
@@ -249,9 +252,15 @@ export default {
 
 <style scoped>
 td {
-  width: 70%;
+  width: 100%;
+  word-break: break-all;
 }
 th {
-  width: 30%;
+  width: 25%;
+}
+.item {
+  width: 100%;
+  word-break: break-all;
+  height: auto;
 }
 </style>

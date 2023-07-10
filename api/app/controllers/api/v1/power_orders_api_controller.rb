@@ -26,29 +26,22 @@ class Api::V1::PowerOrdersApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i
     power = params[:power].to_i
     group_category_id = params[:group_category_id].to_i
-    # 両方ともALL
-    if fes_year_id == 0 && power == 0
-      @power_orders = PowerOrder.all
-      #fes_year_idだけ指定
-    elsif fes_year_id != 0 && power == 0 
-      @power_orders = PowerOrder.preload(:group).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact 
-      #rental_item_idだけ指定
-    elsif fes_year_id == 0 && power != 0
-      @power_orders = PowerOrder.preload(:group).where("(power >= ?)", power)
-      #両方とも指定
-    else
-      @power_orders = PowerOrder.preload(:group).where("(power >= ?)", power).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact
-    end
 
-    if group_category_id == 0
-      @power_orders = PowerOrder.all
-    else
-      @power_orders = PowerOrder.preload(:group).map{ |power_order| power_order if power_order.group.group_category_id == group_category_id }.compact 
+    # fes_year_id, power, category_idで絞り込み
+    @power_orders = PowerOrder.all
+    if fes_year_id != 0
+      @power_orders = @power_orders.preload(:group).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact
+    end
+    if power != 0
+      @power_orders = @power_orders.preload(:group).where("power >= ?", power)
+    end
+    if group_category_id != 0
+      @power_orders = @power_orders.preload(:group).map{ |power_order| power_order if power_order.group.group_category_id == group_category_id }.compact
     end
 
     if @power_orders.count == 0
       render json: fmt(not_found, [], "Not found power_orders")
-    else 
+    else
       render json: fmt(ok, fit_power_order_index_for_admin_view(@power_orders))
     end
   end

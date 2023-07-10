@@ -27,27 +27,25 @@ class Api::V1::PlaceOrdersApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i 
     place_id = params[:place_id].to_i
     group_category_id = params[:group_category_id].to_i
-    #両方ともALL
-    if fes_year_id == 0 && place_id == 0
-      @place_orders = PlaceOrder.all
-      #fes_year_idだけ指定
-    elsif fes_year_id != 0 && place_id == 0 
-      @place_orders = Group.where(fes_year_id: fes_year_id).preload(:place_order).map{ |group| group.place_order }.compact
-      #place_idだけ指定
-    elsif fes_year_id == 0 && place_id != 0
-      @place_orders = PlaceOrder.where("(first = ?) OR (second = ?) OR (third = ?)", place_id, place_id, place_id)
-      #両方とも指定
-    else
-      @place_orders = PlaceOrder.where("(first = ?) OR (second = ?) OR (third = ?)", place_id, place_id, place_id).map{ |place_order| place_order if place_order.group.fes_year_id == fes_year_id }.compact 
+
+    @place_orders = PlaceOrder.preload(:group)
+
+    # fes_year_id で絞り込み
+    if fes_year_id != 0
+      @place_orders = @place_orders.joins(:group).where(groups: { fes_year_id: fes_year_id })
     end
 
-    if group_category_id == 0
-      @place_orders = PlaceOrder.all
-    else
-      @place_orders = PlaceOrder.preload(:group).map{ |place_order| place_order if place_order.group.group_category_id == group_category_id }.compact 
+    # place_id で絞り込み
+    if place_id != 0
+      @place_orders = @place_orders.where("(first = ?) OR (second = ?) OR (third = ?)", place_id, place_id, place_id)
     end
 
-    if @place_orders.count == 0
+    # group_category_id で絞り込み
+    if group_category_id != 0
+      @place_orders = @place_orders.joins(:group).where(groups: { group_category_id: group_category_id })
+    end
+
+    if @place_orders.empty?
       render json: fmt(not_found, [], "Not found place_orders")
     else 
       render json: fmt(ok, fit_place_order_index_for_admin_view(@place_orders))

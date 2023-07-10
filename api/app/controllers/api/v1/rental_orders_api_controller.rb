@@ -26,24 +26,19 @@ class Api::V1::RentalOrdersApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i
     rental_item_id = params[:rental_item_id].to_i
     group_category_id = params[:group_category_id].to_i
-    # 両方ともALL
-    if fes_year_id == 0 && rental_item_id == 0
-      @rental_orders = RentalOrder.all
-      #fes_year_idだけ指定
-    elsif fes_year_id != 0 && rental_item_id == 0 
-      @rental_orders = RentalOrder.preload(:group).map{ |rental_order| rental_order if rental_order.group.fes_year_id == fes_year_id }.compact
-      #rental_item_idだけ指定
-    elsif fes_year_id == 0 && rental_item_id != 0
-      @rental_orders = RentalOrder.where(rental_item_id: rental_item_id)
-      #両方とも指定
-    else
-      @rental_orders = RentalOrder.where(rental_item_id: rental_item_id).map{ |rental_order| rental_order if rental_order.group.fes_year_id == fes_year_id }.compact
+
+    @rental_orders = RentalOrder.preload(:group)
+
+    if fes_year_id != 0
+      @rental_orders = @rental_orders.joins(:group).where(groups: { fes_year_id: fes_year_id })
     end
 
-    if group_category_id == 0
-      @rental_orders = RentalOrder.all
-    else
-      @rental_orders = RentalOrder.preload(:group).map{ |rental_order| rental_order if rental_order.group.group_category_id == group_category_id }.compact 
+    if rental_item_id != 0
+       @rental_orders = @rental_orders.where("rental_item_id = ?", rental_item_id)
+    end
+
+    if group_category_id != 0
+      @rental_orders = @rental_orders.joins(:group).where(groups: { group_category_id: group_category_id })
     end
 
     if @rental_orders.count == 0
