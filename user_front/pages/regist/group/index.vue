@@ -105,7 +105,7 @@ const registerCategory = async () => {
         </Card>
         <Row>
           <RegistPageButton :text="$t('Button.reset')" @click="reset" variant="danger"></RegistPageButton>
-          <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
+          <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click.once="registerCategory"></RegistPageButton>
         </Row>
       </Card>
     </div>

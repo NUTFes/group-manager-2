@@ -241,7 +241,7 @@ const createCurrentDepartmentList = (e: any) => {
           <RegistPageButton
             :disabled="!meta.valid || isSubmitting"
             :text="$t('Button.register')"
-            @click="registUser"
+            @click.once="registUser"
           >
           </RegistPageButton>
         </Row>
