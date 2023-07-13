@@ -20,7 +20,8 @@ class StageOrder < ApplicationRecord
       return {
         "stage_order": stage_order,
         "stage_order_info": stage_order.to_info_h,
-        "group": stage_order.group
+        "group": stage_order.group,
+        "venue_map": stage_order.group.venue_map 
       }
     end
 
