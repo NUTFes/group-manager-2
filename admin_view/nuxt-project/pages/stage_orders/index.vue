@@ -1,7 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="ステージ申請一覧">
-      <CommonButton v-if="this.$role(roleID).stage_orders.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).stage_orders.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -66,12 +70,12 @@
         <template v-slot:table-body>
           <tr
             v-for="(stageOrder, index) in stageOrders"
-						@click="
-							() =>
-								$router.push({
-									path: `/stage_orders/` + stageOrder.stage_order.id,
-								})
-						"
+            @click="
+              () =>
+                $router.push({
+                  path: `/stage_orders/` + stageOrder.stage_order.id,
+                })
+            "
             :key="index"
           >
             <td>{{ stageOrder.stage_order.id }}</td>
@@ -134,11 +138,7 @@
           <h3>第一希望</h3>
           <select v-model="first">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in stageList"
-              :key="list.id"
-              :value="list.id"
-            >
+            <option v-for="list in stageList" :key="list.id" :value="list.id">
               {{ list.name }}
             </option>
           </select>
@@ -147,11 +147,7 @@
           <h3>第二希望</h3>
           <select v-model="second">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in stageList"
-              :key="list.id"
-              :value="list.id"
-            >
+            <option v-for="list in stageList" :key="list.id" :value="list.id">
               {{ list.name }}
             </option>
           </select>
@@ -160,11 +156,7 @@
           <h3>準備時間幅</h3>
           <select v-model="prepareTimeInterval">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeBox"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeBox" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -173,11 +165,7 @@
           <h3>使用時間幅</h3>
           <select v-model="useTimeInterval">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeBox"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeBox" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -186,11 +174,7 @@
           <h3>掃除時間幅</h3>
           <select v-model="cleanUpTimeInterval">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeBox"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeBox" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -199,11 +183,7 @@
           <h3>準備開始時刻</h3>
           <select v-model="prepareStartTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -212,11 +192,7 @@
           <h3>パフォーマンス開始時刻</h3>
           <select v-model="performanceStartTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -225,11 +201,7 @@
           <h3>パフォーマンス終了時刻</h3>
           <select v-model="performanceEndTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -238,11 +210,7 @@
           <h3>掃除終了時刻</h3>
           <select v-model="cleanUpEndTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -254,10 +222,7 @@
         >
       </template>
     </AddModal>
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -269,14 +234,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: [
-        "ID",
-        "参加団体",
-        "晴れ希望",
-        "希望日",
-        "第一希望",
-        "第二希望",
-      ],
+      headers: ["ID", "参加団体", "晴れ希望", "希望日", "第一希望", "第二希望"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isIntervalMode: true,
@@ -290,11 +248,46 @@ export default {
       ],
       fesDatesList: [],
       stageList: [],
-      timeBox: ["5分","10分","15分","20分","25分","30分","35分","40分","45分","50分","55分","60分",
-        "65分","70分","75分","80分","90分","95分","100分","105分","110分","115分","120分",
+      timeBox: [
+        "5分",
+        "10分",
+        "15分",
+        "20分",
+        "25分",
+        "30分",
+        "35分",
+        "40分",
+        "45分",
+        "50分",
+        "55分",
+        "60分",
+        "65分",
+        "70分",
+        "75分",
+        "80分",
+        "90分",
+        "95分",
+        "100分",
+        "105分",
+        "110分",
+        "115分",
+        "120分",
       ],
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
-      minute_range: ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50","55"],
+      minute_range: [
+        "00",
+        "05",
+        "10",
+        "15",
+        "20",
+        "25",
+        "30",
+        "35",
+        "40",
+        "45",
+        "50",
+        "55",
+      ],
       timeRange: [],
       refYears: "Years",
       refYearID: 0,
@@ -316,7 +309,8 @@ export default {
       prepareStartTime: "指定なし",
       performanceStartTime: "指定なし",
       performanceEndTime: "指定なし",
-      cleanUpEndTime: "指定なし"
+      cleanUpEndTime: "指定なし",
+      searchText: "",
     };
   },
   async asyncData({ $axios }) {
@@ -365,7 +359,7 @@ export default {
   },
   methods: {
     changeMode() {
-      this.isIntervalMode = !this.isIntervalMode
+      this.isIntervalMode = !this.isIntervalMode;
     },
     async refinementStageOrders(item_id, name_list) {
       // fes_yearで絞り込むとき
@@ -438,7 +432,8 @@ export default {
       this.isOpenSnackBar = false;
     },
     async openAddModal() {
-      const groupsListUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupsListUrl =
+        "/api/v1/get_groups_refinemented_by_current_fes_year";
       const resGroups = await this.$axios.$get(groupsListUrl);
       const fesDatesListUrl = "/api/v1/get_current_fes_dates";
       const resFesDates = await this.$axios.$get(fesDatesListUrl);
@@ -488,7 +483,7 @@ export default {
         this.cleanUpEndTime;
 
       this.$axios.$post(url).then((response) => {
-        this.reload(response.data.id)
+        this.reload(response.data.id);
         this.groupID = null;
         this.isSunny = null;
         this.fesDateID = null;

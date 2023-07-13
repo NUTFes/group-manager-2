@@ -90,7 +90,7 @@ class Api::V1::StageOrdersApiController < ApplicationController
   #あいまい検索
   def get_search_stage_orders
     word = params[:word]
-    @stage_orders = StageOrder.preload(:group).map{ |stage_order| stage_order if stage_order.group.name.include?(word) }
+    @stage_orders = StageOrder.preload(:group).map{ |stage_order| stage_order if stage_order.group.name.include?(word) }.compact
     if @stage_orders.count == 0
       render json: fmt(not_found, [], "Not found stage_orders")
     else
