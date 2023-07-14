@@ -55,7 +55,7 @@ class Api::V1::PlaceOrdersApiController < ApplicationController
   #あいまい検索
   def get_search_place_orders
     word = params[:word]
-    @place_orders = Group.where("name like ?", "%#{word}%").preload(:place_order).map{ |group| group.place_order }.compact
+    @place_orders = PlaceOrder.all.map{ |place_order| place_order if place_order.group.name.include?(word) || place_order.to_place_name_h[:first].include?(word) || place_order.to_place_name_h[:second].include?(word) || place_order.to_place_name_h[:third].include?(word)}.compact
     if @place_orders.count == 0
       render json: fmt(not_found, [], "Not found place_orders")
     else
