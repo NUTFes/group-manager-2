@@ -323,6 +323,7 @@ export default {
       performanceStartTime: "指定なし",
       performanceEndTime: "指定なし",
       cleanUpEndTime: "指定なし",
+      searchText: "",
     };
   },
   async asyncData({ $axios }) {
