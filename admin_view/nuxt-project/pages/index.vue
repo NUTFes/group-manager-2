@@ -80,11 +80,17 @@ export default {
             this.getUser()
             return response;
           },
-          (error) => {
-            this.message = "メールアドレスかパスワードが違います。";
-            return error;
-          }
-        );
+        )
+          // (error) => {
+          //   this.message = "メールアドレスかパスワードが違います。";
+          //   return error;
+          // }
+          .catch(() => {
+            alert(
+              "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
+            );
+          });
+      
     },
   },
 };

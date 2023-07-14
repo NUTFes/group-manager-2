@@ -45,7 +45,7 @@ export default {
               },
               ticks: {
                 min: 0,
-                max: 30,
+                max: 60,
                 fontSize: 12,
                 stepSize: 5,
               },
@@ -53,8 +53,16 @@ export default {
           ],
         },
 				tooltips: {
-					enabled: false,
-				}
+					enabled: true,
+          callbacks:{
+            label: function(tooltipItems) {
+              if(tooltipItems.xLabel == "0"){
+                return "";
+              }
+              return  tooltipItems.xLabel ;
+            },
+          },
+				},
       },
     };
   },

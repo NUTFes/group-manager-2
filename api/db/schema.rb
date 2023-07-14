@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_25_071401) do
+ActiveRecord::Schema.define(version: 2023_07_05_131315) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -340,7 +340,6 @@ ActiveRecord::Schema.define(version: 2023_05_25_071401) do
     t.boolean "is_edit_employee"
     t.boolean "is_edit_food_product"
     t.boolean "is_edit_purchase_list"
-    t.boolean "is_edit_announcement"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "add_power_order"
@@ -348,8 +347,9 @@ ActiveRecord::Schema.define(version: 2023_05_25_071401) do
     t.boolean "add_employee"
     t.boolean "add_food_product"
     t.boolean "add_purchase_list"
-    t.boolean "add_announcement"
     t.integer "fes_year_id"
+    t.boolean "is_edit_announcement"
+    t.boolean "add_announcement"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

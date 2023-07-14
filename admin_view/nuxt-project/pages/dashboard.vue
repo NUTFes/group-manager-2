@@ -2,12 +2,19 @@
   <div class="main-content">
     <SubHeader pageTitle="ダッシュボード" />
     <Row>
-      <Card>
+      <Card width="300px" gap="10px">
         <Row justify="start">
-          <h4>参加団体</h4>
+          <h4>参加団体数</h4>
         </Row>
         <hr />
-        <Chart1 :styles="myStyles" />
+        <Row>
+          <Card width="" height="" padding="0" flexGrow="0" border="0px">
+           <GroupsCard v-bind:dashboardData="dashboard_data" :styles="myStyles"/>
+          </Card>
+          <Card width="" height="" padding="0" flexGrow="0" border="0px">
+            <Chart1 :styles="myStyles" />
+          </Card>
+        </Row>
       </Card>
       <UsersCard v-bind:dashboardData="dashboard_data" />
     </Row>

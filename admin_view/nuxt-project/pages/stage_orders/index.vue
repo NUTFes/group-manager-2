@@ -84,6 +84,10 @@
             <td>{{ stageOrder.stage_order_info.date }}</td>
             <td>{{ stageOrder.stage_order_info.stage_first }}</td>
             <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+            <td v-if="venueMaps != null">
+              <div v-if="venueMaps[index].venue_map === null">未登録</div>
+              <div v-else>登録済み</div>
+            </td>
           </tr>
         </template>
       </Table>
@@ -234,10 +238,19 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "晴れ希望", "希望日", "第一希望", "第二希望"],
+      headers: [
+        "ID",
+        "参加団体",
+        "晴れ希望",
+        "希望日",
+        "第一希望",
+        "第二希望",
+        "会場配置図",
+      ],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isIntervalMode: true,
+      venueMaps: [],
       isSunnyList: [
         { id: 1, text: "はい", value: true },
         { id: 2, text: "いいえ", value: false },
@@ -322,7 +335,17 @@ export default {
       "/api/v1/get_refinement_stage_orders?fes_year_id=" +
       currentYearRes.data.fes_year_id +
       "&stage_id=0&days_num=0&is_sunny=0";
+
     const stageOrdersRes = await $axios.$post(url);
+
+    let venueMaps = [];
+    for (const res of stageOrdersRes.data) {
+      const vennuMapUrl =
+        "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
+      const venueMapRes = await $axios.$get(vennuMapUrl);
+      venueMaps.push(venueMapRes.data);
+    }
+
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const stagesUrl = "/stages";
@@ -400,6 +423,7 @@ export default {
         }
       }
       this.stageOrders = [];
+      this.venueMaps = [];
       const refUrl =
         "/api/v1/get_refinement_stage_orders?fes_year_id=" +
         this.refYearID +
@@ -411,16 +435,25 @@ export default {
         this.refIsSunnyID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
+        const url =
+          "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
+        const response = await this.$axios.$get(url);
         this.stageOrders.push(res);
+        this.venueMaps.push(response.data);
       }
     },
     async searchStageOrders() {
       this.stageOrders = [];
+      this.venueMaps = [];
       const searchUrl =
         "/api/v1/get_search_stage_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data) {
+        const url =
+          "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
+        const response = await this.$axios.$get(url);
         this.stageOrders.push(res);
+        this.venueMaps.push(response.data);
       }
     },
     openSnackBar(message) {
