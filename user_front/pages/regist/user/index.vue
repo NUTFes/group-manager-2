@@ -69,6 +69,9 @@ const login = () => {
 };
 
 const registUser = async () => {
+
+  isSubmitting.value = true;
+  
   await $fetch<User>(config.APIURL + "/api/auth", {
     method: "POST",
     params: {
@@ -241,7 +244,7 @@ const createCurrentDepartmentList = (e: any) => {
           <RegistPageButton
             :disabled="!meta.valid || isSubmitting"
             :text="$t('Button.register')"
-            @click.once="registUser"
+            @click="registUser"
           >
           </RegistPageButton>
         </Row>

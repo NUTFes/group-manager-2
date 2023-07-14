@@ -47,6 +47,9 @@ onMounted(async () => {
 })
 
 const registerCategory = async () => {
+
+  isSubmitting.value = true;
+  
   await $fetch<Group>(config.APIURL + "/groups", {
     method: "POST",
     params: {
@@ -105,7 +108,7 @@ const registerCategory = async () => {
         </Card>
         <Row>
           <RegistPageButton :text="$t('Button.reset')" @click="reset" variant="danger"></RegistPageButton>
-          <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click.once="registerCategory"></RegistPageButton>
+          <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
     </div>
