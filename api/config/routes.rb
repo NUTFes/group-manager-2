@@ -187,6 +187,7 @@ Rails.application.routes.draw do
       get "get_purchase_lists_csv/:fes_year_id" => "output_csv#output_purchase_lists_csv"
       get "get_users_csv/:fes_year_id" => "output_csv#output_users_csv"
       get "get_assign_rental_items_csv/:fes_year_id" => "output_csv#output_assign_rental_items_csv"
+      get "get_announcements_csv" => "output_csv#output_announcements_csv"
 
       # ダッシュボード
       get "dashboard" => "dashboard_api#get_dashboard_info"
