@@ -434,6 +434,23 @@ class Api::V1::OutputCsvController < ApplicationController
     send_data(csv_data, filename:"代表者_#{filename_year}年度.csv")
   end
 
+  def output_announcements_csv
+    @announcements = Announcement.all
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(参加団体名 アナウンス文)
+      csv << column_name
+      @announcements.each do |announcement|
+        column_values = [
+          announcement.group.name,
+          announcement.message
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename:"会場アナウンス文.csv")
+  end
+
   def output_public_relations_csv
     if params[:fes_year_id].to_i == 0
       @public_relations = Group.preload(:public_relation).map{ |group| group.public_relation }
