@@ -47,6 +47,9 @@ onMounted(async () => {
 })
 
 const registerCategory = async () => {
+
+  isSubmitting.value = true;
+  
   await $fetch<Group>(config.APIURL + "/groups", {
     method: "POST",
     params: {

@@ -69,6 +69,9 @@ const login = () => {
 };
 
 const registUser = async () => {
+
+  isSubmitting.value = true;
+  
   await $fetch<User>(config.APIURL + "/api/auth", {
     method: "POST",
     params: {
