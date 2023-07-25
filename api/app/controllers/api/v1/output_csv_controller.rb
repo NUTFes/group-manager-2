@@ -450,4 +450,33 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     send_data(csv_data, filename:"会場アナウンス文.csv")
   end
+
+  def output_public_relations_csv
+    if params[:fes_year_id].to_i == 0
+      @public_relations = Group.preload(:public_relation).map{ |group| group.public_relation }
+      filename_year = "全"
+    else
+      @public_relations = Group.where(fes_year_id:params[:fes_year_id]).preload(:public_relation).map{ |group| group.public_relation }
+      filename_year = FesYear.find(params[:fes_year_id]).year_num
+    end
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(参加団体名 PR文 URL)
+      csv << column_name
+      @public_relations.each do |public_relations|
+        # データが存在しない場合はスキップする
+        if public_relations.nil?
+          next
+        end
+        column_values = [
+          public_relations.group.name,
+          public_relations.blurb,
+          public_relations.picture_path,
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename:"参加団体PR申請_#{filename_year}年度.csv")
+  end
+
 end
