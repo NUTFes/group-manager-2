@@ -53,7 +53,7 @@
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
       <td><%= assign_rental_item.rental_item.name %></td>
-      <td></td>
+      <td><%= assign_rental_item.stocker_place.name %></td>
       <td><%= assign_rental_item.num %></td>
       <td><%= group.fes_year.fes_dates.find_by(days_num: 0)&.date %>(準備日)</td>
       <td><%= group.fes_year.fes_dates.find_by(days_num: 3)&.date %>(片付け日)</td>
