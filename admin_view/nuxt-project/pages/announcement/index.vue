@@ -13,7 +13,7 @@
         iconName="file_download"
         :on_click="downloadCSV"
       >
-        csv
+        CSV
       </CommonButton>
     </SubHeader>
 
