@@ -88,7 +88,7 @@
               <div v-if="venueMaps[index].venue_map === null">未登録</div>
               <div v-else>登録済み</div>
             </td>
-            <td v-else>会場配置図が存在しません</td>
+            <td v-else>会場配置図を読み込めません</td>
           </tr>
         </template>
       </Table>
