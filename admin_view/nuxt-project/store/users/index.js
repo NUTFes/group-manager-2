@@ -14,7 +14,7 @@ import createPersistedState from 'vuex-persistedstate';
  * 外から参照するのは問題ない
  */
 export const state = () => ({
-  role: 3,
+  role: 4,
   accessToken: null,
   client: null,
   uid: null,

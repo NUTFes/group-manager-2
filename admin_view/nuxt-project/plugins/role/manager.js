@@ -151,9 +151,9 @@ export const managerRole = {
   },
   user_page_setting: {
     read: true,
-    create: false,
-    update: false,
-    delete: false,
+    create: true,
+    update: true,
+    delete: true,
   },
   users: {
     read: true,

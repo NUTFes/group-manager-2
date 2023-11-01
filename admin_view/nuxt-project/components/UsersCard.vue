@@ -15,6 +15,9 @@
         <Tag primaryColor="#9C8AE3" secondaryColor="#70FFDD"
           >{{ dashboardData.user_num }} Users</Tag
         >
+        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
+          >{{ dashboardData.viewer_num }} Viewer</Tag
+        >
       </Row>
     </div>
     <hr />

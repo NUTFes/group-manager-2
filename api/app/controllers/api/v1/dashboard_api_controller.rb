@@ -5,6 +5,7 @@ class Api::V1::DashboardApiController < ApplicationController
         developer_num = User.where(role_id:1).length
         manager_num = User.where(role_id:2).length
         user_num = User.where(role_id:3).length
+        viewer_num = User.where(role_id:4).length
         groups = Group.all
         groups_length = groups.length
         cate_1_length = groups.where(group_category:1).length
@@ -31,6 +32,7 @@ class Api::V1::DashboardApiController < ApplicationController
             developer_num: developer_num,
             manager_num: manager_num,
             user_num: user_num,
+            viewer_num: viewer_num,
             groups_length: groups_length,
             cate_1_length: cate_1_length,
             cate_2_length: cate_2_length,
