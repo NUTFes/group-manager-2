@@ -3,13 +3,13 @@ class PrintPdfController < ApplicationController
 
   # 物品貸し出し書類出力
   def output_rental_items_pdf
-    output_groups("output_rental_items", "output_rental_items_pdf", "物品貸し出し書類_物品持ち出し表(各団体向け)", "Not Landscape")
+    output_groups("output_rental_items", "output_rental_items_pdf", "物品貸出表", "Not Landscape")
   end
   
   # 物品貸し出し書類をまとめて出力
   def output_all_groups_rental_items_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id])
-    print_pdf("output_all_groups_rental_items", "output_rental_items_pdf", "物品貸し出し書類_物品持ち出し表(各団体向け)", "Not Landscape")
+    print_pdf("output_all_groups_rental_items", "output_rental_items_pdf", "物品貸出表", "Not Landscape")
   end
 
   # 参加団体情報リスト
@@ -20,7 +20,7 @@ class PrintPdfController < ApplicationController
   # 参加団体情報リストをまとめて出力
   def output_all_groups_info_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id])
-    print_pdf("output_all_groups_info", "output_rental_items_pdf", "参加団体情報", "Not Landscape")
+    print_pdf("output_all_groups_info", "output_rental_items_pdf", "参加団体情報リストまとめ", "Not Landscape")
   end
 
   # 使用電力リスト出力
@@ -35,7 +35,7 @@ class PrintPdfController < ApplicationController
 
   # 貸出物品リスト
   def output_rental_items_list_pdf
-    output_groups_with_categories("output_rental_items_list", "output_rental_items_list_pdf", "貸出物品リスト", "Landscape")
+    output_groups_with_categories("output_rental_items_list", "output_rental_items_list_pdf", "貸出物品リストまとめ", "Landscape")
   end
 
   # 販売食品リスト
