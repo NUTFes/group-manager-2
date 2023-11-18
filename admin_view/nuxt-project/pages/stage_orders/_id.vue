@@ -4,10 +4,18 @@
       v-bind:pageTitle="stageOrder.group.name"
       pageSubTitle="ステージ申請一覧"
     >
-      <CommonButton v-if="this.$role(this.roleID).stage_orders.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).stage_orders.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).stage_orders.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).stage_orders.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -44,6 +52,18 @@
           <tr>
             <th>第二希望</th>
             <td>{{ stageOrder.stage_order_info.stage_second }}</td>
+          </tr>
+          <tr>
+            <th>会場配置図</th>
+            <td>
+              <div v-if="stageOrder.venue_map === null">未登録</div>
+              <div v-else>
+                <img
+                  :src="stageOrder.venue_map.picture_path"
+                  style="width: 80%; height: 80%"
+                />
+              </div>
+            </td>
           </tr>
           <tr>
             <th>準備時間幅</th>
@@ -121,11 +141,7 @@
           <h3>第一希望</h3>
           <select v-model="first">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in stageList"
-              :key="list.id"
-              :value="list.id"
-            >
+            <option v-for="list in stageList" :key="list.id" :value="list.id">
               {{ list.name }}
             </option>
           </select>
@@ -134,11 +150,7 @@
           <h3>第二希望</h3>
           <select v-model="second">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in stageList"
-              :key="list.id"
-              :value="list.id"
-            >
+            <option v-for="list in stageList" :key="list.id" :value="list.id">
               {{ list.name }}
             </option>
           </select>
@@ -147,11 +159,7 @@
           <h3>準備時間幅</h3>
           <select v-model="prepareTimeInterval">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeBox"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeBox" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -160,11 +168,7 @@
           <h3>使用時間幅</h3>
           <select v-model="useTimeInterval">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeBox"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeBox" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -173,11 +177,7 @@
           <h3>掃除時間幅</h3>
           <select v-model="cleanUpTimeInterval">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeBox"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeBox" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -186,11 +186,7 @@
           <h3>準備開始時刻</h3>
           <select v-model="prepareStartTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -199,11 +195,7 @@
           <h3>パフォーマンス開始時刻</h3>
           <select v-model="performanceStartTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -212,11 +204,7 @@
           <h3>パフォーマンス終了時刻</h3>
           <select v-model="performanceEndTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -225,11 +213,7 @@
           <h3>掃除終了時刻</h3>
           <select v-model="cleanUpEndTime">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="list in timeRange"
-              :key="list"
-              :value="list"
-            >
+            <option v-for="list in timeRange" :key="list" :value="list">
               {{ list }}
             </option>
           </select>
@@ -252,10 +236,7 @@
         >
       </template>
     </DeleteModal>
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -276,11 +257,46 @@ export default {
         { id: 1, text: "はい", value: true },
         { id: 2, text: "いいえ", value: false },
       ],
-      timeBox: ["5分","10分","15分","20分","25分","30分","35分","40分","45分","50分","55分","60分",
-        "65分","70分","75分","80分","90分","95分","100分","105分","110分","115分","120分",
+      timeBox: [
+        "5分",
+        "10分",
+        "15分",
+        "20分",
+        "25分",
+        "30分",
+        "35分",
+        "40分",
+        "45分",
+        "50分",
+        "55分",
+        "60分",
+        "65分",
+        "70分",
+        "75分",
+        "80分",
+        "90分",
+        "95分",
+        "100分",
+        "105分",
+        "110分",
+        "115分",
+        "120分",
       ],
       hour_range: ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18"],
-      minute_range: ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50","55"],
+      minute_range: [
+        "00",
+        "05",
+        "10",
+        "15",
+        "20",
+        "25",
+        "30",
+        "35",
+        "40",
+        "45",
+        "50",
+        "55",
+      ],
       timeRange: [],
       refYears: "Years",
       refYearID: 0,
@@ -302,7 +318,7 @@ export default {
       prepareStartTime: "指定なし",
       performanceStartTime: "指定なし",
       performanceEndTime: "指定なし",
-      cleanUpEndTime: "指定なし"
+      cleanUpEndTime: "指定なし",
     };
   },
   async asyncData({ $axios, route }) {
@@ -330,7 +346,8 @@ export default {
   },
   methods: {
     async openEditModal() {
-      const groupsListUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupsListUrl =
+        "/api/v1/get_groups_refinemented_by_current_fes_year";
       const resGroups = await this.$axios.$get(groupsListUrl);
       const fesDatesListUrl = "/api/v1/get_current_fes_dates";
       const resFesDates = await this.$axios.$get(fesDatesListUrl);
@@ -339,20 +356,20 @@ export default {
       this.groupList = resGroups.data;
       this.fesDatesList = resFesDates.data;
       this.stageList = resStages.data;
-      let stageOrder = this.stageOrder.stage_order
-      console.log(stageOrder)
-      this.groupID = stageOrder.group_id
-      this.isSunny = stageOrder.is_sunny
-      this.fesDateID = stageOrder.fes_date_id
-      this.first = stageOrder.stage_first
-      this.second = stageOrder.stage_second
-      this.prepareTimeInterval = stageOrder.prepare_time_interval
-      this.useTimeInterval = stageOrder.use_time_interval
-      this.cleanUpTimeInterval = stageOrder.cleanup_time_interval
-      this.prepareStartTime = stageOrder.prepare_start_time
-      this.performanceStartTime = stageOrder.performance_start_time
-      this.performanceEndTime = stageOrder.performance_end_time
-      this.cleanUpEndTime = stageOrder.cleanup_end_time
+      let stageOrder = this.stageOrder.stage_order;
+      console.log(stageOrder);
+      this.groupID = stageOrder.group_id;
+      this.isSunny = stageOrder.is_sunny;
+      this.fesDateID = stageOrder.fes_date_id;
+      this.first = stageOrder.stage_first;
+      this.second = stageOrder.stage_second;
+      this.prepareTimeInterval = stageOrder.prepare_time_interval;
+      this.useTimeInterval = stageOrder.use_time_interval;
+      this.cleanUpTimeInterval = stageOrder.cleanup_time_interval;
+      this.prepareStartTime = stageOrder.prepare_start_time;
+      this.performanceStartTime = stageOrder.performance_start_time;
+      this.performanceEndTime = stageOrder.performance_end_time;
+      this.cleanUpEndTime = stageOrder.cleanup_end_time;
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -381,7 +398,8 @@ export default {
     },
     async edit() {
       const url =
-        "/stage_orders/"+ this.routeId +
+        "/stage_orders/" +
+        this.routeId +
         "?group_id=" +
         this.groupID +
         "&is_sunny=" +
@@ -407,7 +425,7 @@ export default {
         "&cleanup_end_time=" +
         this.cleanUpEndTime;
 
-        console.log(url)
+      console.log(url);
 
       await this.$axios.$put(url).then((response) => {
         this.reload(response.data.id);

@@ -4,11 +4,9 @@
       <CommonButton v-if="this.$role(roleID).public_relations.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
-      <!--
       <CommonButton iconName="file_download" :on_click="downloadCSV">
         CSV
       </CommonButton>
-      -->
     </SubHeader>
 
     <SubSubHeader>
@@ -288,7 +286,7 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_public_relations_csv/" +
         this.refYearID;
-      window.open(url, "未実装");
+      window.open(url, "PR申請_CSV");
     },
   },
 };

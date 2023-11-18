@@ -373,7 +373,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 販売食品 購入品 なまもの 購入店 購入日 曜日 何日目)
+      column_name = %w(参加団体名 販売食品 購入品 なまもの 購入店 購入日 曜日 何日目 URL)
       csv << column_name
       @purchase_lists.each do |food_product|
         # データが存在しない場合はスキップする
@@ -393,7 +393,8 @@ class Api::V1::OutputCsvController < ApplicationController
             purchase_list.shop.name,
             purchase_list.fes_date.date,
             purchase_list.fes_date.day,
-            purchase_list.fes_date.days_num
+            purchase_list.fes_date.days_num,
+            purchase_list.url
           ]
           csv << column_values
         end
@@ -431,6 +432,51 @@ class Api::V1::OutputCsvController < ApplicationController
       end
     end
     send_data(csv_data, filename:"代表者_#{filename_year}年度.csv")
+  end
+
+  def output_announcements_csv
+    @announcements = Announcement.all
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(参加団体名 アナウンス文)
+      csv << column_name
+      @announcements.each do |announcement|
+        column_values = [
+          announcement.group.name,
+          announcement.message
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename:"会場アナウンス文.csv")
+  end
+
+  def output_public_relations_csv
+    if params[:fes_year_id].to_i == 0
+      @public_relations = Group.preload(:public_relation).map{ |group| group.public_relation }
+      filename_year = "全"
+    else
+      @public_relations = Group.where(fes_year_id:params[:fes_year_id]).preload(:public_relation).map{ |group| group.public_relation }
+      filename_year = FesYear.find(params[:fes_year_id]).year_num
+    end
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(参加団体名 PR文 URL)
+      csv << column_name
+      @public_relations.each do |public_relations|
+        # データが存在しない場合はスキップする
+        if public_relations.nil?
+          next
+        end
+        column_values = [
+          public_relations.group.name,
+          public_relations.blurb,
+          public_relations.picture_path,
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename:"参加団体PR申請_#{filename_year}年度.csv")
   end
 
 end

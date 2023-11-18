@@ -8,6 +8,13 @@
       >
         追加
       </CommonButton>
+      <CommonButton
+        v-if="this.$role(roleID).announcements.create"
+        iconName="file_download"
+        :on_click="downloadCSV"
+      >
+        CSV
+      </CommonButton>
     </SubHeader>
 
     <SubSubHeader>
@@ -206,6 +213,12 @@ export default {
       for (const res of refRes.data) {
         this.announcements.push(res);
       }
+    },
+    async downloadCSV() {
+      const url =
+        this.$config.apiURL +
+        "/api/v1/get_announcements_csv"
+      window.open(url, "購入品申請_CSV");
     },
   },
 };

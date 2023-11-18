@@ -45,7 +45,6 @@ export default {
               },
               ticks: {
                 min: 0,
-                max: 30,
                 fontSize: 12,
                 stepSize: 5,
               },
@@ -53,10 +52,27 @@ export default {
           ],
         },
 				tooltips: {
-					enabled: false,
-				}
+					enabled: true,
+          callbacks:{
+            label: function(tooltipItems) {
+              if(tooltipItems.xLabel == "0"){
+                return "";
+              }
+              return  tooltipItems.xLabel ;
+            },
+          },
+				},
       },
     };
+  },
+  methods: {
+    // データの中で最大の値を返す関数
+    findMaxValue(data) {
+      return Math.max(...data);
+    },
+    roundUp5(num) {
+      return Math.ceil(num / 5) * 5;
+    },
   },
   mounted() {
     this.$axios
@@ -73,6 +89,10 @@ export default {
         this.data.datasets[0].data[3] = response.data.cate_4_length;
         this.data.datasets[0].data[4] = response.data.cate_5_length;
         this.data.datasets[0].data[5] = response.data.cate_6_length;
+        // データの中で最大の値を取得
+        const maxDataValue = this.findMaxValue(this.data.datasets[0].data);
+        // x軸の最大値を設定
+        this.options.scales.xAxes[0].ticks.max = this.roundUp5(maxDataValue+1);;
         this.renderChart(this.data, this.options);
       });
     this.rate = Number(this.groups_length) + 1;
