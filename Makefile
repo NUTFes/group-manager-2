@@ -18,7 +18,7 @@ prod-build:
 	docker-compose -f docker-compose.prod.yml run --rm user_front npm install
 	docker-compose -f docker-compose.prod.yml run --rm admin_view npm install
 	docker-compose -f docker-compose.prod.yml run --rm user_front npm run build
-	docker-compose -f docker-compose.prod.yml run --rm admin_view npm build
+	docker-compose -f docker-compose.prod.yml run --rm admin_view npm run build
 	docker-compose -f docker-compose.prod.yml run --rm api rails db:migrate
 
 prod-build-seed:
