@@ -70,8 +70,8 @@
         <input type="radio" id="manager" value="2" v-model="picked" />
         <label for="user" style="color:black">User</label>
         <input type="radio" id="user" value="3" v-model="picked" />
-        <label for="viewer" style="color:black">Viewer</label>
-        <input type="radio" id="viewer" value="4" v-model="picked" />
+        <label for="member" style="color:black">Member</label>
+        <input type="radio" id="member" value="4" v-model="picked" />
         <span style="color:black">{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
       </template>
       <template v-slot:method>
@@ -132,7 +132,7 @@ export default {
         { id: 1, name: "developer" },
         { id: 2, name: "manager" },
         { id: 3, name: "user" },
-        { id: 4, name: "viewer" },
+        { id: 4, name: "member" },
       ],
     };
   },

@@ -1,4 +1,4 @@
-export const viewerRole = {
+export const memberRole = {
   employees: {
     read: true,
     create: false,

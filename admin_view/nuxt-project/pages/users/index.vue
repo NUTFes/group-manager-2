@@ -140,10 +140,10 @@ export default {
     return {
       headers: ["ID", "名前", "権限"],
       roles: [
-        { id: 1, name: "developer" },
-        { id: 2, name: "manager" },
-        { id: 3, name: "user" },
-        { id: 4, name: "viewer" },
+        { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
+        { id: 2, name: "manager" }, // 管理者( 参加団体部門長にユーザ画面制御の権限のみを与える )
+        { id: 3, name: "user" },  // 参加団体( 権限を与えない )
+        { id: 4, name: "member" },  // 実行委員/その他の部門長 (閲覧権限のみ与える)
       ],
       departmentList: [
         { id: 1,  name: "機械創造工学課程" },
