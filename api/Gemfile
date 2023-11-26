@@ -30,8 +30,8 @@ gem 'devise_token_auth'
 gem 'seed-fu'
 
 gem 'pdfkit'
-gem 'wkhtmltopdf'
-gem 'wkhtmltopdf-binary'
+# gem 'wkhtmltopdf'
+# gem 'wkhtmltopdf-binary'
 
 gem 'slack-notifier'
 gem 'dotenv-rails'
