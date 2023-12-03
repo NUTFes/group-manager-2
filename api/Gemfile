@@ -30,8 +30,11 @@ gem 'devise_token_auth'
 gem 'seed-fu'
 
 gem 'pdfkit'
-# gem 'wkhtmltopdf'
-# gem 'wkhtmltopdf-binary'
+# 環境変数PLATFORMが'arm64-darwin'でない場合、以下のGemをインクルード
+if ENV['PLATFORM'] != 'arm64-darwin'
+  gem 'wkhtmltopdf'
+  gem 'wkhtmltopdf-binary'
+end
 
 gem 'slack-notifier'
 gem 'dotenv-rails'
