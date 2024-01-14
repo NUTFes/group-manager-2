@@ -23,3 +23,7 @@ table, td, th, tr{
   border: 1px #333333 solid;
   border-collapse: collapse;
 }
+
+tbody {
+  page-break-inside: avoid;
+}
