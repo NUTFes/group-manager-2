@@ -184,8 +184,8 @@
       </VerticalTable>
     </Card>
     <Row>
-      <CommonButton iconName="save" :on_click="update">保存</CommonButton>
-      <InTableButton iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
+      <CommonButton v-if="$role(roleID).user_page_setting.update" iconName="save" :on_click="update">保存</CommonButton>
+      <InTableButton v-if="$role(roleID).user_page_setting.update" iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
     </Row>
   </div>
 </template>
