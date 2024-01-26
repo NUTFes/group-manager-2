@@ -10,6 +10,7 @@
           <h6 v-if="user.role_id == 1" class="developer">Developer</h6>
           <h6 v-if="user.role_id == 2">Manager</h6>
           <h6 v-if="user.role_id == 3">User</h6>
+          <h6 v-if="user.role_id == 4">Member</h6>
           <h3>{{ user.name }}</h3>
           <p>{{ user.email }}</p>
           <IconButton icon_name="edit" :on_click="openEditModal" />

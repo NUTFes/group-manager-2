@@ -10,7 +10,8 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
+            <!-- roleのupdateがtrueになっているroleだけ，トグルボタンが表示される -->
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_regist_group" :isOn="is_regist_group" :on_click="() => {this.is_regist_group = !this.is_regist_group}" />
           </td>
         </tr>
         <tr>
@@ -20,7 +21,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_group" :isOn="is_edit_group" :on_click="() => {this.is_edit_group = !this.is_edit_group}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_group" :isOn="is_edit_group" :on_click="() => {this.is_edit_group = !this.is_edit_group}" />
           </td>
         </tr>
         <tr>
@@ -30,7 +31,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_sub_rep" :isOn="is_edit_sub_rep" :on_click="() => {this.is_edit_sub_rep = !this.is_edit_sub_rep}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_sub_rep" :isOn="is_edit_sub_rep" :on_click="() => {this.is_edit_sub_rep = !this.is_edit_sub_rep}" />
           </td>
         </tr>
         <tr>
@@ -40,7 +41,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_place" :isOn="is_edit_place" :on_click="() => {this.is_edit_place = !this.is_edit_place}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_place" :isOn="is_edit_place" :on_click="() => {this.is_edit_place = !this.is_edit_place}" />
           </td>
         </tr>
         <tr>
@@ -50,7 +51,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="add_power_order" :isOn="add_power_order" :on_click="() => {this.add_power_order = !this.add_power_order}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_power_order" :isOn="add_power_order" :on_click="() => {this.add_power_order = !this.add_power_order}" />
           </td>
         </tr>
         <tr>
@@ -60,7 +61,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_power_order" :isOn="is_edit_power_order" :on_click="() => {this.is_edit_power_order = !this.is_edit_power_order}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_power_order" :isOn="is_edit_power_order" :on_click="() => {this.is_edit_power_order = !this.is_edit_power_order}" />
           </td>
         </tr>
         <tr>
@@ -70,7 +71,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="add_rental_order" :isOn="add_rental_order" :on_click="() => {this.add_rental_order = !this.add_rental_order}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_rental_order" :isOn="add_rental_order" :on_click="() => {this.add_rental_order = !this.add_rental_order}" />
           </td>
         </tr>
         <tr>
@@ -80,7 +81,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_rental_order" :isOn="is_edit_rental_order" :on_click="() => {this.is_edit_rental_order = !this.is_edit_rental_order}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_rental_order" :isOn="is_edit_rental_order" :on_click="() => {this.is_edit_rental_order = !this.is_edit_rental_order}" />
           </td>
         </tr>
         <tr>
@@ -90,7 +91,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_stage_order" :isOn="is_edit_stage_order" :on_click="() => {this.is_edit_stage_order = !this.is_edit_stage_order}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_stage_order" :isOn="is_edit_stage_order" :on_click="() => {this.is_edit_stage_order = !this.is_edit_stage_order}" />
           </td>
         </tr>
         <tr>
@@ -100,7 +101,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="add_employee" :isOn="add_employee" :on_click="() => {this.add_employee = !this.add_employee}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_employee" :isOn="add_employee" :on_click="() => {this.add_employee = !this.add_employee}" />
           </td>
         </tr>
         <tr>
@@ -110,7 +111,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_employee" :isOn="is_edit_employee" :on_click="() => {this.is_edit_employee = !this.is_edit_employee}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_employee" :isOn="is_edit_employee" :on_click="() => {this.is_edit_employee = !this.is_edit_employee}" />
           </td>
         </tr>
         <tr>
@@ -120,7 +121,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_regist_food_product" :isOn="is_regist_food_product" :on_click="() => {this.is_regist_food_product = !this.is_regist_food_product}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_regist_food_product" :isOn="is_regist_food_product" :on_click="() => {this.is_regist_food_product = !this.is_regist_food_product}" />
           </td>
         </tr>
         <tr>
@@ -130,7 +131,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="add_food_product" :isOn="add_food_product" :on_click="() => {this.add_food_product = !this.add_food_product}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_food_product" :isOn="add_food_product" :on_click="() => {this.add_food_product = !this.add_food_product}" />
           </td>
         </tr>
         <tr>
@@ -140,7 +141,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_food_product" :isOn="is_edit_food_product" :on_click="() => {this.is_edit_food_product = !this.is_edit_food_product}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_food_product" :isOn="is_edit_food_product" :on_click="() => {this.is_edit_food_product = !this.is_edit_food_product}" />
           </td>
         </tr>
         <tr>
@@ -150,7 +151,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="add_purchase_list" :isOn="add_purchase_list" :on_click="() => {this.add_purchase_list = !this.add_purchase_list}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="add_purchase_list" :isOn="add_purchase_list" :on_click="() => {this.add_purchase_list = !this.add_purchase_list}" />
           </td>
         </tr>
         <tr>
@@ -160,7 +161,7 @@
             <p v-else>募集締め切り</p>
           </td>
           <td>
-            <SwitchButton v-model="is_edit_purchase_list" :isOn="is_edit_purchase_list" :on_click="() => {this.is_edit_purchase_list = !this.is_edit_purchase_list}" />
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_purchase_list" :isOn="is_edit_purchase_list" :on_click="() => {this.is_edit_purchase_list = !this.is_edit_purchase_list}" />
           </td>
         </tr>
         <tr>
@@ -183,8 +184,8 @@
       </VerticalTable>
     </Card>
     <Row>
-      <CommonButton iconName="save" :on_click="update">保存</CommonButton>
-      <InTableButton iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
+      <CommonButton v-if="$role(roleID).user_page_setting.update" iconName="save" :on_click="update">保存</CommonButton>
+      <InTableButton v-if="$role(roleID).user_page_setting.update" iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
     </Row>
   </div>
 </template>
