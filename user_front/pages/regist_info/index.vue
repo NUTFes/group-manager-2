@@ -351,7 +351,10 @@ const isStageOverlap = computed(() => {
         </li>
         <li
           v-if="
-            groupCategoryId != 3 && groupCategoryId != 4 && groupCategoryId != 5 && groupCategoryId != 6
+            groupCategoryId != 3 &&
+            groupCategoryId != 4 &&
+            groupCategoryId != 5 &&
+            groupCategoryId != 6
           "
           @click="tab = 9"
         >
@@ -486,10 +489,12 @@ const isStageOverlap = computed(() => {
               <p>{{ totalPower }} [W]</p>
             </div>
             <p v-if="isSamePower" class="text-gray-500">
-              {{ $t("Power.isSamePower") }}<span class="font-bold">1500[W]</span>
+              {{ $t("Power.isSamePower")
+              }}<span class="font-bold">1500[W]</span>
             </p>
             <p v-else-if="isOverPower" class="text-red-500">
-              {{ $t("Power.isOverPower") }}<span class="font-bold">1500[W]</span>
+              {{ $t("Power.isOverPower")
+              }}<span class="font-bold">1500[W]</span>
             </p>
             <p v-else class="text-gray-500">
               {{ $t("Power.isElse") }}<span class="font-bold">1500[W]</span>
@@ -504,6 +509,7 @@ const isStageOverlap = computed(() => {
               :manufacturer="p.power_order.manufacturer"
               :model="p.power_order.model"
               :url="p.power_order.item_url"
+              :total-power="totalPower"
               @reload-power="reload"
             />
           </div>
@@ -511,6 +517,7 @@ const isStageOverlap = computed(() => {
             v-if="isAddPower"
             v-model:add-power="isAddPower"
             :group-id="group?.id"
+            :total-power="totalPower"
             @reload-power="reload"
           />
         </div>
