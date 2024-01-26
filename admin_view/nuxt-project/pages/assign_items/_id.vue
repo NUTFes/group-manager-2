@@ -36,6 +36,9 @@
               >
                 <td>{{ stockerItem.rental_item.name }}</td>
                 <td>{{ stockerItem.stocker_item.num }}</td>
+                <td :class="{ warning: warningStatus[index], 'no-hover': warningStatus[index] }">
+                    {{ calculateDifference(stockerItem, index) }}
+                </td>
                 <td><btn  @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
                 <td><btn  @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
               </tr>
@@ -297,6 +300,21 @@
   </div>
 </template>
 
+<style>
+  .warning {
+    text-align: center;
+    vertical-align: middle;
+    padding: 25px;
+    background-color: #ffac5d; 
+  }
+  .normal-table td.warning:hover {
+    background-color: #ffac5d !important;
+    background: none;  /* 線形グラデーションを上書きして無効にします */
+    -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
+    -webkit-text-fill-color: black !important;    /* テキストの色を黒に設定します */
+  }
+</style>
+
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
@@ -306,6 +324,8 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
+      warningStatus: {},
+      isWarning: false, 
       assignRentalItemId: null,
       stockerItemId: null,
       stockerItemDeleteId: null,
@@ -329,6 +349,7 @@ export default {
       rental_headers: [
         "物品名",
         "個数",
+        "残数",
       ],
       stocker_headers: [
         "団体名",
@@ -437,6 +458,22 @@ export default {
   },
 
   methods: {
+    calculateDifference(stockerItem, index) {
+        const matchingAssignRentalItems = this.assignRentalItems.filter(
+            item => item.rental_item.name === stockerItem.rental_item.name
+        );
+        let difference = stockerItem.stocker_item.num;
+        if (matchingAssignRentalItems.length > 0) {
+            const totalAssignedNum = matchingAssignRentalItems.reduce(
+                (total, item) => total + item.assign_rental_item.num,
+                0
+            );
+            difference = stockerItem.stocker_item.num - totalAssignedNum;
+        }
+        this.$set(this.warningStatus, index, difference < 0);
+        return difference;
+      },
+
     async editPlace() {
       const placeUrl =
         "/stocker_places/" +
