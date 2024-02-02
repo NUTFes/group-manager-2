@@ -195,7 +195,7 @@ export const powerSchema = object({
     .of(
       object().shape({
         productName: string().required("入力してください\nPlease enter"),
-        maxPower: number().required("入力してください\nPlease enter").min(1, "0W以上で入力してください\nPlease enter more than 0 W").max(1500,"1500以下に設定してください\nSet below 1500").typeError('半角数字を入力してください\nPlease enter one-byte numbers'),
+        maxPower: number().required("入力してください\nPlease enter").min(1, "0W以上で入力してください\nPlease enter more than 0 W").typeError('半角数字を入力してください\nPlease enter one-byte numbers'),
         manufacturer: string().required("入力してください\nPlease enter"),
         model: string().required("入力してください\nPlease enter"),
         url: string().required("入力してください\nPlease enter").url("URLを入力してください\nPlease enter URL"),
@@ -204,7 +204,7 @@ export const powerSchema = object({
 });
 export const editPowerSchema = object({
   productName: string().required("入力してください\nPlease enter"),
-  maxPower: number().required("入力してください\nPlease enter").min(1, "0W以上で入力してください\nPlease enter more than 0 W").max(1500,"1500以下に設定してください\nSet below 1500").typeError('半角数字を入力してください\nPlease enter one-byte numbers'),
+  maxPower: number().required("入力してください\nPlease enter").min(1, "0W以上で入力してください\nPlease enter more than 0 W").typeError('半角数字を入力してください\nPlease enter one-byte numbers'),
   manufacturer: string().required("入力してください\nPlease enter"),
   model: string().required("入力してください\nPlease enter"),
   url: string().required("入力してください\nPlease enter").url("URLを入力してください\nPlease enter URL"),

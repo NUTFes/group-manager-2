@@ -27,8 +27,13 @@ table {
   width: 40%;
 }
 
-.items th {
-  width: 20%;
+
+.small-box {
+  width:5%
+}
+
+.large-box {
+  width:10%
 }
 
 .items tr {
