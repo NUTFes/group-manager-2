@@ -9,7 +9,7 @@ class PrintPdfController < ApplicationController
   # 物品貸し出し書類をまとめて出力
   def output_all_groups_rental_items_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id]).order(:group_category_id)
-    print_pdf("output_all_groups_rental_items", "output_rental_items_pdf", "物品貸し出し書類_物品持ち出し表(各団体向け)", "Not Landscape")
+    print_pdf("output_all_groups_rental_items", "output_rental_items_pdf", "物品貸出表", "Not Landscape")
   end
 
   # 参加団体情報リスト
