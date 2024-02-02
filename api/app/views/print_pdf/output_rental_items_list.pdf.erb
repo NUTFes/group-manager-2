@@ -1,38 +1,53 @@
 <% @catgories.each do |category| %>
   <% if category.exists? %>
-  <div class="page-break">
-    <h1>貸出物品リストまとめ - <%= category.first.group_category.name %></h1>
-    <table>
+    <% item_count = 0 %>
+    <% page_items_limit = 18 %>
+    <% is_new_page = true %>
+
+    <% category.each do |group| %>
+      <% group_items_count = group.assign_rental_items.exists? ? group.assign_rental_items.count : 1 %>
+      <% if item_count + group_items_count > page_items_limit || is_new_page %>
+        <% if !is_new_page %>
+          </table>
+          </div>
+        <% end %>
+        <div class="page-break">
+        <h1>貸し出し物品リスト - <%= category.first.group_category.name %></h1>
+        <table>
+          <tr>
+            <th>参加形式</th>
+            <th>団体番号</th>
+            <th>団体名</th>
+            <th>企画名</th>
+            <th>名称</th>
+            <th>借用場所</th>
+            <th>個数</th>
+            <th>備考欄</th>
+          </tr>
+        <% item_count = 0 %>
+        <% is_new_page = false %>
+      <% end %>
+      <% item_count += group_items_count %>
       <tr>
-        <th>参加形式</th>
-        <th>団体番号</th>
-        <th>団体名</th>
-        <th>企画名</th>
-        <th>名称</th>
-        <th>借用場所</th>
-        <th>個数</th>
-        <th>備考欄</th>
-      </tr>
-      <% category.each do |group| %>
-        <tr>
-          <td rowspan=<%= group.assign_rental_items.count %>><%= group.group_category.name %></td>
-          <td rowspan=<%= group.assign_rental_items.count %>><%= group.number %></td>
-          <td rowspan=<%= group.assign_rental_items.count %>><%= group.name %></td>
-          <td rowspan=<%= group.assign_rental_items.count %>><%= group.project_name %></td>
-          <% if group.assign_rental_items.exists? %>
-          <% group.assign_rental_items.each do |assign_rental_item| %>
-          <td><%= assign_rental_item.rental_item.name %></td>
-          <td><%= assign_rental_item.stocker_place.name %></td>
-          <td><%= assign_rental_item.num %></td>
-          <td></td>
-        </tr>
+        <td rowspan=<%= group_items_count %>><%= group.group_category.name %></td>
+        <td rowspan=<%= group_items_count %>><%= group.number %></td>
+        <td rowspan=<%= group_items_count %>><%= group.name %></td>
+        <td rowspan=<%= group_items_count %>><%= group.project_name %></td>
+        <% if group.assign_rental_items.exists? %>
+          <% group.assign_rental_items.each_with_index do |assign_rental_item, index| %>
+            <% if index > 0 %><tr><% end %>
+            <td><%= assign_rental_item.rental_item.name %></td>
+            <td><%= assign_rental_item.stocker_place.name %></td>
+            <td><%= assign_rental_item.num %></td>
+            <td></td>
+            </tr>
           <% end %>
         <% else %>
-          <td colspan=3>なし</td>
+          <td colspan="3">なし</td>
         </tr>
         <% end %>
       <% end %>
-    </table>
-  </div>
+      </table>
+    </div>
   <% end %>
 <% end %>
