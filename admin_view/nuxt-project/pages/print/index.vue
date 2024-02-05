@@ -28,7 +28,7 @@
           </td>
         </tr>
         <tr>
-          <td>貸出物品リスト</td>
+          <td>貸出物品リストまとめ</td>
           <td>
             <InTableButton
               iconName="file_download"
@@ -80,7 +80,7 @@
           </td>
         </tr>
         <tr>
-          <td>物品貸し出し表まとめ</td>
+          <td>物品貸出表</td>
           <td>
             <InTableButton
               iconName="file_download"

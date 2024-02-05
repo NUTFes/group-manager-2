@@ -1,4 +1,4 @@
-export const managerRole = {
+export const memberRole = {
   employees: {
     read: true,
     create: false,
@@ -151,9 +151,9 @@ export const managerRole = {
   },
   user_page_setting: {
     read: true,
-    create: true,
-    update: true,
-    delete: true,
+    create: false,
+    update: false,
+    delete: false,
   },
   users: {
     read: true,
@@ -161,7 +161,7 @@ export const managerRole = {
     update: false,
     delete: false,
   },
-  assign_items: {
+  assgin_items: {
     read: true,
     create: false,
     update: false,

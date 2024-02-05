@@ -84,10 +84,11 @@
             <td>{{ stageOrder.stage_order_info.date }}</td>
             <td>{{ stageOrder.stage_order_info.stage_first }}</td>
             <td>{{ stageOrder.stage_order_info.stage_second }}</td>
-            <td v-if="venueMaps != null">
+            <td v-if="venueMaps[index]">
               <div v-if="venueMaps[index].venue_map === null">未登録</div>
               <div v-else>登録済み</div>
             </td>
+            <td v-else>会場配置図を読み込めません</td>
           </tr>
         </template>
       </Table>
@@ -359,6 +360,7 @@ export default {
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
       stageList: stagesRes.data,
+      venueMaps: venueMaps,
     };
   },
   mounted() {

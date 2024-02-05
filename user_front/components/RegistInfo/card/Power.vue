@@ -8,6 +8,7 @@ interface Props {
   model: string
   url: string
   setting: boolean | null
+  totalPower: number | null;
 }
 const props = withDefaults(defineProps<Props>(), {
   groupId: null,
@@ -17,7 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
   manufacturer: '',
   model: '',
   url: '',
-  setting: null
+  setting: null,
+  totalPower: 0,
 })
 
 interface Emits {
@@ -83,6 +85,7 @@ const openDeletePower = () => {
     :manufacturer="manufacturer"
     :model="model"
     :url="url"
+    :total-power="totalPower"
     @reload-power="reloadPower()"
   />
   <RegistInfoDeletePower
