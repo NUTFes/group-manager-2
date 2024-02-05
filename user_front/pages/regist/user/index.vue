@@ -111,10 +111,10 @@ const createCurrentDepartmentList = (e: any) => {
 <template>
   <div>
     <div class="mx-[20%] my-[5%]">
-      <Card>
+      <Card border="none" padding="0px">
         <h1 class="text-3xl">{{ $t("User.registRepresentative") }}</h1>
-        <Card border="none" align="end">
-          <div class="flex">
+        <Card border="none" align="end" class="!gap-1 md:!gap-2.5">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.name") }}</p>
             <input
               class="form"
@@ -126,7 +126,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ nameError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.studentId") }}</p>
             <input
               class="form"
@@ -139,7 +139,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ studentIdError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.grade") }}</p>
             <select
               class="form w-72"
@@ -161,7 +161,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ gradeError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.department") }}</p>
             <select
               class="form w-72"
@@ -182,7 +182,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ departmentError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.mail") }}</p>
             <input
               class="form w-72"
@@ -195,7 +195,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ emailError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.tel") }}</p>
             <input
               class="form"
@@ -209,7 +209,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ telError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.password") }}</p>
             <input
               type="password"
@@ -222,7 +222,7 @@ const createCurrentDepartmentList = (e: any) => {
             <p class="error">{{ passwordError }}</p>
           </div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t("User.passwordConfirm") }}</p>
             <input
               type="password"

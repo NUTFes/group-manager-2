@@ -75,22 +75,22 @@ const registerCategory = async () => {
 <template>
   <div>
     <div class="mx-[20%] my-[5%]">
-      <Card>
+      <Card border="none">
         <h1 class="text-3xl">{{ $t('Group.registGroup') }}</h1>
         <Card border="none" align="end">
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.groupName') }}</p>
             <input class="form" v-model="registerParams.groupName" @change="handleChangeGroupName" :class="{ 'error-border': groupNameError}">
           </div>
           <div class="error-msg">{{ groupNameError }}</div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.shopName') }}</p>
             <input class="form" v-model="registerParams.projectName" @change="handleChangeProjectName" :class="{ 'error-border': projectNameError }">
           </div>
           <div class="error-msg">{{ projectNameError }}</div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.category') }}</p>
             <select class="w-72" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
@@ -100,7 +100,7 @@ const registerCategory = async () => {
           </div>
           <div class="error-msg">{{ categoryError }}</div>
 
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.activityDetails') }}</p>
             <input class="form" v-model="registerParams.activity" @change="handleChangeActivity" :class="{ 'error-border': activityError }">
           </div>
