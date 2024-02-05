@@ -77,7 +77,7 @@ const registerCategory = async () => {
     <div class="mx-[20%] my-[5%]">
       <Card border="none">
         <h1 class="text-3xl">{{ $t('Group.registGroup') }}</h1>
-        <Card border="none" align="end">
+        <Card border="none" align="end" class="!gap-1 md:!gap-2.5">
           <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.groupName') }}</p>
             <input class="form" v-model="registerParams.groupName" @change="handleChangeGroupName" :class="{ 'error-border': groupNameError}">
