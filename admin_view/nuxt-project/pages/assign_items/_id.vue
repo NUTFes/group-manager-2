@@ -142,28 +142,18 @@
       </template>
     </AddModal>
 
-    <AddModal
+    <AssignItemAddModal
       @close="closeAssignAddModal"
       v-if="isOpenAssignAddModal"
       title="割当の追加"
     >
       <template v-slot:form>
-        <div>
-          <h3>団体名</h3>
-          <select v-model="assignGroup">
-            <option disabled value="">選択してください</option>
-            <option
-              v-for="group in groups"
-              :key="group.id"
-              :value="group.id"
-            >
-              {{ group.name }}
-            </option>
-          </select>
-        </div>
-        <div>
+        <div class="assign-item-name-container">
           <h3>物品名</h3>
-          <select v-model="assignItemName">
+          <select
+            class="assign-item-name-select"
+            v-model="assignItemName"
+          >
             <option disabled value="">選択してください</option>
             <option
               v-for="i in stockerItems"
@@ -174,15 +164,62 @@
             </option>
           </select>
         </div>
-        <div>
-          <h3>個数</h3>
-          <input v-model="assignItemNum" type="number" placeholder="入力してください" />
+        <div v-if="assignItemName" class="assign-item-list-wrapper">
+          <div
+            v-for="(assign, index) in assignItemsNumAndGroup"
+            :key="index"
+            class="assign-item-list"
+          >
+            <div class="assign-item-list-container">
+              <!-- 団体名のセレクトボックス -->
+              <div class="assign-item-list-group">
+                <div v-if="index === 0" class="assign-item-list-label-group-label">
+                  <h3>団体名</h3>
+                </div>
+                <select v-model="assign.group" class="assign-item-list-group-select">
+                  <option disabled value="">選択してください</option>
+                  <!-- 団体名を重複して選択できないようにする -->
+                  <option
+                    v-for="group in groups"
+                    :key="group.id"
+                    :value="group.id"
+                    v-if="!getSelectedGroupIds().includes(group.id) || assign.group === group.id"
+                  >
+                    {{ group.name }}
+                  </option>
+                </select>
+              </div>
+              <!-- 個数の入力ボックス -->
+              <div class="assign-item-list-num">
+                <div v-if="index === 0" class="assign-item-list-num-label">
+                  <h3>個数</h3>
+                </div>
+                <input
+                  v-model="assign.num"
+                  type="number"
+                  placeholder="入力してください"
+                  class="assign-item-list-num-input"
+                />
+              </div>
+              <!-- 削除ボタン -->
+              <div class="assign-item-list-delete">
+                <button class="assign-item-list-delete-btn delete-btn-effect" @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)">
+                  <span class="material-icons"> delete </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button class="assign-item-list-add-btn add-btn-effect" @click.prevent="addAssignItem">団体を追加</button>
+          </div>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitAssign">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submitAssign"
+          >登録</CommonButton
+        >
       </template>
-    </AddModal>
+    </AssignItemAddModal>
 
     <EditModal
       @close="closePlaceEditModal"
@@ -319,6 +356,7 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import moment from "moment";
+import AssignItemAddModal from "../../components/AssignItemAddModal.vue";
 
 export default {
   watchQuery: ["page"],
@@ -332,6 +370,7 @@ export default {
       assignRentalItemDeleteId: null,
       assignItemName: "",
       assignItemNum: null,
+      assignItemsNumAndGroup: [{ group: "", num: 0 }], // 物品割当の団体名と個数
       stockerItemName: "",
       stockerItemNum: null,
       rentableItems: [],
@@ -343,7 +382,7 @@ export default {
       itemYear: [],
       itemFesYear: "",
       itemStockerPlaceId: "",
-			roomName: null,
+      roomName: null,
       refRole: [],
       id: this.$route.params.id,
       rental_headers: [
@@ -440,7 +479,7 @@ export default {
     return {
       stockerPlaces: stockerPlacesRes.data,
       stockerItems: stockerItemsRes.data.stocker_items,
-			placeName: stockerItemsRes.data.stocker_place,
+      placeName: stockerItemsRes.data.stocker_place,
       assignRentalItems: assignRentalItemsRes.data,
       groups: groupsRes,
       allRentableItems: allRentableItemsRes.data,
@@ -547,30 +586,56 @@ export default {
         this.closeItemEditModal();
       });
     },
-
+    getSelectedGroupIds() {
+      return this.assignItemsNumAndGroup.map((assign) => assign.group);
+    },
+    addAssignItem() {
+      this.assignItemsNumAndGroup.push({ group: "", num: 0 });
+    },
     async submitAssign() {
-      const assignUrl =
-        "/assign_rental_items/" +
-        "?group_id=" +
-        this.assignGroup +
-        "&rental_item_id=" +
-        this.assignItemName +
-        "&num=" +
-        this.assignItemNum +
-        "&stocker_place_id=" +
-        this.id;
-      await this.$axios.$post(assignUrl).then((response) => {
-        this.assignGroup = "";
-        this.assignItemName = "";
-        this.assignItemNum = null;
-        this.id;
-        console.log(response.data);
-        location.reload();
-        this.closeAssignAddModal();
-      })
-      .catch(error => {
-        console.log(error)
-      });
+      const assignUrl = "/assign_rental_items";
+          // バリデーションフラグ
+      let isValid = true;
+      // バリデーションメッセージ
+      let validationMessages = [];
+
+      // アイテムごとのバリデーション
+      this.assignItemsNumAndGroup.forEach(item => {
+      if (!item.group) {
+        validationMessages.push("団体名が選択されていません。");
+        isValid = false;
+      }
+      if (!item.num || isNaN(item.num) || item.num <= 0) {
+        validationMessages.push("個数は正の数である必要があります。");
+        isValid = false;
+      }
+    });
+    if (!isValid) {
+      // バリデーションメッセージを表示
+      alert(validationMessages.join("\n"));
+      return; // ここで処理を終了し、リセットせずにモーダルをそのまま表示
+    }
+    try {
+      const payload = {
+        items: this.assignItemsNumAndGroup.map(item => ({
+          group_id: item.group,
+          num: item.num
+        })),
+        rentalItemId: this.assignItemName,
+        stockerPlaceId: this.id,
+      };
+      const response = await this.$axios.$post(assignUrl, payload);
+      console.log(response.data);
+      // バリデーションに成功したら、ここでデータをリセット
+      this.assignItemsNumAndGroup = [{ group: "", num: 0 }];
+      this.assignItemName = "";
+      this.assignItemNum = null;
+      this.id;
+      location.reload();
+      this.closeAssignAddModal();
+    } catch (error) {
+      console.error(error);
+      alert('登録処理中にエラーが発生しました。')};
     },
 
     async editAssign() {
@@ -601,7 +666,7 @@ export default {
       this.isOpenItemAddModal = false;
     },
     openAssignAddModal() {
-			this.itemFesYear = this.refYearID
+      this.itemFesYear = this.refYearID;
       this.isOpenAssignAddModal = false;
       this.isOpenAssignAddModal = true;
     },
@@ -609,9 +674,9 @@ export default {
       this.isOpenAssignAddModal = false;
     },
     openPlaceEditModal() {
-			this.roomName = this.placeName.name
-			this.stockItemStatus = this.placeName.stock_item_status
-			this.assignItemStatus = this.placeName.assign_item_status
+      this.roomName = this.placeName.name
+      this.stockItemStatus = this.placeName.stock_item_status
+      this.assignItemStatus = this.placeName.assign_item_status
       this.isOpenPlaceEditModal = false;
       this.isOpenPlaceEditModal = true;
     },
@@ -662,3 +727,192 @@ export default {
   },
 };
 </script>
+
+<style>
+.assign-item-name-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.assign-item-name-select {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  padding: 15px;
+  width: 100%;
+  transition: all 0.5s 0s ease;
+}
+.assign-item-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.assign-item-list-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 8px;
+}
+.assign-item-list-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 4;
+  gap: 8px;
+}
+.assign-item-list-num {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 2;
+  gap: 8px;
+}
+.assign-item-list-group-select {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  transition: all 0.5s 0s ease;
+}
+.assign-item-list-num-input {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  transition: all 0.5s 0s ease;
+}
+.assign-item-list-delete {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  flex: 1;
+  gap: 16px;
+}
+.assign-item-list-delete-btn {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  width: 100%;
+  padding: 15px;
+  text-align: center;
+  transition: all 0.5s 0s ease;
+}
+.assign-item-list-add-btn {
+  color: var(--accent-7);
+  border: 1px solid var(--accent-5);
+  /* width: 100%; */
+  padding: 15px;
+  text-align: center;
+  transition: all 0.5s 0s ease;
+}
+.add-btn-effect {
+  border-radius: var(--button-radius);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--accent-0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  transition: all 0.2s 0s ease;
+  z-index: 0;
+  gap: 10px;
+  position: relative; /* 擬似要素のために必要 */
+}
+.add-btn-effect:before {
+  border-radius: var(--button-radius);
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  transition: 0.5s;
+  background: linear-gradient(
+    135deg,
+    var(--button-primary) 0%,
+    var(--button-secondary) 100%
+  );
+}
+.add-btn-effect:after {
+  content: "";
+  border-radius: var(--button-radius);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  transition: 0.5s;
+  background: linear-gradient(
+    45deg,
+    var(--primary) 0%,
+    var(--button-secondary) 100%
+  );
+}
+.add-btn-effect:after {
+  background: linear-gradient(
+    45deg,
+    var(--primary) 0%,
+    var(--button-secondary) 100%
+  );
+}
+.add-btn-effect:hover:before {
+  opacity: 0;
+}
+.add-btn-effect:active {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.25);
+}
+.delete-btn-effect {
+  border-radius: var(--button-radius);
+  padding: 10px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--accent-0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  transition: all 0.2s 0s ease;
+  z-index: 0;
+  gap: 10px;
+}
+.delete-btn-effect:before {
+  border-radius: var(--button-radius);
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  transition: 0.5s;
+  background: linear-gradient(135deg, #ff7070 0%, #e38ad5 100%);
+}
+.delete-btn-effect:after {
+  content: "";
+  border-radius: var(--button-radius);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  transition: 0.5s;
+  background: linear-gradient(
+    45deg,
+    var(--primary) 0%,
+    var(--button-secondary) 100%
+  );
+}
+.delete-btn-effect:hover:before {
+  opacity: 0;
+}
+.delete-btn-effect:active {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.25);
+}
+</style>
