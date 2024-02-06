@@ -17,8 +17,19 @@ class AssignRentalItemsController < ApplicationController
   # POST /assign_rental_items
   # POST /assign_rental_items.json
   def create
-    @assign_rental_item = AssignRentalItem.create(assign_rental_item_params)
-    render json: fmt(created, @assign_rental_item)
+    ActiveRecord::Base.transaction do
+      @assign_rental_items = assign_rental_items_params[:items].map do |item_params|
+        AssignRentalItem.create!(
+          group_id: item_params[:group_id],
+          rental_item_id: assign_rental_items_params[:rentalItemId],
+          num: item_params[:num],
+          stocker_place_id: assign_rental_items_params[:stockerPlaceId]
+        )
+      end
+    end
+    render json: fmt(created, @assign_rental_items)
+  rescue ActiveRecord::RecordInvalid => e
+    render json: fmt(internal_server_error, [], e.message)
   end
 
   # PATCH/PUT /assign_rental_items/1
@@ -46,7 +57,7 @@ class AssignRentalItemsController < ApplicationController
     end
 
     # Only allow a list of trusted parameters through.
-    def assign_rental_item_params
-      params.permit(:group_id, :rental_item_id, :num, :stocker_place_id)
+    def assign_rental_items_params
+      params.permit(:rentalItemId, :stockerPlaceId, items: [:group_id, :num])
     end
-end
+  end
