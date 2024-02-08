@@ -337,26 +337,10 @@
   </div>
 </template>
 
-<style>
-  .warning {
-    text-align: center;
-    vertical-align: middle;
-    padding: 25px;
-    background-color: #ffac5d; 
-  }
-  .normal-table td.warning:hover {
-    background-color: #ffac5d !important;
-    background: none;  /* 線形グラデーションを上書きして無効にします */
-    -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
-    -webkit-text-fill-color: black !important;    /* テキストの色を黒に設定します */
-  }
-</style>
-
 <script>
 import axios from "axios";
 import { mapState } from "vuex";
 import moment from "moment";
-import AssignItemAddModal from "../../components/AssignItemAddModal.vue";
 
 export default {
   watchQuery: ["page"],
@@ -729,6 +713,18 @@ export default {
 </script>
 
 <style>
+.warning {
+  text-align: center;
+  vertical-align: middle;
+  padding: 25px;
+  background-color: #ffac5d; 
+}
+.normal-table td.warning:hover {
+  background-color: #ffac5d !important;
+  background: none;  /* 線形グラデーションを上書きして無効にします */
+  -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
+  -webkit-text-fill-color: black !important;    /* テキストの色を黒に設定します */
+}
 .assign-item-name-container {
   display: flex;
   flex-direction: column;
