@@ -80,33 +80,31 @@ const localChageHandler = (e: any) => {
   </div>
   <div
     v-if="isMenuOpen"
-    class="md:hidden absolute top-0 right-0 bg-white border-b border-gray-300 w-4/5 h-full bg-opacity-90 z-10"
+    class="md:hidden fixed w-full h-full bg-black z-30 bg-opacity-60"
+    @click="isMenuOpen = !isMenuOpen"
   >
-    <div class="flex flex-col gap-4 p-2">
-      <button
-        class="md:hidden ml-auto text-2xl"
-        @click="isMenuOpen = !isMenuOpen"
-      >
-        <img class="w-8" src="../assets/menu.svg" />
+  </div>
+  <div
+    v-if="isMenuOpen"
+    class="md:hidden fixed inset-0 m-auto bg-slate-200 w-4/5 h-1/4 opacity-90 z-40 flex items-center justify-center rounded-3xl"
+  >
+    <div class="flex flex-col gap-8">
+      <form class="flex items-center mx-auto w-fit">
+        <label class="whitespace-nowrap" for="locale-select"
+          >{{ $t("language") }}：
+        </label>
+        <select
+          class="bg-slate-200"
+          id="locale-select"
+          v-model="$i18n.locale"
+        >
+          <option value="ja">日本語</option>
+          <option value="en">English</option>
+        </select>
+      </form>
+      <button class="text-2xl" @click="logout">
+        {{ $t("Header.logOut") }}
       </button>
-      <div class="my-12 flex flex-col gap-4">
-        <form class="flex items-center mx-auto w-fit">
-          <label class="whitespace-nowrap" for="locale-select"
-            >{{ $t("language") }}：
-          </label>
-          <select
-            class="w-auto m-auto ml-0 h-auto border-none"
-            id="locale-select"
-            v-model="$i18n.locale"
-          >
-            <option value="ja">日本語</option>
-            <option value="en">English</option>
-          </select>
-        </form>
-        <button class="text-2xl" @click="logout">
-          {{ $t("Header.logOut") }}
-        </button>
-      </div>
     </div>
   </div>
 </template>
