@@ -4,10 +4,10 @@
       v-bind:pageTitle="placeName.name"
       pageSubTitle="物品申請"
     >
-      <CommonButton iconName="edit" :on_click="openPlaceEditModal">
+      <CommonButton v-if="this.$role(roleID).stocker_places.update" iconName="edit" :on_click="openPlaceEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openPlaceDeleteModal">
+      <CommonButton v-if="this.$role(roleID).stocker_places.delete" iconName="delete" :on_click="openPlaceDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -16,7 +16,7 @@
       <Column width="100%">
         <Card width="100%">
           <SubHeader pageTitle="在庫物品">
-            <CommonButton iconName="add_circle" :on_click="openItemAddModal">
+            <CommonButton v-if="this.$role(this.roleID).rental_items.create" iconName="add_circle" :on_click="openItemAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -47,7 +47,7 @@
         </Card>
         <Card width="100%">
           <SubHeader pageTitle="割り当て">
-            <CommonButton iconName="add_circle" :on_click="openAssignAddModal">
+            <CommonButton v-if="this.$role(roleID).assign_items.create" iconName="add_circle" :on_click="openAssignAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -228,7 +228,7 @@
 
     <EditModal
       @close="closeItemEditModal"
-      v-if="isOpenItemEditModal"
+      v-if="isOpenItemEditModal && this.$role(this.roleID).rental_items.create"
       title="在庫物品個数の編集"
     >
       <template v-slot:form>
@@ -244,7 +244,7 @@
 
     <EditModal
       @close="closeAssignEditModal"
-      v-if="isOpenAssignEditModal"
+      v-if="isOpenAssignEditModal && this.$role(roleID).assign_items.update"
       title="割当個数の編集"
     >
       <template v-slot:form>
@@ -273,7 +273,7 @@
 
     <DeleteModal
       @close="closeItemDeleteModal"
-      v-if="isOpenItemDeleteModal"
+      v-if="isOpenItemDeleteModal && this.$role(this.roleID).rental_items.delete"
       title="在庫物品の削除"
     >
       <template v-slot:method>
@@ -286,7 +286,7 @@
 
     <DeleteModal
       @close="closeAssignDeleteModal"
-      v-if="isOpenAssignDeleteModal"
+      v-if="isOpenAssignDeleteModal && this.$role(roleID).assign_items.delete"
       title="割当の削除"
     >
       <template v-slot:method>

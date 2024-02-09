@@ -161,7 +161,7 @@ export const userRole = {
     update: false,
     delete: false,
   },
-  assgin_items: {
+  assign_items: {
     read: false,
     create: false,
     update: false,
