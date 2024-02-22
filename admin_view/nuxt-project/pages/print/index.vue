@@ -92,6 +92,12 @@
             </InTableButton>
           </td>
         </tr>
+        <tr>
+          <td>保健所提出書類（調理計画・従事者）</td>
+          <td>
+            <InTableButton iconName="file_download" :on_click="downloadHealthOfficeDocumentsPDF">PDF</InTableButton>
+          </td>
+        </tr>
       </VerticalTable>
     </Card>
   </div>
@@ -175,6 +181,15 @@ export default {
           this.currentYearID +
           "/output.pdf",
         "物品貸し出し表まとめ"
+      );
+    },
+    downloadHealthOfficeDocumentsPDF: function () {
+      window.open(
+        this.$config.apiURL +
+          "/print_pdf/health_office_documents/" +
+          this.currentYearID +
+          "/output.pdf",
+        "保健所提出書類（調理計画・従事者）"
       );
     },
     async downloadPowerCSV() {
