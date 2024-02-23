@@ -29,58 +29,25 @@ export default {
 </script>
 
 <style>
-/* .assign-item-add-modal_content input,
-.assign-item-add-modal_content textarea {
-  color: var(--accent-5);
-  border: 1px solid var(--accent-5);
-  padding: 15px;
-  width: 500px;
-  transition: all 0.5s 0s ease;
-} */
-
-/* .assign-item-add-modal label {
-  color: var(--accent-5);
-  border: 1px solid var(--accent-5);
-  padding: 15px;
-  width: 500px;
-  transition: all 0.5s 0s ease;
-} */
-
-/* .assign-item-add-modal input[type="file"] {
-    display: none;
-} */
-
 .assign-item-add-modal_content input:focus,
 .assign-item-add-modal_content textarea:focus {
   border: 1px solid var(--accent-7);
   z-index: 20;
   outline: 0;
 }
-
-/* .assign-item-add-modal_content select {
-  color: var(--accent-7);
-  border: 1px solid var(--accent-5);
-  padding: 15px;
-  width: 500px;
-  transition: all 0.5s 0s ease;
-} */
-
 .assign-item-add-modal_content select:focus {
   border: 1px solid var(--accent-7);
   z-index: 20;
   outline: 0;
 }
-
 .assign-item-add-modal__box h2 {
   color: var(--accent-5);
 }
-
 .assign-item-add-modal_content h3 {
   color: var(--accent-5);
   font-size: 16px;
   font-weight: 500;
 }
-
 .assign-item-add-modal_content form {
   width: 100%;
   height: 100%;
@@ -88,11 +55,9 @@ export default {
   flex-flow: column;
   gap: 25px;
 }
-
 .default-option {
   color: red;
 }
-
 .assign-item-add-modal {
   top: 0;
   left: 0;
@@ -111,7 +76,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .assign-item-add-modal__box {
   z-index: 15;
   display: flex;
@@ -130,7 +94,6 @@ export default {
   backdrop-filter: blur(4px);
   gap: 30px;
 }
-
 .assign-item-add-modal_content {
   width: 100%;
   height: 100%;
@@ -138,7 +101,6 @@ export default {
   flex-flow: column;
   gap: 20px;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   will-change: opacity;
