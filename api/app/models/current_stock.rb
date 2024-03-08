@@ -1,0 +1,2 @@
+class CurrentStock < ApplicationRecord
+end
