@@ -168,6 +168,7 @@ export default {
           icon: "assignment_return",
           click: "/assign_items",
         },
+        { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
         { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
