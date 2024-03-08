@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_05_131315) do
+ActiveRecord::Schema.define(version: 2024_03_07_061926) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -40,6 +40,16 @@ ActiveRecord::Schema.define(version: 2023_07_05_131315) do
     t.integer "stage_id"
     t.string "time_point_start"
     t.string "time_point_end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "current_stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "place_category_id"
+    t.integer "place_id"
+    t.integer "item_id"
+    t.integer "stock_num"
+    t.integer "date_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -113,6 +123,20 @@ ActiveRecord::Schema.define(version: 2023_07_05_131315) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "committee"
+  end
+
+  create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "group_id"
+    t.integer "use_place_id"
+    t.integer "rental_place_id"
+    t.integer "item_id"
+    t.integer "item_num"
+    t.integer "people_num"
+    t.datetime "time_start"
+    t.datetime "time_end"
+    t.integer "date_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "memos", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
