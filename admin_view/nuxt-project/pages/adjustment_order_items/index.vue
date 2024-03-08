@@ -25,44 +25,47 @@
       </template>
     </SubSubHeader>
 
-    <div style="display: flex; justify-content: space-between;">
-      <Card width="45%">
-        <Table>
-          <template v-slot:table-header>
-            <th v-for="(header, index) in itemHeaders" v-bind:key="index">
-              {{ header }}
-            </th>
-          </template>
-          <template v-slot:table-body>
-            <tr v-for="(stocker_place, index) in stockerPlaces">
-              <td>{{ stocker_place.id }}</td>
-              <td>{{  }}</td>
-              <td>{{  }}</td>
-              <td>{{  }}</td>
-              <td>{{  }}</td>
-            </tr>
-          </template>
-        </Table>
-      </Card>
-      <Card width="45%">
-        <Table>
-          <template v-slot:table-header>
-            <th v-for="(header, index) in groupHeaders" v-bind:key="index">
-              {{ header }}
-            </th>
-          </template>
-          <template v-slot:table-body>
-            <tr v-for="(stocker_place, index) in stockerPlaces">
-              <td>{{ stocker_place.id }}</td>
-              <td>{{  }}</td>
-              <td>{{  }}</td>
-              <td>{{  }}</td>
-              <td>{{  }}</td>
-            </tr>
-          </template>
-        </Table>
-      </Card>
-    </div>
+    <Row wrap="nowrap" align="start">
+      <Column width="50%" height="800px">
+        <Card width="100%" style="overflow: scroll">
+          <Table>
+            <template v-slot:table-header>
+              <th v-for="(header, index) in itemHeaders" v-bind:key="index">
+                {{ header }}
+              </th>
+            </template>
+            <template v-slot:table-body>
+              <tr v-for="(stocker_place, index) in stockerPlaces">
+                <td>{{ stocker_place.id }}</td>
+                <td>{{  }}</td>
+                <td>{{  }}</td>
+                <td>{{  }}</td>
+              </tr>
+            </template>
+          </Table>
+        </Card>
+      </Column>
+      <Column width="50%" height="800px">
+        <Card width="100%" style="overflow: scroll">
+          <Table>
+            <template v-slot:table-header>
+              <th v-for="(header, index) in groupHeaders" v-bind:key="index">
+                {{ header }}
+              </th>
+            </template>
+            <template v-slot:table-body>
+              <tr v-for="(stocker_place, index) in stockerPlaces">
+                <td>{{ stocker_place.id }}</td>
+                <td>{{  }}</td>
+                <td>{{  }}</td>
+                <td>{{  }}</td>
+                <td>{{  }}</td>
+              </tr>
+            </template>
+          </Table>
+        </Card>
+      </Column>
+    </Row>
 
     <AddModal
       @close="closeAddModal"
