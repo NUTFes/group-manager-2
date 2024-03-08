@@ -1,0 +1,2 @@
+class ItemAdjustment < ApplicationRecord
+end
