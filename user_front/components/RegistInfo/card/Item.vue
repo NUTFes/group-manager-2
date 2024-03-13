@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types'
 
 interface Regist {
   id: number
@@ -18,7 +19,6 @@ interface Emits {
   (e: 'reloadItem', v: null): void
 }
 const emits = defineEmits<Emits>()
-
 const reloadItem = () => {
   emits('reloadItem', null)
 }
@@ -31,14 +31,20 @@ const item = withDefaults(defineProps<Props>(), {
   setting: null
 })
 
-const isEditItem = ref<boolean>(false)
-const isDeleteItem = ref<boolean>(false)
+const config = useRuntimeConfig();
+const isEditItem = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditItem.value = setting.data[0].is_edit_rental_order
+});
 
-const openEditItem = () => {
-  isEditItem.value = true
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
 }
-const openDeleteItem = () => {
-  isDeleteItem.value = true
+const isDeleteModal = ref<boolean>(false);
+const openDeleteModal = () => {
+  isDeleteModal.value = true
 }
 
 </script>
@@ -54,17 +60,17 @@ const openDeleteItem = () => {
         </span>
         <span class="text-2xl">{{ $t('Item.count') }}</span>
       </div>
-      <div class="absolute right-4 bottom-2">
+      <div v-if="isEditItem" class="absolute right-4 bottom-2">
         <div class="my-2">
-          <EditButton @click="openEditItem()" />
+          <EditButton @click="openEditModal()" />
         </div>
-      <DeleteButton @click="openDeleteItem()" />
+        <DeleteButton @click="openDeleteModal()" />
       </div>
     </template>
   </RegistInfoNarrowCard>
   <RegistInfoEditItem
-    v-if="isEditItem"
-    v-model:edit-item="isEditItem"
+    v-if="isEditModal"
+    v-model:edit-item="isEditModal"
     :group-id="groupId"
     :id="regist?.id"
     :item="regist?.rental_item_id"
@@ -72,8 +78,8 @@ const openDeleteItem = () => {
     @reload-item="reloadItem"
   />
   <RegistInfoDeleteItem
-    v-if="isDeleteItem"
-    v-model:delete-item="isDeleteItem"
+    v-if="isDeleteModal"
+    v-model:delete-item="isDeleteModal"
     :id="regist?.id"
     @reload-item="reloadItem"
   />

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types'
 
 interface Props {
   id: number | null
@@ -35,11 +36,17 @@ const reloadSubRep = () => {
   emits('reloadSubRep', null)
 }
 
-const isEditSubRep = ref<boolean>(false)
-const openEditSubRep = () => {
-  isEditSubRep.value = true
-}
+const config = useRuntimeConfig();
+const isEditSubRep = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditSubRep.value = setting.data[0].is_edit_sub_rep
+});
 
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
+}
 </script>
 
 <template>
@@ -65,15 +72,15 @@ const openEditSubRep = () => {
           <div class="character2">tel‣{{ sub.tel }}</div>
       </div>
     </template>
-    <template #method>
+    <template v-if="isEditSubRep" #method>
       <div class="absolute right-4">
-        <EditButton @click="openEditSubRep()" />
+        <EditButton @click="openEditModal()" />
       </div>
     </template>
   </RegistInfoWideCard>
   <RegistInfoEditSubRep
-    v-if="isEditSubRep"
-    v-model:edit-sub-rep="isEditSubRep"
+    v-if="isEditModal"
+    v-model:edit-sub-rep="isEditModal"
     :id="sub.id"
     :group-id="sub.groupId"
     :name="sub.name"

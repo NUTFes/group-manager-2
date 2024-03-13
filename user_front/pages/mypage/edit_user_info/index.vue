@@ -5,12 +5,14 @@ import { userDetailSchema } from "~~/utils/validate";
 import { User, UserDetail, EditUser, CurrentUser } from "~~/types/currentUser";
 import { gradeList, GradeWithDepartmentList } from "~/utils/list";
 import { NoScript } from '../../../.nuxt/components';
+import { Setting } from "~~/types";
 
 const config = useRuntimeConfig();
 const router = useRouter();
 
 const user = ref<User>();
 const userDetail = ref<UserDetail>();
+const isEditUser = ref<boolean>();
 
 const { meta, isSubmitting } = useForm({
   validationSchema: userDetailSchema,
@@ -49,6 +51,8 @@ onMounted(async () => {
     handleGrade(response.data.user_detail.grade_id);
     createCurrentDepartmentList({ target: { value: response.data.user_detail.grade_id } });
   });
+  const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditUser.value = setting.data[0].is_edit_user
 });
 
 const editParams = ref({
@@ -102,6 +106,9 @@ const createCurrentDepartmentList = (e: any) => {
   <div class="regist-card">
     <div class="reist-title-content">
       <div class="user-info">{{ $t("User.editUser") }}</div>
+    </div>
+    <div v-if="!isEditUser" class="text-3xl text-red-600 font-bold my-5">
+      編集は締め切られました
     </div>
     <div>
       <input
@@ -164,6 +171,7 @@ const createCurrentDepartmentList = (e: any) => {
     </div>
     <div class="regist-button">
       <RegistPageButton
+        v-if="isEditUser"
         :text="$t('Button.edit')"
         :disabled="!meta.valid || isSubmitting"
         @click="editUser"

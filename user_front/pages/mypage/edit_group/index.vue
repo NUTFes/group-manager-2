@@ -13,6 +13,7 @@ const groupCategoryId = ref<number>();
 const activity = ref<string>("");
 const user = ref("");
 const setting = ref("");
+const isEditGroup = ref<boolean>();
 const userId = ref<number>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
@@ -66,6 +67,7 @@ onMounted(() => {
     })
     .then((response) => {
       setting.value = response.data.data[0];
+      isEditGroup.value = response.data.data[0].is_edit_group;
     });
 });
 
@@ -122,6 +124,9 @@ const buttonDisabled = computed(() => {
   <div class="w-2/3 mx-auto">
     <div class="w-full text-2xl my-8 font-bold bg-[#eceff1] p-2 rounded-md">
       {{ $t("Group.editGroup") }}
+    </div>
+    <div v-if="!isEditGroup" class="text-3xl text-red-600 font-bold my-5">
+      編集は締め切られました
     </div>
     <div class="border p-4 my-4 rounded-md flex flex-col gap-8">
       <div class="flex flex-col gap-2">
@@ -195,6 +200,7 @@ const buttonDisabled = computed(() => {
     <div class="w-fit ml-auto mt-4 mb-12">
       <!-- styleタグないを参考にグラデーションをかける -->
       <button
+        v-if="isEditGroup"
         @click="register"
         class="text-xl text-gray-800 bg-gray-300 rounded-lg py-2 px-4 font-bold disabled:opacity-50 bg-gradient-to-r hover:from-pink-400 hover:to-yellow-500"
         :disabled="buttonDisabled"

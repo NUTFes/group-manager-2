@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { loginCheck } from "~~/utils/methods";
 import axios from "axios";
+import { Setting } from "~~/types";
 
 interface PublicRelation {
   id: number;
@@ -38,6 +39,7 @@ const selectedFileUrl = ref<string>("");
 const fileName = ref<string>("選択してください\nPlease select");
 const pictureName = ref<string>("");
 const blurb = ref<string>("");
+const isEditPublicRelation = ref<boolean>();
 const isSubmitting = ref<boolean>(false);
 const clientId = config.IMGUR_CLIENT_ID;
 
@@ -61,6 +63,8 @@ onMounted(async () => {
     .catch((error) => {
       console.log(error);
     });
+    const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+    isEditPublicRelation.value = setting.data[0].is_edit_public_relation
 });
 
 const isBlurbOver = computed(() => {
@@ -169,6 +173,9 @@ const editImageURL = () => {
 <template>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("PR.PR") }}</h1>
+    <div v-if="!isEditPublicRelation" class="text-3xl text-red-600 font-bold my-5">
+      編集は締め切られました
+    </div>
     <Card>
       <div class="left text-3xl">
         {{ $t("PR.text") }}
@@ -195,6 +202,7 @@ const editImageURL = () => {
         </div>
       </div>
       <RegistPageButton
+        v-if="isEditPublicRelation"
         :text="$t('Button.register')"
         @click="editImageURL"
         :disabled="isBlurbOver || isSubmitting"

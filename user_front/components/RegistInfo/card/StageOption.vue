@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types'
 
 interface Props {
   groupId: number
@@ -29,9 +30,15 @@ const reloadStageOption = () => {
   emits('reloadStageOption', null)
 }
 
-const isEditStageOption = ref<boolean>(false)
-const openEditStgeOption = () => {
-  isEditStageOption.value = true
+const config = useRuntimeConfig();
+const isEditStageOption = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditStageOption.value = setting.data[0].is_edit_stage_common_option
+});
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
 }
 </script>
 
@@ -64,16 +71,16 @@ const openEditStgeOption = () => {
         <div class="w-80 break-normal">{{ option.stageContent }}</div>
       </div>
     </template>
-    <template #method>
+    <template v-if="isEditStageOption" #method>
       <div class="absolute right-8">
-        <EditButton @click="openEditStgeOption()" />
+        <EditButton @click="openEditModal()" />
       </div>
     </template>
   </RegistInfoWideCard>
   </div>
   <RegistInfoEditStageOption
-    v-if="isEditStageOption"
-    v-model:edit-stage-option="isEditStageOption"
+    v-if="isEditModal"
+    v-model:edit-stage-option="isEditModal"
     :group-id="groupId"
     :id="id"
     :own-equipment="ownEquipment"

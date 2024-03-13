@@ -38,12 +38,15 @@ const reset = () => {
 const config = useRuntimeConfig()
 const router = useRouter()
 
+const isRegistGroup = ref<boolean>();
+
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
   registerParams.userId = localStorage.getItem("user_id") || ''
   const setting = await $fetch<Setting>(config.APIURL + "/user_page_settings")
   registerParams.fesYearId = setting.data[0].fes_year_id
+  isRegistGroup.value = setting.data[0].is_regist_group
 })
 
 const registerCategory = async () => {
@@ -75,7 +78,7 @@ const registerCategory = async () => {
 <template>
   <div>
     <div class="mx-[20%] my-[5%]">
-      <Card border="none">
+      <Card v-if="isRegistGroup" border="none">
         <h1 class="text-3xl">{{ $t('Group.registGroup') }}</h1>
         <Card border="none" align="end" class="!gap-1 md:!gap-2.5">
           <div class="flex flex-col md:flex-row">
@@ -111,6 +114,9 @@ const registerCategory = async () => {
           <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
+      <div v-else class="text-3xl text-red-600 font-bold text-center">
+        登録は締め切られました
+      </div>
     </div>
   </div>
 </template>

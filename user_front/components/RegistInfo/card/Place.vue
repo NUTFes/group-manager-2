@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types'
 
 interface OrderList {
   first: number
@@ -33,9 +34,16 @@ const reloadPlace = () => {
   emits('reloadPlace', null)
 }
 
-const isEditPlace = ref<boolean>(false)
-const openEditPlace = () => {
-  isEditPlace.value = true
+const config = useRuntimeConfig();
+const isEditPlace = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditPlace.value = setting.data[0].is_edit_place
+});
+
+const isEditModal = ref(false);
+const openEditModal = () => {
+  isEditModal.value = true
 }
 </script>
 
@@ -55,16 +63,16 @@ const openEditPlace = () => {
             {{ place.remark }}
           </div>
       </template>
-      <template #method>
+      <template v-if="isEditPlace" #method>
         <div class="mx-4">
-          <EditButton @click="openEditPlace()" />
+          <EditButton @click="openEditModal()" />
         </div>
       </template>
     </RegistInfoWideCard>
   </div>
   <RegistInfoEditPlace
-    v-if="isEditPlace"
-    v-model:edit-place="isEditPlace"
+    v-if="isEditModal"
+    v-model:edit-place="isEditModal"
     :id="place.id"
     :first="regist?.first"
     :second="regist?.second"

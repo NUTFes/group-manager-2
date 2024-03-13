@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import axios from "axios";
 import { User, RegisterParams } from "@/types/regist/user";
+import { Setting } from "@/types";
 import { useForm, useField } from "vee-validate";
 import { userSchema } from "~~/utils/validate";
 import { gradeList, GradeWithDepartmentList } from "~/utils/list";
@@ -54,6 +55,8 @@ const reset = () => {
 const config = useRuntimeConfig();
 const router = useRouter();
 
+const isRegistGroup = ref<boolean>();
+
 const login = () => {
   const params = new URLSearchParams({
     email: registerParams.mail,
@@ -71,7 +74,7 @@ const login = () => {
 const registUser = async () => {
 
   isSubmitting.value = true;
-  
+
   await $fetch<User>(config.APIURL + "/api/auth", {
     method: "POST",
     params: {
@@ -100,6 +103,11 @@ const registUser = async () => {
   router.push("/regist/group");
 };
 
+onMounted(async()=>{
+  const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+    isRegistGroup.value = setting.data[0].is_regist_group
+});
+
 const currentDepartmentList = ref<{ id: number; name: string }[]>([]);
 const createCurrentDepartmentList = (e: any) => {
   currentDepartmentList.value = GradeWithDepartmentList.filter((grade) => {
@@ -111,7 +119,7 @@ const createCurrentDepartmentList = (e: any) => {
 <template>
   <div>
     <div class="mx-[20%] my-[5%]">
-      <Card border="none" padding="0px">
+      <Card v-if="isRegistGroup" border="none" padding="0px">
         <h1 class="text-3xl">{{ $t("User.registRepresentative") }}</h1>
         <Card border="none" align="end" class="!gap-1 md:!gap-2.5">
           <div class="flex flex-col md:flex-row">
@@ -249,6 +257,9 @@ const createCurrentDepartmentList = (e: any) => {
           </RegistPageButton>
         </Row>
       </Card>
+      <div v-else class="text-3xl text-red-600 font-bold text-center">
+        登録は締め切られました
+      </div>
     </div>
   </div>
 </template>
