@@ -8,6 +8,14 @@ build:
 	docker compose run --rm api rails db:migrate
 	docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
 
+build mac:
+	PLATFORM=arm64-darwin docker compose build
+	docker compose run --rm user_front npm install
+	docker compose run --rm admin_view npm install
+	docker compose run --rm api rails db:create
+	docker compose run --rm api rails db:migrate
+	docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
+
 build db:
 	docker compose run --rm api rails db:create
 	docker compose run --rm api rails db:migrate
