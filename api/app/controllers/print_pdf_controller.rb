@@ -48,6 +48,12 @@ class PrintPdfController < ApplicationController
     output_groups_with_categories("output_contact", "output_contact_pdf", "連絡先リスト", "Not Landscape")
   end
 
+  # 保健所提出書類（調理計画・従事者）の出力
+  def output_health_office_documents_pdf
+    print_pdf("output_health_office_documents", "output_health_office_documents_pdf", "保健所提出書類（調理計画・従事者）", "Not Landscape")
+  end
+
+
   # 全参加団体用
   def output_groups(template_name, style_name, output_file_name, type)
     if Group.exists?(params[:group_id])
