@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types'
 
 interface Props {
   id: number | null
@@ -39,9 +40,16 @@ const reloadStage = () => {
   emits('reloadStage', null)
 }
 
-const isEditStage = ref<boolean>(false)
-const openEditStage = () => {
-  isEditStage.value = true
+const config = useRuntimeConfig();
+const isEditStage = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditStage.value = setting.data[0].is_edit_stage_order
+});
+
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
 }
 </script>
 
@@ -58,16 +66,16 @@ const openEditStage = () => {
         <div class="flex items-center">{{ $t('Stage.secondPreference') }}<RegistInfoTriangle />{{ stage.secondStage }}</div>
       </div>
     </template>
-    <template #method>
+    <template v-if="isEditStage" #method>
       <div class="absolute right-8">
-        <EditButton @click="openEditStage()" />
+        <EditButton @click="openEditModal()" />
       </div>
     </template>
   </RegistInfoWideCard>
   </div>
   <RegistInfoEditStage
-    v-if="isEditStage"
-    v-model:edit-stage="isEditStage"
+    v-if="isEditModal"
+    v-model:edit-stage="isEditModal"
     :group-id="groupId"
     :id="id"
     :is-sunny="isSunny"

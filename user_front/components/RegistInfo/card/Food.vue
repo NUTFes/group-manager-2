@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types';
+
 interface Props {
   id: number | null;
   groupId: number;
@@ -13,6 +15,10 @@ interface Props {
 interface Emits {
   (e: "reloadFood", v: null): void;
 }
+const emits = defineEmits<Emits>();
+  const reloadFood = () => {
+  emits("reloadFood", null);
+};
 
 const food = withDefaults(defineProps<Props>(), {
   id: null,
@@ -24,22 +30,23 @@ const food = withDefaults(defineProps<Props>(), {
   setting: null,
 });
 
-const emits = defineEmits<Emits>();
+const config = useRuntimeConfig();
+const isEditFood = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditFood.value = setting.data[0].is_edit_food_product
+});
 
-const isEditFood = ref<boolean>(false);
-const isDeleteFood = ref<boolean>(false);
-
-const openEditFood = () => {
-  isEditFood.value = true;
-};
-const openDeleteFood = () => {
-  isDeleteFood.value = true;
-};
-
-const reloadFood = () => {
-  emits("reloadFood", null);
-};
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
+}
+const isDeleteModal = ref<boolean>(false);
+const openDeleteModal = () => {
+  isDeleteModal.value = true
+}
 </script>
+
 <template>
   <RegistInfoWideCard>
     <template #body>
@@ -75,18 +82,18 @@ const reloadFood = () => {
         </div>
       </div>
     </template>
-    <template #method>
+    <template v-if="isEditFood" #method>
       <div class="mx-4">
         <div class="my-2">
-          <EditButton @click="openEditFood()" />
+          <EditButton @click="openEditModal()" />
         </div>
-        <DeleteButton @click="openDeleteFood()" />
+        <DeleteButton @click="openDeleteModal()" />
       </div>
     </template>
   </RegistInfoWideCard>
   <RegistInfoEditFood
-    v-if="isEditFood"
-    v-model:edit-food="isEditFood"
+    v-if="isEditModal"
+    v-model:edit-food="isEditModal"
     :group-id="groupId"
     :id="id"
     :dish-name="name"
@@ -97,8 +104,8 @@ const reloadFood = () => {
     @reload-food="reloadFood()"
   />
   <RegistInfoDeleteFood
-    v-if="isDeleteFood"
-    v-model:delete-food="isDeleteFood"
+    v-if="isDeleteModal"
+    v-model:delete-food="isDeleteModal"
     :id="id"
     @reload-food="reloadFood()"
   />

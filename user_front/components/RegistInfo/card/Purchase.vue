@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types';
+
 interface Props {
   id: number;
   groupId: number;
@@ -38,16 +40,23 @@ const reloadPurchase = () => {
   emits("reloadPurchase", null);
 };
 
-const isEditPurchase = ref<boolean>(false);
-const isDeletePurchase = ref<boolean>(false);
+const config = useRuntimeConfig();
+const isEditPurchase = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditPurchase.value = setting.data[0].is_edit_purchase_list
+});
 
-const openEditPurchase = () => {
-  isEditPurchase.value = true;
-};
-const openDeletePurchase = () => {
-  isDeletePurchase.value = true;
-};
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
+}
+const isDeleteModal = ref<boolean>(false);
+const openDeleteModal = () => {
+  isDeleteModal.value = true
+}
 </script>
+
 <template>
   <RegistInfoWideCard>
     <template #body>
@@ -88,18 +97,18 @@ const openDeletePurchase = () => {
         </p>
       </div>
     </template>
-    <template #method>
+    <template v-if="isEditPurchase" #method>
       <div class="mx-4">
         <div class="my-2">
-          <EditButton @click="openEditPurchase()" />
+          <EditButton @click="openEditModal()" />
         </div>
-        <DeleteButton @click="openDeletePurchase()" />
+        <DeleteButton @click="openDeleteModal()" />
       </div>
     </template>
   </RegistInfoWideCard>
   <RegistInfoEditPurchase
-    v-if="isEditPurchase"
-    v-model:edit-Purchase="isEditPurchase"
+    v-if="isEditModal"
+    v-model:edit-Purchase="isEditModal"
     :id="id"
     :group-id="groupId"
     :food-product-id="foodProductId"
@@ -115,8 +124,8 @@ const openDeletePurchase = () => {
     @reload-purchase="reloadPurchase"
   />
   <RegistInfoDeletePurchase
-    v-if="isDeletePurchase"
-    v-model:delete-Purchase="isDeletePurchase"
+    v-if="isDeleteModal"
+    v-model:delete-Purchase="isDeleteModal"
     :id="id"
     @reload-purchase="reloadPurchase"
   />
