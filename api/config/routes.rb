@@ -155,8 +155,10 @@ Rails.application.routes.draw do
       #---会場アナウンス文申請
       get "get_announcement_index_for_admin_view" => "announcements_api#get_announcement_index_for_admin_view"
       get "get_announcement_show_for_admin_view/:id" => "announcements_api#get_announcement_show_for_admin_view"
+      get "get_announcement_for_admin_view/:id" => "announcements_api#get_announcement_for_admin_view"
       post "get_refinement_announcements" => "announcements_api#get_refinement_announcements"
       post "get_search_announcements" => "announcements_api#get_search_announcements"
+      get "get_groups_have_no_announcement" => "groups_api#get_groups_have_no_announcement"
 
       #---申請情報ページ
       get "get_order_info_for_admin_view/:id" => "order_infos_api#get_order_info_for_admin_view"

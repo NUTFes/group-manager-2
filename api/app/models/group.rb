@@ -609,6 +609,69 @@ class Group < ApplicationRecord
         }
     end
 
+    ### announcement (アナウンス文)
+
+    # 全てのgroupとそのannouncementを取得する
+    def self.with_announcements
+      @records = Group.preload(:announcement)
+        .map{
+          |group|
+          {
+            "group": group,
+            "message": group.announcement.nil? ? nil : group.announcement.message,
+            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
+            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+          }
+        }
+    end
+
+    # 指定したIDのgroupとそのannouncementを取得する
+    def self.with_announcement(group_id)
+      @record = Group.eager_load(:announcement).where(groups: {id: group_id})
+        .map{
+          |group|
+          {
+            "group": group,
+            "message": group.announcement.nil? ? nil : group.announcement.message,
+            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
+            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+          }
+        }
+    end
+
+    # announcementが存在しないgroupのみ取得する
+    def self.have_no_announcement(fes_year_id)
+      @records = Group.eager_load(:announcement).where(groups: {fes_year_id: fes_year_id}).filter_map { |group| group if group.announcement.nil? }
+    end
+
+    # 指定したfes_yearに対応するgroupとそのannouncementを取得する
+    def self.with_announcement_narrow_down_by_fes_year(fes_year_id)
+      @record = Group.eager_load(:announcement).where(groups: {fes_year_id: fes_year_id})
+        .map{
+          |group|
+          {
+            "group": group,
+            "message": group.announcement.nil? ? nil : group.announcement.message,
+            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
+            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+          }
+        }
+    end
+
+    # 検索ワードに対応するgroupとそのannouncementを取得する
+    def self.with_announcement_narrow_down_by_search_word(word)
+      @record = Group.eager_load(:announcement).where("name like ?","%#{word}%")
+        .map{
+          |group|
+          {
+            "group": group,
+            "message": group.announcement.nil? ? nil : group.announcement.message,
+            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
+            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+          }
+        }
+    end
+
     # 割り当てられたステージを取得
     def stage
       return self.group_identification.nil? || self.group_identification.stage_number.nil? ? nil : self.group_identification.stage_number.stage.name

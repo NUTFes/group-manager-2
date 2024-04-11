@@ -35,22 +35,22 @@
             <tr>
               <th>会場アナウンス文</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
-                <div v-else>{{ announcement.announcement.message }}</div>
+                <div v-if='announcement.message === null'>未登録</div>
+                <div v-else>{{ announcement.message }}</div>
               </td>
             </tr>
             <tr>
               <th>登録日時</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
-                <div v-else>{{ announcement.announcement.created_at | formatDate }}</div>
+                <div v-if='announcement.message === null'>未登録</div>
+                <div v-else>{{ announcement.created_at | formatDate }}</div>
               </td>
             </tr>
             <tr>
               <th>編集日時</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
-                <div v-else>{{ announcement.announcement.updated_at | formatDate }}</div>
+                <div v-if='announcement.message === null'>未登録</div>
+                <div v-else>{{ announcement.updated_at | formatDate }}</div>
               </td>
             </tr>
           </VerticalTable>
@@ -124,17 +124,17 @@ export default {
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/announcement/", "");
-    const url = "/api/v1/get_announcement_show_for_admin_view/" + routeId;
+    const url = "/api/v1/get_announcement_for_admin_view/" + routeId;
     const res = await $axios.$get(url);
     return {
-      announcement: res.data,
+      announcement: res.data[0],
       route: url,
     };
   },
   methods: {
     openEditModal() {
-      this.group_id = this.announcement.announcement.group_id;
-      this.message = this.announcement.announcement.message;
+      this.group_id = this.announcement.group_id;
+      this.message = this.announcement.message;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
@@ -156,19 +156,18 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload(id) {
-      const url = "/api/v1/get_announcement_show_for_admin_view/" + id;
+      const url = "/api/v1/get_announcement_for_admin_view/" + id;
       const res = await this.$axios.$get(url);
       this.announcement = res.data;
     },
     async edit() {
-      const url = 
-      "/announcements/" + 
-      this.announcement.announcement.id + 
-      "?group_id=" + 
+      const url =
+      "/announcements/" +
+      this.announcement.announcement.id +
+      "?group_id=" +
       this.group_id+
-      "&message=" + 
+      "&message=" +
       this.message;
-      
 
       await this.$axios.$put(url).then((res) => {
         this.openSnackBar("会場アナウンス文を編集しました");

@@ -54,14 +54,14 @@
             @click="
               () =>
                 $router.push({
-                  path: `/announcement/` + announcement.announcement.id,
+                  path: `/announcement/` + announcement.group.id,
                 })
             "
           >
             <td>{{ announcement.group.id }}</td>
             <td>{{ announcement.group.name}}</td>
             <td>
-              <div v-if='announcement.announcement.message === ""'>未登録</div>
+              <div v-if='announcement.message === null'>未登録</div>
               <div v-else>登録済み</div>
             </td>
           </tr>
@@ -115,7 +115,6 @@ export default {
       dialog: false,
       message: "",
       snackMessage: "",
-      group_id: "",
       refYears: "Years",
       refYearID: 0,
       searchText: ""
@@ -150,7 +149,7 @@ export default {
   methods: {
 
     async openAddModal() {
-      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupUrl = "/api/v1/get_groups_have_no_announcement";
       const groupRes = await this.$axios.$get(groupUrl);
       this.groups = groupRes.data;
       this.isOpenAddModal = true;
@@ -166,9 +165,9 @@ export default {
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
-    reload(id) {
-      const reUrl = "/api/v1/get_announcement_show_for_admin_view/" + id;
-      this.$axios.get(reUrl).then((res) => {
+    reload() {
+      const url = "/api/v1/get_refinement_announcements?fes_year_id=" + this.refYearID;
+      this.$axios.get(url).then((res) => {
         this.announcements.push(res.data.data);
       });
     },

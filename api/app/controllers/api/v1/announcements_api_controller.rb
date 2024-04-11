@@ -20,31 +20,56 @@ class Api::V1::AnnouncementsApiController < ApplicationController
       }
     end
 
-    def get_refinement_announcements
+    def get_announcement_for_admin_view
+      @groups = Group.with_announcement(params[:id])
+      render json: fmt(ok, @groups)
+    end
 
-        fes_year_id = params[:fes_year_id].to_i
-        # 指定なし
-        if fes_year_id == 0
-          @announcements = Announcement.all
-          #fes_year_id指定
-        else
-          @announcements = Announcement.preload(:group).map{ |announcements| announcements if announcements.group.fes_year_id == fes_year_id }.compact
-        end
-      if @announcements.count == 0
-        render json: fmt(not_found, [], "Not found announcements")
+    # admin_viewのannouncement/indexの形に整える
+    def fit_group_index_for_admin_view(groups)
+      groups.map{
+        |group|
+        {
+          "group": group,
+          "group_category": group.group_category,
+          "fes_year": group.fes_year
+        }
+      }
+    end
+
+    # 絞り込み機能
+    def get_refinement_announcements
+      fes_year_id = params[:fes_year_id].to_i
+      # 両方ともALL
+      if fes_year_id == 0
+        @groups = Group.with_announcements
+        # fes_year_idだけ指定
+      elsif fes_year_id != 0
+        @groups = Group.with_announcement_narrow_down_by_fes_year(fes_year_id)
+      end
+
+      if @groups.count == 0
+        render json: fmt(not_found, [], "Not found groups")
       else
-        render json: fmt(ok, fit_announcement_index_for_admin_view(@announcements))
+        render json: fmt(ok, @groups)
       end
     end
 
-    #あいまい検索
+    # あいまい検索機能
     def get_search_announcements
       word = params[:word]
-      @announcements = Announcement.all.map{ |announcements| announcements if announcements.group.name.include?(word)  }.compact
-      if @announcements.count == 0
-        render json: fmt(not_found, [], "Not found announcements")
+      @groups = Group.with_announcement_narrow_down_by_search_word(word)
+      if @groups.count == 0
+        render json: fmt(not_found, [], "Not found groups")
       else
-        render json: fmt(ok, fit_announcement_index_for_admin_view(@announcements))
+        render json: fmt(ok, @groups)
       end
     end
+
+
+
+
+
+
+
   end
