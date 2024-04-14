@@ -168,6 +168,7 @@ export default {
           icon: "assignment_return",
           click: "/assign_items",
         },
+        {title: "物品移動計画", icon: "event_note", click:"/item_movement_planning"},
         { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
         { title: "物品貸出 時間・人数調整", icon: "assignment_return", click: "/adjustment_rental_time"},
         { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
