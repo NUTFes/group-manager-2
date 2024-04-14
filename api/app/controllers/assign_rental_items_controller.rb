@@ -35,6 +35,13 @@ class AssignRentalItemsController < ApplicationController
     render json: fmt(ok, [], "Deleted assign_rental_item = "+params[:id])
   end
 
+  # DELETE /assign_rental_items/delete_multiple
+  def delete_multiple
+    assign_rental_item_ids = params[:assign_rental_item_ids]
+    AssignRentalItem.where(id: assign_rental_item_ids).destroy_all
+    render json: fmt(ok, [], "Deleted assign_rental_items")
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_assign_rental_item

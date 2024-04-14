@@ -37,7 +37,11 @@ Rails.application.routes.draw do
   resources :purchase_lists
   post "/purchase_lists" => "purchase_lists#create"
   resources :food_products
-  resources :assign_rental_items
+  resources :assign_rental_items do
+    collection do
+      delete "delete_multiple"
+    end
+  end
   resources :rentable_items
   resources :rental_items
   resources :rental_item_allow_lists

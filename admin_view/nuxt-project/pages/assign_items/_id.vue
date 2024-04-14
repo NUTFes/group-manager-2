@@ -51,8 +51,15 @@
               追加
             </CommonButton>
           </SubHeader>
+          <!-- ここに左詰で削除ボタンをおく -->
+          <div class="assign-items-multi-delete-btn-wrapper">
+            <button v-if="selectedCheckBoxAssignItems.length > 0" class="assign-items-multi-delete-btn delete-btn-effect" @click="deleteAssignMultiple()">
+              <span class="material-icons"> delete </span>削除
+            </button>
+          </div>
           <Table>
             <template v-slot:table-header>
+              <th><input type="checkbox" @change="changeAllAssignItemCheckbox" v-model="isAllSelected" class="assign-item-checkbox"></th>
               <th v-for="(header, index) in stocker_headers" v-bind:key="index">
                 {{ header }}
               </th>
@@ -65,6 +72,7 @@
                 :key="index"
                 @click="() => $router.push({ path: '/assign_items/' + id})"
               >
+                <td><input type="checkbox" v-model="selectedCheckBoxAssignItems" :value="assignRentalItem.assign_rental_item.id" class="assign-item-checkbox"></td>
                 <td>{{ assignRentalItem.group.name}}</td>
                 <td>{{ assignRentalItem.rental_item.name }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
@@ -313,6 +321,72 @@
     -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
     -webkit-text-fill-color: black !important;    /* テキストの色を黒に設定します */
   }
+  .assign-item-checkbox {
+    transform: scale(2);
+  }
+  .assign-items-multi-delete-btn-wrapper {
+    position: relative;
+  }
+  .assign-items-multi-delete-btn {
+    /* 削除ボタンをフローティングで設置する */
+    position: absolute;
+    top: -40px;
+    right: 230px;
+    z-index: 10;
+    color: var(--accent-7);
+    border: 1px solid var(--accent-5);
+    width: 140px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.5s 0s ease;
+}
+.delete-btn-effect {
+  border-radius: var(--button-radius);
+  padding: 10px 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--accent-0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  transition: all 0.2s 0s ease;
+}
+.delete-btn-effect:before {
+  border-radius: var(--button-radius);
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  transition: 0.5s;
+  background: linear-gradient(135deg, #ff7070 0%, #e38ad5 100%);
+}
+.delete-btn-effect:after {
+  content: "";
+  border-radius: var(--button-radius);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  transition: 0.5s;
+  background: linear-gradient(
+    45deg,
+    var(--primary) 0%,
+    var(--button-secondary) 100%
+  );
+}
+.delete-btn-effect:hover:before {
+  opacity: 0;
+}
+.delete-btn-effect:active {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.25);
+}
 </style>
 
 <script>
@@ -332,6 +406,7 @@ export default {
       assignRentalItemDeleteId: null,
       assignItemName: "",
       assignItemNum: null,
+      selectedCheckBoxAssignItems: [],
       stockerItemName: "",
       stockerItemNum: null,
       rentableItems: [],
@@ -343,6 +418,7 @@ export default {
       itemYear: [],
       itemFesYear: "",
       itemStockerPlaceId: "",
+      isAllSelected: false,
 			roomName: null,
       refRole: [],
       id: this.$route.params.id,
@@ -548,6 +624,19 @@ export default {
       });
     },
 
+    changeAllAssignItemCheckbox() {
+      // 全てのチェックボックスが選択されているか
+      if (this.selectedCheckBoxAssignItems.length === this.assignRentalItems.length) {
+        this.selectedCheckBoxAssignItems = [];
+        this.isAllSelected = false;
+      } else {
+        this.selectedCheckBoxAssignItems = this.assignRentalItems.map(
+          (item) => item.assign_rental_item.id
+        );
+        this.isAllSelected = true;
+      }
+    },
+
     async submitAssign() {
       const assignUrl =
         "/assign_rental_items/" +
@@ -586,6 +675,12 @@ export default {
         this.closeAssignEditModal();
       });
     },
+    async deleteSelectedAssign() {
+      if (this.selectedCheckBoxAssignItems.length === 0) {
+        alart("削除する割当を選択してください");
+        return;
+      }
+    },
 
     async deleteAssign() {
       const delAssignUrl = "/assign_rental_items/" + this.assignRentalItemDeleteId;
@@ -593,6 +688,21 @@ export default {
       location.reload();
       this.closeAssignEditModal();
     },
+
+    async deleteAssignMultiple() {
+      console.log(this.selectedCheckBoxAssignItems);
+      const delAssignMultipleUrl = "/assign_rental_items/delete_multiple/";
+      const delAssignMultipleRes = await this.$axios.$delete(delAssignMultipleUrl, {
+        data: {
+          assign_rental_item_ids: this.selectedCheckBoxAssignItems,
+        },
+      });
+      console.log(delAssignMultipleRes);
+      this.selectedCheckBoxAssignItems = [];
+      this.isAllSelected = false;
+      location.reload();
+    },
+    
     openItemAddModal() {
       this.isOpenItemAddModal = false;
       this.isOpenItemAddModal = true;
@@ -658,6 +768,12 @@ export default {
     },
     closeAssignDeleteModal() {
       this.isOpenAssignDeleteModal = false;
+    },
+  },
+  watch: {
+    selectedCheckBoxAssignItems(newVal) {
+    // 全てのアイテムが選択されているかチェック
+    this.isAllSelected = newVal.length === this.assignRentalItems.length;
     },
   },
 };
