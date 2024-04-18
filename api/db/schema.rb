@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_07_061926) do
+ActiveRecord::Schema.define(version: 2024_04_18_124539) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -42,6 +42,17 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.string "time_point_end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "cooking_process_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.text "pre_open_kitchen"
+    t.text "pre_open_tent"
+    t.text "during_open_kitchen"
+    t.text "during_open_tent"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
 
   create_table "current_stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -123,6 +134,7 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "committee"
+    t.boolean "is_international"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -413,5 +425,6 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "user_details", "users"
 end
