@@ -17,7 +17,7 @@ class Api::V1::GroupsApiController < ApplicationController
 
   def get_groups_have_no_public_relation
     @current_fes_year = UserPageSetting.first.fes_year
-    @groups = Group.f(@current_fes_year.id)
+    @groups = Group.have_no_public_relation(@current_fes_year.id)
     render json: fmt(ok, @groups)
   end
 

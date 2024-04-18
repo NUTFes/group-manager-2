@@ -617,9 +617,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "message": group.announcement.nil? ? nil : group.announcement.message,
-            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
-            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+            "announcement": group.announcement,
           }
         }
     end
@@ -631,9 +629,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "message": group.announcement.nil? ? nil : group.announcement.message,
-            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
-            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+            "announcement": group.announcement,
           }
         }
     end
@@ -650,9 +646,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "message": group.announcement.nil? ? nil : group.announcement.message,
-            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
-            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+            "announcement": group.announcement,
           }
         }
     end
@@ -664,9 +658,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "message": group.announcement.nil? ? nil : group.announcement.message,
-            "created_at": group.announcement.nil? ? nil : group.announcement.created_at,
-            "updated_at": group.announcement.nil? ? nil : group.announcement.updated_at,
+            "announcement": group.announcement,
           }
         }
     end
