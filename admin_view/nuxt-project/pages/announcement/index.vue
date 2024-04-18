@@ -61,7 +61,7 @@
             <td>{{ announcement.group.id }}</td>
             <td>{{ announcement.group.name}}</td>
             <td>
-              <div v-if='announcement.message === null'>未登録</div>
+              <div v-if='announcement.announcement === null'>未登録</div>
               <div v-else>登録済み</div>
             </td>
           </tr>
