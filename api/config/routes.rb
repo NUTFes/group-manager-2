@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   resources :public_relations
   resources :venue_maps
   resources :announcements
+  resources :cooking_process_orders
 
   # /api/v1/...
   namespace 'api' do
