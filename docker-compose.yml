@@ -46,6 +46,18 @@ services:
       - VUE_APP_API_URL=http://localhost:3000
     depends_on: [api]
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    env_file:
+      - ./phpmyadmin.env
+    volumes:
+      - ./phpmyadmin/sessions:/sessions
+    depends_on:
+      - db
+    ports:
+      - 3307:80
+
 volumes:
   mysql-data:
     driver: local
