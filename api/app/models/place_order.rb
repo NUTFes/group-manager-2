@@ -20,7 +20,6 @@ class PlaceOrder < ApplicationRecord
         "place_order": place_order,
         "place_order_name": place_order.to_place_name_h,
         "group": place_order.group,
-        "venue_map": place_order.group.venue_map 
       }
     end
 
