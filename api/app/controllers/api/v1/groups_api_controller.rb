@@ -51,6 +51,7 @@ class Api::V1::GroupsApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i
     group_category_id = params[:group_category_id].to_i
     committee = params[:committee].to_i
+    is_international = params[:is_international].to_i
 
     option_list = [nil, true, false] # 0: 指定なし(ALL) 1: true 2: false
 
@@ -58,6 +59,7 @@ class Api::V1::GroupsApiController < ApplicationController
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
     @groups = @groups.where(committee: committee == 1) unless committee == 0
+    @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
 
     if @groups.count == 0
       render json: fmt(not_found, [], "Not found groups")
