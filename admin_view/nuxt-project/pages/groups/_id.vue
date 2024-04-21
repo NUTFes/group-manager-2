@@ -41,6 +41,10 @@
             <td>{{ group.group.committee }}</td>
           </tr>
           <tr>
+            <th>国際</th>
+            <td>{{ group.group.is_international }}</td>
+          </tr>
+          <tr>
             <th>企画名</th>
             <td>{{ group.group.project_name }}</td>
           </tr>
@@ -99,6 +103,10 @@
               {{ category.name }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>国際</h3>
+          <input type="checkbox" v-model="international"/>
         </div>
         <div>
           <h3>企画名</h3>
@@ -162,6 +170,7 @@ export default {
       groupCategoryId: "",
       fesYearId: "",
       committee: "",
+      international: false,
 
       isOpenEditModal: false,
       isOpenDeleteModal: false,
@@ -197,6 +206,7 @@ export default {
       committee: groupRes.data.committee,
       groupName: groupRes.data.group.name,
       projectName: groupRes.data.group.project_name,
+      international: groupRes.data.group.is_international,
       activity: groupRes.data.group.activity,
       groupCategoryId: groupRes.data.group.group_category_id,
       fesYearId: groupRes.data.group.fes_year_id,
@@ -254,7 +264,9 @@ export default {
         "&activity=" +
         this.activity +
         "&fes_year_id=" +
-        this.fesYearId;
+        this.fesYearId +
+        "&is_international=" + 
+        this.international;
       console.log(putGroupUrl);
 
       await this.$axios.$put(putGroupUrl).then((response) => {
@@ -265,6 +277,7 @@ export default {
         this.activity = "";
         this.groupCategoryId = "";
         this.fesYearId = "";
+        this.international = false;
         this.reload();
         this.closeEditModal();
       });

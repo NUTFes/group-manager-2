@@ -32,6 +32,13 @@
         >
           {{ refCommittee }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="internationalList"
+          :on_click="refinementGroups"
+          value="value"
+        >
+          {{ refInternational }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -62,6 +69,7 @@
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
             <td>{{ group.group.committee }}</td>
+            <td>{{ group.group.is_international }}</td>
             <td>{{ group.group.project_name }}</td>
             <td>{{ group.group_category.name }}</td>
             <td>{{ group.fes_year.year_num }}</td>
@@ -103,6 +111,10 @@
               {{ category.name }}
             </option>
           </select>
+        </div>
+        <div>
+          <h3>国際</h3>
+          <input type="checkbox" v-model="international" />
         </div>
         <div>
           <h3>企画名</h3>
@@ -154,6 +166,7 @@ export default {
       groupCategoryId: "",
       fesYearId: "",
       committee: "",
+      international: false,
 
       year_list: [],
       user: [],
@@ -165,6 +178,8 @@ export default {
       refCategoryID: 0,
       refCommittee: "申請者",
       refCommitteeID: 0,
+      refInternational: "国際",
+      refInternationalID: 0,
       isOpenAddModal: false,
       isOpenSnackBar: false,
       searchText: "",
@@ -182,6 +197,7 @@ export default {
         "ID",
         "グループ名",
         "委員",
+        "国際",
         "企画名",
         "カテゴリ",
         "開催年",
@@ -189,6 +205,10 @@ export default {
       applicantList: [
         { id: 1, value: "実行委員", bool: true },
         { id: 2, value: "参加団体", bool: false },
+      ],
+      internationalList: [
+        { id: 1, value: "国際", bool: true },
+        { id: 2, value: "国内", bool: false },
       ],
     };
   },
@@ -247,6 +267,15 @@ export default {
         } else {
           this.refCommittee = name_list[item_id -1].value;
         }
+        // internationalで絞り込むとき
+      } else if (Object.is(name_list, this.internationalList)) {
+        this.refInternationalID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refInternational = "ALL";
+        } else {
+          this.refInternational = name_list[item_id -1].value;
+        }
       }
       this.groups = [];
       const refUrl =
@@ -255,7 +284,9 @@ export default {
         "&group_category_id=" +
         this.refCategoryID +
         "&committee=" +
-        this.refCommitteeID;
+        this.refCommitteeID +
+        "&is_international=" +
+        this.refInternationalID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.groups.push(res);
@@ -316,7 +347,9 @@ export default {
         "&group_category_id=" +
         this.groupCategoryId +
         "&fes_year_id=" +
-        this.fesYearId;
+        this.fesYearId +
+        "&is_international=" +
+        this.international;
       this.$axios.$post(postGroupUrl).then((response) => {
         this.openSnackBar(this.groupName + "を追加しました");
         this.groupName = "";
@@ -325,6 +358,7 @@ export default {
         this.activity = "";
         this.groupCategoryId = "";
         this.fesYearId = "";
+        this.international = false;
         this.reload();
         this.closeAddModal();
       });

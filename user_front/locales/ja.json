@@ -136,7 +136,8 @@
     "groupName": "団体名",
     "shopName": "企画名",
     "category": "参加形式",
-    "activityDetails": "活動内容"
+    "activityDetails": "活動内容",
+    "international": "国際"
   },
 
   "Stage": {
