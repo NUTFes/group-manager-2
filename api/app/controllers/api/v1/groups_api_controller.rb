@@ -21,6 +21,12 @@ class Api::V1::GroupsApiController < ApplicationController
     render json: fmt(ok, @groups)
   end
 
+  def get_groups_have_no_announcement
+    @current_fes_year = UserPageSetting.first.fes_year
+    @groups = Group.have_no_announcement(@current_fes_year.id)
+    render json: fmt(ok, @groups)
+  end
+
   # admin_pageのviewの形に整える
   def fit_group_index_for_admin_view(groups)
     groups.map{
