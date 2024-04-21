@@ -159,6 +159,10 @@ export default {
       this.announcement = res.data[0];
     },
     async edit() {
+      if (!this.message) {
+        this.openSnackBar("会場アナウンス文を入力してください");
+        return;
+      }
       if (this.announcement.announcement) {
         const editUrl =
           "/announcements/" +
