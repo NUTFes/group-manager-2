@@ -172,6 +172,11 @@ export default {
       });
     },
     async submit() {
+      if (!this.group_id || !this.message) {
+        this.openSnackBar("参加団体と会場アナウンス文を入力してください");
+        return;
+      }
+
       const postAnnouncementUrl =
         "/announcements/" +
         "?group_id=" +
