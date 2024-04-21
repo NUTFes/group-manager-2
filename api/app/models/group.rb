@@ -623,6 +623,11 @@ class Group < ApplicationRecord
       return self.group_identification.nil? ? nil : self.group_identification.number
     end
 
+    # 開催日取得
+    def date
+      return self.group_identification.nil? ? nil : self.group_identification.date
+    end
+
     # 電力申請の総和を計算する
     def sum_power_orders
       sum = 0
