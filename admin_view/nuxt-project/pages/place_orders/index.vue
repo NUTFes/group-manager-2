@@ -201,15 +201,6 @@ export default {
       currentYearRes.data.fes_year_id;
     const placeOrderRes = await $axios.$post(placeOrderUrl);
 
-    // let venueMaps = [];
-    // for (const res of placeOrderRes.data) {
-    //   console.log(res)
-    //   const vennuMapUrl = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
-    //   const venueMapRes = await $axios.$get(vennuMapUrl);
-    //   console.log(venueMapRes)
-    //   venueMaps.push(venueMapRes.data)
-    // }
-
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
 
@@ -220,10 +211,8 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
     });
 
-    // console.log(venueMaps)
     return {
       placeOrders: placeOrderRes.data,
-      // venueMaps: venueMaps,
       placeList: placesRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
@@ -273,17 +262,14 @@ export default {
         this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
       this.placeOrders = [];
-      // this.venueMaps = [];
       for (const res of refRes.data) {
         const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
         const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
-        // this.venueMaps.push(response.data);
       };
     },
     async searchPlaceOrders() {
       this.placeOrders = [];
-      // this.venueMaps = [];
       const searchUrl =
         "/api/v1/get_search_place_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
@@ -291,7 +277,6 @@ export default {
         const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
         const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
-        // this.venueMaps.push(response.data);
       }
     },
     async openAddModal() {

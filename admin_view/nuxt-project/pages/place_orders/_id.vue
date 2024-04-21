@@ -50,7 +50,7 @@
               <th>第三希望</th>
               <td>{{ placeOrder.place_order_name.third }}</td>
             </tr>
-            <tr>
+            <!-- <tr>
               <th>会場配置図</th>
               <td>
                 <div v-if="placeOrder.venue_map === null">
@@ -63,7 +63,7 @@
                   />
                 </div>
               </td>
-            </tr>
+            </tr> -->
             <tr>
               <th>備考</th>
               <td>{{ placeOrder.place_order.remark }}</td>
