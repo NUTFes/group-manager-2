@@ -155,7 +155,7 @@
         }
         this.groups = [];
         const refUrl =
-          "/api/v1/get_refinement_groups?fes_year_id=" +
+          "/api/v1/get_refinement_order_infos?fes_year_id=" +
           this.refYearID;
         const refRes = await this.$axios.$post(refUrl);
         for (const res of refRes.data) {
@@ -164,7 +164,7 @@
       },
       async searchGroups() {
         this.groups = [];
-        const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText;
+        const searchUrl = "/api/v1/get_search_order_infos?word=" + this.searchText;
         const refRes = await this.$axios.$post(searchUrl);
         for (const res of refRes.data) {
             this.groups.push(res);
