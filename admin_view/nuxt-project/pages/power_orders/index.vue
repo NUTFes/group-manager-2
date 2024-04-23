@@ -1,7 +1,11 @@
 <template>
   <div class="main-content">
     <SubHeader pageTitle="電力申請一覧">
-      <CommonButton v-if="this.$role(roleID).power_orders.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).power_orders.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -156,14 +160,14 @@ export default {
         { id: 11, power: 1000 },
       ],
       groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
+        { id: 1, name: "食品販売" },
+        { id: 2, name: "物品販売" },
+        { id: 3, name: "ステージ" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室" },
+        { id: 6, name: "国際" },
+        { id: 7, name: "実行委員" },
+        { id: 8, name: "その他" },
       ],
       groupID: null,
       item: null,
@@ -201,8 +205,23 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem("powerOrdersRefYear") || 'Year';
+    this.refPower = localStorage.getItem("powerOrdersRefPower") || 0;
+    this.refGroupCategories =
+      localStorage.getItem("powerOrdersRefCategory") || 'Category';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementPowerOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("powerOrdersRefYear", this.refYears);
+      localStorage.setItem("powerOrdersRefPower", this.refPower);
+      localStorage.setItem("powerOrdersRefCategory", this.refGroupCategories);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -230,6 +249,8 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
       this.powerOrders = [];
       const refUrl =
         "/api/v1/get_refinement_power_orders?fes_year_id=" +

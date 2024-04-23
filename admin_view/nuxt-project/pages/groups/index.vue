@@ -238,8 +238,24 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem('groupsRefYear') || 'Year';
+    this.refGroupCategories = localStorage.getItem('groupsRefCategory') || 'Category';
+    this.refInternational = localStorage.getItem('groupsRefInternational') || 'International';
+    this.refCommittee = localStorage.getItem('groupsRefCommittee') || 'Committee';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementGroups(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("groupsRefYear", this.refYears);
+      localStorage.setItem("groupsRefCategory", this.refGroupCategories);
+      localStorage.setItem("groupsRefInternational", this.refInternational);
+      localStorage.setItem("groupsRefCommittee", this.refCommittee);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -277,6 +293,8 @@ export default {
           this.refInternational = name_list[item_id -1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.groups = [];
       const refUrl =
         "/api/v1/get_refinement_groups?fes_year_id=" +

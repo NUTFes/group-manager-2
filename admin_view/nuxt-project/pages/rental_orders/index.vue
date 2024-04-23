@@ -186,8 +186,23 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem("rentalOrdersRefYear") || 'Year';
+    this.refRentalItems = localStorage.getItem("rentalOrdersRefItem") || 'Item';
+    this.refGroupCategories =
+      localStorage.getItem("rentalOrdersRefCategory") || 'Category';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementRentalOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("rentalOrdersRefYear", this.refYears);
+      localStorage.setItem("rentalOrdersRefItem", this.refRentalItems);
+      localStorage.setItem("rentalOrdersRefCategory", this.refGroupCategories);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -216,7 +231,8 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
-
+    },
+    async fetchFilteredData() {
       this.rentalOrders = [];
       const refUrl =
         "/api/v1/get_refinement_rental_orders?fes_year_id=" +

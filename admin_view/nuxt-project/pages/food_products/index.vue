@@ -190,8 +190,20 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem("foodProductsRefYear") || 'Year';
+    this.refIsCooking = localStorage.getItem("foodProductsRefIsCooking") || '調理あり/なし';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementFoodProducts(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("foodProductsRefYear", this.refYears);
+      localStorage.setItem("foodProductsRefIsCooking", this.refIsCooking);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -211,6 +223,8 @@ export default {
           this.refIsCooking = name_list[item_id - 1].text;
         }
       }
+    },
+    async fetchFilteredData() {
       this.foodProducts = [];
       const refUrl =
         "/api/v1/get_refinement_food_products?fes_year_id=" +

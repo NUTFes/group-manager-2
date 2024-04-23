@@ -268,8 +268,26 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem('stageCommonOptionsRefYear') || 'Year';
+    this.refIsOwnEquipment = localStorage.getItem('stageCommonOptionsRefIsOwnEquipment') || '所持機器の使用';
+    this.refIsBgm = localStorage.getItem('stageCommonOptionsRefIsBgm') || '音楽をかける';
+    this.refIsCameraPermission = localStorage.getItem('stageCommonOptionsRefIsCameraPermission') || '撮影許可';
+    this.refIsLoudSound = localStorage.getItem('stageCommonOptionsRefIsLoudSound') || '大きな音';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementStageCommonOptions(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("stageCommonOptionsRefYear", this.refYears);
+      localStorage.setItem("stageCommonOptionsRefIsOwnEquipment", this.refIsOwnEquipment);
+      localStorage.setItem("stageCommonOptionsRefIsBgm", this.refIsBgm);
+      localStorage.setItem("stageCommonOptionsRefIsCameraPermission", this.refIsCameraPermission);
+      localStorage.setItem("stageCommonOptionsRefIsLoudSound", this.refIsLoudSound);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (Object.is(name_list, this.yearList)) {
         this.refYearID = item_id;
@@ -316,6 +334,8 @@ export default {
           this.refIsLoudSound = name_list[item_id - 1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.stageCommonOption = [];
       const refUrl =
         "/api/v1/get_refinement_stage_common_options?fes_year_id=" +

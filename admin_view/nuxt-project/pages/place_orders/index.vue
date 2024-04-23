@@ -224,8 +224,23 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem("placeOrdersRefYear") || 'Year';
+    this.refPlaces = localStorage.getItem("placeOrdersRefPlace") || 'Place';
+    this.refGroupCategories =
+      localStorage.getItem("placeOrdersRefCategory") || 'Category';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementPlaceOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("placeOrdersRefYear", this.refYears);
+      localStorage.setItem("placeOrdersRefPlace", this.refPlaces);
+      localStorage.setItem("placeOrdersRefCategory", this.refGroupCategories);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -253,6 +268,9 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
+      this.placeOrders = [];
       const refUrl =
         "/api/v1/get_refinement_place_orders?fes_year_id=" +
         this.refYearID +
@@ -261,10 +279,7 @@ export default {
         "&group_category_id=" +
         this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
-      this.placeOrders = [];
       for (const res of refRes.data) {
-        const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
-        const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
       };
     },

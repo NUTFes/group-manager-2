@@ -219,8 +219,18 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem('representativeRefYear') || 'Year';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async refinementRepresentatives(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem('representativeRefYear', this.refYears);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
@@ -229,6 +239,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.representatives = [];
       const refUrl =
         "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;

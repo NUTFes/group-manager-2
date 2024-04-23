@@ -213,6 +213,12 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem("purchaseListsRefYear") || 'Year';
+    this.refIsFresh = localStorage.getItem("purchaseListsRefIsFresh") || 'なまもの';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async getFoodProducts() {
       const url = "/api/v1/get_food_products_by_group_id/" + this.groupID;
@@ -236,6 +242,12 @@ export default {
       this.isOpenAddModal = false;
     },
     async refinementPurchaseLists(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("purchaseListsRefYear", this.refYears);
+      localStorage.setItem("purchaseListsRefIsFresh", this.refIsFresh);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -255,6 +267,8 @@ export default {
           this.refIsFresh = name_list[item_id - 1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.purchaseLists = [];
       const refUrl =
         "/api/v1/get_refinement_purchase_lists?fes_year_id=" +

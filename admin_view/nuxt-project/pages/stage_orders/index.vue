@@ -26,7 +26,7 @@
         <SearchDropDown
           :nameList="isSunnyList"
           :on_click="refinementStageOrders"
-          value="value"
+          value="text"
         >
           {{ refIsSunny }}
         </SearchDropDown>
@@ -354,6 +354,12 @@ export default {
         this.timeRange.push(hour + ":" + minute);
       }
     }
+    this.refYears = localStorage.getItem("stageOrdersRefYear") || 'Year';
+    this.refIsSunny = localStorage.getItem("stageOrdersRefIsSunny") || '晴れ希望';
+    this.refDaysNum = localStorage.getItem("stageOrdersRefDaysNum") || '何日目';
+    this.refStage = localStorage.getItem("stageOrdersRefStage") || 'Stage';
+
+    this.fetchFilteredData();
   },
   computed: {
     useInterval() {
@@ -371,6 +377,14 @@ export default {
       this.isIntervalMode = !this.isIntervalMode;
     },
     async refinementStageOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("stageOrdersRefYear", this.refYears);
+      localStorage.setItem("stageOrdersRefIsSunny", this.refIsSunny);
+      localStorage.setItem("stageOrdersRefDaysNum", this.refDaysNum);
+      localStorage.setItem("stageOrdersRefStage", this.refStage);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -387,7 +401,7 @@ export default {
         if (item_id == 0) {
           this.refIsSunny = "ALL";
         } else {
-          this.refIsSunny = name_list[item_id - 1].value;
+          this.refIsSunny = name_list[item_id - 1].text;
         }
         // days_numで絞り込むとき
       } else if (Object.is(name_list, this.daysNumList)) {
@@ -408,6 +422,8 @@ export default {
           this.refStage = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
       this.stageOrders = [];
       const refUrl =
         "/api/v1/get_refinement_stage_orders?fes_year_id=" +
@@ -420,9 +436,6 @@ export default {
         this.refIsSunnyID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
-        const url =
-          "/api/v1/get_stage_order_show_for_admin_view/" + res.stage_order.id;
-        const response = await this.$axios.$get(url);
         this.stageOrders.push(res);
       }
     },

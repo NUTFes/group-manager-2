@@ -216,6 +216,11 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refRole = localStorage.getItem("usersRefRole") || 'Role';
+
+    this.fetchFilteredData();
+  },
   methods: {
     openAddModal() {
       this.isOpenAddModal = false;
@@ -233,12 +238,19 @@ export default {
       this.isOpenSnackBar = false;
     },
     async refinementUsers(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("usersRefRole", this.refRole);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       this.refRoleID = item_id
       if (item_id == 0){
         this.refRole = "ALL";
       } else {
         this.refRole = name_list[item_id - 1].name;
       }
+    },
+    async fetchFilteredData() {
       this.users = [];
       const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
       const refRes = await this.$axios.$post(refUrl);

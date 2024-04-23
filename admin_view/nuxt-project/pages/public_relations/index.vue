@@ -158,6 +158,11 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refYears = localStorage.getItem("publicRelationsRefYear") || 'Year';
+
+    this.fetchFilteredData();
+  },
   methods: {
     async openAddModal() {
       const url = "/api/v1/get_groups_have_no_public_relation";
@@ -253,6 +258,11 @@ export default {
       );
     },
     async refinementPurchaseLists(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem("publicRelationsRefYear", this.refYears);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -263,6 +273,8 @@ export default {
           this.refYears = name_list[item_id - 1].year_num;
         }
       }
+    },
+    async fetchFilteredData() {
       this.publicRelations = [];
       const refUrl =
         "/api/v1/get_refinement_public_relations?fes_year_id=" +
