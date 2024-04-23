@@ -39,57 +39,57 @@
             >
               <td>{{ group.group.id }}</td>
               <td>{{ group.group.name}}</td>
-              <td>
-                <div v-if='group.sub_rep'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.sub_rep}">
+                <div v-if='group.sub_rep'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.place_order'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.place_order}">
+                <div v-if='group.place_order'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.power_orders'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.power_orders}">
+                <div v-if='group.power_orders'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.rental_orders'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.rental_orders}">
+                <div v-if='group.rental_orders'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.stage_orders'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.stage_orders}">
+                <div v-if='group.stage_orders'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.stage_common_option'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.stage_common_option}">
+                <div v-if='group.stage_common_option'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.employees'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.employees}">
+                <div v-if='group.employees'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.food_products && group.food_products.food_product'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.food_products}">
+                <div v-if='group.food_products && group.food_products.food_product'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.food_products && group.food_products.purchase_lists'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !(group.food_products && group.food_products.purchase_lists)}">
+                <div v-if='group.food_products && group.food_products.purchase_lists'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.public_relation'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.public_relation}">
+                <div v-if='group.public_relation'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.announucement'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.announucement}">
+                <div v-if='group.announucement'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.venue_map'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.venue_map}">
+                <div v-if='group.venue_map'>◯</div>
+                <div v-else>✖️</div>
               </td>
-              <td>
-                <div v-if='group.cooking_process_order'>登録済み</div>
-                <div v-else>未登録</div>
+              <td :class="{unregistered: !group.cooking_process_order}">
+                <div v-if='group.cooking_process_order'>◯</div>
+                <div v-else>✖️</div>
               </td>
             </tr>
           </template>
@@ -173,3 +173,16 @@
     },
   };
   </script>
+  <style scoped>
+  .unregistered {
+    background-color: red;
+    color: white;
+  }
+  .normal-table td.unregistered:hover {
+    background-color: red !important;
+    color: white;
+    background: none;  /* 線形グラデーションを上書きして無効にします */
+    -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
+    -webkit-text-fill-color: black !important;
+  }
+  </style>
