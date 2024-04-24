@@ -216,8 +216,9 @@ export default {
   mounted() {
     this.refYears = localStorage.getItem("purchaseListsRefYear") || 'Year';
     this.refIsFresh = localStorage.getItem("purchaseListsRefIsFresh") || 'なまもの';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async getFoodProducts() {

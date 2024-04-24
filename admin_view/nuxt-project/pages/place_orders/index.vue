@@ -225,6 +225,8 @@ export default {
     }),
   },
   mounted() {
+    window.scrollTo(0, 0);
+    
     this.refYears = localStorage.getItem("placeOrdersRefYear") || 'Year';
     this.refPlaces = localStorage.getItem("placeOrdersRefPlace") || 'Place';
     this.refGroupCategories =

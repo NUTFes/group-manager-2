@@ -193,8 +193,9 @@ export default {
   mounted() {
     this.refYears = localStorage.getItem("foodProductsRefYear") || 'Year';
     this.refIsCooking = localStorage.getItem("foodProductsRefIsCooking") || '調理あり/なし';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementFoodProducts(item_id, name_list) {

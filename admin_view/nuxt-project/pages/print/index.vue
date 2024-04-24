@@ -119,6 +119,9 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     downloadPowerPDF: function () {
       window.open(

@@ -243,8 +243,9 @@ export default {
     this.refGroupCategories = localStorage.getItem('groupsRefCategory') || 'Category';
     this.refInternational = localStorage.getItem('groupsRefInternational') || 'International';
     this.refCommittee = localStorage.getItem('groupsRefCommittee') || 'Committee';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementGroups(item_id, name_list) {

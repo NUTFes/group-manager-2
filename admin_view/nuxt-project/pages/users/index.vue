@@ -218,8 +218,9 @@ export default {
   },
   mounted() {
     this.refRole = localStorage.getItem("usersRefRole") || 'Role';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     openAddModal() {

@@ -210,8 +210,9 @@ export default {
     this.refPower = localStorage.getItem("powerOrdersRefPower") || 0;
     this.refGroupCategories =
       localStorage.getItem("powerOrdersRefCategory") || 'Category';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementPowerOrders(item_id, name_list) {

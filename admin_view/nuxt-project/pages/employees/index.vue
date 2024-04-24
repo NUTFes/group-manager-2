@@ -162,8 +162,9 @@ export default {
   },
   mounted() {
     this.refYears = localStorage.getItem("employeesRefYear") || 'Year';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementEmployees(item_id, name_list) {

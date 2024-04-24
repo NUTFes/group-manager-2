@@ -274,8 +274,9 @@ export default {
     this.refIsBgm = localStorage.getItem('stageCommonOptionsRefIsBgm') || '音楽をかける';
     this.refIsCameraPermission = localStorage.getItem('stageCommonOptionsRefIsCameraPermission') || '撮影許可';
     this.refIsLoudSound = localStorage.getItem('stageCommonOptionsRefIsLoudSound') || '大きな音';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementStageCommonOptions(item_id, name_list) {

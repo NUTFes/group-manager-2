@@ -348,6 +348,8 @@ export default {
     };
   },
   mounted() {
+    window.scrollTo(0, 0);
+    
     // 時間を作る
     for (let hour of this.hour_range) {
       for (let minute of this.minute_range) {

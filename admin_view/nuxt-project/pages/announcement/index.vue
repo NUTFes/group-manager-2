@@ -148,8 +148,9 @@ export default {
   },
   mounted() {
     this.refYears = localStorage.getItem("announcementRefYear") || 'Year';
-
     this.fetchFilteredData();
+    
+    window.scrollTo(0, 0);
   },
   methods: {
 

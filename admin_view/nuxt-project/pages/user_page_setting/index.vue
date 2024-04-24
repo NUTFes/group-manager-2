@@ -288,6 +288,8 @@ export default {
   },
 
   mounted() {
+    window.scrollTo(0, 0);
+    
     this.$axios
       .get("/user_page_settings")
       .then((response) => {

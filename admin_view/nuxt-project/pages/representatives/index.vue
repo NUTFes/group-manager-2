@@ -221,8 +221,9 @@ export default {
   },
   mounted() {
     this.refYears = localStorage.getItem('representativeRefYear') || 'Year';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementRepresentatives(item_id, name_list) {

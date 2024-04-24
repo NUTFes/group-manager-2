@@ -173,6 +173,9 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     async openEditModal() {
       const shopUrl = "/shops";

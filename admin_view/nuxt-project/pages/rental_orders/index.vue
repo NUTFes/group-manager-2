@@ -191,8 +191,9 @@ export default {
     this.refRentalItems = localStorage.getItem("rentalOrdersRefItem") || 'Item';
     this.refGroupCategories =
       localStorage.getItem("rentalOrdersRefCategory") || 'Category';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     async refinementRentalOrders(item_id, name_list) {

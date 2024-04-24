@@ -143,8 +143,9 @@ export default {
   mounted() {
     this.refYears = localStorage.getItem('groupIdentifyRefYear') || 'Year';
     this.refGroupCategories = localStorage.getItem('groupIdentifyRefCategory') || 'Category';
-
     this.fetchFilteredData();
+
+    window.scrollTo(0, 0);
   },
   methods: {
     openAddModal(id, groupId, name, number) {

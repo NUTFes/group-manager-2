@@ -181,6 +181,9 @@ export default {
       refYears: currentYears[0].year_num,
   };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     openAddModal() {
       this.$axios.$get("/places").then((res) => {
