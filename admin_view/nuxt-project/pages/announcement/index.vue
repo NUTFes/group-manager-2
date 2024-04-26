@@ -147,6 +147,8 @@ export default {
     }),
   },
   mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
     const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
@@ -155,10 +157,11 @@ export default {
       this.refYears = 'Year';
     }
     this.fetchFilteredData();
-    
-    window.scrollTo(0, 0);
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
 
     async openAddModal() {
       const groupUrl = "/api/v1/get_groups_have_no_announcement";
@@ -228,6 +231,9 @@ export default {
       for (const res of refRes.data) {
         this.announcements.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchAnnouncements() {
       this.announcements = [];

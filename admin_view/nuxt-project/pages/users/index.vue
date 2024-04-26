@@ -217,6 +217,8 @@ export default {
     }),
   },
   mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    
     const storedRoleID = localStorage.getItem(this.$route.path + 'RefRole');
     if (storedRoleID) {
       this.refRoleID = Number(storedRoleID);
@@ -225,10 +227,11 @@ export default {
       this.refRoles = 'Role';
     }
     this.fetchFilteredData();
-
-    window.scrollTo(0, 0);
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
@@ -264,6 +267,9 @@ export default {
       for (const res of refRes.data){
         this.users.push(res)
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchUsers(){
       this.users = []

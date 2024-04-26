@@ -159,6 +159,8 @@ export default {
     }),
   },
   mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
     const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
@@ -167,10 +169,11 @@ export default {
       this.refYears = 'Year';
     }
     this.fetchFilteredData();
-
-    window.scrollTo(0, 0);
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async openAddModal() {
       const url = "/api/v1/get_groups_have_no_public_relation";
       const resGroups = await this.$axios.$get(url);
@@ -290,6 +293,9 @@ export default {
       for (const res of refRes.data) {
         this.publicRelations.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchPurchaseLists() {
       this.publicRelations = [];

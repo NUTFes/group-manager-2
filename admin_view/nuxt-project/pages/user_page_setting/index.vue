@@ -288,7 +288,10 @@ export default {
   },
 
   mounted() {
-    window.scrollTo(0, 0);
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+    });
     
     this.$axios
       .get("/user_page_settings")
@@ -336,6 +339,9 @@ export default {
     }),
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     update: function() {
       const update_url = "/user_page_settings/1";
       let params = new URLSearchParams();

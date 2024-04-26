@@ -225,7 +225,7 @@ export default {
     }),
   },
   mounted() {
-    window.scrollTo(0, 0);
+    window.addEventListener('scroll', this.saveScrollPosition);
     this.refPlaces = localStorage.getItem("placeOrdersRefPlace") || 'Place';
     this.refGroupCategories =
       localStorage.getItem("placeOrdersRefCategory") || 'Category';
@@ -257,6 +257,9 @@ export default {
     this.fetchFilteredData();
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementPlaceOrders(item_id, name_list) {
       this.updateFilters(item_id, name_list);
       localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
@@ -270,7 +273,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears == "ALL";
+          this.refYears = "ALL";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -306,6 +309,9 @@ export default {
       for (const res of refRes.data) {
         this.placeOrders.push(res);
       };
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchPlaceOrders() {
       this.placeOrders = [];

@@ -214,6 +214,8 @@ export default {
     }),
   },
   mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
     const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
@@ -231,10 +233,12 @@ export default {
     }
 
     this.fetchFilteredData();
-
-    window.scrollTo(0, 0);
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+
     async getFoodProducts() {
       const url = "/api/v1/get_food_products_by_group_id/" + this.groupID;
       const res = await this.$axios.$get(url);
@@ -294,6 +298,10 @@ export default {
       for (const res of refRes.data) {
         this.purchaseLists.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
+
     },
     async searchPurchaseLists() {
       this.purchaseLists = [];

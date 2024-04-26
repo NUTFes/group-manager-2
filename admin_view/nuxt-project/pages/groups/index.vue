@@ -272,9 +272,12 @@ export default {
     }
     this.fetchFilteredData();
 
-    window.scrollTo(0, 0);
+    window.addEventListener('scroll', this.saveScrollPosition);
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementGroups(item_id, name_list) {
       this.updateFilters(item_id, name_list);
       localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
@@ -338,6 +341,9 @@ export default {
       for (const res of refRes.data) {
         this.groups.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchGroups() {
       this.groups = [];
