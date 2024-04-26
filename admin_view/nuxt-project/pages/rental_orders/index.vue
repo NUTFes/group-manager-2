@@ -187,10 +187,30 @@ export default {
     }),
   },
   mounted() {
-    this.refYears = localStorage.getItem("rentalOrdersRefYear") || 'Year';
-    this.refRentalItems = localStorage.getItem("rentalOrdersRefItem") || 'Item';
-    this.refGroupCategories =
-      localStorage.getItem("rentalOrdersRefCategory") || 'Category';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedRentalItemID = localStorage.getItem(this.$route.path + 'RefRentalItem');
+    if (storedRentalItemID) {
+      this.refRentalItemID = Number(storedRentalItemID);
+      this.updateFilters(this.refRentalItemID, this.rentalItemsList);
+    } else {
+      this.refRentalItems = 'Items';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Categories';
+    }
+
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -198,9 +218,9 @@ export default {
   methods: {
     async refinementRentalOrders(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("rentalOrdersRefYear", this.refYears);
-      localStorage.setItem("rentalOrdersRefItem", this.refRentalItems);
-      localStorage.setItem("rentalOrdersRefCategory", this.refGroupCategories);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefRentalItem', this.refRentalItemID);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

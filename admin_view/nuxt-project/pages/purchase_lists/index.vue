@@ -214,8 +214,22 @@ export default {
     }),
   },
   mounted() {
-    this.refYears = localStorage.getItem("purchaseListsRefYear") || 'Year';
-    this.refIsFresh = localStorage.getItem("purchaseListsRefIsFresh") || 'なまもの';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsFreshID = localStorage.getItem(this.$route.path + 'RefIsFresh');
+    if (storedIsFreshID) {
+      this.refIsFreshID = Number(storedIsFreshID);
+      this.updateFilters(this.refIsFreshID, this.isFreshList);
+    } else {
+      this.refIsFresh = 'なまもの';
+    }
+
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -244,8 +258,8 @@ export default {
     },
     async refinementPurchaseLists(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("purchaseListsRefYear", this.refYears);
-      localStorage.setItem("purchaseListsRefIsFresh", this.refIsFresh);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsFresh', this.refIsFreshID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

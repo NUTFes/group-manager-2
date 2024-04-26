@@ -206,10 +206,30 @@ export default {
     }),
   },
   mounted() {
-    this.refYears = localStorage.getItem("powerOrdersRefYear") || 'Year';
-    this.refPower = localStorage.getItem("powerOrdersRefPower") || 0;
-    this.refGroupCategories =
-      localStorage.getItem("powerOrdersRefCategory") || 'Category';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedPower = localStorage.getItem(this.$route.path + 'RefPower');
+    if (storedPower) {
+      this.refPower = Number(storedPower);
+      this.updateFilters(this.refPower, this.powerList);
+    } else {
+      this.refPower = 0;
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Category';
+    }
+
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -217,9 +237,9 @@ export default {
   methods: {
     async refinementPowerOrders(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("powerOrdersRefYear", this.refYears);
-      localStorage.setItem("powerOrdersRefPower", this.refPower);
-      localStorage.setItem("powerOrdersRefCategory", this.refGroupCategories);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefPower', this.refPower);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

@@ -191,8 +191,21 @@ export default {
     }),
   },
   mounted() {
-    this.refYears = localStorage.getItem("foodProductsRefYear") || 'Year';
-    this.refIsCooking = localStorage.getItem("foodProductsRefIsCooking") || '調理あり/なし';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsCookingID = localStorage.getItem(this.$route.path + 'RefIsCooking');
+    if (storedIsCookingID) {
+      this.refIsCookingID = Number(storedIsCookingID);
+      this.updateFilters(this.refIsCookingID, this.isCookingList);
+    } else {
+      this.refIsCooking = '調理あり/なし';
+    }
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -200,8 +213,8 @@ export default {
   methods: {
     async refinementFoodProducts(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("foodProductsRefYear", this.refYears);
-      localStorage.setItem("foodProductsRefIsCooking", this.refIsCooking);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsCooking', this.refIsCookingID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

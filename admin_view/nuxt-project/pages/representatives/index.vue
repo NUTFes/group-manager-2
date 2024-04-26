@@ -220,7 +220,13 @@ export default {
     }),
   },
   mounted() {
-    this.refYears = localStorage.getItem('representativeRefYear') || 'Year';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -228,7 +234,7 @@ export default {
   methods: {
     async refinementRepresentatives(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem('representativeRefYear', this.refYears);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

@@ -217,7 +217,13 @@ export default {
     }),
   },
   mounted() {
-    this.refRole = localStorage.getItem("usersRefRole") || 'Role';
+    const storedRoleID = localStorage.getItem(this.$route.path + 'RefRole');
+    if (storedRoleID) {
+      this.refRoleID = Number(storedRoleID);
+      this.updateFilters(this.refRoleID, this.roles);
+    } else {
+      this.refRoles = 'Role';
+    }
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -240,7 +246,7 @@ export default {
     },
     async refinementUsers(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("usersRefRole", this.refRole);
+      localStorage.setItem(this.$route.path + 'RefRole', item_id);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

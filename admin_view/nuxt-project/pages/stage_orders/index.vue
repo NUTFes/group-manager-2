@@ -356,10 +356,38 @@ export default {
         this.timeRange.push(hour + ":" + minute);
       }
     }
-    this.refYears = localStorage.getItem("stageOrdersRefYear") || 'Year';
-    this.refIsSunny = localStorage.getItem("stageOrdersRefIsSunny") || '晴れ希望';
-    this.refDaysNum = localStorage.getItem("stageOrdersRefDaysNum") || '何日目';
-    this.refStage = localStorage.getItem("stageOrdersRefStage") || 'Stage';
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsSunnyID = localStorage.getItem(this.$route.path + 'RefIsSunny');
+    if (storedIsSunnyID) {
+      this.refIsSunnyID = Number(storedIsSunnyID);
+      this.updateFilters(this.refIsSunnyID, this.isSunnyList);
+    } else {
+      this.refIsSunny = '晴れ希望';
+    }
+
+    const storedDaysNumID = localStorage.getItem(this.$route.path + 'RefDaysNum');
+    if (storedDaysNumID) {
+      this.refDaysNumID = Number(storedDaysNumID);
+      this.updateFilters(this.refDaysNumID, this.daysNumList);
+    } else {
+      this.refDaysNum = '何日目';
+    }
+
+    const storedStageID = localStorage.getItem(this.$route.path + 'RefStage');
+    if (storedStageID) {
+      this.refStageID = Number(storedStageID);
+      this.updateFilters(this.refStageID, this.stageList);
+    } else {
+      this.refStage = 'Stage';
+    }
 
     this.fetchFilteredData();
   },
@@ -380,10 +408,10 @@ export default {
     },
     async refinementStageOrders(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("stageOrdersRefYear", this.refYears);
-      localStorage.setItem("stageOrdersRefIsSunny", this.refIsSunny);
-      localStorage.setItem("stageOrdersRefDaysNum", this.refDaysNum);
-      localStorage.setItem("stageOrdersRefStage", this.refStage);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsSunny', this.refIsSunnyID);
+      localStorage.setItem(this.$route.path + 'RefDaysNum', this.refDaysNumID);
+      localStorage.setItem(this.$route.path + 'RefStage', this.refStageID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

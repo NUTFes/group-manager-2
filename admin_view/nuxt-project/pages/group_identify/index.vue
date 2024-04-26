@@ -141,8 +141,21 @@ export default {
     };
   },
   mounted() {
-    this.refYears = localStorage.getItem('groupIdentifyRefYear') || 'Year';
-    this.refGroupCategories = localStorage.getItem('groupIdentifyRefCategory') || 'Category';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Category';
+    }
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -202,8 +215,8 @@ export default {
     },
     async refinementGroups(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem('groupIdentifyRefYear', this.refYears);
-      localStorage.setItem('groupIdentifyRefCategory', this.refGroupCategories);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {

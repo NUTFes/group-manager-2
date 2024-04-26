@@ -269,11 +269,46 @@ export default {
     }),
   },
   mounted() {
-    this.refYears = localStorage.getItem('stageCommonOptionsRefYear') || 'Year';
-    this.refIsOwnEquipment = localStorage.getItem('stageCommonOptionsRefIsOwnEquipment') || '所持機器の使用';
-    this.refIsBgm = localStorage.getItem('stageCommonOptionsRefIsBgm') || '音楽をかける';
-    this.refIsCameraPermission = localStorage.getItem('stageCommonOptionsRefIsCameraPermission') || '撮影許可';
-    this.refIsLoudSound = localStorage.getItem('stageCommonOptionsRefIsLoudSound') || '大きな音';
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsOwnEquipmentID = localStorage.getItem(this.$route.path + 'RefIsOwnEquipment');
+    if (storedIsOwnEquipmentID) {
+      this.refIsOwnEquipmentID = Number(storedIsOwnEquipmentID);
+      this.updateFilters(this.refIsOwnEquipmentID, this.isOwnEquipmentList);
+    } else {
+      this.refIsOwnEquipment = '所持機器の使用';
+    }
+
+    const storedIsBgmID = localStorage.getItem(this.$route.path + 'RefIsBgm');
+    if (storedIsBgmID) {
+      this.refIsBgmID = Number(storedIsBgmID);
+      this.updateFilters(this.refIsBgmID, this.isBgmList);
+    } else {
+      this.refIsBgm = '音楽をかける';
+    }
+
+    const storedIsCameraPermissionID = localStorage.getItem(this.$route.path + 'RefIsCameraPermission');
+    if (storedIsCameraPermissionID) {
+      this.refIsCameraPermissionID = Number(storedIsCameraPermissionID);
+      this.updateFilters(this.refIsCameraPermissionID, this.isCameraPermissionList);
+    } else {
+      this.refIsCameraPermission = '撮影許可';
+    }
+
+    const storedIsLoudSoundID = localStorage.getItem(this.$route.path + 'RefIsLoudSound');
+    if (storedIsLoudSoundID) {
+      this.refIsLoudSoundID = Number(storedIsLoudSoundID);
+      this.updateFilters(this.refIsLoudSoundID, this.isLoudSoundList);
+    } else {
+      this.refIsLoudSound = '大きな音';
+    }
+
     this.fetchFilteredData();
 
     window.scrollTo(0, 0);
@@ -281,11 +316,11 @@ export default {
   methods: {
     async refinementStageCommonOptions(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem("stageCommonOptionsRefYear", this.refYears);
-      localStorage.setItem("stageCommonOptionsRefIsOwnEquipment", this.refIsOwnEquipment);
-      localStorage.setItem("stageCommonOptionsRefIsBgm", this.refIsBgm);
-      localStorage.setItem("stageCommonOptionsRefIsCameraPermission", this.refIsCameraPermission);
-      localStorage.setItem("stageCommonOptionsRefIsLoudSound", this.refIsLoudSound);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsOwnEquipment', this.refIsOwnEquipmentID);
+      localStorage.setItem(this.$route.path + 'RefIsBgm', this.refIsBgmID);
+      localStorage.setItem(this.$route.path + 'RefIsCameraPermission', this.refIsCameraPermissionID);
+      localStorage.setItem(this.$route.path + 'RefIsLoudSound', this.refIsLoudSoundID);
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
