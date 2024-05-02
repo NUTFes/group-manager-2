@@ -2,7 +2,7 @@
 import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { useForm, useField } from "vee-validate";
-import { groupCategoryList } from "~~/utils/list";
+import { GroupCategory } from '@/types/regist/groupCategory';
 import { groupSchema } from "~~/utils/validate";
 
 const router = useRouter();
@@ -116,6 +116,8 @@ const register = () => {
     );
 };
 
+const groupCategoryList = await $fetch<GroupCategory>(config.APIURL + "/group_categories");
+
 const buttonDisabled = computed(() => {
   return !!(
     groupNameError.value ||
@@ -177,7 +179,7 @@ const buttonDisabled = computed(() => {
           @change="handleChangeCategory"
         >
           <option
-            v-for="item in groupCategoryList"
+            v-for="item in groupCategoryList.data"
             :value="item.id"
             :key="item.id"
           >

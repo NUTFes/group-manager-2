@@ -89,16 +89,7 @@ export default {
   data() {
     return {
       headers:["参加団体ID", "団体名", "カテゴリ", "識別番号", "会場", "ステージ", "登録日時", "編集日時"],
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
-      ],
+      groupCategories: [],
       num: null,
       isAddModal: false,
       isEditModal: false,
@@ -116,6 +107,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get('group_categories');
     const url =
       "/group_identification?fes_year_id=" +
       currentYearRes.data.fes_year_id + "&group_category_id=0";
@@ -128,6 +120,7 @@ export default {
     return {
       groupIdentifications: groupRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };

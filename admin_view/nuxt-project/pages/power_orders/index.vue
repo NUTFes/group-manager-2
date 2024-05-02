@@ -155,16 +155,7 @@ export default {
         { id: 10, power: 900 },
         { id: 11, power: 1000 },
       ],
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
-      ],
+      groupCategories: [],
       groupID: null,
       item: null,
       power: 0,
@@ -177,7 +168,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-
+    const groupCategoryRes = await $axios.$get('group_categories');
     // const url = "/api/v1/get_power_order_index_for_admin_view";
     const url =
       "/api/v1/get_refinement_power_orders?fes_year_id=" +
@@ -192,6 +183,7 @@ export default {
     return {
       powerOrders: powerOrdersRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
