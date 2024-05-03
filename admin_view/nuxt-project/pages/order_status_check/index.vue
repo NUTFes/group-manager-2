@@ -129,7 +129,6 @@
       const currentYears = yearsRes.data.filter(function (element) {
         return element.id == currentYearRes.data.fes_year_id;
        });
-      console.log(groupsRes.data)
 
       return {
         groups: groupsRes.data,

@@ -59,65 +59,6 @@ class Group < ApplicationRecord
         }
     end
 
-    ### order_info (申請情報)
-
-    # 全てのgroupとそれが持つorderを取得する
-    # def self.with_order_infos
-    #   @record = Group.all
-    #     .map{
-    #       |group|
-    #       {
-    #         "group": group,
-    #         "user": group.user.nil? ? nil: group.user,
-    #         "group_category": group.group_category.nil? ? nil : group.group_category.name,
-    #         "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-    #         "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-    #         "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-    #         "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-    #           |stage_order|
-    #           {
-    #             "stage_order": stage_order.to_info_h
-    #           }
-    #         },
-    #         "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-    #         "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-    #           |power_order|
-    #           {
-    #             "power_order": power_order.to_info_h
-    #           }
-    #         },
-    #         "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-    #           |rental_order|
-    #           {
-    #             "rental_item": rental_order.to_rental_item_info_h,
-    #           }
-    #         },
-    #         "employees": group.employees.count == 0 ? nil : group.employees.map{
-    #           |employee|
-    #           {
-    #             "employee": employee.to_info_h
-    #           }
-    #         },
-    #         "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-    #           |food_product|
-    #           {
-    #             "food_product": food_product.to_info_h,
-    #             "purchase_lists": food_product.purchase_lists.map{
-    #               |purchase_list|
-    #               {
-    #                 "purchase_list": purchase_list.to_info_h
-    #               }
-    #             }
-    #           }
-    #         },
-    #         "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-    #         "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-    #         "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-    #         "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
-    #       }
-    #     }
-    # end
-
     def self.with_order_infos
       @record = Group.all
         .map{
@@ -147,63 +88,6 @@ class Group < ApplicationRecord
         }
     end
 
-    # 指定したIDのgroupとそれが持つorderを取得する
-    # def self.with_order_info(group_id)
-    #   group = Group.find(group_id)
-    #   @record =
-    #     {
-    #       "group": group,
-    #       "user": group.user.nil? ? nil: group.user,
-    #       "group_category": group.group_category.nil? ? nil : group.group_category.name,
-    #       "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-    #       "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-    #       "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-    #       "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-    #         |stage_order|
-    #         {
-    #           "stage_order": stage_order.to_info_h
-    #         }
-    #       },
-    #       "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-    #       "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-    #         |power_order|
-    #         {
-    #           "power_order": power_order.to_info_h
-    #         }
-    #       },
-    #       "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-    #         |rental_order|
-    #         {
-    #           "rental_item": rental_order.to_rental_item_info_h,
-    #         }
-    #       },
-    #       "employees": group.employees.count == 0 ? nil : group.employees.map{
-    #         |employee|
-    #         {
-    #           "employee": employee.to_info_h
-    #         }
-    #       },
-    #       "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-    #         |food_product|
-    #         {
-    #           "food_product": food_product.to_info_h,
-    #           "purchase_lists": food_product.purchase_lists.map{
-    #             |purchase_list|
-    #             {
-    #               "purchase_list": purchase_list.to_info_h
-    #             }
-    #           }
-    #         }
-    #       },
-    #       "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-    #       "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-    #       "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-    #       "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
-    #     }
-    #   return @record
-    # end
-    # 指定したIDのgroupとそれが持つorderを取得する
-
     def self.with_order_info(group_id)
       group = Group.find(group_id)
       @record =
@@ -231,63 +115,6 @@ class Group < ApplicationRecord
         }
       return @record
     end
-
-    # # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
-    # def self.with_order_info_narrow_down_by_fes_year(fes_year_id)
-    #   @record = Group.where(groups: {fes_year_id: fes_year_id})
-    #     .map{
-    #       |group|
-    #       {
-    #         "group": group,
-    #         "user": group.user.nil? ? nil: group.user,
-    #         "group_category": group.group_category.nil? ? nil : group.group_category.name,
-    #         "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-    #         "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-    #         "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-    #         "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-    #           |stage_order|
-    #           {
-    #             "stage_order": stage_order.to_info_h
-    #           }
-    #         },
-    #         "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-    #         "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-    #           |power_order|
-    #           {
-    #             "power_order": power_order.to_info_h
-    #           }
-    #         },
-    #         "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-    #           |rental_order|
-    #           {
-    #             "rental_item": rental_order.to_rental_item_info_h,
-    #           }
-    #         },
-    #         "employees": group.employees.count == 0 ? nil : group.employees.map{
-    #           |employee|
-    #           {
-    #             "employee": employee.to_info_h
-    #           }
-    #         },
-    #         "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-    #           |food_product|
-    #           {
-    #             "food_product": food_product.to_info_h,
-    #             "purchase_lists": food_product.purchase_lists.map{
-    #               |purchase_list|
-    #               {
-    #                 "purchase_list": purchase_list.to_info_h
-    #               }
-    #             }
-    #           }
-    #         },
-    #         "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-    #         "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-    #         "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-    #         "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
-    #       }
-    #     }
-    # end
 
     # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
     def self.with_order_info_narrow_down_by_fes_year(fes_year_id)
@@ -318,63 +145,6 @@ class Group < ApplicationRecord
           }
         }
     end
-
-    # # 検索ワードに対応するgroupとそれが持つorderを取得する
-    # def self.with_order_info_narrow_down_by_search_word(word)
-    #   @record = Group.where("name like ?","%#{word}%")
-    #     .map{
-    #       |group|
-    #       {
-    #         "group": group,
-    #         "user": group.user.nil? ? nil: group.user,
-    #         "group_category": group.group_category.nil? ? nil : group.group_category.name,
-    #         "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-    #         "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-    #         "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-    #         "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-    #           |stage_order|
-    #           {
-    #             "stage_order": stage_order.to_info_h
-    #           }
-    #         },
-    #         "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-    #         "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-    #           |power_order|
-    #           {
-    #             "power_order": power_order.to_info_h
-    #           }
-    #         },
-    #         "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-    #           |rental_order|
-    #           {
-    #             "rental_item": rental_order.to_rental_item_info_h,
-    #           }
-    #         },
-    #         "employees": group.employees.count == 0 ? nil : group.employees.map{
-    #           |employee|
-    #           {
-    #             "employee": employee.to_info_h
-    #           }
-    #         },
-    #         "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-    #           |food_product|
-    #           {
-    #             "food_product": food_product.to_info_h,
-    #             "purchase_lists": food_product.purchase_lists.map{
-    #               |purchase_list|
-    #               {
-    #                 "purchase_list": purchase_list.to_info_h
-    #               }
-    #             }
-    #           }
-    #         },
-    #         "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-    #         "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-    #         "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-    #         "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
-    #       }
-    #     }
-    # end
 
     # 検索ワードに対応するgroupとそれが持つorderを取得する
     def self.with_order_info_narrow_down_by_search_word(word)
