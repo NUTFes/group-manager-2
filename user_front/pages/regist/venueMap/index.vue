@@ -38,7 +38,7 @@ onMounted(async () => {
     currentVenueMap.value = venueMap || null;
   });
   const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
-  isEditVenueMap.value = setting.data[0].is_edit_vanue_map
+  isEditVenueMap.value = setting.data[0].is_edit_venue_map
 });
 
 const fileUpload = (e: Event) => {
