@@ -63,8 +63,9 @@ onMounted(async () => {
     .catch((error) => {
       console.log(error);
     });
-    const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
-    isEditPublicRelation.value = setting.data[0].is_edit_public_relation
+  const setting =
+    (await $fetch<Setting>(config.APIURL + "/user_page_settings")) || null;
+  isEditPublicRelation.value = setting.data[0].is_edit_public_relation;
 });
 
 const isBlurbOver = computed(() => {
@@ -83,6 +84,34 @@ const fileUpload = (e: Event) => {
   selectedFile.value = file;
   selectedFileUrl.value = URL.createObjectURL(file);
   fileName.value = file.name;
+
+  fileCheck();
+};
+
+// 画像ファイルのバリデーション。uploadした瞬間に発火する
+const fileCheck = () => {
+  const img = new Image();
+  img.onload = () => {
+    // 正方形かどうかの判定
+    if (img.width !== img.height) {
+      alert("画像を正方形にしてください\nPlease make the image square");
+    };
+  };
+  img.src = selectedFileUrl.value;
+
+  if (selectedFile.value) {
+    // jpeg,pngの指定、それ以外の場合はエラー
+    if (!["image/jpeg", "image/png"].includes(selectedFile.value.type)) {
+      alert("JPEG、PNG形式の画像を選択してください\nPlease select an image in JPEG or PNG format");
+      return;
+    }
+
+    // 画像ファイルのサイズ指定、20MB以上の場合はエラー
+    if (selectedFile.value.size / 1000000 > 20) {
+      alert("20MBより小さい画像を選択してください\nPlease select images smaller than 20MB");
+      return;
+    }
+  }
 };
 
 const editImageURL = () => {
@@ -138,7 +167,9 @@ const editImageURL = () => {
               router.push("/mypage");
             })
             .catch(() => {
-              alert("PR文の登録に失敗しました\nFailed to register PR statement");
+              alert(
+                "PR文の登録に失敗しました\nFailed to register PR statement"
+              );
               router.push("/mypage");
             });
         })
@@ -173,7 +204,10 @@ const editImageURL = () => {
 <template>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("PR.PR") }}</h1>
-    <div v-if="!isEditPublicRelation" class="text-3xl text-red-600 font-bold my-5">
+    <div
+      v-if="!isEditPublicRelation"
+      class="text-3xl text-red-600 font-bold my-5"
+    >
       編集は締め切られました
     </div>
     <Card>
