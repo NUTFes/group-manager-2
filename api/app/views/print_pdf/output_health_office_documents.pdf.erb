@@ -43,12 +43,22 @@
             <td><%= food_product.name %></td>
             <td><%= food_product.is_cooking ? '◯' : '' %></td>
             <td><%= food_product.is_cooking ? '' : '◯' %></td>
-            <td><%= food_product.first_day_num %></td>
+            <td><%= (food_product.first_day_num + food_product.second_day_num) / 2 %></td>
             <td><%= purchase_list.items %></td>
             <td><%= Shop.find(purchase_list.shop_id).name %></td>
-            <td><%= purchase_list.purchase_date %></td>
             <td>
-              <% @fes_dates.each do |fes_date| %>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 0 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+            </td>
+            <td>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 2 }.each do |fes_date| %>
                 <%= fes_date.date %><br>
               <% end %>
             </td>
