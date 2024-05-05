@@ -238,8 +238,56 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Categories';
+    }
+
+    const storedInternationalID = localStorage.getItem(this.$route.path + 'RefInternational');
+    if (storedInternationalID) {
+      this.refInternationalID = Number(storedInternationalID);
+      this.updateFilters(this.refInternationalID, this.internationalList);
+    } else {
+      this.refInternational = 'International';
+    }
+
+    const storedCommitteeID = localStorage.getItem(this.$route.path + 'RefCommittee');
+    if (storedCommitteeID) {
+      this.refCommitteeID = Number(storedCommitteeID);
+      this.updateFilters(this.refCommitteeID, this.applicantList);
+    } else {
+      this.refCommittee = '申請者';
+    }
+    this.fetchFilteredData();
+
+    window.addEventListener('scroll', this.saveScrollPosition);
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementGroups(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      localStorage.setItem(this.$route.path + 'RefInternational', this.refInternationalID);
+      localStorage.setItem(this.$route.path + 'RefCommittee', this.refCommitteeID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
+      console.log(item_id, name_list[0])
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -277,6 +325,8 @@ export default {
           this.refInternational = name_list[item_id -1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.groups = [];
       const refUrl =
         "/api/v1/get_refinement_groups?fes_year_id=" +
@@ -291,6 +341,9 @@ export default {
       for (const res of refRes.data) {
         this.groups.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchGroups() {
       this.groups = [];

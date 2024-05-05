@@ -123,6 +123,9 @@ export default {
       route: url,
     };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     openEditModal() {
       if (this.announcement.announcement) {

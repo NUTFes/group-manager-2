@@ -40,7 +40,6 @@
       </div>
     </v-col>
   </v-row>
-  </div>
 </template>
 
 <script>
@@ -59,6 +58,8 @@ export default {
     }
   },
   mounted() {
+    window.scrollTo(0, 0);
+
     this.$axios.get('/rentable_items', {
       headers: { 
         "Content-Type": "application/json", 
