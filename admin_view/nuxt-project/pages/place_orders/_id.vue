@@ -178,6 +178,9 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     edit() {
       const url =
