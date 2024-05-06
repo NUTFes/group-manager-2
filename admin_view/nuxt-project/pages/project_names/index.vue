@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content"  v-if="this.$role(roleID).project_names.read">
     <SubHeader pageTitle="企画名申請一覧">
       <CommonButton v-if="this.$role(roleID).project_names.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -11,6 +11,8 @@
     </SubSubHeader>
     <Card width="100%"> </Card>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
+
 </template>
 
 <script>

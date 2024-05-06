@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).stages.read">
     <SubHeader pageTitle="ステージ割り当て">
     </SubHeader>
 
@@ -128,11 +128,13 @@
     </AddModal>
 
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
 import AddModal from '../../components/AddModal.vue';
 import CommonButton from '../../components/CommonButton.vue';
+import { mapState } from "vuex";
 export default {
   components: { AddModal, CommonButton },
   data() {
@@ -181,6 +183,11 @@ export default {
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openAddModal() {

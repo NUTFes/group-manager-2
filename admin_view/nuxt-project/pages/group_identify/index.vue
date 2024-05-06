@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).group_identify.read">
     <SubHeader pageTitle="識別番号" />
     <SubSubHeader>
       <template v-slot:refinement>
@@ -82,9 +82,11 @@
       </template>
     </AddModal>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -131,6 +133,11 @@ export default {
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
   methods: {
     openAddModal(id, groupId, name, number) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).representatives.read">
     <SubHeader pageTitle="代表者一覧">
       <CommonButton v-if="this.$role(roleID).representatives.create" iconName="add_circle" :on_click="openAddModal">
         副代表追加
@@ -129,6 +129,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>

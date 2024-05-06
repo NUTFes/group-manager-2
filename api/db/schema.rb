@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_07_061926) do
+ActiveRecord::Schema.define(version: 2024_03_25_051858) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -374,6 +374,12 @@ ActiveRecord::Schema.define(version: 2024_03_07_061926) do
     t.integer "fes_year_id"
     t.boolean "is_edit_announcement"
     t.boolean "add_announcement"
+    t.boolean "is_edit_user"
+    t.boolean "is_edit_stage_common_option"
+    t.boolean "is_edit_public_relation"
+    t.boolean "is_edit_venue_map"
+    t.boolean "is_edit_cooking_process"
+    t.boolean "add_stage_order"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
