@@ -173,4 +173,10 @@ export const memberRole = {
     update: false,
     delete: false,
   },
+  cooking_process_orders: {
+    read: true,
+    create: false,
+    update: false,
+    delete: false,
+  },
 };

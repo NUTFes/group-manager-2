@@ -173,4 +173,10 @@ export const userRole = {
     update: false,
     delete: false,
   },
+  cooking_process_orders: {
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
 };
