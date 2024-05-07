@@ -22,9 +22,8 @@
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
-          <th
-            v-for="(header, index) in headers" v-bind:key="index">
-            {{ header}}
+          <th v-for="(header, index) in headers" v-bind:key="index">
+            {{ header }}
           </th>
         </template>
         <template v-slot:table-body>
@@ -45,31 +44,30 @@
         </template>
       </Table>
     </Card>
-    <AddModal
-      @close="closeAddModal"
-      v-if="isAddModal"
-      title="識別番号の設定"
-    >
+    <AddModal @close="closeAddModal" v-if="isAddModal" title="識別番号の設定">
       <template v-slot:form>
-        <span style="color:#333"><b>{{targetGroupName}}</b> の識別番号の設定</span>
+        <span style="color: #333"
+          ><b>{{ targetGroupName }}</b> の識別番号の設定</span
+        >
         <div>
           <h3>識別番号</h3>
           <input v-model="num" type="number" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton v-if="num != null" iconName="add_circle" :on_click="submit"
+        <CommonButton
+          v-if="num != null"
+          iconName="add_circle"
+          :on_click="submit"
           >登録</CommonButton
         >
       </template>
     </AddModal>
-    <AddModal
-      @close="closeAddModal"
-      v-if="isEditModal"
-      title="識別番号の編集"
-    >
+    <AddModal @close="closeAddModal" v-if="isEditModal" title="識別番号の編集">
       <template v-slot:form>
-        <span style="color:#333"><b>{{targetGroupName}}</b> の識別番号の編集</span>
+        <span style="color: #333"
+          ><b>{{ targetGroupName }}</b> の識別番号の編集</span
+        >
         <div>
           <h3>識別番号</h3>
           <input v-model="num" type="number" placeholder="入力してください" />
@@ -88,16 +86,25 @@
 export default {
   data() {
     return {
-      headers:["参加団体ID", "団体名", "カテゴリ", "識別番号", "会場", "ステージ", "登録日時", "編集日時"],
+      headers: [
+        "参加団体ID",
+        "団体名",
+        "カテゴリ",
+        "識別番号",
+        "会場",
+        "ステージ",
+        "登録日時",
+        "編集日時",
+      ],
       groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
+        { id: 1, name: "食品販売" },
+        { id: 2, name: "物品販売" },
+        { id: 3, name: "ステージ" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室" },
+        { id: 6, name: "国際" },
+        { id: 7, name: "実行委員" },
+        { id: 8, name: "その他" },
       ],
       num: null,
       isAddModal: false,
@@ -111,14 +118,15 @@ export default {
       refYears: null,
       refGroupCategories: "Categories",
       refCategoryID: 0,
-    }
+    };
   },
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     const url =
       "/group_identification?fes_year_id=" +
-      currentYearRes.data.fes_year_id + "&group_category_id=0";
+      currentYearRes.data.fes_year_id +
+      "&group_category_id=0";
     const groupRes = await $axios.$get(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
@@ -132,47 +140,90 @@ export default {
       refYears: currentYears[0].year_num,
     };
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Category';
+    }
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+
     openAddModal(id, groupId, name, number) {
-      this.targetId = id
-      this.targetGroupId = groupId
-      this.targetGroupName = name
-      this.num = number
+      this.targetId = id;
+      this.targetGroupId = groupId;
+      this.targetGroupName = name;
+      this.num = number;
       if (number === null) {
-        this.isAddModal = true
+        this.isAddModal = true;
       } else {
-        this.isEditModal = true
+        this.isEditModal = true;
       }
     },
     closeAddModal() {
-      this.isAddModal = false
-      this.isEditModal = false
+      this.isAddModal = false;
+      this.isEditModal = false;
     },
     reload() {
-      const url = "/group_identification?fes_year_id=" + this.refYearID + "&group_category_id=0";
+      const url =
+        "/group_identification?fes_year_id=" +
+        this.refYearID +
+        "&group_category_id=0";
       this.$axios.$get(url).then((res) => {
-        this.groupIdentifications = res.data
+        this.groupIdentifications = res.data;
       });
     },
     submit() {
-      const url = '/group_identification?group_id=' + this.targetGroupId + '&number=' + this.num
+      const url =
+        "/group_identification?group_id=" +
+        this.targetGroupId +
+        "&number=" +
+        this.num;
       this.$axios.$post(url).then(() => {
-        this.reload()
-        this.closeAddModal()
-        this.targetGroupId = null
-        this.targetGroupName = null
-      })
+        this.reload();
+        this.closeAddModal();
+        this.targetGroupId = null;
+        this.targetGroupName = null;
+      });
     },
     edit() {
-      const url = '/group_identification/'+ this.targetId +'?group_id=' + this.targetGroupId + '&number=' + this.num
+      const url =
+        "/group_identification/" +
+        this.targetId +
+        "?group_id=" +
+        this.targetGroupId +
+        "&number=" +
+        this.num;
       this.$axios.$put(url).then(() => {
-        this.reload()
-        this.closeAddModal()
-        this.targetGroupId = null
-        this.targetGroupName = null
-      })
+        this.reload();
+        this.closeAddModal();
+        this.targetGroupId = null;
+        this.targetGroupName = null;
+      });
     },
     async refinementGroups(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -192,16 +243,23 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
       this.groupIdentifications = [];
       const refUrl =
         "/group_identification?fes_year_id=" +
-        this.refYearID + "&group_category_id=" + this.refCategoryID
-      console.log(refUrl)
+        this.refYearID +
+        "&group_category_id=" +
+        this.refCategoryID;
+      console.log(refUrl);
       const refRes = await this.$axios.$get(refUrl);
       for (const res of refRes.data) {
         this.groupIdentifications.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
-  }
-}
+  },
+};
 </script>

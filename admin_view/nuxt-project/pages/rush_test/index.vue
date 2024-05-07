@@ -191,6 +191,10 @@ export default {
       refYears: currentYears[0].year_num,
     };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
+
   methods: {
     async refinementGroups(item_id, name_list) {
       // fes_yearで絞り込むとき

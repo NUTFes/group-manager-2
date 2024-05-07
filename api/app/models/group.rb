@@ -59,110 +59,59 @@ class Group < ApplicationRecord
         }
     end
 
-    ### order_info (申請情報)
-
-    # 全てのgroupとそれが持つorderを取得する
     def self.with_order_infos
       @record = Group.all
         .map{
           |group|
           {
             "group": group,
-            "user": group.user.nil? ? nil: group.user,
-            "group_category": group.group_category.nil? ? nil : group.group_category.name,
-            "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-            "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-            "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-            "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-              |stage_order|
+            "user": group.user.nil? ? nil: group.user.id,
+            "group_category": group.group_category.nil? ? nil : group.group_category.id,
+            "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
+            "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
+            "place_order": group.place_order.nil? ? nil : group.place_order.id,
+            "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
+            "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
+            "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
+            "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
+            "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+            "food_products": group.food_products.empty? ? nil :
               {
-                "stage_order": stage_order.to_info_h
-              }
-            },
-            "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-            "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-              |power_order|
-              {
-                "power_order": power_order.to_info_h
-              }
-            },
-            "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-              |rental_order|
-              {
-                "rental_item": rental_order.to_rental_item_info_h,
-              }
-            },
-            "employees": group.employees.count == 0 ? nil : group.employees.map{
-              |employee|
-              {
-                "employee": employee.to_info_h
-              }
-            },
-            "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-              |food_product|
-              {
-                "food_product": food_product.to_info_h,
-                "purchase_lists": food_product.purchase_lists.map{
-                  |purchase_list|
-                  {
-                    "purchase_list": purchase_list.to_info_h
-                  }
-                }
-              }
-            }
+                "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
+              },
+            "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
+            "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
+            "announcement": group.announcement.nil? ? nil : group.announcement.id,
+            "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
           }
         }
     end
 
-
-    # 指定したIDのgroupとそれが持つorderを取得する
     def self.with_order_info(group_id)
       group = Group.find(group_id)
       @record =
         {
           "group": group,
-          "user": group.user.nil? ? nil: group.user,
-          "group_category": group.group_category.nil? ? nil : group.group_category.name,
-          "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-          "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-          "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-          "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-            |stage_order|
+          "user": group.user.nil? ? nil: group.user.id,
+          "group_category": group.group_category.nil? ? nil : group.group_category.id,
+          "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
+          "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
+          "place_order": group.place_order.nil? ? nil : group.place_order.id,
+          "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
+          "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
+          "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
+          "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
+          "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+          "food_products": group.food_products.empty? ? nil :
             {
-              "stage_order": stage_order.to_info_h
-            }
-          },
-          "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-          "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-            |power_order|
-            {
-              "power_order": power_order.to_info_h
-            }
-          },
-          "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-            |rental_order|
-            {
-              "rental_item": rental_order.to_rental_item_info_h,
-            }
-          },
-          "employees": group.employees.count == 0 ? nil : group.employees.map{
-            |employee|
-            {
-              "employee": employee.to_info_h
-            }
-          },
-          "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-            |food_product|
-            {
-              "food_product": food_product.to_info_h,
-              "purchase_lists": food_product.purchase_lists.map{
-                |purchase_list|
-                {
-                  "purchase_list": purchase_list.to_info_h
-                }
-              }
-            }
-          }
+              "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+              "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
+            },
+          "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
+          "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
+          "announcement": group.announcement.nil? ? nil : group.announcement.id,
+          "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
         }
       return @record
     end
@@ -174,48 +123,25 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "user": group.user.nil? ? nil: group.user,
-            "group_category": group.group_category.nil? ? nil : group.group_category.name,
-            "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-            "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-            "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-            "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-              |stage_order|
+            "user": group.user.nil? ? nil: group.user.id,
+            "group_category": group.group_category.nil? ? nil : group.group_category.id,
+            "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
+            "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
+            "place_order": group.place_order.nil? ? nil : group.place_order.id,
+            "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
+            "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
+            "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
+            "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
+            "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+            "food_products": group.food_products.empty? ? nil :
               {
-                "stage_order": stage_order.to_info_h
-              }
-            },
-            "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-            "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-              |power_order|
-              {
-                "power_order": power_order.to_info_h
-              }
-            },
-            "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-              |rental_order|
-              {
-                "rental_item": rental_order.to_rental_item_info_h,
-              }
-            },
-            "employees": group.employees.count == 0 ? nil : group.employees.map{
-              |employee|
-              {
-                "employee": employee.to_info_h
-              }
-            },
-            "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-              |food_product|
-              {
-                "food_product": food_product.to_info_h,
-                "purchase_lists": food_product.purchase_lists.map{
-                  |purchase_list|
-                  {
-                    "purchase_list": purchase_list.to_info_h
-                  }
-                }
-              }
-            }
+                "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
+              },
+            "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
+            "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
+            "announcement": group.announcement.nil? ? nil : group.announcement.id,
+            "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
           }
         }
     end
@@ -226,50 +152,26 @@ class Group < ApplicationRecord
         .map{
           |group|
           {
-
             "group": group,
-            "user": group.user.nil? ? nil: group.user,
-            "group_category": group.group_category.nil? ? nil : group.group_category.name,
-            "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-            "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-            "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-            "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders.map {
-              |stage_order|
+            "user": group.user.nil? ? nil: group.user.id,
+            "group_category": group.group_category.nil? ? nil : group.group_category.id,
+            "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
+            "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
+            "place_order": group.place_order.nil? ? nil : group.place_order.id,
+            "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
+            "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
+            "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
+            "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
+            "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+            "food_products": group.food_products.empty? ? nil :
               {
-                "stage_order": stage_order.to_info_h
-              }
-            },
-            "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-            "power_orders": group.power_orders.count == 0 ? nil : group.power_orders.map {
-              |power_order|
-              {
-                "power_order": power_order.to_info_h
-              }
-            },
-            "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders.map{
-              |rental_order|
-              {
-                "rental_item": rental_order.to_rental_item_info_h,
-              }
-            },
-            "employees": group.employees.count == 0 ? nil : group.employees.map{
-              |employee|
-              {
-                "employee": employee.to_info_h
-              }
-            },
-            "food_products": group.food_products.count == 0 ? nil : group.food_products.map{
-              |food_product|
-              {
-                "food_product": food_product.to_info_h,
-                "purchase_lists": food_product.purchase_lists.map{
-                  |purchase_list|
-                  {
-                    "purchase_list": purchase_list.to_info_h
-                  }
-                }
-              }
-            }
+                "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
+              },
+            "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
+            "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
+            "announcement": group.announcement.nil? ? nil : group.announcement.id,
+            "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
           }
         }
     end

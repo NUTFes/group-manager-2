@@ -216,7 +216,22 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    
+    const storedRoleID = localStorage.getItem(this.$route.path + 'RefRole');
+    if (storedRoleID) {
+      this.refRoleID = Number(storedRoleID);
+      this.updateFilters(this.refRoleID, this.roles);
+    } else {
+      this.refRoles = 'Role';
+    }
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;
@@ -233,18 +248,28 @@ export default {
       this.isOpenSnackBar = false;
     },
     async refinementUsers(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefRole', item_id);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       this.refRoleID = item_id
       if (item_id == 0){
         this.refRole = "ALL";
       } else {
         this.refRole = name_list[item_id - 1].name;
       }
+    },
+    async fetchFilteredData() {
       this.users = [];
       const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data){
         this.users.push(res)
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchUsers(){
       this.users = []

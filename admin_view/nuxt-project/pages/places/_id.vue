@@ -97,6 +97,9 @@ export default {
       routeId: routeId,
     };
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     openEditModal() {
       this.name = this.place.name
