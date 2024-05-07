@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_18_124539) do
+ActiveRecord::Schema.define(version: 2024_05_07_003226) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(version: 2024_04_18_124539) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "committee"
     t.boolean "is_international"
+    t.boolean "is_external"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

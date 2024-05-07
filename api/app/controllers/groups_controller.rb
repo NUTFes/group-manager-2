@@ -33,6 +33,7 @@ class GroupsController < ApplicationController
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       国際：#{@group.is_international}
+      学外：#{@group.is_external}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
 
@@ -59,6 +60,7 @@ class GroupsController < ApplicationController
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       国際：#{@group.is_international}
+      学外：#{@group.is_external}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
 
@@ -85,6 +87,7 @@ class GroupsController < ApplicationController
       参加形式：#{@group.group_category.name}
       企画名：#{@group.project_name}
       国際：#{@group.is_international}
+      学外：#{@group.is_external}
       概要：#{@group.activity}
       ーーーーーーーーーーーーーーーー
 
@@ -106,6 +109,6 @@ class GroupsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def group_params
-      params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id, :committee, :is_international)
+      params.permit(:name, :project_name, :activity, :user_id, :group_category_id, :fes_year_id, :committee, :is_international, :is_external)
     end
 end
