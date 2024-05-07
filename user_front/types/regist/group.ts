@@ -20,4 +20,5 @@ interface Data {
   updated_at: string
   user_id: number
   is_international: boolean
+  is_external: boolean
 }

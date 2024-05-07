@@ -13,7 +13,8 @@ const { meta, isSubmitting } = useForm({
 const { handleChange: handleChangeGroupName, errorMessage: groupNameError } = useField('groupName');
 const { handleChange: handleChangeProjectName, errorMessage: projectNameError } = useField('projectName');
 const { handleChange: handleChangeActivity, errorMessage: activityError } = useField('activity');
-const { handleChange: handleChangeInternational, errorMessage: internationalError } = useField('international');
+const { handleChange: handleChangeInternational, errorMessage: internationalError } = useField('international')
+const { handleChange: handleChangeExternal, errorMessage: externalError } = useField('external')
 const { handleChange: handleChangeCategory, errorMessage: categoryError } = useField('category');
 
 const registerParams = reactive(
@@ -25,6 +26,7 @@ const registerParams = reactive(
     userId: '',
     fesYearId: 0,
     international: false,
+    external: false
   }
 )
 
@@ -34,7 +36,9 @@ const reset = () => {
   registerParams.activity = "",
   registerParams.categoryId = "",
   registerParams.userId = "",
-  registerParams.fesYearId = 0
+  registerParams.fesYearId = 0,
+  registerParams.international = false,
+  registerParams.external = false
 }
 
 const config = useRuntimeConfig()
@@ -54,7 +58,7 @@ onMounted(async () => {
 const registerCategory = async () => {
 
   isSubmitting.value = true;
-  
+
   await $fetch<Group>(config.APIURL + "/groups", {
     method: "POST",
     params: {
@@ -66,6 +70,7 @@ const registerCategory = async () => {
       fes_year_id: registerParams.fesYearId,
       committee: false,
       is_international: registerParams.international,
+      is_external: registerParams.external
     },
     headers: {
       "Content-Type": "application/json",
@@ -107,11 +112,18 @@ const registerCategory = async () => {
           <div class="error-msg">{{ categoryError }}</div>
 
           <div class="flex flex-col md:flex-row">
-            <p class="label">{{ $t('Group.internarional') }}</p>
+            <p class="label">{{ $t('Group.international') }}</p>
             <input class="form" type="checkbox" v-model="registerParams.international" @change="handleChangeInternational">
             <span class="slider round"></span>
           </div>
           <div class="error-msg">{{ internationalError }}</div>
+
+          <div class="flex flex-col md:flex-row">
+            <p class="label">{{ $t('Group.external') }}</p>
+            <input class="form" type="checkbox" v-model="registerParams.external" @change="handleChangeExternal">
+            <span class="slider round"></span>
+          </div>
+          <div class="error-msg">{{ externalError }}</div>
 
           <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.activityDetails') }}</p>

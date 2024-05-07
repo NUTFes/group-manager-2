@@ -17,6 +17,7 @@ const setting = ref("");
 const isEditGroup = ref<boolean>();
 const userId = ref<number>();
 const international = ref<boolean>();
+const external = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
 
@@ -34,6 +35,8 @@ const { handleChange: handleChangeActivity, errorMessage: activityError } =
   useField("activity");
 const { handleChange: handleChangeInternational, errorMessage: internarionalError } =
   useField("international");
+const { handleChange: handleChangeExternal, errorMessage: externalError } =
+  useField("external");
 const { handleChange: handleChangeCategory, errorMessage: categoryError } =
   useField("category");
 
@@ -46,6 +49,7 @@ onMounted(() => {
     activity.value = response.data.data.activity;
     groupName.value = response.data.data.name;
     international.value = response.data.data.is_international;
+    external.value = response.data.data.is_external;
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -90,6 +94,7 @@ const register = () => {
         group_category_id: groupCategoryId.value,
         fes_year_id: fesYearId.value,
         is_international: international.value,
+        is_external: external.value,
       },
       {
         headers: {
@@ -122,7 +127,8 @@ const buttonDisabled = computed(() => {
     projectNameError.value ||
     categoryError.value ||
     activityError.value ||
-    internarionalError.value
+    internarionalError.value ||
+    externalError.value
   );
 });
 </script>
@@ -188,15 +194,26 @@ const buttonDisabled = computed(() => {
           {{ categoryError }}
         </p>
       </div>
-      
+
       <div class="flex flex-col gap-2">
         <div class="text-lg">
           {{ $t("Group.international") }}
         </div>
         <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international" @change="handleChangeInternational">
         <span class="slider round"></span>
-        <p class="text-red-500 text-sm" v-if="categoryError">
-          {{ categoryError }}
+        <p class="text-red-500 text-sm" v-if="internarionalError">
+          {{ internarionalError }}
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.external") }}
+        </div>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="external" @change="handleChangeExternal">
+        <span class="slider round"></span>
+        <p class="text-red-500 text-sm" v-if="externalError">
+          {{ externalError }}
         </p>
       </div>
 
