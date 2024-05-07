@@ -13,6 +13,7 @@ const { meta, isSubmitting } = useForm({
 const { handleChange: handleChangeGroupName, errorMessage: groupNameError } = useField('groupName');
 const { handleChange: handleChangeProjectName, errorMessage: projectNameError } = useField('projectName');
 const { handleChange: handleChangeActivity, errorMessage: activityError } = useField('activity');
+const { handleChange: handleChangeInternational, errorMessage: internationalError } = useField('international');
 const { handleChange: handleChangeCategory, errorMessage: categoryError } = useField('category');
 
 const registerParams = reactive(
@@ -23,6 +24,7 @@ const registerParams = reactive(
     categoryId: '',
     userId: '',
     fesYearId: 0,
+    international: false,
   }
 )
 
@@ -66,6 +68,7 @@ const registerCategory = async () => {
       group_category_id: registerParams.categoryId,
       fes_year_id: registerParams.fesYearId,
       committee: false,
+      is_international: registerParams.international,
     },
     headers: {
       "Content-Type": "application/json",
@@ -105,6 +108,13 @@ const registerCategory = async () => {
             </select>
           </div>
           <div class="error-msg">{{ categoryError }}</div>
+
+          <div class="flex flex-col md:flex-row">
+            <p class="label">{{ $t('Group.internarional') }}</p>
+            <input class="form" type="checkbox" v-model="registerParams.international" @change="handleChangeInternational">
+            <span class="slider round"></span>
+          </div>
+          <div class="error-msg">{{ internationalError }}</div>
 
           <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.activityDetails') }}</p>

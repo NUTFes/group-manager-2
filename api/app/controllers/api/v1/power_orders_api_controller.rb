@@ -30,13 +30,13 @@ class Api::V1::PowerOrdersApiController < ApplicationController
     # fes_year_id, power, category_idで絞り込み
     @power_orders = PowerOrder.all
     if fes_year_id != 0
-      @power_orders = @power_orders.preload(:group).map{ |power_order| power_order if power_order.group.fes_year_id == fes_year_id }.compact
+      @power_orders = @power_orders.joins(:group).where(groups: { fes_year_id: fes_year_id })
     end
     if power != 0
       @power_orders = @power_orders.preload(:group).where("power >= ?", power)
     end
     if group_category_id != 0
-      @power_orders = @power_orders.preload(:group).map{ |power_order| power_order if power_order.group.group_category_id == group_category_id }.compact
+      @power_orders = @power_orders.joins(:group).where(groups: { group_category_id: group_category_id })
     end
 
     if @power_orders.count == 0

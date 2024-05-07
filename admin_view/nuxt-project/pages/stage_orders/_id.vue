@@ -54,18 +54,6 @@
             <td>{{ stageOrder.stage_order_info.stage_second }}</td>
           </tr>
           <tr>
-            <th>会場配置図</th>
-            <td>
-              <div v-if="stageOrder.venue_map === null">未登録</div>
-              <div v-else>
-                <img
-                  :src="stageOrder.venue_map.picture_path"
-                  style="width: 80%; height: 80%"
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
             <th>準備時間幅</th>
             <td>{{ stageOrder.stage_order_info.prepare_time_interval }}</td>
           </tr>
@@ -337,6 +325,8 @@ export default {
     }),
   },
   mounted() {
+    window.scrollTo(0, 0);
+    
     // 時間を作る
     for (let hour of this.hour_range) {
       for (let minute of this.minute_range) {

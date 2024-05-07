@@ -70,14 +70,6 @@
             <td>{{ placeOrder.place_order_name.first }}</td>
             <td>{{ placeOrder.place_order_name.second }}</td>
             <td>{{ placeOrder.place_order_name.third }}</td>
-            <td v-if="venueMaps != null">
-              <div v-if="venueMaps[index].venue_map === null">
-                未登録
-              </div>
-              <div v-else>
-                登録済み
-              </div>
-            </td>
           </tr>
         </template>
       </Table>
@@ -170,15 +162,13 @@ export default {
         "委員",
         "第一希望",
         "第二希望",
-        "第三希望",
-        "会場配置図"
+        "第三希望"
       ],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       placeList: [],
       appGroup: "",
       placeOrders: [],
-      venueMaps: [],
       firstPlaceOrder: "",
       secondPlaceOrder: "",
       thirdPlaceOrder: "",
@@ -203,13 +193,6 @@ export default {
       currentYearRes.data.fes_year_id;
     const placeOrderRes = await $axios.$post(placeOrderUrl);
 
-    let venueMaps = [];
-    for (const res of placeOrderRes.data) {
-      const vennuMapUrl = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
-      const venueMapRes = await $axios.$get(vennuMapUrl);
-      venueMaps.push(venueMapRes.data)
-    }
-
     const placesUrl = "/places";
     const placesRes = await $axios.$get(placesUrl);
 
@@ -220,10 +203,8 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
     });
 
-    console.log(venueMaps)
     return {
       placeOrders: placeOrderRes.data,
-      venueMaps: venueMaps,
       placeList: placesRes.data,
       groupCategories: groupCategoryRes.data,
       yearList: yearsRes.data,
@@ -236,14 +217,56 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.refPlaces = localStorage.getItem("placeOrdersRefPlace") || 'Place';
+    this.refGroupCategories =
+      localStorage.getItem("placeOrdersRefCategory") || 'Category';
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedPlaceID = localStorage.getItem(this.$route.path + 'RefPlace');
+    if (storedPlaceID) {
+      this.refPlaceID = Number(storedPlaceID);
+      this.updateFilters(this.refPlaceID, this.placeList);
+    } else {
+      this.refPlaces = 'Place';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory'); 
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Category';
+    }
+
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementPlaceOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(this.$route.path + "RefPlace", this.refPlaceID);
+      localStorage.setItem(this.$route.path + "RefCategory", this.refCategoryID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears == "ALL";
+          this.refYears = "ALL";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -265,6 +288,9 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
+      this.placeOrders = [];
       const refUrl =
         "/api/v1/get_refinement_place_orders?fes_year_id=" +
         this.refYearID +
@@ -274,17 +300,15 @@ export default {
         this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
       this.placeOrders = [];
-      this.venueMaps = [];
       for (const res of refRes.data) {
-        const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
-        const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
-        this.venueMaps.push(response.data);
       };
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchPlaceOrders() {
       this.placeOrders = [];
-      this.venueMaps = [];
       const searchUrl =
         "/api/v1/get_search_place_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
@@ -292,7 +316,6 @@ export default {
         const url = "/api/v1/get_place_order_show_for_admin_view/" + res.place_order.id;
         const response = await this.$axios.$get(url);
         this.placeOrders.push(res);
-        this.venueMaps.push(response.data);
       }
     },
     async openAddModal() {

@@ -117,7 +117,16 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+    });
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     openAddModal() {
       this.isOpenAddModal = false;
       this.isOpenAddModal = true;

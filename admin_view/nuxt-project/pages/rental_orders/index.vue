@@ -179,8 +179,48 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedRentalItemID = localStorage.getItem(this.$route.path + 'RefRentalItem');
+    if (storedRentalItemID) {
+      this.refRentalItemID = Number(storedRentalItemID);
+      this.updateFilters(this.refRentalItemID, this.rentalItemsList);
+    } else {
+      this.refRentalItems = 'Items';
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Categories';
+    }
+
+    this.fetchFilteredData();
+    
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementRentalOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefRentalItem', this.refRentalItemID);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -209,7 +249,8 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
-
+    },
+    async fetchFilteredData() {
       this.rentalOrders = [];
       const refUrl =
         "/api/v1/get_refinement_rental_orders?fes_year_id=" +
@@ -222,6 +263,9 @@ export default {
       for (const res of refRes.data) {
         this.rentalOrders.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchRentalOrders() {
       this.rentalOrders = [];

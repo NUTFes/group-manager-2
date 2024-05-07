@@ -110,6 +110,7 @@ export default {
       ],
       // 申請系
       order_items: [
+        { title: "申請状況一覧", icon: "task", click: "/order_status_check" },
         { title: "参加団体申請", icon: "groups", click: "/groups" },
         // {
         //   title: "企画名申請",

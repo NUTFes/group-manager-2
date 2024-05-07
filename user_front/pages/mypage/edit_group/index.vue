@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { useForm, useField } from "vee-validate";
 import { GroupCategory } from '@/types/regist/groupCategory';
@@ -15,6 +16,7 @@ const user = ref("");
 const setting = ref("");
 const isEditGroup = ref<boolean>();
 const userId = ref<number>();
+const international = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
 
@@ -30,6 +32,8 @@ const {
 } = useField("projectName");
 const { handleChange: handleChangeActivity, errorMessage: activityError } =
   useField("activity");
+const { handleChange: handleChangeInternational, errorMessage: internarionalError } =
+  useField("international");
 const { handleChange: handleChangeCategory, errorMessage: categoryError } =
   useField("category");
 
@@ -41,6 +45,7 @@ onMounted(() => {
     groupCategoryId.value = response.data.data.group_category_id;
     activity.value = response.data.data.activity;
     groupName.value = response.data.data.name;
+    international.value = response.data.data.is_international;
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -84,6 +89,7 @@ const register = () => {
         user_id: userId.value,
         group_category_id: groupCategoryId.value,
         fes_year_id: fesYearId.value,
+        is_international: international.value,
       },
       {
         headers: {
@@ -117,7 +123,8 @@ const buttonDisabled = computed(() => {
     groupNameError.value ||
     projectNameError.value ||
     categoryError.value ||
-    activityError.value
+    activityError.value ||
+    internarionalError.value
   );
 });
 </script>
@@ -183,6 +190,18 @@ const buttonDisabled = computed(() => {
           {{ categoryError }}
         </p>
       </div>
+      
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.international") }}
+        </div>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international" @change="handleChangeInternational">
+        <span class="slider round"></span>
+        <p class="text-red-500 text-sm" v-if="categoryError">
+          {{ categoryError }}
+        </p>
+      </div>
+
       <div class="flex flex-col gap-2">
         <div class="text-lg">
           {{ $t("Group.activityDetails") }}
