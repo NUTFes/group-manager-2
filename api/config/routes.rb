@@ -160,6 +160,12 @@ Rails.application.routes.draw do
       post "get_search_announcements" => "announcements_api#get_search_announcements"
       get "get_groups_have_no_announcement" => "groups_api#get_groups_have_no_announcement"
 
+      #---調理工程表申請
+      get "get_cooking_process_order_for_admin_view/:id" => "cooking_process_orders_api#get_cooking_process_order_for_admin_view"
+      post "get_refinement_cooking_process_orders" => "cooking_process_orders_api#get_refinement_cooking_process_orders"
+      post "get_search_cooking_process_orders" => "cooking_process_orders_api#get_search_cooking_process_orders"
+      get "get_groups_have_no_cooking_process_order" => "groups_api#get_groups_have_no_cooking_process_order"
+
       #---申請情報ページ
       get "get_order_info_for_admin_view/:id" => "order_infos_api#get_order_info_for_admin_view"
       post "get_refinement_order_infos" => "order_infos_api#get_refinement_order_infos"

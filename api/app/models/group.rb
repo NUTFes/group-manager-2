@@ -664,6 +664,61 @@ class Group < ApplicationRecord
         }
     end
 
+    # 全てのgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_orders
+      @record = Group.eager_load(:cooking_process_order)
+        .map{
+          |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        }
+    end
+
+    # 指定したIDのgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_order(group_id)
+      @record = Group.eager_load(:cooking_process_order).where(id: group_id)
+        .map{
+          |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        }
+    end
+
+    # cooking_process_orderが存在しないgroupのみ取得する
+    def self.have_no_cooking_process_order(fes_year_id)
+      Group.eager_load(:cooking_process_order)
+        .where(fes_year_id: fes_year_id)
+        .filter_map { |group| group if group.cooking_process_order.nil? }
+    end
+
+    # 指定したfes_yearに対応するgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_order_narrow_down_by_fes_year(fes_year_id)
+      Group.eager_load(:cooking_process_order)
+        .where(fes_year_id: fes_year_id)
+        .map do |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        end
+    end
+
+    # 検索ワードに対応するgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_order_narrow_down_by_search_word(word)
+      Group.eager_load(:cooking_process_order)
+        .where("name LIKE ?", "%#{word}%")
+        .map do |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        end
+    end
+
     # 割り当てられたステージを取得
     def stage
       return self.group_identification.nil? || self.group_identification.stage_number.nil? ? nil : self.group_identification.stage_number.stage.name
