@@ -39,6 +39,13 @@
         >
           {{ refInternational }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="externalList"
+          :on_click="refinementGroups"
+          value="value"
+        >
+          {{ refExternal }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
@@ -70,6 +77,7 @@
             <td>{{ group.group.name }}</td>
             <td>{{ group.group.committee }}</td>
             <td>{{ group.group.is_international }}</td>
+            <td>{{ group.group.is_external }}</td>
             <td>{{ group.group.project_name }}</td>
             <td>{{ group.group_category.name }}</td>
             <td>{{ group.fes_year.year_num }}</td>
@@ -115,6 +123,10 @@
         <div>
           <h3>国際</h3>
           <input type="checkbox" v-model="international" />
+        </div>
+        <div>
+          <h3>学外</h3>
+          <input type="checkbox" v-model="external" />
         </div>
         <div>
           <h3>企画名</h3>
@@ -167,6 +179,7 @@ export default {
       fesYearId: "",
       committee: "",
       international: false,
+      external: false,
 
       year_list: [],
       user: [],
@@ -180,6 +193,8 @@ export default {
       refCommitteeID: 0,
       refInternational: "国際",
       refInternationalID: 0,
+      refExternal: "学外",
+      refExternalID: 0,
       isOpenAddModal: false,
       isOpenSnackBar: false,
       searchText: "",
@@ -190,14 +205,16 @@ export default {
         { id: 4, name: '展示・体験' },
         { id: 5, name: '研究室' },
         { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
+        { id: 7, name: '学外'},
+        { id: 8, name: '実行委員' },
+        { id: 9, name: 'その他' }
       ],
       headers: [
         "ID",
         "グループ名",
         "委員",
         "国際",
+        "学外",
         "企画名",
         "カテゴリ",
         "開催年",
@@ -209,6 +226,10 @@ export default {
       internationalList: [
         { id: 1, value: "国際", bool: true },
         { id: 2, value: "国内", bool: false },
+      ],
+      externalList: [
+        { id: 1, value: "学外", bool: true },
+        { id: 2, value: "学内", bool: false },
       ],
     };
   },
@@ -263,6 +284,14 @@ export default {
       this.refInternational = 'International';
     }
 
+    const storedExternalID = localStorage.getItem(this.$route.path + 'RefExternal');
+    if (storedExternalID) {
+      this.refExternalID = Number(storedExternalID);
+      this.updateFilters(this.refExternalID, this.externalList);
+    } else {
+      this.refExternal = 'External';
+    }
+
     const storedCommitteeID = localStorage.getItem(this.$route.path + 'RefCommittee');
     if (storedCommitteeID) {
       this.refCommitteeID = Number(storedCommitteeID);
@@ -283,6 +312,7 @@ export default {
       localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
       localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
       localStorage.setItem(this.$route.path + 'RefInternational', this.refInternationalID);
+      localStorage.setItem(this.$route.path + 'RefExternal', this.refExternalID);
       localStorage.setItem(this.$route.path + 'RefCommittee', this.refCommitteeID);
       this.fetchFilteredData();
     },
@@ -324,6 +354,15 @@ export default {
         } else {
           this.refInternational = name_list[item_id -1].value;
         }
+        // externalで絞り込むとき
+      } else if (Object.is(name_list, this.externalList)) {
+        this.refExternalID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refExternal = "ALL";
+        } else {
+          this.refExternal = name_list[item_id -1].value;
+        }
       }
     },
     async fetchFilteredData() {
@@ -336,7 +375,9 @@ export default {
         "&committee=" +
         this.refCommitteeID +
         "&is_international=" +
-        this.refInternationalID;
+        this.refInternationalID +
+        "&is_external=" +
+        this.refExternalID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.groups.push(res);
@@ -402,7 +443,9 @@ export default {
         "&fes_year_id=" +
         this.fesYearId +
         "&is_international=" +
-        this.international;
+        this.international +
+        "&is_external=" +
+        this.external;
       this.$axios.$post(postGroupUrl).then((response) => {
         this.openSnackBar(this.groupName + "を追加しました");
         this.groupName = "";
@@ -412,6 +455,7 @@ export default {
         this.groupCategoryId = "";
         this.fesYearId = "";
         this.international = false;
+        this.external = false;
         this.reload();
         this.closeAddModal();
       });
