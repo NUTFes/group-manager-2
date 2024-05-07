@@ -306,6 +306,7 @@ export default {
         "&group_category_id=" +
         this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
+      this.placeOrders = [];
       for (const res of refRes.data) {
         this.placeOrders.push(res);
       };
