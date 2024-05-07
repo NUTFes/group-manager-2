@@ -89,7 +89,8 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
+        <div v-if="isMessageOver" style="color: red;">アナウンス文は300字以内で入力してください。</div>
+        <CommonButton iconName="add_circle" :on_click="submit" :disabled="isMessageOver"
           >登録</CommonButton
         >
       </template>
@@ -145,6 +146,9 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    isMessageOver() {
+      return this.message.length > 300;
+    },
   },
   mounted() {
     window.addEventListener('scroll', this.saveScrollPosition);
