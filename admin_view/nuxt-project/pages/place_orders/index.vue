@@ -180,16 +180,7 @@ export default {
       refPlaceID: 0,
       refGroupCategories: "Categories",
       refCategoryID: 0,
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
-      ],
+      groupCategories: [],
       searchText: "",
       groupList: null,
     };
@@ -197,6 +188,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get('/group_categories');
     const placeOrderUrl =
       "/api/v1/get_refinement_place_orders?fes_year_id=" +
       currentYearRes.data.fes_year_id;
@@ -215,6 +207,7 @@ export default {
     return {
       placeOrders: placeOrderRes.data,
       placeList: placesRes.data,
+      groupCategories: groupCategoryRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,

@@ -125,6 +125,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get("group_categories");
     const url =
       "/group_identification?fes_year_id=" +
       currentYearRes.data.fes_year_id +
@@ -138,6 +139,7 @@ export default {
     return {
       groupIdentifications: groupRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
@@ -169,7 +171,10 @@ export default {
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
 
     openAddModal(id, groupId, name, number) {
@@ -226,8 +231,11 @@ export default {
     },
     async refinementGroups(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
-      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
@@ -264,7 +272,10 @@ export default {
         this.groupIdentifications.push(res);
       }
       this.$nextTick(() => {
-        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
       });
     },
   },

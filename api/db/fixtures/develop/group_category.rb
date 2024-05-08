@@ -4,7 +4,6 @@ GroupCategory.seed( :id,
   { id: 3, name: 'ステージ' },
   { id: 4, name: '展示・体験' },
   { id: 5, name: '研究室' },
-  { id: 6, name: '国際' },
-  { id: 7, name: '実行委員' },
-  { id: 8, name: 'その他' }
+  { id: 6, name: '実行委員' },
+  { id: 7, name: 'その他' }
 )
