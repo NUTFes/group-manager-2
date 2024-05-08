@@ -39,13 +39,21 @@ onMounted(async () => {
 
 const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "Mypage.editGroup" },
-  { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
-  { to: "/mypage/password_reset", text: "Mypage.editPassword" },
-  { to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" },
   { to: "/mypage/publicRelations", text: "Mypage.editPR" },
-  { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
+  { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
   { to: "/regist/venueMap", text: "Mypage.regitstVenueMap" },
+  { to: "/mypage/password_reset", text: "Mypage.editPassword" },
+  { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
+  { to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" },
 ];
+if (registGroupCategoryId.value === 1) {
+  links.push({ to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" });
+}
+
+// registGroupCategoryId.value === 1ではなく、is_external=trueの場合にリンクを表示する
+const shouldDisplayLink = (link: { to: string; text: string }) => {
+  return link.text !== "Mypage.editContactPerson" || registGroupCategoryId.value === 1;
+}
 </script>
 
 <template>
@@ -73,7 +81,7 @@ const links: { to: string; text: string }[] = [
             <MypageButton :text="$t('Mypage.check')" link="/regist_info" />
             <div class="grid md:grid-cols-2 justify-items-center my-2 gap-2 text-pink-400">
               <ui v-for="link in links" :key="link.text">
-                <nuxt-link :to="link.to" class="text-lg">{{
+                <nuxt-link v-if="shouldDisplayLink(link)" :to="link.to" class="text-lg">{{
                   $t(link.text)
                 }}</nuxt-link>
               </ui>
