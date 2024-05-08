@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).purchase_lists.read">
     <SubHeader pageTitle="購入食品申請一覧">
       <CommonButton
         v-if="this.$role(roleID).purchase_lists.create"
@@ -151,6 +151,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>

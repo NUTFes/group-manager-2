@@ -89,7 +89,7 @@ export default {
   computed: {
     myStyles() {
       return {
-        height: "300px",
+        height:"300px",
         width: "400px",
         position: "relative",
       };

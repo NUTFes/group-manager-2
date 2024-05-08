@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).group_identify.read">
     <SubHeader pageTitle="識別番号" />
     <SubSubHeader>
       <template v-slot:refinement>
@@ -80,9 +80,11 @@
       </template>
     </AddModal>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -142,27 +144,30 @@ export default {
       refYears: currentYears[0].year_num,
     };
   },
-  mounted() {
-    window.addEventListener("scroll", this.saveScrollPosition);
-
-    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
-    if (storedYearID) {
-      this.refYearID = Number(storedYearID);
-      this.updateFilters(this.refYearID, this.yearList);
-    } else {
-      this.refYears = "Year";
-    }
-
-    const storedCategoryID = localStorage.getItem(
-      this.$route.path + "RefCategory"
-    );
-    if (storedCategoryID) {
-      this.refCategoryID = Number(storedCategoryID);
-      this.updateFilters(this.refCategoryID, this.groupCategories);
-    } else {
-      this.refGroupCategories = "Category";
-    }
-    this.fetchFilteredData();
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+    mounted() {
+      window.addEventListener('scroll', this.saveScrollPosition);
+      
+      const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+      if (storedYearID) {
+        this.refYearID = Number(storedYearID);
+        this.updateFilters(this.refYearID, this.yearList);
+      } else {
+        this.refYears = 'Year';
+      }
+  
+      const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+      if (storedCategoryID) {
+        this.refCategoryID = Number(storedCategoryID);
+        this.updateFilters(this.refCategoryID, this.groupCategories);
+      } else {
+        this.refGroupCategories = 'Category';
+      }
+      this.fetchFilteredData();
+    },
   },
   methods: {
     saveScrollPosition() {
