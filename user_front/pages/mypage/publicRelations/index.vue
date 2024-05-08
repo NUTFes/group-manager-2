@@ -42,6 +42,7 @@ const blurb = ref<string>("");
 const isEditPublicRelation = ref<boolean>();
 const isSubmitting = ref<boolean>(false);
 const clientId = config.IMGUR_CLIENT_ID;
+const isFileCheck = ref<boolean>(false);
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -63,8 +64,9 @@ onMounted(async () => {
     .catch((error) => {
       console.log(error);
     });
-    const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
-    isEditPublicRelation.value = setting.data[0].is_edit_public_relation
+  const setting =
+    (await $fetch<Setting>(config.APIURL + "/user_page_settings")) || null;
+  isEditPublicRelation.value = setting.data[0].is_edit_public_relation;
 });
 
 const isBlurbOver = computed(() => {
@@ -83,6 +85,44 @@ const fileUpload = (e: Event) => {
   selectedFile.value = file;
   selectedFileUrl.value = URL.createObjectURL(file);
   fileName.value = file.name;
+
+  fileCheck();
+};
+
+// 画像ファイルのバリデーション。uploadした瞬間に発火する
+const fileCheck = () => {
+  if (selectedFile.value) {
+    // jpeg,pngの指定、それ以外の場合はエラー
+    if (!["image/jpeg", "image/png"].includes(selectedFile.value.type)) {
+      alert("JPEG、PNG形式の画像を選択してください\nPlease select an image in JPEG or PNG format");
+      isFileCheck.value = false;
+    }
+
+    // 画像ファイルのサイズ指定、20MB以上の場合はエラー
+    if (selectedFile.value.size / 1000000 > 20) {
+      alert("20MBより小さい画像を選択してください\nPlease select images smaller than 20MB");
+      isFileCheck.value = false;
+    }
+  }
+
+  const img = new Image();
+  img.onload = () => {
+    // 正方形かどうかの判定
+    if (img.width !== img.height) {
+      alert("画像を正方形にしてください\nPlease make the image square");
+      isFileCheck.value = false;
+    };
+  };
+  img.src = selectedFileUrl.value;
+
+  // ファイル名のチェック。"_"で区切られているかどうかのチェック
+  const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+  if (!fileNameRegex.test(fileName.value)) {
+    alert("ファイル名は「参加形式_団体名」の形式で入力してください\nPlease enter the file name in the format of 'participation_format_organization_name'");
+    isFileCheck.value = false;
+  }
+
+  isFileCheck.value = true;
 };
 
 const editImageURL = () => {
@@ -138,7 +178,9 @@ const editImageURL = () => {
               router.push("/mypage");
             })
             .catch(() => {
-              alert("PR文の登録に失敗しました\nFailed to register PR statement");
+              alert(
+                "PR文の登録に失敗しました\nFailed to register PR statement"
+              );
               router.push("/mypage");
             });
         })
@@ -173,7 +215,10 @@ const editImageURL = () => {
 <template>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("PR.PR") }}</h1>
-    <div v-if="!isEditPublicRelation" class="text-3xl text-red-600 font-bold my-5">
+    <div
+      v-if="!isEditPublicRelation"
+      class="text-3xl text-red-600 font-bold my-5"
+    >
       編集は締め切られました
     </div>
     <Card>
@@ -205,7 +250,7 @@ const editImageURL = () => {
         v-if="isEditPublicRelation"
         :text="$t('Button.register')"
         @click="editImageURL"
-        :disabled="isBlurbOver || isSubmitting"
+        :disabled="isBlurbOver || isSubmitting || !isFileCheck"
       ></RegistPageButton>
       <p v-if="isSubmitting">{{ $t("PR.registering") }}</p>
     </Card>
