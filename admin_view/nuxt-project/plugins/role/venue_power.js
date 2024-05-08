@@ -179,5 +179,11 @@ export const venuePowerRole = {
         update: true,
         delete: true,
       },
+      order_status: {
+        read:   true,
+        create: true,
+        update: true,
+        delete: true,
+      },
   };
   
