@@ -4,10 +4,10 @@
       v-bind:pageTitle="placeName.name"
       pageSubTitle="物品申請"
     >
-      <CommonButton iconName="edit" :on_click="openPlaceEditModal">
+      <CommonButton v-if="this.$role(roleID).stocker_places.update" iconName="edit" :on_click="openPlaceEditModal">
         編集
       </CommonButton>
-      <CommonButton iconName="delete" :on_click="openPlaceDeleteModal">
+      <CommonButton v-if="this.$role(roleID).stocker_places.delete" iconName="delete" :on_click="openPlaceDeleteModal">
         削除
       </CommonButton>
     </SubHeader>
@@ -16,7 +16,7 @@
       <Column width="100%">
         <Card width="100%">
           <SubHeader pageTitle="在庫物品">
-            <CommonButton iconName="add_circle" :on_click="openItemAddModal">
+            <CommonButton v-if="this.$role(this.roleID).rental_items.create" iconName="add_circle" :on_click="openItemAddModal">
               追加
             </CommonButton>
           </SubHeader>
@@ -47,13 +47,13 @@
         </Card>
         <Card width="100%">
           <SubHeader pageTitle="割り当て">
-            <CommonButton iconName="add_circle" :on_click="openAssignAddModal">
+            <CommonButton v-if="this.$role(roleID).assign_items.create" iconName="add_circle" :on_click="openAssignAddModal">
               追加
             </CommonButton>
           </SubHeader>
           <Table>
             <template v-slot:table-header>
-              <th v-for="(header, index) in stocker_headers" v-bind:key="index">
+              <th v-for="(header, index) in stocker_headers" v-bind:key="index" @click = "sorted_assignRentalItems(index)">
                 {{ header }}
               </th>
               <th>編集</th>
@@ -265,7 +265,7 @@
 
     <EditModal
       @close="closeItemEditModal"
-      v-if="isOpenItemEditModal"
+      v-if="isOpenItemEditModal && this.$role(this.roleID).rental_items.create"
       title="在庫物品個数の編集"
     >
       <template v-slot:form>
@@ -281,7 +281,7 @@
 
     <EditModal
       @close="closeAssignEditModal"
-      v-if="isOpenAssignEditModal"
+      v-if="isOpenAssignEditModal && this.$role(roleID).assign_items.update"
       title="割当個数の編集"
     >
       <template v-slot:form>
@@ -310,7 +310,7 @@
 
     <DeleteModal
       @close="closeItemDeleteModal"
-      v-if="isOpenItemDeleteModal"
+      v-if="isOpenItemDeleteModal && this.$role(this.roleID).rental_items.delete"
       title="在庫物品の削除"
     >
       <template v-slot:method>
@@ -323,7 +323,7 @@
 
     <DeleteModal
       @close="closeAssignDeleteModal"
-      v-if="isOpenAssignDeleteModal"
+      v-if="isOpenAssignDeleteModal && this.$role(roleID).assign_items.delete"
       title="割当の削除"
     >
       <template v-slot:method>
@@ -423,6 +423,10 @@ export default {
       rules: {
         required: (value) => !!value || "入力してください",
       },
+      clicked_index:-1,
+      sort_key_1:"",
+      sort_key_2:"",
+      sort_asc: true,
     };
   },
 
@@ -475,11 +479,13 @@ export default {
     };
   },
   computed: {
-      ...mapState({
+    ...mapState({
       roleID: (state) => state.users.role,
     }),
   },
-
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     calculateDifference(stockerItem, index) {
         const matchingAssignRentalItems = this.assignRentalItems.filter(
@@ -707,6 +713,47 @@ export default {
     },
     closeAssignDeleteModal() {
       this.isOpenAssignDeleteModal = false;
+    },
+    
+    sorted_assignRentalItems(index) {
+      console.log(index);
+      if(index == 0){
+        this.sort_key_1 = "group";
+        this.sort_key_2 = "name";
+        if(this.clicked_index == index){
+          this.sort_asc = !this.sort_asc;
+        } else{
+          this.sort_asc = true;
+        }
+      } else if(index == 1){
+        this.sort_key_1 = "rental_item";
+        this.sort_key_2 = "name";
+        if(this.clicked_index == index){
+          this.sort_asc = !this.sort_asc;
+        } else{
+          this.sort_asc = true;
+        }
+      } else{
+        this.sort_key = "";
+      }
+      this.clicked_index = index;
+      if (this.sort_key_1 != "") {
+        let set = 1;
+        this.sort_asc ? (set = 1) : (set = -1);
+        this.assignRentalItems.sort((a, b) => {
+          if (a[this.sort_key_1][this.sort_key_2] < b[this.sort_key_1][this.sort_key_2]) {
+            return -1*set;
+          }
+          if (a[this.sort_key_1][this.sort_key_2] > b[this.sort_key_1][this.sort_key_2]) {
+            return 1*set;
+          }
+          return 0;
+        });
+        
+        return this.assignRentalItems;
+      } else {
+        return this.assignRentalItems;
+      }
     },
   },
 };

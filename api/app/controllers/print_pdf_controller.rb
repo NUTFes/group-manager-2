@@ -5,7 +5,7 @@ class PrintPdfController < ApplicationController
   def output_rental_items_pdf
     output_groups("output_rental_items", "output_rental_items_pdf", "物品貸出表", "Not Landscape")
   end
-  
+
   # 物品貸し出し書類をまとめて出力
   def output_all_groups_rental_items_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id]).order(:group_category_id)
@@ -16,7 +16,7 @@ class PrintPdfController < ApplicationController
   def output_group_info_pdf
     output_groups("output_group_info", "output_group_info_pdf", "参加団体情報", "Not Landscape")
   end
-  
+
   # 参加団体情報リストをまとめて出力
   def output_all_groups_info_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id])
@@ -48,6 +48,11 @@ class PrintPdfController < ApplicationController
     output_groups_with_categories("output_contact", "output_contact_pdf", "連絡先リスト", "Not Landscape")
   end
 
+  # 保健所提出書類（調理計画・従事者）の出力
+  def output_health_office_documents_pdf
+    output_groups_of_health_office_document("output_health_office_documents", "output_health_office_documents_pdf", "保健所提出書類（調理計画・従事者）", "Not Landscape")
+  end
+
   # 全参加団体用
   def output_groups(template_name, style_name, output_file_name, type)
     if Group.exists?(params[:group_id])
@@ -63,8 +68,20 @@ class PrintPdfController < ApplicationController
   def output_groups_in_group_category_1(template_name, style_name, output_file_name, type)
     if Group.where(fes_year_id: params[:fes_year_id]).exists?
       @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
+      puts @groups
       print_pdf(template_name, style_name, output_file_name, type)
-    else 
+    else
+      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+    end
+  end
+
+  # 保健所提出書類（調理計画・従事者）
+  def output_groups_of_health_office_document(template_name, style_name, output_file_name, type)
+    if Group.where(fes_year_id: params[:fes_year_id]).exists?
+      @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
+      @fes_dates = FesDate.all
+      print_pdf(template_name, style_name, output_file_name, type)
+    else
       render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
     end
   end
@@ -79,7 +96,7 @@ class PrintPdfController < ApplicationController
         @catgories << group
       end
       print_pdf(template_name, style_name, output_file_name, type)
-    else 
+    else
       render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
     end
   end
@@ -90,9 +107,9 @@ class PrintPdfController < ApplicationController
       format.pdf do
         html = render_to_string template: "print_pdf/#{template_name}"
         if type == 'Landscape'
-          pdf = PDFKit.new(html, 
-                           page_size: 'A4', 
-                           encoding: "UTF-8", 
+          pdf = PDFKit.new(html,
+                           page_size: 'A4',
+                           encoding: "UTF-8",
                            orientation: 'Landscape',
                            margin_top: '0.2in',
                            margin_left: '0.2in',

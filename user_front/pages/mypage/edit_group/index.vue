@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { useForm, useField } from "vee-validate";
 import { groupCategoryList } from "~~/utils/list";
@@ -13,7 +14,9 @@ const groupCategoryId = ref<number>();
 const activity = ref<string>("");
 const user = ref("");
 const setting = ref("");
+const isEditGroup = ref<boolean>();
 const userId = ref<number>();
+const international = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
 
@@ -29,6 +32,8 @@ const {
 } = useField("projectName");
 const { handleChange: handleChangeActivity, errorMessage: activityError } =
   useField("activity");
+const { handleChange: handleChangeInternational, errorMessage: internarionalError } =
+  useField("international");
 const { handleChange: handleChangeCategory, errorMessage: categoryError } =
   useField("category");
 
@@ -40,6 +45,7 @@ onMounted(() => {
     groupCategoryId.value = response.data.data.group_category_id;
     activity.value = response.data.data.activity;
     groupName.value = response.data.data.name;
+    international.value = response.data.data.is_international;
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -66,6 +72,7 @@ onMounted(() => {
     })
     .then((response) => {
       setting.value = response.data.data[0];
+      isEditGroup.value = response.data.data[0].is_edit_group;
     });
 });
 
@@ -82,6 +89,7 @@ const register = () => {
         user_id: userId.value,
         group_category_id: groupCategoryId.value,
         fes_year_id: fesYearId.value,
+        is_international: international.value,
       },
       {
         headers: {
@@ -113,7 +121,8 @@ const buttonDisabled = computed(() => {
     groupNameError.value ||
     projectNameError.value ||
     categoryError.value ||
-    activityError.value
+    activityError.value ||
+    internarionalError.value
   );
 });
 </script>
@@ -122,6 +131,9 @@ const buttonDisabled = computed(() => {
   <div class="w-2/3 mx-auto">
     <div class="w-full text-2xl my-8 font-bold bg-[#eceff1] p-2 rounded-md">
       {{ $t("Group.editGroup") }}
+    </div>
+    <div v-if="!isEditGroup" class="text-3xl text-red-600 font-bold my-5">
+      編集は締め切られました
     </div>
     <div class="border p-4 my-4 rounded-md flex flex-col gap-8">
       <div class="flex flex-col gap-2">
@@ -176,6 +188,18 @@ const buttonDisabled = computed(() => {
           {{ categoryError }}
         </p>
       </div>
+      
+      <div class="flex flex-col gap-2">
+        <div class="text-lg">
+          {{ $t("Group.international") }}
+        </div>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international" @change="handleChangeInternational">
+        <span class="slider round"></span>
+        <p class="text-red-500 text-sm" v-if="categoryError">
+          {{ categoryError }}
+        </p>
+      </div>
+
       <div class="flex flex-col gap-2">
         <div class="text-lg">
           {{ $t("Group.activityDetails") }}
@@ -195,6 +219,7 @@ const buttonDisabled = computed(() => {
     <div class="w-fit ml-auto mt-4 mb-12">
       <!-- styleタグないを参考にグラデーションをかける -->
       <button
+        v-if="isEditGroup"
         @click="register"
         class="text-xl text-gray-800 bg-gray-300 rounded-lg py-2 px-4 font-bold disabled:opacity-50 bg-gradient-to-r hover:from-pink-400 hover:to-yellow-500"
         :disabled="buttonDisabled"

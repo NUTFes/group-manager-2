@@ -1,7 +1,11 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).power_orders.read">
     <SubHeader pageTitle="電力申請一覧">
-      <CommonButton v-if="this.$role(roleID).power_orders.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).power_orders.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -157,14 +161,14 @@ export default {
         { id: 11, power: 1000 },
       ],
       groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
+        { id: 1, name: "食品販売" },
+        { id: 2, name: "物品販売" },
+        { id: 3, name: "ステージ" },
+        { id: 4, name: "展示・体験" },
+        { id: 5, name: "研究室" },
+        { id: 6, name: "国際" },
+        { id: 7, name: "実行委員" },
+        { id: 8, name: "その他" },
       ],
       groupID: null,
       item: null,
@@ -202,8 +206,47 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedPower = localStorage.getItem(this.$route.path + 'RefPower');
+    if (storedPower) {
+      this.refPower = Number(storedPower);
+      this.updateFilters(this.refPower, this.powerList);
+    } else {
+      this.refPower = 0;
+    }
+
+    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = 'Category';
+    }
+
+    this.fetchFilteredData();
+
+    window.addEventListener('scroll', this.saveScrollPosition);
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementPowerOrders(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefPower', this.refPower);
+      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -231,6 +274,8 @@ export default {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
       }
+    },
+    async fetchFilteredData() {
       this.powerOrders = [];
       const refUrl =
         "/api/v1/get_refinement_power_orders?fes_year_id=" +
@@ -243,6 +288,9 @@ export default {
       for (const res of refRes.data) {
         this.powerOrders.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchPowerOrders() {
       this.powerOrders = [];

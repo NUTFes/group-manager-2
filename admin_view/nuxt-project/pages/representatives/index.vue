@@ -220,8 +220,28 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+    this.fetchFilteredData();
+
+    window.addEventListener('scroll', this.saveScrollPosition);
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementRepresentatives(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
@@ -230,6 +250,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.representatives = [];
       const refUrl =
         "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
@@ -237,6 +259,9 @@ export default {
       for (const res of refRes.data) {
         this.representatives.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchRepresentatives() {
       this.representatives = [];

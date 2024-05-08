@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { loginCheck } from "~~/utils/methods";
 import axios from "axios";
+import { Setting } from "~~/types";
 
 interface VenueMap {
   id: number;
@@ -23,6 +24,7 @@ const fileName = ref<string>("選択してください\nPlease select");
 const clientId = config.IMGUR_CLIENT_ID;
 const isSubmitting = ref<boolean>(false);
 const currentVenueMap = ref<VenueMap | null>(null);
+const isEditVenueMap = ref<boolean>();
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -35,6 +37,8 @@ onMounted(async () => {
     const venueMap = venueMaps.find((vm) => vm.group_id === state.groupId);
     currentVenueMap.value = venueMap || null;
   });
+  const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditVenueMap.value = setting.data[0].is_edit_venue_map
 });
 
 const fileUpload = (e: Event) => {
@@ -118,6 +122,9 @@ const postImageURL = () => {
 <template>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("VenueMap.regitstVenueMap") }}</h1>
+    <div v-if="!isEditVenueMap" class="text-3xl text-red-600 font-bold my-5">
+      編集は締め切られました
+    </div>
     <Card>
       <div class="flex flex-col my-4 items-center gap-4">
         <span class="text-3xl mr-4">{{ $t("VenueMap.map") }}</span>
@@ -132,6 +139,7 @@ const postImageURL = () => {
         </div>
       </div>
       <RegistPageButton
+        v-if="isEditVenueMap"
         :text="$t('Button.register')"
         @click="postImageURL"
         :disabled="isSubmitting"

@@ -191,8 +191,37 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsCookingID = localStorage.getItem(this.$route.path + 'RefIsCooking');
+    if (storedIsCookingID) {
+      this.refIsCookingID = Number(storedIsCookingID);
+      this.updateFilters(this.refIsCookingID, this.isCookingList);
+    } else {
+      this.refIsCooking = '調理あり/なし';
+    }
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementFoodProducts(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsCooking', this.refIsCookingID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -212,6 +241,8 @@ export default {
           this.refIsCooking = name_list[item_id - 1].text;
         }
       }
+    },
+    async fetchFilteredData() {
       this.foodProducts = [];
       const refUrl =
         "/api/v1/get_refinement_food_products?fes_year_id=" +
@@ -222,6 +253,9 @@ export default {
       for (const res of refRes.data) {
         this.foodProducts.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchFoodProducts() {
       this.foodProducts = [];

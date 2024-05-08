@@ -65,6 +65,7 @@ Rails.application.routes.draw do
   resources :public_relations
   resources :venue_maps
   resources :announcements
+  resources :cooking_process_orders
 
   # /api/v1/...
   namespace 'api' do
@@ -154,8 +155,10 @@ Rails.application.routes.draw do
       #---会場アナウンス文申請
       get "get_announcement_index_for_admin_view" => "announcements_api#get_announcement_index_for_admin_view"
       get "get_announcement_show_for_admin_view/:id" => "announcements_api#get_announcement_show_for_admin_view"
+      get "get_announcement_for_admin_view/:id" => "announcements_api#get_announcement_for_admin_view"
       post "get_refinement_announcements" => "announcements_api#get_refinement_announcements"
       post "get_search_announcements" => "announcements_api#get_search_announcements"
+      get "get_groups_have_no_announcement" => "groups_api#get_groups_have_no_announcement"
 
       #---申請情報ページ
       get "get_order_info_for_admin_view/:id" => "order_infos_api#get_order_info_for_admin_view"
@@ -232,6 +235,7 @@ Rails.application.routes.draw do
   get "print_pdf/food_products/:fes_year_id/output" => "print_pdf#output_food_products_pdf"
   get "print_pdf/group_info/:group_id/output" => "print_pdf#output_group_info_pdf"
   get "print_pdf/all_groups_info/:fes_year_id/output" => "print_pdf#output_all_groups_info_pdf"
+  get "print_pdf/health_office_documents/:fes_year_id/output" => "print_pdf#output_health_office_documents_pdf"
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {

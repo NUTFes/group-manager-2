@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { Group } from "~~/types";
 
@@ -168,6 +169,22 @@ const groupCategoryId = ref<Group["group_category_id"]>();
 const selectTab = ref<number>(1);
 const tab = ref<number>(selectTab.value);
 
+const isEditSubRep = ref<boolean>();
+const isEditPlace = ref<boolean>();
+const isEditPower = ref<boolean>();
+const isEditItem = ref<boolean>();
+const isEditStage = ref<boolean>();
+const isEditStageOption = ref<boolean>();
+const isEditEmployee = ref<boolean>();
+const isEditFood = ref<boolean>();
+const isEditPurchase = ref<boolean>();
+const isAddPower = ref<boolean>();
+const isAddItem = ref<boolean>();
+const isAddStage = ref<boolean>();
+const isAddEmployee = ref<boolean>();
+const isAddFood = ref<boolean>();
+const isAddPurchase = ref<boolean>();
+
 const config = useRuntimeConfig();
 const url = config.APIURL + "/api/v1/current_user/current_regist_info";
 onMounted(() => {
@@ -199,6 +216,32 @@ onMounted(() => {
   // axios.get(settingurl).then((response) => {
   //   setting.value = response.data.data[0];
   // });
+  axios
+    .get(config.APIURL + "/user_page_settings", {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid"),
+      },
+    })
+    .then((response) => {
+      isEditSubRep.value = response.data.data[0].is_edit_sub_rep;
+      isEditPlace.value = response.data.data[0].is_edit_place;
+      isEditPower.value = response.data.data[0].is_edit_power_order;
+      isEditItem.value = response.data.data[0].is_edit_rental_order;
+      isEditStage.value = response.data.data[0].is_edit_stage_order;
+      isEditStageOption.value = response.data.data[0].is_edit_stage_common_option;
+      isEditEmployee.value = response.data.data[0].is_edit_employee;
+      isEditFood.value = response.data.data[0].is_edit_food_product;
+      isEditPurchase.value = response.data.data[0].is_edit_purchase_list;
+      isAddPower.value = response.data.data[0].add_power_order;
+      isAddItem.value = response.data.data[0].add_rental_order;
+      isAddStage.value = response.data.data[0].add_stage_order;
+      isAddEmployee.value = response.data.data[0].add_employee;
+      isAddFood.value = response.data.data[0].add_food_product;
+      isAddPurchase.value = response.data.data[0].add_purchase_list;
+    });
 });
 
 const reload = () => {
@@ -224,34 +267,34 @@ const reload = () => {
     });
 };
 
-const isAddItem = ref<boolean>(false);
-const openAddItem = () => {
-  isAddItem.value = true;
+const isAddItemModal = ref<boolean>(false);
+const openAddItemModal = () => {
+  isAddItemModal.value = true;
 };
 
-const isAddPower = ref<boolean>(false);
-const openAddPower = () => {
-  isAddPower.value = true;
+const isAddPowerModal = ref<boolean>(false);
+const openAddPowerModal = () => {
+  isAddPowerModal.value = true;
 };
 
-const isAddEmployee = ref<boolean>(false);
-const openAddEmployee = () => {
-  isAddEmployee.value = true;
+const isAddEmployeeModal = ref<boolean>(false);
+const openAddEmployeeModal = () => {
+  isAddEmployeeModal.value = true;
 };
 
-const isAddFood = ref<boolean>(false);
-const openAddFood = () => {
-  isAddFood.value = true;
+const isAddFoodModal = ref<boolean>(false);
+const openAddFoodModal = () => {
+  isAddFoodModal.value = true;
 };
 
-const isAddPurchase = ref<boolean>(false);
-const openAddPurchase = () => {
-  isAddPurchase.value = true;
+const isAddPurchaseModal = ref<boolean>(false);
+const openAddPurchaseModal = () => {
+  isAddPurchaseModal.value = true;
 };
 
-const isAddStage = ref<boolean>(false);
-const openAddStage = () => {
-  isAddStage.value = true;
+const isAddStageModal = ref<boolean>(false);
+const openAddStageModal = () => {
+  isAddStageModal.value = true;
 };
 
 const totalPower = computed(() => {
@@ -330,7 +373,7 @@ const isStageOverlap = computed(() => {
             {{ $t("RegistInfo.item") }}
           </div>
         </li>
-        <li @click="tab = 7">
+        <li v-if="groupCategoryId === 1" @click="tab = 7">
           <div :class="{ select: tab === 7 }" class="title">
             {{ $t("RegistInfo.employees") }}
           </div>
@@ -368,6 +411,9 @@ const isStageOverlap = computed(() => {
       <div class="ml-12 pt-4">
         <!-- 副代表申請  -->
         <div v-show="tab === 1">
+          <div v-if="!isEditSubRep" class="text-3xl text-red-600 font-bold my-5">
+            編集は締め切られました
+          </div>
           <RegistInfoCardSubRep
             :group-id="group?.id"
             :id="subRep?.id"
@@ -385,6 +431,9 @@ const isStageOverlap = computed(() => {
 
         <!-- 会場申請 group_category_id !== ３ -->
         <div v-show="tab === 2">
+          <div v-if="!isEditPlace" class="text-3xl text-red-600 font-bold my-5">
+            編集は締め切られました
+          </div>
           <div class="mb-4">
             <div class="text-xl flex gap-3">
               <p>{{ $t("RegistInfo.placeMessage") }}</p>
@@ -424,14 +473,23 @@ const isStageOverlap = computed(() => {
 
         <!-- ステージ申請 group_category_id === ３ -->
         <div v-show="tab === 3" class="flex flex-col gap-4">
+          <Button
+          v-if="isAddStage && !isOverStage && !isStageOverlap"
+          class="fixed right-0 bottom-0 m-10 mb-14"
+          @click="openAddStageModal()"
+          />
+          <div v-if="!isAddStage && !isEditStage" class="text-3xl text-red-600 font-bold my-5">
+            追加・編集・削除は締め切られました
+          </div>
+          <div v-else-if="!isAddStage" class="text-3xl text-red-600 font-bold my-5">
+            追加は締め切られました
+          </div>
+          <div v-else-if="!isEditStage" class="text-3xl text-red-600 font-bold my-5">
+            編集・削除は締め切られました
+          </div>
           <div v-if="isStageOverlap" class="text-red-500">
             <p>{{ $t("Place.overlapPlace") }}</p>
           </div>
-          <Button
-            v-if="!isStageOverlap"
-            class="fixed right-0 bottom-0 m-10 mb-14"
-            @click="openAddStage()"
-          />
           <div>
             <div class="mb-8" v-for="s in stageOrders" :key="s.toString()">
               <div>
@@ -454,8 +512,8 @@ const isStageOverlap = computed(() => {
             </div>
           </div>
           <RegistInfoAddStage
-            v-if="isAddStage"
-            v-model:add-stage="isAddStage"
+            v-if="isAddStageModal"
+            v-model:add-stage="isAddStageModal"
             :group-id="group?.id"
             @reload-stage="reload"
           />
@@ -463,6 +521,9 @@ const isStageOverlap = computed(() => {
 
         <!-- ステージオプション申請 group_category_id === ３ -->
         <div v-if="groupCategoryId === 3" v-show="tab === 4">
+          <div v-if="!isEditStageOption" class="text-3xl text-red-600 font-bold my-5">
+            編集は締め切られました
+          </div>
           <RegistInfoCardStageOption
             :group-id="group?.id"
             :id="stageOption?.id"
@@ -478,11 +539,20 @@ const isStageOverlap = computed(() => {
         <!-- 電力申請 -->
         <div v-show="tab === 5">
           <Button
-            v-if="!isOverPower && !isSamePower"
+            v-if="isAddPower && !isOverPower && !isSamePower"
             class="fixed right-0 bottom-0 m-10 mb-14"
-            @click="openAddPower()"
+            @click="openAddPowerModal()"
           />
           <!-- 電力の合計を計算して表示する -->
+          <div v-if="!isAddPower && !isEditPower" class="text-3xl text-red-600 font-bold my-5">
+            追加・編集・削除は締め切られました
+          </div>
+          <div v-else-if="!isAddPower" class="text-3xl text-red-600 font-bold my-5">
+            追加は締め切られました
+          </div>
+          <div v-else-if="!isEditPower" class="text-3xl text-red-600 font-bold my-5">
+            編集・削除は締め切られました
+          </div>
           <div class="mb-4">
             <div class="text-xl flex gap-3">
               <p>{{ $t("Power.total") }}</p>
@@ -514,8 +584,8 @@ const isStageOverlap = computed(() => {
             />
           </div>
           <RegistInfoAddPower
-            v-if="isAddPower"
-            v-model:add-power="isAddPower"
+            v-if="isAddPowerModal"
+            v-model:add-power="isAddPowerModal"
             :group-id="group?.id"
             :total-power="totalPower"
             @reload-power="reload"
@@ -525,10 +595,19 @@ const isStageOverlap = computed(() => {
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
           <Button
-            v-if="!isRentalItemOverlap"
+            v-if="isAddItem && !isRentalItemOverlap"
             class="fixed right-0 bottom-0 m-10 mb-14"
-            @click="openAddItem()"
+            @click="openAddItemModal()"
           />
+          <div v-if="!isAddItem && !isEditItem" class="text-3xl text-red-600 font-bold my-5">
+            追加・編集・削除は締め切られました
+          </div>
+          <div v-else-if="!isAddItem" class="text-3xl text-red-600 font-bold my-5">
+            追加は締め切られました
+          </div>
+          <div v-else-if="!isEditItem" class="text-3xl text-red-600 font-bold my-5">
+            編集・削除は締め切られました
+          </div>
           <div v-if="isRentalItemOverlap" class="text-red-500">
             <p>{{ $t("Item.overlapItem") }}</p>
           </div>
@@ -548,8 +627,8 @@ const isStageOverlap = computed(() => {
             </div>
           </div>
           <RegistInfoAddItem
-            v-if="isAddItem"
-            v-model:add-item="isAddItem"
+            v-if="isAddItemModal"
+            v-model:add-item="isAddItemModal"
             :group-id="group?.id"
             @reload-item="reload"
           />
@@ -558,9 +637,19 @@ const isStageOverlap = computed(() => {
         <!-- 従業員申請 -->
         <div v-show="tab === 7" class="flex flex-wrap flex-col">
           <Button
+            v-if="isAddEmployee"
             class="fixed right-0 bottom-0 m-10 mb-14"
-            @click="openAddEmployee()"
+            @click="openAddEmployeeModal()"
           />
+          <div v-if="!isAddEmployee && !isEditEmployee" class="text-3xl text-red-600 font-bold my-5">
+            追加・編集・削除は締め切られました
+          </div>
+          <div v-else-if="!isAddEmployee" class="text-3xl text-red-600 font-bold my-5">
+            追加は締め切られました
+          </div>
+          <div v-else-if="!isEditEmployee" class="text-3xl text-red-600 font-bold my-5">
+            編集・削除は締め切られました
+          </div>
           <div class="mt--9 flex flex-wrap gap-4">
             <div class="w-fit" v-for="e in employee" :key="e.toString()">
               <RegistInfoCardEmployee
@@ -573,8 +662,8 @@ const isStageOverlap = computed(() => {
             </div>
           </div>
           <RegistInfoAddEmployee
-            v-if="isAddEmployee"
-            v-model:add-employee="isAddEmployee"
+            v-if="isAddEmployeeModal"
+            v-model:add-employee="isAddEmployeeModal"
             :group-id="group?.id"
             @reload-employee="reload"
           />
@@ -583,9 +672,19 @@ const isStageOverlap = computed(() => {
         <!-- 販売食品申請 -->
         <div v-show="tab === 8">
           <Button
+            v-if="isAddFood"
             class="fixed right-0 bottom-0 m-10 mb-14"
-            @click="openAddFood()"
+            @click="openAddFoodModal()"
           />
+          <div v-if="!isAddFood && !isEditFood" class="text-3xl text-red-600 font-bold my-5">
+            追加・編集・削除は締め切られました
+          </div>
+          <div v-else-if="!isAddFood" class="text-3xl text-red-600 font-bold my-5">
+            追加は締め切られました
+          </div>
+          <div v-else-if="!isEditFood" class="text-3xl text-red-600 font-bold my-5">
+            編集・削除は締め切られました
+          </div>
           <div class="mb-8" v-for="f in food" :key="f.toString()">
             <RegistInfoCardFood
               :group-id="group?.id"
@@ -599,8 +698,8 @@ const isStageOverlap = computed(() => {
             />
           </div>
           <RegistInfoAddFood
-            v-if="isAddFood"
-            v-model:add-food="isAddFood"
+            v-if="isAddFoodModal"
+            v-model:add-food="isAddFoodModal"
             :group-id="group?.id"
             :groupCategoryId="groupCategoryId ? groupCategoryId : 0"
             @reload-food="reload"
@@ -610,9 +709,19 @@ const isStageOverlap = computed(() => {
         <!-- 購入品申請 -->
         <div v-show="tab === 9">
           <Button
+            v-if="isAddPurchase"
             class="fixed right-0 bottom-0 m-10 mb-14"
-            @click="openAddPurchase()"
+            @click="openAddPurchaseModal()"
           />
+          <div v-if="!isAddPurchase && !isEditPurchase" class="text-3xl text-red-600 font-bold my-5">
+            追加・編集・削除は締め切られました
+          </div>
+          <div v-else-if="!isAddPurchase" class="text-3xl text-red-600 font-bold my-5">
+            追加は締め切られました
+          </div>
+          <div v-else-if="!isEditPurchase" class="text-3xl text-red-600 font-bold my-5">
+            編集・削除は締め切られました
+          </div>
           <div v-for="f in food" :key="f.toString()">
             <div class="mb-8" v-for="p in f.purchase_lists" :key="p.toString()">
               <RegistInfoCardPurchase
@@ -633,8 +742,8 @@ const isStageOverlap = computed(() => {
             </div>
           </div>
           <RegistInfoAddPurchase
-            v-if="isAddPurchase"
-            v-model:add-purchase="isAddPurchase"
+            v-if="isAddPurchaseModal"
+            v-model:add-purchase="isAddPurchaseModal"
             :group-id="group?.id"
             :group-category-id="groupCategoryId ? groupCategoryId : 0"
             @reload-purchase="reload"

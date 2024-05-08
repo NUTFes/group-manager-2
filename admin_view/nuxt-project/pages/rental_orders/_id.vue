@@ -125,6 +125,9 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     async openEditModal() {
       this.rentalItemID = this.rentalOrder.rental_order.rental_item_id;

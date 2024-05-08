@@ -1,0 +1,51 @@
+h1 {
+    text-align: center;
+  }
+
+  .attention, p, span {
+    margin-left: 5%;
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+
+  body {
+    width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    margin: auto;
+    width: 80%;
+    table-layout: fixed;
+  }
+
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+    vertical-align: bottom;
+    height: 50px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  th.first, td.No {
+    text-align: center;
+  }
+
+  th.No, td.No { width: 10%; }
+  th.Belonging, td.Belonging { width: 20%; }
+  th.Name, td.Name { width: 40%; }
+  th.Category, td.Category { width: 30%; }
+
+  th[rowspan], th[colspan], td[rowspan], td[colspan] {
+    text-align: center;
+  }
+
+  .page-break {
+    page-break-after: always;
+  }
+
+  h1, th {
+    font-weight: normal;
+  }

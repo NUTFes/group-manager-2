@@ -54,15 +54,15 @@
             @click="
               () =>
                 $router.push({
-                  path: `/announcement/` + announcement.announcement.id,
+                  path: `/announcement/` + announcement.group.id,
                 })
             "
           >
             <td>{{ announcement.group.id }}</td>
             <td>{{ announcement.group.name}}</td>
             <td>
-              <div v-if='announcement.announcement.message === ""'>未登録</div>
-              <div v-else>登録済み</div>
+              <div v-if='announcement.announcement && announcement.announcement.message'>登録済み</div>
+              <div v-else>未登録</div>
             </td>
           </tr>
         </template>
@@ -89,7 +89,8 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
+        <div v-if="isMessageOver" style="color: red;">アナウンス文は300字以内で入力してください。</div>
+        <CommonButton iconName="add_circle" :on_click="submit" :disabled="isMessageOver"
           >登録</CommonButton
         >
       </template>
@@ -116,7 +117,6 @@ export default {
       dialog: false,
       message: "",
       snackMessage: "",
-      group_id: "",
       refYears: "Years",
       refYearID: 0,
       searchText: ""
@@ -147,11 +147,29 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    isMessageOver() {
+      return this.message.length > 300;
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+    this.fetchFilteredData();
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
 
     async openAddModal() {
-      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupUrl = "/api/v1/get_groups_have_no_announcement";
       const groupRes = await this.$axios.$get(groupUrl);
       this.groups = groupRes.data;
       this.isOpenAddModal = true;
@@ -167,13 +185,18 @@ export default {
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
-    reload(id) {
-      const reUrl = "/api/v1/get_announcement_show_for_admin_view/" + id;
-      this.$axios.get(reUrl).then((res) => {
+    reload() {
+      const url = "/api/v1/get_refinement_announcements?fes_year_id=" + this.refYearID;
+      this.$axios.get(url).then((res) => {
         this.announcements.push(res.data.data);
       });
     },
     async submit() {
+      if (!this.group_id || !this.message) {
+        this.openSnackBar("参加団体と会場アナウンス文を入力してください");
+        return;
+      }
+
       const postAnnouncementUrl =
         "/announcements/" +
         "?group_id=" +
@@ -190,7 +213,12 @@ export default {
       });
     },
     async refinementAnnouncements(item_id, name_list) {
-     // fes_yearで絞り込むとき
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
+      // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
       if (item_id == 0) {
@@ -198,6 +226,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.announcements = [];
       const refUrl =
         "/api/v1/get_refinement_announcements?fes_year_id=" +
@@ -206,6 +236,9 @@ export default {
       for (const res of refRes.data) {
         this.announcements.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchAnnouncements() {
       this.announcements = [];

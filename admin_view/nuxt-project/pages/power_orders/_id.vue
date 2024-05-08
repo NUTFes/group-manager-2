@@ -144,6 +144,9 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     openEditModal() {
       this.item = this.powerOrder.power_order.item;

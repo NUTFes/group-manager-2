@@ -10,15 +10,22 @@ interface Announcement {
 }
 
 const router = useRouter();
+const state = reactive({
+  groupId: 0,
+  language: "",
+});
+
 
 const currentAnnouncement = ref<Announcement>();
 const config = useRuntimeConfig();
 const groupId = ref<number>(0);
 const message = ref<string>("");
+const isEditAnnouncement = ref<boolean>();
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
+  state.language = localStorage.getItem("local") || "";
   groupId.value = Number(localStorage.getItem("group_id"));
 
   const getAnnouncementUrl = "/announcements";
@@ -33,6 +40,29 @@ onMounted(async () => {
       message.value = currentAnnouncement.value.message;
     }
   });
+  const settingUrl = config.APIURL + "/user_page_settings";
+  axios
+    .get(settingUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "access-token": localStorage.getItem("access-token"),
+        client: localStorage.getItem("client"),
+        uid: localStorage.getItem("uid"),
+      },
+    })
+    .then((response) => {
+      isEditAnnouncement.value = response.data.data[0].is_edit_announcement;
+    });
+});
+
+// アナウンス文のバリデーションチェック300字より多いか
+const isMessageOver = computed(() => {
+  if (state.language == "en") {
+    const messageEng = message.value.split(" ");
+    return messageEng.length > 125;
+  } else {
+    return message.value.length > 300;
+  }
 });
 
 const postAnnouncement = () => {
@@ -75,14 +105,20 @@ const postAnnouncement = () => {
 <template>
   <div class="mx-[10%] my-[5%]">
     <h1 class="text-4xl">{{ $t("Announcement.editAnnouncement") }}</h1>
+    <div v-if="!isEditAnnouncement" class="text-3xl text-red-600 font-bold my-5">
+      編集は締め切られました
+    </div>
     <Card>
       <div class="text-left">
         <span class="text-3xl mr-4">{{ $t("Announcement.text") }}</span>
+        <p v-if="isMessageOver" class="text-red-500 text-sm">{{ $t("Announcement.over") }}</p>
       </div>
       <textarea class="border-2 w-[60%]" v-model="message"></textarea>
       <RegistPageButton
+        v-if="isEditAnnouncement"
         :text="$t('Announcement.edit')"
         @click="postAnnouncement"
+        :disabled="isMessageOver"
       ></RegistPageButton>
     </Card>
   </div>

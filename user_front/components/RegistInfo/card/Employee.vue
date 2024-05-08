@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Setting } from '~~/types'
 
 interface Props {
   id: number
@@ -20,19 +21,24 @@ const employee = withDefaults(defineProps<Props>(), {
 })
 
 const emits = defineEmits<Emits>()
-
 const reloadEmployee = () => {
   emits('reloadEmployee', null)
 }
 
-const isEditEmployee = ref<boolean>(false)
-const isDeleteEmployee = ref<boolean>(false)
+const config = useRuntimeConfig();
+const isEditEmployee = ref<boolean>();
+onMounted(async()=>{
+const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
+  isEditEmployee.value = setting.data[0].is_edit_employee
+});
 
-const openEditItem = () => {
-  isEditEmployee.value = true
+const isEditModal = ref<boolean>(false);
+const openEditModal = () => {
+  isEditModal.value = true
 }
-const openDeleteItem = () => {
-  isDeleteEmployee.value = true
+const isDeleteModal = ref<boolean>(false);
+const openDeleteModal = () => {
+  isDeleteModal.value = true
 }
 </script>
 
@@ -43,9 +49,9 @@ const openDeleteItem = () => {
         <div class="my-2">
           No.{{ employee.studentId }}
         </div>
-        <div class="flex-col mx-8">
-          <EditButton @click="openEditItem()" />
-          <DeleteButton @click="openDeleteItem()" />
+        <div v-if="isEditEmployee" class="flex-col mx-8">
+          <EditButton @click="openEditModal()" />
+          <DeleteButton @click="openDeleteModal()" />
         </div>
       </div>
       <div class="h-[80%] pt-28 ml-5 mx-4 text-5xl text-center truncate hover:text-clip">
@@ -54,14 +60,14 @@ const openDeleteItem = () => {
     </template>
   </RegistInfoNarrowCard>
   <RegistInfoDeleteEmployee
-    v-if="isDeleteEmployee"
-    v-model:delete-employee="isDeleteEmployee"
+    v-if="isEditModal"
+    v-model:delete-employee="isEditModal"
     :id="id"
     @reload-employee="reloadEmployee()"
   />
   <RegistInfoEditEmployee
-    v-if="isEditEmployee"
-    v-model:edit-employee="isEditEmployee"
+    v-if="isDeleteModal"
+    v-model:edit-employee="isDeleteModal"
     :id="id"
     :group-id="groupId"
     :name="name"

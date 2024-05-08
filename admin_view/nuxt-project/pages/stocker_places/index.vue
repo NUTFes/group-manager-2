@@ -49,6 +49,9 @@ export default {
       selfRoleId: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.scrollTo(0, 0);
+  },
   methods: {
     reload: function () {
       this.$axios

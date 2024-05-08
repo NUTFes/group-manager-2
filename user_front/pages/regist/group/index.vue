@@ -13,6 +13,7 @@ const { meta, isSubmitting } = useForm({
 const { handleChange: handleChangeGroupName, errorMessage: groupNameError } = useField('groupName');
 const { handleChange: handleChangeProjectName, errorMessage: projectNameError } = useField('projectName');
 const { handleChange: handleChangeActivity, errorMessage: activityError } = useField('activity');
+const { handleChange: handleChangeInternational, errorMessage: internationalError } = useField('international');
 const { handleChange: handleChangeCategory, errorMessage: categoryError } = useField('category');
 
 const registerParams = reactive(
@@ -23,6 +24,7 @@ const registerParams = reactive(
     categoryId: '',
     userId: '',
     fesYearId: 0,
+    international: false,
   }
 )
 
@@ -38,12 +40,15 @@ const reset = () => {
 const config = useRuntimeConfig()
 const router = useRouter()
 
+const isRegistGroup = ref<boolean>();
+
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
   registerParams.userId = localStorage.getItem("user_id") || ''
   const setting = await $fetch<Setting>(config.APIURL + "/user_page_settings")
   registerParams.fesYearId = setting.data[0].fes_year_id
+  isRegistGroup.value = setting.data[0].is_regist_group
 })
 
 const registerCategory = async () => {
@@ -60,6 +65,7 @@ const registerCategory = async () => {
       group_category_id: registerParams.categoryId,
       fes_year_id: registerParams.fesYearId,
       committee: false,
+      is_international: registerParams.international,
     },
     headers: {
       "Content-Type": "application/json",
@@ -75,7 +81,7 @@ const registerCategory = async () => {
 <template>
   <div>
     <div class="mx-[20%] my-[5%]">
-      <Card border="none">
+      <Card v-if="isRegistGroup" border="none">
         <h1 class="text-3xl">{{ $t('Group.registGroup') }}</h1>
         <Card border="none" align="end" class="!gap-1 md:!gap-2.5">
           <div class="flex flex-col md:flex-row">
@@ -101,6 +107,13 @@ const registerCategory = async () => {
           <div class="error-msg">{{ categoryError }}</div>
 
           <div class="flex flex-col md:flex-row">
+            <p class="label">{{ $t('Group.internarional') }}</p>
+            <input class="form" type="checkbox" v-model="registerParams.international" @change="handleChangeInternational">
+            <span class="slider round"></span>
+          </div>
+          <div class="error-msg">{{ internationalError }}</div>
+
+          <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.activityDetails') }}</p>
             <input class="form" v-model="registerParams.activity" @change="handleChangeActivity" :class="{ 'error-border': activityError }">
           </div>
@@ -111,6 +124,9 @@ const registerCategory = async () => {
           <RegistPageButton :disabled='!meta.valid || isSubmitting' :text="$t('Button.register')" @click="registerCategory"></RegistPageButton>
         </Row>
       </Card>
+      <div v-else class="text-3xl text-red-600 font-bold text-center">
+        登録は締め切られました
+      </div>
     </div>
   </div>
 </template>

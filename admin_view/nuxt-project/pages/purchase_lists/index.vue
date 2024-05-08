@@ -214,7 +214,32 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+
+    const storedIsFreshID = localStorage.getItem(this.$route.path + 'RefIsFresh');
+    if (storedIsFreshID) {
+      this.refIsFreshID = Number(storedIsFreshID);
+      this.updateFilters(this.refIsFreshID, this.isFreshList);
+    } else {
+      this.refIsFresh = 'なまもの';
+    }
+
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+
     async getFoodProducts() {
       const url = "/api/v1/get_food_products_by_group_id/" + this.groupID;
       const res = await this.$axios.$get(url);
@@ -237,6 +262,12 @@ export default {
       this.isOpenAddModal = false;
     },
     async refinementPurchaseLists(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      localStorage.setItem(this.$route.path + 'RefIsFresh', this.refIsFreshID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -256,6 +287,8 @@ export default {
           this.refIsFresh = name_list[item_id - 1].value;
         }
       }
+    },
+    async fetchFilteredData() {
       this.purchaseLists = [];
       const refUrl =
         "/api/v1/get_refinement_purchase_lists?fes_year_id=" +
@@ -266,6 +299,10 @@ export default {
       for (const res of refRes.data) {
         this.purchaseLists.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
+
     },
     async searchPurchaseLists() {
       this.purchaseLists = [];

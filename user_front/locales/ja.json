@@ -83,7 +83,8 @@
     "editAnnouncement": "会場アナウンス文の編集",
     "text": "会場アナウンス文",
     "edit": "編集",
-    "regist": "登録"
+    "regist": "登録",
+    "over": "300文字を超えています"
   },
 
   "VenueMap": {
@@ -136,7 +137,8 @@
     "groupName": "団体名",
     "shopName": "企画名",
     "category": "参加形式",
-    "activityDetails": "活動内容"
+    "activityDetails": "活動内容",
+    "international": "国際"
   },
 
   "Stage": {

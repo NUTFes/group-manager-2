@@ -159,7 +159,22 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+    this.fetchFilteredData();
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async openAddModal() {
       const url = "/api/v1/get_groups_have_no_public_relation";
       const resGroups = await this.$axios.$get(url);
@@ -254,6 +269,11 @@ export default {
       );
     },
     async refinementPurchaseLists(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -264,6 +284,8 @@ export default {
           this.refYears = name_list[item_id - 1].year_num;
         }
       }
+    },
+    async fetchFilteredData() {
       this.publicRelations = [];
       const refUrl =
         "/api/v1/get_refinement_public_relations?fes_year_id=" +
@@ -272,6 +294,9 @@ export default {
       for (const res of refRes.data) {
         this.publicRelations.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchPurchaseLists() {
       this.publicRelations = [];
