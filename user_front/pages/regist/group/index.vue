@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Setting } from '@/types'
 import { Group } from '@/types/regist/group';
-import { groupCategoryList } from '~~/utils/list';
+import { GroupCategory } from '@/types/regist/groupCategory';
 import { loginCheck } from '@/utils/methods'
 import { useField, useForm } from 'vee-validate';
 import { groupSchema } from '~~/utils/validate';
@@ -41,14 +41,17 @@ const config = useRuntimeConfig()
 const router = useRouter()
 
 const isRegistGroup = ref<boolean>();
+const groupCategoryList = await $fetch<GroupCategory>(config.APIURL + "/group_categories")
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
+  console.log('ログインチェックを行います')
   loginCheck();
   registerParams.userId = localStorage.getItem("user_id") || ''
   const setting = await $fetch<Setting>(config.APIURL + "/user_page_settings")
   registerParams.fesYearId = setting.data[0].fes_year_id
   isRegistGroup.value = setting.data[0].is_regist_group
+
 })
 
 const registerCategory = async () => {
@@ -100,7 +103,7 @@ const registerCategory = async () => {
             <p class="label">{{ $t('Group.category') }}</p>
             <select class="w-72" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
-              <option v-for="category in groupCategoryList" :value="category.id" :key="category.id">{{ category.name }}
+              <option v-for="category in groupCategoryList.data" :value="category.id" :key="category.id">{{ category.name }}
               </option>
             </select>
           </div>

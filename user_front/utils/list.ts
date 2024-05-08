@@ -1,13 +1,13 @@
-export const groupCategoryList: { id: number; name: string }[] = [
-  { id: 1, name: "食品販売:Food stalls" },
-  { id: 2, name: "物品販売:Groups selling goods" },
-  { id: 3, name: "ステージ:Stage" },
-  { id: 4, name: "展示・体験:Exhibitions and hands-on groups" },
-  { id: 5, name: "研究室:Laboratory" },
-  { id: 6, name: "国際:International" },
-  { id: 7, name: "実行委員:executive committee" },
-  { id: 8, name: "その他:organizations other than formal" },
-];
+// export const groupCategoryList: { id: number; name: string }[] = [
+//   { id: 1, name: "食品販売:Food stalls" },
+//   { id: 2, name: "物品販売:Groups selling goods" },
+//   { id: 3, name: "ステージ:Stage" },
+//   { id: 4, name: "展示・体験:Exhibitions and hands-on groups" },
+//   { id: 5, name: "研究室:Laboratory" },
+//   { id: 6, name: "国際:International" },
+//   { id: 7, name: "実行委員:executive committee" },
+//   { id: 8, name: "その他:organizations other than formal" },
+// ];
 
 export const gradeList: { id: number; name: string }[] = [
   { id: 1, name: "B1[学部1年]" },

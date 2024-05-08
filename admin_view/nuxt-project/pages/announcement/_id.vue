@@ -70,7 +70,8 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
+        <div v-if="isMessageOver" style="color: red;">アナウンス文は300字以内で入力してください。</div>
+        <CommonButton iconName="edit" :on_click="edit" :disabled="isMessageOver">登録</CommonButton>
       </template>
     </EditModal>
 
@@ -113,6 +114,9 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    isMessageOver() {
+      return this.message.length > 300;
+    },
   },
   async asyncData({ $axios, route }) {
     const routeId = route.path.replace("/announcement/", "");

@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).power_orders.read">
     <SubHeader pageTitle="電力申請一覧">
       <CommonButton
         v-if="this.$role(roleID).power_orders.create"
@@ -129,6 +129,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -181,7 +182,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-
+    const groupCategoryRes = await $axios.$get("group_categories");
     // const url = "/api/v1/get_power_order_index_for_admin_view";
     const url =
       "/api/v1/get_refinement_power_orders?fes_year_id=" +
@@ -196,6 +197,7 @@ export default {
     return {
       powerOrders: powerOrdersRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
@@ -206,15 +208,15 @@ export default {
     }),
   },
   mounted() {
-    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
       this.updateFilters(this.refYearID, this.yearList);
     } else {
-      this.refYears = 'Year';
+      this.refYears = "Year";
     }
 
-    const storedPower = localStorage.getItem(this.$route.path + 'RefPower');
+    const storedPower = localStorage.getItem(this.$route.path + "RefPower");
     if (storedPower) {
       this.refPower = Number(storedPower);
       this.updateFilters(this.refPower, this.powerList);
@@ -222,27 +224,35 @@ export default {
       this.refPower = 0;
     }
 
-    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    const storedCategoryID = localStorage.getItem(
+      this.$route.path + "RefCategory"
+    );
     if (storedCategoryID) {
       this.refCategoryID = Number(storedCategoryID);
       this.updateFilters(this.refCategoryID, this.groupCategories);
     } else {
-      this.refGroupCategories = 'Category';
+      this.refGroupCategories = "Category";
     }
 
     this.fetchFilteredData();
 
-    window.addEventListener('scroll', this.saveScrollPosition);
+    window.addEventListener("scroll", this.saveScrollPosition);
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
     async refinementPowerOrders(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
-      localStorage.setItem(this.$route.path + 'RefPower', this.refPower);
-      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(this.$route.path + "RefPower", this.refPower);
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
@@ -288,7 +298,10 @@ export default {
         this.powerOrders.push(res);
       }
       this.$nextTick(() => {
-        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
       });
     },
     async searchPowerOrders() {

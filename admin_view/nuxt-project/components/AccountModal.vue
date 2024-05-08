@@ -8,9 +8,12 @@
             <slot></slot>
           </Row>
           <h6 v-if="user.role_id == 1" class="developer">Developer</h6>
-          <h6 v-if="user.role_id == 2">Manager</h6>
-          <h6 v-if="user.role_id == 3">User</h6>
-          <h6 v-if="user.role_id == 4">Member</h6>
+          <h6 v-if="user.role_id == 2" class="participant">Participant</h6>
+          <h6 v-if="user.role_id == 3" class="inventory_management">Inventory_Management</h6>
+          <h6 v-if="user.role_id == 4" class="venue_power">Venue_Power</h6>
+          <h6 v-if="user.role_id == 5" class="sanitation_management">Sanitation_Management</h6>
+          <h6 v-if="user.role_id == 6" class="staff">Staff</h6>
+          <h6 v-if="user.role_id == 7" class="user">User</h6>
           <h3>{{ user.name }}</h3>
           <p>{{ user.email }}</p>
           <IconButton icon_name="edit" :on_click="openEditModal" />
