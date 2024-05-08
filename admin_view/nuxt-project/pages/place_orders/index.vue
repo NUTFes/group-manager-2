@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).place_orders.read">
     <SubHeader pageTitle="会場申請一覧">
       <CommonButton v-if="this.$role(roleID).place_orders.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -148,6 +148,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -299,6 +300,7 @@ export default {
         "&group_category_id=" +
         this.refCategoryID;
       const refRes = await this.$axios.$post(refUrl);
+      this.placeOrders = [];
       for (const res of refRes.data) {
         this.placeOrders.push(res);
       };

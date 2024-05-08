@@ -83,7 +83,8 @@
     "editAnnouncement": "会場アナウンス文の編集",
     "text": "会場アナウンス文",
     "edit": "編集",
-    "regist": "登録"
+    "regist": "登録",
+    "over": "300文字を超えています"
   },
 
   "VenueMap": {

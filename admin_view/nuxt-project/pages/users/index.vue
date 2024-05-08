@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).users.read">
     <SubHeader pageTitle="ユーザー一覧">
       <CommonButton v-if="this.$role(roleID).users.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -54,7 +54,7 @@
         </template>
       </Table>
     </Card>
-     
+
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
@@ -130,6 +130,7 @@
     </SnackBar>
 
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -141,28 +142,31 @@ export default {
       headers: ["ID", "名前", "権限"],
       roles: [
         { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
-        { id: 2, name: "manager" }, // 管理者( 参加団体部門長にユーザ画面制御の権限のみを与える )
-        { id: 3, name: "user" },  // 参加団体( 権限を与えない )
-        { id: 4, name: "member" },  // 実行委員/その他の部門長 (閲覧権限のみ与える)
+        { id: 2, name: "participant" }, //　参加者( 参加団体部門長+国際交流部門長)
+        { id: 3, name: "inventory_management" }, //物品管理部門長
+        { id: 4, name: "venue_power" }, //会場電力部門長
+        { id: 5, name: "sanitation_management" }, //衛生管理部門長
+        { id: 6, name: "staff" }, //総務局員
+        { id: 7, name: "user" }, //参加団体,企画局員
       ],
       departmentList: [
-        { id: 1,  name: "機械創造工学課程" },
-        { id: 2,  name: "電気電子情報工学課程" },
-        { id: 3,  name: "物質材料工学課程/生物機能工学課程" },
-        { id: 4,  name: "環境社会基盤工学課程" },
-        { id: 5,  name: "情報・経営システム工学課程" },
-        { id: 6,  name: "機械創造工学専攻" },
-        { id: 7,  name: "電気電子情報工学専攻" },
-        { id: 8,  name: "物質材料工学専攻/生物機能工学専攻" },
-        { id: 9, name: "環境社会基盤工学専攻" },
-        { id: 10, name: "情報・経営システム工学専攻" },
-        { id: 11, name: "原子力システム安全工学専攻" },
-        { id: 12, name: "システム安全専攻" },
+        { id: 1,  name: "機械工学分野/機械創造工学課程" },
+        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学過程" },
+        { id: 3,  name: "物質生物工学分野/物質材料工学過程/生物機能工学過程" },
+        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学過程" },
+        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学過程" },
+        { id: 6,  name: "機械工学分野/機械創造工学専攻" },
+        { id: 7,  name: "電気電子情報工学分野/電気電子情報工学専攻" },
+        { id: 8,  name: "物質生物工学分野/物質材料工学専攻/生物機能工学専攻" },
+        { id: 9,  name: "環境社会基盤工学分野/環境社会基盤工学専攻" },
+        { id: 10, name: "情報・経営システム工学分野/情報・経営システム工学専攻" },
+        { id: 11, name: "量子・原子力統合工学分野/原子力システム安全工学専攻" },
+        { id: 12, name: "システム安全工学専攻" },
         { id: 13, name: "技術科学イノベーション専攻" },
-        { id: 14, name: "情報・制御工学専攻" },
-        { id: 15, name: "材料工学専攻" },
-        { id: 16, name: "エネルギー・環境工学専攻" },
-        { id: 17, name: "生物統合工学専攻" },
+        { id: 14, name: "情報・制御工学分野/情報・制御工学専攻" },
+        { id: 15, name: "材料工学分野/材料工学専攻" },
+        { id: 16, name: "エネルギー工学分野/エネルギー・環境工学専攻" },
+        { id: 17, name: "社会環境・生物機能工学分野/生物統合工学専攻" },
         { id: 18, name: "その他" },
       ],
       gradeList: [

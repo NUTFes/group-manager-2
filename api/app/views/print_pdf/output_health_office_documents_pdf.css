@@ -1,52 +1,51 @@
 h1 {
     text-align: center;
   }
-  
+
   .attention, p, span {
     margin-left: 5%;
     margin-bottom: 0;
     margin-top: 0;
   }
-  
+
   body {
     width: 100%;
   }
-  
+
   table {
     border-collapse: collapse;
-    margin: auto; /* テーブルを中央に配置 */
-    width: 80%; /* テーブルの全体幅を調整 */
-    table-layout: fixed; /* 各セルの横幅を均等にする */
+    margin: auto;
+    width: 80%;
+    table-layout: fixed;
   }
-  
+
   th, td {
     border: 1px solid black;
     padding: 8px;
     text-align: center;
-    vertical-align: bottom; /* Aligns text to bottom */
-    height: 50px; /* Minimum cell height, adjust as needed */
+    vertical-align: bottom;
+    height: 50px;
+    word-wrap: break-word;
+    white-space: normal;
   }
-  
+
   th.first, td.No {
-    text-align: center; 
+    text-align: center;
   }
-  
+
   th.No, td.No { width: 10%; }
   th.Belonging, td.Belonging { width: 20%; }
   th.Name, td.Name { width: 40%; }
   th.Category, td.Category { width: 30%; }
-  
-  /* 調理計画の表に特有のスタイル */
+
   th[rowspan], th[colspan], td[rowspan], td[colspan] {
     text-align: center;
   }
-  
-  /* ページブレークのスタイル */
-  .page-break { 
-    page-break-after: always; /* 次の要素を新しいページに配置 */
+
+  .page-break {
+    page-break-after: always;
   }
-  
+
   h1, th {
-    font-weight: normal; /* 太字を解除 */
+    font-weight: normal;
   }
-  

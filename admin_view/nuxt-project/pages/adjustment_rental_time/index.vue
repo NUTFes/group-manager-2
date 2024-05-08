@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).stocker_places.read">
     <SubHeader pageTitle="物品貸出 時間・人数調整">
       <CommonButton v-if="this.$role(roleID).stocker_places.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -85,6 +85,7 @@
       </template>
     </AddModal>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>

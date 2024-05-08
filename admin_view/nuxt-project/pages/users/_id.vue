@@ -66,12 +66,18 @@
       <template v-slot:form>
         <label for="developer" style="color:black">Developer</label>
         <input type="radio" id="developer" value="1" v-model="picked" />
-        <label for="manager" style="color:black">Manager</label>
-        <input type="radio" id="manager" value="2" v-model="picked" />
+        <label for="participant" style="color:black">Participant</label>
+        <input type="radio" id="participant" value="2" v-model="picked" />
+        <label for="inventory_management" style="color:black">Inventory_Management</label>
+        <input type="radio" id="inventory_management" value="3" v-model="picked" />
+        <label for="venue_power" style="color:black">Venue_Power</label>
+        <input type="radio" id="venue_power" value="4" v-model="picked" />
+        <label for="sanitation_management" style="color:black">Sanitation_Management</label>
+        <input type="radio" id="sanitation_management" value="5" v-model="picked" />
+        <label for="staff" style="color:black">Staff</label>
+        <input type="radio" id="staff" value="6" v-model="picked" />
         <label for="user" style="color:black">User</label>
-        <input type="radio" id="user" value="3" v-model="picked" />
-        <label for="member" style="color:black">Member</label>
-        <input type="radio" id="member" value="4" v-model="picked" />
+        <input type="radio" id="user" value="7" v-model="picked" />
         <span style="color:black">{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
       </template>
       <template v-slot:method>
@@ -130,9 +136,12 @@ export default {
       isOpenSnackBar: false,
       roles: [
         { id: 1, name: "developer" },
-        { id: 2, name: "manager" },
-        { id: 3, name: "user" },
-        { id: 4, name: "member" },
+        { id: 2, name: "participant" }, 
+        { id: 3, name: "inventory_management" }, 
+        { id: 4, name: "venue_power" }, 
+        { id: 5, name: "sanitation_management" }, 
+        { id: 6, name: "staff" }, 
+        { id: 7, name: "user" },
       ],
     };
   },

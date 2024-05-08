@@ -10,13 +10,22 @@
           >{{ dashboardData.developer_num }} Developers</Tag
         >
         <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A"
-          >{{ dashboardData.manager_num }} Managers</Tag
+          >{{ dashboardData.participant_num }} Participants</Tag
         >
         <Tag primaryColor="#9C8AE3" secondaryColor="#70FFDD"
-          >{{ dashboardData.user_num }} Users</Tag
+          >{{ dashboardData.inventory_management_num }} Inventory_Managers</Tag
         >
         <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
-          >{{ dashboardData.member_num }} Members</Tag
+          >{{ dashboardData.venue_power_num }} Venue_Power_Managers</Tag
+        >
+        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
+          >{{ dashboardData.sanitation_management_num }} Sanitation_Managers</Tag
+        >
+        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
+          >{{ dashboardData.staff_num }} Staffs</Tag
+        >
+        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
+          >{{ dashboardData.user_num }} Users</Tag
         >
       </Row>
     </div>
@@ -40,7 +49,7 @@ export default {
 .users-card-content {
   font-size: 60px;
   width: 400px;
-  height: 300px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
