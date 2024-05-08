@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).power_orders.read">
     <SubHeader pageTitle="電力申請一覧">
       <CommonButton
         v-if="this.$role(roleID).power_orders.create"
@@ -129,6 +129,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>

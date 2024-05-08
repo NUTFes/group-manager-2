@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).places.read">
     <SubHeader pageTitle="会場割り当て">
     </SubHeader>
 
@@ -127,12 +127,15 @@
     </AddModal>
 
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
+
 </template>
 
 <script>
 import AddModal from '../../components/AddModal.vue';
 import CommonButton from '../../components/CommonButton.vue';
 import Column from '../../components/Column.vue';
+import { mapState } from "vuex";
 export default {
   components: { AddModal, CommonButton, Column },
   data() {
@@ -181,6 +184,10 @@ export default {
       refYears: currentYears[0].year_num,
   };
   },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   mounted() {
     window.addEventListener('scroll', this.saveScrollPosition);
     this.$nextTick(() => {

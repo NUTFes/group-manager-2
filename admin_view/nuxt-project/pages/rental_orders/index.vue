@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).rental_orders.read">
     <SubHeader pageTitle="物品申請一覧">
       <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -122,6 +122,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>

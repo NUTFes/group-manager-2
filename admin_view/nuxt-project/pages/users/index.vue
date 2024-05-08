@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).users.read">
     <SubHeader pageTitle="ユーザー一覧">
       <CommonButton v-if="this.$role(roleID).users.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -130,6 +130,7 @@
     </SnackBar>
 
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -141,9 +142,12 @@ export default {
       headers: ["ID", "名前", "権限"],
       roles: [
         { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
-        { id: 2, name: "manager" }, // 管理者( 参加団体部門長にユーザ画面制御の権限のみを与える )
-        { id: 3, name: "user" },  // 参加団体( 権限を与えない )
-        { id: 4, name: "member" },  // 実行委員/その他の部門長 (閲覧権限のみ与える)
+        { id: 2, name: "participant" }, //　参加者( 参加団体部門長+国際交流部門長)
+        { id: 3, name: "inventory_management" }, //物品管理部門長
+        { id: 4, name: "venue_power" }, //会場電力部門長
+        { id: 5, name: "sanitation_management" }, //衛生管理部門長
+        { id: 6, name: "staff" }, //総務局員
+        { id: 7, name: "user" }, //参加団体,企画局員
       ],
       departmentList: [
         { id: 1,  name: "機械創造工学課程" },
