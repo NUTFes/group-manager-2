@@ -92,7 +92,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).food_products.read">
           <td>保健所提出書類（調理計画・従事者）</td>
           <td>
             <InTableButton iconName="file_download" :on_click="downloadHealthOfficeDocumentsPDF">PDF</InTableButton>
