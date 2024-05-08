@@ -94,7 +94,7 @@
           </select>
         </div>
         <div>
-          <h3>調理品目</h3>
+          <h3>販売品名</h3>
           <select v-model="foodProductID">
             <option disabled value="">選択してください</option>
             <option
@@ -160,7 +160,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "調理品目", "購入品", "なまもの", "URL"],
+      headers: ["ID", "参加団体", "販売品名", "購入品", "なまもの", "URL"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [

@@ -360,7 +360,7 @@ class Api::V1::OutputCsvController < ApplicationController
         end
       end
     end
-    send_data(csv_data, filename:"販売食品申請_#{filename_year}年度.csv")
+    send_data(csv_data, filename:"販売品申請_#{filename_year}年度.csv")
   end
 
   def output_purchase_lists_csv

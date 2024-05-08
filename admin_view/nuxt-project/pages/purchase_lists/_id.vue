@@ -40,7 +40,7 @@
             <td>{{ purchaseList.purchase_list.purchase_date }}</td>
           </tr>
           <tr>
-            <th>調理品目</th>
+            <th>販売品名</th>
             <td>{{ purchaseList.purchase_list_info.food_product }}</td>
           </tr>
           <tr>
