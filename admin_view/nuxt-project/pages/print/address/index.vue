@@ -58,7 +58,7 @@
 
     <div class="sheet">
       <br />
-      <h2>連絡先リスト - 模擬店(物品販売)</h2>
+      <h2>連絡先リスト - 模擬店(販売品)</h2>
       <hr />
       <br />
       <table border="solid">
@@ -74,7 +74,7 @@
         <tbody v-for="group in group_2" :key="group.group.id">
           <tr>
             <td rowspan="2">{{ group.group.id }}</td>
-            <td rowspan="2">物品販売</td>
+            <td rowspan="2">販売品</td>
             <td rowspan="2">{{ group.group.name }}</td>
             <td>{{ group.user_name }}</td>
             <td>{{ group.user_tel }}</td>

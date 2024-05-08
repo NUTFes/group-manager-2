@@ -105,7 +105,7 @@
     "item": "物品申請",
     "employees": "従業員申請",
     "food": "食品申請",
-    "saleGoods": "物品販売",
+    "saleGoods": "販売品",
     "purchase": "購入品申請",
     "placeMessage": "野外・室内どちらかのみの申請でお願いいたします。"
   },
@@ -266,7 +266,7 @@
     "addSaleGoods": "販売物品の追加",
     "deleteSaleGoods": "販売物品の削除",
     "editSaleGoods": "販売物品の編集",
-    "name": "販売物品名",
+    "name": "販売品名",
     "select": "選択してください",
     "yes": "有",
     "no": "無",
@@ -285,8 +285,8 @@
     "deletePurchase": "購入品の削除",
     "editPurchase": "購入品の編集",
     "purchase": "購入品",
-    "target": "調理品目名",
-    "targetGoods": "調理品目",
+    "target": "販売品名",
+    "targetGoods": "販売品",
     "select": "選択してください",
     "name": "購入材料名",
     "goodsName": "購入品",
@@ -317,7 +317,7 @@
 
   "List": {
     "food": "模擬店(食品販売)",
-    "goods": "模擬店(物品販売)",
+    "goods": "模擬店(販売品)",
     "stage": "ステージ企画",
     "ediExhibitst": "展示・体験",
     "laboratory": "研究室公開",
