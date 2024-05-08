@@ -146,25 +146,26 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
-  mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
-    
-    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
-    if (storedYearID) {
-      this.refYearID = Number(storedYearID);
-      this.updateFilters(this.refYearID, this.yearList);
-    } else {
-      this.refYears = 'Year';
-    }
-
-    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
-    if (storedCategoryID) {
-      this.refCategoryID = Number(storedCategoryID);
-      this.updateFilters(this.refCategoryID, this.groupCategories);
-    } else {
-      this.refGroupCategories = 'Category';
-    }
-    this.fetchFilteredData();
+    mounted() {
+      window.addEventListener('scroll', this.saveScrollPosition);
+      
+      const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+      if (storedYearID) {
+        this.refYearID = Number(storedYearID);
+        this.updateFilters(this.refYearID, this.yearList);
+      } else {
+        this.refYears = 'Year';
+      }
+  
+      const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+      if (storedCategoryID) {
+        this.refCategoryID = Number(storedCategoryID);
+        this.updateFilters(this.refCategoryID, this.groupCategories);
+      } else {
+        this.refGroupCategories = 'Category';
+      }
+      this.fetchFilteredData();
+    },
   },
   methods: {
     saveScrollPosition() {

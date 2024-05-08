@@ -49,7 +49,7 @@ export default {
 .users-card-content {
   font-size: 60px;
   width: 400px;
-  height: 300px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
