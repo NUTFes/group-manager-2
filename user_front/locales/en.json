@@ -138,7 +138,16 @@
     "groupName": "group name",
     "shopName": "shop name",
     "category": "select category",
-    "activityDetails": "Activity Details"
+    "activityDetails": "Activity Details",
+    "contactPersonName": "contact person name",
+    "contactPersonEmail": "contact person email"
+  },
+
+  "contactPerson": {
+    "registContactPerson": "Registration of contact person",
+    "editContactPerson": "Edit contact person",
+    "name": "name",
+    "mail": "mail adress"
   },
 
   "Stage": {

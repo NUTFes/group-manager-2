@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   resources :venue_maps
   resources :announcements
   resources :cooking_process_orders
+  resources :contact_persons
 
   # /api/v1/...
   namespace 'api' do
@@ -159,6 +160,12 @@ Rails.application.routes.draw do
       post "get_refinement_announcements" => "announcements_api#get_refinement_announcements"
       post "get_search_announcements" => "announcements_api#get_search_announcements"
       get "get_groups_have_no_announcement" => "groups_api#get_groups_have_no_announcement"
+
+      #---実行委員担当者申請ページ
+      get "get_contact_person_index_for_admin_view" => "contact_persons_api#get_contact_person_index_for_admin_view"
+      get "get_contact_person_show_for_admin_view/:id" => "contact_persons_api#get_contact_person_show_for_admin_view"
+      post "get_refinement_contact_persons" => "contact_persons_api#get_refinement_contact_persons"
+      post "get_search_contact_persons" => "contact_persons_api#get_search_contact_persons"
 
       #---申請情報ページ
       get "get_order_info_for_admin_view/:id" => "order_infos_api#get_order_info_for_admin_view"
