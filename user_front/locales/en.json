@@ -84,7 +84,8 @@
     "editAnnouncement": "Editing of venue announcement text",
     "text": "Announcement text at the venue",
     "edit": "editing",
-    "regist": "registing"
+    "regist": "registing",
+    "over": "This announcement text is over 125 words."
   },
 
   "VenueMap": {

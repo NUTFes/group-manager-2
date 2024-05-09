@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).groups.read">
     <SubHeader pageTitle="参加団体申請一覧">
       <CommonButton v-if="this.$role(roleID).groups.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -157,6 +157,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -198,17 +199,7 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       searchText: "",
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '学外'},
-        { id: 8, name: '実行委員' },
-        { id: 9, name: 'その他' }
-      ],
+      groupCategories: [],
       headers: [
         "ID",
         "グループ名",
@@ -236,6 +227,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get('/group_categories')
     // const url = "/api/v1/get_group_index_for_admin_view";
     const url =
       "/api/v1/get_refinement_groups?fes_year_id=" +
@@ -250,6 +242,7 @@ export default {
     return {
       groups: groupRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };

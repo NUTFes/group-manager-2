@@ -80,7 +80,7 @@ export default {
       var params = new URLSearchParams();
       params.append("name", this.name);
       params.append("email", this.email);
-      params.append("role_id", 2); // デフォルトはmanager権限
+      params.append("role_id", 2); // デフォルトはparticipant権限
       params.append("password", this.password);
       params.append("password_confirmation", this.password_confirmation);
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";

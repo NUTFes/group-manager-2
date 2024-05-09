@@ -669,7 +669,7 @@ const isStageOverlap = computed(() => {
           />
         </div>
 
-        <!-- 販売食品申請 -->
+        <!-- 販売品申請 -->
         <div v-show="tab === 8">
           <Button
             v-if="isAddFood"

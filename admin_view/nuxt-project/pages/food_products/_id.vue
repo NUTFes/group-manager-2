@@ -2,7 +2,7 @@
   <div class="main-content">
     <SubHeader
       v-bind:pageTitle="foodProduct.food_product.name"
-      pageSubTitle="販売食品申請一覧"
+      pageSubTitle="販売品申請一覧"
     >
       <CommonButton v-if="this.$role(this.roleID).food_products.update" iconName="edit" :on_click="openEditModal">
         編集
@@ -56,7 +56,7 @@
     <EditModal
       @close="closeEditModal"
       v-if="isOpenEditModal"
-      title="販売食品申請の編集"
+      title="販売品申請の編集"
     >
       <template v-slot:form>
         <div>
@@ -97,7 +97,7 @@
     <DeleteModal
       @close="closeDeleteModal"
       v-if="isOpenDeleteModal"
-      title="販売食品申請の削除"
+      title="販売品申請の削除"
     >
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>

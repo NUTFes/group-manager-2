@@ -10,6 +10,11 @@ interface Announcement {
 }
 
 const router = useRouter();
+const state = reactive({
+  groupId: 0,
+  language: "",
+});
+
 
 const currentAnnouncement = ref<Announcement>();
 const config = useRuntimeConfig();
@@ -20,6 +25,7 @@ const isEditAnnouncement = ref<boolean>();
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
   loginCheck();
+  state.language = localStorage.getItem("local") || "";
   groupId.value = Number(localStorage.getItem("group_id"));
 
   const getAnnouncementUrl = "/announcements";
@@ -47,6 +53,16 @@ onMounted(async () => {
     .then((response) => {
       isEditAnnouncement.value = response.data.data[0].is_edit_announcement;
     });
+});
+
+// アナウンス文のバリデーションチェック300字より多いか
+const isMessageOver = computed(() => {
+  if (state.language == "en") {
+    const messageEng = message.value.split(" ");
+    return messageEng.length > 125;
+  } else {
+    return message.value.length > 300;
+  }
 });
 
 const postAnnouncement = () => {
@@ -95,12 +111,14 @@ const postAnnouncement = () => {
     <Card>
       <div class="text-left">
         <span class="text-3xl mr-4">{{ $t("Announcement.text") }}</span>
+        <p v-if="isMessageOver" class="text-red-500 text-sm">{{ $t("Announcement.over") }}</p>
       </div>
       <textarea class="border-2 w-[60%]" v-model="message"></textarea>
       <RegistPageButton
         v-if="isEditAnnouncement"
         :text="$t('Announcement.edit')"
         @click="postAnnouncement"
+        :disabled="isMessageOver"
       ></RegistPageButton>
     </Card>
   </div>

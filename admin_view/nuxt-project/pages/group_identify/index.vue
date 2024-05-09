@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).group_identify.read">
     <SubHeader pageTitle="識別番号" />
     <SubSubHeader>
       <template v-slot:refinement>
@@ -80,32 +80,16 @@
       </template>
     </AddModal>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-      headers: [
-        "参加団体ID",
-        "団体名",
-        "カテゴリ",
-        "識別番号",
-        "会場",
-        "ステージ",
-        "登録日時",
-        "編集日時",
-      ],
-      groupCategories: [
-        { id: 1, name: "食品販売" },
-        { id: 2, name: "物品販売" },
-        { id: 3, name: "ステージ" },
-        { id: 4, name: "展示・体験" },
-        { id: 5, name: "研究室" },
-        { id: 6, name: "国際" },
-        { id: 7, name: "実行委員" },
-        { id: 8, name: "その他" },
-      ],
+      headers:["参加団体ID", "団体名", "カテゴリ", "識別番号", "会場", "ステージ", "登録日時", "編集日時"],
+      groupCategories: [],
       num: null,
       isAddModal: false,
       isEditModal: false,
@@ -123,6 +107,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get('group_categories');
     const url =
       "/group_identification?fes_year_id=" +
       currentYearRes.data.fes_year_id +
@@ -136,33 +121,42 @@ export default {
     return {
       groupIdentifications: groupRes.data,
       yearList: yearsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };
   },
-  mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
-    
-    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
-    if (storedYearID) {
-      this.refYearID = Number(storedYearID);
-      this.updateFilters(this.refYearID, this.yearList);
-    } else {
-      this.refYears = 'Year';
-    }
-
-    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
-    if (storedCategoryID) {
-      this.refCategoryID = Number(storedCategoryID);
-      this.updateFilters(this.refCategoryID, this.groupCategories);
-    } else {
-      this.refGroupCategories = 'Category';
-    }
-    this.fetchFilteredData();
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+    mounted() {
+      window.addEventListener('scroll', this.saveScrollPosition);
+      
+      const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+      if (storedYearID) {
+        this.refYearID = Number(storedYearID);
+        this.updateFilters(this.refYearID, this.yearList);
+      } else {
+        this.refYears = 'Year';
+      }
+  
+      const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+      if (storedCategoryID) {
+        this.refCategoryID = Number(storedCategoryID);
+        this.updateFilters(this.refCategoryID, this.groupCategories);
+      } else {
+        this.refGroupCategories = 'Category';
+      }
+      this.fetchFilteredData();
+    },
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
 
     openAddModal(id, groupId, name, number) {
@@ -219,8 +213,11 @@ export default {
     },
     async refinementGroups(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
-      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
@@ -257,7 +254,10 @@ export default {
         this.groupIdentifications.push(res);
       }
       this.$nextTick(() => {
-        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
       });
     },
   },
