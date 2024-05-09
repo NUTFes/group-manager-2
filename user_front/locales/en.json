@@ -139,7 +139,9 @@
     "groupName": "group name",
     "shopName": "shop name",
     "category": "select category",
-    "activityDetails": "Activity Details"
+    "activityDetails": "Activity Details",
+    "international": "International",
+    "external": "External"
   },
 
   "Stage": {
