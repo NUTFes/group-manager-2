@@ -1,13 +1,13 @@
-export const groupCategoryList: { id: number; name: string }[] = [
-  { id: 1, name: "食品販売:Food stalls" },
-  { id: 2, name: "物品販売:Groups selling goods" },
-  { id: 3, name: "ステージ:Stage" },
-  { id: 4, name: "展示・体験:Exhibitions and hands-on groups" },
-  { id: 5, name: "研究室:Laboratory" },
-  { id: 6, name: "国際:International" },
-  { id: 7, name: "実行委員:executive committee" },
-  { id: 8, name: "その他:organizations other than formal" },
-];
+// export const groupCategoryList: { id: number; name: string }[] = [
+//   { id: 1, name: "食品販売:Food stalls" },
+//   { id: 2, name: "販売品:Groups selling goods" },
+//   { id: 3, name: "ステージ:Stage" },
+//   { id: 4, name: "展示・体験:Exhibitions and hands-on groups" },
+//   { id: 5, name: "研究室:Laboratory" },
+//   { id: 6, name: "国際:International" },
+//   { id: 7, name: "実行委員:executive committee" },
+//   { id: 8, name: "その他:organizations other than formal" },
+// ];
 
 export const gradeList: { id: number; name: string }[] = [
   { id: 1, name: "B1[学部1年]" },
@@ -23,7 +23,7 @@ export const gradeList: { id: number; name: string }[] = [
   { id: 11, name: "GD2[イノベ2年]" },
   { id: 12, name: "GD3[イノベ3年]" },
   { id: 13, name: "GD4[イノベ4年]" },
-  { id: 14, name: "GD4[イノベ5年]" },
+  { id: 14, name: "GD5[イノベ5年]" },
   { id: 15, name: "教員:university staff" },
   { id: 16, name: "その他:other" },
 ];
@@ -42,10 +42,10 @@ export const departmentList: { id: number; name: string }[] = [
   { id: 11, name: "量子・原子力統合工学分野/原子力システム安全工学専攻:Integrated Quantum and Nuclear Engineering" },
   { id: 12, name: "システム安全工学専攻:System Safety Engineering" },
   { id: 13, name: "技術科学イノベーション専攻:GIGAKU Innovation Group" },
-  { id: 14, name: "情報・制御工学分野:Information Science and Control Engineering" },
-  { id: 15, name: "材料工学分野:Materials Science" },
-  { id: 16, name: "エネルギー工学分野:Energy Engineering" },
-  { id: 17, name: "社会環境・生物機能工学分野:Integrated Bioscience and Technology" },
+  { id: 14, name: "情報・制御工学分野/情報・制御工学専攻:Information Science and Control Engineering" },
+  { id: 15, name: "材料工学分野/材料工学専攻:Materials Science" },
+  { id: 16, name: "エネルギー工学分野/エネルギー・環境工学専攻:Energy Engineering" },
+  { id: 17, name: "社会環境・生物機能工学分野/生物統合工学専攻:Integrated Bioscience and Technology" },
   { id: 18, name: "その他:other" },
 ]
 
@@ -72,10 +72,10 @@ export const M1toM2GradeDepartmentList: { id: number; name: string }[] = [
 ];
 
 export const D1toD3GradeDepartmentList: { id: number; name: string }[] = [
-  { id: 14, name: "情報・制御工学分野:Information Science and Control Engineering" },
-  { id: 15, name: "材料工学分野:Materials Science" },
-  { id: 16, name: "エネルギー工学分野:Energy Engineering" },
-  { id: 17, name: "社会環境・生物機能工学分野:Integrated Bioscience and Technology" },
+  { id: 14, name: "情報・制御工学分野/情報・制御工学専攻:Information Science and Control Engineering" },
+  { id: 15, name: "材料工学分野/材料工学専攻:Materials Science" },
+  { id: 16, name: "エネルギー工学分野/エネルギー・環境工学専攻:Energy Engineering" },
+  { id: 17, name: "社会環境・生物機能工学分野/生物統合工学専攻:Integrated Bioscience and Technology" },
 ];
 
 export const GDGradeDepartmentList: { id: number; name: string }[] = [

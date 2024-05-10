@@ -134,7 +134,7 @@ Rails.application.routes.draw do
       post "get_refinement_employees" => "employees_api#get_refinement_employees"
       post "get_search_employees" => "employees_api#get_search_employees"
 
-      #---販売食品申請ページ
+      #---販売品申請ページ
       get "get_food_product_index_for_admin_view" => "food_products_api#get_food_product_index_for_admin_view"
       get "get_food_product_show_for_admin_view/:id" => "food_products_api#get_food_product_show_for_admin_view"
       post "get_refinement_food_products" => "food_products_api#get_refinement_food_products"

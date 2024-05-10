@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).rental_orders.read">
     <SubHeader pageTitle="物品申請一覧">
       <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
         追加
@@ -122,6 +122,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -139,16 +140,7 @@ export default {
       refRentalItemID: 0,
       refGroupCategories: "Categories",
       refCategoryID: 0,
-      groupCategories: [
-        { id: 1, name: '食品販売' },
-        { id: 2, name: '物品販売' },
-        { id: 3, name: 'ステージ' },
-        { id: 4, name: '展示・体験' },
-        { id: 5, name: '研究室' },
-        { id: 6, name: '国際' },
-        { id: 7, name: '実行委員' },
-        { id: 8, name: 'その他' }
-      ],
+      groupCategories: [],
       searchText: "",
       groupID: null,
       rentalItemID: null,
@@ -161,6 +153,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get('group_categories');
     const url =
       "/api/v1/get_refinement_rental_orders?fes_year_id=" +
       currentYearRes.data.fes_year_id +
@@ -177,6 +170,7 @@ export default {
       rentalOrders: rentalOrdersRes.data,
       yearList: yearsRes.data,
       rentalItemsList: rentalItemsRes.data,
+      groupCategories: groupCategoryRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
     };

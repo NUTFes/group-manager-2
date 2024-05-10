@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 2024_05_07_065259) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "committee"
     t.boolean "is_international"
+    t.boolean "is_external"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

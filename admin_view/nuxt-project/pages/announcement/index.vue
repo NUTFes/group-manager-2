@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content"  v-if="this.$role(roleID).announcements.read">
     <SubHeader pageTitle="会場アナウンス文申請一覧">
       <CommonButton
         v-if="this.$role(roleID).announcements.create"
@@ -89,7 +89,8 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
+        <div v-if="isMessageOver" style="color: red;">アナウンス文は300字以内で入力してください。</div>
+        <CommonButton iconName="add_circle" :on_click="submit" :disabled="isMessageOver"
           >登録</CommonButton
         >
       </template>
@@ -98,6 +99,7 @@
       {{ snackMessage }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -145,6 +147,9 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    isMessageOver() {
+      return this.message.length > 300;
+    },
   },
   mounted() {
     window.addEventListener('scroll', this.saveScrollPosition);

@@ -118,7 +118,7 @@ export default {
         //   click: "/project_names",
         // },
         {
-          title: "代表者申請",
+          title: "代表・副代表申請",
           icon: "directions_walk",
           click: "/representatives",
         },
@@ -141,7 +141,7 @@ export default {
         },
         { title: "従業員申請", icon: "directions_run", click: "/employees" },
         {
-          title: "販売食品申請",
+          title: "販売品申請",
           icon: "fastfood",
           click: "/food_products",
         },

@@ -1,6 +1,6 @@
 <template>
-  <div class="main-content">
-    <SubHeader pageTitle="販売食品申請一覧">
+  <div class="main-content" v-if="this.$role(roleID).food_products.read">
+    <SubHeader pageTitle="販売品申請一覧">
       <CommonButton v-if="this.$role(roleID).food_products.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
@@ -71,7 +71,7 @@
     <AddModal
       @close="closeAddModal"
       v-if="isOpenAddModal"
-      title="販売食品申請の追加"
+      title="販売品申請の追加"
     >
       <template v-slot:form>
         <div>
@@ -128,6 +128,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -315,7 +316,7 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
-      window.open(url, "販売食品申請_CSV");
+      window.open(url, "販売品申請_CSV");
     },
   },
 };

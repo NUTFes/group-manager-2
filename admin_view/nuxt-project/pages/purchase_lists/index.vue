@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).purchase_lists.read">
     <SubHeader pageTitle="購入食品申請一覧">
       <CommonButton
         v-if="this.$role(roleID).purchase_lists.create"
@@ -94,7 +94,7 @@
           </select>
         </div>
         <div>
-          <h3>調理品目</h3>
+          <h3>販売品名</h3>
           <select v-model="foodProductID">
             <option disabled value="">選択してください</option>
             <option
@@ -151,6 +151,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -159,7 +160,7 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "調理品目", "購入品", "なまもの", "URL"],
+      headers: ["ID", "参加団体", "販売品名", "購入品", "なまもの", "URL"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
