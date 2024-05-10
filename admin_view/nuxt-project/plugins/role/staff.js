@@ -179,5 +179,11 @@ export const staffRole = {
         update: false,
         delete: false,
       },
+      order_status: {
+        read:   true,
+        create: true,
+        update: true,
+        delete: true,
+      },
   };
   

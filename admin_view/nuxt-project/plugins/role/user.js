@@ -179,4 +179,10 @@ export const userRole = {
     update: false,
     delete: false,
   },
+  order_status: {
+    read:   false,
+    create: false,
+    update: false,
+    delete: false,
+  },
 };
