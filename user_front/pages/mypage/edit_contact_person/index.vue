@@ -8,10 +8,11 @@ import { loginCheck } from "@/utils/methods";
 const router = useRouter();
 const config = useRuntimeConfig();
 
-const ContactPersonName = ref<string>("");
-const ContactPersonEmail = ref<string>("");
+const contactPersonName = ref<string>("");
+const contactPersonEmail = ref<string>("");
 const groupId = Number(localStorage.getItem("group_id"));
 const isSubmitting = ref<boolean>(false);
+const currentContactPerson = ref<ContactPerson>();
 
 const { meta } = useForm({
   validationSchema: contactPersonSchema,
@@ -25,49 +26,45 @@ onMounted(() => {
   const contactPersonUrl = config.APIURL + "/contact_persons/";
   axios.get(contactPersonUrl).then((response) => {
     const contactPersons: ContactPerson[] = response.data;
-    const contactPerson = contactPersons.find((cp) => cp.group_id === groupId);
-    ContactPersonName.value = contactPerson?.name || "";
-    ContactPersonEmail.value = contactPerson?.email || "";
-    console.log(contactPerson)
-    console.log(ContactPersonName.value)
-    console.log(ContactPersonEmail.value)
+    currentContactPerson.value = contactPersons.find((cp) => cp.group_id === groupId);
+    contactPersonName.value = currentContactPerson.value?.name || "";
+    contactPersonEmail.value = currentContactPerson.value?.email || "";
   });
 });
 
 const register = () => {
   isSubmitting.value = true;
-  console.log(ContactPersonName.value)
 
-  if (ContactPersonName.value) {
-    const contactPersonUrl = config.APIURL + "/contact_persons/" + groupId;
+  if (currentContactPerson.value) {
+    const contactPersonUrl = config.APIURL + "/contact_persons/" + currentContactPerson.value?.id;
     axios
-    .put(contactPersonUrl, {
-      group_id: groupId,
-      name: ContactPersonName.value,
-      email: ContactPersonEmail.value,
-    })
-    .then(() => {
-      alert("登録できました\nRegistration Success");
-      router.push("/mypage");
-    })
-    .catch(() => {
-      alert("登録できませんでした\nRegistration Failure");
+      .put(contactPersonUrl, {
+        group_id: groupId,
+        name: contactPersonName.value,
+        email: contactPersonEmail.value,
+      })
+      .then(() => {
+        alert("登録できました\nRegistration Success");
+        router.push("/mypage");
+      })
+      .catch(() => {
+        alert("登録できませんでした\nRegistration Failure");
     });
   } else {
     const contactPersonUrl = config.APIURL + "/contact_persons/";
     axios
-    .post(contactPersonUrl, {
-      group_id: groupId,
-      name: ContactPersonName.value,
-      email: ContactPersonEmail.value,
-    })
-    .then(() => {
-      alert("登録できました\nRegistration Success");
-      router.push("/mypage");
-    })
-    .catch(() => {
-      alert("登録できませんでした\nRegistration Failure");
-    });
+      .post(contactPersonUrl, {
+        group_id: groupId,
+        name: contactPersonName.value,
+        email: contactPersonEmail.value,
+      })
+      .then(() => {
+        alert("登録できました\nRegistration Success");
+        router.push("/mypage");
+      })
+      .catch(() => {
+        alert("登録できませんでした\nRegistration Failure");
+      });
   }
 };
 
@@ -93,7 +90,7 @@ const buttonDisabled = computed(() => {
           class="rounded-md border border-black p-2 text-xl"
           id="name"
           type="text"
-          v-model="ContactPersonName"
+          v-model="contactPersonName"
           @change="handleChangeContactPersonName"
         />
         <p class="text-red-500 text-sm" v-if="ContactPersonNameError">
@@ -108,7 +105,7 @@ const buttonDisabled = computed(() => {
           class="rounded-md border border-black p-2 text-xl"
           id="email"
           type="text"
-          v-model="ContactPersonEmail"
+          v-model="contactPersonEmail"
           @change="handleChangeContactPersonEmail"
         />
         <p class="text-red-500 text-sm" v-if="ContactPersonEmailError">
