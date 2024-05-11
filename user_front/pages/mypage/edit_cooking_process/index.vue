@@ -164,7 +164,7 @@ const buttonDisabled = computed(() => {
       </div>
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Group.shopName") }}
+          {{ $t("Cook.tentBefore") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"
@@ -179,22 +179,15 @@ const buttonDisabled = computed(() => {
       </div>
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Group.category") }}
+          {{ $t("Cook.cookAfter") }}
         </div>
-        <select
+        <input
           class="rounded-md border border-black p-2 text-xl"
-          id="category"
-          v-model="groupCategoryId"
-          @change="handleChangeCategory"
-        >
-          <option
-            v-for="item in groupCategoryList.data"
-            :value="item.id"
-            :key="item.id"
-          >
-            {{ item.name }}
-          </option>
-        </select>
+          id="group"
+          type="text"
+          v-model="groupName"
+          @change="handleChangeGroupName"
+        />
         <p class="text-red-500 text-sm" v-if="categoryError">
           {{ categoryError }}
         </p>
@@ -202,29 +195,7 @@ const buttonDisabled = computed(() => {
 
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Group.international") }}
-        </div>
-        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international" @change="handleChangeInternational">
-        <span class="slider round"></span>
-        <p class="text-red-500 text-sm" v-if="internarionalError">
-          {{ internarionalError }}
-        </p>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <div class="text-lg">
-          {{ $t("Group.external") }}
-        </div>
-        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="external" @change="handleChangeExternal">
-        <span class="slider round"></span>
-        <p class="text-red-500 text-sm" v-if="externalError">
-          {{ externalError }}
-        </p>
-      </div>
-
-      <div class="flex flex-col gap-2">
-        <div class="text-lg">
-          {{ $t("Group.activityDetails") }}
+          {{ $t("Cook.tentAfter") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"
