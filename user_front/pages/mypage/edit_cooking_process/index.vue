@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// フロントだけ作った。多分他のとこからデータ持ってきて入力データ送り返せるようにしていらないところを消したら完成する。
 import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { useForm, useField } from "vee-validate";
