@@ -31,7 +31,7 @@ export const groupSchema = object({
 
 // subRep登録のバリデーション
 export const subRepSchema = object({
-  name: string().required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる電話番号を入力してください"),
+  name: string().required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる氏名を入力してください"),
   department: string().required("入力してください\nPlease enter"),
   grade: string().required("入力してください\nPlease enter"),
   studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください\nPlease enter 8 single-byte numbers").required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる学籍番号を入力してください"),
