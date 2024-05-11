@@ -138,7 +138,7 @@ const buttonDisabled = computed(() => {
 <template>
   <div class="w-2/3 mx-auto">
     <div class="w-full text-2xl my-8 font-bold bg-[#eceff1] p-2 rounded-md">
-      {{ $t("Cook.cookBefore") }}
+      {{ $t("Cook.cookTitle") }}
     </div>
     <div v-if="!isEditGroup" class="text-3xl text-red-600 font-bold my-5">
       編集は締め切られました
@@ -146,7 +146,10 @@ const buttonDisabled = computed(() => {
     <div class="border p-4 my-4 rounded-md flex flex-col gap-8">
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Group.groupName") }}
+          <!--
+            $t("~~")の中身を書き換える
+          -->
+          {{ $t("Cook.cookBefore") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"

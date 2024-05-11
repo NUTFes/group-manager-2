@@ -360,8 +360,9 @@
   },
 
   "Cook": {
-    "cookBefor":"営業前調理場",
-    "tentBefor":"営業前テント内",
+    "cookTitle":"調理工程申請",
+    "cookBefore":"営業前調理場",
+    "tentBefore":"営業前テント内",
     "cookAfter":"営業中調理場",
     "tentAfter":"営業中テント内"
   }
