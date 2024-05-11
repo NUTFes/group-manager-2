@@ -22,10 +22,10 @@ const external = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
 // ここより上がもとからあったやつ ///
-const cookBefore = ref<string>("");
-const tentBefore = ref<string>("");
-const cookAfter = ref<string>("");
-const tentAfter = ref<string>("");
+const preOpenKitchen = ref<string>("");
+const preOpenTent = ref<string>("");
+const duringOpenKitchen = ref<string>("");
+const duringOpenTent = ref<string>("");
 
 const { meta } = useForm({
   validationSchema: groupSchema,
@@ -46,14 +46,14 @@ const { handleChange: handleChangeExternal, errorMessage: externalError } =
 const { handleChange: handleChangeCategory, errorMessage: categoryError } =
   useField("category");
 // ここより上のconstはもとからあったやつ ///
-const { handleChange: handleChangeCookBefore, errorMessage: cookBeforeError } =
-  useField("cookBefore");
-const { handleChange: handleChangeTentBefore, errorMessage: TentBeforeError } =
-  useField("cookBefore");
-const { handleChange: handleChangeCookAfter, errorMessage: cookAfterError } =
-  useField("cookAfter");
-const { handleChange: handleChangeTentAfter, errorMessage: tentAfterError } =
-  useField("tentAfter");
+const { handleChange: handleChangepreOpenKitchen, errorMessage: preOpenKitchenError } =
+  useField("preOpenKitchen");
+const { handleChange: handleChangepreOpenTent, errorMessage: preOpenTentError } =
+  useField("preOpenKitchen");
+const { handleChange: handleChangeduringOpenKitchen, errorMessage: duringOpenKitchenError } =
+  useField("duringOpenKitchen");
+const { handleChange: handleChangeduringOpenTent, errorMessage: duringOpenTentError } =
+  useField("duringOpenTent");
 
 onMounted(() => {// せいかいはこっちか？
   loginCheck();
@@ -67,10 +67,10 @@ onMounted(() => {// せいかいはこっちか？
     external.value = response.data.data.is_external;
     //ここより上のvalueはもとからあったやつ///
     //これ多分データーベースから持ってきた初期値いれるやつ
-    cookBefore.value = response.data.data.cook_before;
-    tentBefore.value = response.data.data.tent_before;
-    cookAfter.value = response.data.data.cook_after;
-    tentAfter.value = response.data.data.tent_after;
+    preOpenKitchen.value = response.data.data.pre_open_kitchen;
+    preOpenTent.value = response.data.data.pre_open_tent;
+    duringOpenKitchen.value = response.data.data.during_open_kitchen;
+    duringOpenTent.value = response.data.data.during_open_tent;
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -117,10 +117,10 @@ const register = () => {
         is_international: international.value,
         is_external: external.value, 
         // ここより上はもとからあったやつ///
-        cook_before: cookBefore.value,
-        tent_before: tentBefore.value,
-        cook_after: cookAfter.value,
-        tent_after: tentAfter.value
+        pre_open_kitchen: preOpenKitchen.value,
+        pre_open_tent: preOpenTent.value,
+        during_open_kitchen: duringOpenKitchen.value,
+        during_open_tent: duringOpenTent.value
       },
       {
         headers: {
@@ -158,10 +158,10 @@ const buttonDisabled = computed(() => {
     internarionalError.value || 
     externalError.value 
     // ここより上はもとからあったやつ///
-    ||cookBeforeError.value||
-    tentBeforeError.value||
-    cookAfterError.value||
-    tentAfterError.value
+    ||preOpenKitchenError.value||
+    preOpenTentError.value||
+    duringOpenKitchenError.value||
+    duringOpenTentError.value
   );
 });
 // ボタンを押せないようにするやつ
@@ -183,63 +183,63 @@ const buttonDisabled = computed(() => {
           <!--
             $t("~~")の中身を書き換える
           -->
-          {{ $t("Cook.cookBefore") }}
+          {{ $t("Cook.preOpenKitchen") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"
           id="group"
           type="text"
-          v-model="CookBefore"
-          @change="handleChangeCookBefore"
+          v-model="preOpenKitchen"
+          @change="handleChangepreOpenKitchen"
         />
-        <p class="text-red-500 text-sm" v-if="cookBeforeError">
-          {{ cookBeforeError }}
+        <p class="text-red-500 text-sm" v-if="preOpenKitchenError">
+          {{ preOpenKitchenError }}
         </p>
       </div>
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Cook.tentBefore") }}
+          {{ $t("Cook.preOpenTent") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"
           id="project"
           type="text"
-          v-model="tentBefore"
-          @change="handleChangeTentBefore"
+          v-model="preOpenTent"
+          @change="handleChangepreOpenTent"
         />
-        <p class="text-red-500 text-sm" v-if="tentBeforeError">
-          {{ tentBeforeError }}
+        <p class="text-red-500 text-sm" v-if="preOpenTentError">
+          {{ preOpenTentError }}
         </p>
       </div>
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Cook.cookAfter") }}
+          {{ $t("Cook.duringOpenKitchen") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"
           id="group"
           type="text"
-          v-model="cookAfter"
-          @change="handleChangeCookAfter"
+          v-model="duringOpenKitchen"
+          @change="handleChangeduringOpenKitchen"
         />
-        <p class="text-red-500 text-sm" v-if="cookAfterError">
-          {{ cookAfterError }}
+        <p class="text-red-500 text-sm" v-if="duringOpenKitchenError">
+          {{ duringOpenKitchenError }}
         </p>
       </div>
 
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Cook.tentAfter") }}
+          {{ $t("Cook.duringOpenTent") }}
         </div>
         <input
           class="rounded-md border border-black p-2 text-xl"
           id="activity"
           type="text"
-          v-model="tentAfter"
-          @change="handleChangeTentAfter"
+          v-model="duringOpenTent"
+          @change="handleChangeduringOpenTent"
         />
-        <p class="text-red-500 text-sm" v-if="tentAfterError">
-          {{ tentAfterError }}
+        <p class="text-red-500 text-sm" v-if="duringOpenTentError">
+          {{ duringOpenTentError }}
         </p>
       </div>
     </div>
