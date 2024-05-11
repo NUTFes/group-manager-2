@@ -181,8 +181,8 @@ export default {
       const url =
         "/api/v1/get_refinement_cooking_process_orders?fes_year_id=" +
         this.refYearID;
-      this.$axios.get(url).then((res) => {
-        this.cooking_process_orders.push(res.data.data);
+      this.$axios.post(url).then((res) => {
+        this.cooking_process_orders = res.data.data;
       });
     },
     async submit() {
@@ -214,7 +214,7 @@ export default {
         );
         this.openSnackBar("調理工程申請を登録しました");
         this.clearForm();
-        this.reload(response.data.id);
+        this.reload();
         this.closeAddModal();
       } catch (error) {
         this.openSnackBar(
