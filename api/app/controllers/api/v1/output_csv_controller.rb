@@ -284,8 +284,7 @@ class Api::V1::OutputCsvController < ApplicationController
           stage_common_option.own_equipment ? "使用する" : "使用しない",
           stage_common_option.bgm ? "使用する" : "使用しない",
           stage_common_option.camera_permission ? "許可する" : "許可しない",
-          stage_common_option.loud_sound ? "出す" : "出さない",
-          stage_common_option.stage_content
+          stage_common_option.loud_sound ? "出す" : "出さない"
         ]
         csv << column_values
       end

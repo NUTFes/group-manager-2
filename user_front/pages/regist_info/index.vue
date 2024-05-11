@@ -37,7 +37,6 @@ interface StageOption {
   bgm: boolean;
   camera_permission: boolean;
   loud_sound: boolean;
-  stage_content: string;
 }
 
 interface Place {
@@ -531,7 +530,6 @@ const isStageOverlap = computed(() => {
             :bgm="stageOption?.bgm"
             :camera-permission="stageOption?.camera_permission"
             :loud-sound="stageOption?.loud_sound"
-            :stage-content="stageOption?.stage_content"
             @reload-stage-option="reload"
           />
         </div>
