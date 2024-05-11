@@ -48,11 +48,11 @@
               <th>学外</th>
               <td>{{ group.group.is_external }}</td>
             </tr>
-            <tr>
+            <tr v-if="external">
               <th>実行委員担当者</th>
               <td>{{ contactPersonName }}</td>
             </tr>
-            <tr>
+            <tr v-if="external">
               <th>実行委員担当者メールアドレス</th>
               <td>{{ contactPersonEmail }}</td>
             </tr>
@@ -124,11 +124,11 @@
             <h3>学外</h3>
             <input type="checkbox" v-model="external"/>
           </div>
-          <div>
+          <div v-if="external">
             <h3>実行委員担当者</h3>
             <input v-model="contactPersonName" placeholder="入力してください" />
           </div>
-          <div>
+          <div v-if="external">
             <h3>実行委員担当者メールアドレス</h3>
             <input v-model="contactPersonEmail" placeholder="入力してください" />
           </div>
@@ -221,6 +221,7 @@
 
       const groupUrl = "/api/v1/get_group_show_for_admin_view/" + routeId;
       const groupRes = await $axios.$get(groupUrl);
+      console.log(groupRes.data);
 
       const catUrl = "/group_categories";
       const catRes = await $axios.$get(catUrl);

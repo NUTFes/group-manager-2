@@ -48,12 +48,9 @@ const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
   { to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" },
 ];
-if (registGroupCategoryId.value === 1) {
-  links.push({ to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" });
-}
 
 const shouldDisplayLink = (link: { to: string; text: string }) => {
-  return link.text !== "Mypage.editContactPerson" || is_external;
+  return link.text !== "Mypage.editContactPerson" || is_external.value;
 }
 </script>
 
