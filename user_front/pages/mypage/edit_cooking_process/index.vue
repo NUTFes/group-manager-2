@@ -20,6 +20,11 @@ const international = ref<boolean>();
 const external = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
+// ここより上がもとからあったやつ ///
+const cookBefore = ref<string>("");
+const tentBefore = ref<string>("");
+const cookAfter = ref<string>("");
+const tentAfter = ref<string>("");
 
 const { meta } = useForm({
   validationSchema: groupSchema,
@@ -39,8 +44,17 @@ const { handleChange: handleChangeExternal, errorMessage: externalError } =
   useField("external");
 const { handleChange: handleChangeCategory, errorMessage: categoryError } =
   useField("category");
+// ここより上のconstはもとからあったやつ ///
+const { handleChange: handleChangeCookBefore, errorMessage: cookBeforeError } =
+  useField("cookBefore");
+const { handleChange: handleChangeTentBefore, errorMessage: TentBeforeError } =
+  useField("cookBefore");
+const { handleChange: handleChangeCookAfter, errorMessage: cookAfterError } =
+  useField("cookAfter");
+const { handleChange: handleChangeTentAfter, errorMessage: tentAfterError } =
+  useField("tentAfter");
 
-onMounted(() => {
+onMounted(() => {// せいかいはこっちか？
   loginCheck();
   const groupUrl = config.APIURL + "/groups/" + groupId;
   axios.get(groupUrl).then((response) => {
@@ -50,6 +64,12 @@ onMounted(() => {
     groupName.value = response.data.data.name;
     international.value = response.data.data.is_international;
     external.value = response.data.data.is_external;
+    //ここより上のvalueはもとからあったやつ///
+    //これ多分データーベースから持ってきた初期値いれるやつ
+    cookBefore.value = response.data.data.cook_before;
+    tentBefore.value = response.data.data.tent_before;
+    cookAfter.value = response.data.data.cook_after;
+    tentAfter.value = response.data.data.tent_after;
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -84,7 +104,7 @@ const register = () => {
   const registUrl = config.APIURL + "/groups/" + groupId;
   axios.defaults.headers.common["Content-Type"] = "application/json";
   axios
-    .put(
+    .put(// 多分ここがデータ送り出すとこ
       registUrl,
       {
         name: groupName.value,
@@ -94,7 +114,12 @@ const register = () => {
         group_category_id: groupCategoryId.value,
         fes_year_id: fesYearId.value,
         is_international: international.value,
-        is_external: external.value,
+        is_external: external.value, 
+        // ここより上はもとからあったやつ///
+        cook_before: cookBefore.value,
+        tent_before: tentBefore.value,
+        cook_after: cookAfter.value,
+        tent_after: tentAfter.value
       },
       {
         headers: {
@@ -121,7 +146,7 @@ const register = () => {
     );
 };
 
-const groupCategoryList = await $fetch<GroupCategory>(config.APIURL + "/group_categories");
+const groupCategoryList = await $fetch<GroupCategory>(config.APIURL + "/group_categories");// 変数が使用されてる形跡がない
 
 const buttonDisabled = computed(() => {
   return !!(
@@ -129,10 +154,18 @@ const buttonDisabled = computed(() => {
     projectNameError.value ||
     categoryError.value ||
     activityError.value ||
-    internarionalError.value ||
-    externalError.value
+    internarionalError.value || 
+    externalError.value 
+    // ここより上はもとからあったやつ///
+    ||cookBeforeError.value||
+    tentBeforeError.value||
+    cookAfterError.value||
+    tentAfterError.value
   );
 });
+// ボタンを押せないようにするやつ
+// !! <- 二重否定:複数の否定演算子を連続して使用することで、明示的にあらゆる値を対応する論理型プリミティブに変換することができます。
+// だから、各値がエラー文持ってたら絶対にtrueを返す
 </script>
 
 <template>
@@ -155,11 +188,11 @@ const buttonDisabled = computed(() => {
           class="rounded-md border border-black p-2 text-xl"
           id="group"
           type="text"
-          v-model="groupName"
-          @change="handleChangeGroupName"
+          v-model="CookBefore"
+          @change="handleChangeCookBefore"
         />
-        <p class="text-red-500 text-sm" v-if="groupNameError">
-          {{ groupNameError }}
+        <p class="text-red-500 text-sm" v-if="cookBeforeError">
+          {{ cookBeforeError }}
         </p>
       </div>
       <div class="flex flex-col gap-2">
@@ -170,11 +203,11 @@ const buttonDisabled = computed(() => {
           class="rounded-md border border-black p-2 text-xl"
           id="project"
           type="text"
-          v-model="projectName"
-          @change="handleChangeProjectName"
+          v-model="tentBefore"
+          @change="handleChangeTentBefore"
         />
-        <p class="text-red-500 text-sm" v-if="projectNameError">
-          {{ projectNameError }}
+        <p class="text-red-500 text-sm" v-if="tentBeforeError">
+          {{ tentBeforeError }}
         </p>
       </div>
       <div class="flex flex-col gap-2">
@@ -185,11 +218,11 @@ const buttonDisabled = computed(() => {
           class="rounded-md border border-black p-2 text-xl"
           id="group"
           type="text"
-          v-model="groupName"
-          @change="handleChangeGroupName"
+          v-model="cookAfter"
+          @change="handleChangeCookAfter"
         />
-        <p class="text-red-500 text-sm" v-if="categoryError">
-          {{ categoryError }}
+        <p class="text-red-500 text-sm" v-if="cookAfterError">
+          {{ cookAfterError }}
         </p>
       </div>
 
@@ -201,11 +234,11 @@ const buttonDisabled = computed(() => {
           class="rounded-md border border-black p-2 text-xl"
           id="activity"
           type="text"
-          v-model="activity"
-          @change="handleChangeActivity"
+          v-model="tentAfter"
+          @change="handleChangeTentAfter"
         />
-        <p class="text-red-500 text-sm" v-if="activityError">
-          {{ activityError }}
+        <p class="text-red-500 text-sm" v-if="tentAfterError">
+          {{ tentAfterError }}
         </p>
       </div>
     </div>
