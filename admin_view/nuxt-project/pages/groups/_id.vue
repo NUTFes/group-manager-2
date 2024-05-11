@@ -49,6 +49,14 @@
               <td>{{ group.group.is_external }}</td>
             </tr>
             <tr>
+              <th>実行委員担当者</th>
+              <td>{{ contactPersonName }}</td>
+            </tr>
+            <tr>
+              <th>実行委員担当者メールアドレス</th>
+              <td>{{ contactPersonEmail }}</td>
+            </tr>
+            <tr>
               <th>企画名</th>
               <td>{{ group.group.project_name }}</td>
             </tr>
@@ -117,6 +125,14 @@
             <input type="checkbox" v-model="external"/>
           </div>
           <div>
+            <h3>実行委員担当者</h3>
+            <input v-model="contactPersonName" placeholder="入力してください" />
+          </div>
+          <div>
+            <h3>実行委員担当者メールアドレス</h3>
+            <input v-model="contactPersonEmail" placeholder="入力してください" />
+          </div>
+          <div>
             <h3>企画名</h3>
             <input v-model="projectName" placeholder="入力してください" />
           </div>
@@ -180,6 +196,8 @@
         committee: "",
         international: false,
         external: false,
+        contactPersonName: "",
+        contactPersonEmail: "",
 
         isOpenEditModal: false,
         isOpenDeleteModal: false,
@@ -210,6 +228,17 @@
       const yearsUrl = "/fes_years";
       const yearsRes = await $axios.$get(yearsUrl);
 
+      const contactPersonUrl = "/contact_persons";
+      let contactPersonRes = null;
+      await $axios.get(contactPersonUrl)
+        .then((response) => {
+          const contactPersons = response.data;
+          contactPersonRes = contactPersons.find((cp) => cp.group_id == parseInt(routeId));
+        })
+        .catch((error) => {
+          console.error("Error fetching contact persons: ", error);
+        });
+
       return {
         group: groupRes.data,
         committee: groupRes.data.committee,
@@ -217,6 +246,8 @@
         projectName: groupRes.data.group.project_name,
         international: groupRes.data.group.is_international,
         external: groupRes.data.group.is_external,
+        contactPersonName: contactPersonRes ? contactPersonRes.name : "",
+        contactPersonEmail: contactPersonRes ? contactPersonRes.email : "",
         activity: groupRes.data.group.activity,
         groupCategoryId: groupRes.data.group.group_category_id,
         fesYearId: groupRes.data.group.fes_year_id,
@@ -262,7 +293,6 @@
         this.group = reGroupRes.data;
       },
       async editGroup() {
-        console.log(this.group.group.id);
         const putGroupUrl =
           "/groups/" +
           this.group.group.id +
@@ -282,7 +312,6 @@
           this.international +
           "&is_external=" +
           this.external;
-        console.log(putGroupUrl);
 
         await this.$axios.$put(putGroupUrl).then((response) => {
           this.openSnackBar(this.groupName + "を編集しました");
