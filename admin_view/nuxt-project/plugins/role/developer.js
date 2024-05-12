@@ -185,4 +185,10 @@ export const developerRole = {
     update: true,
     delete: true,
   },
+  cooking_process_orders:{
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
 };
