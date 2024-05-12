@@ -304,11 +304,19 @@ export default {
       for (const res of refRes.data) {
         this.placeOrders.push(res);
       };
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchPlaceOrders();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchPlaceOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.placeOrders = [];
       const searchUrl =
         "/api/v1/get_search_place_orders?word=" + this.searchText;

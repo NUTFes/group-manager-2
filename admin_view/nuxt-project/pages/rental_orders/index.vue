@@ -264,11 +264,19 @@ export default {
       for (const res of refRes.data) {
         this.rentalOrders.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchRentalOrders();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchRentalOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.rentalOrders = [];
       const searchUrl =
         "/api/v1/get_search_rental_orders?word=" + this.searchText;

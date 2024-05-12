@@ -44,10 +44,6 @@
             <td>{{ stageCommonOption.stage_common_option.loud_sound }}</td>
           </tr>
           <tr>
-            <th>ステージ内容</th>
-            <td>{{ stageCommonOption.stage_common_option.stage_content }}</td>
-          </tr>
-          <tr>
             <th>登録日時</th>
             <td>
               {{
@@ -121,10 +117,6 @@
             </option>
           </select>
         </div>
-        <div>
-          <h3>ステージ内容</h3>
-          <textarea v-model="stageContent" placeholder="入力してください" />
-        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
@@ -180,7 +172,6 @@ export default {
       bgm: "",
       cameraPermission: "",
       loudSound: "",
-      stageContent: "",
     };
   },
   async asyncData({ $axios, route }) {
@@ -201,7 +192,6 @@ export default {
       bgm: response.data.stage_common_option.bgm,
       cameraPermission: response.data.stage_common_option.camera_permission,
       loudSound: response.data.stage_common_option.loud_sound,
-      stageContent: response.data.stage_common_option.stage_content,
     };
   },
   computed: {
@@ -253,9 +243,7 @@ export default {
         "&camera_permission=" +
         this.cameraPermission +
         "&loud_sound=" +
-        this.loudSound +
-        "&stage_content=" +
-        this.stageContent;
+        this.loudSound;
       console.log(putStageOptionUrl);
 
       await this.$axios.$put(putStageOptionUrl).then(() => {

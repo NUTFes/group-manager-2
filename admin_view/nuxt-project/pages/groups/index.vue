@@ -1,7 +1,11 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).groups.read">
     <SubHeader pageTitle="参加団体申請一覧">
-      <CommonButton v-if="this.$role(roleID).groups.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).groups.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -102,7 +106,11 @@
           <h3>申請者</h3>
           <select v-model="committee">
             <option disabled value="">選択してください</option>
-            <option v-for="applicant in applicantList" :key="applicant.id" :value="applicant.bool">
+            <option
+              v-for="applicant in applicantList"
+              :key="applicant.id"
+              :value="applicant.bool"
+            >
               {{ applicant.value }}
             </option>
           </select>
@@ -227,7 +235,7 @@ export default {
   async asyncData({ $axios }) {
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
-    const groupCategoryRes = await $axios.$get('/group_categories')
+    const groupCategoryRes = await $axios.$get("/group_categories");
     // const url = "/api/v1/get_group_index_for_admin_view";
     const url =
       "/api/v1/get_refinement_groups?fes_year_id=" +
@@ -253,64 +261,86 @@ export default {
     }),
   },
   mounted() {
-    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
       this.updateFilters(this.refYearID, this.yearList);
     } else {
-      this.refYears = 'Year';
+      this.refYears = "Year";
     }
 
-    const storedCategoryID = localStorage.getItem(this.$route.path + 'RefCategory');
+    const storedCategoryID = localStorage.getItem(
+      this.$route.path + "RefCategory"
+    );
     if (storedCategoryID) {
       this.refCategoryID = Number(storedCategoryID);
       this.updateFilters(this.refCategoryID, this.groupCategories);
     } else {
-      this.refGroupCategories = 'Categories';
+      this.refGroupCategories = "Categories";
     }
 
-    const storedInternationalID = localStorage.getItem(this.$route.path + 'RefInternational');
+    const storedInternationalID = localStorage.getItem(
+      this.$route.path + "RefInternational"
+    );
     if (storedInternationalID) {
       this.refInternationalID = Number(storedInternationalID);
       this.updateFilters(this.refInternationalID, this.internationalList);
     } else {
-      this.refInternational = 'International';
+      this.refInternational = "International";
     }
 
-    const storedExternalID = localStorage.getItem(this.$route.path + 'RefExternal');
+    const storedExternalID = localStorage.getItem(
+      this.$route.path + "RefExternal"
+    );
     if (storedExternalID) {
       this.refExternalID = Number(storedExternalID);
       this.updateFilters(this.refExternalID, this.externalList);
     } else {
-      this.refExternal = 'External';
+      this.refExternal = "External";
     }
 
-    const storedCommitteeID = localStorage.getItem(this.$route.path + 'RefCommittee');
+    const storedCommitteeID = localStorage.getItem(
+      this.$route.path + "RefCommittee"
+    );
     if (storedCommitteeID) {
       this.refCommitteeID = Number(storedCommitteeID);
       this.updateFilters(this.refCommitteeID, this.applicantList);
     } else {
-      this.refCommittee = '申請者';
+      this.refCommittee = "申請者";
     }
     this.fetchFilteredData();
 
-    window.addEventListener('scroll', this.saveScrollPosition);
+    window.addEventListener("scroll", this.saveScrollPosition);
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
     async refinementGroups(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
-      localStorage.setItem(this.$route.path + 'RefCategory', this.refCategoryID);
-      localStorage.setItem(this.$route.path + 'RefInternational', this.refInternationalID);
-      localStorage.setItem(this.$route.path + 'RefExternal', this.refExternalID);
-      localStorage.setItem(this.$route.path + 'RefCommittee', this.refCommitteeID);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
+      localStorage.setItem(
+        this.$route.path + "RefInternational",
+        this.refInternationalID
+      );
+      localStorage.setItem(
+        this.$route.path + "RefExternal",
+        this.refExternalID
+      );
+      localStorage.setItem(
+        this.$route.path + "RefCommittee",
+        this.refCommitteeID
+      );
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
-      console.log(item_id, name_list[0])
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
@@ -336,7 +366,7 @@ export default {
         if (item_id == 0) {
           this.refCommittee = "ALL";
         } else {
-          this.refCommittee = name_list[item_id -1].value;
+          this.refCommittee = name_list[item_id - 1].value;
         }
         // internationalで絞り込むとき
       } else if (Object.is(name_list, this.internationalList)) {
@@ -345,7 +375,7 @@ export default {
         if (item_id == 0) {
           this.refInternational = "ALL";
         } else {
-          this.refInternational = name_list[item_id -1].value;
+          this.refInternational = name_list[item_id - 1].value;
         }
         // externalで絞り込むとき
       } else if (Object.is(name_list, this.externalList)) {
@@ -354,7 +384,7 @@ export default {
         if (item_id == 0) {
           this.refExternal = "ALL";
         } else {
-          this.refExternal = name_list[item_id -1].value;
+          this.refExternal = name_list[item_id - 1].value;
         }
       }
     },
@@ -375,11 +405,22 @@ export default {
       for (const res of refRes.data) {
         this.groups.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchGroups();
+      }
       this.$nextTick(() => {
-        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
       });
     },
     async searchGroups() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.groups = [];
       const searchUrl = "/api/v1/get_search_groups?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);

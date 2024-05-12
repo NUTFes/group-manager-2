@@ -165,10 +165,6 @@
             </option>
           </select>
         </div>
-        <div>
-          <h3>ステージ内容</h3>
-          <textarea v-model="stageContent" placeholder="入力してください" />
-        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitEmployee"
@@ -221,7 +217,6 @@ export default {
       bgm: "",
       cameraPermission: "",
       loudSound: "",
-      stageContent: "",
       //refinement
       stageCommonOption: [],
       searchText: "",
@@ -392,11 +387,19 @@ export default {
       for (const res of refRes.data) {
         this.stageCommonOption.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchStageCommonOptions();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchStageCommonOptions() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.stageCommonOption = [];
       const searchUrl =
         "/api/v1/get_search_stage_common_options?word=" + this.searchText;
@@ -432,9 +435,7 @@ export default {
         "&camera_permission=" +
         this.cameraPermission +
         "&loud_sound=" +
-        this.loudSound +
-        "&stage_content=" +
-        this.stageContent;
+        this.loudSound;
       console.log(postStageOptionUrl);
 
       await this.$axios.$post(postStageOptionUrl).then((response) => {
@@ -444,7 +445,6 @@ export default {
         this.bgm = "";
         this.cameraPermission = "";
         this.loudSound = "";
-        this.stageContent = "";
         this.refinementStageCommonOptions(0, this.yearList);
         this.closeAddModal();
       });

@@ -284,8 +284,7 @@ class Api::V1::OutputCsvController < ApplicationController
           stage_common_option.own_equipment ? "使用する" : "使用しない",
           stage_common_option.bgm ? "使用する" : "使用しない",
           stage_common_option.camera_permission ? "許可する" : "許可しない",
-          stage_common_option.loud_sound ? "出す" : "出さない",
-          stage_common_option.stage_content
+          stage_common_option.loud_sound ? "出す" : "出さない"
         ]
         csv << column_values
       end
@@ -449,6 +448,26 @@ class Api::V1::OutputCsvController < ApplicationController
       end
     end
     send_data(csv_data, filename:"会場アナウンス文.csv")
+  end
+
+  def output_cooking_process_orders_csv
+    @cooking_process_orders = CookingProcessOrder.all
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(参加団体名 営業前:調理場 営業前:テント内 営業中:調理場 営業中:テント内)
+      csv << column_name
+      @cooking_process_orders.each do |cooking_process_order|
+        column_values = [
+          cooking_process_order.group.name,
+          cooking_process_order.pre_open_kitchen,
+          cooking_process_order.pre_open_tent,
+          cooking_process_order.during_open_kitchen,
+          cooking_process_order.during_open_tent
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename:"調理工程申請.csv")
   end
 
   def output_public_relations_csv

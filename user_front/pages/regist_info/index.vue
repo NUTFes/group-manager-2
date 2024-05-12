@@ -37,7 +37,6 @@ interface StageOption {
   bgm: boolean;
   camera_permission: boolean;
   loud_sound: boolean;
-  stage_content: string;
 }
 
 interface Place {
@@ -231,7 +230,8 @@ onMounted(() => {
       isEditPower.value = response.data.data[0].is_edit_power_order;
       isEditItem.value = response.data.data[0].is_edit_rental_order;
       isEditStage.value = response.data.data[0].is_edit_stage_order;
-      isEditStageOption.value = response.data.data[0].is_edit_stage_common_option;
+      isEditStageOption.value =
+        response.data.data[0].is_edit_stage_common_option;
       isEditEmployee.value = response.data.data[0].is_edit_employee;
       isEditFood.value = response.data.data[0].is_edit_food_product;
       isEditPurchase.value = response.data.data[0].is_edit_purchase_list;
@@ -392,15 +392,7 @@ const isStageOverlap = computed(() => {
             }}
           </div>
         </li>
-        <li
-          v-if="
-            groupCategoryId != 3 &&
-            groupCategoryId != 4 &&
-            groupCategoryId != 5 &&
-            groupCategoryId != 6
-          "
-          @click="tab = 9"
-        >
+        <li v-if="groupCategoryId === 1" @click="tab = 9">
           <div :class="{ select: tab === 9 }" class="title">
             {{ $t("RegistInfo.purchase") }}
           </div>
@@ -411,7 +403,10 @@ const isStageOverlap = computed(() => {
       <div class="ml-12 pt-4">
         <!-- 副代表申請  -->
         <div v-show="tab === 1">
-          <div v-if="!isEditSubRep" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isEditSubRep"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集は締め切られました
           </div>
           <RegistInfoCardSubRep
@@ -474,17 +469,26 @@ const isStageOverlap = computed(() => {
         <!-- ステージ申請 group_category_id === ３ -->
         <div v-show="tab === 3" class="flex flex-col gap-4">
           <Button
-          v-if="isAddStage && !isOverStage && !isStageOverlap"
-          class="fixed right-0 bottom-0 m-10 mb-14"
-          @click="openAddStageModal()"
+            v-if="isAddStage && !isOverStage && !isStageOverlap"
+            class="fixed right-0 bottom-0 m-10 mb-14"
+            @click="openAddStageModal()"
           />
-          <div v-if="!isAddStage && !isEditStage" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isAddStage && !isEditStage"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加・編集・削除は締め切られました
           </div>
-          <div v-else-if="!isAddStage" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isAddStage"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加は締め切られました
           </div>
-          <div v-else-if="!isEditStage" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isEditStage"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集・削除は締め切られました
           </div>
           <div v-if="isStageOverlap" class="text-red-500">
@@ -521,7 +525,10 @@ const isStageOverlap = computed(() => {
 
         <!-- ステージオプション申請 group_category_id === ３ -->
         <div v-if="groupCategoryId === 3" v-show="tab === 4">
-          <div v-if="!isEditStageOption" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isEditStageOption"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集は締め切られました
           </div>
           <RegistInfoCardStageOption
@@ -531,7 +538,6 @@ const isStageOverlap = computed(() => {
             :bgm="stageOption?.bgm"
             :camera-permission="stageOption?.camera_permission"
             :loud-sound="stageOption?.loud_sound"
-            :stage-content="stageOption?.stage_content"
             @reload-stage-option="reload"
           />
         </div>
@@ -544,13 +550,22 @@ const isStageOverlap = computed(() => {
             @click="openAddPowerModal()"
           />
           <!-- 電力の合計を計算して表示する -->
-          <div v-if="!isAddPower && !isEditPower" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isAddPower && !isEditPower"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加・編集・削除は締め切られました
           </div>
-          <div v-else-if="!isAddPower" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isAddPower"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加は締め切られました
           </div>
-          <div v-else-if="!isEditPower" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isEditPower"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集・削除は締め切られました
           </div>
           <div class="mb-4">
@@ -599,13 +614,22 @@ const isStageOverlap = computed(() => {
             class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddItemModal()"
           />
-          <div v-if="!isAddItem && !isEditItem" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isAddItem && !isEditItem"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加・編集・削除は締め切られました
           </div>
-          <div v-else-if="!isAddItem" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isAddItem"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加は締め切られました
           </div>
-          <div v-else-if="!isEditItem" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isEditItem"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集・削除は締め切られました
           </div>
           <div v-if="isRentalItemOverlap" class="text-red-500">
@@ -641,13 +665,22 @@ const isStageOverlap = computed(() => {
             class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddEmployeeModal()"
           />
-          <div v-if="!isAddEmployee && !isEditEmployee" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isAddEmployee && !isEditEmployee"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加・編集・削除は締め切られました
           </div>
-          <div v-else-if="!isAddEmployee" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isAddEmployee"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加は締め切られました
           </div>
-          <div v-else-if="!isEditEmployee" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isEditEmployee"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集・削除は締め切られました
           </div>
           <div class="mt--9 flex flex-wrap gap-4">
@@ -676,13 +709,22 @@ const isStageOverlap = computed(() => {
             class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddFoodModal()"
           />
-          <div v-if="!isAddFood && !isEditFood" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isAddFood && !isEditFood"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加・編集・削除は締め切られました
           </div>
-          <div v-else-if="!isAddFood" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isAddFood"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加は締め切られました
           </div>
-          <div v-else-if="!isEditFood" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isEditFood"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集・削除は締め切られました
           </div>
           <div class="mb-8" v-for="f in food" :key="f.toString()">
@@ -707,19 +749,28 @@ const isStageOverlap = computed(() => {
         </div>
 
         <!-- 購入品申請 -->
-        <div v-show="tab === 9">
+        <div v-if="groupCategoryId === 1" v-show="tab === 9">
           <Button
             v-if="isAddPurchase"
             class="fixed right-0 bottom-0 m-10 mb-14"
             @click="openAddPurchaseModal()"
           />
-          <div v-if="!isAddPurchase && !isEditPurchase" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-if="!isAddPurchase && !isEditPurchase"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加・編集・削除は締め切られました
           </div>
-          <div v-else-if="!isAddPurchase" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isAddPurchase"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             追加は締め切られました
           </div>
-          <div v-else-if="!isEditPurchase" class="text-3xl text-red-600 font-bold my-5">
+          <div
+            v-else-if="!isEditPurchase"
+            class="text-3xl text-red-600 font-bold my-5"
+          >
             編集・削除は締め切られました
           </div>
           <div v-for="f in food" :key="f.toString()">

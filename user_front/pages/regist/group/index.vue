@@ -106,7 +106,7 @@ const registerCategory = async () => {
 
           <div class="flex flex-col md:flex-row">
             <p class="label">{{ $t('Group.category') }}</p>
-            <select class="w-72" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
+            <select class="form w-72" v-model="registerParams.categoryId" @change="handleChangeCategory" :class="{ 'error-border': categoryError }">
               <option selected disabled></option>
               <option v-for="category in groupCategoryList.data" :value="category.id" :key="category.id">{{ category.name }}
               </option>
