@@ -235,16 +235,20 @@ const buttonDisabled = computed(() => {
         </p>
       </div>
     </div>
-    <div class="w-fit ml-auto mt-4 mb-12">
-      <!-- styleタグないを参考にグラデーションをかける -->
-      <button
+    <div class="regist-button">
+      <RegistPageButton
         v-if="isEditGroup"
         @click="register"
-        class="text-xl text-gray-800 bg-gray-300 rounded-lg py-2 px-4 font-bold disabled:opacity-50 bg-gradient-to-r hover:from-pink-400 hover:to-yellow-500"
         :disabled="buttonDisabled"
-      >
-        {{ $t("Button.edit") }}
-      </button>
+        :text="$t('Button.register')"
+      ></RegistPageButton>
     </div>
   </div>
 </template>
+
+<style scoped>
+.regist-button {
+  @apply text-right
+    mb-8;
+}
+</style>

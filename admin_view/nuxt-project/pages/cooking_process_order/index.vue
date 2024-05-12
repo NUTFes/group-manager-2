@@ -159,6 +159,11 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    this.refinementCookingProcessOrders(this.refYearID, this.yearList);
+
+    window.addEventListener('scroll', this.saveScrollPosition);
+  },
   methods: {
     async openAddModal() {
       const groupUrl = "/api/v1/get_groups_have_no_cooking_process_order";
@@ -247,8 +252,16 @@ export default {
       for (const res of refRes.data) {
         this.cooking_process_orders.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchCookingProcessOrders();
+      }
     },
     async searchCookingProcessOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.cooking_process_orders = [];
       const searchUrl =
         "/api/v1/get_search_cooking_process_orders?word=" + this.searchText;
