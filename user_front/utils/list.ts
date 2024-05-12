@@ -1,6 +1,6 @@
 // export const groupCategoryList: { id: number; name: string }[] = [
 //   { id: 1, name: "食品販売:Food stalls" },
-//   { id: 2, name: "販売品:Groups selling goods" },
+//   { id: 2, name: "物品販売:Groups selling goods" },
 //   { id: 3, name: "ステージ:Stage" },
 //   { id: 4, name: "展示・体験:Exhibitions and hands-on groups" },
 //   { id: 5, name: "研究室:Laboratory" },

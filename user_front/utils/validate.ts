@@ -31,12 +31,12 @@ export const groupSchema = object({
 
 // subRep登録のバリデーション
 export const subRepSchema = object({
-  name: string().required("入力してください\nPlease enter"),
+  name: string().required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる氏名を入力してください"),
   department: string().required("入力してください\nPlease enter"),
   grade: string().required("入力してください\nPlease enter"),
-  studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください\nPlease enter 8 single-byte numbers").required("入力してください\nPlease enter"),
-  email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter"),
-  tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください\nPlease enter 10 or 11 half-digits").required("入力してください\nPlease enter")
+  studentId: string().matches(/^[0-9]{8}$/, "半角数字8桁で入力してください\nPlease enter 8 single-byte numbers").required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる学籍番号を入力してください"),
+  email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なるメールアドレスを入力してください"),
+  tel: string().matches(/^[0-9]{10,11}$/, "10桁または11桁の半角数字で入力してください\nPlease enter 10 or 11 half-digits").required("入力してください\nPlease enter").notOneOf(['false'],"代表者とは異なる電話番号を入力してください"),
 });
 
 // place登録のバリデーション
@@ -171,7 +171,6 @@ export const stageOptionSchema = object({
   isMusic: boolean().required("入力してください\nPlease enter"),
   isCamera: boolean().required("入力してください\nPlease enter"),
   isNoise: boolean().required("入力してください\nPlease enter"),
-  stageContent: string().required("入力してください\nPlease enter"),
 });
 
 // item登録のバリデーション

@@ -6,7 +6,6 @@ one:
   bgm: false
   camera_permission: false
   loud_sound: false
-  stage_content: MyText
 
 two:
   group_id: 1
@@ -14,4 +13,3 @@ two:
   bgm: false
   camera_permission: false
   loud_sound: false
-  stage_content: MyText

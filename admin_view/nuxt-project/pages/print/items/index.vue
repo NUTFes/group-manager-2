@@ -77,7 +77,7 @@
 
     <div class="sheet">
       <br />
-      <h2>貸出物品リスト - 模擬店(販売品)</h2>
+      <h2>貸出物品リスト - 模擬店(物品販売)</h2>
       <hr />
       <br />
       <table border="solid">
@@ -96,7 +96,7 @@
             <td :rowspan="group.assign_rental_item.length">
               {{ group.group.id }}
             </td>
-            <td :rowspan="group.assign_rental_item.length">販売品</td>
+            <td :rowspan="group.assign_rental_item.length">物品販売</td>
             <td :rowspan="group.assign_rental_item.length">
               {{ group.group.name }}
             </td>

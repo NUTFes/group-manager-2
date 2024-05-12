@@ -6,19 +6,19 @@
     <div class="users-card-content">
       <h1>{{ dashboardData.all_user_num }}</h1>
       <Row>
-        <Tag primaryColor="#FF7070" secondaryColor="#E38AD5"
+        <Tag primaryColor="#FF7070" secondaryColor="#E38AD5" 
           >{{ dashboardData.developer_num }} Developers</Tag
         >
-        <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A"
+        <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A" width = auto
           >{{ dashboardData.participant_num }} Participants</Tag
         >
-        <Tag primaryColor="#9C8AE3" secondaryColor="#70FFDD"
+        <Tag primaryColor="#9C8AE3" secondaryColor="#70FFDD" width = auto
           >{{ dashboardData.inventory_management_num }} Inventory_Managers</Tag
         >
-        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
+        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33" width = auto
           >{{ dashboardData.venue_power_num }} Venue_Power_Managers</Tag
         >
-        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"
+        <Tag primaryColor="#ffce56" secondaryColor="#d6ff33" width = auto
           >{{ dashboardData.sanitation_management_num }} Sanitation_Managers</Tag
         >
         <Tag primaryColor="#ffce56" secondaryColor="#d6ff33"

@@ -2,7 +2,7 @@
   "language": "言語",
 
   "Header": {
-    "header": "技大祭2023",
+    "header": "技大祭2024",
     "logOut": "ログアウト"
   },
 
@@ -28,7 +28,7 @@
     "signUp": "新規登録",
     "toSignUp": "登録されてない方は",
     "overview": "参加概要",
-    "overviewDetails": "開催日時：2023年9月16日(土) 17日(日)",
+    "overviewDetails": "開催日時：2024年9月14日(土) 15日(日)",
     "regist": "登録の流れ",
     "regist1": "ユーザー情報の登録",
     "regist1Details": "代表の方の氏名、学籍番号、所属、学年、メールアドレス、電話番号、パスワードを登録してください。",
@@ -47,7 +47,15 @@
     "regist8": "販売食品登録",
     "regist8Details": "あなたの団体の販売食品名、調理の有無、1日目と2日目の販売予定数の登録をしてください。",
     "regist9": "購入品登録",
-    "regist9Details": "あなたの団体の購入材料名、購入場所、購入日、生ものか否かの登録をしてください。"
+    "regist9Details": "あなたの団体の購入材料名、購入場所、購入日、生ものか否かの登録をしてください。",
+    "regist10":"PR文の申請",
+    "regist10Details":"あなたの団体のPR文とPRイラストの登録をしてください。",
+    "regist11":"アナウンス文の申請",
+    "regist11Details":"あなたの団体のアナウンス文の登録をしてください。",
+    "regist12":"模擬店平面図の申請",
+    "regist12Details":"あなたの団体の模擬店平面図の登録をしてください。",
+    "regist13":"調理工程の申請",
+    "regist13Details":"あなたの団体の調理工程の登録をしてください。"
   },
 
   "Mypage": {
@@ -63,6 +71,7 @@
     "editPR": "PR文編集",
     "editAnnouncemant": "アナウンス文編集",
     "regitstVenueMap": "模擬店平面図",
+    "editCookingProcess": "調理工程申請",
     "notice": "お知らせ",
     "updateDate": "更新日"
   },
@@ -106,7 +115,7 @@
     "item": "物品申請",
     "employees": "従業員申請",
     "food": "食品申請",
-    "saleGoods": "販売品",
+    "saleGoods": "物品販売",
     "purchase": "購入品申請",
     "placeMessage": "野外・室内どちらかのみの申請でお願いいたします。"
   },
@@ -184,8 +193,7 @@
     "equipment": "機器",
     "music": "音楽",
     "photo": "撮影",
-    "noise": "騒音",
-    "content": "ステージ内容"
+    "noise": "騒音"
   },
 
   "Subrep": {
@@ -328,7 +336,7 @@
 
   "List": {
     "food": "模擬店(食品販売)",
-    "goods": "模擬店(販売品)",
+    "goods": "模擬店(物品販売)",
     "stage": "ステージ企画",
     "ediExhibitst": "展示・体験",
     "laboratory": "研究室公開",
@@ -366,5 +374,13 @@
     "materialsScience": "材料工学専攻",
     "energy": "エネルギー・環境工学専攻",
     "IntegratedBio": "生物統合工学専攻"
+  },
+
+  "Cook": {
+    "cookTitle":"調理工程申請",
+    "preOpenKitchen":"営業前調理場",
+    "preOpenTent":"営業前テント内",
+    "duringOpenKitchen":"営業中調理場",
+    "duringOpenTent":"営業中テント内"
   }
 }

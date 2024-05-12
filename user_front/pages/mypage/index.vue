@@ -47,6 +47,7 @@ const links: { to: string; text: string }[] = [
   { to: "/mypage/password_reset", text: "Mypage.editPassword" },
   { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
   { to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" },
+  { to: "/mypage/edit_cooking_process", text: "Mypage.editCookingProcess"},
 ];
 
 const shouldDisplayLink = (link: { to: string; text: string }) => {

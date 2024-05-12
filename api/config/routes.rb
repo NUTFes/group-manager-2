@@ -161,6 +161,12 @@ Rails.application.routes.draw do
       post "get_search_announcements" => "announcements_api#get_search_announcements"
       get "get_groups_have_no_announcement" => "groups_api#get_groups_have_no_announcement"
 
+      #---調理工程表申請
+      get "get_cooking_process_order_for_admin_view/:id" => "cooking_process_orders_api#get_cooking_process_order_for_admin_view"
+      post "get_refinement_cooking_process_orders" => "cooking_process_orders_api#get_refinement_cooking_process_orders"
+      post "get_search_cooking_process_orders" => "cooking_process_orders_api#get_search_cooking_process_orders"
+      get "get_groups_have_no_cooking_process_order" => "groups_api#get_groups_have_no_cooking_process_order"
+
       #---実行委員担当者申請ページ
       get "get_contact_person_index_for_admin_view" => "contact_persons_api#get_contact_person_index_for_admin_view"
       get "get_contact_person_show_for_admin_view/:id" => "contact_persons_api#get_contact_person_show_for_admin_view"
@@ -198,6 +204,7 @@ Rails.application.routes.draw do
       get "get_users_csv/:fes_year_id" => "output_csv#output_users_csv"
       get "get_assign_rental_items_csv/:fes_year_id" => "output_csv#output_assign_rental_items_csv"
       get "get_announcements_csv" => "output_csv#output_announcements_csv"
+      get "get_cooking_process_orders_csv" => "output_csv#output_cooking_process_orders_csv"
       get "get_public_relations_csv/:fes_year_id" => "output_csv#output_public_relations_csv"
 
       # ダッシュボード
