@@ -146,7 +146,7 @@ export default {
           click: "/food_products",
         },
         {
-          title: "購入品申請",
+          title: "購入食品申請",
           icon: "shopping_cart",
           click: "/purchase_lists",
         },
