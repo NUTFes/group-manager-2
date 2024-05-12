@@ -67,6 +67,7 @@
     "editGroup": "参加団体情報の編集",
     "editUserInfo": "ユーザー情報確認＆編集",
     "editPassword": "パスワード変更",
+    "editContactPerson": "実行委員担当者登録＆編集",
     "editPR": "PR文編集",
     "editAnnouncemant": "アナウンス文編集",
     "regitstVenueMap": "模擬店平面図",
@@ -148,7 +149,16 @@
     "category": "参加形式",
     "activityDetails": "活動内容",
     "international": "国際",
-    "external": "学外"
+    "external": "学外",
+    "contactPersonName": "実行委員担当者氏名",
+    "contactPersonEmail": "実行委員担当者メールアドレス"
+  },
+
+  "contactPerson": {
+    "registContactPerson": "実行委員担当者登録",
+    "editContactPerson": "実行委員担当者登録＆編集",
+    "name": "実行委員担当者氏名",
+    "mail": "実行委員担当者メールアドレス"
   },
 
   "Stage": {

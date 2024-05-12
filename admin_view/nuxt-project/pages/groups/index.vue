@@ -310,7 +310,6 @@ export default {
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
-      console.log(item_id, name_list[0])
       // fes_yearで絞り込むとき
       if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;

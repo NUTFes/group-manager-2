@@ -149,7 +149,16 @@
     "category": "select category",
     "activityDetails": "Activity Details",
     "international": "International",
-    "external": "External"
+    "external": "External",
+    "contactPersonName": "contact person name",
+    "contactPersonEmail": "contact person email"
+  },
+
+  "contactPerson": {
+    "registContactPerson": "Registration of contact person",
+    "editContactPerson": "Edit contact person",
+    "name": "name",
+    "mail": "mail adress"
   },
 
   "Stage": {

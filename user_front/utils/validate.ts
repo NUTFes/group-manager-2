@@ -265,3 +265,9 @@ export const passwordResetSchema = object({
   password: string().required("入力してください\nPlease enter").min(8, "8桁以上入力してください\nPlease enter at least 8 digits"),
   passwordConfirm: string().required("パスワードを再入力してください\nPlease re-enter your password").oneOf([ref("password")], "パスワードが一致しませんでした\nPassword did not match")
 });
+
+// contactPerson登録のバリデーション
+export const contactPersonSchema = object({
+  name: string().required("入力してください\nPlease enter"),
+  email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter")
+});
