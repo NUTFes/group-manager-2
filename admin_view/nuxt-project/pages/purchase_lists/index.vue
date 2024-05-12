@@ -25,7 +25,7 @@
         <SearchDropDown
           :nameList="isFreshList"
           :on_click="refinementPurchaseLists"
-          value="value"
+          value="freshText"
         >
           {{ refIsFresh }}
         </SearchDropDown>
@@ -165,8 +165,8 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
-        { id: 1, text: "はい", value: "なまもの" },
-        { id: 2, text: "いいえ", value: "加工品" },
+        { id: 1, text: "はい", value: true, freshText:"なまもの" },
+        { id: 2, text: "いいえ", value: false, freshText:"加工品" },
       ],
       groupList: [],
       shopList: [],
