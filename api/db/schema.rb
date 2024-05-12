@@ -282,7 +282,6 @@ ActiveRecord::Schema.define(version: 2024_05_07_003226) do
     t.boolean "bgm"
     t.boolean "camera_permission"
     t.boolean "loud_sound"
-    t.text "stage_content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

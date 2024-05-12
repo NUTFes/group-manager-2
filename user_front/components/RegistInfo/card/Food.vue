@@ -200,8 +200,7 @@ purchase_lists": [
     "own_equipment": true,
     "bgm": true,
     "camera_permission": true,
-    "loud_sound": true,
-    "stage_content": "nutfes"
+    "loud_sound": true
   },
   "power_orders": [
     {

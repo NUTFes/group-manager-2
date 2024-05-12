@@ -171,7 +171,6 @@ export const stageOptionSchema = object({
   isMusic: boolean().required("入力してください\nPlease enter"),
   isCamera: boolean().required("入力してください\nPlease enter"),
   isNoise: boolean().required("入力してください\nPlease enter"),
-  stageContent: string().required("入力してください\nPlease enter"),
 });
 
 // item登録のバリデーション
