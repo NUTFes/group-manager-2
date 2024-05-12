@@ -119,7 +119,7 @@
     "saleGoods": "Sale of Goods",
     "purchase": "Purchase",
     "placeMessage": "Please apply for either outdoor or indoor space only.",
-    "ItemMessage": "Please apply for either indoor or outdoor groups only."
+    "ItemMessage": "Please apply only for stage groups, indoor groups or outdoor groups."
 
   },
 
