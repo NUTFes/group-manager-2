@@ -49,7 +49,8 @@
           </tr>
           <tr>
             <th>なまもの</th>
-            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">〇</td>
+            <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">×</td>
           </tr>
           <tr>
             <th>購入店</th>

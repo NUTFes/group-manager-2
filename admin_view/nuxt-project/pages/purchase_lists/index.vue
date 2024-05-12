@@ -25,7 +25,7 @@
         <SearchDropDown
           :nameList="isFreshList"
           :on_click="refinementPurchaseLists"
-          value="value"
+          value="freshText"
         >
           {{ refIsFresh }}
         </SearchDropDown>
@@ -67,7 +67,8 @@
               {{ purchaseList.purchase_list_info.food_product }}
             </td>
             <td class="purchase">{{ purchaseList.purchase_list.items }}</td>
-            <td class="fresh">{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">〇</td>
+            <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">×</td>
             <td class="url">{{ purchaseList.purchase_list.url }}</td>
           </tr>
         </template>
@@ -164,8 +165,8 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
-        { id: 1, text: "はい", value: true },
-        { id: 2, text: "いいえ", value: false },
+        { id: 1, text: "はい", value: true, freshText:"〇" },
+        { id: 2, text: "いいえ", value: false, freshText:"×" },
       ],
       groupList: [],
       shopList: [],
