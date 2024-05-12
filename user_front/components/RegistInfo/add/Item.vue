@@ -30,7 +30,7 @@ const groupCategoryId = Number(localStorage.getItem("group_category_id"));
 const insideRentableItemList = ref<ItemList[]>([]);
 const outsideRentableItemList = ref<ItemList[]>([]);
 // 場所と物品を制限するための変数
-const selectedLocation = ref<string>("屋内団体");
+const selectedLocation = ref<string>("屋外団体");
 const selectableItemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
@@ -136,12 +136,30 @@ const addItem = async () => {
   // 貸し出し可能物品個数のチェック
   const itemId = newItem.value as number;
   const itemNum = newNum.value as number;
+  console.log("itemId",itemId)
+  console.log("itemNum",itemNum)
+  console.log("selectedLocation.value",selectedLocation.value)
   if (getMaxValueByItemId(itemId) < itemNum) {
     alert(
       "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
     );
     return;
   }
+  // 机の入力バリデーション
+  if (itemId === 1 && itemNum > 20 && selectedLocation.value === '屋外団体') {
+    alert(
+      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
+  }
+    // 椅子の入力バリデーション
+    if (itemId === 3 && itemNum > 20 && selectedLocation.value === '屋外団体') {
+    alert(
+      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
+  }
+  // テントのバリデーション
 
   await useFetch(config.APIURL + "/rental_orders", {
     method: "POST",
@@ -307,8 +325,6 @@ const reset = () => {
           </option>
         </select>
       </div>
-
-
 
 
       <div class="error_msg">{{ nameError }}</div>
