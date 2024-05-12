@@ -96,6 +96,31 @@ const updateSelectedLocation = (event: Event) => {
   }
 };
 
+// バリデーションに合わせてリストを作っておく
+// groupCategoryId=1の場合(食品販売)
+const outsideRentableItemList_Id_1 = computed(() => {
+  return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 9);
+});
+
+// groupCategoryId=3の場合(ステージ)
+const outsideRentableItemList_Id_3 = computed(() => {
+  return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 3);
+});
+
+// groupCategoryId=2,4,5,7の場合(物品販売、展示・体験、研究室、その他)
+// かつ、屋外なのか、屋外なのかを分けたリスト
+const outsideRentableItemList_Id_in = computed(() => {
+  const validIds = [1, 3, 4, 5, 6];  // 表示したいIDのリスト
+  return outsideRentableItemList.value.filter(item => validIds.includes(item.id));
+});
+const outsideRentableItemList_Id_out = computed(() => {
+  return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 9);
+});
+
+console.log("outsideRentableItemList_Id_3",outsideRentableItemList_Id_3)
+console.log("selectedLocation",selectedLocation)
+
+
 const newItem = ref<number | null>();
 const newNum = ref<number | null>();
 
@@ -151,6 +176,7 @@ const reset = () => {
       </div>
     </template>
     <template #form>
+      <!-- 屋内団体、屋外団体、ステージ団体を選ぶinputの部分 -->
       <div class="flex mt-4 gap-3 justify-end">
         <div v-if="Number(groupCategoryId) !== 1 && Number(groupCategoryId) !== 3">
           <label class="mr-2">
@@ -188,12 +214,50 @@ const reset = () => {
         </div>
       </div>
       <div class="text">{{ $t("Item.item") }}</div>
+
+      <!-- 以下のようにして、 groupCategoryIdが指定の番号のバリデーションを作る-->
+      <!-- 食品販売 -->
       <div v-if="Number(groupCategoryId) === 1">
         <select
           class="entry"
           v-model="newItem"
           @change="handleName"
           :checked="selectedLocation === '屋外団体'"
+          :class="{ error_border: nameError }"
+        >
+        <!-- ここで！ユーザーの団体カテゴリでバリデーションをする -->
+          <option
+            v-for="list in outsideRentableItemList_Id_1"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+      <!-- ステージ団体のバリデーション -->
+      <div v-else-if="Number(groupCategoryId) === 3">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :class="{ error_border: nameError }"
+        >
+          <option
+            v-for="list in outsideRentableItemList_Id_3"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+      <!-- 実行委員 -->
+      <div v-else-if="Number(groupCategoryId) === 6">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
           :class="{ error_border: nameError }"
         >
           <option
@@ -205,15 +269,18 @@ const reset = () => {
           </option>
         </select>
       </div>
-      <div v-else>
+      <!--　物品販売、展示・体験、研究室、その他  -->
+      <!-- 屋外団体 -->
+      <div v-else-if="selectedLocation === '屋外団体'">
         <select
           class="entry"
           v-model="newItem"
           @change="handleName"
+          :checked="selectedLocation === '屋外団体'"
           :class="{ error_border: nameError }"
         >
           <option
-            v-for="list in selectableItemList"
+            v-for="list in outsideRentableItemList_Id_out"
             :key="list.id"
             :value="list.id"
           >
@@ -221,6 +288,28 @@ const reset = () => {
           </option>
         </select>
       </div>
+      <!-- 屋内団体 -->
+      <div v-else-if="selectedLocation === '屋内団体'">
+        <select
+          class="entry"
+          v-model="newItem"
+          @change="handleName"
+          :checked="selectedLocation === '屋内団体'"
+
+          :class="{ error_border: nameError }"
+        >
+          <option
+            v-for="list in outsideRentableItemList_Id_in"
+            :key="list.id"
+            :value="list.id"
+          >
+            {{ list.name }}
+          </option>
+        </select>
+      </div>
+
+
+
 
       <div class="error_msg">{{ nameError }}</div>
       <div class="text">{{ $t("Item.number") }}</div>
