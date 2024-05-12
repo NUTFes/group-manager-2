@@ -103,16 +103,16 @@ const postImageURL = () => {
           params: fetchParams,
         })
           .then((response) => {
-            alert("会場配置図を登録しました\nVenue map has been registered.");
+            alert("模擬店平面図を登録しました\nVenue map has been registered.");
             router.push("/mypage");
           })
           .catch((err) => {
-            alert("会場配置図の登録に失敗しました\nFailed to register the venue map");
+            alert("模擬店平面図の登録に失敗しました\nFailed to register the venue map");
             router.push("/mypage");
           });
       })
       .catch((err) => {
-        alert("会場配置図の登録に失敗しました\nFailed to register the venue map");
+        alert("模擬店平面図の登録に失敗しました\nFailed to register the venue map");
         router.push("/mypage");
       });
   });
