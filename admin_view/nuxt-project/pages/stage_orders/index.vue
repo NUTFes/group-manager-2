@@ -469,8 +469,16 @@ export default {
       for (const res of refRes.data) {
         this.stageOrders.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchStageOrders();
+      }
     },
     async searchStageOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.stageOrders = [];
       const searchUrl =
         "/api/v1/get_search_stage_orders?word=" + this.searchText;
