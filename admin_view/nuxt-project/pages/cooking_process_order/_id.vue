@@ -294,6 +294,7 @@ export default {
             cookingProcessOrderData
           );
           this.openSnackBar("調理工程を登録しました");
+          this.reload(response.data.group_id);
           this.closeEditModal();
         } catch (error) {
           this.openSnackBar(
