@@ -34,7 +34,7 @@ const selectedLocation = ref<string>("屋外団体");
 const selectableItemList = ref<ItemList[]>([]);
 
 onMounted(async () => {
-  if (Number(localStorage.getItem("group_category_id")) === 3) {
+  if (Number(groupCategoryId) === 3) {
     const itemData = await $fetch<Item>(
       config.APIURL + "/api/v1/get_stage_rentable_items"
     );
@@ -99,13 +99,11 @@ const updateSelectedLocation = (event: Event) => {
 // バリデーションに合わせてリストを作っておく
 // groupCategoryId=1の場合(食品販売)
 const outsideRentableItemList_Id_1 = computed(() => {
-  return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 9);
+  return outsideRentableItemList.value.filter(item => item.id >= 0 && item.id <= 9);
 });
 
 // groupCategoryId=3の場合(ステージ)
-const outsideRentableItemList_Id_3 = computed(() => {
-  return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 3);
-});
+const stageRentableItemList = selectableItemList
 
 // groupCategoryId=2,4,5,7の場合(物品販売、展示・体験、研究室、その他)
 // かつ、屋外なのか、屋外なのかを分けたリスト
@@ -117,7 +115,7 @@ const outsideRentableItemList_Id_out = computed(() => {
   return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 9);
 });
 
-console.log("outsideRentableItemList_Id_3",outsideRentableItemList_Id_3)
+console.log("selectableItemList",selectableItemList)
 console.log("selectedLocation",selectedLocation)
 
 
@@ -137,9 +135,6 @@ const addItem = async () => {
   // 貸し出し可能物品個数のチェック
   const itemId = newItem.value as number;
   const itemNum = newNum.value as number;
-  console.log("itemId",itemId)
-  console.log("itemNum",itemNum)
-  console.log("selectedLocation.value",selectedLocation.value)
   if (getMaxValueByItemId(itemId) < itemNum) {
     alert(
       "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
@@ -147,16 +142,16 @@ const addItem = async () => {
     return;
   }
   // 机の入力バリデーション
-  if (itemId === 1 && itemNum > 20 && selectedLocation.value === '屋外団体') {
+  if (itemId === 1 && itemNum > 20 && selectedLocation.value !== '屋内団体') {
     alert(
-      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+      "机の貸し出し数が上限を超えています。20以下にしてください。\The number of desks available for rent has exceeded the limit; please reduce it to 20 or less."
     );
     return;
   }
     // 椅子の入力バリデーション
-    if (itemId === 3 && itemNum > 20 && selectedLocation.value === '屋外団体') {
+    if (itemId === 3 && itemNum > 20 && selectedLocation.value !== '屋内団体') {
     alert(
-      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+      "椅子の貸し出し数が上限を超えています。20以下にしてください。\nThe number of chairs available for rent has exceeded the limit; please reduce it to 20 or less."
     );
     return;
   }
@@ -165,7 +160,7 @@ const addItem = async () => {
     // 1つ以上の申請があるとき
     if(itemNum > 1){
       alert(
-      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+        "テントが複数選択されています。1つにしてください。\Multiple tents have been selected, please select one."
     );
     return;
     }
@@ -205,7 +200,10 @@ const reset = () => {
     </template>
     <template #form>
       <!-- 屋内団体、屋外団体、ステージ団体を選ぶinputの部分 -->
-      <div class="flex mt-4 gap-3 justify-end">
+      <div class="flex flex-col mt-4 gap-3 justify-end">
+        <div class="text-xl flex gap-3">
+          <p class="text-red-500">{{ $t("RegistInfo.ItemMessage") }}</p>
+        </div>
         <div v-if="Number(groupCategoryId) !== 1 && Number(groupCategoryId) !== 3">
           <label class="mr-2">
             <input
@@ -228,7 +226,7 @@ const reset = () => {
             {{ $t("Item.outsideGroup") }}
           </label>
         </div>
-        <div v-if="Number(groupCategoryId) === 3">
+        <div v-else-if="Number(groupCategoryId) === 3">
           <label>
             <input
               type="radio"
@@ -272,7 +270,7 @@ const reset = () => {
           :class="{ error_border: nameError }"
         >
           <option
-            v-for="list in outsideRentableItemList_Id_3"
+            v-for="list in stageRentableItemList"
             :key="list.id"
             :value="list.id"
           >

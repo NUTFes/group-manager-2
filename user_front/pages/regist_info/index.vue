@@ -614,6 +614,9 @@ const isStageOverlap = computed(() => {
 
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <div class="text-xl flex gap-3">
+              <p>{{ $t("RegistInfo.ItemMessage") }}</p>
+            </div>
           <Button
             v-if="isAddItem && !isRentalItemOverlap"
             class="fixed right-0 bottom-0 m-10 mb-14"

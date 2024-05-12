@@ -117,7 +117,9 @@
     "food": "Food",
     "saleGoods": "Sale of Goods",
     "purchase": "Purchase",
-    "placeMessage": "Please apply for either outdoor or indoor space only."
+    "placeMessage": "Please apply for either outdoor or indoor space only.",
+    "ItemMessage": "Please apply for either indoor or outdoor groups only."
+
   },
 
   "User": {
