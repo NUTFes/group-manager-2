@@ -106,7 +106,7 @@
     "item": "物品申請",
     "employees": "従業員申請",
     "food": "食品申請",
-    "saleGoods": "販売品",
+    "saleGoods": "物品販売",
     "purchase": "購入品申請",
     "placeMessage": "野外・室内どちらかのみの申請でお願いいたします。"
   },
@@ -319,7 +319,7 @@
 
   "List": {
     "food": "模擬店(食品販売)",
-    "goods": "模擬店(販売品)",
+    "goods": "模擬店(物品販売)",
     "stage": "ステージ企画",
     "ediExhibitst": "展示・体験",
     "laboratory": "研究室公開",
