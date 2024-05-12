@@ -47,6 +47,6 @@ class StageCommonOptionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def stage_common_option_params
-      params.permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound, :stage_content)
+      params.permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound)
     end
 end

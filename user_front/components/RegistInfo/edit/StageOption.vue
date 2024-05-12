@@ -83,7 +83,6 @@ const editStageOption = async () => {
         bgm: newBgm.value,
         camera_permission: newCameraPermission.value,
         loud_sound: newLoudSound.value,
-        stage_content: newStageContent.value,
       },
     })
   } else {
@@ -95,7 +94,6 @@ const editStageOption = async () => {
         bgm: newBgm.value,
         camera_permission: newCameraPermission.value,
         loud_sound: newLoudSound.value,
-        stage_content: newStageContent.value,
       }
     })
   }

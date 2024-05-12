@@ -165,10 +165,6 @@
             </option>
           </select>
         </div>
-        <div>
-          <h3>ステージ内容</h3>
-          <textarea v-model="stageContent" placeholder="入力してください" />
-        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submitEmployee"
@@ -432,9 +428,7 @@ export default {
         "&camera_permission=" +
         this.cameraPermission +
         "&loud_sound=" +
-        this.loudSound +
-        "&stage_content=" +
-        this.stageContent;
+        this.loudSound;
       console.log(postStageOptionUrl);
 
       await this.$axios.$post(postStageOptionUrl).then((response) => {

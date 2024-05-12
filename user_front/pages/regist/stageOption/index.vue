@@ -48,7 +48,6 @@ const registerStageOption = async () => {
       bgm: registerParams.isMusic,
       camera_permission: registerParams.isCamera,
       loud_sound: registerParams.isNoise,
-      stage_content: registerParams.stageContent,
     },
     headers: {
       "Content-Type": "application/json",
