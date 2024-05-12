@@ -62,6 +62,7 @@
     "editPR": "PR文編集",
     "editAnnouncemant": "アナウンス文編集",
     "regitstVenueMap": "模擬店平面図",
+    "editCookingProcess": "調理工程申請",
     "notice": "お知らせ",
     "updateDate": "更新日"
   },
@@ -356,5 +357,13 @@
     "materialsScience": "材料工学専攻",
     "energy": "エネルギー・環境工学専攻",
     "IntegratedBio": "生物統合工学専攻"
+  },
+
+  "Cook": {
+    "cookTitle":"調理工程申請",
+    "preOpenKitchen":"営業前調理場",
+    "preOpenTent":"営業前テント内",
+    "duringOpenKitchen":"営業中調理場",
+    "duringOpenTent":"営業中テント内"
   }
 }

@@ -44,6 +44,7 @@ const links: { to: string; text: string }[] = [
   { to: "/mypage/publicRelations", text: "Mypage.editPR" },
   { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
   { to: "/regist/venueMap", text: "Mypage.regitstVenueMap" },
+  { to: "/mypage/edit_cooking_process", text: "Mypage.editCookingProcess"},
 ];
 </script>
 
