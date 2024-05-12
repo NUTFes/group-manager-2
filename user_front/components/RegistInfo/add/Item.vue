@@ -132,6 +132,7 @@ const reloadItem = () => {
   emits("reloadItem", null);
 };
 
+// 物品の登録ボタンを押した時の関数
 const addItem = async () => {
   // 貸し出し可能物品個数のチェック
   const itemId = newItem.value as number;
@@ -159,7 +160,16 @@ const addItem = async () => {
     );
     return;
   }
-  // テントのバリデーション
+  // テント、小テントのバリデーション
+  if (itemId === 7 || itemId === 8){
+    // 1つ以上の申請があるとき
+    if(itemNum > 1){
+      alert(
+      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
+    );
+    return;
+    }
+  }
 
   await useFetch(config.APIURL + "/rental_orders", {
     method: "POST",

@@ -321,6 +321,11 @@ const isRentalItemOverlap = computed(() => {
   const rentalOrder = rentalOrders.value.map((rentalOrder) => {
     return rentalOrder.rental_item.name;
   });
+  console.log("rentalOrder",rentalOrder)
+  // テントと小テントが存在してもエラーがでるようにしたい。
+  if (rentalOrder.includes("テント") && rentalOrder.includes("小テント")) {
+    return true
+  }
   const rentalOrderSet = new Set(rentalOrder);
   return rentalOrder.length !== rentalOrderSet.size;
 });
