@@ -2,7 +2,7 @@
 import axios from "axios";
 import { loginCheck } from "@/utils/methods";
 import { useForm, useField } from "vee-validate";
-import { PasswordResetParams } from "~~/types/mypage/passwordReset";
+import { PasswordResetParams } from "~~/types/Mypage/passwordReset";
 
 definePageMeta({
   layout: false,

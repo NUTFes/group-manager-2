@@ -288,6 +288,13 @@ export default {
       for (const res of refRes.data) {
         this.powerOrders.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchPowerOrders();
+      }
       this.$nextTick(() => {
         window.scrollTo(
           0,
@@ -296,6 +303,7 @@ export default {
       });
     },
     async searchPowerOrders() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.powerOrders = [];
       const searchUrl =
         "/api/v1/get_search_power_orders?word=" + this.searchText;

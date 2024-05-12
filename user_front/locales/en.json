@@ -71,6 +71,7 @@
     "editPR": "public relations Edit",
     "editAnnouncemant": "Announcement text edit",
     "regitstVenueMap": "Booth MAP",
+    "editCookingProcess":"Cooking Process Edit",
     "notice": "Notice",
     "updateDate": "update date"
   },
@@ -89,7 +90,7 @@
 
   "Announcement": {
     "regitstAnnouncement": "Registration of venue announcement text",
-    "editAnnouncement": "Editing of venue announcement text",
+    "editAnnouncement": "Edit of venue announcement text",
     "text": "Announcement text at the venue",
     "edit": "editing",
     "regist": "registing",
@@ -137,7 +138,7 @@
     "editUser": "Edit User Information",
     "editName": "full name",
     "editStudentId": "StudentID 8 digits",
-    "editTel": "11or11 single-byte numbers, without -",
+    "editTel": "10or11 single-byte numbers, without -",
     "resetPassword": "Password reset",
     "newPassword": "Enter new password",
     "newPasswordConfirm": "Retype new password (for confirmation)"
@@ -378,5 +379,13 @@
     "materialsScience": "Materials Science",
     "energy": "Energy and Environment Science",
     "IntegratedBio": "Integrated Bioscience and Technology"
+  },
+
+  "Cook": {
+    "cookTitle":"Cooking Process Order",
+    "preOpenKitchen":"Pre-Open Kitchen",
+    "preOpenTent":"Pre-Open Tent",
+    "duringOpenKitchen":"During Open Kitchen",
+    "duringOpenTent":"During Open Tent"
   }
 }

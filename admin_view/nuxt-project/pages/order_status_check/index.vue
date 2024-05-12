@@ -143,6 +143,11 @@
         roleID: (state) => state.users.role,
       }),
     },
+    mounted() {
+      this.refinementgroups(this.refYearID, this.yearList);
+
+      window.addEventListener('scroll', this.saveScrollPosition);
+    },
     methods: {
       async refinementgroups(item_id, name_list) {
        // fes_yearで絞り込むとき
@@ -161,8 +166,16 @@
         for (const res of refRes.data) {
           this.groups.push(res);
         }
+        const storedSearchText = localStorage.getItem(
+          this.$route.path + "SearchText"
+        );
+        if (storedSearchText) {
+          this.searchText = storedSearchText;
+          this.searchGroups();
+        }
       },
       async searchGroups() {
+        localStorage.setItem(this.$route.path + "SearchText", this.searchText);
         this.groups = [];
         const searchUrl = "/api/v1/get_search_order_infos?word=" + this.searchText;
         const refRes = await this.$axios.$post(searchUrl);

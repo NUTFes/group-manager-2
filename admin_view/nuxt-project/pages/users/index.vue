@@ -202,7 +202,7 @@ export default {
       createPassword: null,
       createPasswordConfirmation: null,
       createUserId: null,
-      createRoleId: 2,
+      createRoleId: 7,
     };
   },
   async asyncData({ $axios }) {
@@ -271,11 +271,19 @@ export default {
       for (const res of refRes.data){
         this.users.push(res)
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchUsers();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchUsers(){
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.users = []
       const searchUrl = "/api/v1/get_search_users?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);

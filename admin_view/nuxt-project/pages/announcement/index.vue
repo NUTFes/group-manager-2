@@ -236,11 +236,19 @@ export default {
       for (const res of refRes.data) {
         this.announcements.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchAnnouncements();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchAnnouncements() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.announcements = [];
       const searchUrl = "/api/v1/get_search_announcements?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
