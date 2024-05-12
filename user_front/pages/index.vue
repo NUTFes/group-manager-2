@@ -40,11 +40,11 @@ const signUp = () => {
 <template>
   <div>
     <Header />
-    <div class="flex justify-center items-center relative bg-[#00AFCC] p-8">
+    <div class="flex justify-center items-center relative bg-[#D83333] p-8">
       <div class="text-2xl md:text-5xl font-serif font-bold absolute">
         {{ $t("Welcome.welcome") }}
       </div>
-      <img class="w-1/2 sm:w-1/3" src="../assets/following-step01.svg" />
+      <img class="w-1/2 sm:w-1/3" src="../assets/43rd_logo.svg" />
     </div>
     <div class="flex justify-center items-center w-full sm:w-3/5 sm:mx-auto">
       <div

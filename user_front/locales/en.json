@@ -2,7 +2,7 @@
   "language": "Language",
 
   "Header": {
-    "header": "NUTFES2023",
+    "header": "NUTFES2024",
     "logOut": "Log Out"
   },
 
@@ -28,7 +28,7 @@
     "signUp": "Sign up",
     "toSignUp": "If you are not registered,",
     "overview": "Participation Overview",
-    "overviewDetails": "Date & Time：September 16(Sat), 17(Sun), 2023",
+    "overviewDetails": "Date & Time：September 14(Sat), 15(Sun), 2024",
     "regist": "Registration Process",
     "regist1": "User Information",
     "regist1Details": "Please register the name, student ID number, department, grade, phone number, email address, and password of the representative.",
@@ -38,16 +38,24 @@
     "regist3Details": "Please register the name, student ID number, department, grade, phone number, and email address of the deputy.",
     "regist4": "Venue and Stage",
     "regist4Details": "Please register your organization's first to third choice of stall locations.",
-    "regist5": "Registration of goods",
+    "regist5": "Registration of Goods",
     "regist5Details": "Please register the type and number of items your organization would like to borrow.",
     "regist6": "Electricity Application",
     "regist6Details": "Please register the product name, power consumption, manufacturer, model number, and product URL of the product your organization will use on the day of NUTFES.",
     "regist7": "Employees",
     "regist7Details": "Please register the employee's name and student ID number.",
-    "regist8": "Foods for sale",
+    "regist8": "Foods for Sale",
     "regist8Details": "Please register the name of food sold, cooked or not, and estimated number of products to be sold on Day 1 and Day 2.",
     "regist9": "Purchased Products",
-    "regist9Details": "Please register the material name, where it is purchased, the date of purchase, and whether it is raw or not."
+    "regist9Details": "Please register the material name, where it is purchased, the date of purchase, and whether it is raw or not.",
+    "regist10":"PR statement Application",
+    "regist10Details":"Register your organization's PR statement and PR illustration.",
+    "regist11":"Venue announcement text Application",
+    "regist11Details":"Register your organization's announcement text.",
+    "regist12":"Booth map Application",
+    "regist12Details":"Register your organization's mock-up Booth maop.",
+    "regist13":"Cooking Process Application",
+    "regist13Details":"Register your organization's cooking process."
   },
 
   "Mypage": {
