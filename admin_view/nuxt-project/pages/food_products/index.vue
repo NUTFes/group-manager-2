@@ -253,11 +253,19 @@ export default {
       for (const res of refRes.data) {
         this.foodProducts.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchFoodProducts();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchFoodProducts() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.foodProducts = [];
       const searchUrl =
         "/api/v1/get_search_food_products?word=" + this.searchText;

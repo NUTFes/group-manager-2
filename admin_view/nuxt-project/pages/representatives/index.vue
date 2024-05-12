@@ -257,11 +257,19 @@ export default {
       for (const res of refRes.data) {
         this.representatives.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchRepresentatives();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchRepresentatives() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.representatives = [];
       const searchUrl =
         "/api/v1/get_search_representatives?word=" + this.searchText;

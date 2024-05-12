@@ -200,11 +200,19 @@ export default {
       for (const res of refRes.data) {
         this.employees.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchEmployees();
+      }
       this.$nextTick(() => {
         window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
       });
     },
     async searchEmployees() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.employees = [];
       const searchUrl = "/api/v1/get_search_employees?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
