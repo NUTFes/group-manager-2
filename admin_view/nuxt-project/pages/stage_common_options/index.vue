@@ -217,7 +217,6 @@ export default {
       bgm: "",
       cameraPermission: "",
       loudSound: "",
-      stageContent: "",
       //refinement
       stageCommonOption: [],
       searchText: "",
@@ -438,7 +437,6 @@ export default {
         this.bgm = "";
         this.cameraPermission = "";
         this.loudSound = "";
-        this.stageContent = "";
         this.refinementStageCommonOptions(0, this.yearList);
         this.closeAddModal();
       });

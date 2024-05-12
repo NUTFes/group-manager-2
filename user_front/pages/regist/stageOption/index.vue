@@ -11,7 +11,6 @@ const { handleChange: handleItem, errorMessage: itemError } = useField('isItem')
 const { handleChange: handleMusic, errorMessage: musicError } = useField('isMusic')
 const { handleChange: handleCamera, errorMessage: cameraError } = useField('isCamera')
 const { handleChange: handleNoise, errorMessage: noiseError } = useField('isNoise')
-const { handleChange: handleContent, errorMessage: contentError } = useField('stageContent')
 
 const config = useRuntimeConfig();
 const router = useRouter();
@@ -21,7 +20,6 @@ const registerParams = reactive({
   isMusic: "",
   isCamera: "",
   isNoise: "",
-  stageContent: "",
   groupId: 0,
 })
 
@@ -30,7 +28,6 @@ const reset = () => {
   registerParams.isMusic = "",
   registerParams.isCamera = "",
   registerParams.isNoise = "",
-  registerParams.stageContent = "",
   registerParams.groupId = 0
 }
 
@@ -111,12 +108,6 @@ const back = () =>{
             </select>
           </div>
           <div>{{ cameraError }}</div>
-
-          <div class="flex">
-            <p class="label">{{ $t('StageOption.content') }}</p>
-            <input class="form" v-model="registerParams.stageContent" @change="handleContent">
-          </div>
-          <div class="text-rose-600">{{ contentError }}</div>
 
         </Card>
         <Row>

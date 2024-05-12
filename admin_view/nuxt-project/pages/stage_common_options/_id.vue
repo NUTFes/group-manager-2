@@ -172,7 +172,6 @@ export default {
       bgm: "",
       cameraPermission: "",
       loudSound: "",
-      stageContent: "",
     };
   },
   async asyncData({ $axios, route }) {

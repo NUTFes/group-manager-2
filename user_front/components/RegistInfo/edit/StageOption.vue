@@ -10,7 +10,6 @@ interface Props {
   bgm: boolean | null,
   cameraPermission: boolean | null,
   loudSound: boolean | null,
-  stageContent: string,
 }
 const props = withDefaults(defineProps<Props>(), {
   groupId: null,
@@ -19,7 +18,6 @@ const props = withDefaults(defineProps<Props>(), {
   bgm: null,
   cameraPermission: null,
   loudSound: null,
-  stageContent: '',
 })
 
 const { meta, isSubmitting } = useForm({
@@ -29,20 +27,17 @@ const { meta, isSubmitting } = useForm({
     isMusic: props.bgm,
     isCamera: props.cameraPermission,
     isNoise: props.loudSound,
-    stageContent: props.stageContent
   }
 })
 const { handleChange: handleOwnEquipment, errorMessage: ownEquipmentError } = useField('isItem')
 const { handleChange: handleBgm, errorMessage: bgmError } = useField('isMusic')
 const { handleChange: handleCameraPermission, errorMessage: cameraPermissionError } = useField('isCamera')
 const { handleChange: handleLoudSound, errorMessage: loudSoundError } = useField('isNoise')
-const { handleChange: handleStageContent, errorMessage: stageContentError } = useField('stageContent')
 
 const newOwnEquipment = ref<Props['ownEquipment']>(props.ownEquipment)
 const newBgm = ref<Props['bgm']>(props.bgm)
 const newCameraPermission = ref<Props['cameraPermission']>(props.cameraPermission)
 const newLoudSound = ref<Props['loudSound']>(props.loudSound)
-const newStageContent = ref<Props['stageContent']>(props.stageContent)
 
 const itemsAvailable = [
   {id: 1, label: "使用:use", value: true },
@@ -106,12 +101,10 @@ const reset = () => {
   newBgm.value = null
   newCameraPermission.value = null
   newLoudSound.value = null
-  newStageContent.value = ''
   handleOwnEquipment(newOwnEquipment.value)
   handleBgm(newBgm.value)
   handleCameraPermission(newCameraPermission.value)
   handleLoudSound(newLoudSound.value)
-  handleStageContent(newStageContent.value)
 }
 
 </script>
@@ -169,9 +162,6 @@ const reset = () => {
       </option>
       </select>
       <div class="error_msg">{{ loudSoundError }}</div>
-      <div class="text">{{ $t('StageOption.content') }}</div>
-      <textarea class="entry" v-model="newStageContent" @change="handleStageContent" :class="{ 'error_border': stageContentError }"/>
-      <div class="error_msg">{{ stageContentError }}</div>
       <div class="flex justify-between mt-8 mx-8">
         <RegistPageButton :text="$t('Button.reset')" @click="reset()"></RegistPageButton>
         <RegistPageButton :disabled="!meta.valid || isSubmitting" :text="$t('Button.edit')" @click="editStageOption()"></RegistPageButton>
