@@ -145,8 +145,8 @@ export default {
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
       isFreshList: [
-        { id: 1, text: "はい", value: true },
-        { id: 2, text: "いいえ", value: false },
+        { id: 1, text: "はい", value: "なまもの" },
+        { id: 2, text: "いいえ", value: "加工品" },
       ],
       items: null,
       shopID: null,
