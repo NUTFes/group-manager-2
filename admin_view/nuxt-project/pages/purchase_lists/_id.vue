@@ -49,7 +49,8 @@
           </tr>
           <tr>
             <th>なまもの</th>
-            <td>{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">なまもの</td>
+            <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">加工品</td>
           </tr>
           <tr>
             <th>購入店</th>
@@ -145,8 +146,8 @@ export default {
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
       isFreshList: [
-        { id: 1, text: "はい", value: "なまもの" },
-        { id: 2, text: "いいえ", value: "加工品" },
+        { id: 1, text: "はい", value: true },
+        { id: 2, text: "いいえ", value: false },
       ],
       items: null,
       shopID: null,
