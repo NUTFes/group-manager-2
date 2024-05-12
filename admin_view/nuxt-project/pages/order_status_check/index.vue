@@ -2,28 +2,49 @@
     <div class="main-content" v-if="this.$role(roleID).order_status.read">
       <SubHeader pageTitle="申請状況一覧"></SubHeader>
 
-      <SubSubHeader>
-        <template v-slot:refinement>
-          <SearchDropDown
-            :nameList="yearList"
-            :on_click="refinementgroups"
-            value="year_num"
-          >
-            {{ refYears }}
-          </SearchDropDown>
-        </template>
-        <template v-slot:search>
-          <SearchBar>
-            <input
-              v-model="searchText"
-              @keypress.enter="searchGroups"
-              type="text"
-              size="25"
-              placeholder="search"
-            />
-          </SearchBar>
-        </template>
-      </SubSubHeader>
+    <SubSubHeader>
+      <template v-slot:refinement>
+        <SearchDropDown
+          :nameList="yearList"
+          :on_click="refinementGroups"
+          value="year_num"
+        >
+          {{ refYears }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="groupCategories"
+          :on_click="refinementGroups"
+          value="name"
+        >
+          {{ refGroupCategories }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="internationalList"
+          :on_click="refinementGroups"
+          value="value"
+        >
+          {{ refInternational }}
+        </SearchDropDown>
+        <SearchDropDown
+          :nameList="externalList"
+          :on_click="refinementGroups"
+          value="value"
+        >
+          {{ refExternal }}
+        </SearchDropDown>
+      </template>
+      <template v-slot:search>
+        <SearchBar>
+          <input
+            v-model="searchText"
+            @keypress.enter="searchGroups"
+            type="text"
+            size="25"
+            placeholder="search"
+          />
+        </SearchBar>
+      </template>
+    </SubSubHeader>
 
       <Card width="100%" >
         <Table>
@@ -100,36 +121,69 @@
     <h1 v-else>閲覧権限がありません</h1>
   </template>
 
-  <script>
-  import { mapState } from "vuex";
-  export default {
-    watchQuery: ["page"],
-    data() {
-      return {
-        headers: ["ID", "参加団体", "副代表", "会場", "電力", "物品", "ステージ", "ステージオプション", "従業員", "販売品", "購入品", "PR", "アナウンス", "模擬店平面図", "調理工程"],
-        groups: [],
-        group_id: "",
-        groups: [],
-        groups: [],
-        dialog: false,
-        message: "",
-        refYears: "Years",
-        refYearID: 0,
-        searchText: ""
-      };
-    },
-    async asyncData({ $axios }) {
-      const currentYearUrl = "/user_page_settings/1";
-      const currentYearRes = await $axios.$get(currentYearUrl);
-      const url =
-        "/api/v1/get_refinement_order_infos?fes_year_id=" +
-        currentYearRes.data.fes_year_id;
-      const groupsRes = await $axios.$post(url);
-      const yearsUrl = "/fes_years";
-      const yearsRes = await $axios.$get(yearsUrl);
-      const currentYears = yearsRes.data.filter(function (element) {
-        return element.id == currentYearRes.data.fes_year_id;
-       });
+<script>
+import { mapState } from "vuex";
+export default {
+  watchQuery: ["page"],
+  data() {
+    return {
+      headers: [
+        "ID",
+        "参加団体",
+        "副代表",
+        "会場",
+        "電力",
+        "物品",
+        "ステージ",
+        "ステージオプション",
+        "従業員",
+        "販売品",
+        "購入品",
+        "PR",
+        "アナウンス",
+        "模擬店平面図",
+        "調理工程",
+      ],
+      groups: [],
+      group_categories: [],
+      group_id: "",
+      dialog: false,
+      message: "",
+      international: false,
+      external: false,
+      refYears: "Years",
+      refYearID: 0,
+      refGroupCategories: "Categories",
+      refCategoryID: 0,
+      refInternational: "国際",
+      refInternationalID: 0,
+      refExternal: "学外",
+      refExternalID: 0,
+      groupCategories: [],
+      searchText: "",
+      internationalList: [
+        { id: 1, value: "国際", bool: true },
+        { id: 2, value: "国内", bool: false },
+      ],
+      externalList: [
+        { id: 1, value: "学外", bool: true },
+        { id: 2, value: "学内", bool: false },
+      ],
+    };
+  },
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    const groupCategoryRes = await $axios.$get("/group_categories");
+    const url =
+      "/api/v1/get_refinement_order_status_check?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
+    const groupsRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
 
       return {
         groups: groupsRes.data,

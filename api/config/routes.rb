@@ -178,6 +178,11 @@ Rails.application.routes.draw do
       post "get_refinement_order_infos" => "order_infos_api#get_refinement_order_infos"
       post "get_search_order_infos" => "order_infos_api#get_search_order_infos"
 
+      #---申請状況一覧
+      get "get_order_status_check_for_admin_view/:id" => "order_status_check_api#get_order_status_check_for_admin_view"
+      post "get_refinement_order_status_check" => "order_status_check_api#get_refinement_order_status_check"
+      post "get_search_order_status_check" => "order_status_check_api#get_search_order_status_check"
+
       #---開催日
       get "get_refinement_fes_date_by_fes_year/:fes_year_id" => "fes_dates_api#get_refinement_fes_date_by_fes_year"
       get "get_current_fes_dates" => "fes_dates_api#get_current_fes_dates"
