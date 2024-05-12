@@ -67,7 +67,8 @@
               {{ purchaseList.purchase_list_info.food_product }}
             </td>
             <td class="purchase">{{ purchaseList.purchase_list.items }}</td>
-            <td class="fresh">{{ purchaseList.purchase_list.is_fresh }}</td>
+            <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">なまもの</td>
+            <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">加工品</td>
             <td class="url">{{ purchaseList.purchase_list.url }}</td>
           </tr>
         </template>
@@ -164,8 +165,8 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
-        { id: 1, text: "はい", value: true },
-        { id: 2, text: "いいえ", value: false },
+        { id: 1, text: "はい", value: "なまもの" },
+        { id: 2, text: "いいえ", value: "加工品" },
       ],
       groupList: [],
       shopList: [],
