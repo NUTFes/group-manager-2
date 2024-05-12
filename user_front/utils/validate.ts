@@ -271,3 +271,10 @@ export const contactPersonSchema = object({
   name: string().required("入力してください\nPlease enter"),
   email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter")
 });
+
+export const cookingProcessOrderSchema = object({
+  preOpenKitchen: string().required("入力してください\nPlease enter"),
+  preOpenTent: string().required("入力してください\nPlease enter"),
+  duringOpenKitchen: string().required("入力してください\nPlease enter"),
+  duringOpenTent: string().required("入力してください\nPlease enter"),
+});
