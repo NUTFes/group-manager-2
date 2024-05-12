@@ -202,7 +202,7 @@ export default {
       createPassword: null,
       createPasswordConfirmation: null,
       createUserId: null,
-      createRoleId: 2,
+      createRoleId: 7,
     };
   },
   async asyncData({ $axios }) {
