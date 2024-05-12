@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).representatives.read">
     <SubHeader pageTitle="代表者一覧">
       <CommonButton v-if="this.$role(roleID).representatives.create" iconName="add_circle" :on_click="openAddModal">
         副代表追加
@@ -129,6 +129,7 @@
       {{ message }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -139,26 +140,24 @@ export default {
     return {
       headers: ["ID", "参加団体", "代表者", "副代表"],
       departmentList: [
-        { id: 1, name: "機械創造工学課程" },
-        { id: 2, name: "電気電子情報工学課程" },
-        { id: 3, name: "物質材料工学課程" },
-        { id: 4, name: "環境社会基盤工学課程" },
-        { id: 5, name: "生物機能工学課程" },
-        { id: 6, name: "情報・経営システム工学課程" },
-        { id: 7, name: "機械創造工学専攻" },
-        { id: 8, name: "電気電子情報工学専攻" },
-        { id: 9, name: "物質材料工学専攻" },
-        { id: 10, name: "環境社会基盤工学専攻" },
-        { id: 11, name: "生物機能工学専攻" },
-        { id: 12, name: "情報・経営システム工学専攻" },
-        { id: 13, name: "原子力システム安全工学専攻" },
-        { id: 14, name: "システム安全専攻" },
-        { id: 15, name: "技術科学イノベーション専攻" },
-        { id: 16, name: "情報・制御工学専攻" },
-        { id: 17, name: "材料工学専攻" },
-        { id: 18, name: "エネルギー・環境工学専攻" },
-        { id: 19, name: "生物統合工学専攻" },
-        { id: 20, name: "その他" },
+        { id: 1,  name: "機械工学分野/機械創造工学課程" },
+        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学過程" },
+        { id: 3,  name: "物質生物工学分野/物質材料工学過程/生物機能工学過程" },
+        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学過程" },
+        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学過程" },
+        { id: 6,  name: "機械工学分野/機械創造工学専攻" },
+        { id: 7,  name: "電気電子情報工学分野/電気電子情報工学専攻" },
+        { id: 8,  name: "物質生物工学分野/物質材料工学専攻/生物機能工学専攻" },
+        { id: 9,  name: "環境社会基盤工学分野/環境社会基盤工学専攻" },
+        { id: 10, name: "情報・経営システム工学分野/情報・経営システム工学専攻" },
+        { id: 11, name: "量子・原子力統合工学分野/原子力システム安全工学専攻" },
+        { id: 12, name: "システム安全工学専攻" },
+        { id: 13, name: "技術科学イノベーション専攻" },
+        { id: 14, name: "情報・制御工学分野/情報・制御工学専攻" },
+        { id: 15, name: "材料工学分野/材料工学専攻" },
+        { id: 16, name: "エネルギー工学分野/エネルギー・環境工学専攻" },
+        { id: 17, name: "社会環境・生物機能工学分野/生物統合工学専攻" },
+        { id: 18, name: "その他" },
       ],
       gradeList: [
         { id: 1, name: "B1[学部1年]" },
@@ -174,7 +173,7 @@ export default {
         { id: 11, name: "GD2[イノベ2年]" },
         { id: 12, name: "GD3[イノベ3年]" },
         { id: 13, name: "GD4[イノベ4年]" },
-        { id: 14, name: "GD4[イノベ5年]" },
+        { id: 14, name: "GD5[イノベ5年]" },
         { id: 15, name: "その他" },
       ],
       isOpenAddModal: false,
@@ -219,8 +218,28 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+    this.fetchFilteredData();
+
+    window.addEventListener('scroll', this.saveScrollPosition);
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     async refinementRepresentatives(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
@@ -229,6 +248,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.representatives = [];
       const refUrl =
         "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
@@ -236,6 +257,9 @@ export default {
       for (const res of refRes.data) {
         this.representatives.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchRepresentatives() {
       this.representatives = [];

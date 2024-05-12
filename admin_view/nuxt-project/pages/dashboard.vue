@@ -54,6 +54,17 @@ export default {
     Chart3,
     Update,
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+    });
+  },
+  method: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
+  },
   data() {
     return {
       user: [],
@@ -78,7 +89,7 @@ export default {
   computed: {
     myStyles() {
       return {
-        height: "300px",
+        height:"300px",
         width: "400px",
         position: "relative",
       };

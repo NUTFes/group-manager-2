@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_18_124539) do
+ActiveRecord::Schema.define(version: 2024_05_07_065259) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -40,6 +40,14 @@ ActiveRecord::Schema.define(version: 2024_04_18_124539) do
     t.integer "stage_id"
     t.string "time_point_start"
     t.string "time_point_end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "contact_people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "group_id"
+    t.string "name"
+    t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -135,6 +143,7 @@ ActiveRecord::Schema.define(version: 2024_04_18_124539) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "committee"
     t.boolean "is_international"
+    t.boolean "is_external"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -281,7 +290,6 @@ ActiveRecord::Schema.define(version: 2024_04_18_124539) do
     t.boolean "bgm"
     t.boolean "camera_permission"
     t.boolean "loud_sound"
-    t.text "stage_content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -386,6 +394,12 @@ ActiveRecord::Schema.define(version: 2024_04_18_124539) do
     t.integer "fes_year_id"
     t.boolean "is_edit_announcement"
     t.boolean "add_announcement"
+    t.boolean "is_edit_user"
+    t.boolean "is_edit_stage_common_option"
+    t.boolean "is_edit_public_relation"
+    t.boolean "is_edit_venue_map"
+    t.boolean "is_edit_cooking_process"
+    t.boolean "add_stage_order"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

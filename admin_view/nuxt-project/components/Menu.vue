@@ -110,6 +110,7 @@ export default {
       ],
       // 申請系
       order_items: [
+        { title: "申請状況一覧", icon: "task", click: "/order_status_check" },
         { title: "参加団体申請", icon: "groups", click: "/groups" },
         // {
         //   title: "企画名申請",
@@ -117,7 +118,7 @@ export default {
         //   click: "/project_names",
         // },
         {
-          title: "代表者申請",
+          title: "代表・副代表申請",
           icon: "directions_walk",
           click: "/representatives",
         },
@@ -140,7 +141,7 @@ export default {
         },
         { title: "従業員申請", icon: "directions_run", click: "/employees" },
         {
-          title: "販売食品申請",
+          title: "販売品申請",
           icon: "fastfood",
           click: "/food_products",
         },
@@ -159,6 +160,11 @@ export default {
           icon: "campaign",
           click: "/announcement",
         },
+        {
+          title: "調理工程申請",
+          icon: "restaurant",
+          click: "/cooking_process_order",
+        }
       ],
       // 操作系
       operation_items: [

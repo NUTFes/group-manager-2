@@ -10,6 +10,7 @@ const state = reactive({ currentUserName: "" });
 const registGroupId = ref<number>(0);
 const registGroupCategoryId = ref<number>(0);
 const config = useRuntimeConfig();
+const is_external = ref<boolean>(false);
 
 onMounted(async () => {
   loginCheck();
@@ -26,6 +27,7 @@ onMounted(async () => {
   ).then((response) => {
     registGroupId.value = response.data[0].group.id;
     registGroupCategoryId.value = response.data[0].group.group_category_id;
+    is_external.value = response.data[0].group.is_external;
     localStorage.setItem("group_id", registGroupId.value.toString());
     localStorage.setItem(
       "group_category_id",
@@ -39,12 +41,18 @@ onMounted(async () => {
 
 const links: { to: string; text: string }[] = [
   { to: "/mypage/edit_group", text: "Mypage.editGroup" },
-  { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
-  { to: "/mypage/password_reset", text: "Mypage.editPassword" },
   { to: "/mypage/publicRelations", text: "Mypage.editPR" },
-  { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
+  { to: "/mypage/edit_user_info", text: "Mypage.editUserInfo" },
   { to: "/regist/venueMap", text: "Mypage.regitstVenueMap" },
+  { to: "/mypage/password_reset", text: "Mypage.editPassword" },
+  { to: "/mypage/edit_announcement", text: "Mypage.editAnnouncemant" },
+  { to: "/mypage/edit_contact_person", text: "Mypage.editContactPerson" },
+  { to: "/mypage/edit_cooking_process", text: "Mypage.editCookingProcess"},
 ];
+
+const shouldDisplayLink = (link: { to: string; text: string }) => {
+  return link.text !== "Mypage.editContactPerson" || is_external.value;
+}
 </script>
 
 <template>
@@ -72,7 +80,7 @@ const links: { to: string; text: string }[] = [
             <MypageButton :text="$t('Mypage.check')" link="/regist_info" />
             <div class="grid md:grid-cols-2 justify-items-center my-2 gap-2 text-pink-400">
               <ui v-for="link in links" :key="link.text">
-                <nuxt-link :to="link.to" class="text-lg">{{
+                <nuxt-link v-if="shouldDisplayLink(link)" :to="link.to" class="text-lg">{{
                   $t(link.text)
                 }}</nuxt-link>
               </ui>

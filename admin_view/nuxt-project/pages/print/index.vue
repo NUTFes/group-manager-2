@@ -3,7 +3,7 @@
     <SubHeader pageTitle="書類印刷"></SubHeader>
     <Card width="100%">
       <VerticalTable>
-        <tr>
+        <tr v-if="this.$role(roleID).power_orders.read">
           <td>使用電力リスト</td>
           <td>
             <InTableButton iconName="file_download" :on_click="downloadPowerPDF"
@@ -14,7 +14,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).employees.read">
           <td>従業員リスト</td>
           <td>
             <InTableButton
@@ -27,7 +27,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).rental_items.read">
           <td>貸出物品リストまとめ</td>
           <td>
             <InTableButton
@@ -40,7 +40,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).food_products.read">
           <td>販売食品リスト</td>
           <td>
             <InTableButton
@@ -53,7 +53,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).groups.read">
           <td>連絡先リスト</td>
           <td>
             <InTableButton
@@ -66,7 +66,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).groups.read">
           <td>参加団体情報リストまとめ</td>
           <td>
             <InTableButton
@@ -79,7 +79,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).rental_items.read">
           <td>物品貸出表</td>
           <td>
             <InTableButton
@@ -92,7 +92,7 @@
             </InTableButton>
           </td>
         </tr>
-        <tr>
+        <tr v-if="this.$role(roleID).food_products.read">
           <td>保健所提出書類（調理計画・従事者）</td>
           <td>
             <InTableButton iconName="file_download" :on_click="downloadHealthOfficeDocumentsPDF">PDF</InTableButton>
@@ -119,7 +119,16 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+    });
+  },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     downloadPowerPDF: function () {
       window.open(
         this.$config.apiURL +

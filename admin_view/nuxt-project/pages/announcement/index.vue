@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content"  v-if="this.$role(roleID).announcements.read">
     <SubHeader pageTitle="会場アナウンス文申請一覧">
       <CommonButton
         v-if="this.$role(roleID).announcements.create"
@@ -89,7 +89,8 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
+        <div v-if="isMessageOver" style="color: red;">アナウンス文は300字以内で入力してください。</div>
+        <CommonButton iconName="add_circle" :on_click="submit" :disabled="isMessageOver"
           >登録</CommonButton
         >
       </template>
@@ -98,6 +99,7 @@
       {{ snackMessage }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -145,8 +147,26 @@ export default {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    isMessageOver() {
+      return this.message.length > 300;
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+
+    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = 'Year';
+    }
+    this.fetchFilteredData();
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
 
     async openAddModal() {
       const groupUrl = "/api/v1/get_groups_have_no_announcement";
@@ -193,7 +213,12 @@ export default {
       });
     },
     async refinementAnnouncements(item_id, name_list) {
-     // fes_yearで絞り込むとき
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
+      // fes_yearで絞り込むとき
       this.refYearID = item_id;
       // ALLの時
       if (item_id == 0) {
@@ -201,6 +226,8 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
+    },
+    async fetchFilteredData() {
       this.announcements = [];
       const refUrl =
         "/api/v1/get_refinement_announcements?fes_year_id=" +
@@ -209,6 +236,9 @@ export default {
       for (const res of refRes.data) {
         this.announcements.push(res);
       }
+      this.$nextTick(() => {
+        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      });
     },
     async searchAnnouncements() {
       this.announcements = [];

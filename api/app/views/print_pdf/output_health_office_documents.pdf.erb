@@ -1,103 +1,76 @@
 <body>
-  <h1>従　事　者　名　簿　(※)</h1>
-    <!-- 従事者名簿のテーブル -->
+  <% @groups.each do |group| %>
+    <h1>従　事　者　名　簿　(※)</h1>
     <table>
-    <tr>
+      <tr>
         <th class="first No">No.</th>
         <th class="first Belonging">所属（クラス等）</th>
         <th class="first Name">氏名</th>
         <th class="first Category">保護者、生徒等の区分</th>
-    </tr>
-    <tr>
-        <td class="No">1</td>
-        <td class="Belonging">焼き鳥くらりん</td>
-        <td class="Name">阿久津英司</td>
-        <td class="Category">生徒</td>
-    </tr>
-    <tr>
-        <td class="No">1</td>
-        <td class="Belonging">焼き鳥くらりん</td>
-        <td class="Name">阿久津英司</td>
-        <td class="Category">生徒</td>
-    </tr>
-    <tr>
-        <td class="No">1</td>
-        <td class="Belonging">焼き鳥くらりん</td>
-        <td class="Name">阿久津英司</td>
-        <td class="Category">生徒</td>
-    </tr>
-    <tr>
-        <td class="No">1</td>
-        <td class="Belonging">焼き鳥くらりん</td>
-        <td class="Name">阿久津英司</td>
-        <td class="Category">生徒</td>
-    </tr>
+      </tr>
+      <% group.employees.each_with_index do |employee, index| %>
+        <tr>
+          <td class="No"><%= index +1%></td>
+          <td class="Belonging"><%=group.name %></td>
+          <td class="Name"><%=employee.name %></td>
+          <td class="Category">生徒</td>
+        </tr>
+      <% end %>
     </table>
     <div class="attention">
-        <p>※  食品を管理する人についてのみ記入すること。</p>
+      <p>※  食品を管理する人についてのみ記入すること。</p>
     </div>
-  <div class="page-break"></div> <!-- ページブレーク -->
-  <h1>調理計画(※1)</h1>
-    <!-- 調理計画のテーブル -->
+    <div class="page-break"></div>
+    <h1>調理計画(※1)</h1>
     <table>
-        <tr>
-            <th rowspan="2">調理品目</th>
-            <th colspan="2">食品区分(※2)</br>(該当に◯)</th>
-            <th rowspan="2">提供予定</br>数量</th>
-            <th colspan="3">原材料の仕入状況</th>
-            <th rowspan="2">調理開始</br>日時</th>
-        </tr>
-        <tr>
-            <td>加熱調理</br>食品</td>
-            <td>既製食品</td>
-            <td>原材料名</td>
-            <td>仕入先</td>
-            <td>仕入日</td>
-        </tr>
-        <tr>
-            <td>焼き鳥</td>
-            <td>◯</td>
-            <td></td>
-            <td>200</td>
-            <td>焼きとり　加熱済み　ねぎ間串　50本入</td>
-            <td>ひらせい 長岡ニュータウン店</td>
-            <td>9月15,16日</td>
-            <td>9月16.17日</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+      <tr>
+        <th rowspan="2">販売品名</th>
+        <th colspan="2">食品区分(※2)</br>(該当に◯)</th>
+        <th rowspan="2">提供予定</br>数量</th>
+        <th colspan="3">原材料の仕入状況</th>
+        <th rowspan="2">調理開始</br>日時</th>
+      </tr>
+      <tr>
+        <td>加熱調理</br>食品</td>
+        <td>既製食品</td>
+        <td>原材料名</td>
+        <td>仕入先</td>
+        <td>仕入日</td>
+      </tr>
+      <% group.food_products.each do |food_product| %>
+        <% food_product.purchase_lists.each do |purchase_list| %>
+          <tr>
+            <td><%= food_product.name %></td>
+            <td><%= food_product.is_cooking ? '◯' : '' %></td>
+            <td><%= food_product.is_cooking ? '' : '◯' %></td>
+            <td><%= (food_product.first_day_num + food_product.second_day_num) / 2 %></td>
+            <td><%= purchase_list.items %></td>
+            <td><%= Shop.find(purchase_list.shop_id).name %></td>
+            <td>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 0 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+            </td>
+            <td>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 2 }.each do |fes_date| %>
+                <%= fes_date.date %><br>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
     </table>
     <div class="attention">
-        <p>※1  バザーが2日以上の場合は1日ごとに記載すること。</p>
-        <p>※2  現地で加熱調理するものは「加熱調理食品」欄に◯を記入</p>
-        <span>営業許可施設で調理された既製食品を現地で盛り付けるものは、「既製食品」欄に◯を記入</span>
+      <p>※1  バザーが2日以上の場合は1日ごとに記載すること。</p>
+      <p>※2  現地で加熱調理するものは「加熱調理食品」欄に◯を記入</p>
+      <span>営業許可施設で調理された既製食品を現地で盛り付けるものは、「既製食品」欄に◯を記入</span>
     </div>
+    <div class="page-break"></div>
+  <% end %>
 </body>

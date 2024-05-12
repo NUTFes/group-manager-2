@@ -59,8 +59,6 @@ class Group < ApplicationRecord
         }
     end
 
-    ### order_info (申請情報)
-
     # 全てのgroupとそれが持つorderを取得する
     def self.with_order_infos
       @record = Group.all
@@ -109,11 +107,14 @@ class Group < ApplicationRecord
                   }
                 }
               }
-            }
+            },
+            "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
+            "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
+            "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
+            "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
           }
         }
     end
-
 
     # 指定したIDのgroupとそれが持つorderを取得する
     def self.with_order_info(group_id)
@@ -162,7 +163,11 @@ class Group < ApplicationRecord
                 }
               }
             }
-          }
+          },
+          "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
+          "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
+          "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
+          "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
         }
       return @record
     end
@@ -215,7 +220,11 @@ class Group < ApplicationRecord
                   }
                 }
               }
-            }
+            },
+            "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
+            "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
+            "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
+            "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
           }
         }
     end
@@ -226,7 +235,6 @@ class Group < ApplicationRecord
         .map{
           |group|
           {
-
             "group": group,
             "user": group.user.nil? ? nil: group.user,
             "group_category": group.group_category.nil? ? nil : group.group_category.name,
@@ -269,7 +277,11 @@ class Group < ApplicationRecord
                   }
                 }
               }
-            }
+            },
+            "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
+            "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
+            "announcement": group.announcement.nil? ? nil : group.announcement.id,
+            "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
           }
         }
     end
@@ -664,6 +676,61 @@ class Group < ApplicationRecord
         }
     end
 
+    # 全てのgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_orders
+      @record = Group.eager_load(:cooking_process_order)
+        .map{
+          |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        }
+    end
+
+    # 指定したIDのgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_order(group_id)
+      @record = Group.eager_load(:cooking_process_order).where(id: group_id)
+        .map{
+          |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        }
+    end
+
+    # cooking_process_orderが存在しないgroupのみ取得する
+    def self.have_no_cooking_process_order(fes_year_id)
+      Group.eager_load(:cooking_process_order)
+        .where(fes_year_id: fes_year_id)
+        .filter_map { |group| group if group.cooking_process_order.nil? }
+    end
+
+    # 指定したfes_yearに対応するgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_order_narrow_down_by_fes_year(fes_year_id)
+      Group.eager_load(:cooking_process_order)
+        .where(fes_year_id: fes_year_id)
+        .map do |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        end
+    end
+
+    # 検索ワードに対応するgroupとそのcooking_process_orderを取得する
+    def self.with_cooking_process_order_narrow_down_by_search_word(word)
+      Group.eager_load(:cooking_process_order)
+        .where("name LIKE ?", "%#{word}%")
+        .map do |group|
+          {
+            "group": group,
+            "cooking_process_order": group.cooking_process_order,
+          }
+        end
+    end
+
     # 割り当てられたステージを取得
     def stage
       return self.group_identification.nil? || self.group_identification.stage_number.nil? ? nil : self.group_identification.stage_number.stage.name
@@ -677,6 +744,11 @@ class Group < ApplicationRecord
     # 識別番号取得
     def number
       return self.group_identification.nil? ? nil : self.group_identification.number
+    end
+
+    # 開催日取得
+    def date
+      return self.group_identification.nil? ? nil : self.group_identification.date
     end
 
     # 電力申請の総和を計算する

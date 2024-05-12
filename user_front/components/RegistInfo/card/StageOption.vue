@@ -8,7 +8,6 @@ interface Props {
   bgm: boolean | null
   cameraPermission: boolean | null
   loudSound: boolean | null
-  stageContent: string
   setting: boolean | null
 }
 const option = withDefaults(defineProps<Props>(), {
@@ -18,7 +17,6 @@ const option = withDefaults(defineProps<Props>(), {
   bgm: null,
   cameraPermission: null,
   loudSound: null,
-  stageContent: '',
   setting: null
 })
 
@@ -66,10 +64,6 @@ const openEditModal = () => {
         <div class="lower">{{ option.loudSound ? $t('StageOption.yes') : $t('StageOption.no') }}</div>
       </div>
       <RegistInfoDivideBar />
-      <div class="h-24">
-        <div class="upper">{{ $t('StageOption.content') }}</div>
-        <div class="w-80 break-normal">{{ option.stageContent }}</div>
-      </div>
     </template>
     <template v-if="isEditStageOption" #method>
       <div class="absolute right-8">
@@ -87,7 +81,6 @@ const openEditModal = () => {
     :camera-permission="cameraPermission"
     :bgm="bgm"
     :loud-sound="loudSound"
-    :stage-content="stageContent"
     @reload-stage-option="reloadStageOption"
   />
 </template>

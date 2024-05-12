@@ -6,7 +6,6 @@ class CreateStageCommonOptions < ActiveRecord::Migration[6.0]
       t.boolean :bgm
       t.boolean :camera_permission
       t.boolean :loud_sound
-      t.text :stage_content
 
       t.timestamps
     end

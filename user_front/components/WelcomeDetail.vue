@@ -189,6 +189,82 @@
             </div>
           </div>
         </div>
+
+        <!-- 10_PR文の申請 -->
+        <div class="w-full p-4 bg-white flex items-center justify-center">
+          <div class="w-4/5 flex gap-16 my-8">
+            <div class="relative z-10 flex flex-col">
+              <p class="text-lg sm:text-3xl">STEP</p>
+              <div class="flex items-center gap-4">
+                <p class="text-3xl sm:text-6xl text-[#e040fb]">10</p>
+                <p class="text-xl sm:text-5xl whitespace-nowrap">
+                  {{ $t("Welcome.regist10") }}
+                </p>
+              </div>
+              <div class="ml-24 mt-12">
+                {{ $t("Welcome.regist10Details") }}
+              </div>
+            </div>
+            <img class="w-1/2 opacity-50 md:opacity-100 md:w-1/3 absolute z-0 md:static" src="../assets/following-step04.svg" />
+          </div>
+        </div>
+
+        <!-- 11_アナウンス文の申請 -->
+        <div class="w-full p-4 bg-gray-200 flex items-center justify-center">
+          <div class="w-4/5 flex gap-16 my-8">
+            <img class="w-1/2 opacity-50 md:opacity-100 md:w-1/3 absolute z-0 md:static" src="../assets/following-step05.svg" />
+            <div class="relative z-10 flex flex-col">
+              <p class="text-lg sm:text-3xl">STEP</p>
+              <div class="flex items-center gap-4">
+                <p class="text-3xl sm:text-6xl text-[#e040fb]">11</p>
+                <p class="text-xl sm:text-5xl whitespace-nowrap">
+                  {{ $t("Welcome.regist11") }}
+                </p>
+              </div>
+              <div class="ml-24 mt-12">
+                {{ $t("Welcome.regist11Details") }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 12_模擬店平面図の申請 -->
+        <div class="w-full p-4 bg-white flex items-center justify-center">
+          <div class="w-4/5 flex gap-16 my-8">
+            <div class="relative z-10 flex flex-col">
+              <p class="text-lg sm:text-3xl">STEP</p>
+              <div class="flex items-center gap-4">
+                <p class="text-3xl sm:text-6xl text-[#e040fb]">12</p>
+                <p class="text-xl sm:text-5xl whitespace-nowrap">
+                  {{ $t("Welcome.regist12") }}
+                </p>
+              </div>
+              <div class="ml-24 mt-12">
+                {{ $t("Welcome.regist12Details") }}
+              </div>
+            </div>
+            <img class="w-1/2 opacity-50 md:opacity-100 md:w-1/3 absolute z-0 md:static" src="../assets/following-step06.svg" />
+          </div>
+        </div>
+
+        <!-- 13_調理工程の申請 -->
+        <div class="w-full p-4 bg-gray-200 flex items-center justify-center">
+          <div class="w-4/5 flex gap-16 my-8">
+            <img class="w-1/2 opacity-50 md:opacity-100 md:w-1/3 absolute z-0 md:static" src="../assets/following-step01.svg" />
+            <div class="relative z-10 flex flex-col">
+              <p class="text-lg sm:text-3xl">STEP</p>
+              <div class="flex items-center gap-4">
+                <p class="text-3xl sm:text-6xl text-[#e040fb]">13</p>
+                <p class="text-xl sm:text-5xl whitespace-nowrap">
+                  {{ $t("Welcome.regist13") }}
+                </p>
+              </div>
+              <div class="ml-24 mt-12">
+                {{ $t("Welcome.regist13Details") }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

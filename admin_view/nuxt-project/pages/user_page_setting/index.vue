@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).user_page_setting.read">
     <SubHeader pageTitle="ユーザー画面制御"></SubHeader>
     <Card width="100%">
       <VerticalTable>
@@ -248,6 +248,7 @@
       <InTableButton v-if="$role(roleID).user_page_setting.update" iconName="close" :on_click="() => {location.reload()}">キャンセル</InTableButton>
     </Row>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -288,6 +289,11 @@ export default {
   },
 
   mounted() {
+    window.addEventListener('scroll', this.saveScrollPosition);
+    this.$nextTick(() => {
+      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+    });
+    
     this.$axios
       .get("/user_page_settings")
       .then((response) => {
@@ -334,6 +340,9 @@ export default {
     }),
   },
   methods: {
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+    },
     update: function() {
       const update_url = "/user_page_settings/1";
       let params = new URLSearchParams();
