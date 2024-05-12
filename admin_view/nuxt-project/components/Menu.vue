@@ -160,6 +160,11 @@ export default {
           icon: "campaign",
           click: "/announcement",
         },
+        {
+          title: "調理工程申請",
+          icon: "restaurant",
+          click: "/cooking_process_order",
+        }
       ],
       // 操作系
       operation_items: [
