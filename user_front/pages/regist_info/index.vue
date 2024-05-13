@@ -385,7 +385,7 @@ const isStageOverlap = computed(() => {
           @click="tab = 8"
         >
           <div :class="{ select: tab === 8 }" class="title">
-            {$t("RegistInfo.product") }}
+            {{$t("RegistInfo.product") }}
           </div>
         </li>
         <li v-if="groupCategoryId === 1" @click="tab = 9">
