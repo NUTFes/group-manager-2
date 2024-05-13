@@ -80,7 +80,7 @@ const registUser = async () => {
     params: {
       name: registerParams.name,
       email: registerParams.mail,
-      role_id: 3,
+      role_id: 7,
       password: registerParams.password,
       password_confirmation: registerParams.passwordConfirm,
     },

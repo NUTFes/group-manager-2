@@ -29,7 +29,7 @@
               <td>{{ publicRelations.group.name }}</td>
             </tr>
             <tr>
-              <th>ダウンロードパス</th>
+              <th>PRイラスト</th>
               <td>
                 <div v-if='publicRelations.picture_path === null'>未登録</div>
                 <div v-else @click="DownloadPic(publicRelations.picture_path)">
