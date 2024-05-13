@@ -1,62 +1,72 @@
-RentalItemAllowList.seed( :id,
-# 机の貸し出し可能な団体種別
-    { id:  1 , rental_item_id:  1 , group_category_id: 1 } , # 模擬店(食品)
-    { id:  2 , rental_item_id:  1 , group_category_id: 2 } , # 模擬店(物品)
-    { id:  3 , rental_item_id:  1 , group_category_id: 4 } , # 展示体験
-    { id:  4 , rental_item_id:  1 , group_category_id: 5 } , # 研究室公開
-    { id:  5 , rental_item_id:  1 , group_category_id: 6 } , # その他
-# 長机の貸し出し可能な団体種別
-    { id:  6 , rental_item_id:  2 , group_category_id: 1 } , # 模擬店(食品)
-    { id:  7 , rental_item_id:  2 , group_category_id: 2 } , # 模擬店(物品)
-    { id:  8 , rental_item_id:  2 , group_category_id: 4 } , # 展示体験
-    { id:  9 , rental_item_id:  2 , group_category_id: 5 } , # 研究室公開
-    { id: 10 , rental_item_id:  2 , group_category_id: 6 } , # その他
-# 椅子の貸し出し可能な団体種別
-    { id: 11 , rental_item_id:  3 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 12 , rental_item_id:  3 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 13 , rental_item_id:  3 , group_category_id: 3 } , # ステージ
-    { id: 14 , rental_item_id:  3 , group_category_id: 4 } , # 展示体験
-    { id: 15 , rental_item_id:  3 , group_category_id: 5 } , # 研究室公開
-    { id: 16 , rental_item_id:  3 , group_category_id: 6 } , # その他
-# パイプ椅子の貸し出し可能な団体種別
-    { id: 17 , rental_item_id:  4 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 18 , rental_item_id:  4 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 19 , rental_item_id:  4 , group_category_id: 3 } , # ステージ
-    { id: 20 , rental_item_id:  4 , group_category_id: 4 } , # 展示体験
-    { id: 21 , rental_item_id:  4 , group_category_id: 5 } , # 研究室公開
-    { id: 22 , rental_item_id:  4 , group_category_id: 6 } , # その他
-# パーテーションの貸し出し可能な団体種別
-    { id: 23 , rental_item_id:  5 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 24 , rental_item_id:  5 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 25 , rental_item_id:  5 , group_category_id: 3 } , # ステージ
-    { id: 26 , rental_item_id:  5 , group_category_id: 4 } , # 展示体験
-    { id: 27 , rental_item_id:  5 , group_category_id: 5 } , # 研究室公開
-    { id: 28 , rental_item_id:  5 , group_category_id: 6 } , # その他
-# 掲示板の貸し出し可能な団体種別
-    { id: 29 , rental_item_id:  6 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 30 , rental_item_id:  6 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 31 , rental_item_id:  6 , group_category_id: 4 } , # 展示体験
-    { id: 32 , rental_item_id:  6 , group_category_id: 5 } , # 研究室公開
-    { id: 33 , rental_item_id:  6 , group_category_id: 6 } , # その他
-# 暗幕の貸し出し可能な団体種別
-    { id: 34 , rental_item_id:  7 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 35 , rental_item_id:  7 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 36 , rental_item_id:  7 , group_category_id: 4 } , # 展示体験
-    { id: 37 , rental_item_id:  7 , group_category_id: 5 } , # 研究室公開
-    { id: 38 , rental_item_id:  7 , group_category_id: 6 } , # その他
-# マイクの貸し出し可能な団体種別
-    { id: 39 , rental_item_id:  8 , group_category_id: 3 } , # ステージ
-# テントの貸出可能な団体種別
-    { id: 40 , rental_item_id: 10 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 41 , rental_item_id: 10 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 42 , rental_item_id: 10 , group_category_id: 4 } , # 展示体験
-    { id: 43 , rental_item_id: 10 , group_category_id: 5 } , # 研究室公開
-    { id: 44 , rental_item_id: 10 , group_category_id: 6 } , # その他
-# パーテーション足の貸し出し可能な団体種別
-    { id: 45 , rental_item_id: 11 , group_category_id: 1 } , # 模擬店(食品)
-    { id: 46 , rental_item_id: 11 , group_category_id: 2 } , # 模擬店(物品)
-    { id: 47 , rental_item_id: 11 , group_category_id: 3 } , # ステージ
-    { id: 48 , rental_item_id: 11 , group_category_id: 4 } , # 展示体験
-    { id: 49 , rental_item_id: 11 , group_category_id: 5 } , # 研究室公開
-    { id: 50 , rental_item_id: 11 , group_category_id: 6 } , # その他
+RentalItemAllowList.seed(:id,
+  { id: 1 ,  rental_item_id: 1 ,  group_category_id: 1 },
+  { id: 2 ,  rental_item_id: 1 ,  group_category_id: 2 },
+  { id: 3 ,  rental_item_id: 1 ,  group_category_id: 3 },
+  { id: 4 ,  rental_item_id: 1 ,  group_category_id: 4 },
+  { id: 5 ,  rental_item_id: 1 ,  group_category_id: 5 },
+  { id: 6 ,  rental_item_id: 1 ,  group_category_id: 6 },
+  { id: 7 ,  rental_item_id: 1 ,  group_category_id: 7 },
+  { id: 8 ,  rental_item_id: 2 ,  group_category_id: 1 },
+  { id: 9 ,  rental_item_id: 2 ,  group_category_id: 2 },
+  { id: 10 , rental_item_id: 2 ,  group_category_id: 3 },
+  { id: 11 , rental_item_id: 2 ,  group_category_id: 4 },
+  { id: 12 , rental_item_id: 2 ,  group_category_id: 5 },
+  { id: 13 , rental_item_id: 2 ,  group_category_id: 6 },
+  { id: 14 , rental_item_id: 2 ,  group_category_id: 7 },
+  { id: 15 , rental_item_id: 3 ,  group_category_id: 1 },
+  { id: 16 , rental_item_id: 3 ,  group_category_id: 2 },
+  { id: 17 , rental_item_id: 3 ,  group_category_id: 3 },
+  { id: 18 , rental_item_id: 3 ,  group_category_id: 4 },
+  { id: 19 , rental_item_id: 3 ,  group_category_id: 5 },
+  { id: 20 , rental_item_id: 3 ,  group_category_id: 6 },
+  { id: 21 , rental_item_id: 3 ,  group_category_id: 7 },
+  { id: 22 , rental_item_id: 4 ,  group_category_id: 1 },
+  { id: 23 , rental_item_id: 4 ,  group_category_id: 2 },
+  { id: 24 , rental_item_id: 4 ,  group_category_id: 4 },
+  { id: 25 , rental_item_id: 4 ,  group_category_id: 5 },
+  { id: 26 , rental_item_id: 4 ,  group_category_id: 6 },
+  { id: 27 , rental_item_id: 4 ,  group_category_id: 7 },
+  { id: 28 , rental_item_id: 5 ,  group_category_id: 1 },
+  { id: 29 , rental_item_id: 5 ,  group_category_id: 2 },
+  { id: 30 , rental_item_id: 5 ,  group_category_id: 4 },
+  { id: 31 , rental_item_id: 5 ,  group_category_id: 5 },
+  { id: 32 , rental_item_id: 5 ,  group_category_id: 6 },
+  { id: 33 , rental_item_id: 5 ,  group_category_id: 7 },
+  { id: 34 , rental_item_id: 6 ,  group_category_id: 1 },
+  { id: 35 , rental_item_id: 6 ,  group_category_id: 2 },
+  { id: 36 , rental_item_id: 6 ,  group_category_id: 4 },
+  { id: 37 , rental_item_id: 6 ,  group_category_id: 5 },
+  { id: 38 , rental_item_id: 6 ,  group_category_id: 6 },
+  { id: 39 , rental_item_id: 6 ,  group_category_id: 7 },
+  { id: 40 , rental_item_id: 7 ,  group_category_id: 1 },
+  { id: 41 , rental_item_id: 7 ,  group_category_id: 2 },
+  { id: 42 , rental_item_id: 7 ,  group_category_id: 4 },
+  { id: 43 , rental_item_id: 7 ,  group_category_id: 5 },
+  { id: 44 , rental_item_id: 7 ,  group_category_id: 6 },
+  { id: 45 , rental_item_id: 7 ,  group_category_id: 7 },
+  { id: 46 , rental_item_id: 8 ,  group_category_id: 6 },
+  { id: 47 , rental_item_id: 9 ,  group_category_id: 6 },
+  { id: 48 , rental_item_id: 10 , group_category_id: 6 },
+  { id: 49 , rental_item_id: 11 , group_category_id: 6 },
+  { id: 50 , rental_item_id: 12 , group_category_id: 6 },
+  { id: 51 , rental_item_id: 13 , group_category_id: 6 },
+  { id: 52 , rental_item_id: 14 , group_category_id: 6 },
+  { id: 53 , rental_item_id: 15 , group_category_id: 6 },
+  { id: 54 , rental_item_id: 16 , group_category_id: 6 },
+  { id: 55 , rental_item_id: 17 , group_category_id: 6 },
+  { id: 56 , rental_item_id: 18 , group_category_id: 6 },
+  { id: 57 , rental_item_id: 19 , group_category_id: 6 },
+  { id: 58 , rental_item_id: 20 , group_category_id: 6 },
+  { id: 59 , rental_item_id: 21 , group_category_id: 6 },
+  { id: 60 , rental_item_id: 22 , group_category_id: 6 },
+  { id: 61 , rental_item_id: 23 , group_category_id: 6 },
+  { id: 62 , rental_item_id: 24 , group_category_id: 6 },
+  { id: 63 , rental_item_id: 25 , group_category_id: 6 },
+  { id: 64 , rental_item_id: 26 , group_category_id: 6 },
+  { id: 65 , rental_item_id: 27 , group_category_id: 6 },
+  { id: 66 , rental_item_id: 28 , group_category_id: 6 },
+  { id: 67 , rental_item_id: 29 , group_category_id: 6 },
+  { id: 68 , rental_item_id: 30 , group_category_id: 6 },
+  { id: 69 , rental_item_id: 31 , group_category_id: 6 },
+  { id: 70 , rental_item_id: 32 , group_category_id: 6 }
 )
