@@ -1,7 +1,11 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).food_products.read">
     <SubHeader pageTitle="販売品申請一覧">
-      <CommonButton v-if="this.$role(roleID).food_products.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton
+        v-if="this.$role(roleID).food_products.create"
+        iconName="add_circle"
+        :on_click="openAddModal"
+      >
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
@@ -25,12 +29,19 @@
         >
           {{ refIsCooking }}
         </SearchDropDown>
+        <SearchDropDown
+          :nameList="CategoryList"
+          :on_click="refinementFoodProducts"
+          value="text"
+        >
+          {{ refCategory }}
+        </SearchDropDown>
       </template>
       <template v-slot:search>
         <SearchBar>
           <input
             v-model="searchText"
-            @keypress.enter="searchFoodProducts"
+            @keypress.enter="fetchFilteredData"
             type="text"
             size="25"
             placeholder="search"
@@ -62,7 +73,10 @@
             <td>{{ foodProduct.food_product.name }}</td>
             <td>{{ foodProduct.food_product.first_day_num }}</td>
             <td>{{ foodProduct.food_product.second_day_num }}</td>
-            <td>{{ foodProduct.food_product.is_cooking }}</td>
+            <td>
+              <div v-if="foodProduct.food_product.is_cooking">○</div>
+              <div v-else-if="!foodProduct.food_product.is_cooking">✖</div>
+            </td>
           </tr>
         </template>
       </Table>
@@ -150,11 +164,17 @@ export default {
         { id: 1, text: "調理あり", value: true },
         { id: 2, text: "調理なし", value: false },
       ],
+      CategoryList: [
+        { id: 1, text: "食品販売" },
+        { id: 2, text: "物品販売" },
+      ],
       foodProducts: [],
       refYears: "Year",
       refYearID: 0,
       refIsCooking: "調理あり/なし",
       refIsCookingID: 0,
+      refCategory: "食品/物品販売",
+      refCategoryID: 0,
       searchText: "",
       groupID: null,
       name: "",
@@ -192,33 +212,65 @@ export default {
     }),
   },
   mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
+    window.addEventListener("scroll", this.saveScrollPosition);
 
-    const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
+    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
       this.updateFilters(this.refYearID, this.yearList);
     } else {
-      this.refYears = 'Year';
+      this.refYears = "Year";
     }
 
-    const storedIsCookingID = localStorage.getItem(this.$route.path + 'RefIsCooking');
+    const storedIsCookingID = localStorage.getItem(
+      this.$route.path + "RefIsCooking"
+    );
     if (storedIsCookingID) {
       this.refIsCookingID = Number(storedIsCookingID);
       this.updateFilters(this.refIsCookingID, this.isCookingList);
     } else {
-      this.refIsCooking = '調理あり/なし';
+      this.refIsCooking = "調理あり/なし";
     }
+
+    const storedCategoryID = localStorage.getItem(
+      this.$route.path + "RefCategory"
+    );
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.CategoryList);
+    } else {
+      this.refCategory = "食品/物品販売";
+    }
+
+    const storedSearchText = localStorage.getItem(
+      this.$route.path + "SearchText"
+    );
+    if (storedSearchText) {
+      this.searchText = storedSearchText;
+    } else {
+      this.searchText = "";
+    }
+
     this.fetchFilteredData();
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
     async refinementFoodProducts(item_id, name_list) {
       this.updateFilters(item_id, name_list);
-      localStorage.setItem(this.$route.path + 'RefYear', this.refYearID);
-      localStorage.setItem(this.$route.path + 'RefIsCooking', this.refIsCookingID);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(
+        this.$route.path + "RefIsCooking",
+        this.refIsCookingID
+      );
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
       this.fetchFilteredData();
     },
     updateFilters(item_id, name_list) {
@@ -232,13 +284,25 @@ export default {
           this.refYears = name_list[item_id - 1].year_num;
         }
         // 調理の有無で絞り込むとき
-      } else if (name_list.toString() == this.isCookingList.toString()) {
+      } else if (
+        JSON.stringify(name_list) == JSON.stringify(this.isCookingList)
+      ) {
         this.refIsCookingID = item_id;
         // ALLの時
-        if (item_id == 0) {
-          this.refIsCooking == "ALL";
+        if (item_id === 0) {
+          this.refIsCooking = "調理あり/なし";
         } else {
           this.refIsCooking = name_list[item_id - 1].text;
+        }
+      } else if (
+        JSON.stringify(name_list) == JSON.stringify(this.CategoryList)
+      ) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id === 0) {
+          this.refCategory = "食品/物品販売";
+        } else {
+          this.refCategory = name_list[item_id - 1].text;
         }
       }
     },
@@ -248,32 +312,34 @@ export default {
         "/api/v1/get_refinement_food_products?fes_year_id=" +
         this.refYearID +
         "&is_cooking=" +
-        this.refIsCookingID;
+        this.refIsCookingID +
+        "&category_id=" +
+        this.refCategoryID +
+        "&word=" +
+        this.searchText;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
         this.foodProducts.push(res);
       }
-      const storedSearchText = localStorage.getItem(
-        this.$route.path + "SearchText"
-      );
-      if (storedSearchText) {
-        this.searchText = storedSearchText;
-        this.searchFoodProducts();
-      }
+
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.$nextTick(() => {
-        window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
       });
     },
-    async searchFoodProducts() {
-      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
-      this.foodProducts = [];
-      const searchUrl =
-        "/api/v1/get_search_food_products?word=" + this.searchText;
-      const refRes = await this.$axios.$post(searchUrl);
-      for (const res of refRes.data) {
-        this.foodProducts.push(res);
-      }
-    },
+    // async searchFoodProducts() {
+    //   localStorage.setItem(this.$route.path + "SearchText", this.searchText);
+    //   this.foodProducts = [];
+    //   const searchUrl =
+    //     "/api/v1/get_search_food_products?word=" + this.searchText;
+    //   const refRes = await this.$axios.$post(searchUrl);
+    //   for (const res of refRes.data) {
+    //     this.foodProducts.push(res);
+    //   }
+    // },
     async openAddModal() {
       const url = "/api/v1/get_groups_refinemented_by_current_fes_year";
       const resGroups = await this.$axios.$get(url);
