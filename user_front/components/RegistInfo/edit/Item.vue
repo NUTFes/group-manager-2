@@ -81,24 +81,6 @@ onMounted(async () => {
   }
 });
 
-// 物品のidから物品の情報を取得し、物品の貸し出し可能数を返す
-const getMaxValueByItemId = (id: number) => {
-  const items = selectableItemList.value.find((item) => item.id === id);
-
-  let maxValue = 0;
-  if (items?.name === "テント") {
-    maxValue = 1;
-  } else if (
-    selectedLocation.value === "屋外団体" &&
-    (items?.name === "机" || items?.name === "椅子")
-  ) {
-    maxValue = 20;
-  } else {
-    maxValue = 99;
-  }
-  return maxValue;
-};
-
 const updateSelectedLocation = (event: Event) => {
   const target = event.target as HTMLInputElement;
   switch (target.value) {
@@ -140,12 +122,6 @@ const editItem = async () => {
   // 貸し出し可能物品個数のチェック
   const itemId = newItem.value as number;
   const itemNum = newNum.value as number;
-  if (getMaxValueByItemId(itemId) < itemNum) {
-    alert(
-      "貸し出し可能個数を超過している物品があるので修正してください。\nPlease correct the number of items that have exceeded the number of items available for loan."
-    );
-    return;
-  }
   // 机の入力バリデーション
   if (itemId === 1 && itemNum > 20 && selectedLocation.value  === '屋外団体') {
     alert(
