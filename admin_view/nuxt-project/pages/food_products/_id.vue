@@ -4,10 +4,18 @@
       v-bind:pageTitle="foodProduct.food_product.name"
       pageSubTitle="販売品申請一覧"
     >
-      <CommonButton v-if="this.$role(this.roleID).food_products.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).food_products.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).food_products.delete" iconName="delete" :on_click="openDeleteModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).food_products.delete"
+        iconName="delete"
+        :on_click="openDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -39,7 +47,10 @@
           </tr>
           <tr>
             <th>調理の有無</th>
-            <td>{{ foodProduct.food_product.is_cooking }}</td>
+            <td>
+              <div v-if="foodProduct.food_product.is_cooking">○</div>
+              <div v-else-if="!foodProduct.food_product.is_cooking">✖</div>
+            </td>
           </tr>
           <tr>
             <th>登録日時</th>

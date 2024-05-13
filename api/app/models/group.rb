@@ -413,7 +413,7 @@ class Group < ApplicationRecord
               },
             "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
             "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-            "announcement": group.announcement.nil? ? nil : group.announcement.id,
+            "announcement": group.announcement.nil? ? nil : group.announcement.status,
             "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
           }
         }
@@ -879,7 +879,7 @@ class Group < ApplicationRecord
       return sum
     end
 
-    # 購入食品の個数を計算する
+    # 購入品の個数を計算する
     def count_purchase_lists
       count = 0
       self.food_products.each do |food_product|

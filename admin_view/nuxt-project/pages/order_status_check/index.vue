@@ -1,6 +1,8 @@
 <template>
-    <div class="main-content" v-if="this.$role(roleID).order_status.read">
-      <SubHeader pageTitle="申請状況一覧"></SubHeader>
+  <div class="main-content" v-if="this.$role(roleID).order_status.read">
+    <SubHeader pageTitle="申請状況一覧"></SubHeader>
+  <div class="main-content" v-if="this.$role(roleID).order_status.read">
+    <SubHeader pageTitle="申請状況一覧"></SubHeader>
 
     <SubSubHeader>
       <template v-slot:refinement>
@@ -46,80 +48,105 @@
       </template>
     </SubSubHeader>
 
-      <Card width="100%" >
-        <Table>
-          <template v-slot:table-header>
-            <th v-for="(header, index) in headers" :key="index">
-              {{ header }}
-            </th>
-          </template>
-          <template v-slot:table-body>
-            <tr
-              v-for="(group, index) in groups"
-              :key="index"
+    <Card width="100%">
+      <Table>
+        <template v-slot:table-header>
+          <th v-for="(header, index) in headers" :key="index">
+            {{ header }}
+          </th>
+        </template>
+        <template v-slot:table-body>
+          <tr v-for="(group, index) in groups" :key="index">
+            <td>{{ group.group.id }}</td>
+            <td>{{ group.group.name }}</td>
+            <td :class="{ unregistered: !group.sub_rep }">
+              <div v-if="group.sub_rep">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td
+              :class="{
+                unregistered:
+                  !group.place_order && !group.group.is_international,
+              }"
             >
-              <td>{{ group.group.id }}</td>
-              <td>{{ group.group.name}}</td>
-              <td :class="{unregistered: !group.sub_rep}">
-                <div v-if='group.sub_rep'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.place_order}">
-                <div v-if='group.place_order'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.power_orders}">
-                <div v-if='group.power_orders'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.rental_orders}">
-                <div v-if='group.rental_orders'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.stage_orders}">
-                <div v-if='group.stage_orders'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.stage_common_option}">
-                <div v-if='group.stage_common_option'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.employees}">
-                <div v-if='group.employees'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.food_products}">
-                <div v-if='group.food_products && group.food_products.food_product'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !(group.food_products && group.food_products.purchase_lists)}">
-                <div v-if='group.food_products && group.food_products.purchase_lists'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.public_relation}">
-                <div v-if='group.public_relation'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.announucement}">
-                <div v-if='group.announucement'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.venue_map}">
-                <div v-if='group.venue_map'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-              <td :class="{unregistered: !group.cooking_process_order}">
-                <div v-if='group.cooking_process_order'>◯</div>
-                <div v-else>✖️</div>
-              </td>
-            </tr>
-          </template>
-        </Table>
-      </Card>
-
-    </div>
-    <h1 v-else>閲覧権限がありません</h1>
-  </template>
+              <div v-if="group.group.is_international">ー</div>
+              <div
+                v-else-if="group.place_order && !group.group.is_international"
+              >
+                ◯
+              </div>
+              <div
+                v-else-if="!group.place_order && !group.group.is_international"
+              >
+                ✖️
+              </div>
+            </td>
+            <td :class="{ unregistered: !group.power_orders }">
+              <div v-if="group.power_orders">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.rental_orders }">
+              <div v-if="group.rental_orders">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.stage_orders }">
+              <div v-if="group.stage_orders">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.stage_common_option }">
+              <div v-if="group.stage_common_option">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.employees }">
+              <div v-if="group.employees">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.food_products }">
+              <div
+                v-if="group.food_products && group.food_products.food_product"
+              >
+                ◯
+              </div>
+              <div v-else>✖️</div>
+            </td>
+            <td
+              :class="{
+                unregistered: !(
+                  group.food_products && group.food_products.purchase_lists
+                ),
+              }"
+            >
+              <div
+                v-if="group.food_products && group.food_products.purchase_lists"
+              >
+                ◯
+              </div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.public_relation }">
+              <div v-if="group.public_relation">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.announcement }">
+              <div v-if="group.announcement==='申請済み'">◯</div>
+              <div v-else-if="group.announcement==='申請しない'">ー</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.venue_map }">
+              <div v-if="group.venue_map">◯</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.cooking_process_order }">
+              <div v-if="group.cooking_process_order">◯</div>
+              <div v-else>✖️</div>
+            </td>
+          </tr>
+        </template>
+      </Table>
+    </Card>
+  </div>
+  <h1 v-else>閲覧権限がありません</h1>
+</template>
 
 <script>
 import { mapState } from "vuex";
@@ -153,11 +180,11 @@ export default {
       external: false,
       refYears: "Years",
       refYearID: 0,
-      refGroupCategories: "Categories",
+      refGroupCategories: "ALL",
       refCategoryID: 0,
-      refInternational: "国際",
+      refInternational: "ALL",
       refInternationalID: 0,
-      refExternal: "学外",
+      refExternal: "ALL",
       refExternalID: 0,
       groupCategories: [],
       searchText: "",
@@ -185,26 +212,94 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
     });
 
-      return {
-        groups: groupsRes.data,
-        yearList: yearsRes.data,
-        refYearID: currentYearRes.data.fes_year_id,
-        refYears: currentYears[0].year_num,
-      };
-    },
-    computed: {
-      ...mapState({
-        roleID: (state) => state.users.role,
-      }),
-    },
-    mounted() {
-      this.refinementgroups(this.refYearID, this.yearList);
+    return {
+      groups: groupsRes.data,
+      groupCategories: groupCategoryRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+    };
+  },
+  computed: {
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
+  },
+  mounted() {
+    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
 
-      window.addEventListener('scroll', this.saveScrollPosition);
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = "Year";
+    }
+
+    const storedCategoryID = localStorage.getItem(
+      this.$route.path + "RefCategory"
+    );
+
+    if (storedCategoryID) {
+      this.refCategoryID = Number(storedCategoryID);
+      this.updateFilters(this.refCategoryID, this.groupCategories);
+    } else {
+      this.refGroupCategories = "Categories";
+    }
+
+    const storedInternationalID = localStorage.getItem(
+      this.$route.path + "RefInternational"
+    );
+
+    if (storedInternationalID) {
+      this.refInternationalID = Number(storedInternationalID);
+      this.updateFilters(this.refInternationalID, this.internationalList);
+    } else {
+      this.refInternational = "International";
+    }
+
+    const storedExternalID = localStorage.getItem(
+      this.$route.path + "RefExternal"
+    );
+
+    if (storedExternalID) {
+      this.refExternalID = Number(storedExternalID);
+      this.updateFilters(this.refExternalID, this.externalList);
+    } else {
+      this.refExternal = "External";
+    }
+
+    this.fetchFilteredData();
+
+    window.addEventListener("scroll", this.saveScrollPosition);
+  },
+  methods: {
+    saveScrollPosition() {
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
-    methods: {
-      async refinementgroups(item_id, name_list) {
-       // fes_yearで絞り込むとき
+    async refinementGroups(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      localStorage.setItem(
+        this.$route.path + "RefCategory",
+        this.refCategoryID
+      );
+      localStorage.setItem(
+        this.$route.path + "RefInternational",
+        this.refInternationalID
+      );
+      localStorage.setItem(
+        this.$route.path + "RefExternal",
+        this.refExternalID
+      );
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
+      console.log(item_id, name_list[0]);
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
@@ -212,44 +307,86 @@ export default {
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
-        this.groups = [];
-        const refUrl =
-          "/api/v1/get_refinement_order_infos?fes_year_id=" +
-          this.refYearID;
-        const refRes = await this.$axios.$post(refUrl);
-        for (const res of refRes.data) {
-          this.groups.push(res);
+      } else if (name_list.toString() == this.groupCategories.toString()) {
+        this.refCategoryID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refGroupCategories = "ALL";
+        } else {
+          this.refGroupCategories = name_list[item_id - 1].name;
         }
-        const storedSearchText = localStorage.getItem(
-          this.$route.path + "SearchText"
-        );
-        if (storedSearchText) {
-          this.searchText = storedSearchText;
-          this.searchGroups();
+        // internationalで絞り込むとき
+      } else if (Object.is(name_list, this.internationalList)) {
+        this.refInternationalID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refInternational = "ALL";
+        } else {
+          this.refInternational = name_list[item_id - 1].value;
         }
-      },
-      async searchGroups() {
-        localStorage.setItem(this.$route.path + "SearchText", this.searchText);
-        this.groups = [];
-        const searchUrl = "/api/v1/get_search_order_infos?word=" + this.searchText;
-        const refRes = await this.$axios.$post(searchUrl);
-        for (const res of refRes.data) {
-            this.groups.push(res);
+        // externalで絞り込む時
+      } else if (Object.is(name_list, this.externalList)) {
+        this.refExternalID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refExternal = "ALL";
+        } else {
+          this.refExternal = name_list[item_id - 1].value;
         }
-      },
+      }
     },
-  };
-  </script>
-  <style scoped>
-  .unregistered {
-    background-color: red;
-    color: white;
-  }
-  .normal-table td.unregistered:hover {
-    background-color: red !important;
-    color: white;
-    background: none;  /* 線形グラデーションを上書きして無効にします */
-    -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
-    -webkit-text-fill-color: black !important;
-  }
-  </style>
+    async fetchFilteredData() {
+      this.groups = [];
+      const refUrl =
+        "/api/v1/get_refinement_order_status_check?fes_year_id=" +
+        this.refYearID +
+        "&group_category_id=" +
+        this.refCategoryID +
+        "&is_international=" +
+        this.refInternationalID +
+        "&is_external=" +
+        this.refExternalID;
+      const refRes = await this.$axios.$post(refUrl);
+      for (const res of refRes.data) {
+        this.groups.push(res);
+      }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchGroups();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
+      });
+    },
+    async searchGroups() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
+      this.groups = [];
+      const searchUrl =
+        "/api/v1/get_search_order_status_check?word=" + this.searchText;
+      const refRes = await this.$axios.$post(searchUrl);
+      for (const res of refRes.data) {
+        this.groups.push(res);
+      }
+    },
+  },
+};
+</script>
+<style scoped>
+.unregistered {
+  background-color: red;
+  color: white;
+}
+.normal-table td.unregistered:hover {
+  background-color: red !important;
+  color: white;
+  background: none; /* 線形グラデーションを上書きして無効にします */
+  -webkit-background-clip: initial !important; /* デフォルトの状態に戻します */
+  -webkit-text-fill-color: black !important;
+}
+</style>
