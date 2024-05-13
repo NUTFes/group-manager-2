@@ -44,8 +44,8 @@
     "regist6Details": "あなたの団体が技大祭当日に使用する製品の製品名・消費電力量・メーカー・型番・製品URLを登録してください。",
     "regist7": "従業員登録",
     "regist7Details": "従業員の氏名、学籍番号を登録してください。",
-    "regist8": "販売食品登録",
-    "regist8Details": "あなたの団体の販売食品名、調理の有無、1日目と2日目の販売予定数の登録をしてください。",
+    "regist8": "販売品登録",
+    "regist8Details": "あなたの団体の販売品名、調理の有無、1日目と2日目の販売予定数の登録をしてください。",
     "regist9": "購入品登録",
     "regist9Details": "あなたの団体の購入材料名、購入場所、購入日、生ものか否かの登録をしてください。",
     "regist10":"PR文の申請",
@@ -115,7 +115,7 @@
     "item": "物品申請",
     "employees": "従業員申請",
     "food": "食品申請",
-    "saleGoods": "物品販売",
+    "product": "販売品申請",
     "purchase": "購入品申請",
     "placeMessage": "野外・室内どちらかのみの申請でお願いいたします。",
     "ItemMessage": "ステージ団体、屋内団体、屋外団体いずれかのみの申請でお願いいたします。"
@@ -262,31 +262,13 @@
     "studentId": "学籍番号"
   },
 
-  "Food": {
-    "registFood": "販売食品の登録",
-    "addFood": "販売食品の追加",
-    "deleteFood": "販売食品の削除",
-    "editFood": "販売食品の編集",
-    "name": "販売食品名",
-    "cook": "調理の有無",
-    "select": "選択してください",
-    "yes": "有",
-    "no": "無",
-    "numberFirstDay": "１日目の販売予定数",
-    "numberSecondDay": "２日目の販売予定数",
-    "firstDay": "１日目",
-    "secondDay": "２日目",
-    "count": "個",
-    "sold": "販売",
-    "toBe": "予定数"
-  },
-
-  "SaleGoods": {
-    "registSaleGoods": "販売物品の登録",
-    "addSaleGoods": "販売物品の追加",
-    "deleteSaleGoods": "販売物品の削除",
-    "editSaleGoods": "販売物品の編集",
+  "Product": {
+    "registProduct": "販売品の登録",
+    "addProduct": "販売品の追加",
+    "deleteProduct": "販売品の削除",
+    "editProduct": "販売品の編集",
     "name": "販売品名",
+    "cook": "調理の有無",
     "select": "選択してください",
     "yes": "有",
     "no": "無",

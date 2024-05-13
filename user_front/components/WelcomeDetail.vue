@@ -152,7 +152,7 @@
           </div>
         </div>
 
-        <!-- 08_販売食品登録 -->
+        <!-- 08_販売品登録 -->
         <div class="w-full p-4 bg-white flex items-center justify-center">
           <div class="w-4/5 flex gap-16 my-8">
             <div class="relative z-10 flex flex-col">

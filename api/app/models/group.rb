@@ -879,7 +879,7 @@ class Group < ApplicationRecord
       return sum
     end
 
-    # 購入食品の個数を計算する
+    # 購入品の個数を計算する
     def count_purchase_lists
       count = 0
       self.food_products.each do |food_product|

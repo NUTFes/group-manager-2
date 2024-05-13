@@ -41,7 +41,7 @@
           </td>
         </tr>
         <tr v-if="this.$role(roleID).food_products.read">
-          <td>販売食品リスト</td>
+          <td>販売品リスト</td>
           <td>
             <InTableButton
               iconName="file_download"
@@ -162,7 +162,7 @@ export default {
           "/print_pdf/food_products/" +
           this.currentYearID +
           "/output.pdf",
-        "販売食品リスト"
+        "販売品リスト"
       );
     },
     downloadContactsPDF: function () {
@@ -219,7 +219,7 @@ export default {
     async downloadFoodProductsCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
-      window.open(url, "販売食品リスト_CSV");
+      window.open(url, "販売品リスト_CSV");
     },
     async downloadContactsCSV() {
       const url =
