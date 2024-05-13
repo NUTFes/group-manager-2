@@ -164,7 +164,12 @@ export default {
           title: "調理工程申請",
           icon: "restaurant",
           click: "/cooking_process_order",
-        }
+        },
+        {
+          title: "模擬店平面図申請",
+          icon: "campaign",
+          click: "/venue_maps",
+        },
       ],
       // 操作系
       operation_items: [
