@@ -158,7 +158,7 @@ const addItem = async () => {
     // 1つ以上の申請があるとき
     if(itemNum > 1){
       alert(
-        "テントが複数選択されています。1つにしてください。\Multiple tents have been selected, please select one."
+        "テントが複数選択されています。1つにしてください。\nMultiple tents have been selected, please select one."
     );
     return;
     }
