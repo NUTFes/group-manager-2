@@ -38,9 +38,9 @@ class PrintPdfController < ApplicationController
     output_groups_with_categories("output_rental_items_list", "output_rental_items_list_pdf", "貸出物品リストまとめ", "Landscape")
   end
 
-  # 販売食品リスト
+  # 販売品リスト
   def output_food_products_pdf
-    output_groups_in_group_category_1("output_food_products", "output_food_products_pdf", "販売食品リスト", "Landscape")
+    output_groups_in_group_category_1("output_food_products", "output_food_products_pdf", "販売品リスト", "Landscape")
   end
 
   # 連絡先リスト

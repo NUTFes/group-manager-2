@@ -2,7 +2,7 @@
   <div class="main-content">
     <SubHeader
       v-bind:pageTitle="purchaseList.purchase_list.items"
-      pageSubTitle="購入食品申請一覧"
+      pageSubTitle="購入品申請一覧"
       class="item"
     >
       <CommonButton

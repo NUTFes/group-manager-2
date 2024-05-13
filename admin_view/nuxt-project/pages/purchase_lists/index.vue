@@ -1,6 +1,6 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).purchase_lists.read">
-    <SubHeader pageTitle="購入食品申請一覧">
+    <SubHeader pageTitle="購入品申請一覧">
       <CommonButton
         v-if="this.$role(roleID).purchase_lists.create"
         iconName="add_circle"

@@ -145,7 +145,7 @@
           </td>
         </tr>
         <tr>
-          <td>販売食品の登録</td>
+          <td>販売品の登録</td>
           <td>
             <p v-if="is_regist_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -155,7 +155,7 @@
           </td>
         </tr>
         <tr>
-          <td>販売食品の追加</td>
+          <td>販売品の追加</td>
           <td>
             <p v-if="add_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -165,7 +165,7 @@
           </td>
         </tr>
         <tr>
-          <td>販売食品情報編集・削除</td>
+          <td>販売品情報編集・削除</td>
           <td>
             <p v-if="is_edit_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
