@@ -24,9 +24,6 @@ class AnnouncementsController < ApplicationController
   # PATCH/PUT /announcements/1
   # PATCH/PUT /announcements/1.json
   def update
-    puts @announcement.message
-    puts params[:status]
-    puts announcement_params
     @announcement.update(announcement_params)
     render json: fmt(created, @announcement, "Updated announcement id = "+params[:id])
   end
