@@ -171,9 +171,9 @@ export default {
       foodProducts: [],
       refYears: "Year",
       refYearID: 0,
-      refIsCooking: "調理あり/なし",
+      refIsCooking: "ALL",
       refIsCookingID: 0,
-      refCategory: "食品/物品販売",
+      refCategory: "ALL",
       refCategoryID: 0,
       searchText: "",
       groupID: null,
@@ -229,7 +229,7 @@ export default {
       this.refIsCookingID = Number(storedIsCookingID);
       this.updateFilters(this.refIsCookingID, this.isCookingList);
     } else {
-      this.refIsCooking = "調理あり/なし";
+      this.refIsCooking = "ALL";
     }
 
     const storedCategoryID = localStorage.getItem(
@@ -239,7 +239,7 @@ export default {
       this.refCategoryID = Number(storedCategoryID);
       this.updateFilters(this.refCategoryID, this.CategoryList);
     } else {
-      this.refCategory = "食品/物品販売";
+      this.refCategory = "ALL";
     }
 
     const storedSearchText = localStorage.getItem(
@@ -290,7 +290,7 @@ export default {
         this.refIsCookingID = item_id;
         // ALLの時
         if (item_id === 0) {
-          this.refIsCooking = "調理あり/なし";
+          this.refIsCooking = "ALL";
         } else {
           this.refIsCooking = name_list[item_id - 1].text;
         }
@@ -300,7 +300,7 @@ export default {
         this.refCategoryID = item_id;
         // ALLの時
         if (item_id === 0) {
-          this.refCategory = "食品/物品販売";
+          this.refCategory = "ALL";
         } else {
           this.refCategory = name_list[item_id - 1].text;
         }
