@@ -795,6 +795,73 @@ class Group < ApplicationRecord
         }
     end
 
+    ### venue map (模擬店平面図)
+
+    # 全てのgroupとそのvenue_mapを取得する
+    def self.with_venue_maps
+      @records = Group.preload(:venue_map)
+        .map{
+          |group|
+          {
+            "group": group,
+            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
+            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
+            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
+            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+          }
+        }
+    end
+
+    # 指定したIDのgroupとそのpublic_relationを取得する
+    def self.with_venue_map(group_id)
+      @record = Group.eager_load(:venue_map).where(groups: {id: group_id})
+        .map{
+          |group|
+          {
+            "group": group,
+            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
+            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
+            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
+            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+          }
+        }
+    end
+
+    # venue_mapが存在しないgroupのみ取得する
+    def self.have_no_venue_map(fes_year_id)
+      @records = Group.eager_load(:venue_map).where(groups: {fes_year_id: fes_year_id}).filter_map { |group| group if group.venue_map.nil? }
+    end
+
+    # 指定したfes_yearに対応するgroupとそのvenue_mapを取得する
+    def self.with_venue_map_narrow_down_by_fes_year(fes_year_id)
+      @record = Group.eager_load(:venue_map).where(groups: {fes_year_id: fes_year_id})
+        .map{
+          |group|
+          {
+            "group": group,
+            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
+            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
+            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
+            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+          }
+        }
+    end
+
+    # 検索ワードに対応するgroupとそのvenue_mapを取得する
+    def self.with_venue_map_narrow_down_by_search_word(word)
+      @record = Group.eager_load(:venue_map).where("name like ?","%#{word}%")
+        .map{
+          |group|
+          {
+            "group": group,
+            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
+            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
+            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
+            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+          }
+        }
+    end
+
     # 全てのgroupとそのcooking_process_orderを取得する
     def self.with_cooking_process_orders
       @record = Group.eager_load(:cooking_process_order)

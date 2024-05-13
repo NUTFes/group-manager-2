@@ -153,6 +153,12 @@ Rails.application.routes.draw do
       post "get_search_public_relations" => "public_relations_api#get_search_public_relations"
       get "get_groups_have_no_public_relation" => "groups_api#get_groups_have_no_public_relation"
 
+      #---模擬店平面図申請ページ
+      get "get_venue_map_for_admin_view/:id" => "venue_maps_api#get_venue_map_for_admin_view"
+      post "get_refinement_venue_maps" => "venue_maps_api#get_refinement_venue_maps"
+      post "get_search_venue_maps" => "venue_maps_api#get_search_venue_maps"
+      get "get_groups_have_no_venue_map" => "groups_api#get_groups_have_no_venue_map"
+
       #---会場アナウンス文申請
       get "get_announcement_index_for_admin_view" => "announcements_api#get_announcement_index_for_admin_view"
       get "get_announcement_show_for_admin_view/:id" => "announcements_api#get_announcement_show_for_admin_view"
