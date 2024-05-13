@@ -115,8 +115,6 @@ const outsideRentableItemList_Id_out = computed(() => {
   return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 9);
 });
 
-console.log("selectableItemList",selectableItemList)
-console.log("selectedLocation",selectedLocation)
 
 
 const newItem = ref<number | null>();
