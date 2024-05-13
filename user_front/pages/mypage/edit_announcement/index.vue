@@ -5,6 +5,7 @@ interface Announcement {
   id: number;
   group_id: number;
   message: string;
+  status: string;
   created_at: string;
   updated_at: string;
 }
@@ -15,11 +16,11 @@ const state = reactive({
   language: "",
 });
 
-
 const currentAnnouncement = ref<Announcement>();
 const config = useRuntimeConfig();
 const groupId = ref<number>(0);
 const message = ref<string>("");
+const status = ref<string>("未申請");
 const isEditAnnouncement = ref<boolean>();
 
 onMounted(async () => {
@@ -38,6 +39,7 @@ onMounted(async () => {
 
     if (currentAnnouncement.value) {
       message.value = currentAnnouncement.value.message;
+      status.value = currentAnnouncement.value.status || "未申請";
     }
   });
   const settingUrl = config.APIURL + "/user_page_settings";
@@ -66,17 +68,24 @@ const isMessageOver = computed(() => {
 });
 
 const postAnnouncement = () => {
+  console.log("message.value",message.value)
+  console.log("status.value",status.value)
   if (message.value.length === 0) {
     alert("会場アナウンス文を入力してください\nPlease enter the text of the venue announcement");
     return;
   }
 
+  if (status.value === "申請しない") {
+    message.value = "";
+  }
+
   if (currentAnnouncement.value) {
-    const putURl = "/announcements/" + currentAnnouncement.value?.id;
+    const putURL = "/announcements/" + currentAnnouncement.value?.id;
     axios
-      .put(config.APIURL + putURl, {
+      .put(config.APIURL + putURL, {
         group_id: groupId.value,
         message: message.value,
+        status: status.value,
       })
       .then((res) => {
         alert("会場アナウンスを更新しました\nVenue announcements have been updated");
@@ -90,6 +99,7 @@ const postAnnouncement = () => {
     axios
       .post(config.APIURL + postUrl, {
         message: message.value,
+        status: status.value,
       })
       .then((res) => {
         alert("会場アナウンスを登録しました\nVenue announcements have been registered");
@@ -113,10 +123,20 @@ const postAnnouncement = () => {
         <span class="text-3xl mr-4">{{ $t("Announcement.text") }}</span>
         <p v-if="isMessageOver" class="text-red-500 text-sm">{{ $t("Announcement.over") }}</p>
       </div>
-      <textarea class="border-2 w-[60%]" v-model="message"></textarea>
+      <div class="my-4 flex">
+        <div class="mr-4">
+          <input type="radio" id="apply" name="apply" value="申請済み" v-model="status">
+          <label for="apply">{{ $t('Announcement.apply') }}</label>
+        </div>
+        <div>
+          <input type="radio" id="noApply" name="apply" value="申請しない" v-model="status">
+          <label for="noApply">{{ $t('Announcement.noApply') }}</label>
+        </div>
+      </div>
+      <textarea v-if="status === '申請済み'" class="border-2 w-[60%]" v-model="message"></textarea>
       <RegistPageButton
         v-if="isEditAnnouncement"
-        :text="$t('Announcement.edit')"
+        :text="$t('Announcement.regist')"
         @click="postAnnouncement"
         :disabled="isMessageOver"
       ></RegistPageButton>

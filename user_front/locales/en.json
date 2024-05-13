@@ -94,7 +94,9 @@
     "text": "Announcement text at the venue",
     "edit": "editing",
     "regist": "registing",
-    "over": "This announcement text is over 125 words."
+    "over": "This announcement text is over 125 words.",
+    "apply": "Apply",
+    "noApply": "Not applied"
   },
 
   "VenueMap": {

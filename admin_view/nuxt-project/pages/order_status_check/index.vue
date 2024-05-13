@@ -111,8 +111,9 @@
               <div v-if="group.public_relation">◯</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.announucement }">
-              <div v-if="group.announucement">◯</div>
+            <td :class="{ unregistered: !group.announcement }">
+              <div v-if="group.announcement==='申請済み'">◯</div>
+              <div v-else-if="group.announcement==='申請しない'">ー</div>
               <div v-else>✖️</div>
             </td>
             <td :class="{ unregistered: !group.venue_map }">

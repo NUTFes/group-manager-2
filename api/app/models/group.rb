@@ -413,7 +413,7 @@ class Group < ApplicationRecord
               },
             "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
             "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-            "announcement": group.announcement.nil? ? nil : group.announcement.id,
+            "announcement": group.announcement.nil? ? nil : group.announcement.status,
             "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
           }
         }
