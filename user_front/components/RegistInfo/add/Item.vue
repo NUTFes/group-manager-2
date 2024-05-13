@@ -115,6 +115,14 @@ const addItem = async () => {
   // 貸し出し可能物品個数のチェック
   const itemId = newItem.value as number;
   const itemNum = newNum.value as number;
+
+  // ９９個以上は申請させない
+  if (itemNum > 99) {
+    alert(
+      "貸し出し数が上限を超えています。少なくしてください。\nThe number of loans has exceeded the limit. Please reduce the number."
+    );
+    return;
+  }
   // 机の入力バリデーション
   if (itemId === 1 && itemNum > 20 && selectedLocation.value === '屋外団体') {
     alert(

@@ -1,8 +1,6 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).order_status.read">
     <SubHeader pageTitle="申請状況一覧"></SubHeader>
-  <div class="main-content" v-if="this.$role(roleID).order_status.read">
-    <SubHeader pageTitle="申請状況一覧"></SubHeader>
 
     <SubSubHeader>
       <template v-slot:refinement>
