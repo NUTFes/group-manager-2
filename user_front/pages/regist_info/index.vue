@@ -321,6 +321,10 @@ const isRentalItemOverlap = computed(() => {
   const rentalOrder = rentalOrders.value.map((rentalOrder) => {
     return rentalOrder.rental_item.name;
   });
+  // テントと小テントが存在してもエラーがでるようにしたい。
+  if (rentalOrder.includes("テント") && rentalOrder.includes("小テント")) {
+    return true
+  }
   const rentalOrderSet = new Set(rentalOrder);
   return rentalOrder.length !== rentalOrderSet.size;
 });
@@ -609,6 +613,9 @@ const isStageOverlap = computed(() => {
 
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <div class="text-xl flex gap-3">
+              <p>{{ $t("RegistInfo.ItemMessage") }}</p>
+            </div>
           <Button
             v-if="isAddItem && !isRentalItemOverlap"
             class="fixed right-0 bottom-0 m-10 mb-14"
