@@ -26,20 +26,42 @@ class Api::V1::FoodProductsApiController < ApplicationController
     fes_year_id = params[:fes_year_id].to_i
     is_cooking = params[:is_cooking].to_i
     is_cooking_list = [nil, true, false]
+    category_id = params[:category_id].to_i
+    search_word = params[:word]
     # is_cooking
     # 0: 指定なし(ALL), 1: 調理あり(true), 2: 調理なし(false)
-    # 両方ともALL
-    if fes_year_id == 0 && is_cooking == 0
+    # category_id
+    # 0: 指定なし(ALL), 1: 食品販売, 2: 物品販売
+    # word あるかないか
+    # 全部ALL
+    if fes_year_id == 0 && is_cooking == 0 && category_id == 0
       @food_products = FoodProduct.all
     # fes_year_idだけ指定
-    elsif fes_year_id != 0 && is_cooking == 0
+    elsif fes_year_id != 0 && is_cooking == 0 && category_id == 0
       @food_products = FoodProduct.preload(:group).map{ |food_product| food_product if food_product.group.fes_year_id == fes_year_id }.compact
     # is_cookingだけ指定
-    elsif fes_year_id == 0 && is_cooking != 0
+    elsif fes_year_id == 0 && is_cooking != 0 && category_id == 0
       @food_products = FoodProduct.where(is_cooking: is_cooking_list[is_cooking])
-    # 両方指定
-    else
+    # category_idだけ指定
+    elsif fes_year_id == 0 && is_cooking == 0 && category_id != 0
+      @food_products = FoodProduct.preload(:group).map{ |food_product| food_product if food_product.group.group_category_id == category_id }.compact
+    # fes_year_idとis_cookingの指定
+    elsif fes_year_id != 0 && is_cooking != 0 && category_id == 0
       @food_products = FoodProduct.where(is_cooking: is_cooking_list[is_cooking]).map{ |food_product| food_product if food_product.group.fes_year_id == fes_year_id }.compact
+    # fes_year_idとcategory_idの指定
+    elsif fes_year_id != 0 && is_cooking == 0 && category_id != 0
+      @food_products = FoodProduct.preload(:group).map{ |food_product| food_product if food_product.group.fes_year_id == fes_year_id && food_product.group.group_category_id == category_id }.compact
+    # is_cookingとcategory_idの指定
+    elsif fes_year_id == 0 && is_cooking != 0 && category_id != 0
+      @food_products = FoodProduct.where(is_cooking: is_cooking_list[is_cooking]).map{ |food_product| food_product if food_product.group.group_category_id == category_id }.compact
+    # 全部指定
+    else
+      @food_products = FoodProduct.where(is_cooking: is_cooking_list[is_cooking]).map{ |food_product| food_product if food_product.group.fes_year_id == fes_year_id && food_product.group.group_category_id == category_id }.compact
+    end
+
+    if search_word.present?
+      # 文字列検索
+      @food_products = @food_products.map{ |food_product| food_product if food_product.group.name.include?(search_word) || food_product.name.include?(search_word) }.compact
     end
 
     if @food_products.count == 0
