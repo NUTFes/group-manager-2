@@ -58,7 +58,6 @@ const links: { to: string; text: string }[] = [
 const linksGroupCategoryId_1 = [...links,  { to: "/mypage/edit_cooking_process", text: "Mypage.editCookingProcess"}]
 
 
-console.log("registGroupCategoryId",registGroupCategoryId)
 
 const shouldDisplayLink = (link: { to: string; text: string }) => {
   return link.text !== "Mypage.editContactPerson" || is_external.value;
