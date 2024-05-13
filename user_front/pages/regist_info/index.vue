@@ -352,7 +352,10 @@ const isStageOverlap = computed(() => {
             {{ $t("RegistInfo.subrepresentative") }}
           </div>
         </li>
-        <li v-if="groupCategoryId !== 3" @click="tab = 2">
+        <li
+          v-if="groupCategoryId !== 3 && !group?.is_international"
+          @click="tab = 2"
+        >
           <div :class="{ select: tab === 2 }" class="title">
             {{ $t("RegistInfo.place") }}
           </div>
@@ -425,7 +428,7 @@ const isStageOverlap = computed(() => {
         </div>
 
         <!-- 会場申請 group_category_id !== ３ -->
-        <div v-show="tab === 2">
+        <div v-if="!group?.is_international" v-show="tab === 2">
           <div v-if="!isEditPlace" class="text-3xl text-red-600 font-bold my-5">
             編集は締め切られました
           </div>

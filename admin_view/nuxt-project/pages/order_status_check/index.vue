@@ -1,6 +1,8 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).order_status.read">
     <SubHeader pageTitle="申請状況一覧"></SubHeader>
+  <div class="main-content" v-if="this.$role(roleID).order_status.read">
+    <SubHeader pageTitle="申請状況一覧"></SubHeader>
 
     <SubSubHeader>
       <template v-slot:refinement>
@@ -61,9 +63,23 @@
               <div v-if="group.sub_rep">◯</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.place_order }">
-              <div v-if="group.place_order">◯</div>
-              <div v-else>✖️</div>
+            <td
+              :class="{
+                unregistered:
+                  !group.place_order && !group.group.is_international,
+              }"
+            >
+              <div v-if="group.group.is_international">ー</div>
+              <div
+                v-else-if="group.place_order && !group.group.is_international"
+              >
+                ◯
+              </div>
+              <div
+                v-else-if="!group.place_order && !group.group.is_international"
+              >
+                ✖️
+              </div>
             </td>
             <td :class="{ unregistered: !group.power_orders }">
               <div v-if="group.power_orders">◯</div>
@@ -334,6 +350,13 @@ export default {
       for (const res of refRes.data) {
         this.groups.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchGroups();
+      }
       this.$nextTick(() => {
         window.scrollTo(
           0,
@@ -342,6 +365,7 @@ export default {
       });
     },
     async searchGroups() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.groups = [];
       const searchUrl =
         "/api/v1/get_search_order_status_check?word=" + this.searchText;
