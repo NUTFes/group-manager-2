@@ -179,13 +179,13 @@ export const itemSchema = object({
     .of(
       object().shape({
         itemNameId: number().typeError('入力してください\nPlease enter').required("入力してください\nPlease enter"),
-        itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0個以上で入力してください\nPlease enter at least 0"),
+        itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0個以上で入力してください\nPlease enter 1 or more."),
       })
     ).strict(),
 });
 export const editItemSchema = object({
   itemNameId: number().typeError('入力してください\nPlease enter').required("入力してください\nPlease enter"),
-  itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0個以上で入力してください\nPlease enter at least 0"),
+  itemNum: number().typeError('半角数字を入力してください\nPlease enter one-byte numbers').required("入力してください\nPlease enter").min(1, "0個以上で入力してください\nPlease enter 1 or more."),
 });
 
 // power登録のバリデーション
