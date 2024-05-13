@@ -142,7 +142,7 @@ const addItem = async () => {
   // 机の入力バリデーション
   if (itemId === 1 && itemNum > 20 && selectedLocation.value === '屋外団体') {
     alert(
-      "机の貸し出し数が上限を超えています。20以下にしてください。\The number of desks available for rent has exceeded the limit; please reduce it to 20 or less."
+      "机の貸し出し数が上限を超えています。20以下にしてください。\nThe number of desks available for rent has exceeded the limit; please reduce it to 20 or less."
     );
     return;
   }
