@@ -24,6 +24,9 @@ class AnnouncementsController < ApplicationController
   # PATCH/PUT /announcements/1
   # PATCH/PUT /announcements/1.json
   def update
+    puts @announcement.message
+    puts params[:status]
+    puts announcement_params
     @announcement.update(announcement_params)
     render json: fmt(created, @announcement, "Updated announcement id = "+params[:id])
   end
@@ -47,6 +50,6 @@ class AnnouncementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def announcement_params
-      params.permit(:group_id, :message)
+      params.permit(:group_id, :message, :status, :id)
     end
 end

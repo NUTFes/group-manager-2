@@ -61,7 +61,7 @@
             <td>{{ announcement.group.id }}</td>
             <td>{{ announcement.group.name}}</td>
             <td>
-              <div v-if='announcement.announcement && announcement.announcement.message'>登録済み</div>
+              <div v-if='announcement.announcement && announcement.announcement.message'>{{announcement.announcement.status}}</div>
               <div v-else>未登録</div>
             </td>
           </tr>
@@ -188,6 +188,7 @@ export default {
     reload() {
       const url = "/api/v1/get_refinement_announcements?fes_year_id=" + this.refYearID;
       this.$axios.get(url).then((res) => {
+        console.log("res.data.data",res.data.data)
         this.announcements.push(res.data.data);
       });
     },
@@ -236,6 +237,7 @@ export default {
       for (const res of refRes.data) {
         this.announcements.push(res);
       }
+      console.log("redres.data",refRes.data)
       const storedSearchText = localStorage.getItem(
         this.$route.path + "SearchText"
       );
