@@ -68,6 +68,8 @@ const isMessageOver = computed(() => {
 });
 
 const postAnnouncement = () => {
+  console.log("message.value",message.value)
+  console.log("status.value",status.value)
   if (message.value.length === 0) {
     alert("会場アナウンス文を入力してください\nPlease enter the text of the venue announcement");
     return;
@@ -78,9 +80,9 @@ const postAnnouncement = () => {
   }
 
   if (currentAnnouncement.value) {
-    const putURl = "/announcements/" + currentAnnouncement.value?.id;
+    const putURL = "/announcements/" + currentAnnouncement.value?.id;
     axios
-      .put(config.APIURL + putURl, {
+      .put(config.APIURL + putURL, {
         group_id: groupId.value,
         message: message.value,
         status: status.value,
@@ -134,7 +136,7 @@ const postAnnouncement = () => {
       <textarea v-if="status === '申請済み'" class="border-2 w-[60%]" v-model="message"></textarea>
       <RegistPageButton
         v-if="isEditAnnouncement"
-        :text="$t('Announcement.edit')"
+        :text="$t('Announcement.regist')"
         @click="postAnnouncement"
         :disabled="isMessageOver"
       ></RegistPageButton>
