@@ -106,8 +106,8 @@ export default {
   width: 100%;
   height: 100px;
   display: flex;
-  align-items: start;
-  justify-content: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-flow: column;
 }
 
@@ -122,7 +122,7 @@ export default {
 
 .sub-header-title {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-wrap: wrap;
   flex-flow: column;
@@ -131,7 +131,7 @@ export default {
 .sub-header-content {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   flex-wrap: wrap;
   flex-grow: 1;
   gap: 20px;

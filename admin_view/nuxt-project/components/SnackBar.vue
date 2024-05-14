@@ -40,8 +40,8 @@ export default {};
   min-height: 100%;
   padding: 20px;
   display: flex;
-  justify-content: end;
-  align-items: end;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .snack-modal__box {

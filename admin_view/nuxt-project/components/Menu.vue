@@ -228,8 +228,8 @@ export default {
 .menu-content {
   width: 100%;
   display: flex;
-  align-items: start;
-  justify-content: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-flow: column;
   gap: 5px;
   margin-bottom: 60px;

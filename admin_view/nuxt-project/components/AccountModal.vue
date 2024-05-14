@@ -187,7 +187,7 @@ export default {
 
 .account-modal_content div {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-flow: column;
   gap: 10px;
@@ -211,14 +211,14 @@ export default {
   width: 100%;
   min-height: 100%;
   display: flex;
-  justify-content: end;
-  align-items: start;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 
 .account-modal__box {
   width: 400px;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   flex-flow: column;
   padding: 30px 15px;

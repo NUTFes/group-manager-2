@@ -58,7 +58,7 @@ export default {
   letter-spacing: 2px;
   color: var(--accent-0);
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   border: none;
   transition: all 0.2s 0s ease;
