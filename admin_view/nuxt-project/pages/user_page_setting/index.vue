@@ -84,9 +84,9 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_power_order" :isOn="is_edit_power_order" :on_click="() => {this.is_edit_power_order = !this.is_edit_power_order}" />
           </td>
         </tr>
-        <!--貸出物品-->
+        <!--物品-->
         <tr>
-          <th rowspan="2">貸出物品</th>
+          <th rowspan="2">物品</th>
           <td>登録</td>
           <td>
             <p v-if="add_rental_order === true">募集中</p>
@@ -108,7 +108,7 @@
         </tr>
         <!--ステージ-->
         <tr>
-          <th rowspan="3">ステージ</th>
+          <th rowspan="2">ステージ</th>
           <td>登録</td>
           <td>
             <p v-if="add_stage_order === true">募集中</p>
@@ -119,7 +119,7 @@
           </td>
         </tr>
         <tr>
-          <td>編集</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_stage_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -128,8 +128,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_stage_order" :isOn="is_edit_stage_order" :on_click="() => {this.is_edit_stage_order = !this.is_edit_stage_order}" />
           </td>
         </tr>
+        <!--ステージオプション-->
         <tr>
-          <td>オプション</td>
+          <th rowspan="1">ステージオプション</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_stage_common_option === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -160,9 +162,9 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_employee" :isOn="is_edit_employee" :on_click="() => {this.is_edit_employee = !this.is_edit_employee}" />
           </td>
         </tr>
-        <!--販売食品-->
+        <!--販売品-->
         <tr>
-          <th rowspan="3">販売食品</th>
+          <th rowspan="3">販売品</th>
           <td>登録</td>
           <td>
             <p v-if="is_regist_food_product === true">募集中</p>
