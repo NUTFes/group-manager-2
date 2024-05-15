@@ -94,7 +94,9 @@
     "text": "Announcement text at the venue",
     "edit": "editing",
     "regist": "registing",
-    "over": "This announcement text is over 125 words."
+    "over": "This announcement text is over 125 words.",
+    "apply": "Apply",
+    "noApply": "Not applied"
   },
 
   "VenueMap": {
@@ -116,9 +118,11 @@
     "item": "Item",
     "employees": "Employees",
     "food": "Food",
-    "saleGoods": "Sale of Goods",
+    "product": "Sale of Goods",
     "purchase": "Purchase",
-    "placeMessage": "Please apply for either outdoor or indoor space only."
+    "placeMessage": "Please apply for either outdoor or indoor space only.",
+    "ItemMessage": "Please apply only for stage, indoor or outdoor groups."
+
   },
 
   "User": {
@@ -263,31 +267,12 @@
     "studentId": "studentId"
   },
 
-  "Food": {
-    "registFood": "Registration of foods for sale",
-    "addFood": "Additional foods for sale",
-    "deleteFood": "Deletion foods for sale",
-    "editFood": "Edit foods for Sale",
-    "name": "Name of food sold",
-    "cook": "Cooked or not",
-    "select": "Please select",
-    "yes": "Cooked",
-    "no": "uncooked",
-    "numberFirstDay": "Estimated number of products to be sold on Day１",
-    "numberSecondDay": "Estimated number of products to be sold on Day２",
-    "firstDay": "Day１",
-    "secondDay": "Day２",
-    "count": "",
-    "sold": "Estimated number",
-    "toBe": "of products to be sold"
-  },
-
-  "SaleGoods": {
-    "registSaleGoods": "Registration of goods for sale",
-    "addSaleGoods": "Additional goods for sale",
-    "deleteSaleGoods": "Deletion goods for sale",
-    "editSaleGoods": "Edit goods for Sale",
-    "name": "Name of goods sold",
+  "Product": {
+    "registProduct": "Registration of products for sale",
+    "addProduct": "Additional products for sale",
+    "deleteProduct": "Deletion products for sale",
+    "editProduct": "Edit products for Sale",
+    "name": "Name of products sold",
     "cook": "Cooked or not",
     "select": "Please select",
     "yes": "Cooked",

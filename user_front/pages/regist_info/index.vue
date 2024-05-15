@@ -321,6 +321,10 @@ const isRentalItemOverlap = computed(() => {
   const rentalOrder = rentalOrders.value.map((rentalOrder) => {
     return rentalOrder.rental_item.name;
   });
+  // テントと小テントが存在してもエラーがでるようにしたい。
+  if (rentalOrder.includes("テント") && rentalOrder.includes("小テント")) {
+    return true
+  }
   const rentalOrderSet = new Set(rentalOrder);
   return rentalOrder.length !== rentalOrderSet.size;
 });
@@ -348,7 +352,10 @@ const isStageOverlap = computed(() => {
             {{ $t("RegistInfo.subrepresentative") }}
           </div>
         </li>
-        <li v-if="groupCategoryId !== 3" @click="tab = 2">
+        <li
+          v-if="groupCategoryId !== 3 && !group?.is_international"
+          @click="tab = 2"
+        >
           <div :class="{ select: tab === 2 }" class="title">
             {{ $t("RegistInfo.place") }}
           </div>
@@ -385,11 +392,7 @@ const isStageOverlap = computed(() => {
           @click="tab = 8"
         >
           <div :class="{ select: tab === 8 }" class="title">
-            {{
-              groupCategoryId === 1
-                ? $t("RegistInfo.food")
-                : $t("RegistInfo.saleGoods")
-            }}
+            {{$t("RegistInfo.product") }}
           </div>
         </li>
         <li v-if="groupCategoryId === 1" @click="tab = 9">
@@ -425,7 +428,7 @@ const isStageOverlap = computed(() => {
         </div>
 
         <!-- 会場申請 group_category_id !== ３ -->
-        <div v-show="tab === 2">
+        <div v-if="!group?.is_international" v-show="tab === 2">
           <div v-if="!isEditPlace" class="text-3xl text-red-600 font-bold my-5">
             編集は締め切られました
           </div>
@@ -609,6 +612,9 @@ const isStageOverlap = computed(() => {
 
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
+          <div class="text-xl flex gap-3">
+              <p>{{ $t("RegistInfo.ItemMessage") }}</p>
+            </div>
           <Button
             v-if="isAddItem && !isRentalItemOverlap"
             class="fixed right-0 bottom-0 m-10 mb-14"
