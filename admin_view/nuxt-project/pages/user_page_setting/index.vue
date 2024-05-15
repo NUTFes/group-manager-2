@@ -3,8 +3,22 @@
     <SubHeader pageTitle="ユーザー画面制御"></SubHeader>
     <Card width="100%">
       <VerticalTable>
+        <!--代表者-->
         <tr>
-          <td>参加団体登録</td>
+          <th rowspan="1">代表者</th>
+          <td>登録</td>
+          <td>
+            <p v-if="is_edit_user === true">募集中</p>
+            <p v-else>募集締め切り</p>
+          </td>
+          <td>
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_user" :isOn="is_edit_user" :on_click="() => {this.is_edit_user = !this.is_edit_user}" />
+          </td>
+        </tr>
+        <!--団体-->
+        <tr>
+          <th rowspan="2">団体</th>
+          <td>登録</td>
           <td>
             <p v-if="is_regist_group === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -15,7 +29,7 @@
           </td>
         </tr>
         <tr>
-          <td>団体情報編集・削除</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_group === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -24,18 +38,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_group" :isOn="is_edit_group" :on_click="() => {this.is_edit_group = !this.is_edit_group}" />
           </td>
         </tr>
+        <!--副代表-->
         <tr>
-          <td>ユーザ情報編集・削除</td>
-          <td>
-            <p v-if="is_edit_user === true">募集中</p>
-            <p v-else>募集締め切り</p>
-          </td>
-          <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_user" :isOn="is_edit_user" :on_click="() => {this.is_edit_user = !this.is_edit_user}" />
-          </td>
-        </tr>
-        <tr>
-          <td>副代表情報編集</td>
+          <th rowspan="1">副代表</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_sub_rep === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -44,8 +50,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_sub_rep" :isOn="is_edit_sub_rep" :on_click="() => {this.is_edit_sub_rep = !this.is_edit_sub_rep}" />
           </td>
         </tr>
+        <!--会場-->
         <tr>
-          <td>会場申請情報編集</td>
+          <th rowspan="1">会場</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_place === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -54,8 +62,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_place" :isOn="is_edit_place" :on_click="() => {this.is_edit_place = !this.is_edit_place}" />
           </td>
         </tr>
+        <!--電力-->
         <tr>
-          <td>電力申請の追加</td>
+          <th rowspan="2">電力</th>
+          <td>登録</td>
           <td>
             <p v-if="add_power_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -65,7 +75,7 @@
           </td>
         </tr>
         <tr>
-          <td>電力申請情報編集・削除</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_power_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -74,8 +84,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_power_order" :isOn="is_edit_power_order" :on_click="() => {this.is_edit_power_order = !this.is_edit_power_order}" />
           </td>
         </tr>
+        <!--物品-->
         <tr>
-          <td>貸出物品の追加</td>
+          <th rowspan="2">物品</th>
+          <td>登録</td>
           <td>
             <p v-if="add_rental_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -85,7 +97,7 @@
           </td>
         </tr>
         <tr>
-          <td>物品申請情報編集・削除</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_rental_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -94,8 +106,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_rental_order" :isOn="is_edit_rental_order" :on_click="() => {this.is_edit_rental_order = !this.is_edit_rental_order}" />
           </td>
         </tr>
+        <!--ステージ-->
         <tr>
-          <td>ステージ申請の追加</td>
+          <th rowspan="2">ステージ</th>
+          <td>登録</td>
           <td>
             <p v-if="add_stage_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -105,7 +119,7 @@
           </td>
         </tr>
         <tr>
-          <td>ステージ申請情報編集</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_stage_order === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -114,8 +128,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_stage_order" :isOn="is_edit_stage_order" :on_click="() => {this.is_edit_stage_order = !this.is_edit_stage_order}" />
           </td>
         </tr>
+        <!--ステージオプション-->
         <tr>
-          <td>ステージオプション申請情報編集</td>
+          <th rowspan="1">ステージオプション</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_stage_common_option === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -124,8 +140,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_stage_common_option" :isOn="is_edit_stage_common_option" :on_click="() => {this.is_edit_stage_common_option = !this.is_edit_stage_common_option}" />
           </td>
         </tr>
+        <!--従業員-->
         <tr>
-          <td>従業員の追加</td>
+          <th rowspan="2">従業員</th>
+          <td>登録</td>
           <td>
             <p v-if="add_employee === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -135,7 +153,7 @@
           </td>
         </tr>
         <tr>
-          <td>従業員情報編集・削除</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_employee === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -144,18 +162,12 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_employee" :isOn="is_edit_employee" :on_click="() => {this.is_edit_employee = !this.is_edit_employee}" />
           </td>
         </tr>
+        <!--販売品-->
         <tr>
-          <td>販売品の登録</td>
-          <td>
-            <p v-if="is_regist_food_product === true">募集中</p>
-            <p v-else>募集締め切り</p>
-          </td>
-          <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_regist_food_product" :isOn="is_regist_food_product" :on_click="() => {this.is_regist_food_product = !this.is_regist_food_product}" />
-          </td>
+          <th rowspan="3">販売品</th>
         </tr>
         <tr>
-          <td>販売品の追加</td>
+          <td>登録</td>
           <td>
             <p v-if="add_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -165,7 +177,7 @@
           </td>
         </tr>
         <tr>
-          <td>販売品情報編集・削除</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -174,8 +186,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_food_product" :isOn="is_edit_food_product" :on_click="() => {this.is_edit_food_product = !this.is_edit_food_product}" />
           </td>
         </tr>
+        <!--購入品-->
         <tr>
-          <td>購入品の追加</td>
+          <th rowspan="2">購入品</th>
+          <td>登録</td>
           <td>
             <p v-if="add_purchase_list === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -185,7 +199,7 @@
           </td>
         </tr>
         <tr>
-          <td>購入品情報編集・削除</td>
+          <td>編集・削除</td>
           <td>
             <p v-if="is_edit_purchase_list === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -194,8 +208,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_purchase_list" :isOn="is_edit_purchase_list" :on_click="() => {this.is_edit_purchase_list = !this.is_edit_purchase_list}" />
           </td>
         </tr>
+        <!--アナウンス文-->
         <tr>
-          <td>アナウンス文申請情報編集</td>
+          <th rowspan="1">アナウンス文</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_announcement === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -204,8 +220,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_announcement" :isOn="is_edit_announcement" :on_click="() => {this.is_edit_announcement = !this.is_edit_announcement}" />
           </td>
         </tr>
+        <!--PR-->
         <tr>
-          <td>PR申請情報編集</td>
+          <th rowspan="1">PR</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_public_relation === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -214,8 +232,10 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_public_relation" :isOn="is_edit_public_relation" :on_click="() => {this.is_edit_public_relation = !this.is_edit_public_relation}" />
           </td>
         </tr>
+        <!--模擬店平面図-->
         <tr>
-          <td>模擬店平面図情報編集</td>
+          <th rowspan="1">模擬店平面図</th>
+          <td>登録・編集</td>
           <td>
             <p v-if="is_edit_venue_map === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -258,7 +278,6 @@ export default {
     return {
       data: [],
       is_regist_group: false,
-      is_regist_food_product: false,
       is_edit_group: false,
       is_edit_user: false,
       is_edit_sub_rep: false,
@@ -299,8 +318,6 @@ export default {
       .then((response) => {
         console.log(response.data.data[0])
         this.is_regist_group = response.data.data[0].is_regist_group;
-        this.is_regist_food_product = response.data.data[0].is_regist_food_product;
-        console.log(response.data.data[0].is_regist_food_product)
         this.is_edit_group = response.data.data[0].is_edit_group;
         this.is_edit_user = response.data.data[0].is_edit_user;
         this.is_edit_sub_rep = response.data.data[0].is_edit_sub_rep;
@@ -347,7 +364,6 @@ export default {
       const update_url = "/user_page_settings/1";
       let params = new URLSearchParams();
       params.append("is_regist_group", this.is_regist_group);
-      params.append("is_regist_food_product", this.is_regist_food_product);
       params.append("is_edit_group", this.is_edit_group);
       params.append("is_edit_user", this.is_edit_user);
       params.append("is_edit_sub_rep", this.is_edit_sub_rep);
