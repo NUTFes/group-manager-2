@@ -165,17 +165,9 @@
         <!--販売品-->
         <tr>
           <th rowspan="3">販売品</th>
-          <td>登録</td>
-          <td>
-            <p v-if="is_regist_food_product === true">募集中</p>
-            <p v-else>募集締め切り</p>
-          </td>
-          <td>
-            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_regist_food_product" :isOn="is_regist_food_product" :on_click="() => {this.is_regist_food_product = !this.is_regist_food_product}" />
-          </td>
         </tr>
         <tr>
-          <td>追加</td>
+          <td>登録</td>
           <td>
             <p v-if="add_food_product === true">募集中</p>
             <p v-else>募集締め切り</p>
@@ -286,7 +278,6 @@ export default {
     return {
       data: [],
       is_regist_group: false,
-      is_regist_food_product: false,
       is_edit_group: false,
       is_edit_user: false,
       is_edit_sub_rep: false,
@@ -327,8 +318,6 @@ export default {
       .then((response) => {
         console.log(response.data.data[0])
         this.is_regist_group = response.data.data[0].is_regist_group;
-        this.is_regist_food_product = response.data.data[0].is_regist_food_product;
-        console.log(response.data.data[0].is_regist_food_product)
         this.is_edit_group = response.data.data[0].is_edit_group;
         this.is_edit_user = response.data.data[0].is_edit_user;
         this.is_edit_sub_rep = response.data.data[0].is_edit_sub_rep;
@@ -375,7 +364,6 @@ export default {
       const update_url = "/user_page_settings/1";
       let params = new URLSearchParams();
       params.append("is_regist_group", this.is_regist_group);
-      params.append("is_regist_food_product", this.is_regist_food_product);
       params.append("is_edit_group", this.is_edit_group);
       params.append("is_edit_user", this.is_edit_user);
       params.append("is_edit_sub_rep", this.is_edit_sub_rep);
