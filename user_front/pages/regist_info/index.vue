@@ -341,6 +341,7 @@ const isStageOverlap = computed(() => {
   const stageOrderSet = new Set(stageOrder);
   return stageOrder.length !== stageOrderSet.size;
 });
+
 </script>
 
 <template>
@@ -423,6 +424,7 @@ const isStageOverlap = computed(() => {
             :studentId="subRep?.student_id"
             :email="subRep?.email"
             :tel="subRep?.tel"
+            :rep_user_id="group?.user_id"
             @reload-sub-rep="reload"
           />
         </div>
