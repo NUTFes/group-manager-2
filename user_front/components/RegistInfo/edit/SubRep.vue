@@ -2,7 +2,7 @@
 import { gradeList, GradeWithDepartmentList } from "~/utils/list";
 import { useField, useForm } from "vee-validate";
 import { subRepSchema } from "~/utils/validate";
-import { User, UserDetail } from '@/types/currentUser';
+import { User, UserDetail } from "@/types/currentUser";
 const config = useRuntimeConfig();
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
   tel: string;
   email: string;
   student_id: number | null;
+  rep_user_id: number | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   tel: "",
   email: "",
   student_id: null,
+  rep_user_id: null,
 });
 
 const { meta, isSubmitting } = useForm({
@@ -48,15 +50,20 @@ const { handleChange: handleDepartmentId, errorMessage: departmentIdError } =
 const { handleChange: handleGradeId, errorMessage: gradeIdError } =
   useField("grade");
 
-  
-const userData = ref<User | null>(null); 
-const userDetailData = ref<UserDetail | null>(null); 
+const userData = ref<User | null>(null);
+const userDetailData = ref<UserDetail | null>(null);
 
 onMounted(async () => {
-  const res = await $fetch<{data:User}>(config.APIURL + "/users/" + props.id);
+  console.log(props.tel);
+  const res = await $fetch<{ data: User }>(
+    config.APIURL + "/users/" + props.rep_user_id
+  );
   userData.value = res.data;
-  const resDetail = await $fetch<{data:UserDetail}>(config.APIURL + "/user_details/" + props.id);
+  const resDetail = await $fetch<{ data: UserDetail }>(
+    config.APIURL + "/user_details?user_id=" + props.rep_user_id
+  );
   userDetailData.value = resDetail.data;
+
   checkNameOverlap();
   checkTelOverlap();
   checkEmailOverlap();
@@ -64,33 +71,33 @@ onMounted(async () => {
 });
 
 const checkNameOverlap = () => {
-  if(newName.value == userData.value?.name){
-    handleName('false')
-  }else{
-    handleName(newName.value)
+  if (newName.value == userData.value?.name) {
+    handleName("false");
+  } else {
+    handleName(newName.value);
   }
-}
+};
 const checkTelOverlap = () => {
-  if(newTel.value == userDetailData.value?.tel){
-    handleTel('false')
-  }else{
-    handleTel(newTel.value)
+  if (newTel.value == userDetailData.value?.tel) {
+    handleTel("false");
+  } else {
+    handleTel(newTel.value);
   }
-}
+};
 const checkEmailOverlap = () => {
-  if(newEmail.value == userData.value?.email){
-    handleMail('false')
-  }else{
-    handleMail(newEmail.value)
+  if (newEmail.value == userData.value?.email) {
+    handleMail("false");
+  } else {
+    handleMail(newEmail.value);
   }
-}
+};
 const checkStudentIdOverlap = () => {
-  if(newStudentId.value == userDetailData.value?.student_id){
-    handleStudentId('false')
-  }else{
-    handleStudentId(newStudentId.value)
+  if (newStudentId.value == userDetailData.value?.student_id) {
+    handleStudentId("false");
+  } else {
+    handleStudentId(newStudentId.value);
   }
-}
+};
 
 interface Emits {
   (e: "update:editSubRep", isEditSubRep: boolean): void;
@@ -171,8 +178,6 @@ onMounted(() => {
     createCurrentDepartmentList({ target: { value: props.grade_id } });
   }
 });
-
-console.log(meta);
 </script>
 
 <template>

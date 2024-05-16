@@ -4,7 +4,12 @@ class UserDetailsController < ApplicationController
   # GET /user_details
   # GET /user_details.json
   def index
-    @user_details = UserDetail.all
+    if params[:user_id]
+      @user_details = UserDetail.find_by(user_id: params[:user_id].to_i)
+    else
+      @user_details = UserDetail.all
+    end
+
     render json: fmt(ok, @user_details)
   end
 
