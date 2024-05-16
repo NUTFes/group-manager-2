@@ -71,7 +71,7 @@ p {
 .drop-down-container {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   flex-wrap: wrap;
   flex-grow: 1;
   gap: 20px;
@@ -79,7 +79,7 @@ p {
 .search-bar-container {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 20px;
 }

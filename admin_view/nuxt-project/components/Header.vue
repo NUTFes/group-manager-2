@@ -170,7 +170,7 @@ img {
 .header-option {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   flex-grow: 1;
   gap: 15px;
 }

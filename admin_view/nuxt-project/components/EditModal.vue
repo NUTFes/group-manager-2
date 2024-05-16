@@ -73,7 +73,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   flex-flow: column;
   gap: 25px;
@@ -81,7 +81,7 @@ export default {
 
 .edit-modal_content div {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   flex-flow: column;
   gap: 10px;
