@@ -2,7 +2,7 @@ version: "3"
 services:
   db:
     image: mysql:8.0
-    container_name: 'GM2-DB'
+    container_name: "GM2-DB"
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_ROOT_USER: root
@@ -20,7 +20,7 @@ services:
 
   api:
     build: ./api
-    command: bash -c "rails db:migrate && rails db:seed_fu && rails db:seed_fu FIXTURE_PATH=db/fixtures/develop && bundle exec rails s"
+    command: bash -c "bundle exec rails s"
     container_name: "GM2-API"
     volumes: [./api:/myapp]
     ports: ["3000:3000"]
@@ -32,7 +32,7 @@ services:
     ports:
       - "8002:3000"
       - "24678:24678"
-    command: bash -c "npm i && npm run build && npm run start"
+    command: bash -c "npm run start"
     volumes: [./user_front:/app]
     env_file: [group-manager-2.stg.env]
     depends_on: [api]
@@ -41,7 +41,7 @@ services:
     build: ./admin_view
     container_name: "GM2-ADMIN-VIEW"
     ports: ["8000:8000"]
-    command: bash -c "npm i && npm run build && npm run start"
+    command: bash -c "npm run start"
     volumes: [./admin_view:/app]
     env_file: [group-manager-2.stg.env]
 

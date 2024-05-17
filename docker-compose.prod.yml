@@ -9,7 +9,7 @@ services:
 
   api:
     build: ./api
-    command: bash -c "rails db:migrate && rails db:seed_fu && rails db:seed_fu FIXTURE_PATH=db/fixtures/production && bundle exec rails s"
+    command: bash -c "bundle exec rails s"
     container_name: "GM2-API"
     volumes: [./api:/myapp]
     env_file: [group-manager-2.env]
@@ -17,7 +17,7 @@ services:
   user_front:
     build: ./user_front
     container_name: "GM2-USER-FRONT"
-    command: bash -c "npm i && npm run build && npm run start"
+    command: bash -c "npm run start"
     volumes: [./user_front:/app]
     env_file: [group-manager-2.env]
     depends_on: [api]
@@ -25,6 +25,6 @@ services:
   admin_view:
     build: ./admin_view
     container_name: "GM2-ADMIN-VIEW"
-    command: bash -c "npm i && npm run build && npm run start"
+    command: bash -c "npm run start"
     volumes: [./admin_view:/app]
     env_file: [group-manager-2.env]
