@@ -323,7 +323,7 @@ const isRentalItemOverlap = computed(() => {
   });
   // テントと小テントが存在してもエラーがでるようにしたい。
   if (rentalOrder.includes("テント") && rentalOrder.includes("小テント")) {
-    return true
+    return true;
   }
   const rentalOrderSet = new Set(rentalOrder);
   return rentalOrder.length !== rentalOrderSet.size;
@@ -393,7 +393,7 @@ const isStageOverlap = computed(() => {
           @click="tab = 8"
         >
           <div :class="{ select: tab === 8 }" class="title">
-            {{$t("RegistInfo.product") }}
+            {{ $t("RegistInfo.product") }}
           </div>
         </li>
         <li v-if="groupCategoryId === 1" @click="tab = 9">
@@ -615,8 +615,8 @@ const isStageOverlap = computed(() => {
         <!-- 物品申請 -->
         <div v-show="tab === 6" class="flex flex-wrap flex-col">
           <div class="text-xl flex gap-3">
-              <p>{{ $t("RegistInfo.ItemMessage") }}</p>
-            </div>
+            <p>{{ $t("RegistInfo.ItemMessage") }}</p>
+          </div>
           <Button
             v-if="isAddItem && !isRentalItemOverlap"
             class="fixed right-0 bottom-0 m-10 mb-14"
@@ -654,6 +654,7 @@ const isStageOverlap = computed(() => {
                 :regist="item.rental_item.rental_item"
                 :name="item.rental_item.name"
                 :num="item.rental_item.num"
+                :rental-item-ids="rentalOrders?.map(order => order.rental_item.rental_item.rental_item_id)"
                 @reload-item="reload"
               />
             </div>
@@ -662,6 +663,7 @@ const isStageOverlap = computed(() => {
             v-if="isAddItemModal"
             v-model:add-item="isAddItemModal"
             :group-id="group?.id"
+            :rental-item-ids="rentalOrders?.map(order => order.rental_item.rental_item.rental_item_id)"
             @reload-item="reload"
           />
         </div>

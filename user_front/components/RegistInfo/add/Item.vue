@@ -13,12 +13,23 @@ const { handleChange: handleNum, errorMessage: numError } = useField("itemNum");
 
 interface Props {
   groupId: number | null;
+  rentalItemIds: number[] | null;
 }
 
 interface Emits {
   (e: "update:addItem", isAddItem: boolean): void;
   (e: "reloadItem", v: null): void;
 }
+
+type RentableItem = {
+    created_at: string;
+    id: number;
+    is_inside_shop_rentable: boolean;
+    is_outside_shop_rentable: boolean;
+    is_stage_rentable: boolean;
+    name: string;
+    updated_at: string;
+};
 
 const props = withDefaults(defineProps<Props>(), {
   groupId: null,
@@ -78,23 +89,34 @@ const updateSelectedLocation = (event: Event) => {
   }
 };
 
+// 共通のフィルタリング関数を定義
+const filterItems = (itemList: RentableItem[], rentalItemIds: number[]): RentableItem[] => {
+    return itemList.filter(item => !rentalItemIds.includes(item.id));
+};
+
 // バリデーションに合わせてリストを作っておく
 // groupCategoryId=1の場合(食品販売)
 const outsideRentableItemList_Id_1 = computed(() => {
-  return outsideRentableItemList.value.filter(item => item.id >= 0 && item.id <= 9);
+  const foodRentableItemList = outsideRentableItemList.value.filter(item => item.id >= 0 && item.id <= 9);
+  return filterItems(foodRentableItemList, props.rentalItemIds ?? []);
 });
 
 // groupCategoryId=3の場合(ステージ)
-const stageRentableItemList = selectableItemList
+const stageRentableItemList_Id_3 = computed(() => {
+  const stageRentableItemList = selectableItemList.value.filter(item => item.id >= 0 && item.id <= 9);
+  return filterItems(stageRentableItemList, props.rentalItemIds ?? []);
+});
 
 // groupCategoryId=2,4,5,7の場合(物品販売、展示・体験、研究室、その他)
 // かつ、屋外なのか、屋外なのかを分けたリスト
 const outsideRentableItemList_Id_in = computed(() => {
   const validIds = [1, 3, 4, 5, 6];  // 表示したいIDのリスト
-  return outsideRentableItemList.value.filter(item => validIds.includes(item.id));
+  const outsideRentableItemList_in = outsideRentableItemList.value.filter(item => validIds.includes(item.id));
+  return filterItems(outsideRentableItemList_in, props.rentalItemIds ?? []);
 });
 const outsideRentableItemList_Id_out = computed(() => {
-  return outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 9);
+  const outsideRentableItemList_out = outsideRentableItemList.value.filter(item => item.id >= 1 && item.id <= 2);
+  return filterItems(outsideRentableItemList_out, props.rentalItemIds ?? []);
 });
 
 
@@ -252,7 +274,7 @@ const reset = () => {
           :class="{ error_border: nameError }"
         >
           <option
-            v-for="list in stageRentableItemList"
+            v-for="list in stageRentableItemList_Id_3"
             :key="list.id"
             :value="list.id"
           >
