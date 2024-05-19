@@ -9,6 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Create envfile
         uses: SpicyPizza/create-envfile@v2.0
         with:
@@ -25,9 +28,6 @@ jobs:
           VUE_APP_URL: ${{ secrets.VUE_APP_URL }}
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           file_name: group-manager-2.env
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
