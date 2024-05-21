@@ -185,5 +185,10 @@ export const inventoryManagementRole = {
         update: true,
         delete: true,
       },
+      venue_maps:{
+        read: true,
+        create: false,
+        update: false,
+        delete: false,
+      },
   };
-  

@@ -197,4 +197,10 @@ export const developerRole = {
     update: true,
     delete: true,
   },
+  venue_maps:{
+    read: true,
+    create: true,
+    update: true,
+    delete: true,
+  },
 };
