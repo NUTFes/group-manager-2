@@ -36,10 +36,11 @@ onMounted(async () => {
     currentAnnouncement.value = announcements.find(
       (announcement: Announcement) => announcement.group_id === groupId.value
     );
+    console.log("announcements", currentAnnouncement.value?.message);
 
     if (currentAnnouncement.value) {
       message.value = currentAnnouncement.value.message;
-      status.value = currentAnnouncement.value.status || "未申請";
+      status.value = currentAnnouncement.value.message ? "申請済み" : "申請しない";
     }
   });
   const settingUrl = config.APIURL + "/user_page_settings";
