@@ -36,7 +36,6 @@ onMounted(async () => {
     currentAnnouncement.value = announcements.find(
       (announcement: Announcement) => announcement.group_id === groupId.value
     );
-    console.log("announcements", currentAnnouncement.value?.message);
 
     if (currentAnnouncement.value) {
       message.value = currentAnnouncement.value.message;
