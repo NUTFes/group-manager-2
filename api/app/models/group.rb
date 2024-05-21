@@ -812,7 +812,7 @@ class Group < ApplicationRecord
         }
     end
 
-    # 指定したIDのgroupとそのpublic_relationを取得する
+    # 指定したIDのgroupとそのvenue_mapを取得する
     def self.with_venue_map(group_id)
       @record = Group.eager_load(:venue_map).where(groups: {id: group_id})
         .map{
