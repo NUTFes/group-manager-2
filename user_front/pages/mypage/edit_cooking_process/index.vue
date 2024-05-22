@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import axios from "axios";
-import { CookingProcessOrder } from "@/types/regist/cookingProcessOrder";
 import { useForm, useField } from "vee-validate";
-import { cookingProcessOrderSchema } from "~~/utils/validate";
-import { loginCheck } from "@/utils/methods";
+import { CookingProcessOrder } from "@/types/regist/cookingProcessOrder";
 
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -13,11 +11,9 @@ const preOpenKitchen = ref<boolean>();
 const duringOpenKitchen = ref<boolean>();
 const tent = ref<Text>();
 const groupId = Number(localStorage.getItem("group_id"));
-const setting = ref("");
 const isEditGroup = ref<boolean>();
-const isSubmitting = ref<boolean>(false);
 
-const { meta } = useForm({
+const { meta, isSubmitting } = useForm({
   validationSchema: cookingProcessOrderSchema,
 });
 
@@ -34,6 +30,9 @@ onMounted(() => {
     preOpenKitchen.value = currentCookingProcessOrder.value?.pre_open_kitchen;
     duringOpenKitchen.value = currentCookingProcessOrder.value?.during_open_kitchen;
     tent.value = currentCookingProcessOrder.value?.tent;
+    handleChangepreOpenKitchen(currentCookingProcessOrder.value?.pre_open_kitchen);
+    handleChangeduringOpenKitchen(currentCookingProcessOrder.value?.during_open_kitchen);
+    handleChangetent(currentCookingProcessOrder.value?.tent);
   });
 
   const settingUrl = config.APIURL + "/user_page_settings";
@@ -47,7 +46,6 @@ onMounted(() => {
       },
     })
     .then((response) => {
-      setting.value = response.data.data[0];
       isEditGroup.value = response.data.data[0].is_edit_group;
     });
 });
@@ -92,9 +90,9 @@ const register = () => {
 
 const buttonDisabled = computed(() => {
   return !!(
-    preOpenKitchen.value &&
-    duringOpenKitchen.value &&
-    tent.value
+    !preOpenKitchen.value ||
+    !duringOpenKitchen.value ||
+    !tent.value
   );
 });
 </script>
@@ -191,7 +189,7 @@ const buttonDisabled = computed(() => {
         v-if="isEditGroup"
         @click="register"
         class="regist-button"
-        :disabled="!buttonDisabled || isSubmitting"
+        :disabled="buttonDisabled || !meta.valid || isSubmitting"
         :text="$t('Button.register')"
       ></RegistPageButton>
     </div>
