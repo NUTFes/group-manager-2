@@ -367,8 +367,7 @@
   "Cook": {
     "cookTitle":"Cooking Process Order",
     "preOpenKitchen":"Pre-Open Kitchen",
-    "preOpenTent":"Pre-Open Tent",
     "duringOpenKitchen":"During Open Kitchen",
-    "duringOpenTent":"During Open Tent"
+    "tent":"Activities Inside the Tent"
   }
 }

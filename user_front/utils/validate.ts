@@ -273,8 +273,7 @@ export const contactPersonSchema = object({
 });
 
 export const cookingProcessOrderSchema = object({
-  preOpenKitchen: string().required("入力してください\nPlease enter"),
-  preOpenTent: string().required("入力してください\nPlease enter"),
-  duringOpenKitchen: string().required("入力してください\nPlease enter"),
-  duringOpenTent: string().required("入力してください\nPlease enter"),
+  preOpenKitchen: boolean().required("入力してください\nPlease enter"),
+  duringOpenKitchen: boolean().required("入力してください\nPlease enter"),
+  tent: string().required("入力してください\nPlease enter"),
 });

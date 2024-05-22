@@ -49,6 +49,22 @@ export default {
     display: none;
 }
 
+.add-modal input[type="radio"] {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
+.add-modal input[type="radio"] + label {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
 .add-modal_content input:focus,
 .add-modal_content textarea:focus {
   border: 1px solid var(--accent-7);

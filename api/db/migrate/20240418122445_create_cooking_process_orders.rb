@@ -5,7 +5,7 @@ class CreateCookingProcessOrders < ActiveRecord::Migration[6.1]
       t.text :pre_open_kitchen
       t.text :pre_open_tent
       t.text :during_open_kitchen
-      t.text :during_open_tent
+      t.text :tent
       t.timestamps
     end
   end

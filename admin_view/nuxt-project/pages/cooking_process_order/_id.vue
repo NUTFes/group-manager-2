@@ -33,97 +33,58 @@
               <td>{{ cooking_process_order.group.name }}</td>
             </tr>
             <tr>
-              <th rowspan="2">営業前</th>
-              <th>調理場</th>
+              <th rowspan="2">調理場</th>
+              <th>営業前</th>
               <td>
-                <div
-                  v-if="cooking_process_order.cooking_process_order === null"
-                >
+                <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
                 </div>
                 <div v-else>
-                  {{
-                    cooking_process_order.cooking_process_order.pre_open_kitchen
-                  }}
+                  {{ cooking_process_order.cooking_process_order.pre_open_kitchen ? '使用する' : '使用しない' }}
                 </div>
               </td>
             </tr>
             <tr>
-              <th>テント内</th>
+              <th>営業中</th>
               <td>
-                <div
-                  v-if="cooking_process_order.cooking_process_order === null"
-                >
+                <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
                 </div>
                 <div v-else>
-                  {{
-                    cooking_process_order.cooking_process_order.pre_open_tent
-                  }}
+                  {{ cooking_process_order.cooking_process_order.during_open_kitchen ? '使用する' : '使用しない' }}
                 </div>
               </td>
             </tr>
             <tr>
-              <th rowspan="2">営業中</th>
-              <th>調理場</th>
+              <th colspan="2">テント内</th>
               <td>
-                <div
-                  v-if="cooking_process_order.cooking_process_order === null"
-                >
+                <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
                 </div>
                 <div v-else>
-                  {{
-                    cooking_process_order.cooking_process_order
-                      .during_open_kitchen
-                  }}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th>テント内</th>
-              <td>
-                <div
-                  v-if="cooking_process_order.cooking_process_order === null"
-                >
-                  未登録
-                </div>
-                <div v-else>
-                  {{
-                    cooking_process_order.cooking_process_order.during_open_tent
-                  }}
+                  {{ cooking_process_order.cooking_process_order.tent }}
                 </div>
               </td>
             </tr>
             <tr>
               <th colspan="2">登録日時</th>
               <td>
-                <div
-                  v-if="cooking_process_order.cooking_process_order === null"
-                >
+                <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
                 </div>
                 <div v-else>
-                  {{
-                    cooking_process_order.cooking_process_order.created_at
-                      | formatDate
-                  }}
+                  {{ cooking_process_order.cooking_process_order.created_at | formatDate }}
                 </div>
               </td>
             </tr>
             <tr>
               <th colspan="2">編集日時</th>
               <td>
-                <div
-                  v-if="cooking_process_order.cooking_process_order === null"
-                >
+                <div v-if="cooking_process_order.cooking_process_order === null">
                   未登録
                 </div>
                 <div v-else>
-                  {{
-                    cooking_process_order.cooking_process_order.updated_at
-                      | formatDate
-                  }}
+                  {{ cooking_process_order.cooking_process_order.updated_at | formatDate }}
                 </div>
               </td>
             </tr>
@@ -139,20 +100,31 @@
     >
       <template v-slot:form>
         <div>
-          <h3>営業前：調理場</h3>
-          <input v-model="pre_open_kitchen" placeholder="入力してください" />
+          <h3>調理場：営業前</h3>
+          <div class="radio-group">
+            <input type="radio" id="preOpenKitchenYes" value="true" v-model="pre_open_kitchen" />
+            <label for="preOpenKitchenYes">使用する</label>
+          </div>
+          <div class="radio-group">
+            <input type="radio" id="preOpenKitchenNo" value="false" v-model="pre_open_kitchen" />
+            <label for="preOpenKitchenNo">使用しない</label>
+          </div>
+        </div>
+
+        <div>
+          <h3>調理場：営業中</h3>
+          <div class="radio-group">
+            <input type="radio" id="duringOpenKitchenYes" value="true" v-model="during_open_kitchen" />
+            <label for="duringOpenKitchenYes">使用する</label>
+          </div>
+          <div class="radio-group">
+            <input type="radio" id="duringOpenKitchenNo" value="false" v-model="during_open_kitchen" />
+            <label for="duringOpenKitchenNo">使用しない</label>
+          </div>
         </div>
         <div>
-          <h3>営業前：テント内</h3>
-          <input v-model="pre_open_tent" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>営業中：調理場</h3>
-          <input v-model="during_open_kitchen" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>営業中：テント内</h3>
-          <input v-model="during_open_tent" placeholder="入力してください" />
+          <h3>テント内での作業内容</h3>
+          <input v-model="tent" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -192,6 +164,9 @@ export default {
       snackMessage: null,
       group_id: null,
       routeId: null,
+      pre_open_kitchen: null,
+      during_open_kitchen: null,
+      tent: "",
     };
   },
   computed: {
@@ -214,19 +189,16 @@ export default {
         this.group_id = this.cooking_process_order.group.id;
         this.pre_open_kitchen =
           this.cooking_process_order.cooking_process_order.pre_open_kitchen;
-        this.pre_open_tent =
-          this.cooking_process_order.cooking_process_order.pre_open_tent;
         this.during_open_kitchen =
           this.cooking_process_order.cooking_process_order.during_open_kitchen;
-        this.during_open_tent =
-          this.cooking_process_order.cooking_process_order.during_open_tent;
+        this.tent =
+          this.cooking_process_order.cooking_process_order.tent;
         this.isOpenEditModal = true;
       } else {
         this.group_id = this.cooking_process_order.group.id;
         this.pre_open_kitchen = null;
-        this.pre_open_tent = null;
         this.during_open_kitchen = null;
-        this.during_open_tent = null;
+        this.tent = null;
         this.isOpenEditModal = true;
       }
     },
@@ -256,18 +228,16 @@ export default {
     async edit() {
       if (
         !this.pre_open_kitchen ||
-        !this.pre_open_tent ||
         !this.during_open_kitchen ||
-        !this.during_open_tent
+        !this.tent
       ) {
         this.openSnackBar("調理工程申請を全て入力してください");
         return;
       }
       const cookingProcessOrderData = {
         pre_open_kitchen: this.pre_open_kitchen,
-        pre_open_tent: this.pre_open_tent,
         during_open_kitchen: this.during_open_kitchen,
-        during_open_tent: this.during_open_tent,
+        tent: this.tent,
       };
       if (this.cooking_process_order.cooking_process_order) {
         // 既存の調理工程を編集
@@ -319,5 +289,13 @@ td {
 }
 th {
   width: 15%;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-flow: row nowrap;
+  width: 500px;
 }
 </style>
