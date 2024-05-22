@@ -292,5 +292,5 @@ export const announcementSchema = object({
         return wordCount <= 125;
       }
     }),
-  status: string().required("選択してください\nPlease enter"),
+  status: string().required("選択してください\nPlease select"),
 });

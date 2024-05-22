@@ -90,8 +90,6 @@ const register = () => {
 
 const buttonDisabled = computed(() => {
   return !!(
-    !preOpenKitchen.value ||
-    !duringOpenKitchen.value ||
     !tent.value
   );
 });
