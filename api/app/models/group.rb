@@ -804,10 +804,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
-            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
-            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
-            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+            "venue_map": group.venue_map,
           }
         }
     end
@@ -819,10 +816,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
-            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
-            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
-            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+            "venue_map": group.venue_map,
           }
         }
     end
@@ -839,10 +833,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
-            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
-            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
-            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+            "venue_map": group.venue_map,
           }
         }
     end
@@ -854,10 +845,7 @@ class Group < ApplicationRecord
           |group|
           {
             "group": group,
-            "picture_name": group.venue_map.nil? ? nil : group.venue_map.picture_name,
-            "picture_path": group.venue_map.nil? ? nil : group.venue_map.picture_path,
-            "created_at": group.venue_map.nil? ? nil : group.venue_map.created_at,
-            "updated_at": group.venue_map.nil? ? nil : group.venue_map.updated_at,
+            "venue_map": group.venue_map,
           }
         }
     end
