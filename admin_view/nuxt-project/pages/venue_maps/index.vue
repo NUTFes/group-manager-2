@@ -1,19 +1,12 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).venue_maps.read">
     <SubHeader pageTitle="模擬店平面図申請一覧">
       <CommonButton
-        v-if="this.$role(roleID).announcements.create"
+        v-if="this.$role(roleID).venue_maps.create"
         iconName="add_circle"
         :on_click="openAddModal"
       >
         追加
-      </CommonButton>
-      <CommonButton
-        v-if="this.$role(roleID).announcements.create"
-        iconName="file_download"
-        :on_click="downloadCSV"
-      >
-        CSV
       </CommonButton>
     </SubHeader>
 
@@ -21,7 +14,7 @@
       <template v-slot:refinement>
         <SearchDropDown
           :nameList="yearList"
-          :on_click="refinementAnnouncements"
+          :on_click="refinementVenueMaps"
           value="year_num"
         >
           {{ refYears }}
@@ -31,7 +24,7 @@
         <SearchBar>
           <input
             v-model="searchText"
-            @keypress.enter="searchAnnouncements"
+            @keypress.enter="searchVenueMaps"
             type="text"
             size="25"
             placeholder="search"
@@ -49,20 +42,20 @@
         </template>
         <template v-slot:table-body>
           <tr
-            v-for="(announcement, index) in announcements"
+            v-for="(venueMap, index) in venueMaps"
             :key="index"
             @click="
               () =>
                 $router.push({
-                  path: `/announcement/` + announcement.announcement.id,
+                  path: `/venue_maps/` + venueMap.group.id,
                 })
             "
           >
-            <td>{{ announcement.group.id }}</td>
-            <td>{{ announcement.group.name}}</td>
+            <td>{{ venueMap.group.id }}</td>
+            <td>{{ venueMap.group.name }}</td>
             <td>
-              <div v-if='announcement.announcement.message === ""'>未登録</div>
-              <div v-else>登録済み</div>
+              <div v-if="venueMap.venue_map">登録済み</div>
+              <div v-else>未登録</div>
             </td>
           </tr>
         </template>
@@ -78,19 +71,26 @@
         <div>
           <h3>参加団体</h3>
           <select v-model="group_id">
-            <option v-for="group in groups" :key="group.id" :value="group.id">
+            <option
+              v-for="group in groupList"
+              :key="group.id"
+              :value="group.id"
+            >
               {{ group.name }}
             </option>
           </select>
         </div>
         <div>
           <h3>模擬店平面図</h3>
-          <input v-model="message" placeholder="入力してください" />
+          <label>
+            <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload" />
+            {{ files[0].name }}
+          </label>
         </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
-          >登録</CommonButton
+          >{{ buttonState }}</CommonButton
         >
       </template>
     </AddModal>
@@ -102,6 +102,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 export default {
   watchQuery: ["page"],
   data() {
@@ -109,34 +110,30 @@ export default {
       headers: ["ID", "参加団体", "申請状況"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
-      group_id: "",
-      announcements: [],
-      groups: [],
-      dialog: false,
-      message: "",
       snackMessage: "",
       group_id: "",
       refYears: "Years",
       refYearID: 0,
-      searchText: ""
+      searchText: "",
+      buttonState: "登録",
+      isPush: {disabled: false},
+      files: [{ name: "選択してください" }],
     };
   },
   async asyncData({ $axios }) {
-
     const currentYearUrl = "/user_page_settings/1";
     const currentYearRes = await $axios.$get(currentYearUrl);
     const url =
-      "/api/v1/get_refinement_announcements?fes_year_id=" +
+      "/api/v1/get_refinement_venue_maps?fes_year_id=" +
       currentYearRes.data.fes_year_id;
-    const announcementsRes = await $axios.$post(url);
+    const venueMapsRes = await $axios.$post(url);
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const currentYears = yearsRes.data.filter(function (element) {
       return element.id == currentYearRes.data.fes_year_id;
-     });
-
+    });
     return {
-      announcements: announcementsRes.data,
+      venueMaps: venueMapsRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
@@ -147,78 +144,149 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
-  methods: {
+  mounted() {
+    window.addEventListener("scroll", this.saveScrollPosition);
 
+    const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
+    if (storedYearID) {
+      this.refYearID = Number(storedYearID);
+      this.updateFilters(this.refYearID, this.yearList);
+    } else {
+      this.refYears = "Year";
+    }
+    this.fetchFilteredData();
+  },
+  methods: {
+    saveScrollPosition() {
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
+    },
     async openAddModal() {
-      const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
+      const groupUrl = "/api/v1/get_groups_have_no_venue_map";
       const groupRes = await this.$axios.$get(groupUrl);
-      this.groups = groupRes.data;
+      this.groupList = groupRes.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
       this.isOpenAddModal = false;
     },
     openSnackBar(message) {
-      this.snackMessage = message;
+      this.message = message;
       this.isOpenSnackBar = true;
       setTimeout(this.closeSnackBar, 2000);
     },
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
-    reload(id) {
-      const reUrl = "/api/v1/get_announcement_show_for_admin_view/" + id;
-      this.$axios.get(reUrl).then((res) => {
-        this.announcements.push(res.data.data);
+    reload() {
+      const url =
+        "/api/v1/get_refinement_venue_maps?fes_year_id=" + this.refYearID;
+      this.venueMaps = [];
+      this.$axios.$post(url).then((response) => {
+        this.venueMaps = response.data;
       });
     },
-    async submit() {
-      const postAnnouncementUrl =
-        "/announcements/" +
-        "?group_id=" +
-        this.group_id +
-        "&message=" +
-        this.message;
-
-      this.$axios.$post(postAnnouncementUrl).then((res) => {
-        this.openSnackBar("模擬店平面図を登録しました");
-        this.group_id = "";
-        this.message = "";
-        this.reload(res.data.id);
-        this.closeAddModal();
-      });
+    fileUpload(event) {
+      this.files = event.target.files;
     },
-    async refinementAnnouncements(item_id, name_list) {
-     // fes_yearで絞り込むとき
-      this.refYearID = item_id;
-      // ALLの時
-      if (item_id == 0) {
-        this.refYears = "ALL";
-      } else {
-        this.refYears = name_list[item_id - 1].year_num;
+    submit() {
+      for (let f of this.files) {
+        let storageRef = ref(this.$storage, f.name);
+        let uploadTask = uploadBytesResumable(storageRef, f);
+        this.run(uploadTask);
       }
-      this.announcements = [];
+    },
+    run(uploadTask) {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
+          this.progress = progress * 100;
+          switch (snapshot.state) {
+            case "paused":
+              this.buttonState = "待機";
+              this.isPush.disabled = true;
+              this.state = "paused";
+              break;
+            case "running":
+              this.buttonState = "待機";
+              this.isPush.disabled = true;
+              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            const url =
+              "/venue_maps?group_id=" +
+              this.venueMap.venue_map.group_id +
+              "&picture_name=" +
+              uploadTask.snapshot.ref.name +
+              "&picture_path=" +
+              downloadURL;
+
+            this.$axios.$post(url).then((response) => {
+              this.reload();
+              this.closeAddModal();
+              this.openSnackBar("模擬店平面図を追加しました");
+              this.isPush.disabled = false;
+            });
+          });
+        }
+      );
+    },
+    async refinementVenueMaps(item_id, name_list) {
+      this.updateFilters(item_id, name_list);
+      localStorage.setItem(this.$route.path + "RefYear", this.refYearID);
+      this.fetchFilteredData();
+    },
+    updateFilters(item_id, name_list) {
+      // fes_yearで絞り込むとき
+      if (name_list.toString() == this.yearList.toString()) {
+        this.refYearID = item_id;
+        // ALLの時
+        if (item_id == 0) {
+          this.refYears = "ALL";
+        } else {
+          this.refYears = name_list[item_id - 1].year_num;
+        }
+      }
+    },
+    async fetchFilteredData() {
+      this.venueMaps = [];
       const refUrl =
-        "/api/v1/get_refinement_announcements?fes_year_id=" +
-        this.refYearID;
+        "/api/v1/get_refinement_venue_maps?fes_year_id=" + this.refYearID;
       const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data) {
-        this.announcements.push(res);
+        this.venueMaps.push(res);
       }
+      const storedSearchText = localStorage.getItem(
+        this.$route.path + "SearchText"
+      );
+      if (storedSearchText) {
+        this.searchText = storedSearchText;
+        this.searchPurchaseLists();
+      }
+      this.$nextTick(() => {
+        window.scrollTo(
+          0,
+          parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+        );
+      });
     },
-    async searchAnnouncements() {
-      this.announcements = [];
-      const searchUrl = "/api/v1/get_search_announcements?word=" + this.searchText;
+    async searchVenueMaps() {
+      localStorage.setItem(this.$route.path + "SearchText", this.searchText);
+      this.venueMaps = [];
+      const searchUrl = "/api/v1/get_search_venue_maps?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data) {
-        this.announcements.push(res);
+        this.venueMaps.push(res);
       }
-    },
-    async downloadCSV() {
-      const url =
-        this.$config.apiURL +
-        "/api/v1/get_announcements_csv"
-      window.open(url, "購入品申請_CSV");
     },
   },
 };

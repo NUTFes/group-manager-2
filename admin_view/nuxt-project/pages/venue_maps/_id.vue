@@ -1,18 +1,18 @@
 <template>
   <div class="main-content">
     <SubHeader
-      v-bind:pageTitle="announcement.group.name"
+      v-bind:pageTitle="venue_map.group.name"
       pageSubTitle="模擬店平面図申請一覧"
     >
       <CommonButton
-        v-if="this.$role(this.roleID).announcements.update"
+        v-if="this.$role(this.roleID).venue_maps.update"
         iconName="edit"
         :on_click="openEditModal"
       >
         編集
       </CommonButton>
       <CommonButton
-        v-if="this.$role(this.roleID).announcements.delete"
+        v-if="this.$role(this.roleID).venue_maps.delete"
         iconName="delete"
         :on_click="openDeleteModal"
       >
@@ -26,31 +26,40 @@
           <VerticalTable>
             <tr>
               <th>ID</th>
-              <td>{{ announcement.group.id }}</td>
+              <td>{{ venue_map.group.id }}</td>
             </tr>
             <tr>
               <th>参加団体</th>
-              <td>{{ announcement.group.name }}</td>
+              <td>{{ venue_map.group.name }}</td>
             </tr>
             <tr>
               <th>模擬店平面図</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
-                <div v-else>{{ announcement.announcement.message }}</div>
+                <div v-if="venue_map.venue_map === null">未登録</div>
+                <div v-else>
+                  <img
+                    :src="venue_map.venue_map.picture_path"
+                    style="width: 40%; height: 40%"
+                  />
+                </div>
               </td>
             </tr>
             <tr>
               <th>登録日時</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
-                <div v-else>{{ announcement.announcement.created_at | formatDate }}</div>
+                <div v-if="venue_map.venue_map === null">未登録</div>
+                <div v-else>
+                  {{ venue_map.venue_map.created_at | formatDate }}
+                </div>
               </td>
             </tr>
             <tr>
               <th>編集日時</th>
               <td>
-                <div v-if='announcement.announcement.message === ""'>未登録</div>
-                <div v-else>{{ announcement.announcement.updated_at | formatDate }}</div>
+                <div v-if="venue_map.venue_map === null">未登録</div>
+                <div v-else>
+                  {{ venue_map.venue_map.updated_at | formatDate }}
+                </div>
               </td>
             </tr>
           </VerticalTable>
@@ -66,19 +75,22 @@
       <template v-slot:form>
         <div>
           <h3>団体名</h3>
-          <select v-model="group_id">
-            <option v-for="group in groups" :key="group.id" :value="group.id">
-              {{ group.name }}
-            </option>
-          </select>
+          <input
+            v-model="venue_map.group.name"
+            placeholder="入力してください"
+          />
         </div>
         <div>
           <h3>模擬店平面図</h3>
-          <input v-model="message" placeholder="入力してください" />
+          <label>
+            <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload" />
+          </label>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">登録</CommonButton>
+        <CommonButton iconName="edit" :on_click="edit">{{
+          buttonState
+        }}</CommonButton>
       </template>
     </EditModal>
 
@@ -102,19 +114,18 @@
 
 <script>
 import { mapState } from "vuex";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 export default {
   watchQuery: ["page"],
   data() {
     return {
-      announcement: {},
-      groups: [],
       isOpenEditModal: false,
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
-      message: null,
       snackMessage: null,
       group_id: null,
-      routeId: null,
+      buttonState: "登録",
+      isPush: { disabled: false },
     };
   },
   computed: {
@@ -123,32 +134,29 @@ export default {
     }),
   },
   async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/announcement/", "");
-    const url = "/api/v1/get_announcement_show_for_admin_view/" + routeId;
+    const routeId = route.path.replace("/venue_maps/", "");
+    const url = "/api/v1/get_venue_map_for_admin_view/" + routeId;
     const res = await $axios.$get(url);
     return {
-      announcement: res.data,
+      venue_map: res.data[0],
       route: url,
     };
   },
   methods: {
     openEditModal() {
-      this.group_id = this.announcement.announcement.group_id;
-      this.message = this.announcement.announcement.message;
       this.isOpenEditModal = true;
     },
     closeEditModal() {
       this.isOpenEditModal = false;
     },
     openDeleteModal() {
-      this.isOpenDeleteModal = false;
       this.isOpenDeleteModal = true;
     },
     closeDeleteModal() {
       this.isOpenDeleteModal = false;
     },
-    openSnackBar(message) {
-      this.snackMessage = message;
+    openSnackBar(snackMessage) {
+      this.snackMessage = snackMessage;
       this.isOpenSnackBar = true;
       setTimeout(this.closeSnackBar, 2000);
     },
@@ -156,32 +164,77 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload(id) {
-      const url = "/api/v1/get_announcement_show_for_admin_view/" + id;
+      const url = "/api/v1/get_venue_map_for_admin_view/" + id;
       const res = await this.$axios.$get(url);
-      this.announcement = res.data;
+      this.venue_map = res.data[0];
     },
-    async edit() {
-      const url = 
-      "/announcements/" + 
-      this.announcement.announcement.id + 
-      "?group_id=" + 
-      this.group_id+
-      "&message=" + 
-      this.message;
-      
+    fileUpload(event) {
+      this.files = event.target.files;
+    },
+    edit() {
+      for (let f of this.files) {
+        let storageRef = ref(this.$storage, f.name);
+        let uploadTask = uploadBytesResumable(storageRef, f);
+        this.run(uploadTask);
+      }
+    },
+    run(uploadTask) {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          let progress = snapshot.bytesTransferred / snapshot.totalBytes;
+          this.progress = progress * 100;
+          switch (snapshot.state) {
+            case "paused":
+              this.buttonState = "待機";
+              this.isPush.disabled = true;
+              this.state = "paused";
+              break;
+            case "running":
+              this.buttonState = "待機";
+              this.isPush.disabled = true;
+              this.state = "Uploading ... (" + this.progress.toFixed() + "%)";
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            const data = {
+              group_id: this.venue_map.group.id,
+              picture_name: uploadTask.snapshot.ref.name,
+              picture_path: downloadURL,
+            };
 
-      await this.$axios.$put(url).then((res) => {
-        this.openSnackBar("模擬店平面図を編集しました");
-        this.message = "";
-        this.group_id = "";
-        this.reload(res.data.id);
-        this.closeEditModal();
-      });
+            if (this.venue_map.venue_map) {
+              //put
+              const editUrl = `/venue_maps/${this.venue_map.venue_map.id}`;
+              this.$axios.$put(editUrl, data).then((response) => {
+                this.reload(response.data.group_id);
+                this.closeEditModal();
+                this.openSnackBar("模擬店平面図を編集しました");
+                this.isPush.disabled = false;
+              });
+            } else {
+              //post
+              const postUrl = `/venue_maps?group_id=${this.venue_map.group.id}`;
+              this.$axios.$post(postUrl, data).then((response) => {
+                this.reload(response.data.group_id);
+                this.closeEditModal();
+                this.openSnackBar("模擬店平面図を登録しました");
+                this.isPush.disabled = false;
+              });
+            }
+          });
+        }
+      );
     },
     async destroy() {
-      const delUrl = "/announcements/" + this.announcement.announcement.id;
+      const delUrl = "/venue_maps/" + this.venue_map.venue_map.id;
       await this.$axios.$delete(delUrl);
-      this.$router.push("/announcement");
+      this.$router.push("/venue_maps");
     },
   },
 };
