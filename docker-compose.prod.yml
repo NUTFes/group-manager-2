@@ -25,6 +25,6 @@ services:
   admin_view:
     build: ./admin_view
     container_name: "GM2-ADMIN-VIEW"
-    command: bash -c "nuxt start"
+    command: bash -c "npm run start"
     volumes: [./admin_view:/app]
     env_file: [group-manager-2.env]
