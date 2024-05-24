@@ -170,13 +170,12 @@ const buttonDisabled = computed(() => {
         <div class="text-lg">
           {{ $t("Cook.tent") }}
         </div>
-        <input
+        <textarea
           class="rounded-md border border-black p-2 text-xl"
           id="activity"
-          type="text"
           v-model="tent"
           @change="handleChangetent"
-        />
+        ></textarea>
         <p class="text-red-500 text-sm" v-if="tentError">
           {{ tentError }}
         </p>
@@ -186,14 +185,12 @@ const buttonDisabled = computed(() => {
       <RegistPageButton
         v-if="isEditGroup"
         @click="register"
-        class="regist-button"
         :disabled="buttonDisabled || !meta.valid || isSubmitting"
         :text="$t('Button.register')"
       ></RegistPageButton>
     </div>
   </div>
 </template>
-
 <style scoped>
 .regist-button {
   @apply text-right
