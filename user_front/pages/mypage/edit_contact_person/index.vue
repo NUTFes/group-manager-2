@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import axios from "axios";
-import { ContactPerson } from '@/types/regist/contactPerson';
 import { useForm, useField } from "vee-validate";
-import { contactPersonSchema } from "~~/utils/validate";
-import { loginCheck } from "@/utils/methods";
+import { ContactPerson } from '@/types/regist/contactPerson';
 
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -11,10 +9,9 @@ const config = useRuntimeConfig();
 const contactPersonName = ref<string>("");
 const contactPersonEmail = ref<string>("");
 const groupId = Number(localStorage.getItem("group_id"));
-const isSubmitting = ref<boolean>(false);
 const currentContactPerson = ref<ContactPerson>();
 
-const { meta } = useForm({
+const { meta, isSubmitting } = useForm({
   validationSchema: contactPersonSchema,
 });
 
@@ -29,6 +26,8 @@ onMounted(() => {
     currentContactPerson.value = contactPersons.find((cp) => cp.group_id === groupId);
     contactPersonName.value = currentContactPerson.value?.name || "";
     contactPersonEmail.value = currentContactPerson.value?.email || "";
+    handleChangeContactPersonName(currentContactPerson.value?.name);
+    handleChangeContactPersonEmail(currentContactPerson.value?.email);
   });
 });
 
@@ -70,8 +69,8 @@ const register = () => {
 
 const buttonDisabled = computed(() => {
   return !!(
-    ContactPersonNameError.value ||
-    ContactPersonEmailError.value
+    !contactPersonName.value ||
+    !contactPersonEmail.value
   );
 });
 </script>
@@ -116,7 +115,7 @@ const buttonDisabled = computed(() => {
     <div class="regist-button">
       <RegistPageButton
         @click="register"
-        :disabled="buttonDisabled || isSubmitting"
+        :disabled="buttonDisabled || !meta.valid || isSubmitting"
         :text="$t('Button.register')"
       ></RegistPageButton>
     </div>

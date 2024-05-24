@@ -87,20 +87,32 @@
           </select>
         </div>
         <div>
-          <h3>営業前：調理場</h3>
-          <input v-model="pre_open_kitchen" placeholder="入力してください" />
+          <h3>調理場：営業前</h3>
+          <div class="radio-group">
+            <input type="radio" id="preOpenKitchenYes" value="true" v-model="pre_open_kitchen" />
+            <label for="preOpenKitchenYes">使用する</label>
+          </div>
+          <div class="radio-group">
+            <input type="radio" id="preOpenKitchenNo" value="false" v-model="pre_open_kitchen" />
+            <label for="preOpenKitchenNo">使用しない</label>
+          </div>
         </div>
+
         <div>
-          <h3>営業前：テント内</h3>
-          <input v-model="pre_open_tent" placeholder="入力してください" />
+          <h3>調理場：営業中</h3>
+          <div class="radio-group">
+            <input type="radio" id="duringOpenKitchenYes" value="true" v-model="during_open_kitchen" />
+            <label for="duringOpenKitchenYes">使用する</label>
+          </div>
+          <div class="radio-group">
+            <input type="radio" id="duringOpenKitchenNo" value="false" v-model="during_open_kitchen" />
+            <label for="duringOpenKitchenNo">使用しない</label>
+          </div>
         </div>
+
         <div>
-          <h3>営業中：調理場</h3>
-          <input v-model="during_open_kitchen" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>営業中：テント内</h3>
-          <input v-model="during_open_tent" placeholder="入力してください" />
+          <h3>テント内での作業内容</h3>
+          <input v-model="tent" placeholder="入力してください" />
         </div>
       </template>
       <template v-slot:method>
@@ -132,6 +144,9 @@ export default {
       refYears: "Years",
       refYearID: 0,
       searchText: "",
+      pre_open_kitchen: null,
+      during_open_kitchen: null,
+      tent: "",
     };
   },
   async asyncData({ $axios }) {
@@ -195,18 +210,16 @@ export default {
       if (
         !this.group_id ||
         !this.pre_open_kitchen ||
-        !this.pre_open_tent ||
         !this.during_open_kitchen ||
-        !this.during_open_tent
+        !this.tent
       ) {
         this.openSnackBar("参加団体と全ての調理工程申請を入力してください");
         return;
       }
       const cookingProcessOrderData = {
         pre_open_kitchen: this.pre_open_kitchen,
-        pre_open_tent: this.pre_open_tent,
         during_open_kitchen: this.during_open_kitchen,
-        during_open_tent: this.during_open_tent,
+        tent: this.tent,
       };
 
       // POSTリクエストのURL
@@ -230,9 +243,8 @@ export default {
     clearForm() {
       this.group_id = null;
       this.pre_open_kitchen = "";
-      this.pre_open_tent = "";
       this.during_open_kitchen = "";
-      this.during_open_tent = "";
+      this.tent = "";
     },
 
     async refinementCookingProcessOrders(item_id, name_list) {
@@ -277,3 +289,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.radio-group {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  flex-flow: row nowrap;
+  width: 500px;
+}
+</style>

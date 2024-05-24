@@ -45,6 +45,6 @@ class CookingProcessOrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through
     def cooking_process_order_params
-      params.require(:cooking_process_order).permit(:pre_open_kitchen, :pre_open_tent, :during_open_kitchen, :during_open_tent)
+      params.require(:cooking_process_order).permit(:pre_open_kitchen, :during_open_kitchen, :tent)
     end
 end

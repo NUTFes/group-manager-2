@@ -59,6 +59,22 @@ export default {
   outline: 0;
 }
 
+.edit-modal input[type="radio"] {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
+.edit-modal input[type="radio"] + label {
+  color: initial;
+  border: initial;
+  padding: initial;
+  width: initial;
+  transition: initial;
+}
+
 .edit-modal__box h2 {
   color: var(--accent-5);
 }

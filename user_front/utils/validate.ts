@@ -272,9 +272,25 @@ export const contactPersonSchema = object({
   email: string().email('メールアドレスをご確認ください\nPlease check your e-mail address').required("入力してください\nPlease enter")
 });
 
+// cookingProcess登録のバリデーション
 export const cookingProcessOrderSchema = object({
-  preOpenKitchen: string().required("入力してください\nPlease enter"),
-  preOpenTent: string().required("入力してください\nPlease enter"),
-  duringOpenKitchen: string().required("入力してください\nPlease enter"),
-  duringOpenTent: string().required("入力してください\nPlease enter"),
+  preOpenKitchen: boolean().required("入力してください\nPlease enter"),
+  duringOpenKitchen: boolean().required("入力してください\nPlease enter"),
+  tent: string().required("入力してください\nPlease enter"),
+});
+
+// announcement登録のバリデーション
+export const announcementSchema = object({
+  message: string().required("入力してください\nPlease enter")
+    .test('is-valid-length', '日本語の場合は300字未満、英語の場合は125words未満で入力してください\nPlease enter less than 300 characters for Japanese and less than 125 words for English', (value) => {
+      if (!value) return true;
+      const isJapanese = /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ーa-zA-Z0-9ａ-ｚＡ-Ｚ０-９々〆〤]/u.test(value);
+      if (isJapanese) {
+        return value.length <= 300;
+      } else {
+        const wordCount = value.split(' ').length;
+        return wordCount <= 125;
+      }
+    }),
+  status: string().required("選択してください\nPlease select"),
 });

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { useForm, useField } from "vee-validate";
 import { GroupCategory } from '@/types/regist/groupCategory';
-import { groupSchema } from "~~/utils/validate";
 
 const router = useRouter();
 const config = useRuntimeConfig();
@@ -13,7 +11,6 @@ const projectName = ref<string>("");
 const groupCategoryId = ref<number>();
 const activity = ref<string>("");
 const user = ref("");
-const setting = ref("");
 const isEditGroup = ref<boolean>();
 const userId = ref<number>();
 const international = ref<boolean>();
@@ -21,7 +18,7 @@ const external = ref<boolean>();
 const fesYearId = ref<number>();
 const groupId = localStorage.getItem("group_id");
 
-const { meta } = useForm({
+const { meta, isSubmitting } = useForm({
   validationSchema: groupSchema,
 });
 
@@ -33,10 +30,6 @@ const {
 } = useField("projectName");
 const { handleChange: handleChangeActivity, errorMessage: activityError } =
   useField("activity");
-const { handleChange: handleChangeInternational, errorMessage: internarionalError } =
-  useField("international");
-const { handleChange: handleChangeExternal, errorMessage: externalError } =
-  useField("external");
 const { handleChange: handleChangeCategory, errorMessage: categoryError } =
   useField("category");
 
@@ -50,6 +43,10 @@ onMounted(() => {
     groupName.value = response.data.data.name;
     international.value = response.data.data.is_international;
     external.value = response.data.data.is_external;
+    handleChangeGroupName(response.data.data.name);
+    handleChangeProjectName(response.data.data.project_name);
+    handleChangeActivity(response.data.data.activity);
+    handleChangeCategory(response.data.data.group_category_id);
   });
   const url = config.APIURL + "/api/v1/users/show";
   axios
@@ -75,7 +72,6 @@ onMounted(() => {
       },
     })
     .then((response) => {
-      setting.value = response.data.data[0];
       isEditGroup.value = response.data.data[0].is_edit_group;
     });
 });
@@ -125,12 +121,9 @@ const groupCategoryList = await $fetch<GroupCategory>(config.APIURL + "/group_ca
 
 const buttonDisabled = computed(() => {
   return !!(
-    groupNameError.value ||
-    projectNameError.value ||
-    categoryError.value ||
-    activityError.value ||
-    internarionalError.value ||
-    externalError.value
+    !groupName.value ||
+    !projectName.value ||
+    !activity.value
   );
 });
 </script>
@@ -201,22 +194,14 @@ const buttonDisabled = computed(() => {
         <div class="text-lg">
           {{ $t("Group.international") }}
         </div>
-        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international" @change="handleChangeInternational">
-        <span class="slider round"></span>
-        <p class="text-red-500 text-sm" v-if="internarionalError">
-          {{ internarionalError }}
-        </p>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="international">
       </div>
 
       <div class="flex flex-col gap-2">
         <div class="text-lg">
           {{ $t("Group.external") }}
         </div>
-        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="external" @change="handleChangeExternal">
-        <span class="slider round"></span>
-        <p class="text-red-500 text-sm" v-if="externalError">
-          {{ externalError }}
-        </p>
+        <input class="rounded-md border border-black p-2 text-xl" type="checkbox" v-model="external">
       </div>
 
       <div class="flex flex-col gap-2">
@@ -239,7 +224,7 @@ const buttonDisabled = computed(() => {
       <RegistPageButton
         v-if="isEditGroup"
         @click="register"
-        :disabled="buttonDisabled"
+        :disabled="buttonDisabled || !meta.valid || isSubmitting"
         :text="$t('Button.register')"
       ></RegistPageButton>
     </div>
