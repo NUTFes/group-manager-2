@@ -191,4 +191,10 @@ export const userRole = {
     update: false,
     delete: false,
   },
+  venue_maps:{
+    read: false,
+    create: false,
+    update: false,
+    delete: false,
+  },
 };
