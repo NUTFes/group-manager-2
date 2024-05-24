@@ -83,14 +83,18 @@
         <div>
           <h3>模擬店平面図</h3>
           <label>
-            <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload" />
+            <input type="file" accept=".png, .jpg" @change="fileUpload" />
+            <div v-if="isInvalidFile" style="color: red;">ファイル形式は[.png又は.jpeg]にしてください</div>
           </label>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="edit">{{
-          buttonState
-        }}</CommonButton>
+        <CommonButton
+          iconName="edit"
+          :disabled="isInvalidFile"
+          :on_click="edit"
+          >{{ buttonState }}</CommonButton
+        >
       </template>
     </EditModal>
 
@@ -126,6 +130,7 @@ export default {
       group_id: null,
       buttonState: "登録",
       isPush: { disabled: false },
+      isInvalidFile: false,
     };
   },
   computed: {
@@ -170,6 +175,18 @@ export default {
     },
     fileUpload(event) {
       this.files = event.target.files;
+      // ファイル形式のバリデーション
+      if (this.files.length > 0) {
+        const file = this.files[0];
+        const validFileName = ["png", "jpeg"];
+        const fileName = file.name.split(".").pop().toLowerCase();
+        this.isInvalidFile = !validFileName.includes(fileName);
+        if (this.isInvalidFile) {
+          this.openSnackBar("ファイル形式は[.png又は.jpeg]にしてください");
+        }
+      } else {
+        this.isInvalidFile = true;
+      }
     },
     edit() {
       for (let f of this.files) {
