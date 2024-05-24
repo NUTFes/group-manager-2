@@ -102,11 +102,11 @@
         <div>
           <h3>調理場：営業前</h3>
           <div class="radio-group">
-            <input type="radio" id="preOpenKitchenYes" value="true" v-model="pre_open_kitchen" />
+            <input type="radio" id="preOpenKitchenYes" :value="true" v-model="pre_open_kitchen" />
             <label for="preOpenKitchenYes">使用する</label>
           </div>
           <div class="radio-group">
-            <input type="radio" id="preOpenKitchenNo" value="false" v-model="pre_open_kitchen" />
+            <input type="radio" id="preOpenKitchenNo" :value="false" v-model="pre_open_kitchen" />
             <label for="preOpenKitchenNo">使用しない</label>
           </div>
         </div>
@@ -114,11 +114,11 @@
         <div>
           <h3>調理場：営業中</h3>
           <div class="radio-group">
-            <input type="radio" id="duringOpenKitchenYes" value="true" v-model="during_open_kitchen" />
+            <input type="radio" id="duringOpenKitchenYes" :value="true" v-model="during_open_kitchen" />
             <label for="duringOpenKitchenYes">使用する</label>
           </div>
           <div class="radio-group">
-            <input type="radio" id="duringOpenKitchenNo" value="false" v-model="during_open_kitchen" />
+            <input type="radio" id="duringOpenKitchenNo" :value="false" v-model="during_open_kitchen" />
             <label for="duringOpenKitchenNo">使用しない</label>
           </div>
         </div>
@@ -227,9 +227,9 @@ export default {
     },
     async edit() {
       if (
-        !this.pre_open_kitchen ||
-        !this.during_open_kitchen ||
-        !this.tent
+        this.pre_open_kitchen === null ||
+        this.during_open_kitchen === null ||
+        this.tent === ""
       ) {
         this.openSnackBar("調理工程申請を全て入力してください");
         return;
