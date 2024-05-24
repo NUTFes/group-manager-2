@@ -459,8 +459,8 @@ class Api::V1::OutputCsvController < ApplicationController
       @cooking_process_orders.each do |cooking_process_order|
         column_values = [
           cooking_process_order.group.name,
-          cooking_process_order.pre_open_kitchen,
-          cooking_process_order.during_open_kitchen,
+          cooking_process_order.pre_open_kitchen ? "申請する" : "申請しない",  
+          cooking_process_order.during_open_kitchen ? "申請する" : "申請しない",  
           cooking_process_order.tent
         ]
         csv << column_values
