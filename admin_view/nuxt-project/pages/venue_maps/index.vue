@@ -83,15 +83,18 @@
         <div>
           <h3>模擬店平面図</h3>
           <label>
-            <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload" />
+            <input type="file" accept=".png, .jpg" @change="fileUpload" />
             {{ files[0].name }}
           </label>
+          <div v-if="isInvalidFile" style="color: red">
+            ファイル形式は[.png又は.jpeg]にしてください
+          </div>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
-          >{{ buttonState }}</CommonButton
-        >
+        <CommonButton iconName="add_circle" :on_click="submit">{{
+          buttonState
+        }}</CommonButton>
       </template>
     </AddModal>
     <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
@@ -116,8 +119,9 @@ export default {
       refYearID: 0,
       searchText: "",
       buttonState: "登録",
-      isPush: {disabled: false},
+      isPush: { disabled: false },
       files: [{ name: "選択してください" }],
+      isInvalidFile: false,
     };
   },
   async asyncData({ $axios }) {
@@ -172,8 +176,8 @@ export default {
     closeAddModal() {
       this.isOpenAddModal = false;
     },
-    openSnackBar(message) {
-      this.message = message;
+    openSnackBar(snackMessage) {
+      this.snackMessage = snackMessage;
       this.isOpenSnackBar = true;
       setTimeout(this.closeSnackBar, 2000);
     },
@@ -190,6 +194,18 @@ export default {
     },
     fileUpload(event) {
       this.files = event.target.files;
+      // ファイル形式のバリデーション
+      if (this.files.length > 0) {
+        const file = this.files[0];
+        const validFileName = ["png", "jpeg"];
+        const fileName = file.name.split(".").pop().toLowerCase();
+        this.isInvalidFile = !validFileName.includes(fileName);
+        if (this.isInvalidFile) {
+          this.openSnackBar("ファイル形式は[.png又は.jpeg]にしてください");
+        }
+      } else {
+        this.isInvalidFile = true;
+      }
     },
     submit() {
       for (let f of this.files) {
@@ -222,18 +238,17 @@ export default {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const url =
-              "/venue_maps?group_id=" +
-              this.venueMap.venue_map.group_id +
-              "&picture_name=" +
-              uploadTask.snapshot.ref.name +
-              "&picture_path=" +
-              downloadURL;
+            const data = {
+              group_id: this.group_id,
+              picture_name: uploadTask.snapshot.ref.name,
+              picture_path: downloadURL,
+            };
 
-            this.$axios.$post(url).then((response) => {
-              this.reload();
+            const url = `/venue_maps?group_id=${this.group_id}`;
+            this.$axios.$post(url, data).then((response) => {
+              this.reload(response.data.group_id);
               this.closeAddModal();
-              this.openSnackBar("模擬店平面図を追加しました");
+              this.openSnackBar("模擬店平面図を登録しました");
               this.isPush.disabled = false;
             });
           });
