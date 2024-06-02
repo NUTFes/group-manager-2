@@ -1,7 +1,12 @@
 name: Docker Build and Test
 
 on:
-  - pull_request
+  pull_request:
+    paths:
+      - 'admin_view/**'
+      - 'user_front/**'
+      - 'api/**'
+
 
 jobs:
   docker:
