@@ -3,11 +3,11 @@ FROM node:18-bookworm-slim AS builder
 WORKDIR /app
 
 # Install postinstall necessary for Nuxt 3
-COPY package*.json ./
-RUN npm install
+COPY ./user_front/package*.json ./
+RUN npm ci
 
 # Copy the rest of your Vue.js application source code
-COPY . .
+COPY ./user_front/ ./
 
 # Build the application
 RUN npm run build
@@ -21,6 +21,7 @@ COPY --from=builder /app/.output ./output
 
 # Set environment variables
 ENV NODE_ENV production
+
 
 # Expose the port the app runs on
 EXPOSE 3000
