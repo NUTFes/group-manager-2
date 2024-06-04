@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { loginCheck } from "~~/utils/methods";
 import axios from "axios";
 import { Setting } from "~~/types";
+import { useField, useForm } from 'vee-validate';
+import { publicRelationSchema } from "~~/utils/validate";
 
 interface PublicRelation {
   id: number;
@@ -43,6 +44,13 @@ const isEditPublicRelation = ref<boolean>();
 const isSubmitting = ref<boolean>(false);
 const clientId = config.IMGUR_CLIENT_ID;
 const isFileCheck = ref<boolean>(false);
+
+const { handleSubmit } = useForm({
+  validationSchema: publicRelationSchema,
+});
+
+const { value: blurbField, errorMessage: blurbError, handleChange: handleBlurbChange } = useField('blurb');
+const { value: fileNameField, errorMessage: fileNameError, handleChange: handleFileNameChange } = useField('fileName');
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -225,7 +233,8 @@ const editImageURL = () => {
       <div class="left text-3xl">
         {{ $t("PR.text") }}
       </div>
-      <textarea class="border-2 w-[60%]" v-model="blurb"></textarea>
+      <textarea class="border-2 w-[60%]" v-model="blurb" @change="handleBlurbChange" />
+      <p v-if="blurbError" class="text-red-500 text-sm">{{ blurbError }}</p>
       <p v-if="isBlurbOver" class="text-red-500 text-sm">{{ $t("PR.over") }}</p>
       <div class="my-4 items-center">
         <label>

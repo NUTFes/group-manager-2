@@ -294,3 +294,19 @@ export const announcementSchema = object({
     }),
   status: string().required("選択してください\nPlease select"),
 });
+
+export const publicRelationSchema = object({
+  blurb: string().required("PR文を入力してください\nPlease enter your PR statement")
+    .test('is-valid-length', '日本語の場合は50字未満、英語の場合は25単語未満で入力してください\nPlease enter less than 50 characters for Japanese and less than 25 words for English', (value) => {
+      if (!value) return true;
+      const isJapanese = /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ーa-zA-Z0-9ａ-ｚＡ-Ｚ０-９々〆〤]/u.test(value);
+      if (isJapanese) {
+        return value.length <= 50;
+      } else {
+        const wordCount = value.split(' ').length;
+        return wordCount <= 25;
+      }
+    }),
+  fileName: string().required("画像を選択してください\nPlease select an image")
+    .matches(/^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/, "ファイル名は「参加形式_団体名」の形式で入力してください\nPlease enter the file name in the format of 'participation_format_organization_name'"),
+});
