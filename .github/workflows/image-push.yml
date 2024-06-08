@@ -12,9 +12,9 @@ jobs:
       matrix:
         include:
           - dockerfile: admin.k8s.Dockerfile
-            image_name: nutfes/group-manager-2-admin_view
+            image_name: nutfes/group-manager-2-admin-view
           - dockerfile: front.k8s.Dockerfile
-            image_name: nutfes/group-manager-2-user_front
+            image_name: nutfes/group-manager-2-user-front
           - dockerfile: api.k8s.Dockerfile
             image_name: nutfes/group-manager-2-api
 
