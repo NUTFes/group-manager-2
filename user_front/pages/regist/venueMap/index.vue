@@ -25,6 +25,7 @@ const clientId = config.IMGUR_CLIENT_ID;
 const isSubmitting = ref<boolean>(false);
 const currentVenueMap = ref<VenueMap | null>(null);
 const isEditVenueMap = ref<boolean>();
+const isFileCheck = ref<boolean>(false);
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -48,6 +49,30 @@ const fileUpload = (e: Event) => {
   selectedFile.value = file;
   fileName.value = file.name;
   selectedFileUrl.value = URL.createObjectURL(file);
+  fileCheck();
+};
+
+// 画像ファイルのバリデーション。uploadした瞬間に発火する
+const fileCheck = () => {
+  // 初期状態ではバリデーションを成功とする
+  isFileCheck.value = true;
+
+  if (selectedFile.value) {
+    // jpeg, pngの指定、それ以外の場合はエラー
+    if (!["image/jpeg", "image/png"].includes(selectedFile.value.type)) {
+      alert("JPEG、PNG形式の画像を選択してください\nPlease select an image in JPEG or PNG format");
+      isFileCheck.value = false;
+      return; // エラーメッセージが表示された場合はバリデーションを終了
+    }
+  }
+
+  // ファイル名のチェック。"_"で区切られているかどうかのチェック
+  const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+  if (!fileNameRegex.test(fileName.value)) {
+    alert("ファイル名は「参加形式_団体名」の形式で入力してください\nPlease enter the file name in the format of 'participation_format_organization_name'");
+    isFileCheck.value = false;
+    return; // エラーメッセージが表示された場合はバリデーションを終了
+  }
 };
 
 const changeImage2base64 = (file: File) => {
@@ -128,7 +153,7 @@ const postImageURL = () => {
     <Card>
       <div class="flex flex-col my-4 items-center gap-4">
         <span class="text-3xl mr-4">{{ $t("VenueMap.map") }}</span>
-        <input type="file" accept=".pdf, .png, .jpg" @change="fileUpload" />
+        <input type="file" accept=".png, .jpg" @change="fileUpload" />
         <div class="flex flex-col items-center gap-4" v-if="currentVenueMap">
           <p>{{ $t("VenueMap.currently") }}</p>
           <img :src="currentVenueMap.picture_path" class="w-[50%]" />
@@ -142,7 +167,7 @@ const postImageURL = () => {
         v-if="isEditVenueMap"
         :text="$t('Button.register')"
         @click="postImageURL"
-        :disabled="isSubmitting"
+        :disabled="isSubmitting || !isFileCheck"
       ></RegistPageButton>
       <p v-if="isSubmitting">{{ $t("PR.registering") }}</p>
     </Card>

@@ -230,7 +230,7 @@ const editImageURL = () => {
       <div class="my-4 items-center">
         <label>
           <span class="text-3xl mr-4">{{ $t("PR.image") }}</span>
-          <input type="file" @change="fileUpload" />
+          <input type="file" accept=".png, .jpg" @change="fileUpload" />
         </label>
       </div>
       <div class="flex flex-col gap-2 my-4">
