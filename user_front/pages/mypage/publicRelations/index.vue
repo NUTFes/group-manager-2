@@ -93,7 +93,7 @@ const fileUpload = (e: Event) => {
 const fileCheck = () => {
   if (selectedFile.value) {
     // jpeg,pngの指定、それ以外の場合はエラー
-    if (!["image/jpeg", "image/png"].includes(selectedFile.value.type)) {
+    if (!["image/jpeg", "image/png", "image/png"].includes(selectedFile.value.type)) {
       alert("JPEG、PNG形式の画像を選択してください\nPlease select an image in JPEG or PNG format");
       isFileCheck.value = false;
     }
@@ -256,4 +256,3 @@ const editImageURL = () => {
     </Card>
   </div>
 </template>
-

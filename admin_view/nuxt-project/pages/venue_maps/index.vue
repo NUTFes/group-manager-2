@@ -86,15 +86,21 @@
             <input type="file" accept=".png, .jpg" @change="fileUpload" />
             {{ files[0].name }}
           </label>
-          <div v-if="isInvalidFile" style="color: red">
-            ファイル形式は[.png又は.jpeg]にしてください
+          <div v-if="isInvalidFile && !isFileCheck" style="color: red">
+            ファイル形式は[.pngか.jpeg又は.jpg]にしてください
+          </div>
+          <div v-else-if="isFileCheck && !isInvalidFile" style="color: red">
+            ファイル名は「参加形式_団体名」の形式で入力してください
           </div>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit">{{
-          buttonState
-        }}</CommonButton>
+        <CommonButton
+          iconName="add_circle"
+          :on_click="submit"
+          :disabled="!isFile"
+          >{{ buttonState }}</CommonButton
+        >
       </template>
     </AddModal>
     <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
@@ -122,6 +128,8 @@ export default {
       isPush: { disabled: false },
       files: [{ name: "選択してください" }],
       isInvalidFile: false,
+      isFile: false,
+      isFileCheck: false,
     };
   },
   async asyncData({ $axios }) {
@@ -194,17 +202,33 @@ export default {
     },
     fileUpload(event) {
       this.files = event.target.files;
-      // ファイル形式のバリデーション
       if (this.files.length > 0) {
         const file = this.files[0];
-        const validFileName = ["png", "jpeg"];
+
+        const validFileName = ["png", "jpeg", "jpg"];
         const fileName = file.name.split(".").pop().toLowerCase();
         this.isInvalidFile = !validFileName.includes(fileName);
+        const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+
+        // ファイル形式のバリデーション
         if (this.isInvalidFile) {
-          this.openSnackBar("ファイル形式は[.png又は.jpeg]にしてください");
+          this.openSnackBar(
+            "ファイル形式は[.pngか.jpeg又は.jpg]にしてください。"
+          );
+          this.isInvalidFile = true;
+          return;
+          // ファイル名のチェック。"_"で区切られているかどうかのチェック
+        } else if (!fileNameRegex.test(file.name)) {
+          this.openSnackBar(
+            "ファイル名は「参加形式_団体名」の形式で入力してください"
+          );
+          this.isFileCheck = true;
+          return;
+        } else {
+          this.isInvalidFile = false;
+          this.isFileCheck = false;
+          this.isFile = true;
         }
-      } else {
-        this.isInvalidFile = true;
       }
     },
     submit() {
@@ -212,6 +236,7 @@ export default {
         let storageRef = ref(this.$storage, f.name);
         let uploadTask = uploadBytesResumable(storageRef, f);
         this.run(uploadTask);
+        this.isFile = false;
       }
     },
     run(uploadTask) {
@@ -250,6 +275,7 @@ export default {
               this.closeAddModal();
               this.openSnackBar("模擬店平面図を登録しました");
               this.isPush.disabled = false;
+              this.files = null;
             });
           });
         }
@@ -306,3 +332,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.common-button[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+</style>

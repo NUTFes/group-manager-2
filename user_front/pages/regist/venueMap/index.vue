@@ -25,6 +25,7 @@ const clientId = config.IMGUR_CLIENT_ID;
 const isSubmitting = ref<boolean>(false);
 const currentVenueMap = ref<VenueMap | null>(null);
 const isEditVenueMap = ref<boolean>();
+const isFileCheck = ref<boolean>(false);
 
 onMounted(async () => {
   // ログインしていない場合は/welcomeに遷移させる
@@ -37,8 +38,9 @@ onMounted(async () => {
     const venueMap = venueMaps.find((vm) => vm.group_id === state.groupId);
     currentVenueMap.value = venueMap || null;
   });
-  const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
-  isEditVenueMap.value = setting.data[0].is_edit_venue_map
+  const setting =
+    (await $fetch<Setting>(config.APIURL + "/user_page_settings")) || null;
+  isEditVenueMap.value = setting.data[0].is_edit_venue_map;
 });
 
 const fileUpload = (e: Event) => {
@@ -48,6 +50,16 @@ const fileUpload = (e: Event) => {
   selectedFile.value = file;
   fileName.value = file.name;
   selectedFileUrl.value = URL.createObjectURL(file);
+
+  // ファイル名のチェック。"_"で区切られているかどうかのチェック
+  const fileNameRegex = /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+$/;
+  if (!fileNameRegex.test(fileName.value) === true) {
+    alert(
+      "ファイル名は「参加形式_団体名」の形式で入力してください\nPlease enter the file name in the format of 'participation_format_organization_name'"
+    );
+    isFileCheck.value = false;
+  }
+  isFileCheck.value = true;
 };
 
 const changeImage2base64 = (file: File) => {
@@ -107,12 +119,16 @@ const postImageURL = () => {
             router.push("/mypage");
           })
           .catch((err) => {
-            alert("模擬店平面図の登録に失敗しました\nFailed to register the venue map");
+            alert(
+              "模擬店平面図の登録に失敗しました\nFailed to register the venue map"
+            );
             router.push("/mypage");
           });
       })
       .catch((err) => {
-        alert("模擬店平面図の登録に失敗しました\nFailed to register the venue map");
+        alert(
+          "模擬店平面図の登録に失敗しました\nFailed to register the venue map"
+        );
         router.push("/mypage");
       });
   });
