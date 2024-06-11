@@ -161,6 +161,11 @@ export default {
           click: "/announcement",
         },
         {
+          title: "模擬店平面図申請",
+          icon: "map",
+          click: "/venue_maps",
+        },
+        {
           title: "調理工程申請",
           icon: "restaurant",
           click: "/cooking_process_order",

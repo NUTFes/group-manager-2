@@ -38,8 +38,9 @@ onMounted(async () => {
     const venueMap = venueMaps.find((vm) => vm.group_id === state.groupId);
     currentVenueMap.value = venueMap || null;
   });
-  const setting = await $fetch<Setting>(config.APIURL+ "/user_page_settings") || null
-  isEditVenueMap.value = setting.data[0].is_edit_venue_map
+  const setting =
+    (await $fetch<Setting>(config.APIURL + "/user_page_settings")) || null;
+  isEditVenueMap.value = setting.data[0].is_edit_venue_map;
 });
 
 const fileUpload = (e: Event) => {
@@ -132,12 +133,16 @@ const postImageURL = () => {
             router.push("/mypage");
           })
           .catch((err) => {
-            alert("模擬店平面図の登録に失敗しました\nFailed to register the venue map");
+            alert(
+              "模擬店平面図の登録に失敗しました\nFailed to register the venue map"
+            );
             router.push("/mypage");
           });
       })
       .catch((err) => {
-        alert("模擬店平面図の登録に失敗しました\nFailed to register the venue map");
+        alert(
+          "模擬店平面図の登録に失敗しました\nFailed to register the venue map"
+        );
         router.push("/mypage");
       });
   });
