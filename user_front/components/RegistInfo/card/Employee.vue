@@ -61,13 +61,13 @@ const openDeleteModal = () => {
   </RegistInfoNarrowCard>
   <RegistInfoDeleteEmployee
     v-if="isDeleteModal"
-    v-model:edit-employee="isDeleteModal"
+    v-model:delete-employee="isDeleteModal"
     :id="id"
     @reload-employee="reloadEmployee()"
   />
   <RegistInfoEditEmployee
     v-if="isEditModal"
-    v-model:delete-employee="isEditModal"
+    v-model:edit-employee="isEditModal"
     :id="id"
     :group-id="groupId"
     :name="name"
