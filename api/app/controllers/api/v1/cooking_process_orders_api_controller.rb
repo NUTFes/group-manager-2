@@ -1,5 +1,5 @@
 class Api::V1::CookingProcessOrdersApiController < ApplicationController
-  
+
   def get_cooking_process_order_for_admin_view
     @groups = Group.with_cooking_process_order(params[:id])
     render json: fmt(ok, @groups)

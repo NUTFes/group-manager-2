@@ -364,8 +364,7 @@
   "Cook": {
     "cookTitle":"調理工程申請",
     "preOpenKitchen":"営業前調理場",
-    "preOpenTent":"営業前テント内",
     "duringOpenKitchen":"営業中調理場",
-    "duringOpenTent":"営業中テント内"
+    "tent":"テント内での作業内容"
   }
 }

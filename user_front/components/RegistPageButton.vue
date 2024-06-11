@@ -6,20 +6,18 @@ const props = defineProps<{
 }>();
 </script>
 <template>
-  <div>
-    <button
-      :disabled="disabled"
-      :class="{
-        none: disabled,
-        primary: variant === 'primary' || variant === undefined,
-        danger: variant === 'danger',
-        secondary: variant === 'secondary',
-        success: variant === 'success',
-      }"
-    >
-      {{ props.text }}
-    </button>
-  </div>
+  <button
+    :disabled="disabled"
+    :class="{
+      none: disabled,
+      primary: variant === 'primary' || variant === undefined,
+      danger: variant === 'danger',
+      secondary: variant === 'secondary',
+      success: variant === 'success',
+    }"
+  >
+    {{ props.text }}
+  </button>
 </template>
 
 <style scoped>

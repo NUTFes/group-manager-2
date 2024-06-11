@@ -28,9 +28,8 @@ class CookingProcessOrder < ApplicationRecord
       "id": self.id,
       "group_id": self.group_id,
       "pre_open_kitchen": self.pre_open_kitchen,
-      "pre_open_tent": self.pre_open_tent,
       "during_open_kitchen": self.during_open_kitchen,
-      "during_open_tent": self.during_open_tent
+      "tent": self.tent
     }
   end
 end

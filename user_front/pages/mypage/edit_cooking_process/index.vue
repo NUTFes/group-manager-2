@@ -1,43 +1,59 @@
 <script lang="ts" setup>
 import axios from "axios";
-import { CookingProcessOrder } from "@/types/regist/cookingProcessOrder";
 import { useForm, useField } from "vee-validate";
-import { cookingProcessOrderSchema } from "~~/utils/validate";
-import { loginCheck } from "@/utils/methods";
+import { CookingProcessOrder } from "@/types/regist/cookingProcessOrder";
+import { Setting } from "~~/types";
 
 const router = useRouter();
 const config = useRuntimeConfig();
 
 const currentCookingProcessOrder = ref<CookingProcessOrder>();
-const preOpenKitchen = ref<Text>();
-const preOpenTent = ref<Text>();
-const duringOpenKitchen = ref<Text>();
-const duringOpenTent = ref<Text>();
+const preOpenKitchen = ref<boolean>();
+const duringOpenKitchen = ref<boolean>();
+const isEditCookingProcess = ref<boolean>();
+const tent = ref<Text>();
 const groupId = Number(localStorage.getItem("group_id"));
-const setting = ref("");
 const isEditGroup = ref<boolean>();
-const isSubmitting = ref<boolean>(false);
 
-const { meta } = useForm({
+const { meta, isSubmitting } = useForm({
   validationSchema: cookingProcessOrderSchema,
 });
 
-const { handleChange: handleChangepreOpenKitchen, errorMessage: preOpenKitchenError } = useField("preOpenKitchen");
-const { handleChange: handleChangepreOpenTent, errorMessage: preOpenTentError } = useField("preOpenKitchen");
-const { handleChange: handleChangeduringOpenKitchen, errorMessage: duringOpenKitchenError } = useField("duringOpenKitchen");
-const { handleChange: handleChangeduringOpenTent, errorMessage: duringOpenTentError } = useField("duringOpenTent");
+const {
+  handleChange: handleChangepreOpenKitchen,
+  errorMessage: preOpenKitchenError,
+} = useField("preOpenKitchen");
+const {
+  handleChange: handleChangeduringOpenKitchen,
+  errorMessage: duringOpenKitchenError,
+} = useField("duringOpenKitchen");
+const { handleChange: handleChangetent, errorMessage: tentError } =
+  useField("tent");
 
-onMounted(() => {
+onMounted(async() => {
   loginCheck();
   const cookingProcessOrderUrl = config.APIURL + "/cooking_process_orders/";
   axios.get(cookingProcessOrderUrl).then((response) => {
     const cookingProcessOrders: CookingProcessOrder[] = response.data;
-    currentCookingProcessOrder.value = cookingProcessOrders.find((cpo) => cpo.group_id === groupId);
+    currentCookingProcessOrder.value = cookingProcessOrders.find(
+      (cpo) => cpo.group_id === groupId
+    );
     preOpenKitchen.value = currentCookingProcessOrder.value?.pre_open_kitchen;
-    preOpenTent.value = currentCookingProcessOrder.value?.pre_open_tent;
-    duringOpenKitchen.value = currentCookingProcessOrder.value?.during_open_kitchen;
-    duringOpenTent.value = currentCookingProcessOrder.value?.during_open_tent;
+    duringOpenKitchen.value =
+      currentCookingProcessOrder.value?.during_open_kitchen;
+    tent.value = currentCookingProcessOrder.value?.tent;
+    handleChangepreOpenKitchen(
+      currentCookingProcessOrder.value?.pre_open_kitchen
+    );
+    handleChangeduringOpenKitchen(
+      currentCookingProcessOrder.value?.during_open_kitchen
+    );
+    handleChangetent(currentCookingProcessOrder.value?.tent);
   });
+
+  const setting =
+    (await $fetch<Setting>(config.APIURL + "/user_page_settings")) || null;
+  isEditCookingProcess.value = setting.data[0].is_edit_cooking_process;
 
   const settingUrl = config.APIURL + "/user_page_settings";
   axios
@@ -50,7 +66,6 @@ onMounted(() => {
       },
     })
     .then((response) => {
-      setting.value = response.data.data[0];
       isEditGroup.value = response.data.data[0].is_edit_group;
     });
 });
@@ -58,15 +73,17 @@ onMounted(() => {
 const register = () => {
   isSubmitting.value = true;
 
-  if(currentCookingProcessOrder.value){
-    const cookingProcessOrderUrl = config.APIURL + "/cooking_process_orders/" + currentCookingProcessOrder.value?.id;
+  if (currentCookingProcessOrder.value) {
+    const cookingProcessOrderUrl =
+      config.APIURL +
+      "/cooking_process_orders/" +
+      currentCookingProcessOrder.value?.id;
     axios
       .put(cookingProcessOrderUrl, {
         group_id: groupId,
         pre_open_kitchen: preOpenKitchen.value,
-        pre_open_tent: preOpenTent.value,
         during_open_kitchen: duringOpenKitchen.value,
-        during_open_tent: duringOpenTent.value
+        tent: tent.value,
       })
       .then(() => {
         alert("登録できました\nRegistration Success");
@@ -74,16 +91,15 @@ const register = () => {
       })
       .catch(() => {
         alert("登録できませんでした\nRegistration Failure");
-    });
+      });
   } else {
     const cookingProcessOrderUrl = config.APIURL + "/cooking_process_orders/";
     axios
       .post(cookingProcessOrderUrl, {
         group_id: groupId,
         pre_open_kitchen: preOpenKitchen.value,
-        pre_open_tent: preOpenTent.value,
         during_open_kitchen: duringOpenKitchen.value,
-        during_open_tent: duringOpenTent.value
+        tent: tent.value,
       })
       .then(() => {
         alert("登録できました\nRegistration Success");
@@ -91,17 +107,12 @@ const register = () => {
       })
       .catch(() => {
         alert("登録できませんでした\nRegistration Failure");
-    });
+      });
   }
 };
 
 const buttonDisabled = computed(() => {
-  return !!(
-    preOpenKitchenError.value||
-    preOpenTentError.value||
-    duringOpenKitchenError.value||
-    duringOpenTentError.value
-  );
+  return !!!tent.value;
 });
 </script>
 
@@ -110,7 +121,7 @@ const buttonDisabled = computed(() => {
     <div class="w-full text-2xl my-8 font-bold bg-[#eceff1] p-2 rounded-md">
       {{ $t("Cook.cookTitle") }}
     </div>
-    <div v-if="!isEditGroup" class="text-3xl text-red-600 font-bold my-5">
+    <div v-if="!isEditCookingProcess" class="text-3xl text-red-600 font-bold my-5">
       編集は締め切られました
     </div>
     <div class="border p-4 my-4 rounded-md flex flex-col gap-8">
@@ -118,43 +129,63 @@ const buttonDisabled = computed(() => {
         <div class="text-lg">
           {{ $t("Cook.preOpenKitchen") }}
         </div>
-        <input
-          class="rounded-md border border-black p-2 text-xl"
-          id="group"
-          type="text"
-          v-model="preOpenKitchen"
-          @change="handleChangepreOpenKitchen"
-        />
+        <div class="flex items-center">
+          <input
+            type="radio"
+            id="preOpenKitchenYes"
+            value="true"
+            v-model="preOpenKitchen"
+            @change="handleChangepreOpenKitchen"
+            class="form-radio h-4 w-4 text-blue-600"
+          />
+          <label for="preOpenKitchenYes" class="ml-2 text-xl">使用する</label>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="radio"
+            id="preOpenKitchenNo"
+            value="false"
+            v-model="preOpenKitchen"
+            @change="handleChangepreOpenKitchen"
+            class="form-radio h-4 w-4 text-blue-600"
+          />
+          <label for="preOpenKitchenNo" class="ml-2 text-xl">使用しない</label>
+        </div>
         <p class="text-red-500 text-sm" v-if="preOpenKitchenError">
           {{ preOpenKitchenError }}
         </p>
       </div>
-      <div class="flex flex-col gap-2">
-        <div class="text-lg">
-          {{ $t("Cook.preOpenTent") }}
-        </div>
-        <input
-          class="rounded-md border border-black p-2 text-xl"
-          id="project"
-          type="text"
-          v-model="preOpenTent"
-          @change="handleChangepreOpenTent"
-        />
-        <p class="text-red-500 text-sm" v-if="preOpenTentError">
-          {{ preOpenTentError }}
-        </p>
-      </div>
+
       <div class="flex flex-col gap-2">
         <div class="text-lg">
           {{ $t("Cook.duringOpenKitchen") }}
         </div>
-        <input
-          class="rounded-md border border-black p-2 text-xl"
-          id="group"
-          type="text"
-          v-model="duringOpenKitchen"
-          @change="handleChangeduringOpenKitchen"
-        />
+        <div class="flex items-center">
+          <input
+            type="radio"
+            id="duringOpenKitchenYes"
+            value="true"
+            v-model="duringOpenKitchen"
+            @change="handleChangeduringOpenKitchen"
+            class="form-radio h-4 w-4 text-blue-600"
+          />
+          <label for="duringOpenKitchenYes" class="ml-2 text-xl"
+            >使用する</label
+          >
+        </div>
+        <div class="flex items-center">
+          <input
+            type="radio"
+            id="duringOpenKitchenNo"
+            value="false"
+            v-model="duringOpenKitchen"
+            @change="handleChangeduringOpenKitchen"
+            class="form-radio h-4 w-4 text-blue-600"
+          />
+          <label for="duringOpenKitchenNo" class="ml-2 text-xl"
+            >使用しない</label
+          >
+        </div>
         <p class="text-red-500 text-sm" v-if="duringOpenKitchenError">
           {{ duringOpenKitchenError }}
         </p>
@@ -162,32 +193,29 @@ const buttonDisabled = computed(() => {
 
       <div class="flex flex-col gap-2">
         <div class="text-lg">
-          {{ $t("Cook.duringOpenTent") }}
+          {{ $t("Cook.tent") }}
         </div>
-        <input
+        <textarea
           class="rounded-md border border-black p-2 text-xl"
           id="activity"
-          type="text"
-          v-model="duringOpenTent"
-          @change="handleChangeduringOpenTent"
-        />
-        <p class="text-red-500 text-sm" v-if="duringOpenTentError">
-          {{ duringOpenTentError }}
+          v-model="tent"
+          @change="handleChangetent"
+        ></textarea>
+        <p class="text-red-500 text-sm" v-if="tentError">
+          {{ tentError }}
         </p>
       </div>
     </div>
     <div class="regist-button">
       <RegistPageButton
-        v-if="isEditGroup"
+        v-if="isEditCookingProcess"
         @click="register"
-        class="regist-button"
-        :disabled="buttonDisabled || isSubmitting"
+        :disabled="buttonDisabled || !meta.valid || isSubmitting"
         :text="$t('Button.register')"
       ></RegistPageButton>
     </div>
   </div>
 </template>
-
 <style scoped>
 .regist-button {
   @apply text-right
