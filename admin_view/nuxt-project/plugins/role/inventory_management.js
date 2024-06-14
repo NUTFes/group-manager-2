@@ -161,7 +161,7 @@ export const inventoryManagementRole = {
     update: false,
     delete: false,
   },
-  assgin_items: {
+  assign_items: {
     read: true,
     create: true,
     update: true,
