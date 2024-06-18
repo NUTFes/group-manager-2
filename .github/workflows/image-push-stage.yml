@@ -7,30 +7,22 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.merged == true ||
+      github.event.action == 'opened' ||
+      github.event.action == 'synchronize' ||
+      github.event.action == 'reopened'
     strategy:
       matrix:
         include:
           - dockerfile: admin.k8s.Dockerfile
             image_name: nutfes/group-manager-2-admin-view
-            vue_app_url: ''
-            vue_app_api_url: ''
-            imgur_id: ''
-            imgur_token: ''
 
           - dockerfile: front.k8s.Dockerfile
             image_name: nutfes/group-manager-2-user-front
-            vue_app_url: ${{ secrets.VUE_APP_URL }}
-            vue_app_api_url: ${{ secrets.VUE_APP_API_URL }}
-            imgur_id: ${{ secrets.NUXT_IMGUR_CLIENT_ID }}
-            imgur_token: ${{ secrets.NUXT_IMGUR_CLIENT_SECRET }}
 
           - dockerfile: api.k8s.Dockerfile
             image_name: nutfes/group-manager-2-api
-            vue_app_url: ${{ secrets.VUE_APP_URL }}
-            vue_app_api_url: ${{ secrets.VUE_APP_API_URL }}
-            imgur_id: ''
-            imgur_token: ''
-
 
     steps:
       - uses: actions/checkout@v4
@@ -55,8 +47,7 @@ jobs:
           push: true
           tags: ${{ matrix.image_name }}:latest
           build-args: |
-            VUE_APP_URL=${{ matrix.vue_app_url }}
-            VUE_APP_API_URL=${{ matrix.vue_app_api_url }}
-            NUXT_IMGUR_CLIENT_ID=${{ matrix.imgur_id }}
-            NUXT_IMGUR_CLIENT_SECRET=${{ matrix.imgur_token }}
-
+            VUE_APP_URL=${{ secrets.VUE_APP_URL }}
+            VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }}
+            NUXT_IMGUR_CLIENT_ID=${{ secrets.NUXT_IMGUR_CLIENT_ID }}
+            NUXT_IMGUR_CLIENT_SECRET=${{ secrets.NUXT_IMGUR_CLIENT_SECRET }}
