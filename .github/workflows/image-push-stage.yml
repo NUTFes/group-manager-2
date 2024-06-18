@@ -7,11 +7,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    if: |
-      github.event.pull_request.merged == true ||
-      github.event.action == 'opened' ||
-      github.event.action == 'synchronize' ||
-      github.event.action == 'reopened'
+    if: github.event_name == 'pull_request'
     strategy:
       matrix:
         include:
