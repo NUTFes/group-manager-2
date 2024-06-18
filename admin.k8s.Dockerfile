@@ -2,6 +2,14 @@
 FROM node:16-bookworm-slim AS builder
 WORKDIR /app
 
+# Accept API URL as a build-time environment variable
+ARG API_URL
+ARG APP_API_URL
+
+# Set the environment variable
+ENV VUE_APP_URL=${API_URL}
+ENV VUE_APP_API_URL=${APP_API_URL}
+
 # Copy package.json and package-lock.json (or npm-shrinkwrap.json)
 COPY ./admin_view/nuxt-project/package*.json ./
 
