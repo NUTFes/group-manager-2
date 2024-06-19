@@ -47,7 +47,7 @@ jobs:
           push: true
           tags: ${{ matrix.image_name }}:latest
           build-args: |
-            API_URL=${{ secrets.VUE_APP_URL }}
-            APP_API_URL=${{ secrets.VUE_APP_API_URL }}
+            API_URL=https://group-manager-api.nosse.net
+            APP_API_URL=https://group-manager-api.nosse.net
             CLIENT_ID=${{ secrets.NUXT_IMGUR_CLIENT_ID }}
             CLIENT_SECRET=${{ secrets.NUXT_IMGUR_CLIENT_SECRET }}
