@@ -47,7 +47,7 @@ jobs:
           push: true
           tags: ${{ matrix.image_name }}:latest
           build-args: |
-            VUE_APP_URL=${{ secrets.VUE_APP_URL }}
-            VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }}
-            NUXT_IMGUR_CLIENT_ID=${{ secrets.NUXT_IMGUR_CLIENT_ID }}
-            NUXT_IMGUR_CLIENT_SECRET=${{ secrets.NUXT_IMGUR_CLIENT_SECRET }}
+            API_URL=${{ secrets.VUE_APP_URL }}
+            APP_API_URL=${{ secrets.VUE_APP_API_URL }}
+            CLIENT_ID=${{ secrets.NUXT_IMGUR_CLIENT_ID }}
+            CLIENT_SECRET=${{ secrets.NUXT_IMGUR_CLIENT_SECRET }}
