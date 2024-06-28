@@ -151,7 +151,7 @@ img {
     rgba(40, 40, 40, 0.9),
     rgba(40, 40, 40, 0.8)
   );
-  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 1);
 }
 .header-contents {
   width: 100%;
