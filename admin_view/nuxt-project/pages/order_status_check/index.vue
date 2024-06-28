@@ -61,23 +61,10 @@
               <div v-if="group.sub_rep">◯</div>
               <div v-else>✖️</div>
             </td>
-            <td
-              :class="{
-                unregistered:
-                  !group.place_order && !group.group.is_international,
-              }"
-            >
-              <div v-if="group.group.is_international">ー</div>
-              <div
-                v-else-if="group.place_order && !group.group.is_international"
-              >
-                ◯
-              </div>
-              <div
-                v-else-if="!group.place_order && !group.group.is_international"
-              >
-                ✖️
-              </div>
+            <td :class="{ unregistered: !group.place_order && !group.group.is_international && group.group_category !== 3 }">
+              <div v-if="group.place_order">◯</div>
+              <div v-else-if="group.group.is_international || group.group_category === 3">ー</div>
+              <div v-else>✖️</div>
             </td>
             <td :class="{ unregistered: !group.power_orders }">
               <div v-if="group.power_orders">◯</div>
@@ -87,38 +74,29 @@
               <div v-if="group.rental_orders">◯</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.stage_orders }">
+            <td :class="{ unregistered: !group.stage_orders && group.group_category === 3 }">
               <div v-if="group.stage_orders">◯</div>
+              <div v-else-if="group.group_category !== 3">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.stage_common_option }">
+            <td :class="{ unregistered: !group.stage_common_option && group.group_category === 3 }">
               <div v-if="group.stage_common_option">◯</div>
+              <div v-else-if="group.group_category !== 3">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.employees }">
+            <td :class="{ unregistered: !group.employees && group.group_category === 1 }">
               <div v-if="group.employees">◯</div>
+              <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.food_products }">
-              <div
-                v-if="group.food_products && group.food_products.food_product"
-              >
-                ◯
-              </div>
+            <td :class="{ unregistered: !group.food_products && (group.group_category === 1 || group.group_category === 2) }">
+              <div v-if="group.food_products && group.food_products.food_product">◯</div>
+              <div v-else-if="group.group_category !== 1 && group.group_category !== 2">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td
-              :class="{
-                unregistered: !(
-                  group.food_products && group.food_products.purchase_lists
-                ),
-              }"
-            >
-              <div
-                v-if="group.food_products && group.food_products.purchase_lists"
-              >
-                ◯
-              </div>
+            <td :class="{ unregistered: !(group.food_products && group.food_products.purchase_lists) && group.group_category === 1 }">
+              <div v-if="group.food_products && group.food_products.purchase_lists">◯</div>
+              <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
             <td :class="{ unregistered: !group.public_relation }">
@@ -130,12 +108,14 @@
               <div v-else-if="group.announcement==='申請しない'">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.venue_map }">
+            <td :class="{ unregistered: !group.venue_map && group.group_category === 1 }">
               <div v-if="group.venue_map">◯</div>
+              <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.cooking_process_order }">
+            <td :class="{ unregistered: !group.cooking_process_order && group.group_category === 1 }">
               <div v-if="group.cooking_process_order">◯</div>
+              <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
           </tr>
