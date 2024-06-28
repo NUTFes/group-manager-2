@@ -13,7 +13,6 @@
   font-size: 14px;
   width: 100%;
   border-collapse: collapse;
-  border: solid 1px var(--accent-0);
 }
 
 .normal-table tr {
@@ -25,6 +24,10 @@
   font-weight: 500;
   padding: 5px;
   border-bottom: solid 1px var(--accent-3);
+  position: sticky;
+  top: 60px;
+  background: white;
+  z-index: 1;
 }
 
 .normal-table td {
