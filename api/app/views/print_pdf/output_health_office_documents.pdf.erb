@@ -14,12 +14,14 @@
         <td class="Name"><%=group.user.name %></td>
         <td class="Category">生徒</td>
       </tr>
-      <tr>
-        <td class="No">2</td>
-        <td class="Belonging"><%=group.name %></td>
-        <td class="Name"><%=group.sub_rep.name %></td>
-        <td class="Category">生徒</td>
-      </tr>
+      <% if group.sub_rep %>
+        <tr>
+          <td class="No">2</td>
+          <td class="Belonging"><%=group.name %></td>
+          <td class="Name"><%= group.sub_rep.name %></td>
+          <td class="Category">生徒</td>
+        </tr>
+      <% end %>
       <% group.employees.each_with_index do |employee, index| %>
         <tr>
           <td class="No"><%= index +3%></td>
