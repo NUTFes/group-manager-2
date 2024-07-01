@@ -8,21 +8,25 @@
         <th class="first Name">氏名</th>
         <th class="first Category">保護者、生徒等の区分</th>
       </tr>
-      <tr>
-        <td class="No">1</td>
-        <td class="Belonging"><%=group.name %></td>
-        <td class="Name"><%=group.user.name %></td>
-        <td class="Category">生徒</td>
-      </tr>
-      <tr>
-        <td class="No">2</td>
-        <td class="Belonging"><%=group.name %></td>
-        <td class="Name"><%=group.sub_rep.name %></td>
-        <td class="Category">生徒</td>
-      </tr>
+      <% if group.user %>
+        <tr>
+          <td class="No">1</td>
+          <td class="Belonging"><%= group.name %></td>
+          <td class="Name"><%= group.user.name %></td>
+          <td class="Category">生徒</td>
+        </tr>
+      <% end %>
+      <% if group.sub_rep %>
+        <tr>
+          <td class="No"><%= group.user ? 2 : 1 %></td>
+          <td class="Belonging"><%= group.name %></td>
+          <td class="Name"><%= group.sub_rep.name %></td>
+          <td class="Category">生徒</td>
+        </tr>
+      <% end %>
       <% group.employees.each_with_index do |employee, index| %>
         <tr>
-          <td class="No"><%= index +3%></td>
+          <td class="No"><%= group.sub_rep ? index +3 : index +2 %></td>
           <td class="Belonging"><%=group.name %></td>
           <td class="Name"><%=employee.name %></td>
           <td class="Category">生徒</td>
