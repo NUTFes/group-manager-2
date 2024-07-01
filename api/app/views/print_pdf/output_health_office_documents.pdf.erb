@@ -8,17 +8,15 @@
         <th class="first Name">氏名</th>
         <th class="first Category">保護者、生徒等の区分</th>
       </tr>
-      <% if group.user %>
-        <tr>
-          <td class="No">1</td>
-          <td class="Belonging"><%= group.name %></td>
-          <td class="Name"><%= group.user.name %></td>
-          <td class="Category">生徒</td>
-        </tr>
-      <% end %>
+      <tr>
+        <td class="No">1</td>
+        <td class="Belonging"><%= group.name %></td>
+        <td class="Name"><%= group.user.name %></td>
+        <td class="Category">生徒</td>
+      </tr>
       <% if group.sub_rep %>
         <tr>
-          <td class="No"><%= group.user ? 2 : 1 %></td>
+          <td class="No">2</td>
           <td class="Belonging"><%= group.name %></td>
           <td class="Name"><%= group.sub_rep.name %></td>
           <td class="Category">生徒</td>
