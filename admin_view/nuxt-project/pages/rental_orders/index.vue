@@ -1,7 +1,7 @@
 <template>
   <div class="main-content" v-if="this.$role(roleID).rental_orders.read">
     <SubHeader pageTitle="物品申請一覧">
-      <CommonButton v-if="this.$role(roleID).places.create" iconName="add_circle" :on_click="openAddModal">
+      <CommonButton v-if="this.$role(roleID).rental_orders.create" iconName="add_circle" :on_click="openAddModal">
         追加
       </CommonButton>
       <CommonButton iconName="file_download" :on_click="downloadCSV">
