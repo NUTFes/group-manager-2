@@ -1,0 +1,53 @@
+name: Docker Build and Test
+
+on:
+  pull_request:
+    paths:
+      - 'admin_view/**'
+      - 'user_front/**'
+      - 'api/**'
+
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          BOT_USER_ACCESS_TOKEN: ${{ secrets.BOT_USER_ACCESS_TOKEN }}
+          CHANNEL: ${{ secrets.CHANNEL }}
+          NUTMEG_MYSQL_DBNAME: ${{ secrets.NUTMEG_MYSQL_DBNAME }}
+          NUTMEG_MYSQL_HOST: ${{ secrets.NUTMEG_MYSQL_HOST }}
+          NUTMEG_MYSQL_PASSWORD: ${{ secrets.NUTMEG_MYSQL_PASSWORD }}
+          NUTMEG_MYSQL_USERNAME: ${{ secrets.NUTMEG_MYSQL_USERNAME }}
+          RAILS_ENV: ${{ secrets.RAILS_ENV }}
+          RAILS_LOG_TO_STDOUT: ${{ secrets.RAILS_LOG_TO_STDOUT }}
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
+          VUE_APP_URL: ${{ secrets.VUE_APP_URL }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          file_name: group-manager-2.env
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Docker image
+        run: docker compose -f docker-compose.prod.yml build
+
+      - name: install admin_view
+        run: docker compose -f docker-compose.prod.yml run --rm admin_view npm i
+
+      - name: install user_front
+        run: docker compose -f docker-compose.prod.yml run --rm user_front npm i
+
+      - name: Build admin_view
+        run: docker compose -f docker-compose.prod.yml run --rm admin_view npm run build
+
+      - name: Build user_front
+        run: docker compose -f docker-compose.prod.yml run --rm user_front npm run build
