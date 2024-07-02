@@ -103,9 +103,9 @@ export const inventoryManagementRole = {
   },
   rental_orders: {
     read:   true,
-    create: false,
-    update: false,
-    delete: false,
+    create: true,
+    update: true,
+    delete: true,
   },
   representatives: {
     read:   true,
@@ -163,9 +163,9 @@ export const inventoryManagementRole = {
   },
   assign_items: {
     read:   true,
-    create: false,
-    update: false,
-    delete: false,
+    create: true,
+    update: true,
+    delete: true,
   },
   announcements: {
     read:   true,

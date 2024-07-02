@@ -2,7 +2,7 @@
   <div class="main-content" v-if="this.$role(roleID).rental_items.read">
     <SubHeader pageTitle="物品一覧">
       <CommonButton
-        v-if="this.$role(roleID).places.create"
+        v-if="this.$role(roleID).rental_items.create"
         iconName="add_circle"
         :on_click="openAddModal"
       >
