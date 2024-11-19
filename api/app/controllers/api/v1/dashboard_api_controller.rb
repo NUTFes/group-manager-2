@@ -3,12 +3,9 @@ class Api::V1::DashboardApiController < ApplicationController
         # ユーザー数
         all_user_num = User.all.length
         developer_num = User.where(role_id:1).length
-        participant_num = User.where(role_id:2).length
-        inventory_management_num = User.where(role_id:3).length
-        venue_power_num = User.where(role_id:4).length
-        sanitation_management_num = User.where(role_id:5).length
-        staff_num = User.where(role_id:6).length
-        user_num = User.where(role_id:7).length
+        manager_num = User.where(role_id:2).length
+        staff_num = User.where(role_id:3).length
+        user_num = User.where(role_id:4).length
         groups = Group.all
         groups_length = groups.length
         cate_1_length = groups.where(group_category:1).length
@@ -33,11 +30,8 @@ class Api::V1::DashboardApiController < ApplicationController
         group_data = {
             all_user_num: all_user_num,
             developer_num: developer_num,
-            participant_num: participant_num,
-            inventory_management_num: inventory_management_num,
-            venue_power_num: venue_power_num,
-            sanitation_management_num: sanitation_management_num,
-            staff_num:staff_num,
+            manager_num: manager_num,
+            staff_num: staff_num,
             user_num: user_num,
             groups_length: groups_length,
             cate_1_length: cate_1_length,
@@ -52,7 +46,7 @@ class Api::V1::DashboardApiController < ApplicationController
             progress_assign_item_1: progress_assign_item_1,
             progress_assign_item_2: progress_assign_item_2,
             progress_assign_item_3: progress_assign_item_3,
-        } 
+        }
 
         render json: group_data
     end
