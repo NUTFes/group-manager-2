@@ -142,12 +142,9 @@ export default {
       headers: ["ID", "名前", "権限"],
       roles: [
         { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
-        { id: 2, name: "participant" }, //　参加者( 参加団体部門長+国際交流部門長)
-        { id: 3, name: "inventory_management" }, //物品管理部門長
-        { id: 4, name: "venue_power" }, //会場電力部門長
-        { id: 5, name: "sanitation_management" }, //衛生管理部門長
-        { id: 6, name: "staff" }, //総務局員
-        { id: 7, name: "user" }, //参加団体,企画局員
+        { id: 2, name: "manager" }, //　参加者( 参加団体部門長+国際交流部門長)
+        { id: 3, name: "staff" }, //総務局員
+        { id: 4, name: "user" }, //参加団体,企画局員
       ],
       departmentList: [
         { id: 1,  name: "機械工学分野/機械創造工学課程" },
@@ -222,7 +219,7 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.saveScrollPosition);
-    
+
     const storedRoleID = localStorage.getItem(this.$route.path + 'RefRole');
     if (storedRoleID) {
       this.refRoleID = Number(storedRoleID);
