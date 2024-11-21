@@ -244,7 +244,7 @@ export default {
       this.refYearID = item_id;
       // ALLの時
       if (item_id == 0) {
-        this.refYears = "ALL Years";
+        this.refYears = "ALL";
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
