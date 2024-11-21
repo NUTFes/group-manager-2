@@ -279,7 +279,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL Yeras";
+          this.refYears = "ALL";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -290,7 +290,7 @@ export default {
         this.refIsCookingID = item_id;
         // ALLの時
         if (item_id === 0) {
-          this.refIsCooking = "ALL Cooking states";
+          this.refIsCooking = "ALL";
         } else {
           this.refIsCooking = name_list[item_id - 1].text;
         }
@@ -300,7 +300,7 @@ export default {
         this.refCategoryID = item_id;
         // ALLの時
         if (item_id === 0) {
-          this.refCategory = "ALL Categorys";
+          this.refCategory = "ALL";
         } else {
           this.refCategory = name_list[item_id - 1].text;
         }

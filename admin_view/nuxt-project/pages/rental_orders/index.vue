@@ -227,7 +227,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL Years";
+          this.refYears = "ALL";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -236,7 +236,7 @@ export default {
         this.refRentalItemID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refRentalItems = "ALL Iteams";
+          this.refRentalItems = "ALL";
         } else {
           this.refRentalItems = name_list[item_id - 1].name;
         }
@@ -245,7 +245,7 @@ export default {
         this.refCategoryID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refGroupCategories = "ALL Categories";
+          this.refGroupCategories = "ALL";
         } else {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
