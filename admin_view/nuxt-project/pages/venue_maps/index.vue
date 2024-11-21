@@ -107,6 +107,7 @@
       {{ snackMessage }}
     </SnackBar>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
