@@ -1,4 +1,10 @@
 export const managerRole = {
+  dashboard: {
+    read: true,
+    create: true,
+    update: false,
+    delete: false,
+  },
   employees: {
     read: true,
     create: true,
