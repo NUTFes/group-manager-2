@@ -252,7 +252,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL";
+          this.refYears = "ALL Years";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -269,7 +269,7 @@ export default {
         this.refCategoryID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refGroupCategories = "ALL";
+          this.refGroupCategories = "ALL Categories";
         } else {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
