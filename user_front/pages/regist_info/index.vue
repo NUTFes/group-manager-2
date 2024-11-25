@@ -472,7 +472,7 @@ const isStageOverlap = computed(() => {
           </div>
           <div class="w-[13%] h-[80%] text-base color=red">{{ $t('Place.free') }}</div>
           <div class="w-[25%] h-[80%] pr-1 break-normal break-words text-ellipsis overflow-hidden">
-            {{ Place.Exremark }}
+            {{ placeOrder?.remark}}
           </div>
         </div>
 
