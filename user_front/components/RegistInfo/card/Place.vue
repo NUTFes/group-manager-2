@@ -55,7 +55,7 @@ const openEditModal = () => {
           {{ $t('Place.hope1') }}{{ place.n }}{{ $t('Place.hope2') }}
         </div>
         <RegistInfoDivideBar />
-        <div class="w-[40%] text-center text-4xl">
+        <div class="w-[65%] text-center text-4xl">
           {{ place.place }}
         </div>
         <!-- 以下備考欄の記述 -->
