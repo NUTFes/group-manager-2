@@ -58,10 +58,10 @@ const openEditModal = () => {
         <div class="w-[40%] text-center text-4xl">
           {{ place.place }}
         </div>
-        <div class="w-[13%] h-[80%] text-base">{{ $t('Place.free') }}</div>
+        <!-- <div class="w-[13%] h-[80%] text-base">{{ $t('Place.free') }}</div>
           <div class="w-[25%] h-[80%] pr-1 break-normal break-words text-ellipsis overflow-hidden">
             {{ place.remark }}
-          </div>
+          </div> -->
       </template>
       <template v-if="isEditPlace" #method>
         <div class="mx-4">
