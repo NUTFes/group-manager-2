@@ -82,3 +82,6 @@ const openEditModal = () => {
     @reload-place="reloadPlace()"
   />
 </template>
+
+export default remark;
+
