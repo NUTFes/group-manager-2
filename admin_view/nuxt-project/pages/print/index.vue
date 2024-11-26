@@ -1,20 +1,23 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).print.read">
     <SubHeader pageTitle="書類印刷"></SubHeader>
     <Card width="100%">
       <VerticalTable>
-        <tr v-if="this.$role(roleID).power_orders.read">
+        <tr>
           <td>使用電力リスト</td>
           <td>
             <InTableButton iconName="file_download" :on_click="downloadPowerPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadPowerCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadPowerCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).employees.read">
+        <tr>
           <td>従業員リスト</td>
           <td>
             <InTableButton
@@ -22,12 +25,15 @@
               :on_click="downloadEmployeePDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadEmployeeCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadEmployeeCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).rental_items.read">
+        <tr>
           <td>貸出物品リストまとめ</td>
           <td>
             <InTableButton
@@ -35,12 +41,15 @@
               :on_click="downloadRentalItemsPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadRentalItemsCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).food_products.read">
+        <tr>
           <td>販売品リスト</td>
           <td>
             <InTableButton
@@ -48,12 +57,15 @@
               :on_click="downloadFoodProductsPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadFoodProductsCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadFoodProductsCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).groups.read">
+        <tr>
           <td>連絡先リスト</td>
           <td>
             <InTableButton
@@ -61,12 +73,15 @@
               :on_click="downloadContactsPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadContactsCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadContactsCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).groups.read">
+        <tr>
           <td>参加団体情報リストまとめ</td>
           <td>
             <InTableButton
@@ -74,12 +89,15 @@
               :on_click="downloadGroupInfoPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadGroupInfoCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadGroupInfoCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).rental_items.read">
+        <tr>
           <td>物品貸出表</td>
           <td>
             <InTableButton
@@ -87,20 +105,28 @@
               :on_click="downloadRentalItemsAllPDF"
               >PDF</InTableButton
             >
-            <InTableButton iconName="file_download" :on_click="downloadRentalItemsAllCSV">
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadRentalItemsAllCSV"
+            >
               CSV
             </InTableButton>
           </td>
         </tr>
-        <tr v-if="this.$role(roleID).food_products.read">
+        <tr>
           <td>保健所提出書類（調理計画・従事者）</td>
           <td>
-            <InTableButton iconName="file_download" :on_click="downloadHealthOfficeDocumentsPDF">PDF</InTableButton>
+            <InTableButton
+              iconName="file_download"
+              :on_click="downloadHealthOfficeDocumentsPDF"
+              >PDF</InTableButton
+            >
           </td>
         </tr>
       </VerticalTable>
     </Card>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -120,14 +146,20 @@ export default {
     }),
   },
   mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
+    window.addEventListener("scroll", this.saveScrollPosition);
     this.$nextTick(() => {
-      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      window.scrollTo(
+        0,
+        parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+      );
     });
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
     downloadPowerPDF: function () {
       window.open(
@@ -232,8 +264,10 @@ export default {
       window.open(url, "参加団体情報リスト_CSV");
     },
     async downloadRentalItemsAllCSV() {
-      const url =  //無し
-        this.$config.apiURL + "/api/v1/get_assign_rental_items_csv/" + this.refYearID;
+      const url = //無し
+        this.$config.apiURL +
+        "/api/v1/get_assign_rental_items_csv/" +
+        this.refYearID;
       window.open(url, "物品貸し出し表まとめ_CSV");
     },
   },

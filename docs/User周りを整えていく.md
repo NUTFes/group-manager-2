@@ -1,14 +1,12 @@
-# User周りを整えていく
+# User 周りを整えていく
 
-## Roleモデルを作る
+## Role モデルを作る
 
 `docker-compose run --rm admin_api rails g model Role name:string`
 
 `docker-compose run --rm admin_api rails db:migrate`
 
-
-
-## seed_fuのGemを入れる
+## seed_fu の Gem を入れる
 
 `Gemfile`に追記する．
 
@@ -20,17 +18,17 @@
 
 `docker-compose build --no-cache`
 
+## 読み込むための seed_fu ファイルを作成
 
-
-## 読み込むためのseed_fuファイルを作成
-
-seed_fuファイルは`fixtures`というディレクトリに入れるみたいです．
+seed_fu ファイルは`fixtures`というディレクトリに入れるみたいです．
 
 `mkdir api/db/fixtures`
 
-Roleモデルの初期データを入力する
+Role モデルの初期データを入力する
 
 今回は`role.rb`というファイル名にして`fixtures`の下に保存．
+
+以下は旧式
 
 ```ruby
 Role.seed( :id,
@@ -44,17 +42,26 @@ Role.seed( :id,
 )
 ```
 
-ここでseed_fuファイルを読み込む．
+新 Role(2024/11/20~)
+
+```ruby
+Role.seed( :id,
+  { id: 1, name: 'developer' },
+  { id: 2, name: 'manager' },
+  { id: 3, name: 'staff' },
+  { id: 4, name: 'user' },
+)
+```
+
+ここで seed_fu ファイルを読み込む．
 
 `docker-compose run --rm api rails db:seed_fu`
 
-
-
-## UserモデルとRoleモデルをつなげる
+## User モデルと Role モデルをつなげる
 
 ### 考え方
 
-Roleモデルは3つしかないが，それらに属するUserはいっぱいいる．
+Role モデルは 3 つしかないが，それらに属する User はいっぱいいる．
 
 例）
 
@@ -63,13 +70,11 @@ Roleモデルは3つしかないが，それらに属するUserはいっぱい�
 - 政木 role:manager （政木は総務の管理者）
 - 参加団体 role:user （参加団体は一般ユーザー）
 
-この中でも開発者は2人いる．つまり，開発者は多くのUserを持っている．
+この中でも開発者は 2 人いる．つまり，開発者は多くの User を持っている．
 
+### User と Role のモデルを編集する
 
-
-### UserとRoleのモデルを編集する
-
-Roleは多くのユーザーを持つので
+Role は多くのユーザーを持つので
 
 `api/app/models/role.rb`
 
@@ -77,9 +82,7 @@ Roleは多くのユーザーを持つので
 has_many :users
 ```
 
-
-
-Userは必ずRoleに属するので
+User は必ず Role に属するので
 
 `api/app/models/user.rb`
 
@@ -87,43 +90,33 @@ Userは必ずRoleに属するので
 belongs_to :role
 ```
 
-
-
 ### 参照の仕方
 
-例えばidが1のユーザーのロールを参照したければ
+例えば id が 1 のユーザーのロールを参照したければ
 
-`User.find(1).role`でRoleのレコードが返ってくる．
+`User.find(1).role`で Role のレコードが返ってくる．
 
-`User.find(1).role.name`とするとそのRoleの名前（developerなど）が返ってくる．
+`User.find(1).role.name`とするとその Role の名前（developer など）が返ってくる．
 
-
-
-## UserDetailモデルを作る
+## UserDetail モデルを作る
 
 `docker-compose run --rm api rails g scaffold tel:string grade_id:intger grade_id:integer user:references`
 
 `docker-compose run --rm api rails db:migrate`
 
-
-
-## Departmentモデルを作る
+## Department モデルを作る
 
 `docker-compose run --rm api rails g model name:string`
 
 `docker-compose run --rm api rails db:migrate`
 
-
-
-## Gradeモデルを作る
+## Grade モデルを作る
 
 `docker-compose run --rm api rails g model name:string`
 
 `docker-compose run --rm api rails db:migrate`
 
-
-
-## seed_fuを作る
+## seed_fu を作る
 
 `fixtures/department.rb`
 
@@ -152,8 +145,6 @@ Department.seed( :id,
 )
 ```
 
-
-
 `fixtures/grade.rb`
 
 ```ruby
@@ -176,8 +167,6 @@ Grade.seed( :id,
 )
 ```
 
-
-
 ## 紐づけ
 
 `app/model/department.rb`
@@ -188,8 +177,6 @@ class Department < ApplicationRecord
 end
 ```
 
-
-
 `app/model/grade.rb`
 
 ```ruby
@@ -197,8 +184,6 @@ class Grade < ApplicationRecord
   has_many :user_details
 end
 ```
-
-
 
 `app/model/user_detail.rb`
 
@@ -209,8 +194,6 @@ class UserDetail < ApplicationRecord
   belongs_to :grade
 end
 ```
-
-
 
 `app/model/user.rb`
 
@@ -225,6 +208,3 @@ class User < ActiveRecord::Base
   has_one :user_detail, dependent: :destroy
 end
 ```
-
-
-

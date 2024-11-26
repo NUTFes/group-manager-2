@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="main-content" v-if="this.$role(roleID).dashboard.read">
     <SubHeader pageTitle="ダッシュボード" />
     <Row>
       <Card width="300px" gap="10px">
@@ -9,7 +9,10 @@
         <hr />
         <Row>
           <Card width="" height="" padding="0" flexGrow="0" border="0px">
-           <GroupsCard v-bind:dashboardData="dashboard_data" :styles="myStyles"/>
+            <GroupsCard
+              v-bind:dashboardData="dashboard_data"
+              :styles="myStyles"
+            />
           </Card>
           <Card width="" height="" padding="0" flexGrow="0" border="0px">
             <Chart1 :styles="myStyles" />
@@ -37,6 +40,7 @@
       </Card>
     </Row>
   </div>
+  <h1 v-else>閲覧権限がありません</h1>
 </template>
 
 <script>
@@ -45,6 +49,7 @@ import Chart1 from "./Chart_Group";
 import Chart2 from "./Chart_Stock";
 import Chart3 from "./Chart_Assign";
 import Update from "../components/Update.vue";
+import { mapState } from "vuex";
 
 export default {
   watchQuery: ["page"],
@@ -54,15 +59,27 @@ export default {
     Chart3,
     Update,
   },
+  roles: [
+    { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
+    { id: 2, name: "manager" }, //　参加者( 参加団体部門長+国際交流部門長)
+    { id: 3, name: "staff" }, //総務局員
+    { id: 4, name: "user" }, //参加団体,企画局員
+  ],
   mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
+    window.addEventListener("scroll", this.saveScrollPosition);
     this.$nextTick(() => {
-      window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
+      window.scrollTo(
+        0,
+        parseInt(localStorage.getItem("scrollPosition-" + this.$route.path))
+      );
     });
   },
   method: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
     },
   },
   data() {
@@ -89,11 +106,14 @@ export default {
   computed: {
     myStyles() {
       return {
-        height:"300px",
+        height: "300px",
         width: "400px",
         position: "relative",
       };
     },
+    ...mapState({
+      roleID: (state) => state.users.role,
+    }),
   },
 };
 </script>

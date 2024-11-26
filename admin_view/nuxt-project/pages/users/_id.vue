@@ -1,10 +1,18 @@
 <template>
   <div class="main-content">
     <SubHeader v-bind:pageTitle="user.user.name" pageSubTitle="ユーザー一覧">
-      <CommonButton v-if="this.$role(this.roleID).users.update" iconName="edit" :on_click="openEditModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).users.update"
+        iconName="edit"
+        :on_click="openEditModal"
+      >
         権限編集
       </CommonButton>
-      <CommonButton v-if="this.$role(this.roleID).users.update" iconName="edit" :on_click="openResetModal">
+      <CommonButton
+        v-if="this.$role(this.roleID).users.update"
+        iconName="edit"
+        :on_click="openResetModal"
+      >
         パスワード再設定
       </CommonButton>
     </SubHeader>
@@ -64,21 +72,17 @@
       title="権限の編集"
     >
       <template v-slot:form>
-        <label for="developer" style="color:black">Developer</label>
+        <label for="developer" style="color: black">Developer</label>
         <input type="radio" id="developer" value="1" v-model="picked" />
-        <label for="participant" style="color:black">Participant</label>
-        <input type="radio" id="participant" value="2" v-model="picked" />
-        <label for="inventory_management" style="color:black">Inventory_Management</label>
-        <input type="radio" id="inventory_management" value="3" v-model="picked" />
-        <label for="venue_power" style="color:black">Venue_Power</label>
-        <input type="radio" id="venue_power" value="4" v-model="picked" />
-        <label for="sanitation_management" style="color:black">Sanitation_Management</label>
-        <input type="radio" id="sanitation_management" value="5" v-model="picked" />
-        <label for="staff" style="color:black">Staff</label>
-        <input type="radio" id="staff" value="6" v-model="picked" />
-        <label for="user" style="color:black">User</label>
-        <input type="radio" id="user" value="7" v-model="picked" />
-        <span style="color:black">{{ roles[role-1].name }} → {{ roles[picked-1].name }}</span>
+        <label for="manager" style="color: black">Manager</label>
+        <input type="radio" id="manager" value="2" v-model="picked" />
+        <label for="staff" style="color: black">Staff</label>
+        <input type="radio" id="staff" value="3" v-model="picked" />
+        <label for="user" style="color: black">User</label>
+        <input type="radio" id="user" value="4" v-model="picked" />
+        <span style="color: black"
+          >{{ roles[role - 1].name }} → {{ roles[picked - 1].name }}</span
+        >
       </template>
       <template v-slot:method>
         <CommonButton iconName="edit" :on_click="editRole">編集</CommonButton>
@@ -93,24 +97,38 @@
       <template v-slot:form>
         <div>
           <h3>新しいパスワード</h3>
-          <input v-model="password" type="password" placeholder="入力してください" />
+          <input
+            v-model="password"
+            type="password"
+            placeholder="入力してください"
+          />
         </div>
         <div>
           <h3>新しいパスワード再確認</h3>
-          <input v-model="passwordConfirm" type="password" placeholder="入力してください" />
-          <p v-if="passwordConfirm !== '' && password !== passwordConfirm">パスワードが一致しません</p>
+          <input
+            v-model="passwordConfirm"
+            type="password"
+            placeholder="入力してください"
+          />
+          <p v-if="passwordConfirm !== '' && password !== passwordConfirm">
+            パスワードが一致しません
+          </p>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton v-if="password === passwordConfirm" iconName="edit" :on_click="editPassword">編集</CommonButton>
-        <CommonButton v-else iconName="edit" disabled :on_click="editPassword">編集</CommonButton>
+        <CommonButton
+          v-if="password === passwordConfirm"
+          iconName="edit"
+          :on_click="editPassword"
+          >編集</CommonButton
+        >
+        <CommonButton v-else iconName="edit" disabled :on_click="editPassword"
+          >編集</CommonButton
+        >
       </template>
     </EditModal>
 
-    <SnackBar
-      v-if="isOpenSnackBar"
-      @close="closeSnackBar"
-    >
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
       {{ message }}
     </SnackBar>
   </div>
@@ -130,18 +148,15 @@ export default {
     return {
       isOpenEditModal: false,
       isOpenResetModal: false,
-      picked: '',
-      password: '',
-      passwordConfirm: '',
+      picked: "",
+      password: "",
+      passwordConfirm: "",
       isOpenSnackBar: false,
       roles: [
         { id: 1, name: "developer" },
-        { id: 2, name: "participant" }, 
-        { id: 3, name: "inventory_management" }, 
-        { id: 4, name: "venue_power" }, 
-        { id: 5, name: "sanitation_management" }, 
-        { id: 6, name: "staff" }, 
-        { id: 7, name: "user" },
+        { id: 2, name: "manager" },
+        { id: 3, name: "staff" },
+        { id: 4, name: "user" },
       ],
     };
   },
@@ -168,7 +183,7 @@ export default {
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
-      this.picked = this.role
+      this.picked = this.role;
     },
     closeEditModal() {
       this.isOpenEditModal = false;
@@ -194,16 +209,22 @@ export default {
       this.user = reUserRes.data;
     },
     async editRole() {
-      const url = "/users/" + this.routeId + "?role_id=" + this.picked
+      const url = "/users/" + this.routeId + "?role_id=" + this.picked;
       await this.$axios.$put(url).then((res) => {
-        this.role = res.data.role_id
+        this.role = res.data.role_id;
         this.reload();
         this.closeEditModal();
         this.openSnackBar("権限を編集しました");
       });
     },
     async editPassword() {
-      const url = "/api/v1/users/reset_password?user_id=" + this.routeId + "&password=" + this.password + "&password_confirmation=" + this.passwordConfirm
+      const url =
+        "/api/v1/users/reset_password?user_id=" +
+        this.routeId +
+        "&password=" +
+        this.password +
+        "&password_confirmation=" +
+        this.passwordConfirm;
       await this.$axios.$post(url).then((res) => {
         this.closeResetModal();
         this.openSnackBar("パスワードを変更しました");
