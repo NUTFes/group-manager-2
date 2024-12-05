@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     image: mysql:8.0
-    container_name: 'GM2-DB'
+    container_name: 'GM3-DB'
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_ROOT_USER: root
@@ -17,7 +17,7 @@ services:
       args:
         PLATFORM: ${PLATFORM:-default}
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    container_name: 'GM2-API'
+    container_name: 'GM3-API'
     volumes: [./api:/myapp]
     ports: ["3000:3000"]
     env_file: [webhook.env]
@@ -44,6 +44,15 @@ services:
     environment:
       - VUE_APP_URL=http://api:3000
       - VUE_APP_API_URL=http://localhost:3000
+    depends_on: [api]
+  
+  user:
+    build: ./user
+    container_name: 'GM3-USER'
+    ports:
+      - "8001:3000"
+    command: npm run dev
+    volumes: [./user:/app]
     depends_on: [api]
 
 volumes:
