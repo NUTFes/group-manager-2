@@ -73,7 +73,7 @@ export default {
       local: {
         token: {
           property: false,
-          maxAge: 1,
+          maxAge: 3600,
           global: true,
         },
         endpoints: {
