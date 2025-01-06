@@ -430,7 +430,7 @@ export default {
         this.refIsSunnyID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refIsSunny = "ALL Weather";
+          this.refIsSunny = "ALL Weather: Sunny or Not";
         } else {
           this.refIsSunny = name_list[item_id - 1].text;
         }
@@ -444,7 +444,7 @@ export default {
           this.refDaysNum = name_list[item_id - 1].days_num;
         }
         // stage_idで絞り込むとき
-      } else if (name_list.toString() == this.stageList.toString()) {
+      } else if (JSON.stringify(name_list) === JSON.stringify(this.stageList)) {
         this.refStageID = item_id;
         // ALLの時
         if (item_id == 0) {

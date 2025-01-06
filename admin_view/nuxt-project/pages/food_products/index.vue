@@ -290,7 +290,7 @@ export default {
         this.refIsCookingID = item_id;
         // ALLの時
         if (item_id === 0) {
-          this.refIsCooking = "ALL Cooking states";
+          this.refIsCooking = "ALL Cooking States";
         } else {
           this.refIsCooking = name_list[item_id - 1].text;
         }
