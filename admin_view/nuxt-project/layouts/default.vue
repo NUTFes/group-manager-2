@@ -4,7 +4,7 @@
     <Menu v-if="main && print" />
     <main>
       <transition name="page">
-        <nuxt :key="$route.fullPath" />
+        <nuxt />
       </transition>
     </main>
   </div>
