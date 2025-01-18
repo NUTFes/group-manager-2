@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -53,7 +53,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions('users', ['getUser']),
+    ...mapActions("users", ["getUser"]),
     async loginWithAuthModule() {
       // this.formHasErrors = false;
       // Object.keys(this.form).forEach((f) => {
@@ -68,29 +68,23 @@ export default {
             password: this.password,
           },
         })
-        .then(
-          (response) => {
-            localStorage.setItem(
-              "access-token",
-              response.headers["access-token"]
-            );
-            localStorage.setItem("client", response.headers.client);
-            localStorage.setItem("uid", response.headers.uid);
-            localStorage.setItem("token-type", response.headers["token-type"]);
-            this.getUser()
-            return response;
-          },
-        )
-          // (error) => {
-          //   this.message = "メールアドレスかパスワードが違います。";
-          //   return error;
-          // }
-          .catch(() => {
-            alert(
-              "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
-            );
-          });
-      
+        .then((response) => {
+          localStorage.setItem(
+            "access-token",
+            response.headers["access-token"]
+          );
+          localStorage.setItem("client", response.headers.client);
+          localStorage.setItem("uid", response.headers.uid);
+          localStorage.setItem("token-type", response.headers["token-type"]);
+          this.getUser();
+          return response;
+        })
+        .catch(() => {
+          alert(
+            "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
+          );
+        });
+      this.$auth.setUserToken(localStorage.getItem("access-token"));
     },
   },
 };

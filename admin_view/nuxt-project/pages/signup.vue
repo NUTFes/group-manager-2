@@ -91,6 +91,7 @@ export default {
         localStorage.setItem("token-type", response.headers["token-type"]);
         this.$router.push("regist_user_detail");
       });
+      this.$auth.setUserToken(localStorage.getItem("access-token"));
     },
   },
 };

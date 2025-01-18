@@ -27,7 +27,7 @@ export default {
   },
 
   publicRuntimeConfig: {
-    apiURL: process.env.VUE_APP_URL
+    apiURL: process.env.VUE_APP_URL,
   },
 
   router: {
@@ -54,7 +54,7 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", ["@nuxtjs/moment", ["ja"]]],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth-next", ["@nuxtjs/moment", ["ja"]]],
 
   axios: {
     // baseURL: 'http://localhost:3000'
@@ -71,6 +71,11 @@ export default {
     },
     strategies: {
       local: {
+        token: {
+          property: false,
+          maxAge: 3600,
+          global: true,
+        },
         endpoints: {
           login: {
             url: "/api/auth/sign_in",
@@ -80,6 +85,8 @@ export default {
           logout: false,
           user: false,
         },
+        tokenRequired: true,
+        tokenType: "Bearer",
       },
     },
   },
