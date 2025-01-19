@@ -4,7 +4,6 @@ build-gm2:
 	docker compose build
 	docker compose run --rm user_front npm install
 	docker compose run --rm admin_view npm install
-	docker compose run --rm user npm install
 	docker compose run --rm api rails db:create
 	docker compose run --rm api rails db:migrate
 	docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
@@ -19,7 +18,7 @@ build-gm2-mac:
 
 build-gm3:
 	docker compose build
-	docker compose run --rm user npm install
+	docker compose run --rm user pnpm install
 	docker compose run --rm admin_view npm install
 	docker compose run --rm api rails db:create
 	docker compose run --rm api rails db:migrate
@@ -27,7 +26,7 @@ build-gm3:
 
 build-gm3-mac:
 	PLATFORM=arm64-darwin docker compose build
-	docker compose run --rm user npm install
+	docker compose run --rm user pnpm install
 	docker compose run --rm admin_view npm install
 	docker compose run --rm api rails db:create
 	docker compose run --rm api rails db:migrate
