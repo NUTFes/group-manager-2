@@ -39,9 +39,9 @@ export const Default: Story = {
 ```typescript
 import React, { FC } from 'react';
 
-type {{ inputs.name }}Props = {};
+type {{ inputs.name | pascal }}Props = {};
 
-const {{ inputs.name | pascal }}: FC<{{ inputs.name }}Props> = () => {
+const {{ inputs.name | pascal }}: FC<{{ inputs.name | pascal }}Props> = () => {
 return <div>{{ inputs.name }} Component</div>;
 };
 
