@@ -65,7 +65,6 @@ services:
     container_name: "GM3-USER"
     ports:
       - "8003:3000"
-      - "6006:6006"
     command: pnpm run dev
     volumes: [./user:/app]
     depends_on: [api]
