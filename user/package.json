@@ -9,13 +9,15 @@
     "lint": "next lint",
     "scaffdog": "scaffdog",
     "scaff:component": "scaffdog generate -p .scaffdog/templates template",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 --ci",
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@storybook/theming": "^8.5.0",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-icons": "^5.4.0",
     "scaffdog": "^4.1.0",
     "storybook": "^8.5.0"
   },
