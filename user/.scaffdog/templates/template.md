@@ -16,13 +16,21 @@ export { default } from "./{{ inputs.name | pascal }}";
 # `{{ inputs.name | pascal }}/{{ inputs.name | pascal }}.stories.tsx`
 
 ```typescript
-import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import {{ inputs.name | pascal }} from './{{ inputs.name | pascal }}';
+import "../../styles/globals.css";
 
 export default {
 title: 'Components/{{ inputs.name | pascal }}',
+tags: ["autodocs"],
 component: {{ inputs.name | pascal }},
+parameters: {
+    docs: {
+      source: {
+        type: "auto",
+      },
+    },
+  },
 } as Meta<typeof {{ inputs.name | pascal }}>;
 
 type Story = StoryObj<typeof {{ inputs.name | pascal }}>;
@@ -37,7 +45,7 @@ export const Default: Story = {
 # `{{ inputs.name | pascal }}/{{ inputs.name | pascal }}.tsx`
 
 ```typescript
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 type {{ inputs.name | pascal }}Props = {};
 
