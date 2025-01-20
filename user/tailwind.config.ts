@@ -11,6 +11,14 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        main: "var(--main-color)",
+        secondary: "var(--secondary-color)",
+        thirdly: "var(--thirdly-color)",
+        font: "var(--font-color)",
+        alert: "var(--alert-color)",
+        sub: "var(--sub-color)",
+        // fix: text-baseが元々あるから渋々変更
+        baseColor: "var(--base-color)",
       },
     },
   },

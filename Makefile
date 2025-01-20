@@ -66,3 +66,10 @@ prod-restart:
 
 prod-logs:
 	docker-compose -f docker-compose.prod.yml logs
+
+gen-component:
+	docker compose run --rm user pnpm run scaff:component
+	find ./user/src/components -type d -mmin -1 -exec sudo chmod 755 -R {} \;
+
+run-storybook:
+	docker compose run --rm -p 6006:6006 user pnpm run storybook
