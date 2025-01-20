@@ -8,4 +8,8 @@ Scaffdog を使用して Next.js 用のコンポーネント雛形を自動生�
 
 ```
 pnpm run scaff:component
+
+docker compose run --rm pnpm run scaff:component
 ```
+
+入力する値関係なく作成されるファイル、フォルダ名はパスカルケース(Hoge等)に変換されます。
