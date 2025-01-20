@@ -1,7 +1,7 @@
 ---
-name: test.md
-about: test
-title: test
+name: テンプレート
+about: gm2のカスタムテンプレート
+title: ''
 labels: ''
 assignees: ''
 
