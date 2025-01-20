@@ -10,6 +10,21 @@ services:
     ports: ["3306:3306"]
     volumes: [mysql-data:/var/lib/mysql]
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    volumes:
+      - ./phpmyadmin/sessions:/sessions
+    depends_on:
+      - db
+    ports:
+      - 3307:80
+
   api:
     build:
       context: ./api
