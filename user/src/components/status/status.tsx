@@ -32,7 +32,7 @@ const StatusA = (props:{staA:number}) =>{
 
     return(
     <div  style={{display:"flex",backgroundColor:bgcolor,width:100,height:30,borderRadius:15, justifyContent:"center" ,alignItems:"center",border:2,borderStyle:"solid",borderColor:brdcolor}}>
-        <div className="px-{8} py-{2}" style={{display:"flex",width:64,height:23,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor}}>
+        <div className="px-{8} py-{2}" style={{display:"flex",width:64,height:23,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor,fontSize:16}}>
         {strdis}  
         </div>
     </div>
@@ -62,7 +62,7 @@ const StatusB = (props:{staB:number}) =>{
 
     return(
     <div  style={{display:"flex",backgroundColor:bgcolor,width:86,height:30,borderRadius:15, justifyContent:"center" ,alignItems:"center",border:2,borderStyle:"solid",borderColor:brdcolor}}>
-        <div className="px-{8} py-{2}" style={{display:"flex",width:48,height:22,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor}}>
+        <div className="px-{8} py-{2}" style={{display:"flex",width:48,height:22,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor,fontSize:16}}>
         {strdis}  
         </div>
     </div>
@@ -97,7 +97,7 @@ const StatusC = (props:{staC:number}) =>{
 
     return(
     <div  style={{display:"flex",backgroundColor:bgcolor,width:56,height:30,borderRadius:15, justifyContent:"center" ,alignItems:"center",border:2,borderStyle:"solid",borderColor:brdcolor}}>
-        <div className="px-{8} py-{2}" style={{display:"flex",width:32,height:19,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor}}>
+        <div className="px-{8} py-{2}" style={{display:"flex",width:48,height:19,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor,fontSize:16}}>
         {strdis}  
         </div>
     </div>
