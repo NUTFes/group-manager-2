@@ -1,11 +1,11 @@
-//色　
+//色　仕様に使う基本色
 const green = "#34A854"
 const red = "#FF6752"
 const white = "#FFFFFF"
 const gray = "#B2B2B2"
 const black ="#000000"
 
-//ステータス (A,B,C)
+//ステータス (A,B,C)　現在３種類
 const StatusA = (props:{staA:number}) =>{
 
     let strdis="エラー"
@@ -45,7 +45,7 @@ const StatusB = (props:{staB:number}) =>{
 
     let strdis="エラー"
     let bgcolor=black
-    let strcolor="red"
+    let strcolor="red" //これは"#FF6752"ではなく#FF0000のほうの赤
     let brdcolor="red"
 
     if (props.staB===0){
