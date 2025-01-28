@@ -42,7 +42,7 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
         <div>
-        <StatusA staA={numA} />
+        <StatusB staB={numB} />
         </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
