@@ -33,7 +33,7 @@ const StatusA = (props:{staA:number}) =>{
     }
 
     const bscbgstyle="w-[100px] h-[30px] flex  items-center justify-center rounded-[15px] border-2 border-solid "
-    const bsctxstyle="px-4 py-2 w-[92px] h-[23px] flex items-center justify-center shrink-0 text-[16px] "
+    const bsctxstyle="w-[92px] h-[23px] flex items-center justify-center shrink-0 text-[16px] "
 
     return(
         <div className={`${bscbgstyle} ${ctmbgstyle}`}>
@@ -66,7 +66,7 @@ const StatusB = (props:{staB:number}) =>{
     }
 
     const bscbgstyle="w-[86px] h-[30px] flex  items-center justify-center rounded-[15px] border-2 border-solid "
-    const bsctxstyle="px-4 py-2 w-[78px] h-[22px] flex items-center justify-center shrink-0 text-[16px] "
+    const bsctxstyle="w-[78px] h-[22px] flex items-center justify-center shrink-0 text-[16px] "
 
     return(
         <div className={`${bscbgstyle} ${ctmbgstyle}`}>
