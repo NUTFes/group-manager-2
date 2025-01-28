@@ -1,38 +1,87 @@
-//色　仕様に使う基本色
-const green = "#34A854"
-const red = "#FF6752"
-const white = "#FFFFFF"
-const gray = "#B2B2B2"
-const black ="#000000"
+import { count } from "console"
+
+// 色　仕様に使う基本色(tailwind.config.txにあった。)
+const green = "#34A854" //:--main-color
+const red = "#FF6752"   //:--alart-color
+const white = "#FFFFFF" //:--base-color
+const gray = "#B2B2B2"  //:--sub-color
+const black ="#000000"  //:
 
 //ステータス (A,B,C)　現在３種類
-const StatusA = (props:{staA:number}) =>{
 
-    let strdis="エラー"
-    let bgcolor=black
-    let strcolor="red"
-    let brdcolor="red"
+
+
+// // 1パターン目
+// const StatusA = (props:{staA:number}) =>{
+
+//     let strdis="エラー"
+//     let bgcolor=black
+//     let strcolor="red"
+//     let brdcolor="red"
+
+//     if (props.staA===0){
+//         strdis="受付中";
+//         bgcolor=green;
+//         strcolor=white;
+//         brdcolor=green;
+//     } else if (props.staA===1){
+//         strdis="締切間近";
+//         bgcolor=red;
+//         strcolor=white;
+//         brdcolor=red;
+//     }else if (props.staA===2){
+//         strdis="受付終了";
+//         bgcolor=white;
+//         strcolor=gray;
+//         brdcolor=gray;
+//     }
+
+    
+
+//     return(
+    
+
+//     <div  style={{display:"flex",backgroundColor:bgcolor,width:100,height:30,borderRadius:15, justifyContent:"center" ,alignItems:"center",border:2,borderStyle:"solid",borderColor:brdcolor}}>
+//         <div className="px-{8} py-{2}" style={{display:"flex",width:64,height:23,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor,fontSize:16}}>
+//         {strdis}  
+//         </div>
+//     </div>
+//     )
+// }
+
+// export {StatusA}
+
+
+// 2パターン目
+const StatusA = (props:{staA:number}) =>{
+    let ctmbgstyle
+    let ctmtxstyle
+    let strdis
 
     if (props.staA===0){
         strdis="受付中";
-        bgcolor=green;
-        strcolor=white;
-        brdcolor=green;
-    } else if (props.staA===1){
+        ctmbgstyle="bg-[--main-color] border-[--main-color]"
+        ctmtxstyle="text-[--base-color]"
+    }else if (props.staA===1){
         strdis="締切間近";
-        bgcolor=red;
-        strcolor=white;
-        brdcolor=red;
+        ctmbgstyle="bg-[--alert-color] border-[--alert-color]"
+        ctmtxstyle="text-[--base-color]"
     }else if (props.staA===2){
         strdis="受付終了";
-        bgcolor=white;
-        strcolor=gray;
-        brdcolor=gray;
+        ctmbgstyle="bg-[--base-color] border-[--sub-color]"
+        ctmtxstyle="text-[--sub-color]"
+    }else{
+        strdis="エラー";
+        ctmbgstyle="bg-black border-red-600"
+        ctmtxstyle="text-red-600"
     }
 
+    const bscbgstyle="w-[100px] h-[30px] flex  items-center justify-center rounded-[15px] border-2 border-solid "
+    const bsctxstyle="px-4 py-4 w-[100px] h-[23px] flex items-center justify-center shrink-0 text-[16px] "
+
     return(
-    <div  style={{display:"flex",backgroundColor:bgcolor,width:100,height:30,borderRadius:15, justifyContent:"center" ,alignItems:"center",border:2,borderStyle:"solid",borderColor:brdcolor}}>
-        <div className="px-{8} py-{2}" style={{display:"flex",width:64,height:23,justifyContent:"center" ,alignItems:"center",flexShrink:0,color:strcolor,fontSize:16}}>
+<div className={`${bscbgstyle} ${ctmbgstyle}`}>
+        <div className={`${bsctxstyle} ${ctmtxstyle}`}>
         {strdis}  
         </div>
     </div>
