@@ -1,18 +1,11 @@
 import { count } from "console"
 
-// 色　仕様に使う基本色(tailwind.config.txにあった。)
-const green = "#34A854" //:--main-color
-const red = "#FF6752"   //:--alart-color
-const white = "#FFFFFF" //:--base-color
-const gray = "#B2B2B2"  //:--sub-color
-const black ="#000000"  //:
-
 //ステータス (A,B,C)　現在３種類
 
 const StatusA = (props:{staA:string}) =>{
-    let ctmbgstyle
-    let ctmtxstyle
-    let strdis
+    let ctmbgstyle  //custom background style
+    let ctmtxstyle  //custom text style
+    let strdis  //string display
 
     if (props.staA=="reception"){
         strdis="受付中";
@@ -32,8 +25,8 @@ const StatusA = (props:{staA:string}) =>{
         ctmtxstyle="text-red-600"
     }
 
-    const bscbgstyle="w-[100px] h-[30px] flex  items-center justify-center rounded-[15px] border-2 border-solid "
-    const bsctxstyle="w-[92px] h-[23px] flex items-center justify-center shrink-0 text-[16px] "
+    const bscbgstyle="w-[100px] h-[30px] flex  items-center justify-center rounded-[15px] border-2 border-solid "  //basic background style
+    const bsctxstyle="w-[92px] h-[23px] flex items-center justify-center shrink-0 text-[16px] "  //basic text style
 
     return(
         <div className={`${bscbgstyle} ${ctmbgstyle}`}>
