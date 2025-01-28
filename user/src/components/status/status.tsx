@@ -95,8 +95,8 @@ const StatusC = (props:{staC:number}) =>{
         ctmtxstyle="text-[--base-color]"
     }else if (props.staC===2){
         strdis="末";
-        ctmbgstyle="bg-[--base-color] border-[--sub-color]"
-        ctmtxstyle="text-[--sub-color]"
+        ctmbgstyle="bg-[--alert-color] border-[--alert-color]"
+        ctmtxstyle="text-[--base-color]"
     }else{
         strdis="エラー";
         ctmbgstyle="bg-black border-red-600"
@@ -104,7 +104,7 @@ const StatusC = (props:{staC:number}) =>{
     }
     
     const bscbgstyle="w-[56px] h-[30px] flex  items-center justify-center rounded-[15px] border-2 border-solid "
-    const bsctxstyle="px-4 py-2 w-[48px] h-[19px] flex items-center justify-center shrink-0 text-[16px] "
+    const bsctxstyle="w-[48px] h-[19px] flex items-center justify-center shrink-0 text-[16px] "
 
     return(
         <div className={`${bscbgstyle} ${ctmbgstyle}`}>

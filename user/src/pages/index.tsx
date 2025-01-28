@@ -16,7 +16,7 @@ const geistMono = localFont({
 
 const numA =2
 const numB =0
-const numC =4
+const numC =2
 export default function Home() {
   return (
     <div
@@ -42,7 +42,7 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
         <div>
-        <StatusB staB={numB} />
+        <StatusC staC={numC} />
         </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
