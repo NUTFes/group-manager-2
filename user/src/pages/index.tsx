@@ -14,7 +14,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-const numA =2
+const numA ="reception"
 const numB =0
 const numC =2
 export default function Home() {
@@ -42,7 +42,7 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
         <div>
-        <StatusC staC={numC} />
+        <StatusA staA={numA} />
         </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">

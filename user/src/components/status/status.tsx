@@ -9,20 +9,20 @@ const black ="#000000"  //:
 
 //ステータス (A,B,C)　現在３種類
 
-const StatusA = (props:{staA:number}) =>{
+const StatusA = (props:{staA:string}) =>{
     let ctmbgstyle
     let ctmtxstyle
     let strdis
 
-    if (props.staA===0){
+    if (props.staA=="reception"){
         strdis="受付中";
         ctmbgstyle="bg-[--main-color] border-[--main-color]"
         ctmtxstyle="text-[--base-color]"
-    }else if (props.staA===1){
+    }else if (props.staA=="approaching"){
         strdis="締切間近";
         ctmbgstyle="bg-[--alert-color] border-[--alert-color]"
         ctmtxstyle="text-[--base-color]"
-    }else if (props.staA===2){
+    }else if (props.staA=="closed"){
         strdis="受付終了";
         ctmbgstyle="bg-[--base-color] border-[--sub-color]"
         ctmtxstyle="text-[--sub-color]"
@@ -46,16 +46,16 @@ const StatusA = (props:{staA:number}) =>{
 
 export {StatusA}
 
-const StatusB = (props:{staB:number}) =>{
+const StatusB = (props:{staB:string}) =>{
     let ctmbgstyle
     let ctmtxstyle
     let strdis
 
-    if (props.staB===0){
+    if (props.staB=="registered"){
         strdis="登録済";
         ctmbgstyle="bg-[--base-color] border-[--sub-color]"
         ctmtxstyle="text-[--sub-color]"
-    } else if (props.staB===1){
+    } else if (props.staB=="unregistered"){
         strdis="未登録";
         ctmbgstyle="bg-[--alert-color] border-[--alert-color]"
         ctmtxstyle="text-[--base-color]"
@@ -80,20 +80,20 @@ const StatusB = (props:{staB:number}) =>{
 
 export {StatusB}
 
-const StatusC = (props:{staC:number}) =>{
+const StatusC = (props:{staC:string}) =>{
     let ctmbgstyle
     let ctmtxstyle
     let strdis
 
-    if (props.staC===0){
+    if (props.staC=="unnecessary"){
         strdis="不要";
         ctmbgstyle="bg-[--base-color] border-[--sub-color]"
         ctmtxstyle="text-[--sub-color]"
-    } else if (props.staC===1){
+    } else if (props.staC=="done"){
         strdis="済";
         ctmbgstyle="bg-[--main-color] border-[--main-color]"
         ctmtxstyle="text-[--base-color]"
-    }else if (props.staC===2){
+    }else if (props.staC=="not_yet"){
         strdis="末";
         ctmbgstyle="bg-[--alert-color] border-[--alert-color]"
         ctmtxstyle="text-[--base-color]"
