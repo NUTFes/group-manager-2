@@ -109,4 +109,3 @@ const StatusC = (props:{staC:string}) =>{
 }
 
 export {StatusC}
-
