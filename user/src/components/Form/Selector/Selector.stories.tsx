@@ -1,12 +1,12 @@
-import { Meta, StoryObj } from '@storybook/react';
-import Selector from './Selector';
-import "../../styles/globals.css";
+import { Meta, StoryObj } from "@storybook/react";
+import Selector from "./Selector";
+import "@globals";
 
 export default {
-title: 'Components/Selector',
-tags: ["autodocs"],
-component: Selector,
-parameters: {
+  title: "Components/Selector",
+  tags: ["autodocs"],
+  component: Selector,
+  parameters: {
     docs: {
       source: {
         type: "auto",
@@ -18,7 +18,5 @@ parameters: {
 type Story = StoryObj<typeof Selector>;
 
 export const Default: Story = {
-  args: {
-
-  },
+  args: {},
 };
