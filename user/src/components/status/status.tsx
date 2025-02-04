@@ -1,5 +1,3 @@
-import { count } from "console"
-
 //ステータス (A,B,C)　現在３種類
 
 const StatusA = (props:{staA:string}) =>{
@@ -108,4 +106,4 @@ const StatusC = (props:{staC:string}) =>{
     )
 }
 
-export {StatusC}
+export default StatusC
