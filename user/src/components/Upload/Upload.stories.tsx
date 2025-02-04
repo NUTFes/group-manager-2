@@ -1,0 +1,31 @@
+import { Meta, StoryObj } from "@storybook/react";
+import Upload from "./Upload";
+import "@globals";
+
+export default {
+  title: "Components/Upload",
+  tags: ["autodocs"],
+  component: Upload,
+  parameters: {
+    docs: {
+      source: {
+        type: "auto",
+      },
+    },
+  },
+} as Meta<typeof Upload>;
+
+type Story = StoryObj<typeof Upload>;
+
+export const Default: Story = {
+  args: {
+    title: "PR画像",
+    note: [
+      "画像名：参加形式_団体名",
+      "ファイル形式：png、jpeg",
+      "ファイルサイズ：10MB未満",
+      "画像、イラストの形：正方形（できれば料理の写真)",
+    ],
+    onClick: () => alert("クリックされたよ"),
+  },
+};
