@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import Checkbox from './Checkbox';
-import "../../styles/globals.css";
+import "@globals";
 
 export default {
 title: 'Components/Checkbox',
