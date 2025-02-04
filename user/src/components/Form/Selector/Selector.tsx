@@ -15,7 +15,7 @@ type SelectorProps = {
     options: Option[];
 };
 
-const Selector: FC<SelectorProps> = ({label, value, onChange, required, note, error, options}) => {
+const Selector: FC<SelectorProps> = ({label, value, onChange, required, note, error, options = []}) => {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         onChange(event.target.value);
     };
