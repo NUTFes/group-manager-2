@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import TextArea from './TextArea';
-import "../../styles/globals.css";
+import "@globals";
 
 export default {
 title: 'Components/TextArea',
