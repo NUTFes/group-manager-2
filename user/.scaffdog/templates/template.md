@@ -18,7 +18,7 @@ export { default } from "./{{ inputs.name | pascal }}";
 ```typescript
 import { Meta, StoryObj } from '@storybook/react';
 import {{ inputs.name | pascal }} from './{{ inputs.name | pascal }}';
-import "../../styles/globals.css";
+import "@globals";
 
 export default {
 title: 'Components/{{ inputs.name | pascal }}',
