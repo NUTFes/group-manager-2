@@ -1,12 +1,12 @@
-import { Meta, StoryObj } from '@storybook/react';
-import Radio from './Radio';
-import "../../styles/globals.css";
+import { Meta, StoryObj } from "@storybook/react";
+import Radio from "./Radio";
+import "@globals";
 
 export default {
-title: 'Components/Radio',
-tags: ["autodocs"],
-component: Radio,
-parameters: {
+  title: "Components/Radio",
+  tags: ["autodocs"],
+  component: Radio,
+  parameters: {
     docs: {
       source: {
         type: "auto",
@@ -18,7 +18,5 @@ parameters: {
 type Story = StoryObj<typeof Radio>;
 
 export const Default: Story = {
-  args: {
-
-  },
+  args: {},
 };
