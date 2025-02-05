@@ -19,6 +19,7 @@ type Story = StoryObj<typeof Status>;
 
 export const Default: Story = {
   args: {
-
+    statusType:"A",
+    status:"reception"
   },
 };
