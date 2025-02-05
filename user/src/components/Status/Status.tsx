@@ -9,7 +9,7 @@ type StyleDefinition = {
     statusText: string;
     backgroundColor: string;
     textColor: string;
-    statusType: ValidStatus['statusType']; // typeを追加
+    statusType: ValidStatus['statusType']; 
   };
 
 const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
@@ -77,7 +77,7 @@ const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
           C: { bg: "w-[56px] h-[30px]", text: "w-[48px] h-[19px]" },
         } as const;
 
-          // 🚨 実行時にエラーをスローする
+          // 不適切な実行時にエラーをスローする
           
         if (statusInfo.statusType !== statusType) {
             throw new Error(
