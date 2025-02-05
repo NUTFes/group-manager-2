@@ -1,8 +1,7 @@
 import Image from "next/image";
 import localFont from "next/font/local";
-import { StatusA } from "@/components/status/status";
-import { StatusB } from "@/components/status/status";
-import { StatusC } from "@/components/status/status";
+import  Status  from "../components/Status"
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -14,9 +13,6 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-const numA ="reception"
-const numB =0
-const numC =2
 export default function Home() {
   return (
     <div
@@ -42,7 +38,7 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
         <div>
-        <StatusA staA={numA} />
+        <Status statusType="A" status="reception" />
         </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
