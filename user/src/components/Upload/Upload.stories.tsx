@@ -26,6 +26,8 @@ export const Default: Story = {
       "ファイルサイズ：10MB未満",
       "画像、イラストの形：正方形（できれば料理の写真)",
     ],
+    error: "画像の送信に失敗しました。",
     onClick: () => alert("クリックされたよ"),
+    idDisable: false,
   },
 };
