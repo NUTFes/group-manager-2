@@ -25,5 +25,6 @@ export const Default: Story = {
     variant: true,
     icon: "pencil",
     onClick: () => alert("clicked"),
+    isDisable: true,
   },
 };
