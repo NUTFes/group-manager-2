@@ -1,5 +1,5 @@
 import React from "react";
-import { Meta, Story } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
 import { useArgs } from "@storybook/preview-api";
 import Radio from "./Radio";
 import "@globals";
@@ -24,7 +24,7 @@ const sampleOptions = [
   { id: "3", name: "Option 3" },
 ];
 
-const Template: Story<typeof Radio> = (args) => {
+const Template: StoryFn<typeof Radio> = (args) => {
   // useArgs で現在の args と更新用関数を取得
   const [{ value }, updateArgs] = useArgs();
 
