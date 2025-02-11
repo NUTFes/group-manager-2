@@ -123,6 +123,3 @@ typings/
 # cloudflare
 cloudflare/**/*.json
 cloudflare/**/cert.pem
-
-# phpmyadmin
-/phpmyadmin
