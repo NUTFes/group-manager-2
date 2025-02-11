@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@storybook/preview-api':
+        specifier: ^8.5.3
+        version: 8.5.3(storybook@8.5.0(prettier@3.4.2))
       '@storybook/theming':
         specifier: ^8.5.0
         version: 8.5.0(storybook@8.5.0(prettier@3.4.2))
@@ -1301,6 +1304,11 @@ packages:
 
   '@storybook/preview-api@8.5.0':
     resolution: {integrity: sha512-g0XbD54zMUkl6bpuA7qEBCE9rW1QV6KKmwkO4bkxMOJcMke3x9l00JTaYn7Un8wItjXiS3BIG15B6mnfBG7fng==}
+    peerDependencies:
+      storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
+
+  '@storybook/preview-api@8.5.3':
+    resolution: {integrity: sha512-dUsuXW+KgDg4tWXOB6dk5j5gwwRUzbPvicHAY9mzbpSVScbWXuE5T/S/9hHlbtfkhFroWQgPx2eB8z3rai+7RQ==}
     peerDependencies:
       storybook: ^8.2.0 || ^8.3.0-0 || ^8.4.0-0 || ^8.5.0-0 || ^8.6.0-0
 
@@ -6106,6 +6114,10 @@ snapshots:
       - webpack-cli
 
   '@storybook/preview-api@8.5.0(storybook@8.5.0(prettier@3.4.2))':
+    dependencies:
+      storybook: 8.5.0(prettier@3.4.2)
+
+  '@storybook/preview-api@8.5.3(storybook@8.5.0(prettier@3.4.2))':
     dependencies:
       storybook: 8.5.0(prettier@3.4.2)
 

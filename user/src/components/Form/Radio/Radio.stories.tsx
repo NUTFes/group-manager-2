@@ -1,4 +1,6 @@
-import { Meta, StoryObj } from "@storybook/react";
+import React from "react";
+import { Meta, Story } from "@storybook/react";
+import { useArgs } from "@storybook/preview-api";
 import Radio from "./Radio";
 import "@globals";
 
@@ -15,8 +17,35 @@ export default {
   },
 } as Meta<typeof Radio>;
 
-type Story = StoryObj<typeof Radio>;
+// サンプルの options データ
+const sampleOptions = [
+  { id: "1", name: "Option 1" },
+  { id: "2", name: "Option 2" },
+  { id: "3", name: "Option 3" },
+];
 
-export const Default: Story = {
-  args: {},
+const Template: Story<typeof Radio> = (args) => {
+  // useArgs で現在の args と更新用関数を取得
+  const [{ value }, updateArgs] = useArgs();
+
+  // ラジオボタンの onChange イベントで args の value を更新
+  const handleChange = (newValue: string) => {
+    updateArgs({ value: newValue });
+    if (args.onChange) {
+      args.onChange(newValue);
+    }
+  };
+
+  return <Radio {...args} value={value} onChange={handleChange} />;
+};
+
+export const Default = Template.bind({});
+Default.args = {
+  label: "Choose an option",
+  value: "2",
+  onChange: (value: string) => console.log("Selected:", value),
+  required: true,
+  note: "value の値によって，デフォルトの選択肢が選択されます",
+  error: "エラー",
+  options: sampleOptions,
 };
