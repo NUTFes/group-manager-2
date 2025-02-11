@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@storybook/preview-api": "^8.5.3",
     "@storybook/theming": "^8.5.0",
     "@svgr/webpack": "^8.1.0",
     "next": "15.0.3",
