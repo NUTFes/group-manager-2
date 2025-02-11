@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import Icons from "@/icons/Icons";
+import Icons, { Loading } from "@/icons/Icons";
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -8,6 +8,7 @@ type ButtonProps = {
   variant?: boolean;
   icon?: string;
   onClick?: () => void;
+  isDisable: boolean;
 };
 
 const colorBorderClass = {
@@ -48,22 +49,30 @@ function getIconSpacingClass(size: ButtonProps["size"]) {
 }
 
 const Button: FC<ButtonProps> = (props) => {
-  const { children, size, color, variant, icon, onClick } = props;
-  const iconElement = icon ? Icons[icon] : null;
+  const { children, size, color, variant, icon, onClick, isDisable } = props;
+  const iconElement = isDisable ? (
+    <Loading colorClass={colorBgClass[color]} />
+  ) : icon ? (
+    Icons[icon]
+  ) : null;
 
-  const baseClass =
-    "rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.25)] justify-center items-center inline-flex overflow-hidden";
+  const baseClass = `h-[63px] rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.25)] justify-center items-center inline-flex overflow-hidden
+  transition-transform duration-150 ease-in-out ${isDisable ? "cursor-not-allowed" : "active:scale-95"}`;
 
   return (
     <button
-      className={`${baseClass} ${getSizeClass(size)} ${getColorClass(
-        color,
-        variant
-      )} ${iconElement ? getIconSpacingClass(size) : ""} flex`}
-      onClick={onClick}
+      className={`${baseClass} ${getSizeClass(size)} ${getColorClass(color, variant)} ${iconElement ? getIconSpacingClass(size) : ""} flex`}
+      onClick={isDisable ? () => {} : onClick}
+      disabled={isDisable}
     >
-      {iconElement && <span className="flex items-center">{iconElement}</span>}
-      <span className="font-bold text-center">{children}</span>
+      {iconElement && (
+        <span className={`flex items-center`}>{iconElement}</span>
+      )}
+      {isDisable ? (
+        <></>
+      ) : (
+        <span className="font-bold text-center">{children}</span>
+      )}
     </button>
   );
 };
