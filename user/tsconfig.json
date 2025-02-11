@@ -19,6 +19,6 @@
       "@globals": ["./src/styles/globals.css"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["svgr.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
