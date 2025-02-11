@@ -38,7 +38,7 @@ const Radio: FC<RadioProps> = ({label, value, onChange, required, note, error, o
                                 onChange={handleChange}
                                 className={`w-4 h-4 form-radio ${error ? "accent-alert" : "accent-main"}`}
                             />
-                            <span>{option.name}</span>
+                            <span className={`${error ? "text-alert" : ""}`}>{option.name}</span>
                         </label>
                     ))}
                 </div>
