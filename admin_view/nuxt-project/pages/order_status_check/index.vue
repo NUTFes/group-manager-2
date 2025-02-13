@@ -281,7 +281,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL";
+          this.refYears = "ALL Years";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -289,7 +289,7 @@ export default {
         this.refCategoryID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refGroupCategories = "ALL";
+          this.refGroupCategories = "ALL Categories";
         } else {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
@@ -298,7 +298,7 @@ export default {
         this.refInternationalID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refInternational = "ALL";
+          this.refInternational = "ALL Nationalities";
         } else {
           this.refInternational = name_list[item_id - 1].value;
         }
@@ -307,7 +307,7 @@ export default {
         this.refExternalID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refExternal = "ALL";
+          this.refExternal = "ALL Gloups";
         } else {
           this.refExternal = name_list[item_id - 1].value;
         }

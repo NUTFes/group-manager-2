@@ -421,7 +421,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL";
+          this.refYears = "ALL Years";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -430,7 +430,7 @@ export default {
         this.refIsSunnyID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refIsSunny = "ALL";
+          this.refIsSunny = "ALL Weather: Sunny or Not";
         } else {
           this.refIsSunny = name_list[item_id - 1].text;
         }
@@ -439,16 +439,16 @@ export default {
         this.refDaysNumID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refDaysNum = "ALL";
+          this.refDaysNum = "ALL Days";
         } else {
           this.refDaysNum = name_list[item_id - 1].days_num;
         }
         // stage_idで絞り込むとき
-      } else if (name_list.toString() == this.stageList.toString()) {
+      } else if (JSON.stringify(name_list) === JSON.stringify(this.stageList)) {
         this.refStageID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refStage = "ALL";
+          this.refStage = "ALL Stages";
         } else {
           this.refStage = name_list[item_id - 1].name;
         }

@@ -328,7 +328,7 @@ export default {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL";
+          this.refYears = "ALL years";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
@@ -337,7 +337,7 @@ export default {
         this.refIsOwnEquipmentID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refIsOwnEquipment = "ALL";
+          this.refIsOwnEquipment = "All Devices: Owned or Not";
         } else {
           this.refIsOwnEquipment = name_list[item_id - 1].value;
         }
@@ -346,7 +346,7 @@ export default {
         this.refIsBgmID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refIsBgm = "ALL";
+          this.refIsBgm = "All Music Options";
         } else {
           this.refIsBgm = name_list[item_id - 1].value;
         }
@@ -355,7 +355,7 @@ export default {
         this.refIsCameraPermissionID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refIsCameraPermission = "ALL";
+          this.refIsCameraPermission = "ALL Shooting Permissions";
         } else {
           this.refIsCameraPermission = name_list[item_id - 1].value;
         }
@@ -364,7 +364,7 @@ export default {
         this.refIsLoudSoundID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refIsLoudSound = "ALL";
+          this.refIsLoudSound = "ALL Sound Levels";
         } else {
           this.refIsLoudSound = name_list[item_id - 1].value;
         }
