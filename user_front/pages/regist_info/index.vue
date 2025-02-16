@@ -2,6 +2,7 @@
 import { is } from "@vee-validate/rules";
 import axios from "axios";
 import { Group } from "~~/types";
+import Place from "~~/components/RegistInfo/card/Place.vue";
 
 interface RegistInfo {
   sub_rep: SubRep[];
@@ -469,6 +470,13 @@ const isStageOverlap = computed(() => {
               @reload-place="reload"
             />
           </div>
+          <div class="bg-white w-[55%]">
+            <div class="w-[100%] h-[80%] text-base color=red">{{ $t('Place.free') }}</div>
+            <div class="w-[80%]  pr-1 break-normal break-words text-ellipsis overflow-hidden ">
+              {{ placeOrder?.remark}}
+            </div>
+          </div>
+         
         </div>
 
         <!-- ステージ申請 group_category_id === ３ -->

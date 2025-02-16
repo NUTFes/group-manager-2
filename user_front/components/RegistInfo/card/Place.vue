@@ -55,13 +55,14 @@ const openEditModal = () => {
           {{ $t('Place.hope1') }}{{ place.n }}{{ $t('Place.hope2') }}
         </div>
         <RegistInfoDivideBar />
-        <div class="w-[40%] text-center text-4xl">
+        <div class="w-[65%] text-center text-4xl">
           {{ place.place }}
         </div>
-        <div class="w-[13%] h-[80%] text-base">{{ $t('Place.free') }}</div>
+        <!-- 以下備考欄の記述 -->
+        <!-- <div class="w-[13%] h-[80%] text-base">{{ $t('Place.free') }}</div>
           <div class="w-[25%] h-[80%] pr-1 break-normal break-words text-ellipsis overflow-hidden">
             {{ place.remark }}
-          </div>
+          </div> -->
       </template>
       <template v-if="isEditPlace" #method>
         <div class="mx-4">
@@ -81,3 +82,6 @@ const openEditModal = () => {
     @reload-place="reloadPlace()"
   />
 </template>
+
+export default remark;
+
