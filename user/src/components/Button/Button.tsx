@@ -8,7 +8,7 @@ type ButtonProps = {
   variant?: boolean;
   icon?: string;
   onClick?: () => void;
-  isDisable: boolean;
+  isDisable?: boolean;
 };
 
 const colorBorderClass = {
@@ -66,7 +66,11 @@ const Button: FC<ButtonProps> = (props) => {
       disabled={isDisable}
     >
       {iconElement && (
-        <span className={`flex items-center`}>{iconElement}</span>
+        <span
+          className={`flex items-center ${icon === "lessThan" ? "text-sm" : ""} `}
+        >
+          {iconElement}
+        </span>
       )}
       {isDisable ? (
         <></>
