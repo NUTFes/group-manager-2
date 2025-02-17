@@ -18,5 +18,5 @@ export default {
 type Story = StoryObj<typeof RegisterCarousel>;
 
 export const Default: Story = {
-  args: {},
+  args: { onClick: () => alert("送信されるよ") },
 };
