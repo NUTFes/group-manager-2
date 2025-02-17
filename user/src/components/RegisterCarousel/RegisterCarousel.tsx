@@ -7,6 +7,7 @@ import { RegisterParams } from "@/types/register/user";
 import { GradeList, DepartmentList } from "@/utils/list";
 
 type RegisterCarouselProps = {
+  isOpen: boolean;
   onClick: () => void;
 };
 
@@ -68,7 +69,7 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
   );
 };
 
-const Carousel: FC<RegisterCarouselProps> = ({ onClick }) => {
+const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClick }) => {
   const gradeOptions = [{ id: 0, name: "選択してください" }, ...GradeList];
   const departmentOptions = [
     { id: 0, name: "選択してください" },
@@ -103,6 +104,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ onClick }) => {
     setStepIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  if (!isOpen) return <></>;
   return (
     <section className="px-60 py-20 bg-white rounded-2xl shadow-md space-y-14">
       <FormStep step={stepIndex} />
