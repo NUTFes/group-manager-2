@@ -1,1 +1,0 @@
-import '/home/kure/workspace/group-manager-2/user/node_modules/.pnpm/@chromatic-com+storybook@3.2.4_react@19.0.0-rc-66855b96-20241106_storybook@8.5.0_prettier@3.4.2_/node_modules/@chromatic-com/storybook/dist/manager.mjs';
