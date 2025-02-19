@@ -1,7 +1,7 @@
 type ValidStatus =
-  | { statusType: "A"; status: "reception" | "approaching" | "closed" }
-  | { statusType: "B"; status: "registered" | "unregistered" }
-  | { statusType: "C"; status: "unnecessary" | "done" | "not_yet" };
+  | { statusType: "reception"; status: "open" | "deadline" | "closed" }
+  | { statusType: "registration"; status: "registered" | "unregistered" }
+  | { statusType: "progress"; status: "not_required" | "completed" | "pending" };
 
   type StatusProps<T extends ValidStatus["statusType"]> = Extract<ValidStatus, { statusType: T }>;
 
@@ -13,50 +13,50 @@ type StyleDefinition = {
   };
 
 const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
-    reception: {
-        statusType: "A",
+    open: {
+        statusType: "reception",
         statusText: "受付中",
         backgroundColor: "bg-main border-main",
         textColor: "text-baseColor",
     },
-    approaching: {
-        statusType: "A",
+    deadline: {
+        statusType: "reception",
         statusText: "締切間近",
         backgroundColor: "bg-alert border-alert",
         textColor: "text-baseColor",
     },
     closed: {
-        statusType: "A",
+        statusType: "reception",
         statusText: "受付終了",
         backgroundColor: "bg-baseColor border-sub",
         textColor: "text-sub",
     },
     registered: {
-        statusType: "B",
+        statusType: "registration",
         statusText: "登録済",
         backgroundColor: "bg-baseColor border-sub",
         textColor: "text-sub",
     },
     unregistered: {
-        statusType: "B",
+        statusType: "registration",
         statusText: "未登録",
         backgroundColor: "bg-alert border-alert",
         textColor: "text-baseColor",
     },
-    unnecessary: {
-        statusType: "C",
+    not_required: {
+        statusType: "progress",
         statusText: "不要",
         backgroundColor: "bg-baseColor border-sub",
         textColor: "text-sub",
     },
-    done: {
-        statusType: "C",
+    completed: {
+        statusType: "progress",
         statusText: "済",
         backgroundColor: "bg-main border-main",
         textColor: "text-baseColor",
     },
-    not_yet: {
-        statusType: "C",
+    pending: {
+        statusType: "progress",
         statusText: "末",
         backgroundColor: "bg-alert border-alert",
         textColor: "text-baseColor",
@@ -72,9 +72,9 @@ const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
           "flex items-center justify-center shrink-0 text-[16px]";
       
         const sizeStyles = {
-          A: { bg: "w-[100px] h-[30px]", text: "w-[92px] h-[23px]" },
-          B: { bg: "w-[86px] h-[30px]", text: "w-[78px] h-[22px]" },
-          C: { bg: "w-[56px] h-[30px]", text: "w-[48px] h-[19px]" },
+          reception: { bg: "w-[100px] h-[30px]", text: "w-[92px] h-[23px]" },
+          registration: { bg: "w-[86px] h-[30px]", text: "w-[78px] h-[22px]" },
+          progress: { bg: "w-[56px] h-[30px]", text: "w-[48px] h-[19px]" },
         } as const;
 
         //   // 不適切な実行時にエラーをスローする
