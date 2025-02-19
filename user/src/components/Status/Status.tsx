@@ -77,13 +77,13 @@ const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
           C: { bg: "w-[56px] h-[30px]", text: "w-[48px] h-[19px]" },
         } as const;
 
-          // 不適切な実行時にエラーをスローする
+        //   // 不適切な実行時にエラーをスローする
           
-        if (statusInfo.statusType !== statusType) {
-            throw new Error(
-                `statusType="${statusType}" と status="${status}"の組み合わせは不適切です!!`
-            );
-        }
+        // if (statusInfo.statusType !== statusType) {
+        //     throw new Error(
+        //         `statusType="${statusType}" と status="${status}"の組み合わせは不適切です!!`
+        //     );
+        // }
       
         return (
           <div className={`${commonBgStyle} ${sizeStyles[statusType].bg} ${statusInfo.backgroundColor}`} >

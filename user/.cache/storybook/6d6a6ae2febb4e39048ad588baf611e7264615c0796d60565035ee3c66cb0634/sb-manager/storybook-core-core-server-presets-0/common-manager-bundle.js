@@ -1,0 +1,1 @@
+import '/home/kure/workspace/group-manager-2/user/node_modules/.pnpm/@storybook+core@8.5.0_prettier@3.4.2/node_modules/@storybook/core/dist/core-server/presets/common-manager.js';

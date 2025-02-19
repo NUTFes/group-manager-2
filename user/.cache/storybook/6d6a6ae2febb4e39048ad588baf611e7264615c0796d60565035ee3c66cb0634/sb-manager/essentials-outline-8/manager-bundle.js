@@ -1,0 +1,1 @@
+import '/home/kure/workspace/group-manager-2/user/node_modules/.pnpm/@storybook+addon-essentials@8.5.0_@types+react@18.3.18_storybook@8.5.0_prettier@3.4.2_/node_modules/@storybook/addon-essentials/dist/outline/manager.js';
