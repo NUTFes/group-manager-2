@@ -1,6 +1,5 @@
 import Image from "next/image";
 import localFont from "next/font/local";
-import  Status  from "../components/Status"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,9 +36,6 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
-        <div>
-        <Status statusType="A" status="reception" />
-        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
