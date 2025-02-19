@@ -1,79 +1,5 @@
 "use strict";
-(self["webpackChunkapp"] = self["webpackChunkapp"] || []).push([["components-Status-Status-stories"],{
-
-/***/ "./src/components/Status/Status.stories.tsx":
-/*!**************************************************!*\
-  !*** ./src/components/Status/Status.stories.tsx ***!
-  \**************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Default: () => (/* binding */ Default),
-/* harmony export */   __namedExportsOrder: () => (/* binding */ __namedExportsOrder),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _Status__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Status */ "./src/components/Status/Status.tsx");
-/* harmony import */ var _styles_globals_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../styles/globals.css */ "./src/styles/globals.css");
-/* provided dependency */ var __react_refresh_utils__ = __webpack_require__(/*! ./node_modules/.pnpm/@pmmmwh+react-refresh-webpack-plugin@0.5.15_react-refresh@0.14.2_type-fest@4.32.0_webpack-hot_euqyt3554vtxwgyegrk3ywqllq/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js */ "./node_modules/.pnpm/@pmmmwh+react-refresh-webpack-plugin@0.5.15_react-refresh@0.14.2_type-fest@4.32.0_webpack-hot_euqyt3554vtxwgyegrk3ywqllq/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js");
-__webpack_require__.$Refresh$.runtime = __webpack_require__(/*! ./node_modules/.pnpm/react-refresh@0.14.2/node_modules/react-refresh/runtime.js */ "./node_modules/.pnpm/react-refresh@0.14.2/node_modules/react-refresh/runtime.js");
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-    title: 'Components/Status',
-    tags: [
-        "autodocs"
-    ],
-    component: _Status__WEBPACK_IMPORTED_MODULE_0__["default"],
-    parameters: {
-        docs: {
-            source: {
-                type: "auto"
-            }
-        }
-    }
-});
-const Default = {
-    args: {
-        statusType: "reception",
-        status: "open"
-    }
-};
-;const __namedExportsOrder = ["Default"];
-
-const $ReactRefreshModuleId$ = __webpack_require__.$Refresh$.moduleId;
-const $ReactRefreshCurrentExports$ = __react_refresh_utils__.getModuleExports(
-	$ReactRefreshModuleId$
-);
-
-function $ReactRefreshModuleRuntime$(exports) {
-	if (true) {
-		let errorOverlay;
-		if (true) {
-			errorOverlay = false;
-		}
-		let testMode;
-		if (typeof __react_refresh_test__ !== 'undefined') {
-			testMode = __react_refresh_test__;
-		}
-		return __react_refresh_utils__.executeRuntime(
-			exports,
-			$ReactRefreshModuleId$,
-			module.hot,
-			errorOverlay,
-			testMode
-		);
-	}
-}
-
-if (typeof Promise !== 'undefined' && $ReactRefreshCurrentExports$ instanceof Promise) {
-	$ReactRefreshCurrentExports$.then($ReactRefreshModuleRuntime$);
-} else {
-	$ReactRefreshModuleRuntime$($ReactRefreshCurrentExports$);
-}
-
-/***/ }),
+self["webpackHotUpdateapp"]("components-Status-Status-stories",{
 
 /***/ "./src/components/Status/Status.tsx":
 /*!******************************************!*\
@@ -86,7 +12,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/.pnpm/next@15.0.3_@babel+core@7.26.0_react-dom@19.0.0-rc-66855b96-20241106_react@19.0.0-rc-66855b96_fpy4of67lljj5mmtr3hdr3usnm/node_modules/next/dist/compiled/react/jsx-dev-runtime.js");
-/* provided dependency */ var console = __webpack_require__(/*! ./node_modules/.pnpm/console-browserify@1.2.0/node_modules/console-browserify/index.js */ "./node_modules/.pnpm/console-browserify@1.2.0/node_modules/console-browserify/index.js");
 /* provided dependency */ var __react_refresh_utils__ = __webpack_require__(/*! ./node_modules/.pnpm/@pmmmwh+react-refresh-webpack-plugin@0.5.15_react-refresh@0.14.2_type-fest@4.32.0_webpack-hot_euqyt3554vtxwgyegrk3ywqllq/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js */ "./node_modules/.pnpm/@pmmmwh+react-refresh-webpack-plugin@0.5.15_react-refresh@0.14.2_type-fest@4.32.0_webpack-hot_euqyt3554vtxwgyegrk3ywqllq/node_modules/@pmmmwh/react-refresh-webpack-plugin/lib/runtime/RefreshUtils.js");
 __webpack_require__.$Refresh$.runtime = __webpack_require__(/*! ./node_modules/.pnpm/react-refresh@0.14.2/node_modules/react-refresh/runtime.js */ "./node_modules/.pnpm/react-refresh@0.14.2/node_modules/react-refresh/runtime.js");
 
@@ -160,7 +85,7 @@ const Status = ({ statusType, status })=>{
         }
     };
     if (statusInfo.statusType !== statusType) {
-        console.warn(`statusType="${statusType}" と status="${status}"の組み合わせは不適切です!!`);
+        throw new Error(`statusType="${statusType}" と status="${status}"の組み合わせは不適切です!!`);
     }
     return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)("div", {
         className: `${commonBgStyle} ${sizeStyles[statusType].size} ${statusInfo.backgroundColor}`,
@@ -222,5 +147,5 @@ if (typeof Promise !== 'undefined' && $ReactRefreshCurrentExports$ instanceof Pr
 
 /***/ })
 
-}]);
-//# sourceMappingURL=components-Status-Status-stories.iframe.bundle.js.map
+});
+//# sourceMappingURL=components-Status-Status-stories.2ff109e40fa91c782ef3.hot-update.js.map
