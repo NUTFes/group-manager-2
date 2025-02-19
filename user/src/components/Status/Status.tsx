@@ -72,9 +72,9 @@ const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
           "flex items-center justify-center shrink-0 text-[16px]";
       
         const sizeStyles = {
-          reception: { bg: "w-[100px] h-[30px]", text: "w-[92px] h-[23px]" },
-          registration: { bg: "w-[86px] h-[30px]", text: "w-[78px] h-[22px]" },
-          progress: { bg: "w-[56px] h-[30px]", text: "w-[48px] h-[19px]" },
+          reception: { size: "w-[100px] h-[30px]", text: "w-[92px] h-[23px]" },
+          registration: { size: "w-[86px] h-[30px]", text: "w-[78px] h-[22px]" },
+          progress: { size: "w-[56px] h-[30px]", text: "w-[48px] h-[19px]" },
         } as const;
 
         //   // 不適切な実行時にエラーをスローする
@@ -86,7 +86,7 @@ const STATUS_MAP: Record<ValidStatus["status"], StyleDefinition> = {
         // }
       
         return (
-          <div className={`${commonBgStyle} ${sizeStyles[statusType].bg} ${statusInfo.backgroundColor}`} >
+          <div className={`${commonBgStyle} ${sizeStyles[statusType].size} ${statusInfo.backgroundColor}`} >
             <div
               className={`${commonTextStyle} ${sizeStyles[statusType].text} ${statusInfo.textColor}`}
             >
