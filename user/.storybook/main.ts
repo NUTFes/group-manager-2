@@ -21,7 +21,7 @@ const config: StorybookConfig = {
     // This modifies the existing image rule to exclude .svg files
     // since you want to handle those files with @svgr/webpack
     const imageRule = config.module.rules.find((rule) =>
-      rule?.["test"]?.test(".svg")
+      rule?.["test"]?.test(".svg"),
     );
     if (imageRule) {
       imageRule["exclude"] = /\.svg$/;
