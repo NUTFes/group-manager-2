@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type Option = {
   id: string;
@@ -44,9 +44,9 @@ const Radio: FC<RadioProps> = ({
                 value={option.id}
                 checked={value === option.id}
                 onChange={handleChange}
-                className={`w-4 h-4 form-radio ${error ? "accent-alert" : "accent-main"}`}
+                className={`w-4 h-4 form-radio ${error ? 'accent-alert' : 'accent-main'}`}
               />
-              <span className={`${error ? "text-alert" : ""}`}>
+              <span className={`${error ? 'text-alert' : ''}`}>
                 {option.name}
               </span>
             </label>

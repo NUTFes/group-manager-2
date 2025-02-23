@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type Option = {
   id: string;
@@ -38,7 +38,7 @@ const Selector: FC<SelectorProps> = ({
         <select
           value={value}
           onChange={handleChange}
-          className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? "border-alert" : "border-main"} mb-[4px]`}
+          className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? 'border-alert' : 'border-main'} mb-[4px]`}
         >
           {options.map((option) => (
             <option key={option.id} value={option.id}>

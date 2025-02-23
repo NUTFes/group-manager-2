@@ -31,6 +31,6 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Noto Sans JP";
+  font-family: 'Noto Sans JP';
   font-weight: 500;
 }

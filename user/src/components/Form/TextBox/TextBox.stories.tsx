@@ -1,15 +1,15 @@
-import { Meta, StoryObj } from "@storybook/react";
-import TextBox from "./TextBox";
-import "@globals";
+import '@globals';
+import { Meta, StoryObj } from '@storybook/react';
+import TextBox from './TextBox';
 
 export default {
-  title: "Components/TextBox",
-  tags: ["autodocs"],
+  title: 'Components/TextBox',
+  tags: ['autodocs'],
   component: TextBox,
   parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },

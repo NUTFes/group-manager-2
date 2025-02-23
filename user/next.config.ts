@@ -1,12 +1,12 @@
 // next.config.ts
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   webpack(config) {
     // 既存の SVG を処理するルールを取得
     const fileLoaderRule = config.module.rules.find((rule: any) =>
-      rule.test?.test?.(".svg"),
+      rule.test?.test?.('.svg')
     );
 
     if (fileLoaderRule) {
@@ -22,8 +22,8 @@ const nextConfig: NextConfig = {
           test: /\.svg$/i,
           issuer: fileLoaderRule.issuer,
           resourceQuery: { not: [/url/] }, // ?url が付かない場合
-          use: ["@svgr/webpack"],
-        },
+          use: ['@svgr/webpack'],
+        }
       );
 
       // 既存のファイルローダールールから *.svg を除外

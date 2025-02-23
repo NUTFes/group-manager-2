@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type TextAreaProps = {
   label: string;
@@ -31,7 +31,7 @@ const TextArea: FC<TextAreaProps> = ({
         <textarea
           value={value}
           onChange={handleChange}
-          className={`w-[400px] h-32 text-font border-2 rounded-[10px] block mb-[4px] ${error ? "border-alert" : "border-main"}`}
+          className={`w-[400px] h-32 text-font border-2 rounded-[10px] block mb-[4px] ${error ? 'border-alert' : 'border-main'}`}
         />
         <p className="text-xs text-sub max-w-[400px] break-words">{note}</p>
         <p className="text-xs text-alert">{error}</p>

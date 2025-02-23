@@ -1,8 +1,8 @@
-import { SlPencil } from "react-icons/sl";
-import { RxCross2 } from "react-icons/rx";
-import { FiPlus } from "react-icons/fi";
-import { LiaLessThanSolid } from "react-icons/lia";
-import { FC } from "react";
+import { FC } from 'react';
+import { FiPlus } from 'react-icons/fi';
+import { LiaLessThanSolid } from 'react-icons/lia';
+import { RxCross2 } from 'react-icons/rx';
+import { SlPencil } from 'react-icons/sl';
 
 export const Loading: FC<{ colorClass: string }> = ({ colorClass }) => (
   <div className="flex justify-center" aria-label="読み込み中">
