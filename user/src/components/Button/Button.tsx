@@ -5,6 +5,7 @@ type ButtonProps = {
   children: React.ReactNode;
   size: "pc" | "mobile";
   color: "main" | "secondary" | "alert";
+  type: "button" | "submit" | "reset";
   variant?: boolean;
   icon?: string;
   onClick?: () => void;
@@ -49,7 +50,8 @@ function getIconSpacingClass(size: ButtonProps["size"]) {
 }
 
 const Button: FC<ButtonProps> = (props) => {
-  const { children, size, color, variant, icon, onClick, isDisable } = props;
+  const { children, size, color, variant, icon, onClick, isDisable, type } =
+    props;
   const iconElement = isDisable ? (
     <Loading colorClass={colorBgClass[color]} />
   ) : icon ? (
@@ -64,6 +66,7 @@ const Button: FC<ButtonProps> = (props) => {
       className={`${baseClass} ${getSizeClass(size)} ${getColorClass(color, variant)} ${iconElement ? getIconSpacingClass(size) : ""} flex`}
       onClick={isDisable ? () => {} : onClick}
       disabled={isDisable}
+      type={type}
     >
       {iconElement && (
         <span

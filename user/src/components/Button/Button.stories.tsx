@@ -22,6 +22,7 @@ export const Default: Story = {
     children: "登録",
     size: "pc",
     color: "main",
+    type: "button",
     variant: true,
     icon: "pencil",
     onClick: () => alert("clicked"),
