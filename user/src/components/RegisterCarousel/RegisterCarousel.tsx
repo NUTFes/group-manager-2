@@ -22,12 +22,12 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
         <div className="w-[376px] h-14 left-[6px] top-0 absolute">
           <div
             className={`w-20 h-2 left-[72px] top-[24px] absolute ${
-              step >= 0 ? "bg-main" : "bg-[#b2b2b2]"
+              step >= 1 ? "bg-main" : "bg-[#b2b2b2]"
             }`}
           />
           <div
             className={`w-20 h-2 left-[224px] top-[24px] absolute ${
-              step >= 1 ? "bg-main" : "bg-[#b2b2b2]"
+              step >= 2 ? "bg-main" : "bg-[#b2b2b2]"
             }`}
           />
           <div
@@ -106,12 +106,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClick }) => {
 
   if (!isOpen) return <></>;
   return (
-    <section className="px-60 py-20 bg-white rounded-2xl shadow-md space-y-14">
+    <section className="px-[clamp(10px,10vw,240px)] py-[clamp(5px,5vw,80px)] bg-white rounded-2xl shadow-md space-y-12">
       <FormStep step={stepIndex} />
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           <div className="min-w-full flex-shrink-0">
-            <div className="bg-baseColor rounded-lg flex flex-col justify-center items-center space-y-14">
+            <div className="bg-baseColor rounded-lg flex flex-col justify-center items-center space-y-12">
               <TextBox
                 label="メールアドレス"
                 value=""
@@ -141,8 +141,8 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClick }) => {
               />
             </div>
           </div>
-          <div className="min-w-full flex-shrink-0 p-4 ">
-            <div className="bg-baseColor rounded-lg flex flex-col justify-center items-center space-y-14">
+          <div className="min-w-full flex-shrink-0 p-4">
+            <div className="bg-baseColor rounded-lg flex flex-col justify-center items-center space-y-12">
               <TextBox
                 label="名前"
                 value=""
@@ -182,27 +182,25 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClick }) => {
             </div>
           </div>
           <div className="min-w-full flex-shrink-0 p-4">
-            <div className="bg-baseColor rounded-lg flex flex-col items-start space-y-14">
+            <div className="bg-baseColor rounded-lg flex flex-col items-start space-y-12">
               <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
                 <div className="y-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                  <div className="text-[#474747] text-xs font-black">
+                  <div className="text-font text-xs font-black">
                     メールアドレス
                   </div>
                 </div>
                 <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                  <div className="text-[#474747] text-base font-medium font-['Noto Sans JP']">
+                  <div className="text-font text-base font-medium">
                     {input.mail}
                   </div>
                 </div>
               </div>
               <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
                 <div className="h-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                  <div className="text-[#474747] text-xs font-black font-['Noto Sans JP']">
-                    パスワード
-                  </div>
+                  <div className="text-font text-xs font-black">パスワード</div>
                 </div>
                 <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                  <div className="text-[#474747] text-base font-medium font-['Noto Sans JP']">
+                  <div className="text-font text-base font-medium">
                     {"*".repeat(input.password.length)}
                   </div>
                 </div>
