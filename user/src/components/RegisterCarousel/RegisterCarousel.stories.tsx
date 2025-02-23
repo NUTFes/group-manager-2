@@ -3,7 +3,7 @@ import RegisterCarousel from "./RegisterCarousel";
 import "@globals";
 
 export default {
-  title: "Components/Carousel",
+  title: "Components/RegisterCarousel",
   tags: ["autodocs"],
   component: RegisterCarousel,
   parameters: {
@@ -18,5 +18,5 @@ export default {
 type Story = StoryObj<typeof RegisterCarousel>;
 
 export const Default: Story = {
-  args: { isOpen: true, onClick: () => alert("送信されるよ") },
+  args: { isOpen: true, onSubmit: () => alert("送信されるよ") },
 };
