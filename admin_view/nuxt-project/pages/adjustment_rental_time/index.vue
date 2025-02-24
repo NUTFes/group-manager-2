@@ -8,13 +8,14 @@
 
     <SubSubHeader>
       <template v-slot:refinement>
-        <SearchDropDown
+        <div style="margin-right: 35%;"></div>
+        <!-- <SearchDropDown
         :nameList="yearList"
         :on_click="refinementGroups"
         value="year_num"
         >
           {{ refYears }}
-        </SearchDropDown>
+        </SearchDropDown> -->
         <SearchDropDown
         :nameList="groupCategories"
         :on_click="refinementGroups"
@@ -22,6 +23,10 @@
         >
           {{ refGroupCategories }}
         </SearchDropDown>
+        <div style="margin-right: 2%;"></div>
+        <CombineButton :on_click="Clicked">団体名で結合</CombineButton>
+        <CombineButton :on_click="Clicked">借り場で結合</CombineButton>
+        <CombineButton :on_click="Clicked">物品で結合</CombineButton>
       </template>
     </SubSubHeader>
 
@@ -104,12 +109,18 @@ export default {
               "ID",
               "団体名",
               "使用場",
-              "仮り場",
+              "借り場",
               "物品",
               "個数",
               "人数",
               "時間",
               "",
+          ],
+          groupCategories: [
+            { name: "準備日" },
+            { name: "1日目" },
+            { name: "2日目" },
+            { name: "片付け日" }
           ],
           isOpenAddModal: false,
           stocker_place: [],
