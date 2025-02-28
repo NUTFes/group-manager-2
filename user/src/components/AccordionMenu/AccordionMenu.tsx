@@ -8,7 +8,7 @@ type AccordionMenuProps = {
   isOpen: boolean;
   onToggle: () => void;
   isEdit: boolean;
-  isExit: boolean;
+  isExist: boolean;
   required: boolean;
 };
 
@@ -18,7 +18,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   isOpen,
   onToggle,
   isEdit,
-  isExit,
+  isExist,
   required,
 }) => {
   // TODO：api/app/controllers/user_page_settings_controller.rbでの登録するかどうかのbooleanを受け取る想定。
@@ -26,7 +26,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   const receptionStatus = isEdit ? 'open' : 'closed';
 
   // TODO：取得のAPI叩いてdataがあるかどうかをbooleanで判断してそれを渡す想定。
-  const registerStatus = isExit ? 'registered' : 'unregistered';
+  const registerStatus = isExist ? 'registered' : 'unregistered';
 
   return (
     <div className="border-t border-[#b2b2b2]">
