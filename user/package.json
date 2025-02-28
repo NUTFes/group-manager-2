@@ -10,7 +10,6 @@
     "scaff:component": "scaffdog generate -p .scaffdog/templates template",
     "storybook": "storybook dev -p 6006 --ci",
     "build-storybook": "storybook build",
-    "prepare": "husky install",
     "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "fmt": "prettier --write **/*.{js,jsx,ts,tsx,css,scss}",
     "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}"
