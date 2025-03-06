@@ -49,7 +49,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
           <div
             className={`md:w-52 w-full font-bold ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
           >
-            <Textfit mode="single" max={50}>
+            <Textfit mode="single" max={40}>
               {title}
             </Textfit>
           </div>
