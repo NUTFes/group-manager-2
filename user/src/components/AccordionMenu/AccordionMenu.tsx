@@ -11,7 +11,7 @@ type AccordionMenuProps = {
   isEdit: boolean;
   isExist: boolean;
   required: boolean;
-  note: string;
+  note?: string;
 };
 
 const AccordionMenu: FC<AccordionMenuProps> = ({
