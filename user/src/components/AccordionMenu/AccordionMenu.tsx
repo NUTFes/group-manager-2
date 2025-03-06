@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { RiArrowDownWideLine } from 'react-icons/ri';
+import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
 
 type AccordionMenuProps = {
@@ -10,6 +11,7 @@ type AccordionMenuProps = {
   isEdit: boolean;
   isExist: boolean;
   required: boolean;
+  note: string;
 };
 
 const AccordionMenu: FC<AccordionMenuProps> = ({
@@ -20,39 +22,52 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   isEdit,
   isExist,
   required,
+  note,
 }) => {
   // TODO：api/app/controllers/user_page_settings_controller.rbでの登録するかどうかのbooleanを受け取る想定。
   // 要件要確認
   const receptionStatus = isEdit ? 'open' : 'closed';
 
   // TODO：取得のAPI叩いてdataがあるかどうかをbooleanで判断してそれを渡す想定。
+  // できるならAPI側でisExist()みたいな関数を作りたい。工数多い。。。
   const registerStatus = isExist ? 'registered' : 'unregistered';
 
   return (
-    <div className="border-t border-[#b2b2b2]">
+    <div className="border-t border-[#b2b2b2] w-full md:w-[560px]">
       <button
         onClick={onToggle}
-        className="w-full h-20 flex items-center gap-6 overflow-hidden cursor-pointer"
+        className="w-full md:w-[560px] h-20 flex items-center gap-6 overflow-hidden cursor-pointer mb-10"
       >
-        <div className="w-[25px] h-[17px] flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <div
-            className={`text-center text-xs font-black ${required ? 'text-[#ff6752]' : 'text-[#474747]'}`}
+            className={`w-6 text-center text-xs font-light ${required ? 'text-[#ff6752]' : 'text-[#474747]'}`}
           >
             {required ? '必須' : '任意'}
           </div>
         </div>
-        <div className="flex items-center py-2.5">
-          <div className="text-[#b2b2b2] text-[32px] font-bold">{title}</div>
-        </div>
-        <div className="ml-auto flex items-center gap-6">
-          <Status statusType="reception" status={receptionStatus} />
-          <Status statusType="registration" status={registerStatus} />
-          <div className="text-main">
-            <RiArrowDownWideLine size={24} className="stroke-[1]" />
+        <div className="py-2.5">
+          <div
+            className={`md:w-52 w-full font-bold ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
+          >
+            <Textfit mode="single" max={50}>
+              {title}
+            </Textfit>
           </div>
         </div>
+        <Status statusType="reception" status={receptionStatus} />
+        <Status statusType="registration" status={registerStatus} />
+        <div
+          className={`text-main transition-transform duration-300 ${isOpen ? `rotate-180` : ``}`}
+        >
+          <RiArrowDownWideLine size={24} className="stroke-[1]" />
+        </div>
       </button>
-      {isOpen && <div className="p-4">{children}</div>}
+      {isOpen && (
+        <div className="mb-10">
+          {note && <p className="text-red-500 font-bold mb-10">{note}</p>}
+          {children}
+        </div>
+      )}
     </div>
   );
 };

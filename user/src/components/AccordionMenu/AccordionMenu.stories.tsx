@@ -20,10 +20,11 @@ export const Default: StoryObj<typeof AccordionMenu> = {
     );
   },
   args: {
-    title: 'Accordion Title',
+    title: '副代表申請',
     isEdit: true,
-    isExit: false,
+    isExist: false,
     required: true,
     children: <div>Accordion content</div>,
+    note: '個人参加者の場合のみ、副代表申請は不要です。',
   },
 };

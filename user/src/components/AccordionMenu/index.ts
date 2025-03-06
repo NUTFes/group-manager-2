@@ -1,1 +1,1 @@
-export { default } from "./AccordionMenu";
+export { default } from './AccordionMenu';
