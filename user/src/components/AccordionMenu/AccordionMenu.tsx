@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import React from 'react';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
@@ -12,6 +13,7 @@ type AccordionMenuProps = {
   isExist: boolean;
   required: boolean;
   note?: string;
+  onSubmit: () => void;
 };
 
 const AccordionMenu: FC<AccordionMenuProps> = ({
@@ -23,6 +25,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   isExist,
   required,
   note,
+  onSubmit,
 }) => {
   // TODO：api/app/controllers/user_page_settings_controller.rbでの登録するかどうかのbooleanを受け取る想定。
   // 要件要確認
@@ -65,7 +68,9 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
       {isOpen && (
         <div className="mb-10">
           {note && <p className="text-red-500 font-bold mb-10">{note}</p>}
-          {children}
+          {React.isValidElement(children)
+            ? React.cloneElement(children, { onSubmit } as any)
+            : children}
         </div>
       )}
     </div>
