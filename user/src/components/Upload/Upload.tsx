@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { MdUploadFile } from "react-icons/md";
+import { FC } from 'react';
+import { MdUploadFile } from 'react-icons/md';
 
 // NOTE: 箇条書きで列挙できるようにnoteを配列で定義
 type UploadProps = {
@@ -15,7 +15,7 @@ const Upload: FC<UploadProps> = ({
   note = [],
   onClick,
   idDisable,
-  error = "",
+  error = '',
 }) => {
   return (
     <button
@@ -30,7 +30,7 @@ const Upload: FC<UploadProps> = ({
       <div
         className={`h-[72px] px-12 py-4 bg-baseColor rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.25)] border border-main
         justify-center items-center gap-4 inline-flex overflow-hidden transition-transform duration-150 ease-in-out
-        ${idDisable ? "bg-gray-300 cursor-not-allowed" : "bg-base hover:bg-gray-200"}
+        ${idDisable ? 'bg-gray-300 cursor-not-allowed' : 'bg-base hover:bg-gray-200'}
         active:scale-95`}
       >
         <div className="flex items-center justify-center">

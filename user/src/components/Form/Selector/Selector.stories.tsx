@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { Meta, StoryObj, StoryFn } from "@storybook/react";
-import Selector from "./Selector";
-import "@globals";
+import React, { useState } from 'react';
+import '@globals';
+import { Meta, StoryFn, StoryObj } from '@storybook/react';
+import Selector from './Selector';
 
 export default {
-  title: "Components/Selector",
-  tags: ["autodocs"],
+  title: 'Components/Selector',
+  tags: ['autodocs'],
   component: Selector,
   argTypes: {
     options: {
-      control: "object",
+      control: 'object',
     },
   },
   parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -34,14 +34,14 @@ const Template: StoryFn<typeof Selector> = (args) => {
 
 export const Default = Template.bind({});
 Default.args = {
-  label: "サンプルラベル",
-  value: "",
+  label: 'サンプルラベル',
+  value: '',
   required: false,
-  note: "注意書きなど",
-  error: "",
+  note: '注意書きなど',
+  error: '',
   options: [
-    { id: "", name: "選択してください" },
-    { id: "1", name: "オプション1" },
-    { id: "2", name: "オプション２" },
+    { id: '', name: '選択してください' },
+    { id: '1', name: 'オプション1' },
+    { id: '2', name: 'オプション２' },
   ],
 };

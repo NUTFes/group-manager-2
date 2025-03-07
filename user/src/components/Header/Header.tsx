@@ -1,6 +1,6 @@
-import { FC } from "react";
-import CorporateIcon from "../../../public/corporate_logo.svg";
-import ProfileIcon from "../../../public/profile_icon.svg";
+import { FC } from 'react';
+import CorporateIcon from '../../../public/corporate_logo.svg';
+import ProfileIcon from '../../../public/profile_icon.svg';
 
 type HeaderProps = {
   onClick: () => void;

@@ -1,15 +1,15 @@
-import { Meta, StoryObj } from "@storybook/react";
-import Header from "./Header";
-import "@globals";
+import '@globals';
+import { Meta, StoryObj } from '@storybook/react';
+import Header from './Header';
 
 export default {
-  title: "Components/Header",
-  tags: ["autodocs"],
+  title: 'Components/Header',
+  tags: ['autodocs'],
   component: Header,
   parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -19,6 +19,6 @@ type Story = StoryObj<typeof Header>;
 
 export const Default: Story = {
   args: {
-    onClick: () => alert("押されたよ"),
+    onClick: () => alert('押されたよ'),
   },
 };

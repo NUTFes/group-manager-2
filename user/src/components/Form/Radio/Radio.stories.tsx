@@ -1,17 +1,17 @@
-import React from "react";
-import { Meta, StoryFn } from "@storybook/react";
-import { useArgs } from "@storybook/preview-api";
-import Radio from "./Radio";
-import "@globals";
+import React from 'react';
+import '@globals';
+import { useArgs } from '@storybook/preview-api';
+import { Meta, StoryFn } from '@storybook/react';
+import Radio from './Radio';
 
 export default {
-  title: "Components/Radio",
-  tags: ["autodocs"],
+  title: 'Components/Radio',
+  tags: ['autodocs'],
   component: Radio,
   parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -19,9 +19,9 @@ export default {
 
 // サンプルの options データ
 const sampleOptions = [
-  { id: "1", name: "Option 1" },
-  { id: "2", name: "Option 2" },
-  { id: "3", name: "Option 3" },
+  { id: '1', name: 'Option 1' },
+  { id: '2', name: 'Option 2' },
+  { id: '3', name: 'Option 3' },
 ];
 
 const Template: StoryFn<typeof Radio> = (args) => {
@@ -41,11 +41,11 @@ const Template: StoryFn<typeof Radio> = (args) => {
 
 export const Default = Template.bind({});
 Default.args = {
-  label: "Choose an option",
-  value: "2",
-  onChange: (value: string) => console.log("Selected:", value),
+  label: 'Choose an option',
+  value: '2',
+  onChange: (value: string) => console.log('Selected:', value),
   required: true,
-  note: "value の値によって，デフォルトの選択肢が選択されます",
-  error: "エラー",
+  note: 'value の値によって，デフォルトの選択肢が選択されます',
+  error: 'エラー',
   options: sampleOptions,
 };

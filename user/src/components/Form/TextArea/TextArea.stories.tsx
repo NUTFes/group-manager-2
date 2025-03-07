@@ -1,15 +1,15 @@
+import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import TextArea from './TextArea';
-import "@globals";
 
 export default {
-title: 'Components/TextArea',
-tags: ["autodocs"],
-component: TextArea,
-parameters: {
+  title: 'Components/TextArea',
+  tags: ['autodocs'],
+  component: TextArea,
+  parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -18,7 +18,5 @@ parameters: {
 type Story = StoryObj<typeof TextArea>;
 
 export const Default: Story = {
-  args: {
-
-  },
+  args: {},
 };
