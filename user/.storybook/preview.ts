@@ -1,8 +1,8 @@
-import type { Preview } from "@storybook/react";
-import { themes } from "@storybook/theming";
+import type { Preview } from '@storybook/react';
+import { themes } from '@storybook/theming';
 
 const preview: Preview = {
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
     controls: {
       matchers: {

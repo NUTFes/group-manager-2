@@ -3,7 +3,7 @@ import { FC } from "react";
 type TextBoxProps = {
   label: string;
   value: string;
-  onChange: (value: any) => void;
+  onChange: (value: string) => void;
   required?: boolean;
   note?: string;
   error?: string;
