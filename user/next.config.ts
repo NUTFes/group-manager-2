@@ -3,6 +3,16 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
+  },
   webpack(config) {
     // 既存の SVG を処理するルールを取得
     const fileLoaderRule = config.module.rules.find((rule: any) =>
