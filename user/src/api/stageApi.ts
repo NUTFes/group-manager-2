@@ -1,4 +1,5 @@
 import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { addMinutes } from '@/hooks/useStageForm';
 
 export type FesDate = {
   id: number;
@@ -17,16 +18,28 @@ const API_ENDPOINTS = {
   STAGE_ORDERS: '/stage_orders',
 };
 
-export type StageOrderData = {
+export type StageOrderBase = {
   group_id: number;
   fes_date_id: number;
   is_sunny: boolean;
-  stage_first?: number;
-  stage_second?: number;
+  stage_first: number;
+  stage_second: number;
   use_time_interval: string;
   prepare_time_interval: string;
   cleanup_time_interval: string;
-  remarks: string;
+};
+
+// 送信用データ型
+export type StageOrderData = StageOrderBase;
+
+export type StageOrderResponse = StageOrderBase & {
+  id: number;
+  prepare_start_time: string | null;
+  performance_start_time: string | null;
+  performance_end_time: string | null;
+  cleanup_end_time: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 // APIレスポンス型定義
@@ -58,18 +71,62 @@ export const useStageFormData = () => {
   };
 };
 
+// 既存のステージ申請を取得するフック
+export const useExistingStageOrders = (groupId: number | null) => {
+  const endpoint = groupId ? `${API_ENDPOINTS.STAGE_ORDERS}?group_id=${groupId}` : null;
+  
+  const { data, error, isLoading } = useApiGet<{data: StageOrderResponse[]}>(endpoint);
+
+  const filteredOrders = data?.data?.filter(order => order.group_id === groupId) || [];
+  
+  const sunnyOrder = filteredOrders.find(order => order.is_sunny);
+  const rainyOrder = filteredOrders.find(order => !order.is_sunny);
+
+  return {
+    sunnyOrder,
+    rainyOrder,
+    isLoading,
+    hasError: !!error,
+    hasExistingOrders: filteredOrders.length > 0
+  };
+};
+
 // ステージ申請送信用フック
 export const useStageOrderSubmission = () => {
-  const { post } = useApiMutations();
+  const { post, put } = useApiMutations();
+  
   const submitStageOrder = async (
     sunnyOrderData: StageOrderData,
-    rainyOrderData: StageOrderData
+    rainyOrderData: StageOrderData,
+    existingSunnyOrder?: StageOrderResponse,
+    existingRainyOrder?: StageOrderResponse
   ) => {
     try {
-      await Promise.all([
-        post(API_ENDPOINTS.STAGE_ORDERS, sunnyOrderData),
-        post(API_ENDPOINTS.STAGE_ORDERS, rainyOrderData)
-      ]);
+      const promises = [];
+
+      const formatOrderData = (data: StageOrderData): StageOrderData => ({
+        ...data,
+        use_time_interval: addMinutes(data.use_time_interval),
+        prepare_time_interval: addMinutes(data.prepare_time_interval),
+        cleanup_time_interval: addMinutes(data.cleanup_time_interval),
+      });
+
+      const formattedSunnyData = formatOrderData(sunnyOrderData);
+      const formattedRainyData = formatOrderData(rainyOrderData);
+
+      if (existingSunnyOrder) {
+        promises.push(put(`${API_ENDPOINTS.STAGE_ORDERS}/${existingSunnyOrder.id}`, formattedSunnyData));
+      } else {
+        promises.push(post(API_ENDPOINTS.STAGE_ORDERS, formattedSunnyData));
+      }
+
+      if (existingRainyOrder) {
+        promises.push(put(`${API_ENDPOINTS.STAGE_ORDERS}/${existingRainyOrder.id}`, formattedRainyData));
+      } else {
+        promises.push(post(API_ENDPOINTS.STAGE_ORDERS, formattedRainyData));
+      }
+
+      await Promise.all(promises);
       return { success: true };
     } catch (error) {
       console.error('ステージ申請エラー:', error);
