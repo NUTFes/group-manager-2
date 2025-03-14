@@ -73,3 +73,6 @@ gen-component:
 
 run-storybook:
 	docker compose run --rm -p 6006:6006 user pnpm run storybook
+
+fmt:
+	docker compose run --rm user pnpm run fmt
