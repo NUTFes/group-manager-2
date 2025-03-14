@@ -19,9 +19,10 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: {
-    children: '登録',
-    size: 'pc',
-    color: 'main',
+    children: "登録",
+    size: "pc",
+    color: "main",
+    type: "button",
     variant: true,
     icon: 'pencil',
     onClick: () => alert('clicked'),

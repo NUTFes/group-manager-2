@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 type Option = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -32,13 +32,13 @@ const Selector: FC<SelectorProps> = ({
     <>
       <label>
         <div className="flex gap-6 items-center mb-[4px]">
-          <p className="text-base">{label}</p>
+          <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
         <select
           value={value}
           onChange={handleChange}
-          className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? 'border-alert' : 'border-main'} mb-[4px]`}
+          className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? "border-alert" : "border-main"} mb-[4px]`}
         >
           {options.map((option) => (
             <option key={option.id} value={option.id}>
