@@ -2,15 +2,15 @@ import { useMemo } from 'react';
 import { FesDate, Stage } from '@/api/stageApi';
 
 export interface StageSelectProps {
-  allStages: { id: string; name: string }[];
-  selectedId: string;
+  allStages: { id: number; name: string }[];
+  selectedId: number;
 }
 
 // ステージの選択肢を作成するためのヘルパー関数
 export const useStageOptions = (stages: Stage[]) => {
   return useMemo(() => {
     return stages.map((stage) => ({
-      id: stage.id.toString(),
+      id: stage.id,
       name: stage.name,
     }));
   }, [stages]);
@@ -24,7 +24,7 @@ export const useFilteredStageOptions = ({
   return useMemo(() => {
     if (!selectedId) return allStages;
     return allStages.filter(
-      (stage) => stage.id !== selectedId || stage.id === ''
+      (stage) => stage.id !== selectedId || stage.id === 0
     );
   }, [allStages, selectedId]);
 };
@@ -47,7 +47,7 @@ export const useDateOptions = (dates: FesDate[]) => {
       const index = dates.findIndex((date) => date.id === d.id);
 
       return {
-        id: d.id.toString(),
+        id: d.id,
         name: `${index + 1}日目 ${formattedDate}`,
       };
     });

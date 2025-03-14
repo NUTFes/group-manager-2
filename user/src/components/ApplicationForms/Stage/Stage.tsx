@@ -72,22 +72,22 @@ const Stage: FC = () => {
 
   const filteredSunny1 = useFilteredStageOptions({
     allStages: sunnyStageOptions,
-    selectedId: sunnySecondChoice,
+    selectedId: sunnySecondChoice ? Number(sunnySecondChoice) : 0,
   });
 
   const filteredSunny2 = useFilteredStageOptions({
     allStages: sunnyStageOptions,
-    selectedId: sunnyFirstChoice,
+    selectedId: sunnyFirstChoice ? Number(sunnyFirstChoice) : 0,
   });
 
   const filteredRainy1 = useFilteredStageOptions({
     allStages: rainyStageOptions,
-    selectedId: rainySecondChoice,
+    selectedId: rainySecondChoice ? Number(rainySecondChoice) : 0,
   });
 
   const filteredRainy2 = useFilteredStageOptions({
     allStages: rainyStageOptions,
-    selectedId: rainyFirstChoice,
+    selectedId: rainyFirstChoice ? Number(rainyFirstChoice) : 0,
   });
 
   // エラー表示
@@ -112,7 +112,7 @@ const Stage: FC = () => {
 
       const baseOrderData = {
         group_id: currentGroupId,
-        fes_date_id: parseInt(data.date),
+        fes_date_id: Number(data.date),
         use_time_interval: data.performTime,
         prepare_time_interval: data.prepTime,
         cleanup_time_interval: data.cleanupTime,
@@ -121,18 +121,18 @@ const Stage: FC = () => {
       const sunnyOrderData: StageOrderData = {
         ...baseOrderData,
         is_sunny: true,
-        stage_first: parseInt(data.sunnyFirstChoice),
+        stage_first: Number(data.sunnyFirstChoice),
         stage_second: data.sunnySecondChoice
-          ? parseInt(data.sunnySecondChoice)
+          ? Number(data.sunnySecondChoice)
           : 0,
       };
 
       const rainyOrderData: StageOrderData = {
         ...baseOrderData,
         is_sunny: false,
-        stage_first: parseInt(data.rainyFirstChoice),
+        stage_first: Number(data.rainyFirstChoice),
         stage_second: data.rainySecondChoice
-          ? parseInt(data.rainySecondChoice)
+          ? Number(data.rainySecondChoice)
           : 0,
       };
 
@@ -191,7 +191,7 @@ const Stage: FC = () => {
             <Radio
               label="開催日"
               value={date}
-              onChange={(value) => updateField('date', value)}
+              onChange={(value: string) => updateField('date', value)}
               required
               options={dateOptions}
             />
@@ -280,7 +280,7 @@ const Stage: FC = () => {
           </div>
 
           <div className="flex justify-center gap-4 mt-4">
-            <Button size="pc" color="main" isDisable={!isValid}>
+            <Button type='submit' size="pc" color="main" isDisable={!isValid}>
               {isEditing ? '更新' : '登録'}
             </Button>
           </div>
