@@ -155,7 +155,7 @@ const Stage: FC = () => {
         </div>
       )}
 
-      <form onSubmit={onSubmit}>
+      <form className='flex flex-col gap-10' onSubmit={onSubmit}>
         <div>
           <Radio
             label="開催日"
