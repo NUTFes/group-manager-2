@@ -280,7 +280,7 @@ const Stage: FC = () => {
           </div>
 
           <div className="flex justify-center gap-4 mt-4">
-            <Button type='submit' size="pc" color="main" isDisable={!isValid}>
+            <Button type="submit" size="pc" color="main" isDisable={!isValid}>
               {isEditing ? '更新' : '登録'}
             </Button>
           </div>
