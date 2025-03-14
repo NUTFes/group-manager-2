@@ -50,18 +50,27 @@ type ApiResponse<T> = {
 
 // フォームデータの取得用フック
 export const useStageFormData = () => {
-  const { data: fesDateResponse, error: fesDateError, isLoading: fesDateLoading } = 
-    useApiGet<ApiResponse<FesDate>>(API_ENDPOINTS.FES_DATES);
-  
-  const { data: sunnyStagesResponse, error: sunnyStagesError, isLoading: sunnyStagesLoading } = 
-    useApiGet<ApiResponse<Stage>>(API_ENDPOINTS.SUNNY_STAGES);
-  
-  const { data: rainyStagesResponse, error: rainyStagesError, isLoading: rainyStagesLoading } = 
-    useApiGet<ApiResponse<Stage>>(API_ENDPOINTS.RAINY_STAGES);
-  
+  const {
+    data: fesDateResponse,
+    error: fesDateError,
+    isLoading: fesDateLoading,
+  } = useApiGet<ApiResponse<FesDate>>(API_ENDPOINTS.FES_DATES);
+
+  const {
+    data: sunnyStagesResponse,
+    error: sunnyStagesError,
+    isLoading: sunnyStagesLoading,
+  } = useApiGet<ApiResponse<Stage>>(API_ENDPOINTS.SUNNY_STAGES);
+
+  const {
+    data: rainyStagesResponse,
+    error: rainyStagesError,
+    isLoading: rainyStagesLoading,
+  } = useApiGet<ApiResponse<Stage>>(API_ENDPOINTS.RAINY_STAGES);
+
   const isLoading = fesDateLoading || sunnyStagesLoading || rainyStagesLoading;
   const hasError = !!(fesDateError || sunnyStagesError || rainyStagesError);
-  
+
   return {
     fesDateData: fesDateResponse?.data || [],
     sunnyStagesData: sunnyStagesResponse?.data || [],
@@ -73,28 +82,33 @@ export const useStageFormData = () => {
 
 // 既存のステージ申請を取得するフック
 export const useExistingStageOrders = (groupId: number | null) => {
-  const endpoint = groupId ? `${API_ENDPOINTS.STAGE_ORDERS}?group_id=${groupId}` : null;
-  
-  const { data, error, isLoading } = useApiGet<{data: StageOrderResponse[]}>(endpoint);
+  const endpoint = groupId
+    ? `${API_ENDPOINTS.STAGE_ORDERS}?group_id=${groupId}`
+    : null;
 
-  const filteredOrders = data?.data?.filter(order => order.group_id === groupId) || [];
-  
-  const sunnyOrder = filteredOrders.find(order => order.is_sunny);
-  const rainyOrder = filteredOrders.find(order => !order.is_sunny);
+  const { data, error, isLoading } = useApiGet<{ data: StageOrderResponse[] }>(
+    endpoint
+  );
+
+  const filteredOrders =
+    data?.data?.filter((order) => order.group_id === groupId) || [];
+
+  const sunnyOrder = filteredOrders.find((order) => order.is_sunny);
+  const rainyOrder = filteredOrders.find((order) => !order.is_sunny);
 
   return {
     sunnyOrder,
     rainyOrder,
     isLoading,
     hasError: !!error,
-    hasExistingOrders: filteredOrders.length > 0
+    hasExistingOrders: filteredOrders.length > 0,
   };
 };
 
 // ステージ申請送信用フック
 export const useStageOrderSubmission = () => {
   const { post, put } = useApiMutations();
-  
+
   const submitStageOrder = async (
     sunnyOrderData: StageOrderData,
     rainyOrderData: StageOrderData,
@@ -115,13 +129,23 @@ export const useStageOrderSubmission = () => {
       const formattedRainyData = formatOrderData(rainyOrderData);
 
       if (existingSunnyOrder) {
-        promises.push(put(`${API_ENDPOINTS.STAGE_ORDERS}/${existingSunnyOrder.id}`, formattedSunnyData));
+        promises.push(
+          put(
+            `${API_ENDPOINTS.STAGE_ORDERS}/${existingSunnyOrder.id}`,
+            formattedSunnyData
+          )
+        );
       } else {
         promises.push(post(API_ENDPOINTS.STAGE_ORDERS, formattedSunnyData));
       }
 
       if (existingRainyOrder) {
-        promises.push(put(`${API_ENDPOINTS.STAGE_ORDERS}/${existingRainyOrder.id}`, formattedRainyData));
+        promises.push(
+          put(
+            `${API_ENDPOINTS.STAGE_ORDERS}/${existingRainyOrder.id}`,
+            formattedRainyData
+          )
+        );
       } else {
         promises.push(post(API_ENDPOINTS.STAGE_ORDERS, formattedRainyData));
       }

@@ -1,17 +1,17 @@
-import { stageSchema, StageFormData } from '@/utils/validate/validate';
+import { useEffect } from 'react';
+import { StageOrderResponse } from '@/api/stageApi';
+import { StageFormData, stageSchema } from '@/utils/validate/validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { StageOrderResponse } from '@/api/stageApi';
-import { useEffect } from 'react';
 
-export type FormField = 
-  | 'date' 
-  | 'sunnyFirstChoice' 
-  | 'sunnySecondChoice' 
-  | 'rainyFirstChoice' 
-  | 'rainySecondChoice' 
-  | 'prepTime' 
-  | 'performTime' 
+export type FormField =
+  | 'date'
+  | 'sunnyFirstChoice'
+  | 'sunnySecondChoice'
+  | 'rainyFirstChoice'
+  | 'rainySecondChoice'
+  | 'prepTime'
+  | 'performTime'
   | 'cleanupTime';
 
 export const DEFAULT_FORM_STATE: StageFormData = {
@@ -39,11 +39,11 @@ export const addMinutes = (timeStr: string | undefined): string => {
 
 // 既存データからフォーム初期値を作成する関数
 export const createInitialValues = (
-  sunnyOrder?: StageOrderResponse, 
+  sunnyOrder?: StageOrderResponse,
   rainyOrder?: StageOrderResponse
 ): StageFormData => {
   const values = { ...DEFAULT_FORM_STATE };
-  
+
   const sourceOrder = sunnyOrder || rainyOrder;
   if (sourceOrder) {
     values.date = sourceOrder.fes_date_id.toString();
@@ -51,12 +51,12 @@ export const createInitialValues = (
     values.performTime = removeMinutes(sourceOrder.use_time_interval);
     values.cleanupTime = removeMinutes(sourceOrder.cleanup_time_interval);
   }
-  
+
   if (sunnyOrder) {
     values.sunnyFirstChoice = sunnyOrder.stage_first.toString();
     values.sunnySecondChoice = sunnyOrder.stage_second?.toString() || '';
   }
-  
+
   if (rainyOrder) {
     values.rainyFirstChoice = rainyOrder.stage_first.toString();
     values.rainySecondChoice = rainyOrder.stage_second?.toString() || '';
@@ -65,9 +65,15 @@ export const createInitialValues = (
   return values;
 };
 
-export const useStageForm = (existingSunnyOrder?: StageOrderResponse, existingRainyOrder?: StageOrderResponse) => {
-  const initialValues = createInitialValues(existingSunnyOrder, existingRainyOrder);
-  
+export const useStageForm = (
+  existingSunnyOrder?: StageOrderResponse,
+  existingRainyOrder?: StageOrderResponse
+) => {
+  const initialValues = createInitialValues(
+    existingSunnyOrder,
+    existingRainyOrder
+  );
+
   const {
     register,
     handleSubmit,
@@ -85,7 +91,10 @@ export const useStageForm = (existingSunnyOrder?: StageOrderResponse, existingRa
   // データが変更された場合はリセット
   useEffect(() => {
     if (existingSunnyOrder || existingRainyOrder) {
-      const values = createInitialValues(existingSunnyOrder, existingRainyOrder);
+      const values = createInitialValues(
+        existingSunnyOrder,
+        existingRainyOrder
+      );
       reset(values);
     }
   }, [existingSunnyOrder, existingRainyOrder, reset]);
@@ -93,7 +102,7 @@ export const useStageForm = (existingSunnyOrder?: StageOrderResponse, existingRa
   // フォームフィールドの更新
   const updateField = (field: FormField, value: string) => {
     setValue(field, value, { shouldValidate: true });
-    
+
     if (['prepTime', 'performTime', 'cleanupTime'].includes(field)) {
       setTimeout(() => {
         trigger();

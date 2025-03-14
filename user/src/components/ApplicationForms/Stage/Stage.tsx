@@ -1,10 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import {
   StageOrderData,
+  useExistingStageOrders,
   useStageFormData,
   useStageOrderSubmission,
-  useExistingStageOrders,
 } from '@/api/stageApi';
+import { StageFormData } from '@/utils/validate/validate';
+import { FieldError } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
@@ -15,18 +17,24 @@ import {
   useFilteredStageOptions,
   useStageOptions,
 } from './StageForm';
-import { StageFormData } from '@/utils/validate/validate';
-import { FieldError } from 'react-hook-form';
 
 const Stage: FC = () => {
   // TODO: 認証基盤ができたら、グループIDを取得する
-  const [currentGroupId] = useState<number | null>(1);  
+  const [currentGroupId] = useState<number | null>(1);
   const [submitError, setSubmitError] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  const { sunnyOrder, rainyOrder, isLoading: isLoadingOrders, hasExistingOrders } = useExistingStageOrders(currentGroupId);
+  const {
+    sunnyOrder,
+    rainyOrder,
+    isLoading: isLoadingOrders,
+    hasExistingOrders,
+  } = useExistingStageOrders(currentGroupId);
 
-  const { handleSubmit, formState, updateField } = useStageForm(sunnyOrder, rainyOrder);
+  const { handleSubmit, formState, updateField } = useStageForm(
+    sunnyOrder,
+    rainyOrder
+  );
 
   const {
     date,
@@ -41,8 +49,13 @@ const Stage: FC = () => {
     isValid,
   } = formState;
 
-  const { fesDateData, sunnyStagesData, rainyStagesData, isLoading: isLoadingFormData, hasError } =
-    useStageFormData();
+  const {
+    fesDateData,
+    sunnyStagesData,
+    rainyStagesData,
+    isLoading: isLoadingFormData,
+    hasError,
+  } = useStageFormData();
 
   const { submitStageOrder } = useStageOrderSubmission();
 
@@ -79,8 +92,12 @@ const Stage: FC = () => {
 
   // エラー表示
   const renderError = (fieldName: keyof StageFormData | 'totalTime') => {
-    const error = errors[fieldName as keyof typeof errors] as FieldError | undefined;
-    return error ? <p className="text-[#FF0000] text-xs">{error.message}</p> : null;
+    const error = errors[fieldName as keyof typeof errors] as
+      | FieldError
+      | undefined;
+    return error ? (
+      <p className="text-[#FF0000] text-xs">{error.message}</p>
+    ) : null;
   };
 
   // 登録処理
@@ -92,7 +109,7 @@ const Stage: FC = () => {
         setSubmitError('グループIDが見つかりません');
         return;
       }
-      
+
       const baseOrderData = {
         group_id: currentGroupId,
         fes_date_id: parseInt(data.date),
@@ -105,21 +122,34 @@ const Stage: FC = () => {
         ...baseOrderData,
         is_sunny: true,
         stage_first: parseInt(data.sunnyFirstChoice),
-        stage_second: data.sunnySecondChoice ? parseInt(data.sunnySecondChoice) : 0
+        stage_second: data.sunnySecondChoice
+          ? parseInt(data.sunnySecondChoice)
+          : 0,
       };
 
       const rainyOrderData: StageOrderData = {
         ...baseOrderData,
         is_sunny: false,
         stage_first: parseInt(data.rainyFirstChoice),
-        stage_second: data.rainySecondChoice ? parseInt(data.rainySecondChoice) : 0
+        stage_second: data.rainySecondChoice
+          ? parseInt(data.rainySecondChoice)
+          : 0,
       };
 
       // 既存の申請データがある場合は更新処理を行う
-      const result = await submitStageOrder(sunnyOrderData, rainyOrderData, sunnyOrder, rainyOrder);
+      const result = await submitStageOrder(
+        sunnyOrderData,
+        rainyOrderData,
+        sunnyOrder,
+        rainyOrder
+      );
 
       if (result.success) {
-        alert(isEditing ? 'ステージ希望を更新しました。' : 'ステージ希望を登録しました。');
+        alert(
+          isEditing
+            ? 'ステージ希望を更新しました。'
+            : 'ステージ希望を登録しました。'
+        );
         setIsEditing(true);
       } else {
         setSubmitError(
@@ -156,8 +186,7 @@ const Stage: FC = () => {
           <p>データを読み込み中です...</p>
         </div>
       ) : (
-        <form className='w-[400px] flex flex-col gap-10' onSubmit={onSubmit}>
-          
+        <form className="w-[400px] flex flex-col gap-10" onSubmit={onSubmit}>
           <div>
             <Radio
               label="開催日"
@@ -251,11 +280,7 @@ const Stage: FC = () => {
           </div>
 
           <div className="flex justify-center gap-4 mt-4">
-            <Button
-              size="pc"
-              color="main"
-              isDisable={!isValid}
-            >
+            <Button size="pc" color="main" isDisable={!isValid}>
               {isEditing ? '更新' : '登録'}
             </Button>
           </div>

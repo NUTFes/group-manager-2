@@ -23,7 +23,9 @@ export const useFilteredStageOptions = ({
 }: StageSelectProps) => {
   return useMemo(() => {
     if (!selectedId) return allStages;
-    return allStages.filter((stage) => stage.id !== selectedId || stage.id === '');
+    return allStages.filter(
+      (stage) => stage.id !== selectedId || stage.id === ''
+    );
   }, [allStages, selectedId]);
 };
 

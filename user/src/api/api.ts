@@ -9,7 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
  */
 export const fetcher = (url: string) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-  
+
   return fetch(fullUrl)
     .then(async (res) => {
       if (!res.ok) {
@@ -37,11 +37,11 @@ export const createRequestOptions = (method: string, data?: any) => {
       'Content-Type': 'application/json',
     },
   };
-  
+
   if (data) {
     options.body = JSON.stringify(data);
   }
-  
+
   return options;
 };
 
@@ -52,7 +52,7 @@ export const createRequestOptions = (method: string, data?: any) => {
  */
 export const sendRequest = async (url: string, options: RequestInit) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-  
+
   try {
     const response = await fetch(fullUrl, options);
 

@@ -122,15 +122,27 @@ export const stageSchema = z
     sunnySecondChoice: z.string().nonempty('晴れの第2希望を選択してください'),
     rainyFirstChoice: z.string().nonempty('雨の第1希望を選択してください'),
     rainySecondChoice: z.string().nonempty('雨の第2希望を選択してください'),
-    prepTime: z.string()
+    prepTime: z
+      .string()
       .nonempty('準備時間を入力してください')
-      .refine(val => !isNaN(Number(val)) && Number(val) >= 0, '有効な準備時間を入力してください'),
-    performTime: z.string()
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 0,
+        '有効な準備時間を入力してください'
+      ),
+    performTime: z
+      .string()
       .nonempty('本番時間を入力してください')
-      .refine(val => !isNaN(Number(val)) && Number(val) >= 0, '有効な本番時間を入力してください'),
-    cleanupTime: z.string()
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 0,
+        '有効な本番時間を入力してください'
+      ),
+    cleanupTime: z
+      .string()
       .nonempty('片付け時間を入力してください')
-      .refine(val => !isNaN(Number(val)) && Number(val) >= 0, '有効な片付け時間を入力してください'),
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 0,
+        '有効な片付け時間を入力してください'
+      ),
     remarks: z.string().optional(),
     groupId: z.string().optional(),
   })
@@ -149,7 +161,10 @@ export const stageSchema = z
   )
   .refine(
     (data) => {
-      return data.sunnyFirstChoice !== data.sunnySecondChoice || data.sunnyFirstChoice === '';
+      return (
+        data.sunnyFirstChoice !== data.sunnySecondChoice ||
+        data.sunnyFirstChoice === ''
+      );
     },
     {
       message: '第1希望と異なるステージを選んでください',
@@ -158,7 +173,10 @@ export const stageSchema = z
   )
   .refine(
     (data) => {
-      return data.rainyFirstChoice !== data.rainySecondChoice || data.rainyFirstChoice === '';
+      return (
+        data.rainyFirstChoice !== data.rainySecondChoice ||
+        data.rainyFirstChoice === ''
+      );
     },
     {
       message: '第1希望と異なるステージを選んでください',
