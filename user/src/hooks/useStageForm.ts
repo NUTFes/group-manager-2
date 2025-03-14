@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
 import { stageSchema, StageFormData } from '@/utils/validate/validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { StageOrderResponse } from '@/api/stageApi';
+import { useEffect } from 'react';
 
 export type FormField = 
   | 'date' 
@@ -11,13 +12,9 @@ export type FormField =
   | 'rainySecondChoice' 
   | 'prepTime' 
   | 'performTime' 
-  | 'cleanupTime' 
-  | 'remarks'
-  | 'groupId';
+  | 'cleanupTime';
 
-const DRAFT_STORAGE_KEY = 'stageDraft';
-
-const DEFAULT_FORM_STATE: StageFormData = {
+export const DEFAULT_FORM_STATE: StageFormData = {
   date: '',
   sunnyFirstChoice: '',
   sunnySecondChoice: '',
@@ -26,61 +23,82 @@ const DEFAULT_FORM_STATE: StageFormData = {
   prepTime: '',
   performTime: '',
   cleanupTime: '',
-  remarks: '',
-  groupId: '',
 };
 
-export const useStageForm = () => {
+// 文字列から「分」を削除する関数
+export const removeMinutes = (timeStr: string | undefined): string => {
+  if (!timeStr) return '';
+  return timeStr.replace(/分$/, '');
+};
+
+// 文字列に「分」を追加する関数
+export const addMinutes = (timeStr: string | undefined): string => {
+  if (!timeStr) return '';
+  return timeStr.endsWith('分') ? timeStr : `${timeStr}分`;
+};
+
+// 既存データからフォーム初期値を作成する関数
+export const createInitialValues = (
+  sunnyOrder?: StageOrderResponse, 
+  rainyOrder?: StageOrderResponse
+): StageFormData => {
+  const values = { ...DEFAULT_FORM_STATE };
+  
+  const sourceOrder = sunnyOrder || rainyOrder;
+  if (sourceOrder) {
+    values.date = sourceOrder.fes_date_id.toString();
+    values.prepTime = removeMinutes(sourceOrder.prepare_time_interval);
+    values.performTime = removeMinutes(sourceOrder.use_time_interval);
+    values.cleanupTime = removeMinutes(sourceOrder.cleanup_time_interval);
+  }
+  
+  if (sunnyOrder) {
+    values.sunnyFirstChoice = sunnyOrder.stage_first.toString();
+    values.sunnySecondChoice = sunnyOrder.stage_second?.toString() || '';
+  }
+  
+  if (rainyOrder) {
+    values.rainyFirstChoice = rainyOrder.stage_first.toString();
+    values.rainySecondChoice = rainyOrder.stage_second?.toString() || '';
+  }
+
+  return values;
+};
+
+export const useStageForm = (existingSunnyOrder?: StageOrderResponse, existingRainyOrder?: StageOrderResponse) => {
+  const initialValues = createInitialValues(existingSunnyOrder, existingRainyOrder);
+  
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-    getValues,
     reset,
     trigger,
     watch,
   } = useForm<StageFormData>({
     resolver: zodResolver(stageSchema),
     mode: 'onChange',
-    defaultValues: DEFAULT_FORM_STATE,
+    defaultValues: initialValues,
   });
 
-  // ローカルストレージから下書きの読み込み
+  // データが変更された場合はリセット
   useEffect(() => {
-    const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
-    if (savedDraft) {
-      try {
-        const parsedDraft = JSON.parse(savedDraft);
-        const formValues = { ...DEFAULT_FORM_STATE, ...parsedDraft };
-        
-        Object.entries(formValues).forEach(([key, value]) => {
-          setValue(key as FormField, value as string);
-        });
-        
-        trigger();
-      } catch (e) {
-        console.error('下書きの解析に失敗しました', e);
-      }
+    if (existingSunnyOrder || existingRainyOrder) {
+      const values = createInitialValues(existingSunnyOrder, existingRainyOrder);
+      reset(values);
     }
-  }, [setValue, trigger]);
+  }, [existingSunnyOrder, existingRainyOrder, reset]);
 
   // フォームフィールドの更新
   const updateField = (field: FormField, value: string) => {
     setValue(field, value, { shouldValidate: true });
-  };
-
-  // 下書き保存
-  const saveDraft = () => {
-    const currentValues = getValues();
-    localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(currentValues));
-    return true;
-  };
-
-  // 下書き削除
-  const clearDraft = () => {
-    localStorage.removeItem(DRAFT_STORAGE_KEY);
-    reset(DEFAULT_FORM_STATE);
+    
+    if (['prepTime', 'performTime', 'cleanupTime'].includes(field)) {
+      setTimeout(() => {
+        trigger();
+      }, 10);
+    }
   };
 
   // 全フォーム値の監視
@@ -89,13 +107,13 @@ export const useStageForm = () => {
   return {
     register,
     handleSubmit,
+    reset,
     formState: {
       ...allValues,
       errors,
       isValid,
     },
     updateField,
-    saveDraft,
-    clearDraft,
+    trigger,
   };
 };
