@@ -3,11 +3,11 @@ import {
   StageOrderData,
   useStageFormData,
   useStageOrderSubmission,
+  useExistingStageOrders,
 } from '@/api/stageApi';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
-import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import { useStageForm } from '@/hooks/useStageForm';
 import {
@@ -19,9 +19,14 @@ import { StageFormData } from '@/utils/validate/validate';
 import { FieldError } from 'react-hook-form';
 
 const Stage: FC = () => {
-  const { handleSubmit, formState, updateField, saveDraft, clearDraft } = useStageForm();
-  const [currentGroupId, setCurrentGroupId] = useState<number>(1);
+  // TODO: 認証基盤ができたら、グループIDを取得する
+  const [currentGroupId] = useState<number | null>(1);  
   const [submitError, setSubmitError] = useState<string>('');
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+
+  const { sunnyOrder, rainyOrder, isLoading: isLoadingOrders, hasExistingOrders } = useExistingStageOrders(currentGroupId);
+
+  const { handleSubmit, formState, updateField } = useStageForm(sunnyOrder, rainyOrder);
 
   const {
     date,
@@ -32,26 +37,23 @@ const Stage: FC = () => {
     prepTime,
     performTime,
     cleanupTime,
-    remarks,
     errors,
     isValid,
   } = formState;
 
-  const { fesDateData, sunnyStagesData, rainyStagesData, isLoading, hasError } =
+  const { fesDateData, sunnyStagesData, rainyStagesData, isLoading: isLoadingFormData, hasError } =
     useStageFormData();
 
   const { submitStageOrder } = useStageOrderSubmission();
 
+  // 既存の申請がある場合は編集モードに設定
   useEffect(() => {
-    const storedGroupId = localStorage.getItem('group_id');
-    if (storedGroupId) {
-      setCurrentGroupId(parseInt(storedGroupId));
-      updateField('groupId', storedGroupId);
+    if (hasExistingOrders) {
+      setIsEditing(true);
     }
-  }, []);
+  }, [hasExistingOrders]);
 
   const dateOptions = useDateOptions(fesDateData);
-
   const sunnyStageOptions = useStageOptions(sunnyStagesData);
   const rainyStageOptions = useStageOptions(rainyStagesData);
 
@@ -81,46 +83,44 @@ const Stage: FC = () => {
     return error ? <p className="text-[#FF0000] text-xs">{error.message}</p> : null;
   };
 
-  // 一時保存処理
-  const handleSaveDraft = () => {
-    if (saveDraft()) {
-      alert('下書きを保存しました');
-    }
-  };
-
   // 登録処理
   const onSubmit = handleSubmit(async (data) => {
     setSubmitError('');
 
     try {
+      if (!currentGroupId) {
+        setSubmitError('グループIDが見つかりません');
+        return;
+      }
+      
       const baseOrderData = {
         group_id: currentGroupId,
         fes_date_id: parseInt(data.date),
         use_time_interval: data.performTime,
         prepare_time_interval: data.prepTime,
         cleanup_time_interval: data.cleanupTime,
-        remarks: data.remarks || '',
       };
 
       const sunnyOrderData: StageOrderData = {
         ...baseOrderData,
         is_sunny: true,
         stage_first: parseInt(data.sunnyFirstChoice),
-        stage_second: parseInt(data.sunnySecondChoice),
+        stage_second: data.sunnySecondChoice ? parseInt(data.sunnySecondChoice) : 0
       };
 
       const rainyOrderData: StageOrderData = {
         ...baseOrderData,
         is_sunny: false,
         stage_first: parseInt(data.rainyFirstChoice),
-        stage_second: parseInt(data.rainySecondChoice),
+        stage_second: data.rainySecondChoice ? parseInt(data.rainySecondChoice) : 0
       };
 
-      const result = await submitStageOrder(sunnyOrderData, rainyOrderData);
+      // 既存の申請データがある場合は更新処理を行う
+      const result = await submitStageOrder(sunnyOrderData, rainyOrderData, sunnyOrder, rainyOrder);
 
       if (result.success) {
-        alert('ステージ希望を登録しました。');
-        clearDraft();
+        alert(isEditing ? 'ステージ希望を更新しました。' : 'ステージ希望を登録しました。');
+        setIsEditing(true);
       } else {
         setSubmitError(
           '送信中にエラーが発生しました。もう一度お試しください。'
@@ -130,6 +130,8 @@ const Stage: FC = () => {
       setSubmitError('予期せぬエラーが発生しました。もう一度お試しください。');
     }
   });
+
+  const isLoadingAll = isLoadingOrders || isLoadingFormData;
 
   return (
     <div className="w-fit flex flex-col rounded-[20px] gap-10 p-20 text-black bg-white shadow-[0px_4px_6px_0px_rgba(0,_0,_0,_0.25)]">
@@ -149,130 +151,116 @@ const Stage: FC = () => {
         </div>
       )}
 
-      {isLoading && (
-        <div className="text-center py-4">
+      {isLoadingAll ? (
+        <div className="w-[400px] text-center py-4">
           <p>データを読み込み中です...</p>
         </div>
+      ) : (
+        <form className='w-[400px] flex flex-col gap-10' onSubmit={onSubmit}>
+          
+          <div>
+            <Radio
+              label="開催日"
+              value={date}
+              onChange={(value) => updateField('date', value)}
+              required
+              options={dateOptions}
+            />
+            {renderError('date')}
+            {!errors.date && (
+              <p className="text-[#484848] text-xs">選んでください</p>
+            )}
+          </div>
+
+          <div>
+            <Selector
+              label="晴れの場合：第1希望"
+              value={sunnyFirstChoice}
+              onChange={(value) => updateField('sunnyFirstChoice', value)}
+              required
+              options={filteredSunny1}
+            />
+            {renderError('sunnyFirstChoice')}
+          </div>
+
+          <div>
+            <Selector
+              label="晴れの場合：第2希望"
+              value={sunnySecondChoice}
+              onChange={(value) => updateField('sunnySecondChoice', value)}
+              required
+              options={filteredSunny2}
+            />
+            {renderError('sunnySecondChoice')}
+          </div>
+
+          <div>
+            <Selector
+              label="雨の場合：第1希望"
+              value={rainyFirstChoice}
+              onChange={(value) => updateField('rainyFirstChoice', value)}
+              required
+              options={filteredRainy1}
+            />
+            {renderError('rainyFirstChoice')}
+          </div>
+
+          <div>
+            <Selector
+              label="雨の場合：第2希望"
+              value={rainySecondChoice}
+              onChange={(value) => updateField('rainySecondChoice', value)}
+              required
+              options={filteredRainy2}
+            />
+            {renderError('rainySecondChoice')}
+          </div>
+
+          <div>
+            <TextBox
+              label="準備時間(単位：min)"
+              value={prepTime}
+              onChange={(value) => updateField('prepTime', value)}
+              required
+              note="ステージ上の準備にかかる時間を分単位で記入してください"
+            />
+            {renderError('prepTime')}
+          </div>
+
+          <div>
+            <TextBox
+              label="本番時間(単位：min)"
+              value={performTime}
+              onChange={(value) => updateField('performTime', value)}
+              required
+              note="準備、本番、片付けの時間が120分以内になるようにしてください"
+            />
+            {renderError('performTime')}
+          </div>
+
+          <div>
+            <TextBox
+              label="片付け時間(単位：min)"
+              value={cleanupTime}
+              onChange={(value) => updateField('cleanupTime', value)}
+              required
+              note="ステージ上の片付けにかかる時間を分単位で記入してください"
+            />
+            {renderError('cleanupTime')}
+            {renderError('totalTime')}
+          </div>
+
+          <div className="flex justify-center gap-4 mt-4">
+            <Button
+              size="pc"
+              color="main"
+              isDisable={!isValid}
+            >
+              {isEditing ? '更新' : '登録'}
+            </Button>
+          </div>
+        </form>
       )}
-
-      <form className='flex flex-col gap-10' onSubmit={onSubmit}>
-        <div>
-          <Radio
-            label="開催日"
-            value={date}
-            onChange={(value) => updateField('date', value)}
-            required
-            options={dateOptions}
-          />
-          {renderError('date')}
-          {!errors.date && (
-            <p className="text-[#484848] text-xs">選んでください</p>
-          )}
-        </div>
-
-        <div>
-          <Selector
-            label="晴れの場合：第1希望"
-            value={sunnyFirstChoice}
-            onChange={(value) => updateField('sunnyFirstChoice', value)}
-            required
-            options={filteredSunny1}
-          />
-          {renderError('sunnyFirstChoice')}
-        </div>
-
-        <div>
-          <Selector
-            label="晴れの場合：第2希望"
-            value={sunnySecondChoice}
-            onChange={(value) => updateField('sunnySecondChoice', value)}
-            required
-            options={filteredSunny2}
-          />
-          {renderError('sunnySecondChoice')}
-        </div>
-
-        <div>
-          <Selector
-            label="雨の場合：第1希望"
-            value={rainyFirstChoice}
-            onChange={(value) => updateField('rainyFirstChoice', value)}
-            required
-            options={filteredRainy1}
-          />
-          {renderError('rainyFirstChoice')}
-        </div>
-
-        <div>
-          <Selector
-            label="雨の場合：第2希望"
-            value={rainySecondChoice}
-            onChange={(value) => updateField('rainySecondChoice', value)}
-            required
-            options={filteredRainy2}
-          />
-          {renderError('rainySecondChoice')}
-        </div>
-
-        <div>
-          <TextBox
-            label="準備時間(単位：min)"
-            value={prepTime}
-            onChange={(value) => updateField('prepTime', value)}
-            required
-            note="ステージ上の準備にかかる時間を分単位で記入してください"
-          />
-          {renderError('prepTime')}
-        </div>
-
-        <div>
-          <TextBox
-            label="本番時間(単位：min)"
-            value={performTime}
-            onChange={(value) => updateField('performTime', value)}
-            required
-            note="準備、本番、片付けの時間が120分以内になるようにしてください"
-          />
-          {renderError('performTime')}
-        </div>
-
-        <div>
-          <TextBox
-            label="片付け時間(単位：min)"
-            value={cleanupTime}
-            onChange={(value) => updateField('cleanupTime', value)}
-            required
-            note="ステージ上の片付けにかかる時間を分単位で記入してください"
-          />
-          {renderError('cleanupTime')}
-          {renderError('totalTime')}
-        </div>
-
-        <TextArea
-          label="備考"
-          value={remarks || ''}
-          onChange={(value) => updateField('remarks', value)}
-        />
-
-        <div className="flex justify-center gap-4 mt-4">
-          <Button
-            size="pc"
-            color="secondary"
-            onClick={handleSaveDraft}
-            isDisable={false}
-            variant={true}
-          >
-            一時保存
-          </Button>
-          <Button
-            size="pc"
-            color="main"
-            isDisable={!isValid}
-          >
-            登録
-          </Button>
-        </div>
-      </form>
     </div>
   );
 };
