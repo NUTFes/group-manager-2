@@ -32,7 +32,7 @@ const TextBox: FC<TextBoxProps> = ({
           type="text"
           value={value}
           onChange={handleChange}
-          className={`w-[400px] text-font h-12 border-2 rounded-[10px] ${error ? "border-alert" : "border-main"}`}
+          className={`w-[400px] text-font h-12 border-2 rounded-[10px] p-4 ${error ? "border-alert" : "border-main"}`}
         />
         <p className="text-xs text-sub max-w-[400px] break-words mt-[4px]">
           {note}
