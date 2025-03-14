@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 type Option = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -42,7 +42,7 @@ const Radio: FC<RadioProps> = ({
                 type="radio"
                 name={label}
                 value={option.id}
-                checked={value === option.id}
+                checked={value === option.id.toString()}
                 onChange={handleChange}
                 className={`w-4 h-4 form-radio ${error ? 'accent-alert' : 'accent-main'}`}
               />
