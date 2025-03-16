@@ -104,7 +104,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
           />
           <TextArea label="備考" onChange={() => {}} value="" />
         </div>
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center items-center mt-10">
           <Button size="pc" color="main" type="submit">
             登録
           </Button>
