@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import snakecaseKeys from 'snakecase-keys';
 import { mutate } from 'swr';
 import api from '@/lib/api';
 import Button from '@/components/Button';
@@ -50,10 +51,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
   // alert以外で通知したい。
   const onSubmit = async (data: FormData) => {
     try {
-      await api.post('/stage_common_options/', data);
+      const payload = snakecaseKeys(data, { deep: true });
+      await api.post('/stage_common_options/', payload);
       mutate('/stage_common_options/');
-      alert('送信しました');
       reset();
+      alert('送信しました');
     } catch {
       alert('送信に失敗しました。');
     }
