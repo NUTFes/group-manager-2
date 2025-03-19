@@ -5,7 +5,6 @@ import { mutate } from 'swr';
 import api from '@/lib/api';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
-import TextArea from '@/components/Form/TextArea';
 import FormContainer from '@/components/FormContainer';
 import { stageOptionSchema } from './schema';
 
@@ -21,8 +20,7 @@ const options2 = [
   { id: 0, name: 'いいえ' },
 ];
 
-// TODO: 現状のAPIには備考欄がない。どこかのタイミングで追加。
-// group_idの取得もどこかのタイミングで追加。
+// FIX: group_idの取得は団体申請実装時に追加。
 // NOTE: Mysqlはbooleanを整数で保存するので整数型で送信している。
 type FormData = {
   groupId: number;
@@ -30,14 +28,12 @@ type FormData = {
   bgm: number;
   cameraPermission: number;
   loudSound: number;
-  //   remarks: string;
 };
 
 const StageOptionForm: FC<StageOptionFormProps> = () => {
   const {
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors },
     reset,
     watch,
@@ -51,6 +47,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
 
   const values = watch();
 
+  // alert以外で通知したい。
   const onSubmit = async (data: FormData) => {
     try {
       await api.post('/stage_common_options/', data);
@@ -102,7 +99,6 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             value={values.loudSound?.toString() || ''}
             error={errors.loudSound?.message}
           />
-          <TextArea label="備考" onChange={() => {}} value="" />
         </div>
         <div className="w-full flex justify-center items-center mt-10">
           <Button size="pc" color="main" type="submit">
