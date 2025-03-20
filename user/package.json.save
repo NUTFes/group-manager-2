@@ -1,0 +1,58 @@
+nano user/package.json{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "scaffdog": "scaffdog",
+    "scaff:component": "scaffdog generate -p .scaffdog/templates template",
+    "storybook": "storybook dev -p 6006 --ci",
+    "build-storybook": "storybook build",
+    "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "fmt": "prettier --write **/*.{js,jsx,ts,tsx,css,scss}",
+    "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}"
+  },
+  "dependencies": {
+    "@storybook/preview-api": "^8.5.3",
+    "@storybook/theming": "^8.5.0",
+    "@svgr/webpack": "^8.1.0",
+    "embla-carousel-react": "^8.5.2",
+    "framer-motion": "^12.4.2",
+    "eslint-plugin-tailwindcss": "^3.18.0",
+    "next": "15.0.3",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-icons": "^5.4.0",
+    "scaffdog": "^4.1.0",
+    "storybook": "^8.5.0",
+<<<<<<< HEAD
+    "swr": "^2.3.3",
+=======
+    "swr": "^2.3.2",
+>>>>>>> 9a1959ab084c7090240b85bc8f8c7f128908d056
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.4",
+    "@storybook/addon-essentials": "^8.5.0",
+    "@storybook/addon-interactions": "^8.5.0",
+    "@storybook/addon-onboarding": "^8.5.0",
+    "@storybook/blocks": "^8.5.0",
+    "@storybook/nextjs": "^8.5.0",
+    "@storybook/react": "^8.5.0",
+    "@storybook/test": "^8.5.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^20.17.24",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^9",
+    "eslint-config-next": "15.0.3",
+    "eslint-plugin-storybook": "^0.11.2",
+    "postcss": "^8",
+    "prettier": "^3.5.2",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
