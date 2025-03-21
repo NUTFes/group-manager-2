@@ -18,9 +18,11 @@ const FormList: FC<FormListProps> = ({ items }) => {
           </div>
         </div>
       ))}
-      <Button size="pc" color="main" type="button" icon="pencil">
-        修正
-      </Button>
+      <div className="w-full flex justify-center items-center">
+        <Button size="pc" color="main" type="button" icon="pencil">
+          修正
+        </Button>
+      </div>
     </FormContainer>
   );
 };
