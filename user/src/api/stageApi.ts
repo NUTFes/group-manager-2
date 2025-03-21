@@ -1,5 +1,5 @@
+import { addMinutes } from '@/components/ApplicationForms/Stage/hooks/useStageForm';
 import { useApiGet, useApiMutations } from '@/hooks/useApi';
-import { addMinutes } from '@/hooks/useStageForm';
 
 export type FesDate = {
   id: number;
