@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import snakecaseKeys from 'snakecase-keys';
 import { mutate } from 'swr';
+import useSWR from 'swr';
 import api from '@/lib/api';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -42,18 +43,24 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
     resolver: zodResolver(stageOptionSchema),
     mode: 'onChange',
     defaultValues: {
-      groupId: 1,
+      groupId: 3,
     },
   });
 
   const values = watch();
 
+  const { data } = useSWR(`/stage_common_options/${values.groupId}`);
+
   // alert以外で通知したい。
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (formData: FormData) => {
     try {
-      const payload = snakecaseKeys(data, { deep: true });
-      await api.post('/stage_common_options/', payload);
-      mutate('/stage_common_options/');
+      const payload = snakecaseKeys(formData, { deep: true });
+      if (data) {
+        await api.put('/stage_common_options', payload);
+      } else {
+        await api.post('/stage_common_options', payload);
+      }
+      mutate(`/stage_common_options/${formData.groupId}`);
       reset();
       alert('送信しました');
     } catch {
