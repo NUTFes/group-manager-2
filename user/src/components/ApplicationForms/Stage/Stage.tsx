@@ -166,7 +166,7 @@ const Stage: FC = () => {
   return (
     <div className="w-fit flex flex-col rounded-[20px] gap-10 p-20 text-black bg-white shadow-[0px_4px_6px_0px_rgba(0,_0,_0,_0.25)]">
       {hasError && (
-        <div className="w-fit bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="w-[400px] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
           <strong className="font-bold">エラー：</strong>
           <span className="block sm:inline">
             データの取得に失敗しました。ページを再読込してください。
@@ -175,7 +175,7 @@ const Stage: FC = () => {
       )}
 
       {submitError && (
-        <div className="w-fit bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="w-[400px] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
           <strong className="font-bold">送信エラー：</strong>
           <span className="block sm:inline">{submitError}</span>
         </div>
