@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import AccordionMenu from '../AccordionMenu';
+import VenueApplicationForm from './VenueApplicationForm';
 import {
   getIsOpenAccordionMenuAtom,
   setIsOpenAccordionMenuAtom,
@@ -14,7 +15,7 @@ const VenueApplication: FC<VenueApplicationProps> = () => {
 
   return (
     <AccordionMenu
-      title="ステージオプション申請"
+      title="会場申請"
       isEdit={false}
       isExist={false}
       required
@@ -22,7 +23,7 @@ const VenueApplication: FC<VenueApplicationProps> = () => {
       onToggle={toggleIsOpen}
       onSubmit={() => {}}
     >
-      aaa
+      <VenueApplicationForm />
     </AccordionMenu>
   );
 };
