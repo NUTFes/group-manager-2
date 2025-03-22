@@ -2,8 +2,8 @@ import { FC } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import AccordionMenu from '@/components/AccordionMenu';
 import {
-  getIsOpenAccordionMenuAtom,
-  setIsOpenAccordionMenuAtom,
+  getIsOpenStageAccordionMenuAtom,
+  setIsOpenStageAccordionMenuAtom,
 } from '@/components/ApplicationForms/Stage/store';
 import StageForm from './StageForm';
 
@@ -13,8 +13,8 @@ type StageProps = {
 };
 
 const Stage: FC<StageProps> = ({ isEdit = false, isExist = false }) => {
-  const isOpen = useAtomValue(getIsOpenAccordionMenuAtom);
-  const [, toggleIsOpen] = useAtom(setIsOpenAccordionMenuAtom);
+  const isOpen = useAtomValue(getIsOpenStageAccordionMenuAtom);
+  const [, toggleIsOpen] = useAtom(setIsOpenStageAccordionMenuAtom);
 
   return (
     <AccordionMenu
@@ -26,7 +26,7 @@ const Stage: FC<StageProps> = ({ isEdit = false, isExist = false }) => {
       onToggle={toggleIsOpen}
       onSubmit={() => {}}
     >
-      <StageForm isEdit={isEdit} isExist={isExist} />
+      <StageForm />
     </AccordionMenu>
   );
 };

@@ -1,26 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   StageOrderData,
-  useExistingStageOrders,
+  useGetStageOrders,
   useStageFormData,
-  useStageOrderSubmission,
+  useMutateStageOrders,
 } from '@/api/stageApi';
 import { useStageForm } from './useStageForm';
 import { useDateOptions, useFilteredStageOptions, useStageOptions } from './useStageHelpers';
 
-export const useStageFormLogic = (isEdit = false, isExist = false) => {
+export const useStageFormLogic = () => {
   // TODO: 認証基盤ができたら、グループIDを取得する
   const [currentGroupId] = useState<number | null>(1);
   const [submitError, setSubmitError] = useState<string>('');
-  const [isEditing, setIsEditing] = useState<boolean>(isEdit);
 
   // ステージ申請の既存データ取得
   const {
     sunnyOrder,
     rainyOrder,
     isLoading: isLoadingOrders,
-    hasExistingOrders,
-  } = useExistingStageOrders(currentGroupId);
+    hasExisting,
+  } = useGetStageOrders(currentGroupId);
 
   // フォーム状態管理
   const { handleSubmit, formState, updateField } = useStageForm(
@@ -38,14 +37,7 @@ export const useStageFormLogic = (isEdit = false, isExist = false) => {
   } = useStageFormData();
 
   // 申請送信ロジック
-  const { submitStageOrder } = useStageOrderSubmission();
-
-  // 既存の申請がある場合は編集モードに設定
-  useEffect(() => {
-    if (isExist || hasExistingOrders) {
-      setIsEditing(true);
-    }
-  }, [isExist, hasExistingOrders]);
+  const { submitStageOrder } = useMutateStageOrders();
 
   // 選択肢の生成
   const dateOptions = useDateOptions(fesDateData);
@@ -125,11 +117,10 @@ export const useStageFormLogic = (isEdit = false, isExist = false) => {
 
       if (result.success) {
         alert(
-          isEditing
+          hasExisting
             ? 'ステージ希望を更新しました。'
             : 'ステージ希望を登録しました。'
         );
-        setIsEditing(true);
       } else {
         setSubmitError(
           '送信中にエラーが発生しました。もう一度お試しください。'
@@ -155,7 +146,7 @@ export const useStageFormLogic = (isEdit = false, isExist = false) => {
     isLoadingAll,
     hasError,
     submitError,
-    isEditing,
+    hasExisting,
     isValid,
   };
 };

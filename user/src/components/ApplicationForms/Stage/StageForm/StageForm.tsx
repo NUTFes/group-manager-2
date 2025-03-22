@@ -8,12 +8,7 @@ import FormContainer from '@/components/FormContainer';
 import { StageFormData } from '@/utils/validate/validate';
 import { useStageFormLogic } from '../hooks';
 
-type StageFormProps = {
-  isEdit?: boolean;
-  isExist?: boolean;
-};
-
-const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
+const StageForm: FC = () => {
   const {
     formState,
     updateField,
@@ -26,9 +21,9 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
     isLoadingAll,
     hasError,
     submitError,
-    isEditing,
+    hasExisting,
     isValid,
-  } = useStageFormLogic(isEdit, isExist);
+  } = useStageFormLogic();
 
   const {
     date,
@@ -42,14 +37,12 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
     errors,
   } = formState;
 
-  // エラー表示
-  const renderError = (fieldName: keyof StageFormData | 'totalTime') => {
+  // エラーメッセージを取得する関数
+  const getErrorMessage = (fieldName: keyof StageFormData | 'totalTime') => {
     const error = errors[fieldName as keyof typeof errors] as
       | FieldError
       | undefined;
-    return error ? (
-      <p className="text-[#FF0000] text-xs">{error.message}</p>
-    ) : null;
+    return error ? error.message : undefined;
   };
 
   return (
@@ -86,8 +79,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value: string) => updateField('date', value)}
               required
               options={dateOptions}
+              error={getErrorMessage('date')}
             />
-            {renderError('date')}
             {!errors.date && (
               <p className="text-[#484848] text-xs">選んでください</p>
             )}
@@ -100,8 +93,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('sunnyFirstChoice', value)}
               required
               options={filteredSunny1}
+              error={getErrorMessage('sunnyFirstChoice')}
             />
-            {renderError('sunnyFirstChoice')}
           </div>
 
           <div>
@@ -111,8 +104,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('sunnySecondChoice', value)}
               required
               options={filteredSunny2}
+              error={getErrorMessage('sunnySecondChoice')}
             />
-            {renderError('sunnySecondChoice')}
           </div>
 
           <div>
@@ -122,8 +115,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('rainyFirstChoice', value)}
               required
               options={filteredRainy1}
+              error={getErrorMessage('rainyFirstChoice')}
             />
-            {renderError('rainyFirstChoice')}
           </div>
 
           <div>
@@ -133,8 +126,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('rainySecondChoice', value)}
               required
               options={filteredRainy2}
+              error={getErrorMessage('rainySecondChoice')}
             />
-            {renderError('rainySecondChoice')}
           </div>
 
           <div>
@@ -144,8 +137,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('prepTime', value)}
               required
               note="ステージ上の準備にかかる時間を分単位で記入してください"
+              error={getErrorMessage('prepTime')}
             />
-            {renderError('prepTime')}
           </div>
 
           <div>
@@ -155,8 +148,8 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('performTime', value)}
               required
               note="準備、本番、片付けの時間が120分以内になるようにしてください"
+              error={getErrorMessage('performTime')}
             />
-            {renderError('performTime')}
           </div>
 
           <div>
@@ -166,14 +159,16 @@ const StageForm: FC<StageFormProps> = ({ isEdit = false, isExist = false }) => {
               onChange={(value) => updateField('cleanupTime', value)}
               required
               note="ステージ上の片付けにかかる時間を分単位で記入してください"
+              error={getErrorMessage('cleanupTime')}
             />
-            {renderError('cleanupTime')}
-            {renderError('totalTime')}
+            {getErrorMessage('totalTime') && (
+              <p className="text-[#FF0000] text-xs">{getErrorMessage('totalTime')}</p>
+            )}
           </div>
 
           <div className="flex justify-center gap-4 mt-4">
             <Button type="submit" size="pc" color="main" isDisable={!isValid}>
-              {isEditing ? '更新' : '登録'}
+              {hasExisting ? '更新' : '登録'}
             </Button>
           </div>
         </form>

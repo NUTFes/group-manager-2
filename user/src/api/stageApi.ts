@@ -18,7 +18,7 @@ const API_ENDPOINTS = {
   STAGE_ORDERS: '/stage_orders',
 };
 
-export type StageOrderBase = {
+export type BaseStageOrder = {
   group_id: number;
   fes_date_id: number;
   is_sunny: boolean;
@@ -30,9 +30,9 @@ export type StageOrderBase = {
 };
 
 // 送信用データ型
-export type StageOrderData = StageOrderBase;
+export type StageOrderData = BaseStageOrder;
 
-export type StageOrderResponse = StageOrderBase & {
+export type StageOrderResponse = BaseStageOrder & {
   id: number;
   prepare_start_time: string | null;
   performance_start_time: string | null;
@@ -81,7 +81,7 @@ export const useStageFormData = () => {
 };
 
 // 既存のステージ申請を取得するフック
-export const useExistingStageOrders = (groupId: number | null) => {
+export const useGetStageOrders = (groupId: number | null) => {
   const endpoint = groupId
     ? `${API_ENDPOINTS.STAGE_ORDERS}?group_id=${groupId}`
     : null;
@@ -101,12 +101,12 @@ export const useExistingStageOrders = (groupId: number | null) => {
     rainyOrder,
     isLoading,
     hasError: !!error,
-    hasExistingOrders: filteredOrders.length > 0,
+    hasExisting: filteredOrders.length > 0,
   };
 };
 
 // ステージ申請送信用フック
-export const useStageOrderSubmission = () => {
+export const useMutateStageOrders = () => {
   const { post, put } = useApiMutations();
 
   const submitStageOrder = async (
