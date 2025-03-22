@@ -25,7 +25,7 @@ const TextArea: FC<TextAreaProps> = ({
     <>
       <label>
         <div className="flex gap-6 items-center mb-[4px]">
-          <p className="text-base">{label}</p>
+          <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
         <textarea

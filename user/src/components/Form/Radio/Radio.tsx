@@ -32,7 +32,7 @@ const Radio: FC<RadioProps> = ({
     <>
       <label>
         <div className="flex gap-6 items-center mb-[5px]">
-          <p className="text-base">{label}</p>
+          <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
         <div className="flex flex-col gap-4 my-6">
@@ -46,7 +46,7 @@ const Radio: FC<RadioProps> = ({
                 onChange={handleChange}
                 className={`w-4 h-4 form-radio ${error ? 'accent-alert' : 'accent-main'}`}
               />
-              <span className={`${error ? 'text-alert' : ''}`}>
+              <span className={`${error ? 'text-alert' : 'text-font'}`}>
                 {option.name}
               </span>
             </label>
