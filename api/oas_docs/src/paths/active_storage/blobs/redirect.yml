@@ -1,0 +1,60 @@
+---
+paths:
+  "/rails/active_storage/blobs/redirect/{signed_id}/*filename":
+    get:
+      tags:
+      - active_storage/blobs/redirect
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: active_storage/blobs/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
+        '404':
+          description: active_storage/blobs/redirect description
+        '422':
+          description: active_storage/blobs/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
+      deprecated: false
+      parameters:
+      - name: signed_id
+        in: path
+        description: signed_id
+        required: true
+        schema:
+          type: integer
+  "/rails/active_storage/blobs/{signed_id}/*filename":
+    get:
+      tags:
+      - active_storage/blobs/redirect
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: active_storage/blobs/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
+        '404':
+          description: active_storage/blobs/redirect description
+        '422':
+          description: active_storage/blobs/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.blobs.Redirect"
+      deprecated: false
+      parameters:
+      - name: signed_id
+        in: path
+        description: signed_id
+        required: true
+        schema:
+          type: integer

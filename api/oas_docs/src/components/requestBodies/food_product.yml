@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    FoodProduct:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/FoodProduct"

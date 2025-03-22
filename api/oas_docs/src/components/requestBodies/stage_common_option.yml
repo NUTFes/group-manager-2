@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    StageCommonOption:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/StageCommonOption"

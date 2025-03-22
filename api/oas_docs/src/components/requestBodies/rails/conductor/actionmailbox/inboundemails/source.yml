@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    rails.conductor.actionmailbox.inboundemails.Source:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
