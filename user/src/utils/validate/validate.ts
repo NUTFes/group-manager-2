@@ -117,59 +117,74 @@ export const placeSchema = z.object({
 // stage登録のバリデーション
 export const stageSchema = z
   .object({
-    weather: z.string().nonempty('入力してください\nPlease enter'),
-    fesDate: z.number({ invalid_type_error: '入力してください\nPlease enter' }),
-    first: z.number({ invalid_type_error: '入力してください\nPlease enter' }),
-    second: z.number({ invalid_type_error: '入力してください\nPlease enter' }),
-    performanceTime: z
-      .number({ invalid_type_error: '入力してください\nPlease enter' })
-      .min(0, '0分以上で入力してください\nPlease enter more than 0 minutes'),
-    preparationTime: z
-      .number({ invalid_type_error: '入力してください\nPlease enter' })
-      .min(0, '0分以上で入力してください\nPlease enter more than 0 minutes'),
-    cleanUpTime: z
-      .number({ invalid_type_error: '入力してください\nPlease enter' })
-      .min(0, '0分以上で入力してください\nPlease enter more than 0 minutes'),
+    date: z.string().nonempty('入力してください'),
+    sunnyFirstChoice: z.string().nonempty('晴れの第1希望を選択してください'),
+    sunnySecondChoice: z.string().nonempty('晴れの第2希望を選択してください'),
+    rainyFirstChoice: z.string().nonempty('雨の第1希望を選択してください'),
+    rainySecondChoice: z.string().nonempty('雨の第2希望を選択してください'),
+    prepTime: z
+      .string()
+      .nonempty('準備時間を入力してください')
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 0,
+        '有効な準備時間を入力してください'
+      ),
+    performTime: z
+      .string()
+      .nonempty('本番時間を入力してください')
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 0,
+        '有効な本番時間を入力してください'
+      ),
+    cleanupTime: z
+      .string()
+      .nonempty('片付け時間を入力してください')
+      .refine(
+        (val) => !isNaN(Number(val)) && Number(val) >= 0,
+        '有効な片付け時間を入力してください'
+      ),
+    remarks: z.string().optional(),
+    groupId: z.string().optional(),
   })
-  .superRefine((data, ctx) => {
-    // ステージが両方とも1以外の場合に、同じステージが選択されていないかチェック
-    if (data.first !== 1 && data.second !== 1 && data.first === data.second) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['first'],
-        message: '同じステージを選択しています\nThe same stage is selected',
-      });
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['second'],
-        message: '同じステージを選択しています\nThe same stage is selected',
-      });
+  .refine(
+    (data) => {
+      const total =
+        Number(data.prepTime) +
+        Number(data.performTime) +
+        Number(data.cleanupTime);
+      return total <= 120;
+    },
+    {
+      message: '準備、本番、片付けの合計時間が120分を超えています',
+      path: ['totalTime'],
     }
-    // 時間の合計が120分以内かチェック
-    const total =
-      Number(data.performanceTime) +
-      Number(data.preparationTime) +
-      Number(data.cleanUpTime);
-    if (total > 120) {
-      const errorMsg =
-        '合計120分以内で入力してください\nPlease enter up to 120 minutes total';
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['performanceTime'],
-        message: errorMsg,
-      });
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['preparationTime'],
-        message: errorMsg,
-      });
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['cleanUpTime'],
-        message: errorMsg,
-      });
+  )
+  .refine(
+    (data) => {
+      return (
+        data.sunnyFirstChoice !== data.sunnySecondChoice ||
+        data.sunnyFirstChoice === ''
+      );
+    },
+    {
+      message: '第1希望と異なるステージを選んでください',
+      path: ['sunnySecondChoice'],
     }
-  });
+  )
+  .refine(
+    (data) => {
+      return (
+        data.rainyFirstChoice !== data.rainySecondChoice ||
+        data.rainyFirstChoice === ''
+      );
+    },
+    {
+      message: '第1希望と異なるステージを選んでください',
+      path: ['rainySecondChoice'],
+    }
+  );
+
+export type StageFormData = z.infer<typeof stageSchema>;
 
 // stage編集のバリデーション
 export const editStageSchema = z
