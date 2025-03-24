@@ -20,6 +20,7 @@
     "@storybook/theming": "^8.5.0",
     "@svgr/webpack": "^8.1.0",
     "axios": "^1.8.3",
+    "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.5.2",
     "eslint-plugin-tailwindcss": "^3.18.0",
     "framer-motion": "^12.4.2",
