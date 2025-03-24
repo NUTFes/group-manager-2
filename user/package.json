@@ -34,7 +34,7 @@
     "scaffdog": "^4.1.0",
     "snakecase-keys": "^8.0.1",
     "storybook": "^8.5.0",
-    "swr": "^2.3.2",
+    "swr": "^2.3.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -47,7 +47,7 @@
     "@storybook/react": "^8.5.0",
     "@storybook/test": "^8.5.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@types/node": "^20",
+    "@types/node": "^20.17.24",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^9",
