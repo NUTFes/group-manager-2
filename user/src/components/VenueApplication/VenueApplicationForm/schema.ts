@@ -1,12 +1,11 @@
 import { z } from 'zod';
 
 export const venueApplicationFormSchema = z.object({
-  // groupId: z.number({ required_error: '入力してください' }).int().default(1),
-  // ownEquipment: z.number({ required_error: '入力してください' }),
-  // bgm: z.number({ required_error: '入力してください' }),
-  // cameraPermission: z.number({ required_error: '入力してください' }),
-  // loudSound: z.number({ required_error: '入力してください' }),
-  // remarks: z.string().optional(),
+  groupId: z.number({ required_error: '入力してください' }).int().default(1),
+  first: z.number({ required_error: '入力してください' }),
+  second: z.number({ required_error: '入力してください' }),
+  third: z.number({ required_error: '入力してください' }),
+  remark: z.string().optional(),
 });
 
-export type VenueApplicationForm = z.infer<typeof venueApplicationFormSchema>;
+export type VenueApplicationType = z.infer<typeof venueApplicationFormSchema>;
