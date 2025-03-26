@@ -13,7 +13,7 @@ const FormList: FC<FormListProps> = ({ items }) => {
       {items.map((item, index) => (
         <div key={index} className="w-auto md:w-72 flex flex-col">
           <div className="text-xs text-font">{item.label}</div>
-          <div className="h-6 md:h-10 mt-2 ml-2 text-base text-font font-medium">
+          <div className="h-6 md:h-10 mt-2 text-base text-font font-medium">
             {item.content}
           </div>
         </div>
