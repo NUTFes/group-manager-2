@@ -7,7 +7,11 @@ import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
 import FormContainer from '@/components/FormContainer';
 import { convertPlacesToOptions } from '../hooks';
-import { VenueApplicationType, venueApplicationFormSchema } from './schema';
+import {
+  DEFAULT_ID,
+  VenueApplicationType,
+  venueApplicationFormSchema,
+} from './schema';
 
 type VenueApplicationFormProps = {};
 
@@ -22,9 +26,9 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
     defaultValues: {
       // FIX: group_idの取得は団体申請実装時に追加。
       groupId: 4,
-      first: 0,
-      second: 0,
-      third: 0,
+      first: DEFAULT_ID,
+      second: DEFAULT_ID,
+      third: DEFAULT_ID,
       remark: '',
     },
   });
@@ -64,23 +68,27 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
             options={options}
             value={values.first}
             onChange={(value) => setValue('first', Number(value))}
+            error={errors.first?.message}
           />
           <Selector
             label="第二希望"
             options={options}
             value={values.second}
             onChange={(value) => setValue('second', Number(value))}
+            error={errors.second?.message}
           />
           <Selector
             label="第三希望"
             options={options}
             value={values.third}
             onChange={(value) => setValue('third', Number(value))}
+            error={errors.third?.message}
           />
           <TextArea
             label="備考"
             value={values.remark ?? ''}
             onChange={(value) => setValue('remark', value)}
+            error={errors.remark?.message}
           />
           <Button size="pc" color="main" type="submit">
             登録
