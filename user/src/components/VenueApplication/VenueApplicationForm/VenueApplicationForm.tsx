@@ -17,6 +17,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
     setValue,
     onSubmit,
     handleSubmit,
+    disableOptions,
   } = useVenueMapHooks();
   if (placesLoading || isMutating) {
     return <div>loading...</div>;
@@ -30,6 +31,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
           <Selector
             label="第一希望"
             options={options}
+            disableOptions={disableOptions}
             value={values.first}
             onChange={(value) => setValue('first', Number(value))}
             error={errors.first?.message}
@@ -37,6 +39,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
           <Selector
             label="第二希望"
             options={options}
+            disableOptions={disableOptions}
             value={values.second}
             onChange={(value) => setValue('second', Number(value))}
             error={errors.second?.message}
@@ -44,6 +47,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
           <Selector
             label="第三希望"
             options={options}
+            disableOptions={disableOptions}
             value={values.third}
             onChange={(value) => setValue('third', Number(value))}
             error={errors.third?.message}

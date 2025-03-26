@@ -12,12 +12,6 @@ import {
 } from './schema';
 
 export const useVenueMapHooks = () => {
-  const convertPlacesToOptions = (places: Place[]) => {
-    return places.map((place) => {
-      return { id: place.id, name: place.name };
-    });
-  };
-
   const {
     handleSubmit,
     formState: { errors },
@@ -40,6 +34,11 @@ export const useVenueMapHooks = () => {
   const values = watch();
 
   const options = convertPlacesToOptions(places);
+  const disableOptions = extractDisableOptions([
+    values.first,
+    values.second,
+    values.third,
+  ]);
   const onSubmit = async (formData: VenueApplicationType) => {
     if (errors.first || errors.second || errors.third || errors.remark) {
       console.error(errors);
@@ -66,5 +65,16 @@ export const useVenueMapHooks = () => {
     setValue,
     onSubmit,
     handleSubmit,
+    disableOptions,
   };
+};
+
+const convertPlacesToOptions = (places: Place[]) => {
+  return places.map((place) => {
+    return { id: place.id, name: place.name };
+  });
+};
+
+const extractDisableOptions = (values: number[]) => {
+  return values.filter((value) => value !== DEFAULT_ID);
 };
