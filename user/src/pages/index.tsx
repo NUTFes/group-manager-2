@@ -1,5 +1,6 @@
 import localFont from 'next/font/local';
 import Image from 'next/image';
+import VenueApplication from '@/components/VenueApplication';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -61,6 +62,7 @@ export default function Home() {
             Read our docs
           </a>
         </div>
+        <VenueApplication />
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a

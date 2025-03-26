@@ -1,62 +1,26 @@
 import { FC } from 'react';
-import { usePlacesData, usePlacesOrderMutations } from '@/api/venueApplication';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
 import FormContainer from '@/components/FormContainer';
-import { convertPlacesToOptions } from '../hooks';
-import {
-  DEFAULT_ID,
-  VenueApplicationType,
-  venueApplicationFormSchema,
-} from './schema';
+import { useVenueMapHooks } from './hooks';
 
 type VenueApplicationFormProps = {};
 
 const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
   const {
-    handleSubmit,
-    formState: { errors },
+    placesLoading,
+    isMutating,
+    options,
+    values,
+    errors,
     setValue,
-    watch,
-  } = useForm<VenueApplicationType>({
-    resolver: zodResolver(venueApplicationFormSchema),
-    defaultValues: {
-      // FIX: group_idの取得は団体申請実装時に追加。
-      groupId: 4,
-      first: DEFAULT_ID,
-      second: DEFAULT_ID,
-      third: DEFAULT_ID,
-      remark: '',
-    },
-  });
-  const { trigger, error, isMutating } = usePlacesOrderMutations();
-
-  const { places, placesLoading } = usePlacesData();
+    onSubmit,
+    handleSubmit,
+  } = useVenueMapHooks();
   if (placesLoading || isMutating) {
     return <div>loading...</div>;
   }
-
-  const values = watch();
-  const options = convertPlacesToOptions(places);
-  const onSubmit = async (formData: VenueApplicationType) => {
-    if (errors.first || errors.second || errors.third || errors.remark) {
-      console.error(errors);
-      alert('入力エラーがあります。');
-      return;
-    }
-    try {
-      await trigger({
-        query: formData,
-      });
-      alert('送信しました');
-    } catch {
-      console.error(error);
-      alert('送信に失敗しました。');
-    }
-  };
 
   return (
     <FormContainer>

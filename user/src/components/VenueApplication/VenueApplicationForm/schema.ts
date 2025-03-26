@@ -18,7 +18,7 @@ export const venueApplicationFormSchema = z
     const freq: Record<number, number> = {};
     fields.forEach(({ value }) => {
       if (value !== DEFAULT_ID) {
-        freq[value] = (freq[value] || DEFAULT_ID) + 1;
+        freq[value] = (freq[value] || 0) + 1;
       }
     });
     fields.forEach(({ field, value }) => {
