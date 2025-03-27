@@ -10,7 +10,7 @@ import snakecaseKeys from 'snakecase-keys';
 import { mutate } from 'swr';
 import useSWR from 'swr';
 import api from '@/lib/api';
-import { stageOptionSchema } from './schema';
+import { vicerepresentativeSchema } from './schema';
 
 type ViceRepresentativeFormProps = {};
 
@@ -33,7 +33,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
         reset,
         watch,
       } = useForm<FormData>({
-        resolver: zodResolver(stageOptionSchema),
+        resolver: zodResolver(vicerepresentativeSchema),
         mode: 'onChange',
         defaultValues: {
           groupId: 1,
