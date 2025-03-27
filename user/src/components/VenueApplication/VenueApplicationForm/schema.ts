@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
 export const DEFAULT_ID = 1;
+// NOTE: その他の選択肢のIDは11としている
+const OTHER_OPTION_ID = 11;
+
 export const venueApplicationFormSchema = z
   .object({
     groupId: z.number({ required_error: '入力してください' }).int().default(1),
@@ -27,6 +30,15 @@ export const venueApplicationFormSchema = z
           code: z.ZodIssueCode.custom,
           message: '希望が重複しています',
           path: [field],
+        });
+      }
+
+      // その他の選択肢が選択された場合、備考に場所が入力されているかチェック
+      if (value === OTHER_OPTION_ID && !data.remark) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: '備考に場所を入力してください',
+          path: ['remark'],
         });
       }
     });
