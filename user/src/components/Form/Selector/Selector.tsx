@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type Option = {
   id: number;
@@ -7,12 +7,13 @@ type Option = {
 
 type SelectorProps = {
   label: string;
-  value: string;
+  value: number | string;
   onChange: (value: string) => void;
   required?: boolean;
   note?: string;
   error?: string;
   options: Option[];
+  disableOptions?: number[];
 };
 
 const Selector: FC<SelectorProps> = ({
@@ -23,6 +24,7 @@ const Selector: FC<SelectorProps> = ({
   note,
   error,
   options = [],
+  disableOptions = [],
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
@@ -38,10 +40,14 @@ const Selector: FC<SelectorProps> = ({
         <select
           value={value}
           onChange={handleChange}
-          className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? "border-alert" : "border-main"} mb-[4px]`}
+          className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? 'border-alert' : 'border-main'} mb-[4px]`}
         >
           {options.map((option) => (
-            <option key={option.id} value={option.id}>
+            <option
+              key={option.id}
+              value={option.id}
+              disabled={disableOptions.includes(option.id)}
+            >
               {option.name}
             </option>
           ))}
