@@ -42,7 +42,7 @@ const Selector: FC<SelectorProps> = ({
           className={`w-[400px] h-12 text-font border-2 rounded-[10px] ${error ? "border-alert" : "border-main"} mb-[4px]`}
         >
           {options.map((option) => (
-            <option key={option.id} value={option.id} disabled={option.disabled}>
+            <option key={option.id} value={option.id} disabled={option.disabled} hidden={option.disabled}>
               {option.name}
             </option>
           ))}
