@@ -1,16 +1,29 @@
 {
+  // biomeを無効化
+  "biome.enabled": false,
+  // 自動保存を有効化
   "editor.formatOnSave": true,
+  // Prettierをデフォルトのフォーマッタに設定
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // eslintのpathを指定
   "eslint.workingDirectories": ["./user"],
+    // Prettierの設定ファイルを指定
   "prettier.configPath": "./user/.prettierrc.json",
-  //   コマンドをいちいち実行しなくても常に lint/format が素早く実行される状態にする
+
+  // 以下、各拡張子ごとに明示的に設定
   "[javascript]": {
-    // "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    // "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -28,8 +41,4 @@
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "biome.enabled": false,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
 }
