@@ -1,5 +1,6 @@
 # Actionの名前
-name: Code Check
+name: User Code Quality
+description: ユーザディレクトリ以下に対してESLintとPrettierを実行する
 
 on:
   # Pull Request時
