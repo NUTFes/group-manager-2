@@ -1,16 +1,16 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.workingDirectories": ["./user"],
   "prettier.configPath": "./user/.prettierrc.json",
-  "eslint.workingDirectories": ["./"],
   //   コマンドをいちいち実行しなくても常に lint/format が素早く実行される状態にする
   "[javascript]": {
-    "editor.tabSize": 2,
+    // "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.tabSize": 2,
+    // "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
