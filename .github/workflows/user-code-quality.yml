@@ -1,6 +1,6 @@
 # Actionの名前
 name: User Code Quality
-description: ユーザディレクトリ以下に対してESLintとPrettierを実行する
+description: ユーザディレクトリ以下に対してESLintとPrettierを実行し、フォーマットされた場合は自動でコミットする
 
 on:
   # Pull Request時
@@ -12,8 +12,10 @@ jobs:
   Code-Check:
     runs-on: ubuntu-latest
     steps:
-      # GitHubリポジトリのコードをチェックアウト
+      # GitHubリポジトリのコードをチェックアウト（fetch-depth: 0 にして完全な履歴を取得）
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       # Node.js v22をセットアップ
       - name: Use Node.js v22
@@ -25,15 +27,24 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      # プロジェクトの依存関係をインストール
+      # プロジェクトの依存関係をインストール（user ディレクトリ内）
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ./user
 
-      # prettierでコードのフォーマットをチェック
-      - name: Check code format
+      # prettierでコードのフォーマットを実行
+      - name: Format code with Prettier
         run: pnpm run fmt
         working-directory: ./user
+
+      # 変更があれば、コミット＆プッシュする
+      - name: Commit formatted files
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Action
+          author_email: action@github.com
+          message: "chore: auto format code"
+          push: true
 
       # ESLintでコードをチェック
       - name: Check code lint
