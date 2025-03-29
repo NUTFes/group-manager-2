@@ -1,10 +1,10 @@
-import { FC, useState, useCallback } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Button from "@/components/Button";
-import TextBox from "@/components/Form/TextBox";
-import Selector from "@/components/Form/Selector";
-import { RegisterParams } from "@/types/register/user";
-import { GradeList, DepartmentList } from "@/utils/list";
+import { FC, useCallback, useState } from 'react';
+import { RegisterParams } from '@/types/register/user';
+import { DepartmentList, GradeList } from '@/utils/list';
+import useEmblaCarousel from 'embla-carousel-react';
+import Button from '@/components/Button';
+import Selector from '@/components/Form/Selector';
+import TextBox from '@/components/Form/TextBox';
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -22,27 +22,27 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
         <div className="w-[376px] h-14 left-[6px] top-0 absolute">
           <div
             className={`w-20 h-2 left-[72px] top-[24px] absolute ${
-              step >= 1 ? "bg-main" : "bg-[#b2b2b2]"
+              step >= 1 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
             className={`w-20 h-2 left-[224px] top-[24px] absolute ${
-              step >= 2 ? "bg-main" : "bg-[#b2b2b2]"
+              step >= 2 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
             className={`w-14 h-14 left-[8px] top-0 absolute rounded-full ${
-              step >= 0 ? "bg-main" : "bg-[#b2b2b2]"
+              step >= 0 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
             className={`w-14 h-14 left-[160px] top-0 absolute rounded-full ${
-              step >= 1 ? "bg-main" : "bg-[#b2b2b2]"
+              step >= 1 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
             className={`w-14 h-14 left-[312px] top-0 absolute rounded-full ${
-              step === 2 ? "bg-main" : "bg-[#b2b2b2]"
+              step === 2 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div className="w-4 h-[38px] pb-[7px] left-[28px] top-[9px] absolute flex-col justify-start items-center inline-flex">
@@ -70,26 +70,26 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
-  const gradeOptions = [{ id: 0, name: "選択してください" }, ...GradeList];
+  const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
   const departmentOptions = [
-    { id: 0, name: "選択してください" },
+    { id: 0, name: '選択してください' },
     ...DepartmentList,
   ];
   const [input, setInput] = useState<RegisterParams>({
-    name: "",
-    studentId: "",
-    tel: "",
-    mail: "",
+    name: '',
+    studentId: '',
+    tel: '',
+    mail: '',
     departmentId: 0,
     gradeId: 0,
-    password: "",
-    passwordConfirm: "",
+    password: '',
+    passwordConfirm: '',
     userId: 0,
   });
   const [stepIndex, setStepIndex] = useState<number>(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
-    containScroll: "trimSnaps",
+    containScroll: 'trimSnaps',
   });
 
   const handleNext = useCallback(() => {
@@ -209,7 +209,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                   </div>
                   <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
                     <div className="text-font text-base font-medium">
-                      {"*".repeat(input.password.length)}
+                      {'*'.repeat(input.password.length)}
                     </div>
                   </div>
                 </div>

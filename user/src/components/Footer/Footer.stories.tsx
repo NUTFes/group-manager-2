@@ -1,15 +1,15 @@
-import { Meta, StoryObj } from "@storybook/react";
-import Footer from "./Footer";
-import "@globals";
+import '@globals';
+import { Meta, StoryObj } from '@storybook/react';
+import Footer from './Footer';
 
 export default {
-  title: "Components/Footer",
-  tags: ["autodocs"],
+  title: 'Components/Footer',
+  tags: ['autodocs'],
   component: Footer,
   parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
