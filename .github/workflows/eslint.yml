@@ -1,18 +1,38 @@
-name: Lint
-on: 
-  push:
-    paths:
-      - '**.vue'
-      - '**.js'
+# Actionの名前
+name: Code Check
+
+on:
+  # Pull Request時
+  pull_request:
+    # 対象のブランチを指定
+    branches: ["gm3/develop"]
+
 jobs:
-  lint:
+  Code-Check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Set Node.js 16.12.0
-        uses: actions/setup-node@v1
+      # GitHubリポジトリのコードをチェックアウト
+      - uses: actions/checkout@v3
+      # Node.js v18をセットアップ
+      - name: Use Node.js v22
+        # npmのキャッシュを有効
+        # 以前にインストールしたnpmパッケージを再利用でき、ビルド時間を短縮
+        uses: actions/setup-node@v3
         with:
-          node-version: 16.12.0
-      - name: ESLint
-        run: npm run lint
+          node-version: 22
+          cache: "pnpm"
+
+      # プロジェクトの依存関係をインストール
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ./user
+
+      # prettierでコードのフォーマットをチェック
+      - name: Check code format
+        run: pnpm run fmt:warn
+        working-directory: ./user
+
+      # ESLintでコードをチェック
+      - name: Check code lint
+        run: pnpm run lint
+        working-directory: ./user
