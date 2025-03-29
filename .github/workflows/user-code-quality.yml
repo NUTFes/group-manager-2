@@ -32,7 +32,7 @@ jobs:
 
       # prettierでコードのフォーマットをチェック
       - name: Check code format
-        run: pnpm run fmt:warn
+        run: pnpm run fmt
         working-directory: ./user
 
       # ESLintでコードをチェック
