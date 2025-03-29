@@ -1,15 +1,15 @@
-import { Meta, StoryObj } from "@storybook/react";
-import RegisterCarousel from "./RegisterCarousel";
-import "@globals";
+import '@globals';
+import { Meta, StoryObj } from '@storybook/react';
+import RegisterCarousel from './RegisterCarousel';
 
 export default {
-  title: "Components/RegisterCarousel",
-  tags: ["autodocs"],
+  title: 'Components/RegisterCarousel',
+  tags: ['autodocs'],
   component: RegisterCarousel,
   parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -18,5 +18,5 @@ export default {
 type Story = StoryObj<typeof RegisterCarousel>;
 
 export const Default: Story = {
-  args: { isOpen: true, onSubmit: () => alert("送信されるよ") },
+  args: { isOpen: true, onSubmit: () => alert('送信されるよ') },
 };

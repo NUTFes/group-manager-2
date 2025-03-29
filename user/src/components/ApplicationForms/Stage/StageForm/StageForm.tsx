@@ -1,11 +1,11 @@
 import { FC } from 'react';
+import { StageFormData } from '@/utils/validate/validate';
 import { FieldError } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
-import { StageFormData } from '@/utils/validate/validate';
 import { useStageFormLogic } from '../hooks';
 
 const StageForm: FC = () => {
@@ -162,7 +162,9 @@ const StageForm: FC = () => {
               error={getErrorMessage('cleanupTime')}
             />
             {getErrorMessage('totalTime') && (
-              <p className="text-[#FF0000] text-xs">{getErrorMessage('totalTime')}</p>
+              <p className="text-[#FF0000] text-xs">
+                {getErrorMessage('totalTime')}
+              </p>
             )}
           </div>
 

@@ -2,11 +2,15 @@ import { useState } from 'react';
 import {
   StageOrderData,
   useGetStageOrders,
-  useStageFormData,
   useMutateStageOrders,
+  useStageFormData,
 } from '@/api/stageApi';
 import { useStageForm } from './useStageForm';
-import { useDateOptions, useFilteredStageOptions, useStageOptions } from './useStageHelpers';
+import {
+  useDateOptions,
+  useFilteredStageOptions,
+  useStageOptions,
+} from './useStageHelpers';
 
 export const useStageFormLogic = () => {
   // TODO: 認証基盤ができたら、グループIDを取得する
@@ -45,7 +49,12 @@ export const useStageFormLogic = () => {
   const rainyStageOptions = useStageOptions(rainyStagesData);
 
   // 現在のフォーム値の取得
-  const { sunnyFirstChoice, sunnySecondChoice, rainyFirstChoice, rainySecondChoice } = formState;
+  const {
+    sunnyFirstChoice,
+    sunnySecondChoice,
+    rainyFirstChoice,
+    rainySecondChoice,
+  } = formState;
 
   // 選択肢のフィルタリング（重複選択防止）
   const filteredSunny1 = useFilteredStageOptions({
