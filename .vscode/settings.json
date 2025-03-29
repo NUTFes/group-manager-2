@@ -1,6 +1,8 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": "./user/.prettierrc.json",
+  "eslint.workingDirectories": ["./"],
   //   コマンドをいちいち実行しなくても常に lint/format が素早く実行される状態にする
   "[javascript]": {
     "editor.tabSize": 2,
@@ -24,6 +26,10 @@
     "source.organizeImports.biome": "explicit"
   },
   "[github-actions-workflow]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "biome.enabled": false,
+  "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
