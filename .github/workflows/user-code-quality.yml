@@ -15,7 +15,9 @@ jobs:
       # GitHubリポジトリのコードをチェックアウト（fetch-depth: 0 にして完全な履歴を取得）
       - uses: actions/checkout@v3
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
+          persist-credentials: true
 
       # Node.js v22をセットアップ
       - name: Use Node.js v22
