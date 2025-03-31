@@ -3,9 +3,11 @@ import { useGetAnnouncements } from '@/api/announcementsAPI';
 import { format } from 'date-fns';
 import FormContainer from '@/components/FormContainer';
 
-type NotifyListProps = {};
+type NotifyListProps = {
+  isLoginPage: boolean;
+};
 
-const NotifyList: FC<NotifyListProps> = () => {
+const NotifyList: FC<NotifyListProps> = ({ isLoginPage }) => {
   // FIX: ログイン認証実装で修正する。
   const testGroupID = 1;
 
@@ -31,10 +33,10 @@ const NotifyList: FC<NotifyListProps> = () => {
   return (
     <div className="flex items-center justify-center">
       <FormContainer>
-        <div className="w-[497px] mb-10">
+        <div className={`${isLoginPage ? 'w-[800px]' : 'w-[497px]'} mb-10`}>
           <div className="text-4xl font-bold text-main">お知らせ</div>
         </div>
-        <div className="flex flex-col gap-4 pl-10">
+        <div className="flex flex-col gap-4">
           {isLoading ? (
             <div>Loading...</div>
           ) : error ? (

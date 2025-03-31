@@ -18,5 +18,5 @@ export default {
 type Story = StoryObj<typeof NotifyList>;
 
 export const Default: Story = {
-  args: {},
+  args: { isLoginPage: true },
 };
