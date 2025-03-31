@@ -1,14 +1,8 @@
 import { FC } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import snakecaseKeys from 'snakecase-keys';
-import { mutate } from 'swr';
-import useSWR from 'swr';
-import api from '@/lib/api';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
-import { stageOptionSchema } from './schema';
+import { useStageOptionHooks } from './hooks';
 
 type StageOptionFormProps = {};
 
@@ -22,51 +16,22 @@ const options2 = [
   { id: 0, name: 'いいえ' },
 ];
 
-// FIX: group_idの取得は団体申請実装時に追加。
-// NOTE: Mysqlはbooleanを整数で保存するので整数型で送信している。
-type FormData = {
-  groupId: number;
-  ownEquipment: number;
-  bgm: number;
-  cameraPermission: number;
-  loudSound: number;
-};
-
 const StageOptionForm: FC<StageOptionFormProps> = () => {
   const {
     handleSubmit,
+    errors,
+    isMutating,
+    stageOptions,
+    isLoading,
+    hasError,
+    onSubmit,
     setValue,
-    formState: { errors },
-    reset,
-    watch,
-  } = useForm<FormData>({
-    resolver: zodResolver(stageOptionSchema),
-    mode: 'onChange',
-    defaultValues: {
-      groupId: 3,
-    },
-  });
+    values,
+  } = useStageOptionHooks();
 
-  const values = watch();
-
-  const { data } = useSWR(`/stage_common_options/${values.groupId}`);
-
-  // alert以外で通知したい。
-  const onSubmit = async (formData: FormData) => {
-    try {
-      const payload = snakecaseKeys(formData, { deep: true });
-      if (data) {
-        await api.put('/stage_common_options', payload);
-      } else {
-        await api.post('/stage_common_options', payload);
-      }
-      mutate(`/stage_common_options/${formData.groupId}`);
-      reset();
-      alert('送信しました');
-    } catch {
-      alert('送信に失敗しました。');
-    }
-  };
+  if (isLoading || isMutating) {
+    return;
+  }
 
   return (
     <FormContainer>
@@ -78,7 +43,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             onChange={(value) => setValue('ownEquipment', Number(value))}
             options={options1}
             required
-            value={values.ownEquipment?.toString() || ''}
+            value={values.ownEquipment?.toString() || ``}
             error={errors.ownEquipment?.message}
           />
           <Radio
@@ -110,7 +75,12 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
           />
         </div>
         <div className="w-full flex justify-center items-center mt-10">
-          <Button size="pc" color="main" type="submit">
+          <Button
+            size="pc"
+            color="main"
+            type="submit"
+            isDisable={isLoading || isMutating}
+          >
             登録
           </Button>
         </div>
