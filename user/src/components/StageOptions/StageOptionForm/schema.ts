@@ -6,7 +6,6 @@ export const stageOptionSchema = z.object({
   bgm: z.number({ required_error: '入力してください' }),
   cameraPermission: z.number({ required_error: '入力してください' }),
   loudSound: z.number({ required_error: '入力してください' }),
-  //   remarks: z.string().optional(),
 });
 
 export type StageOptionForm = z.infer<typeof stageOptionSchema>;
