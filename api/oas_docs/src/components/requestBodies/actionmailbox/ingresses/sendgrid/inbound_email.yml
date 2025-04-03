@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    actionmailbox.ingresses.sendgrid.InboundEmail:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/actionmailbox.ingresses.sendgrid.InboundEmail"
