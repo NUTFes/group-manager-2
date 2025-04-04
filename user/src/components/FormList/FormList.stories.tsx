@@ -27,5 +27,5 @@ const testItems = [
 ];
 
 export const Default: Story = {
-  args: { items: testItems },
+  args: { items: testItems, onEdit: () => alert('押されたよ'), isEdit: true },
 };
