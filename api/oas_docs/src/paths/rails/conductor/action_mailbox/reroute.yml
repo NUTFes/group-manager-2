@@ -1,0 +1,33 @@
+---
+paths:
+  "/rails/conductor/action_mailbox/{inbound_email_id}/reroute":
+    post:
+      tags:
+      - rails/conductor/action_mailbox/reroute
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rails/conductor/action_mailbox/reroute description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/rails.conductor.actionmailbox.Reroute"
+        '404':
+          description: rails/conductor/action_mailbox/reroute description
+        '422':
+          description: rails/conductor/action_mailbox/reroute description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/rails.conductor.actionmailbox.Reroute"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.Reroute"
+      parameters:
+      - name: inbound_email_id
+        in: path
+        description: inbound_email_id
+        required: true
+        schema:
+          type: integer

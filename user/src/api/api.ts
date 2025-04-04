@@ -1,3 +1,5 @@
+import snakecaseKeys from 'snakecase-keys';
+
 /**
  * APIのベースURL
  * 環境変数から読み込む
@@ -24,6 +26,37 @@ export const fetcher = (url: string) => {
       throw error;
     });
 };
+
+/**
+ * POSTリクエスト用のfetcher関数
+ * @param url - リクエスト先のベースURL
+ * @param param1 - SWR Mutationで渡される引数（bodyとqueryを含む）
+ * @returns レスポンスのJSON
+ */
+export async function postFetcher(
+  url: string,
+  { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
+): Promise<any> {
+  // queryパラメータが存在する場合、URLに追加
+  let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  if (arg.query) {
+    const queryStr = objectToQueryString(arg.query);
+    finalUrl = `${API_URL}${url}?${queryStr}`;
+  }
+
+  const response = await fetch(finalUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(arg.body),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error posting data');
+  }
+  return response.json();
+}
 
 /**
  * リクエストオプションを生成するヘルパー関数
@@ -92,3 +125,18 @@ export const putData = async (url: string, data: any) => {
 export const deleteData = async (url: string) => {
   return sendRequest(url, createRequestOptions('DELETE'));
 };
+
+/**
+ * オブジェクトをクエリパラメータ文字列に変換するユーティリティ関数
+ * @param params - キーと値の組み合わせが格納されたオブジェクト
+ * @returns クエリパラメータ形式の文字列
+ */
+function objectToQueryString(params: { [key: string]: any }): string {
+  const snakeParams = snakecaseKeys(params, { deep: true });
+  return Object.keys(snakeParams)
+    .map(
+      (key) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(snakeParams[key])}`
+    )
+    .join('&');
+}

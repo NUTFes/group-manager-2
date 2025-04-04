@@ -1,5 +1,6 @@
 import localFont from 'next/font/local';
 import Image from 'next/image';
+import VenueApplication from '@/components/VenueApplication';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

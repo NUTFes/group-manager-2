@@ -1,1 +1,1 @@
-export { default } from "./RegisterCarousel";
+export { default } from './RegisterCarousel';

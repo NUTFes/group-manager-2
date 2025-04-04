@@ -1,15 +1,15 @@
+import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
-import "@globals";
 import StageForm from './StageForm';
 
 export default {
-title: 'Components/StageForm',
-tags: ["autodocs"],
-component: StageForm,
-parameters: {
+  title: 'Components/StageForm',
+  tags: ['autodocs'],
+  component: StageForm,
+  parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -18,7 +18,5 @@ parameters: {
 type Story = StoryObj<typeof StageForm>;
 
 export const Default: Story = {
-  args: {
-
-  },
+  args: {},
 };
