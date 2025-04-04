@@ -1,11 +1,11 @@
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
-import NotifyList from './NotifyList';
+import NewsList from './NewsList';
 
 export default {
-  title: 'Components/NotifyList',
+  title: 'Components/NewsList',
   tags: ['autodocs'],
-  component: NotifyList,
+  component: NewsList,
   parameters: {
     docs: {
       source: {
@@ -13,9 +13,9 @@ export default {
       },
     },
   },
-} as Meta<typeof NotifyList>;
+} as Meta<typeof NewsList>;
 
-type Story = StoryObj<typeof NotifyList>;
+type Story = StoryObj<typeof NewsList>;
 
 export const Default: Story = {
   args: { isLoginPage: true },

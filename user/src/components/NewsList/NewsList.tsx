@@ -1,30 +1,29 @@
 import { FC } from 'react';
-import { useGetAnnouncements } from '@/api/announcementsAPI';
+import { useGetNews } from '@/api/newsApi';
 import { format } from 'date-fns';
 import FormContainer from '@/components/FormContainer';
 
-type NotifyListProps = {
+type NewsListProps = {
   isLoginPage: boolean;
 };
 
-const NotifyList: FC<NotifyListProps> = ({ isLoginPage }) => {
-  // FIX: ログイン認証実装で修正する。
-  const testGroupID = 1;
+const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
+  const { news, error, isLoading } = useGetNews();
 
-  const { announcements, error, isLoading } = useGetAnnouncements(testGroupID);
+  const sortedNews = (news || []).slice().sort((a, b) => a.id - b.id);
 
-  const formattedDates = (announcements || []).map((item) =>
+  const formattedDates = sortedNews.map((item) =>
     format(new Date(item.created_at), 'yyyy/MM/dd')
   );
 
-  const announcementList = announcements?.map((announcement, index) => {
+  const newsList = sortedNews.map((item, index) => {
     const date = formattedDates[index] ?? 'お知らせはありません。';
 
     return (
-      <div key={announcement.id} className="flex flex-col gap-2">
+      <div key={item.id} className="flex flex-col gap-2">
         <span className="w-24 text-base font-medium text-font">{date}</span>
         <span className="w-56 text-base font-medium text-font">
-          {announcement.message}
+          {item.body}
         </span>
       </div>
     );
@@ -38,11 +37,11 @@ const NotifyList: FC<NotifyListProps> = ({ isLoginPage }) => {
         </div>
         <div className="flex flex-col gap-4">
           {isLoading ? (
-            <div>Loading...</div>
+            <div className="text-base text-font">読み込み中...</div>
           ) : error ? (
-            <div>Error occurred</div>
+            <div className="text-base text-font">エラーが発生しました</div>
           ) : (
-            announcementList
+            newsList
           )}
         </div>
       </FormContainer>
@@ -50,4 +49,4 @@ const NotifyList: FC<NotifyListProps> = ({ isLoginPage }) => {
   );
 };
 
-export default NotifyList;
+export default NewsList;
