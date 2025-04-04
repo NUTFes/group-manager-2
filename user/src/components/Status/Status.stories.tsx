@@ -1,15 +1,15 @@
 import { Meta, StoryObj } from '@storybook/react';
+import '../../styles/globals.css';
 import Status from './Status';
-import "../../styles/globals.css";
 
 export default {
-title: 'Components/Status',
-tags: ["autodocs"],
-component: Status,
-parameters: {
+  title: 'Components/Status',
+  tags: ['autodocs'],
+  component: Status,
+  parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof Status>;
 
 export const Default: Story = {
   args: {
-    statusType:"reception",
-    status:"open"
+    statusType: 'reception',
+    status: 'open',
   },
 };
