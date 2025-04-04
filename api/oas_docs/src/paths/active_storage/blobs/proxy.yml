@@ -1,0 +1,31 @@
+---
+paths:
+  "/rails/active_storage/blobs/proxy/{signed_id}/*filename":
+    get:
+      tags:
+      - active_storage/blobs/proxy
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: active_storage/blobs/proxy description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.blobs.Proxy"
+        '404':
+          description: active_storage/blobs/proxy description
+        '422':
+          description: active_storage/blobs/proxy description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.blobs.Proxy"
+      deprecated: false
+      parameters:
+      - name: signed_id
+        in: path
+        description: signed_id
+        required: true
+        schema:
+          type: integer

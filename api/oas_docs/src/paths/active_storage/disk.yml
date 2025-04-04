@@ -1,0 +1,58 @@
+---
+paths:
+  "/rails/active_storage/disk/{encoded_key}/*filename":
+    get:
+      tags:
+      - active_storage/disk
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: active_storage/disk description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.Disk"
+        '404':
+          description: active_storage/disk description
+        '422':
+          description: active_storage/disk description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.Disk"
+      deprecated: false
+      parameters:
+      - name: encoded_key
+        in: path
+        description: encoded_key
+        required: true
+        schema:
+          type: string
+  "/rails/active_storage/disk/{encoded_token}":
+    put:
+      tags:
+      - active_storage/disk
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: active_storage/disk description
+        '404':
+          description: active_storage/disk description
+        '422':
+          description: active_storage/disk description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.Disk"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/activestorage.Disk"
+      parameters:
+      - name: encoded_token
+        in: path
+        description: encoded_token
+        required: true
+        schema:
+          type: string
