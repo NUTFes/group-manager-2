@@ -190,7 +190,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
             <div className="min-w-full shrink-0 p-4">
               <div className="flex flex-col items-start space-y-12 rounded-lg bg-baseColor">
                 <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                  <div className="y-[17px] inline-flex items-center justify-start pb-[3px] pr-[81px]">
+                  <div className="inline-flex w-[17px] items-center justify-start pb-[3px] pr-[81px]">
                     <div className="text-xs font-black text-font">
                       メールアドレス
                     </div>

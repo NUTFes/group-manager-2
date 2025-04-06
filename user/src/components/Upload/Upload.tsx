@@ -30,7 +30,7 @@ const Upload: FC<UploadProps> = ({
       <div
         className={`inline-flex h-[72px] items-center justify-center gap-4 overflow-hidden rounded-[10px] border
         border-main bg-baseColor px-12 py-4 shadow-[2px_2px_4px_0px_rgba(0,0,0,0.25)] transition-transform duration-150 ease-in-out
-        ${idDisable ? 'cursor-not-allowed bg-gray-300' : 'bg-base hover:bg-gray-200'}
+        ${idDisable ? 'cursor-not-allowed bg-gray-300' : 'bg-baseColor hover:bg-gray-200'}
         active:scale-95`}
       >
         <div className="flex items-center justify-center">
