@@ -141,6 +141,9 @@ importers:
       typescript:
         specifier: ^5
         version: 5.8.2
+      webpack:
+        specifier: ^5.98.0
+        version: 5.98.0(esbuild@0.25.1)
 
 packages:
 
