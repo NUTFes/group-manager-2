@@ -69,7 +69,9 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         <div className="mb-10">
           {note && <p className="text-red-500 font-bold mb-10">{note}</p>}
           {React.isValidElement(children)
-            ? React.cloneElement(children, { onSubmit } as any)
+            ? // 別PRでここ消えるためとりあえずの許容
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              React.cloneElement(children, { onSubmit } as any)
             : children}
         </div>
       )}
