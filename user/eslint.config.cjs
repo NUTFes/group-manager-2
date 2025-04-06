@@ -10,6 +10,12 @@ module.exports = [
   ...compat.extends('plugin:storybook/recommended'),
   ...compat.extends('plugin:tailwindcss/recommended'),
   ...compat.extends('plugin:prettier/recommended'),
+  {
+    files: ['*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
   // 自分のカスタム設定
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
