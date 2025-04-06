@@ -10,6 +10,7 @@ import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
 import { stageOptionSchema } from './schema';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type StageOptionFormProps = {};
 
 const options1 = [
