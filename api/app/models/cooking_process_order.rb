@@ -5,12 +5,12 @@ class CookingProcessOrder < ApplicationRecord
   # 全ての CookingProcessOrder レコードとそれらの group をプリロードしてハッシュで返すクラスメソッド
   def self.with_groups
     @records = CookingProcessOrder.preload(:group)
-      .map { |cooking_process_order|
-        {
-          "cooking_process_order": cooking_process_order,
-          "group": cooking_process_order.group
-        }
+                                  .map do |cooking_process_order|
+      {
+        "cooking_process_order": cooking_process_order,
+        "group": cooking_process_order.group
       }
+    end
   end
 
   # 特定の CookingProcessOrder レコードとその group を返すクラスメソッド
@@ -25,11 +25,11 @@ class CookingProcessOrder < ApplicationRecord
   # インスタンスの情報をハッシュとして返すインスタンスメソッド
   def to_info_h
     {
-      "id": self.id,
-      "group_id": self.group_id,
-      "pre_open_kitchen": self.pre_open_kitchen,
-      "during_open_kitchen": self.during_open_kitchen,
-      "tent": self.tent
+      "id": id,
+      "group_id": group_id,
+      "pre_open_kitchen": pre_open_kitchen,
+      "during_open_kitchen": during_open_kitchen,
+      "tent": tent
     }
   end
 end

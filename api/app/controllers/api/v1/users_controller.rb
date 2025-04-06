@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   # before_action :authenticate_api_user!
-  
+
   def get_user_index_for_admin_view
     @users = User.with_user_details
     render json: fmt(ok, @users)
@@ -22,18 +22,16 @@ class Api::V1::UsersController < ApplicationController
     render json: fmt(ok, @user)
   end
 
-  #admin_pageのviewの形に整える
+  # admin_pageのviewの形に整える
   def fit_user_index_for_admin_view(users)
-    users.map{
-      |user|
+    users.map do |user|
       {
         "user": user,
         "role": user.role
       }
-    }
+    end
   end
 
-  
   # 絞り込み機能
   def get_refinement_users
     role_id = params[:role_id].to_i
@@ -44,8 +42,8 @@ class Api::V1::UsersController < ApplicationController
     end
 
     if @users.count == 0
-      render json: fmt(not_found, [], "Not found users")
-    else 
+      render json: fmt(not_found, [], 'Not found users')
+    else
       render json: fmt(ok, fit_user_index_for_admin_view(@users))
     end
   end
@@ -53,9 +51,9 @@ class Api::V1::UsersController < ApplicationController
   # あいまい検索機能
   def get_search_users
     word = params[:word]
-    @users = User.where("name like ? or email like ?", "%#{word}%", "%#{word}%")
+    @users = User.where('name like ? or email like ?', "%#{word}%", "%#{word}%")
     if @users.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_user_index_for_admin_view(@users))
     end
@@ -68,7 +66,7 @@ class Api::V1::UsersController < ApplicationController
     render json: fmt(ok, @user)
   end
 
-  ### これ使ってる？ 
+  ### これ使ってる？
   def update
     @user = User.find(params[:id])
     role_id = params[:role_id]
@@ -76,16 +74,15 @@ class Api::V1::UsersController < ApplicationController
     render json: @user
   end
 
-
   def edit_user_info
     @user = User.find(edit_user_info_params[:user_id])
     @user_detail = @user.user_detail
-    @user.name = edit_user_info_params[:name] 
-    @user.email = edit_user_info_params[:email] 
-    @user_detail.student_id = edit_user_info_params[:student_id] 
-    @user_detail.grade_id = edit_user_info_params[:grade_id] 
-    @user_detail.department_id = edit_user_info_params[:department_id] 
-    @user_detail.tel = edit_user_info_params[:tel] 
+    @user.name = edit_user_info_params[:name]
+    @user.email = edit_user_info_params[:email]
+    @user_detail.student_id = edit_user_info_params[:student_id]
+    @user_detail.grade_id = edit_user_info_params[:grade_id]
+    @user_detail.department_id = edit_user_info_params[:department_id]
+    @user_detail.tel = edit_user_info_params[:tel]
     @user.save!
     @user_detail.save!
   end
@@ -95,16 +92,16 @@ class Api::V1::UsersController < ApplicationController
     @user.password = reset_password_params[:password]
     @user.password_confirmation = reset_password_params[:password_confirmation]
     @user.save!
-    render json: fmt(ok, [], "Updated password user_id = "+params[:user_id])
+    render json: fmt(ok, [], 'Updated password user_id = ' + params[:user_id])
   end
 
   private
-  
-    def edit_user_info_params
-      params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
-    end
 
-    def reset_password_params
-      params.permit(:user_id, :password, :password_confirmation)
-    end
+  def edit_user_info_params
+    params.permit(:user_id, :name, :student_id, :grade_id, :department_id, :tel, :email)
+  end
+
+  def reset_password_params
+    params.permit(:user_id, :password, :password_confirmation)
+  end
 end

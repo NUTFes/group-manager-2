@@ -1,5 +1,5 @@
 class PowerOrdersController < ApplicationController
-  before_action :set_power_order, only: [:show, :update, :destroy]
+  before_action :set_power_order, only: %i[show update destroy]
 
   # GET /power_orders
   # GET /power_orders.json
@@ -25,28 +25,29 @@ class PowerOrdersController < ApplicationController
   # PATCH/PUT /power_orders/1.json
   def update
     @power_order.update(power_order_params)
-    render json: fmt(created, @power_order, "Updated power_order id = "+params[:id])
+    render json: fmt(created, @power_order, 'Updated power_order id = ' + params[:id])
   end
 
   # DELETE /power_orders/1
   # DELETE /power_orders/1.json
   def destroy
     @power_order.destroy
-    render json: fmt(ok, [], "Deleted power_order = "+params[:id])
+    render json: fmt(ok, [], 'Deleted power_order = ' + params[:id])
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_power_order
-      if PowerOrder.exists?(params[:id])
-        @power_order = PowerOrder.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found power_order = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def power_order_params
-      params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_power_order
+    if PowerOrder.exists?(params[:id])
+      @power_order = PowerOrder.find(params[:id])
+    else
+      render json: fmt(not_found, [], 'Not found power_order = ' + params[:id])
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def power_order_params
+    params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
+  end
 end

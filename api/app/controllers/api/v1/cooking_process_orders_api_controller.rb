@@ -1,5 +1,4 @@
 class Api::V1::CookingProcessOrdersApiController < ApplicationController
-
   def get_cooking_process_order_for_admin_view
     @groups = Group.with_cooking_process_order(params[:id])
     render json: fmt(ok, @groups)
@@ -17,7 +16,7 @@ class Api::V1::CookingProcessOrdersApiController < ApplicationController
     end
 
     if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)
     end
@@ -28,7 +27,7 @@ class Api::V1::CookingProcessOrdersApiController < ApplicationController
     word = params[:word]
     @groups = Group.with_cooking_process_order_narrow_down_by_search_word(word)
     if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)
     end

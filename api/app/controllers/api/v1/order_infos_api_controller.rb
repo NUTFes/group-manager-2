@@ -1,5 +1,4 @@
 class Api::V1::OrderInfosApiController < ApplicationController
-
   def get_order_info_for_admin_view
     @groups = Group.with_order_info(params[:id])
     render json: fmt(ok, @groups)
@@ -11,14 +10,14 @@ class Api::V1::OrderInfosApiController < ApplicationController
     # fes_yesrがALL
     if fes_year_id == 0
       @groups = Group.with_order_infos
-      # fes_year_idが指定 
+      # fes_year_idが指定
     elsif fes_year_id != 0
       @groups = Group.with_order_info_narrow_down_by_fes_year(fes_year_id)
     end
 
     if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
-    else 
+      render json: fmt(not_found, [], 'Not found groups')
+    else
       render json: fmt(ok, @groups)
     end
   end
@@ -28,10 +27,9 @@ class Api::V1::OrderInfosApiController < ApplicationController
     word = params[:word]
     @groups = Group.with_order_info_narrow_down_by_search_word(word)
     if @groups.count == 0
-      render json: fmt(not_found, [], "Not found groups")
+      render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)
     end
   end
-
 end

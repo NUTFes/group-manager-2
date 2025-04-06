@@ -1,1 +1,1 @@
-json.array! @news, partial: "news/news", as: :news
+json.array! @news, partial: 'news/news', as: :news

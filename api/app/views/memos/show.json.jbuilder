@@ -1,1 +1,1 @@
-json.partial! "memos/memo", memo: @memo
+json.partial! 'memos/memo', memo: @memo

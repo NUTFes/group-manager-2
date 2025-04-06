@@ -9,7 +9,7 @@ class PublicRelation < ApplicationRecord
       picture_path: picture_path,
       blurb: blurb,
       created_at: created_at,
-      updated_at: updated_at,
+      updated_at: updated_at
     }
   end
 end
