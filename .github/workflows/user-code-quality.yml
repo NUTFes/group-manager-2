@@ -48,7 +48,16 @@ jobs:
           message: "chore: auto format code"
           push: true
 
-      # ESLintでコードをチェック
-      - name: Check code lint
-        run: pnpm run lint
+      # ESLintでコードの自動修正を実行
+      - name: Fix lint issues with ESLint
+        run: pnpm run lint-fix
         working-directory: ./user
+
+      # 変更があれば、コミット＆プッシュする
+      - name: Commit lint fixed files
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Action
+          author_email: action@github.com
+          message: "chore: auto fix lint issues"
+          push: true
