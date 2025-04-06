@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 User.seed(:id,
           { id: 1, name: '管理者',
             email: 'admin@email.com',

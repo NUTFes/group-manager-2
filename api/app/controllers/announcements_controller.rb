@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AnnouncementsController < ApplicationController
   before_action :set_announcement, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class AnnouncementsController < ApplicationController
   # PATCH/PUT /announcements/1.json
   def update
     @announcement.update(announcement_params)
-    render json: fmt(created, @announcement, 'Updated announcement id = ' + params[:id])
+    render json: fmt(created, @announcement, "Updated announcement id = #{params[:id]}")
   end
 
   # DELETE /announcements/1
   # DELETE /announcements/1.json
   def destroy
     @announcement.destroy
-    render json: fmt(ok, [], 'Deleted announcement = ' + params[:id])
+    render json: fmt(ok, [], "Deleted announcement = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class AnnouncementsController < ApplicationController
     if Announcement.exists?(params[:id])
       @announcement = Announcement.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found announcement = ' + params[:id])
+      render json: fmt(not_found, [], "Not found announcement = #{params[:id]}")
     end
   end
 

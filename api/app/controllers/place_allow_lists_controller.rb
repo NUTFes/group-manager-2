@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaceAllowListsController < ApplicationController
   before_action :set_place_allow_list, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class PlaceAllowListsController < ApplicationController
   # PATCH/PUT /place_allow_lists/1.json
   def update
     @place_allow_list.update(place_allow_list_params)
-    render json: fmt(created, @place_allow_list, 'Updated place_allow_list id = ' + params[:id])
+    render json: fmt(created, @place_allow_list, "Updated place_allow_list id = #{params[:id]}")
   end
 
   # DELETE /place_allow_lists/1
   # DELETE /place_allow_lists/1.json
   def destroy
     @place_allow_list.destroy
-    render json: fmt(ok, [], 'Deleted place_allow_list = ' + params[:id])
+    render json: fmt(ok, [], "Deleted place_allow_list = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class PlaceAllowListsController < ApplicationController
     if PlaceAllowList.exists?(params[:id])
       @place_allow_list = PlaceAllowList.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found place_allow_list = ' + params[:id])
+      render json: fmt(not_found, [], "Not found place_allow_list = #{params[:id]}")
     end
   end
 

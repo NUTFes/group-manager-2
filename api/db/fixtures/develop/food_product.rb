@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FoodProduct.seed(:id,
                  { id: 1, group_id: 1,
                    name: 'baked tomato',

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserPageSettingsController < ApplicationController
   before_action :set_user_page_setting, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class UserPageSettingsController < ApplicationController
   # PATCH/PUT /user_page_settings/1.json
   def update
     @user_page_setting.update(user_page_setting_params)
-    render json: fmt(created, @user_page_setting, 'Updated user_page_setting id = ' + params[:id])
+    render json: fmt(created, @user_page_setting, "Updated user_page_setting id = #{params[:id]}")
   end
 
   # DELETE /user_page_settings/1
   # DELETE /user_page_settings/1.json
   def destroy
     @user_page_setting.destroy
-    render json: fmt(ok, [], 'Deleted user_page_setting = ' + params[:id])
+    render json: fmt(ok, [], "Deleted user_page_setting = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class UserPageSettingsController < ApplicationController
     if UserPageSetting.exists?(params[:id])
       @user_page_setting = UserPageSetting.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found user_page_setting = ' + params[:id])
+      render json: fmt(not_found, [], "Not found user_page_setting = #{params[:id]}")
     end
   end
 

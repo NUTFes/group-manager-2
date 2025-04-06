@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ShopsController < ApplicationController
   before_action :set_shop, only: %i[show update destroy]
 
@@ -17,12 +19,12 @@ class ShopsController < ApplicationController
 
   def update
     @shop.update(shop_params)
-    render json: fmt(created, @shop, 'Updated shop id = ' + params[:id])
+    render json: fmt(created, @shop, "Updated shop id = #{params[:id]}")
   end
 
   def destroy
     @shop.destroy
-    render json: fmt(ok, [], 'Deleted shop = ' + params[:id])
+    render json: fmt(ok, [], "Deleted shop = #{params[:id]}")
   end
 
   private
@@ -32,7 +34,7 @@ class ShopsController < ApplicationController
     if Shop.exists?(params[:id])
       @shop = Shop.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found shop = ' + params[:id])
+      render json: fmt(not_found, [], "Not found shop = #{params[:id]}")
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FesDatesController < ApplicationController
   before_action :set_fes_date, only: %i[show update destroy]
 
@@ -27,12 +29,12 @@ class FesDatesController < ApplicationController
 
   def update
     @fes_date.update(fes_date_params)
-    render json: fmt(created, @fes_date, 'Updated fes_date id = ' + params[:id])
+    render json: fmt(created, @fes_date, "Updated fes_date id = #{params[:id]}")
   end
 
   def destroy
     @fes_date.destroy
-    render json: fmt(ok, [], 'Deleted fes_date = ' + params[:id])
+    render json: fmt(ok, [], "Deleted fes_date = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class FesDatesController < ApplicationController
     if FesDate.exists?(params[:id])
       @fes_date = FesDate.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found fes_date = ' + params[:id])
+      render json: fmt(not_found, [], "Not found fes_date = #{params[:id]}")
     end
   end
 

@@ -1,65 +1,71 @@
-class Api::V1::AnnouncementsApiController < ApplicationController
-  def get_announcement_index_for_admin_view
-    @announcements = Announcement.with_groups
-    render json: fmt(ok, @announcements)
-  end
+# frozen_string_literal: true
 
-  def get_announcement_show_for_admin_view
-    @announcement = Announcement.with_group(params[:id])
-    render json: fmt(ok, @announcement)
-  end
+module Api
+  module V1
+    class AnnouncementsApiController < ApplicationController
+      def get_announcement_index_for_admin_view
+        @announcements = Announcement.with_groups
+        render json: fmt(ok, @announcements)
+      end
 
-  def fit_announcement_index_for_admin_view(announcements)
-    announcements.map do |announcement|
-      {
-        "announcement": announcement,
-        "group": announcement.group
-      }
-    end
-  end
+      def get_announcement_show_for_admin_view
+        @announcement = Announcement.with_group(params[:id])
+        render json: fmt(ok, @announcement)
+      end
 
-  def get_announcement_for_admin_view
-    @groups = Group.with_announcement(params[:id])
-    render json: fmt(ok, @groups)
-  end
+      def fit_announcement_index_for_admin_view(announcements)
+        announcements.map do |announcement|
+          {
+            "announcement": announcement,
+            "group": announcement.group
+          }
+        end
+      end
 
-  # admin_viewのannouncement/indexの形に整える
-  def fit_group_index_for_admin_view(groups)
-    groups.map do |group|
-      {
-        "group": group,
-        "group_category": group.group_category,
-        "fes_year": group.fes_year
-      }
-    end
-  end
+      def get_announcement_for_admin_view
+        @groups = Group.with_announcement(params[:id])
+        render json: fmt(ok, @groups)
+      end
 
-  # 絞り込み機能
-  def get_refinement_announcements
-    fes_year_id = params[:fes_year_id].to_i
-    # 両方ともALL
-    if fes_year_id == 0
-      @groups = Group.with_announcements
-      # fes_year_idだけ指定
-    elsif fes_year_id != 0
-      @groups = Group.with_announcement_narrow_down_by_fes_year(fes_year_id)
-    end
+      # admin_viewのannouncement/indexの形に整える
+      def fit_group_index_for_admin_view(groups)
+        groups.map do |group|
+          {
+            "group": group,
+            "group_category": group.group_category,
+            "fes_year": group.fes_year
+          }
+        end
+      end
 
-    if @groups.count == 0
-      render json: fmt(not_found, [], 'Not found groups')
-    else
-      render json: fmt(ok, @groups)
-    end
-  end
+      # 絞り込み機能
+      def get_refinement_announcements
+        fes_year_id = params[:fes_year_id].to_i
+        # 両方ともALL
+        if fes_year_id.zero?
+          @groups = Group.with_announcements
+          # fes_year_idだけ指定
+        elsif fes_year_id != 0
+          @groups = Group.with_announcement_narrow_down_by_fes_year(fes_year_id)
+        end
 
-  # あいまい検索機能
-  def get_search_announcements
-    word = params[:word]
-    @groups = Group.with_announcement_narrow_down_by_search_word(word)
-    if @groups.count == 0
-      render json: fmt(not_found, [], 'Not found groups')
-    else
-      render json: fmt(ok, @groups)
+        if @groups.count.zero?
+          render json: fmt(not_found, [], 'Not found groups')
+        else
+          render json: fmt(ok, @groups)
+        end
+      end
+
+      # あいまい検索機能
+      def get_search_announcements
+        word = params[:word]
+        @groups = Group.with_announcement_narrow_down_by_search_word(word)
+        if @groups.count.zero?
+          render json: fmt(not_found, [], 'Not found groups')
+        else
+          render json: fmt(ok, @groups)
+        end
+      end
     end
   end
 end

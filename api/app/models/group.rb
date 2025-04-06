@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Group < ApplicationRecord
   belongs_to :user
   belongs_to :fes_year
@@ -62,11 +64,11 @@ class Group < ApplicationRecord
       {
         "group": group,
         "user": group.user.nil? ? nil : group.user,
-        "group_category": group.group_category.nil? ? nil : group.group_category.name,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-        "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-        "stage_orders": if group.stage_orders.count == 0
+        "group_category": group.group_category&.name,
+        "fes_year": group.fes_year&.year_num,
+        "sub_rep": group.sub_rep&.to_info_h,
+        "place_order": group.place_order&.to_place_name_h,
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
@@ -75,8 +77,8 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-        "power_orders": if group.power_orders.count == 0
+        "stage_common_option": group.stage_common_option&.to_info_h,
+        "power_orders": if group.power_orders.count.zero?
                           nil
                         else
                           group.power_orders.map do |power_order|
@@ -85,7 +87,7 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -94,7 +96,7 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "employees": if group.employees.count == 0
+        "employees": if group.employees.count.zero?
                        nil
                      else
                        group.employees.map do |employee|
@@ -103,7 +105,7 @@ class Group < ApplicationRecord
                          }
                        end
                      end,
-        "food_products": if group.food_products.count == 0
+        "food_products": if group.food_products.count.zero?
                            nil
                          else
                            group.food_products.map do |food_product|
@@ -117,10 +119,10 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-        "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
+        "public_relation": group.public_relation&.to_info_h,
+        "venue_map": group.venue_map&.to_info_h,
+        "announcement": group.announcement&.to_info_h,
+        "cooking_process_order": group.cooking_process_order&.to_info_h
       }
     end
   end
@@ -132,11 +134,11 @@ class Group < ApplicationRecord
       {
         "group": group,
         "user": group.user.nil? ? nil : group.user,
-        "group_category": group.group_category.nil? ? nil : group.group_category.name,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-        "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-        "stage_orders": if group.stage_orders.count == 0
+        "group_category": group.group_category&.name,
+        "fes_year": group.fes_year&.year_num,
+        "sub_rep": group.sub_rep&.to_info_h,
+        "place_order": group.place_order&.to_place_name_h,
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
@@ -145,8 +147,8 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-        "power_orders": if group.power_orders.count == 0
+        "stage_common_option": group.stage_common_option&.to_info_h,
+        "power_orders": if group.power_orders.count.zero?
                           nil
                         else
                           group.power_orders.map do |power_order|
@@ -155,7 +157,7 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -164,7 +166,7 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "employees": if group.employees.count == 0
+        "employees": if group.employees.count.zero?
                        nil
                      else
                        group.employees.map do |employee|
@@ -173,7 +175,7 @@ class Group < ApplicationRecord
                          }
                        end
                      end,
-        "food_products": if group.food_products.count == 0
+        "food_products": if group.food_products.count.zero?
                            nil
                          else
                            group.food_products.map do |food_product|
@@ -187,10 +189,10 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-        "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
+        "public_relation": group.public_relation&.to_info_h,
+        "venue_map": group.venue_map&.to_info_h,
+        "announcement": group.announcement&.to_info_h,
+        "cooking_process_order": group.cooking_process_order&.to_info_h
       }
     @record
   end
@@ -202,11 +204,11 @@ class Group < ApplicationRecord
       {
         "group": group,
         "user": group.user.nil? ? nil : group.user,
-        "group_category": group.group_category.nil? ? nil : group.group_category.name,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-        "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-        "stage_orders": if group.stage_orders.count == 0
+        "group_category": group.group_category&.name,
+        "fes_year": group.fes_year&.year_num,
+        "sub_rep": group.sub_rep&.to_info_h,
+        "place_order": group.place_order&.to_place_name_h,
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
@@ -215,8 +217,8 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-        "power_orders": if group.power_orders.count == 0
+        "stage_common_option": group.stage_common_option&.to_info_h,
+        "power_orders": if group.power_orders.count.zero?
                           nil
                         else
                           group.power_orders.map do |power_order|
@@ -225,7 +227,7 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -234,7 +236,7 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "employees": if group.employees.count == 0
+        "employees": if group.employees.count.zero?
                        nil
                      else
                        group.employees.map do |employee|
@@ -243,7 +245,7 @@ class Group < ApplicationRecord
                          }
                        end
                      end,
-        "food_products": if group.food_products.count == 0
+        "food_products": if group.food_products.count.zero?
                            nil
                          else
                            group.food_products.map do |food_product|
@@ -257,10 +259,10 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.to_info_h,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.to_info_h,
-        "announcement": group.announcement.nil? ? nil : group.announcement.to_info_h,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.to_info_h
+        "public_relation": group.public_relation&.to_info_h,
+        "venue_map": group.venue_map&.to_info_h,
+        "announcement": group.announcement&.to_info_h,
+        "cooking_process_order": group.cooking_process_order&.to_info_h
       }
     end
   end
@@ -272,11 +274,11 @@ class Group < ApplicationRecord
       {
         "group": group,
         "user": group.user.nil? ? nil : group.user,
-        "group_category": group.group_category.nil? ? nil : group.group_category.name,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.year_num,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-        "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-        "stage_orders": if group.stage_orders.count == 0
+        "group_category": group.group_category&.name,
+        "fes_year": group.fes_year&.year_num,
+        "sub_rep": group.sub_rep&.to_info_h,
+        "place_order": group.place_order&.to_place_name_h,
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
@@ -285,8 +287,8 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-        "power_orders": if group.power_orders.count == 0
+        "stage_common_option": group.stage_common_option&.to_info_h,
+        "power_orders": if group.power_orders.count.zero?
                           nil
                         else
                           group.power_orders.map do |power_order|
@@ -295,7 +297,7 @@ class Group < ApplicationRecord
                             }
                           end
                         end,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -304,7 +306,7 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "employees": if group.employees.count == 0
+        "employees": if group.employees.count.zero?
                        nil
                      else
                        group.employees.map do |employee|
@@ -313,7 +315,7 @@ class Group < ApplicationRecord
                          }
                        end
                      end,
-        "food_products": if group.food_products.count == 0
+        "food_products": if group.food_products.count.zero?
                            nil
                          else
                            group.food_products.map do |food_product|
@@ -327,10 +329,10 @@ class Group < ApplicationRecord
                              }
                            end
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-        "announcement": group.announcement.nil? ? nil : group.announcement.id,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
+        "public_relation": group.public_relation&.id,
+        "venue_map": group.venue_map&.id,
+        "announcement": group.announcement&.id,
+        "cooking_process_order": group.cooking_process_order&.id
       }
     end
   end
@@ -354,28 +356,28 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "user": group.user.nil? ? nil : group.user.id,
-        "group_category": group.group_category.nil? ? nil : group.group_category.id,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
-        "place_order": group.place_order.nil? ? nil : group.place_order.id,
-        "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
-        "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
-        "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+        "user": group.user&.id,
+        "group_category": group.group_category&.id,
+        "fes_year": group.fes_year&.id,
+        "sub_rep": group.sub_rep&.id,
+        "place_order": group.place_order&.id,
+        "stage_orders": group.stage_orders.count.zero? ? nil : group.stage_orders[0].id,
+        "stage_common_option": group.stage_common_option&.id,
+        "power_orders": group.power_orders.count.zero? ? nil : group.power_orders[0].id,
+        "rental_orders": group.rental_orders.count.zero? ? nil : group.rental_orders[0].id,
+        "employees": group.employees.count.zero? ? nil : group.employees[0].id,
         "food_products": if group.food_products.empty?
                            nil
                          else
                            {
-                             "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                             "food_product": group.food_products.first&.id,
                              "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
                            }
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-        "announcement": group.announcement.nil? ? nil : group.announcement.id,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
+        "public_relation": group.public_relation&.id,
+        "venue_map": group.venue_map&.id,
+        "announcement": group.announcement&.id,
+        "cooking_process_order": group.cooking_process_order&.id
       }
     end
   end
@@ -385,28 +387,28 @@ class Group < ApplicationRecord
     @record =
       {
         "group": group,
-        "user": group.user.nil? ? nil : group.user.id,
-        "group_category": group.group_category.nil? ? nil : group.group_category.id,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
-        "place_order": group.place_order.nil? ? nil : group.place_order.id,
-        "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
-        "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
-        "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+        "user": group.user&.id,
+        "group_category": group.group_category&.id,
+        "fes_year": group.fes_year&.id,
+        "sub_rep": group.sub_rep&.id,
+        "place_order": group.place_order&.id,
+        "stage_orders": group.stage_orders.count.zero? ? nil : group.stage_orders[0].id,
+        "stage_common_option": group.stage_common_option&.id,
+        "power_orders": group.power_orders.count.zero? ? nil : group.power_orders[0].id,
+        "rental_orders": group.rental_orders.count.zero? ? nil : group.rental_orders[0].id,
+        "employees": group.employees.count.zero? ? nil : group.employees[0].id,
         "food_products": if group.food_products.empty?
                            nil
                          else
                            {
-                             "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                             "food_product": group.food_products.first&.id,
                              "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
                            }
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-        "announcement": group.announcement.nil? ? nil : group.announcement.id,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
+        "public_relation": group.public_relation&.id,
+        "venue_map": group.venue_map&.id,
+        "announcement": group.announcement&.id,
+        "cooking_process_order": group.cooking_process_order&.id
       }
     @record
   end
@@ -417,28 +419,28 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "user": group.user.nil? ? nil : group.user.id,
-        "group_category": group.group_category.nil? ? nil : group.group_category.id,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
-        "place_order": group.place_order.nil? ? nil : group.place_order.id,
-        "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
-        "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
-        "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+        "user": group.user&.id,
+        "group_category": group.group_category&.id,
+        "fes_year": group.fes_year&.id,
+        "sub_rep": group.sub_rep&.id,
+        "place_order": group.place_order&.id,
+        "stage_orders": group.stage_orders.count.zero? ? nil : group.stage_orders[0].id,
+        "stage_common_option": group.stage_common_option&.id,
+        "power_orders": group.power_orders.count.zero? ? nil : group.power_orders[0].id,
+        "rental_orders": group.rental_orders.count.zero? ? nil : group.rental_orders[0].id,
+        "employees": group.employees.count.zero? ? nil : group.employees[0].id,
         "food_products": if group.food_products.empty?
                            nil
                          else
                            {
-                             "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                             "food_product": group.food_products.first&.id,
                              "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
                            }
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-        "announcement": group.announcement.nil? ? nil : group.announcement.id,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
+        "public_relation": group.public_relation&.id,
+        "venue_map": group.venue_map&.id,
+        "announcement": group.announcement&.id,
+        "cooking_process_order": group.cooking_process_order&.id
       }
     end
   end
@@ -449,28 +451,28 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "user": group.user.nil? ? nil : group.user.id,
-        "group_category": group.group_category.nil? ? nil : group.group_category.id,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
-        "place_order": group.place_order.nil? ? nil : group.place_order.id,
-        "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
-        "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
-        "employees": group.employees.count == 0 ? nil : group.employees[0].id,
+        "user": group.user&.id,
+        "group_category": group.group_category&.id,
+        "fes_year": group.fes_year&.id,
+        "sub_rep": group.sub_rep&.id,
+        "place_order": group.place_order&.id,
+        "stage_orders": group.stage_orders.count.zero? ? nil : group.stage_orders[0].id,
+        "stage_common_option": group.stage_common_option&.id,
+        "power_orders": group.power_orders.count.zero? ? nil : group.power_orders[0].id,
+        "rental_orders": group.rental_orders.count.zero? ? nil : group.rental_orders[0].id,
+        "employees": group.employees.count.zero? ? nil : group.employees[0].id,
         "food_products": if group.food_products.empty?
                            nil
                          else
                            {
-                             "food_product": group.food_products.first.nil? ? nil : group.food_products.first.id,
+                             "food_product": group.food_products.first&.id,
                              "purchase_lists": group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
                            }
                          end,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-        "announcement": group.announcement.nil? ? nil : group.announcement.status,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id
+        "public_relation": group.public_relation&.id,
+        "venue_map": group.venue_map&.id,
+        "announcement": group.announcement&.status,
+        "cooking_process_order": group.cooking_process_order&.id
       }
     end
   end
@@ -484,7 +486,7 @@ class Group < ApplicationRecord
       {
         "group": group,
         "sub_rep": group.sub_rep,
-        "sub_rep_info": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h
+        "sub_rep_info": group.sub_rep&.to_info_h
       }
     end
   end
@@ -496,7 +498,7 @@ class Group < ApplicationRecord
       {
         "group": group,
         "sub_rep": group.sub_rep,
-        "sub_rep_info": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h
+        "sub_rep_info": group.sub_rep&.to_info_h
       }
     end
   end
@@ -510,7 +512,7 @@ class Group < ApplicationRecord
       {
         "group": group,
         "place_order": group.place_order,
-        "place_order_name": group.place_order.nil? ? nil : group.place_order.to_place_name_h
+        "place_order_name": group.place_order&.to_place_name_h
       }
     end
   end
@@ -523,7 +525,7 @@ class Group < ApplicationRecord
       {
         "group": group,
         "place_order": group.place_order,
-        "place_order_name": group.place_order.nil? ? nil : group.place_order.to_place_name_h
+        "place_order_name": group.place_order&.to_place_name_h
       }
     end
   end
@@ -536,13 +538,13 @@ class Group < ApplicationRecord
                     .map  do |group|
       {
         "group": group,
-        "stage_orders": if group.stage_orders.count == 0
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
                             {
                               "stage_order": stage_order,
-                              "stage_order_info": stage_order.nil? ? nil : stage_order.to_info_h
+                              "stage_order_info": stage_order&.to_info_h
                             }
                           end
                         end
@@ -557,13 +559,13 @@ class Group < ApplicationRecord
                    .map do |group|
       {
         "group": group,
-        "stage_orders": if group.stage_orders.count == 0
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
                             {
                               "stage_order": stage_order,
-                              "stage_order_info": stage_order.nil? ? nil : stage_order.to_info_h
+                              "stage_order_info": stage_order&.to_info_h
                             }
                           end
                         end
@@ -604,7 +606,7 @@ class Group < ApplicationRecord
                     .map  do |group|
       {
         "group": group,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders
+        "power_orders": group.power_orders.count.zero? ? nil : group.power_orders
       }
     end
   end
@@ -616,7 +618,7 @@ class Group < ApplicationRecord
                    .map do |group|
       {
         "group": group,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders
+        "power_orders": group.power_orders.count.zero? ? nil : group.power_orders
       }
     end
   end
@@ -629,7 +631,7 @@ class Group < ApplicationRecord
                     .map  do |group|
       {
         "group": group,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -650,7 +652,7 @@ class Group < ApplicationRecord
                    .map do |group|
       {
         "group": group,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -672,7 +674,7 @@ class Group < ApplicationRecord
                     .map  do |group|
       {
         "group": group,
-        "employees": group.employees.count == 0 ? nil : group.employees
+        "employees": group.employees.count.zero? ? nil : group.employees
       }
     end
   end
@@ -684,7 +686,7 @@ class Group < ApplicationRecord
                    .map do |group|
       {
         "group": group,
-        "employees": group.employees.count == 0 ? nil : group.employees
+        "employees": group.employees.count.zero? ? nil : group.employees
       }
     end
   end
@@ -697,7 +699,7 @@ class Group < ApplicationRecord
                     .map  do |group|
       {
         "group": group,
-        "food_products": group.food_products.count == 0 ? nil : group.food_products
+        "food_products": group.food_products.count.zero? ? nil : group.food_products
       }
     end
   end
@@ -709,7 +711,7 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "food_products": group.food_products.count == 0 ? nil : group.food_products
+        "food_products": group.food_products.count.zero? ? nil : group.food_products
       }
     end
   end
@@ -722,11 +724,11 @@ class Group < ApplicationRecord
                     .map  do |group|
       {
         "group": group,
-        "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
-        "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
-        "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
-        "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
-        "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at
+        "picture_name": group.public_relation&.picture_name,
+        "picture_path": group.public_relation&.picture_path,
+        "blurb": group.public_relation&.blurb,
+        "created_at": group.public_relation&.created_at,
+        "updated_at": group.public_relation&.updated_at
       }
     end
   end
@@ -737,12 +739,12 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "public_relation_id": group.public_relation.nil? ? nil : group.public_relation.id,
-        "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
-        "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
-        "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
-        "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
-        "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at
+        "public_relation_id": group.public_relation&.id,
+        "picture_name": group.public_relation&.picture_name,
+        "picture_path": group.public_relation&.picture_path,
+        "blurb": group.public_relation&.blurb,
+        "created_at": group.public_relation&.created_at,
+        "updated_at": group.public_relation&.updated_at
       }
     end
   end
@@ -760,11 +762,11 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
-        "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
-        "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
-        "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
-        "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at
+        "picture_name": group.public_relation&.picture_name,
+        "picture_path": group.public_relation&.picture_path,
+        "blurb": group.public_relation&.blurb,
+        "created_at": group.public_relation&.created_at,
+        "updated_at": group.public_relation&.updated_at
       }
     end
   end
@@ -775,11 +777,11 @@ class Group < ApplicationRecord
                    .map  do |group|
       {
         "group": group,
-        "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
-        "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
-        "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
-        "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
-        "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at
+        "picture_name": group.public_relation&.picture_name,
+        "picture_path": group.public_relation&.picture_path,
+        "blurb": group.public_relation&.blurb,
+        "created_at": group.public_relation&.created_at,
+        "updated_at": group.public_relation&.updated_at
       }
     end
   end
@@ -955,12 +957,12 @@ class Group < ApplicationRecord
 
   # 識別番号取得
   def number
-    group_identification.nil? ? nil : group_identification.number
+    group_identification&.number
   end
 
   # 開催日取得
   def date
-    group_identification.nil? ? nil : group_identification.date
+    group_identification&.date
   end
 
   # 電力申請の総和を計算する
@@ -986,7 +988,7 @@ class Group < ApplicationRecord
     rental_orders.preload(:rental_item).map do |rental_order|
       {
         "item": rental_order.rental_item.name,
-        "num": rental_order.num - assign_rental_items.map { |assign_rental_item| assign_rental_item.num }.sum
+        "num": rental_order.num - assign_rental_items.map(&:num).sum
       }
     end
   end

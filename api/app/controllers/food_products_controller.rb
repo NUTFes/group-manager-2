@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FoodProductsController < ApplicationController
   before_action :set_food_product, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class FoodProductsController < ApplicationController
   # PATCH/PUT /food_products/1.json
   def update
     @food_product.update(food_product_params)
-    render json: fmt(created, @food_product, 'Updated food_product id = ' + params[:id])
+    render json: fmt(created, @food_product, "Updated food_product id = #{params[:id]}")
   end
 
   # DELETE /food_products/1
   # DELETE /food_products/1.json
   def destroy
     @food_product.destroy
-    render json: fmt(ok, [], 'Deleted food_product = ' + params[:id])
+    render json: fmt(ok, [], "Deleted food_product = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class FoodProductsController < ApplicationController
     if FoodProduct.exists?(params[:id])
       @food_product = FoodProduct.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found food_product = ' + params[:id])
+      render json: fmt(not_found, [], "Not found food_product = #{params[:id]}")
     end
   end
 

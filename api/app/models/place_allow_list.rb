@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaceAllowList < ApplicationRecord
   belongs_to :place
   belongs_to :group_category

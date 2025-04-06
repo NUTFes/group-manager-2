@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StageOrdersController < ApplicationController
   before_action :set_stage_order, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class StageOrdersController < ApplicationController
   # PATCH/PUT /stage_orders/1.json
   def update
     @stage_order.update(stage_order_params)
-    render json: fmt(created, @stage_order, 'Updated stage_order id = ' + params[:id])
+    render json: fmt(created, @stage_order, "Updated stage_order id = #{params[:id]}")
   end
 
   # DELETE /stage_orders/1
   # DELETE /stage_orders/1.json
   def destroy
     @stage_order.destroy
-    render json: fmt(ok, [], 'Deleted stage_order = ' + params[:id])
+    render json: fmt(ok, [], "Deleted stage_order = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class StageOrdersController < ApplicationController
     if StageOrder.exists?(params[:id])
       @stage_order = StageOrder.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found stage_order = ' + params[:id])
+      render json: fmt(not_found, [], "Not found stage_order = #{params[:id]}")
     end
   end
 

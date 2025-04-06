@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContactPersonsController < ApplicationController
   before_action :set_contact_person, only: %i[show update destroy]
 

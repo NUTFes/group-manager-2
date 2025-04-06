@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RentalItemAllowListsController < ApplicationController
   before_action :set_rental_item_allow_list, only: %i[show update destroy]
 
@@ -17,12 +19,12 @@ class RentalItemAllowListsController < ApplicationController
 
   def update
     @rental_item_allow_list.update(rental_item_allow_list_params)
-    render json: fmt(created, @rental_item_allow_list, 'Updated rental_item_allow_list id = ' + params[:id])
+    render json: fmt(created, @rental_item_allow_list, "Updated rental_item_allow_list id = #{params[:id]}")
   end
 
   def destroy
     @rental_item_allow_list.destroy
-    render json: fmt(ok, [], 'Deleted rental_item_allow_list = ' + params[:id])
+    render json: fmt(ok, [], "Deleted rental_item_allow_list = #{params[:id]}")
   end
 
   private
@@ -32,7 +34,7 @@ class RentalItemAllowListsController < ApplicationController
     if RentalItemAllowList.exists?(params[:id])
       @rental_item_allow_list = RentalItemAllowList.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found rental_item_allow_list = ' + params[:id])
+      render json: fmt(not_found, [], "Not found rental_item_allow_list = #{params[:id]}")
     end
   end
 

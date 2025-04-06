@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateAssignGroupPlaces < ActiveRecord::Migration[6.0]
   def change
     create_table :assign_group_places do |t|

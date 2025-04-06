@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RentalItemAllowList.seed(:id,
                          # 机の貸し出し可能な団体種別
                          { id:  1, rental_item_id:  1, group_category_id: 1 }, # 模擬店(食品)

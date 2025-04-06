@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlacesController < ApplicationController
   before_action :set_place, only: %i[show update destroy]
 
@@ -17,14 +19,14 @@ class PlacesController < ApplicationController
 
   def update
     @place.update(place_params)
-    render json: fmt(created, @place, 'Updated place id = ' + params[:id])
+    render json: fmt(created, @place, "Updated place id = #{params[:id]}")
   end
 
   # DELETE /place_orders/1
   # DELETE /place_orders/1.json
   def destroy
     @place.destroy
-    render json: fmt(ok, [], 'Deleted place = ' + params[:id])
+    render json: fmt(ok, [], "Deleted place = #{params[:id]}")
   end
 
   private
@@ -34,7 +36,7 @@ class PlacesController < ApplicationController
     if Place.exists?(params[:id])
       @place = Place.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found place = ' + params[:id])
+      render json: fmt(not_found, [], "Not found place = #{params[:id]}")
     end
   end
 

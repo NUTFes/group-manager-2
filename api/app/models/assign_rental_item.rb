@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignRentalItem < ApplicationRecord
   belongs_to :group
   belongs_to :rental_item

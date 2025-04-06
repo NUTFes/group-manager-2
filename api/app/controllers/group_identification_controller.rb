@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupIdentificationController < ApplicationController
   before_action :set_group_identification, only: %i[update destroy]
 
@@ -14,7 +16,7 @@ class GroupIdentificationController < ApplicationController
 
     @group_identifications = @groups.map do |group|
       {
-        "id": group.group_identification.nil? ? nil : group.group_identification.id,
+        "id": group.group_identification&.id,
         "group_id": group.id,
         "name": group.name,
         "group_category_id": group.group_category.id,
@@ -22,8 +24,8 @@ class GroupIdentificationController < ApplicationController
         "number": group.number.nil? ? nil : group.number,
         "place": group.place.nil? ? nil : group.place,
         "stage": group.stage.nil? ? nil : group.stage,
-        "created_at": group.group_identification.nil? ? nil : group.group_identification.created_at,
-        "updated_at": group.group_identification.nil? ? nil : group.group_identification.updated_at
+        "created_at": group.group_identification&.created_at,
+        "updated_at": group.group_identification&.updated_at
 
       }
     end
@@ -37,12 +39,12 @@ class GroupIdentificationController < ApplicationController
 
   def update
     @group_identification.update(group_identification_params)
-    render json: fmt(ok, @group_identification, 'Updated group_identification id = ' + params[:id])
+    render json: fmt(ok, @group_identification, "Updated group_identification id = #{params[:id]}")
   end
 
   def destroy
     @group_identification.destroy
-    render json: fmt(ok, [], 'Deleted group_identification id = ' + params[:id])
+    render json: fmt(ok, [], "Deleted group_identification id = #{params[:id]}")
   end
 
   private
@@ -51,7 +53,7 @@ class GroupIdentificationController < ApplicationController
     if GroupIdentification.exists?(params[:id])
       @group_identification = GroupIdentification.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found group_identification = ' + params[:id])
+      render json: fmt(not_found, [], "Not found group_identification = #{params[:id]}")
     end
   end
 

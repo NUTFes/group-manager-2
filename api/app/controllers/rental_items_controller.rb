@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RentalItemsController < ApplicationController
   before_action :set_rental_item, only: %i[show update destroy]
 
@@ -17,12 +19,12 @@ class RentalItemsController < ApplicationController
 
   def update
     @rental_item.update(rental_item_params)
-    render json: fmt(created, @rental_item, 'Updated rental_item id = ' + params[:id])
+    render json: fmt(created, @rental_item, "Updated rental_item id = #{params[:id]}")
   end
 
   def destroy
     @rental_item.destroy
-    render json: fmt(ok, [], 'Deleted rental_item = ' + params[:id])
+    render json: fmt(ok, [], "Deleted rental_item = #{params[:id]}")
   end
 
   private
@@ -32,7 +34,7 @@ class RentalItemsController < ApplicationController
     if RentalItem.exists?(params[:id])
       @rental_item = RentalItem.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found rental_item = ' + params[:id])
+      render json: fmt(not_found, [], "Not found rental_item = #{params[:id]}")
     end
   end
 

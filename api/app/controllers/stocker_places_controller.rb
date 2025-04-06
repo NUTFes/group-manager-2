@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StockerPlacesController < ApplicationController
   before_action :set_stocker_place, only: %i[show update destroy]
 
@@ -17,12 +19,12 @@ class StockerPlacesController < ApplicationController
 
   def update
     @stocker_place.update(stocker_place_params)
-    render json: fmt(created, @stocker_place, 'Updated stocker_place id = ' + params[:id])
+    render json: fmt(created, @stocker_place, "Updated stocker_place id = #{params[:id]}")
   end
 
   def destroy
     @stocker_place.destroy
-    render json: fmt(ok, [], 'Deleted stocker_place = ' + params[:id])
+    render json: fmt(ok, [], "Deleted stocker_place = #{params[:id]}")
   end
 
   private
@@ -32,7 +34,7 @@ class StockerPlacesController < ApplicationController
     if StockerPlace.exists?(params[:id])
       @stocker_place = StockerPlace.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found stocker_place = ' + params[:id])
+      render json: fmt(not_found, [], "Not found stocker_place = #{params[:id]}")
     end
   end
 

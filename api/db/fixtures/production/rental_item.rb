@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RentalItem.seed(:id,
                 { id: 1, name: '机', is_inside_shop_rentable: true, is_outside_shop_rentable: true,
                   is_stage_rentable: true },

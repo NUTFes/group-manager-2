@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PurchaseList < ApplicationRecord
   belongs_to :fes_date
   belongs_to :food_product

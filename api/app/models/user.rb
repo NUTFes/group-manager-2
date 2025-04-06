@@ -66,14 +66,14 @@ class User < ActiveRecord::Base
       "user": user,
       "role": user.role,
       "user_detail": user.user_detail,
-      "user_detail_info": user.user_detail.nil? ? nil : user.user_detail.to_info_h
+      "user_detail_info": user.user_detail&.to_info_h
     }
   end
 
   def with_user_detail
     {
       "user": self,
-      "user_detail": user_detail.nil? ? nil : user_detail.to_info_h
+      "user_detail": user_detail&.to_info_h
     }
   end
 
@@ -83,10 +83,10 @@ class User < ActiveRecord::Base
     @record = @groups.map do |group|
       {
         "group": group,
-        "group_category": group.group_category.nil? ? nil : group.group_category.name,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.to_info_h,
-        "place_order": group.place_order.nil? ? nil : group.place_order.to_place_name_h,
-        "stage_orders": if group.stage_orders.count == 0
+        "group_category": group.group_category&.name,
+        "sub_rep": group.sub_rep&.to_info_h,
+        "place_order": group.place_order&.to_place_name_h,
+        "stage_orders": if group.stage_orders.count.zero?
                           nil
                         else
                           group.stage_orders.map do |stage_order|
@@ -95,8 +95,8 @@ class User < ActiveRecord::Base
                             }
                           end
                         end,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.to_info_h,
-        "power_orders": if group.power_orders.count == 0
+        "stage_common_option": group.stage_common_option&.to_info_h,
+        "power_orders": if group.power_orders.count.zero?
                           nil
                         else
                           group.power_orders.map do |power_order|
@@ -105,7 +105,7 @@ class User < ActiveRecord::Base
                             }
                           end
                         end,
-        "rental_orders": if group.rental_orders.count == 0
+        "rental_orders": if group.rental_orders.count.zero?
                            nil
                          else
                            group.rental_orders.map do |rental_order|
@@ -114,7 +114,7 @@ class User < ActiveRecord::Base
                              }
                            end
                          end,
-        "employees": if group.employees.count == 0
+        "employees": if group.employees.count.zero?
                        nil
                      else
                        group.employees.map do |employee|
@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
                          }
                        end
                      end,
-        "food_products": if group.food_products.count == 0
+        "food_products": if group.food_products.count.zero?
                            nil
                          else
                            group.food_products.map do |food_product|

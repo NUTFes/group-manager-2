@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Shop.seed(:id,
           { id: 1, name: 'アピタ長岡店',
             tel: '0258-29-6111',

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateCurrentStocks < ActiveRecord::Migration[6.1]
   def change
     create_table :current_stocks do |t|

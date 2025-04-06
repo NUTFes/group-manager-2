@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Employee < ApplicationRecord
   belongs_to :group
   belongs_to :stool_test

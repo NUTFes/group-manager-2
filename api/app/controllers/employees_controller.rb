@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmployeesController < ApplicationController
   before_action :set_employee, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class EmployeesController < ApplicationController
   # PATCH/PUT /employees/1.json
   def update
     @employee.update(employee_params)
-    render json: fmt(created, @employee, 'Updated employee id = ' + params[:id])
+    render json: fmt(created, @employee, "Updated employee id = #{params[:id]}")
   end
 
   # DELETE /employees/1
   # DELETE /employees/1.json
   def destroy
     @employee.destroy
-    render json: fmt(ok, [], 'Deleted employee = ' + params[:id])
+    render json: fmt(ok, [], "Deleted employee = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class EmployeesController < ApplicationController
     if Employee.exists?(params[:id])
       @employee = Employee.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found employee = ' + params[:id])
+      render json: fmt(not_found, [], "Not found employee = #{params[:id]}")
     end
   end
 

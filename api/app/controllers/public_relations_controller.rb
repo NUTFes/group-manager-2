@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublicRelationsController < ApplicationController
   before_action :set_public_relation, only: %i[show update destroy]
 
@@ -17,12 +19,12 @@ class PublicRelationsController < ApplicationController
 
   def update
     @public_relation.update(public_relation_params)
-    render json: fmt(created, @public_relation, 'Updated public_relation id = ' + params[:id])
+    render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy
     @public_relation.destroy
-    render json: fmt(ok, [], 'Deleted public_relation = ' + params[:id])
+    render json: fmt(ok, [], "Deleted public_relation = #{params[:id]}")
   end
 
   private
@@ -32,7 +34,7 @@ class PublicRelationsController < ApplicationController
     if PublicRelation.exists?(params[:id])
       @public_relation = PublicRelation.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found public_relation = ' + params[:id])
+      render json: fmt(not_found, [], "Not found public_relation = #{params[:id]}")
     end
   end
 

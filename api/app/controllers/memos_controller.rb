@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MemosController < ApplicationController
   before_action :set_memo, only: %i[show update destroy]
 
@@ -38,7 +40,7 @@ class MemosController < ApplicationController
     @memo.update(memo_params)
     @memos = Memo.all.order(id: 'DESC')
     memo_list = []
-    for memo in @memos
+    @memos.each do |memo|
       user = memo.user.name
       memo_list << {
         memo: memo,
@@ -53,7 +55,7 @@ class MemosController < ApplicationController
   # DELETE /memos/1.json
   def destroy
     @memo.destroy
-    render json: fmt(ok, [], 'Deleted memo = ' + params[:id])
+    render json: fmt(ok, [], "Deleted memo = #{params[:id]}")
   end
 
   private
@@ -63,7 +65,7 @@ class MemosController < ApplicationController
     if Memo.exists?(params[:id])
       @memo = Memo.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found memo = ' + params[:id])
+      render json: fmt(not_found, [], "Not found memo = #{params[:id]}")
     end
   end
 

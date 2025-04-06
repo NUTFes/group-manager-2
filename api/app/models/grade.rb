@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Grade < ApplicationRecord
   has_many :user_details
   has_many :sub_reps

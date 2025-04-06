@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Employee.seed(:id,
               { id: 1, group_id: 1,
                 name: '技大梅子',

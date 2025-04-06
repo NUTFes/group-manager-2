@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 UserDetail.seed(:id,
                 { id: 1, tel: '11111111111',
                   grade_id: 1,

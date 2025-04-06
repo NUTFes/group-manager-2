@@ -1,79 +1,85 @@
-class Api::V1::AssignRentalItemsApiController < ApplicationController
-  # 在庫物品 stocker_items
-  def get_stocker_item_index_for_admin_view
-    @stocker_items = StockerItem.with_rental_items
-    render json: fmt(ok, @stocker_items)
-  end
+# frozen_string_literal: true
 
-  def get_stocker_item_show_for_admin_view
-    @stocker_item = StockerItem.with_rental_item(params[:id])
-    render json: fmt(ok, @stocker_item)
-  end
+module Api
+  module V1
+    class AssignRentalItemsApiController < ApplicationController
+      # 在庫物品 stocker_items
+      def get_stocker_item_index_for_admin_view
+        @stocker_items = StockerItem.with_rental_items
+        render json: fmt(ok, @stocker_items)
+      end
 
-  def fit_stocker_item_index_for_admin_view(stocker_items)
-    stocker_items.map do |stocker_item|
-      {
-        "stocker_item": stocker_item,
-        "rental_item": stocker_item.rental_item
-      }
-    end
-  end
+      def get_stocker_item_show_for_admin_view
+        @stocker_item = StockerItem.with_rental_item(params[:id])
+        render json: fmt(ok, @stocker_item)
+      end
 
-  # 在庫物品絞り込み
-  def get_refinement_stocker_item
-    stocker_place_id = params[:stocker_place_id].to_i
-    @stocker_items = if stocker_place_id == 0
-                       StockerItem.all
-                     else
-                       StockerItem.where(stocker_place_id: stocker_place_id)
-                     end
+      def fit_stocker_item_index_for_admin_view(stocker_items)
+        stocker_items.map do |stocker_item|
+          {
+            "stocker_item": stocker_item,
+            "rental_item": stocker_item.rental_item
+          }
+        end
+      end
 
-    @stocker_place = StockerPlace.find(params[:stocker_place_id])
+      # 在庫物品絞り込み
+      def get_refinement_stocker_item
+        stocker_place_id = params[:stocker_place_id].to_i
+        @stocker_items = if stocker_place_id.zero?
+                           StockerItem.all
+                         else
+                           StockerItem.where(stocker_place_id: stocker_place_id)
+                         end
 
-    if @stocker_items.count == 0
-      render json: fmt(not_found, { "stocker_place": @stocker_place, "stocker_items": [] },
-                       'Not found stocker_items')
-    else
-      render json: fmt(ok,
-                       { "stocker_place": @stocker_place,
-                         "stocker_items": fit_stocker_item_index_for_admin_view(@stocker_items) })
-    end
-  end
+        @stocker_place = StockerPlace.find(params[:stocker_place_id])
 
-  # 割当状況 assign_rental_items
-  def get_assign_rental_item_index_for_admin_view
-    @assign_rental_items = AssignRentalItem.with_groups_and_rental_item
-    render json: fmt(ok, @assign_rental_items)
-  end
+        if @stocker_items.count.zero?
+          render json: fmt(not_found, { "stocker_place": @stocker_place, "stocker_items": [] },
+                           'Not found stocker_items')
+        else
+          render json: fmt(ok,
+                           { "stocker_place": @stocker_place,
+                             "stocker_items": fit_stocker_item_index_for_admin_view(@stocker_items) })
+        end
+      end
 
-  def get_assign_rental_item_show_for_admin_view
-    @assign_rental_item = AssignRentalItem.with_rental_item(params[:id])
-    render json: fmt(ok, @assign_rental_item)
-  end
+      # 割当状況 assign_rental_items
+      def get_assign_rental_item_index_for_admin_view
+        @assign_rental_items = AssignRentalItem.with_groups_and_rental_item
+        render json: fmt(ok, @assign_rental_items)
+      end
 
-  def fit_assign_rental_item_index_for_admin_view(assign_rental_items)
-    assign_rental_items.map do |assign_rental_item|
-      {
-        "assign_rental_item": assign_rental_item,
-        "rental_item": assign_rental_item.rental_item,
-        "group": assign_rental_item.group
-      }
-    end
-  end
+      def get_assign_rental_item_show_for_admin_view
+        @assign_rental_item = AssignRentalItem.with_rental_item(params[:id])
+        render json: fmt(ok, @assign_rental_item)
+      end
 
-  # 割当状況絞り込み
-  def get_refinement_assign_rental_item
-    stocker_place_id = params[:stocker_place_id].to_i
-    @assign_rental_items = if stocker_place_id == 0
-                             AssignRentalItem.all
-                           else
-                             AssignRentalItem.where(stocker_place_id: stocker_place_id)
-                           end
+      def fit_assign_rental_item_index_for_admin_view(assign_rental_items)
+        assign_rental_items.map do |assign_rental_item|
+          {
+            "assign_rental_item": assign_rental_item,
+            "rental_item": assign_rental_item.rental_item,
+            "group": assign_rental_item.group
+          }
+        end
+      end
 
-    if @assign_rental_items.count == 0
-      render json: fmt(not_found, [], 'Not found assign_rental_items')
-    else
-      render json: fmt(ok, fit_assign_rental_item_index_for_admin_view(@assign_rental_items))
+      # 割当状況絞り込み
+      def get_refinement_assign_rental_item
+        stocker_place_id = params[:stocker_place_id].to_i
+        @assign_rental_items = if stocker_place_id.zero?
+                                 AssignRentalItem.all
+                               else
+                                 AssignRentalItem.where(stocker_place_id: stocker_place_id)
+                               end
+
+        if @assign_rental_items.count.zero?
+          render json: fmt(not_found, [], 'Not found assign_rental_items')
+        else
+          render json: fmt(ok, fit_assign_rental_item_index_for_admin_view(@assign_rental_items))
+        end
+      end
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupCategoriesController < ApplicationController
   before_action :set_group_category, only: %i[show update destroy]
 
@@ -17,12 +19,12 @@ class GroupCategoriesController < ApplicationController
 
   def update
     @group.update(group_category_params)
-    render json: fmt(created, @group_category, 'Updated group_category id = ' + params[:id])
+    render json: fmt(created, @group_category, "Updated group_category id = #{params[:id]}")
   end
 
   def destroy
     @group_category.destroy
-    render json: fmt(ok, [], 'Deleted group_category = ' + params[:id])
+    render json: fmt(ok, [], "Deleted group_category = #{params[:id]}")
   end
 
   private
@@ -32,7 +34,7 @@ class GroupCategoriesController < ApplicationController
     if GroupCategory.exists?(params[:id])
       @group_category = GroupCategory.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found group_category = ' + params[:id])
+      render json: fmt(not_found, [], "Not found group_category = #{params[:id]}")
     end
   end
 

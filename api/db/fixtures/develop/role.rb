@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Role.seed(:id,
           { id: 1, name: 'developer' },
           { id: 2, name: 'manager' },

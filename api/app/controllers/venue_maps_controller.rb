@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VenueMapsController < ApplicationController
   before_action :set_venue_map, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class VenueMapsController < ApplicationController
   # PATCH/PUT /venue_maps/1.json
   def update
     @venue_map.update(venue_map_params)
-    render json: fmt(created, @venue_map, 'Updated venue_map id = ' + params[:id])
+    render json: fmt(created, @venue_map, "Updated venue_map id = #{params[:id]}")
   end
 
   # DELETE /venue_maps/1
   # DELETE /venue_maps/1.json
   def destroy
     @venue_map.destroy
-    render json: fmt(ok, [], 'Deleted venue_map = ' + params[:id])
+    render json: fmt(ok, [], "Deleted venue_map = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class VenueMapsController < ApplicationController
     if VenueMap.exists?(params[:id])
       @venue_map = VenueMap.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found venue_map = ' + params[:id])
+      render json: fmt(not_found, [], "Not found venue_map = #{params[:id]}")
     end
   end
 

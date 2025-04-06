@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignStagesController < ApplicationController
   before_action :set_assign_stage, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class AssignStagesController < ApplicationController
   # PATCH/PUT /assign_stages/1.json
   def update
     @assign_stage.update(assign_stage_params)
-    render json: fmt(created, @assign_stage, 'Updated assign_stage id = ' + params[:id])
+    render json: fmt(created, @assign_stage, "Updated assign_stage id = #{params[:id]}")
   end
 
   # DELETE /assign_stages/1
   # DELETE /assign_stages/1.json
   def destroy
     @assign_stage.destroy
-    render json: fmt(ok, [], 'Deleted assign_stage = ' + params[:id])
+    render json: fmt(ok, [], "Deleted assign_stage = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class AssignStagesController < ApplicationController
     if AssignStage.exists?(params[:id])
       @assign_stage = AssignStage.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found assign_stage = ' + params[:id])
+      render json: fmt(not_found, [], "Not found assign_stage = #{params[:id]}")
     end
   end
 

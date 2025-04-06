@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddColumnsToUserPageSettings < ActiveRecord::Migration[6.0]
   def change
     add_column :user_page_settings, :add_power_order, :boolean

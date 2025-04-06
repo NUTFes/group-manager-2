@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
   before_action :set_group, only: %i[show update destroy]
 
@@ -23,7 +25,7 @@ class GroupsController < ApplicationController
     client = Slack::Web::Client.new
     client.chat_postMessage(
       token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: '#' + ENV['CHANNEL'],
+      channel: "##{ENV['CHANNEL']}",
       text: "
 
       参加団体「#{@group.name}」が追加されました
@@ -45,12 +47,12 @@ class GroupsController < ApplicationController
   # PATCH/PUT /groups/1.json
   def update
     @group.update(group_params)
-    render json: fmt(created, @group, 'Updated group id = ' + params[:id])
+    render json: fmt(created, @group, "Updated group id = #{params[:id]}")
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
       token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: '#' + ENV['CHANNEL'],
+      channel: "##{ENV['CHANNEL']}",
       text: "
 
       参加団体「#{@group.name}」が編集されました
@@ -72,12 +74,12 @@ class GroupsController < ApplicationController
   # DELETE /groups/1.json
   def destroy
     @group.destroy
-    render json: fmt(ok, [], 'Deleted group id = ' + params[:id])
+    render json: fmt(ok, [], "Deleted group id = #{params[:id]}")
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
       token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: '#' + ENV['CHANNEL'],
+      channel: "##{ENV['CHANNEL']}",
       text: "
 
       参加団体「#{@group.name}」が削除されました
@@ -104,7 +106,7 @@ class GroupsController < ApplicationController
       @group = Group.find(params[:id])
     else
       # なければnot found
-      render json: fmt(not_found, [], 'Not found group id = ' + params[:id])
+      render json: fmt(not_found, [], "Not found group id = #{params[:id]}")
     end
   end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrintPdfController < ApplicationController
   include ActionController::MimeResponds
 
@@ -92,7 +94,7 @@ class PrintPdfController < ApplicationController
     if Group.where(fes_year_id: params[:fes_year_id]).exists?
       @groups = Group.where(fes_year_id: params[:fes_year_id])
       @catgories = []
-      for i in 1..6 do
+      (1..6).each do |i|
         group = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: i)
         @catgories << group
       end

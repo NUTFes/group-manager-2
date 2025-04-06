@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CookingProcessOrdersController < ApplicationController
   before_action :set_cooking_process_order, only: %i[show update destroy]
 
@@ -26,13 +28,13 @@ class CookingProcessOrdersController < ApplicationController
   # PATCH/PUT /cooking_process_orders/1
   def update
     @cooking_process_order.update(cooking_process_order_params)
-    render json: fmt(created, @cooking_process_order, 'Updated cooking process order id = ' + params[:id])
+    render json: fmt(created, @cooking_process_order, "Updated cooking process order id = #{params[:id]}")
   end
 
   # DELETE /cooking_process_orders/1
   def destroy
     @cooking_process_order.destroy
-    render json: fmt(ok, [], 'Deleted cooking process order id = ' + params[:id])
+    render json: fmt(ok, [], "Deleted cooking process order id = #{params[:id]}")
   end
 
   private

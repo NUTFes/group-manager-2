@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Group.seed(:id,
            { id: 1, name: 'nutfes',
              project_name: 'nutfes',

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubRepsController < ApplicationController
   before_action :set_sub_rep, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class SubRepsController < ApplicationController
   # PATCH/PUT /sub_reps/1.json
   def update
     @sub_rep.update(sub_rep_params)
-    render json: fmt(created, @sub_rep, 'Updated sub_rep id = ' + params[:id])
+    render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
   end
 
   # DELETE /sub_reps/1
   # DELETE /sub_reps/1.json
   def destroy
     @sub_rep.destroy
-    render json: fmt(ok, [], 'Deleted sub_rep = ' + params[:id])
+    render json: fmt(ok, [], "Deleted sub_rep = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class SubRepsController < ApplicationController
     if SubRep.exists?(params[:id])
       @sub_rep = SubRep.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found sub_rep = ' + params[:id])
+      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}")
     end
   end
 

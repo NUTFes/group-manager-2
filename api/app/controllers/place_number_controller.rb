@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaceNumberController < ApplicationController
   before_action :set_place_number, only: %i[show update destroy]
 
@@ -13,10 +15,10 @@ class PlaceNumberController < ApplicationController
                          else
                            place.place_numbers.map do |place_number|
                              {
-                               "group_identification_id": place_number.group_identification.nil? ? nil : place_number.group_identification.id,
+                               "group_identification_id": place_number.group_identification&.id,
                                "place_number": place_number.nil? ? nil : place_number,
-                               "num": place_number.group_identification.nil? ? nil : place_number.group_identification.number,
-                               "group": place_number.group_identification.nil? ? nil : place_number.group_identification.group
+                               "num": place_number.group_identification&.number,
+                               "group": place_number.group_identification&.group
                              }
                            end
                          end
@@ -32,12 +34,12 @@ class PlaceNumberController < ApplicationController
 
   def update
     @place_number.update(place_number_params)
-    render json: fmt(ok, @place_number, 'Updated place_number id =' + params[:id])
+    render json: fmt(ok, @place_number, "Updated place_number id =#{params[:id]}")
   end
 
   def destroy
     @place_number.destroy
-    render json: fmt(ok, [], 'Deleted place_number id =' + params[:id])
+    render json: fmt(ok, [], "Deleted place_number id =#{params[:id]}")
   end
 
   private
@@ -46,7 +48,7 @@ class PlaceNumberController < ApplicationController
     if PlaceNumber.exists?(params[:id])
       @place_number = PlaceNumber.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found place_number id = ' + params[:id])
+      render json: fmt(not_found, [], "Not found place_number id = #{params[:id]}")
     end
   end
 

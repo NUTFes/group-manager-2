@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PowerOrdersController < ApplicationController
   before_action :set_power_order, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class PowerOrdersController < ApplicationController
   # PATCH/PUT /power_orders/1.json
   def update
     @power_order.update(power_order_params)
-    render json: fmt(created, @power_order, 'Updated power_order id = ' + params[:id])
+    render json: fmt(created, @power_order, "Updated power_order id = #{params[:id]}")
   end
 
   # DELETE /power_orders/1
   # DELETE /power_orders/1.json
   def destroy
     @power_order.destroy
-    render json: fmt(ok, [], 'Deleted power_order = ' + params[:id])
+    render json: fmt(ok, [], "Deleted power_order = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class PowerOrdersController < ApplicationController
     if PowerOrder.exists?(params[:id])
       @power_order = PowerOrder.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found power_order = ' + params[:id])
+      render json: fmt(not_found, [], "Not found power_order = #{params[:id]}")
     end
   end
 

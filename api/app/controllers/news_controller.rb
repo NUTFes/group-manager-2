@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NewsController < ApplicationController
   before_action :set_news, only: %i[show update destroy]
 
@@ -25,14 +27,14 @@ class NewsController < ApplicationController
   # PATCH/PUT /news/1.json
   def update
     @news.update(news_params)
-    render json: fmt(created, @news, 'Updated news id = ' + params[:id])
+    render json: fmt(created, @news, "Updated news id = #{params[:id]}")
   end
 
   # DELETE /news/1
   # DELETE /news/1.json
   def destroy
     @news.destroy
-    render json: fmt(ok, [], 'Deleted news = ' + params[:id])
+    render json: fmt(ok, [], "Deleted news = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class NewsController < ApplicationController
     if News.exists?(params[:id])
       @news = News.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found news = ' + params[:id])
+      render json: fmt(not_found, [], "Not found news = #{params[:id]}")
     end
   end
 

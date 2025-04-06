@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StagesController < ApplicationController
   before_action :set_stage, only: %i[show update destroy]
 
@@ -27,12 +29,12 @@ class StagesController < ApplicationController
 
   def update
     @stage.update(stage_params)
-    render json: fmt(created, @stage, 'Updated stage id = ' + params[:id])
+    render json: fmt(created, @stage, "Updated stage id = #{params[:id]}")
   end
 
   def destroy
     @stage.destroy
-    render json: fmt(ok, [], 'Deleted stage = ' + params[:id])
+    render json: fmt(ok, [], "Deleted stage = #{params[:id]}")
   end
 
   private
@@ -42,7 +44,7 @@ class StagesController < ApplicationController
     if Stage.exists?(params[:id])
       @stage = Stage.find(params[:id])
     else
-      render json: fmt(not_found, [], 'Not found stage = ' + params[:id])
+      render json: fmt(not_found, [], "Not found stage = #{params[:id]}")
     end
   end
 

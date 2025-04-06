@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   # before_action :authenticate_api_user!
   before_action :set_user, only: %i[show update destroy]
@@ -18,12 +20,12 @@ class UsersController < ApplicationController
 
   def update
     @user.update(user_params)
-    render json: fmt(ok, @user, 'Updated user id = ' + params[:id])
+    render json: fmt(ok, @user, "Updated user id = #{params[:id]}")
   end
 
   def destroy
     @user.destroy
-    render json: fmt(ok, [], 'Deleted user = ' + params[:id])
+    render json: fmt(ok, [], "Deleted user = #{params[:id]}")
   end
 
   def show_user_detail
@@ -42,8 +44,7 @@ class UsersController < ApplicationController
 
     @groups = @user.groups
     groups = []
-    for group in @groups
-      group_data = []
+    @groups.each do |group|
       group_data = {
         group: group,
         fes_year: group.fes_year.year_num,
@@ -108,7 +109,7 @@ class UsersController < ApplicationController
     @user.password = reset_password_params[:password]
     @user.password_confirmation = reset_password_params[:password_confirmation]
     @user.save!
-    render json: fmt(ok, [], 'Updated password user_id = ' + params[:user_id])
+    render json: fmt(ok, [], "Updated password user_id = #{params[:user_id]}")
   end
 
   def simply_user_create
