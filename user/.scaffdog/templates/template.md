@@ -45,6 +45,7 @@ export const Default: Story = {
 ```typescript
 import { FC } from 'react';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type {{ inputs.name | pascal }}Props = {};
 
 const {{ inputs.name | pascal }}: FC<{{ inputs.name | pascal }}Props> = () => {
