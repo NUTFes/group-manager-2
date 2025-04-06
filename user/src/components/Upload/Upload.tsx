@@ -19,6 +19,7 @@ const Upload: FC<UploadProps> = ({
 }) => {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={idDisable}
       className="inline-flex w-[402px] flex-col items-start justify-start gap-1"
