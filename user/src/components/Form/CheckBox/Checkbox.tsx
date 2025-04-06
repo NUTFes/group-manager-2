@@ -49,7 +49,7 @@ const Checkbox: FC<CheckboxProps> = ({
                 value={option.id}
                 checked={value.includes(option.id)}
                 onChange={handleChange}
-                className={`size-4 form-checkbox ${error ? 'accent-alert' : 'accent-main'}`}
+                className={`form-checkbox size-4 ${error ? 'accent-alert' : 'accent-main'}`}
               />
               <span>{option.name}</span>
             </label>
