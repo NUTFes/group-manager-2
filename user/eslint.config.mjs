@@ -35,8 +35,6 @@ const config = [
     },
     plugins: {
       tailwindcss: (await import('eslint-plugin-tailwindcss')).default,
-      '@typescript-eslint': (await import('@typescript-eslint/eslint-plugin'))
-        .default,
     },
     rules: {
       'prettier/prettier': [
