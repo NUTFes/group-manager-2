@@ -10,6 +10,7 @@ on:
 
 jobs:
   Code-Check:
+    name: Code-Check
     runs-on: ubuntu-latest
     steps:
       # GitHubリポジトリのコードをチェックアウト（fetch-depth: 0 にして完全な履歴を取得）
