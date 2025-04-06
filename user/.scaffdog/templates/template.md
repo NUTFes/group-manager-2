@@ -1,16 +1,16 @@
 ---
-name: "template"
-root: "."
-output: "src/components"
+name: 'template'
+root: '.'
+output: 'src/components'
 ignore: []
 questions:
-  name: "Please enter components name."
+  name: 'Please enter components name.'
 ---
 
 # `{{ inputs.name | pascal }}/index.ts`
 
 ```typescript
-export { default } from "./{{ inputs.name | pascal }}";
+export { default } from './{{ inputs.name | pascal }}';
 ```
 
 # `{{ inputs.name | pascal }}/{{ inputs.name | pascal }}.stories.tsx`
@@ -36,9 +36,7 @@ parameters: {
 type Story = StoryObj<typeof {{ inputs.name | pascal }}>;
 
 export const Default: Story = {
-  args: {
-
-  },
+  args: {},
 };
 ```
 
