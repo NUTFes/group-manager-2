@@ -53,7 +53,7 @@ module.exports = [
           trailingComma: 'es5',
           bracketSpacing: true,
           printWidth: 80,
-          arrowParens: 'avoid',
+          arrowParens: 'always',
         },
       ],
     },
