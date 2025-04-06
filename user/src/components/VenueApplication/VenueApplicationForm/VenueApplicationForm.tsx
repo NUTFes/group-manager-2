@@ -28,7 +28,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
     <FormContainer>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col space-y-10"></div>
-        <div className="w-full flex flex-col gap-10 justify-center items-center">
+        <div className="flex w-full flex-col items-center justify-center gap-10">
           <Selector
             label="第一希望"
             options={options}

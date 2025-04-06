@@ -18,51 +18,51 @@ type FormStepProps = {
 const FormStep: FC<FormStepProps> = ({ step }) => {
   return (
     <div className="flex items-center justify-center">
-      <div className="w-[388px] h-[81px] relative">
-        <div className="w-[376px] h-14 left-[6px] top-0 absolute">
+      <div className="relative h-[81px] w-[388px]">
+        <div className="absolute left-[6px] top-0 h-14 w-[376px]">
           <div
-            className={`w-20 h-2 left-[72px] top-[24px] absolute ${
+            className={`absolute left-[72px] top-[24px] h-2 w-20 ${
               step >= 1 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
-            className={`w-20 h-2 left-[224px] top-[24px] absolute ${
+            className={`absolute left-[224px] top-[24px] h-2 w-20 ${
               step >= 2 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
-            className={`w-14 h-14 left-[8px] top-0 absolute rounded-full ${
+            className={`absolute left-[8px] top-0 size-14 rounded-full ${
               step >= 0 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
-            className={`w-14 h-14 left-[160px] top-0 absolute rounded-full ${
+            className={`absolute left-[160px] top-0 size-14 rounded-full ${
               step >= 1 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
           <div
-            className={`w-14 h-14 left-[312px] top-0 absolute rounded-full ${
+            className={`absolute left-[312px] top-0 size-14 rounded-full ${
               step === 2 ? 'bg-main' : 'bg-[#b2b2b2]'
             }`}
           />
-          <div className="w-4 h-[38px] pb-[7px] left-[28px] top-[9px] absolute flex-col justify-start items-center inline-flex">
-            <div className="text-center text-baseColor text-[26px]">1</div>
+          <div className="absolute left-[28px] top-[9px] inline-flex h-[38px] w-4 flex-col items-center justify-start pb-[7px]">
+            <div className="text-center text-[26px] text-baseColor">1</div>
           </div>
-          <div className="w-4 h-[38px] pb-[7px] left-[180px] top-[9px] absolute flex-col justify-start items-center inline-flex">
-            <div className="text-center text-baseColor text-[26px]">2</div>
+          <div className="absolute left-[180px] top-[9px] inline-flex h-[38px] w-4 flex-col items-center justify-start pb-[7px]">
+            <div className="text-center text-[26px] text-baseColor">2</div>
           </div>
-          <div className="w-4 h-[38px] pb-[7px] left-[332px] top-[9px] absolute flex-col justify-start items-center inline-flex">
-            <div className="text-center text-baseColor text-[26px]">3</div>
+          <div className="absolute left-[332px] top-[9px] inline-flex h-[38px] w-4 flex-col items-center justify-start pb-[7px]">
+            <div className="text-center text-[26px] text-baseColor">3</div>
           </div>
         </div>
-        <div className="w-[84px] h-[17px] pb-[3px] left-0 top-[64px] absolute justify-center items-center inline-flex">
-          <div className="text-center text-font text-xs">メールアドレス</div>
+        <div className="absolute left-0 top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px]">
+          <div className="text-center text-xs text-font">メールアドレス</div>
         </div>
-        <div className="w-[84px] h-[17px] pl-[11.58px] pr-[12.42px] pb-[3px] left-[153px] top-[64px] absolute justify-center items-center inline-flex">
-          <div className="text-center text-font text-xs">代表者情報</div>
+        <div className="absolute left-[153px] top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px] pl-[11.58px] pr-[12.42px]">
+          <div className="text-center text-xs text-font">代表者情報</div>
         </div>
-        <div className="w-[84px] h-[17px] pb-[3px] left-[304px] top-[64px] absolute justify-center items-center inline-flex">
-          <div className="text-center text-font text-xs">確認</div>
+        <div className="absolute left-[304px] top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px]">
+          <div className="text-center text-xs text-font">確認</div>
         </div>
       </div>
     </div>
@@ -109,12 +109,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
   if (!isOpen) return <></>;
   return (
     <form method="POST" onSubmit={onSubmit}>
-      <section className="px-[clamp(10px,10vw,240px)] py-[clamp(5px,5vw,80px)] bg-white rounded-2xl shadow-md space-y-12">
+      <section className="space-y-12 rounded-2xl bg-white px-[clamp(10px,10vw,240px)] py-[clamp(5px,5vw,80px)] shadow-md">
         <FormStep step={stepIndex} />
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
-            <div className="min-w-full flex-shrink-0">
-              <div className="bg-baseColor rounded-lg flex flex-col justify-center items-center space-y-12">
+            <div className="min-w-full shrink-0">
+              <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                 <TextBox
                   label="メールアドレス"
                   value=""
@@ -144,8 +144,8 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                 />
               </div>
             </div>
-            <div className="min-w-full flex-shrink-0 p-4">
-              <div className="bg-baseColor rounded-lg flex flex-col justify-center items-center space-y-12">
+            <div className="min-w-full shrink-0 p-4">
+              <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                 <TextBox
                   label="名前"
                   value=""
@@ -187,58 +187,58 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                 />
               </div>
             </div>
-            <div className="min-w-full flex-shrink-0 p-4">
-              <div className="bg-baseColor rounded-lg flex flex-col items-start space-y-12">
-                <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
-                  <div className="y-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                    <div className="text-font text-xs font-black">
+            <div className="min-w-full shrink-0 p-4">
+              <div className="flex flex-col items-start space-y-12 rounded-lg bg-baseColor">
+                <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="y-[17px] inline-flex items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="text-xs font-black text-font">
                       メールアドレス
                     </div>
                   </div>
-                  <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                    <div className="text-font text-base font-medium">
+                  <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="text-base font-medium text-font">
                       {input.mail}
                     </div>
                   </div>
                 </div>
-                <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
-                  <div className="h-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                    <div className="text-font text-xs font-black">
+                <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="text-xs font-black text-font">
                       パスワード
                     </div>
                   </div>
-                  <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                    <div className="text-font text-base font-medium">
+                  <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="text-base font-medium text-font">
                       {'*'.repeat(input.password.length)}
                     </div>
                   </div>
                 </div>
-                <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
-                  <div className="h-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                    <div className="text-font text-xs font-black">名前</div>
+                <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="text-xs font-black text-font">名前</div>
                   </div>
-                  <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                    <div className="text-font text-base font-medium">
+                  <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="text-base font-medium text-font">
                       {input.name}
                     </div>
                   </div>
                 </div>
-                <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
-                  <div className="h-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                    <div className="text-font text-xs font-black">学籍番号</div>
+                <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="text-xs font-black text-font">学籍番号</div>
                   </div>
-                  <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                    <div className="text-font text-base font-medium">
+                  <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="text-base font-medium text-font">
                       {input.studentId}
                     </div>
                   </div>
                 </div>
-                <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
-                  <div className="h-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                    <div className="text-font text-xs font-black">学年</div>
+                <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="text-xs font-black text-font">学年</div>
                   </div>
-                  <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                    <div className="text-font text-base font-medium">
+                  <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="text-base font-medium text-font">
                       {
                         GradeList.find((grade) => grade.id === input.gradeId)
                           ?.name
@@ -246,12 +246,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                     </div>
                   </div>
                 </div>
-                <div className="w-[298px] h-[63px] flex-col justify-center items-start gap-2 inline-flex">
-                  <div className="h-[17px] pr-[81px] pb-[3px] justify-start items-center inline-flex">
-                    <div className="text-font text-xs font-black">学科</div>
+                <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                  <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="text-xs font-black text-font">学科</div>
                   </div>
-                  <div className="w-[298px] h-[38px] pr-[68px] pb-[19px] justify-start items-center inline-flex">
-                    <div className="text-font text-base font-medium">
+                  <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="text-base font-medium text-font">
                       {
                         DepartmentList.find(
                           (department) => department.id === input.departmentId
@@ -264,7 +264,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center mt-4 gap-4">
+        <div className="mt-4 flex justify-center gap-4">
           {stepIndex === 0 ? (
             <div />
           ) : (

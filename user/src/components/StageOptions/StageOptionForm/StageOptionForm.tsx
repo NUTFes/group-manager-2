@@ -110,7 +110,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             error={errors.loudSound?.message}
           />
         </div>
-        <div className="w-full flex justify-center items-center mt-10">
+        <div className="mt-10 flex w-full items-center justify-center">
           <Button size="pc" color="main" type="submit">
             登録
           </Button>
