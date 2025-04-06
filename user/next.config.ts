@@ -1,8 +1,10 @@
 // next.config.ts
 import type { NextConfig } from 'next';
+import type { RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   experimental: {
     turbo: {
       rules: {
@@ -15,8 +17,9 @@ const nextConfig: NextConfig = {
   },
   webpack(config) {
     // 既存の SVG を処理するルールを取得
-    const fileLoaderRule = config.module.rules.find((rule: any) =>
-      rule.test?.test?.('.svg')
+    const fileLoaderRule = config.module.rules.find(
+      (rule: RuleSetRule): rule is RuleSetRule =>
+        rule.test instanceof RegExp && rule.test.test('.svg')
     );
 
     if (fileLoaderRule) {
