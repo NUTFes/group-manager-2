@@ -5,6 +5,7 @@ import TextArea from '@/components/Form/TextArea';
 import FormContainer from '@/components/FormContainer';
 import { useVenueMapHooks } from './hooks';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type VenueApplicationFormProps = {};
 
 const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
