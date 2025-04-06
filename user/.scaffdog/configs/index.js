@@ -1,3 +1,5 @@
-export default {
+const config = {
   files: ['*'],
 };
+
+export default config;
