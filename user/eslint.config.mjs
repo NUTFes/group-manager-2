@@ -48,7 +48,7 @@ const config = [
           trailingComma: 'es5',
           bracketSpacing: true,
           printWidth: 80,
-          arrowParens: 'allways',
+          arrowParens: 'always',
         },
       ],
     },
