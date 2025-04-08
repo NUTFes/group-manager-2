@@ -1,9 +1,9 @@
 import useSWRMutation from 'swr/mutation';
 import { useApiGet } from '@/hooks/useApi';
-import { postFetcher } from './api';
+import { patchFetcher, postFetcher } from './api';
 
 const API_ENDPOINTS = {
-  STAGE_OPTIONS: 'stage_common_options',
+  STAGE_OPTIONS: '/stage_common_options',
 };
 
 export type StageOption = {
@@ -16,50 +16,35 @@ export type StageOption = {
 
 export type StageOptionResponse = {
   groupId: number;
-  ownEquipment: number;
-  bgm: number;
-  cameraPermission: number;
-  loudSound: number;
+  ownEquipment: boolean;
+  bgm: boolean;
+  cameraPermission: boolean;
+  loudSound: boolean;
   created_at: string;
   updated_at: string;
-};
-
-type ApiResponse<T> = {
-  data: T[];
-};
-
-export const useStageOption = () => {
-  const { data, error, isLoading } = useApiGet<
-    ApiResponse<StageOptionResponse>
-  >(API_ENDPOINTS.STAGE_OPTIONS);
-
-  return {
-    stageOptionDate: data?.data || [],
-    isLoading,
-    error,
-  };
 };
 
 // 既存のステージ申請を取得するフック
 export const useGetStageOptions = (groupId: number | null) => {
   const endpoint = groupId
-    ? `${API_ENDPOINTS.STAGE_OPTIONS}?group_id=${groupId}`
+    ? `${API_ENDPOINTS.STAGE_OPTIONS}/group/${groupId}`
     : null;
 
-  const { data, error, isLoading } = useApiGet<{ data: StageOption[] }>(
+  const { data, error, isLoading } = useApiGet<{ data: StageOptionResponse }>(
     endpoint
   );
 
-  const filtered =
-    data?.data?.filter((order) => order.groupId === groupId) || [];
-
   return {
-    stageOptions: filtered,
+    stageOptions: data?.data,
     isLoading,
     hasError: !!error,
   };
 };
 
-export const useMutateStageOptions = () => {
+export const useCreateStageOptions = () => {
   return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, postFetcher);
+};
+
+export const useUpdateStageOptions = () => {
+  return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, patchFetcher);
 };
