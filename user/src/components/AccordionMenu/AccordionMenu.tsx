@@ -39,7 +39,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
     <div className="border-t border-[#b2b2b2] w-full md:w-[560px]">
       <button
         onClick={onToggle}
-        className="w-full md:w-[560px] h-20 flex items-center gap-6 overflow-hidden cursor-pointer mb-10"
+        className="w-[560px] h-20 flex items-center gap-6 overflow-hidden cursor-pointer mb-10"
       >
         <div className="flex items-center justify-center">
           <div
