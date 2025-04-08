@@ -1,3 +1,4 @@
+import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
 /**
@@ -17,7 +18,8 @@ export const fetcher = (url: string) => {
       if (!res.ok) {
         throw new Error(`API Error: ${res.status}`);
       }
-      return res.json();
+      const json = await res.json();
+      return camelcaseKeys(json, { deep: true });
     })
     .then((data) => {
       return data;
@@ -55,6 +57,40 @@ export async function postFetcher(
   if (!response.ok) {
     throw new Error('Error posting data');
   }
+  return response.json();
+}
+
+/**
+ * PATCHリクエスト用のfetcher関数
+ * @param url - リクエスト先のベースURL
+ * @param param1 - SWR Mutationで渡される引数（bodyとqueryを含む）
+ * @returns レスポンスのJSON
+ */
+export async function patchFetcher(
+  url: string,
+  { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
+): Promise<any> {
+  // URLを組み立てる（スラッシュ漏れ対策込み）
+  let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  if (arg.query) {
+    const queryStr = objectToQueryString(arg.query);
+    finalUrl = `${finalUrl}?${queryStr}`;
+  }
+
+  const response = await fetch(finalUrl, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(arg.body),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('PATCH failed:', errorText);
+    throw new Error('Error patching data');
+  }
+
   return response.json();
 }
 
@@ -107,15 +143,6 @@ export const sendRequest = async (url: string, options: RequestInit) => {
  */
 export const postData = async (url: string, data: any) => {
   return sendRequest(url, createRequestOptions('POST', data));
-};
-
-/**
- * PUTリクエスト用の関数
- * @param url - エンドポイント
- * @param data - 更新するデータ
- */
-export const putData = async (url: string, data: any) => {
-  return sendRequest(url, createRequestOptions('PUT', data));
 };
 
 /**
