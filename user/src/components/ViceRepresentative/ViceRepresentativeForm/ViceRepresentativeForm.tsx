@@ -18,8 +18,8 @@ import Button from '@/components/Button';
 type ViceRepresentativeFormProps = {};
 
 const option2 = [
-    {id: 1, name:'はい'},
-    {id: 0, name:'いいえ'},
+    {id: 0, name:'はい(一人での参加)'},//一人
+    {id: 1, name:'いいえ(グループで参加)'},//グループ
 ];
 const optiongrade = [
     { id: 0, name:"選択してください",disabled:true},
@@ -64,6 +64,7 @@ const optionfield = [
   
 
 type FormData ={
+    groupId: number;
     isGroup: number;
     name:string;
     number:string;
@@ -84,12 +85,13 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
       } = useForm<FormData>({
         resolver: zodResolver(vicerepresentativeSchema),
         defaultValues: {
-          isGroup: 2,
-          name:'',
-          number:'',
-          grade:0,
-          field:0,
-          address:'',
+            groupId:3,
+            isGroup: 2,
+            name:'',
+            number:'',
+            grade:0,
+            field:0,
+            address:'',
 
 
         },
@@ -97,14 +99,21 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
     
     const values = watch();
 
+    const { data } = useSWR(`/vice_representative/${values.groupId}`);
+
     const onSubmit = async (data: FormData) => {
         try {
-          await api.post('/stage_common_options/', data);
-          mutate('/stage_common_options/');
-          alert('送信しました');
-          reset();
-        } catch {
-          alert('送信に失敗しました。');
+            const payload =snakecaseKeys(data, {deep: true});
+            if (data){
+                await api.put('/vice_representative/', payload);
+            } else{
+                await api.post('/vice_representative/', payload);
+            }
+            mutate(`/vice_representative/${data?.groupId}`);
+            alert('送信しました');
+            reset();
+            } catch {
+            alert('送信に失敗しました。');
         }
     };
 
@@ -129,7 +138,7 @@ return (
                     value={radioValue1}
                     error={errors.isGroup?.message}
                 />
-                {radioValue1 === "0" &&(
+                {radioValue1 === "1" &&(
                     <div>
                         <TextBox
                             label='名前'
