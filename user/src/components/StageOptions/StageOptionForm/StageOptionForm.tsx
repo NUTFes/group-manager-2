@@ -20,17 +20,38 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
   const {
     handleSubmit,
     errors,
-    isMutating,
     stageOptions,
     isLoading,
     hasError,
     onSubmit,
     setValue,
     values,
+    createError,
+    createIsMutating,
+    updateError,
+    updateIsMutating,
   } = useStageOptionHooks();
 
-  if (isLoading || isMutating) {
-    return;
+  const convertToString = (value?: boolean): string => {
+    if (value === true) return '1';
+    if (value === false) return '0';
+    return '';
+  };
+
+  if (isLoading || stageOptions === undefined) {
+    return <div className="text-center py-10">読み込み中です...</div>;
+  }
+
+  if (hasError) {
+    return (
+      <div className="text-red-500 text-center py-10">
+        データの取得に失敗しました。
+      </div>
+    );
+  }
+
+  if (createError || updateError) {
+    alert('送信に失敗しました。時間を追いて再度お試しください');
   }
 
   return (
@@ -43,7 +64,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             onChange={(value) => setValue('ownEquipment', Number(value))}
             options={options1}
             required
-            value={values.ownEquipment?.toString() || ``}
+            value={
+              values.ownEquipment !== undefined
+                ? values.ownEquipment.toString()
+                : convertToString(stageOptions?.ownEquipment)
+            }
             error={errors.ownEquipment?.message}
           />
           <Radio
@@ -52,7 +77,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             onChange={(value) => setValue('bgm', Number(value))}
             options={options1}
             required
-            value={values.bgm?.toString() || ''}
+            value={
+              values.bgm !== undefined
+                ? values.bgm.toString()
+                : convertToString(stageOptions?.bgm)
+            }
             error={errors.bgm?.message}
           />
           <Radio
@@ -61,7 +90,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             onChange={(value) => setValue('cameraPermission', Number(value))}
             options={options2}
             required
-            value={values.cameraPermission?.toString() || ''}
+            value={
+              values.cameraPermission !== undefined
+                ? values.cameraPermission.toString()
+                : convertToString(stageOptions?.cameraPermission)
+            }
             error={errors.cameraPermission?.message}
           />
           <Radio
@@ -70,7 +103,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             onChange={(value) => setValue('loudSound', Number(value))}
             options={options2}
             required
-            value={values.loudSound?.toString() || ''}
+            value={
+              values.loudSound !== undefined
+                ? values.loudSound.toString()
+                : convertToString(stageOptions?.loudSound)
+            }
             error={errors.loudSound?.message}
           />
         </div>
@@ -79,7 +116,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             size="pc"
             color="main"
             type="submit"
-            isDisable={isLoading || isMutating}
+            isDisable={isLoading || createIsMutating || updateIsMutating}
           >
             登録
           </Button>
