@@ -1,0 +1,24 @@
+---
+paths:
+  "/rails/active_storage/direct_uploads":
+    post:
+      tags:
+      - active_storage/direct_upload
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: active_storage/direct_upload description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.DirectUpload"
+        '422':
+          description: active_storage/direct_upload description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.DirectUpload"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/activestorage.DirectUpload"

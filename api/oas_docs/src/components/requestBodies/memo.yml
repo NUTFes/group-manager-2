@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    Memo:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Memo"

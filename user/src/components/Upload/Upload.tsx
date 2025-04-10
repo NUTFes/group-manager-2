@@ -21,31 +21,31 @@ const Upload: FC<UploadProps> = ({
     <button
       onClick={onClick}
       disabled={idDisable}
-      className="w-[402px] flex-col justify-start items-start gap-1 inline-flex"
+      className="inline-flex w-[402px] flex-col items-start justify-start gap-1"
     >
-      <div className="self-stretch justify-start items-baseline gap-6 inline-flex">
-        <div className="text-font text-base font-medium">{title}</div>
-        <div className="text-center text-alert text-xs font-light">※必須</div>
+      <div className="inline-flex items-baseline justify-start gap-6 self-stretch">
+        <div className="text-base font-medium text-font">{title}</div>
+        <div className="text-center text-xs font-light text-alert">※必須</div>
       </div>
       <div
-        className={`h-[72px] px-12 py-4 bg-baseColor rounded-[10px] shadow-[2px_2px_4px_0px_rgba(0,0,0,0.25)] border border-main
-        justify-center items-center gap-4 inline-flex overflow-hidden transition-transform duration-150 ease-in-out
-        ${idDisable ? 'bg-gray-300 cursor-not-allowed' : 'bg-base hover:bg-gray-200'}
+        className={`inline-flex h-[72px] items-center justify-center gap-4 overflow-hidden rounded-[10px] border
+        border-main bg-baseColor px-12 py-4 shadow-[2px_2px_4px_0px_rgba(0,0,0,0.25)] transition-transform duration-150 ease-in-out
+        ${idDisable ? 'cursor-not-allowed bg-gray-300' : 'bg-baseColor hover:bg-gray-200'}
         active:scale-95`}
       >
         <div className="flex items-center justify-center">
-          <MdUploadFile className="text-main w-[40px] h-[40px]" />
+          <MdUploadFile className="size-[40px] text-main" />
         </div>
-        <div className="text-center text-main text-[26px] font-bold">
+        <div className="text-center text-[26px] font-bold text-main">
           アップロード
         </div>
       </div>
-      <ul className="text-left text-font text-xs font-light list-disc list-inside">
+      <ul className="list-inside list-disc text-left text-xs font-light text-font">
         {note.map((line, idx) => (
           <li key={idx}>{line}</li>
         ))}
       </ul>
-      <div className="text-xs text-alert max-w-[402px] break-words">
+      <div className="max-w-[402px] break-words text-xs text-alert">
         {error}
       </div>
     </button>

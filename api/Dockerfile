@@ -1,4 +1,4 @@
-FROM ruby:2.7.1
+FROM ruby:3.0.7
 
 # ビルド時の引数としてPLATFORMを定義
 ARG PLATFORM

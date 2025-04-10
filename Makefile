@@ -76,3 +76,6 @@ run-storybook:
 
 fmt:
 	docker compose run --rm user pnpm run fmt
+
+run-swagger:
+	docker compose -f compose.swagger.yml up -d

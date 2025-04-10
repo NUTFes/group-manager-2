@@ -4,7 +4,7 @@ const Footer: FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full h-20 bg-green-600 flex justify-center items-center px-8 text-xs font-light text-white">
+    <footer className="flex h-20 w-full items-center justify-center bg-green-600 px-8 text-xs font-light text-white">
       Copyright © {currentYear} NUTMEG. All Rights Reserved.
     </footer>
   );
