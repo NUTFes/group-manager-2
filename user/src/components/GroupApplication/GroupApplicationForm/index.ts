@@ -1,1 +1,1 @@
-export { default } from "./GroupApplicationForm";
+export { default } from './GroupApplicationForm';

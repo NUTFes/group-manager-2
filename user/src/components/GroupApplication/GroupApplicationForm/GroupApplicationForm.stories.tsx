@@ -1,15 +1,15 @@
+import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import GroupApplicationForm from './GroupApplicationForm';
-import "@globals";
 
 export default {
-title: 'Components/GroupApplicationForm',
-tags: ["autodocs"],
-component: GroupApplicationForm,
-parameters: {
+  title: 'Components/GroupApplicationForm',
+  tags: ['autodocs'],
+  component: GroupApplicationForm,
+  parameters: {
     docs: {
       source: {
-        type: "auto",
+        type: 'auto',
       },
     },
   },
@@ -18,7 +18,5 @@ parameters: {
 type Story = StoryObj<typeof GroupApplicationForm>;
 
 export const Default: Story = {
-  args: {
-
-  },
+  args: {},
 };
