@@ -41,7 +41,7 @@ export const Test: StoryObj<typeof AccordionMenu> = {
         onSubmit={() => alert('押されたよ')}
       >
         <form>
-          <Button size="pc" color="main" isDisable={false}>
+          <Button size="pc" color="main" isDisable={false} type="button">
             Button
           </Button>
         </form>
