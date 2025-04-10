@@ -36,10 +36,10 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   };
 
   return (
-    <div className="border-t border-[#b2b2b2] max-w-[560px] w-full">
+    <div className="w-full max-w-[560px] border-t border-[#b2b2b2]">
       <button
         onClick={toggleAccordion}
-        className="max-w-[560px] w-full h-20 flex items-center gap-6 overflow-hidden cursor-pointer mb-10"
+        className="mb-10 flex h-20 w-full max-w-[560px] cursor-pointer items-center gap-6 overflow-hidden"
       >
         <div className="flex items-center justify-center">
           <div
@@ -67,7 +67,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
       </button>
       {isOpen && (
         <div className="mb-10">
-          {note && <p className="text-red-500 font-bold mb-10">{note}</p>}
+          {note && <p className="mb-10 font-bold text-red-500">{note}</p>}
           {children}
         </div>
       )}
