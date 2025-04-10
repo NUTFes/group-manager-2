@@ -36,11 +36,11 @@ const Checkbox: FC<CheckboxProps> = ({
   return (
     <>
       <label>
-        <div className="flex gap-6 items-center mb-[5px]">
+        <div className="mb-[5px] flex items-center gap-6">
           <p className="text-base">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
-        <div className="flex flex-col gap-4 my-6">
+        <div className="my-6 flex flex-col gap-4">
           {options.map((option) => (
             <label key={option.id} className="flex items-center gap-2">
               <input
@@ -49,7 +49,7 @@ const Checkbox: FC<CheckboxProps> = ({
                 value={option.id}
                 checked={value.includes(option.id)}
                 onChange={handleChange}
-                className={`w-4 h-4 form-checkbox ${error ? 'accent-alert' : 'accent-main'}`}
+                className={`form-checkbox size-4 ${error ? 'accent-alert' : 'accent-main'}`}
               />
               <span>{option.name}</span>
             </label>

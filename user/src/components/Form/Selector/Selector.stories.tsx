@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '@globals';
-import { Meta, StoryFn, StoryObj } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import Selector from './Selector';
 
 export default {
@@ -40,8 +40,8 @@ Default.args = {
   note: '注意書きなど',
   error: '',
   options: [
-    { id: '', name: '選択してください' },
-    { id: '1', name: 'オプション1' },
-    { id: '2', name: 'オプション２' },
+    { id: 0, name: '選択してください' },
+    { id: 1, name: 'オプション1' },
+    { id: 2, name: 'オプション２' },
   ],
 };

@@ -1,5 +1,6 @@
 // next.config.ts
 import type { NextConfig } from 'next';
+import type { RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -15,10 +16,11 @@ const nextConfig: NextConfig = {
   },
   webpack(config) {
     // 既存の SVG を処理するルールを取得
-    const fileLoaderRule = config.module.rules.find((rule: any) =>
-      rule.test?.test?.('.svg')
+    const rules = config.module.rules as RuleSetRule[];
+    const fileLoaderRule = rules.find(
+      (rule): rule is RuleSetRule =>
+        rule.test instanceof RegExp && rule.test.test('.svg')
     );
-
     if (fileLoaderRule) {
       config.module.rules.push(
         // *.svg?url の場合、既存のファイルローダールールを利用

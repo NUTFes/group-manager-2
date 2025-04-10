@@ -7,6 +7,7 @@ import {
   setIsOpenAccordionMenuAtom,
 } from './store';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type VenueApplicationProps = {};
 
 const VenueApplication: FC<VenueApplicationProps> = () => {

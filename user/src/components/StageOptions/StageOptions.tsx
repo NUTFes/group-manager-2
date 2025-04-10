@@ -8,6 +8,7 @@ import {
 } from './store';
 
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type StageOptionsProps = {};
 
 const StageOptions: FC<StageOptionsProps> = () => {
