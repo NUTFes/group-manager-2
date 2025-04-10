@@ -1,1 +1,1 @@
-export { default } from "./GroupApplication";
+export { default } from './GroupApplication';
