@@ -1,6 +1,8 @@
 import { deleteData, fetcher, postData, putData } from '@/api/api';
 import useSWR from 'swr';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // データ取得のための共通フック
 export const useApiGet = <T>(url: string | null, options?: any) => {
   const { data, error, isLoading, mutate } = useSWR<T>(url, fetcher, options);

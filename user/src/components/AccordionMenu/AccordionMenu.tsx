@@ -50,7 +50,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         </div>
         <div className="py-2.5">
           <div
-            className={`md:w-52 w-full font-bold ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
+            className={`w-full font-bold md:w-52 ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
           >
             <Textfit mode="single" max={40}>
               {title}

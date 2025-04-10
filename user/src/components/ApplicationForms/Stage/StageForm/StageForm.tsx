@@ -48,7 +48,7 @@ const StageForm: FC = () => {
   return (
     <FormContainer>
       {hasError && (
-        <div className="w-[400px] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           <strong className="font-bold">エラー：</strong>
           <span className="block sm:inline">
             データの取得に失敗しました。ページを再読込してください。
@@ -57,19 +57,19 @@ const StageForm: FC = () => {
       )}
 
       {submitError && (
-        <div className="w-[400px] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           <strong className="font-bold">送信エラー：</strong>
           <span className="block sm:inline">{submitError}</span>
         </div>
       )}
 
       {isLoadingAll ? (
-        <div className="w-[400px] text-center py-4">
+        <div className="w-[400px] py-4 text-center">
           <p>データを読み込み中です...</p>
         </div>
       ) : (
         <form
-          className="w-[400px] flex flex-col gap-10 text-[#484848]"
+          className="flex w-[400px] flex-col gap-10 text-[#484848]"
           onSubmit={onSubmit}
         >
           <div>
@@ -82,7 +82,7 @@ const StageForm: FC = () => {
               error={getErrorMessage('date')}
             />
             {!errors.date && (
-              <p className="text-[#484848] text-xs">選んでください</p>
+              <p className="text-xs text-[#484848]">選んでください</p>
             )}
           </div>
 
@@ -162,13 +162,13 @@ const StageForm: FC = () => {
               error={getErrorMessage('cleanupTime')}
             />
             {getErrorMessage('totalTime') && (
-              <p className="text-[#FF0000] text-xs">
+              <p className="text-xs text-[#FF0000]">
                 {getErrorMessage('totalTime')}
               </p>
             )}
           </div>
 
-          <div className="flex justify-center gap-4 mt-4">
+          <div className="mt-4 flex justify-center gap-4">
             <Button type="submit" size="pc" color="main" isDisable={!isValid}>
               {hasExisting ? '更新' : '登録'}
             </Button>

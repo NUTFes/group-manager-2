@@ -1,3 +1,7 @@
-module.exports = {
-  ...require('../configs'),
+import configs from '../configs';
+
+const config = {
+  ...configs,
 };
+
+export default config;

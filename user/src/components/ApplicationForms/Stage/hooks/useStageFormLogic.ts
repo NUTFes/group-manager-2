@@ -135,7 +135,7 @@ export const useStageFormLogic = () => {
           '送信中にエラーが発生しました。もう一度お試しください。'
         );
       }
-    } catch (error) {
+    } catch {
       setSubmitError('予期せぬエラーが発生しました。もう一度お試しください。');
     }
   });

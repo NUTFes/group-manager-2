@@ -1,10 +1,10 @@
-// eslint.config.cjs
+// eslint.config.mjs
+import { FlatCompat } from '@eslint/eslintrc';
 
-const { FlatCompat } = require('@eslint/eslintrc');
 const compat = new FlatCompat();
 
-module.exports = [
-  // 互換ユーティリティを使って、従来の shareable config を読み込みます
+const config = [
+  // 互換ユーティリティを使って従来の shareable config を読み込みます
   ...compat.extends('next/core-web-vitals'),
   ...compat.extends('next/typescript'),
   ...compat.extends('plugin:storybook/recommended'),
@@ -14,7 +14,7 @@ module.exports = [
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser: require('@typescript-eslint/parser'),
+      parser: (await import('@typescript-eslint/parser')).default,
       parserOptions: {
         ecmaVersion: 2020,
         sourceType: 'module',
@@ -34,8 +34,7 @@ module.exports = [
       },
     },
     plugins: {
-      tailwindcss: require('eslint-plugin-tailwindcss'),
-      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+      tailwindcss: (await import('eslint-plugin-tailwindcss')).default,
     },
     rules: {
       'prettier/prettier': [
@@ -47,9 +46,11 @@ module.exports = [
           trailingComma: 'es5',
           bracketSpacing: true,
           printWidth: 80,
-          arrowParens: 'avoid',
+          arrowParens: 'always',
         },
       ],
     },
   },
 ];
+
+export default config;

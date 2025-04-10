@@ -10,6 +10,7 @@ import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
 import { stageOptionSchema } from './schema';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type StageOptionFormProps = {};
 
 const options1 = [
@@ -109,7 +110,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             error={errors.loudSound?.message}
           />
         </div>
-        <div className="w-full flex justify-center items-center mt-10">
+        <div className="mt-10 flex w-full items-center justify-center">
           <Button size="pc" color="main" type="submit">
             登録
           </Button>
