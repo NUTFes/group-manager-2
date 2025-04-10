@@ -1,6 +1,7 @@
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import FormList from './FormList';
+import { FormItem } from './type';
 
 export default {
   title: 'Components/FormList',
@@ -17,8 +18,8 @@ export default {
 
 type Story = StoryObj<typeof FormList>;
 
-const testItems = [
-  { label: '団体名', content: 'わたあめ同好会' },
+const testItems: FormItem[] = [
+  { label: '団体名', content: 'わたあめ同好会', isEditable: true },
   { label: '企画名', content: 'わたあめ屋さん' },
   { label: '国際団体ですか？', content: 'いいえ' },
   { label: '学外団体ですか？', content: 'いいえ' },
@@ -27,5 +28,5 @@ const testItems = [
 ];
 
 export const Default: Story = {
-  args: { items: testItems },
+  args: { items: testItems, onEdit: () => alert('押されたよ'), isEdit: true },
 };

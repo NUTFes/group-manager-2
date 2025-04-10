@@ -24,16 +24,16 @@ const TextArea: FC<TextAreaProps> = ({
   return (
     <>
       <label>
-        <div className="flex gap-6 items-center mb-[4px]">
+        <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
         <textarea
           value={value}
           onChange={handleChange}
-          className={`w-[400px] h-32 text-font border-2 rounded-[10px] block mb-[4px] ${error ? 'border-alert' : 'border-main'}`}
+          className={`mb-[4px] block h-32 w-[400px] rounded-[10px] border-2 text-font ${error ? 'border-alert' : 'border-main'}`}
         />
-        <p className="text-xs text-sub max-w-[400px] break-words">{note}</p>
+        <p className="max-w-[400px] break-words text-xs text-sub">{note}</p>
         <p className="text-xs text-alert">{error}</p>
       </label>
     </>

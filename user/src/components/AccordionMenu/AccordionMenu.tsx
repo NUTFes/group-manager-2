@@ -36,10 +36,10 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   const registerStatus = isExist ? 'registered' : 'unregistered';
 
   return (
-    <div className="border-t border-[#b2b2b2] w-full md:w-[560px]">
+    <div className="w-full border-t border-[#b2b2b2] md:w-[560px]">
       <button
         onClick={onToggle}
-        className="w-[560px] h-20 flex items-center gap-6 overflow-hidden cursor-pointer mb-10"
+        className="mb-10 flex h-20 w-full cursor-pointer items-center gap-6 overflow-hidden md:w-[560px]"
       >
         <div className="flex items-center justify-center">
           <div
@@ -50,7 +50,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         </div>
         <div className="py-2.5">
           <div
-            className={`md:w-52 w-full font-bold ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
+            className={`w-full font-bold md:w-52 ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
           >
             <Textfit mode="single" max={40}>
               {title}
@@ -67,9 +67,11 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
       </button>
       {isOpen && (
         <div className="mb-10">
-          {note && <p className="text-red-500 font-bold mb-10">{note}</p>}
+          {note && <p className="mb-10 font-bold text-red-500">{note}</p>}
           {React.isValidElement(children)
-            ? React.cloneElement(children, { onSubmit } as any)
+            ? // 別PRでここ消えるためとりあえずの許容
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              React.cloneElement(children, { onSubmit } as any)
             : children}
         </div>
       )}

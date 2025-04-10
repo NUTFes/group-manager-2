@@ -78,7 +78,7 @@ const Button: FC<ButtonProps> = (props) => {
       {isDisable ? (
         <></>
       ) : (
-        <span className="font-bold text-center">{children}</span>
+        <span className="text-center font-bold">{children}</span>
       )}
     </button>
   );

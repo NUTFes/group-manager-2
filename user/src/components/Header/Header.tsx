@@ -8,7 +8,7 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = ({ onClick }) => {
   return (
-    <div className="w-full h-20 bg-main flex justify-between items-center px-8">
+    <div className="flex h-20 w-full items-center justify-between bg-main px-8">
       <CorporateIcon height="60" />
       <button onClick={onClick}>
         <ProfileIcon height="56" />

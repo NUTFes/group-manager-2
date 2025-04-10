@@ -1,6 +1,8 @@
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 /**
  * APIのベースURL
  * 環境変数から読み込む
