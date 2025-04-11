@@ -4,7 +4,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import {
   getIsOpenStageAccordionMenuAtom,
   setIsOpenStageAccordionMenuAtom,
-} from '@/components/ApplicationForms/Stage/store';
+} from '@/components/Applications/Stage/store';
 import StageForm from './StageForm';
 
 type StageProps = {
