@@ -32,12 +32,12 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
   } = useStageOptionHooks();
 
   if (isLoading || stageOptions === undefined) {
-    return <div className="text-center py-10">読み込み中です...</div>;
+    return <div className="py-10 text-center">読み込み中です...</div>;
   }
 
   if (hasError) {
     return (
-      <div className="text-red-500 text-center py-10">
+      <div className="py-10 text-center text-red-500">
         データの取得に失敗しました。
       </div>
     );
@@ -48,6 +48,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
   }
 
   // TODO: 締め切り後 isEditを消す処理が必要
+  // accordionMenuからpropsで持ってくるとか？
   if (!isEditing) {
     return <FormList items={formItem} isEdit onEdit={toEdit} />;
   }
@@ -117,9 +118,9 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             error={errors.loudSound?.message}
           />
         </div>
-        <div className="w-full flex justify-center items-center mt-10">
+        <div className="mt-10 flex w-full items-center justify-center">
           {stageOptions && (
-            <div className="mr-[15px]">
+            <div className="mr-4">
               <Button
                 size="pc"
                 color="main"
