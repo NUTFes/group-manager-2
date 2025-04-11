@@ -18,7 +18,7 @@ jobs:
           fi
       - name: Set Reviewers
         env:
-          REVIEWERS: "${{ vars.REVIEWERS_NAME }}"
+          REVIEWERS: "${{ vars.REVIEWERS }}"
         run: |
           reviewers=$(echo "\"${REVIEWERS// /}\"" | jq 'split(",") | .-["${{ github.actor }}"]')
           curl -X POST \
