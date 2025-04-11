@@ -15,6 +15,7 @@ export type StageOption = {
 };
 
 export type StageOptionResponse = {
+  id: number;
   groupId: number;
   ownEquipment: boolean;
   bgm: boolean;
@@ -45,6 +46,6 @@ export const useCreateStageOptions = () => {
   return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, postFetcher);
 };
 
-export const useUpdateStageOptions = () => {
-  return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, patchFetcher);
+export const useUpdateStageOptions = (id: number) => {
+  return useSWRMutation(`${API_ENDPOINTS.STAGE_OPTIONS}/${id}`, patchFetcher);
 };
