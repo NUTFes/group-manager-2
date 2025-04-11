@@ -62,9 +62,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             options={options1}
             required
             value={
-              values.ownEquipment !== undefined
-                ? values.ownEquipment.toString()
-                : convertToString(stageOptions?.ownEquipment)
+              values.ownEquipment === undefined
+                ? stageOptions?.ownEquipment != null
+                  ? convertToString(stageOptions.ownEquipment)
+                  : ''
+                : values.ownEquipment.toString()
             }
             error={errors.ownEquipment?.message}
           />
@@ -75,9 +77,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             options={options1}
             required
             value={
-              values.bgm !== undefined
-                ? values.bgm.toString()
-                : convertToString(stageOptions?.bgm)
+              values.bgm === undefined
+                ? stageOptions?.bgm != null
+                  ? convertToString(stageOptions.bgm)
+                  : ''
+                : values.bgm.toString()
             }
             error={errors.bgm?.message}
           />
@@ -88,9 +92,11 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             options={options2}
             required
             value={
-              values.cameraPermission !== undefined
-                ? values.cameraPermission.toString()
-                : convertToString(stageOptions?.cameraPermission)
+              values.cameraPermission === undefined
+                ? stageOptions?.cameraPermission != null
+                  ? convertToString(stageOptions.cameraPermission)
+                  : ''
+                : values.ownEquipment.toString()
             }
             error={errors.cameraPermission?.message}
           />
@@ -101,14 +107,29 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             options={options2}
             required
             value={
-              values.loudSound !== undefined
-                ? values.loudSound.toString()
-                : convertToString(stageOptions?.loudSound)
+              values.loudSound === undefined
+                ? stageOptions?.loudSound != null
+                  ? convertToString(stageOptions.loudSound)
+                  : ''
+                : values.loudSound.toString()
             }
             error={errors.loudSound?.message}
           />
         </div>
         <div className="w-full flex justify-center items-center mt-10">
+          {stageOptions && (
+            <div className="mr-[15px]">
+              <Button
+                size="pc"
+                color="main"
+                variant
+                type="button"
+                onClick={toEdit}
+              >
+                キャンセル
+              </Button>
+            </div>
+          )}
           <Button
             size="pc"
             color="main"
