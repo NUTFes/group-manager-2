@@ -62,7 +62,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             options={options1}
             required
             value={
-              values.ownEquipment !== null
+              values.ownEquipment !== undefined
                 ? values.ownEquipment.toString()
                 : convertToString(stageOptions?.ownEquipment)
             }
