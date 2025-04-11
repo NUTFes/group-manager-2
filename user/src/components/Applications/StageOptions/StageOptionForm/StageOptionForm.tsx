@@ -47,6 +47,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
     alert('送信に失敗しました。時間を置いて再度お試しください');
   }
 
+  // TODO: 締め切り後 isEditを消す処理が必要
   if (!isEditing) {
     return <FormList items={formItem} isEdit onEdit={toEdit} />;
   }
