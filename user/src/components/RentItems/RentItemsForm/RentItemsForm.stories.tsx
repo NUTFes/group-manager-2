@@ -4,16 +4,16 @@ import { Meta, StoryObj } from '@storybook/react';
 import RentItemsForm from './RentItemsForm';
 
 export default {
-    title: 'Components/RentItemsForm',
-    tags: ['autodocs'],
-    component: RentItemsForm,
-    parameters: {
-        docs: {
-            source: {
-                type: 'auto',
-            },
-        },
+  title: 'Components/RentItemsForm',
+  tags: ['autodocs'],
+  component: RentItemsForm,
+  parameters: {
+    docs: {
+      source: {
+        type: 'auto',
+      },
     },
+  },
 } as Meta<typeof RentItemsForm>;
 
 type Story = StoryObj<typeof RentItemsForm>;
