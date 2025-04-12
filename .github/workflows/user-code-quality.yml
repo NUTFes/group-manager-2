@@ -27,6 +27,7 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+        working-directory: ./user
 
       # prettierでコードのフォーマットを実行
       - name: Format code with Prettier
