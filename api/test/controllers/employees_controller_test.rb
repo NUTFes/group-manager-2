@@ -18,7 +18,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
            params: { employee: { employee_category_id: @employee.employee_category_id, group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show employee' do
@@ -29,7 +29,7 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
   test 'should update employee' do
     patch employee_url(@employee),
           params: { employee: { employee_category_id: @employee.employee_category_id, group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy employee' do
@@ -37,6 +37,6 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
       delete employee_url(@employee), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

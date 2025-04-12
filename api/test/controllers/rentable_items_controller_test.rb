@@ -18,7 +18,7 @@ class RentableItemsControllerTest < ActionDispatch::IntegrationTest
            params: { rentable_item: { max_num: @rentable_item.max_num, stocker_item_id: @rentable_item.stocker_item_id, stocker_place_id: @rentable_item.stocker_place_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show rentable_item' do
@@ -29,7 +29,7 @@ class RentableItemsControllerTest < ActionDispatch::IntegrationTest
   test 'should update rentable_item' do
     patch rentable_item_url(@rentable_item),
           params: { rentable_item: { max_num: @rentable_item.max_num, stocker_item_id: @rentable_item.stocker_item_id, stocker_place_id: @rentable_item.stocker_place_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy rentable_item' do
@@ -37,6 +37,6 @@ class RentableItemsControllerTest < ActionDispatch::IntegrationTest
       delete rentable_item_url(@rentable_item), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

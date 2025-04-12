@@ -19,9 +19,9 @@ module Api
       def fit_representatives_index_for_admin_view(groups)
         groups.map do |group|
           {
-            "user": group.user,
-            "group": group,
-            "sub_rep": group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
+            user: group.user,
+            group: group,
+            sub_rep: group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
           }
         end
       end
@@ -57,7 +57,7 @@ module Api
       # あいまい検索機能
       def get_search_representatives
         word = params[:word]
-        @groups = Group.all.map { |group| group if is_search_condition(group, word) }.compact
+        @groups = Group.all.select { |group| is_search_condition(group, word) }
         if @groups.count.zero?
           render json: fmt(not_found, [], 'Not found representatives')
         else

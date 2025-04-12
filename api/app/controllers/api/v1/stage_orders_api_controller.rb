@@ -16,9 +16,9 @@ module Api
       def fit_stage_order_index_for_admin_view(stage_orders)
         stage_orders.map do |stage_order|
           {
-            "stage_order": stage_order,
-            "stage_order_info": stage_order.to_info_h,
-            "group": stage_order.group
+            stage_order: stage_order,
+            stage_order_info: stage_order.to_info_h,
+            group: stage_order.group
           }
         end
       end
@@ -59,9 +59,7 @@ module Api
       # あいまい検索
       def get_search_stage_orders
         word = params[:word]
-        @stage_orders = StageOrder.preload(:group).map do |stage_order|
-          stage_order if stage_order.group.name.include?(word)
-        end.compact
+        @stage_orders = StageOrder.preload(:group).select { |stage_order| stage_order.group.name.include?(word) }
         if @stage_orders.count.zero?
           render json: fmt(not_found, [], 'Not found stage_orders')
         else

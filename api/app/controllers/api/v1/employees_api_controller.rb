@@ -16,9 +16,9 @@ module Api
       def fit_employee_index_for_admin_view(employees)
         employees.map do |employee|
           {
-            "employee": employee,
-            "group": employee.group,
-            "stool_test": employee.stool_test
+            employee: employee,
+            group: employee.group,
+            stool_test: employee.stool_test
           }
         end
       end
@@ -31,9 +31,7 @@ module Api
                        Employee.all
                      # fes_year_id指定
                      else
-                       Employee.preload(:group).map do |employee|
-                         employee if employee.group.fes_year_id == fes_year_id
-                       end.compact
+                       Employee.preload(:group).select { |employee| employee.group.fes_year_id == fes_year_id }
                      end
 
         if @employees.count.zero?
@@ -46,9 +44,7 @@ module Api
       # あいまい検索
       def get_search_employees
         word = params[:word]
-        @employees = Employee.all.map do |employee|
-          employee if employee.group.name.include?(word) || employee.name.include?(word)
-        end.compact
+        @employees = Employee.all.select { |employee| employee.group.name.include?(word) || employee.name.include?(word) }
         if @employees.count.zero?
           render json: fmt(not_found, [], 'Not found employees')
         else

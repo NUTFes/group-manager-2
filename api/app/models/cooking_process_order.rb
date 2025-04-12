@@ -9,8 +9,8 @@ class CookingProcessOrder < ApplicationRecord
     @records = CookingProcessOrder.preload(:group)
                                   .map do |cooking_process_order|
       {
-        "cooking_process_order": cooking_process_order,
-        "group": cooking_process_order.group
+        cooking_process_order: cooking_process_order,
+        group: cooking_process_order.group
       }
     end
   end
@@ -19,19 +19,19 @@ class CookingProcessOrder < ApplicationRecord
   def self.with_group(cooking_process_order_id)
     cooking_process_order = CookingProcessOrder.find(cooking_process_order_id)
     {
-      "cooking_process_order": cooking_process_order,
-      "group": cooking_process_order.group
+      cooking_process_order: cooking_process_order,
+      group: cooking_process_order.group
     }
   end
 
   # インスタンスの情報をハッシュとして返すインスタンスメソッド
   def to_info_h
     {
-      "id": id,
-      "group_id": group_id,
-      "pre_open_kitchen": pre_open_kitchen,
-      "during_open_kitchen": during_open_kitchen,
-      "tent": tent
+      id: id,
+      group_id: group_id,
+      pre_open_kitchen: pre_open_kitchen,
+      during_open_kitchen: during_open_kitchen,
+      tent: tent
     }
   end
 end

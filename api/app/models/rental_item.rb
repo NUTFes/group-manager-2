@@ -8,8 +8,8 @@ class RentalItem < ApplicationRecord
 
   def to_info_h
     {
-      "name": name,
-      "is_rentable": is_rentable
+      name: name,
+      is_rentable: is_rentable
     }
   end
 end

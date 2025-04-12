@@ -18,7 +18,7 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
            params: { assign_group_place: { place_id: @assign_group_place.place_id, place_order_id: @assign_group_place.place_order_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show assign_group_place' do
@@ -29,7 +29,7 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
   test 'should update assign_group_place' do
     patch assign_group_place_url(@assign_group_place),
           params: { assign_group_place: { place_id: @assign_group_place.place_id, place_order_id: @assign_group_place.place_order_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy assign_group_place' do
@@ -37,6 +37,6 @@ class AssignGroupPlacesControllerTest < ActionDispatch::IntegrationTest
       delete assign_group_place_url(@assign_group_place), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

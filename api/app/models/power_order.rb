@@ -7,8 +7,8 @@ class PowerOrder < ApplicationRecord
     @record = PowerOrder.preload(:group)
                         .map do |power_order|
       {
-        "power_order": power_order,
-        "group": power_order.group
+        power_order: power_order,
+        group: power_order.group
       }
     end
   end
@@ -23,12 +23,12 @@ class PowerOrder < ApplicationRecord
 
   def to_info_h
     {
-      "id": id,
-      "item": item,
-      "power": power,
-      "manufacturer": manufacturer,
-      "model": model,
-      "item_url": item_url
+      id: id,
+      item: item,
+      power: power,
+      manufacturer: manufacturer,
+      model: model,
+      item_url: item_url
     }
   end
 end

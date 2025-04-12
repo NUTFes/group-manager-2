@@ -8,9 +8,9 @@ class Employee < ApplicationRecord
     @record = Employee.preload(:group)
                       .map do |employee|
       {
-        "employee": employee,
-        "group": employee.group,
-        "stool_test": employee.stool_test
+        employee: employee,
+        group: employee.group,
+        stool_test: employee.stool_test
       }
     end
   end
@@ -18,18 +18,18 @@ class Employee < ApplicationRecord
   def self.with_group(employee_id)
     employee = Employee.find(employee_id)
     {
-      "employee": employee,
-      "group": employee.group,
-      "stool_test": employee.stool_test
+      employee: employee,
+      group: employee.group,
+      stool_test: employee.stool_test
     }
   end
 
   def to_info_h
     {
-      "id": id,
-      "name": name,
-      "student_id": student_id,
-      "stool_test": stool_test.status
+      id: id,
+      name: name,
+      student_id: student_id,
+      stool_test: stool_test.status
     }
   end
 end

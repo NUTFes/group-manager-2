@@ -24,8 +24,8 @@ class GroupsController < ApplicationController
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
-      token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: "##{ENV['CHANNEL']}",
+      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+      channel: "##{ENV.fetch('CHANNEL', nil)}",
       text: "
 
       参加団体「#{@group.name}」が追加されました
@@ -51,8 +51,8 @@ class GroupsController < ApplicationController
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
-      token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: "##{ENV['CHANNEL']}",
+      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+      channel: "##{ENV.fetch('CHANNEL', nil)}",
       text: "
 
       参加団体「#{@group.name}」が編集されました
@@ -78,8 +78,8 @@ class GroupsController < ApplicationController
 
     client = Slack::Web::Client.new
     client.chat_postMessage(
-      token: ENV['BOT_USER_ACCESS_TOKEN'],
-      channel: "##{ENV['CHANNEL']}",
+      token: ENV.fetch('BOT_USER_ACCESS_TOKEN', nil),
+      channel: "##{ENV.fetch('CHANNEL', nil)}",
       text: "
 
       参加団体「#{@group.name}」が削除されました

@@ -9,19 +9,19 @@ class PlaceNumberController < ApplicationController
     @places = Place.all
     @place_numbers = @places.map do |place|
       {
-        "place": place,
-        "place_numbers": if place.place_numbers.nil?
-                           nil
-                         else
-                           place.place_numbers.map do |place_number|
-                             {
-                               "group_identification_id": place_number.group_identification&.id,
-                               "place_number": place_number.nil? ? nil : place_number,
-                               "num": place_number.group_identification&.number,
-                               "group": place_number.group_identification&.group
-                             }
-                           end
+        place: place,
+        place_numbers: if place.place_numbers.nil?
+                         nil
+                       else
+                         place.place_numbers.map do |place_number|
+                           {
+                             group_identification_id: place_number.group_identification&.id,
+                             place_number: place_number.nil? ? nil : place_number,
+                             num: place_number.group_identification&.number,
+                             group: place_number.group_identification&.group
+                           }
                          end
+                       end
       }
     end
     render json: fmt(ok, @place_numbers)

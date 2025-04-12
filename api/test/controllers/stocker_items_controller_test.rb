@@ -18,7 +18,7 @@ class StockerItemsControllerTest < ActionDispatch::IntegrationTest
            params: { stocker_item: { fes_year_id: @stocker_item.fes_year_id, num: @stocker_item.num, rental_item_id: @stocker_item.rental_item_id, stocker_place_id: @stocker_item.stocker_place_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show stocker_item' do
@@ -29,7 +29,7 @@ class StockerItemsControllerTest < ActionDispatch::IntegrationTest
   test 'should update stocker_item' do
     patch stocker_item_url(@stocker_item),
           params: { stocker_item: { fes_year_id: @stocker_item.fes_year_id, num: @stocker_item.num, rental_item_id: @stocker_item.rental_item_id, stocker_place_id: @stocker_item.stocker_place_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy stocker_item' do
@@ -37,6 +37,6 @@ class StockerItemsControllerTest < ActionDispatch::IntegrationTest
       delete stocker_item_url(@stocker_item), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

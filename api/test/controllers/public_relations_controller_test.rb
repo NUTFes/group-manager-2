@@ -18,7 +18,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
            params: { public_relation: { blurb: @public_relation.blurb, group_id: @public_relation.group_id, picture_path: @public_relation.picture_path } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show public_relation' do
@@ -29,7 +29,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   test 'should update public_relation' do
     patch public_relation_url(@public_relation),
           params: { public_relation: { blurb: @public_relation.blurb, group_id: @public_relation.group_id, picture_path: @public_relation.picture_path } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy public_relation' do
@@ -37,6 +37,6 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
       delete public_relation_url(@public_relation), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

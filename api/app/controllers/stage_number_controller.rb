@@ -9,27 +9,27 @@ class StageNumberController < ApplicationController
     @stages = Stage.all
     @stage_numbers = @stages.map do |stage|
       {
-        "stage": stage,
-        "stage_numbers": if stage.stage_numbers.nil?
-                           nil
-                         else
-                           stage.stage_numbers.map do |stage_number|
-                             {
-                               "group_identification_id": stage_number.group_identification&.id,
-                               "stage_number": stage_number,
-                               "num": if stage_number.group_identification.nil?
-                                        nil
-                                      else
-                                        (stage_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? stage_number.group_identification.number : nil)
-                                      end,
-                               "group": if stage_number.group_identification.nil?
-                                          nil
-                                        else
-                                          (stage_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? stage_number.group_identification.group : nil)
-                                        end
-                             }
-                           end
+        stage: stage,
+        stage_numbers: if stage.stage_numbers.nil?
+                         nil
+                       else
+                         stage.stage_numbers.map do |stage_number|
+                           {
+                             group_identification_id: stage_number.group_identification&.id,
+                             stage_number: stage_number,
+                             num: if stage_number.group_identification.nil?
+                                    nil
+                                  else
+                                    (stage_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? stage_number.group_identification.number : nil)
+                                  end,
+                             group: if stage_number.group_identification.nil?
+                                      nil
+                                    else
+                                      (stage_number.group_identification.group.fes_year_id == params[:fes_year_id].to_i ? stage_number.group_identification.group : nil)
+                                    end
+                           }
                          end
+                       end
       }
     end
     render json: fmt(ok, @stage_numbers)

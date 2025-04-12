@@ -18,7 +18,7 @@ class UserDetailsControllerTest < ActionDispatch::IntegrationTest
            params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show user_detail' do
@@ -29,7 +29,7 @@ class UserDetailsControllerTest < ActionDispatch::IntegrationTest
   test 'should update user_detail' do
     patch user_detail_url(@user_detail),
           params: { user_detail: { department_id: @user_detail.department_id, grade_id: @user_detail.grade_id, tel: @user_detail.tel, user_id: @user_detail.user_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy user_detail' do
@@ -37,6 +37,6 @@ class UserDetailsControllerTest < ActionDispatch::IntegrationTest
       delete user_detail_url(@user_detail), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

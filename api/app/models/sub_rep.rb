@@ -8,15 +8,15 @@ class SubRep < ApplicationRecord
   # 副代表の情報の日本語をハッシュにして返す
   def to_info_h
     {
-      "id": id,
-      "name": name,
-      "department": department.name,
-      "department_id": department.id,
-      "grade": grade.name,
-      "grade_id": grade.id,
-      "tel": tel,
-      "email": email,
-      "student_id": student_id
+      id: id,
+      name: name,
+      department: department.name,
+      department_id: department.id,
+      grade: grade.name,
+      grade_id: grade.id,
+      tel: tel,
+      email: email,
+      student_id: student_id
     }
   end
 end

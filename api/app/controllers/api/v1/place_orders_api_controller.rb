@@ -17,9 +17,9 @@ module Api
       def fit_place_order_index_for_admin_view(place_orders)
         place_orders.map do |place_order|
           {
-            "place_order": place_order,
-            "place_order_name": place_order.to_place_name_h,
-            "group": place_order.group
+            place_order: place_order,
+            place_order_name: place_order.to_place_name_h,
+            group: place_order.group
           }
         end
       end
@@ -42,9 +42,7 @@ module Api
         end
 
         # group_category_id で絞り込み
-        if group_category_id != 0
-          @place_orders = @place_orders.joins(:group).where(groups: { group_category_id: group_category_id })
-        end
+        @place_orders = @place_orders.joins(:group).where(groups: { group_category_id: group_category_id }) if group_category_id != 0
 
         if @place_orders.empty?
           render json: fmt(not_found, [], 'Not found place_orders')
@@ -56,11 +54,7 @@ module Api
       # あいまい検索
       def get_search_place_orders
         word = params[:word]
-        @place_orders = PlaceOrder.all.map do |place_order|
-          if place_order.group.name.include?(word) || place_order.to_place_name_h[:first].include?(word) || place_order.to_place_name_h[:second].include?(word) || place_order.to_place_name_h[:third].include?(word)
-            place_order
-          end
-        end.compact
+        @place_orders = PlaceOrder.all.select { |place_order| place_order.group.name.include?(word) || place_order.to_place_name_h[:first].include?(word) || place_order.to_place_name_h[:second].include?(word) || place_order.to_place_name_h[:third].include?(word) }
         if @place_orders.count.zero?
           render json: fmt(not_found, [], 'Not found place_orders')
         else

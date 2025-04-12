@@ -7,8 +7,8 @@ class FesDatesController < ApplicationController
     @fes_dates = FesDate.preload(:fes_year)
                         .map do |fes_date|
       {
-        "fes_date": fes_date,
-        "fes_year": fes_date.fes_year
+        fes_date: fes_date,
+        fes_year: fes_date.fes_year
       }
     end
     render json: fmt(ok, @fes_dates)
@@ -16,8 +16,8 @@ class FesDatesController < ApplicationController
 
   def show
     fes_date = {
-      "fes_date": @fes_date,
-      "fes_year": @fes_date.fes_year
+      fes_date: @fes_date,
+      fes_year: @fes_date.fes_year
     }
     render json: fmt(ok, fes_date)
   end

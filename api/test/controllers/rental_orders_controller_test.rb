@@ -18,7 +18,7 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
            params: { rental_order: { group_id: @rental_order.group_id, num: @rental_order.num, rental_item_id: @rental_order.rental_item_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show rental_order' do
@@ -29,7 +29,7 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
   test 'should update rental_order' do
     patch rental_order_url(@rental_order),
           params: { rental_order: { group_id: @rental_order.group_id, num: @rental_order.num, rental_item_id: @rental_order.rental_item_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy rental_order' do
@@ -37,6 +37,6 @@ class RentalOrdersControllerTest < ActionDispatch::IntegrationTest
       delete rental_order_url(@rental_order), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

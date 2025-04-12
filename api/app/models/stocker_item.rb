@@ -10,8 +10,8 @@ class StockerItem < ApplicationRecord
     @record = StockerItem.preload(:rental_item)
                          .map do |stocker_item|
       {
-        "stocker_item": stocker_item,
-        "rental_item": stocker_item.rental_item
+        stocker_item: stocker_item,
+        rental_item: stocker_item.rental_item
       }
     end
   end
@@ -19,19 +19,19 @@ class StockerItem < ApplicationRecord
   def self.with_rental_item(stocker_item_id)
     stocker_item = StockerItem.find(stocker_item_id)
     {
-      "stocker_item": stocker_item,
-      "rental_item": stocker_item.rental_item
+      stocker_item: stocker_item,
+      rental_item: stocker_item.rental_item
     }
   end
 
   def to_rental_item_info_h
     {
-      "rental_item": nil? ? nil : self,
-      "name": rental_item.name,
-      "is_inside_shop_rentable": rental_item.is_inside_shop_rentable,
-      "is_outside_shop_rentable": rental_item.is_outside_shop_rentable,
-      "is_stage_rentable": rental_item.is_stage_rentable,
-      "num": num
+      rental_item: nil? ? nil : self,
+      name: rental_item.name,
+      is_inside_shop_rentable: rental_item.is_inside_shop_rentable,
+      is_outside_shop_rentable: rental_item.is_outside_shop_rentable,
+      is_stage_rentable: rental_item.is_stage_rentable,
+      num: num
     }
   end
 end

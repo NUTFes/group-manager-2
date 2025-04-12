@@ -7,8 +7,8 @@ class Announcement < ApplicationRecord
     @record = Announcement.preload(:group)
                           .map do |announcement|
       {
-        "announcement": announcement,
-        "group": announcement.group
+        announcement: announcement,
+        group: announcement.group
       }
     end
   end
@@ -16,15 +16,15 @@ class Announcement < ApplicationRecord
   def self.with_group(announcement_id)
     announcement = Announcement.find(announcement_id)
     {
-      "announcement": announcement,
-      "group": announcement.group
+      announcement: announcement,
+      group: announcement.group
     }
   end
 
   def to_info_h
     {
-      "id": id,
-      "group_id": group_id
+      id: id,
+      group_id: group_id
     }
   end
 end

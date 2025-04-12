@@ -18,7 +18,7 @@ class AssignStagesControllerTest < ActionDispatch::IntegrationTest
            params: { assign_stage: { stage_id: @assign_stage.stage_id, stage_order_id: @assign_stage.stage_order_id, time_point_end: @assign_stage.time_point_end, time_point_start: @assign_stage.time_point_start } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show assign_stage' do
@@ -29,7 +29,7 @@ class AssignStagesControllerTest < ActionDispatch::IntegrationTest
   test 'should update assign_stage' do
     patch assign_stage_url(@assign_stage),
           params: { assign_stage: { stage_id: @assign_stage.stage_id, stage_order_id: @assign_stage.stage_order_id, time_point_end: @assign_stage.time_point_end, time_point_start: @assign_stage.time_point_start } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy assign_stage' do
@@ -37,6 +37,6 @@ class AssignStagesControllerTest < ActionDispatch::IntegrationTest
       delete assign_stage_url(@assign_stage), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

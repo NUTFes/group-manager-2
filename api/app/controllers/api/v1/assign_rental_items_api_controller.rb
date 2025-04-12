@@ -17,8 +17,8 @@ module Api
       def fit_stocker_item_index_for_admin_view(stocker_items)
         stocker_items.map do |stocker_item|
           {
-            "stocker_item": stocker_item,
-            "rental_item": stocker_item.rental_item
+            stocker_item: stocker_item,
+            rental_item: stocker_item.rental_item
           }
         end
       end
@@ -35,12 +35,12 @@ module Api
         @stocker_place = StockerPlace.find(params[:stocker_place_id])
 
         if @stocker_items.count.zero?
-          render json: fmt(not_found, { "stocker_place": @stocker_place, "stocker_items": [] },
+          render json: fmt(not_found, { stocker_place: @stocker_place, stocker_items: [] },
                            'Not found stocker_items')
         else
           render json: fmt(ok,
-                           { "stocker_place": @stocker_place,
-                             "stocker_items": fit_stocker_item_index_for_admin_view(@stocker_items) })
+                           { stocker_place: @stocker_place,
+                             stocker_items: fit_stocker_item_index_for_admin_view(@stocker_items) })
         end
       end
 
@@ -58,9 +58,9 @@ module Api
       def fit_assign_rental_item_index_for_admin_view(assign_rental_items)
         assign_rental_items.map do |assign_rental_item|
           {
-            "assign_rental_item": assign_rental_item,
-            "rental_item": assign_rental_item.rental_item,
-            "group": assign_rental_item.group
+            assign_rental_item: assign_rental_item,
+            rental_item: assign_rental_item.rental_item,
+            group: assign_rental_item.group
           }
         end
       end

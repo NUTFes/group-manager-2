@@ -18,7 +18,7 @@ class FoodProductsControllerTest < ActionDispatch::IntegrationTest
            params: { food_product: { first_day_num: @food_product.first_day_num, group_id: @food_product.group_id, is_cooking: @food_product.is_cooking, name: @food_product.name, second_day_num: @food_product.second_day_num } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show food_product' do
@@ -29,7 +29,7 @@ class FoodProductsControllerTest < ActionDispatch::IntegrationTest
   test 'should update food_product' do
     patch food_product_url(@food_product),
           params: { food_product: { first_day_num: @food_product.first_day_num, group_id: @food_product.group_id, is_cooking: @food_product.is_cooking, name: @food_product.name, second_day_num: @food_product.second_day_num } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy food_product' do
@@ -37,6 +37,6 @@ class FoodProductsControllerTest < ActionDispatch::IntegrationTest
       delete food_product_url(@food_product), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

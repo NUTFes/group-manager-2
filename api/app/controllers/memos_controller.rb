@@ -9,8 +9,8 @@ class MemosController < ApplicationController
     @memos = Memo.preload(:user).order(id: 'DESC').limit(100)
                  .map do |memo|
       {
-        "memo": memo,
-        "user": memo.user
+        memo: memo,
+        user: memo.user
       }
     end
     render json: fmt(ok, @memos)
@@ -27,8 +27,8 @@ class MemosController < ApplicationController
   def create
     @new_memo = Memo.create(memo_params)
     @memo = {
-      "memo": @new_memo,
-      "user": @new_memo.user
+      memo: @new_memo,
+      user: @new_memo.user
     }
     render json: fmt(created, @memo)
     # render json: @memos
@@ -38,7 +38,7 @@ class MemosController < ApplicationController
   # PATCH/PUT /memos/1.json
   def update
     @memo.update(memo_params)
-    @memos = Memo.all.order(id: 'DESC')
+    @memos = Memo.order(id: 'DESC')
     memo_list = []
     @memos.each do |memo|
       user = memo.user.name

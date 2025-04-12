@@ -17,8 +17,8 @@ module Api
       def fit_power_order_index_for_admin_view(power_orders)
         power_orders.map do |power_order|
           {
-            "power_order": power_order,
-            "group": power_order.group
+            power_order: power_order,
+            group: power_order.group
           }
         end
       end
@@ -32,10 +32,8 @@ module Api
         # fes_year_id, power, category_idで絞り込み
         @power_orders = PowerOrder.all
         @power_orders = @power_orders.joins(:group).where(groups: { fes_year_id: fes_year_id }) if fes_year_id != 0
-        @power_orders = @power_orders.preload(:group).where('power >= ?', power) if power != 0
-        if group_category_id != 0
-          @power_orders = @power_orders.joins(:group).where(groups: { group_category_id: group_category_id })
-        end
+        @power_orders = @power_orders.preload(:group).where(power: power..) if power != 0
+        @power_orders = @power_orders.joins(:group).where(groups: { group_category_id: group_category_id }) if group_category_id != 0
 
         if @power_orders.count.zero?
           render json: fmt(not_found, [], 'Not found power_orders')
@@ -47,9 +45,7 @@ module Api
       # あいまい検索
       def get_search_power_orders
         word = params[:word]
-        @power_orders = PowerOrder.all.map do |power_order|
-          power_order if power_order.group.name.include?(word) || power_order.item.include?(word)
-        end.compact
+        @power_orders = PowerOrder.all.select { |power_order| power_order.group.name.include?(word) || power_order.item.include?(word) }
         if @power_orders.count.zero?
           render json: fmt(not_found, [], 'Not found power_orders')
         else

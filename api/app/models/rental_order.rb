@@ -8,9 +8,9 @@ class RentalOrder < ApplicationRecord
     @record = RentalOrder.preload(:group)
                          .map do |rental_order|
       {
-        "rental_order": rental_order,
-        "rental_item": rental_order.rental_item,
-        "group": rental_order.group
+        rental_order: rental_order,
+        rental_item: rental_order.rental_item,
+        group: rental_order.group
       }
     end
   end
@@ -18,20 +18,20 @@ class RentalOrder < ApplicationRecord
   def self.with_rental_item(rental_order_id)
     rental_order = RentalOrder.find(rental_order_id)
     {
-      "rental_order": rental_order,
-      "rental_item": rental_order.rental_item,
-      "group": rental_order.group
+      rental_order: rental_order,
+      rental_item: rental_order.rental_item,
+      group: rental_order.group
     }
   end
 
   def to_rental_item_info_h
     {
-      "rental_item": nil? ? nil : self,
-      "name": rental_item.name,
-      "is_inside_shop_rentable": rental_item.is_inside_shop_rentable,
-      "is_outside_shop_rentable": rental_item.is_outside_shop_rentable,
-      "is_stage_rentable": rental_item.is_stage_rentable,
-      "num": num
+      rental_item: nil? ? nil : self,
+      name: rental_item.name,
+      is_inside_shop_rentable: rental_item.is_inside_shop_rentable,
+      is_outside_shop_rentable: rental_item.is_outside_shop_rentable,
+      is_stage_rentable: rental_item.is_stage_rentable,
+      num: num
     }
   end
 end

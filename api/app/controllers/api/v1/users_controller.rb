@@ -30,8 +30,8 @@ module Api
       def fit_user_index_for_admin_view(users)
         users.map do |user|
           {
-            "user": user,
-            "role": user.role
+            user: user,
+            role: user.role
           }
         end
       end

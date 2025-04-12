@@ -8,9 +8,9 @@ class PlaceOrder < ApplicationRecord
     @record = PlaceOrder.preload(:group)
                         .map do |place_order|
       {
-        "place_order": place_order,
-        "place_order_name": place_order.to_place_name_h,
-        "group": place_order.group
+        place_order: place_order,
+        place_order_name: place_order.to_place_name_h,
+        group: place_order.group
       }
     end
   end
@@ -18,20 +18,20 @@ class PlaceOrder < ApplicationRecord
   def self.get_with_group(place_order_id)
     place_order = PlaceOrder.find(place_order_id)
     {
-      "place_order": place_order,
-      "place_order_name": place_order.to_place_name_h,
-      "group": place_order.group
+      place_order: place_order,
+      place_order_name: place_order.to_place_name_h,
+      group: place_order.group
     }
   end
 
   # 会場申請を会場名のハッシュにして返す
   def to_place_name_h
     {
-      "place_order": nil? ? nil : self,
-      "first": first.nil? ? nil : _place_name(first),
-      "second": second.nil? ? nil : _place_name(second),
-      "third": third.nil? ? nil : _place_name(third),
-      "remark": remark.nil? ? nil : remark
+      place_order: nil? ? nil : self,
+      first: first.nil? ? nil : _place_name(first),
+      second: second.nil? ? nil : _place_name(second),
+      third: third.nil? ? nil : _place_name(third),
+      remark: remark.nil? ? nil : remark
     }
   end
 

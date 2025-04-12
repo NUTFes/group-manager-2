@@ -17,7 +17,7 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
       post memos_url, params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show memo' do
@@ -27,7 +27,7 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update memo' do
     patch memo_url(@memo), params: { memo: { content: @memo.content, user_id: @memo.user_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy memo' do
@@ -35,6 +35,6 @@ class MemosControllerTest < ActionDispatch::IntegrationTest
       delete memo_url(@memo), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

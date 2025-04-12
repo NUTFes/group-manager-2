@@ -12,29 +12,29 @@ module Api
       def fit_group_index_for_admin_view(groups)
         groups.map do |group|
           {
-            "group": group,
-            "user": group.user&.id,
-            "group_category": group.group_category&.id,
-            "fes_year": group.fes_year&.id,
-            "sub_rep": group.sub_rep&.id,
-            "place_order": group.place_order&.id,
-            "stage_orders": group.stage_orders.count.zero? ? nil : group.stage_orders[0].id,
-            "stage_common_option": group.stage_common_option&.id,
-            "power_orders": group.power_orders.count.zero? ? nil : group.power_orders[0].id,
-            "rental_orders": group.rental_orders.count.zero? ? nil : group.rental_orders[0].id,
-            "employees": group.employees.count.zero? ? nil : group.employees[0].id,
-            "food_product": group.food_products.empty? ? nil : true,
-            "purchase_list": if group.food_products.empty?
-                               nil
-                             elsif group.food_products.any? do |food_product|
-                               !food_product.purchase_lists.empty?
-                             end
-                               true
-                             end,
-            "public_relation": group.public_relation&.id,
-            "venue_map": group.venue_map&.id,
-            "announcement": group.announcement&.status,
-            "cooking_process_order": group.cooking_process_order&.id
+            group: group,
+            user: group.user&.id,
+            group_category: group.group_category&.id,
+            fes_year: group.fes_year&.id,
+            sub_rep: group.sub_rep&.id,
+            place_order: group.place_order&.id,
+            stage_orders: group.stage_orders.count.zero? ? nil : group.stage_orders[0].id,
+            stage_common_option: group.stage_common_option&.id,
+            power_orders: group.power_orders.count.zero? ? nil : group.power_orders[0].id,
+            rental_orders: group.rental_orders.count.zero? ? nil : group.rental_orders[0].id,
+            employees: group.employees.count.zero? ? nil : group.employees[0].id,
+            food_product: group.food_products.empty? ? nil : true,
+            purchase_list: if group.food_products.empty?
+                             nil
+                           elsif group.food_products.any? do |food_product|
+                             !food_product.purchase_lists.empty?
+                           end
+                             true
+                           end,
+            public_relation: group.public_relation&.id,
+            venue_map: group.venue_map&.id,
+            announcement: group.announcement&.status,
+            cooking_process_order: group.cooking_process_order&.id
           }
         end
       end

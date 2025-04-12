@@ -17,8 +17,8 @@ module Api
       def fit_stage_common_option_index_for_admin_view(stage_common_options)
         stage_common_options.map do |stage_common_option|
           {
-            "stage_common_option": stage_common_option,
-            "group": stage_common_option.group.nil? ? nil : stage_common_option.group
+            stage_common_option: stage_common_option,
+            group: stage_common_option.group.nil? ? nil : stage_common_option.group
           }
         end
       end
@@ -36,22 +36,14 @@ module Api
         @stage_common_options = StageCommonOption.all
 
         # own_equipment,  bgm, camera_permission, loud_soundで絞り込み
-        if own_equipment != 0
-          @stage_common_options = @stage_common_options.where('(own_equipment = ?)', option_list[own_equipment])
-        end
+        @stage_common_options = @stage_common_options.where('(own_equipment = ?)', option_list[own_equipment]) if own_equipment != 0
         @stage_common_options = @stage_common_options.where('(bgm = ?)', option_list[bgm]) if bgm != 0
-        if camera_permission != 0
-          @stage_common_options = @stage_common_options.where('(camera_permission = ?)', option_list[camera_permission])
-        end
+        @stage_common_options = @stage_common_options.where('(camera_permission = ?)', option_list[camera_permission]) if camera_permission != 0
         if loud_sound != 0
           @stage_common_options = @stage_common_options.where('(loud_sound = ?)',
                                                               option_list[loud_sound])
         end
-        if fes_year_id != 0
-          @stage_common_options = @stage_common_options.preload(:group).map do |stage_common_option|
-            stage_common_option if stage_common_option.group.fes_year_id == fes_year_id
-          end.compact
-        end
+        @stage_common_options = @stage_common_options.preload(:group).select { |stage_common_option| stage_common_option.group.fes_year_id == fes_year_id } if fes_year_id != 0
 
         if @stage_common_options.count.zero?
           render json: fmt(not_found, [], 'Not found stage_common_options')
@@ -63,9 +55,7 @@ module Api
       # あいまい検索
       def get_search_stage_common_options
         word = params[:word]
-        @stage_common_options = StageCommonOption.preload(:group).map do |stage_common_option|
-          stage_common_option if stage_common_option.group.name.include?(word)
-        end.compact
+        @stage_common_options = StageCommonOption.preload(:group).select { |stage_common_option| stage_common_option.group.name.include?(word) }
         if @stage_common_options.count.zero?
           render json: fmt(not_found, [], 'Not found stage_common_options')
         else

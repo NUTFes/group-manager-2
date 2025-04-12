@@ -16,16 +16,16 @@ class GroupIdentificationController < ApplicationController
 
     @group_identifications = @groups.map do |group|
       {
-        "id": group.group_identification&.id,
-        "group_id": group.id,
-        "name": group.name,
-        "group_category_id": group.group_category.id,
-        "group_category": group.group_category.name,
-        "number": group.number.nil? ? nil : group.number,
-        "place": group.place.nil? ? nil : group.place,
-        "stage": group.stage.nil? ? nil : group.stage,
-        "created_at": group.group_identification&.created_at,
-        "updated_at": group.group_identification&.updated_at
+        id: group.group_identification&.id,
+        group_id: group.id,
+        name: group.name,
+        group_category_id: group.group_category.id,
+        group_category: group.group_category.name,
+        number: group.number.nil? ? nil : group.number,
+        place: group.place.nil? ? nil : group.place,
+        stage: group.stage.nil? ? nil : group.stage,
+        created_at: group.group_identification&.created_at,
+        updated_at: group.group_identification&.updated_at
 
       }
     end

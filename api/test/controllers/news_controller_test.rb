@@ -17,7 +17,7 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
       post news_index_url, params: { news: { body: @news.body, title: @news.title } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show news' do
@@ -27,7 +27,7 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should update news' do
     patch news_url(@news), params: { news: { body: @news.body, title: @news.title } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy news' do
@@ -35,6 +35,6 @@ class NewsControllerTest < ActionDispatch::IntegrationTest
       delete news_url(@news), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

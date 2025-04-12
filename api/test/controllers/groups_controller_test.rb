@@ -18,7 +18,7 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
            params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show group' do
@@ -29,7 +29,7 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   test 'should update group' do
     patch group_url(@group),
           params: { group: { activity: @group.activity, fes_year_id: @group.fes_year_id, group_category_id: @group.group_category_id, name: @group.name, project_name: @group.project_name, user_id: @group.user_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy group' do
@@ -37,6 +37,6 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
       delete group_url(@group), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

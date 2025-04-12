@@ -5,7 +5,7 @@ module Api
   module Auth
     class SessionsController < ApplicationController
       def index
-        puts current_api_user
+        Rails.logger.debug current_api_user
         if current_api_user
           render json: { is_login: true, data: current_api_v1_user }
         else

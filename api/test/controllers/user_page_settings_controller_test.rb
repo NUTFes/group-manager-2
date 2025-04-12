@@ -18,7 +18,7 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
            params: { user_page_setting: { is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
   test 'should show user_page_setting' do
@@ -29,7 +29,7 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
   test 'should update user_page_setting' do
     patch user_page_setting_url(@user_page_setting),
           params: { user_page_setting: { is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
   test 'should destroy user_page_setting' do
@@ -37,6 +37,6 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
       delete user_page_setting_url(@user_page_setting), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

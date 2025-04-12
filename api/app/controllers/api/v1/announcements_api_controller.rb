@@ -16,8 +16,8 @@ module Api
       def fit_announcement_index_for_admin_view(announcements)
         announcements.map do |announcement|
           {
-            "announcement": announcement,
-            "group": announcement.group
+            announcement: announcement,
+            group: announcement.group
           }
         end
       end
@@ -31,9 +31,9 @@ module Api
       def fit_group_index_for_admin_view(groups)
         groups.map do |group|
           {
-            "group": group,
-            "group_category": group.group_category,
-            "fes_year": group.fes_year
+            group: group,
+            group_category: group.group_category,
+            fes_year: group.fes_year
           }
         end
       end

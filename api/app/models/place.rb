@@ -11,19 +11,17 @@ class Place < ApplicationRecord
 
   # その会場の(開催年で絞り込んだ)参加団体(開催年で絞り込んだ)を取得する
   def groups(fes_year_id)
-    place_numbers.preload(:group_identification).map do |place_number|
+    place_numbers.preload(:group_identification).filter_map do |place_number|
       place_number.group_identification.group if place_number.group_identification.group.fes_year_id == fes_year_id
-    end.compact
+    end
   end
 
   # その会場で申請されている電力の総和を計算する
   def sum_power_orders(fes_year_id)
     sum_power_orders_by_place = 0
-    sum_power_orders_by_place += place_numbers.preload(:group_identification).map do |place_number|
-      if place_number.group_identification.group.fes_year_id == fes_year_id
-        place_number.group_identification.group.sum_power_orders
-      end
-    end.compact.sum
+    sum_power_orders_by_place += place_numbers.preload(:group_identification).filter_map do |place_number|
+      place_number.group_identification.group.sum_power_orders if place_number.group_identification.group.fes_year_id == fes_year_id
+    end.sum
     sum_power_orders_by_place
   end
 end

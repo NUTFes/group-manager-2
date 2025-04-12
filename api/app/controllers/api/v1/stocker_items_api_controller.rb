@@ -25,7 +25,9 @@ module Api
         end
 
         output = []
-        if !@stocker_items.empty?
+        if @stocker_items.empty?
+          render json: fmt(not_found, [], 'Not found stocker_items')
+        else
           @stocker_items.each do |stocker_item|
             remaining_num = stocker_item.num - AssignRentalItem.where(rental_item_id: stocker_item.rental_item_id,
                                                                       stocker_place_id: stocker_item.stocker_place_id).sum(:num)
@@ -40,8 +42,6 @@ module Api
             output << temp
           end
           render json: fmt(ok, output)
-        else
-          render json: fmt(not_found, [], 'Not found stocker_items')
         end
       end
     end

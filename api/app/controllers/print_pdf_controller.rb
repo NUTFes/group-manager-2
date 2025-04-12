@@ -63,35 +63,35 @@ class PrintPdfController < ApplicationController
       print_pdf(template_name, style_name, "#{output_file_name}_#{format('%02d', @group.id)}.#{@group.name}", type)
     # groupが存在しなければNot FoundのHTMLを出力
     else
-      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+      render file: Rails.root.join('app/views/print_pdf/not_found.html').to_s, layout: false, content_type: 'text/html'
     end
   end
 
   # 食品販売
   def output_groups_in_group_category_1(template_name, style_name, output_file_name, type)
-    if Group.where(fes_year_id: params[:fes_year_id]).exists?
+    if Group.exists?(fes_year_id: params[:fes_year_id])
       @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
-      puts @groups
+      Rails.logger.debug @groups
       print_pdf(template_name, style_name, output_file_name, type)
     else
-      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+      render file: Rails.root.join('app/views/print_pdf/not_found.html').to_s, layout: false, content_type: 'text/html'
     end
   end
 
   # 保健所提出書類（調理計画・従事者）
   def output_groups_of_health_office_document(template_name, style_name, output_file_name, type)
-    if Group.where(fes_year_id: params[:fes_year_id]).exists?
+    if Group.exists?(fes_year_id: params[:fes_year_id])
       @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
       @fes_dates = FesDate.all
       print_pdf(template_name, style_name, output_file_name, type)
     else
-      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+      render file: Rails.root.join('app/views/print_pdf/not_found.html').to_s, layout: false, content_type: 'text/html'
     end
   end
 
   # カテゴリ分けされたもの
   def output_groups_with_categories(template_name, style_name, output_file_name, type)
-    if Group.where(fes_year_id: params[:fes_year_id]).exists?
+    if Group.exists?(fes_year_id: params[:fes_year_id])
       @groups = Group.where(fes_year_id: params[:fes_year_id])
       @catgories = []
       (1..6).each do |i|
@@ -100,7 +100,7 @@ class PrintPdfController < ApplicationController
       end
       print_pdf(template_name, style_name, output_file_name, type)
     else
-      render file: "#{Rails.root}/app/views/print_pdf/not_found.html", layout: false, content_type: 'text/html'
+      render file: Rails.root.join('app/views/print_pdf/not_found.html').to_s, layout: false, content_type: 'text/html'
     end
   end
 
@@ -121,7 +121,7 @@ class PrintPdfController < ApplicationController
               else
                 PDFKit.new(html, page_size: 'A4', encoding: 'UTF-8')
               end
-        pdf.stylesheets << "#{Rails.root}/app/views/print_pdf/#{style_name}.css"
+        pdf.stylesheets << Rails.root.join("app/views/print_pdf/#{style_name}.css").to_s
 
         send_data pdf.to_pdf,
                   filename: "#{output_file_name}.pdf",
