@@ -29,6 +29,12 @@ jobs:
           cache-dependency-path: |
             ./user/package.json
             ./user/pnpm-lock.yaml
+
+
+      # Corepack を有効にして pnpm を使えるようにする
+      - name: Enable Corepack
+        run: corepack enable
+
       - run: pnpm install --frozen-lockfile
         working-directory: ./user
 
