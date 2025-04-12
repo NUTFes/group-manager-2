@@ -75,7 +75,7 @@ module Api
       end
 
       def output_sub_reps_csv
-        if params[:fes_year_id].to_id.zero?
+        if params[:fes_year_id].to_i.zero?
           @sub_reps = Group.preload(:sub_rep).map(&:sub_rep)
           filename_year = '全'
         else

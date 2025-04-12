@@ -37,7 +37,7 @@ module Api
                      end
 
         if @employees.count.zero?
-          render json: fmt(not_found, [], 'Not found empolees')
+          render json: fmt(not_found, [], 'Not found employees')
         else
           render json: fmt(ok, fit_employee_index_for_admin_view(@employees))
         end
