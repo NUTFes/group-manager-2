@@ -50,7 +50,7 @@ jobs:
         with:
           author_name: GitHub Action
           author_email: action@github.com
-          message: "chore: auto format code"
+          message: "chore: auto format code [skip ci]"
           push: true
 
       # ESLintでコードの自動修正を実行
@@ -64,5 +64,6 @@ jobs:
         with:
           author_name: GitHub Action
           author_email: action@github.com
-          message: "chore: auto fix lint issues"
+          message: "chore: auto fix lint issues [skip ci]"
           push: true
+
