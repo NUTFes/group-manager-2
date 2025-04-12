@@ -13,25 +13,29 @@ jobs:
     name: Code-Check
     runs-on: ubuntu-latest
     steps:
-      # GitHubリポジトリのコードをチェックアウト（fetch-depth: 0 にして完全な履歴を取得）
+      # GitHubリポジトリのコードをチェックアウト
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
           persist-credentials: true
 
-      # Node.js v22をセットアップ
-      - name: Use Node.js v22
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22
-
       # Corepack を有効にして pnpm を使えるようにする
       - name: Enable Corepack
         run: corepack enable
 
-      # プロジェクトの依存関係をインストール（user ディレクトリ内）
-      - name: Install dependencies
+      # Node.js v22をセットアップ
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: |
+            ./user/package.json
+            ./user/pnpm-lock.yaml
+
+      # pnpmで依存関係をインストール
+      - name: pnpm install dependencies
         run: pnpm install --frozen-lockfile
         working-directory: ./user
 
