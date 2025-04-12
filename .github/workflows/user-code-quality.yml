@@ -34,8 +34,9 @@ jobs:
             ./user/package.json
             ./user/pnpm-lock.yaml
 
-
-      - run: pnpm install --frozen-lockfile
+      # pnpmで依存関係をインストール
+      - name: pnpm install dependencies
+        run: pnpm install --frozen-lockfile
         working-directory: ./user
 
       # prettierでコードのフォーマットを実行
