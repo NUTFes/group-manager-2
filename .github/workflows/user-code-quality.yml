@@ -10,7 +10,7 @@ on:
 
 jobs:
   format:
-    name: fomrat
+    name: format
     runs-on: ubuntu-latest
     steps:
       # GitHubリポジトリのコードをチェックアウト
@@ -50,7 +50,7 @@ jobs:
         with:
           author_name: GitHub Action
           author_email: action@github.com
-          message: "chore: auto format code [skip ci]"
+          message: "chore: auto format code"
           push: true
 
       # ESLintでコードの自動修正を実行
@@ -64,7 +64,7 @@ jobs:
         with:
           author_name: GitHub Action
           author_email: action@github.com
-          message: "chore: auto fix lint issues [skip ci]"
+          message: "chore: auto fix lint issues"
           push: true
 
   Code-Check:
