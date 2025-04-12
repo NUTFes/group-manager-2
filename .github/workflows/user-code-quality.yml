@@ -26,6 +26,9 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
+          cache-dependency-path: |
+            ./user/package.json
+            ./user/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
         working-directory: ./user
 
