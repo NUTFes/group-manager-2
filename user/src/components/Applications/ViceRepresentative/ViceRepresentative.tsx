@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
-import ViceRepresentativeForm from '@/components/ViceRepresentative/ViceRepresentativeForm';
+import ViceRepresentativeForm from '@/components/Applications/ViceRepresentative/ViceRepresentativeForm';
 
 
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。

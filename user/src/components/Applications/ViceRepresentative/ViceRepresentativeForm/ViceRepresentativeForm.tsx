@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import FormContainer from '../../FormContainer';
-import Radio from '../../Form/Radio';
-import TextBox from '../../Form/TextBox';
+import FormContainer from '../../../FormContainer';
+import Radio from '../../../Form/Radio';
+import TextBox from '../../../Form/TextBox';
 import { PiSquareSplitVerticalDuotone } from 'react-icons/pi';
 import { getRandomValues } from 'crypto';
 import {useForm} from 'react-hook-form';
