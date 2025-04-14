@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
@@ -26,16 +27,18 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
     isEditing,
     toEdit,
     formItem,
-    options1,
-    options2,
+    options,
     convertToString,
+    userPageSettingIsLoading,
+    userPageSettingHasError,
+    userPageSettings,
   } = useStageOptionHooks();
 
-  if (isLoading || stageOptions === undefined) {
+  if (isLoading || stageOptions === undefined || userPageSettingIsLoading) {
     return <div className="py-10 text-center">読み込み中です...</div>;
   }
 
-  if (hasError) {
+  if (hasError || userPageSettingHasError) {
     return (
       <div className="py-10 text-center text-red-500">
         データの取得に失敗しました。
@@ -44,13 +47,17 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
   }
 
   if (createError || updateError) {
-    alert('送信に失敗しました。時間を置いて再度お試しください');
+    toast.error('送信に失敗しました。時間を置いて再度お試しください');
   }
 
-  // TODO: 締め切り後 isEditを消す処理が必要
-  // accordionMenuからpropsで持ってくるとか？
-  if (!isEditing) {
-    return <FormList items={formItem} isEdit onEdit={toEdit} />;
+  // Fix: accordionから取ってきてpropsで渡した方がapi叩かれる回数が一度で良くなる。
+  // useUserPageSettingsを使って、userPageSettingsの値を取得する。trueなら編集可能
+  if (userPageSettings?.is_edit_stage_common_option) {
+    if (!isEditing) {
+      return <FormList items={formItem} isEdit onEdit={toEdit} />;
+    }
+  } else {
+    return <FormList items={formItem} />;
   }
 
   return (
@@ -61,7 +68,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             label={stageOptionLabels[0]}
             note="選んでください"
             onChange={(value) => setValue('ownEquipment', Number(value))}
-            options={options1}
+            options={options}
             required
             value={
               values.ownEquipment === undefined
@@ -76,7 +83,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             label={stageOptionLabels[1]}
             note="選んでください"
             onChange={(value) => setValue('bgm', Number(value))}
-            options={options1}
+            options={options}
             required
             value={
               values.bgm === undefined
@@ -91,14 +98,14 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             label={stageOptionLabels[2]}
             note="選んでください"
             onChange={(value) => setValue('cameraPermission', Number(value))}
-            options={options2}
+            options={options}
             required
             value={
               values.cameraPermission === undefined
                 ? stageOptions?.cameraPermission != null
                   ? convertToString(stageOptions.cameraPermission)
                   : ''
-                : values.ownEquipment.toString()
+                : values.cameraPermission.toString()
             }
             error={errors.cameraPermission?.message}
           />
@@ -106,7 +113,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             label={stageOptionLabels[3]}
             note="選んでください"
             onChange={(value) => setValue('loudSound', Number(value))}
-            options={options2}
+            options={options}
             required
             value={
               values.loudSound === undefined
