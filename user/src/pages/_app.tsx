@@ -7,7 +7,19 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="max-h-svh">
       <Layout>
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          // transition={Bounce}
+        />
         <Component {...pageProps} />
       </Layout>
     </div>
