@@ -5,8 +5,10 @@ import {
   useGetStageOptions,
   useUpdateStageOptions,
 } from '@/api/stageOptionApi';
+import { useGetUserPageSettings } from '@/api/userPageSettingsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { FormItem } from '@/components/FormList/type';
 import { stageOptionLabels } from '../../label';
@@ -29,6 +31,12 @@ export const useStageOptionHooks = () => {
 
   const values = watch();
 
+  const {
+    userPageSettings,
+    isLoading: userPageSettingIsLoading,
+    hasError: userPageSettingHasError,
+  } = useGetUserPageSettings();
+
   const { stageOptions, isLoading, hasError } = useGetStageOptions(
     values.groupId
   );
@@ -44,7 +52,7 @@ export const useStageOptionHooks = () => {
   );
 
   useEffect(() => {
-    if (stageOptions && stageOptions !== null) {
+    if (stageOptions) {
       {
         setValuesStageOptions(stageOptions);
       }
@@ -63,29 +71,27 @@ export const useStageOptionHooks = () => {
     isMutating: updateIsMutating,
   } = useUpdateStageOptions(stageOptions?.id ?? 0);
 
-  // alert以外で通知したい。
   const onSubmit = async (formData: StageOptionForm) => {
     if (stageOptions) {
       try {
         await update({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
-        alert('送信しました');
+        toast.success('送信しました');
         toEdit();
         setIsEditing(true);
       } catch {
-        reset();
-        alert('送信に失敗しました。');
+        toast.error('送信に失敗しました。');
       }
     } else {
       try {
         await create({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
-        alert('送信しました');
+        toast.success('送信しました');
         toEdit();
       } catch {
-        reset();
-        alert('送信に失敗しました。');
+        toast.error('送信に失敗しました。');
       }
+      reset();
     }
   };
 
@@ -101,33 +107,30 @@ export const useStageOptionHooks = () => {
     }
   }, [stageOptions]);
 
+  const options = [
+    { id: 1, name: 'はい' },
+    { id: 0, name: 'いいえ' },
+  ];
+
   const formItem: FormItem[] = [
     {
       label: stageOptionLabels[0],
-      content: stageOptions?.ownEquipment ? 'あり' : 'なし',
+      content: stageOptions?.ownEquipment ? options[0].name : options[1].name,
     },
     {
       label: stageOptionLabels[1],
-      content: stageOptions?.bgm ? 'あり' : 'なし',
+      content: stageOptions?.bgm ? options[0].name : options[1].name,
     },
     {
       label: stageOptionLabels[2],
-      content: stageOptions?.cameraPermission ? 'はい' : 'いいえ',
+      content: stageOptions?.cameraPermission
+        ? options[0].name
+        : options[1].name,
     },
     {
       label: stageOptionLabels[3],
-      content: stageOptions?.loudSound ? 'はい' : 'いいえ',
+      content: stageOptions?.loudSound ? options[0].name : options[1].name,
     },
-  ];
-
-  const options1 = [
-    { id: 1, name: 'あり' },
-    { id: 0, name: 'なし' },
-  ];
-
-  const options2 = [
-    { id: 1, name: 'はい' },
-    { id: 0, name: 'いいえ' },
   ];
 
   const convertToString = (value: boolean | null): string => {
@@ -151,8 +154,10 @@ export const useStageOptionHooks = () => {
     isEditing,
     toEdit,
     formItem,
-    options1,
-    options2,
+    options,
     convertToString,
+    userPageSettingIsLoading,
+    userPageSettingHasError,
+    userPageSettings,
   };
 };
