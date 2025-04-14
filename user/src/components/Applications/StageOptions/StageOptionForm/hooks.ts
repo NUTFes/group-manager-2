@@ -5,7 +5,7 @@ import {
   useGetStageOptions,
   useUpdateStageOptions,
 } from '@/api/stageOptionApi';
-import { useGetUserPageSettings } from '@/api/userPageSettingsApi';
+import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';

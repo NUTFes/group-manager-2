@@ -52,7 +52,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
 
   // Fix: accordionから取ってきてpropsで渡した方がapi叩かれる回数が一度で良くなる。
   // useUserPageSettingsを使って、userPageSettingsの値を取得する。trueなら編集可能
-  if (userPageSettings?.is_edit_stage_common_option) {
+  if (!userPageSettings?.is_edit_stage_common_option) {
     if (!isEditing) {
       return <FormList items={formItem} isEdit onEdit={toEdit} />;
     }
