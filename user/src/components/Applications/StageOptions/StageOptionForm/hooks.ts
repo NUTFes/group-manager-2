@@ -138,6 +138,20 @@ export const useStageOptionHooks = () => {
     return value ? '1' : '0';
   };
 
+  const validateEdit = () => {
+    if (stageOptions && values) {
+      if (
+        Number(stageOptions.bgm) === values.bgm &&
+        Number(stageOptions.cameraPermission) === values.cameraPermission &&
+        Number(stageOptions.loudSound) === values.loudSound &&
+        Number(stageOptions.ownEquipment) === values.ownEquipment
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return {
     handleSubmit,
     errors,
@@ -159,5 +173,6 @@ export const useStageOptionHooks = () => {
     userPageSettingIsLoading,
     userPageSettingHasError,
     userPageSettings,
+    validateEdit,
   };
 };

@@ -32,6 +32,7 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
     userPageSettingIsLoading,
     userPageSettingHasError,
     userPageSettings,
+    validateEdit,
   } = useStageOptionHooks();
 
   if (isLoading || stageOptions === undefined || userPageSettingIsLoading) {
@@ -143,7 +144,12 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             size="pc"
             color="main"
             type="submit"
-            isDisable={isLoading || createIsMutating || updateIsMutating}
+            isDisable={
+              isLoading ||
+              createIsMutating ||
+              updateIsMutating ||
+              validateEdit()
+            }
           >
             登録
           </Button>
