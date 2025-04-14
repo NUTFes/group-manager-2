@@ -4,10 +4,6 @@ const API_ENDPOINTS = {
   STAGE_OPTIONS: '/user_page_settings',
 };
 
-type ApiResponse<T> = {
-  data: T[];
-};
-
 export type UserPageSettings = {
   id: number;
   is_regist_group: boolean;
@@ -39,13 +35,11 @@ export type UserPageSettings = {
   add_stage_order: boolean;
 };
 
-export type UserPageSettingsResponse = ApiResponse<UserPageSettings>;
-
 export const useGetUserPageSettings = () => {
   const endpoint = `${API_ENDPOINTS.STAGE_OPTIONS}`;
 
   const { data, error, isLoading } = useApiGet<{
-    data: UserPageSettingsResponse;
+    data: UserPageSettings;
   }>(endpoint);
 
   return {
