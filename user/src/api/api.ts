@@ -148,6 +148,15 @@ export const postData = async (url: string, data: any) => {
 };
 
 /**
+ * PUTリクエスト用の関数
+ * @param url - エンドポイント
+ * @param data - 送信するデータ
+ */
+export const putData = async (url: string, data: any) => {
+  return sendRequest(url, createRequestOptions('PUT', data));
+};
+
+/**
  * DELETEリクエスト用の関数
  * @param url - 削除対象のエンドポイント
  */
