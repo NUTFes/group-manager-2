@@ -1,5 +1,6 @@
 class SubRepsController < ApplicationController
   before_action :set_sub_rep, only: [:show, :update, :destroy]
+  before_action :set_sub_reps_by_group_id, only: [:get_by_group_id]
 
   # GET /sub_reps
   # GET /sub_reps.json
@@ -35,6 +36,11 @@ class SubRepsController < ApplicationController
     render json: fmt(ok, [], "Deleted sub_rep = "+params[:id])
   end
 
+  # GET /sub_reps/group_id/1
+  def get_by_group_id
+    render json: fmt(ok, @sub_rep)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_sub_rep
@@ -42,6 +48,15 @@ class SubRepsController < ApplicationController
         @sub_rep = SubRep.find(params[:id])
       else
         render json: fmt(not_found, [], "Not found sub_rep = "+params[:id])
+      end
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_sub_reps_by_group_id
+      if SubRep.exists?(group_id: params[:group_id])
+        @sub_rep = SubRep.find_by(group_id: params[:group_id])
+      else
+        render json: fmt(not_found, [], "Not found sub_rep = "+params[:group_id])
       end
     end
 

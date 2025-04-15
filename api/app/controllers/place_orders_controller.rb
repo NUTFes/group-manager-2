@@ -1,5 +1,6 @@
 class PlaceOrdersController < ApplicationController
   before_action :set_place_order, only: [:show, :update, :destroy]
+  before_action :set_place_order_by_group_id, only: [:get_by_group_id]
 
   # GET /place_orders
   # GET /place_orders.json
@@ -35,6 +36,11 @@ class PlaceOrdersController < ApplicationController
     render json:fmt(ok, [], "Deletd place_order = "+params[:id])
   end
 
+  # GET /place_orders/group_id/1
+  def get_by_group_id
+    render json: fmt(ok, @place_order)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_place_order
@@ -42,6 +48,15 @@ class PlaceOrdersController < ApplicationController
         @place_order = PlaceOrder.find(params[:id])
       else
         render json: fmt(not_found, [], "Not found place_order = "+params[:id])
+      end
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_place_order_by_group_id
+      if PlaceOrder.exists?(group_id: params[:group_id])
+        @place_order = PlaceOrder.find_by(group_id: params[:group_id])
+      else
+        render json: fmt(not_found, [], "Not found place_order = "+params[:group_id])
       end
     end
 
