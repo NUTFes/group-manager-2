@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import React from 'react';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
@@ -7,25 +7,19 @@ import Status from '@/components/Status';
 type AccordionMenuProps = {
   title: string;
   children: React.ReactNode;
-  isOpen: boolean;
-  onToggle: () => void;
   isEdit: boolean;
   isExist: boolean;
   required: boolean;
   note?: string;
-  onSubmit: () => void;
 };
 
 const AccordionMenu: FC<AccordionMenuProps> = ({
   title,
   children,
-  isOpen,
-  onToggle,
   isEdit,
   isExist,
   required,
   note,
-  onSubmit,
 }) => {
   // TODO：api/app/controllers/user_page_settings_controller.rbでの登録するかどうかのbooleanを受け取る想定。
   // 要件要確認
@@ -35,11 +29,17 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   // できるならAPI側でisExist()みたいな関数を作りたい。工数多い。。。
   const registerStatus = isExist ? 'registered' : 'unregistered';
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleAccordion = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <div className="border-t border-[#b2b2b2] w-full md:w-[560px]">
+    <div className="w-full max-w-[560px] border-t border-[#b2b2b2]">
       <button
-        onClick={onToggle}
-        className="w-full md:w-[560px] h-20 flex items-center gap-6 overflow-hidden cursor-pointer mb-10"
+        onClick={toggleAccordion}
+        className="mb-10 flex h-20 w-full max-w-[560px] cursor-pointer items-center gap-6 overflow-hidden"
       >
         <div className="flex items-center justify-center">
           <div
@@ -50,7 +50,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         </div>
         <div className="py-2.5">
           <div
-            className={`md:w-52 w-full font-bold ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
+            className={`w-full font-bold md:w-52 ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
           >
             <Textfit mode="single" max={40}>
               {title}
@@ -67,10 +67,8 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
       </button>
       {isOpen && (
         <div className="mb-10">
-          {note && <p className="text-red-500 font-bold mb-10">{note}</p>}
-          {React.isValidElement(children)
-            ? React.cloneElement(children, { onSubmit } as any)
-            : children}
+          {note && <p className="mb-10 font-bold text-red-500">{note}</p>}
+          {children}
         </div>
       )}
     </div>

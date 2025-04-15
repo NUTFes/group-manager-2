@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { ReactNode } from 'react';
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,12 +10,12 @@ interface LayoutProps {
 
 const Layout = ({ children, headerOnClick = () => {} }: LayoutProps) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       {/* ヘッダー */}
       <Header onClick={headerOnClick} />
 
       {/* メインコンテンツ */}
-      <main className="flex-grow">{children}</main>
+      <main className="grow">{children}</main>
 
       {/* フッター */}
       <Footer />

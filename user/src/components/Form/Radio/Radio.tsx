@@ -31,11 +31,11 @@ const Radio: FC<RadioProps> = ({
   return (
     <>
       <label>
-        <div className="flex gap-6 items-center mb-[5px]">
+        <div className="mb-[5px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
-        <div className="flex flex-col gap-4 my-6">
+        <div className="my-6 flex flex-col gap-4">
           {options.map((option) => (
             <label key={option.id} className="flex items-center gap-2">
               <input
@@ -44,7 +44,7 @@ const Radio: FC<RadioProps> = ({
                 value={option.id}
                 checked={value === option.id.toString()}
                 onChange={handleChange}
-                className={`w-4 h-4 form-radio ${error ? 'accent-alert' : 'accent-main'}`}
+                className={`form-radio size-4 ${error ? 'accent-alert' : 'accent-main'}`}
               />
               <span className={`${error ? 'text-alert' : 'text-font'}`}>
                 {option.name}

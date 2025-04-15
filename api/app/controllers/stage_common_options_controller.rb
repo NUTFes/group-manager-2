@@ -35,6 +35,12 @@ class StageCommonOptionsController < ApplicationController
     render json: fmt(ok, [], "Deleted stage_common_option = "+params[:id])
   end
 
+  def by_group
+    group_id = params[:group_id]
+    @stage_common_option = StageCommonOption.find_by(group_id: group_id)
+    render json: fmt(ok, @stage_common_option)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage_common_option

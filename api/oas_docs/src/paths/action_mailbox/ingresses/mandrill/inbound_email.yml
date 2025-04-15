@@ -1,0 +1,43 @@
+---
+paths:
+  "/rails/action_mailbox/mandrill/inbound_emails":
+    get:
+      tags:
+      - action_mailbox/ingresses/mandrill/inbound_email
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: action_mailbox/ingresses/mandrill/inbound_email description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
+        '422':
+          description: action_mailbox/ingresses/mandrill/inbound_email description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
+      deprecated: false
+    post:
+      tags:
+      - action_mailbox/ingresses/mandrill/inbound_email
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: action_mailbox/ingresses/mandrill/inbound_email description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
+        '422':
+          description: action_mailbox/ingresses/mandrill/inbound_email description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actionmailbox.ingresses.mandrill.InboundEmail"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/actionmailbox.ingresses.mandrill.InboundEmail"

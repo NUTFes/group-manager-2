@@ -3,9 +3,9 @@ import Icons, { Loading } from '@/icons/Icons';
 
 type ButtonProps = {
   children: React.ReactNode;
-  size: "pc" | "mobile";
-  color: "main" | "secondary" | "alert";
-  type: "button" | "submit" | "reset";
+  size: 'pc' | 'mobile';
+  color: 'main' | 'secondary' | 'alert';
+  type: 'button' | 'submit' | 'reset';
   variant?: boolean;
   icon?: string;
   onClick?: () => void;
@@ -70,7 +70,7 @@ const Button: FC<ButtonProps> = (props) => {
     >
       {iconElement && (
         <span
-          className={`flex items-center ${icon === "lessThan" ? "text-sm" : ""} `}
+          className={`flex items-center ${icon === 'lessThan' ? 'text-sm' : ''} `}
         >
           {iconElement}
         </span>
@@ -78,7 +78,7 @@ const Button: FC<ButtonProps> = (props) => {
       {isDisable ? (
         <></>
       ) : (
-        <span className="font-bold text-center">{children}</span>
+        <span className="text-center font-bold">{children}</span>
       )}
     </button>
   );
