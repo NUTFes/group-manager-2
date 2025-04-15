@@ -14,6 +14,7 @@ const ViceRepresentative: FC<ViceRepresentativeFormProps> = () => {
       isEdit={false}
       isExist={false}
       required
+      note='一人での参加者の場合のみ、副代表申請は不要です。'
     >
       <ViceRepresentativeForm />
     </AccordionMenu>
