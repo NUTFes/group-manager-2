@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import Button from '../Button';
@@ -11,14 +10,7 @@ export default {
 
 export const Default: StoryObj<typeof AccordionMenu> = {
   render: (args) => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <AccordionMenu
-        {...args}
-        isOpen={isOpen}
-        onToggle={() => setIsOpen((prev) => !prev)}
-      />
-    );
+    return <AccordionMenu {...args} />;
   },
   args: {
     title: '副代表申請',
@@ -32,14 +24,8 @@ export const Default: StoryObj<typeof AccordionMenu> = {
 
 export const Test: StoryObj<typeof AccordionMenu> = {
   render: (args) => {
-    const [isOpen, setIsOpen] = useState(false);
     return (
-      <AccordionMenu
-        {...args}
-        isOpen={isOpen}
-        onToggle={() => setIsOpen((prev) => !prev)}
-        onSubmit={() => alert('押されたよ')}
-      >
+      <AccordionMenu {...args}>
         <form>
           <Button size="pc" color="main" isDisable={false} type="button">
             Button
