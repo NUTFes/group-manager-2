@@ -45,7 +45,7 @@ Rails.application.routes.draw do
   resources :stocker_places
   resources :rental_orders do
     collection do
-      get 'group_id/:group_id', to: 'rental_orders#get_by_group_id'
+      get 'group/:group_id', to: 'rental_orders#get_by_group_id'
     end
   end
 
@@ -53,19 +53,19 @@ Rails.application.routes.draw do
   resources :assign_stages
   resources :stage_orders do
     collection do
-      get 'group_id/:group_id', to: 'stage_orders#get_by_group_id'
+      get 'group/:group_id', to: 'stage_orders#get_by_group_id'
     end
   end
   resources :stages
   resources :employees
   resources :sub_reps do
     collection do
-      get 'group_id/:group_id', to: 'sub_reps#get_by_group_id'
+      get 'group/:group_id', to: 'sub_reps#get_by_group_id'
     end
   end
   resources :power_orders do
     collection do
-      get 'group_id/:group_id', to: 'power_orders#get_by_group_id'
+      get 'group/:group_id', to: 'power_orders#get_by_group_id'
     end
   end
   resources :place_allow_lists
@@ -73,7 +73,7 @@ Rails.application.routes.draw do
   resources :assign_group_places
   resources :place_orders do
     collection do
-      get 'group_id/:group_id', to: 'place_orders#get_by_group_id'
+      get 'group/:group_id', to: 'place_orders#get_by_group_id'
     end
   end
   resources :stage_common_options
@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   resources :fes_years
   resources :public_relations do
     collection do
-      get 'group_id/:group_id', to: 'public_relations#get_by_group_id'
+      get 'group/:group_id', to: 'public_relations#get_by_group_id'
     end
   end
   resources :venue_maps
