@@ -1,7 +1,7 @@
 import { useApiGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
-  STAGE_OPTIONS: '/user_page_settings',
+  USER_PAGE_SETTINGS: '/user_page_settings',
 };
 
 export type UserPageSettings = {
@@ -36,7 +36,7 @@ export type UserPageSettings = {
 };
 
 export const useGetUserPageSettings = () => {
-  const endpoint = `${API_ENDPOINTS.STAGE_OPTIONS}`;
+  const endpoint = `${API_ENDPOINTS.USER_PAGE_SETTINGS}`;
 
   const { data, error, isLoading } = useApiGet<{
     data: UserPageSettings;
