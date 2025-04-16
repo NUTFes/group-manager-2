@@ -53,9 +53,7 @@ export const useStageOptionHooks = () => {
 
   useEffect(() => {
     if (stageOptions) {
-      {
-        setValuesStageOptions(stageOptions);
-      }
+      setValuesStageOptions(stageOptions);
     }
   }, [stageOptions, setValuesStageOptions]);
 
