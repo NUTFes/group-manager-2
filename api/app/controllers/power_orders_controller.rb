@@ -54,7 +54,6 @@ class PowerOrdersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_power_orders_by_group_id
       if PowerOrder.exists?(group_id: params[:group_id])
-        puts "PowerOrder.exists?(params[:group_id])"
         @power_orders = PowerOrder.where(group_id: params[:group_id])
       else
         puts "PowerOrder.exists?(params[:group_id]) else"
