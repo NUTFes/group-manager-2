@@ -1,128 +1,86 @@
 import { FC } from 'react';
+import { StageOptionResponse } from '@/api/stageOptionApi';
 import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
-import FormList from '@/components/FormList';
 import { stageOptionLabels } from '../../label';
-import { useStageOptionHooks } from './hooks';
+import { useStageOptionFormHooks } from './hooks';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type StageOptionFormProps = {};
+type StageOptionFormProps = {
+  stageOptions?: StageOptionResponse;
+  toEdit?: () => void;
+};
 
-const StageOptionForm: FC<StageOptionFormProps> = () => {
+const StageOptionForm: FC<StageOptionFormProps> = ({
+  stageOptions,
+  toEdit,
+}) => {
   const {
     handleSubmit,
     errors,
-    stageOptions,
-    isLoading,
-    hasError,
     onSubmit,
     setValue,
-    values,
     createError,
     createIsMutating,
     updateError,
     updateIsMutating,
-    isEditing,
-    toEdit,
-    formItem,
     options,
-    convertToString,
-    userPageSettingIsLoading,
-    userPageSettingHasError,
-    userPageSettings,
+    convertToBoolean,
     validateEdit,
-  } = useStageOptionHooks();
-
-  if (isLoading || stageOptions === undefined || userPageSettingIsLoading) {
-    return <div className="py-10 text-center">読み込み中です...</div>;
-  }
-
-  if (hasError || userPageSettingHasError) {
-    return (
-      <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
-      </div>
-    );
-  }
+    formatRadioValue,
+    values,
+  } = useStageOptionFormHooks(stageOptions);
 
   if (createError || updateError) {
     toast.error('送信に失敗しました。時間を置いて再度お試しください');
   }
 
-  // Fix: accordionから取ってきてpropsで渡した方がapi叩かれる回数が一度で良くなる。
-  // useUserPageSettingsを使って、userPageSettingsの値を取得する。trueなら編集可能
-  if (userPageSettings?.is_edit_stage_common_option) {
-    if (!isEditing) {
-      return <FormList items={formItem} isEdit onEdit={toEdit} />;
-    }
-  } else {
-    return <FormList items={formItem} />;
-  }
-
   return (
     <FormContainer>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      <form
+        onSubmit={handleSubmit(onSubmit, (err) => console.table(err))}
+        className="w-full"
+      >
         <div className="flex flex-col space-y-10">
           <Radio
             label={stageOptionLabels[0]}
             note="選んでください"
-            onChange={(value) => setValue('ownEquipment', Number(value))}
+            onChange={(value) =>
+              setValue('ownEquipment', convertToBoolean(value))
+            }
             options={options}
             required
-            value={
-              values.ownEquipment === undefined
-                ? stageOptions?.ownEquipment != null
-                  ? convertToString(stageOptions.ownEquipment)
-                  : ''
-                : values.ownEquipment.toString()
-            }
+            value={formatRadioValue(values.ownEquipment)}
             error={errors.ownEquipment?.message}
           />
           <Radio
             label={stageOptionLabels[1]}
             note="選んでください"
-            onChange={(value) => setValue('bgm', Number(value))}
+            onChange={(value) => setValue('bgm', convertToBoolean(value))}
             options={options}
             required
-            value={
-              values.bgm === undefined
-                ? stageOptions?.bgm != null
-                  ? convertToString(stageOptions.bgm)
-                  : ''
-                : values.bgm.toString()
-            }
+            value={formatRadioValue(values.bgm)}
             error={errors.bgm?.message}
           />
           <Radio
             label={stageOptionLabels[2]}
             note="選んでください"
-            onChange={(value) => setValue('cameraPermission', Number(value))}
+            onChange={(value) =>
+              setValue('cameraPermission', convertToBoolean(value))
+            }
             options={options}
             required
-            value={
-              values.cameraPermission === undefined
-                ? stageOptions?.cameraPermission != null
-                  ? convertToString(stageOptions.cameraPermission)
-                  : ''
-                : values.cameraPermission.toString()
-            }
+            value={formatRadioValue(values.cameraPermission)}
             error={errors.cameraPermission?.message}
           />
           <Radio
             label={stageOptionLabels[3]}
             note="選んでください"
-            onChange={(value) => setValue('loudSound', Number(value))}
+            onChange={(value) => setValue('loudSound', convertToBoolean(value))}
             options={options}
             required
-            value={
-              values.loudSound === undefined
-                ? stageOptions?.loudSound != null
-                  ? convertToString(stageOptions.loudSound)
-                  : ''
-                : values.loudSound.toString()
-            }
+            value={formatRadioValue(values.loudSound)}
             error={errors.loudSound?.message}
           />
         </div>
@@ -144,14 +102,9 @@ const StageOptionForm: FC<StageOptionFormProps> = () => {
             size="pc"
             color="main"
             type="submit"
-            isDisable={
-              isLoading ||
-              createIsMutating ||
-              updateIsMutating ||
-              validateEdit()
-            }
+            isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
-            登録
+            {stageOptions ? '修正' : '登録'}
           </Button>
         </div>
       </form>
