@@ -78,3 +78,7 @@ fmt:
 
 run-swagger:
 	docker compose -f compose.swagger.yml up -d
+
+openapi:
+	docker compose run --rm api bundle exec rake routes:oas:docs
+	docker compose run --rm api bundle exec rake routes:oas:build

@@ -1,5 +1,6 @@
 class StageOrdersController < ApplicationController
   before_action :set_stage_order, only: [:show, :update, :destroy]
+  before_action :set_stage_order_by_group_id, only: [:get_by_group_id]
 
   # GET /stage_orders
   # GET /stage_orders.json
@@ -35,6 +36,11 @@ class StageOrdersController < ApplicationController
     render json: fmt(ok, [], "Deleted stage_order = "+params[:id])  
   end
 
+  # GET /stage_orders/group_id/1
+  def get_by_group_id
+    render json: fmt(ok, @stage_order)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage_order
@@ -42,6 +48,15 @@ class StageOrdersController < ApplicationController
         @stage_order = StageOrder.find(params[:id])
       else
         render json: fmt(not_found, [], "Not found stage_order = "+params[:id])
+      end
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_stage_order_by_group_id
+      if StageOrder.exists?(group_id: params[:group_id])
+        @stage_order = StageOrder.find_by(group_id: params[:group_id])
+      else
+        render json: fmt(not_found, [], "Not found stage_order = "+params[:group_id])
       end
     end
 

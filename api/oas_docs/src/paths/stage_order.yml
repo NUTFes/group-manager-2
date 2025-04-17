@@ -41,6 +41,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageOrder"
+  "/stage_orders/group/{group_id}":
+    get:
+      tags:
+      - stage_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageOrder"
+        '404':
+          description: stage_order description
+        '422':
+          description: stage_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/stage_orders/{id}":
     get:
       tags:
