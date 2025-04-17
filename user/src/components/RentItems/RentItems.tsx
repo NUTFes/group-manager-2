@@ -17,17 +17,17 @@ const RentItems: FC<RentItemsProps> = ({ isEdit = false, isExist = false }) => {
   const [, toggleIsOpen] = useAtom(setIsOpenAccordionMenuAtom);
 
   return (
-      <AccordionMenu
-          title="物品申請"
-          isEdit={isEdit}
-          isExist={isExist}
-          required={true}
-          isOpen={isOpen}
-          onToggle={toggleIsOpen}
-          onSubmit={() => {}}
-      >
-        <RentItemsForm />
-      </AccordionMenu>
+    <AccordionMenu
+      title="物品申請"
+      isEdit={isEdit}
+      isExist={isExist}
+      required={true}
+      isOpen={isOpen}
+      onToggle={toggleIsOpen}
+      onSubmit={() => {}}
+    >
+      <RentItemsForm />
+    </AccordionMenu>
   );
 };
 

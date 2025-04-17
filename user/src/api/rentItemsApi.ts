@@ -44,9 +44,9 @@ type ApiResponse<T> = {
 export const useRentableItemsByType = (locationType: string) => {
   // 会場タイプに応じてエンドポイントを選択
   const endpoint =
-      locationType === '1'
-          ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
-          : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
+    locationType === '1'
+      ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
+      : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
 
   const {
     data: response,
@@ -69,7 +69,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
     isLoading,
     mutate,
   } = useApiGet<ApiResponse<RentalOrder[]>>(
-      `${API_ENDPOINTS.RENTAL_ORDERS}?group_id=${groupId}`
+    `${API_ENDPOINTS.RENTAL_ORDERS}?group_id=${groupId}`
   );
 
   return {
@@ -86,8 +86,8 @@ export const useMutateRentalOrders = () => {
 
   // 物品申請データを送信
   const submitRentalOrders = async (
-      items: Array<{ group_id: number; rental_item_id: number; num: number }>,
-      existingItems: RentalOrder[] = []
+    items: Array<{ group_id: number; rental_item_id: number; num: number }>,
+    existingItems: RentalOrder[] = []
   ) => {
     try {
       const promises = [];
@@ -98,7 +98,7 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-            put(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`, items[i])
+          put(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`, items[i])
         );
       }
 
@@ -113,7 +113,7 @@ export const useMutateRentalOrders = () => {
       if (existingItems.length > items.length) {
         for (let i = items.length; i < existingItems.length; i++) {
           promises.push(
-              deleteData(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
+            deleteData(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
           );
         }
       }
@@ -130,7 +130,7 @@ export const useMutateRentalOrders = () => {
   const deleteRentalOrders = async (itemIds: number[]) => {
     try {
       const promises = itemIds.map((id) =>
-          deleteData(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
+        deleteData(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
       );
 
       await Promise.all(promises);
