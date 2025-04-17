@@ -4,12 +4,12 @@ class UnRegisteredGroupsController < ApplicationController
   # GET /un_registered_groups
   def index
     @un_registered_groups = UnRegisteredGroup.all
-    render json: @un_registered_groups
+    render json: fmt(:ok, @un_registered_groups)
   end
 
   # GET /un_registered_groups/:id
   def show
-    render json: @un_registered_group
+    render json: fmt(:ok, @un_registered_group)
   end
 
   # POST /un_registered_groups
@@ -17,25 +17,25 @@ class UnRegisteredGroupsController < ApplicationController
     @un_registered_group = UnRegisteredGroup.new(un_registered_group_params)
 
     if @un_registered_group.save
-      render json: @un_registered_group, status: :created
+      render json: fmt(:ok, @un_registered_group), status: :created
     else
-      render json: @un_registered_group.errors, status: :unprocessable_entity
+      render json: fmt(:unprocessable_entity, @un_registered_group.errors), status: :unprocessable_entity
     end
   end
 
   # PUT /un_registered_groups/:id
   def update
     if @un_registered_group.update(un_registered_group_params)
-      render json: @un_registered_group
+      render json: fmt(:ok, @un_registered_group)
     else
-      render json: @un_registered_group.errors, status: :unprocessable_entity
+      render json: fmt(:unprocessable_entity, @un_registered_group.errors), status: :unprocessable_entity
     end
   end
 
   # DELETE /un_registered_groups/:id
   def destroy
     @un_registered_group.destroy
-    head :no_content
+    render json: fmt(:no_content, nil), status: :no_content
   end
 
   private
