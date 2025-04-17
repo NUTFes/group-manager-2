@@ -92,6 +92,11 @@ Rails.application.routes.draw do
   resources :announcements
   resources :cooking_process_orders
   resources :contact_persons
+  resources :un_registered_groups do
+    collection do
+      get 'group', to: 'un_registered_groups#group'
+    end
+  end
 
   # /api/v1/...
   namespace 'api' do
