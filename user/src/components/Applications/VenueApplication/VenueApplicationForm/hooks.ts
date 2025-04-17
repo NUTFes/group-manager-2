@@ -1,5 +1,6 @@
 import {
   Place,
+  PlaceOrder,
   usePlacesData,
   usePlacesOrderMutations,
 } from '@/api/venueApplication';
@@ -11,7 +12,11 @@ import {
   venueApplicationFormSchema,
 } from './schema';
 
-export const useVenueMapHooks = () => {
+export const useVenueMapHooks = (placeOrder?: PlaceOrder) => {
+  const groupId = placeOrder?.group_id ?? 0;
+  const first = placeOrder?.first ?? DEFAULT_ID;
+  const second = placeOrder?.second ?? DEFAULT_ID;
+  const third = placeOrder?.third ?? DEFAULT_ID;
   const {
     handleSubmit,
     formState: { errors },
@@ -21,11 +26,11 @@ export const useVenueMapHooks = () => {
     resolver: zodResolver(venueApplicationFormSchema),
     defaultValues: {
       // FIX: group_idの取得は団体申請実装時に追加。
-      groupId: 4,
-      first: DEFAULT_ID,
-      second: DEFAULT_ID,
-      third: DEFAULT_ID,
-      remark: '',
+      groupId: groupId,
+      first: first,
+      second: second,
+      third: third,
+      remark: placeOrder?.remark || '',
     },
   });
   const { trigger, error, isMutating } = usePlacesOrderMutations();
