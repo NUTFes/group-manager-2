@@ -1,12 +1,15 @@
 // src/components/RentItems/hooks/useRentItemsForm.ts
 import { useEffect, useRef, useState } from 'react';
-import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
-import { rentItemsFormResolver, RentItemsFormData } from '../RentItemsForm/schema';
 import {
+  useMutateRentalOrders,
   useRentableItemsByType,
   useRentalOrdersByGroupId,
-  useMutateRentalOrders
 } from '@/api/rentItemsApi';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import {
+  RentItemsFormData,
+  rentItemsFormResolver,
+} from '../RentItemsForm/schema';
 
 export const useRentItemsFormLogic = () => {
   // 認証基盤ができたら、グループIDを取得する
@@ -29,7 +32,8 @@ export const useRentItemsFormLogic = () => {
     mode: 'onChange',
   });
 
-  const { control, watch, setValue, handleSubmit, reset, formState, trigger } = form;
+  const { control, watch, setValue, handleSubmit, reset, formState, trigger } =
+    form;
   const { errors, isValid } = formState;
 
   // fieldArrayを使用して動的なフォームを管理
@@ -43,17 +47,14 @@ export const useRentItemsFormLogic = () => {
   const locationType = watch('locationType');
 
   // 既存のAPIフックを使用
-  const {
-    items,
-    itemsError,
-    itemsLoading
-  } = useRentableItemsByType(locationType);
+  const { items, itemsError, itemsLoading } =
+    useRentableItemsByType(locationType);
 
   const {
     rentalOrders,
     rentalOrdersError,
     rentalOrdersLoading,
-    mutateRentalOrders
+    mutateRentalOrders,
   } = useRentalOrdersByGroupId(currentGroupId);
 
   const { submitRentalOrders, deleteRentalOrders } = useMutateRentalOrders();
@@ -72,7 +73,12 @@ export const useRentItemsFormLogic = () => {
   // 初期データの設定
   useEffect(() => {
     // 既に初期化済み、またはユーザーが手動で変更した場合は実行しない
-    if (isInitialized.current || userChangedLocationType.current || rentalOrders.length === 0 || items.length === 0) {
+    if (
+      isInitialized.current ||
+      userChangedLocationType.current ||
+      rentalOrders.length === 0 ||
+      items.length === 0
+    ) {
       return;
     }
 
@@ -86,20 +92,16 @@ export const useRentItemsFormLogic = () => {
       // 各申請物品が屋内用か屋外用かを判定
       const isInsideOnly = rentalOrders.every((order) => {
         const item = items.find((i) => i.id === order.rental_item_id);
-        return (
-            item?.is_inside_shop_rentable && !item?.is_outside_shop_rentable
-        );
+        return item?.is_inside_shop_rentable && !item?.is_outside_shop_rentable;
       });
 
       const isOutsideOnly = rentalOrders.every((order) => {
         const item = items.find((i) => i.id === order.rental_item_id);
-        return (
-            !item?.is_inside_shop_rentable && item?.is_outside_shop_rentable
-        );
+        return !item?.is_inside_shop_rentable && item?.is_outside_shop_rentable;
       });
 
       // 明確に屋内のみ、または屋外のみと判定できる場合
-      let initialLocationType: string;       // デフォルトは屋内
+      let initialLocationType: string; // デフォルトは屋内
       if (isInsideOnly) {
         initialLocationType = '1'; // 屋内
       } else if (isOutsideOnly) {
@@ -125,7 +127,7 @@ export const useRentItemsFormLogic = () => {
       const formData: RentItemsFormData = {
         hasItems: true,
         locationType: initialLocationType,
-        items: savedItems.length > 0 ? savedItems : [{ itemId: '', count: 1 }]
+        items: savedItems.length > 0 ? savedItems : [{ itemId: '', count: 1 }],
       };
 
       // スキーマに対して値をバリデーション
