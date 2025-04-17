@@ -1,325 +1,184 @@
-// src/components/RentItems/hooks/useRentItemsFormLogic.ts
-import { FormEvent, useEffect, useState } from 'react';
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
-
-// フォームのエラー型
-type FormErrors = {
-  hasItems?: string;
-  locationType?: string;
-  items?: Array<{
-    name?: string;
-    count?: string;
-  }>;
-};
-
-// フォームで使用する物品の型
-type ItemForm = {
-  itemId: string;
-  count: number;
-};
-
-// APIエンドポイント
-const API_ENDPOINTS = {
-  // 物品関連
-  INSIDE_SHOP_RENTABLE_ITEMS: '/api/v1/get_inside_shop_rentable_items', // 屋内模擬店での貸出物品
-  OUTSIDE_SHOP_RENTABLE_ITEMS: '/api/v1/get_outside_shop_rentable_items', // 屋外模擬店での貸出物品
-
-  // 物品申請関連
-  RENTAL_ORDERS: '/rental_orders',
-};
-
-// APIレスポンス型
-type ApiResponse<T> = {
-  status: {
-    code: number;
-    message: string;
-  };
-  data: T;
-};
-
-// 物品マスター情報の型
-type RentalItem = {
-  id: number;
-  name: string;
-  is_inside_shop_rentable: boolean;
-  is_outside_shop_rentable: boolean;
-  is_stage_rentable: boolean;
-  created_at: string;
-  updated_at: string;
-};
-
-// 物品申請情報の型
-type RentalOrder = {
-  id: number;
-  group_id: number;
-  rental_item_id: number;
-  num: number;
-  created_at: string;
-  updated_at: string;
-};
+// src/components/RentItems/hooks/useRentItemsForm.ts
+import { useEffect, useRef, useState } from 'react';
+import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
+import { rentItemsFormResolver, RentItemsFormData } from '../RentItemsForm/schema';
+import {
+  useRentableItemsByType,
+  useRentalOrdersByGroupId,
+  useMutateRentalOrders
+} from '@/api/rentItemsApi';
 
 export const useRentItemsFormLogic = () => {
   // 認証基盤ができたら、グループIDを取得する
-  const [currentGroupId] = useState<number>(1);
-  const [hasItems, setHasItems] = useState<boolean>(false);
-  const [locationType, setLocationType] = useState<string>('1'); // デフォルトは「屋内」
-  const [itemList, setItemList] = useState<ItemForm[]>([
-    { itemId: '', count: 1 },
-  ]);
-  const [errors, setErrors] = useState<FormErrors | null>(null);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const currentGroupId = 1;
   const [submitError, setSubmitError] = useState<string>('');
 
-  // 会場タイプに基づいて適切なエンドポイントを選択
-  const itemsEndpoint =
-    locationType === '1'
-      ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
-      : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
+  // 初期化完了フラグを追加
+  const isInitialized = useRef(false);
+  // ユーザーが手動で変更したかどうかを追跡
+  const userChangedLocationType = useRef(false);
 
-  // 物品データの取得
+  // React Hook Form初期化 (Zodスキーマ使用)
+  const form = useForm<RentItemsFormData>({
+    defaultValues: {
+      hasItems: false,
+      locationType: '1', // Default to indoor
+      items: [{ itemId: '', count: 1 }],
+    },
+    resolver: rentItemsFormResolver,
+    mode: 'onChange',
+  });
+
+  const { control, watch, setValue, handleSubmit, reset, formState, trigger } = form;
+  const { errors, isValid } = formState;
+
+  // fieldArrayを使用して動的なフォームを管理
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'items',
+  });
+
+  // フォーム値の監視
+  const hasItems = watch('hasItems');
+  const locationType = watch('locationType');
+
+  // 既存のAPIフックを使用
   const {
-    data: itemsResponse,
-    error: itemsError,
-    isLoading: itemsLoading,
-  } = useApiGet<ApiResponse<RentalItem[]>>(itemsEndpoint);
+    items,
+    itemsError,
+    itemsLoading
+  } = useRentableItemsByType(locationType);
 
-  // 物品申請データの取得
   const {
-    data: rentalOrdersResponse,
-    error: rentalOrdersError,
-    isLoading: rentalOrdersLoading,
-    mutate: mutateRentalOrders,
-  } = useApiGet<ApiResponse<RentalOrder[]>>(
-    `${API_ENDPOINTS.RENTAL_ORDERS}?group_id=${currentGroupId}`
-  );
+    rentalOrders,
+    rentalOrdersError,
+    rentalOrdersLoading,
+    mutateRentalOrders
+  } = useRentalOrdersByGroupId(currentGroupId);
 
-  // API操作のための関数
-  const { post, put, delete: deleteData } = useApiMutations();
+  const { submitRentalOrders, deleteRentalOrders } = useMutateRentalOrders();
 
-  const rentalOrders = rentalOrdersResponse?.data || [];
+  const hasExisting = rentalOrders.length > 0;
+
+  // 物品のオプション
+  const itemOptions = [
+    { id: 0, name: '選んでください' },
+    ...items.map((item) => ({
+      id: item.id,
+      name: item.name,
+    })),
+  ];
 
   // 初期データの設定
   useEffect(() => {
-    if (rentalOrders.length > 0) {
-      setHasItems(true);
+    // 既に初期化済み、またはユーザーが手動で変更した場合は実行しない
+    if (isInitialized.current || userChangedLocationType.current || rentalOrders.length === 0 || items.length === 0) {
+      return;
+    }
+
+    try {
       // 保存されている物品データを設定
       const savedItems = rentalOrders.map((item) => ({
         itemId: item.rental_item_id.toString(),
         count: item.num,
       }));
-      setItemList(savedItems);
 
-      // APIから取得した物品データをチェック
-      if (itemsResponse?.data && itemsResponse.data.length > 0) {
-        // 各申請物品が屋内用か屋外用かを判定
-        const isInsideOnly = rentalOrders.every((order) => {
-          const item = itemsResponse.data.find(
-            (i) => i.id === order.rental_item_id
-          );
-          return (
+      // 各申請物品が屋内用か屋外用かを判定
+      const isInsideOnly = rentalOrders.every((order) => {
+        const item = items.find((i) => i.id === order.rental_item_id);
+        return (
             item?.is_inside_shop_rentable && !item?.is_outside_shop_rentable
-          );
-        });
+        );
+      });
 
-        const isOutsideOnly = rentalOrders.every((order) => {
-          const item = itemsResponse.data.find(
-            (i) => i.id === order.rental_item_id
-          );
-          return (
+      const isOutsideOnly = rentalOrders.every((order) => {
+        const item = items.find((i) => i.id === order.rental_item_id);
+        return (
             !item?.is_inside_shop_rentable && item?.is_outside_shop_rentable
-          );
-        });
+        );
+      });
 
-        // 明確に屋内のみ、または屋外のみと判定できる場合
-        if (isInsideOnly) {
-          setLocationType('1'); // 屋内
-        } else if (isOutsideOnly) {
-          setLocationType('2'); // 屋外
-        } else {
-          // 混在している場合は、物品の数でより多い方を判定
-          let insideCount = 0;
-          let outsideCount = 0;
+      // 明確に屋内のみ、または屋外のみと判定できる場合
+      let initialLocationType: string;       // デフォルトは屋内
+      if (isInsideOnly) {
+        initialLocationType = '1'; // 屋内
+      } else if (isOutsideOnly) {
+        initialLocationType = '2'; // 屋外
+      } else {
+        // 混在している場合は、物品の数でより多い方を判定
+        let insideCount = 0;
+        let outsideCount = 0;
 
-          for (const order of rentalOrders) {
-            const item = itemsResponse.data.find(
-              (i) => i.id === order.rental_item_id
-            );
-            if (item) {
-              if (item.is_inside_shop_rentable) insideCount += order.num;
-              if (item.is_outside_shop_rentable) outsideCount += order.num;
-            }
+        for (const order of rentalOrders) {
+          const item = items.find((i) => i.id === order.rental_item_id);
+          if (item) {
+            if (item.is_inside_shop_rentable) insideCount += order.num;
+            if (item.is_outside_shop_rentable) outsideCount += order.num;
           }
-
-          // 屋外物品が多ければ屋外、そうでなければ屋内をデフォルトに
-          setLocationType(outsideCount > insideCount ? '2' : '1');
         }
+
+        // 屋外物品が多ければ屋外、そうでなければ屋内をデフォルトに
+        initialLocationType = outsideCount > insideCount ? '2' : '1';
       }
+
+      // フォームをリセット - Zodスキーマに基づく値の設定
+      const formData: RentItemsFormData = {
+        hasItems: true,
+        locationType: initialLocationType,
+        items: savedItems.length > 0 ? savedItems : [{ itemId: '', count: 1 }]
+      };
+
+      // スキーマに対して値をバリデーション
+      reset(formData);
+
+      // 初期化完了をマーク
+      isInitialized.current = true;
+    } catch (error) {
+      console.error('初期データの読み込みエラー:', error);
+      // エラーが発生した場合でも初期化完了をマーク（無限ループ防止）
+      isInitialized.current = true;
     }
-  }, [rentalOrders, itemsResponse]);
+  }, [rentalOrders, items, reset]);
 
-  // 物品のオプション
-  const itemOptions = itemsResponse?.data
-    ? [
-        { id: 0, name: '選んでください' },
-        ...itemsResponse.data.map((item) => ({
-          id: item.id,
-          name: item.name,
-        })),
-      ]
-    : [{ id: 0, name: '選んでください' }];
-
-  // 物品を追加
-  const addItem = () => {
-    setItemList([...itemList, { itemId: '', count: 1 }]);
-  };
-
-  // 物品を削除
-  const removeItem = (index: number) => {
-    if (itemList.length <= 1) {
-      return;
+  // locationType変更時の処理
+  useEffect(() => {
+    // ユーザーが会場タイプを変更した場合、そのタイプに適した空のフォームをセット
+    if (userChangedLocationType.current && hasItems) {
+      // itemsだけをリセット（会場タイプと物品利用有無は保持）
+      setValue('items', [{ itemId: '', count: 1 }]);
     }
-    const newList = [...itemList];
-    newList.splice(index, 1);
-    setItemList(newList);
-    validateForm();
-  };
-
-  // 物品名を更新
-  const updateItemName = (index: number, value: string) => {
-    const newList = [...itemList];
-    newList[index].itemId = value;
-    setItemList(newList);
-    validateForm();
-  };
-
-  // 個数を更新
-  const updateItemCount = (index: number, value: string) => {
-    const newList = [...itemList];
-    newList[index].count = parseInt(value, 10);
-    setItemList(newList);
-    validateForm();
-  };
+  }, [locationType, hasItems, setValue]);
 
   // 会場タイプのラジオボタンを更新
   const updateLocationType = (value: string) => {
-    setLocationType(value);
-    validateForm();
+    // ユーザーが手動で変更したとマーク
+    userChangedLocationType.current = true;
+    setValue('locationType', value);
+
+    // フォームの検証を手動でトリガー
+    trigger();
   };
 
-  // フォームのバリデーション
-  const validateForm = () => {
-    const newErrors: FormErrors = {};
-
-    if (hasItems) {
-      // 会場タイプの選択を検証
-      if (!locationType || (locationType !== '1' && locationType !== '2')) {
-        newErrors.locationType = '会場タイプを選択してください';
-      }
-
-      const itemErrors: Array<{ name?: string; count?: string }> = [];
-      let hasItemError = false;
-
-      itemList.forEach((item, index) => {
-        const errors: { name?: string; count?: string } = {};
-
-        if (!item.itemId || item.itemId === '0') {
-          errors.name = '物品を選択してください';
-          hasItemError = true;
-        }
-
-        if (!item.count || item.count <= 0) {
-          errors.count = '1つ以上選択してください';
-          hasItemError = true;
-        }
-
-        itemErrors[index] = errors;
-      });
-
-      if (hasItemError) {
-        newErrors.items = itemErrors;
-      }
-    }
-
-    setErrors(Object.keys(newErrors).length > 0 ? newErrors : null);
-    setIsValid(Object.keys(newErrors).length === 0);
-
-    return Object.keys(newErrors).length === 0;
+  // 物品を追加
+  const addItem = () => {
+    append({ itemId: '', count: 1 });
+    // 新しいアイテムを追加した後にフォームを再検証
+    setTimeout(() => trigger(), 0);
   };
 
-  // 物品申請を削除
-  const deleteRentalOrders = async (itemIds: number[]) => {
-    try {
-      const promises = itemIds.map((id) =>
-        deleteData(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
-      );
-
-      await Promise.all(promises);
-      return { success: true };
-    } catch (error) {
-      console.error('物品申請削除エラー:', error);
-      return { success: false, error };
-    }
-  };
-
-  // 物品申請を送信
-  const submitRentalOrders = async (
-    items: Array<{ group_id: number; rental_item_id: number; num: number }>,
-    existingItems: RentalOrder[] = []
-  ) => {
-    try {
-      const promises = [];
-
-      // 既存データと新データの長さを比較
-      const minLength = Math.min(items.length, existingItems.length);
-
-      // 更新：既存データの数だけ更新を実行
-      for (let i = 0; i < minLength; i++) {
-        promises.push(
-          put(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`, items[i])
-        );
-      }
-
-      // 追加：新データが多い場合、残りを新規作成
-      if (items.length > existingItems.length) {
-        for (let i = existingItems.length; i < items.length; i++) {
-          promises.push(post(API_ENDPOINTS.RENTAL_ORDERS, items[i]));
-        }
-      }
-
-      // 削除：既存データが多い場合、余分なものを削除
-      if (existingItems.length > items.length) {
-        for (let i = items.length; i < existingItems.length; i++) {
-          promises.push(
-            deleteData(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
-          );
-        }
-      }
-
-      await Promise.all(promises);
-      return { success: true };
-    } catch (error) {
-      console.error('物品申請エラー:', error);
-      return { success: false, error };
-    }
-  };
-
-  // フォームの送信
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+  // フォーム送信のハンドラー
+  const onSubmit: SubmitHandler<RentItemsFormData> = async (data) => {
     try {
       setSubmitError('');
 
+      // Zodスキーマを通じて既に検証済みのデータを使用
+
       // 「いいえ」が選択された場合、既存のデータを削除
-      if (!hasItems) {
+      if (!data.hasItems) {
         if (rentalOrders.length > 0) {
           // 既存のデータをすべて削除
           const result = await deleteRentalOrders(
-            rentalOrders.map((item) => item.id)
+              rentalOrders.map((item) => item.id)
           );
 
           if (result.success) {
@@ -327,7 +186,7 @@ export const useRentItemsFormLogic = () => {
             mutateRentalOrders();
           } else {
             setSubmitError(
-              '削除中にエラーが発生しました。もう一度お試しください。'
+                '削除中にエラーが発生しました。もう一度お試しください。'
             );
           }
         } else {
@@ -337,8 +196,8 @@ export const useRentItemsFormLogic = () => {
       }
 
       // 「はい」が選択された場合、データを保存または更新
-      // 新しい物品データを作成
-      const newItemsData = itemList.map((item) => ({
+      // 新しい物品データを作成 - Zodによって検証済みのデータを使用
+      const newItemsData = data.items!.map((item) => ({
         group_id: currentGroupId,
         rental_item_id: parseInt(item.itemId, 10),
         num: item.count,
@@ -349,14 +208,16 @@ export const useRentItemsFormLogic = () => {
 
       if (result.success) {
         alert(
-          rentalOrders.length > 0
-            ? '物品申請を更新しました。'
-            : '物品申請を登録しました。'
+            rentalOrders.length > 0
+                ? '物品申請を更新しました。'
+                : '物品申請を登録しました。'
         );
-        mutateRentalOrders();
+        await mutateRentalOrders();
+        // 送信が成功したら、ユーザー変更フラグをリセット
+        userChangedLocationType.current = false;
       } else {
         setSubmitError(
-          '送信中にエラーが発生しました。もう一度お試しください。'
+            '送信中にエラーが発生しました。もう一度お試しください。'
         );
       }
     } catch (error) {
@@ -367,20 +228,18 @@ export const useRentItemsFormLogic = () => {
 
   const isLoading = itemsLoading || rentalOrdersLoading;
   const hasError = !!(itemsError || rentalOrdersError);
-  const hasExisting = rentalOrders.length > 0;
 
   return {
+    form,
+    fields,
+    control,
     hasItems,
-    setHasItems,
     locationType,
     updateLocationType,
-    itemList,
     itemOptions,
     addItem,
-    removeItem,
-    updateItemName,
-    updateItemCount,
-    onSubmit,
+    remove,
+    handleSubmit: handleSubmit(onSubmit),
     isLoading,
     hasError,
     errors,
