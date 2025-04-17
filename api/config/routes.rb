@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   resources :announcements
   resources :cooking_process_orders
   resources :contact_persons
+  resources :un_registered_groups
 
   # /api/v1/...
   namespace 'api' do
