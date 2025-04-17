@@ -1,34 +1,60 @@
 import { FC } from 'react';
+import { StageOptionResponse } from '@/api/stageOptionApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import StageOptionForm from '@/components/Applications/StageOptions/StageOptionForm';
 import { useStageOptionHooks } from '@/components/Applications/StageOptions/hooks';
 import FormList from '@/components/FormList';
+import { FormItem } from '@/components/FormList/type';
 
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
 
 type StageOptionsProps = { isDeadline?: boolean };
 
-const StageOptions: FC<StageOptionsProps> = ({ isDeadline }) => {
-  const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
-    useStageOptionHooks();
+type ContentProps = {
+  isLoading: boolean;
+  hasError: boolean;
+  isDeadline: boolean | undefined;
+  isEditing: boolean;
+  toEdit: () => void;
+  stageOptions?: StageOptionResponse;
+  formItem: FormItem[];
+};
 
-  let content: React.ReactNode;
-
+const Content: FC<ContentProps> = ({
+  isLoading,
+  hasError,
+  isDeadline,
+  isEditing,
+  toEdit,
+  stageOptions,
+  formItem,
+}) => {
   if (isLoading) {
-    content = <div>Loading...</div>;
-  } else if (hasError) {
-    content = (
+    return <div>Loading...</div>;
+  }
+
+  if (hasError) {
+    return (
       <div className="py-10 text-center text-red-500">
         データの取得に失敗しました。
       </div>
     );
-  } else if (isDeadline) {
-    content = <FormList items={formItem} />;
-  } else if (isEditing) {
-    content = <StageOptionForm toEdit={toEdit} stageOptions={stageOptions} />;
-  } else {
-    content = <FormList items={formItem} isEdit onEdit={toEdit} />;
   }
+
+  if (isDeadline) {
+    return <FormList items={formItem} />;
+  }
+
+  if (isEditing) {
+    return <StageOptionForm toEdit={toEdit} stageOptions={stageOptions} />;
+  }
+
+  return <FormList items={formItem} isEdit onEdit={toEdit} />;
+};
+
+const StageOptions: FC<StageOptionsProps> = ({ isDeadline }) => {
+  const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
+    useStageOptionHooks();
 
   return (
     <AccordionMenu
@@ -37,7 +63,15 @@ const StageOptions: FC<StageOptionsProps> = ({ isDeadline }) => {
       isExist={false}
       required
     >
-      {content}
+      <Content
+        isLoading={isLoading}
+        hasError={hasError}
+        isDeadline={isDeadline}
+        isEditing={isEditing}
+        toEdit={toEdit}
+        stageOptions={stageOptions}
+        formItem={formItem}
+      />
     </AccordionMenu>
   );
 };
