@@ -38,6 +38,23 @@ class UnRegisteredGroupsController < ApplicationController
     render json: fmt(:no_content, nil), status: :no_content
   end
 
+  # GET /un_registered_groups/group
+  def group
+    group_id = params[:group_id]
+    order_type = params[:order_type]
+
+    if group_id.present? && order_type.present?
+      if UnRegisteredGroup.exists?(group_id: group_id, order_type: order_type)
+        @un_registered_groups = UnRegisteredGroup.where(group_id: group_id, order_type: order_type)
+        render json: fmt(:ok, @un_registered_groups)
+      else
+        render json: fmt(:not_found, [], "Not found un_registered_group = #{group_id} and order_type = #{order_type}")
+      end
+    else
+      render json: fmt(:bad_request, { error: 'group_id and order_type are required' }), status: :bad_request
+    end
+  end
+
   private
 
   def set_un_registered_group
