@@ -7,17 +7,19 @@ import FormContainer from '@/components/FormContainer';
 import { useVenueMapHooks } from './hooks';
 
 type VenueApplicationFormProps = {
+  groupId: number;
   placeOrder?: PlaceOrder;
   toEdit?: () => void;
 };
 
 const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
+  groupId,
   placeOrder,
   toEdit,
 }) => {
   const {
     placesLoading,
-    isMutating,
+    isLoading,
     options,
     values,
     errors,
@@ -25,8 +27,9 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     onSubmit,
     handleSubmit,
     disableOptions,
-  } = useVenueMapHooks(placeOrder);
-  if (placesLoading || isMutating) {
+    validateEdit,
+  } = useVenueMapHooks(groupId, placeOrder, toEdit);
+  if (placesLoading || isLoading) {
     return <div>loading...</div>;
   }
 
@@ -79,7 +82,12 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
                 </Button>
               </div>
             )}
-            <Button size="pc" color="main" type="submit">
+            <Button
+              size="pc"
+              color="main"
+              type="submit"
+              isDisable={validateEdit()}
+            >
               {placeOrder ? '修正' : '登録'}
             </Button>
           </div>

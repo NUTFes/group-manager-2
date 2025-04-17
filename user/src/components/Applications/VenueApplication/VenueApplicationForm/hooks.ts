@@ -3,6 +3,7 @@ import {
   PlaceOrder,
   usePlacesData,
   usePlacesOrderMutations,
+  useUpdatePlacesOrderMutations,
 } from '@/api/venueApplication';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -12,11 +13,16 @@ import {
   venueApplicationFormSchema,
 } from './schema';
 
-export const useVenueMapHooks = (placeOrder?: PlaceOrder) => {
-  const groupId = placeOrder?.group_id ?? 0;
+export const useVenueMapHooks = (
+  groupId: number,
+  placeOrder?: PlaceOrder,
+  handleClose?: () => void
+) => {
   const first = placeOrder?.first ?? DEFAULT_ID;
   const second = placeOrder?.second ?? DEFAULT_ID;
   const third = placeOrder?.third ?? DEFAULT_ID;
+  const isEdit = !!placeOrder;
+
   const {
     handleSubmit,
     formState: { errors },
@@ -25,7 +31,6 @@ export const useVenueMapHooks = (placeOrder?: PlaceOrder) => {
   } = useForm<VenueApplicationType>({
     resolver: zodResolver(venueApplicationFormSchema),
     defaultValues: {
-      // FIX: group_idの取得は団体申請実装時に追加。
       groupId: groupId,
       first: first,
       second: second,
@@ -33,7 +38,19 @@ export const useVenueMapHooks = (placeOrder?: PlaceOrder) => {
       remark: placeOrder?.remark || '',
     },
   });
-  const { trigger, error, isMutating } = usePlacesOrderMutations();
+  const {
+    trigger: registerTrigger,
+    error,
+    isMutating,
+  } = usePlacesOrderMutations();
+
+  const {
+    trigger: updateTrigger,
+    isMutating: isUpdating,
+    error: updateError,
+  } = useUpdatePlacesOrderMutations(placeOrder?.id ?? 0);
+
+  const isLoading = isMutating || isUpdating;
 
   const { places, placesLoading } = usePlacesData();
   const values = watch();
@@ -44,26 +61,56 @@ export const useVenueMapHooks = (placeOrder?: PlaceOrder) => {
     values.second,
     values.third,
   ]);
+
+  const submitHandler = async (formData: VenueApplicationType) => {
+    if (isEdit) {
+      await updateTrigger({
+        query: formData,
+      });
+    } else {
+      await registerTrigger({
+        query: formData,
+      });
+    }
+  };
+
   const onSubmit = async (formData: VenueApplicationType) => {
     if (errors.first || errors.second || errors.third || errors.remark) {
       console.error(errors);
       alert('入力エラーがあります。');
       return;
     }
+
     try {
-      await trigger({
-        query: formData,
-      });
+      await submitHandler(formData);
       alert('送信しました');
+      if (handleClose) {
+        handleClose();
+      }
     } catch {
       console.error(error);
+      console.error(updateError);
       alert('送信に失敗しました。');
     }
   };
 
+  const validateEdit = () => {
+    if (placeOrder && values) {
+      if (
+        placeOrder.first === values.first &&
+        placeOrder.second === values.second &&
+        placeOrder.third === values.third &&
+        placeOrder.remark === values.remark
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return {
     placesLoading,
-    isMutating,
+    isLoading,
     options,
     values,
     errors,
@@ -71,6 +118,7 @@ export const useVenueMapHooks = (placeOrder?: PlaceOrder) => {
     onSubmit,
     handleSubmit,
     disableOptions,
+    validateEdit,
   };
 };
 

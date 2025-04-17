@@ -10,20 +10,19 @@ export const usePlaceOrdersHooks = (groupId: number) => {
   } = useGetPlaceOrder(groupId);
   const { places, placesLoading: isPlacesLoading } = usePlacesData();
 
-  console.log('placeOrder', placeOrder);
   const formItem: FormItem[] = placeOrder
     ? [
         {
           label: '第一希望',
-          content: places[placeOrder?.first ?? 0]?.name || '',
+          content: places[placeOrder?.first - 1]?.name || '',
         },
         {
           label: '第二希望',
-          content: places[placeOrder?.second ?? 0]?.name || '',
+          content: places[placeOrder?.second - 1]?.name || '',
         },
         {
           label: '第三希望',
-          content: places[placeOrder?.third ?? 0]?.name || '',
+          content: places[placeOrder?.third - 1]?.name || '',
         },
       ]
     : [];
