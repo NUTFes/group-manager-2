@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_22_012844) do
+ActiveRecord::Schema.define(version: 2025_04_17_161039) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -361,6 +361,14 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.integer "student_id"
   end
 
+  create_table "un_registered_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.integer "order_type", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_un_registered_groups_on_group_id"
+  end
+
   create_table "user_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "tel"
     t.integer "grade_id"
@@ -440,5 +448,6 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
   end
 
   add_foreign_key "cooking_process_orders", "groups"
+  add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
 end
