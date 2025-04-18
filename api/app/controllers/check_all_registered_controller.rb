@@ -20,9 +20,5 @@ def show
     cooking_process_order:   group.cooking_process_order.present?
     }
 
-    render json: statuses
-
-    rescue ActiveRecord::RecordNotFound
-        render json: fmt(:ok, @statues)
-    end
+    render json: fmt(:ok, statuses)
 end
