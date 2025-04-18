@@ -37,7 +37,7 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
     >
       <FormContainer>
         <div
-          className={`${isLoginPage ? 'lg:w-[800px]' : 'lg:w-[497px]'} w-screen lg:mb-10`}
+          className={`${isLoginPage ? 'w-screen lg:w-[800px]' : 'w-[80vw] lg:w-[497px]'} lg:mb-10`}
         >
           <div className="text-4xl font-bold text-main">お知らせ</div>
         </div>
