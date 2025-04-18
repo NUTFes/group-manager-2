@@ -72,11 +72,13 @@ export const useGetPlaceOrder = (groupId: number | null) => {
     ? `${API_ENDPOINTS.VENUE_MAPS}/group/${groupId}`
     : null;
 
-  const { data, isLoading } = useApiGet<ApiResponse<PlaceOrder>>(endpoint);
+  const { data, isLoading, mutate } =
+    useApiGet<ApiResponse<PlaceOrder>>(endpoint);
 
   return {
     placeOrder: data?.status.code == 200 ? data?.data : undefined,
     isLoading,
     hasError: data?.status.code !== 200,
+    mutate,
   };
 };

@@ -20,9 +20,15 @@ const VenueApplication: FC<VenueApplicationProps> = ({ isDeadline }) => {
 };
 
 const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
-  const groupId: number = 1; // TODO: ログイン時に取得したgroupIDを使う
-  const { placeOrder, isLoading, isEditing, formItem, handleEditClick } =
-    usePlaceOrdersHooks(groupId);
+  const groupId: number = 2; // TODO: ログイン時に取得したgroupIDを使う
+  const {
+    placeOrder,
+    isLoading,
+    isEditing,
+    formItem,
+    handleEditClick,
+    mutate,
+  } = usePlaceOrdersHooks(groupId);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -38,6 +44,7 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
         groupId={groupId}
         placeOrder={placeOrder}
         toEdit={handleEditClick}
+        mutate={mutate}
       />
     );
   }
@@ -46,6 +53,6 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
     return <FormList items={formItem} isEdit onEdit={handleEditClick} />;
   }
 
-  return <VenueApplicationForm groupId={groupId} />;
+  return <VenueApplicationForm groupId={groupId} mutate={mutate} />;
 };
 export default VenueApplication;

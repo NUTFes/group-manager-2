@@ -7,6 +7,7 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     placeOrder,
     isLoading: isPlaceOrderLoading,
     hasError,
+    mutate,
   } = useGetPlaceOrder(groupId);
   const { places, placesLoading: isPlacesLoading } = usePlacesData();
 
@@ -42,5 +43,6 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     isEditing,
     formItem,
     handleEditClick,
+    mutate,
   };
 };

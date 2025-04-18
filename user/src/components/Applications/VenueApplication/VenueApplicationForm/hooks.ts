@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/api/stageOptionApi';
 import {
   Place,
   PlaceOrder,
@@ -7,6 +8,8 @@ import {
 } from '@/api/venueApplication';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { KeyedMutator } from 'swr';
 import {
   DEFAULT_ID,
   VenueApplicationType,
@@ -15,6 +18,7 @@ import {
 
 export const useVenueMapHooks = (
   groupId: number,
+  mutate: KeyedMutator<ApiResponse<PlaceOrder>>,
   placeOrder?: PlaceOrder,
   handleClose?: () => void
 ) => {
@@ -77,20 +81,23 @@ export const useVenueMapHooks = (
   const onSubmit = async (formData: VenueApplicationType) => {
     if (errors.first || errors.second || errors.third || errors.remark) {
       console.error(errors);
-      alert('入力エラーがあります。');
+      toast.error('入力エラーがあります。');
       return;
     }
 
     try {
       await submitHandler(formData);
-      alert('送信しました');
+      toast.success('登録しました。');
+      if (mutate) {
+        mutate();
+      }
       if (handleClose) {
         handleClose();
       }
     } catch {
       console.error(error);
       console.error(updateError);
-      alert('送信に失敗しました。');
+      toast.error('登録に失敗しました。');
     }
   };
 

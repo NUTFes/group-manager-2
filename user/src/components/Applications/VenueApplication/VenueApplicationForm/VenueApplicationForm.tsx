@@ -1,5 +1,7 @@
 import { FC } from 'react';
+import { ApiResponse } from '@/api/stageOptionApi';
 import { PlaceOrder } from '@/api/venueApplication';
+import { KeyedMutator } from 'swr';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
@@ -10,12 +12,14 @@ type VenueApplicationFormProps = {
   groupId: number;
   placeOrder?: PlaceOrder;
   toEdit?: () => void;
+  mutate: KeyedMutator<ApiResponse<PlaceOrder>>;
 };
 
 const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
   groupId,
   placeOrder,
   toEdit,
+  mutate,
 }) => {
   const {
     placesLoading,
@@ -28,7 +32,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     handleSubmit,
     disableOptions,
     validateEdit,
-  } = useVenueMapHooks(groupId, placeOrder, toEdit);
+  } = useVenueMapHooks(groupId, mutate, placeOrder, toEdit);
   if (placesLoading || isLoading) {
     return <div>loading...</div>;
   }
