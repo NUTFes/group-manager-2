@@ -21,4 +21,8 @@ def show
     }
 
     render json: fmt(:ok, statuses)
+
+    rescue ActiveRecord::RecordNotFound
+        render json: fmt(not_found, [], "Not found group_id = "+params[:group_id])
+    end
 end
