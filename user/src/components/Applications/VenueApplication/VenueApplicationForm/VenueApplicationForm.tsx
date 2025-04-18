@@ -11,14 +11,14 @@ import { useVenueMapHooks } from './hooks';
 type VenueApplicationFormProps = {
   groupId: number;
   placeOrder?: PlaceOrder;
-  toEdit?: () => void;
+  handleEditClick?: () => void;
   mutate: KeyedMutator<ApiResponse<PlaceOrder>>;
 };
 
 const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
   groupId,
   placeOrder,
-  toEdit,
+  handleEditClick,
   mutate,
 }) => {
   const {
@@ -32,7 +32,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     handleSubmit,
     disableOptions,
     validateEdit,
-  } = useVenueMapHooks(groupId, mutate, placeOrder, toEdit);
+  } = useVenueMapHooks(groupId, mutate, placeOrder, handleEditClick);
   if (placesLoading || isLoading) {
     return <div>loading...</div>;
   }
@@ -73,14 +73,14 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.remark?.message}
           />
           <div className="mt-10 flex w-full items-center justify-center">
-            {placeOrder && toEdit && (
+            {placeOrder && handleEditClick && (
               <div className="mr-4">
                 <Button
                   size="pc"
                   color="main"
                   variant
                   type="button"
-                  onClick={toEdit}
+                  onClick={handleEditClick}
                 >
                   キャンセル
                 </Button>

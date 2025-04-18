@@ -43,7 +43,7 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
       <VenueApplicationForm
         groupId={groupId}
         placeOrder={placeOrder}
-        toEdit={handleEditClick}
+        handleEditClick={handleEditClick}
         mutate={mutate}
       />
     );
