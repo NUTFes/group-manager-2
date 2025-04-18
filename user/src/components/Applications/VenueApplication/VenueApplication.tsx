@@ -8,7 +8,12 @@ type VenueApplicationProps = { isDeadline?: boolean };
 
 const VenueApplication: FC<VenueApplicationProps> = ({ isDeadline }) => {
   return (
-    <AccordionMenu title="会場申請" isEdit={false} isExist={false} required>
+    <AccordionMenu
+      title="会場申請"
+      isEdit={!isDeadline}
+      isExist={false}
+      required
+    >
       <Content isDeadline={isDeadline} />
     </AccordionMenu>
   );
