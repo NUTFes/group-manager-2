@@ -6,8 +6,8 @@ import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
 import FormContainer from '@/components/FormContainer';
-import MultiItemFormButton from '@/components/MultiItemFormButton';
-import { useRentItemsFormLogic } from '@/components/RentItems/hooks/useRentItemsFormLogic';
+import MultiItemFormButton from '../../MultiItemFormButton';
+import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForm/RentItems/hooks/useRentItemsFormLogic';
 
 const RentItemsForm: FC = () => {
     const {

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import AccordionMenu from '@/components/AccordionMenu';
-import RentItemsForm from '@/components/RentItems/RentItemsForm';
+import RentItemsForm from '@/components/Applications/MultiItemForm/RentItems/RentItemsForm';
 import {
   getIsOpenAccordionMenuAtom,
   setIsOpenAccordionMenuAtom,

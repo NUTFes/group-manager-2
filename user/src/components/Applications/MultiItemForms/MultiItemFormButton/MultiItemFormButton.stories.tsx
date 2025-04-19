@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import '../../styles/globals.css';
+import '@globals';
 import MultiItemFormButton from './MultiItemFormButton';
 
 export default {
