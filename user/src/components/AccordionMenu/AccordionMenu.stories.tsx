@@ -26,7 +26,7 @@ export const Default: StoryObj<typeof AccordionMenu> = {
     isExist: false,
     required: true,
     children: <div>Accordion content</div>,
-    note: '個人参加者の場合のみ、副代表申請は不要です。',
+    note: '個人参加者の場合は、副代表申請は不要です。',
   },
 };
 
