@@ -33,12 +33,10 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
 
   return (
     <div
-      className={`${isLoginPage ? 'lg:w-[800px]' : 'lg:w-[497px]'} m-auto flex w-full items-center lg:justify-center`}
+      className="m-auto flex items-center justify-center w-[497px]"
     >
       <FormContainer>
-        <div
-          className={`${isLoginPage ? 'w-screen lg:w-[800px]' : 'w-[80vw] lg:w-[497px]'} lg:mb-10`}
-        >
+        <div className="w-[497px] mb-10">
           <div className="text-4xl font-bold text-main">お知らせ</div>
         </div>
         <div className="flex flex-col gap-4">
