@@ -7,6 +7,7 @@ type TextBoxProps = {
   required?: boolean;
   note?: string;
   error?: string;
+  type?: string;
 };
 
 const TextBox: FC<TextBoxProps> = ({
@@ -16,6 +17,7 @@ const TextBox: FC<TextBoxProps> = ({
   required,
   note,
   error,
+  type,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
@@ -29,7 +31,7 @@ const TextBox: FC<TextBoxProps> = ({
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
         <input
-          type="text"
+          type={type}
           value={value}
           onChange={handleChange}
           className={`h-12 w-[400px] rounded-[10px] border-2 p-4 text-font ${error ? 'border-alert' : 'border-main'}`}

@@ -1,4 +1,5 @@
 import { FC, useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
 import { RegisterParams } from '@/types/register/user';
 import { DepartmentList, GradeList } from '@/utils/list';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -7,6 +8,7 @@ import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
+import { useAuth } from '@/hooks/useAuth';
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -88,11 +90,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     passwordConfirm: '',
     userId: 0,
   });
-  const [stepIndex, setStepIndex] = useState<number>(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
     containScroll: 'trimSnaps',
   });
+  const [stepIndex, setStepIndex] = useState(0);
+  const router = useRouter();
+  const { register } = useAuth();
 
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
@@ -105,12 +108,83 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   const handlePrev = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollPrev()) return;
     emblaApi.scrollPrev();
-    setStepIndex(emblaApi.selectedScrollSnap());
+    setTimeout(() => {
+      setStepIndex(emblaApi.selectedScrollSnap());
+    }, 0);
   }, [emblaApi]);
 
-  // todo: 送信処理を実装する
-  const onSubmit = () => {
-    toast.success('登録が完了しました。');
+  // useEffect(() => {
+  //   if (!emblaApi) return;
+  //   onSelect();
+  //   emblaApi.on('select', onSelect);
+  //   return () => {
+  //     emblaApi.off('select', onSelect);
+  //   };
+  // }, [emblaApi, onSelect]);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const result = await register({
+        mail: input.mail,
+        password: input.password,
+        passwordConfirm: input.passwordConfirm,
+        name: input.name,
+        studentId: input.studentId.toString(),
+        departmentId: Number(input.departmentId),
+        gradeId: Number(input.gradeId),
+        tel: input.tel,
+        userId: input.userId,
+      });
+
+      console.log('Registration result:', result);
+
+      if (result.success) {
+        toast.success('登録が完了しました。');
+        // 登録が成功すると自動的にダッシュボードにリダイレクトされます（useAuth内で処理）
+      } else {
+        // 登録は成功したが自動ログインに失敗した場合など
+        if (result.data) {
+          toast.success('登録が完了しました。ログインしてください。');
+          onClose();
+          router.push('/login?registered=true');
+        } else {
+          toast.error(
+            result.message || '登録に失敗しました。もう一度お試しください。'
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      if (error instanceof Error) {
+        try {
+          // エラーメッセージをJSONとして解析
+          const errorData = JSON.parse(error.message);
+          if (errorData.errors) {
+            // エラーメッセージを整形して表示
+            const errorMessages = Object.entries(errorData.errors)
+              .map(([field, messages]) => {
+                if (Array.isArray(messages)) {
+                  return `${field}: ${messages.join(', ')}`;
+                }
+                return `${field}: ${messages}`;
+              })
+              .join('\n');
+            toast.error(errorMessages);
+          } else if (errorData.full_messages) {
+            // full_messagesがある場合はそれを使用
+            toast.error(errorData.full_messages.join('\n'));
+          } else {
+            toast.error(error.message);
+          }
+        } catch {
+          // JSON解析に失敗した場合は元のエラーメッセージを表示
+          toast.error(error.message);
+        }
+      } else {
+        toast.error('登録に失敗しました。もう一度お試しください。');
+      }
+    }
   };
 
   return (
