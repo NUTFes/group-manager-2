@@ -1,11 +1,6 @@
 import { FC } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
 import AccordionMenu from '@/components/AccordionMenu';
-import RentItemsForm from '@/components/Applications/MultiItemForm/RentItems/RentItemsForm';
-import {
-  getIsOpenAccordionMenuAtom,
-  setIsOpenAccordionMenuAtom,
-} from './store';
+import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
 
 type RentItemsProps = {
   isEdit?: boolean;
@@ -13,18 +8,12 @@ type RentItemsProps = {
 };
 
 const RentItems: FC<RentItemsProps> = ({ isEdit = false, isExist = false }) => {
-  const isOpen = useAtomValue(getIsOpenAccordionMenuAtom);
-  const [, toggleIsOpen] = useAtom(setIsOpenAccordionMenuAtom);
-
   return (
     <AccordionMenu
       title="物品申請"
       isEdit={isEdit}
       isExist={isExist}
       required={true}
-      isOpen={isOpen}
-      onToggle={toggleIsOpen}
-      onSubmit={() => {}}
     >
       <RentItemsForm />
     </AccordionMenu>

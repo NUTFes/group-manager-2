@@ -85,49 +85,58 @@ export const useRentItemsFormLogic = () => {
     try {
       // 保存されている物品データを設定
       const savedItems = rentalOrders.map((item) => ({
-        itemId: item.rental_item_id.toString(),
+        itemId: item.rentalItemId.toString(),
         count: item.num,
       }));
 
       // 各申請物品が屋内用か屋外用かを判定
       const isInsideOnly = rentalOrders.every((order) => {
-        const item = items.find((i) => i.id === order.rental_item_id);
+        const item = items.find((i) => i.id === order.rentalItemId);
+        // 両方に対応している物品は判定から除外し、屋内専用のみをチェック
         return item?.is_inside_shop_rentable && !item?.is_outside_shop_rentable;
       });
 
       const isOutsideOnly = rentalOrders.every((order) => {
-        const item = items.find((i) => i.id === order.rental_item_id);
+        const item = items.find((i) => i.id === order.rentalItemId);
+        // 両方に対応している物品は判定から除外し、屋外専用のみをチェック
         return !item?.is_inside_shop_rentable && item?.is_outside_shop_rentable;
       });
 
-      // 明確に屋内のみ、または屋外のみと判定できる場合
-      let initialLocationType: string; // デフォルトは屋内
+// 混在している、または両方に対応している物品のみの場合のロジックを改善
+      let initialLocationType;
       if (isInsideOnly) {
         initialLocationType = '1'; // 屋内
       } else if (isOutsideOnly) {
         initialLocationType = '2'; // 屋外
       } else {
-        // 混在している場合は、物品の数でより多い方を判定
-        let insideCount = 0;
-        let outsideCount = 0;
+        // 混在している場合は、物品の種類でより多い方を判定
+        let insideOnlyCount = 0;
+        let outsideOnlyCount = 0;
 
         for (const order of rentalOrders) {
-          const item = items.find((i) => i.id === order.rental_item_id);
+          const item = items.find((i) => i.id === order.rentalItemId);
           if (item) {
-            if (item.is_inside_shop_rentable) insideCount += order.num;
-            if (item.is_outside_shop_rentable) outsideCount += order.num;
+            // 屋内専用の物品
+            if (item.is_inside_shop_rentable && !item.is_outside_shop_rentable) {
+              insideOnlyCount += order.num;
+            }
+            // 屋外専用の物品
+            else if (!item.is_inside_shop_rentable && item.is_outside_shop_rentable) {
+              outsideOnlyCount += order.num;
+            }
+            // 両方に対応している物品はカウントしない
           }
         }
 
-        // 屋外物品が多ければ屋外、そうでなければ屋内をデフォルトに
-        initialLocationType = outsideCount > insideCount ? '2' : '1';
+        // 専用物品の数で判断（同数なら屋内をデフォルトに）
+        initialLocationType = outsideOnlyCount > insideOnlyCount ? '2' : '1';
       }
 
       // フォームをリセット - Zodスキーマに基づく値の設定
       const formData: RentItemsFormData = {
         hasItems: true,
         locationType: initialLocationType,
-        items: savedItems.length > 0 ? savedItems : [{ itemId: '', count: 1 }],
+        items: savedItems.length > 0 ? savedItems : [{itemId: '', count: 1}],
       };
 
       // スキーマに対して値をバリデーション
@@ -185,7 +194,7 @@ export const useRentItemsFormLogic = () => {
 
           if (result.success) {
             alert('物品申請を取り消しました。');
-            mutateRentalOrders();
+            await mutateRentalOrders();
           } else {
             setSubmitError(
               '削除中にエラーが発生しました。もう一度お試しください。'
