@@ -16,10 +16,10 @@ const ApplicationForm = () => {
     <div className="flex w-full flex-col gap-20">
       <div className="text-4xl font-bold text-main">申請登録</div>
       <div className="flex flex-col gap-10">
-        <div className="flex h-20 min-w-max items-center justify-center bg-slate-500 lg:w-3/5">
+        <div className="w-[450px] md:w-[560px] h-20 mx-auto bg-slate-500 flex items-center justify-center">
           団体申請
         </div>
-        <div className="flex h-20 min-w-max items-center justify-center bg-slate-500 lg:w-3/5">
+        <div className="w-[450px] md:w-[560px] h-20 mx-auto bg-slate-500 flex items-center justify-center">
           団体申請
         </div>
       </div>
