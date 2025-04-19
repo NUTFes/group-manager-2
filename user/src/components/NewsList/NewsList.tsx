@@ -32,7 +32,7 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
   });
 
   return (
-    <div className="w-[497px] m-auto flex items-center justify-center">
+    <div className="m-auto flex w-[497px] items-center justify-center">
       <FormContainer>
         <div
           className={`${isLoginPage ? 'lg:w-[800px]' : 'lg:w-[497px]'} w-screen lg:mb-10`}
