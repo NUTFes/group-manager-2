@@ -1,7 +1,7 @@
-import { useGetNews } from '@/api/newsApi';
-import FormContainer from '@/components/FormContainer';
-import { format } from 'date-fns';
 import { FC } from 'react';
+import { useGetNews } from '@/api/newsApi';
+import { format } from 'date-fns';
+import FormContainer from '@/components/FormContainer';
 
 type NewsListProps = {
   isLoginPage: boolean;
@@ -32,9 +32,7 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
   });
 
   return (
-    <div
-      className="w-[497px] m-auto flex items-center justify-center"
-    >
+    <div className="w-[497px] m-auto flex items-center justify-center">
       <FormContainer>
         <div
           className={`${isLoginPage ? 'lg:w-[800px]' : 'lg:w-[497px]'} w-screen lg:mb-10`}
