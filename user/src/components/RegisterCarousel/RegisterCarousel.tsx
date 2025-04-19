@@ -1,10 +1,23 @@
 import { FC, useCallback, useState } from 'react';
-import { RegisterParams } from '@/types/register/user';
+import { useRouter } from 'next/router';
 import { DepartmentList, GradeList } from '@/utils/list';
 import useEmblaCarousel from 'embla-carousel-react';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
+import { useAuth } from '@/hooks/useAuth';
+
+export type RegisterParams = {
+  name: string;
+  studentId: string;
+  tel: string;
+  mail: string;
+  departmentId: number;
+  gradeId: number;
+  password: string;
+  passwordConfirm: string;
+  userId: string;
+};
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -69,7 +82,10 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
   );
 };
 
-const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
+const Carousel: FC<RegisterCarouselProps> = ({ isOpen }) => {
+  const router = useRouter();
+  const { register } = useAuth();
+  const [error, setError] = useState<string>('');
   const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
   const departmentOptions = [
     { id: 0, name: '選択してください' },
@@ -84,7 +100,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
     gradeId: 0,
     password: '',
     passwordConfirm: '',
-    userId: 0,
+    userId: '',
   });
   const [stepIndex, setStepIndex] = useState<number>(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -106,28 +122,58 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
     setStepIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await register({
+        mail: input.mail,
+        email: input.mail,
+        password: input.password,
+        passwordConfirm: input.passwordConfirm,
+        name: input.name,
+        role_id: 1,
+        user_detail_attributes: {
+          student_id: input.studentId,
+          department_id: input.departmentId,
+          grade_id: input.gradeId,
+        },
+      });
+      console.log('Registration successful:', response);
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Registration error:', error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('登録に失敗しました。もう一度お試しください。');
+      }
+    }
+  };
+
   if (!isOpen) return <></>;
   return (
-    <form method="POST" onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <section className="space-y-12 rounded-2xl bg-white px-[clamp(10px,10vw,240px)] py-[clamp(5px,5vw,80px)] shadow-md">
         <FormStep step={stepIndex} />
+        {error && <div className="text-center text-sm text-alert">{error}</div>}
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex">
             <div className="min-w-full shrink-0">
               <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                 <TextBox
                   label="メールアドレス"
-                  value=""
+                  value={input.mail}
                   note="例：s123456@stn.nagaokaut.ac.jp"
                   required
                   onChange={(value: string) =>
-                    setInput((prev) => ({ ...prev, name: value }))
+                    setInput((prev) => ({ ...prev, mail: value }))
                   }
                 />
                 <TextBox
                   label="パスワード"
-                  value=""
-                  note="英数字8文字以上"
+                  value={input.password}
+                  type="password"
+                  note="6文字以上の英数字"
                   required
                   onChange={(value) =>
                     setInput((prev) => ({ ...prev, password: value }))
@@ -135,8 +181,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                 />
                 <TextBox
                   label="パスワード（確認用）"
-                  value=""
-                  note="英数字8文字以上"
+                  value={input.passwordConfirm}
+                  type="password"
+                  note="6文字以上の英数字"
                   required
                   onChange={(value) =>
                     setInput((prev) => ({ ...prev, passwordConfirm: value }))
@@ -148,7 +195,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
               <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                 <TextBox
                   label="名前"
-                  value=""
+                  value={input.name}
                   note="例：長岡　太郎"
                   required
                   onChange={(value) =>
@@ -157,7 +204,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                 />
                 <TextBox
                   label="学籍番号"
-                  value=""
+                  value={input.studentId}
                   note="例：12345678"
                   required
                   onChange={(value) =>
@@ -171,7 +218,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                     setInput((prev) => ({ ...prev, gradeId: Number(value) }))
                   }
                   options={gradeOptions}
-                  value=""
+                  value={input.gradeId.toString()}
                 />
                 <Selector
                   label="学科"
@@ -183,7 +230,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onSubmit }) => {
                     }))
                   }
                   options={departmentOptions}
-                  value=""
+                  value={input.departmentId.toString()}
                 />
               </div>
             </div>

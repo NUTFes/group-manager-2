@@ -15,7 +15,22 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const fetcher = (url: string) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
 
-  return fetch(fullUrl)
+  // 認証情報を取得
+  const authStr = localStorage.getItem('auth');
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (authStr) {
+    const auth = JSON.parse(authStr);
+    headers['access-token'] = auth['access-token'];
+    headers.client = auth.client;
+    headers.uid = auth.uid;
+  }
+
+  return fetch(fullUrl, {
+    headers,
+  })
     .then(async (res) => {
       if (!res.ok) {
         throw new Error(`API Error: ${res.status}`);
@@ -124,6 +139,18 @@ export const createRequestOptions = (method: string, data?: any) => {
 export const sendRequest = async (url: string, options: RequestInit) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
 
+  // 認証情報を取得
+  const authStr = localStorage.getItem('auth');
+  if (authStr) {
+    const auth = JSON.parse(authStr);
+    options.headers = {
+      ...options.headers,
+      'access-token': auth['access-token'],
+      client: auth.client,
+      uid: auth.uid,
+    };
+  }
+
   try {
     const response = await fetch(fullUrl, options);
 
@@ -132,7 +159,25 @@ export const sendRequest = async (url: string, options: RequestInit) => {
       throw new Error(errorText || 'APIリクエストに失敗しました');
     }
 
-    return response.json();
+    const data = await response.json();
+
+    // 認証ヘッダーを取得
+    const authHeaders = {
+      'access-token': response.headers.get('access-token'),
+      client: response.headers.get('client'),
+      uid: response.headers.get('uid'),
+    };
+
+    // 認証ヘッダーが存在する場合、localStorageに保存
+    if (authHeaders['access-token']) {
+      localStorage.setItem('auth', JSON.stringify(authHeaders));
+    }
+
+    return {
+      data,
+      headers: response.headers,
+      auth: authHeaders,
+    };
   } catch (error) {
     throw error;
   }

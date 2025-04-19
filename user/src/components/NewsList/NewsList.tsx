@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useGetNews } from '@/api/newsApi';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import FormContainer from '@/components/FormContainer';
 
 type NewsListProps = {
@@ -12,9 +12,20 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
 
   const sortedNews = (news || []).slice().sort((a, b) => a.id - b.id);
 
-  const formattedDates = sortedNews.map((item) =>
-    format(new Date(item.created_at), 'yyyy/MM/dd')
-  );
+  const formatDate = (dateString: string | undefined | null) => {
+    if (!dateString) {
+      return '日付不明';
+    }
+
+    try {
+      return format(parseISO(dateString), 'yyyy/MM/dd');
+    } catch (error) {
+      console.error('日付フォーマットエラー:', error);
+      return '日付不明';
+    }
+  };
+
+  const formattedDates = sortedNews.map((item) => formatDate(item.createdAt));
 
   const newsList = sortedNews.map((item, index) => {
     const date = formattedDates[index] ?? 'お知らせはありません。';

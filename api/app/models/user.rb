@@ -8,9 +8,12 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
   belongs_to :role
   has_one :user_detail, dependent: :destroy
+  accepts_nested_attributes_for :user_detail
   has_many :groups, dependent: :destroy
   has_many :memos
 
+  validates :name, presence: true
+  validates :email, presence: true, uniqueness: true
 
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   @@no_sub_rep = {

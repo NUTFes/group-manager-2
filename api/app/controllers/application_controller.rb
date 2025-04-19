@@ -1,6 +1,13 @@
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
-  
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :student_id, :department_id, :grade_id, :role_id])
+  end
+
   # status
   def ok; return { code: 200, message: 'Success' } end
   def created; return { code: 201, message: 'Created'} end
