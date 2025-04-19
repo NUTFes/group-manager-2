@@ -5,8 +5,8 @@ export type News = {
   id: number;
   title: string;
   body: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 const API_ENDPOINTS = {

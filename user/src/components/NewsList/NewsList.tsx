@@ -12,9 +12,11 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
 
   const sortedNews = (news || []).slice().sort((a, b) => a.id - b.id);
 
-  const formattedDates = sortedNews.map((item) =>
-    format(new Date(item.created_at), 'yyyy/MM/dd')
-  );
+  const formattedDates = sortedNews.map((item) => {
+    const date = new Date(item.createdAt);
+    const formattedDate = format(date, 'yyyy/MM/dd');
+    return formattedDate;
+  });
 
   const newsList = sortedNews.map((item, index) => {
     const date = formattedDates[index] ?? 'お知らせはありません。';
@@ -30,9 +32,11 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
   });
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="m-auto flex w-[497px] items-center justify-center">
       <FormContainer>
-        <div className={`${isLoginPage ? 'w-[800px]' : 'w-[497px]'} mb-10`}>
+        <div
+          className={`${isLoginPage ? 'lg:w-[800px]' : 'lg:w-[497px]'} w-screen lg:mb-10`}
+        >
           <div className="text-4xl font-bold text-main">お知らせ</div>
         </div>
         <div className="flex flex-col gap-4">
