@@ -2,7 +2,7 @@ import NewsList from '@/components/NewsList';
 
 export default function Home() {
   return (
-    <div className="m-4 flex flex-col gap-20 lg:m-20 lg:flex-row">
+    <div className="m-4 flex flex-col gap-10 lg:m-10 lg:flex-row">
       <NewsList isLoginPage={true} />
       <LoginForm />
     </div>
@@ -11,7 +11,7 @@ export default function Home() {
 
 const LoginForm = () => {
   return (
-    <div className="h-40 min-w-max bg-slate-500 lg:size-96 ">
+    <div className="w-[400px] h-[400px] bg-slate-500 mx-auto">
       ログインコンポーネント
     </div>
   );
