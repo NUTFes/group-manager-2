@@ -41,6 +41,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/SubRep"
+  "/sub_reps/group/{group_id}":
+    get:
+      tags:
+      - sub_rep
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+        '404':
+          description: sub_rep description
+        '422':
+          description: sub_rep description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SubRep"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/sub_reps/{id}":
     get:
       tags:

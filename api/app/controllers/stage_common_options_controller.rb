@@ -1,5 +1,6 @@
 class StageCommonOptionsController < ApplicationController
   before_action :set_stage_common_option, only: [:show, :update, :destroy]
+  before_action :set_stage_common_option_by_group_id, only: [:get_by_group_id]
 
   # GET /stage_common_options
   # GET /stage_common_options.json
@@ -35,6 +36,15 @@ class StageCommonOptionsController < ApplicationController
     render json: fmt(ok, [], "Deleted stage_common_option = "+params[:id])
   end
 
+    # GET /place_orders/group_id/1
+    def get_by_group_id
+      render json: fmt(ok, @place_order)
+    end
+  # GET /stage_common_options/group_id/1
+  def get_by_group_id
+    render json: fmt(ok, @stage_common_option)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage_common_option
@@ -42,6 +52,15 @@ class StageCommonOptionsController < ApplicationController
         @stage_common_option = StageCommonOption.find(params[:id])
       else
         render json: fmt(not_found, [], "Not found stage_common_option = "+params[:id])
+      end
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_stage_common_option_by_group_id
+      if StageCommonOption.exists?(group_id: params[:group_id])
+        @stage_common_option = StageCommonOption.find_by(group_id: params[:group_id])
+      else
+        render json: fmt(not_found, [], "Not found stage_common_option = "+params[:group_id])
       end
     end
 

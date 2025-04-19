@@ -1,5 +1,6 @@
 class RentalOrdersController < ApplicationController
   before_action :set_rental_order, only: [:show, :update, :destroy]
+  before_action :set_rental_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /rental_orders
   # GET /rental_orders.json
@@ -35,6 +36,11 @@ class RentalOrdersController < ApplicationController
     render json: fmt(ok, [], "Deleted rental_order = "+params[:id]) 
   end
 
+  # GET /rental_orders/group_id/1
+  def get_by_group_id
+    render json: fmt(ok, @rental_orders)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_rental_order
@@ -42,6 +48,15 @@ class RentalOrdersController < ApplicationController
         @rental_order = RentalOrder.find(params[:id])
       else
         render json: fmt(not_found, [], "Not found rental_order = "+params[:id])
+      end
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_rental_orders_by_group_id
+      if RentalOrder.exists?(group_id: params[:group_id])
+        @rental_orders = RentalOrder.where(group_id: params[:group_id])
+      else
+        render json: fmt(not_found, [], "Not found rental_order = "+params[:group_id])
       end
     end
 
