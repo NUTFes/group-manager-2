@@ -2,9 +2,9 @@ import NewsList from '@/components/NewsList';
 
 export default function HomePage() {
   return (
-    <div className="m-4 flex flex-col-reverse justify-center gap-16 lg:mx-20 lg:my-16 lg:flex-row">
+    <div className="m-4 flex flex-col-reverse justify-center gap-4 lg:mx-10 lg:my-16 lg:flex-row">
       <ApplicationForm />
-      <div className="h-max min-w-max pt-4">
+      <div className="flex justify-center">
         <NewsList isLoginPage={false} />
       </div>
     </div>
