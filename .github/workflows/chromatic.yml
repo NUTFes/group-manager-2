@@ -1,12 +1,7 @@
 name: "Chromatic"
 
 on:
-    push:
-        paths:
-          - "user/**"
-          - ".github/workflows/chromatic.yml"
     pull_request:
-      types: [opened, synchronize]
       paths:
         - "user/**"
         - ".github/workflows/chromatic.yml"
