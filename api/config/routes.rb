@@ -82,6 +82,11 @@ Rails.application.routes.draw do
       get 'group/:group_id', to: 'stage_common_options#get_by_group_id'
     end
   end
+  resources :vice_representatives do
+    collection do
+      get 'group/:group_id', to: 'vice_representatives#get_by_group_id'
+    end
+  end
   resources :groups
   resources :group_categories
   resources :user_details
