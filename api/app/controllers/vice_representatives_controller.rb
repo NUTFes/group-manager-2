@@ -1,4 +1,4 @@
-class ViceRepresentativeController < ApplicationController
+class ViceRepresentativesController < ApplicationController
     before_action :set_vice_representative_by_group_id, only: [:get_by_group_id]
   
     def get_by_group_id

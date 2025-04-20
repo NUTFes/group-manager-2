@@ -2,7 +2,7 @@ import useSWRMutation from 'swr/mutation';
 import { useApiGet } from '@/hooks/useApi';
 import { patchFetcher, postFetcher } from './api';
 
-const API_ENDPOINT = '/vice_representative';
+const API_ENDPOINT = '/vice_representatives';
 
 export type FormData = {
   groupId: number;
@@ -35,7 +35,7 @@ export type ApiResponse<T> = {
   data: T;
 };
 
-export const useGetViceRepresentative = (groupId: number | null) => {
+export const useGetViceRepresentatives = (groupId: number | null) => {
   const endpoint = groupId ? `${API_ENDPOINT}/group/${groupId}` : null;
 
   const { data, error, isLoading } =
