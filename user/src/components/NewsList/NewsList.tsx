@@ -7,7 +7,7 @@ type NewsListProps = {
   isLoginPage: boolean;
 };
 
-const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
+const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
 
   const sortedNews = (news || []).slice().sort((a, b) => a.id - b.id);
@@ -34,7 +34,7 @@ const NewsList: FC<NewsListProps> = ({ isLoginPage }) => {
   return (
     <div className="m-auto flex w-[497px] items-center justify-center">
       <FormContainer>
-        <div className="w-[497px] mb-10">
+        <div className="mb-10 w-[497px]">
           <div className="text-4xl font-bold text-main">お知らせ</div>
         </div>
         <div className="flex flex-col gap-4">
