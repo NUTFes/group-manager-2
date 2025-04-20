@@ -1,4 +1,4 @@
-import PublicRelationsForm from '@/components/PublicRelations/PublicRelationsForm';
+import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm';
 
 export default function Home() {
   // 本来はページのコンテキストやpropsから適切なgroupIdを取得するべきですが、

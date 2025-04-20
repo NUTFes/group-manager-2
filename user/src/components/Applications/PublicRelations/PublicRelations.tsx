@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import PublicRelationsForm from '@/components/PublicRelations/PublicRelationsForm/PublicRelationsForm';
+import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm/PublicRelationsForm';
 
 type PublicRelationsProps = {
   groupId: number;
