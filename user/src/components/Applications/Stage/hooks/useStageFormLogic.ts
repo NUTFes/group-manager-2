@@ -30,7 +30,7 @@ export const useStageFormLogic = () => {
   } = useGetStageOrders(currentGroupId);
 
   // フォーム状態管理
-  const { handleSubmit, formState, updateField } = useStageForm(
+  const { handleSubmit, formState, updateField, reset } = useStageForm(
     sunnyOrder,
     rainyOrder
   );
@@ -80,6 +80,13 @@ export const useStageFormLogic = () => {
     allStages: rainyStageOptions,
     selectedId: rainyFirstChoice ? Number(rainyFirstChoice) : 0,
   });
+
+  // 既存のデータにフォームをリセットする関数
+  const resetForm = () => {
+    if (sunnyOrder || rainyOrder) {
+      reset();
+    }
+  };
 
   // エラーメッセージ取得関数
   const getErrorMessage = (
@@ -177,5 +184,6 @@ export const useStageFormLogic = () => {
     sunnyStageOptions,
     rainyStageOptions,
     getErrorMessage,
+    resetForm,
   };
 };
