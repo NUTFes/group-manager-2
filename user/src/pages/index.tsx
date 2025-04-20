@@ -2,7 +2,7 @@ import NewsList from '@/components/NewsList';
 
 export default function Home() {
   return (
-    <div className="flex m-4 gap-10 flex-col lg:m-10 lg:flex-row">
+    <div className="flex m-4 gap-10 lg:m-10 lg:flex-row flex-col">
       <NewsList isLoginPage={true} />
       <LoginForm />
     </div>
