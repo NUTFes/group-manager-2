@@ -5,6 +5,7 @@ import {
   useMutateStageOrders,
   useStageFormData,
 } from '@/api/stageApi';
+import { toast } from 'react-toastify';
 import { useStageForm } from './useStageForm';
 import {
   useDateOptions,
@@ -16,6 +17,7 @@ export const useStageFormLogic = () => {
   // TODO: 認証基盤ができたら、グループIDを取得する
   const [currentGroupId] = useState<number | null>(1);
   const [submitError, setSubmitError] = useState<string>('');
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   // ステージ申請の既存データ取得
   const {
@@ -80,6 +82,7 @@ export const useStageFormLogic = () => {
   // フォーム送信処理
   const onSubmit = handleSubmit(async (data) => {
     setSubmitError('');
+    setIsSubmitted(false);
 
     try {
       if (!currentGroupId) {
@@ -125,11 +128,12 @@ export const useStageFormLogic = () => {
       );
 
       if (result.success) {
-        alert(
+        toast.success(
           hasExisting
             ? 'ステージ希望を更新しました。'
             : 'ステージ希望を登録しました。'
         );
+        setIsSubmitted(true);
       } else {
         setSubmitError(
           '送信中にエラーが発生しました。もう一度お試しください。'
@@ -157,5 +161,8 @@ export const useStageFormLogic = () => {
     submitError,
     hasExisting,
     isValid,
+    isSubmitted,
+    sunnyStageOptions,
+    rainyStageOptions,
   };
 };
