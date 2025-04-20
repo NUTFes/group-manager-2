@@ -2,7 +2,7 @@ import NewsList from '@/components/NewsList';
 
 export default function Home() {
   return (
-    <div className="flex m-4 gap-10 lg:m-10 lg:flex-row flex-col">
+    <div className="m-4 flex flex-col gap-10 lg:m-10 lg:flex-row">
       <NewsList isLoginPage={true} />
       <LoginForm />
     </div>
@@ -11,7 +11,7 @@ export default function Home() {
 
 const LoginForm = () => {
   return (
-    <div className="size-[400px] mx-auto bg-slate-500">
+    <div className="mx-auto size-[400px] bg-slate-500">
       ログインコンポーネント
     </div>
   );
