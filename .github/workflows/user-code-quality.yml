@@ -2,6 +2,9 @@
 name: User Code Quality
 description: ユーザディレクトリ以下に対してESLintとPrettierを実行し、フォーマットされた場合は自動でコミットする
 
+permissions:
+  contents: write
+
 on:
   # Pull Request時
   pull_request:
@@ -14,10 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # GitHubリポジトリのコードをチェックアウト
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
+          token: ${{ secrets.PAT }}
+          # GitHubのリポジトリをチェックアウトする際に、GitHubのPATを使用して認証する
           persist-credentials: true
 
       # Corepack を有効にして pnpm を使えるようにする
