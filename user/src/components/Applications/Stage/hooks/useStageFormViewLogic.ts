@@ -30,7 +30,10 @@ export const useStageFormViewLogic = ({
   }, [isSubmitted]);
 
   const toEdit = () => setIsFormMode(true);
-  const toCancel = () => setIsFormMode(false);
+  const toCancel = (resetForm?: () => void) => {
+    if (resetForm) resetForm();
+    setIsFormMode(false);
+  };
 
   return { isFormMode, toEdit, toCancel };
 };

@@ -30,6 +30,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
     sunnyStageOptions,
     rainyStageOptions,
     getErrorMessage,
+    resetForm,
   } = useStageFormLogic();
 
   const { isFormMode, toEdit, toCancel } = useStageFormViewLogic({
@@ -213,7 +214,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
                     size="pc"
                     color="main"
                     variant
-                    onClick={toCancel}
+                    onClick={() => toCancel(resetForm)}
                   >
                     キャンセル
                   </Button>
