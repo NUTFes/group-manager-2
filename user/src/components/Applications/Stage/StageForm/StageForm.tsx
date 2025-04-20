@@ -1,6 +1,4 @@
-import { FC, useEffect, useState } from 'react';
-import { StageFormData } from '@/utils/validate/validate';
-import { FieldError } from 'react-hook-form';
+import { FC } from 'react';
 import { stageLabels } from '@/components/Applications/label';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
@@ -10,6 +8,7 @@ import FormContainer from '@/components/FormContainer';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
 import { useStageFormLogic } from '../hooks';
+import { useStageFormViewLogic } from '../hooks/useStageFormViewLogic';
 
 type Props = { isDeadline?: boolean };
 const StageForm: FC<Props> = ({ isDeadline }) => {
@@ -30,24 +29,15 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
     isSubmitted,
     sunnyStageOptions,
     rainyStageOptions,
+    getErrorMessage,
   } = useStageFormLogic();
 
-  // モード管理
-  const [isFormMode, setIsFormMode] = useState(true);
-
-  // 初期表示
-  useEffect(() => {
-    if (!isLoadingAll) {
-      setIsFormMode(!(hasExisting || !!isDeadline));
-    }
-  }, [isLoadingAll, hasExisting, isDeadline]);
-
-  // 登録後に切り替え
-  useEffect(() => {
-    if (isSubmitted) {
-      setIsFormMode(false);
-    }
-  }, [isSubmitted]);
+  const { isFormMode, toEdit, toCancel } = useStageFormViewLogic({
+    hasExisting,
+    isDeadline,
+    isLoadingAll,
+    isSubmitted,
+  });
 
   const {
     date,
@@ -90,14 +80,6 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
     { label: stageLabels[6], content: `${performTime}分` },
     { label: stageLabels[7], content: `${cleanupTime}分` },
   ];
-
-  // エラーメッセージを取得する関数
-  const getErrorMessage = (fieldName: keyof StageFormData | 'totalTime') => {
-    const error = errors[fieldName as keyof typeof errors] as
-      | FieldError
-      | undefined;
-    return error ? error.message : undefined;
-  };
 
   return (
     <>
@@ -231,7 +213,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
                     size="pc"
                     color="main"
                     variant
-                    onClick={() => setIsFormMode(false)}
+                    onClick={toCancel}
                   >
                     キャンセル
                   </Button>
@@ -249,11 +231,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
           )}
         </FormContainer>
       ) : (
-        <FormList
-          items={items}
-          onEdit={() => setIsFormMode(true)}
-          isEdit={!isDeadline}
-        />
+        <FormList items={items} onEdit={toEdit} isEdit={!isDeadline} />
       )}
     </>
   );

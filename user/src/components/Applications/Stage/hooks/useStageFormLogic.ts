@@ -5,6 +5,8 @@ import {
   useMutateStageOrders,
   useStageFormData,
 } from '@/api/stageApi';
+import { StageFormData } from '@/utils/validate/validate';
+import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useStageForm } from './useStageForm';
 import {
@@ -78,6 +80,16 @@ export const useStageFormLogic = () => {
     allStages: rainyStageOptions,
     selectedId: rainyFirstChoice ? Number(rainyFirstChoice) : 0,
   });
+
+  // エラーメッセージ取得関数
+  const getErrorMessage = (
+    fieldName: keyof StageFormData | 'totalTime'
+  ): string | undefined => {
+    const error = formState.errors[
+      fieldName as keyof typeof formState.errors
+    ] as FieldError | undefined;
+    return error ? error.message : undefined;
+  };
 
   // フォーム送信処理
   const onSubmit = handleSubmit(async (data) => {
@@ -164,5 +176,6 @@ export const useStageFormLogic = () => {
     isSubmitted,
     sunnyStageOptions,
     rainyStageOptions,
+    getErrorMessage,
   };
 };
