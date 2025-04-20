@@ -2,8 +2,7 @@ import { FormData } from '@/api/viceRepresentativeApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import snakecaseKeys from 'snakecase-keys';
-import { mutate } from 'swr';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import api from '@/lib/api';
 import { vicerepresentativeSchema } from './schema';
 
@@ -19,7 +18,7 @@ export const useViceRepresentativeHook = () => {
     resolver: zodResolver(vicerepresentativeSchema),
     defaultValues: {
       groupId: 3,
-      isGroup: 2,
+      isGroup: undefined,
       name: '',
       number: '',
       grade: 0,
