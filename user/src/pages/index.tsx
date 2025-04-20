@@ -11,7 +11,7 @@ export default function Home() {
 
 const LoginForm = () => {
   return (
-    <div className="mx-auto size-[400px] bg-slate-500">
+    <div className="size-[400px] bg-slate-500 mx-auto ">
       ログインコンポーネント
     </div>
   );
