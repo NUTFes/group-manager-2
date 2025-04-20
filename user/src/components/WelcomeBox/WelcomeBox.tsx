@@ -11,7 +11,7 @@ const WelcomeBox: FC<WelcomeBoxProps> = ({
   handleRegisterClick,
 }) => {
   return (
-    <div className="flex size-[400px] flex-col items-center justify-center gap-12  rounded-[30px] bg-secondary p-8 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)]">
+    <div className="flex size-[400px] flex-col items-center justify-center gap-12 rounded-[30px] bg-secondary p-8 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)]">
       <div className="flex flex-col items-center gap-2">
         <Button
           type="button"
