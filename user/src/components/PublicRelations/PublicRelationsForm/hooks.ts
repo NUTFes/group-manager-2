@@ -6,84 +6,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-export const publicRelationsSchema = z
-  .object({
-    prText: z.string(),
-    announce: z.enum(['yes', 'no'], {
-      required_error: '選択してください',
-    }),
-    image: z
-      .instanceof(File, { message: '画像をアップロードしてください' })
-      .refine((file) => file.size < 10 * 1024 * 1024, {
-        message: 'ファイルサイズは10MB未満にしてください',
-      })
-      .refine((file) => ['image/png', 'image/jpeg'].includes(file.type), {
-        message: 'ファイル形式はpngまたはjpegにしてください',
-      })
-      .optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.announce === 'yes') {
-      // アナウンスが「はい」の場合のバリデーション
-      if (!data.prText || data.prText.trim() === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: '入力してください',
-          path: ['prText'],
-        });
-      } else {
-        // 入力があれば文字数・単語数チェック
-        if (/[\u3040-\u30FF\u4E00-\u9FAF]/.test(data.prText)) {
-          if (data.prText.length > 50) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: '日本語は50文字以内で入力してください',
-              path: ['prText'],
-            });
-          }
-        } else {
-          const wordCount = data.prText.split(/\s+/).filter(Boolean).length;
-          if (wordCount > 25) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: '英語は25単語以内で入力してください',
-              path: ['prText'],
-            });
-          }
-        }
-      }
-
-      // 画像も必須にする場合はここでチェック
-      // if (!data.image) {
-      //   ctx.addIssue({
-      //     code: z.ZodIssueCode.custom,
-      //     message: '画像をアップロードしてください',
-      //     path: ['image']
-      //   });
-      // }
-    } else if (data.announce === 'no') {
-      // アナウンスが「いいえ」の場合のバリデーション
-      if (data.prText && data.prText.trim() !== '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'アナウンスが「いいえ」の場合、PR文は入力できません',
-          path: ['announce'],
-        });
-      }
-
-      if (data.image) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'アナウンスが「いいえ」の場合、画像はアップロードできません',
-          path: ['announce'],
-        });
-      }
-    }
-  });
-
-export type PublicRelationsFormData = z.infer<typeof publicRelationsSchema>;
+import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (groupId: number) => {
   const {
@@ -94,6 +17,8 @@ export const usePublicRelationsFormHooks = (groupId: number) => {
     watch,
     reset,
   } = useForm<PublicRelationsFormData>({
+    mode: 'onSubmit',
+    criteriaMode: 'all', // 全フィールド・全ルールを検証
     resolver: zodResolver(publicRelationsSchema),
     defaultValues: {
       prText: '',
