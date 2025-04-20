@@ -20,7 +20,7 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
           token: ${{ secrets.PAT }}
-          persist-credentials: true
+          persist-credentials: false
 
       # Corepack を有効にして pnpm を使えるようにする
       - name: Enable Corepack
