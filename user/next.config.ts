@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 import type { RuleSetRule } from 'webpack';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   experimental: {
     turbo: {
