@@ -1,1 +1,1 @@
-export { default } from "./ViceRepresentativeForm";
+export { default } from './ViceRepresentativeForm';

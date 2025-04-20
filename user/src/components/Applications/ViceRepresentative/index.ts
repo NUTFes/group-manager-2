@@ -1,1 +1,1 @@
-export { default } from "./ViceRepresentative";
+export { default } from './ViceRepresentative';
