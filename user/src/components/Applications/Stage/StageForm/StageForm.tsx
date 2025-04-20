@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { StageFormData } from '@/utils/validate/validate';
 import { FieldError } from 'react-hook-form';
+import { stageLabels } from '@/components/Applications/label';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
@@ -62,37 +63,32 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
   const items: FormItem[] = [
     {
-      label: '開催日',
+      label: stageLabels[0],
       content: dateOptions.find((o) => o.id === +date)?.name || '',
-      isEditable: false,
     },
     {
-      label: '晴れの場合：第1希望',
+      label: stageLabels[1],
       content:
         sunnyStageOptions.find((o) => o.id === +sunnyFirstChoice)?.name || '',
-      isEditable: false,
     },
     {
-      label: '晴れの場合：第2希望',
+      label: stageLabels[2],
       content:
         sunnyStageOptions.find((o) => o.id === +sunnySecondChoice)?.name || '',
-      isEditable: false,
     },
     {
-      label: '雨の場合：第1希望',
+      label: stageLabels[3],
       content:
         rainyStageOptions.find((o) => o.id === +rainyFirstChoice)?.name || '',
-      isEditable: false,
     },
     {
-      label: '雨の場合：第2希望',
+      label: stageLabels[4],
       content:
         rainyStageOptions.find((o) => o.id === +rainySecondChoice)?.name || '',
-      isEditable: false,
     },
-    { label: '準備時間', content: `${prepTime}分`, isEditable: false },
-    { label: '本番時間', content: `${performTime}分`, isEditable: false },
-    { label: '片付け時間', content: `${cleanupTime}分`, isEditable: false },
+    { label: stageLabels[5], content: `${prepTime}分` },
+    { label: stageLabels[6], content: `${performTime}分` },
+    { label: stageLabels[7], content: `${cleanupTime}分` },
   ];
 
   // エラーメッセージを取得する関数
@@ -134,7 +130,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
             >
               <div>
                 <Radio
-                  label="開催日"
+                  label={stageLabels[0]}
                   value={date}
                   onChange={(value: string) => updateField('date', value)}
                   required
@@ -148,7 +144,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <Selector
-                  label="晴れの場合：第1希望"
+                  label={stageLabels[1]}
                   value={sunnyFirstChoice}
                   onChange={(value) => updateField('sunnyFirstChoice', value)}
                   required
@@ -159,7 +155,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <Selector
-                  label="晴れの場合：第2希望"
+                  label={stageLabels[2]}
                   value={sunnySecondChoice}
                   onChange={(value) => updateField('sunnySecondChoice', value)}
                   required
@@ -170,7 +166,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <Selector
-                  label="雨の場合：第1希望"
+                  label={stageLabels[3]}
                   value={rainyFirstChoice}
                   onChange={(value) => updateField('rainyFirstChoice', value)}
                   required
@@ -181,7 +177,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <Selector
-                  label="雨の場合：第2希望"
+                  label={stageLabels[4]}
                   value={rainySecondChoice}
                   onChange={(value) => updateField('rainySecondChoice', value)}
                   required
@@ -192,7 +188,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <TextBox
-                  label="準備時間(単位：min)"
+                  label={`${stageLabels[5]}(単位：min)`}
                   value={prepTime}
                   onChange={(value) => updateField('prepTime', value)}
                   required
@@ -203,7 +199,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <TextBox
-                  label="本番時間(単位：min)"
+                  label={`${stageLabels[6]}(単位：min)`}
                   value={performTime}
                   onChange={(value) => updateField('performTime', value)}
                   required
@@ -214,7 +210,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
 
               <div>
                 <TextBox
-                  label="片付け時間(単位：min)"
+                  label={`${stageLabels[7]}(単位：min)`}
                   value={cleanupTime}
                   onChange={(value) => updateField('cleanupTime', value)}
                   required
