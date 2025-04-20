@@ -19,7 +19,7 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
           token: ${{ secrets.PAT }}
-          persist-credentials: true
+          persist-credentials: false
 
       # Corepack を有効にして pnpm を使えるようにする
       - name: Enable Corepack
@@ -49,8 +49,8 @@ jobs:
       - name: Commit formatted files
         uses: EndBug/add-and-commit@v9
         with:
-          author_name: nutfes-joho
-          author_email: nutfes.info@gmail.com
+          author_name: GitHub Action
+          author_email: action@github.com
           message: "chore: auto format code"
           push: true
 
@@ -63,7 +63,7 @@ jobs:
       - name: Commit lint fixed files
         uses: EndBug/add-and-commit@v9
         with:
-          author_name: nutfes-joho
-          author_email: nutfes.info@gmail.com
+          author_name: GitHub Action
+          author_email: action@github.com
           message: "chore: auto fix lint issues"
           push: true
