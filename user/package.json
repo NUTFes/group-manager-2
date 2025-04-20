@@ -13,8 +13,7 @@
     "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint-fix": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "fmt": "prettier --write **/*.{js,jsx,ts,tsx,css,scss}",
-    "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}",
-    "chromatic": "npx chromatic --project-token=chpt_cc7dd2f82ddc1ea"
+    "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
