@@ -22,7 +22,6 @@ AllCops:
   TargetRubyVersion: 3.0
   Exclude:
     - 'vendor/**/*'
-    # - 'db/**/*'
     - 'lib/tasks/**/*'
     - "db/schema.rb"
     - 'bin/*'
@@ -37,11 +36,14 @@ AllCops:
     - 'openapi/**/*'
   NewCops: enable
 
-## sider's rubocop stops during this file
+# 解説するコメントを書いて
+
+# HTTP ステータスコードを使用する際に、Rails の定数を使用することを推奨します。
 Rails/HttpStatus:
   Exclude:
     - 'app/controllers/application_controller.rb'
 
+# Rails のバージョンを指定することで、Rails のバージョンに依存しないコードを書くことを推奨します。
 Rails/SkipsModelValidations:
   AllowedMethods:
     - 'touch'
