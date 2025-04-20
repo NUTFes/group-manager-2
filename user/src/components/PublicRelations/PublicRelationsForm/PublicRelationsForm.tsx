@@ -46,7 +46,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
           </div>
 
           {/* アナウンス選択 */}
-          <div className="h-24 flex flex-col justify-start items-start gap-6">
+          <div className="flex flex-col justify-start items-start gap-6">
             <Radio
               label="アナウンスを行いますか？"
               value={
