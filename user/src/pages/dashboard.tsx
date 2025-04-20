@@ -1,13 +1,18 @@
-import { NextPage } from 'next';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthStore } from '@/stores/authStore';
 
-const Dashboard: NextPage = () => {
+const Dashboard = () => {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, router]);
 
   if (!isAuthenticated) {
-    router.push('/login');
     return null;
   }
 
