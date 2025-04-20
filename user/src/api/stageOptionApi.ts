@@ -6,6 +6,13 @@ const API_ENDPOINTS = {
   STAGE_OPTIONS: '/stage_common_options',
 };
 
+type ApiStatus = { code: number; message: string };
+
+export type ApiResponse<T> = {
+  status: ApiStatus;
+  data: T;
+};
+
 export type StageOption = {
   groupId: number;
   ownEquipment: number;
@@ -31,12 +38,11 @@ export const useGetStageOptions = (groupId: number | null) => {
     ? `${API_ENDPOINTS.STAGE_OPTIONS}/group/${groupId}`
     : null;
 
-  const { data, error, isLoading } = useApiGet<{ data: StageOptionResponse }>(
-    endpoint
-  );
+  const { data, error, isLoading } =
+    useApiGet<ApiResponse<StageOptionResponse>>(endpoint);
 
   return {
-    stageOptions: data?.data,
+    stageOptions: data?.status.code === 200 ? data?.data : undefined,
     isLoading,
     hasError: !!error,
   };

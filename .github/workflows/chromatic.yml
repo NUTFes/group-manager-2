@@ -1,0 +1,44 @@
+name: "Chromatic"
+
+on:
+    pull_request:
+      paths:
+        - "user/**"
+        - ".github/workflows/chromatic.yml"
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+            working-directory: ./user
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Corepack を有効にして pnpm を使えるようにする
+      - name: Enable Corepack
+        run: corepack enable
+      # Node.js v22をセットアップ
+      - name: Use Node.js v22
+        uses: actions/setup-node@v4
+        with:
+            node-version: '22'
+            cache: 'pnpm'
+            cache-dependency-path: |
+              ./user/package.json
+              ./user/pnpm-lock.yaml
+      # pnpmで依存関係をインストール
+      - name: pnpm install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ./user
+      - name: Install dependencies
+        working-directory: ./user
+        run: pnpm i
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: ./user

@@ -1,19 +1,60 @@
 import { FC } from 'react';
-import { useAtom, useAtomValue } from 'jotai';
+import { StageOptionResponse } from '@/api/stageOptionApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import StageOptionForm from '@/components/Applications/StageOptions/StageOptionForm';
-import {
-  getIsOpenAccordionMenuAtom,
-  setIsOpenAccordionMenuAtom,
-} from './store';
+import { useStageOptionHooks } from '@/components/Applications/StageOptions/hooks';
+import FormList from '@/components/FormList';
+import { FormItem } from '@/components/FormList/type';
 
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type StageOptionsProps = {};
 
-const StageOptions: FC<StageOptionsProps> = () => {
-  const isOpen = useAtomValue(getIsOpenAccordionMenuAtom);
-  const [, toggleIsOpen] = useAtom(setIsOpenAccordionMenuAtom);
+type StageOptionsProps = { isDeadline?: boolean };
+
+type ContentProps = {
+  isLoading: boolean;
+  hasError: boolean;
+  isDeadline: boolean | undefined;
+  isEditing: boolean;
+  toEdit: () => void;
+  stageOptions?: StageOptionResponse;
+  formItem: FormItem[];
+};
+
+const Content: FC<ContentProps> = ({
+  isLoading,
+  hasError,
+  isDeadline,
+  isEditing,
+  toEdit,
+  stageOptions,
+  formItem,
+}) => {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (hasError) {
+    return (
+      <div className="py-10 text-center text-red-500">
+        データの取得に失敗しました。
+      </div>
+    );
+  }
+
+  if (isDeadline) {
+    return <FormList items={formItem} />;
+  }
+
+  if (isEditing) {
+    return <StageOptionForm toEdit={toEdit} stageOptions={stageOptions} />;
+  }
+
+  return <FormList items={formItem} isEdit onEdit={toEdit} />;
+};
+
+const StageOptions: FC<StageOptionsProps> = ({ isDeadline }) => {
+  const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
+    useStageOptionHooks();
 
   return (
     <AccordionMenu
@@ -21,11 +62,16 @@ const StageOptions: FC<StageOptionsProps> = () => {
       isEdit={false}
       isExist={false}
       required
-      isOpen={isOpen}
-      onToggle={toggleIsOpen}
-      onSubmit={() => {}}
     >
-      <StageOptionForm />
+      <Content
+        isLoading={isLoading}
+        hasError={hasError}
+        isDeadline={isDeadline}
+        isEditing={isEditing}
+        toEdit={toEdit}
+        stageOptions={stageOptions}
+        formItem={formItem}
+      />
     </AccordionMenu>
   );
 };

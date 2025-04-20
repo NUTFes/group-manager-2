@@ -43,31 +43,65 @@ Rails.application.routes.draw do
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places
-  resources :rental_orders
+  resources :rental_orders do
+    collection do
+      get 'group/:group_id', to: 'rental_orders#get_by_group_id'
+    end
+  end
+
   resources :assign_items
   resources :assign_stages
-  resources :stage_orders
+  resources :stage_orders do
+    collection do
+      get 'group/:group_id', to: 'stage_orders#get_by_group_id'
+    end
+  end
   resources :stages
   resources :employees
-  resources :sub_reps
-  resources :power_orders
+  resources :sub_reps do
+    collection do
+      get 'group/:group_id', to: 'sub_reps#get_by_group_id'
+    end
+  end
+  resources :power_orders do
+    collection do
+      get 'group/:group_id', to: 'power_orders#get_by_group_id'
+    end
+  end
   resources :place_allow_lists
   resources :places
   resources :assign_group_places
-  resources :place_orders
+  resources :place_orders do
+    collection do
+      get 'group/:group_id', to: 'place_orders#get_by_group_id'
+    end
+  end
   resources :stage_common_options
-  get 'stage_common_options/group/:group_id' => 'stage_common_options#by_group'
+  resources :stage_common_options do
+    collection do
+      get 'group/:group_id', to: 'stage_common_options#get_by_group_id'
+    end
+  end
   resources :groups
   resources :group_categories
   resources :user_details
   resources :shops
   resources :fes_dates
   resources :fes_years
-  resources :public_relations
+  resources :public_relations do
+    collection do
+      get 'group/:group_id', to: 'public_relations#get_by_group_id'
+    end
+  end
   resources :venue_maps
   resources :announcements
   resources :cooking_process_orders
   resources :contact_persons
+  resources :un_registered_groups do
+    collection do
+      get 'group', to: 'un_registered_groups#group'
+    end
+  end
 
   # /api/v1/...
   namespace 'api' do

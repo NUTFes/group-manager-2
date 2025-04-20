@@ -1,17 +1,29 @@
 import { FC } from 'react';
+import { ApiResponse } from '@/api/stageOptionApi';
+import { PlaceOrder } from '@/api/venueApplication';
+import { KeyedMutator } from 'swr';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
 import FormContainer from '@/components/FormContainer';
 import { useVenueMapHooks } from './hooks';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type VenueApplicationFormProps = {};
+type VenueApplicationFormProps = {
+  groupId: number;
+  placeOrder?: PlaceOrder;
+  handleEditClick?: () => void;
+  mutate: KeyedMutator<ApiResponse<PlaceOrder>>;
+};
 
-const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
+const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
+  groupId,
+  placeOrder,
+  handleEditClick,
+  mutate,
+}) => {
   const {
     placesLoading,
-    isMutating,
+    isLoading,
     options,
     values,
     errors,
@@ -19,8 +31,9 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
     onSubmit,
     handleSubmit,
     disableOptions,
-  } = useVenueMapHooks();
-  if (placesLoading || isMutating) {
+    validateEdit,
+  } = useVenueMapHooks(groupId, mutate, placeOrder, handleEditClick);
+  if (placesLoading || isLoading) {
     return <div>loading...</div>;
   }
 
@@ -59,9 +72,29 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = () => {
             onChange={(value) => setValue('remark', value)}
             error={errors.remark?.message}
           />
-          <Button size="pc" color="main" type="submit">
-            登録
-          </Button>
+          <div className="mt-10 flex w-full items-center justify-center">
+            {placeOrder && handleEditClick && (
+              <div className="mr-4">
+                <Button
+                  size="pc"
+                  color="main"
+                  variant
+                  type="button"
+                  onClick={handleEditClick}
+                >
+                  キャンセル
+                </Button>
+              </div>
+            )}
+            <Button
+              size="pc"
+              color="main"
+              type="submit"
+              isDisable={validateEdit()}
+            >
+              {placeOrder ? '修正' : '登録'}
+            </Button>
+          </div>
         </div>
       </form>
     </FormContainer>
