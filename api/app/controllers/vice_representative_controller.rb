@@ -1,12 +1,10 @@
-class ViceRepresentativesController < ApplicationController
+class ViceRepresentativeController < ApplicationController
     before_action :set_vice_representative_by_group_id, only: [:get_by_group_id]
   
-    # GET /vice_representatives/group/:group_id
     def get_by_group_id
       render json: fmt(ok, @vice_representative)
     end
   
-    # POST /vice_representative
     def create
       vr = ViceRepresentative.new(vice_representative_params)
       if vr.save
@@ -16,7 +14,6 @@ class ViceRepresentativesController < ApplicationController
       end
     end
   
-    # PATCH/PUT /vice_representative/:id
     def update
       vr = ViceRepresentative.find_by(id: params[:id])
       if vr&.update(vice_representative_params)
