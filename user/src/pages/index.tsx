@@ -28,7 +28,7 @@ export default function Home() {
     <>
       <RegisterCarousel isOpen={isRegisterOpen} onClose={onCloseRegister} />
       <LoginModal isOpen={isLoginOpen} onClose={onCloseLogin} />
-       <div className="m-4 flex flex-col items-center gap-10 lg:m-10 lg:flex-row lg:items-start">
+      <div className="m-4 flex flex-col items-center gap-10 lg:m-10 lg:flex-row lg:items-start">
         <NewsList isLoginPage={true} />
         <WelcomeBox
           handleLoginClick={() => {
