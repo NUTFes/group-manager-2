@@ -132,9 +132,9 @@ export const useAuth = () => {
               const errorMessages = Object.values(errorData.errors).flat();
               throw new Error(errorMessages.join('\n'));
             }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (parseError) {
+          } catch {
             // JSON解析に失敗した場合は元のエラーメッセージを使用
+            throw error;
           }
         }
         throw error;
