@@ -115,12 +115,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form method="POST" onSubmit={onSubmit} className="px-60">
-        <section className="rounded-2xl bg-white py-20 shadow-md">
+      <form method="POST" onSubmit={onSubmit} className="">
+        <section className="rounded-2xl bg-white px-60 py-20 shadow-md">
           <FormStep step={stepIndex} />
-          <div className="overflow-hidden pt-4" ref={emblaRef}>
+          <div className="w-[450px] overflow-hidden pt-4" ref={emblaRef}>
             <div className="flex">
-              <div className="min-w-full shrink-0">
+              <div className="min-w-0 flex-none basis-full">
                 <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                   <TextBox
                     label="メールアドレス"
@@ -154,7 +154,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-              <div className="min-w-full shrink-0 p-4">
+              <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                   <TextBox
                     label="名前"
@@ -200,7 +200,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-              <div className="w-full shrink-0 p-4">
+              <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center space-y-12 rounded-lg bg-baseColor">
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex w-full items-center justify-start pb-[3px] pr-[81px]">
