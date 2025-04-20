@@ -24,9 +24,9 @@ const Upload: FC<UploadProps> = ({
       disabled={idDisable}
       className="inline-flex w-[402px] flex-col items-start justify-start gap-1"
     >
-      <div className="self-stretch justify-start items-baseline gap-6 inline-flex">
-        <div className="text-font text-base font-medium">{title}</div>
-        <div className="text-center text-alert text-xs">※必須</div>
+      <div className="inline-flex items-baseline justify-start gap-6 self-stretch">
+        <div className="text-base font-medium text-font">{title}</div>
+        <div className="text-center text-xs text-alert">※必須</div>
       </div>
       <div
         className={`inline-flex h-[72px] items-center justify-center gap-4 overflow-hidden rounded-[10px] border
@@ -41,7 +41,7 @@ const Upload: FC<UploadProps> = ({
           アップロード
         </div>
       </div>
-      <ul className="text-left text-font text-xs list-disc list-inside">
+      <ul className="list-inside list-disc text-left text-xs text-font">
         {note.map((line, idx) => (
           <li key={idx}>{line}</li>
         ))}

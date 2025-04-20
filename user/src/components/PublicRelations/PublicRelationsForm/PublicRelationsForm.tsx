@@ -32,9 +32,9 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
   return (
     <FormContainer>
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-        <div className="w-full flex flex-col gap-10 justify-center items-start">
+        <div className="flex w-full flex-col items-start justify-center gap-10">
           {/* PR文入力 */}
-          <div className="w-96 h-44 relative">
+          <div className="relative h-44 w-96">
             <TextArea
               label="PR文(HP,パンフレット,アナウンスに使用)"
               value={values.prText || ''}
@@ -46,7 +46,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
           </div>
 
           {/* アナウンス選択 */}
-          <div className="flex flex-col justify-start items-start gap-6">
+          <div className="flex flex-col items-start justify-start gap-6">
             <Radio
               label="アナウンスを行いますか？"
               value={
@@ -64,7 +64,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
           </div>
 
           {/* PR画像アップロード */}
-          <div className="w-96 flex flex-col justify-start items-start gap-1">
+          <div className="flex w-96 flex-col items-start justify-start gap-1">
             <Upload
               title="PR画像"
               note={[
@@ -85,7 +85,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
           </div>
 
           {/* 登録ボタン */}
-          <div className="w-96 h-16 px-28 flex justify-center items-start gap-4 mt-4">
+          <div className="mt-4 flex h-16 w-96 items-start justify-center gap-4 px-28">
             <Button size="pc" color="main" type="submit" isDisable={isMutating}>
               登録
             </Button>
