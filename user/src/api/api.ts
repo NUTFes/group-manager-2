@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/authStore';
 import camelcaseKeys from 'camelcase-keys';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -14,18 +15,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
  */
 export const fetcher = (url: string) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-
-  // 認証情報を取得
-  const authStr = localStorage.getItem('auth');
+  const auth = useAuthStore.getState();
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
 
-  if (authStr) {
-    const auth = JSON.parse(authStr);
-    headers['access-token'] = auth['access-token'];
-    headers.client = auth.client;
-    headers.uid = auth.uid;
+  if (auth.accessToken) {
+    headers['access-token'] = auth.accessToken;
+    headers.client = auth.client!;
+    headers.uid = auth.uid!;
   }
 
   return fetch(fullUrl, {
@@ -139,18 +137,6 @@ export const createRequestOptions = (method: string, data?: any) => {
 export const sendRequest = async (url: string, options: RequestInit) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
 
-  // 認証情報を取得
-  const authStr = localStorage.getItem('auth');
-  if (authStr) {
-    const auth = JSON.parse(authStr);
-    options.headers = {
-      ...options.headers,
-      'access-token': auth['access-token'],
-      client: auth.client,
-      uid: auth.uid,
-    };
-  }
-
   try {
     const response = await fetch(fullUrl, options);
 
@@ -168,9 +154,15 @@ export const sendRequest = async (url: string, options: RequestInit) => {
       uid: response.headers.get('uid'),
     };
 
-    // 認証ヘッダーが存在する場合、localStorageに保存
+    // 認証ヘッダーが存在する場合、authStoreに保存
     if (authHeaders['access-token']) {
-      localStorage.setItem('auth', JSON.stringify(authHeaders));
+      useAuthStore
+        .getState()
+        .setAuth(
+          authHeaders['access-token']!,
+          authHeaders.client!,
+          authHeaders.uid!
+        );
     }
 
     return {
