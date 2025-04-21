@@ -116,11 +116,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form method="POST" onSubmit={onSubmit}>
-        <section className="rounded-2xl bg-white px-60 py-20 shadow-md md:px-32 md:py-10">
+        <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div className="w-[450px] overflow-hidden pt-4" ref={emblaRef}>
             <div className="flex">
-              <div className="min-w-0 flex-none basis-full">
+              <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="メールアドレス"
@@ -155,7 +155,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <div className="min-w-0 flex-none basis-full p-4">
-                <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
+                <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="名前"
                     value={input.name}
