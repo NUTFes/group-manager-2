@@ -28,7 +28,8 @@ export const publicRelationsSchema = z.object({
     })
     .refine((file) => ['image/png', 'image/jpeg'].includes(file.type), {
       message: 'ファイル形式はpngまたはjpegにしてください',
-    }),
+    })
+    .optional(),
 });
 
 export type PublicRelationsFormData = z.infer<typeof publicRelationsSchema>;

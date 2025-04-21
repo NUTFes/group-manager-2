@@ -1,14 +1,69 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
+  useCreatePublicRelation,
   usePublicRelationData,
-  usePublicRelationMutation,
-} from '@/api/publicRelations';
+  useUpdatePublicRelation,
+} from '@/api/publicRelationsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
-export const usePublicRelationsFormHooks = (groupId: number) => {
+export const usePublicRelationsFormHooks = (
+  groupId: number,
+  publicRelationProp?: any
+) => {
+  const {
+    publicRelation: fetchedPublicRelation,
+    error: fetchError,
+    isLoading: isFetching,
+    mutate,
+  } = usePublicRelationData(groupId || 0);
+
+  const publicRelation = publicRelationProp || fetchedPublicRelation;
+
+  // カスタムバリデーションを実装
+  const resolver = async (values: any, context: any, options: any) => {
+    // 基本的なZodバリデーションを実行
+    const result = await zodResolver(publicRelationsSchema)(
+      values,
+      context,
+      options
+    );
+
+    // エラーオブジェクトを型安全に扱うためにキャスト
+    const errors = result.errors as Record<string, any>;
+
+    // 既存データを編集する場合は、画像が必須ではない
+    if (publicRelation) {
+      // 画像フィールドにエラーがあるか確認
+      if (
+        errors.image &&
+        typeof errors.image === 'object' &&
+        errors.image.type === 'custom' &&
+        errors.image.message === '画像をアップロードしてください'
+      ) {
+        // 画像のエラーを削除
+        delete errors.image;
+      }
+    } else {
+      // 新規作成の場合は画像が必須
+      if (!values.image) {
+        errors.image = {
+          type: 'custom',
+          message: '画像をアップロードしてください',
+        };
+      }
+    }
+
+    return {
+      values: result.values,
+      errors: errors,
+    };
+  };
+
+  // StageOptionsFormのパターンに合わせて、データが存在する場合のデフォルト値を設定
   const {
     handleSubmit,
     formState: { errors },
@@ -19,46 +74,46 @@ export const usePublicRelationsFormHooks = (groupId: number) => {
   } = useForm<PublicRelationsFormData>({
     mode: 'onSubmit',
     criteriaMode: 'all', // 全フィールド・全ルールを検証
-    resolver: zodResolver(publicRelationsSchema),
+    resolver: resolver,
     defaultValues: {
-      prText: '',
+      prText: publicRelation?.blurb || '',
       announce: 'no',
     },
   });
 
+  // フックを安定させるため、条件付きではなく常に同じフックを使用
   const {
-    publicRelation,
-    error: fetchError,
-    isLoading: isFetching,
-    mutate,
-  } = usePublicRelationData(groupId || 0);
+    trigger: create,
+    error: createError,
+    isMutating: createIsMutating,
+  } = useCreatePublicRelation();
 
+  const updateId = publicRelation?.id || 0;
   const {
-    createMutation,
-    updatePublicRelation,
-    isLoading: isMutating,
-  } = usePublicRelationMutation();
+    trigger: update,
+    error: updateError,
+    isMutating: updateIsMutating,
+  } = useUpdatePublicRelation(updateId);
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
+  // ファイル名はフォームの画像かAPIデータから取得する
+  const [fileName, setFileName] = useState<string | null>(
+    publicRelation?.picture_name || publicRelation?.pictureName || null
+  );
 
   const values = watch();
 
-  useEffect(() => {
-    if (publicRelation) {
-      reset({
-        prText: publicRelation.pr_text || '',
-        announce: publicRelation.announcement ? 'yes' : 'no',
-      });
+  // 変更がある場合のみ送信ボタンを有効化する
+  const validateEdit = () => {
+    if (!publicRelation) return false;
 
-      if (publicRelation.image_url) {
-        const imageName = publicRelation.image_url.split('/').pop();
-        if (imageName) {
-          setFileName(imageName);
-        }
-      }
-    }
-  }, [publicRelation, reset]);
+    const hasTextChanged = values.prText !== publicRelation.blurb;
+    // Since announcement isn't in the API, we only check if user selected "yes"
+    const hasAnnounceChanged = values.announce === 'yes';
+    const hasImageChanged = !!values.image;
+
+    return !(hasTextChanged || hasAnnounceChanged || hasImageChanged);
+  };
 
   const validateImage = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -172,6 +227,12 @@ export const usePublicRelationsFormHooks = (groupId: number) => {
     }
   };
 
+  // エラー処理を直接行う（useEffectではなく）
+  if (createError || updateError) {
+    toast.error('送信に失敗しました。時間を置いて再度お試しください');
+  }
+
+  // StageOptionFormに合わせたonSubmit実装
   const onSubmit = async (formData: PublicRelationsFormData) => {
     try {
       let imageUrl = '';
@@ -183,39 +244,59 @@ export const usePublicRelationsFormHooks = (groupId: number) => {
       }
 
       // バックエンドに送信するデータを準備
-      const dataForApi: Record<string, string> = {
-        group_id: groupId.toString(),
+      const queryData = {
+        groupId: Number(groupId),
         blurb: formData.prText,
-        announcement: formData.announce === 'yes' ? 'true' : 'false',
+        pictureName: '',
+        picturePath: '',
+        announcement: formData.announce === 'yes',
       };
 
       // 画像URLと画像名を追加
-      if (imageUrl) {
-        dataForApi.picture_name = formData.image?.name || '';
-        dataForApi.picture_path = imageUrl;
-      } else if (publicRelation?.image_url) {
-        // 既存の画像を維持
-        dataForApi.picture_name =
-          publicRelation.image_url.split('/').pop() || '';
-        dataForApi.picture_path = publicRelation.image_url;
+      if (formData.image && imageUrl) {
+        // 新しい画像がアップロードされた場合
+        queryData.pictureName = formData.image.name || '';
+        queryData.picturePath = imageUrl;
+      } else if (publicRelation) {
+        // 新しい画像がアップロードされていない場合は既存の画像を維持
+        // Handle both snake_case and camelCase
+        const imagePath =
+          publicRelation.picture_path || publicRelation.picturePath;
+        const imageName =
+          publicRelation.picture_name || publicRelation.pictureName;
+
+        if (imagePath && imageName) {
+          queryData.pictureName = imageName;
+          queryData.picturePath = imagePath;
+        }
       }
+
+      console.log('送信するデータ:', {
+        url: publicRelation
+          ? `/public_relations/${publicRelation.id}`
+          : '/public_relations',
+        method: publicRelation ? 'PATCH' : 'POST',
+        query: queryData,
+      });
 
       // APIにデータを送信
       if (publicRelation) {
-        await updatePublicRelation(groupId, dataForApi);
+        // SWR Mutationを使用して更新（クエリパラメータとして送信）
+        await update({ query: queryData });
       } else {
-        await createMutation.trigger({
-          body: dataForApi,
-        });
+        // SWR Mutationを使用して新規作成（クエリパラメータとして送信）
+        await create({ query: queryData });
       }
 
+      // データ更新後、mutateで最新データを取得
       await mutate();
-      setIsSubmitted(true);
-      setTimeout(() => setIsSubmitted(false), 3000);
-      alert('送信しました');
+
+      toast.success('送信しました');
+      return true; // 送信成功を返す
     } catch (error) {
       console.error('送信エラー:', error);
-      alert('送信に失敗しました。');
+      toast.error('送信に失敗しました。時間を置いて再度お試しください');
+      return false; // 送信失敗を返す
     }
   };
 
@@ -228,10 +309,13 @@ export const usePublicRelationsFormHooks = (groupId: number) => {
     fileName,
     fetchError,
     isFetching,
-    isMutating,
+    isMutating: createIsMutating || updateIsMutating,
     handleImageUpload,
     handleAnnounceChange,
     announceOptions,
     onSubmit,
+    createError,
+    updateError,
+    validateEdit,
   };
 };

@@ -8,9 +8,16 @@ import { usePublicRelationsFormHooks } from './hooks';
 
 type PublicRelationsFormProps = {
   groupId: number;
+  publicRelation?: any;
+  toEdit: () => void; // Make toEdit required
 };
 
-const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
+const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
+  groupId,
+  publicRelation,
+  toEdit,
+}) => {
+  // PublicRelationsForm receives toEdit as a required prop
   const {
     handleSubmit,
     errors,
@@ -23,15 +30,23 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
     handleAnnounceChange,
     announceOptions,
     onSubmit,
-  } = usePublicRelationsFormHooks(groupId);
-
-  if (isFetching || isMutating) {
-    return <div>loading...</div>;
-  }
+    createError,
+    updateError,
+    validateEdit,
+  } = usePublicRelationsFormHooks(groupId, publicRelation);
 
   return (
     <FormContainer>
-      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+      {isFetching || isMutating ? (
+        <div>loading...</div>
+      ) : (
+        <form className="w-full" onSubmit={handleSubmit(async (data) => {
+          const success = await onSubmit(data);
+          if (success) {
+            // 成功したら toEdit を呼び出す
+            toEdit();
+          }
+        })}>
         <div className="flex w-full flex-col items-start justify-center gap-10">
           {/* PR文入力 */}
           <div className="relative h-44 w-96">
@@ -78,20 +93,44 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({ groupId }) => {
               error={errors.image?.message}
             />
             {fileName && (
-              <p className="mt-2 text-sm text-font">
-                アップロード済み: {fileName}
-              </p>
+              <div className="mt-2 text-sm text-font">
+                <p>アップロード済み: {fileName}</p>
+                {publicRelation && (
+                  <p className="mt-1 text-gray-500">
+                    ※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます
+                  </p>
+                )}
+              </div>
             )}
           </div>
 
-          {/* 登録ボタン */}
-          <div className="mt-4 flex h-16 w-96 items-start justify-center gap-4 px-28">
-            <Button size="pc" color="main" type="submit" isDisable={isMutating}>
-              登録
+          {/* ボタン */}
+          <div className="mt-10 flex w-full items-center justify-center">
+            {publicRelation && (
+              <div className="mr-4">
+                <Button
+                  size="pc"
+                  color="main"
+                  variant
+                  type="button"
+                  onClick={toEdit}
+                >
+                  キャンセル
+                </Button>
+              </div>
+            )}
+            <Button
+              size="pc"
+              color="main"
+              type="submit"
+              isDisable={isMutating || validateEdit()}
+            >
+              {publicRelation ? '修正' : '登録'}
             </Button>
           </div>
         </div>
       </form>
+      )}
     </FormContainer>
   );
 };
