@@ -52,8 +52,9 @@ function getIconSpacingClass(size: ButtonProps['size']) {
 const Button: FC<ButtonProps> = (props) => {
   const { children, size, color, variant, icon, onClick, isDisable, type } =
     props;
+  const variantColorClass = variant ? colorBgClass[color] : 'bg-baseColor';
   const iconElement = isDisable ? (
-    <Loading colorClass={colorBgClass[color]} />
+    <Loading colorClass={variantColorClass} />
   ) : icon ? (
     Icons[icon]
   ) : null;
