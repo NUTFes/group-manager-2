@@ -14,13 +14,26 @@ services:
     volumes: [./api:/myapp]
     env_file: [group-manager-2.env]
 
-  user_front:
-    build: ./user_front
-    container_name: "GM2-USER-FRONT"
-    command: bash -c "npm run start"
-    volumes: [./user_front:/app]
-    env_file: [group-manager-2.env]
-    depends_on: [api]
+  user:
+    build:
+      context: ./user
+      dockerfile: prod.Dockerfile
+      args:
+        - NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV}
+        - NEXT_PUBLIC_APIKEY=${NEXT_PUBLIC_APIKEY}
+        - NEXT_PUBLIC_AUTHDOMAIN=${NEXT_PUBLIC_AUTHDOMAIN}
+        - NEXT_PUBLIC_PROJECTID=${NEXT_PUBLIC_PROJECTID}
+        - NEXT_PUBLIC_STORAGEBUCKET=${NEXT_PUBLIC_STORAGEBUCKET}
+        - NEXT_PUBLIC_MESSAGINGSENDERID=${NEXT_PUBLIC_MESSAGINGSENDERID}
+        - NEXT_PUBLIC_APPID=${NEXT_PUBLIC_APPID}
+        - NEXT_PUBLIC_MEASUREMENTID=${NEXT_PUBLIC_MEASUREMENTID}
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_MAGAZINE_URL=${NEXT_PUBLIC_MAGAZINE_URL}
+    container_name: prod-view
+    ports:
+      - "3000:3000"
+
+
 
   admin_view:
     build: ./admin_view
