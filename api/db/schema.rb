@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_17_161039) do
+ActiveRecord::Schema.define(version: 2025_04_21_125239) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -101,6 +101,19 @@ ActiveRecord::Schema.define(version: 2025_04_17_161039) do
     t.integer "year_num"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "fire_equipment_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "quantity", null: false
+    t.integer "fuel", default: 0
+    t.text "usage"
+    t.boolean "is_takeaway"
+    t.text "remark"
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_fire_equipment_orders_on_group_id"
   end
 
   create_table "food_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -448,6 +461,7 @@ ActiveRecord::Schema.define(version: 2025_04_17_161039) do
   end
 
   add_foreign_key "cooking_process_orders", "groups"
+  add_foreign_key "fire_equipment_orders", "groups"
   add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
 end
