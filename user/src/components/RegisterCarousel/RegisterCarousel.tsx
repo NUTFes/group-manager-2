@@ -115,16 +115,16 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form method="POST" onSubmit={onSubmit} className="">
-        <section className="rounded-2xl bg-white px-60 py-20 shadow-md">
+      <form method="POST" onSubmit={onSubmit}>
+        <section className="rounded-2xl bg-white px-60 py-20 shadow-md md:px-32 md:py-10">
           <FormStep step={stepIndex} />
           <div className="w-[450px] overflow-hidden pt-4" ref={emblaRef}>
             <div className="flex">
               <div className="min-w-0 flex-none basis-full">
-                <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
+                <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="メールアドレス"
-                    value=""
+                    value={input.mail}
                     note="例：s123456@stn.nagaokaut.ac.jp"
                     required
                     onChange={(value: string) =>
@@ -133,7 +133,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                   <TextBox
                     label="パスワード"
-                    value=""
+                    value={input.password}
                     note="英数字8文字以上"
                     required
                     onChange={(value) =>
@@ -142,7 +142,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                   <TextBox
                     label="パスワード（確認用）"
-                    value=""
+                    value={input.passwordConfirm}
                     note="英数字8文字以上"
                     required
                     onChange={(value) =>
@@ -158,7 +158,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 <div className="flex flex-col items-center justify-center space-y-12 rounded-lg bg-baseColor">
                   <TextBox
                     label="名前"
-                    value=""
+                    value={input.name}
                     note="例：長岡　太郎"
                     required
                     onChange={(value) =>
@@ -167,7 +167,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                   <TextBox
                     label="学籍番号"
-                    value=""
+                    value={input.studentId}
                     note="例：12345678"
                     required
                     onChange={(value) =>
@@ -184,7 +184,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                       }))
                     }
                     options={gradeOptions}
-                    value=""
+                    value={input.gradeId}
                   />
                   <Selector
                     label="学科"
@@ -196,63 +196,63 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                       }))
                     }
                     options={departmentOptions}
-                    value=""
+                    value={input.departmentId}
                   />
                 </div>
               </div>
               <div className="min-w-0 flex-none basis-full p-4">
-                <div className="flex flex-col items-center space-y-12 rounded-lg bg-baseColor">
+                <div className="flex flex-col items-center space-y-4 rounded-lg bg-baseColor">
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex w-full items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="inline-flex w-full items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         メールアドレス
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {input.mail}
                       </div>
                     </div>
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         パスワード
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {'*'.repeat(input.password.length)}
                       </div>
                     </div>
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">名前</div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {input.name}
                       </div>
                     </div>
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
                         学籍番号
                       </div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {input.studentId}
                       </div>
                     </div>
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">学年</div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {
                           GradeList.find((grade) => grade.id === input.gradeId)
@@ -262,10 +262,10 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     </div>
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex h-[17px] items-center justify-start pb-[3px] pr-[81px]">
+                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">学科</div>
                     </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pb-[19px] pr-[68px]">
+                    <div className="inline-flex h-[65px] w-[298px] items-center justify-start">
                       <div className="text-base font-medium text-font">
                         {
                           DepartmentList.find(
@@ -279,7 +279,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
-          <div className="mt-4 flex justify-center gap-4">
+          <div className="flex justify-center gap-4">
             {stepIndex === 0 ? (
               <div />
             ) : (
