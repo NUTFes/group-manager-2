@@ -279,7 +279,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center gap-4">
+          <div className="mt-4 flex justify-center gap-4">
             {stepIndex === 0 ? (
               <div />
             ) : (
