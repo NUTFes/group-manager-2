@@ -14,3 +14,12 @@ export const viceRepresentativeLabels = [
   'メールアドレス',
   '電話番号',
 ];
+// 団体申請フォームで表示するラベル
+export const groupLabels = [
+  '団体名',
+  '企画名',
+  '国際団体ですか？',
+  '学外団体ですか？',
+  '参加形式',
+  '企画内容',
+];
