@@ -17,4 +17,14 @@ class ApplicationController < ActionController::API
     return { status: status, data: data }
     #return { status: status, path: request.fullpath, data: data } // fullpathいるかな？
   end
+
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    # :sign_up のキーに role_id を追加
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:role_id])
+  end
+
 end
