@@ -4,15 +4,17 @@ import { useAuthStore } from '@/stores/authStore';
 
 const Dashboard = () => {
   const router = useRouter();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, accessToken } = useAuthStore();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/');
+    // クライアントサイドでの認証チェック
+    if (!isAuthenticated || !accessToken) {
+      router.replace('/');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, accessToken, router]);
 
-  if (!isAuthenticated) {
+  // 認証状態が確認できるまでローディング表示
+  if (!isAuthenticated || !accessToken) {
     return null;
   }
 
