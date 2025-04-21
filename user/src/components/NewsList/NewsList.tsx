@@ -24,7 +24,7 @@ const NewsList: FC<NewsListProps> = () => {
     return (
       <div key={item.id} className="flex flex-col gap-2">
         <span className="w-24 text-base font-medium text-font">{date}</span>
-        <span className="w-56 text-base font-medium text-font">
+        <span className="w-56 whitespace-pre-line text-base font-medium text-font">
           {item.body}
         </span>
       </div>
