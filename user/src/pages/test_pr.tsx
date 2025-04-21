@@ -4,5 +4,5 @@ export default function Home() {
   // TODO: 仮の値として groupId=1 を使用
   const groupId = 1;
 
-  return <PublicRelations groupId={groupId} isDeadLine={false} />;
+  return <PublicRelations groupId={groupId} isDeadline={false} />;
 }
