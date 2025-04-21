@@ -1,9 +1,8 @@
-import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm';
+import PublicRelations from '@/components/Applications/PublicRelations/PublicRelations';
 
 export default function Home() {
-  // 本来はページのコンテキストやpropsから適切なgroupIdを取得するべきですが、
-  // 現段階では固定値として1を設定しています
+  // TODO: 仮の値として groupId=1 を使用
   const groupId = 1;
 
-  return <PublicRelationsForm groupId={groupId} />;
+  return <PublicRelations groupId={groupId} isDeadLine={false} />;
 }
