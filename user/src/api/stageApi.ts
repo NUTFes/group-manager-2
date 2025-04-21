@@ -32,14 +32,22 @@ export type BaseStageOrder = {
 // 送信用データ型
 export type StageOrderData = BaseStageOrder;
 
-export type StageOrderResponse = BaseStageOrder & {
+export type StageOrderResponse = {
   id: number;
-  prepare_start_time: string | null;
-  performance_start_time: string | null;
-  performance_end_time: string | null;
-  cleanup_end_time: string | null;
-  created_at: string;
-  updated_at: string;
+  groupId: number;
+  fesDateId: number;
+  isSunny: boolean;
+  stageFirst: number;
+  stageSecond: number;
+  useTimeInterval: string;
+  prepareTimeInterval: string;
+  cleanupTimeInterval: string;
+  prepareStartTime: string | null;
+  performanceStartTime: string | null;
+  performanceEndTime: string | null;
+  cleanupEndTime: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 // APIレスポンス型定義
@@ -91,10 +99,10 @@ export const useGetStageOrders = (groupId: number | null) => {
   );
 
   const filteredOrders =
-    data?.data?.filter((order) => order.group_id === groupId) || [];
+    data?.data?.filter((order) => order.groupId === groupId) || [];
 
-  const sunnyOrder = filteredOrders.find((order) => order.is_sunny);
-  const rainyOrder = filteredOrders.find((order) => !order.is_sunny);
+  const sunnyOrder = filteredOrders.find((order) => order.isSunny);
+  const rainyOrder = filteredOrders.find((order) => !order.isSunny);
 
   return {
     sunnyOrder,

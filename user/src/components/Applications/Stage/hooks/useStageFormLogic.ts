@@ -5,6 +5,9 @@ import {
   useMutateStageOrders,
   useStageFormData,
 } from '@/api/stageApi';
+import { StageFormData } from '@/utils/validate/validate';
+import { FieldError } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { useStageForm } from './useStageForm';
 import {
   useDateOptions,
@@ -16,6 +19,7 @@ export const useStageFormLogic = () => {
   // TODO: 認証基盤ができたら、グループIDを取得する
   const [currentGroupId] = useState<number | null>(1);
   const [submitError, setSubmitError] = useState<string>('');
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   // ステージ申請の既存データ取得
   const {
@@ -26,7 +30,7 @@ export const useStageFormLogic = () => {
   } = useGetStageOrders(currentGroupId);
 
   // フォーム状態管理
-  const { handleSubmit, formState, updateField } = useStageForm(
+  const { handleSubmit, formState, updateField, reset } = useStageForm(
     sunnyOrder,
     rainyOrder
   );
@@ -77,9 +81,27 @@ export const useStageFormLogic = () => {
     selectedId: rainyFirstChoice ? Number(rainyFirstChoice) : 0,
   });
 
+  // 既存のデータにフォームをリセットする関数
+  const resetForm = () => {
+    if (sunnyOrder || rainyOrder) {
+      reset();
+    }
+  };
+
+  // エラーメッセージ取得関数
+  const getErrorMessage = (
+    fieldName: keyof StageFormData | 'totalTime'
+  ): string | undefined => {
+    const error = formState.errors[
+      fieldName as keyof typeof formState.errors
+    ] as FieldError | undefined;
+    return error ? error.message : undefined;
+  };
+
   // フォーム送信処理
   const onSubmit = handleSubmit(async (data) => {
     setSubmitError('');
+    setIsSubmitted(false);
 
     try {
       if (!currentGroupId) {
@@ -125,11 +147,12 @@ export const useStageFormLogic = () => {
       );
 
       if (result.success) {
-        alert(
+        toast.success(
           hasExisting
             ? 'ステージ希望を更新しました。'
             : 'ステージ希望を登録しました。'
         );
+        setIsSubmitted(true);
       } else {
         setSubmitError(
           '送信中にエラーが発生しました。もう一度お試しください。'
@@ -157,5 +180,10 @@ export const useStageFormLogic = () => {
     submitError,
     hasExisting,
     isValid,
+    isSubmitted,
+    sunnyStageOptions,
+    rainyStageOptions,
+    getErrorMessage,
+    resetForm,
   };
 };

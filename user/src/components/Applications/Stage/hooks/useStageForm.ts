@@ -43,23 +43,22 @@ export const createInitialValues = (
   rainyOrder?: StageOrderResponse
 ): StageFormData => {
   const values = { ...DEFAULT_FORM_STATE };
-
   const sourceOrder = sunnyOrder || rainyOrder;
   if (sourceOrder) {
-    values.date = sourceOrder.fes_date_id.toString();
-    values.prepTime = removeMinutes(sourceOrder.prepare_time_interval);
-    values.performTime = removeMinutes(sourceOrder.use_time_interval);
-    values.cleanupTime = removeMinutes(sourceOrder.cleanup_time_interval);
+    values.date = sourceOrder.fesDateId.toString();
+    values.prepTime = removeMinutes(sourceOrder.prepareTimeInterval);
+    values.performTime = removeMinutes(sourceOrder.useTimeInterval);
+    values.cleanupTime = removeMinutes(sourceOrder.cleanupTimeInterval);
   }
 
   if (sunnyOrder) {
-    values.sunnyFirstChoice = sunnyOrder.stage_first.toString();
-    values.sunnySecondChoice = sunnyOrder.stage_second?.toString() || '';
+    values.sunnyFirstChoice = sunnyOrder.stageFirst.toString();
+    values.sunnySecondChoice = sunnyOrder.stageSecond?.toString() || '';
   }
 
   if (rainyOrder) {
-    values.rainyFirstChoice = rainyOrder.stage_first.toString();
-    values.rainySecondChoice = rainyOrder.stage_second?.toString() || '';
+    values.rainyFirstChoice = rainyOrder.stageFirst.toString();
+    values.rainySecondChoice = rainyOrder.stageSecond?.toString() || '';
   }
 
   return values;
