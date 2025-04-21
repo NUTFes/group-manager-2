@@ -9,7 +9,7 @@ const mockGroupCategories = [
 ];
 
 export default {
-  title: 'Components/GroupApplicationForm',
+  title: 'Components/LogoutButton',
   tags: ['autodocs'],
   component: GroupApplicationForm,
   parameters: {

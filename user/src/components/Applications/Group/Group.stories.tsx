@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import Group from './Group';
 
 export default {
-  title: 'Components/Group',
+  title: 'Components/WelcomeBox',
   tags: ['autodocs'],
   component: Group,
   parameters: {
