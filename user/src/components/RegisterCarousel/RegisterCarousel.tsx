@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { RegisterParams } from '@/types/register/user';
 import { DepartmentList, GradeList } from '@/utils/list';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -93,6 +93,23 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     loop: false,
     containScroll: 'trimSnaps',
   });
+
+  // Embla の select イベントで stepIndex を更新
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onSelect = () => {
+      setStepIndex(emblaApi.selectedScrollSnap());
+    };
+
+    emblaApi.on('select', onSelect);
+    // 初期表示も反映
+    onSelect();
+
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi]);
 
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
