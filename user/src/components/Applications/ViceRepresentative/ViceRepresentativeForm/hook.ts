@@ -1,4 +1,4 @@
-import { FormData } from '@/api/viceRepresentativeApi';
+import { FormData } from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import snakecaseKeys from 'snakecase-keys';
