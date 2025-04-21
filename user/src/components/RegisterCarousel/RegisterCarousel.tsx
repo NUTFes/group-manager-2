@@ -128,7 +128,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     note="例：s123456@stn.nagaokaut.ac.jp"
                     required
                     onChange={(value: string) =>
-                      setInput((prev) => ({ ...prev, name: value }))
+                      setInput((prev) => ({ ...prev, mail: value }))
                     }
                   />
                   <TextBox
