@@ -1,5 +1,7 @@
 import localFont from 'next/font/local';
 import Image from 'next/image';
+import Group from '@/components/Applications/Group/Group';
+import StageOptions from '@/components/Applications/StageOptions';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -18,6 +20,8 @@ export default function Home() {
       className={`${geistSans.variable} ${geistMono.variable} grid min-h-screen grid-rows-[20px_1fr_20px] place-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20`}
     >
       <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
+        <Group isDeadline={false}></Group>
+        <StageOptions></StageOptions>
         <Image
           className="dark:invert"
           src="/next.svg"

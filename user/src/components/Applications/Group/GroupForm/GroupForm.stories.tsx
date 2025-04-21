@@ -1,6 +1,6 @@
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
-import GroupApplicationForm from './GroupApplicationForm';
+import GroupApplicationForm from './GroupForm';
 
 export default {
   title: 'Components/GroupApplicationForm',
