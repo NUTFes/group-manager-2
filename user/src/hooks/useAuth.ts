@@ -28,7 +28,6 @@ export const useAuth = () => {
     isAuthenticated ? '/api/auth/validate_token' : null
   );
 
-  // APIエラーを処理する関数
   const handleAuthError = (error: unknown) => {
     console.error('Auth error:', error);
     if (error instanceof Error) {
@@ -36,75 +35,37 @@ export const useAuth = () => {
         const errorData = JSON.parse(error.message);
         if (errorData.errors) {
           const errorMessages = Object.values(errorData.errors).flat();
-          return errorMessages.join('\n');
+          throw new Error(errorMessages.join('\n'));
         }
       } catch {
-        // JSON解析に失敗した場合は元のエラーメッセージを使用
-        return error.message;
-      }
-    }
-    return '認証エラーが発生しました';
-  };
-
-  // 自動ログイン処理
-  const autoLogin = async (email: string, password: string) => {
-    try {
-      console.log('自動ログイン試行:', email);
-      const loginResponse = await post('/api/auth/sign_in', {
-        email,
-        password,
-      });
-
-      if (!loginResponse?.headers) {
-        console.error('ログインレスポンスにヘッダー情報がありません');
-        return { success: false, message: '認証情報が取得できませんでした' };
-      }
-
-      // レスポンスヘッダーから認証情報を取得
-      const accessToken =
-        loginResponse.headers instanceof Headers
-          ? loginResponse.headers.get('access-token')
-          : loginResponse.headers['access-token'];
-      const client =
-        loginResponse.headers instanceof Headers
-          ? loginResponse.headers.get('client')
-          : loginResponse.headers['client'];
-      const uid =
-        loginResponse.headers instanceof Headers
-          ? loginResponse.headers.get('uid')
-          : loginResponse.headers['uid'];
-
-      if (!(accessToken && client && uid)) {
-        console.error('認証情報が不完全です:', { accessToken, client, uid });
-        return { success: false, message: '認証情報が不完全です' };
-      }
-
-      setAuth(accessToken, client, uid);
-      return { success: true, userData: loginResponse.data };
-    } catch (error) {
-      console.error('自動ログイン失敗:', error);
-      return { success: false, message: handleAuthError(error) };
-    }
-  };
-
-  // ログイン処理
-  const login = useCallback(
-    async (email: string, password: string) => {
-      try {
-        const loginResult = await autoLogin(email, password);
-        if (loginResult.success) {
-          router.push('/dashboard');
-        } else {
-          setError(loginResult.message || 'ログインに失敗しました');
-          throw new Error(loginResult.message);
-        }
-      } catch (error) {
-        setError('ログインに失敗しました');
         throw error;
       }
-    },
-    [router, setAuth, setError, post]
-  );
+    }
+    throw error;
+  };
+
+  const autoLogin = async (email: string, password: string) => {
+    const loginResponse = await post('/api/auth/sign_in', {
+      email,
+      password,
+    });
+
+    if (!loginResponse?.auth) {
+      console.error('ログインレスポンスに認証情報がありません');
+      router.push('/login');
+      return;
+    }
+
+    const { 'access-token': accessToken, client, uid } = loginResponse.auth;
+    if (!(accessToken && client && uid)) {
+      console.error('認証情報が不完全です:', { accessToken, client, uid });
+      router.push('/login');
+      return;
+    }
+
+    setAuth(accessToken, client, uid);
+    router.push('/dashboard');
+  };
 
   const register = useCallback(
     async (params: RegisterParams) => {
@@ -116,70 +77,42 @@ export const useAuth = () => {
         });
 
         const response = await post('/api/auth', {
-          email: params.mail,
-          password: params.password,
-          password_confirmation: params.passwordConfirm,
-          name: params.name,
-          role_id: 1, // デフォルトのロールID
-          user_detail_attributes: {
-            student_id: params.studentId,
-            department_id: params.departmentId,
-            grade_id: params.gradeId,
-            tel: params.tel,
-          },
+          ...params,
+          user_detail_attributes: params.user_detail_attributes,
         });
 
-        console.log('登録レスポンス:', response);
-
-        // レスポンスの構造を確認
-        if (!response || !response.data) {
-          return {
-            success: false,
-            message: '登録に失敗しました: サーバーからの応答が無効です',
-          };
-        }
-
-        if (response.data.status === 'error') {
-          const errorMsg =
-            '登録に失敗しました: ' + JSON.stringify(response.data.errors || {});
-          return { success: false, message: errorMsg };
-        }
-
-        // ユーザーIDが存在するか確認
-        const userId = response.data.data?.id;
-        if (!userId) {
-          return {
-            success: false,
-            message: '登録に失敗しました: ユーザーIDが見つかりません',
-          };
+        if (
+          !(response?.data?.status === 'success' && response?.data?.data?.id)
+        ) {
+          throw new Error('ユーザー登録に失敗しました');
         }
 
         // 登録成功時は自動ログイン
-        const loginResult = await autoLogin(params.mail, params.password);
+        await autoLogin(response.data.data.email, params.password).catch(
+          (error) => {
+            console.error('Auto login failed:', error);
+            router.push('/login');
+          }
+        );
 
-        if (loginResult.success) {
-          router.push('/dashboard');
-          return {
-            success: true,
-            data: response.data.data,
-            userData: loginResult.userData,
-          };
-        } else {
-          // 登録は成功したがログインに失敗した場合
-          router.push('/login?registered=true');
-          return {
-            success: false,
-            message:
-              'ユーザー登録は完了しましたが、自動ログインに失敗しました。ログインページからログインしてください。',
-            data: response.data.data,
-          };
-        }
+        return response;
       } catch (error) {
-        const errorMsg = handleAuthError(error);
-        return { success: false, message: errorMsg };
+        handleAuthError(error);
       }
     },
     [post, router, setAuth]
+  );
+
+  const login = useCallback(
+    async (email: string, password: string) => {
+      try {
+        await autoLogin(email, password);
+      } catch (error) {
+        setError('ログインに失敗しました');
+        throw error;
+      }
+    },
+    [setAuth, router]
   );
 
   const logout = useCallback(async () => {
