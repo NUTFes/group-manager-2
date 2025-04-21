@@ -2,11 +2,14 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { RegisterParams } from '@/types/register/user';
 import { DepartmentList, GradeList } from '@/utils/list';
 import useEmblaCarousel from 'embla-carousel-react';
+import { signIn } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
+
+// ← 追加
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -72,6 +75,8 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
+  // const router = useRouter(); // ← 追加
+
   const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
   const departmentOptions = [
     { id: 0, name: '選択してください' },
@@ -114,9 +119,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
     emblaApi.scrollNext();
-    setTimeout(() => {
-      setStepIndex(emblaApi.selectedScrollSnap());
-    }, 0);
+    // setTimeout と setStepIndex は不要
   }, [emblaApi]);
 
   const handlePrev = useCallback(() => {
@@ -126,13 +129,52 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   }, [emblaApi]);
 
   // todo: 送信処理を実装する
-  const onSubmit = () => {
-    toast.success('登録が完了しました。');
-  };
+  const onSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      // パスワード確認チェック
+      if (input.password !== input.passwordConfirm) {
+        toast.error('パスワードと確認用パスワードが一致しません。');
+        return;
+      }
+
+      try {
+        // 1) サインアップ API 呼び出し
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '登録に失敗しました');
+
+        // 2) NextAuth の Credentials で自動ログイン
+        const signinResult = await signIn('credentials', {
+          redirect: false,
+          email: input.mail,
+          password: input.password,
+        });
+        if (signinResult?.error) throw new Error(signinResult.error);
+
+        // 3) 完了メッセージ & モーダル閉じる or リダイレクト
+        toast.success('登録とログインに成功しました！');
+        onClose();
+        // router.push('/'); // 必要ならトップページへ遷移
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          toast.error(err.message || 'エラーが発生しました');
+        } else {
+          toast.error('エラーが発生しました');
+        }
+      }
+    },
+    [input, onClose]
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form method="POST" onSubmit={onSubmit}>
+      <form method="POST">
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div className="w-[450px] overflow-hidden pt-4" ref={emblaRef}>
@@ -312,7 +354,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               </Button>
             )}
             {stepIndex === 2 ? (
-              <Button size="pc" color="main" type="submit">
+              <Button
+                size="pc"
+                color="main"
+                type="submit"
+                onClick={() => onSubmit}
+              >
                 登録
               </Button>
             ) : (
