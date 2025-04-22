@@ -4,9 +4,7 @@ Rails.application.routes.draw do
     controllers: {
       sessions:      'users/sessions',
       registrations: 'users/registrations'
-    },
-    defaults: { format: :json }
-  end
+    },defaults: { format: :json }
 
   # 識別番号割り当て
   get 'group_identification' => "group_identification#index"
