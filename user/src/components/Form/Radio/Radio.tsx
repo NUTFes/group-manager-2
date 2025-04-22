@@ -35,7 +35,7 @@ const Radio: FC<RadioProps> = ({
           <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
-        <div className="my-6 w-[400px] flex flex-col gap-4">
+        <div className="my-6 flex w-[400px] flex-col gap-4">
           {options.map((option) => (
             <label key={option.id} className="flex items-center gap-2">
               <input
