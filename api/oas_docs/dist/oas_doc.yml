@@ -4238,6 +4238,35 @@ paths:
         required: true
         schema:
           type: integer
+  "/check_all_registered/{group_id}":
+    get:
+      tags:
+      - check_all_registered
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: check_all_registered description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CheckAllRegistered"
+        '404':
+          description: check_all_registered description
+        '422':
+          description: check_all_registered description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CheckAllRegistered"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/contact_persons":
     get:
       tags:
@@ -5157,6 +5186,185 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FesYear"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+  "/fire_equipment_orders":
+    get:
+      tags:
+      - fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+    post:
+      tags:
+      - fire_equipment_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FireEquipmentOrder"
+  "/fire_equipment_orders/group/{group_id}":
+    get:
+      tags:
+      - fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+        '404':
+          description: fire_equipment_order description
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/fire_equipment_orders/{id}":
+    get:
+      tags:
+      - fire_equipment_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+        '404':
+          description: fire_equipment_order description
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    patch:
+      tags:
+      - fire_equipment_order
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: fire_equipment_order description
+        '404':
+          description: fire_equipment_order description
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FireEquipmentOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    put:
+      tags:
+      - fire_equipment_order
+      summary: put summary
+      description: put description
+      responses:
+        '204':
+          description: fire_equipment_order description
+        '404':
+          description: fire_equipment_order description
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FireEquipmentOrder"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+      - fire_equipment_order
+      summary: delete summary
+      description: delete description
+      responses:
+        '200':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
+        '404':
+          description: fire_equipment_order description
+        '422':
+          description: fire_equipment_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FireEquipmentOrder"
       deprecated: false
       parameters:
       - name: id
@@ -8617,6 +8825,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageCommonOption"
+  "/stage_common_options/group/{group_id}":
+    get:
+      tags:
+      - stage_common_option
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+        '404':
+          description: stage_common_option description
+        '422':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/stage_common_options/{id}":
     get:
       tags:
@@ -10517,6 +10754,12 @@ components:
         id:
           type: integer
           format: int64
+    CheckAllRegistered:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
     ContactPerson:
       type: object
       properties:
@@ -10560,6 +10803,12 @@ components:
           type: integer
           format: int64
     FesYear:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    FireEquipmentOrder:
       type: object
       properties:
         id:
@@ -10980,6 +11229,11 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/FesYear"
+    FireEquipmentOrder:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/FireEquipmentOrder"
     FoodProduct:
       content:
         application/json:
