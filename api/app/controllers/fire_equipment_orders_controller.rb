@@ -43,7 +43,7 @@ class FireEquipmentOrdersController < ApplicationController
     if @fire_equipment_order
       render json: fmt(ok, @fire_equipment_order)
     else
-      render json: { error: 'FireEquipmentOrder not found' }, status: :not_found
+      render json: fmt(not_found, [], "Not found fire_equipment_order = "+params[:group_id])
     end
   end
 
