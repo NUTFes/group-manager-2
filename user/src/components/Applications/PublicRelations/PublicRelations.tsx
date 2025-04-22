@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { PublicRelationResponse } from '@/api/publicRelationsApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm/PublicRelationsForm';
 import { usePublicRelationsHooks } from '@/components/Applications/PublicRelations/hooks';
@@ -16,7 +17,7 @@ type ContentProps = {
   isDeadline: boolean | undefined;
   isEditing: boolean;
   toEdit: () => void;
-  publicRelation?: any;
+  publicRelation?: PublicRelationResponse | null;
   formItem: FormItem[];
   groupId: number;
 };
