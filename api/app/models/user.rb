@@ -7,8 +7,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :jwt_authenticatable,
          jwt_revocation_strategy: JwtDenylist
-  # include DeviseTokenAuth::Concerns::User など残す場合は、その下に配置
-  include DeviseTokenAuth::Concerns::User
+
+  # DeviseTokenAuthを無効化するとJWTのトークンが発行される
+  # include DeviseTokenAuth::Concerns::User
   belongs_to :role
   has_one :user_detail, dependent: :destroy
   has_many :groups, dependent: :destroy
