@@ -28,6 +28,14 @@ Devise.setup do |config|
 
   config.jwt do |jwt|
     jwt.secret = Rails.application.credentials.devise_jwt_secret_key!
+    jwt.dispatch_requests = [
+      ['POST', %r{^/users/sign_in$}],   # ログイン時に発行
+      ['POST', %r{^/users$}]           # サインアップ時にも発行可
+    ]
+    jwt.revocation_requests = [
+      ['DELETE', %r{^/users/sign_out$}] # ログアウト時に失効
+    ]
+    jwt.expiration_time = 1.day.to_i   # トークンの有効期限
   end
 
   # Configure the class responsible to send e-mails.
