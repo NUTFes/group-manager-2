@@ -682,6 +682,7 @@ class Group < ApplicationRecord
             "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
             "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
             "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "is_announcement_requested": group.public_relation.nil? ? nil : group.public_relation.is_announcement_requested,
             "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
             "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
           }
@@ -699,6 +700,7 @@ class Group < ApplicationRecord
             "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
             "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
             "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "is_announcement_requested": group.public_relation.nil? ? nil : group.public_relation.is_announcement_requested,
             "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
             "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
           }
@@ -720,6 +722,7 @@ class Group < ApplicationRecord
             "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
             "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
             "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "is_announcement_requested": group.public_relation.nil? ? nil : group.public_relation.is_announcement_requested,
             "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
             "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
           }
@@ -736,6 +739,7 @@ class Group < ApplicationRecord
             "picture_name": group.public_relation.nil? ? nil : group.public_relation.picture_name,
             "picture_path": group.public_relation.nil? ? nil : group.public_relation.picture_path,
             "blurb": group.public_relation.nil? ? nil : group.public_relation.blurb,
+            "is_announcement_requested": group.public_relation.nil? ? nil : group.public_relation.is_announcement_requested,
             "created_at": group.public_relation.nil? ? nil : group.public_relation.created_at,
             "updated_at": group.public_relation.nil? ? nil : group.public_relation.updated_at,
           }

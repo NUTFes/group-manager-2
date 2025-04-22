@@ -9,7 +9,7 @@ export type PublicRelation = {
   blurb: string;
   pictureName: string;
   picturePath: string;
-  announcement?: boolean; // Optional since it's not in API
+  isAnnouncementRequested: boolean;
 };
 
 // レスポンス用の型定義
@@ -19,13 +19,15 @@ export type PublicRelationResponse = {
   blurb: string;
   pictureName: string;
   picturePath: string;
+  isAnnouncementRequested: boolean;
   createdAt: string;
   updatedAt: string;
-  
+
   // バックエンドから返されるスネークケース形式のフィールド
   group_id?: number;
   picture_name?: string;
   picture_path?: string;
+  is_announcement_requested?: boolean;
   created_at?: string;
   updated_at?: string;
 };
@@ -111,5 +113,8 @@ export const useCreatePublicRelation = () => {
 
 // SWR Mutationを使った更新用フック
 export const useUpdatePublicRelation = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.PUBLIC_RELATIONS}/${id}`, patchFetcher);
+  return useSWRMutation(
+    `${API_ENDPOINTS.PUBLIC_RELATIONS}/${id}`,
+    patchFetcher
+  );
 };

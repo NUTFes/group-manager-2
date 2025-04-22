@@ -52,6 +52,6 @@ class PublicRelationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def public_relation_params
-      params.permit(:group_id, :picture_name, :picture_path, :blurb)
+      params.permit(:group_id, :picture_name, :picture_path, :blurb, :is_announcement_requested)
     end
 end

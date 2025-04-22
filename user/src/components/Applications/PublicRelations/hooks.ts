@@ -5,15 +5,30 @@ import { publicRelationLabels } from '../label';
 
 export const usePublicRelationsHooks = (groupId: number) => {
   const {
-    group,
     publicRelation,
-    error: hasError,
-    isLoading,
-    mutate,
+    error: prError,
+    isLoading: prIsLoading,
+    mutate: prMutate,
   } = usePublicRelationData(groupId || 0);
 
   console.log('Current groupId:', groupId);
   console.log('PublicRelation data:', publicRelation);
+
+  // アナウンスステータスを決定
+  // public_relations.is_announcement_requestedフィールドに基づいて状態を決定
+  const getAnnounceStatus = () => {
+    // 現在はcamelCase (isAnnouncementRequested)とスネークケース(is_announcement_requested)の両方に対応
+    if (
+      publicRelation?.isAnnouncementRequested ||
+      publicRelation?.is_announcement_requested
+    ) {
+      return 'はい';
+    } else if (publicRelation) {
+      return 'いいえ';
+    } else {
+      return '未設定';
+    }
+  };
 
   // モックデータのフォールバックなしでAPIベースのformItemsを作成
   const formItem: FormItem[] = [
@@ -24,8 +39,7 @@ export const usePublicRelationsHooks = (groupId: number) => {
     },
     {
       label: publicRelationLabels[1],
-      // APIにはannouncementフィールドがないため、デフォルトで「いいえ」を設定
-      content: 'いいえ',
+      content: getAnnounceStatus(),
     },
     {
       label: publicRelationLabels[2],
@@ -41,16 +55,20 @@ export const usePublicRelationsHooks = (groupId: number) => {
     setIsEditing(!isEditing);
   };
 
-  // publicRelationデータが読み込まれたら編集状態をリセット
+  // データが読み込まれたら編集状態をリセット
   useEffect(() => {
     if (publicRelation) {
       setIsEditing(false);
     }
   }, [publicRelation]);
 
+  // ローディング状態とエラー状態はpublicRelationのみを参照する
+  const isLoading = prIsLoading;
+  const hasError = prError;
+
   // フォーム送信後にデータを再取得するための関数
   const refetchData = async () => {
-    await mutate();
+    await prMutate();
   };
 
   return {
@@ -60,7 +78,7 @@ export const usePublicRelationsHooks = (groupId: number) => {
     isEditing,
     toEdit,
     formItem,
-    mutate,
+    mutate: refetchData,
     refetchData,
   };
 };
