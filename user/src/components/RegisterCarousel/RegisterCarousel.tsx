@@ -88,7 +88,10 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
-          <div className="w-[450px] overflow-hidden pt-4" ref={emblaRef}>
+          <div
+           className="w-[450px] overflow-y-auto overflow-x-hidden max-h-[60vh] pt-4"
+           ref={emblaRef}
+           >
             <div className="flex">
               <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
