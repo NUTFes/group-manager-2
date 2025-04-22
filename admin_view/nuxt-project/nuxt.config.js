@@ -54,7 +54,11 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", ["@nuxtjs/moment", ["ja"]]],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',                 // v3/v4 を利用
+    ['@nuxtjs/moment', ['ja']]
+  ],
 
   axios: {
     // baseURL: 'http://localhost:3000'
@@ -64,21 +68,27 @@ export default {
 
   auth: {
     redirect: {
-      login: "/",
-      logout: "/",
+      login: '/',
+      logout: '/',
+      home: '/dashboard',
       callback: false,
-      home: "/dashboard",
     },
     strategies: {
       local: {
+        token: {
+          property: 'token',
+          type: 'Bearer',
+          name: 'Authorization',
+          global: true,
+        },
+        user: {
+          property: false,
+          autoFetch: false,
+        },
         endpoints: {
-          login: {
-            url: "/api/auth/sign_in",
-            method: "post",
-            propertyName: false,
-          },
-          logout: false,
-          user: false,
+          login:  { url: '/users/sign_in',  method: 'post' },
+          logout: { url: '/users/sign_out', method: 'delete' },
+          user:   { url: '/users/me',         method: 'get' },
         },
       },
     },

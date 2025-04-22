@@ -63,24 +63,21 @@ export default {
       // if (!this.formHasErrors) return "Can't Sign Up";
       await this.$auth
         .loginWith("local", {
-          data: {
-            email: this.email,
-            password: this.password,
-          },
+          data: { user: { email: this.email, password: this.password } }
         })
-        .then(
-          (response) => {
-            localStorage.setItem(
-              "access-token",
-              response.headers["access-token"]
-            );
-            localStorage.setItem("client", response.headers.client);
-            localStorage.setItem("uid", response.headers.uid);
-            localStorage.setItem("token-type", response.headers["token-type"]);
-            this.getUser()
-            return response;
-          },
-        )
+        // .then(
+        //   (response) => {
+        //     localStorage.setItem(
+        //       "",
+        //       response.headers[""]
+        //     );
+        //     localStorage.setItem("client", response.headers.client);
+        //     localStorage.setItem("uid", response.headers.uid);
+        //     localStorage.setItem("token-type", response.headers["token-type"]);
+        //     this.getUser()
+        //     return response;
+        //   },
+        // )
           // (error) => {
           //   this.message = "メールアドレスかパスワードが違います。";
           //   return error;
