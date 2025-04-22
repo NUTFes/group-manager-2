@@ -120,7 +120,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-              <div className="min-w-0 flex-none basis-full p-">
+              <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="名前"
