@@ -26,6 +26,7 @@ gem 'bootsnap', '>= 1.18', require: false
 gem 'rack-cors'
 
 gem 'devise'
+gem 'devise-jwt'
 gem 'devise_token_auth'
 gem 'seed-fu'
 
