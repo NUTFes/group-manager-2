@@ -69,7 +69,6 @@ export const usePublicRelationsFormHooks = (
     setValue,
     setError,
     watch,
-    reset,
   } = useForm<PublicRelationsFormData>({
     mode: 'onSubmit',
     criteriaMode: 'all', // 全フィールド・全ルールを検証
@@ -83,10 +82,7 @@ export const usePublicRelationsFormHooks = (
   // アナウンス状態に基づいてデフォルト値を設定
   function getDefaultAnnounceValue() {
     // PublicRelationのisAnnouncementRequestedフィールドを使用
-    if (
-      publicRelation?.isAnnouncementRequested ||
-      publicRelation?.is_announcement_requested
-    ) {
+    if (publicRelation?.isAnnouncementRequested) {
       return 'yes';
     } else {
       return 'no'; // デフォルトは「いいえ」
@@ -109,7 +105,7 @@ export const usePublicRelationsFormHooks = (
 
   // ファイル名はフォームの画像かAPIデータから取得する
   const [fileName, setFileName] = useState<string | null>(
-    publicRelation?.picture_name || publicRelation?.pictureName || null
+    publicRelation?.pictureName || null
   );
 
   const values = watch();
@@ -119,11 +115,8 @@ export const usePublicRelationsFormHooks = (
     if (!publicRelation) return false;
 
     const hasTextChanged = values.prText !== publicRelation.blurb;
-    // 新しいフィールドを使ってアナウンス選択の変更をチェック
-    const isAnnounceRequested =
-      publicRelation.isAnnouncementRequested ||
-      publicRelation.is_announcement_requested ||
-      false;
+    // アナウンス選択の変更をチェック
+    const isAnnounceRequested = publicRelation.isAnnouncementRequested || false;
     const hasAnnounceChanged =
       (values.announce === 'yes') !== isAnnounceRequested;
     const hasImageChanged = !!values.image;
@@ -280,11 +273,8 @@ export const usePublicRelationsFormHooks = (
         prQueryData.picturePath = imageUrl;
       } else if (publicRelation) {
         // 新しい画像がアップロードされていない場合は既存の画像を維持
-        // Handle both snake_case and camelCase
-        const imagePath =
-          publicRelation.picture_path || publicRelation.picturePath;
-        const imageName =
-          publicRelation.picture_name || publicRelation.pictureName;
+        const imagePath = publicRelation.picturePath;
+        const imageName = publicRelation.pictureName;
 
         if (imagePath && imageName) {
           prQueryData.pictureName = imageName;
