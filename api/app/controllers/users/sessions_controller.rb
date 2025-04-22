@@ -14,7 +14,7 @@ class Users::SessionsController < Devise::SessionsController
       httponly:  true,
       secure:    Rails.env.production?,
       same_site: :lax,
-      expires:   30.minutes.from_now
+      expires:   3.day.from_now
     }
 
     # ③ JSON レスポンス

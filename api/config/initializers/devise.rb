@@ -35,7 +35,7 @@ Devise.setup do |config|
     jwt.revocation_requests = [
       ['DELETE', %r{^/users/sign_out$}] # ログアウト時に失効
     ]
-    jwt.expiration_time = 1.day.to_i   # トークンの有効期限
+    jwt.expiration_time = 3.day.to_i   # トークンの有効期限
     jwt.request_formats = { user: [nil, :json] }
   end
 
