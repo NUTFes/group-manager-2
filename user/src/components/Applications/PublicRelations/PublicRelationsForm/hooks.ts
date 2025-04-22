@@ -16,9 +16,9 @@ export const usePublicRelationsFormHooks = (
 ) => {
   const {
     publicRelation: fetchedPublicRelation,
-    error: fetchError,
-    isLoading: isFetching,
-    mutate,
+    error: fetchPrError,
+    isLoading: isPrFetching,
+    mutate: prMutate,
   } = usePublicRelationData(groupId || 0);
 
   const publicRelation = publicRelationProp || fetchedPublicRelation;
@@ -77,25 +77,37 @@ export const usePublicRelationsFormHooks = (
     resolver: resolver,
     defaultValues: {
       prText: publicRelation?.blurb || '',
-      announce: 'no',
+      announce: getDefaultAnnounceValue(),
     },
   });
 
-  // フックを安定させるため、条件付きではなく常に同じフックを使用
+  // アナウンス状態に基づいてデフォルト値を設定
+  function getDefaultAnnounceValue() {
+    // PublicRelationのisAnnouncementRequestedフィールドを使用
+    if (
+      publicRelation?.isAnnouncementRequested ||
+      publicRelation?.is_announcement_requested
+    ) {
+      return 'yes';
+    } else {
+      return 'no'; // デフォルトは「いいえ」
+    }
+  }
+
+  // PublicRelation API フック
   const {
-    trigger: create,
-    error: createError,
-    isMutating: createIsMutating,
+    trigger: createPr,
+    error: createPrError,
+    isMutating: createPrIsMutating,
   } = useCreatePublicRelation();
 
-  const updateId = publicRelation?.id || 0;
+  const updatePrId = publicRelation?.id || 0;
   const {
-    trigger: update,
-    error: updateError,
-    isMutating: updateIsMutating,
-  } = useUpdatePublicRelation(updateId);
+    trigger: updatePr,
+    error: updatePrError,
+    isMutating: updatePrIsMutating,
+  } = useUpdatePublicRelation(updatePrId);
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
   // ファイル名はフォームの画像かAPIデータから取得する
   const [fileName, setFileName] = useState<string | null>(
     publicRelation?.picture_name || publicRelation?.pictureName || null
@@ -108,8 +120,13 @@ export const usePublicRelationsFormHooks = (
     if (!publicRelation) return false;
 
     const hasTextChanged = values.prText !== publicRelation.blurb;
-    // Since announcement isn't in the API, we only check if user selected "yes"
-    const hasAnnounceChanged = values.announce === 'yes';
+    // 新しいフィールドを使ってアナウンス選択の変更をチェック
+    const isAnnounceRequested =
+      publicRelation.isAnnouncementRequested ||
+      publicRelation.is_announcement_requested ||
+      false;
+    const hasAnnounceChanged =
+      (values.announce === 'yes') !== isAnnounceRequested;
     const hasImageChanged = !!values.image;
 
     return !(hasTextChanged || hasAnnounceChanged || hasImageChanged);
@@ -228,11 +245,11 @@ export const usePublicRelationsFormHooks = (
   };
 
   // エラー処理を直接行う（useEffectではなく）
-  if (createError || updateError) {
+  if (createPrError || updatePrError) {
     toast.error('送信に失敗しました。時間を置いて再度お試しください');
   }
 
-  // StageOptionFormに合わせたonSubmit実装
+  // 更新されたonSubmit実装
   const onSubmit = async (formData: PublicRelationsFormData) => {
     try {
       let imageUrl = '';
@@ -243,20 +260,21 @@ export const usePublicRelationsFormHooks = (
         imageUrl = await uploadImageToImgur(base64Image);
       }
 
+      // PublicRelationデータを送信
       // バックエンドに送信するデータを準備
-      const queryData = {
+      const prQueryData = {
         groupId: Number(groupId),
         blurb: formData.prText,
         pictureName: '',
         picturePath: '',
-        announcement: formData.announce === 'yes',
+        isAnnouncementRequested: formData.announce === 'yes', // アナウンス選択値を保存
       };
 
       // 画像URLと画像名を追加
       if (formData.image && imageUrl) {
         // 新しい画像がアップロードされた場合
-        queryData.pictureName = formData.image.name || '';
-        queryData.picturePath = imageUrl;
+        prQueryData.pictureName = formData.image.name || '';
+        prQueryData.picturePath = imageUrl;
       } else if (publicRelation) {
         // 新しい画像がアップロードされていない場合は既存の画像を維持
         // Handle both snake_case and camelCase
@@ -266,30 +284,30 @@ export const usePublicRelationsFormHooks = (
           publicRelation.picture_name || publicRelation.pictureName;
 
         if (imagePath && imageName) {
-          queryData.pictureName = imageName;
-          queryData.picturePath = imagePath;
+          prQueryData.pictureName = imageName;
+          prQueryData.picturePath = imagePath;
         }
       }
 
-      console.log('送信するデータ:', {
+      console.log('PR送信データ:', {
         url: publicRelation
           ? `/public_relations/${publicRelation.id}`
           : '/public_relations',
         method: publicRelation ? 'PATCH' : 'POST',
-        query: queryData,
+        query: prQueryData,
       });
 
-      // APIにデータを送信
+      // PR関連APIにデータを送信
       if (publicRelation) {
-        // SWR Mutationを使用して更新（クエリパラメータとして送信）
-        await update({ query: queryData });
+        // 既存データの更新 (PUT)
+        await updatePr({ query: prQueryData });
       } else {
-        // SWR Mutationを使用して新規作成（クエリパラメータとして送信）
-        await create({ query: queryData });
+        // 新規作成 (POST)
+        await createPr({ query: prQueryData });
       }
 
       // データ更新後、mutateで最新データを取得
-      await mutate();
+      await prMutate();
 
       toast.success('送信しました');
       return true; // 送信成功を返す
@@ -305,17 +323,16 @@ export const usePublicRelationsFormHooks = (
     errors,
     setValue,
     values,
-    isSubmitted,
     fileName,
-    fetchError,
-    isFetching,
-    isMutating: createIsMutating || updateIsMutating,
+    fetchError: fetchPrError,
+    isFetching: isPrFetching,
+    isMutating: createPrIsMutating || updatePrIsMutating,
     handleImageUpload,
     handleAnnounceChange,
     announceOptions,
     onSubmit,
-    createError,
-    updateError,
+    createError: createPrError,
+    updateError: updatePrError,
     validateEdit,
   };
 };
