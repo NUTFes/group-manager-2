@@ -178,7 +178,7 @@ export const useAuth = () => {
     try {
       await post('/api/auth/sign_out', {});
       clearAuth();
-      router.push('/login');
+      router.push('/');
     } catch (error) {
       throw error;
     }
@@ -197,10 +197,6 @@ export const useAuth = () => {
 
       // --- ステップ 1: ユーザー基本情報登録 ---
       try {
-        console.log('ステップ1: ユーザー登録開始', {
-          email: params.mail,
-          name: params.name,
-        });
         const userResponse = await post('/api/auth', {
           email: params.mail,
           password: params.password,
@@ -208,7 +204,6 @@ export const useAuth = () => {
           name: params.name,
           role_id: 1,
         });
-        console.log('ステップ1: ユーザー登録レスポンス:', userResponse);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         userId = (userResponse?.data as any)?.data?.id;
@@ -225,7 +220,6 @@ export const useAuth = () => {
         }
 
         // --- ステップ 2: ユーザー詳細情報登録 ---
-        console.log(`ステップ2: ユーザー詳細登録開始 (User ID: ${userId})`);
         await post('/user_details', {
           student_id: params.studentId,
           tel: params.tel,
@@ -233,10 +227,8 @@ export const useAuth = () => {
           grade_id: params.gradeId,
           user_id: userId,
         });
-        console.log('ステップ2: ユーザー詳細登録完了');
 
         // --- ステップ 3: 自動ログイン ---
-        console.log('ステップ3: 自動ログイン試行 (サインインAPI呼び出し)');
         const loginResult = await performAutoLogin(
           params.mail,
           params.password
@@ -246,11 +238,9 @@ export const useAuth = () => {
           throw new Error(loginResult.message);
         }
 
-        console.log('登録プロセス完了');
         router.push('/home');
         return { success: true, data: loginResult.data };
       } catch (error) {
-        console.error('登録プロセスエラー:', error);
         const parsedError = parseApiError(error);
 
         if (userId === null) {

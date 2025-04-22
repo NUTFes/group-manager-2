@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 // 認証が不要なパスのリスト
-const publicPaths = ['/', '/register', '/'];
+const publicPaths = ['/'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ローカルストレージから認証情報を取得
+  // Cookieから認証情報を取得
   const authStorage = request.cookies.get('auth-storage');
   if (!authStorage) {
     return NextResponse.redirect(new URL('/', request.url));
