@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { PublicRelationResponse } from '@/api/publicRelationsApi';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import TextArea from '@/components/Form/TextArea/TextArea';
@@ -8,7 +9,7 @@ import { usePublicRelationsFormHooks } from './hooks';
 
 type PublicRelationsFormProps = {
   groupId: number;
-  publicRelation?: any;
+  publicRelation?: PublicRelationResponse | null;
   toEdit: () => void; // Make toEdit required
 };
 

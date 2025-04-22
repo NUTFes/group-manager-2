@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import {
+  PublicRelationResponse,
   useCreatePublicRelation,
   usePublicRelationData,
   useUpdatePublicRelation,
 } from '@/api/publicRelationsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
   groupId: number,
-  publicRelationProp?: any
+  publicRelationProp?: PublicRelationResponse | null
 ) => {
   const {
     publicRelation: fetchedPublicRelation,
@@ -23,7 +24,11 @@ export const usePublicRelationsFormHooks = (
   const publicRelation = publicRelationProp || fetchedPublicRelation;
 
   // カスタムバリデーションを実装
-  const resolver = async (values: any, context: any, options: any) => {
+  const resolver = async (
+    values: PublicRelationsFormData,
+    context: unknown,
+    options: ResolverOptions<PublicRelationsFormData>
+  ) => {
     // 基本的なZodバリデーションを実行
     const result = await zodResolver(publicRelationsSchema)(
       values,
@@ -32,7 +37,10 @@ export const usePublicRelationsFormHooks = (
     );
 
     // エラーオブジェクトを型安全に扱うためにキャスト
-    const errors = result.errors as Record<string, any>;
+    const errors = result.errors as Record<
+      string,
+      { type: string; message: string }
+    >;
 
     // 既存データを編集する場合は、画像が必須ではない
     if (publicRelation) {
