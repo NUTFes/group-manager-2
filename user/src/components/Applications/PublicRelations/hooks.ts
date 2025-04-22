@@ -11,9 +11,6 @@ export const usePublicRelationsHooks = (groupId: number) => {
     mutate: prMutate,
   } = usePublicRelationData(groupId || 0);
 
-  console.log('Current groupId:', groupId);
-  console.log('PublicRelation data:', publicRelation);
-
   // アナウンスステータスを決定
   // public_relations.is_announcement_requestedフィールドに基づいて状態を決定
   const getAnnounceStatus = () => {

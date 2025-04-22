@@ -5,7 +5,6 @@ import {
   useUpdatePublicRelation,
 } from '@/api/publicRelationsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
@@ -215,7 +214,7 @@ export const usePublicRelationsFormHooks = (
     });
   };
 
-  // Imgurに画像をアップロードする関数
+  // Imgurに画像をアップロードする関数（Fetch API版）
   const uploadImageToImgur = async (base64Image: string): Promise<string> => {
     const imgurClientId = process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID;
 
@@ -227,17 +226,21 @@ export const usePublicRelationsFormHooks = (
     const base64 = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
 
     try {
-      const response = await axios.post(
-        'https://api.imgur.com/3/image',
-        { image: base64 },
-        {
-          headers: {
-            Authorization: `Client-ID ${imgurClientId}`,
-          },
-        }
-      );
+      const response = await fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          Authorization: `Client-ID ${imgurClientId}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64 }),
+      });
 
-      return response.data.data.link;
+      if (!response.ok) {
+        throw new Error(`エラー: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data.link;
     } catch (error) {
       console.error('Imgurアップロードエラー:', error);
       throw new Error('画像のアップロードに失敗しました');
