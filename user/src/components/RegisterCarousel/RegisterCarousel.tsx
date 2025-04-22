@@ -1,14 +1,13 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import { RegisterParams } from '@/types/register/user';
 import { DepartmentList, GradeList } from '@/utils/list';
-import useEmblaCarousel from 'embla-carousel-react';
-import { toast } from 'react-toastify';
 // import { useRouter } from 'next/router'; // router は未使用のためコメントアウトまたは削除
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
 import { useAuth } from '@/hooks/useAuth';
+import { useRegisterCarouselHooks } from './hooks';
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -74,6 +73,18 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
+  const {
+    stepIndex,
+    emblaRef,
+    onSubmit,
+    values,
+    setValue,
+    handleNext,
+    handlePrev,
+    gradeOptions,
+    departmentOptions,
+    handleSubmit,
+  } = useRegisterCarouselHooks();
   const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
   const departmentOptions = [
     { id: 0, name: '選択してください' },
@@ -155,100 +166,84 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form method="POST" onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
-          <div className="w-[450px] overflow-hidden pt-4" ref={emblaRef}>
+          <div
+            className="w-[450px] overflow-y-auto overflow-x-hidden max-h-[60vh] pt-4"
+            ref={emblaRef}
+          >
             <div className="flex">
               <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="メールアドレス"
                     type="email"
-                    value={input.mail}
+                    value={values.mail}
                     note="例：s123456@stn.nagaokaut.ac.jp"
                     required
-                    onChange={(value: string) =>
-                      setInput((prev) => ({ ...prev, mail: value }))
-                    }
+                    onChange={(value: string) => setValue('mail', value)}
                   />
                   <TextBox
                     label="パスワード"
                     type="password"
-                    value={input.password}
+                    value={values.password}
                     note="英数字8文字以上"
                     required
-                    onChange={(value) =>
-                      setInput((prev) => ({ ...prev, password: value }))
-                    }
+                    onChange={(value: string) => setValue('password', value)}
                   />
                   <TextBox
                     label="パスワード（確認用）"
                     type="password"
-                    value={input.passwordConfirm}
-                    note="パスワードを再入力"
+                    value={values.passwordConfirm}
+                    note="英数字8文字以上"
                     required
-                    onChange={(value) =>
-                      setInput((prev) => ({
-                        ...prev,
-                        passwordConfirm: value,
-                      }))
+                    onChange={(value: string) =>
+                      setValue('passwordConfirm', value)
                     }
                   />
                 </div>
               </div>
-              <div className="min-w-0 flex-none basis-full p-4">
+              <div className="min-w-0 flex-none basis-full p-">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="名前"
-                    value={input.name}
+                    value={values.name}
                     note="例：長岡　太郎"
                     required
-                    onChange={(value) =>
-                      setInput((prev) => ({ ...prev, name: value }))
-                    }
-                  />
-                  <TextBox
-                    label="学籍番号"
-                    value={input.studentId}
-                    note="例：12345678"
-                    required
-                    onChange={(value) =>
-                      setInput((prev) => ({ ...prev, studentId: value }))
-                    }
+                    onChange={(value: string) => setValue('name', value)}
                   />
                   <TextBox
                     label="電話番号"
-                    value={input.tel}
-                    note="例: 09012345678 (ハイフンなし)"
+                    value={values.tel}
+                    note="例：09012345678"
                     required
-                    onChange={(value) =>
-                      setInput((prev) => ({ ...prev, tel: value }))
-                    }
+                    onChange={(value: string) => setValue('tel', value)}
+                  />
+                  <TextBox
+                    label="学籍番号"
+                    value={values.studentId}
+                    note="例：12345678"
+                    required
+                    onChange={(value: string) => setValue('studentId', value)}
                   />
                   <Selector
                     label="学年"
                     required
-                    onChange={(value) =>
-                      setInput((prev) => ({
-                        ...prev,
-                        gradeId: Number(value),
-                      }))
+                    onChange={(value: string) =>
+                      setValue('gradeId', Number(value))
                     }
                     options={gradeOptions}
-                    value={input.gradeId}
+                    value={values.gradeId}
                   />
                   <Selector
                     label="学科"
                     required
-                    onChange={(value) =>
-                      setInput((prev) => ({
-                        ...prev,
-                        departmentId: Number(value),
-                      }))
+                    onChange={(value: string) =>
+                      setValue('departmentId', Number(value))
                     }
                     options={departmentOptions}
-                    value={input.departmentId}
+                    value={values.departmentId}
                   />
                 </div>
               </div>
@@ -262,7 +257,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
-                        {input.mail}
+                        {values.mail}
                       </div>
                     </div>
                   </div>
@@ -274,7 +269,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
-                        {'*'.repeat(input.password.length)}
+                        {'*'.repeat(values.password.length)}
                       </div>
                     </div>
                   </div>
@@ -284,7 +279,19 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
-                        {input.name}
+                        {values.name}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
+                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
+                      <div className="text-xs font-black text-font">
+                        電話番号
+                      </div>
+                    </div>
+                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
+                      <div className="text-base font-medium text-font">
+                        {values.tel}
                       </div>
                     </div>
                   </div>
@@ -296,7 +303,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
-                        {input.studentId}
+                        {values.studentId}
                       </div>
                     </div>
                   </div>
@@ -307,7 +314,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {
-                          GradeList.find((grade) => grade.id === input.gradeId)
+                          GradeList.find((grade) => grade.id === values.gradeId)
                             ?.name
                         }
                       </div>
@@ -321,7 +328,8 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                       <div className="text-base font-medium text-font">
                         {
                           DepartmentList.find(
-                            (department) => department.id === input.departmentId
+                            (department) =>
+                              department.id === values.departmentId
                           )?.name
                         }
                       </div>
