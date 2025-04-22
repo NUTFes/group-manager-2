@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get '/current_user', to: 'current_user#index'
   devise_for :users,
     controllers: {
       sessions:      'users/sessions',
@@ -303,13 +304,13 @@ Rails.application.routes.draw do
   get "print_pdf/all_groups_info/:fes_year_id/output" => "print_pdf#output_all_groups_info_pdf"
   get "print_pdf/health_office_documents/:fes_year_id/output" => "print_pdf#output_health_office_documents_pdf"
 
-  namespace :api do
-    mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-      registrations: 'api/auth/registrations'
-    }
-    namespace :auth do
-      resources :sessions
-    end
-  end
+  # namespace :api do
+  #   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
+  #     registrations: 'api/auth/registrations'
+  #   }
+  #   namespace :auth do
+  #     resources :sessions
+  #   end
+  # end
 
 end

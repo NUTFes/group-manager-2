@@ -88,7 +88,7 @@ export default {
         endpoints: {
           login:  { url: '/users/sign_in',  method: 'post' },
           logout: { url: '/users/sign_out', method: 'delete' },
-          user:   { url: '/users/me',         method: 'get' },
+          user:   { url: '/current_user',   method: 'get' },
         },
       },
     },

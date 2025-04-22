@@ -36,6 +36,7 @@ Devise.setup do |config|
       ['DELETE', %r{^/users/sign_out$}] # ログアウト時に失効
     ]
     jwt.expiration_time = 1.day.to_i   # トークンの有効期限
+    jwt.request_formats = { user: [nil, :json] }
   end
 
   # Configure the class responsible to send e-mails.
