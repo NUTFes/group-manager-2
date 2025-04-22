@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_21_125239) do
+ActiveRecord::Schema.define(version: 2025_04_22_125908) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -236,6 +236,7 @@ ActiveRecord::Schema.define(version: 2025_04_21_125239) do
     t.text "blurb"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_announcement_requested", default: false, null: false
   end
 
   create_table "purchase_lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
