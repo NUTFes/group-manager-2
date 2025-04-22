@@ -91,29 +91,6 @@ export const useAuth = () => {
       : null
   );
 
-  const autoLogin = async (email: string, password: string) => {
-    const loginResponse = await post('/api/auth/sign_in', {
-      email,
-      password,
-    });
-
-    if (!loginResponse?.auth) {
-      console.error('ログインレスポンスに認証情報がありません');
-      router.push('/login');
-      return;
-    }
-
-    const { 'access-token': accessToken, client, uid } = loginResponse.auth;
-    if (!(accessToken && client && uid)) {
-      console.error('認証情報が不完全です:', { accessToken, client, uid });
-      router.push('/login');
-      return;
-    }
-
-    setAuth(accessToken, client, uid);
-    router.push('/dashboard');
-  };
-
   // 自動ログイン処理 (エラーハンドリングを強化し、結果オブジェクトを返す)
   const performAutoLogin = async (email: string, password: string) => {
     try {
@@ -160,6 +137,35 @@ export const useAuth = () => {
     }
   };
 
+  // ログイン処理
+  const login = useCallback(
+    async (email: string, password: string) => {
+      try {
+        const loginResult = await performAutoLogin(email, password);
+        if (loginResult.success) {
+          router.push('/home');
+        } else {
+          throw new Error(loginResult.message);
+        }
+      } catch (error) {
+        throw error;
+      }
+    },
+    [router]
+  );
+
+  // ログアウト処理
+  const logout = useCallback(async () => {
+    try {
+      await post('/api/auth/sign_out', {});
+      clearAuth();
+      router.push('/login');
+    } catch (error) {
+      throw error;
+    }
+  }, [post, router, clearAuth]);
+
+  // ユーザー登録処理
   const {
     trigger: registerTrigger,
     isMutating: isRegistering,
@@ -219,6 +225,7 @@ export const useAuth = () => {
         }
 
         console.log('登録プロセス完了');
+        router.push('/home');
         return { success: true, data: loginResult.data };
       } catch (error) {
         console.error('登録プロセスエラー:', error);
@@ -241,27 +248,7 @@ export const useAuth = () => {
     }
   );
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      try {
-        await autoLogin(email, password);
-      } catch (error) {
-        throw error;
-      }
-    },
-    [setAuth, router]
-  );
-
-  const logout = useCallback(async () => {
-    try {
-      await post('/api/auth/sign_out', {});
-      clearAuth();
-      router.push('/login');
-    } catch (error) {
-      throw error;
-    }
-  }, [post, router, clearAuth]);
-
+  // トークン検証のためのインターバル設定
   useEffect(() => {
     if (isAuthenticated) {
       const interval = setInterval(
