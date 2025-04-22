@@ -451,7 +451,15 @@ export default {
       });
     },
     async submitGroup() {
-      const CurrentUser = await this.$auth.fetchUser()
+      const currentUserUrl = "/api/v1/users/show";
+      const CurrentUser = await this.$axios.get(currentUserUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      });
       const postGroupUrl =
         "/groups/" +
         "?user_id=" +

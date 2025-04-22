@@ -51,7 +51,15 @@ export default {
   methods: {
     async submit() {
       // ログイン中のユーザーを取得
-      const CurrentUser = await this.$auth.fetchUser()
+      const currentUserUrl = "/api/v1/users/show";
+      const CurrentUser = await this.$axios.get(currentUserUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "access-token": localStorage.getItem("access-token"),
+          client: localStorage.getItem("client"),
+          uid: localStorage.getItem("uid"),
+        },
+      });
       this.user = CurrentUser.data.data;
       const url = "/memos?content=" + this.content + "&user_id=" + this.user.id;
       const res = await this.$axios.$post(url);
