@@ -69,15 +69,19 @@ export default {
             email: this.email,
             password: this.password
           }
+        }, {
+          withCredentials: true
         });
 
         console.log('ログイン成功');
-        
+
         // 直後にユーザー情報を取得して認証状態を設定
         try {
-          const userData = await this.$axios.$get('/current_user');
+          const userData = await this.$axios.$get('/current_user', {
+            withCredentials: true
+          });
           console.log('ユーザー情報取得成功', userData);
-          
+
           // Auth moduleが使用可能なら手動でユーザー情報を設定
           if (this.$auth) {
             this.$auth.setUser(userData);

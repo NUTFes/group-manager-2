@@ -1,4 +1,3 @@
-
 /**
  * vuexについて
  *
@@ -57,20 +56,36 @@ export const mutations = {
 export const actions = {
   async getUser({ commit }) {
     try {
-      // 1) /current_user をクライアント側で自動的に叩きにいく
-      await this.$auth.fetchUser()
-
-      // 2) 認証済みユーザ情報は this.$auth.user にセットされる
-      const user = this.$auth.user
-
-      console.log(user)
-      // role_id プロパティが返ってくる想定
-      commit("setRole", user.data.role_id)
-
-      // トークン系は @nuxtjs/auth が自動管理するので不要
+      // $auth.fetchUserではなく直接axiosでユーザー情報を取得
+      // withCredentialsを明示的に指定してCookieを含める
+      const response = await this.$axios.$get('/current_user', {
+        withCredentials: true
+      });
+      
+      if (response && response.data) {
+        console.log('ユーザー情報取得成功:', response);
+        
+        // role_id プロパティが返ってくる想定
+        commit("setRole", response.data.role_id);
+        
+        // Auth moduleが使用可能ならユーザー情報を設定
+        if (this.$auth) {
+          this.$auth.setUser(response);
+          this.$auth.setLoggedIn(true);
+        }
+      } else {
+        throw new Error('ユーザー情報が取得できませんでした');
+      }
     } catch (error) {
+      console.error('ユーザー情報取得エラー:', error);
       // 取得エラーなら state をクリア
-      commit("resetAll")
+      commit("resetAll");
+      
+      // Auth moduleが使用可能なら状態をリセット
+      if (this.$auth) {
+        this.$auth.setUser(null);
+        this.$auth.setLoggedIn(false);
+      }
     }
   },
 }

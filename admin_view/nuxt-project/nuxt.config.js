@@ -93,12 +93,12 @@ export default {
         token: false,
         user: {
           property: false,
-          autoFetch: true
+          autoFetch: false
         },
         endpoints: {
           login: { url: '/users/sign_in', method: 'post' },
           logout: { url: '/users/sign_out', method: 'delete' },
-          user: { url: '/current_user', method: 'get' }
+          user:  false  // ← user エンドポイントを無効化
         }
       }
     },

@@ -451,7 +451,7 @@ export default {
       });
     },
     async submitGroup() {
-      const currentUserUrl = "/api/v1/users/show";
+      const currentUserUrl = "/current_user";
       const CurrentUser = await this.$axios.get(currentUserUrl, {
         headers: {
           "Content-Type": "application/json",

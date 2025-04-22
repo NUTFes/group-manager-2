@@ -46,31 +46,34 @@ export default {
     },
   },
   mounted() {
-    this.getUser()
-    this.$axios
-      .get("api/v1/users/show", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
-      .then((response) => { this.user = response.data.data;
-      });
-
-    this.$axios
-      .get("/memos", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        this.memos = response.data;
-      });
+    if (this.main) {
+      this.checkAuthAndLoadData();
+    }
   },
   methods: {
     ...mapActions('users', ['getUser']),
+    
+    async checkAuthAndLoadData() {
+      try {
+        await this.getUser();
+        
+        const response = await this.$axios.get("current_user", {
+          withCredentials: true
+        });
+        this.user = response.data.data;
+        
+        const memoResponse = await this.$axios.get("/memos", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true
+        });
+        this.memos = memoResponse.data;
+      } catch (error) {
+        console.error("認証またはデータ取得エラー:", error);
+      }
+    },
+    
     submit: function () {
       this.$axios.defaults.headers.common["Content-Type"] = "application/json";
       var params = new URLSearchParams();
