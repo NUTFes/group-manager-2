@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  include DeviseTokenAuth::Concerns::SetUserByToken
+  # include DeviseTokenAuth::Concerns::SetUserByToken
   
   # status
   def ok; return { code: 200, message: 'Success' } end
