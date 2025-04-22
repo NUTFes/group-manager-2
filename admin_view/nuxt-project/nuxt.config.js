@@ -31,13 +31,11 @@ export default {
   },
 
   router: {
-    middleware: ["auth"],
+    middleware: ["auth", "check-auth"],
   },
 
-  // Global CSS (https://go.nuxtjs.dev/config-css)
   css: ["~/assets/main.scss"],
 
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
     { src: "~/plugins/axios.js", ssr: false },
     { src: "~/plugins/fileter.js", ssr: false },
@@ -45,15 +43,12 @@ export default {
     { src: "~/plugins/role" },
   ],
 
-  // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
 
-  // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
-    // https://go.nuxtjs.dev/vuetify
     "@nuxtjs/vuetify",
   ],
-  // Modules (https://go.nuxtjs.dev/config-modules)
+
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth',                 // v3/v4 を利用
@@ -61,10 +56,26 @@ export default {
   ],
 
   axios: {
-    // baseURL: 'http://localhost:3000'
-    baseURL: process.env.VUE_APP_API_URL,
-    browserBaseURL: process.env.VUE_APP_URL,
+    // proxy: true,
+    baseURL: process.env.VUE_APP_API_URL || 'http://localhost:3000',
+    browserBaseURL: process.env.VUE_APP_URL || 'http://localhost:8000',
+    credentials: true
   },
+
+  // proxy: {
+  //   '/api/': {
+  //     target: process.env.VUE_APP_API_URL || 'http://localhost:3000'
+  //   },
+  //   '/users/': {
+  //     target: process.env.VUE_APP_API_URL || 'http://localhost:3000'
+  //   },
+  //   '/current_user': {
+  //     target: process.env.VUE_APP_API_URL || 'http://localhost:3000'
+  //   },
+  //   '/memos': {
+  //     target: process.env.VUE_APP_API_URL || 'http://localhost:3000'
+  //   }
+  // },
 
   auth: {
     redirect: {
@@ -75,22 +86,28 @@ export default {
     },
     strategies: {
       local: {
-        token: {
-          property: 'token',
-          type: 'Bearer',
-          name: 'Authorization',
-          global: true,
+        scheme: 'cookie',
+        cookie: {
+          name: 'jwt'
         },
+        token: false,
         user: {
           property: false,
-          autoFetch: false,
+          autoFetch: true
         },
         endpoints: {
-          login:  { url: '/users/sign_in',  method: 'post' },
+          login: { url: '/users/sign_in', method: 'post' },
           logout: { url: '/users/sign_out', method: 'delete' },
-          user:   { url: '/current_user',   method: 'get' },
-        },
-      },
+          user: { url: '/current_user', method: 'get' }
+        }
+      }
     },
+    localStorage: false,
+    cookie: {
+      prefix: '',
+      options: {
+        path: '/'
+      }
+    }
   },
 };

@@ -1,5 +1,3 @@
-import axios from "axios";
-import createPersistedState from 'vuex-persistedstate';
 
 /**
  * vuexについて
@@ -59,28 +57,23 @@ export const mutations = {
 export const actions = {
   async getUser({ commit }) {
     try {
-      const response = await this.$axios.$get("api/v1/users/show", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      });
+      // 1) /current_user をクライアント側で自動的に叩きにいく
+      await this.$auth.fetchUser()
 
-      console.log(response.data);
-      commit("setRole", response.data.role_id);
-      commit("setAccessToken", response.data.accessToken);
-      commit("setClient", response.data.client);
-      commit("setUid", response.data.uid);
+      // 2) 認証済みユーザ情報は this.$auth.user にセットされる
+      const user = this.$auth.user
+
+      console.log(user)
+      // role_id プロパティが返ってくる想定
+      commit("setRole", user.data.role_id)
+
+      // トークン系は @nuxtjs/auth が自動管理するので不要
     } catch (error) {
-      commit("setRole", null);
-      commit("setAccessToken", null);
-      commit("setClient", null);
-      commit("setUid", null);
+      // 取得エラーなら state をクリア
+      commit("resetAll")
     }
   },
-};
+}
 
 /**
  * getter

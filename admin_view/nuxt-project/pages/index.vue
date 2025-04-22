@@ -9,16 +9,17 @@
     <div class="login">
       <input v-model="email" type="text" placeholder="email" /><br />
       <input v-model="password" type="password" placeholder="password" /><br />
-      <button @click="loginWithAuthModule" class="bn632-hover bn27">
-        login
+      <button @click.prevent="login" class="bn632-hover bn27" :disabled="isLoggingIn">
+        {{ isLoggingIn ? 'ログイン中...' : 'login' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
 export default {
+  auth: false,  // 認証をスキップ
+  layout: 'default',
   data() {
     return {
       image_src: require("@/assets/homepic.png"),
@@ -27,6 +28,7 @@ export default {
       show_pass: true,
       formHasErrors: false,
       message: "",
+      isLoggingIn: false,
       warnStyle: {
         color: "#F44336",
       },
@@ -53,43 +55,48 @@ export default {
     },
   },
   methods: {
-    ...mapActions('users', ['getUser']),
-    async loginWithAuthModule() {
-      // this.formHasErrors = false;
-      // Object.keys(this.form).forEach((f) => {
-      //   if (!this.form[f]) this.formHasErrors = true;
-      //   this.$refs[f].validate(true);
-      // });
-      // if (!this.formHasErrors) return "Can't Sign Up";
-      await this.$auth
-        .loginWith("local", {
-          data: { user: { email: this.email, password: this.password } }
-        })
-        // .then(
-        //   (response) => {
-        //     localStorage.setItem(
-        //       "",
-        //       response.headers[""]
-        //     );
-        //     localStorage.setItem("client", response.headers.client);
-        //     localStorage.setItem("uid", response.headers.uid);
-        //     localStorage.setItem("token-type", response.headers["token-type"]);
-        //     this.getUser()
-        //     return response;
-        //   },
-        // )
-          // (error) => {
-          //   this.message = "メールアドレスかパスワードが違います。";
-          //   return error;
-          // }
-          .catch(() => {
-            alert(
-              "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
-            );
-          });
-      
-    },
-  },
+    async login() {
+      // 既にログイン処理中なら中断
+      if (this.isLoggingIn) return;
+
+      try {
+        this.isLoggingIn = true;
+        console.log('ログイン試行中...');
+
+        // 直接axiosでリクエスト
+        await this.$axios.$post('/users/sign_in', {
+          user: {
+            email: this.email,
+            password: this.password
+          }
+        });
+
+        console.log('ログイン成功');
+        
+        // 直後にユーザー情報を取得して認証状態を設定
+        try {
+          const userData = await this.$axios.$get('/current_user');
+          console.log('ユーザー情報取得成功', userData);
+          
+          // Auth moduleが使用可能なら手動でユーザー情報を設定
+          if (this.$auth) {
+            this.$auth.setUser(userData);
+            this.$auth.setLoggedIn(true);
+          }
+        } catch (userErr) {
+          console.error('ユーザー情報取得エラー', userErr);
+        }
+
+        // 認証成功したらダッシュボードへリダイレクト
+        this.$router.push('/dashboard');
+      } catch (error) {
+        console.error('ログインエラー:', error);
+        alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
+      } finally {
+        this.isLoggingIn = false;
+      }
+    }
+  }
 };
 </script>
 
