@@ -10,9 +10,9 @@
   </div>
 </template>
 <script>
+import { mapActions } from "vuex";
 import Header from "~/components/Header.vue";
 import Menu from "~/components/Menu.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Header,
@@ -47,15 +47,7 @@ export default {
   },
   mounted() {
     this.getUser()
-    this.$axios
-      .get("api/v1/users/show", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
+    this.$auth.fetchUser()
       .then((response) => { this.user = response.data.data;
       });
 

@@ -175,15 +175,7 @@ export default {
   },
 
   mounted() {
-    this.$axios
-      .get("/api/v1/users/show", {
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": localStorage.getItem("access-token"),
-          client: localStorage.getItem("client"),
-          uid: localStorage.getItem("uid"),
-        },
-      })
+    this.$auth.fetchUser()
       .then((response) => {
         this.user = response.data.data;
       });
