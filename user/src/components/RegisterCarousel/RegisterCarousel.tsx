@@ -96,6 +96,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   const [stepIndex, setStepIndex] = useState(0);
   // const router = useRouter(); // 未使用のため削除
   const { registerTrigger, isRegistering, registrationError } = useAuth();
+  const [displayError, setDisplayError] = useState<string | null>(null); // エラー表示用State
 
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
@@ -114,14 +115,14 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   }, [emblaApi]);
 
   useEffect(() => {
-    if (registrationError) {
-      toast.error(registrationError);
-    }
+    // registrationErrorが変更されたらエラー表示用Stateを更新
+    setDisplayError(registrationError);
   }, [registrationError]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isRegistering) return;
+    setDisplayError(null); // 送信時にエラーをクリア
 
     try {
       console.log('登録実行:', input);
@@ -134,10 +135,21 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
       if (result?.success) {
         toast.success('登録が完了しました。');
         onClose();
+      } else {
+        // registerTriggerがエラーをスローしなくても、result.successがfalseの場合がある
+        // useAuthフック側でエラーが処理され、registrationErrorに入る想定だが念のため
+        if (!registrationError) {
+          setDisplayError('登録処理中に不明なエラーが発生しました。');
+        }
       }
     } catch (error) {
-      console.error('onSubmit Error:', error);
-      toast.error('予期せぬエラーが発生しました。');
+      // registerTrigger がエラーをスローした場合 (通常はこちらで処理される想定)
+      console.error('onSubmit Error caught:', error);
+      // useAuthフックがエラーをセットするのを待つか、ここで直接セットする
+      // registrationErrorが更新されるので、useEffectでsetDisplayErrorが呼ばれるはず
+      if (!registrationError) {
+        setDisplayError('登録処理中に予期せぬエラーが発生しました。');
+      }
     }
   };
 
@@ -331,6 +343,14 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
+
+          {/* エラーメッセージ表示領域 */}
+          {displayError && (
+            <div className="mt-4 text-center text-sm text-red-600">
+              {displayError}
+            </div>
+          )}
+
           <div className="mt-4 flex justify-center gap-4">
             {stepIndex === 0 ? (
               <div />
@@ -351,10 +371,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <Button
                 size="pc"
                 color="main"
+                onClick={handleNext}
                 type="submit"
-                isDisable={isRegistering}
+                // TODO: バリデーションを追加して無効化する
               >
-                {isRegistering ? '登録中...' : '登録'}
+                次へ
               </Button>
             ) : (
               <Button

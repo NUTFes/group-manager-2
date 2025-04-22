@@ -92,49 +92,68 @@ export const useAuth = () => {
   );
 
   // 自動ログイン処理 (エラーハンドリングを強化し、結果オブジェクトを返す)
-  const performAutoLogin = async (email: string, password: string) => {
-    try {
-      console.log('自動ログイン試行:', email);
-      const loginResponse = await post('/api/auth/sign_in', {
-        email,
-        password,
-      });
-      console.log('ログインレスポンス:', loginResponse);
+  const performAutoLogin = useCallback(
+    async (email: string, password: string) => {
+      try {
+        console.log('自動ログイン試行:', email);
+        const loginResponse = await post('/api/auth/sign_in', {
+          email,
+          password,
+        });
+        console.log('ログインレスポンス:', loginResponse);
 
-      if (!loginResponse?.headers) {
-        console.error('ログインレスポンスにヘッダー情報がありません');
-        return { success: false, message: '認証情報が取得できませんでした' };
+        if (!loginResponse?.headers) {
+          console.error('ログインレスポンスにヘッダー情報がありません');
+          return { success: false, message: '認証情報が取得できませんでした' };
+        }
+
+        const accessToken =
+          loginResponse.headers instanceof Headers
+            ? loginResponse.headers.get('access-token')
+            : loginResponse.headers['access-token'];
+        const client =
+          loginResponse.headers instanceof Headers
+            ? loginResponse.headers.get('client')
+            : loginResponse.headers['client'];
+        const uid =
+          loginResponse.headers instanceof Headers
+            ? loginResponse.headers.get('uid')
+            : loginResponse.headers['uid'];
+
+        if (!(accessToken && client && uid)) {
+          console.error('認証情報が不完全です:', { accessToken, client, uid });
+          return { success: false, message: '認証情報が不完全です' };
+        }
+
+        setAuth(accessToken, client, uid);
+        console.log('認証情報をセットしました。');
+        return { success: true, data: loginResponse.data };
+      } catch (error) {
+        console.error('自動ログイン失敗:', error);
+        const parsedError = parseApiError(error);
+        return {
+          success: false,
+          message: `自動ログインに失敗しました: ${parsedError.message}`,
+        };
       }
+    },
+    [post, setAuth]
+  );
 
-      const accessToken =
-        loginResponse.headers instanceof Headers
-          ? loginResponse.headers.get('access-token')
-          : loginResponse.headers['access-token'];
-      const client =
-        loginResponse.headers instanceof Headers
-          ? loginResponse.headers.get('client')
-          : loginResponse.headers['client'];
-      const uid =
-        loginResponse.headers instanceof Headers
-          ? loginResponse.headers.get('uid')
-          : loginResponse.headers['uid'];
+  // エラーメッセージを日本語化する関数
+  const translateErrorMessage = (message: string | undefined): string => {
+    if (!message) return '不明なエラーが発生しました。';
 
-      if (!(accessToken && client && uid)) {
-        console.error('認証情報が不完全です:', { accessToken, client, uid });
-        return { success: false, message: '認証情報が不完全です' };
-      }
-
-      setAuth(accessToken, client, uid);
-      console.log('認証情報をセットしました。');
-      return { success: true, data: loginResponse.data };
-    } catch (error) {
-      console.error('自動ログイン失敗:', error);
-      const parsedError = parseApiError(error);
-      return {
-        success: false,
-        message: `自動ログインに失敗しました: ${parsedError.message}`,
-      };
+    if (message.includes('Email has already been taken')) {
+      return 'このメールアドレスは既に登録されています。別のメールアドレスを使用してください。';
     }
+    if (message.includes('Password is too short')) {
+      return 'パスワードが短すぎます。8文字以上で入力してください。';
+    }
+    if (message.includes("Password confirmation doesn't match Password")) {
+      return 'パスワードと確認用パスワードが一致しません。';
+    }
+    return message;
   };
 
   // ログイン処理
@@ -145,13 +164,13 @@ export const useAuth = () => {
         if (loginResult.success) {
           router.push('/home');
         } else {
-          throw new Error(loginResult.message);
+          throw new Error(translateErrorMessage(loginResult.message));
         }
       } catch (error) {
         throw error;
       }
     },
-    [router]
+    [router, performAutoLogin]
   );
 
   // ログアウト処理
@@ -191,11 +210,14 @@ export const useAuth = () => {
         });
         console.log('ステップ1: ユーザー登録レスポンス:', userResponse);
 
-        userId = userResponse?.data?.data?.id;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        userId = (userResponse?.data as any)?.data?.id;
         if (!userId) {
           const potentialError =
-            userResponse?.data?.errors ||
-            userResponse?.data?.message ||
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (userResponse?.data as any)?.errors ||
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (userResponse?.data as any)?.message ||
             'ユーザーIDが取得できませんでした';
           throw new Error(
             `ユーザー登録に失敗しました: ${JSON.stringify(potentialError)}`
@@ -232,15 +254,17 @@ export const useAuth = () => {
         const parsedError = parseApiError(error);
 
         if (userId === null) {
-          throw new Error(`ユーザー登録に失敗しました: ${parsedError.message}`);
+          throw new Error(
+            `ユーザー登録に失敗しました: ${translateErrorMessage(parsedError.message)}`
+          );
         } else {
           if (parsedError.status === 404) {
             throw new Error(
-              `ユーザー詳細登録のエンドポイントが見つかりません (404): ${parsedError.message}`
+              `ユーザー詳細登録のエンドポイントが見つかりません (404): ${translateErrorMessage(parsedError.message)}`
             );
           } else {
             throw new Error(
-              `ユーザー登録は完了しましたが、後続処理（詳細登録または自動ログイン）でエラーが発生しました: ${parsedError.message}`
+              `ユーザー登録は完了しましたが、後続処理（詳細登録または自動ログイン）でエラーが発生しました: ${translateErrorMessage(parsedError.message)}`
             );
           }
         }

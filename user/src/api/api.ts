@@ -129,50 +129,111 @@ export const createRequestOptions = (method: string, data?: any) => {
   return options;
 };
 
+export class ApiError extends Error {
+  status?: number;
+  errors?: Record<string, string[]>;
+
+  constructor(
+    message: string,
+    status?: number,
+    errors?: Record<string, string[]>
+  ) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.errors = errors;
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    // Set the prototype explicitly.
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
 /**
  * 共通のAPIリクエストを実行する関数
  * @param url - エンドポイント
  * @param options - フェッチオプション
  */
-export const sendRequest = async (url: string, options: RequestInit) => {
-  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+export const sendRequest = async <T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<{ data: T; headers: Headers; response: Response }> => {
+  const { accessToken, client, uid } = useAuthStore.getState();
 
-  try {
-    const response = await fetch(fullUrl, options);
+  // デフォルトヘッダー設定
+  const defaultHeaders: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || 'APIリクエストに失敗しました');
-    }
-
-    const data = await response.json();
-
-    // 認証ヘッダーを取得
-    const authHeaders = {
-      'access-token': response.headers.get('access-token'),
-      client: response.headers.get('client'),
-      uid: response.headers.get('uid'),
-    };
-
-    // 認証ヘッダーが存在する場合、authStoreに保存
-    if (authHeaders['access-token']) {
-      useAuthStore
-        .getState()
-        .setAuth(
-          authHeaders['access-token']!,
-          authHeaders.client!,
-          authHeaders.uid!
-        );
-    }
-
-    return {
-      data,
-      headers: response.headers,
-      auth: authHeaders,
-    };
-  } catch (error) {
-    throw error;
+  // 認証情報が存在すればヘッダーに追加
+  if (accessToken && client && uid) {
+    defaultHeaders['access-token'] = accessToken;
+    defaultHeaders['client'] = client;
+    defaultHeaders['uid'] = uid;
   }
+
+  // オプションにヘッダーをマージ
+  const requestOptions: RequestInit = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers,
+    },
+  };
+
+  const response = await fetch(`${API_URL}${endpoint}`, requestOptions);
+
+  // 認証ヘッダーをレスポンスから取得 (現在は未使用)
+  // const responseAccessToken = response.headers.get('access-token');
+  // const responseClient = response.headers.get('client');
+  // const responseUid = response.headers.get('uid');
+
+  if (!response.ok) {
+    let errorData: any = null;
+    let errorMessage = `APIリクエストに失敗しました (ステータス: ${response.status})`;
+    try {
+      const errorText = await response.text();
+      errorData = JSON.parse(errorText);
+      // RailsのDevise Token Authのエラー形式を想定
+      if (errorData && errorData.errors) {
+        if (Array.isArray(errorData.errors)) {
+          // エラーが配列の場合 (full_messagesなど)
+          errorMessage = errorData.errors.join(', ');
+        } else if (typeof errorData.errors === 'object') {
+          // エラーがオブジェクトの場合 (各フィールドのエラー)
+          errorMessage = Object.entries(errorData.errors)
+            .map(
+              ([field, messages]) =>
+                `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`
+            )
+            .join('\n');
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } else if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+      // パースは成功したが期待した形式ではない場合、元のテキストを使うことも検討
+    } catch (e) {
+      // JSONパース失敗。テキスト形式のエラーの可能性
+      console.error('API error response parsing failed:', e);
+      // console.error('API error response is not valid JSON:', errorText); // デバッグ用
+      // errorText をそのまま使うか、デフォルトメッセージを使う
+    }
+    throw new ApiError(errorMessage, response.status, errorData?.errors);
+  }
+
+  // レスポンスボディが空の場合の対応
+  const responseText = await response.text();
+  let data: T;
+  try {
+    data = responseText ? (JSON.parse(responseText) as T) : ({} as T);
+  } catch (e) {
+    console.error('Failed to parse response JSON:', e);
+    // console.error("Failed to parse response JSON:", responseText); // 元のテキストもログ出力する場合
+    throw new Error('レスポンスのJSONパースに失敗しました');
+  }
+
+  return { data, headers: response.headers, response };
 };
 
 /**

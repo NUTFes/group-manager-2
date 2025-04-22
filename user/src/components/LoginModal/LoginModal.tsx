@@ -10,8 +10,15 @@ type LoginModalProps = {
 };
 
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const { handleLogin, setValue, handleSubmit, errors, email, password } =
-    useLoginModalHooks();
+  const {
+    handleLogin,
+    setValue,
+    handleSubmit,
+    errors,
+    email,
+    password,
+    isLoggingIn,
+  } = useLoginModalHooks(onClose);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -35,8 +42,14 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
             error={errors.password?.message}
             required
           />
-          <Button size="pc" color="main" variant type="submit">
-            ログイン
+          <Button
+            size="pc"
+            color="main"
+            variant
+            type="submit"
+            isDisable={isLoggingIn}
+          >
+            {isLoggingIn ? 'ログイン中...' : 'ログイン'}
           </Button>
         </div>
       </form>
