@@ -12,13 +12,9 @@ export const usePublicRelationsHooks = (groupId: number) => {
   } = usePublicRelationData(groupId || 0);
 
   // アナウンスステータスを決定
-  // public_relations.is_announcement_requestedフィールドに基づいて状態を決定
+  // publicRelationsのisAnnouncementRequestedフィールドに基づいて状態を決定
   const getAnnounceStatus = () => {
-    // 現在はcamelCase (isAnnouncementRequested)とスネークケース(is_announcement_requested)の両方に対応
-    if (
-      publicRelation?.isAnnouncementRequested ||
-      publicRelation?.is_announcement_requested
-    ) {
+    if (publicRelation?.isAnnouncementRequested) {
       return 'はい';
     } else if (publicRelation) {
       return 'いいえ';
@@ -40,9 +36,8 @@ export const usePublicRelationsHooks = (groupId: number) => {
     },
     {
       label: publicRelationLabels[2],
-      // APIからpicture_nameまたはpictureNameを使用
-      content:
-        publicRelation?.picture_name || publicRelation?.pictureName || '未設定',
+      // APIからpictureNameを使用
+      content: publicRelation?.pictureName || '未設定',
     },
   ];
 

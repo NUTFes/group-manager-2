@@ -1,7 +1,6 @@
-import camelcaseKeys from 'camelcase-keys';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { patchFetcher, postFetcher } from './api';
+import { fetcher, patchFetcher, postFetcher } from './api';
 
 // リクエスト用の型定義
 export type PublicRelation = {
@@ -22,23 +21,15 @@ export type PublicRelationResponse = {
   isAnnouncementRequested: boolean;
   createdAt: string;
   updatedAt: string;
-
-  // バックエンドから返されるスネークケース形式のフィールド
-  group_id?: number;
-  picture_name?: string;
-  picture_path?: string;
-  is_announcement_requested?: boolean;
-  created_at?: string;
-  updated_at?: string;
 };
 
 export type Group = {
   id: number;
   name: string;
-  group_category_id: number;
-  user_id: number;
-  fes_year_id: number;
-  public_relation?: PublicRelationResponse;
+  groupCategoryId: number;
+  userId: number;
+  fesYearId: number;
+  publicRelation?: PublicRelationResponse;
 };
 
 type ApiStatus = { code: number; message: string };
@@ -55,28 +46,6 @@ const API_ENDPOINTS = {
 
 // PR情報を取得するためのカスタムフック
 export const usePublicRelationData = (groupId: number) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-  // カスタムフェッチ関数
-  const customFetcher = async (url: string) => {
-    try {
-      // APIのURLを環境変数から取得
-      const fullUrl = `${apiUrl}${url}`;
-      console.log('Fetching data from:', fullUrl);
-
-      const response = await fetch(fullUrl);
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-
-      const json = await response.json();
-      return camelcaseKeys(json, { deep: true });
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-      throw error;
-    }
-  };
-
   // 特定のgroup_idに関連する公開関係情報を取得するエンドポイント
   const endpoint = `${API_ENDPOINTS.PUBLIC_RELATIONS}/group/${groupId}`;
   console.log('Fetching with endpoint:', endpoint);
@@ -86,7 +55,7 @@ export const usePublicRelationData = (groupId: number) => {
     error,
     isLoading,
     mutate,
-  } = useSWR<ApiResponse<PublicRelationResponse>>(endpoint, customFetcher);
+  } = useSWR<ApiResponse<PublicRelationResponse>>(endpoint, fetcher);
 
   // Debug the API response
   console.log('API Response:', response);
