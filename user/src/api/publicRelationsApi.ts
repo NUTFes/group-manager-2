@@ -70,7 +70,6 @@ export const usePublicRelationData = (groupId: number) => {
       }
 
       const json = await response.json();
-      console.log('Raw API response:', json);
       return camelcaseKeys(json, { deep: true });
     } catch (error) {
       console.error('Failed to fetch data:', error);
@@ -94,8 +93,6 @@ export const usePublicRelationData = (groupId: number) => {
 
   // APIからのレスポンスを直接取得
   const publicRelation = response?.status.code === 200 ? response.data : null;
-
-  console.log('Filtered publicRelation:', publicRelation);
 
   return {
     group: null,
