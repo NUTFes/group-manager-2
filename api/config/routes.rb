@@ -105,6 +105,11 @@ Rails.application.routes.draw do
       get 'group', to: 'un_registered_groups#group'
     end
   end
+  resources :fire_equipment_orders do
+    collection do
+      get 'group/:group_id', to: 'fire_equipment_orders#get_by_group_id'
+    end
+  end
 
   # /api/v1/...
   namespace 'api' do
