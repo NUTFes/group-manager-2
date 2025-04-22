@@ -5,7 +5,7 @@ class UnRegisteredGroup < ApplicationRecord
     rental_item_order: 0,
     power_order: 1,
     sub_rep: 2,
-    public_relation: 3,
-    employee: 4
+    employee: 3,
+    fire_equipment_order: 4
   }
 end

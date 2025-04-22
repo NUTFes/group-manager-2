@@ -30,6 +30,9 @@ Rails.application.routes.draw do
   get "/sunny/stages" => "stages#show_sunny"
   get "/rainy/stages" => "stages#show_rainy"
 
+  # 各申請が登録済みか否か
+  get "/check_all_registered/:group_id" => "check_all_registered#show"
+
   # CRUD (/...)
   resources :user_page_settings
   resources :memos
