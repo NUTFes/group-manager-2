@@ -1,8 +1,9 @@
-import { Device } from '@/components/Applications/Power/types';
+import { Device, ORDER_TYPES } from '@/components/Applications/Power/types';
 import { useApiGet, useApiMutations } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
+  UN_REGISTERED_GROUPS: '/un_registered_groups',
 };
 
 // APIから返ってくるデータの型定義
@@ -26,6 +27,12 @@ export type PowerOrderData = {
   manufacturer: string;
   model: string;
   item_url: string;
+};
+
+// 未登録グループのリクエストデータの型定義
+export type UnregisteredGroupData = {
+  group_id: number;
+  order_type: number;
 };
 
 /**
@@ -136,5 +143,22 @@ export const useMutatePowerOrders = () => {
     }
   };
 
-  return { submitPowerOrders, deletePowerOrder };
+  /**
+   * 未登録グループを登録する
+   */
+  const registerUnregisteredGroup = async (groupId: number) => {
+    try {
+      const requestData: UnregisteredGroupData = {
+        group_id: groupId,
+        order_type: ORDER_TYPES.POWER,
+      };
+      await post(API_ENDPOINTS.UN_REGISTERED_GROUPS, requestData);
+      return { success: true };
+    } catch (error) {
+      console.error('未登録グループ登録エラー:', error);
+      return { success: false, error };
+    }
+  };
+
+  return { submitPowerOrders, deletePowerOrder, registerUnregisteredGroup };
 };

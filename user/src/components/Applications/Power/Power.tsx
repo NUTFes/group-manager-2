@@ -101,7 +101,8 @@ const Power: FC<PowerProps> = ({ isDeadline = false }) => {
     useGetPowerOrders(groupId);
 
   // 電力申請の登録・更新・削除機能
-  const { submitPowerOrders, deletePowerOrder } = useMutatePowerOrders();
+  const { submitPowerOrders, deletePowerOrder, registerUnregisteredGroup } =
+    useMutatePowerOrders();
 
   // フォーム管理
   const { formMethods, fields, addDevice, totalPower, isValid } = usePowerForm(
@@ -162,24 +163,32 @@ const Power: FC<PowerProps> = ({ isDeadline = false }) => {
 
   // 申請しないを選択した場合の処理
   const handleApplyNegative = async () => {
-    // 既存の申請があれば削除
-    if (hasExisting && devices.length > 0) {
-      try {
+    try {
+      // 既存の申請があれば削除
+      if (hasExisting && devices.length > 0) {
         const deletePromises = devices.map((device) =>
           device.id
             ? deletePowerOrder(device.id)
             : Promise.resolve({ success: true })
         );
         await Promise.all(deletePromises);
+      }
+
+      // 未登録グループとして登録する
+      const result = await registerUnregisteredGroup(groupId);
+
+      if (result.success) {
         updateState({ applyPower: 'no' });
         await mutate();
-      } catch {
+      } else {
         updateState({
-          submitError: '申請の削除に失敗しました。もう一度お試しください。',
+          submitError: '申請の登録に失敗しました。もう一度お試しください。',
         });
       }
-    } else {
-      updateState({ applyPower: 'no' });
+    } catch {
+      updateState({
+        submitError: '申請の処理に失敗しました。もう一度お試しください。',
+      });
     }
   };
 
