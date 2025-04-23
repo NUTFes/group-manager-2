@@ -1,10 +1,11 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import { DepartmentList, GradeList } from '@/utils/list';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
 import { useRegisterCarouselHooks } from './hooks';
+import { RegisterFormSchema } from './schema';
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -86,9 +87,34 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     displayError,
   } = useRegisterCarouselHooks(onClose);
 
+  // フォーム参照の作成
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // 登録ボタンのクリックハンドラ
+  const handleRegisterClick = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault(); // デフォルトのボタン動作を防止
+
+    // フォームを明示的に送信
+    if (formRef.current) {
+      formRef.current.dispatchEvent(
+        new Event('submit', { cancelable: true, bubbles: true })
+      );
+    }
+  };
+
+  // フォーム送信ハンドラ
+  const handleFormSubmit = (data: RegisterFormSchema) => {
+    onRegisterSubmit(data);
+  };
+
+  // 次へボタンのクリックハンドラ
+  const handleNextClick = () => {
+    handleNext();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onRegisterSubmit)}>
+      <form onSubmit={handleSubmit(handleFormSubmit)} ref={formRef} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
@@ -289,12 +315,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <Button
                 size="pc"
                 color="main"
-                type="submit"
+                type="button"
+                onClick={handleRegisterClick}
                 isDisable={isRegistering}
-                onClick={() => {
-                  console.log('登録ボタンがクリックされました');
-                  handleSubmit(onRegisterSubmit)();
-                }}
               >
                 登録
               </Button>
@@ -303,7 +326,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 size="pc"
                 color="main"
                 type="button"
-                onClick={handleNext}
+                onClick={handleNextClick}
                 isDisable={isRegistering}
               >
                 次へ
