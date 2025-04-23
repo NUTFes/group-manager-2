@@ -13,6 +13,7 @@ RUN wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg |
       && apt-get update \
       && apt-get install -y nodejs npm yarn \
       && apt-get install -y build-essential libpq-dev libgtk-3.0 libnss3 libatk-bridge2.0-0\
+      && apt-get install fonts-ipa* \
       && mkdir /myapp
 
 # PLATFORMが'arm64-darwin'の場合のみ、特定のコマンドを実行
@@ -23,8 +24,6 @@ RUN if [ "$PLATFORM" = "arm64-darwin" ]; then \
       rm wkhtmltox_0.12.6-1.stretch_arm64.deb; \
     fi
 
-# 日本語フォントのインストール
-RUN apt-get install fonts-ipa*
 
 # ワーキングディレクトリの設定
 WORKDIR /myapp
