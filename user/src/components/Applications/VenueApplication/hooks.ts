@@ -25,6 +25,10 @@ export const usePlaceOrdersHooks = (groupId: number) => {
           label: '第三希望',
           content: places[placeOrder?.third - 1]?.name || '',
         },
+        {
+          label: '備考',
+          content: placeOrder?.remark || '',
+        },
       ]
     : [];
 

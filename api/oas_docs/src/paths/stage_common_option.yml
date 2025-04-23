@@ -41,6 +41,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/StageCommonOption"
+  "/stage_common_options/group/{group_id}":
+    get:
+      tags:
+      - stage_common_option
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+        '404':
+          description: stage_common_option description
+        '422':
+          description: stage_common_option description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StageCommonOption"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/stage_common_options/{id}":
     get:
       tags:

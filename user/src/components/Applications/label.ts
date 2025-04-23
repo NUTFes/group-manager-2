@@ -4,3 +4,16 @@ export const stageOptionLabels = [
   '実行委員が撮影することを許可しますか',
   '大きい音を出しますか',
 ];
+
+export const stageLabels = [
+  '開催日',
+  '晴れの場合：第1希望',
+  '晴れの場合：第2希望',
+  '雨の場合：第1希望',
+  '雨の場合：第2希望',
+  '準備時間',
+  '本番時間',
+  '片付け時間',
+];
+
+export const publicRelationLabels = ['PR文', 'アナウンスの有無', 'PR画像'];

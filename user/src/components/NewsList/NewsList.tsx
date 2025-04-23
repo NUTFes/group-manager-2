@@ -24,7 +24,7 @@ const NewsList: FC<NewsListProps> = () => {
     return (
       <div key={item.id} className="flex flex-col gap-2">
         <span className="w-24 text-base font-medium text-font">{date}</span>
-        <span className="w-56 text-base font-medium text-font">
+        <span className="w-full whitespace-pre-line text-base font-medium text-font">
           {item.body}
         </span>
       </div>
@@ -32,7 +32,7 @@ const NewsList: FC<NewsListProps> = () => {
   });
 
   return (
-    <div className="m-auto flex w-[497px] items-center justify-center">
+    <div className="flex w-[497px] items-center justify-center">
       <FormContainer>
         <div className="mb-10 w-[497px]">
           <div className="text-4xl font-bold text-main">お知らせ</div>
