@@ -86,6 +86,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     isRegistering,
     displayError,
     errors,
+    trigger,
   } = useRegisterCarouselHooks(onClose);
 
   // フォーム参照の作成
@@ -133,6 +134,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     error={errors.mail?.message}
                     onChange={(value: string) => setValue('mail', value)}
+                    onBlur={() => trigger('mail')}
                   />
                   <TextBox
                     label="パスワード"
@@ -142,6 +144,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     error={errors.password?.message}
                     onChange={(value: string) => setValue('password', value)}
+                    onBlur={() => trigger('password')}
                   />
                   <TextBox
                     label="パスワード（確認用）"
@@ -153,6 +156,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     onChange={(value: string) =>
                       setValue('passwordConfirm', value)
                     }
+                    onBlur={() => trigger('passwordConfirm')}
                   />
                 </div>
               </div>
@@ -165,6 +169,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     error={errors.name?.message}
                     onChange={(value: string) => setValue('name', value)}
+                    onBlur={() => trigger('name')}
                   />
                   <TextBox
                     label="電話番号"
@@ -173,6 +178,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     error={errors.tel?.message}
                     onChange={(value: string) => setValue('tel', value)}
+                    onBlur={() => trigger('tel')}
                   />
                   <TextBox
                     label="学籍番号"
@@ -181,6 +187,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     error={errors.studentId?.message}
                     onChange={(value: string) => setValue('studentId', value)}
+                    onBlur={() => trigger('studentId')}
                   />
                   <Selector
                     label="学年"

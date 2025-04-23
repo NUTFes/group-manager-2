@@ -59,6 +59,7 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     getValues,
     watch,
     setValue,
+    trigger,
   } = useForm<RegisterFormSchema>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -160,5 +161,6 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     departmentOptions,
     isRegistering,
     displayError,
+    trigger,
   };
 };
