@@ -18,13 +18,16 @@ export const usePowerForm = (defaultValues?: PowerApplicationFormData) => {
     mode: 'onChange',
   });
 
-  const { control, formState, reset, setValue } = formMethods;
+  const { control, formState, reset, setValue, watch } = formMethods;
   const { isValid } = formState;
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'devices',
   });
+
+  // フォームの値を監視
+  const watchedDevices = watch('devices');
 
   // 初期値が変更されたらフォームをリセット
   useEffect(() => {
@@ -58,8 +61,8 @@ export const usePowerForm = (defaultValues?: PowerApplicationFormData) => {
   }, [defaultValues, previousDefaultValues, reset, setValue]);
 
   // 合計電力の計算
-  const totalPower = fields.reduce(
-    (sum, field) => sum + (Number(field.maxPower) || 0),
+  const totalPower = watchedDevices.reduce(
+    (sum, device) => sum + (Number(device.maxPower) || 0),
     0
   );
 
