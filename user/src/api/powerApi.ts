@@ -29,10 +29,19 @@ export type PowerOrderData = {
   item_url: string;
 };
 
-// 未登録グループのリクエストデータの型定義
+// 未登録テーブルのリクエストデータの型定義
 export type UnregisteredGroupData = {
   group_id: number;
   order_type: number;
+};
+
+// 未登録テーブルのレスポンス型定義
+export type UnregisteredGroupResponse = {
+  id: number;
+  group_id: number;
+  order_type: string;
+  created_at: string;
+  updated_at: string;
 };
 
 /**
@@ -85,6 +94,30 @@ export const useGetPowerOrders = (groupId: number | null) => {
     isLoading,
     hasError: !!error,
     hasExisting: devices.length > 0,
+    mutate,
+  };
+};
+
+/**
+ * 未登録テーブルデータを取得するフック
+ */
+export const useGetUnregisteredGroup = (groupId: number | null) => {
+  const endpoint = groupId
+    ? `${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER}`
+    : null;
+
+  const { data, error, isLoading, mutate } = useApiGet<{
+    data: UnregisteredGroupResponse[];
+  }>(endpoint);
+
+  // 指定されたテーブルIDに一致する未登録テーブルデータがあるか
+  const hasUnregistered = data?.data && data.data.length > 0;
+
+  return {
+    unregisteredData: data?.data || [],
+    isLoading,
+    hasError: !!error,
+    hasUnregistered,
     mutate,
   };
 };
@@ -144,7 +177,7 @@ export const useMutatePowerOrders = () => {
   };
 
   /**
-   * 未登録グループを登録する
+   * 未登録テーブルを登録する
    */
   const registerUnregisteredGroup = async (groupId: number) => {
     try {
@@ -155,10 +188,64 @@ export const useMutatePowerOrders = () => {
       await post(API_ENDPOINTS.UN_REGISTERED_GROUPS, requestData);
       return { success: true };
     } catch (error) {
-      console.error('未登録グループ登録エラー:', error);
+      console.error('未登録テーブル登録エラー:', error);
       return { success: false, error };
     }
   };
 
-  return { submitPowerOrders, deletePowerOrder, registerUnregisteredGroup };
+  /**
+   * 未登録テーブルデータを取得する
+   * イベントハンドラや他の関数内での呼び出し用。
+   */
+  const getUnregisteredGroup = async (groupId: number) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER}`
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to get unregistered group');
+      }
+
+      const result = await response.json();
+      return {
+        success: true,
+        data: result.data || [],
+      };
+    } catch (error) {
+      console.error('未登録テーブル取得エラー:', error);
+      return { success: false, error, data: [] };
+    }
+  };
+
+  /**
+   * 未登録テーブルデータを削除する
+   */
+  const deleteUnregisteredGroup = async (groupId: number) => {
+    try {
+      // まず未登録テーブルを取得
+      const result = await getUnregisteredGroup(groupId);
+      if (!result.success || result.data.length === 0) {
+        return { success: true, noData: true }; // データがなければ削除不要
+      }
+
+      // 見つかった場合はIDを使って削除
+      const unregisteredGroup = result.data[0];
+      await deleteMethod(
+        `${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredGroup.id}`
+      );
+      return { success: true };
+    } catch (error) {
+      console.error('未登録テーブル削除エラー:', error);
+      return { success: false, error };
+    }
+  };
+
+  return {
+    submitPowerOrders,
+    deletePowerOrder,
+    registerUnregisteredGroup,
+    deleteUnregisteredGroup,
+    getUnregisteredGroup,
+  };
 };
