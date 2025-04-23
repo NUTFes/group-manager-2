@@ -8,7 +8,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # 全部のオリジンをちゃんとhttpつけて書くよ〜！
-    origins 'http://192.168.97.3:8000', 'http://localhost:8000', 'http://localhost:8003', 'http://api:3000'
+    origins 'https://group-manager.nutfes.net' , 'https://group-manager-admin.nutfes.net'
     # ↑↑↑ api:3000も追加したし、カンマも正しくしたし、httpもちゃんとつけた！💯
 
     resource '*',
