@@ -80,7 +80,6 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     handlePrev,
     gradeOptions,
     departmentOptions,
-    handleSubmit,
     register,
   } = useRegisterCarouselHooks();
 
