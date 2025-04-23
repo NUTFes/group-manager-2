@@ -12,6 +12,8 @@ services:
       dockerfile: Dockerfile
     container_name: prod-api
     volumes: [./api:/myapp]
+    env_file: [.env]
+
 
   user:
     build:
@@ -42,6 +44,7 @@ services:
         - VUE_APP_URL=${VUE_APP_URL}
         - VUE_APP_API_URL=${VUE_APP_API_URL}
     container_name: prod-admin
+    env_file: [.env]
     ports:
       - "8000:3000"
 
