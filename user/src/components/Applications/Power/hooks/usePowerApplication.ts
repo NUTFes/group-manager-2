@@ -135,12 +135,28 @@ export const usePowerApplication = (groupId: number) => {
     try {
       // 既存の申請があれば削除
       if (hasExisting && devices.length > 0) {
-        const deletePromises = devices.map((device) =>
-          device.id
-            ? deletePowerOrder(device.id)
-            : Promise.resolve({ success: true })
+        const deleteResults = await Promise.all(
+          devices.map(async (device) => {
+            if (!device.id) return { success: true };
+
+            try {
+              const result = await deletePowerOrder(device.id);
+              return result;
+            } catch (error) {
+              console.error(`デバイスID ${device.id} の削除に失敗:`, error);
+              return { success: false, error };
+            }
+          })
         );
-        await Promise.all(deletePromises);
+
+        // いずれかの削除が失敗した場合は警告を表示するが処理は続行
+        const hasFailures = deleteResults.some((result) => !result.success);
+        if (hasFailures) {
+          console.warn('一部のデバイス削除に失敗しましたが、処理を続行します');
+          toast.warning(
+            '一部の機器情報の削除に失敗しましたが、処理を続行します'
+          );
+        }
       }
 
       // 未登録グループとして登録する
@@ -157,7 +173,8 @@ export const usePowerApplication = (groupId: number) => {
         });
         toast.error('申請の登録に失敗しました');
       }
-    } catch {
+    } catch (error) {
+      console.error('申請処理中のエラー:', error);
       updateState({
         submitError: '申請の処理に失敗しました。もう一度お試しください。',
       });
@@ -177,7 +194,23 @@ export const usePowerApplication = (groupId: number) => {
 
     try {
       // 申請なしから申請ありに変更した場合、未登録テーブルの情報を削除
-      await deleteUnregisteredGroup(groupId);
+      try {
+        const deleteResult = await deleteUnregisteredGroup(groupId);
+        if (!deleteResult.success) {
+          console.warn('未登録テーブル削除エラー:', deleteResult.error);
+          toast.warning(
+            '未登録データの削除に問題がありましたが、処理を続行します'
+          );
+        }
+      } catch (error) {
+        console.warn(
+          '未登録テーブル削除中にエラーが発生しましたが、処理を続行します:',
+          error
+        );
+        toast.warning(
+          '未登録データの削除に問題がありましたが、処理を続行します'
+        );
+      }
 
       // IDが保持されているか確認
       const devicesWithId = data.devices.map((device, index) => {
@@ -207,7 +240,8 @@ export const usePowerApplication = (groupId: number) => {
         });
         toast.error('申請の送信に失敗しました');
       }
-    } catch {
+    } catch (error) {
+      console.error('申請送信中のエラー:', error);
       updateState({
         submitError: '申請の送信中にエラーが発生しました。',
       });

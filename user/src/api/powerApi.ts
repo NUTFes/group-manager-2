@@ -207,10 +207,23 @@ export const useMutatePowerOrders = () => {
         throw new Error('Failed to get unregistered group');
       }
 
-      const result = await response.json();
+      // レスポンスが空でないことを確認してからJSONをパース
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const text = await response.text();
+        if (text) {
+          const result = JSON.parse(text);
+          return {
+            success: true,
+            data: result.data || [],
+          };
+        }
+      }
+
+      // 空レスポンスまたはJSONでない場合
       return {
         success: true,
-        data: result.data || [],
+        data: [],
       };
     } catch (error) {
       console.error('未登録テーブル取得エラー:', error);
@@ -231,13 +244,53 @@ export const useMutatePowerOrders = () => {
 
       // 見つかった場合はIDを使って削除
       const unregisteredGroup = result.data[0];
-      await deleteMethod(
-        `${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredGroup.id}`
-      );
-      return { success: true };
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredGroup.id}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (response.ok) {
+          return { success: true };
+        } else {
+          let errorDetail = `削除に失敗しました。ステータス: ${response.status}`;
+          try {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+              const errorText = await response.text();
+              if (errorText) {
+                const errorJson = JSON.parse(errorText);
+                errorDetail = `削除に失敗しました: ${errorJson.message || JSON.stringify(errorJson)}`;
+              }
+            }
+          } catch (parseError) {
+            console.error('エラーレスポンスの解析に失敗:', parseError);
+          }
+
+          return {
+            success: false,
+            error: errorDetail,
+          };
+        }
+      } catch (fetchError) {
+        console.error('未登録テーブル削除通信エラー:', fetchError);
+        return {
+          success: false,
+          error: `通信エラー: ${fetchError instanceof Error ? fetchError.message : '不明なエラー'}`,
+        };
+      }
     } catch (error) {
       console.error('未登録テーブル削除エラー:', error);
-      return { success: false, error };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : '不明なエラー',
+      };
     }
   };
 
