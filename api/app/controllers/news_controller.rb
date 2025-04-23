@@ -1,5 +1,4 @@
 class NewsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_news, only: [:show, :update, :destroy]
 
   # GET /news
