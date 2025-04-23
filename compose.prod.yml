@@ -47,18 +47,3 @@ services:
     env_file: [.env]
     ports:
       - "8000:3000"
-
-  db:
-    image: mysql:8.0
-    container_name: "DB"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_ROOT_USER: root
-      MYSQL_PASSWORD: password
-    command: --default-authentication-plugin=mysql_native_password
-    ports: ["3306:3306"]
-    volumes: [mysql-data:/var/lib/mysql]
-
-volumes:
-  mysql-data:
-    driver: local
