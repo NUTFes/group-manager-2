@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  # before_action :authenticate_api_user!
+  before_action :authenticate_api_user!
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
