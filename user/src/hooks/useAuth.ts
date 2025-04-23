@@ -202,7 +202,7 @@ export const useAuth = () => {
           password: params.password,
           password_confirmation: params.passwordConfirm,
           name: params.name,
-          role_id: 1,
+          role_id: 4,
         });
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

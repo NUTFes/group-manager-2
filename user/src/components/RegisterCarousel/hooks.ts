@@ -99,23 +99,6 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     setStepIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
-  // Embla の select イベントで stepIndex を更新
-  // useEffect(() => {
-  //   if (!emblaApi) return;
-
-  //   const onSelect = () => {
-  //     setStepIndex(emblaApi.selectedScrollSnap());
-  //   };
-
-  //   emblaApi.on('select', onSelect);
-  //   // 初期表示も反映
-  //   onSelect();
-
-  //   return () => {
-  //     emblaApi.off('select', onSelect);
-  //   };
-  // }, [emblaApi]);
-
   // エラーメッセージの監視
   useEffect(() => {
     setDisplayError(registrationError);
