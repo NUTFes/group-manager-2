@@ -1,15 +1,48 @@
 import { useCallback, useState } from 'react';
-import { useRouter } from 'next/router';
 import { DepartmentList, GradeList } from '@/utils/list';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
+import type { CreatePluginType } from 'embla-carousel';
+import { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { RegisterFormSchema, RegisterSchema } from './schema';
 
 export const useRegisterCarouselHooks = () => {
-  const router = useRouter();
+  // ① プラグインの型を定義
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  type SelectPlugin = CreatePluginType<Record<string, unknown>, {}>;
+
+  // ② プラグイン生成関数
+  const createSelectPlugin = (): SelectPlugin => {
+    let emblaApiRef: EmblaCarouselType;
+    let handler: () => void;
+
+    return {
+      name: 'selectPlugin',
+      options: {},
+
+      // 初期化時に呼ばれるメソッド
+      init: (emblaApi) => {
+        emblaApiRef = emblaApi;
+        handler = () => {
+          // emblaApiRef が最新のスナップ位置を state に反映
+          setStepIndex(emblaApiRef.selectedScrollSnap());
+        };
+        emblaApiRef.on('select', handler);
+        // モーダル開閉時など初期同期用
+        handler();
+      },
+
+      // クリーンアップ
+      destroy: () => {
+        emblaApiRef.off('select', handler);
+      },
+    };
+  };
+
+  // const router = useRouter();
   const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
   const departmentOptions = [
     { id: 0, name: '選択してください' },
@@ -41,10 +74,10 @@ export const useRegisterCarouselHooks = () => {
 
   const [stepIndex, setStepIndex] = useState<number>(0);
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    containScroll: 'trimSnaps',
-  });
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: false, containScroll: 'trimSnaps' },
+    [createSelectPlugin()]
+  );
 
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
@@ -107,7 +140,7 @@ export const useRegisterCarouselHooks = () => {
       toast.success('登録が完了しました');
 
       // 登録成功後の処理（例：ログインページへリダイレクト）
-      router.push('/');
+      // router.push('/');
     } catch (error: any) {
       console.error('サインアップエラー:', error);
 
