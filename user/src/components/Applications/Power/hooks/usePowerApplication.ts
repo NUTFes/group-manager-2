@@ -257,11 +257,30 @@ export const usePowerApplication = (groupId: number) => {
       value === '1' ? 'yes' : value === '2' ? 'no' : 'undecided';
 
     if (radioValue === 'yes') {
+      // 「はい」を選択した場合
+      // 以前のapplyPowerの値を取得して、「いいえ」から「はい」への変更を検出する
+      const isChangingFromNo = state.applyPower === 'no';
+
       updateState({
         applyPower: 'yes',
         isEditing: true,
         isSubmitted: false,
       });
+
+      // 「いいえ」から「はい」に変更した場合、フォームリセットが必要な場合はフォームを初期化
+      if (isChangingFromNo) {
+        formMethods.reset(
+          {
+            devices: [{ ...DEFAULT_DEVICE }],
+          },
+          {
+            keepDirty: false,
+            keepErrors: false,
+            keepDirtyValues: false,
+            keepValues: false,
+          }
+        );
+      }
     } else if (radioValue === 'no') {
       updateState({
         applyPower: 'no',
