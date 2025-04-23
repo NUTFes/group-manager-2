@@ -1,12 +1,9 @@
-import { FC, useCallback, useEffect, useState } from 'react';
-import { RegisterParams } from '@/types/register/user';
+import { FC } from 'react';
 import { DepartmentList, GradeList } from '@/utils/list';
-// import { useRouter } from 'next/router'; // router は未使用のためコメントアウトまたは削除
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
-import { useAuth } from '@/hooks/useAuth';
 import { useRegisterCarouselHooks } from './hooks';
 
 type RegisterCarouselProps = {
@@ -73,10 +70,10 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
+  // カスタムフックから全ての必要な値と関数を取得
   const {
     stepIndex,
     emblaRef,
-    onSubmit,
     values,
     setValue,
     handleNext,
@@ -84,93 +81,18 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     gradeOptions,
     departmentOptions,
     handleSubmit,
-  } = useRegisterCarouselHooks();
-  const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
-  const departmentOptions = [
-    { id: 0, name: '選択してください' },
-    ...DepartmentList,
-  ];
-  const [input, setInput] = useState<RegisterParams>({
-    name: '',
-    studentId: '',
-    tel: '',
-    mail: '',
-    departmentId: 0,
-    gradeId: 0,
-    password: '',
-    passwordConfirm: '',
-    userId: 0,
-  });
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    containScroll: 'trimSnaps',
-  });
-  const [stepIndex, setStepIndex] = useState(0);
-  // const router = useRouter(); // 未使用のため削除
-  const { registerTrigger, isRegistering, registrationError } = useAuth();
-  const [displayError, setDisplayError] = useState<string | null>(null); // エラー表示用State
-
-  const handleNext = useCallback(() => {
-    if (!emblaApi || !emblaApi.canScrollNext()) return;
-    emblaApi.scrollNext();
-    setTimeout(() => {
-      setStepIndex(emblaApi.selectedScrollSnap());
-    }, 0);
-  }, [emblaApi]);
-
-  const handlePrev = useCallback(() => {
-    if (!emblaApi || !emblaApi.canScrollPrev()) return;
-    emblaApi.scrollPrev();
-    setTimeout(() => {
-      setStepIndex(emblaApi.selectedScrollSnap());
-    }, 0);
-  }, [emblaApi]);
-
-  useEffect(() => {
-    // registrationErrorが変更されたらエラー表示用Stateを更新
-    setDisplayError(registrationError);
-  }, [registrationError]);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isRegistering) return;
-    setDisplayError(null); // 送信時にエラーをクリア
-
-    try {
-      console.log('登録実行:', input);
-      const result = await registerTrigger({
-        ...input,
-      });
-
-      console.log('Registration trigger result:', result);
-
-      if (result?.success) {
-        toast.success('登録が完了しました。');
-        onClose();
-      } else {
-        // registerTriggerがエラーをスローしなくても、result.successがfalseの場合がある
-        // useAuthフック側でエラーが処理され、registrationErrorに入る想定だが念のため
-        if (!registrationError) {
-          setDisplayError('登録処理中に不明なエラーが発生しました。');
-        }
-      }
-    } catch (error) {
-      // registerTrigger がエラーをスローした場合 (通常はこちらで処理される想定)
-      console.error('onSubmit Error caught:', error);
-      // useAuthフックがエラーをセットするのを待つか、ここで直接セットする
-      // registrationErrorが更新されるので、useEffectでsetDisplayErrorが呼ばれるはず
-      if (!registrationError) {
-        setDisplayError('登録処理中に予期せぬエラーが発生しました。');
-      }
-    }
-  };
+    onRegisterSubmit,
+    isRegistering,
+    displayError,
+  } = useRegisterCarouselHooks(onClose);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onRegisterSubmit)}>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
-            className="w-[450px] overflow-y-auto overflow-x-hidden max-h-[60vh] pt-4"
+            className="max-h-[60vh] w-[450px] overflow-y-auto overflow-x-hidden pt-4"
             ref={emblaRef}
           >
             <div className="flex">
@@ -204,7 +126,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-              <div className="min-w-0 flex-none basis-full p-">
+              <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="名前"
@@ -335,18 +257,6 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
-                    <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
-                      <div className="text-xs font-black text-font">
-                        電話番号
-                      </div>
-                    </div>
-                    <div className="inline-flex h-[38px] w-[298px] items-center justify-start">
-                      <div className="text-base font-medium text-font">
-                        {input.tel}
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -379,11 +289,14 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <Button
                 size="pc"
                 color="main"
-                onClick={handleNext}
                 type="submit"
-                // TODO: バリデーションを追加して無効化する
+                isDisable={isRegistering}
+                onClick={() => {
+                  console.log('登録ボタンがクリックされました');
+                  handleSubmit(onRegisterSubmit)();
+                }}
               >
-                次へ
+                登録
               </Button>
             ) : (
               <Button
