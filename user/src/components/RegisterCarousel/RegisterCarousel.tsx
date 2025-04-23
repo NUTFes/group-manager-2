@@ -87,6 +87,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     displayError,
     errors,
     trigger,
+    goToStep,
   } = useRegisterCarouselHooks(onClose);
 
   // フォーム参照の作成
@@ -98,6 +99,29 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
     // フォームを明示的に送信
     if (formRef.current) {
+      // フォーム送信前にバリデーションをチェック
+      const mailFieldHasError = !!errors.mail;
+      const passwordFieldHasError =
+        !!errors.password || !!errors.passwordConfirm;
+      const userInfoFieldHasError =
+        !!errors.name ||
+        !!errors.studentId ||
+        !!errors.tel ||
+        !!errors.gradeId ||
+        !!errors.departmentId;
+
+      // メールアドレスまたはパスワードのエラーがある場合はステップ1に移動
+      if (mailFieldHasError || passwordFieldHasError) {
+        goToStep(0);
+        return;
+      }
+
+      // 代表者情報のエラーがある場合はステップ2に移動
+      if (userInfoFieldHasError) {
+        goToStep(1);
+        return;
+      }
+
       formRef.current.dispatchEvent(
         new Event('submit', { cancelable: true, bubbles: true })
       );
@@ -111,6 +135,58 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   // 次へボタンのクリックハンドラ
   const handleNextClick = () => {
+    // 現在のステップのバリデーションチェック
+    if (stepIndex === 0) {
+      // メールアドレスとパスワードのフィールドをバリデーション
+      const hasMail = !!values.mail;
+      const hasPassword = !!values.password && !!values.passwordConfirm;
+      const mailIsValid = !errors.mail;
+      const passwordIsValid = !errors.password && !errors.passwordConfirm;
+
+      if (!hasMail || !hasPassword || !mailIsValid || !passwordIsValid) {
+        // 一度すべてのフィールドのバリデーションをトリガー
+        trigger('mail');
+        trigger('password');
+        trigger('passwordConfirm');
+        return;
+      }
+    } else if (stepIndex === 1) {
+      // 代表者情報のフィールドをバリデーション
+      const hasName = !!values.name;
+      const hasStudentId = !!values.studentId;
+      const hasTel = !!values.tel;
+      const hasGradeId = values.gradeId !== 0;
+      const hasDepartmentId = values.departmentId !== 0;
+
+      const nameIsValid = !errors.name;
+      const studentIdIsValid = !errors.studentId;
+      const telIsValid = !errors.tel;
+      const gradeIdIsValid = !errors.gradeId;
+      const departmentIdIsValid = !errors.departmentId;
+
+      if (
+        !hasName ||
+        !hasStudentId ||
+        !hasTel ||
+        !hasGradeId ||
+        !hasDepartmentId ||
+        !nameIsValid ||
+        !studentIdIsValid ||
+        !telIsValid ||
+        !gradeIdIsValid ||
+        !departmentIdIsValid
+      ) {
+        // 一度すべてのフィールドのバリデーションをトリガー
+        trigger('name');
+        trigger('studentId');
+        trigger('tel');
+        trigger('gradeId');
+        trigger('departmentId');
+        return;
+      }
+    }
+
+    // 問題がなければ次のステップへ
     handleNext();
   };
 

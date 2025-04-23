@@ -85,6 +85,16 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     [createSelectPlugin()]
   );
 
+  // 特定のステップに移動する関数
+  const goToStep = useCallback(
+    (step: number) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(step);
+      setStepIndex(step);
+    },
+    [emblaApi]
+  );
+
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
     if (stepIndex === 2) return;
@@ -104,6 +114,41 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
   useEffect(() => {
     setDisplayError(registrationError);
   }, [registrationError]);
+
+  // エラーメッセージに基づいて適切なステップに移動する関数
+  const navigateToErrorStep = useCallback(
+    (errorMessage: string) => {
+      // メールアドレスやパスワードに関するエラーであればステップ1に移動
+      if (
+        errorMessage.includes('メールアドレス') ||
+        errorMessage.includes('パスワード') ||
+        errorMessage.includes('mail') ||
+        errorMessage.includes('email') ||
+        errorMessage.includes('password')
+      ) {
+        goToStep(0);
+        return;
+      }
+
+      // 代表者情報に関するエラーであればステップ2に移動
+      if (
+        errorMessage.includes('名前') ||
+        errorMessage.includes('学籍番号') ||
+        errorMessage.includes('電話番号') ||
+        errorMessage.includes('学年') ||
+        errorMessage.includes('学科') ||
+        errorMessage.includes('name') ||
+        errorMessage.includes('studentId') ||
+        errorMessage.includes('tel') ||
+        errorMessage.includes('gradeId') ||
+        errorMessage.includes('departmentId')
+      ) {
+        goToStep(1);
+        return;
+      }
+    },
+    [goToStep]
+  );
 
   // 登録処理を実装
   const onRegisterSubmit = async (data: RegisterFormSchema) => {
@@ -132,17 +177,33 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
         toast.success('登録が完了しました。');
         if (onClose) onClose();
       } else if (!registrationError) {
-        setDisplayError('登録処理中に不明なエラーが発生しました。');
+        const errorMsg = '登録処理中に不明なエラーが発生しました。';
+        setDisplayError(errorMsg);
+        toast.error(errorMsg);
       }
     } catch (error) {
       console.error('Registration error:', error);
       if (error instanceof Error && !registrationError) {
-        setDisplayError(error.message);
+        const errorMsg = error.message;
+        setDisplayError(errorMsg);
+        toast.error(errorMsg);
+
+        // エラーメッセージに基づいて適切なステップに移動
+        navigateToErrorStep(errorMsg);
       } else if (!registrationError) {
-        setDisplayError('登録処理中に予期せぬエラーが発生しました。');
+        const errorMsg = '登録処理中に予期せぬエラーが発生しました。';
+        setDisplayError(errorMsg);
+        toast.error(errorMsg);
       }
     }
   };
+
+  // registrationErrorが変更された時に適切なステップに移動する
+  useEffect(() => {
+    if (registrationError) {
+      navigateToErrorStep(registrationError);
+    }
+  }, [registrationError, navigateToErrorStep]);
 
   return {
     register,
@@ -162,5 +223,6 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     isRegistering,
     displayError,
     trigger,
+    goToStep,
   };
 };
