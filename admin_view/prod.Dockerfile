@@ -43,4 +43,3 @@ EXPOSE 8000
 
 # Start the application
 CMD ["node_modules/.bin/nuxt", "start", "-H", "0.0.0.0", "-p", "8000"]
-# CMD ["node", ".nuxt/dist/server/server.js"]
