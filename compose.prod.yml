@@ -1,17 +1,17 @@
 services:
   cloudflare:
     image: cloudflare/cloudflared
-    container_name: "GM2-CLOUDFLARE"
+    container_name: cloudflare
     volumes:
       - ./cloudflare/prod:/home/nonroot/.cloudflared
     command: tunnel run
 
   api:
-    build: ./api
-    command: bash -c "bundle exec rails s"
-    container_name: "GM2-API"
+    build:
+      context: ./api
+      dockerfile: prod.Dockerfile
+    container_name: prod-api
     volumes: [./api:/myapp]
-    # env_file: [group-manager-2.env]
 
   user:
     build:
