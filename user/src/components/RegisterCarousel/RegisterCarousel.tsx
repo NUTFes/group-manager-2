@@ -85,6 +85,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     onRegisterSubmit,
     isRegistering,
     displayError,
+    errors,
   } = useRegisterCarouselHooks(onClose);
 
   // フォーム参照の作成
@@ -130,6 +131,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.mail}
                     note="例：s123456@stn.nagaokaut.ac.jp"
                     required
+                    error={errors.mail?.message}
                     onChange={(value: string) => setValue('mail', value)}
                   />
                   <TextBox
@@ -138,6 +140,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.password}
                     note="英数字8文字以上"
                     required
+                    error={errors.password?.message}
                     onChange={(value: string) => setValue('password', value)}
                   />
                   <TextBox
@@ -146,6 +149,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.passwordConfirm}
                     note="英数字8文字以上"
                     required
+                    error={errors.passwordConfirm?.message}
                     onChange={(value: string) =>
                       setValue('passwordConfirm', value)
                     }
@@ -159,6 +163,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.name}
                     note="例：長岡　太郎"
                     required
+                    error={errors.name?.message}
                     onChange={(value: string) => setValue('name', value)}
                   />
                   <TextBox
@@ -166,6 +171,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.tel}
                     note="例：09012345678"
                     required
+                    error={errors.tel?.message}
                     onChange={(value: string) => setValue('tel', value)}
                   />
                   <TextBox
@@ -173,6 +179,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.studentId}
                     note="例：12345678"
                     required
+                    error={errors.studentId?.message}
                     onChange={(value: string) => setValue('studentId', value)}
                   />
                   <Selector
@@ -183,6 +190,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     }
                     options={gradeOptions}
                     value={values.gradeId}
+                    error={errors.gradeId?.message}
                   />
                   <Selector
                     label="学科"
@@ -192,6 +200,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     }
                     options={departmentOptions}
                     value={values.departmentId}
+                    error={errors.departmentId?.message}
                   />
                 </div>
               </div>
