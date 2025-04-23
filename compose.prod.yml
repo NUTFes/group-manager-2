@@ -11,23 +11,16 @@ services:
     command: bash -c "bundle exec rails s"
     container_name: "GM2-API"
     volumes: [./api:/myapp]
-    env_file: [group-manager-2.env]
+    # env_file: [group-manager-2.env]
 
   user:
     build:
       context: ./user
       dockerfile: prod.Dockerfile
       args:
-        - NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV}
-        - NEXT_PUBLIC_APIKEY=${NEXT_PUBLIC_APIKEY}
-        - NEXT_PUBLIC_AUTHDOMAIN=${NEXT_PUBLIC_AUTHDOMAIN}
-        - NEXT_PUBLIC_PROJECTID=${NEXT_PUBLIC_PROJECTID}
-        - NEXT_PUBLIC_STORAGEBUCKET=${NEXT_PUBLIC_STORAGEBUCKET}
-        - NEXT_PUBLIC_MESSAGINGSENDERID=${NEXT_PUBLIC_MESSAGINGSENDERID}
-        - NEXT_PUBLIC_APPID=${NEXT_PUBLIC_APPID}
-        - NEXT_PUBLIC_MEASUREMENTID=${NEXT_PUBLIC_MEASUREMENTID}
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-        - NEXT_PUBLIC_MAGAZINE_URL=${NEXT_PUBLIC_MAGAZINE_URL}
+        - NEXT_PUBLIC_IMGUR_CLIENT_ID=${NEXT_PUBLIC_IMGUR_CLIENT_ID}
+        - IMGUR_CLIENT_SECRET=${IMGUR_CLIENT_SECRET}
     container_name: prod-view
     ports:
       - "3000:3000"
@@ -42,8 +35,10 @@ services:
   #   depends_on: [api]
 
   admin_view:
-    build: ./admin_view
-    container_name: "GM2-ADMIN-VIEW"
-    command: bash -c "npm run start"
-    volumes: [./admin_view:/app]
-    env_file: [group-manager-2.env]
+    build:
+      context: ./admin_view
+      dockerfile: prod.Dockerfile
+      args:
+        - API_URL=${API_URL}
+        - APP_API_URL=${APP_API_URL}
+    container_name: prod-admin
