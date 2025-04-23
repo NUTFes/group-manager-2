@@ -22,5 +22,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     groupId: 1, // デフォルト値
+    isDeadline: false, // デフォルト値
   },
 };
