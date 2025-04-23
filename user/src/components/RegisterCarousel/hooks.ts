@@ -7,6 +7,11 @@ import { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import {
+  determineErrorStep,
+  handleRegistrationError,
+  validateCurrentStepFields,
+} from '@/components/RegisterCarousel/errorNavigation';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormSchema, RegisterSchema } from './schema';
 
@@ -115,45 +120,32 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     setDisplayError(registrationError);
   }, [registrationError]);
 
-  // エラーメッセージに基づいて適切なステップに移動する関数
+  // エラーに応じて適切なステップに移動する関数
   const navigateToErrorStep = useCallback(
     (errorMessage: string) => {
-      // メールアドレスやパスワードに関するエラーであればステップ1に移動
-      if (
-        errorMessage.includes('メールアドレス') ||
-        errorMessage.includes('パスワード') ||
-        errorMessage.includes('mail') ||
-        errorMessage.includes('email') ||
-        errorMessage.includes('password')
-      ) {
-        goToStep(0);
-        return;
-      }
-
-      // 代表者情報に関するエラーであればステップ2に移動
-      if (
-        errorMessage.includes('名前') ||
-        errorMessage.includes('学籍番号') ||
-        errorMessage.includes('電話番号') ||
-        errorMessage.includes('学年') ||
-        errorMessage.includes('学科') ||
-        errorMessage.includes('name') ||
-        errorMessage.includes('studentId') ||
-        errorMessage.includes('tel') ||
-        errorMessage.includes('gradeId') ||
-        errorMessage.includes('departmentId')
-      ) {
-        goToStep(1);
-        return;
+      const errorStep = determineErrorStep(errorMessage);
+      if (errorStep >= 0) {
+        goToStep(errorStep);
       }
     },
     [goToStep]
   );
 
+  // 現在のステップのフィールドを検証する関数
+  const validateCurrentStep = useCallback(async () => {
+    return validateCurrentStepFields(errors, values, stepIndex, trigger);
+  }, [errors, values, stepIndex, trigger]);
+
   // 登録処理を実装
   const onRegisterSubmit = async (data: RegisterFormSchema) => {
     try {
       setDisplayError(null); // 送信時にエラーをクリア
+
+      // 現在のステップのバリデーションを確認
+      const hasErrors = await validateCurrentStep();
+      if (hasErrors) {
+        return;
+      }
 
       // RegisterParams型に変換
       const registerData: RegisterParams = {
@@ -176,47 +168,37 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
       if (result?.success) {
         toast.success('登録が完了しました。');
         if (onClose) onClose();
-      } else if (result?.message) {
-        // useAuthから返された詳細なエラーメッセージをトーストで表示
-        // toast.error(result.message);
-        setDisplayError(result.message);
-
-        // エラーメッセージに基づいて適切なステップに移動
-        navigateToErrorStep(result.message);
-      } else if (registrationError) {
-        // 登録エラーがある場合は表示
-        // toast.error(registrationError);
-        setDisplayError(registrationError);
-
-        // エラーメッセージに基づいて適切なステップに移動
-        navigateToErrorStep(registrationError);
       } else {
-        const errorMsg = '登録処理中に不明なエラーが発生しました。';
-        setDisplayError(errorMsg);
-        toast.error(errorMsg);
+        // エラー処理を共通関数で実行
+        handleRegistrationError(
+          result,
+          registrationError,
+          setDisplayError,
+          goToStep
+        );
       }
     } catch (error) {
       console.error('Registration error:', error);
-      if (error instanceof Error) {
-        const errorMsg = error.message;
-        setDisplayError(errorMsg);
-        toast.error(errorMsg);
 
-        // エラーメッセージに基づいて適切なステップに移動
-        navigateToErrorStep(errorMsg);
+      // エラーメッセージを取得
+      let errorMessage: string;
+      if (error instanceof Error) {
+        errorMessage = error.message;
       } else {
-        const errorMsg = '登録処理中に予期せぬエラーが発生しました。';
-        setDisplayError(errorMsg);
-        toast.error(errorMsg);
+        errorMessage = '登録処理中に予期せぬエラーが発生しました。';
       }
+
+      // エラーメッセージを表示
+      setDisplayError(errorMessage);
+
+      // エラーに基づいて適切なステップに移動
+      navigateToErrorStep(errorMessage);
     }
   };
 
   // registrationErrorが変更された時に適切なステップに移動する
   useEffect(() => {
     if (registrationError) {
-      // registrationErrorがあれば表示してナビゲーション
-      toast.error(registrationError);
       navigateToErrorStep(registrationError);
     }
   }, [registrationError, navigateToErrorStep]);
@@ -240,5 +222,7 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     displayError,
     trigger,
     goToStep,
+    validateCurrentStep,
+    navigateToErrorStep,
   };
 };
