@@ -1,4 +1,5 @@
 class EmployeesController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_employee, only: [:show, :update, :destroy]
 
   # GET /employees

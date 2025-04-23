@@ -1,4 +1,5 @@
 class PrintPdfController < ApplicationController
+  before_action :authenticate_api_user!
   include ActionController::MimeResponds
 
   # 物品貸し出し書類出力

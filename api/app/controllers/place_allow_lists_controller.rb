@@ -1,4 +1,5 @@
 class PlaceAllowListsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_place_allow_list, only: [:show, :update, :destroy]
 
   # GET /place_allow_lists
