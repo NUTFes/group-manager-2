@@ -4,6 +4,7 @@ import {
   useGetUnregisteredGroup,
   useMutatePowerOrders,
 } from '@/api/powerApi';
+import { toast } from 'react-toastify';
 import { DEFAULT_DEVICE } from '../constants';
 import { PowerApplicationFormData } from '../schema';
 import { PowerApplicationOption } from '../types';
@@ -149,15 +150,18 @@ export const usePowerApplication = (groupId: number) => {
         updateState({ applyPower: 'no' });
         await mutatePowerOrders();
         await mutateUnregistered();
+        toast.success('電力申請を行わない登録が完了しました');
       } else {
         updateState({
           submitError: '申請の登録に失敗しました。もう一度お試しください。',
         });
+        toast.error('申請の登録に失敗しました');
       }
     } catch {
       updateState({
         submitError: '申請の処理に失敗しました。もう一度お試しください。',
       });
+      toast.error('申請の処理に失敗しました');
     }
   };
 
@@ -167,6 +171,7 @@ export const usePowerApplication = (groupId: number) => {
 
     if (!groupId) {
       updateState({ submitError: 'グループIDが取得できませんでした。' });
+      toast.error('グループIDが取得できませんでした');
       return;
     }
 
@@ -189,15 +194,24 @@ export const usePowerApplication = (groupId: number) => {
         await mutatePowerOrders(); // 電力申請データを再取得
         await mutateUnregistered(); // 未登録テーブルデータを再取得
         updateState({ isEditing: false });
+
+        // 編集か新規登録かによって通知メッセージを変える
+        if (hasExisting) {
+          toast.success('電力申請情報を更新しました');
+        } else {
+          toast.success('電力申請情報を登録しました');
+        }
       } else {
         updateState({
           submitError: '申請の送信に失敗しました。もう一度お試しください。',
         });
+        toast.error('申請の送信に失敗しました');
       }
     } catch {
       updateState({
         submitError: '申請の送信中にエラーが発生しました。',
       });
+      toast.error('申請の送信中にエラーが発生しました');
     }
   };
 
@@ -211,6 +225,7 @@ export const usePowerApplication = (groupId: number) => {
       const result = await deletePowerOrder(deviceId);
       if (result.success) {
         await mutatePowerOrders();
+        toast.success('機器情報を削除しました');
 
         // すべてのデバイスが削除された場合、編集モードに切り替える
         if (willBeEmpty) {
@@ -226,11 +241,13 @@ export const usePowerApplication = (groupId: number) => {
         updateState({
           submitError: '機器の削除に失敗しました。もう一度お試しください。',
         });
+        toast.error('機器の削除に失敗しました');
       }
     } catch {
       updateState({
         submitError: '機器の削除中にエラーが発生しました。',
       });
+      toast.error('機器の削除中にエラーが発生しました');
     }
   };
 
