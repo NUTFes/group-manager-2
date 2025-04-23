@@ -81,11 +81,20 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     gradeOptions,
     departmentOptions,
     handleSubmit,
+    register,
   } = useRegisterCarouselHooks();
+
+  // 登録ボタンのクリックハンドラ（デバッグ用）
+  const handleRegisterClick = () => {
+    console.log('登録ボタンがクリックされました');
+    console.log('現在のフォームデータ：', values);
+  };
+
+  const formSubmitHandler = handleSubmit(onSubmit);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={() => formSubmitHandler()} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
@@ -102,6 +111,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     onChange={(value: string) => setValue('mail', value)}
                   />
+                  <input
+                    type="hidden"
+                    {...register('mail')}
+                    value={values.mail}
+                  />
+
                   <TextBox
                     label="パスワード"
                     value={values.password}
@@ -109,6 +124,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     onChange={(value: string) => setValue('password', value)}
                   />
+                  <input
+                    type="hidden"
+                    {...register('password')}
+                    value={values.password}
+                  />
+
                   <TextBox
                     label="パスワード（確認用）"
                     value={values.passwordConfirm}
@@ -117,6 +138,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     onChange={(value: string) =>
                       setValue('passwordConfirm', value)
                     }
+                  />
+                  <input
+                    type="hidden"
+                    {...register('passwordConfirm')}
+                    value={values.passwordConfirm}
                   />
                 </div>
               </div>
@@ -129,6 +155,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     onChange={(value: string) => setValue('name', value)}
                   />
+                  <input
+                    type="hidden"
+                    {...register('name')}
+                    value={values.name}
+                  />
+
                   <TextBox
                     label="電話番号"
                     value={values.tel}
@@ -136,6 +168,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     onChange={(value: string) => setValue('tel', value)}
                   />
+                  <input
+                    type="hidden"
+                    {...register('tel')}
+                    value={values.tel}
+                  />
+
                   <TextBox
                     label="学籍番号"
                     value={values.studentId}
@@ -143,6 +181,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     required
                     onChange={(value: string) => setValue('studentId', value)}
                   />
+                  <input
+                    type="hidden"
+                    {...register('studentId')}
+                    value={values.studentId}
+                  />
+
                   <Selector
                     label="学年"
                     required
@@ -152,6 +196,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     options={gradeOptions}
                     value={values.gradeId}
                   />
+                  <input
+                    type="hidden"
+                    {...register('gradeId')}
+                    value={values.gradeId}
+                  />
+
                   <Selector
                     label="学科"
                     required
@@ -159,6 +209,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                       setValue('departmentId', Number(value))
                     }
                     options={departmentOptions}
+                    value={values.departmentId}
+                  />
+                  <input
+                    type="hidden"
+                    {...register('departmentId')}
                     value={values.departmentId}
                   />
                 </div>
@@ -271,7 +326,12 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               </Button>
             )}
             {stepIndex === 2 ? (
-              <Button size="pc" color="main" type="submit">
+              <Button
+                size="pc"
+                color="main"
+                type="submit"
+                onClick={handleRegisterClick} // デバッグ用
+              >
                 登録
               </Button>
             ) : (
