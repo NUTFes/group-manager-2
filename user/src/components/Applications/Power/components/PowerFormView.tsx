@@ -61,33 +61,35 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
           </div>
 
           {/* 電力超過警告 */}
-          {totalPower > 1500 && (
-            <div className="mb-4 text-center text-red-600">
-              合計電力が1500Wを超えています。申請にはメール連絡が必要です。
+          <div className="mt-6 flex flex-col items-center gap-4">
+            {totalPower > 1500 && (
+              <div className="mb-4 w-full text-center text-sm text-red-600">
+                <p>合計電力が1500Wを超えています（現在: {totalPower}W）</p>
+              </div>
+            )}
+
+            {/* 操作ボタン */}
+            <div className="flex justify-center gap-4">
+              <Button
+                type="button"
+                size="pc"
+                color="main"
+                icon="plus"
+                variant
+                onClick={onAddDevice}
+              >
+                物品の追加
+              </Button>
+
+              <Button
+                type="submit"
+                size="pc"
+                color="main"
+                isDisable={!isValid || totalPower > 1500}
+              >
+                登録
+              </Button>
             </div>
-          )}
-
-          {/* 操作ボタン */}
-          <div className="mt-6 flex justify-center gap-4">
-            <Button
-              type="button"
-              size="pc"
-              color="main"
-              icon="plus"
-              variant
-              onClick={onAddDevice}
-            >
-              物品の追加
-            </Button>
-
-            <Button
-              type="submit"
-              size="pc"
-              color="main"
-              isDisable={!isValid || totalPower > 1500}
-            >
-              登録
-            </Button>
           </div>
         </form>
       )}
