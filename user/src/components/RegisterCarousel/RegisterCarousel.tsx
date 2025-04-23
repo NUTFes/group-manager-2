@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, FormEvent, useRef } from 'react';
 import { DepartmentList, GradeList } from '@/utils/list';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
@@ -84,17 +84,42 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     register,
   } = useRegisterCarouselHooks();
 
-  // 登録ボタンのクリックハンドラ（デバッグ用）
-  const handleRegisterClick = () => {
+  // フォーム参照の作成
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // 登録ボタンのクリックハンドラ
+  const handleRegisterClick = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault(); // デフォルトのボタン動作を防止
     console.log('登録ボタンがクリックされました');
     console.log('現在のフォームデータ：', values);
+
+    // フォームを明示的に送信
+    if (formRef.current) {
+      console.log('フォームを明示的に送信します');
+      formRef.current.dispatchEvent(
+        new Event('submit', { cancelable: true, bubbles: true })
+      );
+    }
   };
 
-  const formSubmitHandler = handleSubmit(onSubmit);
+  // フォーム送信ハンドラ
+  const handleFormSubmit = (e: FormEvent) => {
+    console.log('フォーム送信イベントが発生しました');
+    e.preventDefault(); // デフォルトの送信を防止
+
+    // 手動でonSubmit関数を呼び出す
+    console.log('onSubmit関数を呼び出します');
+    onSubmit(values);
+  };
+
+  // 次へボタンのクリックハンドラ
+  const handleNextClick = () => {
+    handleNext();
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={() => formSubmitHandler()} noValidate>
+      <form ref={formRef} onSubmit={handleFormSubmit} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
@@ -329,13 +354,18 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <Button
                 size="pc"
                 color="main"
-                type="submit"
-                onClick={handleRegisterClick} // デバッグ用
+                type="button" // submitからbuttonに変更
+                onClick={handleRegisterClick}
               >
                 登録
               </Button>
             ) : (
-              <Button size="pc" color="main" type="button" onClick={handleNext}>
+              <Button
+                size="pc"
+                color="main"
+                type="button"
+                onClick={handleNextClick}
+              >
                 次へ
               </Button>
             )}
