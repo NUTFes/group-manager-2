@@ -1,4 +1,5 @@
 class CheckAllRegisteredController < ApplicationController
+  before_action :authenticate_api_user!
   # GET /all_check_registered/:group_id
   def show
     group_id = params[:group_id]

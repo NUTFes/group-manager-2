@@ -1,4 +1,5 @@
 class StockerItemsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_stocker_item, only: [:show, :update, :destroy]
 
   # GET /stocker_items

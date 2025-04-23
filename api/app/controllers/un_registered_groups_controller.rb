@@ -1,4 +1,5 @@
 class UnRegisteredGroupsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_un_registered_group, only: %i[show update destroy]
 
   # GET /un_registered_groups

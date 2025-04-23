@@ -1,4 +1,5 @@
 class StockerPlacesController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_stocker_place, only: [:show, :update, :destroy]
 
   def index

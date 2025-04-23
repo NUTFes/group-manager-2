@@ -1,4 +1,5 @@
 class AssignStagesController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_assign_stage, only: [:show, :update, :destroy]
 
   # GET /assign_stages

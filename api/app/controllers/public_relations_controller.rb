@@ -1,4 +1,5 @@
 class PublicRelationsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_public_relation, only: %i[ show update destroy ]
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
 

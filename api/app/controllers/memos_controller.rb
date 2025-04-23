@@ -1,4 +1,5 @@
 class MemosController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_memo, only: [:show, :update, :destroy]
 
   # GET /memos
