@@ -176,21 +176,35 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
       if (result?.success) {
         toast.success('登録が完了しました。');
         if (onClose) onClose();
-      } else if (!registrationError) {
+      } else if (result?.message) {
+        // useAuthから返された詳細なエラーメッセージをトーストで表示
+        // toast.error(result.message);
+        setDisplayError(result.message);
+
+        // エラーメッセージに基づいて適切なステップに移動
+        navigateToErrorStep(result.message);
+      } else if (registrationError) {
+        // 登録エラーがある場合は表示
+        // toast.error(registrationError);
+        setDisplayError(registrationError);
+
+        // エラーメッセージに基づいて適切なステップに移動
+        navigateToErrorStep(registrationError);
+      } else {
         const errorMsg = '登録処理中に不明なエラーが発生しました。';
         setDisplayError(errorMsg);
         toast.error(errorMsg);
       }
     } catch (error) {
       console.error('Registration error:', error);
-      if (error instanceof Error && !registrationError) {
+      if (error instanceof Error) {
         const errorMsg = error.message;
         setDisplayError(errorMsg);
         toast.error(errorMsg);
 
         // エラーメッセージに基づいて適切なステップに移動
         navigateToErrorStep(errorMsg);
-      } else if (!registrationError) {
+      } else {
         const errorMsg = '登録処理中に予期せぬエラーが発生しました。';
         setDisplayError(errorMsg);
         toast.error(errorMsg);
@@ -201,6 +215,8 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
   // registrationErrorが変更された時に適切なステップに移動する
   useEffect(() => {
     if (registrationError) {
+      // registrationErrorがあれば表示してナビゲーション
+      toast.error(registrationError);
       navigateToErrorStep(registrationError);
     }
   }, [registrationError, navigateToErrorStep]);

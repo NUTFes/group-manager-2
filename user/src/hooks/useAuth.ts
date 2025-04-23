@@ -164,10 +164,16 @@ export const useAuth = () => {
         if (loginResult.success) {
           router.push('/home');
         } else {
-          throw new Error(translateErrorMessage(loginResult.message));
+          const errorMessage = translateErrorMessage(loginResult.message);
+          // toast.error(errorMessage);
+          return { success: false, message: errorMessage };
         }
+        return { success: true };
       } catch (error) {
-        throw error;
+        const parsedError = parseApiError(error);
+        const errorMessage = translateErrorMessage(parsedError.message);
+        // toast.error(errorMessage);
+        return { success: false, message: errorMessage };
       }
     },
     [router, performAutoLogin]
@@ -179,8 +185,12 @@ export const useAuth = () => {
       await post('/api/auth/sign_out', {});
       clearAuth();
       router.push('/');
+      return { success: true };
     } catch (error) {
-      throw error;
+      const parsedError = parseApiError(error);
+      const errorMessage = translateErrorMessage(parsedError.message);
+      // toast.error(errorMessage);
+      return { success: false, message: errorMessage };
     }
   }, [post, router, clearAuth]);
 
@@ -214,9 +224,9 @@ export const useAuth = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (userResponse?.data as any)?.message ||
             'ユーザーIDが取得できませんでした';
-          throw new Error(
-            `ユーザー登録に失敗しました: ${JSON.stringify(potentialError)}`
-          );
+          const errorMessage = `ユーザー登録に失敗しました: ${JSON.stringify(potentialError)}`;
+          // toast.error(errorMessage);
+          return { success: false, message: errorMessage };
         }
 
         // --- ステップ 2: ユーザー詳細情報登録 ---
@@ -235,29 +245,29 @@ export const useAuth = () => {
         );
 
         if (!loginResult.success) {
-          throw new Error(loginResult.message);
+          const errorMessage = loginResult.message;
+          // toast.error(errorMessage);
+          return { success: false, message: errorMessage };
         }
 
         router.push('/home');
         return { success: true, data: loginResult.data };
       } catch (error) {
         const parsedError = parseApiError(error);
+        let errorMessage: string;
 
         if (userId === null) {
-          throw new Error(
-            `ユーザー登録に失敗しました: ${translateErrorMessage(parsedError.message)}`
-          );
+          errorMessage = `ユーザー登録に失敗しました: ${translateErrorMessage(parsedError.message)}`;
         } else {
           if (parsedError.status === 404) {
-            throw new Error(
-              `ユーザー詳細登録のエンドポイントが見つかりません (404): ${translateErrorMessage(parsedError.message)}`
-            );
+            errorMessage = `ユーザー詳細登録のエンドポイントが見つかりません (404): ${translateErrorMessage(parsedError.message)}`;
           } else {
-            throw new Error(
-              `ユーザー登録は完了しましたが、後続処理（詳細登録または自動ログイン）でエラーが発生しました: ${translateErrorMessage(parsedError.message)}`
-            );
+            errorMessage = `ユーザー登録は完了しましたが、後続処理（詳細登録または自動ログイン）でエラーが発生しました: ${translateErrorMessage(parsedError.message)}`;
           }
         }
+
+        // toast.error(errorMessage);
+        return { success: false, message: errorMessage };
       }
     }
   );
