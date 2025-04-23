@@ -28,7 +28,7 @@ export function middleware(request: NextRequest) {
     }
 
     return NextResponse.next();
-  } catch (error) {
+  } catch {
     // JSONのパースに失敗した場合もログインページにリダイレクト
     return NextResponse.redirect(new URL('/', request.url));
   }
