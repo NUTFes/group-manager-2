@@ -1,10 +1,11 @@
-import { FC, FormEvent, useRef } from 'react';
+import { FC, useRef } from 'react';
 import { DepartmentList, GradeList } from '@/utils/list';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
 import { useRegisterCarouselHooks } from './hooks';
+import { RegisterFormSchema } from './schema';
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -80,7 +81,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     handlePrev,
     gradeOptions,
     departmentOptions,
+    handleSubmit,
     register,
+    errors,
   } = useRegisterCarouselHooks();
 
   // フォーム参照の作成
@@ -102,13 +105,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
   };
 
   // フォーム送信ハンドラ
-  const handleFormSubmit = (e: FormEvent) => {
+  const handleFormSubmit = (data: RegisterFormSchema) => {
     console.log('フォーム送信イベントが発生しました');
-    e.preventDefault(); // デフォルトの送信を防止
-
-    // 手動でonSubmit関数を呼び出す
-    console.log('onSubmit関数を呼び出します');
-    onSubmit(values);
+    onSubmit(data);
   };
 
   // 次へボタンのクリックハンドラ
@@ -118,7 +117,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form ref={formRef} onSubmit={handleFormSubmit} noValidate>
+      <form ref={formRef} onSubmit={handleSubmit(handleFormSubmit)} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
@@ -140,11 +139,16 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('mail')}
                     value={values.mail}
                   />
+                  {errors.mail && (
+                    <div className="text-xs text-red-500">
+                      {errors.mail.message}
+                    </div>
+                  )}
 
                   <TextBox
                     label="パスワード"
                     value={values.password}
-                    note="英数字8文字以上"
+                    note="英語の大文字・小文字、数字、記号を含む8文字以上"
                     required
                     onChange={(value: string) => setValue('password', value)}
                   />
@@ -153,11 +157,15 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('password')}
                     value={values.password}
                   />
-
+                  {errors.password && (
+                    <div className="text-xs text-red-500">
+                      {errors.password.message}
+                    </div>
+                  )}
                   <TextBox
                     label="パスワード（確認用）"
                     value={values.passwordConfirm}
-                    note="英数字8文字以上"
+                    note="英語の大文字・小文字、数字、記号を含む8文字以上"
                     required
                     onChange={(value: string) =>
                       setValue('passwordConfirm', value)
@@ -168,6 +176,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('passwordConfirm')}
                     value={values.passwordConfirm}
                   />
+                  {errors.passwordConfirm && (
+                    <div className="text-xs text-red-500">
+                      {errors.passwordConfirm.message}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="min-w-0 flex-none basis-full p-4">
@@ -184,6 +197,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('name')}
                     value={values.name}
                   />
+                  {errors.name && (
+                    <div className="text-xs text-red-500">
+                      {errors.name.message}
+                    </div>
+                  )}
 
                   <TextBox
                     label="電話番号"
@@ -197,6 +215,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('tel')}
                     value={values.tel}
                   />
+                  {errors.tel && (
+                    <div className="text-xs text-red-500">
+                      {errors.tel.message}
+                    </div>
+                  )}
 
                   <TextBox
                     label="学籍番号"
@@ -210,6 +233,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('studentId')}
                     value={values.studentId}
                   />
+                  {errors.studentId && (
+                    <div className="text-xs text-red-500">
+                      {errors.studentId.message}
+                    </div>
+                  )}
 
                   <Selector
                     label="学年"
@@ -225,6 +253,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('gradeId')}
                     value={values.gradeId}
                   />
+                  {errors.gradeId && (
+                    <div className="text-xs text-red-500">
+                      {errors.gradeId.message}
+                    </div>
+                  )}
 
                   <Selector
                     label="学科"
@@ -240,6 +273,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     {...register('departmentId')}
                     value={values.departmentId}
                   />
+                  {errors.departmentId && (
+                    <div className="text-xs text-red-500">
+                      {errors.departmentId.message}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="min-w-0 flex-none basis-full p-4">
@@ -255,6 +293,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         {values.mail}
                       </div>
                     </div>
+                    {errors.mail && (
+                      <div className="text-xs text-red-500">
+                        {errors.mail.message}
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
@@ -267,6 +310,16 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         {'*'.repeat(values.password.length)}
                       </div>
                     </div>
+                    {errors.password && (
+                      <div className="text-xs text-red-500">
+                        {errors.password.message}
+                      </div>
+                    )}
+                    {errors.passwordConfirm && (
+                      <div className="text-xs text-red-500">
+                        {errors.passwordConfirm.message}
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
@@ -277,6 +330,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         {values.name}
                       </div>
                     </div>
+                    {errors.name && (
+                      <div className="text-xs text-red-500">
+                        {errors.name.message}
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
@@ -289,6 +347,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         {values.tel}
                       </div>
                     </div>
+                    {errors.tel && (
+                      <div className="text-xs text-red-500">
+                        {errors.tel.message}
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
@@ -301,6 +364,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         {values.studentId}
                       </div>
                     </div>
+                    {errors.studentId && (
+                      <div className="text-xs text-red-500">
+                        {errors.studentId.message}
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
@@ -314,6 +382,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         }
                       </div>
                     </div>
+                    {errors.gradeId && (
+                      <div className="text-xs text-red-500">
+                        {errors.gradeId.message}
+                      </div>
+                    )}
                   </div>
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
@@ -329,6 +402,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                         }
                       </div>
                     </div>
+                    {errors.departmentId && (
+                      <div className="text-xs text-red-500">
+                        {errors.departmentId.message}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

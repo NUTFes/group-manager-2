@@ -68,8 +68,9 @@ export const useRegisterCarouselHooks = () => {
       departmentId: 0,
       tel: '',
     },
+    mode: 'all', // フィールドを blur（フォーカスアウト）したタイミングで初回バリデーション
+    // reValidateMode: 'onChange', // 一度エラーが出たフィールドは change のたびに再バリデーション
   });
-
   const values = watch();
 
   const [stepIndex, setStepIndex] = useState<number>(0);
