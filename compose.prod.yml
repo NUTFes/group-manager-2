@@ -9,7 +9,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: prod.Dockerfile
+      dockerfile: Dockerfile
     container_name: prod-api
     volumes: [./api:/myapp]
 
