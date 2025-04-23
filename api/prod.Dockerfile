@@ -8,13 +8,14 @@ WORKDIR /api
 
 # ランタイムに必要なパッケージのみインストール（postgresql-dev の代わりに postgresql-libs）
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
     curl \
     libjemalloc2 \
     libvips42 \
     libpq5 \
     tzdata \
     bash \
+    default-libmysqlclient-dev \
     && apt-get install fonts-ipa*
 
 # 環境変数の設定
@@ -34,14 +35,13 @@ RUN apt-get update && apt-get install -y \
     libnss3 \
     libatk-bridge2.0-dev \
     git \
-    pkg-config \
-    default-libmysqlclient-dev
-
+    pkg-config
 
 # Gemfile のコピーと gem インストール
 COPY Gemfile Gemfile.lock ./
 
-RUN bundle install
+RUN bundle install --jobs=4 --retry=3 --without development test \
+    && bundle clean --force
 
 RUN bundle exec bootsnap precompile --gemfile
 
@@ -60,12 +60,17 @@ COPY --from=build /api /api
 COPY entrypoint.sh /usr/bin/
 
 RUN chmod +x /usr/bin/entrypoint.sh \
- && addgroup --system rails \
- && adduser --system --ingroup rails rails \
- && chown -R rails:rails /api \
- && ln -s "${BUNDLE_PATH}/ruby/${RUBY_VERSION}/bin/rails" "${BUNDLE_PATH}/bin/rails"
+    && addgroup --system rails \
+    && adduser --system --ingroup rails rails \
+    && chown -R rails:rails /api \
+    && ln -s "${BUNDLE_PATH}/ruby/${RUBY_VERSION}/bin/rails" "${BUNDLE_PATH}/bin/rails"
 
-USER 1000:1000
+RUN mkdir -p /api/log \
+    && touch /api/log/production.log \
+    && chown -R rails:rails /api/log \
+    && chmod 0664 /api/log/production.log
+
+USER rails
 
 # Puma サーバーの起動
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

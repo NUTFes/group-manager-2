@@ -3,12 +3,12 @@ FROM node:16-bookworm-slim AS builder
 WORKDIR /app
 
 # Accept API URL as a build-time environment variable
-ARG API_URL
-ARG APP_API_URL
+ARG VUE_APP_URL
+ARG VUE_APP_API_URL
 
 # Set the environment variable
-ENV VUE_APP_URL=${API_URL}
-ENV VUE_APP_API_URL=${APP_API_URL}
+ENV VUE_APP_URL=${VUE_APP_URL}
+ENV VUE_APP_API_URL=${VUE_APP_API_URL}
 
 # Copy package.json and package-lock.json (or npm-shrinkwrap.json)
 COPY ./nuxt-project/package*.json ./
@@ -42,4 +42,5 @@ ENV NODE_ENV=production
 EXPOSE 8000
 
 # Start the application
-CMD ["node_modules/.bin/nuxt", "start"]
+CMD ["node_modules/.bin/nuxt", "start", "-H", "0.0.0.0", "-p", "8000"]
+# CMD ["node", ".nuxt/dist/server/server.js"]

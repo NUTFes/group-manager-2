@@ -23,7 +23,7 @@ services:
         - IMGUR_CLIENT_SECRET=${IMGUR_CLIENT_SECRET}
     container_name: prod-view
     ports:
-      - "3000:3000"
+      - "8003:3000"
 
   # 旧
   # user_front:
@@ -39,6 +39,23 @@ services:
       context: ./admin_view
       dockerfile: prod.Dockerfile
       args:
-        - API_URL=${API_URL}
-        - APP_API_URL=${APP_API_URL}
+        - VUE_APP_URL=${VUE_APP_URL}
+        - VUE_APP_API_URL=${VUE_APP_API_URL}
     container_name: prod-admin
+    ports:
+      - "8000:3000"
+
+  db:
+    image: mysql:8.0
+    container_name: "DB"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_USER: root
+      MYSQL_PASSWORD: password
+    command: --default-authentication-plugin=mysql_native_password
+    ports: ["3306:3306"]
+    volumes: [mysql-data:/var/lib/mysql]
+
+volumes:
+  mysql-data:
+    driver: local
