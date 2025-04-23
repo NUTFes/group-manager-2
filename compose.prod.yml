@@ -1,4 +1,3 @@
-version: "3"
 services:
   cloudflare:
     image: cloudflare/cloudflared
@@ -33,7 +32,14 @@ services:
     ports:
       - "3000:3000"
 
-
+  # 旧
+  # user_front:
+  #   build: ./user_front
+  #   container_name: "GM2-USER-FRONT"
+  #   command: bash -c "npm run start"
+  #   volumes: [./user_front:/app]
+  #   env_file: [group-manager-2.env]
+  #   depends_on: [api]
 
   admin_view:
     build: ./admin_view
