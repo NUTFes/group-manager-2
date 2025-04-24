@@ -4,7 +4,7 @@ import { FormItem } from '@/components/FormList/type';
 import { groupLabels } from '../label';
 
 export const useGroupHooks = () => {
-  const { groups, isLoading, hasError } = useGetGroups(30);
+  const { groups, isLoading, hasError } = useGetGroups(27);
   const { groupCategories } = useGetGroupCategories();
 
   // 団体申請のフォーム内容
