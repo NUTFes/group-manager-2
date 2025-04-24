@@ -1,12 +1,17 @@
-import { FC } from 'react';
+import type { FC } from 'react';
+import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import Radio from '../../../Form/Radio';
 import TextBox from '../../../Form/TextBox';
 import FormContainer from '../../../FormContainer';
-import { useViceRepresentativeHook } from './hook';
+import { viceRepresentativeLabels } from '../../label';
+import { useViceRepresentativeFormHook } from './hook';
 
-type ViceRepresentativeFormProps = {};
+type ViceRepresentativeFormProps = {
+  viceRepresentative?: ViceRepresentativeResponse;
+  toEdit?: () => void;
+};
 
 const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
   const {
@@ -26,14 +31,14 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
     valuegrade,
     valuefield,
     textAddress,
-  } = useViceRepresentativeHook();
+  } = useViceRepresentativeFormHook();
 
   return (
     <FormContainer>
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div>
           <Radio
-            label="一人での参加ですか？"
+            label={viceRepresentativeLabels[0]}
             onChange={(value) => setValue('isGroup', Number(value))}
             options={option2}
             required
@@ -43,7 +48,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
           {radioValue1 === '1' && (
             <div>
               <TextBox
-                label="名前"
+                label={viceRepresentativeLabels[1]}
                 value={textName}
                 onChange={(value) => setValue('name', value)}
                 note="例：長岡　太郎"
@@ -51,7 +56,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
                 error={errors.name?.message}
               />
               <TextBox
-                label="学籍番号"
+                label={viceRepresentativeLabels[2]}
                 value={textNumber}
                 onChange={(value) => setValue('number', value)}
                 note="例：123456"
@@ -59,7 +64,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
                 error={errors.number?.message}
               />
               <Selector
-                label="課程・学年"
+                label={viceRepresentativeLabels[3]}
                 value={valuegrade}
                 onChange={(value) => setValue('grade', Number(value))}
                 required={true}
@@ -67,7 +72,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
                 error={errors.grade?.message}
               />
               <Selector
-                label="学科・専攻"
+                label={viceRepresentativeLabels[4]}
                 value={valuefield}
                 onChange={(value) => setValue('field', Number(value))}
                 required={true}
@@ -75,7 +80,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
                 error={errors.field?.message}
               />
               <TextBox
-                label="メールアドレス"
+                label={viceRepresentativeLabels[5]}
                 value={textAddress}
                 onChange={(value) => setValue('address', value)}
                 note="例：123456@stn.nagaokaut.ac.jp"

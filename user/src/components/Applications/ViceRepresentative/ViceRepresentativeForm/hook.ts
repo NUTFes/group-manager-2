@@ -1,12 +1,15 @@
-import { FormData } from '@/api/viceRepresentativesApi';
+import { useState } from 'react';
+import {
+  FormData,
+  useCreateViceRepresentative,
+  useUpdateViceRepresentative,
+} from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import snakecaseKeys from 'snakecase-keys';
-import useSWR, { mutate } from 'swr';
-import api from '@/lib/api';
+import { mutate } from 'swr';
 import { vicerepresentativeSchema } from './schema';
 
-export const useViceRepresentativeHook = () => {
+export const useViceRepresentativeFormHook = () => {
   const {
     handleSubmit,
     setValue,
@@ -18,7 +21,6 @@ export const useViceRepresentativeHook = () => {
     resolver: zodResolver(vicerepresentativeSchema),
     defaultValues: {
       groupId: 3,
-      isGroup: undefined,
       name: '',
       number: '',
       grade: 0,
@@ -26,6 +28,8 @@ export const useViceRepresentativeHook = () => {
       address: '',
     },
   });
+  const [isGroup, setisGroup] = useState(undefined);
+
   const option2 = [
     { id: 0, name: 'はい(一人での参加)' }, //一人
     { id: 1, name: 'いいえ(グループで参加)' }, //グループ
@@ -71,27 +75,23 @@ export const useViceRepresentativeHook = () => {
     { id: 17, name: '社会環境・生物機能工学分野/生物統合工学専攻' },
     { id: 18, name: 'その他' },
   ];
-
   const values = watch();
   const groupId = values.groupId;
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (inputData: FormData) => {
     try {
-      const payload = snakecaseKeys(data, { deep: true });
-      if (data) {
-        await api.put('/vice_representative/', payload);
+      if (imputData) {
+        await useUpdateViceRepresentative;
       } else {
-        await api.post('/vice_representative/', payload);
+        await useCreateViceRepresentative;
       }
-      mutate(`/vice_representative/${data?.groupId}`);
+      mutate(`/vice_representative/group/${imputData?.groupId}`);
       alert('送信しました');
       reset();
     } catch {
       alert('送信に失敗しました。');
     }
   };
-
-  const { data } = useSWR(`/vice_representative/${values.groupId}`);
 
   return {
     handleSubmit,
@@ -104,7 +104,7 @@ export const useViceRepresentativeHook = () => {
     option2,
     optiongrade,
     optionfield,
-    data,
+    // data,
     radioValue1: values.isGroup?.toString() || '',
     textName: values.name || '',
     textNumber: values.number || '',

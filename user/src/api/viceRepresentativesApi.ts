@@ -27,12 +27,17 @@ export type ViceRepresentative = {
   updatedAt: string;
 };
 
-export type ApiResponse<T> = {
-  status: {
-    code: number;
-    message: string;
-  };
-  data: T;
+export type ViceRepresentativeResponse = {
+  id: number;
+  groupId: number;
+  isGroup: number;
+  name: string;
+  number: string;
+  grade: number;
+  field: number;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export const useGetViceRepresentatives = (groupId: number | null) => {
@@ -44,7 +49,8 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
   return {
     viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     isLoading,
-    hasError: !!error,
+    // hasError: !!error, //groupId関連の実装時に切り替える
+    hasError: false,
   };
 };
 

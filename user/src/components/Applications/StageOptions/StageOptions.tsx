@@ -1,13 +1,11 @@
-import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import StageOptionForm from '@/components/Applications/StageOptions/StageOptionForm';
 import { useStageOptionHooks } from '@/components/Applications/StageOptions/hooks';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
-
+import { FC } from 'react';
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
-
 type StageOptionsProps = { isDeadline?: boolean };
 
 type ContentProps = {

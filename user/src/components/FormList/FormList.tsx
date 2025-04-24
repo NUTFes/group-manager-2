@@ -12,7 +12,7 @@ type FormListProps = {
 const FormList: FC<FormListProps> = ({ items, onEdit, isEdit }) => {
   return (
     <FormContainer>
-      {items.map((item, index) => (
+      {items?.map((item, index) => (
         <div key={index} className="flex w-auto flex-col md:w-[400px]">
           <div className="flex">
             <div className="text-xs text-font">{item.label}</div>

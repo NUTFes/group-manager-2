@@ -4,3 +4,12 @@ export const stageOptionLabels = [
   '実行委員が撮影することを許可しますか',
   '大きい音を出しますか',
 ];
+
+export const viceRepresentativeLabels = [
+  '一人での参加ですか？',
+  '名前',
+  '学籍番号',
+  '課程・学年',
+  '学科・専攻',
+  'メールアドレス',
+];
