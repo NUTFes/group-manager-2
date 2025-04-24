@@ -33,15 +33,17 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
       {/* 申請する場合のフォーム */}
       {showForm && (
         <form onSubmit={handleSubmit(onSubmit)}>
-          {fields.map((field, index) => (
-            <PowerForm
-              key={field.id}
-              index={index}
-              form={formMethods}
-              onRemove={onRemove}
-            />
-          ))}
-
+          <div className="flex w-full flex-col gap-10">
+            {fields.map((field, index) => (
+              <div key={field.id} className="w-full">
+                <PowerForm
+                  index={index}
+                  form={formMethods}
+                  onRemove={onRemove}
+                />
+              </div>
+            ))}
+          </div>
           {/* 電力超過警告 */}
           <div className="mt-6 flex flex-col items-center gap-4">
             {totalPower > 1500 && (
@@ -49,7 +51,6 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
                 <p>合計電力が1500Wを超えています（現在: {totalPower}W）</p>
               </div>
             )}
-
             {/* 操作ボタン */}
             <div className="flex justify-center gap-4">
               <Button
@@ -62,7 +63,6 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
               >
                 物品の追加
               </Button>
-
               <Button
                 type="submit"
                 size="pc"
