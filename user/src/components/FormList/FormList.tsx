@@ -34,33 +34,31 @@ const FormList: FC<FormListProps> = ({
         </div>
       ))}
 
-      {isDelete && (
-        <div className="mt-4 flex w-full items-center justify-center gap-4">
-          {isEdit && onEdit && (
-            <Button
-              size="pc"
-              color="main"
-              type="button"
-              icon="pencil"
-              onClick={onEdit}
-            >
-              修正
-            </Button>
-          )}
-          {isDelete && onDelete && (
-            <Button
-              size="pc"
-              color="alert"
-              type="button"
-              icon="cross"
-              variant
-              onClick={onDelete}
-            >
-              削除
-            </Button>
-          )}
-        </div>
-      )}
+      <div className="mt-4 flex w-full items-center justify-center gap-4">
+        {isEdit && onEdit && (
+          <Button
+            size="pc"
+            color="main"
+            type="button"
+            icon="pencil"
+            onClick={onEdit}
+          >
+            修正
+          </Button>
+        )}
+        {isDelete && onDelete && (
+          <Button
+            size="pc"
+            color="alert"
+            type="button"
+            icon="cross"
+            variant
+            onClick={onDelete}
+          >
+            削除
+          </Button>
+        )}
+      </div>
     </FormContainer>
   );
 };
