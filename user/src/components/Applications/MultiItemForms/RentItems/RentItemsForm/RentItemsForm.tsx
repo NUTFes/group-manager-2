@@ -2,12 +2,12 @@
 import { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine } from 'react-icons/ri';
+import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
 import FormContainer from '@/components/FormContainer';
 import MultiItemFormButton from '../../MultiItemFormButton';
-import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic';
 
 const RentItemsForm: FC = () => {
   const {

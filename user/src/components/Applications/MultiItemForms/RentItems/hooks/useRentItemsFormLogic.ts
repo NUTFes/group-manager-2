@@ -102,7 +102,7 @@ export const useRentItemsFormLogic = () => {
         return !item?.is_inside_shop_rentable && item?.is_outside_shop_rentable;
       });
 
-// 混在している、または両方に対応している物品のみの場合のロジックを改善
+      // 混在している、または両方に対応している物品のみの場合のロジックを改善
       let initialLocationType;
       if (isInsideOnly) {
         initialLocationType = '1'; // 屋内
@@ -117,11 +117,17 @@ export const useRentItemsFormLogic = () => {
           const item = items.find((i) => i.id === order.rentalItemId);
           if (item) {
             // 屋内専用の物品
-            if (item.is_inside_shop_rentable && !item.is_outside_shop_rentable) {
+            if (
+              item.is_inside_shop_rentable &&
+              !item.is_outside_shop_rentable
+            ) {
               insideOnlyCount += order.num;
             }
             // 屋外専用の物品
-            else if (!item.is_inside_shop_rentable && item.is_outside_shop_rentable) {
+            else if (
+              !item.is_inside_shop_rentable &&
+              item.is_outside_shop_rentable
+            ) {
               outsideOnlyCount += order.num;
             }
             // 両方に対応している物品はカウントしない
@@ -136,7 +142,7 @@ export const useRentItemsFormLogic = () => {
       const formData: RentItemsFormData = {
         hasItems: true,
         locationType: initialLocationType,
-        items: savedItems.length > 0 ? savedItems : [{itemId: '', count: 1}],
+        items: savedItems.length > 0 ? savedItems : [{ itemId: '', count: 1 }],
       };
 
       // スキーマに対して値をバリデーション
