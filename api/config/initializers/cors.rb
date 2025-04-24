@@ -7,9 +7,13 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # 全部のオリジンをちゃんとhttpつけて書くよ〜！
-    origins 'https://group-manager.nutfes.net' , 'https://group-manager-admin.nutfes.net'
-    # ↑↑↑ api:3000も追加したし、カンマも正しくしたし、httpもちゃんとつけた！💯
+    if Rails.env.production?
+      # 本番環境用のドメインたち✨
+      origins 'https://group-manager.nutfes.net', 'https://group-manager-admin.nutfes.net'
+    else
+      # 開発環境用のローカルホスト系🔧
+      origins 'http://localhost:8000', 'http://localhost:8003','http://admin_view:8000','http://user:8003'
+    end
 
     resource '*',
       headers: :any,
