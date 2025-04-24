@@ -23,3 +23,16 @@ export const FIELD_NAMES = {
   URL: 'url' as const,
   MAX_POWER: 'maxPower' as const,
 };
+
+// バリデーションメッセージの定数
+export const VALIDATION_MESSAGES = {
+  REQUIRED_PRODUCT_NAME: '製品名を入力してください',
+  REQUIRED_MANUFACTURER: 'メーカー名を入力してください',
+  REQUIRED_MODEL: '型番を入力してください',
+  INVALID_URL: '有効なURLを入力してください',
+  INVALID_NUMBER: '数値を入力してください',
+  MIN_POWER: '1W以上で入力してください',
+  MAX_POWER: '1500W以下で入力してください',
+  MIN_DEVICES: '少なくとも1つの機器を登録してください',
+  TOTAL_POWER_LIMIT: '合計消費電力は1500W以下にしてください',
+};
