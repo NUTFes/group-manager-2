@@ -25,3 +25,5 @@ export const stageLabels = [
   '本番時間',
   '片付け時間',
 ];
+
+export const publicRelationLabels = ['PR文', 'アナウンスの有無', 'PR画像'];

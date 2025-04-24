@@ -69,6 +69,7 @@ prod-logs:
 
 gen-component:
 	docker compose run --rm user pnpm run scaff:component
+	docker compose run --rm user pnpm run fmt
 
 run-storybook:
 	docker compose run --rm -p 6006:6006 user pnpm run storybook

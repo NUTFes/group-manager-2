@@ -1,7 +1,7 @@
 ---
 name: 'template'
 root: '.'
-output: 'src/components'
+output: ['src/components', 'src/components/Applications']
 ignore: []
 questions:
   name: 'Please enter components name.'
