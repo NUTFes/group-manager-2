@@ -5,13 +5,18 @@ import { useAuthStore } from '@/stores/authStore';
 import { RegisterParams } from '@/types/register/user';
 import { useApiGet } from '@/hooks/useApi';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface User {
-  id: number;
-  email: string;
-  name: string;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
+  data: {
+    user: {
+      id: number;
+      email: string;
+      name: string;
+      role_id: number;
+      created_at: string;
+      updated_at: string;
+    };
+  };
 }
 
 // ユーザー登録APIの成功レスポンスの型 (仮)
@@ -35,6 +40,34 @@ type AuthResult<T = unknown> =
       status?: number;
       errors?: Record<string, string[]>;
     };
+
+// ユーザーデータを取得する関数
+const getCurrentUser = async (
+  token: string,
+  clientId: string,
+  uid: string
+): Promise<User | null> => {
+  try {
+    const response = await fetch(`${API_URL}/api/v1/current_user`, {
+      headers: {
+        'access-token': token,
+        client: clientId,
+        uid: uid,
+      },
+    });
+    console.log('response:', response);
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('data:', data);
+      return data;
+    }
+    return null;
+  } catch (error) {
+    console.error('ユーザーデータの取得中にエラーが発生しました:', error);
+    return null;
+  }
+};
 
 export const useAuth = () => {
   const router = useRouter();
@@ -76,8 +109,7 @@ export const useAuth = () => {
 
   // 自動ログイン処理
   const performAutoLogin = useCallback(
-    async (email: string, password: string): Promise<AuthResult<User>> => {
-      console.log('自動ログイン試行:', email);
+    async (email: string, password: string): Promise<AuthResult<Headers>> => {
       // postData は ApiResponse<T> を返す (エラーは throw しない)
       const response = await postData<User>('/api/auth/sign_in', {
         email,
@@ -103,8 +135,7 @@ export const useAuth = () => {
 
         // 認証情報をストアに保存
         setAuth(newAccessToken, newClient, newUid);
-        console.log('認証情報をセットしました。');
-        return { success: true, data: response.data as User };
+        return { success: true, data: response.headers };
       } else {
         // API呼び出しが失敗した場合 (response.success が false)
         console.error('自動ログインAPI失敗:', response.error);
@@ -130,7 +161,15 @@ export const useAuth = () => {
 
       if (loginResult.success) {
         router.push('/home');
-        return { success: true, data: loginResult.data as User };
+        const currentUser = await getCurrentUser(
+          loginResult.data?.get('access-token') ?? '',
+          loginResult.data?.get('client') ?? '',
+          loginResult.data?.get('uid') ?? ''
+        );
+        if (currentUser?.data.user.id) {
+          localStorage.setItem('user_id', currentUser.data.user.id.toString());
+        }
+        return { success: true, data: currentUser as User };
       } else {
         return {
           success: false,
@@ -140,7 +179,7 @@ export const useAuth = () => {
         };
       }
     },
-    [router, performAutoLogin] // 依存配列: router, performAutoLogin
+    [performAutoLogin, router]
   );
 
   // ログアウト処理
@@ -235,25 +274,13 @@ export const useAuth = () => {
       }
 
       // --- ステップ 3: 自動ログイン ---
-      const loginResult = await performAutoLogin(params.mail, params.password);
-      setIsMutating(false);
-
-      if (!loginResult.success) {
-        // performAutoLogin内でエラー状態は更新されるが、メッセージを追記
-        const message = `ユーザー登録は完了しましたが、自動ログインに失敗しました: ${loginResult.message}`;
-        return {
-          success: false,
-          message,
-          status: loginResult.status,
-          errors: loginResult.errors,
-        };
-      }
+      await login(params.mail, params.password);
 
       // 全て成功
       router.push('/home');
-      return { success: true, data: loginResult.data as User };
+      return { success: true, data: {} as User };
     },
-    [performAutoLogin, router] // 依存配列: performAutoLogin, router
+    [login, router] // 依存配列: login, router
   );
 
   // トークン検証 (useApiGetが担当、エラーはuserFetchErrorで受け取る)

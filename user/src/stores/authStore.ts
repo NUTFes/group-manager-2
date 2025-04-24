@@ -61,6 +61,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
+      // ブラウザのローカルストレージに保存
       name: 'auth-storage',
     }
   )
