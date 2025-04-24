@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useGetPowerOrders, useMutatePowerOrders } from '@/api/powerApi';
 import {
-  useGetPowerOrders,
   useGetUnregisteredGroup,
-  useMutatePowerOrders,
-} from '@/api/powerApi';
+  useMutateUnregisteredGroup,
+} from '@/api/unRegisteredGroupApi';
 import { toast } from 'react-toastify';
 import { DEFAULT_DEVICE } from '../constants';
 import { PowerApplicationFormData } from '../schema';
-import { PowerApplicationOption } from '../types';
+import { ORDER_TYPES, PowerApplicationOption } from '../types';
 import { usePowerForm } from './usePowerForm';
 
 // 電力申請フォームの状態管理型
@@ -43,15 +43,14 @@ export const usePowerApplication = (groupId: number) => {
     hasError: hasErrorUnregistered,
     mutate: mutateUnregistered,
     unregisteredData,
-  } = useGetUnregisteredGroup(groupId);
+  } = useGetUnregisteredGroup(groupId, ORDER_TYPES.POWER_ORDER);
+
+  // 未登録グループの登録・削除
+  const { registerUnregisteredGroup, deleteUnregisteredGroup } =
+    useMutateUnregisteredGroup(ORDER_TYPES.POWER_ORDER);
 
   // 電力申請の登録・更新・削除機能
-  const {
-    submitPowerOrders,
-    deletePowerOrder,
-    registerUnregisteredGroup,
-    deleteUnregisteredGroup,
-  } = useMutatePowerOrders();
+  const { submitPowerOrders, deletePowerOrder } = useMutatePowerOrders();
 
   // フォーム管理
   const powerForm = usePowerForm(hasExisting ? { devices } : undefined);
