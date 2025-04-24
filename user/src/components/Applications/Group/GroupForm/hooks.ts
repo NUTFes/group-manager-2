@@ -27,8 +27,8 @@ export const useGroupFormHooks = (
     defaultValues: {
       name: groups?.name ?? '',
       projectName: groups?.projectName ?? '',
-      isInternational: groups?.isInternational ? '1' : '0',
-      isExternal: groups?.isExternal ? '1' : '0',
+      isInternational: groups?.isInternational ?? false,
+      isExternal: groups?.isExternal ?? false,
       groupCategoryId: groups?.groupCategoryId.toString() ?? '1',
       activity: groups?.activity ?? '',
       userId: groups?.userId ?? 1,
@@ -91,19 +91,13 @@ export const useGroupFormHooks = (
     }
   };
 
-  // ラジオボタンの値をbooleanに変換
-  const convertToBoolean = (value: string): boolean => {
-    return value === '1' ? true : false;
-  };
-
-  // ？？？？？？？？？？
   const validateEdit = () => {
     if (groups && values) {
       if (
         groups.name === values.name &&
         groups.projectName === values.projectName &&
-        groups.isInternational === convertToBoolean(values.isInternational) &&
-        groups.isExternal === convertToBoolean(values.isExternal) &&
+        groups.isInternational === values.isInternational &&
+        groups.isExternal === values.isExternal &&
         groups.groupCategoryId === parseInt(values.groupCategoryId) &&
         groups.activity === values.activity
       ) {
@@ -123,7 +117,6 @@ export const useGroupFormHooks = (
     updateError,
     updateIsMutating,
     formatRadioValue,
-    convertToBoolean,
     validateEdit,
     values,
   };
