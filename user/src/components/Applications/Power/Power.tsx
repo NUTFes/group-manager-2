@@ -11,7 +11,7 @@ type PowerProps = {
 
 const Power: FC<PowerProps> = ({ isDeadline = false }) => {
   // TODO: ログイン認証が実装されたら修正する
-  const groupId = 1;
+  const groupId = 8;
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
