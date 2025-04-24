@@ -1,5 +1,5 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic.ts
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import {
   ORDER_TYPES,
   useCheckUnRegisteredGroup,
@@ -89,13 +89,13 @@ export const useRentItemsFormLogic = () => {
   const hasExisting = rentalOrders.length > 0;
 
   // 物品のオプション
-  const itemOptions = [
+  const itemOptions = useMemo(() => [
     { id: 0, name: '選んでください' },
     ...items.map((item) => ({
       id: item.id,
       name: item.name,
     })),
-  ];
+  ], [items]);
 
   // フォームをリセットする関数 - 会場タイプを屋内にデフォルト設定
   const resetFormToDefault = () => {

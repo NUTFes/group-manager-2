@@ -223,7 +223,7 @@ export const useRegisterUnRegisteredGroup = () => {
         try {
           const errorJson = await response.json();
           errorDetail = JSON.stringify(errorJson);
-        } catch (_) {
+        } catch {
           errorDetail = await response.text();
         }
 
