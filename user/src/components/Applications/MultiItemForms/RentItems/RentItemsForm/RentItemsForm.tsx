@@ -43,7 +43,7 @@ const RentItemsForm: FC = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full text-center py-4">
+      <div className="w-full py-4 text-center">
         <p>データを読み込み中です...</p>
       </div>
     );
@@ -51,7 +51,7 @@ const RentItemsForm: FC = () => {
 
   if (hasError) {
     return (
-      <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+      <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
         <strong className="font-bold">エラー：</strong>
         <span className="block sm:inline">
           データの取得に失敗しました。ページを再読込してください。
@@ -65,7 +65,7 @@ const RentItemsForm: FC = () => {
     return (
       <div className="w-full text-font">
         <div>
-          <p className="text-sm text-alert mb-[4px]">
+          <p className="mb-[4px] text-sm text-alert">
             会場申請を先に申請してください。
           </p>
           <br />
@@ -90,7 +90,7 @@ const RentItemsForm: FC = () => {
             )}
           />
         </div>
-        <div className="mt-4 text-center text-red-500 font-medium">
+        <div className="mt-4 text-center font-medium text-red-500">
           物品申請を行わない登録が完了しました
         </div>
       </div>
@@ -107,13 +107,13 @@ const RentItemsForm: FC = () => {
           </p>
         </div>
 
-        <div className="w-full flex flex-col items-start justify-start gap-10 overflow-hidden rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
+        <div className="flex w-full flex-col items-start justify-start gap-10 overflow-hidden rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
           {fields.map((field, index) => (
             <div
               key={field.id}
-              className="w-full mb-4 pb-4 border-b border-gray-200 last:border-b-0 last:mb-0 last:pb-0"
+              className="mb-4 w-full border-b border-gray-200 pb-4 last:mb-0 last:border-b-0 last:pb-0"
             >
-              <div className="flex justify-between items-center w-full">
+              <div className="flex w-full items-center justify-between">
                 <div className="w-full">
                   <p className="font-medium text-font">
                     {itemOptions.find(
@@ -122,7 +122,7 @@ const RentItemsForm: FC = () => {
                         form.getValues(`items.${index}.itemId`)
                     )?.name || ''}
                   </p>
-                  <p className="text-font text-sm">
+                  <p className="text-sm text-font">
                     {form.getValues(`items.${index}.count`)} 個
                   </p>
                 </div>
@@ -155,11 +155,11 @@ const RentItemsForm: FC = () => {
   // 編集モード、または新規申請の場合はフォームを表示
   return (
     <form
-      className="w-full flex flex-col gap-8 text-font"
+      className="flex w-full flex-col gap-8 text-font"
       onSubmit={handleFormSubmit}
     >
       <div>
-        <p className="text-sm text-alert mb-[4px]">
+        <p className="mb-[4px] text-sm text-alert">
           会場申請を先に申請してください。
         </p>
         <br />
@@ -187,7 +187,7 @@ const RentItemsForm: FC = () => {
 
       {!hasItems && (
         <>
-          <div className="flex justify-center mt-4">
+          <div className="mt-4 flex justify-center">
             <Button
               type="button"
               size="pc"
@@ -233,7 +233,7 @@ const RentItemsForm: FC = () => {
           {fields.map((field, index) => (
             <FormContainer key={field.id}>
               <div className="mb-4">
-                <h3 className="font-bold text-font mb-4">物品 {index + 1}</h3>
+                <h3 className="mb-4 font-bold text-font">物品 {index + 1}</h3>
                 <Controller
                   name={`items.${index}.itemId`}
                   control={control}
@@ -320,7 +320,7 @@ const RentItemsForm: FC = () => {
                 </p>
               </div>
               {fields.length > 1 && (
-                <div className="mt-4 text-right mx-auto">
+                <div className="mx-auto mt-4 text-right">
                   <MultiItemFormButton
                     type="button"
                     size="mobile"
@@ -339,7 +339,7 @@ const RentItemsForm: FC = () => {
             </FormContainer>
           ))}
 
-          <div className="flex justify-center mt-4 mb-2 gap-4">
+          <div className="mb-2 mt-4 flex justify-center gap-4">
             <MultiItemFormButton
               type="button"
               size="pc"
@@ -360,13 +360,13 @@ const RentItemsForm: FC = () => {
       )}
 
       {submitError && (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           {submitError}
         </div>
       )}
 
       {errors.root?.message && (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           {errors.root.message.toString()}
         </div>
       )}
