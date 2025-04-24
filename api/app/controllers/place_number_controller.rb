@@ -1,5 +1,4 @@
 class PlaceNumberController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_place_number, only: [:show, :update, :destroy]
 
   # 会場割り当て

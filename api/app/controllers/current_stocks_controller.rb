@@ -1,5 +1,4 @@
 class CurrentStocksController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_current_stock, only: [:show, :update, :destroy]
 
   # GET /current_stocks
