@@ -126,9 +126,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapState } from "vuex";
-import moment from "moment";
 
 export default {
   auth: false,
@@ -179,9 +176,56 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
-  },
 
+    // 認証ヘッダー付き Axios インスタンスを作成
+    const accessToken = localStorage.getItem("access-token") || "";
+    const client = localStorage.getItem("client") || "";
+    const uid = localStorage.getItem("uid") || "";
+    const expiry = localStorage.getItem("expiry") || "";
+    const tokenType = localStorage.getItem("token-type") || "Bearer";
+
+    this.authAxios = this.$axios.create({
+      headers: {
+        "access-token": accessToken,
+        client,
+        uid,
+        expiry,
+        "token-type": tokenType,
+      },
+      withCredentials: true,
+    });
+  },
   methods: {
+    async downloadFile(endpoint, fileName, fileType = 'application/pdf') {
+      try {
+        const response = await this.authAxios.get(
+          endpoint,
+          { responseType: 'blob' }
+        );
+
+        const blob = new Blob([response.data], { type: fileType });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+
+        link.setAttribute('download', `${fileName}`);
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+
+        return true;
+      } catch (error) {
+        console.error("エラーが発生しました", error);
+        // マジ親切にユーザーにも教えてあげる
+        this.openSnackBar && this.openSnackBar(`${fileName}のダウンロード失敗`);
+        return false;
+      }
+    },
+
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
@@ -239,7 +283,7 @@ export default {
         "/print_pdf/group_info/" +
         this.group.group.id +
         "/output.pdf";
-      window.open(url, this.group.group.name + "_PDF");
+        await this.downloadFile(url, this.group.group.name + "_PDF");
     },
     async printRentalItemsPDF() {
       const url =
@@ -247,7 +291,7 @@ export default {
         "/print_pdf/group/" +
         this.group.group.id +
         "/output.pdf";
-      window.open(url, this.group.group.name + "_PDF");
+        await this.downloadFile(url, this.group.group.name+ "_PDF");
     },
   },
 };
