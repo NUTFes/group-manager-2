@@ -5,6 +5,16 @@ export const stageOptionLabels = [
   '大きい音を出しますか',
 ];
 
+// 団体申請フォームで表示するラベル
+export const groupLabels = [
+  '団体名',
+  '企画名',
+  '国際団体ですか？',
+  '学外団体ですか？',
+  '参加形式',
+  '企画内容',
+];
+
 export const stageLabels = [
   '開催日',
   '晴れの場合：第1希望',
