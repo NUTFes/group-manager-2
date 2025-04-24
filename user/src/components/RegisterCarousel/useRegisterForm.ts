@@ -3,9 +3,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { RegisterFormSchema, RegisterSchema } from './schema';
 
-// 元々 errorNavigation.ts にあった関数 - 使われていないので削除
-// const validateCurrentStepFieldsInternal = <T extends RegisterFormSchema>(...
-
+/**
+ * ユーザー登録フォームの状態管理とバリデーションを提供するカスタムフック
+ *
+ * 機能:
+ * - フォームの状態管理（値の取得、設定、監視）
+ * - バリデーション（Zodスキーマによる検証）
+ * - ステップごとのフィールド検証
+ */
 export const useRegisterForm = () => {
   const formMethods = useForm<RegisterFormSchema>({
     resolver: zodResolver(RegisterSchema),
@@ -28,7 +33,11 @@ export const useRegisterForm = () => {
   const { errors } = formState;
   const values = watch();
 
-  // フロントエンドバリデーションを実行する関数
+  /**
+   * 現在のステップのフィールドをバリデーション
+   * @param currentStep 現在のステップ番号
+   * @returns バリデーションエラーの有無（true: エラーあり）
+   */
   const validateCurrentStep = useCallback(
     async (currentStep: number): Promise<boolean> => {
       // 各ステップで検証するフィールド

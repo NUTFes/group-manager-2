@@ -3,12 +3,23 @@ import type { CreatePluginType } from 'embla-carousel';
 import { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 
+/**
+ * カルーセル機能を提供するカスタムフック
+ *
+ * 機能:
+ * - ステップ管理（現在のステップ、次のステップ、前のステップ）
+ * - カルーセルの制御（スクロール、特定のステップへの移動）
+ * - ステップ変更時のイベントハンドリング
+ */
 export const useCarousel = () => {
   // ① プラグインの型を定義
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   type SelectPlugin = CreatePluginType<Record<string, unknown>, {}>;
 
-  // ② プラグイン生成関数
+  /**
+   * カルーセルのステップ変更を監視するプラグイン
+   * ステップ変更時にstateを更新し、UIと同期を保つ
+   */
   const createSelectPlugin = (): SelectPlugin => {
     let emblaApiRef: EmblaCarouselType;
     let handler: () => void;
@@ -43,7 +54,10 @@ export const useCarousel = () => {
     [createSelectPlugin()]
   );
 
-  // 特定のステップに移動する関数
+  /**
+   * 指定したステップに直接移動する
+   * @param step 移動先のステップ番号
+   */
   const goToStep = useCallback(
     (step: number) => {
       if (!emblaApi) return;
@@ -53,6 +67,10 @@ export const useCarousel = () => {
     [emblaApi]
   );
 
+  /**
+   * 次のステップに移動する
+   * 移動可能な場合のみ実行される
+   */
   const handleNext = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
     // ステップ数に基づくガードは呼び出し元で行う想定
@@ -60,6 +78,10 @@ export const useCarousel = () => {
     // select イベントで stepIndex は更新される
   }, [emblaApi]);
 
+  /**
+   * 前のステップに移動する
+   * 移動可能な場合のみ実行される
+   */
   const handlePrev = useCallback(() => {
     if (!emblaApi || !emblaApi.canScrollPrev()) return;
     emblaApi.scrollPrev();

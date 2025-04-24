@@ -4,7 +4,11 @@ import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormSchema } from './schema';
 
-// 元々 errorNavigation.ts にあった関数
+/**
+ * APIエラーメッセージから対応するステップを特定する
+ * @param errors APIから返されたエラー情報
+ * @returns エラーが発生したステップ番号（-1: エラーなし）
+ */
 const determineErrorStep = (
   errors: Record<string, string[]> | undefined
 ): number => {
@@ -25,16 +29,28 @@ const determineErrorStep = (
   return -1;
 };
 
+/**
+ * ユーザー登録処理を管理するカスタムフック
+ *
+ * 機能:
+ * - フォームデータの送信
+ * - エラーハンドリング
+ * - 登録成功時の処理
+ * - ローディング状態の管理
+ */
 export const useRegistration = (
-  validateForm: (step: number) => Promise<boolean>, // フォーム検証関数を引数で受け取る
-  goToStep: (step: number) => void, // ステップ移動関数を引数で受け取る
-  currentStep: number, // 現在のステップを引数で受け取る
-  onClose?: () => void // モーダルを閉じる関数
+  validateForm: (step: number) => Promise<boolean>,
+  goToStep: (step: number) => void,
+  currentStep: number,
+  onClose?: () => void
 ) => {
   const { register: authRegister, isLoading } = useAuth();
   const [displayError, setDisplayError] = useState<string | null>(null);
 
-  // APIエラー時に対応するステップへ移動する関数
+  /**
+   * APIエラー発生時に対応するステップに移動
+   * @param apiErrors APIから返されたエラー情報
+   */
   const navigateToErrorStep = useCallback(
     (apiErrors: Record<string, string[]> | undefined) => {
       const errorStep = determineErrorStep(apiErrors);
@@ -45,19 +61,19 @@ export const useRegistration = (
     [goToStep]
   );
 
-  // 登録処理を実行する関数
+  /**
+   * 登録フォームの送信処理
+   * バリデーション → API送信 → エラーハンドリング の流れで実行
+   */
   const handleRegisterSubmit = useCallback(
     async (data: RegisterFormSchema) => {
       setDisplayError(null);
 
-      // フロントエンドバリデーションを実行
       const hasValidationErrors = await validateForm(currentStep);
       if (hasValidationErrors) {
-        // エラーメッセージは各フィールドで表示される想定
         return;
       }
 
-      // API に送信するデータ形式に変換
       const registerData: RegisterParams = {
         name: data.name,
         studentId: data.studentId,
@@ -67,21 +83,18 @@ export const useRegistration = (
         gradeId: Number(data.gradeId),
         password: data.password,
         passwordConfirm: data.passwordConfirm,
-        userId: 0, // バックエンドで割り当てられる想定
+        userId: 0,
       };
 
-      // useAuth フックの register 関数を呼び出し
       const result = await authRegister(registerData);
 
       if (result.success) {
         toast.success('登録が完了しました。');
         if (onClose) onClose();
       } else {
-        // API エラーメッセージを表示
         const errorMessage =
           result.message || '登録処理中に不明なエラーが発生しました。';
         setDisplayError(errorMessage);
-        // API エラー内容に基づいてステップを移動
         navigateToErrorStep(result.errors);
       }
     },

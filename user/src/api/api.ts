@@ -10,8 +10,10 @@ import snakecaseKeys from 'snakecase-keys';
  */
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-/** * SWR用のフェッチャー関数
- * @param url - 取得先のURL（エンドポイント）
+/**
+ * SWR用のフェッチャー関数
+ * 認証情報がある場合は自動的にヘッダーに追加
+ * レスポンスは自動的にキャメルケースに変換
  */
 export const fetcher = (url: string) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
@@ -22,8 +24,8 @@ export const fetcher = (url: string) => {
 
   if (auth.accessToken) {
     headers['access-token'] = auth.accessToken;
-    headers.client = auth.client!;
-    headers.uid = auth.uid!;
+    headers['client'] = auth.client!;
+    headers['uid'] = auth.uid!;
   }
 
   return fetch(fullUrl, {
@@ -46,15 +48,12 @@ export const fetcher = (url: string) => {
 
 /**
  * POSTリクエスト用のfetcher関数
- * @param url - リクエスト先のベースURL
- * @param param1 - SWR Mutationで渡される引数（bodyとqueryを含む）
- * @returns レスポンスのJSON
+ * クエリパラメータとボディをサポート
  */
 export async function postFetcher(
   url: string,
   { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
 ): Promise<any> {
-  // queryパラメータが存在する場合、URLに追加
   let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
   if (arg.query) {
     const queryStr = objectToQueryString(arg.query);
@@ -77,15 +76,13 @@ export async function postFetcher(
 
 /**
  * PATCHリクエスト用のfetcher関数
- * @param url - リクエスト先のベースURL
- * @param param1 - SWR Mutationで渡される引数（bodyとqueryを含む）
- * @returns レスポンスのJSON
+ * クエリパラメータとボディをサポート
+ * エラー時はレスポンスの詳細をログ出力
  */
 export async function patchFetcher(
   url: string,
   { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
 ): Promise<any> {
-  // URLを組み立てる（スラッシュ漏れ対策込み）
   let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
   if (arg.query) {
     const queryStr = objectToQueryString(arg.query);
@@ -111,8 +108,7 @@ export async function patchFetcher(
 
 /**
  * リクエストオプションを生成するヘルパー関数
- * @param method - HTTPメソッド
- * @param data - リクエストボディ（省略可）
+ * データがある場合は自動的にスネークケースに変換
  */
 export const createRequestOptions = (method: string, data?: any) => {
   const options: RequestInit = {
@@ -123,7 +119,6 @@ export const createRequestOptions = (method: string, data?: any) => {
   };
 
   if (data) {
-    // スネークケース変換はデータ送信時に適用
     options.body = JSON.stringify(snakecaseKeys(data, { deep: true }));
   }
 
@@ -153,6 +148,10 @@ export type ApiResponse<T> =
 
 /**
  * エラーレスポンスからメッセージを抽出する関数
+ * 以下の形式に対応:
+ * - errors配列
+ * - errorsオブジェクト（フィールドごとのエラー）
+ * - messageプロパティ
  */
 const extractErrorMessage = (
   errorData: any,
@@ -160,14 +159,11 @@ const extractErrorMessage = (
 ): string => {
   if (!errorData) return defaultMessage;
 
-  // errorsオブジェクトからメッセージを抽出
   if (errorData.errors) {
     if (Array.isArray(errorData.errors)) {
-      // エラーが配列の場合 (full_messagesなど)
       return errorData.errors.join(', ');
     }
     if (typeof errorData.errors === 'object') {
-      // エラーがオブジェクトの場合 (各フィールドのエラー)
       return Object.entries(errorData.errors)
         .map(
           ([field, messages]) =>
@@ -177,7 +173,6 @@ const extractErrorMessage = (
     }
   }
 
-  // messageプロパティが存在する場合はそれを使用
   if (errorData.message) {
     return errorData.message;
   }
@@ -187,6 +182,7 @@ const extractErrorMessage = (
 
 /**
  * エラーレスポンスを処理する関数
+ * エラーメッセージの抽出とログ出力を行う
  */
 const handleApiError = async (
   response: Response
@@ -202,7 +198,6 @@ const handleApiError = async (
       errorMessage = extractErrorMessage(errorData, defaultErrorMessage);
     }
   } catch (e) {
-    // JSONパース失敗。テキスト形式のエラーの可能性
     console.error('API error response parsing failed:', e);
   }
 
@@ -220,13 +215,13 @@ const handleApiError = async (
 
 /**
  * レスポンスのJSONをパースする関数
+ * 空のレスポンスの場合は空オブジェクトを返す
  */
 const parseResponseData = async <T>(
   response: Response
 ): Promise<ApiResponse<T>> => {
   const responseText = await response.text();
 
-  // レスポンスボディが空の場合は空オブジェクトを返す
   if (!responseText) {
     return {
       success: true,
@@ -260,8 +255,7 @@ const parseResponseData = async <T>(
 
 /**
  * 共通のAPIリクエストを実行する関数
- * @param url - エンドポイント
- * @param options - フェッチオプション
+ * 認証情報の自動付与とエラーハンドリングを行う
  */
 export const sendRequest = async <T>(
   endpoint: string,
@@ -269,19 +263,16 @@ export const sendRequest = async <T>(
 ): Promise<ApiResponse<T>> => {
   const { accessToken, client, uid } = useAuthStore.getState();
 
-  // デフォルトヘッダー設定
   const defaultHeaders: HeadersInit = {
     'Content-Type': 'application/json',
   };
 
-  // 認証情報が存在すればヘッダーに追加
   if (accessToken && client && uid) {
     defaultHeaders['access-token'] = accessToken;
     defaultHeaders['client'] = client;
     defaultHeaders['uid'] = uid;
   }
 
-  // オプションにヘッダーをマージ
   const requestOptions: RequestInit = {
     ...options,
     headers: {
@@ -293,15 +284,12 @@ export const sendRequest = async <T>(
   try {
     const response = await fetch(`${API_URL}${endpoint}`, requestOptions);
 
-    // エラーレスポンスの場合
     if (!response.ok) {
       return handleApiError(response);
     }
 
-    // 正常レスポンスの処理
     return parseResponseData<T>(response);
   } catch (networkError) {
-    // fetch自体が失敗した場合 (ネットワークエラーなど)
     console.error('Network error during API request:', networkError);
     const message =
       networkError instanceof Error
@@ -319,8 +307,7 @@ export const sendRequest = async <T>(
 
 /**
  * POSTリクエスト用の関数
- * @param url - エンドポイント
- * @param data - 送信するデータ
+ * データは自動的にスネークケースに変換
  */
 export const postData = async <T>(
   url: string,
@@ -331,8 +318,7 @@ export const postData = async <T>(
 
 /**
  * PUTリクエスト用の関数
- * @param url - エンドポイント
- * @param data - 送信するデータ
+ * データは自動的にスネークケースに変換
  */
 export const putData = async <T>(
   url: string,
@@ -343,16 +329,14 @@ export const putData = async <T>(
 
 /**
  * DELETEリクエスト用の関数
- * @param url - 削除対象のエンドポイント
  */
 export const deleteData = async <T>(url: string): Promise<ApiResponse<T>> => {
   return sendRequest<T>(url, createRequestOptions('DELETE'));
 };
 
 /**
- * オブジェクトをクエリパラメータ文字列に変換するユーティリティ関数
- * @param params - キーと値の組み合わせが格納されたオブジェクト
- * @returns クエリパラメータ形式の文字列
+ * オブジェクトをクエリパラメータ文字列に変換する関数
+ * キーは自動的にスネークケースに変換
  */
 function objectToQueryString(params: { [key: string]: any }): string {
   const snakeParams = snakecaseKeys(params, { deep: true });
