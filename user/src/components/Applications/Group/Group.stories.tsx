@@ -18,5 +18,7 @@ export default {
 type Story = StoryObj<typeof Group>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    isDeadline: false,
+  },
 };

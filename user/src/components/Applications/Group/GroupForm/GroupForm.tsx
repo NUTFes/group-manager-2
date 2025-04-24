@@ -59,8 +59,8 @@ const GroupForm: FC<GroupFormProps> = ({ groups, toEdit, groupCategories }) => {
           ></TextBox>
           <Radio
             label={groupLabels[2]}
-            value={values.isInternational}
-            onChange={(value) => setValue('isInternational', value)}
+            value={values.isInternational ? '1' : '0'}
+            onChange={(value) => setValue('isInternational', value === '1')}
             required={true}
             note={'注意書き'}
             error={errors.isInternational?.message}
@@ -71,8 +71,8 @@ const GroupForm: FC<GroupFormProps> = ({ groups, toEdit, groupCategories }) => {
           ></Radio>
           <Radio
             label={groupLabels[3]}
-            value={values.isExternal}
-            onChange={(value) => setValue('isExternal', value)}
+            value={values.isExternal ? '1' : '0'}
+            onChange={(value) => setValue('isExternal', value === '1')}
             required={true}
             note={'注意書き'}
             error={errors.isExternal?.message}

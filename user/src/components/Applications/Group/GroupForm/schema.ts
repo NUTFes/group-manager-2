@@ -10,8 +10,8 @@ export const groupSchema = z.object({
   groupCategoryId: z.string().min(1, '選択してください'),
   fesYearId: z.number(),
   committee: z.number(),
-  isInternational: z.string().min(1, '選択してください'),
-  isExternal: z.string().min(1, '選択してください'),
+  isInternational: z.boolean({ required_error: '選択してください' }),
+  isExternal: z.boolean({ required_error: '選択してください' }),
 });
 
 export type GroupForm = z.infer<typeof groupSchema>;
