@@ -30,7 +30,7 @@ const RentItemsForm: FC = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full text-center py-4">
+      <div className="w-full py-4 text-center">
         <p>データを読み込み中です...</p>
       </div>
     );
@@ -38,7 +38,7 @@ const RentItemsForm: FC = () => {
 
   if (hasError) {
     return (
-      <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+      <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
         <strong className="font-bold">エラー：</strong>
         <span className="block sm:inline">
           データの取得に失敗しました。ページを再読込してください。
@@ -49,11 +49,11 @@ const RentItemsForm: FC = () => {
 
   return (
     <form
-      className="w-full flex flex-col gap-8 text-font"
+      className="flex w-full flex-col gap-8 text-font"
       onSubmit={handleSubmit}
     >
       <div>
-        <p className="text-sm text-alert mb-[4px]">
+        <p className="mb-[4px] text-sm text-alert">
           会場申請を先に申請してください。
         </p>
         <br />
@@ -109,7 +109,7 @@ const RentItemsForm: FC = () => {
           {fields.map((field, index) => (
             <FormContainer key={field.id}>
               <div className="mb-4">
-                <h3 className="font-bold text-font mb-4">物品 {index + 1}</h3>
+                <h3 className="mb-4 font-bold text-font">物品 {index + 1}</h3>
                 <Controller
                   name={`items.${index}.itemId`}
                   control={control}
@@ -162,7 +162,7 @@ const RentItemsForm: FC = () => {
                   nutfes.soumu@gmail.com
                 </p>
               </div>
-              <div className="mb-4 mx-auto">
+              <div className="mx-auto mb-4">
                 {fields.length > 1 ? (
                   <MultiItemFormButton
                     type="button"
@@ -180,7 +180,7 @@ const RentItemsForm: FC = () => {
             </FormContainer>
           ))}
 
-          <div className="flex justify-center mt-4 mb-2 gap-4">
+          <div className="mb-2 mt-4 flex justify-center gap-4">
             <MultiItemFormButton
               type="button"
               size="pc"
@@ -199,14 +199,14 @@ const RentItemsForm: FC = () => {
       )}
 
       {submitError && (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           {submitError}
         </div>
       )}
 
       {/* フォーム全体のバリデーションエラーを表示 */}
       {errors.root?.message && (
-        <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4">
+        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           {errors.root.message.toString()}
         </div>
       )}
