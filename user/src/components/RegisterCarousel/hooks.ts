@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { RegisterParams } from '@/types/register/user';
 import { DepartmentList, GradeList } from '@/utils/list';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,11 +7,7 @@ import { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import {
-  determineErrorStep,
-  handleRegistrationError,
-  validateCurrentStepFields,
-} from '@/components/RegisterCarousel/errorNavigation';
+import { validateCurrentStepFields } from '@/components/RegisterCarousel/errorNavigation';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormSchema, RegisterSchema } from './schema';
 
@@ -53,12 +49,19 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     ...DepartmentList,
   ];
 
-  // 認証フック
-  const { registerTrigger, isRegistering, registrationError } = useAuth();
+  // 認証フックから必要な関数と状態を取得 (registerTrigger, registrationError -> register, getAuthActionError etc.)
+  const {
+    register: authRegister,
+    isRegistering,
+    getAuthActionError,
+    clearAuthActionError,
+  } = useAuth();
+  // このコンポーネント専用のエラー表示状態
   const [displayError, setDisplayError] = useState<string | null>(null);
 
   const {
-    register,
+    // react-hook-form の register と区別するためリネーム
+    register: formRegister,
     handleSubmit,
     formState: { errors },
     getValues,
@@ -77,8 +80,7 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
       departmentId: 0,
       tel: '',
     },
-    mode: 'all', // フィールドを blur（フォーカスアウト）したタイミングで初回バリデーション
-    // reValidateMode: 'onChange', // 一度エラーが出たフィールドは change のたびに再バリデーション
+    mode: 'all',
   });
 
   const values = watch();
@@ -104,8 +106,11 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     if (!emblaApi || !emblaApi.canScrollNext()) return;
     if (stepIndex === 2) return;
     emblaApi.scrollNext();
+    // selectedScrollSnap の更新が非同期の場合があるため setTimeout
     setTimeout(() => {
-      setStepIndex(emblaApi.selectedScrollSnap());
+      if (emblaApi) {
+        setStepIndex(emblaApi.selectedScrollSnap());
+      }
     }, 0);
   }, [emblaApi, stepIndex]);
 
@@ -115,96 +120,60 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     setStepIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
-  // エラーメッセージの監視
-  useEffect(() => {
-    setDisplayError(registrationError);
-  }, [registrationError]);
-
-  // エラーに応じて適切なステップに移動する関数
-  const navigateToErrorStep = useCallback(
-    (errorMessage: string) => {
-      const errorStep = determineErrorStep(errorMessage);
-      if (errorStep >= 0) {
-        goToStep(errorStep);
-      }
-    },
-    [goToStep]
-  );
-
   // 現在のステップのフィールドを検証する関数
   const validateCurrentStep = useCallback(async () => {
+    // errorNavigation.ts に依存している場合、そちらも修正が必要か確認
     return validateCurrentStepFields(errors, values, stepIndex, trigger);
   }, [errors, values, stepIndex, trigger]);
 
-  // 登録処理を実装
+  // 登録処理 (try...catch を削除し、結果オブジェクトを確認)
   const onRegisterSubmit = async (data: RegisterFormSchema) => {
-    try {
-      setDisplayError(null); // 送信時にエラーをクリア
+    setDisplayError(null); // 送信時にエラーをクリア
+    clearAuthActionError(); // useAuth のエラーもクリア
 
-      // 現在のステップのバリデーションを確認
-      const hasErrors = await validateCurrentStep();
-      if (hasErrors) {
-        return;
-      }
+    // 現在のステップのバリデーション (これは react-hook-form のエラー)
+    const hasValidationErrors = await validateCurrentStep();
+    if (hasValidationErrors) {
+      // バリデーションエラーがある場合、メッセージ表示は各フィールドで行われる想定
+      // 必要ならここで全体的なメッセージを setDisplayError で設定
+      // setDisplayError("入力内容に誤りがあります。");
+      return;
+    }
 
-      // RegisterParams型に変換
-      const registerData: RegisterParams = {
-        name: data.name,
-        studentId: data.studentId,
-        tel: data.tel,
-        mail: data.mail,
-        departmentId: Number(data.departmentId),
-        gradeId: Number(data.gradeId),
-        password: data.password,
-        passwordConfirm: data.passwordConfirm,
-        userId: 0,
-      };
+    // RegisterParams型に変換
+    const registerData: RegisterParams = {
+      name: data.name,
+      studentId: data.studentId,
+      tel: data.tel,
+      mail: data.mail,
+      departmentId: Number(data.departmentId),
+      gradeId: Number(data.gradeId),
+      password: data.password,
+      passwordConfirm: data.passwordConfirm,
+      userId: 0, // userId はバックエンドで割り振られる想定？
+    };
 
-      console.log('登録実行:', registerData);
-      const result = await registerTrigger(registerData);
+    console.log('登録実行:', registerData);
+    // useAuth の register 関数を呼び出す
+    const result = await authRegister(registerData);
+    console.log('Registration result:', result);
 
-      console.log('Registration trigger result:', result);
-
-      if (result?.success) {
-        toast.success('登録が完了しました。');
-        if (onClose) onClose();
-      } else {
-        // エラー処理を共通関数で実行
-        handleRegistrationError(
-          result,
-          registrationError,
-          setDisplayError,
-          goToStep
-        );
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-
-      // エラーメッセージを取得
-      let errorMessage: string;
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else {
-        errorMessage = '登録処理中に予期せぬエラーが発生しました。';
-      }
-
-      // エラーメッセージを表示
+    if (result.success) {
+      toast.success('登録が完了しました。');
+      if (onClose) onClose();
+    } else {
+      // API 呼び出し失敗時のエラーメッセージを表示
+      const errorMessage =
+        result.message || '登録処理中に不明なエラーが発生しました。';
       setDisplayError(errorMessage);
-
-      // エラーに基づいて適切なステップに移動
-      navigateToErrorStep(errorMessage);
+      // エラー内容に基づいて特定のステップに戻るロジックは一旦削除
+      // navigateToErrorStep(errorMessage);
     }
   };
 
-  // registrationErrorが変更された時に適切なステップに移動する
-  useEffect(() => {
-    if (registrationError) {
-      navigateToErrorStep(registrationError);
-    }
-  }, [registrationError, navigateToErrorStep]);
-
   return {
-    register,
+    // formRegister を register として返す
+    register: formRegister,
     handleSubmit,
     errors,
     getValues,
@@ -223,6 +192,6 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     trigger,
     goToStep,
     validateCurrentStep,
-    navigateToErrorStep,
+    // navigateToErrorStep は一旦返さない
   };
 };

@@ -123,30 +123,52 @@ export const createRequestOptions = (method: string, data?: any) => {
   };
 
   if (data) {
-    options.body = JSON.stringify(data);
+    // スネークケース変換はデータ送信時に適用
+    options.body = JSON.stringify(snakecaseKeys(data, { deep: true }));
   }
 
   return options;
 };
 
-export class ApiError extends Error {
-  status?: number;
-  errors?: Record<string, string[]>;
+// export class ApiError extends Error {
+//   status?: number;
+//   errors?: Record<string, string[]>;
 
-  constructor(
-    message: string,
-    status?: number,
-    errors?: Record<string, string[]>
-  ) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.errors = errors;
-    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    // Set the prototype explicitly.
-    Object.setPrototypeOf(this, ApiError.prototype);
-  }
-}
+//   constructor(
+//     message: string,
+//     status?: number,
+//     errors?: Record<string, string[]>
+//   ) {
+//     super(message);
+//     this.name = 'ApiError';
+//     this.status = status;
+//     this.errors = errors;
+//     // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+//     // Set the prototype explicitly.
+//     Object.setPrototypeOf(this, ApiError.prototype);
+//   }
+// }
+
+// 新しい戻り値の型を定義
+export type ApiResponse<T> =
+  | {
+      success: true;
+      data: T;
+      headers: Headers;
+      response: Response;
+      error?: never; // エラーがないことを示す
+    }
+  | {
+      success: false;
+      error: {
+        message: string;
+        status?: number;
+        errors?: Record<string, string[]>;
+      };
+      data?: never; // データがないことを示す
+      headers?: Headers; // エラー時でもヘッダーを返す場合がある
+      response?: Response; // エラー時でもレスポンスを返す場合がある
+    };
 
 /**
  * 共通のAPIリクエストを実行する関数
@@ -156,7 +178,7 @@ export class ApiError extends Error {
 export const sendRequest = async <T>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<{ data: T; headers: Headers; response: Response }> => {
+): Promise<ApiResponse<T>> => {
   const { accessToken, client, uid } = useAuthStore.getState();
 
   // デフォルトヘッダー設定
@@ -180,60 +202,100 @@ export const sendRequest = async <T>(
     },
   };
 
-  const response = await fetch(`${API_URL}${endpoint}`, requestOptions);
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, requestOptions);
 
-  // 認証ヘッダーをレスポンスから取得 (現在は未使用)
-  // const responseAccessToken = response.headers.get('access-token');
-  // const responseClient = response.headers.get('client');
-  // const responseUid = response.headers.get('uid');
+    // 認証ヘッダーをレスポンスから取得 (現在は未使用)
+    // const responseAccessToken = response.headers.get('access-token');
+    // const responseClient = response.headers.get('client');
+    // const responseUid = response.headers.get('uid');
 
-  if (!response.ok) {
-    let errorData: any = null;
-    let errorMessage = `APIリクエストに失敗しました (ステータス: ${response.status})`;
-    try {
-      const errorText = await response.text();
-      errorData = JSON.parse(errorText);
-      // RailsのDevise Token Authのエラー形式を想定
-      if (errorData && errorData.errors) {
-        if (Array.isArray(errorData.errors)) {
-          // エラーが配列の場合 (full_messagesなど)
-          errorMessage = errorData.errors.join(', ');
-        } else if (typeof errorData.errors === 'object') {
-          // エラーがオブジェクトの場合 (各フィールドのエラー)
-          errorMessage = Object.entries(errorData.errors)
-            .map(
-              ([field, messages]) =>
-                `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`
-            )
-            .join('\n');
+    if (!response.ok) {
+      let errorData: any = null;
+      let errorMessage = `APIリクエストに失敗しました (ステータス: ${response.status})`;
+      try {
+        const errorText = await response.text();
+        errorData = JSON.parse(errorText);
+        // RailsのDevise Token Authのエラー形式を想定
+        if (errorData && errorData.errors) {
+          if (Array.isArray(errorData.errors)) {
+            // エラーが配列の場合 (full_messagesなど)
+            errorMessage = errorData.errors.join(', ');
+          } else if (typeof errorData.errors === 'object') {
+            // エラーがオブジェクトの場合 (各フィールドのエラー)
+            errorMessage = Object.entries(errorData.errors)
+              .map(
+                ([field, messages]) =>
+                  `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`
+              )
+              .join('\n');
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          }
         } else if (errorData.message) {
           errorMessage = errorData.message;
         }
-      } else if (errorData.message) {
-        errorMessage = errorData.message;
+        // パースは成功したが期待した形式ではない場合、元のテキストを使うことも検討
+      } catch (e) {
+        // JSONパース失敗。テキスト形式のエラーの可能性
+        console.error('API error response parsing failed:', e);
+        // console.error('API error response is not valid JSON:', errorText); // デバッグ用
+        // errorText をそのまま使うか、デフォルトメッセージを使う
       }
-      // パースは成功したが期待した形式ではない場合、元のテキストを使うことも検討
-    } catch (e) {
-      // JSONパース失敗。テキスト形式のエラーの可能性
-      console.error('API error response parsing failed:', e);
-      // console.error('API error response is not valid JSON:', errorText); // デバッグ用
-      // errorText をそのまま使うか、デフォルトメッセージを使う
+      // throw new ApiError(errorMessage, response.status, errorData?.errors);
+      return {
+        success: false,
+        error: {
+          message: errorMessage,
+          status: response.status,
+          errors: errorData?.errors,
+        },
+        headers: response.headers,
+        response: response,
+      };
     }
-    throw new ApiError(errorMessage, response.status, errorData?.errors);
-  }
 
-  // レスポンスボディが空の場合の対応
-  const responseText = await response.text();
-  let data: T;
-  try {
-    data = responseText ? (JSON.parse(responseText) as T) : ({} as T);
-  } catch (e) {
-    console.error('Failed to parse response JSON:', e);
-    // console.error("Failed to parse response JSON:", responseText); // 元のテキストもログ出力する場合
-    throw new Error('レスポンスのJSONパースに失敗しました');
-  }
+    // レスポンスボディが空の場合の対応
+    const responseText = await response.text();
+    let data: T;
+    try {
+      data = responseText ? (JSON.parse(responseText) as T) : ({} as T);
+    } catch (e) {
+      console.error('Failed to parse response JSON:', e);
+      // console.error("Failed to parse response JSON:", responseText); // 元のテキストもログ出力する場合
+      // throw new Error('レスポンスのJSONパースに失敗しました');
+      return {
+        success: false,
+        error: {
+          message: 'レスポンスのJSONパースに失敗しました',
+          status: response.status, // パース失敗でもステータスは返す
+        },
+        headers: response.headers,
+        response: response,
+      };
+    }
 
-  return { data, headers: response.headers, response };
+    return {
+      success: true,
+      data,
+      headers: response.headers,
+      response,
+    };
+  } catch (networkError) {
+    // fetch自体が失敗した場合 (ネットワークエラーなど)
+    console.error('Network error during API request:', networkError);
+    const message =
+      networkError instanceof Error
+        ? networkError.message
+        : 'ネットワークエラーが発生しました';
+    return {
+      success: false,
+      error: {
+        message: `ネットワークリクエストに失敗しました: ${message}`,
+        // statusやerrorsはネットワークエラーの場合通常不明
+      },
+    };
+  }
 };
 
 /**
@@ -241,8 +303,11 @@ export const sendRequest = async <T>(
  * @param url - エンドポイント
  * @param data - 送信するデータ
  */
-export const postData = async (url: string, data: any) => {
-  return sendRequest(url, createRequestOptions('POST', data));
+export const postData = async <T>(
+  url: string,
+  data: any
+): Promise<ApiResponse<T>> => {
+  return sendRequest<T>(url, createRequestOptions('POST', data));
 };
 
 /**
@@ -250,16 +315,19 @@ export const postData = async (url: string, data: any) => {
  * @param url - エンドポイント
  * @param data - 送信するデータ
  */
-export const putData = async (url: string, data: any) => {
-  return sendRequest(url, createRequestOptions('PUT', data));
+export const putData = async <T>(
+  url: string,
+  data: any
+): Promise<ApiResponse<T>> => {
+  return sendRequest<T>(url, createRequestOptions('PUT', data));
 };
 
 /**
  * DELETEリクエスト用の関数
  * @param url - 削除対象のエンドポイント
  */
-export const deleteData = async (url: string) => {
-  return sendRequest(url, createRequestOptions('DELETE'));
+export const deleteData = async <T>(url: string): Promise<ApiResponse<T>> => {
+  return sendRequest<T>(url, createRequestOptions('DELETE'));
 };
 
 /**

@@ -1,9 +1,9 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
+import { deleteData, postData } from '@/api/api';
 import { useAuthStore } from '@/stores/authStore';
 import { RegisterParams } from '@/types/register/user';
-import useSWRMutation from 'swr/mutation';
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { useApiGet } from '@/hooks/useApi';
 
 interface User {
   id: number;
@@ -14,290 +14,284 @@ interface User {
   updated_at: string;
 }
 
-export interface AuthError {
-  message: string;
-  errors?: Record<string, string[]>;
+// ユーザー登録APIの成功レスポンスの型 (仮)
+interface RegisterSuccessResponse {
+  data: {
+    id: number;
+    // 他のユーザー情報...
+  };
+  // 他のレスポンス情報...
 }
 
-// APIエラーレスポンスを解析するヘルパー関数
-const parseApiError = (
-  error: unknown
-): { message: string; status?: number } => {
-  let errorMessage = '不明なエラーが発生しました。';
-  let statusCode: number | undefined;
+// ユーザー詳細登録APIの成功レスポンスの型 (仮、通常は成功ステータスのみか？)
+// type UserDetailSuccessResponse = {}; // 使わない場合は不要
 
-  if (error instanceof Error) {
-    try {
-      const errorData = JSON.parse(error.message);
-      if (errorData.errors) {
-        // Railsのバリデーションエラー形式を想定
-        errorMessage = Object.entries(errorData.errors)
-          .map(([field, messages]) => {
-            const fieldName = field; // 必要に応じてフィールド名を変換
-            const messageText = Array.isArray(messages)
-              ? messages.join(', ')
-              : messages;
-            return `${fieldName}: ${messageText}`;
-          })
-          .join('\n');
-      } else if (errorData.message) {
-        errorMessage = errorData.message;
-      } else {
-        errorMessage = error.message; // JSONだが期待した形式ではない
-      }
-      if (typeof errorData.status === 'number') {
-        statusCode = errorData.status;
-      }
-    } catch {
-      errorMessage = error.message; // JSON解析失敗
-    }
-  } else if (typeof error === 'string') {
-    errorMessage = error;
-  } else if (typeof error === 'object' && error !== null) {
-    // Axios等のエラーオブジェクトからステータスを取得
-    if ('response' in error) {
-      const response = (error as { response?: { status?: unknown } }).response;
-      if (typeof response?.status === 'number') {
-        statusCode = response.status;
-      }
-    }
-    // 一般的なエラーオブジェクトのmessageプロパティ
-    if (
-      'message' in error &&
-      typeof (error as { message?: string }).message === 'string'
-    ) {
-      if (errorMessage === '不明なエラーが発生しました。') {
-        errorMessage = (error as { message: string }).message;
-      }
-    }
-  }
-
-  return { message: errorMessage, status: statusCode };
-};
+// API関数の戻り値の型 (T = unknown に変更)
+type AuthResult<T = unknown> =
+  | { success: true; data?: T; message?: string }
+  | {
+      success: false;
+      message: string;
+      status?: number;
+      errors?: Record<string, string[]>;
+    };
 
 export const useAuth = () => {
   const router = useRouter();
-  const { post } = useApiMutations();
   const { setAuth, clearAuth, isAuthenticated, accessToken, client, uid } =
     useAuthStore();
+  // 各アクション実行中のローディング状態
+  const [isMutating, setIsMutating] = useState(false);
+  // 各アクションで発生したエラーメッセージ
+  const [authActionError, setAuthActionError] = useState<string | null>(null);
 
+  // useApiGet は SWR ベースなのでエラーを throw する fetcher を使う
   const {
     data: user,
-    error: userError,
+    error: userFetchError, // SWR が fetcher から throw されたエラーを受け取る
     isLoading: isUserLoading,
   } = useApiGet<User>(
+    // 条件付きフェッチ
     isAuthenticated && accessToken && client && uid
       ? '/api/auth/validate_token'
       : null
   );
 
-  // 自動ログイン処理 (エラーハンドリングを強化し、結果オブジェクトを返す)
-  const performAutoLogin = useCallback(
-    async (email: string, password: string) => {
-      try {
-        console.log('自動ログイン試行:', email);
-        const loginResponse = await post('/api/auth/sign_in', {
-          email,
-          password,
-        });
-        console.log('ログインレスポンス:', loginResponse);
-
-        if (!loginResponse?.headers) {
-          console.error('ログインレスポンスにヘッダー情報がありません');
-          return { success: false, message: '認証情報が取得できませんでした' };
-        }
-
-        const accessToken =
-          loginResponse.headers instanceof Headers
-            ? loginResponse.headers.get('access-token')
-            : loginResponse.headers['access-token'];
-        const client =
-          loginResponse.headers instanceof Headers
-            ? loginResponse.headers.get('client')
-            : loginResponse.headers['client'];
-        const uid =
-          loginResponse.headers instanceof Headers
-            ? loginResponse.headers.get('uid')
-            : loginResponse.headers['uid'];
-
-        if (!(accessToken && client && uid)) {
-          console.error('認証情報が不完全です:', { accessToken, client, uid });
-          return { success: false, message: '認証情報が不完全です' };
-        }
-
-        setAuth(accessToken, client, uid);
-        console.log('認証情報をセットしました。');
-        return { success: true, data: loginResponse.data };
-      } catch (error) {
-        console.error('自動ログイン失敗:', error);
-        const parsedError = parseApiError(error);
-        return {
-          success: false,
-          message: `自動ログインに失敗しました: ${parsedError.message}`,
-        };
-      }
-    },
-    [post, setAuth]
-  );
-
-  // エラーメッセージを日本語化する関数
+  // エラーメッセージを日本語化するヘルパー関数
   const translateErrorMessage = (message: string | undefined): string => {
     if (!message) return '不明なエラーが発生しました。';
-
+    // 翻訳ルールを追加・修正
+    if (message.includes('Invalid login credentials')) {
+      return 'メールアドレスまたはパスワードに誤りがあります。';
+    }
     if (message.includes('Email has already been taken')) {
-      return 'このメールアドレスは既に登録されています。別のメールアドレスを使用してください。';
+      return 'このメールアドレスは既に登録されています。';
     }
     if (message.includes('Password is too short')) {
-      return 'パスワードが短すぎます。8文字以上で入力してください。';
+      return 'パスワードは8文字以上で入力してください。';
     }
     if (message.includes("Password confirmation doesn't match Password")) {
       return 'パスワードと確認用パスワードが一致しません。';
     }
-    return message;
+    // 他の英語メッセージに対する翻訳ルール...
+    return message; // 翻訳ルールがなければそのまま返す
   };
+
+  // 自動ログイン処理
+  const performAutoLogin = useCallback(
+    async (email: string, password: string): Promise<AuthResult<User>> => {
+      console.log('自動ログイン試行:', email);
+      // postData は ApiResponse<T> を返す (エラーは throw しない)
+      const response = await postData<User>('/api/auth/sign_in', {
+        email,
+        password,
+      });
+
+      if (response.success) {
+        // 成功した場合、ヘッダーから認証情報を取得
+        const newAccessToken = response.headers.get('access-token');
+        const newClient = response.headers.get('client');
+        const newUid = response.headers.get('uid');
+
+        if (!(newAccessToken && newClient && newUid)) {
+          console.error('認証情報が不完全です:', {
+            newAccessToken,
+            newClient,
+            newUid,
+          });
+          // 成功レスポンスだが情報不備の場合もエラー扱い
+          const message = '認証情報の取得に失敗しました。';
+          return { success: false, message };
+        }
+
+        // 認証情報をストアに保存
+        setAuth(newAccessToken, newClient, newUid);
+        console.log('認証情報をセットしました。');
+        return { success: true, data: response.data as User };
+      } else {
+        // API呼び出しが失敗した場合 (response.success が false)
+        console.error('自動ログインAPI失敗:', response.error);
+        const message = translateErrorMessage(response.error.message);
+        // 呼び出し元にエラー情報を返す
+        return {
+          success: false,
+          message,
+          status: response.error.status,
+          errors: response.error.errors,
+        };
+      }
+    },
+    [setAuth] // 依存配列: setAuth
+  );
 
   // ログイン処理
   const login = useCallback(
-    async (email: string, password: string) => {
-      try {
-        const loginResult = await performAutoLogin(email, password);
-        if (loginResult.success) {
-          router.push('/home');
-        } else {
-          const errorMessage = translateErrorMessage(loginResult.message);
-          // toast.error(errorMessage);
-          return { success: false, message: errorMessage };
-        }
-        return { success: true };
-      } catch (error) {
-        const parsedError = parseApiError(error);
-        const errorMessage = translateErrorMessage(parsedError.message);
-        // toast.error(errorMessage);
-        return { success: false, message: errorMessage };
+    async (email: string, password: string): Promise<AuthResult<User>> => {
+      setIsMutating(true);
+      setAuthActionError(null); // エラーをリセット
+
+      const loginResult = await performAutoLogin(email, password);
+
+      if (loginResult.success) {
+        router.push('/home');
+        setIsMutating(false);
+        return { success: true, data: loginResult.data as User };
+      } else {
+        // performAutoLogin が失敗した場合
+        setAuthActionError(loginResult.message); // フック内のエラー状態を更新
+        setIsMutating(false);
+        // 呼び出し元にも失敗情報を返す
+        return {
+          success: false,
+          message: loginResult.message,
+          status: loginResult.status,
+          errors: loginResult.errors,
+        };
       }
     },
-    [router, performAutoLogin]
+    [router, performAutoLogin] // 依存配列: router, performAutoLogin
   );
 
   // ログアウト処理
-  const logout = useCallback(async () => {
-    try {
-      await post('/api/auth/sign_out', {});
-      clearAuth();
-      router.push('/');
+  const logout = useCallback(async (): Promise<AuthResult<void>> => {
+    setIsMutating(true);
+    setAuthActionError(null);
+
+    const response = await deleteData<void>('/api/auth/sign_out');
+
+    if (response.success) {
+      clearAuth(); // ストアの認証情報をクリア
+      router.push('/'); // ルートページにリダイレクト
+      setIsMutating(false);
       return { success: true };
-    } catch (error) {
-      const parsedError = parseApiError(error);
-      const errorMessage = translateErrorMessage(parsedError.message);
-      // toast.error(errorMessage);
-      return { success: false, message: errorMessage };
+    } else {
+      // API呼び出しが失敗した場合
+      console.error('ログアウトAPI失敗:', response.error);
+      const message = translateErrorMessage(response.error.message);
+      setAuthActionError(message); // フック内のエラー状態を更新
+      setIsMutating(false);
+      return {
+        success: false,
+        message,
+        status: response.error.status,
+        errors: response.error.errors,
+      };
     }
-  }, [post, router, clearAuth]);
+  }, [router, clearAuth]); // 依存配列: router, clearAuth
 
   // ユーザー登録処理
-  const {
-    trigger: registerTrigger,
-    isMutating: isRegistering,
-    error: registrationError,
-  } = useSWRMutation(
-    '/api/auth',
-    async (key, { arg }: { arg: RegisterParams }) => {
-      const params = arg;
+  const register = useCallback(
+    async (params: RegisterParams): Promise<AuthResult<User>> => {
+      setIsMutating(true);
+      setAuthActionError(null);
       let userId: number | null = null;
 
       // --- ステップ 1: ユーザー基本情報登録 ---
-      try {
-        const userResponse = await post('/api/auth', {
+      const userResponse = await postData<RegisterSuccessResponse>(
+        '/api/auth',
+        {
           email: params.mail,
           password: params.password,
           password_confirmation: params.passwordConfirm,
           name: params.name,
-          role_id: 4,
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        userId = (userResponse?.data as any)?.data?.id;
-        if (!userId) {
-          const potentialError =
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (userResponse?.data as any)?.errors ||
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (userResponse?.data as any)?.message ||
-            'ユーザーIDが取得できませんでした';
-          const errorMessage = `ユーザー登録に失敗しました: ${JSON.stringify(potentialError)}`;
-          // toast.error(errorMessage);
-          return { success: false, message: errorMessage };
+          role_id: 4, // 固定値？
         }
+      );
 
-        // --- ステップ 2: ユーザー詳細情報登録 ---
-        await post('/user_details', {
-          student_id: params.studentId,
-          tel: params.tel,
-          department_id: params.departmentId,
-          grade_id: params.gradeId,
-          user_id: userId,
-        });
-
-        // --- ステップ 3: 自動ログイン ---
-        const loginResult = await performAutoLogin(
-          params.mail,
-          params.password
-        );
-
-        if (!loginResult.success) {
-          const errorMessage = loginResult.message;
-          // toast.error(errorMessage);
-          return { success: false, message: errorMessage };
-        }
-
-        router.push('/home');
-        return { success: true, data: loginResult.data };
-      } catch (error) {
-        const parsedError = parseApiError(error);
-        let errorMessage: string;
-
-        if (userId === null) {
-          errorMessage = `ユーザー登録に失敗しました: ${translateErrorMessage(parsedError.message)}`;
-        } else {
-          if (parsedError.status === 404) {
-            errorMessage = `ユーザー詳細登録のエンドポイントが見つかりません (404): ${translateErrorMessage(parsedError.message)}`;
-          } else {
-            errorMessage = `ユーザー登録は完了しましたが、後続処理（詳細登録または自動ログイン）でエラーが発生しました: ${translateErrorMessage(parsedError.message)}`;
-          }
-        }
-
-        // toast.error(errorMessage);
-        return { success: false, message: errorMessage };
+      if (!userResponse.success) {
+        console.error('ユーザー登録API失敗(基本情報):', userResponse.error);
+        const message = translateErrorMessage(userResponse.error.message);
+        setAuthActionError(message);
+        setIsMutating(false);
+        return {
+          success: false,
+          message,
+          status: userResponse.error.status,
+          errors: userResponse.error.errors,
+        };
       }
-    }
+
+      // レスポンスからユーザーIDを取得 (レスポンス形式に合わせて要調整)
+      const responseData = userResponse.data as
+        | RegisterSuccessResponse
+        | undefined;
+      userId = responseData?.data?.id ?? null;
+      if (userId === null) {
+        console.error(
+          'ユーザー登録後、ユーザーIDが取得できませんでした。',
+          userResponse.data
+        );
+        const message =
+          'ユーザー登録に成功しましたが、IDを取得できませんでした。';
+        setAuthActionError(message);
+        setIsMutating(false);
+        return { success: false, message };
+      }
+
+      // --- ステップ 2: ユーザー詳細情報登録 ---
+      const detailResponse = await postData<void>('/user_details', {
+        student_id: params.studentId,
+        tel: params.tel,
+        department_id: params.departmentId,
+        grade_id: params.gradeId,
+        user_id: userId, // 取得した user_id を使用
+      });
+
+      if (!detailResponse.success) {
+        console.error('ユーザー登録API失敗(詳細情報):', detailResponse.error);
+        // ここでロールバック処理が必要な場合がある（例: 作成したユーザーを削除）
+        const message = translateErrorMessage(detailResponse.error.message);
+        setAuthActionError(message);
+        setIsMutating(false);
+        return {
+          success: false,
+          message: `ユーザー詳細情報の登録に失敗: ${message}`,
+          status: detailResponse.error.status,
+          errors: detailResponse.error.errors,
+        };
+      }
+
+      // --- ステップ 3: 自動ログイン ---
+      const loginResult = await performAutoLogin(params.mail, params.password);
+
+      if (!loginResult.success) {
+        // performAutoLogin内でエラー状態は更新されるが、メッセージを追記
+        const message = `ユーザー登録は完了しましたが、自動ログインに失敗しました: ${loginResult.message}`;
+        setAuthActionError(message); // エラーメッセージ上書き
+        setIsMutating(false);
+        return {
+          success: false,
+          message,
+          status: loginResult.status,
+          errors: loginResult.errors,
+        };
+      }
+
+      // 全て成功
+      router.push('/home');
+      setIsMutating(false);
+      return { success: true, data: loginResult.data as User };
+    },
+    [performAutoLogin, router] // 依存配列: performAutoLogin, router
   );
 
-  // トークン検証のためのインターバル設定
-  useEffect(() => {
-    if (isAuthenticated) {
-      const interval = setInterval(
-        () => {
-          // トークン検証は useApiGet フックによって自動的に行われます
-          // このインターバルは主にユーザー情報の更新のために使用されます
-        },
-        5 * 60 * 1000
-      ); // 5分ごとに実行
-
-      return () => clearInterval(interval);
-    }
-  }, [isAuthenticated]);
+  // トークン検証 (useApiGetが担当、エラーはuserFetchErrorで受け取る)
+  // useEffect(() => { ... }, [isAuthenticated]);
 
   return {
     user,
-    isUserLoading,
-    userError: userError ? parseApiError(userError).message : null,
-    isAuthenticated,
-    registerTrigger,
-    isRegistering,
-    registrationError: registrationError
-      ? parseApiError(registrationError).message
+    isUserLoading, // ユーザー情報取得中のローディング
+    // useApiGet (SWR) が throw したエラー
+    userError: userFetchError
+      ? translateErrorMessage(userFetchError.message) // SWRエラーも翻訳
       : null,
+    isAuthenticated,
     login,
     logout,
+    register,
+    isRegistering: isMutating, // 登録/ログイン/ログアウト実行中のローディング状態
+    // 認証アクションのエラー状態を取得/クリアする関数
+    getAuthActionError: () => authActionError,
+    clearAuthActionError: () => setAuthActionError(null),
   };
 };
