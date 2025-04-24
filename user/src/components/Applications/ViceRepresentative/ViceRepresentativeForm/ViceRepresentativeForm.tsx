@@ -13,25 +13,27 @@ type ViceRepresentativeFormProps = {
   toEdit?: () => void;
 };
 
-const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
+const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
+  viceRepresentative,
+  toEdit,
+}) => {
   const {
     handleSubmit,
     setValue,
-    getValues,
     errors,
-    reset,
-    watch,
     onSubmit,
     option2,
     optiongrade,
     optionfield,
-    radioValue1,
     textName,
-    textNumber,
-    valuegrade,
-    valuefield,
-    textAddress,
-  } = useViceRepresentativeFormHook();
+    textstudentId,
+    valuegradeId,
+    valuedepartmentId,
+    textemail,
+    texttel,
+    setisInd,
+    isIndividual,
+  } = useViceRepresentativeFormHook(viceRepresentative);
 
   return (
     <FormContainer>
@@ -39,13 +41,13 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
         <div>
           <Radio
             label={viceRepresentativeLabels[0]}
-            onChange={(value) => setValue('isGroup', Number(value))}
+            onChange={(value) => setisInd(Number(value))}
             options={option2}
             required
-            value={radioValue1}
-            error={errors.isGroup?.message}
+            value={isIndividual ? '1' : '0'}
+            error={errors.isindividual?.message}
           />
-          {radioValue1 === '1' && (
+          {isIndividual === false && (
             <div>
               <TextBox
                 label={viceRepresentativeLabels[1]}
@@ -57,40 +59,48 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = () => {
               />
               <TextBox
                 label={viceRepresentativeLabels[2]}
-                value={textNumber}
-                onChange={(value) => setValue('number', value)}
+                value={textstudentId}
+                onChange={(value) => setValue('studentId', value)}
                 note="例：123456"
                 required={true}
-                error={errors.number?.message}
+                error={errors.studentId?.message}
               />
               <Selector
                 label={viceRepresentativeLabels[3]}
-                value={valuegrade}
-                onChange={(value) => setValue('grade', Number(value))}
+                value={valuegradeId}
+                onChange={(value) => setValue('gradeId', Number(value))}
                 required={true}
                 options={optiongrade}
-                error={errors.grade?.message}
+                error={errors.gradeId?.message}
               />
               <Selector
                 label={viceRepresentativeLabels[4]}
-                value={valuefield}
-                onChange={(value) => setValue('field', Number(value))}
+                value={valuedepartmentId}
+                onChange={(value) => setValue('departmentId', Number(value))}
                 required={true}
                 options={optionfield}
-                error={errors.field?.message}
+                error={errors.departmentId?.message}
               />
               <TextBox
                 label={viceRepresentativeLabels[5]}
-                value={textAddress}
-                onChange={(value) => setValue('address', value)}
+                value={textemail}
+                onChange={(value) => setValue('email', value)}
                 note="例：123456@stn.nagaokaut.ac.jp"
                 required={true}
-                error={errors.address?.message}
+                error={errors.email?.message}
+              />
+              <TextBox
+                label={viceRepresentativeLabels[6]}
+                value={texttel}
+                onChange={(value) => setValue('tel', value)}
+                note="例：09012345678 (ハイフンなし)"
+                required={true}
+                error={errors.tel?.message}
               />
             </div>
           )}
         </div>
-        <div className="w-full flex justify-center items-center mt-10">
+        <div className="mt-10 flex w-full items-center justify-center">
           <Button size="pc" color="main" type="submit">
             登録
           </Button>

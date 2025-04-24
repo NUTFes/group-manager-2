@@ -12,4 +12,5 @@ export const viceRepresentativeLabels = [
   '課程・学年',
   '学科・専攻',
   'メールアドレス',
+  '電話番号',
 ];

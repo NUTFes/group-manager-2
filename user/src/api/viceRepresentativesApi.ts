@@ -2,42 +2,38 @@ import useSWRMutation from 'swr/mutation';
 import { useApiGet } from '@/hooks/useApi';
 import { patchFetcher, postFetcher } from './api';
 
-const API_ENDPOINT = '/vice_representatives';
+const API_ENDPOINT = '/sub_reps';
 
-export type FormData = {
-  groupId: number;
-  isGroup: number;
-  name: string;
-  number: string;
-  grade: number;
-  field: number;
-  address: string;
+export type ApiResponse<T> = {
+  status: ApiStatus;
+  data: T;
 };
+type ApiStatus = { code: number; message: string };
 
 export type ViceRepresentative = {
   id: number;
   groupId: number;
-  isGroup: number;
   name: string;
-  number: string;
-  grade: number;
-  field: number;
-  address: string;
+  departmentId: number;
+  gradeId: number;
+  tel: string;
+  email: string;
   createdAt: string;
   updatedAt: string;
+  studentId: number;
 };
 
 export type ViceRepresentativeResponse = {
   id: number;
   groupId: number;
-  isGroup: number;
   name: string;
-  number: string;
-  grade: number;
-  field: number;
-  address: string;
+  departmentId: number;
+  gradeId: number;
+  tel: string;
+  email: string;
   createdAt: string;
   updatedAt: string;
+  studentId: number;
 };
 
 export const useGetViceRepresentatives = (groupId: number | null) => {
@@ -58,6 +54,6 @@ export const useCreateViceRepresentative = () => {
   return useSWRMutation(API_ENDPOINT, postFetcher);
 };
 
-export const useUpdateViceRepresentative = (id: number) => {
+export const useUpdateViceRepresentative = (id: number | undefined) => {
   return useSWRMutation(`${API_ENDPOINT}/${id}`, patchFetcher);
 };

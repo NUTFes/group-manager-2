@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import {
-  FormData,
+  ViceRepresentativeResponse,
   useCreateViceRepresentative,
   useUpdateViceRepresentative,
 } from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
-import { vicerepresentativeSchema } from './schema';
+import { ViceRepresentativeForm, vicerepresentativeSchema } from './schema';
 
-export const useViceRepresentativeFormHook = () => {
+export const useViceRepresentativeFormHook = (
+  viceRepresentative: ViceRepresentativeResponse | undefined
+) => {
   const {
     handleSubmit,
     setValue,
@@ -17,23 +19,31 @@ export const useViceRepresentativeFormHook = () => {
     formState: { errors },
     reset,
     watch,
-  } = useForm<FormData>({
+  } = useForm<ViceRepresentativeForm>({
     resolver: zodResolver(vicerepresentativeSchema),
     defaultValues: {
       groupId: 3,
-      name: '',
-      number: '',
-      grade: 0,
-      field: 0,
-      address: '',
+      name: viceRepresentative?.name || '',
+      studentId: viceRepresentative?.studentId || 0,
+      gradeId: viceRepresentative?.gradeId || 0,
+      departmentId: viceRepresentative?.departmentId || 0,
+      email: viceRepresentative?.email || '',
+      tel: viceRepresentative?.tel || '',
     },
   });
-  const [isGroup, setisGroup] = useState(undefined);
 
   const option2 = [
-    { id: 0, name: 'はい(一人での参加)' }, //一人
-    { id: 1, name: 'いいえ(グループで参加)' }, //グループ
+    { id: 1, name: 'はい(一人での参加)' },
+    { id: 0, name: 'いいえ(グループで参加)' },
   ];
+
+  const [isIndividual, setIsIndividual] = useState(() => {
+    if (viceRepresentative) {
+      return false;
+    } else {
+      return undefined;
+    }
+  });
 
   const optiongrade = [
     { id: 0, name: '選択してください', disabled: true },
@@ -75,17 +85,27 @@ export const useViceRepresentativeFormHook = () => {
     { id: 17, name: '社会環境・生物機能工学分野/生物統合工学専攻' },
     { id: 18, name: 'その他' },
   ];
-  const values = watch();
-  const groupId = values.groupId;
 
-  const onSubmit = async (inputData: FormData) => {
+  const values = watch();
+
+  const setisInd = (id: number) => {
+    setIsIndividual(id === 1);
+  };
+
+  const { trigger: create } = useCreateViceRepresentative();
+
+  const { trigger: update } = useUpdateViceRepresentative(
+    viceRepresentative?.id
+  );
+
+  const onSubmit = async (data: ViceRepresentativeForm) => {
     try {
-      if (imputData) {
-        await useUpdateViceRepresentative;
+      if (viceRepresentative) {
+        await update({ query: data });
       } else {
-        await useCreateViceRepresentative;
+        await create({ query: data });
       }
-      mutate(`/vice_representative/group/${imputData?.groupId}`);
+      mutate(`/sub_Reps/group/${data.groupId}`);
       alert('送信しました');
       reset();
     } catch {
@@ -104,12 +124,13 @@ export const useViceRepresentativeFormHook = () => {
     option2,
     optiongrade,
     optionfield,
-    // data,
-    radioValue1: values.isGroup?.toString() || '',
+    isIndividual,
+    setisInd,
     textName: values.name || '',
-    textNumber: values.number || '',
-    valuegrade: values.grade.toString(),
-    valuefield: values.field.toString(),
-    textAddress: values.address || '',
+    textstudentId: values.studentId || '',
+    valuegradeId: values.gradeId.toString(),
+    valuedepartmentId: values.departmentId.toString(),
+    textemail: values.email || '',
+    texttel: values.tel || '',
   };
 };

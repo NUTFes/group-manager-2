@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
-import useSWR from 'swr';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
 
 export const useViceRepresentativeHook = () => {
-  const { isLoading, hasError } = useGetViceRepresentatives(9);
-  const { data } = useSWR(`/vice_representative/group/5`);
-
-  const viceRepresentative = data;
+  const { viceRepresentative, isLoading, hasError } =
+    useGetViceRepresentatives(3);
 
   const formItem: FormItem[] = [
     {
@@ -17,19 +14,23 @@ export const useViceRepresentativeHook = () => {
     },
     {
       label: viceRepresentativeLabels[2],
-      content: viceRepresentative?.number ?? '',
+      content: viceRepresentative?.studentId ?? '',
     },
     {
       label: viceRepresentativeLabels[3],
-      content: viceRepresentative?.grade ?? '',
+      content: viceRepresentative?.gradeId ?? '',
     },
     {
       label: viceRepresentativeLabels[4],
-      content: viceRepresentative?.field ?? '',
+      content: viceRepresentative?.departmentId ?? '',
     },
     {
       label: viceRepresentativeLabels[5],
-      content: viceRepresentative?.address ?? '',
+      content: viceRepresentative?.email ?? '',
+    },
+    {
+      label: viceRepresentativeLabels[6],
+      content: viceRepresentative?.tel ?? '',
     },
   ];
   const [isEditing, setIsEditing] = useState(true);
@@ -39,6 +40,7 @@ export const useViceRepresentativeHook = () => {
   };
 
   useEffect(() => {
+    console.log('useEffect');
     if (viceRepresentative) {
       setIsEditing(false);
     }
