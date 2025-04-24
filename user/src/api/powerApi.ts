@@ -1,9 +1,8 @@
-import { Device, ORDER_TYPES } from '@/components/Applications/Power/types';
+import { Device } from '@/components/Applications/Power/types';
 import { useApiGet, useApiMutations } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
-  UN_REGISTERED_GROUPS: '/un_registered_groups',
 };
 
 // APIから返ってくるデータの型定義
@@ -27,21 +26,6 @@ export type PowerOrderData = {
   manufacturer: string;
   model: string;
   item_url: string;
-};
-
-// 未登録テーブルのリクエストデータの型定義
-export type UnregisteredGroupData = {
-  group_id: number;
-  order_type: number;
-};
-
-// 未登録テーブルのレスポンス型定義
-export type UnregisteredGroupResponse = {
-  id: number;
-  group_id: number;
-  order_type: string;
-  created_at: string;
-  updated_at: string;
 };
 
 /**
@@ -94,30 +78,6 @@ export const useGetPowerOrders = (groupId: number | null) => {
     isLoading,
     hasError: !!error,
     hasExisting: devices.length > 0,
-    mutate,
-  };
-};
-
-/**
- * 未登録テーブルデータを取得するフック
- */
-export const useGetUnregisteredGroup = (groupId: number | null) => {
-  const endpoint = groupId
-    ? `${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER_ORDER}`
-    : null;
-
-  const { data, error, isLoading, mutate } = useApiGet<{
-    data: UnregisteredGroupResponse[];
-  }>(endpoint);
-
-  const unregisteredData = data?.data?.[0] ?? null;
-  const hasUnregistered = !!unregisteredData;
-
-  return {
-    unregisteredData,
-    isLoading,
-    hasError: !!error,
-    hasUnregistered,
     mutate,
   };
 };
@@ -176,76 +136,8 @@ export const useMutatePowerOrders = () => {
     }
   };
 
-  /**
-   * 未登録テーブルを登録する
-   */
-  const registerUnregisteredGroup = async (groupId: number) => {
-    try {
-      const requestData: UnregisteredGroupData = {
-        group_id: groupId,
-        order_type: ORDER_TYPES.POWER_ORDER,
-      };
-      await post(API_ENDPOINTS.UN_REGISTERED_GROUPS, requestData);
-      return { success: true };
-    } catch (error) {
-      console.error('未登録テーブル登録エラー:', error);
-      return { success: false, error };
-    }
-  };
-
-  /**
-   * 未登録テーブルデータを削除する
-   */
-  const deleteUnregisteredGroup = async (
-    unregisteredData: UnregisteredGroupResponse | null
-  ) => {
-    // データがなければ削除不要
-    if (!unregisteredData) {
-      return { success: true, noData: true };
-    }
-
-    const url = `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredData.id}`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        return { success: true };
-      }
-
-      // エラー詳細を取得
-      let errorDetail = `削除に失敗しました。ステータス: ${response.status}`;
-      try {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const errorText = await response.text();
-          if (errorText) {
-            const errorJson = JSON.parse(errorText);
-            errorDetail = `削除に失敗しました: ${errorJson.message || JSON.stringify(errorJson)}`;
-          }
-        }
-      } catch (parseError) {
-        console.error('エラーレスポンスの解析に失敗:', parseError);
-      }
-      return { success: false, error: errorDetail };
-    } catch (fetchError) {
-      console.error('未登録テーブル削除通信エラー:', fetchError);
-      return {
-        success: false,
-        error: `通信エラー: ${fetchError instanceof Error ? fetchError.message : '不明なエラー'}`,
-      };
-    }
-  };
-
   return {
     submitPowerOrders,
     deletePowerOrder,
-    registerUnregisteredGroup,
-    deleteUnregisteredGroup,
   };
 };
