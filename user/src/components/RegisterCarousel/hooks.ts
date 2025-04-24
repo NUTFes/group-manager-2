@@ -53,7 +53,7 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
   ];
 
   // 認証フックから必要な関数と状態を取得 (registerTrigger, registrationError -> register, getAuthActionError etc.)
-  const { register: authRegister, isRegistering } = useAuth();
+  const { register: authRegister, isLoading } = useAuth();
   // このコンポーネント専用のエラー表示状態
   const [displayError, setDisplayError] = useState<string | null>(null);
 
@@ -196,7 +196,7 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     setValue,
     gradeOptions,
     departmentOptions,
-    isRegistering,
+    isLoading,
     displayError,
     trigger,
     goToStep,

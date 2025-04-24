@@ -6,23 +6,22 @@ import { useAuth } from '@/hooks/useAuth';
 import { LoginModalSchema, loginModalSchema } from './schema';
 
 export const useLoginModalHooks = (onClose: () => void) => {
-  const { login, isUserLoading } = useAuth();
+  const { login, isLoading } = useAuth();
   const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleLogin = async (data: LoginModalSchema) => {
     try {
-      setLoginError(null); // エラーをリセット
+      setLoginError(null);
       const result = await login(data.email, data.password);
       if (result.success) {
         toast.success('ログインしました。');
         onClose();
       } else {
-        // ログイン失敗時のエラーメッセージを表示
         setLoginError('メールアドレスまたはパスワードに誤りがあります');
       }
     } catch (error: unknown) {
-      console.error('Login failed:', error);
-      setLoginError('メールアドレスまたはパスワードに誤りがあります');
+      console.error('Login failed (unexpected error):', error);
+      setLoginError('ログイン処理中に予期せぬエラーが発生しました。');
     }
   };
 
@@ -50,7 +49,7 @@ export const useLoginModalHooks = (onClose: () => void) => {
     errors,
     email,
     password,
-    isLoggingIn: isUserLoading,
+    isLoggingIn: isLoading,
     loginError,
   };
 };

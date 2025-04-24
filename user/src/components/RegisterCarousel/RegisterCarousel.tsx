@@ -83,7 +83,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     departmentOptions,
     handleSubmit,
     onRegisterSubmit,
-    isRegistering,
+    isLoading,
     displayError,
     errors,
     trigger,
@@ -336,7 +336,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 type="button"
                 variant
                 icon="lessThan"
-                isDisable={isRegistering}
+                isDisable={isLoading}
               >
                 修正
               </Button>
@@ -347,7 +347,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 color="main"
                 type="button"
                 onClick={handleRegisterClick}
-                isDisable={isRegistering}
+                isDisable={isLoading}
               >
                 登録
               </Button>
@@ -357,7 +357,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 color="main"
                 type="button"
                 onClick={handleNextClick}
-                isDisable={isRegistering}
+                isDisable={isLoading}
               >
                 次へ
               </Button>

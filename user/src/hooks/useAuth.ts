@@ -47,7 +47,6 @@ export const useAuth = () => {
   const {
     data: user,
     error: userFetchError, // SWR が fetcher から throw されたエラーを受け取る
-    isLoading: isUserLoading,
   } = useApiGet<User>(
     // 条件付きフェッチ
     isAuthenticated && accessToken && client && uid
@@ -262,7 +261,6 @@ export const useAuth = () => {
 
   return {
     user,
-    isUserLoading, // ユーザー情報取得中のローディング
     // useApiGet (SWR) が throw したエラー
     userError: userFetchError
       ? translateErrorMessage(userFetchError.message) // SWRエラーも翻訳
@@ -271,6 +269,6 @@ export const useAuth = () => {
     login,
     logout,
     register,
-    isRegistering: isMutating, // 登録/ログイン/ログアウト実行中のローディング状態
+    isLoading: isMutating, // 登録/ログイン/ログアウト実行中のローディング状態
   };
 };
