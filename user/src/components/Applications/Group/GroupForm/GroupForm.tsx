@@ -84,7 +84,7 @@ const GroupForm: FC<GroupFormProps> = ({ groups, toEdit, groupCategories }) => {
           <Selector
             label={groupLabels[4]}
             value={values.groupCategoryId}
-            onChange={(value) => setValue('groupCategoryId', value)}
+            onChange={(value) => setValue('groupCategoryId', parseInt(value))}
             required={true}
             note={'注意書き'}
             error={errors.groupCategoryId?.message}

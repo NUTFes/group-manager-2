@@ -7,7 +7,7 @@ export const groupSchema = z.object({
   projectName: z.string().min(1, '入力してください'),
   activity: z.string().min(1, '入力してください'),
   userId: z.number(),
-  groupCategoryId: z.string().min(1, '選択してください'),
+  groupCategoryId: z.number().min(1, { message: '選択してください' }),
   fesYearId: z.number(),
   committee: z.number(),
   isInternational: z.boolean({ required_error: '選択してください' }),
