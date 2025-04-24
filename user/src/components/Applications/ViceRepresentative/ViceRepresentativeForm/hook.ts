@@ -85,7 +85,6 @@ export const useViceRepresentativeFormHook = (
     { id: 17, name: '社会環境・生物機能工学分野/生物統合工学専攻' },
     { id: 18, name: 'その他' },
   ];
-
   const values = watch();
 
   const setisInd = (id: number) => {

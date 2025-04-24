@@ -40,7 +40,6 @@ export const useViceRepresentativeHook = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect');
     if (viceRepresentative) {
       setIsEditing(false);
     }
