@@ -110,11 +110,11 @@ export const useGetUnregisteredGroup = (groupId: number | null) => {
     data: UnregisteredGroupResponse[];
   }>(endpoint);
 
-  // 指定されたテーブルIDに一致する未登録テーブルデータがあるか
-  const hasUnregistered = data?.data && data.data.length > 0;
+  const unregisteredData = data?.data?.[0] ?? null;
+  const hasUnregistered = !!unregisteredData;
 
   return {
-    unregisteredData: data?.data || [],
+    unregisteredData,
     isLoading,
     hasError: !!error,
     hasUnregistered,
@@ -197,15 +197,14 @@ export const useMutatePowerOrders = () => {
    * 未登録テーブルデータを削除する
    */
   const deleteUnregisteredGroup = async (
-    unregisteredData: UnregisteredGroupResponse[]
+    unregisteredData: UnregisteredGroupResponse | null
   ) => {
     // データがなければ削除不要
-    if (!unregisteredData || unregisteredData.length === 0) {
+    if (!unregisteredData) {
       return { success: true, noData: true };
     }
 
-    const unregisteredGroup = unregisteredData[0];
-    const url = `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredGroup.id}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredData.id}`;
 
     try {
       const response = await fetch(url, {
