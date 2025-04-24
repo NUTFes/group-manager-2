@@ -1,17 +1,7 @@
 import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
-import { RadioOption } from '../types';
-
-interface PowerNegativeViewProps {
-  radioValue: string;
-  onRadioChange: (value: string) => void;
-  onNegativeSubmit: () => void;
-  isSubmitted: boolean;
-  submitError: string | null;
-  showRegisterButton: boolean;
-  radioOptions: RadioOption[];
-}
+import { PowerNegativeViewProps } from '../types';
 
 export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   radioValue,

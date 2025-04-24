@@ -2,7 +2,7 @@ import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
-import { Device } from '../types';
+import { Device, PowerSummaryViewProps } from '../types';
 
 // デバイス情報からフォームアイテムを作成する関数
 export const createFormItemsForDevice = (device: Device): FormItem[] => {
@@ -16,13 +16,6 @@ export const createFormItemsForDevice = (device: Device): FormItem[] => {
   items.push({ label: '電力量(W)', content: `${device.maxPower}W` });
   return items;
 };
-
-interface PowerSummaryViewProps {
-  devices: Device[];
-  onEdit: () => void;
-  onDeleteDevice: (id: number) => void;
-  isDeadline: boolean;
-}
 
 export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
   devices,

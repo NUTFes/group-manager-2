@@ -14,3 +14,12 @@ export const DEFAULT_DEVICE = {
   model: '',
   url: '',
 };
+
+// フィールド名の定数
+export const FIELD_NAMES = {
+  PRODUCT_NAME: 'productName' as const,
+  MANUFACTURER: 'manufacturer' as const,
+  MODEL: 'model' as const,
+  URL: 'url' as const,
+  MAX_POWER: 'maxPower' as const,
+};

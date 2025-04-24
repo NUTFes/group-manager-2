@@ -1,35 +1,13 @@
 import { FC } from 'react';
-import { Control, Controller, FieldPath, UseFormReturn } from 'react-hook-form';
+import { Controller, FieldPath } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
+import { FIELD_NAMES } from '../constants';
 import { PowerApplicationFormData } from '../schema';
-import { Device } from '../types';
-
-// フィールド名の定数
-const FIELD_NAMES = {
-  PRODUCT_NAME: 'productName' as const,
-  MANUFACTURER: 'manufacturer' as const,
-  MODEL: 'model' as const,
-  URL: 'url' as const,
-  MAX_POWER: 'maxPower' as const,
-};
-
-// デバイスフィールドの型を定義
-type DeviceField = keyof Device;
+import { DeviceField, PowerFormFieldProps, PowerFormProps } from '../types';
 
 // フォームフィールドコンポーネント
-interface PowerFormFieldProps {
-  name: DeviceField;
-  label: string;
-  control: Control<PowerApplicationFormData>;
-  index: number;
-  required?: boolean;
-  note?: string;
-  getErrorMessage: (name: DeviceField) => string | undefined;
-  type?: 'text' | 'number';
-}
-
 const PowerFormField: FC<PowerFormFieldProps> = ({
   name,
   label,
@@ -68,12 +46,6 @@ const PowerFormField: FC<PowerFormFieldProps> = ({
       />
     </div>
   );
-};
-
-type PowerFormProps = {
-  index: number;
-  form: UseFormReturn<PowerApplicationFormData>;
-  onRemove: (index: number) => void;
 };
 
 const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
