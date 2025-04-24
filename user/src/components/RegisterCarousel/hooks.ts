@@ -7,7 +7,10 @@ import { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { validateCurrentStepFields } from '@/components/RegisterCarousel/errorNavigation';
+import {
+  determineErrorStep,
+  validateCurrentStepFields,
+} from '@/components/RegisterCarousel/errorNavigation';
 import { useAuth } from '@/hooks/useAuth';
 import { RegisterFormSchema, RegisterSchema } from './schema';
 
@@ -121,6 +124,18 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     return validateCurrentStepFields(errors, values, stepIndex, trigger);
   }, [errors, values, stepIndex, trigger]);
 
+  // navigateToErrorStep を再導入 (または onRegisterSubmit 内に直接記述)
+  const navigateToErrorStep = useCallback(
+    (apiErrors: Record<string, string[]> | undefined) => {
+      const errorStep = determineErrorStep(apiErrors);
+      if (errorStep >= 0) {
+        goToStep(errorStep);
+      }
+      // エラーが特定のステップに紐づかない場合 (-1) は現在のステップに留まる
+    },
+    [goToStep]
+  );
+
   // 登録処理 (try...catch を削除し、結果オブジェクトを確認)
   const onRegisterSubmit = async (data: RegisterFormSchema) => {
     setDisplayError(null); // 送信時にエラーをクリア
@@ -160,8 +175,8 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
       const errorMessage =
         result.message || '登録処理中に不明なエラーが発生しました。';
       setDisplayError(errorMessage);
-      // エラー内容に基づいて特定のステップに戻るロジックは一旦削除
-      // navigateToErrorStep(errorMessage);
+      // エラーオブジェクトを使ってステップ移動を試みる
+      navigateToErrorStep(result.errors);
     }
   };
 
@@ -186,6 +201,6 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
     trigger,
     goToStep,
     validateCurrentStep,
-    // navigateToErrorStep は一旦返さない
+    // navigateToErrorStep も返す場合は追加
   };
 };

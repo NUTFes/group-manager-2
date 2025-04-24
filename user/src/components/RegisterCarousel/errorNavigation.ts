@@ -1,113 +1,40 @@
 /**
- * エラーメッセージに基づいて適切なステップを判断する
- * @param errorMessage エラーメッセージ
- * @returns 移動すべきステップのインデックス（0: メールアドレス入力, 1: 代表者情報入力, -1: 該当なし）
+ * エラーオブジェクトに基づいて適切なステップを判断する
+ * @param errors APIから返された可能性のあるエラーオブジェクト (フィールド名がキー)
+ * @returns 移動すべきステップのインデックス（0: メール/パスワード関連, 1: ユーザー情報関連, -1: 該当なし）
  */
-export const determineErrorStep = (errorMessage: string): number => {
-  // メールアドレスやパスワードに関するエラーであればステップ1に移動
-  if (
-    errorMessage.includes('メールアドレス') ||
-    errorMessage.includes('パスワード') ||
-    errorMessage.includes('mail') ||
-    errorMessage.includes('email') ||
-    errorMessage.includes('password')
-  ) {
-    return 0; // メールアドレス入力ステップ
+export const determineErrorStep = (
+  errors: Record<string, string[]> | undefined
+): number => {
+  if (!errors) {
+    return -1; // エラーオブジェクトがない場合は判断不可
   }
 
-  // 代表者情報に関するエラーであればステップ2に移動
-  if (
-    errorMessage.includes('名前') ||
-    errorMessage.includes('学籍番号') ||
-    errorMessage.includes('電話番号') ||
-    errorMessage.includes('学年') ||
-    errorMessage.includes('学科') ||
-    errorMessage.includes('name') ||
-    errorMessage.includes('studentId') ||
-    errorMessage.includes('tel') ||
-    errorMessage.includes('gradeId') ||
-    errorMessage.includes('departmentId')
-  ) {
-    return 1; // 代表者情報入力ステップ
+  const errorFields = Object.keys(errors);
+
+  // ステップ0に関連する可能性のあるバックエンドのフィールド名
+  const step0Fields = ['email', 'mail', 'password', 'password_confirmation'];
+  // ステップ1に関連する可能性のあるバックエンドのフィールド名
+  const step1Fields = [
+    'name',
+    'student_id',
+    'tel',
+    'grade_id',
+    'department_id',
+  ];
+
+  // エラーフィールドにステップ0のものが含まれるかチェック
+  if (errorFields.some((field) => step0Fields.includes(field))) {
+    return 0;
   }
 
-  // 該当するエラーカテゴリが見つからない場合
+  // エラーフィールドにステップ1のものが含まれるかチェック
+  if (errorFields.some((field) => step1Fields.includes(field))) {
+    return 1;
+  }
+
+  // どのステップにも該当しない場合
   return -1;
-};
-
-/**
- * エラーを処理し、メッセージを表示する
- * @param error エラーオブジェクト
- * @param setDisplayError エラーメッセージを設定する関数
- * @param defaultMessage デフォルトのエラーメッセージ
- * @returns エラーメッセージとエラーステップを含むオブジェクト
- */
-export const handleError = (
-  error: unknown,
-  setDisplayError: (message: string | null) => void,
-  defaultMessage = '予期せぬエラーが発生しました。'
-): { message: string; step: number } => {
-  let errorMessage: string;
-
-  if (error instanceof Error) {
-    errorMessage = error.message;
-  } else if (typeof error === 'string') {
-    errorMessage = error;
-  } else {
-    errorMessage = defaultMessage;
-  }
-
-  // エラーメッセージを表示
-  setDisplayError(errorMessage);
-
-  // 適切なステップを決定
-  const step = determineErrorStep(errorMessage);
-
-  return { message: errorMessage, step };
-};
-
-/**
- * 登録エラーを処理し、適切なステップに誘導する
- * @param result API呼び出し結果
- * @param registrationError 登録エラー
- * @param setDisplayError エラー表示関数
- * @param navigateToStep ステップ遷移関数
- * @returns エラーメッセージとステップを含むオブジェクト（エラーがない場合はnull）
- */
-export const handleRegistrationError = (
-  result: { success?: boolean; message?: string } | undefined,
-  registrationError: string | null,
-  setDisplayError: (message: string | null) => void,
-  navigateToStep: (step: number) => void
-): { message: string; step: number } | null => {
-  // 成功した場合はnullを返す
-  if (result?.success) {
-    return null;
-  }
-
-  let errorMessage: string;
-
-  // エラーメッセージの優先順位: result.message > registrationError > デフォルトメッセージ
-  if (result?.message) {
-    errorMessage = result.message;
-  } else if (registrationError) {
-    errorMessage = registrationError;
-  } else {
-    errorMessage = '登録処理中に不明なエラーが発生しました。';
-  }
-
-  // エラーメッセージを設定
-  setDisplayError(errorMessage);
-
-  // 適切なステップを決定
-  const step = determineErrorStep(errorMessage);
-
-  // 特定のステップに関連するエラーの場合、そのステップに移動
-  if (step >= 0) {
-    navigateToStep(step);
-  }
-
-  return { message: errorMessage, step };
 };
 
 /**
