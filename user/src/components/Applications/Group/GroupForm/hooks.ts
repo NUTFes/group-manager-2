@@ -26,13 +26,13 @@ export const useGroupFormHooks = (
     mode: 'onChange',
     defaultValues: {
       name: groups?.name ?? '',
-      project_name: groups?.projectName ?? '',
-      is_international: groups?.isInternational ? '1' : '0',
-      is_external: groups?.isExternal ? '1' : '0',
-      group_category_id: groups?.groupCategoryId.toString() ?? '',
+      projectName: groups?.projectName ?? '',
+      isInternational: groups?.isInternational ? '1' : '0',
+      isExternal: groups?.isExternal ? '1' : '0',
+      groupCategoryId: groups?.groupCategoryId.toString() ?? '1',
       activity: groups?.activity ?? '',
-      user_id: groups?.userId ?? 1,
-      fes_year_id: groups?.fesYearId ?? 1,
+      userId: groups?.userId ?? 1,
+      fesYearId: groups?.fesYearId ?? 1,
       committee: groups?.committee ? 1 : 0,
     },
   });
@@ -42,12 +42,12 @@ export const useGroupFormHooks = (
 
   // group_category_idの変更を監視し、committeeを自動更新
   useEffect(() => {
-    if (values.group_category_id === '6') {
+    if (values.groupCategoryId === '6') {
       setValue('committee', 1);
     } else {
       setValue('committee', 0);
     }
-  }, [values.group_category_id, setValue]);
+  }, [values.groupCategoryId, setValue]);
 
   const formatRadioValue = (v: boolean | undefined): '' | '1' | '0' => {
     if (v === undefined) return '';
@@ -73,7 +73,7 @@ export const useGroupFormHooks = (
     if (groups) {
       try {
         await update({ query: formData });
-        mutate(`/groups/${formData.user_id}`);
+        mutate(`/groups/${formData.id}`);
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');
@@ -82,8 +82,8 @@ export const useGroupFormHooks = (
     } else {
       try {
         await create({ query: formData });
+        mutate(`/groups/27`);
         toast.success('送信しました');
-        mutate(`/groups/${formData.user_id}`);
       } catch {
         toast.error('送信に失敗しました。');
       }
@@ -101,10 +101,10 @@ export const useGroupFormHooks = (
     if (groups && values) {
       if (
         groups.name === values.name &&
-        groups.projectName === values.project_name &&
-        groups.isInternational === convertToBoolean(values.is_international) &&
-        groups.isExternal === convertToBoolean(values.is_external) &&
-        groups.groupCategoryId === parseInt(values.group_category_id) &&
+        groups.projectName === values.projectName &&
+        groups.isInternational === convertToBoolean(values.isInternational) &&
+        groups.isExternal === convertToBoolean(values.isExternal) &&
+        groups.groupCategoryId === parseInt(values.groupCategoryId) &&
         groups.activity === values.activity
       ) {
         return true;

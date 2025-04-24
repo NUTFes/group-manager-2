@@ -51,19 +51,19 @@ const GroupForm: FC<GroupFormProps> = ({ groups, toEdit, groupCategories }) => {
           ></TextBox>
           <TextBox
             label={groupLabels[1]}
-            value={values.project_name}
-            onChange={(value) => setValue('project_name', value)}
+            value={values.projectName}
+            onChange={(value) => setValue('projectName', value)}
             note={'例：ギダイジャー'}
             required={true}
-            error={errors.project_name?.message}
+            error={errors.projectName?.message}
           ></TextBox>
           <Radio
             label={groupLabels[2]}
-            value={values.is_international}
-            onChange={(value) => setValue('is_international', value)}
+            value={values.isInternational}
+            onChange={(value) => setValue('isInternational', value)}
             required={true}
             note={'注意書き'}
-            error={errors.is_international?.message}
+            error={errors.isInternational?.message}
             options={[
               { id: 0, name: 'いいえ、国際団体（留学生団体）ではありません。' },
               { id: 1, name: 'はい、国際団体（留学生団体）です。' },
@@ -71,11 +71,11 @@ const GroupForm: FC<GroupFormProps> = ({ groups, toEdit, groupCategories }) => {
           ></Radio>
           <Radio
             label={groupLabels[3]}
-            value={values.is_external}
-            onChange={(value) => setValue('is_external', value)}
+            value={values.isExternal}
+            onChange={(value) => setValue('isExternal', value)}
             required={true}
             note={'注意書き'}
-            error={errors.is_external?.message}
+            error={errors.isExternal?.message}
             options={[
               { id: 0, name: 'いいえ、学内の団体です。' },
               { id: 1, name: 'はい、学外の団体です。' },
@@ -83,11 +83,11 @@ const GroupForm: FC<GroupFormProps> = ({ groups, toEdit, groupCategories }) => {
           ></Radio>
           <Selector
             label={groupLabels[4]}
-            value={values.group_category_id}
-            onChange={(value) => setValue('group_category_id', value)}
+            value={values.groupCategoryId}
+            onChange={(value) => setValue('groupCategoryId', value)}
             required={true}
             note={'注意書き'}
-            error={errors.group_category_id?.message}
+            error={errors.groupCategoryId?.message}
             options={
               groupCategories?.map((category) => ({
                 id: category.id,
