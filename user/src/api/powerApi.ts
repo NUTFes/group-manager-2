@@ -60,7 +60,7 @@ const mapDeviceToRequestData = (
  */
 export const useGetPowerOrders = (groupId: number | null) => {
   const endpoint = groupId
-    ? `${API_ENDPOINTS.POWER_ORDERS}?group_id=${groupId}`
+    ? `${API_ENDPOINTS.POWER_ORDERS}/group/${groupId}`
     : null;
 
   const { data, error, isLoading, mutate } = useApiGet<{
