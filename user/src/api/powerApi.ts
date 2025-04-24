@@ -194,56 +194,19 @@ export const useMutatePowerOrders = () => {
   };
 
   /**
-   * 未登録テーブルデータを取得する
-   * イベントハンドラや他の関数内での呼び出し用。
-   */
-  const getUnregisteredGroup = async (groupId: number) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER_ORDER}`
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to get unregistered group');
-      }
-
-      // レスポンスが空でないことを確認してからJSONをパース
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const text = await response.text();
-        if (text) {
-          const result = JSON.parse(text);
-          return {
-            success: true,
-            data: result.data || [],
-          };
-        }
-      }
-
-      // 空レスポンスまたはJSONでない場合
-      return {
-        success: true,
-        data: [],
-      };
-    } catch (error) {
-      console.error('未登録テーブル取得エラー:', error);
-      return { success: false, error, data: [] };
-    }
-  };
-
-  /**
    * 未登録テーブルデータを削除する
    */
-  const deleteUnregisteredGroup = async (groupId: number) => {
+  const deleteUnregisteredGroup = async (
+    unregisteredData: UnregisteredGroupResponse[]
+  ) => {
     try {
-      // まず未登録テーブルを取得
-      const result = await getUnregisteredGroup(groupId);
-      if (!result.success || result.data.length === 0) {
+      // SWRキャッシュから未登録データを取得
+      if (!unregisteredData || unregisteredData.length === 0) {
         return { success: true, noData: true }; // データがなければ削除不要
       }
 
       // 見つかった場合はIDを使って削除
-      const unregisteredGroup = result.data[0];
+      const unregisteredGroup = unregisteredData[0];
 
       try {
         const response = await fetch(
@@ -299,6 +262,5 @@ export const useMutatePowerOrders = () => {
     deletePowerOrder,
     registerUnregisteredGroup,
     deleteUnregisteredGroup,
-    getUnregisteredGroup,
   };
 };

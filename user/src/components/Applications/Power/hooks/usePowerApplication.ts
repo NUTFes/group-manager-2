@@ -42,6 +42,7 @@ export const usePowerApplication = (groupId: number) => {
     isLoading: isLoadingUnregistered,
     hasError: hasErrorUnregistered,
     mutate: mutateUnregistered,
+    unregisteredData,
   } = useGetUnregisteredGroup(groupId);
 
   // 電力申請の登録・更新・削除機能
@@ -195,7 +196,7 @@ export const usePowerApplication = (groupId: number) => {
     try {
       // 申請なしから申請ありに変更した場合、未登録テーブルの情報を削除
       try {
-        const deleteResult = await deleteUnregisteredGroup(groupId);
+        const deleteResult = await deleteUnregisteredGroup(unregisteredData);
         if (!deleteResult.success) {
           console.warn('未登録テーブル削除エラー:', deleteResult.error);
           toast.warning(
