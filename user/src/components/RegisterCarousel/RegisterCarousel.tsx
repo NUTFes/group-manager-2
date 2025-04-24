@@ -321,10 +321,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
           {/* エラーメッセージ表示領域 */}
           {displayError && (
             <div className="mt-4 text-center text-sm text-red-600">
-              {/* {displayError} */}
-              {
-                'eraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-              }
+              {displayError}
             </div>
           )}
 
