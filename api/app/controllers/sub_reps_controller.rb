@@ -1,5 +1,4 @@
 class SubRepsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_sub_rep, only: [:show, :update, :destroy]
   before_action :set_sub_reps_by_group_id, only: [:get_by_group_id]
 

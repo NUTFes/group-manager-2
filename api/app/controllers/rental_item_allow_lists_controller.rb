@@ -1,5 +1,4 @@
 class RentalItemAllowListsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_rental_item_allow_list, only: [:show, :update, :destroy]
 
   def index

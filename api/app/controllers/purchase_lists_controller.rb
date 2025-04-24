@@ -1,5 +1,4 @@
 class PurchaseListsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_purchase_list, only: [:show, :update, :destroy]
 
   # GET /purchase_lists

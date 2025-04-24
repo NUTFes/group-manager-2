@@ -1,5 +1,4 @@
 class GroupCategoriesController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_group_category, only: [:show, :update, :destroy]
 
   def index

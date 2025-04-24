@@ -1,5 +1,4 @@
 class StageNumberController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_stage_number, only: [:show, :update, :destroy]
 
   # ステージ割り当て

@@ -1,5 +1,4 @@
 class ShopsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_shop, only: [:show, :update, :destroy]
 
   def index

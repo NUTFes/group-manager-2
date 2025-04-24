@@ -1,5 +1,4 @@
 class RentalItemsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_rental_item, only: [:show, :update, :destroy]
 
   def index

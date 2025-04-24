@@ -1,5 +1,4 @@
 class FoodProductsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_food_product, only: [:show, :update, :destroy]
 
   # GET /food_products

@@ -1,5 +1,4 @@
 class AssignGroupPlacesController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_assign_group_place, only: [:show, :update, :destroy]
 
   # GET /assign_group_places

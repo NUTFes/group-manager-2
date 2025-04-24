@@ -1,5 +1,4 @@
 class CookingProcessOrdersController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_cooking_process_order, only: [:show, :update, :destroy]
 
   # GET /cooking_process_orders

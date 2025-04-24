@@ -1,5 +1,4 @@
 class AssignRentalItemsController < ApplicationController
-  before_action :authenticate_api_user!
   before_action :set_assign_rental_item, only: [:show, :update, :destroy]
 
   # GET /assign_rental_items
