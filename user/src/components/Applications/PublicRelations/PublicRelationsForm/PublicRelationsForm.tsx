@@ -85,7 +85,6 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
               <Upload
                 title="PR画像"
                 note={[
-                  '画像名：参加形式_団体名',
                   'ファイル形式：png、jpeg',
                   'ファイルサイズ：10MB未満',
                   '画像、イラストの形：正方形（できれば料理の写真）',
