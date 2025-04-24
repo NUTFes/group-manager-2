@@ -199,60 +199,46 @@ export const useMutatePowerOrders = () => {
   const deleteUnregisteredGroup = async (
     unregisteredData: UnregisteredGroupResponse[]
   ) => {
+    // データがなければ削除不要
+    if (!unregisteredData || unregisteredData.length === 0) {
+      return { success: true, noData: true };
+    }
+
+    const unregisteredGroup = unregisteredData[0];
+    const url = `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredGroup.id}`;
+
     try {
-      // SWRキャッシュから未登録データを取得
-      if (!unregisteredData || unregisteredData.length === 0) {
-        return { success: true, noData: true }; // データがなければ削除不要
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        return { success: true };
       }
 
-      // 見つかった場合はIDを使って削除
-      const unregisteredGroup = unregisteredData[0];
-
+      // エラー詳細を取得
+      let errorDetail = `削除に失敗しました。ステータス: ${response.status}`;
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${unregisteredGroup.id}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorText = await response.text();
+          if (errorText) {
+            const errorJson = JSON.parse(errorText);
+            errorDetail = `削除に失敗しました: ${errorJson.message || JSON.stringify(errorJson)}`;
           }
-        );
-
-        if (response.ok) {
-          return { success: true };
-        } else {
-          let errorDetail = `削除に失敗しました。ステータス: ${response.status}`;
-          try {
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-              const errorText = await response.text();
-              if (errorText) {
-                const errorJson = JSON.parse(errorText);
-                errorDetail = `削除に失敗しました: ${errorJson.message || JSON.stringify(errorJson)}`;
-              }
-            }
-          } catch (parseError) {
-            console.error('エラーレスポンスの解析に失敗:', parseError);
-          }
-
-          return {
-            success: false,
-            error: errorDetail,
-          };
         }
-      } catch (fetchError) {
-        console.error('未登録テーブル削除通信エラー:', fetchError);
-        return {
-          success: false,
-          error: `通信エラー: ${fetchError instanceof Error ? fetchError.message : '不明なエラー'}`,
-        };
+      } catch (parseError) {
+        console.error('エラーレスポンスの解析に失敗:', parseError);
       }
-    } catch (error) {
-      console.error('未登録テーブル削除エラー:', error);
+      return { success: false, error: errorDetail };
+    } catch (fetchError) {
+      console.error('未登録テーブル削除通信エラー:', fetchError);
       return {
         success: false,
-        error: error instanceof Error ? error.message : '不明なエラー',
+        error: `通信エラー: ${fetchError instanceof Error ? fetchError.message : '不明なエラー'}`,
       };
     }
   };
