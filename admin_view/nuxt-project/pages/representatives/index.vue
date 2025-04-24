@@ -191,28 +191,6 @@ export default {
       studentID: null,
     };
   },
-  async asyncData({ $axios }) {
-    const currentYearUrl = "/user_page_settings/1";
-    const currentYearRes = await $axios.$get(currentYearUrl);
-    // const url = "/api/v1/get_representative_index_for_admin_view";
-
-    const url =
-      "/api/v1/get_refinement_representatives?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    const representativesRes = await $axios.$post(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id;
-    });
-    return {
-      representatives: representativesRes.data,
-      yearList: yearsRes.data,
-      refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num,
-      currentYearID: currentYears,
-    };
-  },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
@@ -229,8 +207,48 @@ export default {
     this.fetchFilteredData();
 
     window.addEventListener('scroll', this.saveScrollPosition);
+
+    // 認証ヘッダー付き Axios インスタンスを作成
+    const accessToken = localStorage.getItem("access-token") || "";
+    const client = localStorage.getItem("client") || "";
+    const uid = localStorage.getItem("uid") || "";
+    const expiry = localStorage.getItem("expiry") || "";
+    const tokenType = localStorage.getItem("token-type") || "Bearer";
+
+    this.authAxios = this.$axios.create({
+      headers: {
+        "access-token": accessToken,
+        client,
+        uid,
+        expiry,
+        "token-type": tokenType,
+      },
+      withCredentials: true,
+    });
+
+    // 初期データ取得
+    this.fetchInitialData();
   },
   methods: {
+    async fetchInitialData() {
+      const currentYearUrl = "/user_page_settings/1";
+      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const url =
+        "/api/v1/get_refinement_representatives?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      const representativesRes = await this.$axios.$post(url);
+      const yearsUrl = "/fes_years";
+      const yearsRes = await this.$axios.$get(yearsUrl);
+      const currentYears = yearsRes.data.filter(function (element) {
+        return element.id == currentYearRes.data.fes_year_id;
+      });
+      this.representatives = representativesRes.data;
+      this.yearList = yearsRes.data;
+      this.refYearID = currentYearRes.data.fes_year_id;
+      this.refYears = currentYears[0].year_num;
+      this.currentYearID = currentYears;
+      this.fetchFilteredData();
+    },
     saveScrollPosition() {
       localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
     },
