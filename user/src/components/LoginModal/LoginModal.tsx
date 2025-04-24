@@ -30,6 +30,7 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
         <div className="flex w-96 flex-col items-center justify-center gap-12">
           <TextBox
             label="メールアドレス"
+            type="email"
             value={email}
             onChange={(value) => setValue('email', value)}
             error={errors.email?.message}
@@ -38,6 +39,7 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
           />
           <TextBox
             label="パスワード"
+            type="password"
             value={password}
             onChange={(value) => setValue('password', value)}
             error={errors.password?.message}
