@@ -1,6 +1,6 @@
 class Api::V1::CurrentUserApiController < ApplicationController
-  #  before_action :authenticate_api_user!
-  
+  before_action :authenticate_api_user!
+
   # ログインユーザーの登録情報を全て取得する
   def current_regist_info
     @user = current_api_user
