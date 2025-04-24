@@ -134,11 +134,11 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
-            className="max-h-[60vh] w-[450px] overflow-y-auto overflow-x-hidden pt-4"
+            className="mx-auto max-h-[60vh] w-[450px] overflow-y-auto overflow-x-hidden pt-4"
             ref={emblaRef}
           >
             <div className="flex">
-              <div className="min-w-0 flex-none basis-full p-4">
+              <div className="min-w-0 flex-none  basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
                     label="メールアドレス"
@@ -321,7 +321,10 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
           {/* エラーメッセージ表示領域 */}
           {displayError && (
             <div className="mt-4 text-center text-sm text-red-600">
-              {displayError}
+              {/* {displayError} */}
+              {
+                'eraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+              }
             </div>
           )}
 
