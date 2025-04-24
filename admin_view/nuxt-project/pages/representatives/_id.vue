@@ -134,7 +134,6 @@ export default {
   filters: {
     formatDate(value) {
       if (!value) return '';
-      // 日本語っぽくフォーマットするの〜💅✨
       const date = new Date(value);
       return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
     }
