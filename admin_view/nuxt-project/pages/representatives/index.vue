@@ -197,15 +197,14 @@ export default {
     }),
   },
   mounted() {
+    this.fetchInitialData().then(() => {
+    // データ取得後にフィルター処理するの✨
     const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
       this.updateFilters(this.refYearID, this.yearList);
-    } else {
-      this.refYears = 'Year';
     }
-    this.fetchFilteredData();
-
+  });
     window.addEventListener('scroll', this.saveScrollPosition);
 
     // 認証ヘッダー付き Axios インスタンスを作成
@@ -232,13 +231,13 @@ export default {
   methods: {
     async fetchInitialData() {
       const currentYearUrl = "/user_page_settings/1";
-      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const currentYearRes = await this.authAxios.$get(currentYearUrl);
       const url =
         "/api/v1/get_refinement_representatives?fes_year_id=" +
         currentYearRes.data.fes_year_id;
-      const representativesRes = await this.$axios.$post(url);
+      const representativesRes = await this.authAxios.$post(url);
       const yearsUrl = "/fes_years";
-      const yearsRes = await this.$axios.$get(yearsUrl);
+      const yearsRes = await this.authAxios.$get(yearsUrl);
       const currentYears = yearsRes.data.filter(function (element) {
         return element.id == currentYearRes.data.fes_year_id;
       });
@@ -271,7 +270,7 @@ export default {
       this.representatives = [];
       const refUrl =
         "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
-      const refRes = await this.$axios.$post(refUrl);
+      const refRes = await this.authAxios.$post(refUrl);
       for (const res of refRes.data) {
         this.representatives.push(res);
       }
@@ -291,14 +290,14 @@ export default {
       this.representatives = [];
       const searchUrl =
         "/api/v1/get_search_representatives?word=" + this.searchText;
-      const refRes = await this.$axios.$post(searchUrl);
+      const refRes = await this.authAxios.$post(searchUrl);
       for (const res of refRes.data) {
         this.representatives.push(res);
       }
     },
     async openAddModal() {
       const groupUrl = "/api/v1/get_groups_refinemented_by_current_fes_year";
-      const resGroups = await this.$axios.$get(groupUrl);
+      const resGroups = await this.authAxios.$get(groupUrl);
       this.groupList = resGroups.data;
 
       this.isOpenAddModal = true;
@@ -318,7 +317,7 @@ export default {
       const url =
         "/api/v1/get_refinement_representatives?fes_year_id=" + this.refYearID;
       this.representatives = [];
-      this.$axios.$post(url).then((response) => {
+      this.authAxios.$post(url).then((response) => {
         this.representatives = response.data;
       });
     },
@@ -339,7 +338,7 @@ export default {
         "&student_id=" +
         this.studentID;
 
-      this.$axios.$post(url).then((res) => {
+      this.authAxios.$post(url).then((res) => {
         this.name = "";
         this.groupID = "";
         this.departmentID = "";

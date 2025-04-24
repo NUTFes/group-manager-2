@@ -128,8 +128,17 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   watchQuery: ["page"],
+  filters: {
+    formatDate(value) {
+      if (!value) return '';
+      // 日本語っぽくフォーマットするの〜💅✨
+      const date = new Date(value);
+      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+    }
+  },
   data() {
     return {
       isOpenEditModal: false,
@@ -244,7 +253,7 @@ export default {
     async fetchFilteredData() {
       this.users = [];
       const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
-      const refRes = await this.$axios.$post(refUrl);
+      const refRes = await this.authAxios.$post(refUrl);
       for (const res of refRes.data){
         this.users.push(res)
       }
@@ -290,7 +299,7 @@ export default {
       const url =
         "/api/v1/get_representative_show_for_admin_view/" + this.routeId;
       console.log(url);
-      const response = await this.$axios.$get(url);
+      const response = await this.authAxios.$get(url);
       this.representative = response.data;
     },
     async edit() {

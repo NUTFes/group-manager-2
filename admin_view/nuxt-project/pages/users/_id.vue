@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import SubHeader from '@/components/SubHeader';
 import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
