@@ -18,6 +18,7 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
     email,
     password,
     isLoggingIn,
+    loginError,
   } = useLoginModalHooks(onClose);
 
   return (
@@ -42,6 +43,12 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
             error={errors.password?.message}
             required
           />
+          {/* エラーメッセージ表示領域 */}
+          {loginError && (
+            <div className="mt-4 text-center text-sm text-red-600">
+              {loginError}
+            </div>
+          )}
           <Button
             size="pc"
             color="main"
