@@ -49,16 +49,14 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
       {/* 申請する場合のフォーム */}
       {showForm && (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-8 flex flex-col gap-10">
-            {fields.map((field, index) => (
-              <PowerForm
-                key={field.id}
-                index={index}
-                form={formMethods}
-                onRemove={onRemove}
-              />
-            ))}
-          </div>
+          {fields.map((field, index) => (
+            <PowerForm
+              key={field.id}
+              index={index}
+              form={formMethods}
+              onRemove={onRemove}
+            />
+          ))}
 
           {/* 電力超過警告 */}
           <div className="mt-6 flex flex-col items-center gap-4">
