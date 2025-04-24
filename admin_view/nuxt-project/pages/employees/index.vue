@@ -136,26 +136,6 @@ export default {
       ]
     };
   },
-  async asyncData({ $axios }) {
-    const currentYearUrl = "/user_page_settings/1";
-    const currentYearRes = await $axios.$get(currentYearUrl);
-
-    const url =
-      "/api/v1/get_refinement_employees?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    const employeesRes = await $axios.$post(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id;
-    });
-    return {
-      employees: employeesRes.data,
-      yearList: yearsRes.data,
-      refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num,
-    };
-  },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
@@ -171,9 +151,69 @@ export default {
     } else {
       this.refYears = 'Year';
     }
+
+    // 認証ヘッダー付き Axios インスタンスを作成
+    const accessToken = localStorage.getItem("access-token") || "";
+    const client = localStorage.getItem("client") || "";
+    const uid = localStorage.getItem("uid") || "";
+    const expiry = localStorage.getItem("expiry") || "";
+    const tokenType = localStorage.getItem("token-type") || "Bearer";
+
+    this.authAxios = this.$axios.create({
+      headers: {
+        "access-token": accessToken,
+        client,
+        uid,
+        expiry,
+        "token-type": tokenType,
+      },
+      withCredentials: true,
+    });
+
     this.fetchFilteredData();
   },
   methods: {
+
+  //   async asyncData({ $axios }) {
+  //   const currentYearUrl = "/user_page_settings/1";
+  //   const currentYearRes = await $axios.$get(currentYearUrl);
+
+  //   const url =
+  //     "/api/v1/get_refinement_employees?fes_year_id=" +
+  //     currentYearRes.data.fes_year_id;
+  //   const employeesRes = await $axios.$post(url);
+  //   const yearsUrl = "/fes_years";
+  //   const yearsRes = await $axios.$get(yearsUrl);
+  //   const currentYears = yearsRes.data.filter(function (element) {
+  //     return element.id == currentYearRes.data.fes_year_id;
+  //   });
+  //   return {
+  //     employees: employeesRes.data,
+  //     yearList: yearsRes.data,
+  //     refYearID: currentYearRes.data.fes_year_id,
+  //     refYears: currentYears[0].year_num,
+  //   };
+  // },
+
+  async fetchInitialData() {
+      const currentYearUrl = "/user_page_settings/1";
+      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const url =
+        "/api/v1/get_refinement_employees?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      const employeesRes = await this.$axios.$post(url);
+      const yearsUrl = "/fes_years";
+      const yearsRes = await this.$axios.$get(yearsUrl);
+      const currentYears = yearsRes.data.filter(function (element) {
+        return element.id == currentYearRes.data.fes_year_id;
+      });
+      this.employees = employeesRes.data;
+      this.yearList = yearsRes.data;
+      this.refYearID = currentYearRes.data.fes_year_id;
+      this.refYears = currentYears[0].year_num;
+
+      this.fetchFilteredData();
+    },
     saveScrollPosition() {
       localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
     },
