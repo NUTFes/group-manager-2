@@ -251,9 +251,56 @@ export default {
       this.searchText = "";
     }
 
+    //  認証ヘッダー付き Axios インスタンスを作成
+    const accessToken = localStorage.getItem("access-token") || "";
+    const client = localStorage.getItem("client") || "";
+    const uid = localStorage.getItem("uid") || "";
+    const expiry = localStorage.getItem("expiry") || "";
+    const tokenType = localStorage.getItem("token-type") || "Bearer";
+
+    this.authAxios = this.$axios.create({
+      headers: {
+        "access-token": accessToken,
+        client,
+        uid,
+        expiry,
+        "token-type": tokenType,
+      },
+      withCredentials: true,
+    });
+
     this.fetchFilteredData();
   },
   methods: {
+    async downloadFile(endpoint, fileName, fileType = 'application/pdf') {
+      try {
+        const response = await this.authAxios.get(
+          endpoint,
+          { responseType: 'blob' }
+        );
+
+        const blob = new Blob([response.data], { type: fileType });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+
+        link.setAttribute('download', fileName);
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+
+        return true;
+      } catch (error) {
+        console.error("エラーが発生しました", error);
+        // マジ親切にユーザーにも教えてあげる
+        this.openSnackBar && this.openSnackBar(`${fileName}のダウンロード失敗`);
+        return false;
+      }
+    },
     saveScrollPosition() {
       localStorage.setItem(
         "scrollPosition-" + this.$route.path,
@@ -390,7 +437,7 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
-      window.open(url, "販売品申請_CSV");
+      await this.downloadFile(url, "販売品申請_CSV", "text/csv");
     },
   },
 };
