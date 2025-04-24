@@ -29,7 +29,7 @@ export const useGroupFormHooks = (
       projectName: groups?.projectName ?? '',
       isInternational: groups?.isInternational ?? false,
       isExternal: groups?.isExternal ?? false,
-      groupCategoryId: groups?.groupCategoryId.toString() ?? '1',
+      groupCategoryId: groups?.groupCategoryId ?? 1,
       activity: groups?.activity ?? '',
       userId: groups?.userId ?? 1,
       fesYearId: groups?.fesYearId ?? 1,
@@ -40,9 +40,9 @@ export const useGroupFormHooks = (
   // フォームをリアルタイム監視
   const values = watch();
 
-  // group_category_idの変更を監視し、committeeを自動更新
+  // 団体カテゴリーが「実行委員」の場合は，committeeを1にする
   useEffect(() => {
-    if (values.groupCategoryId === '6') {
+    if (values.groupCategoryId === 6) {
       setValue('committee', 1);
     } else {
       setValue('committee', 0);
@@ -98,7 +98,7 @@ export const useGroupFormHooks = (
         groups.projectName === values.projectName &&
         groups.isInternational === values.isInternational &&
         groups.isExternal === values.isExternal &&
-        groups.groupCategoryId === parseInt(values.groupCategoryId) &&
+        groups.groupCategoryId === values.groupCategoryId &&
         groups.activity === values.activity
       ) {
         return true;
