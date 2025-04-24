@@ -4,7 +4,7 @@ import { Loading } from '@/icons/Icons';
 type ButtonProps = {
   children: React.ReactNode;
   size: 'pc' | 'mobile';
-  color: 'add' | 'delete'; // 必要な色のみに簡略化
+  color: 'add' | 'delete' | 'edit'; // 'edit'を追加
   type: 'button';
   onClick?: () => void;
   isDisable?: boolean;
@@ -13,17 +13,19 @@ type ButtonProps = {
 const colorBorderClass = {
   add: 'border-sub text-main',
   delete: 'border-alert text-alert',
+  edit: 'border-main text-baseColor', // メインカラーと同じ色に変更
 } as const;
 
 const colorBgClass = {
-  add: 'bg-main',
-  delete: 'bg-alert',
+  add: 'bg-baseColor',
+  delete: 'bg-baseColor',
+  edit: 'bg-main', // メインカラーと同じ背景色に変更
 } as const;
 
 function getColorClass(color: ButtonProps['color']) {
   const borderClass = colorBorderClass[color];
-  // 常に白背景に色付きの枠線を使用
-  return `bg-baseColor border ${borderClass}`;
+  const bgClass = colorBgClass[color];
+  return `${bgClass} border ${borderClass}`;
 }
 
 function getSizeClass(size: ButtonProps['size']) {
