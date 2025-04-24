@@ -4,8 +4,10 @@ import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
-import { useRegisterCarouselHooks } from './hooks';
-import { RegisterFormSchema } from './schema';
+// 統合フックの代わりに3つの個別フックをインポート
+import { useCarousel } from './useCarousel';
+import { useRegisterForm } from './useRegisterForm';
+import { useRegistration } from './useRegistration';
 
 type RegisterCarouselProps = {
   isOpen: boolean;
@@ -71,24 +73,39 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
-  // カスタムフックから全ての必要な値と関数を取得
+  // カルーセル関連のフック
   const {
     stepIndex,
     emblaRef,
+    handleNext: carouselNext,
+    handlePrev: carouselPrev,
+    goToStep,
+  } = useCarousel();
+
+  // フォーム関連のフック
+  const {
+    handleSubmit,
+    formState: { errors },
     values,
     setValue,
-    handleNext,
-    handlePrev,
-    gradeOptions,
-    departmentOptions,
-    handleSubmit,
-    onRegisterSubmit,
-    isLoading,
-    displayError,
-    errors,
     trigger,
     validateCurrentStep,
-  } = useRegisterCarouselHooks(onClose);
+  } = useRegisterForm();
+
+  // 登録処理関連のフック
+  const { handleRegisterSubmit, isLoading, displayError } = useRegistration(
+    validateCurrentStep,
+    goToStep,
+    stepIndex,
+    onClose
+  );
+
+  // 選択肢のオプション
+  const gradeOptions = [{ id: 0, name: '選択してください' }, ...GradeList];
+  const departmentOptions = [
+    { id: 0, name: '選択してください' },
+    ...DepartmentList,
+  ];
 
   // フォーム参照の作成
   const formRef = useRef<HTMLFormElement>(null);
@@ -98,7 +115,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     if (e) e.preventDefault(); // デフォルトのボタン動作を防止
 
     // すべてのフィールドのバリデーションを実行
-    const hasErrors = await validateCurrentStep();
+    const hasErrors = await validateCurrentStep(stepIndex);
     if (hasErrors) {
       return;
     }
@@ -111,26 +128,32 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  // フォーム送信ハンドラ
-  const handleFormSubmit = (data: RegisterFormSchema) => {
-    onRegisterSubmit(data);
-  };
-
   // 次へボタンのクリックハンドラ
   const handleNextClick = async () => {
     // 現在のステップのバリデーションチェック
-    const hasErrors = await validateCurrentStep();
+    const hasErrors = await validateCurrentStep(stepIndex);
     if (hasErrors) {
       return;
     }
 
     // 問題がなければ次のステップへ
-    handleNext();
+    if (stepIndex < 2) {
+      carouselNext();
+    }
+  };
+
+  // 戻るボタンのクリックハンドラ
+  const handlePrev = () => {
+    carouselPrev();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(handleFormSubmit)} ref={formRef} noValidate>
+      <form
+        onSubmit={handleSubmit(handleRegisterSubmit)}
+        ref={formRef}
+        noValidate
+      >
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div
