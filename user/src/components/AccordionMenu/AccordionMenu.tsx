@@ -1,5 +1,4 @@
-import { FC, useState } from 'react';
-import React from 'react';
+import React, { FC, useState } from 'react';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
@@ -66,7 +65,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         </div>
       </button>
       {isOpen && (
-        <div className="mb-10">
+        <div className="mb-10 flex justify-center">
           {note && <p className="mb-10 font-bold text-red-500">{note}</p>}
           {children}
         </div>
