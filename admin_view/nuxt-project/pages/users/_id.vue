@@ -142,6 +142,7 @@ export default {
     ...mapState({
       selfRoleId: (state) => state.users.role,
       uid: (state) => state.users.uid,
+      roleID: (state) => state.users.role,
     }),
   },
   data() {
@@ -158,28 +159,66 @@ export default {
         { id: 3, name: "staff" },
         { id: 4, name: "user" },
       ],
+      user: {
+        user: {
+          id: "",
+          name: "",
+          email: "",
+          created_at: "",
+          updated_at: "",
+        },
+        user_detail: {
+          tel: "",
+          student_id: "",
+        },
+        user_detail_info: {
+          department: "",
+          grade: "",
+        },
+        role: {
+          id: "",
+          name: "",
+        },
+      },
     };
-  },
-  async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/users/", "");
-    const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
-    const response = await $axios.$get(url);
-    return {
-      user: response.data,
-      role: response.data.role.id,
-      routeId: routeId,
-      route: url,
-    };
-  },
-  computed: {
-    ...mapState({
-      roleID: (state) => state.users.role,
-    }),
   },
   mounted() {
     window.scrollTo(0, 0);
+
+    // localStorage から認証情報を読み込む
+    const accessToken = localStorage.getItem("access-token") || "";
+    const client      = localStorage.getItem("client")       || "";
+    const uid         = localStorage.getItem("uid")          || "";
+    const expiry      = localStorage.getItem("expiry")       || "";
+    const tokenType   = localStorage.getItem("token-type")   || "Bearer";
+
+    // 認証ヘッダー付きAxiosを生成
+    this.authAxios = this.$axios.create({
+      headers: {
+        "access-token": accessToken,
+        client,
+        uid,
+        expiry,
+        "token-type": tokenType
+      },
+      withCredentials: true
+    });
+
+    // データ取得
+    this.fetchInitialData();
   },
   methods: {
+
+    async fetchInitialData() {
+      const routeId = this.$route.path.replace("/users/", "");
+      this.routeId = routeId
+      const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
+      const response = await this.authAxios.$get(url);
+      this.user = response.data;
+      this.role = response.data.role.id,
+      this.route = url;
+
+    },
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
@@ -205,12 +244,12 @@ export default {
     },
     async reload() {
       const url = "/api/v1/get_user_show_for_admin_view/" + this.routeId;
-      const reUserRes = await this.$axios.$get(url);
+      const reUserRes = await this.authAxios.$get(url);
       this.user = reUserRes.data;
     },
     async editRole() {
       const url = "/users/" + this.routeId + "?role_id=" + this.picked;
-      await this.$axios.$put(url).then((res) => {
+      await this.authAxios.$put(url).then((res) => {
         this.role = res.data.role_id;
         this.reload();
         this.closeEditModal();
@@ -225,7 +264,7 @@ export default {
         this.password +
         "&password_confirmation=" +
         this.passwordConfirm;
-      await this.$axios.$post(url).then((res) => {
+      await this.authAxios.$post(url).then((res) => {
         this.closeResetModal();
         this.openSnackBar("パスワードを変更しました");
       });
