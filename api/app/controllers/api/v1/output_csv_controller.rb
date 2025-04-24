@@ -1,5 +1,6 @@
 class Api::V1::OutputCsvController < ApplicationController
   require 'csv'
+  before_action :authenticate_api_user!
 
   def output_groups_csv
     if params[:fes_year_id].to_i == 0
