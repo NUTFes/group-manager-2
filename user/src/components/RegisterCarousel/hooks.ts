@@ -50,12 +50,7 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
   ];
 
   // 認証フックから必要な関数と状態を取得 (registerTrigger, registrationError -> register, getAuthActionError etc.)
-  const {
-    register: authRegister,
-    isRegistering,
-    getAuthActionError,
-    clearAuthActionError,
-  } = useAuth();
+  const { register: authRegister, isRegistering } = useAuth();
   // このコンポーネント専用のエラー表示状態
   const [displayError, setDisplayError] = useState<string | null>(null);
 
@@ -129,7 +124,6 @@ export const useRegisterCarouselHooks = (onClose?: () => void) => {
   // 登録処理 (try...catch を削除し、結果オブジェクトを確認)
   const onRegisterSubmit = async (data: RegisterFormSchema) => {
     setDisplayError(null); // 送信時にエラーをクリア
-    clearAuthActionError(); // useAuth のエラーもクリア
 
     // 現在のステップのバリデーション (これは react-hook-form のエラー)
     const hasValidationErrors = await validateCurrentStep();

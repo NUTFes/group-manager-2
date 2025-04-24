@@ -42,8 +42,6 @@ export const useAuth = () => {
     useAuthStore();
   // 各アクション実行中のローディング状態
   const [isMutating, setIsMutating] = useState(false);
-  // 各アクションで発生したエラーメッセージ
-  const [authActionError, setAuthActionError] = useState<string | null>(null);
 
   // useApiGet は SWR ベースなのでエラーを throw する fetcher を使う
   const {
@@ -128,19 +126,13 @@ export const useAuth = () => {
   const login = useCallback(
     async (email: string, password: string): Promise<AuthResult<User>> => {
       setIsMutating(true);
-      setAuthActionError(null); // エラーをリセット
-
       const loginResult = await performAutoLogin(email, password);
+      setIsMutating(false);
 
       if (loginResult.success) {
         router.push('/home');
-        setIsMutating(false);
         return { success: true, data: loginResult.data as User };
       } else {
-        // performAutoLogin が失敗した場合
-        setAuthActionError(loginResult.message); // フック内のエラー状態を更新
-        setIsMutating(false);
-        // 呼び出し元にも失敗情報を返す
         return {
           success: false,
           message: loginResult.message,
@@ -155,21 +147,17 @@ export const useAuth = () => {
   // ログアウト処理
   const logout = useCallback(async (): Promise<AuthResult<void>> => {
     setIsMutating(true);
-    setAuthActionError(null);
-
     const response = await deleteData<void>('/api/auth/sign_out');
+    setIsMutating(false);
 
     if (response.success) {
       clearAuth(); // ストアの認証情報をクリア
       router.push('/'); // ルートページにリダイレクト
-      setIsMutating(false);
       return { success: true };
     } else {
       // API呼び出しが失敗した場合
       console.error('ログアウトAPI失敗:', response.error);
       const message = translateErrorMessage(response.error.message);
-      setAuthActionError(message); // フック内のエラー状態を更新
-      setIsMutating(false);
       return {
         success: false,
         message,
@@ -183,7 +171,6 @@ export const useAuth = () => {
   const register = useCallback(
     async (params: RegisterParams): Promise<AuthResult<User>> => {
       setIsMutating(true);
-      setAuthActionError(null);
       let userId: number | null = null;
 
       // --- ステップ 1: ユーザー基本情報登録 ---
@@ -201,7 +188,6 @@ export const useAuth = () => {
       if (!userResponse.success) {
         console.error('ユーザー登録API失敗(基本情報):', userResponse.error);
         const message = translateErrorMessage(userResponse.error.message);
-        setAuthActionError(message);
         setIsMutating(false);
         return {
           success: false,
@@ -223,7 +209,6 @@ export const useAuth = () => {
         );
         const message =
           'ユーザー登録に成功しましたが、IDを取得できませんでした。';
-        setAuthActionError(message);
         setIsMutating(false);
         return { success: false, message };
       }
@@ -241,7 +226,6 @@ export const useAuth = () => {
         console.error('ユーザー登録API失敗(詳細情報):', detailResponse.error);
         // ここでロールバック処理が必要な場合がある（例: 作成したユーザーを削除）
         const message = translateErrorMessage(detailResponse.error.message);
-        setAuthActionError(message);
         setIsMutating(false);
         return {
           success: false,
@@ -253,12 +237,11 @@ export const useAuth = () => {
 
       // --- ステップ 3: 自動ログイン ---
       const loginResult = await performAutoLogin(params.mail, params.password);
+      setIsMutating(false);
 
       if (!loginResult.success) {
         // performAutoLogin内でエラー状態は更新されるが、メッセージを追記
         const message = `ユーザー登録は完了しましたが、自動ログインに失敗しました: ${loginResult.message}`;
-        setAuthActionError(message); // エラーメッセージ上書き
-        setIsMutating(false);
         return {
           success: false,
           message,
@@ -269,7 +252,6 @@ export const useAuth = () => {
 
       // 全て成功
       router.push('/home');
-      setIsMutating(false);
       return { success: true, data: loginResult.data as User };
     },
     [performAutoLogin, router] // 依存配列: performAutoLogin, router
@@ -290,8 +272,5 @@ export const useAuth = () => {
     logout,
     register,
     isRegistering: isMutating, // 登録/ログイン/ログアウト実行中のローディング状態
-    // 認証アクションのエラー状態を取得/クリアする関数
-    getAuthActionError: () => authActionError,
-    clearAuthActionError: () => setAuthActionError(null),
   };
 };
