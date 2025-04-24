@@ -103,7 +103,7 @@ export const useGetPowerOrders = (groupId: number | null) => {
  */
 export const useGetUnregisteredGroup = (groupId: number | null) => {
   const endpoint = groupId
-    ? `${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER}`
+    ? `${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER_ORDER}`
     : null;
 
   const { data, error, isLoading, mutate } = useApiGet<{
@@ -183,7 +183,7 @@ export const useMutatePowerOrders = () => {
     try {
       const requestData: UnregisteredGroupData = {
         group_id: groupId,
-        order_type: ORDER_TYPES.POWER,
+        order_type: ORDER_TYPES.POWER_ORDER,
       };
       await post(API_ENDPOINTS.UN_REGISTERED_GROUPS, requestData);
       return { success: true };
@@ -200,7 +200,7 @@ export const useMutatePowerOrders = () => {
   const getUnregisteredGroup = async (groupId: number) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER}`
+        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}?group_id=${groupId}&order_type=${ORDER_TYPES.POWER_ORDER}`
       );
 
       if (!response.ok) {

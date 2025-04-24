@@ -1,24 +1,8 @@
 import { FC } from 'react';
-import { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
-import { PowerApplicationFormData } from '../schema';
-import { RadioOption } from '../types';
+import { PowerFormViewProps } from '../types';
 import PowerForm from './PowerForm';
-
-interface PowerFormViewProps {
-  radioValue: string;
-  onRadioChange: (value: string) => void;
-  formMethods: UseFormReturn<PowerApplicationFormData>;
-  fields: FieldArrayWithId<PowerApplicationFormData, 'devices', 'id'>[];
-  onRemove: (index: number) => void;
-  onAddDevice: () => void;
-  totalPower: number;
-  isValid: boolean;
-  radioOptions: RadioOption[];
-  showForm: boolean;
-  onSubmit: (data: PowerApplicationFormData) => Promise<void>;
-}
 
 export const PowerFormView: FC<PowerFormViewProps> = ({
   radioValue,
