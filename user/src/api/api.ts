@@ -130,25 +130,6 @@ export const createRequestOptions = (method: string, data?: any) => {
   return options;
 };
 
-// export class ApiError extends Error {
-//   status?: number;
-//   errors?: Record<string, string[]>;
-
-//   constructor(
-//     message: string,
-//     status?: number,
-//     errors?: Record<string, string[]>
-//   ) {
-//     super(message);
-//     this.name = 'ApiError';
-//     this.status = status;
-//     this.errors = errors;
-//     // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-//     // Set the prototype explicitly.
-//     Object.setPrototypeOf(this, ApiError.prototype);
-//   }
-// }
-
 // 新しい戻り値の型を定義
 export type ApiResponse<T> =
   | {
@@ -169,6 +150,113 @@ export type ApiResponse<T> =
       headers?: Headers; // エラー時でもヘッダーを返す場合がある
       response?: Response; // エラー時でもレスポンスを返す場合がある
     };
+
+/**
+ * エラーレスポンスからメッセージを抽出する関数
+ */
+const extractErrorMessage = (
+  errorData: any,
+  defaultMessage: string
+): string => {
+  if (!errorData) return defaultMessage;
+
+  // errorsオブジェクトからメッセージを抽出
+  if (errorData.errors) {
+    if (Array.isArray(errorData.errors)) {
+      // エラーが配列の場合 (full_messagesなど)
+      return errorData.errors.join(', ');
+    }
+    if (typeof errorData.errors === 'object') {
+      // エラーがオブジェクトの場合 (各フィールドのエラー)
+      return Object.entries(errorData.errors)
+        .map(
+          ([field, messages]) =>
+            `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`
+        )
+        .join('\n');
+    }
+  }
+
+  // messageプロパティが存在する場合はそれを使用
+  if (errorData.message) {
+    return errorData.message;
+  }
+
+  return defaultMessage;
+};
+
+/**
+ * エラーレスポンスを処理する関数
+ */
+const handleApiError = async (
+  response: Response
+): Promise<ApiResponse<never>> => {
+  const defaultErrorMessage = `APIリクエストに失敗しました (ステータス: ${response.status})`;
+  let errorData = null;
+  let errorMessage = defaultErrorMessage;
+
+  try {
+    const errorText = await response.text();
+    if (errorText) {
+      errorData = JSON.parse(errorText);
+      errorMessage = extractErrorMessage(errorData, defaultErrorMessage);
+    }
+  } catch (e) {
+    // JSONパース失敗。テキスト形式のエラーの可能性
+    console.error('API error response parsing failed:', e);
+  }
+
+  return {
+    success: false,
+    error: {
+      message: errorMessage,
+      status: response.status,
+      errors: errorData?.errors,
+    },
+    headers: response.headers,
+    response: response,
+  };
+};
+
+/**
+ * レスポンスのJSONをパースする関数
+ */
+const parseResponseData = async <T>(
+  response: Response
+): Promise<ApiResponse<T>> => {
+  const responseText = await response.text();
+
+  // レスポンスボディが空の場合は空オブジェクトを返す
+  if (!responseText) {
+    return {
+      success: true,
+      data: {} as T,
+      headers: response.headers,
+      response,
+    };
+  }
+
+  try {
+    const data = JSON.parse(responseText) as T;
+    return {
+      success: true,
+      data,
+      headers: response.headers,
+      response,
+    };
+  } catch (e) {
+    console.error('Failed to parse response JSON:', e);
+    return {
+      success: false,
+      error: {
+        message: 'レスポンスのJSONパースに失敗しました',
+        status: response.status,
+      },
+      headers: response.headers,
+      response: response,
+    };
+  }
+};
 
 /**
  * 共通のAPIリクエストを実行する関数
@@ -205,82 +293,13 @@ export const sendRequest = async <T>(
   try {
     const response = await fetch(`${API_URL}${endpoint}`, requestOptions);
 
-    // 認証ヘッダーをレスポンスから取得 (現在は未使用)
-    // const responseAccessToken = response.headers.get('access-token');
-    // const responseClient = response.headers.get('client');
-    // const responseUid = response.headers.get('uid');
-
+    // エラーレスポンスの場合
     if (!response.ok) {
-      let errorData: any = null;
-      let errorMessage = `APIリクエストに失敗しました (ステータス: ${response.status})`;
-      try {
-        const errorText = await response.text();
-        errorData = JSON.parse(errorText);
-        // RailsのDevise Token Authのエラー形式を想定
-        if (errorData && errorData.errors) {
-          if (Array.isArray(errorData.errors)) {
-            // エラーが配列の場合 (full_messagesなど)
-            errorMessage = errorData.errors.join(', ');
-          } else if (typeof errorData.errors === 'object') {
-            // エラーがオブジェクトの場合 (各フィールドのエラー)
-            errorMessage = Object.entries(errorData.errors)
-              .map(
-                ([field, messages]) =>
-                  `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`
-              )
-              .join('\n');
-          } else if (errorData.message) {
-            errorMessage = errorData.message;
-          }
-        } else if (errorData.message) {
-          errorMessage = errorData.message;
-        }
-        // パースは成功したが期待した形式ではない場合、元のテキストを使うことも検討
-      } catch (e) {
-        // JSONパース失敗。テキスト形式のエラーの可能性
-        console.error('API error response parsing failed:', e);
-        // console.error('API error response is not valid JSON:', errorText); // デバッグ用
-        // errorText をそのまま使うか、デフォルトメッセージを使う
-      }
-      // throw new ApiError(errorMessage, response.status, errorData?.errors);
-      return {
-        success: false,
-        error: {
-          message: errorMessage,
-          status: response.status,
-          errors: errorData?.errors,
-        },
-        headers: response.headers,
-        response: response,
-      };
+      return handleApiError(response);
     }
 
-    // レスポンスボディが空の場合の対応
-    const responseText = await response.text();
-    let data: T;
-    try {
-      data = responseText ? (JSON.parse(responseText) as T) : ({} as T);
-    } catch (e) {
-      console.error('Failed to parse response JSON:', e);
-      // console.error("Failed to parse response JSON:", responseText); // 元のテキストもログ出力する場合
-      // throw new Error('レスポンスのJSONパースに失敗しました');
-      return {
-        success: false,
-        error: {
-          message: 'レスポンスのJSONパースに失敗しました',
-          status: response.status, // パース失敗でもステータスは返す
-        },
-        headers: response.headers,
-        response: response,
-      };
-    }
-
-    return {
-      success: true,
-      data,
-      headers: response.headers,
-      response,
-    };
+    // 正常レスポンスの処理
+    return parseResponseData<T>(response);
   } catch (networkError) {
     // fetch自体が失敗した場合 (ネットワークエラーなど)
     console.error('Network error during API request:', networkError);
@@ -288,11 +307,11 @@ export const sendRequest = async <T>(
       networkError instanceof Error
         ? networkError.message
         : 'ネットワークエラーが発生しました';
+
     return {
       success: false,
       error: {
         message: `ネットワークリクエストに失敗しました: ${message}`,
-        // statusやerrorsはネットワークエラーの場合通常不明
       },
     };
   }
