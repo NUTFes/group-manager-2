@@ -1,9 +1,10 @@
+// src/api/rentItemsApi.ts
 import { useApiGet } from '@/hooks/useApi';
 import {
   createRequestOptions,
   patchFetcher,
   postFetcher,
-  sendRequest,
+  sendRequest
 } from './api';
 
 // APIエンドポイント
@@ -42,7 +43,13 @@ export type RentalOrder = {
 };
 // ORDER_TYPESの定義（物品申請用）
 export const ORDER_TYPES = {
-  RENT_ITEMS: 0, // 物品申請を表すタイプ
+  RENT_ITEMS: 0  // 物品申請を表すタイプ
+};
+
+// 未登録グループデータの型定義
+export type UnRegisteredGroupData = {
+  group_id: number;
+  order_type:number;
 };
 
 // APIレスポンスの型定義
@@ -67,9 +74,9 @@ type ApiResponse<T> = {
 export const useRentableItemsByType = (locationType: string) => {
   // 会場タイプに応じてエンドポイントを選択
   const endpoint =
-    locationType === '1'
-      ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
-      : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
+      locationType === '1'
+          ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
+          : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
 
   const {
     data: response,
@@ -92,7 +99,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
     isLoading,
     mutate,
   } = useApiGet<ApiResponse<RentalOrder[]>>(
-    `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
+      `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
   );
 
   return {
@@ -107,8 +114,8 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
 export const useMutateRentalOrders = () => {
   // 物品申請データを送信
   const submitRentalOrders = async (
-    items: Array<{ group_id: number; rental_item_id: number; num: number }>,
-    existingItems: RentalOrder[] = []
+      items: Array<{ group_id: number; rental_item_id: number; num: number }>,
+      existingItems: RentalOrder[] = []
   ) => {
     try {
       const promises = [];
@@ -119,12 +126,12 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          patchFetcher(
-            `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
-            {
-              arg: { body: items[i] },
-            }
-          )
+            patchFetcher(
+                `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
+                {
+                  arg: { body: items[i] },
+                }
+            )
         );
       }
 
@@ -132,9 +139,9 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-            postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
-              arg: { body: items[i] },
-            })
+              postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+                arg: { body: items[i] },
+              })
           );
         }
       }
@@ -143,10 +150,10 @@ export const useMutateRentalOrders = () => {
       if (existingItems.length > items.length) {
         for (let i = items.length; i < existingItems.length; i++) {
           promises.push(
-            sendRequest(
-              `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
-              createRequestOptions('DELETE')
-            )
+              sendRequest(
+                  `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
+                  createRequestOptions('DELETE')
+              )
           );
         }
       }
@@ -163,10 +170,10 @@ export const useMutateRentalOrders = () => {
   const deleteRentalOrders = async (itemIds: number[]) => {
     try {
       const promises = itemIds.map((id) =>
-        sendRequest(
-          `${API_ENDPOINTS.RENTAL_ORDERS}/${id}`,
-          createRequestOptions('DELETE')
-        )
+          sendRequest(
+              `${API_ENDPOINTS.RENTAL_ORDERS}/${id}`,
+              createRequestOptions('DELETE')
+          )
       );
 
       await Promise.all(promises);
@@ -185,29 +192,26 @@ export const useMutateRentalOrders = () => {
 
 export const useRegisterUnRegisteredGroup = () => {
   // 未登録グループを登録
-  const registerUnRegisteredGroup = async (data: {
-    group_id: number;
-    order_type: number;
-  }) => {
+  const registerUnRegisteredGroup = async (data: { group_id: number; order_type: number }) => {
     try {
       // 修正: 単純なオブジェクトとして送信
       const requestData = {
         un_registered_group: {
           group_id: data.group_id,
-          order_type: data.order_type,
-        },
+          order_type: data.order_type
+        }
       };
 
       // fetchを使用して送信
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestData),
-        }
+          `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+          }
       );
 
       if (!response.ok) {
@@ -216,7 +220,7 @@ export const useRegisterUnRegisteredGroup = () => {
         try {
           const errorJson = await response.json();
           errorDetail = JSON.stringify(errorJson);
-        } catch (e) {
+        } catch (_) {
           errorDetail = await response.text();
         }
 
@@ -224,7 +228,7 @@ export const useRegisterUnRegisteredGroup = () => {
         return {
           success: false,
           error: `APIエラー: ${response.status}`,
-          details: errorDetail,
+          details: errorDetail
         };
       }
 
@@ -236,7 +240,7 @@ export const useRegisterUnRegisteredGroup = () => {
       return {
         success: false,
         error,
-        errorDetails: error instanceof Error ? error.message : 'Unknown error',
+        errorDetails: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   };
@@ -245,13 +249,13 @@ export const useRegisterUnRegisteredGroup = () => {
   const getUnRegisteredGroup = async (groupId: number, orderType: number) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+          `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
       );
 
       // 404の場合は特別に処理（データが見つからない場合は正常）
@@ -262,7 +266,7 @@ export const useRegisterUnRegisteredGroup = () => {
       if (!response.ok) {
         return {
           success: false,
-          error: `APIエラー: ${response.status}`,
+          error: `APIエラー: ${response.status}`
         };
       }
 
@@ -271,7 +275,7 @@ export const useRegisterUnRegisteredGroup = () => {
       return {
         success: true,
         exists: result.data && result.data.length > 0,
-        data: result.data || [],
+        data: result.data || []
       };
     } catch (error) {
       console.error('UnRegisteredGroup取得エラー:', error);
@@ -279,16 +283,13 @@ export const useRegisterUnRegisteredGroup = () => {
         success: false,
         exists: false,
         error,
-        data: [],
+        data: []
       };
     }
   };
 
   // 未登録グループを削除
-  const deleteUnRegisteredGroup = async (
-    groupId: number,
-    orderType: number
-  ) => {
+  const deleteUnRegisteredGroup = async (groupId: number, orderType: number) => {
     try {
       // まず対象データを取得
       const getResult = await getUnRegisteredGroup(groupId, orderType);
@@ -302,9 +303,8 @@ export const useRegisterUnRegisteredGroup = () => {
       }
 
       // 削除処理
-      const deletePromises = getResult.data.map(
-        (item: UnRegisteredGroupResponse) => {
-          return fetch(
+      const deletePromises = getResult.data.map((item: UnRegisteredGroupResponse) => {
+        return fetch(
             `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS}/${item.id}`,
             {
               method: 'DELETE',
@@ -312,41 +312,36 @@ export const useRegisterUnRegisteredGroup = () => {
                 'Content-Type': 'application/json',
               },
             }
-          );
-        }
-      );
+        );
+      });
 
       const deleteResponses = await Promise.all(deletePromises);
 
       // 全ての削除リクエストが成功したか確認
-      const allSuccess = deleteResponses.every((response) => response.ok);
+      const allSuccess = deleteResponses.every(response => response.ok);
 
       if (allSuccess) {
         return { success: true };
       } else {
         const failedStatuses = deleteResponses
-          .filter((response) => !response.ok)
-          .map((response) => response.status);
+            .filter(response => !response.ok)
+            .map(response => response.status);
 
         return {
           success: false,
-          error: `削除に失敗: ${failedStatuses.join(', ')}`,
+          error: `削除に失敗: ${failedStatuses.join(', ')}`
         };
       }
     } catch (error) {
       console.error('UnRegisteredGroup削除エラー:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   };
 
-  return {
-    registerUnRegisteredGroup,
-    getUnRegisteredGroup,
-    deleteUnRegisteredGroup,
-  };
+  return { registerUnRegisteredGroup, getUnRegisteredGroup, deleteUnRegisteredGroup };
 };
 
 // 未登録グループの存在確認用フック
@@ -355,13 +350,13 @@ export const useCheckUnRegisteredGroup = () => {
   const checkUnRegisteredGroup = async (groupId: number, orderType: number) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+          `${process.env.NEXT_PUBLIC_API_URL}${API_ENDPOINTS.UN_REGISTERED_GROUPS_GROUP}?group_id=${groupId}&order_type=${orderType}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
       );
 
       // 404は存在しないという意味なので、エラーではなく「存在しない」という結果を返す
@@ -373,7 +368,7 @@ export const useCheckUnRegisteredGroup = () => {
         return {
           success: false,
           exists: false,
-          error: `APIエラー: ${response.status}`,
+          error: `APIエラー: ${response.status}`
         };
       }
 
@@ -381,14 +376,14 @@ export const useCheckUnRegisteredGroup = () => {
 
       return {
         success: true,
-        exists: result.data && result.data.length > 0,
+        exists: result.data && result.data.length > 0
       };
     } catch (error) {
       console.error('UnRegisteredGroup確認エラー:', error);
       return {
         success: false,
         exists: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   };
