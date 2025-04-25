@@ -219,7 +219,7 @@ export default {
     const tokenType   = localStorage.getItem("token-type")   || "Bearer";
 
     // 認証ヘッダー付きAxiosを生成
-    this.authAxios = this.$axios.create({
+    this.$axios = this.$axios.create({
       headers: {
         "access-token": accessToken,
         client,
@@ -236,7 +236,7 @@ export default {
   methods: {
     async fetchInitialData() {
       const url = `/api/v1/get_representative_show_for_admin_view/${this.routeId}`;
-      const res = await this.authAxios.$get(url);
+      const res = await this.$axios.$get(url);
       this.representative = res.data;
       window.scrollTo(0, 0);
       // フィルタ・検索・スクロール復元
@@ -252,7 +252,7 @@ export default {
     async fetchFilteredData() {
       this.users = [];
       const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
-      const refRes = await this.authAxios.$post(refUrl);
+      const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data){
         this.users.push(res)
       }
@@ -298,13 +298,13 @@ export default {
       const url =
         "/api/v1/get_representative_show_for_admin_view/" + this.routeId;
       console.log(url);
-      const response = await this.authAxios.$get(url);
+      const response = await this.$axios.$get(url);
       this.representative = response.data;
     },
     async edit() {
       const sub = this.representative.sub_rep;
       const url = `/sub_reps/${sub.id}`;
-      await this.authAxios.$put(url, {
+      await this.$axios.$put(url, {
         group_id:      this.representative.group.id,
         name:          this.name,
         department_id: this.departmentID,
@@ -319,7 +319,7 @@ export default {
     },
     async destroy() {
       const sub = this.representative.sub_rep;
-      await this.authAxios.$delete(`/sub_reps/${sub.id}`);
+      await this.$axios.$delete(`/sub_reps/${sub.id}`);
       this.openSnackBar("副代表を削除しました");
       this.closeDeleteModal();
       this.$router.push("/representatives");

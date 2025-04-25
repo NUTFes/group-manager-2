@@ -135,7 +135,6 @@
 </template>
 
 <script>
-import SubHeader from '@/components/SubHeader';
 import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
@@ -194,7 +193,7 @@ export default {
     const tokenType   = localStorage.getItem("token-type")   || "Bearer";
 
     // 認証ヘッダー付きAxiosを生成
-    this.authAxios = this.$axios.create({
+    this.$axios = this.$axios.create({
       headers: {
         "access-token": accessToken,
         client,
@@ -214,7 +213,7 @@ export default {
       const routeId = this.$route.path.replace("/users/", "");
       this.routeId = routeId
       const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
-      const response = await this.authAxios.$get(url);
+      const response = await this.$axios.$get(url);
       this.user = response.data;
       this.role = response.data.role.id,
       this.route = url;
@@ -245,12 +244,12 @@ export default {
     },
     async reload() {
       const url = "/api/v1/get_user_show_for_admin_view/" + this.routeId;
-      const reUserRes = await this.authAxios.$get(url);
+      const reUserRes = await this.$axios.$get(url);
       this.user = reUserRes.data;
     },
     async editRole() {
       const url = "/users/" + this.routeId + "?role_id=" + this.picked;
-      await this.authAxios.$put(url).then((res) => {
+      await this.$axios.$put(url).then((res) => {
         this.role = res.data.role_id;
         this.reload();
         this.closeEditModal();
@@ -265,7 +264,7 @@ export default {
         this.password +
         "&password_confirmation=" +
         this.passwordConfirm;
-      await this.authAxios.$post(url).then((res) => {
+      await this.$axios.$post(url).then((res) => {
         this.closeResetModal();
         this.openSnackBar("パスワードを変更しました");
       });
