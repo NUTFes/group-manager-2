@@ -3,21 +3,16 @@ import AccordionMenu from '@/components/AccordionMenu';
 import StageForm from './StageForm';
 
 type StageProps = {
-  isEdit?: boolean;
-  isExist?: boolean;
-  isDeadline?: boolean;
+  isDeadline?: boolean | undefined;
+  isRegistered: boolean | undefined;
 };
 
-const Stage: FC<StageProps> = ({
-  isEdit = false,
-  isExist = false,
-  isDeadline,
-}) => {
+const Stage: FC<StageProps> = ({ isDeadline, isRegistered }) => {
   return (
     <AccordionMenu
       title="ステージ申請"
-      isEdit={isEdit}
-      isExist={isExist}
+      isEdit={isDeadline}
+      isExist={isRegistered}
       required={true}
     >
       <StageForm isDeadline={isDeadline} />

@@ -6,9 +6,10 @@ import { useStageOptionHooks } from '@/components/Applications/StageOptions/hook
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 
-// TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
-
-type StageOptionsProps = { isDeadline?: boolean };
+type StageOptionsProps = {
+  isDeadline?: boolean;
+  isRegistered: boolean | undefined;
+};
 
 type ContentProps = {
   isLoading: boolean;
@@ -52,15 +53,15 @@ const Content: FC<ContentProps> = ({
   return <FormList items={formItem} isEdit onEdit={toEdit} />;
 };
 
-const StageOptions: FC<StageOptionsProps> = ({ isDeadline }) => {
+const StageOptions: FC<StageOptionsProps> = ({ isDeadline, isRegistered }) => {
   const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
     useStageOptionHooks();
 
   return (
     <AccordionMenu
       title="ステージオプション申請"
-      isEdit={false}
-      isExist={false}
+      isEdit={isDeadline}
+      isExist={isRegistered}
       required
     >
       <Content
