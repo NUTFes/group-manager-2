@@ -238,8 +238,8 @@ export default {
     async fetchInitialData() {
       // ユーザー一覧と年度リストを同時取得
       const [userRes, yearsRes] = await Promise.all([
-        this.authAxios.$get("/api/v1/get_user_index_for_admin_view"),
-        this.authAxios.$get("/fes_years"),
+        this.$axios.$get("/api/v1/get_user_index_for_admin_view"),
+        this.$axios.$get("/fes_years"),
       ]);
       this.users = userRes.data;
       this.yearList = yearsRes.data;
@@ -285,7 +285,7 @@ export default {
     async fetchFilteredData() {
       this.users = [];
       const refUrl = "/api/v1/get_refinement_users?role_id=" + this.refRoleID;
-      const refRes = await this.authAxios.$post(refUrl);
+      const refRes = await this.$axios.$post(refUrl);
       for (const res of refRes.data){
         this.users.push(res)
       }
@@ -304,7 +304,7 @@ export default {
       localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.users = []
       const searchUrl = "/api/v1/get_search_users?word=" + this.searchText;
-      const refRes = await this.authAxios.$post(searchUrl);
+      const refRes = await this.$axios.$post(searchUrl);
       for (const res of refRes.data) {
         this.users.push(res);
       }
@@ -318,7 +318,7 @@ export default {
           password_confirmation: this.createPasswordConfirmation,
           role_id: this.createRoleId
         };
-      this.authAxios.$post(simply_user_create_url, simply_user_create_params).then((response) => {
+      this.$axios.$post(simply_user_create_url, simply_user_create_params).then((response) => {
         if(response.status.code === 201){
           this.createUserId = response.data.id;
           const user_detail_url = "/user_details"
@@ -329,7 +329,7 @@ export default {
               grade_id: this.createGradeId,
               user_id: this.createUserId,
           };
-          this.authAxios.$post(user_detail_url, user_detail_params).then((response) => {
+          this.$axios.$post(user_detail_url, user_detail_params).then((response) => {
             this.openSnackBar(this.createName + "を追加しました");
             this.closeAddModal();
             this.createName = null;
