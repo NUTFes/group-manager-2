@@ -322,6 +322,7 @@ export default {
         "/api/v1/get_public_relations_csv/" +
         this.refYearID;
       await downloadFile(this.$axios,url, "PR申請_CSV", "text/csv");
+      this.openSnackBar("PR申請のCSVをダウンロードしました");
     },
   },
 };

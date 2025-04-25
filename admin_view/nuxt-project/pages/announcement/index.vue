@@ -263,6 +263,7 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_announcements_csv"
       await downloadFile(this.$axios,url, "購入品申請_CSV", 'text/csv');
+      this.openSnackBar("購入品申請のCSVをダウンロードしました");
     },
   },
 };

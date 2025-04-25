@@ -340,6 +340,7 @@ import { downloadFile } from '~/utils/download-file';
           this.group.group.id +
           "/output.pdf";
         await downloadFile(this.$axios,url, this.group.group.name + "_PDF");
+        this.openSnackBar("参加団体情報のPDFをダウンロードしました");
       },
       async printRentalItemsPDF() {
         const url =
@@ -348,6 +349,7 @@ import { downloadFile } from '~/utils/download-file';
           this.group.group.id +
           "/output.pdf";
         await downloadFile(this.$axios,url, this.group.group.name + "_PDF");
+        this.openSnackBar("物品貸し出し表のPDFをダウンロードしました");
       },
     },
   };
