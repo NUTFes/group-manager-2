@@ -1,5 +1,5 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic.ts
-import {FormEvent, useEffect, useMemo, useRef, useState} from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ORDER_TYPES,
   useCheckUnRegisteredGroup,

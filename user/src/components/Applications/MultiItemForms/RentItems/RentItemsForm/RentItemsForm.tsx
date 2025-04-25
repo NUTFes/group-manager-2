@@ -10,28 +10,27 @@ import FormContainer from '@/components/FormContainer';
 import MultiItemFormButton from '../../MultiItemFormButton';
 
 const RentItemsForm: FC = () => {
-    const {
-        form,
-        fields,
-        control,
-        hasItems,
-        updateLocationType,
-        itemOptions,
-        addItem,
-        remove,
-        registerNoItems,
-        isLoading,
-        hasError,
-        errors,
-        submitError,
-        isValid,
-        hasExisting,
-        openEditMode,
-        isEditMode,
-        hasExplicitlyDeclinedItems,
-        handleFormSubmit,
-    } = useRentItemsFormLogic();
-
+  const {
+    form,
+    fields,
+    control,
+    hasItems,
+    updateLocationType,
+    itemOptions,
+    addItem,
+    remove,
+    registerNoItems,
+    isLoading,
+    hasError,
+    errors,
+    submitError,
+    isValid,
+    hasExisting,
+    openEditMode,
+    isEditMode,
+    hasExplicitlyDeclinedItems,
+    handleFormSubmit,
+  } = useRentItemsFormLogic();
 
   if (isLoading) {
     return (
@@ -138,7 +137,6 @@ const RentItemsForm: FC = () => {
       </div>
     );
   }
-
 
   // 編集モード、または新規申請の場合はフォームを表示
   return (
