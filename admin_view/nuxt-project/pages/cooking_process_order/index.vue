@@ -150,6 +150,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   data() {
@@ -199,56 +201,8 @@ export default {
     this.refinementCookingProcessOrders(this.refYearID, this.yearList);
 
     window.addEventListener("scroll", this.saveScrollPosition);
-
-    // 認証ヘッダー付き Axios インスタンスを作成
-    const accessToken = localStorage.getItem("access-token") || "";
-    const client = localStorage.getItem("client") || "";
-    const uid = localStorage.getItem("uid") || "";
-    const expiry = localStorage.getItem("expiry") || "";
-    const tokenType = localStorage.getItem("token-type") || "Bearer";
-
-    this.authAxios = this.$axios.create({
-      headers: {
-        "access-token": accessToken,
-        client,
-        uid,
-        expiry,
-        "token-type": tokenType,
-      },
-      withCredentials: true,
-    });
-
   },
   methods: {
-    async downloadFile(endpoint, fileName, fileType = 'application/pdf') {
-      try {
-        const response = await this.authAxios.get(
-          endpoint,
-          { responseType: 'blob' }
-        );
-
-        const blob = new Blob([response.data], { type: fileType });
-        const url = window.URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = url;
-
-        link.setAttribute('download', fileName);
-
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        window.URL.revokeObjectURL(url);
-
-        return true;
-      } catch (error) {
-        console.error("エラーが発生しました", error);
-        // マジ親切にユーザーにも教えてあげる
-        this.openSnackBar && this.openSnackBar(`${fileName}のダウンロード失敗`);
-        return false;
-      }
-      },
 
     async openAddModal() {
       const groupUrl = "/api/v1/get_groups_have_no_cooking_process_order";
@@ -355,7 +309,7 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_cooking_process_orders_csv";
-      await this.downloadFile(url, "購入品申請_CSV", "text/csv");
+      await downloadFile(this.$axios,url, "購入品申請_CSV", "text/csv");
     },
   },
 };
