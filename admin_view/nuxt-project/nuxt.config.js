@@ -43,6 +43,7 @@ export default {
     { src: "~/plugins/fileter.js", ssr: false },
     { src: "~/plugins/firebase.js" },
     { src: "~/plugins/role" },
+    { src: '~/plugins/auth-axios.js', mode: 'client' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
