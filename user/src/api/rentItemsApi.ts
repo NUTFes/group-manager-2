@@ -46,17 +46,11 @@ export const ORDER_TYPES = {
   RENT_ITEMS: 0, // 物品申請を表すタイプ
 };
 
-// 未登録グループデータの型定義
-export type UnRegisteredGroupData = {
-  group_id: number;
-  order_type: number;
-};
-
 // APIレスポンスの型定義
 export type UnRegisteredGroupResponse = {
   id: number;
   group_id: number;
-  order_type: string;
+  order_type: number;
   created_at: string;
   updated_at: string;
 };

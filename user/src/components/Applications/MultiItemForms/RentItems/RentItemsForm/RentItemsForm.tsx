@@ -1,5 +1,5 @@
 // src/components/RentItems/RentItemsForm/RentItemsForm.tsx
-import { FC, FormEvent, useEffect } from 'react';
+import { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine, RiEdit2Line } from 'react-icons/ri';
 import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic';
@@ -10,36 +10,28 @@ import FormContainer from '@/components/FormContainer';
 import MultiItemFormButton from '../../MultiItemFormButton';
 
 const RentItemsForm: FC = () => {
-  const {
-    form,
-    fields,
-    control,
-    hasItems,
-    updateLocationType,
-    itemOptions,
-    addItem,
-    remove,
-    onSubmit,
-    registerNoItems,
-    isLoading,
-    hasError,
-    errors,
-    submitError,
-    isValid,
-    hasExisting,
-    openEditMode,
-    isEditMode,
-    hasExplicitlyDeclinedItems,
-  } = useRentItemsFormLogic();
+    const {
+        form,
+        fields,
+        control,
+        hasItems,
+        updateLocationType,
+        itemOptions,
+        addItem,
+        remove,
+        registerNoItems,
+        isLoading,
+        hasError,
+        errors,
+        submitError,
+        isValid,
+        hasExisting,
+        openEditMode,
+        isEditMode,
+        hasExplicitlyDeclinedItems,
+        handleFormSubmit,
+    } = useRentItemsFormLogic();
 
-  // 編集モード変更時に再レンダリングを強制
-  useEffect(() => {
-    if (isEditMode) {
-      setTimeout(() => {
-        form.trigger(); // フォームのバリデーションを更新するため強制実行
-      }, 100);
-    }
-  }, [isEditMode, form]);
 
   if (isLoading) {
     return (
@@ -147,10 +139,6 @@ const RentItemsForm: FC = () => {
     );
   }
 
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    form.handleSubmit(onSubmit)();
-  };
 
   // 編集モード、または新規申請の場合はフォームを表示
   return (

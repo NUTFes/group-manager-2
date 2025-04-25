@@ -1,5 +1,5 @@
 // src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic.ts
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {FormEvent, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ORDER_TYPES,
   useCheckUnRegisteredGroup,
@@ -43,6 +43,10 @@ export const useRentItemsFormLogic = () => {
       }>;
     }>('/api/v1/get_all_rentable_items');
 
+  const handleFormSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    form.handleSubmit(onSubmit)();
+  };
   // React Hook Form初期化 (Zodスキーマ使用)
   const form = useForm<RentItemsFormData>({
     defaultValues: {
@@ -404,6 +408,15 @@ export const useRentItemsFormLogic = () => {
     form,
   ]);
 
+  // 編集モード変更時に再レンダリングを強制するuseEffectをここに移動
+  useEffect(() => {
+    if (isEditMode) {
+      setTimeout(() => {
+        trigger(); // フォームのバリデーションを更新するため強制実行
+      }, 100);
+    }
+  }, [isEditMode, trigger]);
+
   // 物品を追加
   const addItem = () => {
     append({ itemId: '', count: 1 });
@@ -525,7 +538,6 @@ export const useRentItemsFormLogic = () => {
     itemOptions,
     addItem,
     remove,
-    onSubmit,
     registerNoItems,
     isLoading,
     hasError,
@@ -537,5 +549,6 @@ export const useRentItemsFormLogic = () => {
     isEditMode,
     hasExplicitlyDeclinedItems,
     resetFormToDefault,
+    handleFormSubmit,
   };
 };
