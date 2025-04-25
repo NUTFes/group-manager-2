@@ -145,25 +145,6 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
-    // 認証ヘッダー付き Axios インスタンスを作成
-    const accessToken = localStorage.getItem("access-token") || "";
-    const client = localStorage.getItem("client") || "";
-    const uid = localStorage.getItem("uid") || "";
-    const expiry = localStorage.getItem("expiry") || "";
-    const tokenType = localStorage.getItem("token-type") || "Bearer";
-
-    this.authAxios = this.$axios.create({
-      headers: {
-        "access-token": accessToken,
-        client,
-        uid,
-        expiry,
-        "token-type": tokenType,
-      },
-      withCredentials: true,
-    });
-    // データ取得
-    this.fetchInitialData();
   },
   methods: {
     async fetchInitialData() {
