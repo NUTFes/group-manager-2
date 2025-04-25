@@ -217,7 +217,7 @@ const RentItemsForm: FC = () => {
             />
           </div>
           {fields.map((field, index) => (
-            <div key={field.id} className="flex w-full justify-center mx-auto">
+            <div key={field.id} className="mx-auto flex w-full justify-center">
               <FormContainer>
                 <div className="mb-4">
                   <h3 className="mb-4 font-bold text-font">物品 {index + 1}</h3>
@@ -308,7 +308,7 @@ const RentItemsForm: FC = () => {
                   </p>
                 </div>
                 {fields.length > 1 && (
-                  <div className="flex justify-center mx-auto mt-4 w-full text-right">
+                  <div className="mx-auto mt-4 flex w-full justify-center text-right">
                     <MultiItemFormButton
                       type="button"
                       size="mobile"
