@@ -6,8 +6,12 @@ export const RegisterSchema = z
     studentId: z.string().regex(/^\d{8}$/, '8桁の学籍番号を入力してください'),
     tel: z
       .string()
-      .regex(/^\d+$/, '電話番号は数字のみで入力してください')
-      .min(10, '電話番号が短すぎます'),
+      .regex(
+        /^0\d{9,10}$/,
+        '有効な電話番号を入力してください（例: 09012345678）'
+      )
+      .min(10, '電話番号が短すぎます')
+      .max(11, '電話番号が長すぎます'),
     mail: z.string().email('有効なメールアドレスを入力してください'),
     departmentId: z.number().min(1, '学科を選択してください'),
     gradeId: z.number().min(1, '学年を選択してください'),
