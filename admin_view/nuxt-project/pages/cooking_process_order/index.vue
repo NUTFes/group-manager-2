@@ -309,7 +309,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_cooking_process_orders_csv";
-      await downloadFile(this.$axios,url, "購入品申請_CSV", "text/csv");
+      await downloadFile(this.$axios,url, "調理工程申請_CSV", "text/csv");
+      this.openSnackBar("調理工程申請のCSVをダウンロードしました");
     },
   },
 };

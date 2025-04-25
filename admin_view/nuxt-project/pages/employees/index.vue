@@ -271,6 +271,7 @@ export default {
       const url =
         this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
       await downloadFile(this.$axios,url, "従業員一覧_CSV", "text/csv");
+      this.openSnackBar("従業員一覧のCSVをダウンロードしました");
     },
   },
 };

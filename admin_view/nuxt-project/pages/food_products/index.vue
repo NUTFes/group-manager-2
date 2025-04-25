@@ -392,6 +392,7 @@ export default {
       const url =
         this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
       await downloadFile(this.$axios,url, "販売品申請_CSV", "text/csv");
+      this.openSnackBar("販売品申請のCSVをダウンロードしました");
     },
   },
 };

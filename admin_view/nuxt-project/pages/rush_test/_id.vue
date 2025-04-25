@@ -122,6 +122,9 @@
         >
       </template>
     </DeleteModal>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+        {{ message }}
+      </SnackBar>
   </div>
 </template>
 
@@ -173,12 +176,22 @@ export default {
       groupCategories: catRes.data,
       yearList: yearsRes.data,
       groupUrl: groupUrl,
+      message: "",
+      isOpenSnackBar: false,
     };
   },
   mounted() {
     window.scrollTo(0, 0);
   },
   methods: {
+    openSnackBar(message) {
+        this.message = message;
+        this.isOpenSnackBar = true;
+        setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
@@ -237,6 +250,7 @@ export default {
         this.group.group.id +
         "/output.pdf";
         await downloadFile(this.$axios,url, this.group.group.name + "_PDF");
+      this.openSnackBar("参加団体情報のPDFをダウンロードしました");
     },
     async printRentalItemsPDF() {
       const url =
@@ -245,6 +259,7 @@ export default {
         this.group.group.id +
         "/output.pdf";
         await downloadFile(this.$axios,url, this.group.group.name+ "_PDF");
+      this.openSnackBar("物品貸し出し表のPDFをダウンロードしました");
     },
   },
 };

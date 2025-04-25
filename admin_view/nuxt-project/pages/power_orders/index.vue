@@ -367,6 +367,7 @@ export default {
       const url =
         this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
       await downloadFile(this.$axios,url, "電力申請_CSV", "text/csv");
+      this.openSnackBar("電力申請のCSVをダウンロードしました");
     },
   },
 };

@@ -125,6 +125,9 @@
         </tr>
       </VerticalTable>
     </Card>
+    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
+      {{ snackBarMessage }}
+    </SnackBar>
   </div>
   <h1 v-else>閲覧権限がありません</h1>
 </template>
@@ -140,6 +143,8 @@ export default {
     const currentYearRes = await $axios.$get(currentYearUrl);
     return {
       currentYearID: currentYearRes.data.fes_year_id,
+      isOpenSnackBar: false,
+      snackBarMessage: "",
     };
   },
   computed: {
@@ -163,65 +168,88 @@ export default {
         window.scrollY
       );
     },
+    openSnackBar(message) {
+        this.snackBarMessage = message;
+        this.isOpenSnackBar = true;
+        setTimeout(this.closeSnackBar, 2000);
+    },
+    closeSnackBar() {
+      this.isOpenSnackBar = false;
+    },
     async downloadPowerPDF() {
       const endpoint = `/print_pdf/power/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '使用電力リスト');
+      this.openSnackBar("使用電力リストをダウンロードしました");
     },
     async downloadEmployeePDF() {
       const endpoint = `/print_pdf/employees/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '従業員リスト');
+      this.openSnackBar("従業員リストをダウンロードしました");
     },
     async downloadRentalItemsPDF() {
       const endpoint = `/print_pdf/rental_items_list/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '貸出物品リスト');
+      this.openSnackBar("貸出物品リストをダウンロードしました");
     },
     async downloadFoodProductsPDF() {
       const endpoint = `/print_pdf/food_products/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '販売品リスト');
+      this.openSnackBar("販売品リストをダウンロードしました");
     },
     async downloadContactsPDF() {
       const endpoint = `/print_pdf/contacts/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '連絡先リスト');
+      this.openSnackBar("連絡先リストをダウンロードしました");
     },
     async downloadGroupInfoPDF() {
       const endpoint = `/print_pdf/all_groups_info/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '参加団体情報リスト');
+      this.openSnackBar("参加団体情報リストをダウンロードしました");
     },
     async downloadRentalItemsAllPDF() {
       const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ');
+      this.openSnackBar("物品貸し出し表まとめをダウンロードしました");
     },
     async downloadHealthOfficeDocumentsPDF() {
       const endpoint = `/print_pdf/health_office_documents/${this.currentYearID}/output.pdf`;
       await downloadFile(this.$axios,endpoint, '保健所提出書類（調理計画・従事者）');
+      this.openSnackBar("保健所提出書類（調理計画・従事者）をダウンロードしました");
     },
     async downloadPowerCSV() {
       const endpoint = `/api/v1/get_power_orders_csv/${this.refYearID}`;
       await downloadFile(this.$axios,endpoint, '使用電力リスト_CSV', 'text/csv');
+      this.openSnackBar("使用電力リストのCSVをダウンロードしました");
     },
     async downloadEmployeeCSV() {
       const endpoint = `/api/v1/get_employees_csv/${this.refYearID}`;
       await downloadFile(this.$axios,endpoint, '従業員リスト_CSV', 'text/csv');
+      this.openSnackBar("従業員リストのCSVをダウンロードしました");
     },
     async downloadRentalItemsCSV() {
       const endpoint = `/api/v1/get_rental_orders_csv/${this.refYearID}`;
       await downloadFile(this.$axios,endpoint, '貸出物品リスト_CSV', 'text/csv');
+      this.openSnackBar("貸出物品リストのCSVをダウンロードしました");
     },
     async downloadFoodProductsCSV() {
       const endpoint = `/api/v1/get_food_products_csv/${this.refYearID}`;
       await downloadFile(this.$axios,endpoint, '販売品リスト_CSV', 'text/csv');
+      this.openSnackBar("販売品リストのCSVをダウンロードしました");
     },
     async downloadContactsCSV() {
       const endpoint = `/api/v1/get_users_csv/${this.currentYearID}`;
       await downloadFile(this.$axios,endpoint, '連絡先リスト_CSV', 'text/csv');
+      this.openSnackBar("連絡先リストのCSVをダウンロードしました");
     },
     async downloadGroupInfoCSV() {
       const endpoint = `/api/v1/get_groups_csv/${this.refYearID}`;
       await downloadFile(this.$axios,endpoint, '参加団体情報リスト_CSV', 'text/csv');
+      this.openSnackBar("参加団体情報リストのCSVをダウンロードしました");
     },
     async downloadRentalItemsAllCSV() {
       const endpoint = `/api/v1/get_assign_rental_items_csv/${this.refYearID}`;
       await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ_CSV', 'text/csv');
+      this.openSnackBar("物品貸し出し表まとめのCSVをダウンロードしました");
     },
   },
 };
