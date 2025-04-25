@@ -211,25 +211,6 @@ export default {
     // ルートIDを取得
     this.routeId = this.$route.params.id;
 
-    // localStorage から認証情報を読み込む
-    const accessToken = localStorage.getItem("access-token") || "";
-    const client      = localStorage.getItem("client")       || "";
-    const uid         = localStorage.getItem("uid")          || "";
-    const expiry      = localStorage.getItem("expiry")       || "";
-    const tokenType   = localStorage.getItem("token-type")   || "Bearer";
-
-    // 認証ヘッダー付きAxiosを生成
-    this.$axios = this.$axios.create({
-      headers: {
-        "access-token": accessToken,
-        client,
-        uid,
-        expiry,
-        "token-type": tokenType
-      },
-      withCredentials: true
-    });
-
     // データ取得
     this.fetchInitialData();
   },
