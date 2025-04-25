@@ -1,0 +1,49 @@
+import { useApiGet } from '@/hooks/useApi';
+
+// openapiの型定義に変えたい
+export type RegistrationStatus = {
+  group: boolean;
+  subRep: boolean;
+  rentalItem: boolean;
+  placeOrder: boolean;
+  stageOrder: boolean;
+  stageOption: boolean;
+  powerOrder: boolean;
+  employee: boolean;
+  venueMap: boolean;
+  foodProduct: boolean;
+  purchaseList: boolean;
+  cookingProcessOrder: boolean;
+  fireEquipmentOrder: boolean;
+};
+
+export type ApiStatus = {
+  code: number;
+  message: string;
+};
+
+export type ApiResponse<T> = {
+  status: ApiStatus;
+  data: T;
+};
+
+const API_ENDPOINTS = {
+  CHECK_ALL_REGISTERED: '/check_all_registered_groups',
+};
+
+export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
+  const endpoint =
+    `${API_ENDPOINTS.CHECK_ALL_REGISTERED}` +
+    (groupId ? `?group_id=${groupId}` : '');
+
+  const { data, error, isLoading } =
+    useApiGet<ApiResponse<RegistrationStatus>>(endpoint);
+
+  const checkAllRegisteredGroups = data?.data ?? undefined;
+
+  return {
+    checkAllRegisteredGroups,
+    isLoading,
+    error,
+  };
+};
