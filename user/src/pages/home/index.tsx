@@ -8,8 +8,10 @@ import StageOptions from '@/components/Applications/StageOptions';
 import NewsList from '@/components/NewsList';
 
 export default function HomePage() {
+  // todo: これgroupsのgetで取得したい。
+  const groupId = 7;
   const { userPageSettings } = useGetUserPageSettings();
-  const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(1);
+  const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row">
@@ -21,12 +23,22 @@ export default function HomePage() {
         <ApplicationForm name="副代表申請" />
         <ApplicationForm name="会場申請" />
         <ApplicationForm name="物品申請" />
-        <Stage isDeadline={userPageSettings?.isEditStageOrder} />
-        <StageOptions isDeadline={userPageSettings?.isEditStageCommonOption} />
-        <Power isDeadline={userPageSettings?.isEditStageOrder} />
+        <Stage
+          isDeadline={userPageSettings?.isEditStageOrder}
+          isRegistered={checkAllRegisteredGroups?.stageOrder}
+        />
+        <StageOptions
+          isDeadline={userPageSettings?.isEditStageCommonOption}
+          isRegistered={checkAllRegisteredGroups?.stageOption}
+        />
+        <Power
+          isDeadline={userPageSettings?.isEditStageOrder}
+          isRegistered={checkAllRegisteredGroups?.powerOrder}
+        />
         <PublicRelations
-          groupId={1}
+          groupId={groupId}
           isDeadline={userPageSettings?.isEditPublicRelation}
+          isRegistered={checkAllRegisteredGroups?.publicRelation}
         />
       </div>
       <div className="flex flex-1 justify-center">

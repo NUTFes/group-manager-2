@@ -4,14 +4,20 @@ import AccordionMenu from '../../AccordionMenu';
 import VenueApplicationForm from './VenueApplicationForm';
 import { usePlaceOrdersHooks } from './hooks';
 
-type VenueApplicationProps = { isDeadline?: boolean };
+type VenueApplicationProps = {
+  isDeadline?: boolean;
+  isRegistered?: boolean | undefined;
+};
 
-const VenueApplication: FC<VenueApplicationProps> = ({ isDeadline }) => {
+const VenueApplication: FC<VenueApplicationProps> = ({
+  isDeadline,
+  isRegistered,
+}) => {
   return (
     <AccordionMenu
       title="会場申請"
       isEdit={!isDeadline}
-      isExist={false}
+      isExist={isRegistered}
       required
     >
       <Content isDeadline={isDeadline} />
