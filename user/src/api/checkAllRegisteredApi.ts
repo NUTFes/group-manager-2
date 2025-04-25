@@ -15,6 +15,7 @@ export type RegistrationStatus = {
   purchaseList: boolean;
   cookingProcessOrder: boolean;
   fireEquipmentOrder: boolean;
+  publicRelation: boolean;
 };
 
 export type ApiStatus = {
