@@ -65,7 +65,7 @@ const StageOptions: FC<StageOptionsProps> = ({
   return (
     <AccordionMenu
       title="ステージオプション申請"
-      isEdit={isDeadline}
+      isEdit={!isDeadline}
       isExist={isRegistered}
       required
     >
