@@ -78,7 +78,7 @@ const Group: FC<GroupProps> = ({ isDeadline, isRegistered, groupId }) => {
   return (
     <AccordionMenu
       title="団体申請"
-      isEdit={isDeadline}
+      isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
     >
