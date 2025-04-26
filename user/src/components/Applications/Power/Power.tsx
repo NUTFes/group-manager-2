@@ -80,7 +80,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
         devices={devices}
         onEdit={prepareFormForEditing}
         onDeleteDevice={handleDeleteDevice}
-        isDeadline={isDeadline ?? false}
+        isDeadline={!isDeadline}
       />
     );
   } else {
