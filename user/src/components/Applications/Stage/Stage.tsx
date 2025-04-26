@@ -5,9 +5,10 @@ import StageForm from './StageForm';
 type StageProps = {
   isDeadline?: boolean | undefined;
   isRegistered: boolean | undefined;
+  groupId: number;
 };
 
-const Stage: FC<StageProps> = ({ isDeadline, isRegistered }) => {
+const Stage: FC<StageProps> = ({ isDeadline, isRegistered, groupId }) => {
   return (
     <AccordionMenu
       title="ステージ申請"
@@ -15,7 +16,7 @@ const Stage: FC<StageProps> = ({ isDeadline, isRegistered }) => {
       isExist={isRegistered}
       required={true}
     >
-      <StageForm isDeadline={isDeadline} />
+      <StageForm isDeadline={isDeadline} groupId={groupId} />
     </AccordionMenu>
   );
 };

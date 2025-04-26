@@ -15,9 +15,8 @@ import {
   useStageOptions,
 } from './useStageHelpers';
 
-export const useStageFormLogic = () => {
-  // TODO: 認証基盤ができたら、グループIDを取得する
-  const [currentGroupId] = useState<number | null>(1);
+export const useStageFormLogic = (groupId: number) => {
+  const [currentGroupId] = useState<number>(groupId);
   const [submitError, setSubmitError] = useState<string>('');
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
