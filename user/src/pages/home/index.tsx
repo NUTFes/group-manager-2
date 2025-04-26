@@ -13,8 +13,6 @@ export default function HomePage() {
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
-  console.log(checkAllRegisteredGroups);
-
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row">
       <div className="flex flex-1 flex-col">
