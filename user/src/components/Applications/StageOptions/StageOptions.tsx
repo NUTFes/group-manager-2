@@ -20,6 +20,7 @@ type ContentProps = {
   toEdit: () => void;
   stageOptions?: StageOptionResponse;
   formItem: FormItem[];
+  groupId: number;
 };
 
 const Content: FC<ContentProps> = ({
@@ -30,6 +31,7 @@ const Content: FC<ContentProps> = ({
   toEdit,
   stageOptions,
   formItem,
+  groupId,
 }) => {
   if (isLoading) {
     return <div>Loading...</div>;
@@ -48,7 +50,13 @@ const Content: FC<ContentProps> = ({
   }
 
   if (isEditing) {
-    return <StageOptionForm toEdit={toEdit} stageOptions={stageOptions} />;
+    return (
+      <StageOptionForm
+        toEdit={toEdit}
+        stageOptions={stageOptions}
+        groupId={groupId}
+      />
+    );
   }
 
   return <FormList items={formItem} isEdit onEdit={toEdit} />;
@@ -77,6 +85,7 @@ const StageOptions: FC<StageOptionsProps> = ({
         toEdit={toEdit}
         stageOptions={stageOptions}
         formItem={formItem}
+        groupId={groupId}
       />
     </AccordionMenu>
   );
