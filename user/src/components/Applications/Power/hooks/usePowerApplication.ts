@@ -5,6 +5,7 @@ import {
   useMutateUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import { DEFAULT_DEVICE } from '../constants';
 import { PowerApplicationFormData } from '../schema';
 import { ORDER_TYPES, PowerApplicationOption } from '../types';
@@ -166,6 +167,7 @@ export const usePowerApplication = (groupId: number) => {
         updateState({ applyPower: 'no' });
         await mutatePowerOrders();
         await mutateUnregistered();
+        mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
         toast.success('電力申請を行わない登録が完了しました');
       } else {
         updateState({
@@ -226,6 +228,7 @@ export const usePowerApplication = (groupId: number) => {
       if (result.success) {
         await mutatePowerOrders(); // 電力申請データを再取得
         await mutateUnregistered(); // 未登録テーブルデータを再取得
+        mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
         updateState({ isEditing: false });
 
         // 編集か新規登録かによって通知メッセージを変える

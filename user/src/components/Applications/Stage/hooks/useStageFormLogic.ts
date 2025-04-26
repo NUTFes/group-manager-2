@@ -8,6 +8,7 @@ import {
 import { StageFormData } from '@/utils/validate/validate';
 import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import { useStageForm } from './useStageForm';
 import {
   useDateOptions,
@@ -146,6 +147,7 @@ export const useStageFormLogic = (groupId: number) => {
       );
 
       if (result.success) {
+        mutate(`check_all_registered/${currentGroupId}`);
         toast.success(
           hasExisting
             ? 'ステージ希望を更新しました。'

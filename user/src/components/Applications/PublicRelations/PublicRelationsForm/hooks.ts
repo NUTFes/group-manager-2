@@ -8,6 +8,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
@@ -309,6 +310,7 @@ export const usePublicRelationsFormHooks = (
 
       // データ更新後、mutateで最新データを取得
       await prMutate();
+      mutate(`check_all_registered/${groupId}`);
 
       toast.success('送信しました');
       return true; // 送信成功を返す
