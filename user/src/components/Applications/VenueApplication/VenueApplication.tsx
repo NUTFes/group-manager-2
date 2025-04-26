@@ -6,12 +6,14 @@ import { usePlaceOrdersHooks } from './hooks';
 
 type VenueApplicationProps = {
   isDeadline?: boolean;
-  isRegistered?: boolean | undefined;
+  isRegistered?: boolean;
+  groupId: number;
 };
 
 const VenueApplication: FC<VenueApplicationProps> = ({
   isDeadline,
   isRegistered,
+  groupId,
 }) => {
   return (
     <AccordionMenu
@@ -20,13 +22,12 @@ const VenueApplication: FC<VenueApplicationProps> = ({
       isExist={isRegistered}
       required
     >
-      <Content isDeadline={isDeadline} />
+      <Content isDeadline={isDeadline} groupId={groupId} />
     </AccordionMenu>
   );
 };
 
-const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
-  const groupId: number = 2; // TODO: ログイン時に取得したgroupIDを使う
+const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
   const {
     placeOrder,
     isLoading,

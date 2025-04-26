@@ -10,8 +10,8 @@ import { FormItem } from '@/components/FormList/type';
 import { useStageFormLogic } from '../hooks';
 import { useStageFormViewLogic } from '../hooks/useStageFormViewLogic';
 
-type Props = { isDeadline?: boolean };
-const StageForm: FC<Props> = ({ isDeadline }) => {
+type Props = { isDeadline?: boolean; groupId: number };
+const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
   const {
     formState,
     updateField,
@@ -31,7 +31,7 @@ const StageForm: FC<Props> = ({ isDeadline }) => {
     rainyStageOptions,
     getErrorMessage,
     resetForm,
-  } = useStageFormLogic();
+  } = useStageFormLogic(groupId);
 
   const { isFormMode, toEdit, toCancel } = useStageFormViewLogic({
     hasExisting,

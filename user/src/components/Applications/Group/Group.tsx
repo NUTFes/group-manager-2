@@ -9,6 +9,7 @@ import { useGroupHooks } from './hooks';
 type GroupProps = {
   isDeadline?: boolean | undefined;
   isRegistered?: boolean | undefined;
+  groupId: number;
 };
 
 type ContentProps = {
@@ -64,7 +65,7 @@ const Content: FC<ContentProps> = ({
 };
 
 // export内容（このファイルのメイン部分）
-const Group: FC<GroupProps> = ({ isDeadline, isRegistered }) => {
+const Group: FC<GroupProps> = ({ isDeadline, isRegistered, groupId }) => {
   const {
     formItem,
     isEditing,
@@ -73,7 +74,7 @@ const Group: FC<GroupProps> = ({ isDeadline, isRegistered }) => {
     isLoading,
     hasError,
     groupCategories,
-  } = useGroupHooks();
+  } = useGroupHooks(groupId);
   return (
     <AccordionMenu
       title="団体申請"

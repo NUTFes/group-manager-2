@@ -9,6 +9,7 @@ import { FormItem } from '@/components/FormList/type';
 type StageOptionsProps = {
   isDeadline?: boolean;
   isRegistered: boolean | undefined;
+  groupId: number;
 };
 
 type ContentProps = {
@@ -53,9 +54,13 @@ const Content: FC<ContentProps> = ({
   return <FormList items={formItem} isEdit onEdit={toEdit} />;
 };
 
-const StageOptions: FC<StageOptionsProps> = ({ isDeadline, isRegistered }) => {
+const StageOptions: FC<StageOptionsProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+}) => {
   const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
-    useStageOptionHooks();
+    useStageOptionHooks(groupId);
 
   return (
     <AccordionMenu

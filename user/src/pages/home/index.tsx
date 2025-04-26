@@ -13,12 +13,15 @@ export default function HomePage() {
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
+  console.log(checkAllRegisteredGroups);
+
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row">
       <div className="flex flex-1 flex-col">
         <Group
           isDeadline={userPageSettings?.isRegistGroup}
           isRegistered={checkAllRegisteredGroups?.group}
+          groupId={groupId}
         />
         <ApplicationForm name="副代表申請" />
         <ApplicationForm name="会場申請" />
@@ -26,14 +29,17 @@ export default function HomePage() {
         <Stage
           isDeadline={userPageSettings?.isEditStageOrder}
           isRegistered={checkAllRegisteredGroups?.stageOrder}
+          groupId={groupId}
         />
         <StageOptions
           isDeadline={userPageSettings?.isEditStageCommonOption}
           isRegistered={checkAllRegisteredGroups?.stageOption}
+          groupId={groupId}
         />
         <Power
           isDeadline={userPageSettings?.isEditStageOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
+          groupId={groupId}
         />
         <PublicRelations
           groupId={groupId}

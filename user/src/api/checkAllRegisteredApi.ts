@@ -29,13 +29,11 @@ export type ApiResponse<T> = {
 };
 
 const API_ENDPOINTS = {
-  CHECK_ALL_REGISTERED: '/check_all_registered_groups',
+  CHECK_ALL_REGISTERED: '/check_all_registered',
 };
 
 export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
-  const endpoint =
-    `${API_ENDPOINTS.CHECK_ALL_REGISTERED}` +
-    (groupId ? `?group_id=${groupId}` : '');
+  const endpoint = `${API_ENDPOINTS.CHECK_ALL_REGISTERED}/${groupId}`;
 
   const { data, error, isLoading } =
     useApiGet<ApiResponse<RegistrationStatus>>(endpoint);
