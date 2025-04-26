@@ -3,24 +3,27 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 
 export default NextAuth({
   providers: [
+    // 認証プロバイダーの設定
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
+
       // Rails APIにリクエストを送信して認証を行う
       async authorize(credentials) {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/sign_in`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/sign_in`,
           {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
             body: JSON.stringify({
-              user: {
-                email: credentials?.email,
-                password: credentials?.password,
-              },
+              email: credentials?.email,
+              password: credentials?.password,
             }),
           }
         );
