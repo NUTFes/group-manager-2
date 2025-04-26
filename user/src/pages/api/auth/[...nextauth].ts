@@ -85,6 +85,15 @@ export default NextAuth({
       console.warn(code);
     },
   },
+
   // デバッグモードを本番環境以外で有効にする
   debug: process.env.NODE_ENV !== 'production',
+
+  // サインインページのルーティングを設定
+  pages: {
+    signIn: '/',
+    signOut: '/logout',
+    error: '/auth-error',
+    newUser: '/home',
+  },
 });
