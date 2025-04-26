@@ -30,13 +30,13 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
           <FormList
             items={createFormItemsForDevice(device)}
             onEdit={onEdit}
-            isDelete={!isDeadline}
+            isDelete={isDeadline}
             onDelete={device.id ? () => onDeleteDevice(device.id!) : undefined}
           />
         </div>
       ))}
 
-      {!isDeadline && (
+      {isDeadline && (
         <div className="flex w-full items-center justify-center gap-4">
           <Button
             size="pc"
