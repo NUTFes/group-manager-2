@@ -11,20 +11,19 @@ type LoginModalProps = {
 
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const {
-    handleLogin,
+    // handleLogin,
+    onSubmit,
     setValue,
-    handleSubmit,
     errors,
     email,
     password,
     isLoggingIn,
-    loginError,
-  } = useLoginModalHooks(onClose);
+  } = useLoginModalHooks();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form
-        onSubmit={handleSubmit(handleLogin)}
+        onSubmit={onSubmit}
         className="flex flex-col items-center gap-12 rounded-[30px] bg-white px-60 py-20 shadow-2xl"
       >
         <div className="flex w-96 flex-col items-center justify-center gap-12">
@@ -45,12 +44,13 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
             error={errors.password?.message}
             required
           />
+          {/* TODO:エラーハンドリングをする */}
           {/* エラーメッセージ表示領域 */}
-          {loginError && (
+          {/* {loginError && (
             <div className="mt-4 text-center text-sm text-red-600">
               {loginError}
             </div>
-          )}
+          )} */}
           <Button
             size="pc"
             color="main"
