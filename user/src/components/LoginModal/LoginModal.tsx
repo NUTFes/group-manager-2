@@ -44,13 +44,6 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
             error={errors.password?.message}
             required
           />
-          {/* TODO:エラーハンドリングをする */}
-          {/* エラーメッセージ表示領域 */}
-          {/* {loginError && (
-            <div className="mt-4 text-center text-sm text-red-600">
-              {loginError}
-            </div>
-          )} */}
           <Button
             size="pc"
             color="main"

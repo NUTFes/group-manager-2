@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -7,6 +8,7 @@ import { LoginModalSchema, loginModalSchema } from './schema';
 
 export const useLoginModalHooks = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const router = useRouter();
 
   const {
     setValue,
@@ -31,8 +33,7 @@ export const useLoginModalHooks = () => {
 
     // APIにリクエストを送信してログイン処理を行う
     signIn('credentials', {
-      redirect: true,
-      callbackUrl: '/home',
+      redirect: false,
       ...data,
     })
       .then((res) => {
@@ -42,10 +43,14 @@ export const useLoginModalHooks = () => {
             type: 'login',
             message: 'emailかpassworが違います',
           });
+          toast.error('ログインに失敗しました');
+          setIsLoggingIn(false);
           return;
         }
         // ログイン成功
         toast.success('ログインに成功しました');
+        setIsLoggingIn(false);
+        router.push('/home');
       })
       .catch((err) => {
         console.error(err);

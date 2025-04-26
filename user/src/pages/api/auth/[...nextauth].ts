@@ -96,7 +96,6 @@ export default NextAuth({
   pages: {
     signIn: '/',
     signOut: '/logout',
-    error: '/auth-error',
     newUser: '/home',
   },
 });
