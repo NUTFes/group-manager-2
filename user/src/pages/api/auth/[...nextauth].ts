@@ -9,10 +9,10 @@ export default NextAuth({
         email: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
+      // Rails APIにリクエストを送信して認証を行う
       async authorize(credentials) {
         const res = await fetch(
-          // TODO: 環境変数でAPIを切り替えれるようにする
-          'https://your-rails-api.com/api/v1/auth/sign_in',
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/auth/sign_in`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -24,12 +24,13 @@ export default NextAuth({
             }),
           }
         );
-
         if (!res.ok) {
           throw new Error('認証に失敗しました');
         }
 
+        // レスポンスからユーザー情報を取得
         const user = await res.json();
+
         // 認証に必要な情報を取得
         const accessToken = res.headers.get('access-token');
         const client = res.headers.get('client');
@@ -48,7 +49,9 @@ export default NextAuth({
       },
     }),
   ],
+
   callbacks: {
+    // ユーザー情報をJWTトークンに保存
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
@@ -57,6 +60,7 @@ export default NextAuth({
       }
       return token;
     },
+    // セッションにJWTトークンの情報を追加
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.client = token.client;
@@ -64,9 +68,23 @@ export default NextAuth({
       return session;
     },
   },
+
   session: {
     strategy: 'jwt',
   },
-  // TODO: 環境変数にNEXTAUTH_SECRETを設定する
+
+  // 環境変数で秘密鍵を設定
   secret: process.env.NEXTAUTH_SECRET,
+
+  // ログ出力を設定
+  logger: {
+    error(code, metadata) {
+      console.error(code, metadata);
+    },
+    warn(code) {
+      console.warn(code);
+    },
+  },
+  // デバッグモードを本番環境以外で有効にする
+  debug: process.env.NODE_ENV !== 'production',
 });
