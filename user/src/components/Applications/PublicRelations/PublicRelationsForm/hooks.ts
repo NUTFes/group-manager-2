@@ -291,14 +291,6 @@ export const usePublicRelationsFormHooks = (
         }
       }
 
-      console.log('PR送信データ:', {
-        url: publicRelation
-          ? `/public_relations/${publicRelation.id}`
-          : '/public_relations',
-        method: publicRelation ? 'PATCH' : 'POST',
-        query: prQueryData,
-      });
-
       // PR関連APIにデータを送信
       if (publicRelation) {
         // 既存データの更新 (PUT)
