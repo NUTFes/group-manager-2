@@ -80,6 +80,7 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   // ログ出力を設定
+  // サーバーサイドのログ
   logger: {
     error(code, metadata) {
       console.error(code, metadata);
@@ -97,5 +98,36 @@ export default NextAuth({
     signIn: '/',
     signOut: '/logout',
     newUser: '/home',
+  },
+
+  // cookiesの設定(nextauthが使用するクッキーの設定
+  // httpOnly: jsからのアクセスを防ぐ
+  // secure: 本番環境でのみ有効（HTTPS）
+  // sameSite: CSRF攻撃を防ぐ
+  cookies: {
+    sessionToken: {
+      name: 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    callbackUrl: {
+      name: 'next-auth.callback-url',
+      options: {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    csrfToken: {
+      name: 'next-auth.csrf-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
   },
 });
