@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   // 認証状態を取得
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   // トップページのURLを取得
@@ -15,7 +15,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   // 認証されていない場合、トップページ以外にいる場合はリダイレクト
-  if (!session && !isAuthPage) {
+  if (status === 'unauthenticated' && !isAuthPage) {
     // 未認証かつ、トップページ以外にいる場合はリダイレクト
     router.replace('/');
     return null;
