@@ -105,6 +105,32 @@ export async function patchFetcher(
 
   return response.json();
 }
+//DE
+export async function deleteFetcher(
+  url: string,
+  { arg }: { arg?: { query?: { [key: string]: any } } } = {}
+): Promise<any> {
+  let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  if (arg?.query) {
+    const queryStr = objectToQueryString(arg.query);
+    finalUrl = `${finalUrl}?${queryStr}`;
+  }
+
+  const response = await fetch(finalUrl, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('DELETE failed:', errorText);
+    throw new Error('Error deleting data');
+  }
+
+  return response.json();
+}
 
 /**
  * リクエストオプションを生成するヘルパー関数

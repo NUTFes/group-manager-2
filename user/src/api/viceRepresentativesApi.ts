@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation';
 import { useApiGet } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { deleteFetcher, patchFetcher, postFetcher } from './api';
 
 const API_ENDPOINT = '/sub_reps';
 
@@ -43,6 +43,7 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
     useApiGet<ApiResponse<ViceRepresentative>>(endpoint);
 
   return {
+    // viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     isLoading,
     // hasError: !!error, //groupId関連の実装時に切り替える
@@ -56,4 +57,8 @@ export const useCreateViceRepresentative = () => {
 
 export const useUpdateViceRepresentative = (id: number | undefined) => {
   return useSWRMutation(`${API_ENDPOINT}/${id}`, patchFetcher);
+};
+
+export const useDeleteViceRepresentative = (id: number | undefined) => {
+  return useSWRMutation(`${API_ENDPOINT}/${id}`, deleteFetcher);
 };

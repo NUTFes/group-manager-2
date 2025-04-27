@@ -3,6 +3,7 @@ import { useMutateUnregisteredGroup } from '@/api/unRegisteredGroupApi';
 import {
   ViceRepresentativeResponse,
   useCreateViceRepresentative,
+  useDeleteViceRepresentative,
   useUpdateViceRepresentative,
 } from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -101,6 +102,10 @@ export const useViceRepresentativeFormHook = (
     viceRepresentative?.id
   );
 
+  const { trigger: deleteViceRep } = useDeleteViceRepresentative(
+    viceRepresentative?.id
+  );
+
   const { registerUnregisteredGroup: unRegister } = useMutateUnregisteredGroup(
     ORDER_TYPES.SUB_REP
   );
@@ -110,24 +115,18 @@ export const useViceRepresentativeFormHook = (
     await validatedSubmit(data);
   };
 
+  // const onDaleteViceRepresentative(data.group_id) => {
+  //   return
+  // }
   const validatedSubmit = async (data: ViceRepresentativeForm) => {
     if (isIndividual === true) {
       try {
         await unRegister(data.groupId);
-        data = {
-          gradeId: 0,
-          departmentId: 0,
-          name: '',
-          studentId: 0,
-          email: '',
-          tel: '',
-          groupId: values.groupId,
-        };
-        await update({ query: data });
+        await deleteViceRep();
         mutate(`/sub_reps/group/${data.groupId}`, undefined, {
           revalidate: false,
         });
-        alert('送信しました1');
+        alert('unRegi送信と副代表データ削除に成功しました');
       } catch {
         alert('送信に失敗しました。1');
         // reset();
