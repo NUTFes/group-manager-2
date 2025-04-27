@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
+import { viceRepresentativeLabels } from '@/components/Applications/label';
 import Button from '@/components/Button';
+import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
-import Radio from '../../../Form/Radio';
-import TextBox from '../../../Form/TextBox';
-import FormContainer from '../../../FormContainer';
-import { viceRepresentativeLabels } from '../../label';
+import TextBox from '@/components/Form/TextBox';
+import FormContainer from '@/components/FormContainer';
 import { useViceRepresentativeFormHook } from './hook';
 
 type ViceRepresentativeFormProps = {

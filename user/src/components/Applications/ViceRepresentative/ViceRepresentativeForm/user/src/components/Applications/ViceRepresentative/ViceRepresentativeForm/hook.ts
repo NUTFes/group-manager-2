@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMutateUnregisteredGroup } from '@/api/unRegisteredGroupApi';
 import {
   ViceRepresentativeResponse,
   useCreateViceRepresentative,
@@ -7,6 +8,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
+import { ORDER_TYPES } from '@/components/Applications/Power/types';
 import { ViceRepresentativeForm, vicerepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (

@@ -25,7 +25,6 @@ const Selector: FC<SelectorProps> = ({
   note,
   error,
   options = [],
-  disableOptions = [],
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);

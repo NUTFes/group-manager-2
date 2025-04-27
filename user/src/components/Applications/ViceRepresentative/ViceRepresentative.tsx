@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
 import AccordionMenu from '@/components/AccordionMenu';
-import ViceRepresentativeForm from '@/components/Applications/ViceRepresentative/ViceRepresentativeForm';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
+import ViceRepresentativeForm from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm';
 import { useViceRepresentativeHook } from './hook';
 
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
