@@ -70,13 +70,11 @@ export default NextAuth({
     },
   },
 
+  // セッションの設定
   session: {
     strategy: 'jwt',
     maxAge: 3 * 24 * 60 * 60, // 3日
   },
-
-  // 環境変数で秘密鍵を設定
-  secret: process.env.NEXTAUTH_SECRET,
 
   // ログ出力を設定
   // サーバーサイドのログ
