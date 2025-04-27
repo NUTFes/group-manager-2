@@ -1,6 +1,7 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import Group from '@/components/Applications/Group';
+import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import Power from '@/components/Applications/Power';
 import PublicRelations from '@/components/Applications/PublicRelations';
 import Stage from '@/components/Applications/Stage';
@@ -23,7 +24,11 @@ export default function HomePage() {
         />
         <ApplicationForm name="副代表申請" />
         <ApplicationForm name="会場申請" />
-        <ApplicationForm name="物品申請" />
+        <RentItems
+          isDeadline={userPageSettings?.isEditRentalOrder}
+          isRegistered={checkAllRegisteredGroups?.rentalItem}
+          groupId={groupId}
+        />
         <Stage
           isDeadline={userPageSettings?.isEditStageOrder}
           isRegistered={checkAllRegisteredGroups?.stageOrder}
@@ -40,9 +45,9 @@ export default function HomePage() {
           groupId={groupId}
         />
         <PublicRelations
-          groupId={groupId}
           isDeadline={userPageSettings?.isEditPublicRelation}
           isRegistered={checkAllRegisteredGroups?.publicRelation}
+          groupId={groupId}
         />
       </div>
       <div className="flex flex-1 justify-center">
