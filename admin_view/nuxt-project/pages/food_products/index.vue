@@ -147,6 +147,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
@@ -390,7 +391,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_food_products_csv/" + this.refYearID;
-      window.open(url, "販売品申請_CSV");
+      await downloadFile(this.$axios,url, "販売品申請_CSV", "text/csv");
+      this.openSnackBar("販売品申請のCSVをダウンロードしました");
     },
   },
 };

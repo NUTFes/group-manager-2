@@ -107,8 +107,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
@@ -320,7 +321,8 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_public_relations_csv/" +
         this.refYearID;
-      window.open(url, "PR申請_CSV");
+      await downloadFile(this.$axios,url, "PR申請_CSV", "text/csv");
+      this.openSnackBar("PR申請のCSVをダウンロードしました");
     },
   },
 };

@@ -1,6 +1,10 @@
 class EmployeesController < ApplicationController
   before_action :set_employee, only: [:show, :update, :destroy]
 
+  # 🌟この行を追加！GET以外のアクションだけに認証かける神テク✨
+  before_action :authenticate_api_user!, only: [:index, :show]
+
+
   # GET /employees
   # GET /employees.json
   def index

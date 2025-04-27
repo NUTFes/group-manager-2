@@ -231,6 +231,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
@@ -350,7 +351,7 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
-    
+
     // 時間を作る
     for (let hour of this.hour_range) {
       for (let minute of this.minute_range) {
@@ -570,7 +571,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_stage_orders_csv/" + this.refYearID;
-      window.open(url, "ステージ申請一覧_CSV");
+      await downloadFile(this.$axios,url, "ステージ申請一覧_CSV", "text/csv");
+      this.openSnackBar("ステージ申請一覧をダウンロードしました");
     },
   },
 };

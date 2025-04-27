@@ -1,12 +1,28 @@
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useAuth } from '@/hooks/useAuth';
 import { LoginModalSchema, loginModalSchema } from './schema';
 
-export const useLoginModalHooks = () => {
-  const handleLogin = () => {
-    // todo: implement login logic
-    toast.success('押されたよ');
+export const useLoginModalHooks = (onClose: () => void) => {
+  const { login, isLoading } = useAuth();
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const handleLogin = async (data: LoginModalSchema) => {
+    try {
+      setLoginError(null);
+      const result = await login(data.email, data.password);
+      if (result.success) {
+        toast.success('ログインしました。');
+        onClose();
+      } else {
+        setLoginError('メールアドレスまたはパスワードに誤りがあります');
+      }
+    } catch (error: unknown) {
+      console.error('Login failed (unexpected error):', error);
+      setLoginError('ログイン処理中に予期せぬエラーが発生しました。');
+    }
   };
 
   const {
@@ -33,5 +49,7 @@ export const useLoginModalHooks = () => {
     errors,
     email,
     password,
+    isLoggingIn: isLoading,
+    loginError,
   };
 };
