@@ -2,9 +2,38 @@
 import type { NextConfig } from 'next';
 import type { RuleSetRule } from 'webpack';
 
+const apiConfig: {
+  [key: string]: {
+    SSR_API_URL: string;
+    NEXT_PUBLIC_API_URL: string;
+  };
+} = {
+  development: {
+    SSR_API_URL: 'http://api:3000',
+    NEXT_PUBLIC_API_URL: 'http://localhost:3000',
+  },
+  staging: {
+    SSR_API_URL: 'https://stg-group-manager-api.nutfes.net',
+    NEXT_PUBLIC_API_URL: 'https://stg-group-manager-api.nutfes.net',
+  },
+  production: {
+    SSR_API_URL: 'https://group-manager-api.nutfes.net',
+    NEXT_PUBLIC_API_URL: 'https://group-manager-api.nutfes.net',
+  },
+};
+
+const APP_ENV = process.env.APP_ENV || 'development';
+
+const { SSR_API_URL, NEXT_PUBLIC_API_URL } =
+  apiConfig[APP_ENV] || apiConfig.development;
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  env: {
+    SSR_API_URL,
+    NEXT_PUBLIC_API_URL,
+  },
   experimental: {
     turbo: {
       rules: {
