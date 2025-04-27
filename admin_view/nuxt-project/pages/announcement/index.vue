@@ -258,6 +258,7 @@ export default {
         this.announcements.push(res);
       }
     },
+    // TODO: get_announcements_csvを年数指定できるように
     async downloadCSV() {
       const url =
         this.$config.apiURL +
