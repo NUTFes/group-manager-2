@@ -6,13 +6,13 @@ import { RADIO_OPTIONS } from './constants';
 import { usePowerApplication } from './hooks/usePowerApplication';
 
 type PowerProps = {
-  isDeadline?: boolean;
+  isDeadline: boolean;
+  groupId: number;
+  isEdit: boolean;
+  isExist: boolean;
 };
 
-const Power: FC<PowerProps> = ({ isDeadline = false }) => {
-  // TODO: ログイン認証が実装されたら修正する
-  const groupId = 8;
-
+const Power: FC<PowerProps> = ({ isDeadline, groupId, isEdit, isExist }) => {
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
     state,
@@ -106,9 +106,9 @@ const Power: FC<PowerProps> = ({ isDeadline = false }) => {
   return (
     <AccordionMenu
       title={'電力申請'}
-      isEdit={false}
-      isExist={false}
-      required={true}
+      isEdit={isEdit}
+      isExist={isExist}
+      required
     >
       {content}
     </AccordionMenu>
