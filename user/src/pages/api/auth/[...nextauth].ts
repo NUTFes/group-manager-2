@@ -50,6 +50,7 @@ export default NextAuth({
     }),
   ],
 
+  // サインイン時にJWTトークンを生成し、その情報をsessionに保存
   callbacks: {
     // ユーザー情報をJWTトークンに保存
     async jwt({ token, user }) {
@@ -96,5 +97,17 @@ export default NextAuth({
     signIn: '/',
     signOut: '/logout',
     newUser: '/home',
+  },
+
+  // 特定のイベントに対するコールバックを設定
+  events: {
+    async signIn(message) {
+      /* on successful sign in */
+      console.log('signin user:', message.user);
+    },
+    async createUser(message) {
+      /* user created */
+      console.log('create user:', message.user);
+    },
   },
 });
