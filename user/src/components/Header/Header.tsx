@@ -19,7 +19,7 @@ const Header: FC<HeaderProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex h-20 w-full items-center justify-between bg-main px-8">
-      <Link href="/">
+      <Link href="/home">
         <CorporateIcon height="60" />
       </Link>
       <button onClick={() => setIsOpen(true)}>
