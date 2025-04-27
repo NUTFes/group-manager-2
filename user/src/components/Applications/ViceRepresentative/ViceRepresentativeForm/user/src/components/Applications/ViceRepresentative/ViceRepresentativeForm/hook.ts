@@ -6,7 +6,6 @@ import {
 import {
   ViceRepresentativeResponse,
   useCreateViceRepresentative,
-  useDeleteViceRepresentative,
   useUpdateViceRepresentative,
 } from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -52,10 +51,6 @@ export const useViceRepresentativeFormHook = (
   const { trigger: create } = useCreateViceRepresentative();
 
   const { trigger: update } = useUpdateViceRepresentative(
-    viceRepresentative?.id
-  );
-
-  const { trigger: deleteViceRep } = useDeleteViceRepresentative(
     viceRepresentative?.id
   );
 
