@@ -25,7 +25,7 @@ export const useGetUnregisteredGroup = (
 ) => {
   const endpoint =
     groupId != null
-      ? `${API_ENDPOINT}?group_id=${groupId}&order_type=${orderType}`
+      ? `${API_ENDPOINT}/group?group_id=${groupId}&order_type=${orderType}`
       : null;
 
   const { data, error, isLoading, mutate } = useApiGet<{
