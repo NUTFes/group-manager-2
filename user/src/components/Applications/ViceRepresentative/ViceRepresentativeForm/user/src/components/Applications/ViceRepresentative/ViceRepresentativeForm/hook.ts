@@ -125,15 +125,12 @@ export const useViceRepresentativeFormHook = (
     groupId,
     ORDER_TYPES.SUB_REP
   );
-
+  const [hasViceRep] = useState<boolean>(!!viceRepresentative);
   const validatedSubmit = async (data: ViceRepresentativeForm) => {
     if (isIndividual === true) {
       try {
         await unRegister(data.groupId);
         await deleteViceRep();
-        mutate(`/sub_reps/group/${data.groupId}`, undefined, {
-          revalidate: false,
-        });
         alert('unRegi送信と副代表データ削除に成功しました');
       } catch {
         alert('送信に失敗しました。1');
@@ -141,21 +138,20 @@ export const useViceRepresentativeFormHook = (
       }
     } else {
       try {
-        if (viceRepresentative) {
+        if (hasViceRep) {
           await update({ query: data });
         } else {
           await create({ query: data });
         }
         await deleteRegister(unregisteredData);
-        mutate(`/sub_reps/group/${data.groupId}`, undefined, {
-          revalidate: false,
-        });
-
         alert('送信しました2');
       } catch {
         alert('送信に失敗しました。2');
       }
     }
+    mutate(`/sub_reps/group/${data.groupId}`, undefined, {
+      revalidate: false,
+    });
   };
 
   return {
