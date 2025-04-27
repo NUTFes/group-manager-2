@@ -103,9 +103,5 @@ export default NextAuth({
       /* on successful sign in */
       console.log('signin user:', message.user);
     },
-    async createUser(message) {
-      /* user created */
-      console.log('create user:', message.user);
-    },
   },
 });
