@@ -175,9 +175,9 @@
   </template>
 
   <script>
-  import axios from "axios";
   import { mapState } from "vuex";
-  import moment from "moment";
+import { downloadFile } from '~/utils/download-file';
+
 
   export default {
     watchQuery: ["page"],
@@ -339,7 +339,8 @@
           "/print_pdf/group_info/" +
           this.group.group.id +
           "/output.pdf";
-        window.open(url, this.group.group.name + "_PDF");
+        await downloadFile(this.$axios,url, this.group.group.name + "_PDF");
+        this.openSnackBar("参加団体情報のPDFをダウンロードしました");
       },
       async printRentalItemsPDF() {
         const url =
@@ -347,7 +348,8 @@
           "/print_pdf/group/" +
           this.group.group.id +
           "/output.pdf";
-        window.open(url, this.group.group.name + "_PDF");
+        await downloadFile(this.$axios,url, this.group.group.name + "_PDF");
+        this.openSnackBar("物品貸し出し表のPDFをダウンロードしました");
       },
     },
   };

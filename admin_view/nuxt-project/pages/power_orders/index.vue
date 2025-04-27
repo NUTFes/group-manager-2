@@ -134,6 +134,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   data() {
@@ -364,7 +366,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
-      window.open(url, "電力申請_CSV");
+      await downloadFile(this.$axios,url, "電力申請_CSV", "text/csv");
+      this.openSnackBar("電力申請のCSVをダウンロードしました");
     },
   },
 };

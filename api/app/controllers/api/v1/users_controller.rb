@@ -1,6 +1,12 @@
 class Api::V1::UsersController < ApplicationController
-  # before_action :authenticate_api_user!
-  
+
+  before_action :authenticate_api_user!, only: [
+    :get_user_index_for_admin_view, :get_user_show_for_admin_view,
+    :get_representative_index_for_admin_view, :get_representative_show_for_admin_view,
+    :get_refinement_users, :get_search_users, :show,
+    :create, :update, :destroy, :edit_user_info, :reset_password
+  ]
+
   def get_user_index_for_admin_view
     @users = User.with_user_details
     render json: fmt(ok, @users)
