@@ -15,8 +15,8 @@ export default function HomePage() {
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
   return (
-    <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row">
-      <div className="flex flex-1 flex-col">
+    <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
+      <div className="order-2 flex flex-1 flex-col lg:order-1">
         <Group
           isDeadline={userPageSettings?.isRegistGroup}
           isRegistered={checkAllRegisteredGroups?.group}
@@ -50,7 +50,7 @@ export default function HomePage() {
           groupId={groupId}
         />
       </div>
-      <div className="flex flex-1 justify-center">
+      <div className="order-1 flex flex-1 items-start justify-center lg:order-2">
         <NewsList isLoginPage={false} />
       </div>
     </div>
