@@ -1,4 +1,3 @@
-// import { useAuthStore } from '@/stores/authStore';
 import camelcaseKeys from 'camelcase-keys';
 import type { Session } from 'next-auth';
 import snakecaseKeys from 'snakecase-keys';

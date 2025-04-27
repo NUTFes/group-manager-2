@@ -10,15 +10,8 @@ type LoginModalProps = {
 };
 
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const {
-    // handleLogin,
-    onSubmit,
-    setValue,
-    errors,
-    email,
-    password,
-    isLoggingIn,
-  } = useLoginModalHooks();
+  const { onSubmit, setValue, errors, email, password, isLoggingIn } =
+    useLoginModalHooks();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

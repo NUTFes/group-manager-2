@@ -10,6 +10,7 @@ export const useLoginModalHooks = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
 
+  // react-hook-formを初期化
   const {
     setValue,
     watch,
@@ -27,6 +28,7 @@ export const useLoginModalHooks = () => {
   const email = watch('email');
   const password = watch('password');
 
+  // フォームの送信処理
   const onSubmit = handleSubmit((data) => {
     // ログイン中・・・
     setIsLoggingIn(true);
@@ -58,14 +60,11 @@ export const useLoginModalHooks = () => {
   });
 
   return {
+    onSubmit,
     setValue,
-    watch,
-    handleSubmit,
-    setError,
-    isLoggingIn,
     errors,
     email,
     password,
-    onSubmit,
+    isLoggingIn,
   };
 };
