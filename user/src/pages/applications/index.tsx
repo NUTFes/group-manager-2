@@ -12,7 +12,7 @@ export default function Home() {
       <ViceRepresentative isDeadline={false} />
       <StageOptions isDeadline={userPageSettings?.isEditStageCommonOption} />
       <Stage isDeadline={userPageSettings?.isEditStageCommonOption} />
-      <Power isDeadline={userPageSettings?.isEditStageCommonOption} />
+      <Power groupId={1} isDeadline={false} isEdit={false} isExist={false} />
     </>
   );
 }
