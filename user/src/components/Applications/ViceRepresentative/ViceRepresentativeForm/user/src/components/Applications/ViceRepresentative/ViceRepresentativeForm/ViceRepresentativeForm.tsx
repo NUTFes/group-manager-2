@@ -15,13 +15,13 @@ type ViceRepresentativeFormProps = {
 
 const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   viceRepresentative,
-  toEdit,
 }) => {
   const {
     handleSubmit,
     setValue,
     errors,
-    onSubmit,
+    validatedSubmit,
+    noValidationSubmit,
     option2,
     optiongrade,
     optionfield,
@@ -37,15 +37,25 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
 
   return (
     <FormContainer>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (isIndividual) {
+            noValidationSubmit();
+          } else {
+            handleSubmit(validatedSubmit)(e);
+          }
+        }}
+        className="w-full"
+      >
         <div>
           <Radio
             label={viceRepresentativeLabels[0]}
             onChange={(value) => setisInd(Number(value))}
             options={option2}
             required
-            value={isIndividual ? '1' : '0'}
-            error={errors.isindividual?.message}
+            value={isIndividual === undefined ? '' : isIndividual ? '1' : '0'}
+            error={errors.groupId?.message}
           />
           {isIndividual === false && (
             <div>
@@ -60,7 +70,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
               <TextBox
                 label={viceRepresentativeLabels[2]}
                 value={textstudentId}
-                onChange={(value) => setValue('studentId', value)}
+                onChange={(value) => setValue('studentId', Number(value))}
                 note="例：123456"
                 required={true}
                 error={errors.studentId?.message}

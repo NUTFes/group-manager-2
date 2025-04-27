@@ -37,13 +37,15 @@ export const useViceRepresentativeFormHook = (
     { id: 0, name: 'いいえ(グループで参加)' },
   ];
 
-  const [isIndividual, setIsIndividual] = useState(() => {
-    if (viceRepresentative) {
-      return false;
-    } else {
-      return undefined;
-    }
-  });
+  const [isIndividual, setIsIndividual] = useState<boolean | undefined>(
+    undefined
+  );
+
+  // useEffect(() => {
+  //   if (viceRepresentative) {
+  //     setIsIndividual(false);
+  //   }
+  // }, [viceRepresentative]);
 
   const optiongrade = [
     { id: 0, name: '選択してください', disabled: true },
@@ -97,18 +99,51 @@ export const useViceRepresentativeFormHook = (
     viceRepresentative?.id
   );
 
-  const onSubmit = async (data: ViceRepresentativeForm) => {
-    try {
-      if (viceRepresentative) {
+  const { registerUnregisteredGroup: unRegister } = useMutateUnregisteredGroup(
+    ORDER_TYPES.SUB_REP
+  );
+
+  const noValidationSubmit = async () => {
+    const data = getValues();
+    await validatedSubmit(data);
+  };
+
+  const validatedSubmit = async (data: ViceRepresentativeForm) => {
+    if (isIndividual === true) {
+      try {
+        await unRegister(data.groupId);
+        data = {
+          gradeId: 0,
+          departmentId: 0,
+          name: '',
+          studentId: 0,
+          email: '',
+          tel: '',
+          groupId: values.groupId,
+        };
         await update({ query: data });
-      } else {
-        await create({ query: data });
+        mutate(`/sub_reps/group/${data.groupId}`, undefined, {
+          revalidate: false,
+        });
+        alert('送信しました1');
+      } catch {
+        alert('送信に失敗しました。1');
+        // reset();
       }
-      mutate(`/sub_Reps/group/${data.groupId}`);
-      alert('送信しました');
-      reset();
-    } catch {
-      alert('送信に失敗しました。');
+    } else {
+      try {
+        if (viceRepresentative) {
+          await update({ query: data });
+        } else {
+          await create({ query: data });
+        }
+        mutate(`/sub_reps/group/${data.groupId}`, undefined, {
+          revalidate: false,
+        });
+        alert('送信しました2');
+      } catch {
+        alert('送信に失敗しました。2');
+      }
     }
   };
 
@@ -119,14 +154,15 @@ export const useViceRepresentativeFormHook = (
     errors,
     reset,
     watch,
-    onSubmit,
+    validatedSubmit,
+    noValidationSubmit,
     option2,
     optiongrade,
     optionfield,
     isIndividual,
     setisInd,
     textName: values.name || '',
-    textstudentId: values.studentId || '',
+    textstudentId: (values.studentId || '').toString(),
     valuegradeId: values.gradeId.toString(),
     valuedepartmentId: values.departmentId.toString(),
     textemail: values.email || '',
