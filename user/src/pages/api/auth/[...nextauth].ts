@@ -13,20 +13,17 @@ export default NextAuth({
 
       // Rails APIにリクエストを送信して認証を行う
       async authorize(credentials) {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/sign_in`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-            body: JSON.stringify({
-              email: credentials?.email,
-              password: credentials?.password,
-            }),
-          }
-        );
+        const res = await fetch(`${process.env.SSR_API_URL}/api/auth/sign_in`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            email: credentials?.email,
+            password: credentials?.password,
+          }),
+        });
         if (!res.ok) {
           throw new Error('認証に失敗しました');
         }
@@ -74,6 +71,7 @@ export default NextAuth({
 
   session: {
     strategy: 'jwt',
+    maxAge: 3 * 24 * 60 * 60, // 3日
   },
 
   // 環境変数で秘密鍵を設定
@@ -98,36 +96,5 @@ export default NextAuth({
     signIn: '/',
     signOut: '/logout',
     newUser: '/home',
-  },
-
-  // cookiesの設定(nextauthが使用するクッキーの設定
-  // httpOnly: jsからのアクセスを防ぐ
-  // secure: 本番環境でのみ有効（HTTPS）
-  // sameSite: CSRF攻撃を防ぐ
-  cookies: {
-    sessionToken: {
-      name: 'next-auth.session-token',
-      options: {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
-    callbackUrl: {
-      name: 'next-auth.callback-url',
-      options: {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
-    csrfToken: {
-      name: 'next-auth.csrf-token',
-      options: {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
   },
 });
