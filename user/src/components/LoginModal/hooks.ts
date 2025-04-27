@@ -29,7 +29,7 @@ export const useLoginModalHooks = () => {
   const password = watch('password');
 
   // フォームの送信処理
-  const onSubmit = handleSubmit((data) => {
+  const handleSignInSubmit = handleSubmit((data) => {
     // ログイン中・・・
     setIsLoggingIn(true);
 
@@ -58,9 +58,8 @@ export const useLoginModalHooks = () => {
         console.error(err);
       });
   });
-
   return {
-    onSubmit,
+    handleSignInSubmit,
     setValue,
     errors,
     email,

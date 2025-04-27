@@ -10,13 +10,13 @@ type LoginModalProps = {
 };
 
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const { onSubmit, setValue, errors, email, password, isLoggingIn } =
+  const { handleSignInSubmit, setValue, errors, email, password, isLoggingIn } =
     useLoginModalHooks();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form
-        onSubmit={onSubmit}
+        onSubmit={handleSignInSubmit}
         className="flex flex-col items-center gap-12 rounded-[30px] bg-white px-60 py-20 shadow-2xl"
       >
         <div className="flex w-96 flex-col items-center justify-center gap-12">
