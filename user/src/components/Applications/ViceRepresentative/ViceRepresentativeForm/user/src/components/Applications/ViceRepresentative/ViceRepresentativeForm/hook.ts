@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { useMutateUnregisteredGroup } from '@/api/unRegisteredGroupApi';
+import {
+  useGetUnregisteredGroup,
+  useMutateUnregisteredGroup,
+} from '@/api/unRegisteredGroupApi';
 import {
   ViceRepresentativeResponse,
   useCreateViceRepresentative,
@@ -91,6 +94,7 @@ export const useViceRepresentativeFormHook = (
     { id: 18, name: 'その他' },
   ];
   const values = watch();
+  const groupId = values.groupId;
 
   const setisInd = (id: number) => {
     setIsIndividual(id === 1);
@@ -110,14 +114,18 @@ export const useViceRepresentativeFormHook = (
     ORDER_TYPES.SUB_REP
   );
 
+  const { deleteUnregisteredGroup: deleteRegister } =
+    useMutateUnregisteredGroup(ORDER_TYPES.SUB_REP);
+
   const noValidationSubmit = async () => {
     const data = getValues();
     await validatedSubmit(data);
   };
+  const { unregisteredData } = useGetUnregisteredGroup(
+    groupId,
+    ORDER_TYPES.SUB_REP
+  );
 
-  // const onDaleteViceRepresentative(data.group_id) => {
-  //   return
-  // }
   const validatedSubmit = async (data: ViceRepresentativeForm) => {
     if (isIndividual === true) {
       try {
@@ -138,9 +146,11 @@ export const useViceRepresentativeFormHook = (
         } else {
           await create({ query: data });
         }
+        await deleteRegister(unregisteredData);
         mutate(`/sub_reps/group/${data.groupId}`, undefined, {
           revalidate: false,
         });
+
         alert('送信しました2');
       } catch {
         alert('送信に失敗しました。2');
