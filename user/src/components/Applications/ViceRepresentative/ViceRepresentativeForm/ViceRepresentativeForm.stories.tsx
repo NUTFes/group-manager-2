@@ -2,6 +2,8 @@ import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import ViceRepresentativeForm from './ViceRepresentativeForm';
 
+type Story = StoryObj<typeof ViceRepresentativeForm>;
+
 export default {
   title: 'Components/ViceRepresentativeForm',
   tags: ['autodocs'],
@@ -15,7 +17,12 @@ export default {
   },
 } as Meta<typeof ViceRepresentativeForm>;
 
-type Story = StoryObj<typeof ViceRepresentativeForm>;
+export const dummy: Story = {
+  args: {
+    toEdit: () => {},
+    viceRepresentative: undefined,
+  },
+};
 
 export const Default: Story = {
   args: {},

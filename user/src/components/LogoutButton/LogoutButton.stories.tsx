@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import LogoutButton from './LogoutButton';
 
 export default {
-  title: 'Components/LogoutButton',
+  title: 'Components/LogoutButton/Primary', // 重複を避けるために修正
   tags: ['autodocs'],
   component: LogoutButton,
   parameters: {

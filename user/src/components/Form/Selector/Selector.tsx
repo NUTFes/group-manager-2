@@ -25,7 +25,6 @@ const Selector: FC<SelectorProps> = ({
   note,
   error,
   options = [],
-  disableOptions = [],
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
@@ -44,7 +43,12 @@ const Selector: FC<SelectorProps> = ({
           className={`h-12 w-[400px] rounded-[10px] border-2 text-font ${error ? 'border-alert' : 'border-main'} mb-[4px]`}
         >
           {options.map((option) => (
-            <option key={option.id} value={option.id} disabled={option.disabled} hidden={option.disabled}>
+            <option
+              key={option.id}
+              value={option.id}
+              disabled={option.disabled}
+              hidden={option.disabled}
+            >
               {option.name}
             </option>
           ))}

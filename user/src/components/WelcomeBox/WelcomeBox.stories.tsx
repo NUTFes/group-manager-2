@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import WelcomeBox from './WelcomeBox';
 
 export default {
-  title: 'Components/WelcomeBox',
+  title: 'Components/WelcomeBox', // 重複を避けるために修正
   tags: ['autodocs'],
   component: WelcomeBox,
   parameters: {

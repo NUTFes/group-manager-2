@@ -35,30 +35,3 @@ export const stageLabels = [
 ];
 
 export const publicRelationLabels = ['PR文', 'アナウンスの有無', 'PR画像'];
-export const viceRepresentativeLabels = [
-  '一人での参加ですか？',
-  '名前',
-  '学籍番号',
-  '課程・学年',
-  '学科・専攻',
-  'メールアドレス',
-];
-// 団体申請フォームで表示するラベル
-export const groupLabels = [
-  '団体名',
-  '企画名',
-  '国際団体ですか？',
-  '学外団体ですか？',
-  '参加形式',
-  '企画内容',
-];
-export const stageLabels = [
-  '開催日',
-  '晴れの場合：第1希望',
-  '晴れの場合：第2希望',
-  '雨の場合：第1希望',
-  '雨の場合：第2希望',
-  '準備時間',
-  '本番時間',
-  '片付け時間',
-];
