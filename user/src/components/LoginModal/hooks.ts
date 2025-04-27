@@ -34,7 +34,8 @@ export const useLoginModalHooks = () => {
     // APIにリクエストを送信してログイン処理を行う
     signIn('credentials', {
       redirect: false,
-      ...data,
+      email: data.email,
+      password: data.password,
     })
       .then((res) => {
         if (res?.error) {
@@ -49,7 +50,6 @@ export const useLoginModalHooks = () => {
         }
         // ログイン成功
         toast.success('ログインに成功しました');
-        setIsLoggingIn(false);
         router.push('/home');
       })
       .catch((err) => {
