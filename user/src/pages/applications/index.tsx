@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <StageOptions isDeadline={userPageSettings?.isEditStageCommonOption} />
       <Stage isDeadline={userPageSettings?.isEditStageCommonOption} />
-      <Power groupId={1} isDeadline={false} isEdit={false} isExist={false} />
+      <Power isDeadline={userPageSettings?.isEditStageCommonOption} />
     </>
   );
 }
