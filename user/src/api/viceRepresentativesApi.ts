@@ -30,6 +30,7 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
     useApiGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
 
   return {
+    // viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     isLoading,
     // hasError: !!error, //groupId関連の実装時に切り替える
