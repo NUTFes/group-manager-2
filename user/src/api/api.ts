@@ -15,7 +15,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
  * APIのヘッダーを生成する関数
  * 認証情報を追加
  */
-export const headers = (session: Session): { headers: HeadersInit } => {
+export const headers = (session: Session): HeadersInit => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
@@ -25,7 +25,7 @@ export const headers = (session: Session): { headers: HeadersInit } => {
   headers['client'] = session.client!;
   headers['uid'] = session.uid!;
 
-  return { headers };
+  return headers;
 };
 
 /**
@@ -37,7 +37,7 @@ export const fetcher = ([url, session]: [string, Session]) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
   console.log('fetcher', fullUrl, session);
 
-  const requestHeaders = headers(session).headers;
+  const requestHeaders = headers(session);
 
   return fetch(fullUrl, {
     headers: requestHeaders,
@@ -273,7 +273,7 @@ export const sendRequest = async <T>(
   session: Session,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const defaultHeaders: HeadersInit = headers(session).headers;
+  const defaultHeaders: HeadersInit = headers(session);
 
   const requestOptions: RequestInit = {
     ...options,
