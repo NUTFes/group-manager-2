@@ -11,7 +11,7 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
 
-      // Rails APIにリクエストを送信して認証を行う
+      // APIにリクエストを送信して認証を行う
       async authorize(credentials) {
         const res = await fetch(`${process.env.SSR_API_URL}/api/auth/sign_in`, {
           method: 'POST',
@@ -50,7 +50,6 @@ export default NextAuth({
     }),
   ],
 
-  // サインイン時にJWTトークンを生成し、その情報をsessionに保存
   callbacks: {
     // ユーザー情報をJWTトークンに保存
     async jwt({ token, user }) {
@@ -61,7 +60,7 @@ export default NextAuth({
       }
       return token;
     },
-    // セッションにJWTトークンの情報を追加
+    // useSessionを使用してJWTトークンの情報を取得する際に、追加で入力した認証情報も取得する
     async session({ session, token }) {
       session.accessToken = token.accessToken;
       session.client = token.client;
