@@ -40,7 +40,7 @@ export default function HomePage() {
           groupId={groupId}
         />
         <Power
-          isDeadline={userPageSettings?.isEditStageOrder}
+          isDeadline={userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
