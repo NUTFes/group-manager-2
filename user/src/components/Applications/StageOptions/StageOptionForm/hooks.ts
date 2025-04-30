@@ -23,7 +23,7 @@ export const useStageOptionFormHooks = (
     resolver: zodResolver(stageOptionSchema),
     mode: 'onChange',
     defaultValues: {
-      groupId: groupId ?? 0,
+      groupId: groupId,
       ownEquipment: stageOptions?.ownEquipment,
       bgm: stageOptions?.bgm,
       cameraPermission: stageOptions?.cameraPermission,
