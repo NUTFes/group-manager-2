@@ -73,7 +73,7 @@ const PublicRelations: FC<PublicRelationsProps> = ({
   return (
     <AccordionMenu
       title="PR文申請"
-      isEdit={isDeadline}
+      isEdit={!isDeadline}
       isExist={isRegistered}
       required
     >
