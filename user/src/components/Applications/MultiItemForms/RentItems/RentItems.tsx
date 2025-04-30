@@ -16,7 +16,7 @@ const RentItems: FC<RentItemsProps> = ({
   return (
     <AccordionMenu
       title="物品申請"
-      isEdit={!isDeadline}
+      isEdit={isDeadline}
       isExist={isRegistered}
       required={true}
     >
