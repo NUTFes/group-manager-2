@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { toast } from 'react-toastify';
+import { useAuth } from '@/hooks/useAuth';
 import CancelButton from '../CancelButton';
 import EditButton from '../EditButton';
 import LogoutButton from '../LogoutButton';
@@ -17,6 +19,18 @@ export type UserInfo = {
 };
 
 const UserModal: FC<UserModalProps> = ({ isOpen, onClose, user }) => {
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.success) {
+      toast.success('ログアウトしました');
+      onClose();
+    } else {
+      toast.error(result.message || 'ログアウトに失敗しました');
+    }
+  };
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -31,7 +45,7 @@ const UserModal: FC<UserModalProps> = ({ isOpen, onClose, user }) => {
             <p className="text-3xl font-bold text-font">{user.name}</p>
             <p className="text-base font-medium text-font">{user.email}</p>
             <EditButton OnClick={onClose} />
-            <LogoutButton onClick={onClose} />
+            <LogoutButton onClick={handleLogout} />
           </div>
         </div>
       </div>
