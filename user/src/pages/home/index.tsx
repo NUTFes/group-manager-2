@@ -18,34 +18,34 @@ export default function HomePage() {
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
       <div className="order-2 flex flex-1 flex-col lg:order-1">
         <Group
-          isDeadline={userPageSettings?.isRegistGroup}
+          isDeadline={!userPageSettings?.isRegistGroup}
           isRegistered={checkAllRegisteredGroups?.group}
           groupId={groupId}
         />
         <ApplicationForm name="副代表申請" />
         <ApplicationForm name="会場申請" />
         <RentItems
-          isDeadline={userPageSettings?.isEditRentalOrder}
+          isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
           groupId={groupId}
         />
         <Stage
-          isDeadline={userPageSettings?.isEditStageOrder}
+          isDeadline={!userPageSettings?.isEditStageOrder}
           isRegistered={checkAllRegisteredGroups?.stageOrder}
           groupId={groupId}
         />
         <StageOptions
-          isDeadline={userPageSettings?.isEditStageCommonOption}
+          isDeadline={!userPageSettings?.isEditStageCommonOption}
           isRegistered={checkAllRegisteredGroups?.stageOption}
           groupId={groupId}
         />
         <Power
-          isDeadline={userPageSettings?.isEditPowerOrder}
+          isDeadline={!userPageSettings?.isEditPowerOrder}
           isRegistered={checkAllRegisteredGroups?.powerOrder}
           groupId={groupId}
         />
         <PublicRelations
-          isDeadline={userPageSettings?.isEditPublicRelation}
+          isDeadline={!userPageSettings?.isEditPublicRelation}
           isRegistered={checkAllRegisteredGroups?.publicRelation}
           groupId={groupId}
         />

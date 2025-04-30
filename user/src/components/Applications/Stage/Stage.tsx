@@ -12,7 +12,7 @@ const Stage: FC<StageProps> = ({ isDeadline, isRegistered, groupId }) => {
   return (
     <AccordionMenu
       title="ステージ申請"
-      isEdit={isDeadline}
+      isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
     >

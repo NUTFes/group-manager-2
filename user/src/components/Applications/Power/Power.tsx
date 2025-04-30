@@ -106,7 +106,7 @@ const Power: FC<PowerProps> = ({ isDeadline = false }) => {
   return (
     <AccordionMenu
       title={'電力申請'}
-      isEdit={isDeadline}
+      isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
     >
