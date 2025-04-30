@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import CorporateIcon from '../../../public/corporate_logo.svg';
 import ProfileIcon from '../../../public/profile_icon.svg';
 import UserModal from '../UserModal';
@@ -10,6 +11,10 @@ type HeaderProps = {
 };
 
 const Header: FC<HeaderProps> = () => {
+  // ルートパス（"/"）の場合はUserModalを表示しない
+  const router = useRouter();
+  const showUserModal = router.pathname !== '/';
+
   const user: UserInfo = {
     id: '1',
     role: 'admin',
@@ -17,15 +22,24 @@ const Header: FC<HeaderProps> = () => {
     email: '',
   };
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="flex h-20 w-full items-center justify-between bg-main px-8">
-      <Link href="/">
+      <Link href="/home">
         <CorporateIcon height="60" />
       </Link>
-      <button onClick={() => setIsOpen(true)}>
-        <ProfileIcon height="56" />
-      </button>
-      <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} user={user} />
+      {showUserModal && (
+        <button onClick={() => setIsOpen(true)}>
+          <ProfileIcon height="56" />
+        </button>
+      )}
+      {showUserModal && (
+        <UserModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          user={user}
+        />
+      )}
     </div>
   );
 };
