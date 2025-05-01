@@ -6,6 +6,7 @@ import Power from '@/components/Applications/Power';
 import PublicRelations from '@/components/Applications/PublicRelations';
 import Stage from '@/components/Applications/Stage';
 import StageOptions from '@/components/Applications/StageOptions';
+import VenueApplications from '@/components/Applications/VenueApplication';
 import NewsList from '@/components/NewsList';
 
 export default function HomePage() {
@@ -23,7 +24,11 @@ export default function HomePage() {
           groupId={groupId}
         />
         <ApplicationForm name="副代表申請" />
-        <ApplicationForm name="会場申請" />
+        <VenueApplications
+          isDeadline={!userPageSettings?.isEditVenueMap}
+          isRegistered={checkAllRegisteredGroups?.venueMap}
+          groupId={groupId}
+        />
         <RentItems
           isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
