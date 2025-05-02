@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { deleteData, postData } from '@/api/api';
 import { useAuthStore } from '@/stores/authStore';
-import { RegisterParams } from '@/types/register/user';
+import { RegisterParams, User as UserType } from '@/types/register/user';
 import { useApiGet } from '@/hooks/useApi';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -11,16 +11,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
  * ユーザー情報の型定義
  */
 interface User {
-  data: {
-    user: {
-      id: number;
-      email: string;
-      name: string;
-      role_id: number;
-      created_at: string;
-      updated_at: string;
-    };
-  };
+  data: UserType;
 }
 
 /**
@@ -152,7 +143,7 @@ export const useAuth = () => {
           return { success: false, message };
         }
 
-        setAuth(newAccessToken, newClient, newUid);
+        setAuth(newAccessToken, newClient, newUid, response.data.data);
         return { success: true, data: response.headers };
       } else {
         console.error('自動ログインAPI失敗:', response.error);
@@ -187,8 +178,8 @@ export const useAuth = () => {
           loginResult.data?.get('client') ?? '',
           loginResult.data?.get('uid') ?? ''
         );
-        if (currentUser?.data.user.id) {
-          localStorage.setItem('user_id', currentUser.data.user.id.toString());
+        if (currentUser?.data.id) {
+          localStorage.setItem('user_id', currentUser.data.id.toString());
         }
         return { success: true, data: currentUser as User };
       } else {

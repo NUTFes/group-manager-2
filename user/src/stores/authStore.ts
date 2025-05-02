@@ -1,14 +1,6 @@
+import { User } from '@/types/register/user';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-interface User {
-  id: number;
-  email: string;
-  name: string;
-  role_id: number;
-  created_at: string;
-  updated_at: string;
-}
 
 interface AuthState {
   accessToken: string | null;
@@ -16,7 +8,12 @@ interface AuthState {
   uid: string | null;
   user: User | null;
   isAuthenticated: boolean;
-  setAuth: (accessToken: string, client: string, uid: string) => void;
+  setAuth: (
+    accessToken: string,
+    client: string,
+    uid: string,
+    user: User
+  ) => void;
   clearAuth: () => void;
 }
 
@@ -28,7 +25,7 @@ export const useAuthStore = create<AuthState>()(
       uid: null,
       user: null,
       isAuthenticated: false,
-      setAuth: (accessToken, client, uid) => {
+      setAuth: (accessToken, client, uid, user) => {
         // Cookieに認証情報を保存（サーバーサイドでの認証チェック用）
         if (typeof document !== 'undefined') {
           document.cookie = `auth-storage=${JSON.stringify({
@@ -42,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
           client,
           uid,
           isAuthenticated: true,
+          user: user,
         });
       },
       clearAuth: () => {
