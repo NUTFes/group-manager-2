@@ -961,4 +961,8 @@ class Group < ApplicationRecord
       return unallocated_rental_items
     end
 
+    def is_food_sales
+      # 食品販売グループかどうかを判定するメソッド
+      return self.group_category_id == 1
+    end
 end
