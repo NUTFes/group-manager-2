@@ -1,6 +1,7 @@
 import { FC } from 'react';
+import { signOut } from 'next-auth/react';
 import { toast } from 'react-toastify';
-import { useAuth } from '@/hooks/useAuth';
+// import { useAuth } from '@/hooks/useAuth';
 import CancelButton from '../CancelButton';
 import EditButton from '../EditButton';
 import LogoutButton from '../LogoutButton';
@@ -19,15 +20,14 @@ export type UserInfo = {
 };
 
 const UserModal: FC<UserModalProps> = ({ isOpen, onClose, user }) => {
-  const { logout } = useAuth();
-
   const handleLogout = async () => {
-    const result = await logout();
-    if (result.success) {
+    try {
+      await signOut({ redirect: false });
       toast.success('ログアウトしました');
       onClose();
-    } else {
-      toast.error(result.message || 'ログアウトに失敗しました');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('ログアウトに失敗しました');
     }
   };
 
