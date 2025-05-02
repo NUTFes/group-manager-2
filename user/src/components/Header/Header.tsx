@@ -13,7 +13,6 @@ const Header: FC<HeaderProps> = () => {
   // ルートパス（"/"）の場合はUserModalを表示しない
   const router = useRouter();
   const showUserModal = router.pathname !== '/';
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (

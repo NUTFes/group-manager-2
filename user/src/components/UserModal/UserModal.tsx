@@ -50,7 +50,7 @@ const UserModal: FC<UserModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="z-10 mx-[30px] my-[100px] flex h-[300px] max-w-[880px]">
+      <div className="z-10 mx-[30px] my-[100px] flex h-[270px] max-w-[880px]">
         <div className="absolute m-6">
           <CancelButton onClick={onClose} />
         </div>

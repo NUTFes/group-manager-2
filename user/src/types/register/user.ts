@@ -1,24 +1,32 @@
 export interface User {
-  status: Status;
-  data: Data;
-}
-
-interface Status {
-  code: number;
-  message: string;
-}
-
-interface Data {
-  allowPasswordChange: boolean;
-  createdAt: string;
-  email: string;
   id: number;
+  email: string;
   name: string;
-  provider: string;
-  roleId: number;
-  uid: string;
-  updatedAt: string;
+  role_id: number;
+  created_at: string;
+  updated_at: string;
 }
+// export interface User {
+//   status: Status;
+//   data: Data;
+// }
+
+// interface Status {
+//   code: number;
+//   message: string;
+// }
+
+// interface Data {
+//   allowPasswordChange: boolean;
+//   createdAt: string;
+//   email: string;
+//   id: number;
+//   name: string;
+//   provider: string;
+//   roleId: number;
+//   uid: string;
+//   updatedAt: string;
+// }
 
 export interface RegisterParams {
   name: string;

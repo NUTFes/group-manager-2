@@ -2,6 +2,30 @@ class PlacesController < ApplicationController
   before_action :set_place, only: [:show, :update, :destroy]
 
   def index
+    group_id = params[:group_id]
+    # group_idがnilまたは空でない場合、group_idで選択肢を表示
+    if group_id.present?
+      @group = Group.find_by(id: group_id)
+      if @group
+        if @group.is_food_sales
+          # MEMO: 食品販売グループの場合、外のエリアの場所を表示
+          # 1: 希望なし
+          # 5: 事務棟エリア（講義室は含まない。)
+          # 6: 図書館エリア
+          # 7: 電気棟エリア
+          # 8: メインステージエリア（情報処理センター前）
+          # 9: 機械・建設棟エリア
+          # 10: その他のエリア
+          @places = Place.where(id: [1, 5, 6, 7, 8, 9, 10])
+        else
+          @places = Place.all
+        end
+        render json: fmt(ok, @places)
+      else
+        render json: fmt(not_found, [], "Not found group = #{group_id}")
+      end
+      return
+    end
     @places = Place.all
     render json: fmt(ok, @places)
   end
