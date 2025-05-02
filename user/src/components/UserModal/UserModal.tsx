@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { User } from '@/types/register/user';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import CancelButton from '../CancelButton';
@@ -8,14 +9,7 @@ import LogoutButton from '../LogoutButton';
 type UserModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  user: UserInfo;
-};
-
-export type UserInfo = {
-  id: string;
-  role: string;
-  name: string;
-  email: string;
+  user: User | null;
 };
 
 const UserModal: FC<UserModalProps> = ({ isOpen, onClose, user }) => {
@@ -41,9 +35,8 @@ const UserModal: FC<UserModalProps> = ({ isOpen, onClose, user }) => {
         </div>
         <div className="flex flex-col items-center gap-12 rounded-[20px] bg-white p-6 shadow-2xl">
           <div className="flex w-[420px] flex-col items-center justify-center gap-6 py-4">
-            <p className="text-sm font-bold text-font">{user.role}</p>
-            <p className="text-3xl font-bold text-font">{user.name}</p>
-            <p className="text-base font-medium text-font">{user.email}</p>
+            <p className="text-3xl font-bold text-font">{user?.name}</p>
+            <p className="text-base font-medium text-font">{user?.email}</p>
             <EditButton OnClick={onClose} />
             <LogoutButton onClick={handleLogout} />
           </div>
