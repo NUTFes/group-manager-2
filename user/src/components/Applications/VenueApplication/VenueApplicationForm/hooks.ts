@@ -56,7 +56,7 @@ export const useVenueMapHooks = (
 
   const isLoading = isMutating || isUpdating;
 
-  const { places, placesLoading } = usePlacesData();
+  const { places, placesLoading } = usePlacesData(groupId);
   const values = watch();
 
   const options = convertPlacesToOptions(places);
