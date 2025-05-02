@@ -13,12 +13,14 @@ type UsePowerDisplayInput = {
   applyPower: ApplyPower;
   hasExisting: boolean;
   isEditing: boolean;
+  hasUnregistered: boolean;
 };
 
 export const usePowerDisplay = ({
   applyPower,
   hasExisting,
   isEditing,
+  hasUnregistered,
 }: UsePowerDisplayInput) => {
   const [negativeEditMode, setNegativeEditMode] = useState(false);
   const prevApplyPower = useRef<ApplyPower | null>(null);
@@ -26,6 +28,8 @@ export const usePowerDisplay = ({
   useEffect(() => {
     if (applyPower === 'no') {
       if (prevApplyPower.current === 'yes') {
+        setNegativeEditMode(true);
+      } else if (!hasUnregistered) {
         setNegativeEditMode(true);
       } else {
         setNegativeEditMode(false);
@@ -36,7 +40,7 @@ export const usePowerDisplay = ({
       setNegativeEditMode(true);
     }
     prevApplyPower.current = applyPower;
-  }, [applyPower]);
+  }, [applyPower, hasUnregistered]);
 
   let mode: PowerDisplayMode;
   if (applyPower === 'undecided') {

@@ -37,6 +37,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
     applyPower,
     hasExisting,
     isEditing,
+    hasUnregistered,
   });
 
   let content;
@@ -47,7 +48,27 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioValue={getRadioValue(applyPower)}
           onRadioChange={(v) => {
             handleRadioChange(v);
-            setNegativeEditMode(true);
+          }}
+          onNegativeSubmit={() => {
+            handleApplyNegative();
+            completeSubmission();
+            setNegativeEditMode(false);
+          }}
+          isSubmitted={isSubmitted}
+          submitError={submitError}
+          showRegisterButton={!hasUnregistered}
+          radioOptions={RADIO_OPTIONS}
+          onEdit={() => setNegativeEditMode(true)}
+          isEdit={true}
+        />
+      );
+      break;
+    case 'negativeRegister':
+      content = (
+        <PowerNegativeView
+          radioValue={getRadioValue(applyPower)}
+          onRadioChange={(v) => {
+            handleRadioChange(v);
           }}
           onNegativeSubmit={() => {
             handleApplyNegative();
@@ -82,28 +103,6 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={false}
-        />
-      );
-      break;
-    case 'negativeRegister':
-      content = (
-        <PowerNegativeView
-          radioValue={getRadioValue(applyPower)}
-          onRadioChange={(v) => {
-            handleRadioChange(v);
-            setNegativeEditMode(true);
-          }}
-          onNegativeSubmit={() => {
-            handleApplyNegative();
-            completeSubmission();
-            setNegativeEditMode(false);
-          }}
-          isSubmitted={isSubmitted}
-          submitError={submitError}
-          showRegisterButton={!hasUnregistered}
-          radioOptions={RADIO_OPTIONS}
-          onEdit={() => setNegativeEditMode(true)}
-          isEdit={true}
         />
       );
       break;
