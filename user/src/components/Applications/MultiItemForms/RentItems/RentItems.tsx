@@ -3,19 +3,24 @@ import AccordionMenu from '@/components/AccordionMenu';
 import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
 
 type RentItemsProps = {
-  isEdit?: boolean;
-  isExist?: boolean;
+  isDeadline: boolean | undefined;
+  isRegistered: boolean | undefined;
+  groupId: number;
 };
 
-const RentItems: FC<RentItemsProps> = ({ isEdit = false, isExist = false }) => {
+const RentItems: FC<RentItemsProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+}) => {
   return (
     <AccordionMenu
       title="物品申請"
-      isEdit={isEdit}
-      isExist={isExist}
+      isEdit={!isDeadline}
+      isExist={isRegistered}
       required={true}
     >
-      <RentItemsForm />
+      <RentItemsForm groupId={groupId} />
     </AccordionMenu>
   );
 };

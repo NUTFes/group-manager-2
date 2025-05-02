@@ -12,14 +12,14 @@ type VenueApplicationFormProps = {
   groupId: number;
   placeOrder?: PlaceOrder;
   handleEditClick?: () => void;
-  mutate: KeyedMutator<ApiResponse<PlaceOrder>>;
+  placeOrderMutate: KeyedMutator<ApiResponse<PlaceOrder>>;
 };
 
 const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
   groupId,
   placeOrder,
   handleEditClick,
-  mutate,
+  placeOrderMutate,
 }) => {
   const {
     placesLoading,
@@ -32,7 +32,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     handleSubmit,
     disableOptions,
     validateEdit,
-  } = useVenueMapHooks(groupId, mutate, placeOrder, handleEditClick);
+  } = useVenueMapHooks(groupId, placeOrderMutate, placeOrder, handleEditClick);
   if (placesLoading || isLoading) {
     return <div>loading...</div>;
   }

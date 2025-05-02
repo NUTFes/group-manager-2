@@ -15,7 +15,7 @@ class CheckAllRegisteredController < ApplicationController
                 :cooking_process_order,
                 stage_orders: [],
                 food_products: :purchase_lists,
-                rental_orders: []
+                rental_orders: [],
               )
               .find(group_id)
 
@@ -37,7 +37,8 @@ class CheckAllRegisteredController < ApplicationController
       food_product:           group.food_products.any?,
       purchase_list:          group.food_products.any? { |fp| fp.purchase_lists.any? },
       cooking_process_order:  group.cooking_process_order.present?,
-      fire_equipment_order:   check_status(group.fire_equipment_orders.any?, unregistered_types, :fire_equipment_order_application)
+      fire_equipment_order:   check_status(group.fire_equipment_orders.any?, unregistered_types, :fire_equipment_order_application),
+      public_relation:        group.public_relation.present?
     }
 
     render json: fmt(:ok, statuses)

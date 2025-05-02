@@ -6,8 +6,8 @@ import Status from '@/components/Status';
 type AccordionMenuProps = {
   title: string;
   children: React.ReactNode;
-  isEdit: boolean;
-  isExist: boolean;
+  isEdit: boolean | undefined;
+  isExist: boolean | undefined;
   required: boolean;
   note?: string;
 };
@@ -20,12 +20,8 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   required,
   note,
 }) => {
-  // TODO：api/app/controllers/user_page_settings_controller.rbでの登録するかどうかのbooleanを受け取る想定。
-  // 要件要確認
   const receptionStatus = isEdit ? 'open' : 'closed';
 
-  // TODO：取得のAPI叩いてdataがあるかどうかをbooleanで判断してそれを渡す想定。
-  // できるならAPI側でisExist()みたいな関数を作りたい。工数多い。。。
   const registerStatus = isExist ? 'registered' : 'unregistered';
 
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +45,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         </div>
         <div className="py-2.5">
           <div
-            className={`w-full font-bold md:w-52 ${isEdit && isExist ? 'text-sub' : 'text-black'}`}
+            className={`w-full font-bold md:w-52 ${isEdit === false ? 'text-sub' : 'text-black'}`}
           >
             <Textfit mode="single" max={40}>
               {title}

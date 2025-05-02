@@ -3,9 +3,8 @@ import { useGetStageOptions } from '@/api/stageOptionApi';
 import { FormItem } from '@/components/FormList/type';
 import { stageOptionLabels } from '../label';
 
-export const useStageOptionHooks = () => {
-  // todo: ログイン時に取得したgroupIDを使う
-  const { stageOptions, isLoading, hasError } = useGetStageOptions(9);
+export const useStageOptionHooks = (groupId: number) => {
+  const { stageOptions, isLoading, hasError } = useGetStageOptions(groupId);
 
   const formItem: FormItem[] = [
     {

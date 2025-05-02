@@ -9,7 +9,11 @@ import Selector from '@/components/Form/Selector';
 import FormContainer from '@/components/FormContainer';
 import MultiItemFormButton from '../../MultiItemFormButton';
 
-const RentItemsForm: FC = () => {
+type RentItemsFormProps = {
+  groupId: number;
+};
+
+const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
   const {
     form,
     fields,
@@ -30,7 +34,7 @@ const RentItemsForm: FC = () => {
     isEditMode,
     hasExplicitlyDeclinedItems,
     handleFormSubmit,
-  } = useRentItemsFormLogic();
+  } = useRentItemsFormLogic(groupId);
 
   if (isLoading) {
     return (
