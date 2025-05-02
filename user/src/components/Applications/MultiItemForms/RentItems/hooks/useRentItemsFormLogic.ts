@@ -16,9 +16,9 @@ import {
   rentItemsFormResolver,
 } from '../RentItemsForm/schema';
 
-export const useRentItemsFormLogic = () => {
+export const useRentItemsFormLogic = (groupId: number) => {
   // 認証基盤ができたら、グループIDを取得する
-  const currentGroupId = 1;
+  const currentGroupId = groupId;
   const [submitError, setSubmitError] = useState<string>('');
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 

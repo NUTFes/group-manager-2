@@ -326,35 +326,34 @@ export default {
     this.$nextTick(() => {
       window.scrollTo(0, parseInt(localStorage.getItem('scrollPosition-' + this.$route.path)))
     });
-    
+
     this.$axios
       .get("/user_page_settings")
       .then((response) => {
-        console.log(response.data.data[0])
-        this.is_regist_group = response.data.data[0].is_regist_group;
-        this.is_edit_group = response.data.data[0].is_edit_group;
-        this.is_edit_user = response.data.data[0].is_edit_user;
-        this.is_edit_sub_rep = response.data.data[0].is_edit_sub_rep;
-        this.is_edit_place = response.data.data[0].is_edit_place;
-        this.is_edit_power_order = response.data.data[0].is_edit_power_order;
-        this.is_edit_rental_order = response.data.data[0].is_edit_rental_order;
-        this.is_edit_stage_order = response.data.data[0].is_edit_stage_order;
-        this.is_edit_stage_common_option = response.data.data[0].is_edit_stage_common_option;
-        this.is_edit_employee = response.data.data[0].is_edit_employee;
-        this.is_edit_food_product = response.data.data[0].is_edit_food_product;
-        this.is_edit_purchase_list = response.data.data[0].is_edit_purchase_list;
-        this.is_edit_announcement = response.data.data[0].is_edit_announcement;
-        this.is_edit_public_relation = response.data.data[0].is_edit_public_relation;
-        this.is_edit_venue_map = response.data.data[0].is_edit_venue_map;
-        this.is_edit_cooking_process = response.data.data[0].is_edit_cooking_process;
-        this.add_power_order = response.data.data[0].add_power_order;
-        this.add_rental_order = response.data.data[0].add_rental_order;
-        this.add_stage_order = response.data.data[0].add_stage_order;
-        this.add_employee = response.data.data[0].add_employee;
-        this.add_food_product = response.data.data[0].add_food_product;
-        this.add_purchase_list = response.data.data[0].add_purchase_list;
-        this.add_announcementd = response.data.data[0].add_announcement;
-        this.fes_year_id = response.data.data[0].fes_year_id
+        this.is_regist_group = response.data.data.is_regist_group;
+        this.is_edit_group = response.data.data.is_edit_group;
+        this.is_edit_user = response.data.data.is_edit_user;
+        this.is_edit_sub_rep = response.data.data.is_edit_sub_rep;
+        this.is_edit_place = response.data.data.is_edit_place;
+        this.is_edit_power_order = response.data.data.is_edit_power_order;
+        this.is_edit_rental_order = response.data.data.is_edit_rental_order;
+        this.is_edit_stage_order = response.data.data.is_edit_stage_order;
+        this.is_edit_stage_common_option = response.data.data.is_edit_stage_common_option;
+        this.is_edit_employee = response.data.data.is_edit_employee;
+        this.is_edit_food_product = response.data.data.is_edit_food_product;
+        this.is_edit_purchase_list = response.data.data.is_edit_purchase_list;
+        this.is_edit_announcement = response.data.data.is_edit_announcement;
+        this.is_edit_public_relation = response.data.data.is_edit_public_relation;
+        this.is_edit_venue_map = response.data.data.is_edit_venue_map;
+        this.is_edit_cooking_process = response.data.data.is_edit_cooking_process;
+        this.add_power_order = response.data.data.add_power_order;
+        this.add_rental_order = response.data.data.add_rental_order;
+        this.add_stage_order = response.data.data.add_stage_order;
+        this.add_employee = response.data.data.add_employee;
+        this.add_food_product = response.data.data.add_food_product;
+        this.add_purchase_list = response.data.data.add_purchase_list;
+        this.add_announcement = response.data.data.add_announcement;
+        this.fes_year_id = response.data.data.fes_year_id
       });
     this.$axios
       .get("/fes_years", {
@@ -409,8 +408,6 @@ export default {
         .then(
           (response) => {
             this.snackbar = true;
-            console.log(response);
-            console.log("update");
           },
           (error) => {}
         );

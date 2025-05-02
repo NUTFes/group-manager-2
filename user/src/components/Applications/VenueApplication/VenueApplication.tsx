@@ -4,30 +4,37 @@ import AccordionMenu from '../../AccordionMenu';
 import VenueApplicationForm from './VenueApplicationForm';
 import { usePlaceOrdersHooks } from './hooks';
 
-type VenueApplicationProps = { isDeadline?: boolean };
+type VenueApplicationProps = {
+  isDeadline?: boolean;
+  isRegistered?: boolean;
+  groupId: number;
+};
 
-const VenueApplication: FC<VenueApplicationProps> = ({ isDeadline }) => {
+const VenueApplication: FC<VenueApplicationProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+}) => {
   return (
     <AccordionMenu
       title="会場申請"
       isEdit={!isDeadline}
-      isExist={false}
+      isExist={isRegistered}
       required
     >
-      <Content isDeadline={isDeadline} />
+      <Content isDeadline={isDeadline} groupId={groupId} />
     </AccordionMenu>
   );
 };
 
-const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
-  const groupId: number = 2; // TODO: ログイン時に取得したgroupIDを使う
+const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
   const {
     placeOrder,
     isLoading,
     isEditing,
     formItem,
     handleEditClick,
-    mutate,
+    placeOrderMutate,
   } = usePlaceOrdersHooks(groupId);
 
   if (isLoading) {
@@ -44,7 +51,7 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
         groupId={groupId}
         placeOrder={placeOrder}
         handleEditClick={handleEditClick}
-        mutate={mutate}
+        placeOrderMutate={placeOrderMutate}
       />
     );
   }
@@ -53,6 +60,11 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline }) => {
     return <FormList items={formItem} isEdit onEdit={handleEditClick} />;
   }
 
-  return <VenueApplicationForm groupId={groupId} mutate={mutate} />;
+  return (
+    <VenueApplicationForm
+      groupId={groupId}
+      placeOrderMutate={placeOrderMutate}
+    />
+  );
 };
 export default VenueApplication;

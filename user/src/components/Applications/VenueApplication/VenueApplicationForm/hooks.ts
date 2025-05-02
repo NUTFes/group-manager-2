@@ -9,7 +9,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { KeyedMutator } from 'swr';
+import { KeyedMutator, mutate } from 'swr';
 import {
   DEFAULT_ID,
   VenueApplicationType,
@@ -18,7 +18,7 @@ import {
 
 export const useVenueMapHooks = (
   groupId: number,
-  mutate: KeyedMutator<ApiResponse<PlaceOrder>>,
+  placeOrderMutate: KeyedMutator<ApiResponse<PlaceOrder>>,
   placeOrder?: PlaceOrder,
   handleClose?: () => void
 ) => {
@@ -56,7 +56,7 @@ export const useVenueMapHooks = (
 
   const isLoading = isMutating || isUpdating;
 
-  const { places, placesLoading } = usePlacesData();
+  const { places, placesLoading } = usePlacesData(groupId);
   const values = watch();
 
   const options = convertPlacesToOptions(places);
@@ -88,12 +88,13 @@ export const useVenueMapHooks = (
     try {
       await submitHandler(formData);
       toast.success('登録しました。');
-      if (mutate) {
-        mutate();
+      if (placeOrderMutate) {
+        placeOrderMutate();
       }
       if (handleClose) {
         handleClose();
       }
+      mutate(`/check_all_registered/${formData.groupId}`);
     } catch {
       console.error(error);
       console.error(updateError);

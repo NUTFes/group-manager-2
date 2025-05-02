@@ -10,11 +10,13 @@ import { useStageOptionFormHooks } from './hooks';
 type StageOptionFormProps = {
   stageOptions?: StageOptionResponse;
   toEdit?: () => void;
+  groupId?: number;
 };
 
 const StageOptionForm: FC<StageOptionFormProps> = ({
   stageOptions,
   toEdit,
+  groupId,
 }) => {
   const {
     handleSubmit,
@@ -30,7 +32,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
     validateEdit,
     formatRadioValue,
     values,
-  } = useStageOptionFormHooks(stageOptions);
+  } = useStageOptionFormHooks(stageOptions, groupId);
 
   if (createError || updateError) {
     toast.error('送信に失敗しました。時間を置いて再度お試しください');

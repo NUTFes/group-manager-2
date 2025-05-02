@@ -42,12 +42,14 @@ const API_ENDPOINTS = {
 };
 
 // フォームデータの取得用フック
-export const usePlacesData = () => {
+export const usePlacesData = (group_id: number) => {
   const {
     data: fesDateResponse,
     error: fesDateError,
     isLoading: fesDateLoading,
-  } = useApiGet<ApiDataResponse<Place>>(API_ENDPOINTS.PLACES);
+  } = useApiGet<ApiDataResponse<Place>>(
+    `${API_ENDPOINTS.PLACES}?group_id=${group_id}`
+  );
   return {
     places: fesDateResponse?.data || [],
     placesError: fesDateError,
