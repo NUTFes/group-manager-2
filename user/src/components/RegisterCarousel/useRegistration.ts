@@ -3,34 +3,76 @@ import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import type { UseFormHandleSubmit } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { RegisterFormSchema } from './schema';
+import type { RegisterFormSchema } from './schema';
+
+type ApiErrors = Record<string, string[]>;
+
+const ERROR_MESSAGES: Record<string, Record<string, string>> = {
+  email: {
+    'has already been taken': 'このメールアドレスは既に登録されています。',
+    default: 'メールアドレスに誤りがあります。',
+  },
+  password: {
+    'is too short': 'パスワードは6文字以上である必要があります。',
+    default: 'パスワードに誤りがあります。',
+  },
+  password_confirmation: {
+    "doesn't match Password": 'パスワードが一致しません。',
+    default: 'パスワード確認に誤りがあります。',
+  },
+  user_details: {
+    tel: '電話番号に誤りがあります。',
+    student_id: '学籍番号に誤りがあります。',
+    grade_id: '学年に誤りがあります。',
+    department_id: '学科に誤りがあります。',
+    default: 'ユーザー詳細情報に誤りがあります。',
+  },
+};
+
+const STEP_FIELDS: Record<number, string[]> = {
+  0: ['email', 'password', 'password_confirmation'],
+  1: ['name', 'tel', 'student_id', 'grade_id', 'department_id', 'user_details'],
+};
 
 /**
- * APIエラーメッセージから対応するステップを特定する
+ * エラーメッセージをマッピングして適切なメッセージを返す関数
+ * @param errors APIから返されたエラー情報
+ * @returns 対応するエラーメッセージ（なければ空文字）
+ */
+function mapErrorMessage(errors: ApiErrors = {}): string {
+  for (const [field, msgs] of Object.entries(errors)) {
+    // 各フィールドに対応するエラーメッセージのマッピングを取得
+    const mapping = ERROR_MESSAGES[field] || {};
+    for (const key of Object.keys(mapping)) {
+      // キーワードが一致するエラーメッセージを返す
+      if (key !== 'default' && msgs.some((m) => m.includes(key))) {
+        return mapping[key];
+      }
+    }
+    // デフォルトメッセージがあればそれを返す
+    if (mapping.default) {
+      return mapping.default;
+    }
+  }
+  // 該当するメッセージがない場合は空文字を返す
+  return '';
+}
+
+/**
+ * エラーが発生したフォームステップを特定する関数
  * @param errors APIから返されたエラー情報
  * @returns エラーが発生したステップ番号（-1: エラーなし）
  */
-const determineErrorStep = (
-  errors: Record<string, string[]> | undefined
-): number => {
-  if (!errors) {
-    return -1;
+function detectErrorStep(errors: ApiErrors = {}): number {
+  const fields = Object.keys(errors); // エラーフィールドを取得
+  for (const [step, targetFields] of Object.entries(STEP_FIELDS)) {
+    // 各ステップのフィールドとエラーフィールドを比較
+    if (fields.some((f) => targetFields.includes(f))) {
+      return Number(step); // 該当するステップ番号を返す
+    }
   }
-  const errorFields = Object.keys(errors);
-  console.log('errorFields', errorFields);
-  const step0Fields = ['email', 'mail', 'password', 'password_confirmation'];
-  const step1Fields = [
-    'name',
-    'student_id',
-    'tel',
-    'grade_id',
-    'department_id',
-    'user_details',
-  ];
-  if (errorFields.some((field) => step0Fields.includes(field))) return 0;
-  if (errorFields.some((field) => step1Fields.includes(field))) return 1;
-  return -1;
-};
+  return -1; // 該当するステップがない場合は-1を返す
+}
 
 /**
  * ユーザー登録処理を管理するカスタムフック
@@ -41,29 +83,28 @@ const determineErrorStep = (
  * - 登録成功時の処理
  * - ローディング状態の管理
  */
-export const useRegistration = (
-  validateForm: (step: number) => Promise<boolean>,
-  goToStep: (step: number) => void,
-  currentStep: number,
-  handleSubmit: UseFormHandleSubmit<RegisterFormSchema>
-) => {
-  // stateを定義
-  const [isLoading, setIsLoading] = useState(false);
-  const [displayError, setDisplayError] = useState<string | null>(null);
-  const router = useRouter();
+export function useRegistration(
+  validateForm: (step: number) => Promise<boolean>, // 各ステップのバリデーション関数
+  goToStep: (step: number) => void, // 指定ステップに移動する関数
+  currentStep: number, // 現在のステップ番号
+  handleSubmit: UseFormHandleSubmit<RegisterFormSchema> // フォーム送信ハンドラー
+) {
+  const [isLoading, setIsLoading] = useState(false); // ローディング状態
+  const [displayError, setDisplayError] = useState<string>(); // 表示するエラーメッセージ
+  const router = useRouter(); // ルーターオブジェクト
 
   /**
    * APIエラー発生時に対応するステップに移動
-   * @param apiErrors APIから返されたエラー情報
+   * @param errors APIから返されたエラー情報
    */
-  const navigateToErrorStep = useCallback(
-    (apiErrors: Record<string, string[]> | undefined) => {
-      const errorStep = determineErrorStep(apiErrors);
-      if (errorStep >= 0) {
-        goToStep(errorStep);
+  const navigateToStep = useCallback(
+    (errors?: ApiErrors) => {
+      const step = detectErrorStep(errors); // エラーが発生したステップを特定
+      if (step >= 0) {
+        goToStep(step); // 該当ステップに移動
       }
     },
-    [goToStep]
+    [goToStep] // goToStep関数を依存関係に追加
   );
 
   /**
@@ -71,154 +112,83 @@ export const useRegistration = (
    * バリデーション → API送信 → エラーハンドリング の流れで実行
    */
   const handleSignUpSubmit = handleSubmit(async (data) => {
-    // ローディング状態を更新
-    setDisplayError(null);
-    setIsLoading(true);
+    setDisplayError(undefined); // エラーメッセージをリセット
+    setIsLoading(true); // ローディング状態を開始
 
-    // バリデーションチェック
-    const hasValidationErrors = await validateForm(currentStep);
-    if (hasValidationErrors) {
+    // 各ステップのバリデーション
+    if (await validateForm(currentStep)) {
+      setIsLoading(false); // バリデーション失敗時にローディング終了
       return;
     }
 
-    // サインアップ関数をPOST
-    const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        registration: {
-          name: data.name,
+    try {
+      // APIリクエストを送信
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          registration: {
+            name: data.name,
+            email: data.mail,
+            password: data.password,
+            password_confirmation: data.passwordConfirm,
+            role_id: 4, // 固定値としてrole_idを設定
+          },
+          user_details: {
+            // tel: data.tel,
+            student_id: data.studentId,
+            grade_id: data.gradeId,
+            department_id: data.departmentId,
+          },
+        }),
+      });
+      const result = await res.json(); // レスポンスをJSON形式で取得
+
+      if (result.status === 'success') {
+        // 登録成功時の処理
+        toast.success('登録が完了しました。');
+        toast.info('自動でログインします。そのままお待ちください。');
+
+        await signIn('credentials', {
+          redirect: false,
           email: data.mail,
           password: data.password,
-          password_confirmation: data.passwordConfirm,
-          role_id: 4,
-        },
-        user_details: {
-          tel: data.tel,
-          student_id: data.studentId,
-          grade_id: data.gradeId,
-          department_id: data.departmentId,
-        },
-      }),
-      // レスポンスをJSON形式で取得
-    }).then((res) => res.json());
-
-    // サインアップの結果が成功の場合
-    if (result.status === 'success') {
-      toast.success('登録が完了しました。');
-      toast.info('自動でログインします。そのままお待ちください。');
-
-      signIn('credentials', {
-        redirect: false,
-        email: data.mail,
-        password: data.password,
-      })
-        .then(() => {
-          toast.success('ログインしました。');
-          router.push('/home');
         })
-        .catch((error) => {
-          console.error('Login error:', error);
-          toast.error('ログインに失敗しました。');
-          toast.info('再度ログインしてください。');
-          router.push('/');
-        });
-
-      // サインアップの結果が失敗の場合
-    } else {
-      // メールアドレスが既に登録されている場合
-      if (result.errors.email) {
-        if (result.errors.email.includes('has already been taken')) {
-          setDisplayError('このメールアドレスは既に登録されています。');
-        } else {
-          setDisplayError('メールアドレスに誤りがあります。');
-        }
-        navigateToErrorStep(result.errors);
-        setIsLoading(false);
+          .then(() => {
+            toast.success('ログインしました。');
+            router.push('/home'); // ホーム画面にリダイレクト
+          })
+          .catch((error) => {
+            console.error('Login error:', error); // ログインエラーをログ出力
+            toast.error('ログインに失敗しました。');
+            toast.info('再度ログインしてください。');
+            router.push('/'); // トップページにリダイレクト
+          });
         return;
+      } else {
+        // エラー時の処理
+        const message =
+          mapErrorMessage(result.errors) ||
+          result.message ||
+          '通信エラーが発生しました。';
+        setDisplayError(message); // エラーメッセージを設定
+        navigateToStep(result.errors); // エラーが発生したステップに移動
       }
-
-      // パスワードのバリデーションエラー
-      if (result.errors.password) {
-        if (result.errors.password.includes('is too short')) {
-          setDisplayError('パスワードは6文字以上である必要があります。');
-        } else {
-          setDisplayError('パスワードに誤りがあります。');
-        }
-        navigateToErrorStep(result.errors);
-        setIsLoading(false);
-        return;
-      }
-
-      // パスワード確認のバリデーションエラー
-      if (result.errors.password_confirmation) {
-        if (
-          result.errors.password_confirmation.includes("doesn't match Password")
-        ) {
-          setDisplayError('パスワードが一致しません。');
-        } else {
-          setDisplayError('パスワード確認に誤りがあります。');
-        }
-        navigateToErrorStep(result.errors);
-        setIsLoading(false);
-        return;
-      }
-
-      // user_detailsの値に誤りがある場合のエラーハンドリング
-      if (result.errors.user_details) {
-        // エラーメッセージとフィールドのマッピング
-        const errorMapping = {
-          tel: '電話番号に誤りがあります。',
-          student_id: '学籍番号に誤りがあります。',
-          grade_id: '学年に誤りがあります。',
-          department_id: '学科に誤りがあります。',
-        };
-
-        // 配列に変換する
-        const userDetailsErrors = Array.isArray(result.errors.user_details)
-          ? result.errors.user_details
-          : [result.errors.user_details];
-
-        let foundError = false;
-
-        // Object.entriesでエラーチェック
-        for (const [field, message] of Object.entries(errorMapping)) {
-          if (
-            userDetailsErrors.some((error_txt: string) =>
-              error_txt.includes(field)
-            )
-          ) {
-            setDisplayError(message);
-            foundError = true;
-            break;
-          }
-        }
-
-        // 特定のエラーが見つからない場合はデフォルトメッセージ
-        if (!foundError) {
-          setDisplayError('ユーザー詳細情報に誤りがあります。');
-        }
-
-        navigateToErrorStep(result.errors);
-        setIsLoading(false);
-        return;
-      }
-
-      // その他のエラー
-      const errorMessage =
-        result.message || '登録処理中に不明なエラーが発生しました。';
-      setDisplayError(errorMessage);
-      navigateToErrorStep(result.errors);
-      setIsLoading(false);
+    } catch {
+      // 通信エラー時の処理
+      setDisplayError('通信に失敗しました。時間をおいて再度お試しください。');
+    } finally {
+      setIsLoading(false); // 最終的にローディング状態を終了
     }
   });
 
   return {
-    isLoading,
-    handleSignUpSubmit,
-    displayError,
+    handleSignUpSubmit, // フォーム送信ハンドラーを返す
+    isLoading, // ローディング状態を返す
+    displayError, // 表示するエラーメッセージを返す
+    setDisplayError, // エラーメッセージを設定する関数を返す
   };
-};
+}
