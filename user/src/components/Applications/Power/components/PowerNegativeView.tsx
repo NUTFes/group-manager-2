@@ -24,7 +24,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   ];
 
   return (
-    <div className="flex flex-col gap-6 w-full">
+    <div className="flex w-full flex-col gap-6">
       {isEdit && (
         <Radio
           label="電力申請を行いますか？"
