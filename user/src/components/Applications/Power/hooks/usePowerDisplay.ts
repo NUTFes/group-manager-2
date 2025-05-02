@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 
 type ApplyPower = 'yes' | 'no' | 'undecided';
 
-export type PowerDisplayMode = 
-  | 'negativeUndecided'  // 未登録の状態：ラジオボタン表示
-  | 'negativeRegister'   // 「はい」→「いいえ」変更後：ラジオボタン+登録ボタン表示
-  | 'negativeDisplay'    // 「なし」で登録済みの場合：FormListを表示
-  | 'summary'            // 「あり」で登録済みの場合：FormListを表示
-  | 'form';              // 「はい」選択時または編集中：Formを表示
+export type PowerDisplayMode =
+  | 'negativeUndecided' // 未登録の状態：ラジオボタン表示
+  | 'negativeRegister' // 「はい」→「いいえ」変更後：ラジオボタン+登録ボタン表示
+  | 'negativeDisplay' // 「なし」で登録済みの場合：FormListを表示
+  | 'summary' // 「あり」で登録済みの場合：FormListを表示
+  | 'form'; // 「はい」選択時または編集中：Formを表示
 
 type UsePowerDisplayInput = {
   applyPower: ApplyPower;

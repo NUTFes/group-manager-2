@@ -17,27 +17,26 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   isEdit,
 }) => {
   const noApplicationItems: FormItem[] = [
-    { label: '電力申請は不要（登録済み）', content: '電力が必要な機器は使用しません。' }
+    {
+      label: '電力申請は不要（登録済み）',
+      content: '電力が必要な機器は使用しません。',
+    },
   ];
 
   return (
     <div className="flex flex-col gap-6 w-full">
       {isEdit && (
-      <Radio
-        label="電力申請を行いますか？"
-        value={radioValue}
-        onChange={onRadioChange}
-        required
-        options={radioOptions}
-      />
+        <Radio
+          label="電力申請を行いますか？"
+          value={radioValue}
+          onChange={onRadioChange}
+          required
+          options={radioOptions}
+        />
       )}
 
       {!isEdit && (
-      <FormList
-        items={noApplicationItems}
-        onEdit={onEdit}
-        isEdit={true}
-      />
+        <FormList items={noApplicationItems} onEdit={onEdit} isEdit={true} />
       )}
 
       {isEdit && !isSubmitted && showRegisterButton && (

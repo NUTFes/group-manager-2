@@ -30,7 +30,8 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
   } = usePowerApplication(groupId);
 
   const { isEditing, applyPower, submitError, isSubmitted } = state;
-  const { fields, addDevice, removeDevice, totalPower, isValid, formMethods } = powerForm;
+  const { fields, addDevice, removeDevice, totalPower, isValid, formMethods } =
+    powerForm;
 
   const { mode, setNegativeEditMode } = usePowerDisplay({
     applyPower,
