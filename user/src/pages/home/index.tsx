@@ -25,8 +25,8 @@ export default function HomePage() {
         />
         <ApplicationForm name="副代表申請" />
         <VenueApplications
-          isDeadline={!userPageSettings?.isEditVenueMap}
-          isRegistered={checkAllRegisteredGroups?.venueMap}
+          isDeadline={!userPageSettings?.isEditPlace}
+          isRegistered={checkAllRegisteredGroups?.placeOrder}
           groupId={groupId}
         />
         <RentItems
