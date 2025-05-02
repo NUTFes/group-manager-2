@@ -34,7 +34,7 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
     isEditing,
     formItem,
     handleEditClick,
-    mutate,
+    placeOrderMutate,
   } = usePlaceOrdersHooks(groupId);
 
   if (isLoading) {
@@ -51,7 +51,7 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
         groupId={groupId}
         placeOrder={placeOrder}
         handleEditClick={handleEditClick}
-        mutate={mutate}
+        placeOrderMutate={placeOrderMutate}
       />
     );
   }
@@ -60,6 +60,11 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
     return <FormList items={formItem} isEdit onEdit={handleEditClick} />;
   }
 
-  return <VenueApplicationForm groupId={groupId} mutate={mutate} />;
+  return (
+    <VenueApplicationForm
+      groupId={groupId}
+      placeOrderMutate={placeOrderMutate}
+    />
+  );
 };
 export default VenueApplication;
