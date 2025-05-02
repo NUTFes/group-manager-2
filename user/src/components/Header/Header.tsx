@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import CorporateIcon from '../../../public/corporate_logo.svg';
 import ProfileIcon from '../../../public/profile_icon.svg';
 import UserModal from '../UserModal';
-import { UserInfo } from '../UserModal/UserModal';
 
 type HeaderProps = {
   onClick: () => void;
@@ -15,12 +14,6 @@ const Header: FC<HeaderProps> = () => {
   const router = useRouter();
   const showUserModal = router.pathname !== '/';
 
-  const user: UserInfo = {
-    id: '1',
-    role: 'admin',
-    name: 'John Doe',
-    email: '',
-  };
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -34,11 +27,7 @@ const Header: FC<HeaderProps> = () => {
         </button>
       )}
       {showUserModal && (
-        <UserModal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          user={user}
-        />
+        <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       )}
     </div>
   );
