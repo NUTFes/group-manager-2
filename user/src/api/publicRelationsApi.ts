@@ -48,7 +48,6 @@ const API_ENDPOINTS = {
 export const usePublicRelationData = (groupId: number) => {
   // 特定のgroup_idに関連する公開関係情報を取得するエンドポイント
   const endpoint = `${API_ENDPOINTS.PUBLIC_RELATIONS}/group/${groupId}`;
-  console.log('Fetching with endpoint:', endpoint);
 
   const {
     data: response,
@@ -56,9 +55,6 @@ export const usePublicRelationData = (groupId: number) => {
     isLoading,
     mutate,
   } = useSWR<ApiResponse<PublicRelationResponse>>(endpoint, fetcher);
-
-  // Debug the API response
-  console.log('API Response:', response);
 
   // APIからのレスポンスを直接取得
   const publicRelation = response?.status.code === 200 ? response.data : null;

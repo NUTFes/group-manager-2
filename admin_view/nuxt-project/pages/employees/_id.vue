@@ -113,22 +113,29 @@ export default {
       groupId: null,
       name: null,
       studentId: null,
-      employee: null,
       stoolTestID: null,
       stoolTestList: [
         { id: 1, value: "検便準備中" },
         { id: 2, value: "検便無" },
         { id: 3, value: "検便有" }
-      ]
-    };
-  },
-  async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/employees/", "");
-    const url = "/api/v1/get_employee_show_for_admin_view/" + routeId;
-    const response = await $axios.$get(url);
-    return {
-      employee: response.data,
-      route: url,
+      ],
+      employee: {
+        employee: {
+          id: null,
+          group_id: null,
+          name: null,
+          student_id: null,
+          stool_test_id: null,
+          created_at: null,
+          updated_at: null,
+        },
+        group: {
+          name: null,
+        },
+        stool_test: {
+          status: null,
+        },
+      }
     };
   },
   computed: {
@@ -138,8 +145,18 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
+    this.fetchInitialData();
   },
   methods: {
+    async fetchInitialData() {
+      const routeId = this.$route.params.id;
+      const url = "/api/v1/get_employee_show_for_admin_view/" + routeId;
+      const res = await this.$axios.$get(url);
+      this.employee = res.data;
+      this.route = url;
+
+      this.fetchFilteredData();
+    },
     openEditModal() {
       this.groupId = this.employee.employee.group_id;
       this.name = this.employee.employee.name;

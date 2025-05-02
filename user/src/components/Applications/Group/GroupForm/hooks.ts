@@ -82,7 +82,8 @@ export const useGroupFormHooks = (
     } else {
       try {
         await create({ query: formData });
-        mutate(`/groups/27`);
+        mutate(`/groups/${formData.userId}`);
+        mutate(`/check_all_registered/${formData.userId}`);
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');

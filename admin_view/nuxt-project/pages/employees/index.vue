@@ -113,6 +113,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   data() {
@@ -136,26 +138,6 @@ export default {
       ]
     };
   },
-  async asyncData({ $axios }) {
-    const currentYearUrl = "/user_page_settings/1";
-    const currentYearRes = await $axios.$get(currentYearUrl);
-
-    const url =
-      "/api/v1/get_refinement_employees?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    const employeesRes = await $axios.$post(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id;
-    });
-    return {
-      employees: employeesRes.data,
-      yearList: yearsRes.data,
-      refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num,
-    };
-  },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
@@ -171,9 +153,29 @@ export default {
     } else {
       this.refYears = 'Year';
     }
+
     this.fetchFilteredData();
   },
   methods: {
+  async fetchInitialData() {
+      const currentYearUrl = "/user_page_settings/1";
+      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const url =
+        "/api/v1/get_refinement_employees?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      const employeesRes = await this.$axios.$post(url);
+      const yearsUrl = "/fes_years";
+      const yearsRes = await this.$axios.$get(yearsUrl);
+      const currentYears = yearsRes.data.filter(function (element) {
+        return element.id == currentYearRes.data.fes_year_id;
+      });
+      this.employees = employeesRes.data;
+      this.yearList = yearsRes.data;
+      this.refYearID = currentYearRes.data.fes_year_id;
+      this.refYears = currentYears[0].year_num;
+
+      this.fetchFilteredData();
+    },
     saveScrollPosition() {
       localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
     },
@@ -268,7 +270,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
-      window.open(url, "従業員一覧_CSV");
+      await downloadFile(this.$axios,url, "従業員一覧_CSV", "text/csv");
+      this.openSnackBar("従業員一覧のCSVをダウンロードしました");
     },
   },
 };

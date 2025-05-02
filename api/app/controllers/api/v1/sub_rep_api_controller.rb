@@ -1,5 +1,6 @@
 class Api::V1::SubRepApiController < ApplicationController
-  
+  before_action :authenticate_api_user!
+
   # あいまい検索機能
   def get_search_sub_reps
     word = params[:word]

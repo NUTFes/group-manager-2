@@ -6,7 +6,11 @@ import AccordionMenu from '../../AccordionMenu';
 import GroupForm from './GroupForm';
 import { useGroupHooks } from './hooks';
 
-type GroupProps = { isDeadline?: boolean };
+type GroupProps = {
+  isDeadline?: boolean | undefined;
+  isRegistered?: boolean | undefined;
+  groupId: number;
+};
 
 type ContentProps = {
   isLoading: boolean;
@@ -61,7 +65,7 @@ const Content: FC<ContentProps> = ({
 };
 
 // export内容（このファイルのメイン部分）
-const Group: FC<GroupProps> = ({ isDeadline }) => {
+const Group: FC<GroupProps> = ({ isDeadline, isRegistered, groupId }) => {
   const {
     formItem,
     isEditing,
@@ -70,12 +74,12 @@ const Group: FC<GroupProps> = ({ isDeadline }) => {
     isLoading,
     hasError,
     groupCategories,
-  } = useGroupHooks();
+  } = useGroupHooks(groupId);
   return (
     <AccordionMenu
       title="団体申請"
-      isEdit={false}
-      isExist={false}
+      isEdit={!isDeadline}
+      isExist={isRegistered}
       required={true}
     >
       <Content

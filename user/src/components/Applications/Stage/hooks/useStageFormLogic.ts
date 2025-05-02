@@ -8,6 +8,7 @@ import {
 import { StageFormData } from '@/utils/validate/validate';
 import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import { useStageForm } from './useStageForm';
 import {
   useDateOptions,
@@ -15,9 +16,8 @@ import {
   useStageOptions,
 } from './useStageHelpers';
 
-export const useStageFormLogic = () => {
-  // TODO: 認証基盤ができたら、グループIDを取得する
-  const [currentGroupId] = useState<number | null>(1);
+export const useStageFormLogic = (groupId: number) => {
+  const [currentGroupId] = useState<number>(groupId);
   const [submitError, setSubmitError] = useState<string>('');
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
@@ -147,6 +147,7 @@ export const useStageFormLogic = () => {
       );
 
       if (result.success) {
+        mutate(`check_all_registered/${currentGroupId}`);
         toast.success(
           hasExisting
             ? 'ステージ希望を更新しました。'

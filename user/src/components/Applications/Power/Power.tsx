@@ -7,12 +7,11 @@ import { usePowerApplication } from './hooks/usePowerApplication';
 
 type PowerProps = {
   isDeadline?: boolean;
+  isRegistered?: boolean | undefined;
+  groupId: number;
 };
 
-const Power: FC<PowerProps> = ({ isDeadline = false }) => {
-  // TODO: ログイン認証が実装されたら修正する
-  const groupId = 8;
-
+const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
     state,
@@ -81,7 +80,7 @@ const Power: FC<PowerProps> = ({ isDeadline = false }) => {
         devices={devices}
         onEdit={prepareFormForEditing}
         onDeleteDevice={handleDeleteDevice}
-        isDeadline={isDeadline}
+        isDeadline={!isDeadline}
       />
     );
   } else {
@@ -106,8 +105,8 @@ const Power: FC<PowerProps> = ({ isDeadline = false }) => {
   return (
     <AccordionMenu
       title={'電力申請'}
-      isEdit={false}
-      isExist={false}
+      isEdit={!isDeadline}
+      isExist={isRegistered}
       required={true}
     >
       {content}
