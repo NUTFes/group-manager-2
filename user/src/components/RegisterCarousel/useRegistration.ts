@@ -138,7 +138,7 @@ export function useRegistration(
             role_id: 4, // 固定値としてrole_idを設定
           },
           user_details: {
-            // tel: data.tel,
+            tel: data.tel,
             student_id: data.studentId,
             grade_id: data.gradeId,
             department_id: data.departmentId,
