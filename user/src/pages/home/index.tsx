@@ -1,4 +1,5 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
+import { useGetGroupInfo } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
@@ -10,8 +11,13 @@ import VenueApplications from '@/components/Applications/VenueApplication';
 import NewsList from '@/components/NewsList';
 
 export default function HomePage() {
-  // todo: これgroupsのgetで取得したい。
-  const groupId = 7;
+  const userId =
+    typeof window !== 'undefined'
+      ? Number(localStorage.getItem('userId'))
+      : null;
+  const { groups } = useGetGroupInfo(userId);
+  const groupId = groups?.id ?? 0;
+  const groupCategoryId = groups?.groupCategoryId ?? 0;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
@@ -24,24 +30,29 @@ export default function HomePage() {
           groupId={groupId}
         />
         <ApplicationForm name="副代表申請" />
-        <VenueApplications
-          isDeadline={!userPageSettings?.isEditPlace}
-          isRegistered={checkAllRegisteredGroups?.placeOrder}
-          groupId={groupId}
-        />
+        {groupCategoryId === 3 ? (
+          <>
+            <Stage
+              isDeadline={!userPageSettings?.isEditStageOrder}
+              isRegistered={checkAllRegisteredGroups?.stageOrder}
+              groupId={groupId}
+            />
+            <StageOptions
+              isDeadline={!userPageSettings?.isEditStageCommonOption}
+              isRegistered={checkAllRegisteredGroups?.stageOption}
+              groupId={groupId}
+            />
+          </>
+        ) : (
+          <VenueApplications
+            isDeadline={!userPageSettings?.isEditPlace}
+            isRegistered={checkAllRegisteredGroups?.placeOrder}
+            groupId={groupId}
+          />
+        )}
         <RentItems
           isDeadline={!userPageSettings?.isEditRentalOrder}
           isRegistered={checkAllRegisteredGroups?.rentalItem}
-          groupId={groupId}
-        />
-        <Stage
-          isDeadline={!userPageSettings?.isEditStageOrder}
-          isRegistered={checkAllRegisteredGroups?.stageOrder}
-          groupId={groupId}
-        />
-        <StageOptions
-          isDeadline={!userPageSettings?.isEditStageCommonOption}
-          isRegistered={checkAllRegisteredGroups?.stageOption}
           groupId={groupId}
         />
         <Power
