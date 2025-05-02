@@ -9,7 +9,7 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     hasError,
     mutate: placeOrderMutate,
   } = useGetPlaceOrder(groupId);
-  const { places, placesLoading: isPlacesLoading } = usePlacesData();
+  const { places, placesLoading: isPlacesLoading } = usePlacesData(groupId);
 
   const formItem: FormItem[] = placeOrder
     ? [
