@@ -47,12 +47,6 @@ export const useViceRepresentativeFormHook = (
     undefined
   );
 
-  // useEffect(() => {
-  //   if (viceRepresentative) {
-  //     setIsIndividual(false);
-  //   }
-  // }, [viceRepresentative]);
-
   const values = watch();
   const groupId = values.groupId;
 
@@ -121,7 +115,6 @@ export const useViceRepresentativeFormHook = (
         onSuccess?.();
       } catch {
         alert('送信に失敗しました。1');
-        // reset();
       }
     } else {
       try {

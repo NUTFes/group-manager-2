@@ -28,9 +28,7 @@ export const useViceRepresentativeHook = () => {
         },
       ];
     }
-    // if (!viceRepresentative) {
-    //   return [];
-    // }
+
     return [
       {
         label: viceRepresentativeLabels[1],
@@ -48,7 +46,7 @@ export const useViceRepresentativeHook = () => {
       },
       {
         label: viceRepresentativeLabels[4],
-        // content: viceRepresentative?.departmentId ?? '',
+
         content:
           optionfield.find((opt) => opt.id === viceRepresentative?.departmentId)
             ?.name ?? '',
@@ -69,17 +67,6 @@ export const useViceRepresentativeHook = () => {
   const toEdit = () => {
     setIsEditing(!isEditing);
   };
-  // useEffect(() => {
-  //   if (isUnregistered) {
-  //     setIsEditing(false);
-  //   }
-  // }, [isUnregistered]);
-
-  // useEffect(() => {
-  //   if (viceRepresentative) {
-  //     setIsEditing(false);
-  //   }
-  // }, [viceRepresentative]);
 
   return {
     viceRepresentative,
