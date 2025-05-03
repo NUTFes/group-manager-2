@@ -64,7 +64,7 @@ export const useViceRepresentativeHook = () => {
     ];
   }, [isUnregistered, viceRepresentative]);
 
-  const [isEditing, setIsEditing] = useState(viceRepresentative ? true : false);
+  const [isEditing, setIsEditing] = useState(viceRepresentative ? false : true);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
