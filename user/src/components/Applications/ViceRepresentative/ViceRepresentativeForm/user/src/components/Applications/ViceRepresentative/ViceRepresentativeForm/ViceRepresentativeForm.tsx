@@ -75,7 +75,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
                 label={viceRepresentativeLabels[2]}
                 value={textstudentId}
                 onChange={(value) => setValue('studentId', Number(value))}
-                note="例：123456"
+                note="例：123456（半角数字のみ）"
                 required={true}
                 error={errors.studentId?.message}
               />
