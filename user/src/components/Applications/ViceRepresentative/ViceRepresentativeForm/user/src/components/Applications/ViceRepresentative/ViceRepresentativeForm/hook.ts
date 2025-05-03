@@ -144,7 +144,9 @@ export const useViceRepresentativeFormHook = (
   ) => {
     if (isIndividual === true) {
       try {
-        await unRegister(data.groupId);
+        if (!unregisteredData) {
+          await unRegister(data.groupId);
+        }
         await deleteViceRep();
         alert('unRegi送信と副代表データ削除に成功しました');
         onSuccess?.();
