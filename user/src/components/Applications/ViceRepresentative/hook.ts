@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGetUnregisteredGroup } from '@/api/unRegisteredGroupApi';
 import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
 import { FormItem } from '@/components/FormList/type';
@@ -24,9 +24,9 @@ export const useViceRepresentativeHook = () => {
         },
       ];
     }
-    if (!viceRepresentative) {
-      return [];
-    }
+    // if (!viceRepresentative) {
+    //   return [];
+    // }
     return [
       {
         label: viceRepresentativeLabels[1],
@@ -55,22 +55,22 @@ export const useViceRepresentativeHook = () => {
     ];
   }, [isUnregistered, viceRepresentative]);
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(viceRepresentative ? true : false);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
   };
-  useEffect(() => {
-    if (isUnregistered) {
-      setIsEditing(false);
-    }
-  }, [isUnregistered]);
+  // useEffect(() => {
+  //   if (isUnregistered) {
+  //     setIsEditing(false);
+  //   }
+  // }, [isUnregistered]);
 
-  useEffect(() => {
-    if (viceRepresentative) {
-      setIsEditing(false);
-    }
-  }, [viceRepresentative]);
+  // useEffect(() => {
+  //   if (viceRepresentative) {
+  //     setIsEditing(false);
+  //   }
+  // }, [viceRepresentative]);
 
   return {
     viceRepresentative,

@@ -15,6 +15,7 @@ type ViceRepresentativeFormProps = {
 
 const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   viceRepresentative,
+  toEdit,
 }) => {
   const {
     handleSubmit,
@@ -40,10 +41,13 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          const onSuccess = () => {
+            toEdit?.();
+          };
           if (isIndividual) {
-            noValidationSubmit();
+            noValidationSubmit(onSuccess);
           } else {
-            handleSubmit(validatedSubmit)(e);
+            handleSubmit((data) => validatedSubmit(data, onSuccess))(e);
           }
         }}
         className="w-full"

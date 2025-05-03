@@ -117,21 +117,37 @@ export const useViceRepresentativeFormHook = (
   const { deleteUnregisteredGroup: deleteRegister } =
     useMutateUnregisteredGroup(ORDER_TYPES.SUB_REP);
 
-  const noValidationSubmit = async () => {
+  const noValidationSubmit = async (onSuccess?: () => void) => {
     const data = getValues();
-    await validatedSubmit(data);
+    await validatedSubmit(data, onSuccess);
   };
   const { unregisteredData } = useGetUnregisteredGroup(
     groupId,
     ORDER_TYPES.SUB_REP
   );
   const [hasViceRep] = useState<boolean>(!!viceRepresentative);
-  const validatedSubmit = async (data: ViceRepresentativeForm) => {
+
+  const refreshViceRepRelated = async (groupId: number) => {
+    await Promise.all([
+      mutate(`/sub_reps/group/${groupId}`, undefined, { revalidate: true }),
+      mutate(
+        `/un_registered_groups?group_id=${groupId}&order_type=${ORDER_TYPES.SUB_REP}`,
+        undefined,
+        { revalidate: true }
+      ),
+    ]);
+  };
+
+  const validatedSubmit = async (
+    data: ViceRepresentativeForm,
+    onSuccess?: () => void
+  ) => {
     if (isIndividual === true) {
       try {
         await unRegister(data.groupId);
         await deleteViceRep();
         alert('unRegi送信と副代表データ削除に成功しました');
+        onSuccess?.();
       } catch {
         alert('送信に失敗しました。1');
         // reset();
@@ -145,13 +161,12 @@ export const useViceRepresentativeFormHook = (
         }
         await deleteRegister(unregisteredData);
         alert('送信しました2');
+        onSuccess?.();
       } catch {
         alert('送信に失敗しました。2');
       }
     }
-    mutate(`/sub_reps/group/${data.groupId}`, undefined, {
-      revalidate: false,
-    });
+    await refreshViceRepRelated(data.groupId);
   };
 
   return {
