@@ -4,6 +4,10 @@ import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
 import { FormItem } from '@/components/FormList/type';
 import { ORDER_TYPES } from '../Power';
 import { viceRepresentativeLabels } from '../label';
+import {
+  optionfield,
+  optiongrade,
+} from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm/hook';
 
 export const useViceRepresentativeHook = () => {
   const groupId = 3; // TODO: groupIdを取得する方法を考える
@@ -38,11 +42,16 @@ export const useViceRepresentativeHook = () => {
       },
       {
         label: viceRepresentativeLabels[3],
-        content: viceRepresentative?.gradeId ?? '',
+        content:
+          optiongrade.find((opt) => opt.id === viceRepresentative?.gradeId)
+            ?.name ?? '',
       },
       {
         label: viceRepresentativeLabels[4],
-        content: viceRepresentative?.departmentId ?? '',
+        // content: viceRepresentative?.departmentId ?? '',
+        content:
+          optionfield.find((opt) => opt.id === viceRepresentative?.departmentId)
+            ?.name ?? '',
       },
       {
         label: viceRepresentativeLabels[5],
