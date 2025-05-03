@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useGetUnregisteredGroup,
   useMutateUnregisteredGroup,
@@ -97,6 +97,15 @@ export const useViceRepresentativeFormHook = (
       ),
     ]);
   };
+  useEffect(() => {
+    if (unregisteredData) {
+      setIsIndividual(true);
+    } else if (viceRepresentative) {
+      setIsIndividual(false);
+    } else {
+      setIsIndividual(undefined);
+    }
+  }, [unregisteredData, viceRepresentative]);
 
   const validatedSubmit = async (
     data: ViceRepresentativeForm,
