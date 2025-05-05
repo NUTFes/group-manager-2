@@ -24,15 +24,15 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
     validatedSubmit,
     noValidationSubmit,
     option2,
-    optiongrade,
-    optionfield,
+    optionGrade,
+    optionField,
     textName,
-    textstudentId,
-    valuegradeId,
-    valuedepartmentId,
-    textemail,
-    texttel,
-    setisInd,
+    textStudentId,
+    valueGradeId,
+    valueDepartmentId,
+    textEmail,
+    textTel,
+    setIsIndividualById,
     isIndividual,
   } = useViceRepresentativeFormHook(viceRepresentative);
 
@@ -41,13 +41,10 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const onSuccess = () => {
-            toEdit?.();
-          };
           if (isIndividual) {
-            noValidationSubmit(onSuccess);
+            noValidationSubmit(toEdit);
           } else {
-            handleSubmit((data) => validatedSubmit(data, onSuccess))(e);
+            handleSubmit((data) => validatedSubmit(data, toEdit))(e);
           }
         }}
         className="w-full"
@@ -55,7 +52,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
         <div>
           <Radio
             label={viceRepresentativeLabels[0]}
-            onChange={(value) => setisInd(Number(value))}
+            onChange={(value) => setIsIndividualById(Number(value))}
             options={option2}
             required
             value={isIndividual === undefined ? '' : isIndividual ? '1' : '0'}
@@ -73,7 +70,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
               />
               <TextBox
                 label={viceRepresentativeLabels[2]}
-                value={textstudentId}
+                value={textStudentId}
                 onChange={(value) => setValue('studentId', Number(value))}
                 note="例：123456（半角数字のみ）"
                 required={true}
@@ -81,23 +78,23 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
               />
               <Selector
                 label={viceRepresentativeLabels[3]}
-                value={valuegradeId}
+                value={valueGradeId}
                 onChange={(value) => setValue('gradeId', Number(value))}
                 required={true}
-                options={optiongrade}
+                options={optionGrade}
                 error={errors.gradeId?.message}
               />
               <Selector
                 label={viceRepresentativeLabels[4]}
-                value={valuedepartmentId}
+                value={valueDepartmentId}
                 onChange={(value) => setValue('departmentId', Number(value))}
                 required={true}
-                options={optionfield}
+                options={optionField}
                 error={errors.departmentId?.message}
               />
               <TextBox
                 label={viceRepresentativeLabels[5]}
-                value={textemail}
+                value={textEmail}
                 onChange={(value) => setValue('email', value)}
                 note="例：123456@stn.nagaokaut.ac.jp"
                 required={true}
@@ -105,7 +102,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
               />
               <TextBox
                 label={viceRepresentativeLabels[6]}
-                value={texttel}
+                value={textTel}
                 onChange={(value) => setValue('tel', value)}
                 note="例：09012345678 (ハイフンなし)"
                 required={true}

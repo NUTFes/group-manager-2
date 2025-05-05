@@ -11,9 +11,10 @@ import {
 } from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { ORDER_TYPES } from '@/components/Applications/Power/types';
-import { ViceRepresentativeForm, vicerepresentativeSchema } from './schema';
+import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
   viceRepresentative: ViceRepresentativeResponse | undefined
@@ -26,7 +27,7 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
   } = useForm<ViceRepresentativeForm>({
-    resolver: zodResolver(vicerepresentativeSchema),
+    resolver: zodResolver(viceRepresentativeSchema),
     defaultValues: {
       groupId: 3,
       name: viceRepresentative?.name || '',
@@ -37,20 +38,14 @@ export const useViceRepresentativeFormHook = (
       tel: viceRepresentative?.tel || '',
     },
   });
-
-  const option2 = [
-    { id: 1, name: 'はい(一人での参加)' },
-    { id: 0, name: 'いいえ(グループで参加)' },
-  ];
+  const values = watch();
+  const groupId = values.groupId;
 
   const [isIndividual, setIsIndividual] = useState<boolean | undefined>(
     undefined
   );
 
-  const values = watch();
-  const groupId = values.groupId;
-
-  const setisInd = (id: number) => {
+  const setIsIndividualById = (id: number) => {
     setIsIndividual(id === 1);
   };
 
@@ -111,10 +106,10 @@ export const useViceRepresentativeFormHook = (
           await unRegister(data.groupId);
         }
         await deleteViceRep();
-        alert('unRegi送信と副代表データ削除に成功しました');
+        toast.success('送信に成功しました');
         onSuccess?.();
       } catch {
-        alert('送信に失敗しました。1');
+        toast.error('送信に失敗しました');
       }
     } else {
       try {
@@ -124,10 +119,10 @@ export const useViceRepresentativeFormHook = (
           await create({ query: data });
         }
         await deleteRegister(unregisteredData);
-        alert('送信しました2');
+        toast.success('送信に成功しました');
         onSuccess?.();
       } catch {
-        alert('送信に失敗しました。2');
+        toast.error('送信に失敗しました');
       }
     }
     await refreshViceRepRelated(data.groupId);
@@ -143,20 +138,20 @@ export const useViceRepresentativeFormHook = (
     validatedSubmit,
     noValidationSubmit,
     option2,
-    optiongrade,
-    optionfield,
+    optionGrade,
+    optionField,
     isIndividual,
-    setisInd,
+    setIsIndividualById,
     textName: values.name || '',
-    textstudentId: (values.studentId || '').toString(),
-    valuegradeId: values.gradeId.toString(),
-    valuedepartmentId: values.departmentId.toString(),
-    textemail: values.email || '',
-    texttel: values.tel || '',
+    textStudentId: (values.studentId || '').toString(),
+    valueGradeId: values.gradeId.toString(),
+    valueDepartmentId: values.departmentId.toString(),
+    textEmail: values.email || '',
+    textTel: values.tel || '',
   };
 };
 
-export const optionfield = [
+export const optionField = [
   { id: 0, name: '選択してください', disabled: true },
   { id: 1, name: '機械工学分野/機械創造工学課程' },
   { id: 2, name: '電気電子情報工学分野/電気電子情報工学過程' },
@@ -178,7 +173,7 @@ export const optionfield = [
   { id: 18, name: 'その他' },
 ];
 
-export const optiongrade = [
+export const optionGrade = [
   { id: 0, name: '選択してください', disabled: true },
   { id: 1, name: 'B1[学部1年]' },
   { id: 2, name: 'B2[学部2年]' },
@@ -195,4 +190,9 @@ export const optiongrade = [
   { id: 13, name: 'GD4[イノベ4年]' },
   { id: 14, name: 'GD5[イノベ5年]' },
   { id: 15, name: 'その他' },
+];
+
+export const option2 = [
+  { id: 1, name: 'はい(一人での参加)' },
+  { id: 0, name: 'いいえ(グループで参加)' },
 ];

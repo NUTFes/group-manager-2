@@ -17,13 +17,6 @@ export default {
   },
 } as Meta<typeof ViceRepresentativeForm>;
 
-export const dummy: Story = {
-  args: {
-    toEdit: () => {},
-    viceRepresentative: undefined,
-  },
-};
-
 export const Default: Story = {
   args: {},
 };

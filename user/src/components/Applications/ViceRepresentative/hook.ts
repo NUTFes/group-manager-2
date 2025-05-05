@@ -5,8 +5,8 @@ import { FormItem } from '@/components/FormList/type';
 import { ORDER_TYPES } from '../Power';
 import { viceRepresentativeLabels } from '../label';
 import {
-  optionfield,
-  optiongrade,
+  optionField,
+  optionGrade,
 } from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm/hook';
 
 export const useViceRepresentativeHook = () => {
@@ -23,7 +23,7 @@ export const useViceRepresentativeHook = () => {
     if (isUnregistered) {
       return [
         {
-          label: '副代表登録は不要（申請済み）',
+          label: '登録済み',
           content: 'あなたは１人での参加です',
         },
       ];
@@ -41,14 +41,14 @@ export const useViceRepresentativeHook = () => {
       {
         label: viceRepresentativeLabels[3],
         content:
-          optiongrade.find((opt) => opt.id === viceRepresentative?.gradeId)
+          optionGrade.find((opt) => opt.id === viceRepresentative?.gradeId)
             ?.name ?? '',
       },
       {
         label: viceRepresentativeLabels[4],
 
         content:
-          optionfield.find((opt) => opt.id === viceRepresentative?.departmentId)
+          optionField.find((opt) => opt.id === viceRepresentative?.departmentId)
             ?.name ?? '',
       },
       {

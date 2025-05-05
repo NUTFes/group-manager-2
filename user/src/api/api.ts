@@ -105,7 +105,7 @@ export async function patchFetcher(
 
   return response.json();
 }
-//DE
+//DELETEリクエスト用のfetcher関数
 export async function deleteFetcher(
   url: string,
   { arg }: { arg?: { query?: { [key: string]: any } } } = {}

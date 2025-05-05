@@ -7,7 +7,7 @@ import ViceRepresentativeForm from './ViceRepresentativeForm/user/src/components
 import { useViceRepresentativeHook } from './hook';
 
 // TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
-type ViceRepresentativeFormProps = { isDeadline?: boolean };
+type ViceRepresentativeProps = { isDeadline?: boolean };
 
 type ContentProps = {
   isLoading: boolean;
@@ -56,9 +56,7 @@ const Content: FC<ContentProps> = ({
   return <FormList items={formItem} isEdit onEdit={toEdit} />;
 };
 
-const ViceRepresentative: FC<ViceRepresentativeFormProps> = ({
-  isDeadline,
-}) => {
+const ViceRepresentative: FC<ViceRepresentativeProps> = ({ isDeadline }) => {
   const {
     formItem,
     isEditing,

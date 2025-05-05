@@ -10,19 +10,6 @@ export type ApiResponse<T> = {
 };
 type ApiStatus = { code: number; message: string };
 
-export type ViceRepresentative = {
-  id: number;
-  groupId: number;
-  name: string;
-  departmentId: number;
-  gradeId: number;
-  tel: string;
-  email: string;
-  createdAt: string;
-  updatedAt: string;
-  studentId: number;
-};
-
 export type ViceRepresentativeResponse = {
   id: number;
   groupId: number;
@@ -40,14 +27,14 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
   const endpoint = groupId ? `${API_ENDPOINT}/group/${groupId}` : null;
 
   const { data, error, isLoading } =
-    useApiGet<ApiResponse<ViceRepresentative>>(endpoint);
+    useApiGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
 
   return {
-    // viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     viceRepresentative: data?.status.code === 200 ? data.data : undefined,
     isLoading,
     // hasError: !!error, //groupId関連の実装時に切り替える
     hasError: false,
+    error,
   };
 };
 
