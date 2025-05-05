@@ -38,6 +38,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
     hasExisting,
     isEditing,
     hasUnregistered,
+    isDeadline,
   });
 
   let content;
@@ -106,6 +107,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={false}
+          isDeadline={isDeadline}
         />
       );
       break;

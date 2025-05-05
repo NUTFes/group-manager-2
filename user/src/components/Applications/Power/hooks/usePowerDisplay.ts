@@ -14,6 +14,7 @@ type UsePowerDisplayInput = {
   hasExisting: boolean;
   isEditing: boolean;
   hasUnregistered: boolean;
+  isDeadline?: boolean;
 };
 
 export const usePowerDisplay = ({
@@ -21,6 +22,7 @@ export const usePowerDisplay = ({
   hasExisting,
   isEditing,
   hasUnregistered,
+  isDeadline,
 }: UsePowerDisplayInput) => {
   const [negativeEditMode, setNegativeEditMode] = useState(false);
   const prevApplyPower = useRef<ApplyPower | null>(null);
@@ -43,16 +45,29 @@ export const usePowerDisplay = ({
   }, [applyPower, hasUnregistered]);
 
   let mode: PowerDisplayMode;
-  if (applyPower === 'undecided') {
-    mode = 'negativeUndecided';
-  } else if (applyPower === 'no' && !negativeEditMode) {
-    mode = 'negativeDisplay';
-  } else if (applyPower === 'no' && negativeEditMode) {
-    mode = 'negativeRegister';
-  } else if (hasExisting && !isEditing) {
-    mode = 'summary';
+
+  // 締切後は編集不可のFormList表示にする
+  if (isDeadline) {
+    if (applyPower === 'no' && !negativeEditMode) {
+      mode = 'negativeDisplay';
+    } else if (hasExisting && !isEditing) {
+      mode = 'summary';
+    } else {
+      mode = hasExisting ? 'summary' : 'negativeDisplay';
+    }
   } else {
-    mode = 'form';
+    // 締切前の通常処理
+    if (applyPower === 'undecided') {
+      mode = 'negativeUndecided';
+    } else if (applyPower === 'no' && !negativeEditMode) {
+      mode = 'negativeDisplay';
+    } else if (applyPower === 'no' && negativeEditMode) {
+      mode = 'negativeRegister';
+    } else if (hasExisting && !isEditing) {
+      mode = 'summary';
+    } else {
+      mode = 'form';
+    }
   }
 
   return { mode, negativeEditMode, setNegativeEditMode };

@@ -16,6 +16,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   onEdit,
   isEdit,
   onCancel,
+  isDeadline,
 }) => {
   const noApplicationItems: FormItem[] = [
     {
@@ -52,7 +53,11 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
       )}
 
       {!isEdit && (
-        <FormList items={noApplicationItems} onEdit={onEdit} isEdit={true} />
+        <FormList
+          items={noApplicationItems}
+          onEdit={isDeadline ? undefined : onEdit}
+          isEdit={!isDeadline}
+        />
       )}
 
       {isEdit && !isSubmitted && showRegisterButton && (

@@ -75,6 +75,7 @@ export interface PowerNegativeViewProps {
   onEdit?: () => void;
   isEdit?: boolean;
   onCancel?: () => void;
+  isDeadline?: boolean;
 }
 
 export interface PowerSummaryViewProps {
