@@ -81,7 +81,9 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
           radioOptions={RADIO_OPTIONS}
           onEdit={() => setNegativeEditMode(true)}
           isEdit={true}
-          onCancel={() => setNegativeEditMode(false)}
+          onCancel={
+            hasUnregistered ? () => setNegativeEditMode(false) : undefined
+          }
         />
       );
       break;
