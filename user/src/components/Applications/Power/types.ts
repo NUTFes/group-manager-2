@@ -74,6 +74,7 @@ export interface PowerNegativeViewProps {
   radioOptions: RadioOption[];
   onEdit?: () => void;
   isEdit?: boolean;
+  onCancel?: () => void;
 }
 
 export interface PowerSummaryViewProps {

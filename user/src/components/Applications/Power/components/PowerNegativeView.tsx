@@ -15,6 +15,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   radioOptions,
   onEdit,
   isEdit,
+  onCancel,
 }) => {
   const noApplicationItems: FormItem[] = [
     {
@@ -26,13 +27,28 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   return (
     <div className="flex w-full flex-col gap-6">
       {isEdit && (
-        <Radio
-          label="電力申請を行いますか？"
-          value={radioValue}
-          onChange={onRadioChange}
-          required
-          options={radioOptions}
-        />
+        <>
+          <Radio
+            label="電力申請を行いますか？"
+            value={radioValue}
+            onChange={onRadioChange}
+            required
+            options={radioOptions}
+          />
+          {onCancel && (
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                size="pc"
+                color="main"
+                variant
+                onClick={onCancel}
+              >
+                キャンセル
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       {!isEdit && (
