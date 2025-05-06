@@ -59,7 +59,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
   if (!isEditMode && hasExplicitlyDeclinedItems && !hasExisting) {
     return (
       <div className="w-full text-font">
-        <div className="flex flex-col gap-10 w-full rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
+        <div className="flex w-full flex-col gap-10 rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
           <div className="mb-4">
             <p className="text-xs">物品申請は不要（登録済み）</p>
             <p>学校から借用する備品はありません。</p>
