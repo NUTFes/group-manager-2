@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
     render json: fmt(ok, @group)
   end
 
-  # GET /groups/user/:user_id/category
+  # GET /groups/user/:user_id/
   def get_user_group_id_and_group_category_id
     @group = Group.find_by(user_id: params[:user_id])
 
