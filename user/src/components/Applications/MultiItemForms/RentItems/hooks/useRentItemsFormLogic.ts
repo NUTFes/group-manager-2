@@ -10,12 +10,12 @@ import {
 } from '@/api/rentItemsApi';
 import { useGetPlaceOrder } from '@/api/venueApplication';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { useApiGet } from '@/hooks/useApi';
 import {
   RentItemsFormData,
   rentItemsFormResolver,
 } from '../RentItemsForm/schema';
-import { toast } from 'react-toastify';
 
 export const useRentItemsFormLogic = (groupId: number) => {
   // 認証基盤ができたら、グループIDを取得する
@@ -32,17 +32,17 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
   // 全ての貸出物品データを取得（屋内・屋外の判定に使用）
   const { data: rentableItemsData, isLoading: rentableItemsLoading } =
-      useApiGet<{
-        data: Array<{
-          id: number;
-          name: string;
-          is_inside_shop_rentable: boolean;
-          is_outside_shop_rentable: boolean;
-          is_stage_rentable: boolean;
-          created_at: string;
-          updated_at: string;
-        }>;
-      }>('/api/v1/get_all_rentable_items');
+    useApiGet<{
+      data: Array<{
+        id: number;
+        name: string;
+        is_inside_shop_rentable: boolean;
+        is_outside_shop_rentable: boolean;
+        is_stage_rentable: boolean;
+        created_at: string;
+        updated_at: string;
+      }>;
+    }>('/api/v1/get_all_rentable_items');
 
   // フォーム送信ハンドラー（FormEventを処理）
   const handleFormSubmit = (e: FormEvent) => {
@@ -79,7 +79,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
   // 既存のAPIフックを使用
   const { items, itemsError, itemsLoading } =
-      useRentableItemsByType(locationType);
+    useRentableItemsByType(locationType);
 
   const {
     rentalOrders,
@@ -90,21 +90,21 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
   const { submitRentalOrders, deleteRentalOrders } = useMutateRentalOrders();
   const { registerUnRegisteredGroup, deleteUnRegisteredGroup } =
-      useRegisterUnRegisteredGroup();
+    useRegisterUnRegisteredGroup();
   const { checkUnRegisteredGroup } = useCheckUnRegisteredGroup();
 
   const hasExisting = rentalOrders.length > 0;
 
   // 物品のオプション
   const itemOptions = useMemo(
-      () => [
-        { id: 0, name: '選んでください' },
-        ...items.map((item) => ({
-          id: item.id,
-          name: item.name,
-        })),
-      ],
-      [items]
+    () => [
+      { id: 0, name: '選んでください' },
+      ...items.map((item) => ({
+        id: item.id,
+        name: item.name,
+      })),
+    ],
+    [items]
   );
 
   // フォームをリセットする関数 - 会場タイプを屋内にデフォルト設定
@@ -141,19 +141,19 @@ export const useRentItemsFormLogic = (groupId: number) => {
           setTimeout(() => {
             // 現在の値でフォームをリセット
             reset(
-                {
-                  ...currentValues,
-                  hasItems: true,
-                },
-                {
-                  keepValues: true,
-                  keepDirty: true,
-                  keepIsSubmitted: false,
-                  keepTouched: false,
-                  keepErrors: false,
-                  keepIsValid: false,
-                  keepSubmitCount: false,
-                }
+              {
+                ...currentValues,
+                hasItems: true,
+              },
+              {
+                keepValues: true,
+                keepDirty: true,
+                keepIsSubmitted: false,
+                keepTouched: false,
+                keepErrors: false,
+                keepIsValid: false,
+                keepSubmitCount: false,
+              }
             );
 
             // リセット後に検証を強制実行
@@ -190,25 +190,25 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
   // 会場申請情報を取得するフックを使用
   const { placeOrder, isLoading: placeOrderLoading } =
-      useGetPlaceOrder(currentGroupId);
+    useGetPlaceOrder(currentGroupId);
 
   // 初期データの設定
   useEffect(() => {
     // データのロード中は何もしない
     if (
-        itemsLoading ||
-        rentalOrdersLoading ||
-        placeOrderLoading ||
-        rentableItemsLoading
+      itemsLoading ||
+      rentalOrdersLoading ||
+      placeOrderLoading ||
+      rentableItemsLoading
     ) {
       return;
     }
 
     // 既に初期化済み、またはユーザーが手動で変更した場合は実行しない
     if (
-        isInitialized.current ||
-        userChangedLocationType.current ||
-        rentalOrders.length === 0
+      isInitialized.current ||
+      userChangedLocationType.current ||
+      rentalOrders.length === 0
     ) {
       return;
     }
@@ -247,20 +247,20 @@ export const useRentItemsFormLogic = (groupId: number) => {
         // 各申請物品について、それが屋内専用か屋外専用かを判定
         for (const order of rentalOrders) {
           const item = allRentableItems.find(
-              (i) => i.id === order.rentalItemId
+            (i) => i.id === order.rentalItemId
           );
           if (item) {
             // 屋内専用の物品
             if (
-                item.is_inside_shop_rentable &&
-                !item.is_outside_shop_rentable
+              item.is_inside_shop_rentable &&
+              !item.is_outside_shop_rentable
             ) {
               insideOnlyCount += order.num;
             }
             // 屋外専用の物品
             else if (
-                !item.is_inside_shop_rentable &&
-                item.is_outside_shop_rentable
+              !item.is_inside_shop_rentable &&
+              item.is_outside_shop_rentable
             ) {
               outsideOnlyCount += order.num;
             }
@@ -307,7 +307,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
   // 物品申請を行わないことを明示的に記録するフラグ
   const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] =
-      useState<boolean>(false);
+    useState<boolean>(false);
 
   // 初期化時にUnRegisteredGroupをチェック
   useEffect(() => {
@@ -363,10 +363,10 @@ export const useRentItemsFormLogic = (groupId: number) => {
   useEffect(() => {
     // 無視フラグが立っている場合は処理をスキップ
     if (
-        !hasItems ||
-        itemsLoading ||
-        autoChangingLocationType.current ||
-        ignoreItemChanges
+      !hasItems ||
+      itemsLoading ||
+      autoChangingLocationType.current ||
+      ignoreItemChanges
     )
       return;
 
@@ -454,7 +454,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
       // 既存の物品申請があれば削除
       if (rentalOrders.length > 0) {
         const result = await deleteRentalOrders(
-            rentalOrders.map((item) => item.id)
+          rentalOrders.map((item) => item.id)
         );
 
         if (!result.success) {
@@ -478,7 +478,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
     } catch (error) {
       console.error('予期せぬエラー:', error);
       const errorMessage =
-          error instanceof Error ? error.message : '不明なエラー';
+        error instanceof Error ? error.message : '不明なエラー';
       setSubmitError('予期せぬエラーが発生しました: ' + errorMessage);
       // トースト通知でエラーを表示
       toast.error('予期せぬエラーが発生しました');
@@ -516,9 +516,9 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
         // アラートの代わりにトースト通知を使用
         toast.success(
-            rentalOrders.length > 0
-                ? '物品申請を更新しました'
-                : '物品申請を登録しました'
+          rentalOrders.length > 0
+            ? '物品申請を更新しました'
+            : '物品申請を登録しました'
         );
 
         await mutateRentalOrders();
@@ -526,7 +526,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
         userChangedLocationType.current = false;
       } else {
         setSubmitError(
-            '送信中にエラーが発生しました。もう一度お試しください。'
+          '送信中にエラーが発生しました。もう一度お試しください。'
         );
         // トースト通知でエラーを表示
         toast.error('物品申請の送信に失敗しました');
@@ -540,10 +540,10 @@ export const useRentItemsFormLogic = (groupId: number) => {
   };
 
   const isLoading =
-      itemsLoading ||
-      rentalOrdersLoading ||
-      placeOrderLoading ||
-      rentableItemsLoading;
+    itemsLoading ||
+    rentalOrdersLoading ||
+    placeOrderLoading ||
+    rentableItemsLoading;
   const hasError = !!(itemsError || rentalOrdersError);
 
   return {
