@@ -34,7 +34,6 @@ export const headers = (session: Session): HeadersInit => {
  */
 export const fetcher = ([url, session]: [string, Session]) => {
   const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-  console.log('fetcher', fullUrl, session);
 
   const requestHeaders = headers(session);
 
