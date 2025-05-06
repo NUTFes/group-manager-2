@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
+import FormList from '@/components/FormList/FormList';
+import { FormItem } from '@/components/FormList/type';
 import { PowerNegativeViewProps } from '../types';
 
 export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
@@ -11,20 +13,54 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   submitError,
   showRegisterButton,
   radioOptions,
+  onEdit,
+  isEdit,
+  onCancel,
+  isDeadline,
 }) => {
-  return (
-    <div className="flex flex-col gap-6">
-      {/* ラジオボタン */}
-      <Radio
-        label="電力申請を行いますか？"
-        value={radioValue}
-        onChange={onRadioChange}
-        required
-        options={radioOptions}
-      />
+  const noApplicationItems: FormItem[] = [
+    {
+      label: '電力申請は不要（登録済み）',
+      content: '電力が必要な機器は使用しません。',
+    },
+  ];
 
-      {/* 申請しない場合の表示 */}
-      {!isSubmitted && showRegisterButton ? (
+  return (
+    <div className="flex w-full flex-col gap-6">
+      {isEdit && (
+        <>
+          <Radio
+            label="電力申請を行いますか？"
+            value={radioValue}
+            onChange={onRadioChange}
+            required
+            options={radioOptions}
+          />
+          {onCancel && (
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                size="pc"
+                color="main"
+                variant
+                onClick={onCancel}
+              >
+                キャンセル
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {!isEdit && (
+        <FormList
+          items={noApplicationItems}
+          onEdit={isDeadline ? undefined : onEdit}
+          isEdit={!isDeadline}
+        />
+      )}
+
+      {isEdit && !isSubmitted && showRegisterButton && (
         <div className="flex flex-col items-center gap-4">
           {submitError && (
             <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
@@ -40,13 +76,6 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
           >
             登録
           </Button>
-        </div>
-      ) : (
-        // 登録済みまたは提出完了の場合は完了メッセージを表示
-        <div className="text-center">
-          <p className="mb-4 text-[#FF6752]">
-            電力申請を行わない登録が完了しました
-          </p>
         </div>
       )}
     </div>
