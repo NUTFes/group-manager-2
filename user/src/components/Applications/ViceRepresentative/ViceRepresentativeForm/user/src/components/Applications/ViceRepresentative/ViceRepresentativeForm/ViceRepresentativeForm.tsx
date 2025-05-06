@@ -15,6 +15,7 @@ type ViceRepresentativeFormProps = {
 
 const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   viceRepresentative,
+  toEdit,
 }) => {
   const {
     handleSubmit,
