@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
@@ -10,19 +9,11 @@ import Stage from '@/components/Applications/Stage';
 import StageOptions from '@/components/Applications/StageOptions';
 import VenueApplications from '@/components/Applications/VenueApplication';
 import NewsList from '@/components/NewsList';
+import { useUser } from '@/hooks/useUser';
 
 export default function HomePage() {
-  // ユーザ情報を取得
-  const [userId, setUserId] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch('/api/getUser');
-      const data = await res.json();
-      setUserId(data?.id);
-    };
-    fetchUser();
-  }, []);
+  const { user } = useUser();
+  const userId = user?.id;
   const { groupUserIdAndGroupCategoryId } = useGetGroupByUserId(userId);
   const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
