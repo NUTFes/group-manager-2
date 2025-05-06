@@ -16,7 +16,10 @@ export const useUser = () => {
     const fetchUserInfo = async () => {
       const res = await fetch('/api/getUser');
       const data = await res.json();
-      setUser(data);
+      setUser({
+        ...data,
+        id: data.id ? Number(data.id) : undefined,
+      });
     };
 
     fetchUserInfo();
