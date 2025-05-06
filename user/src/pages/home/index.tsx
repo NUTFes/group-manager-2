@@ -1,5 +1,5 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
-import { useGetGroups } from '@/api/groupApi';
+import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
@@ -11,9 +11,10 @@ import VenueApplications from '@/components/Applications/VenueApplication';
 import NewsList from '@/components/NewsList';
 
 export default function HomePage() {
-  const groupId = 7;
-  const { groups } = useGetGroups(groupId);
-  const groupCategoryId = groups?.groupCategoryId ?? 0;
+  const userId = 1;
+  const { groupUserIdAndGroupCategoryId } = useGetGroupByUserId(userId);
+  const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
+  const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
