@@ -5,7 +5,9 @@ import useSWR from 'swr';
 
 // データ取得のための共通フック
 export const useApiGet = <T>(url: string | null, options?: any) => {
-  const { data, error, isLoading, mutate } = useSWR<T>(url, fetcher, options);
+  const { data, error, isLoading, mutate } = useSWR<T>(url, fetcher, {
+    ...options,
+  });
 
   return {
     data,
