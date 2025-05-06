@@ -29,7 +29,7 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
         <div key={`device-${index}`} className="mb-4">
           <FormList
             items={createFormItemsForDevice(device)}
-            onEdit={onEdit}
+            onEdit={isDeadline ? undefined : onEdit}
             isDelete={isDeadline}
             onDelete={device.id ? () => onDeleteDevice(device.id!) : undefined}
           />

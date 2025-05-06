@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { DEFAULT_DEVICE } from '../constants';
 import { PowerApplicationFormData } from '../schema';
-import { ORDER_TYPES, PowerApplicationOption } from '../types';
+import { Device, ORDER_TYPES, PowerApplicationOption } from '../types';
 import { usePowerForm } from './usePowerForm';
 
 // 電力申請フォームの状態管理型
@@ -27,6 +27,9 @@ export const usePowerApplication = (groupId: number) => {
     submitError: null,
     isSubmitted: false,
   });
+
+  // 「はい」未登録時の入力内容を一時保存するstate
+  const [pendingDevices, setPendingDevices] = useState<Device[] | null>(null);
 
   // 電力申請データの取得
   const {
@@ -295,7 +298,6 @@ export const usePowerApplication = (groupId: number) => {
 
     if (radioValue === 'yes') {
       // 「はい」を選択した場合
-      // 以前のapplyPowerの値を取得して、「いいえ」から「はい」への変更を検出する
       const isChangingFromNo = state.applyPower === 'no';
 
       updateState({
@@ -304,12 +306,10 @@ export const usePowerApplication = (groupId: number) => {
         isSubmitted: false,
       });
 
-      // 「いいえ」から「はい」に変更した場合、フォームリセットが必要な場合はフォームを初期化
-      if (isChangingFromNo) {
+      // 「いいえ」から「はい」に戻す場合、pendingDevicesがあればそれを復元する
+      if (isChangingFromNo && pendingDevices) {
         formMethods.reset(
-          {
-            devices: [{ ...DEFAULT_DEVICE }],
-          },
+          { devices: pendingDevices },
           {
             keepDirty: false,
             keepErrors: false,
@@ -319,6 +319,11 @@ export const usePowerApplication = (groupId: number) => {
         );
       }
     } else if (radioValue === 'no') {
+      // 「はい」から「いいえ」に変えるとき、未登録内容をpendingDevicesに保存する
+      if (state.applyPower === 'yes') {
+        const currentDevices = formMethods.getValues('devices');
+        setPendingDevices(currentDevices);
+      }
       updateState({
         applyPower: 'no',
         isSubmitted: false,
