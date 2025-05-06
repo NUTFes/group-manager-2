@@ -20,8 +20,6 @@ export default function HomePage() {
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
-  // Group申請が完了しているかを判定
-  const isGroupRegistered = checkAllRegisteredGroups?.group;
 
   const GroupCategoryContent = () => {
     if (groupCategoryId === 6) {
@@ -101,7 +99,7 @@ export default function HomePage() {
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
       <div className="order-2 flex flex-1 flex-col lg:order-1">
         {/* Group申請がまだの場合はGroup申請のみ表示 */}
-        {!isGroupRegistered ? (
+        {!checkAllRegisteredGroups?.group ? (
           <Group
             isDeadline={!userPageSettings?.isRegistGroup}
             isRegistered={checkAllRegisteredGroups?.group}
