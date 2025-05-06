@@ -11,7 +11,7 @@
     "storybook": "storybook dev -p 6006 --ci",
     "build-storybook": "storybook build",
     "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint-fix": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "lint-fix": "eslint \"**/*.{js,jsx,ts,tsx,stories.js,stories.jsx,stories.ts,stories.tsx}\" --report-unused-disable-directives --max-warnings 0 --fix",
     "fmt": "prettier --write **/*.{js,jsx,ts,tsx,css,scss}",
     "fmt:warn": "prettier --l **/*.{js,jsx,ts,tsx,css,scss}"
   },
