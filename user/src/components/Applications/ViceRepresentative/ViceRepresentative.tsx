@@ -75,7 +75,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   return (
     <AccordionMenu
       title="副代表申請"
-      isEdit={isDeadline}
+      isEdit={!isDeadline}
       isExist={isRegistered}
       required
       note="一人での参加者の場合のみ、副代表申請は不要です。"
