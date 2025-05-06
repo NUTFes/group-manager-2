@@ -4,6 +4,7 @@ import {
   useCreateGroups,
   useUpdateGroups,
 } from '@/api/groupApi';
+import { useAuthStore } from '@/stores/authStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -15,6 +16,7 @@ export const useGroupFormHooks = (
   groups: GroupResponse | undefined
 ) => {
   // 団体カテゴリー一覧を取得
+  const { user } = useAuthStore();
   const {
     handleSubmit,
     setValue,
@@ -31,7 +33,7 @@ export const useGroupFormHooks = (
       isExternal: groups?.isExternal ?? false,
       groupCategoryId: groups?.groupCategoryId ?? 1,
       activity: groups?.activity ?? '',
-      userId: groups?.userId ?? 1,
+      userId: groups?.userId ?? user?.id,
       fesYearId: groups?.fesYearId ?? 1,
       committee: groups?.committee ? 1 : 0,
     },
