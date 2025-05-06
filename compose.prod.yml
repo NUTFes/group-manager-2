@@ -29,6 +29,7 @@ services:
     container_name: prod-view
     ports:
       - "8003:3000"
+    env_file: [.env]
 
   # 旧
   # user_front:
