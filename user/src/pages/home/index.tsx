@@ -7,6 +7,7 @@ import PublicRelations from '@/components/Applications/PublicRelations';
 import Stage from '@/components/Applications/Stage';
 import StageOptions from '@/components/Applications/StageOptions';
 import VenueApplications from '@/components/Applications/VenueApplication';
+import ViceRepresentative from '@/components/Applications/ViceRepresentative';
 import NewsList from '@/components/NewsList';
 
 export default function HomePage() {
@@ -23,7 +24,11 @@ export default function HomePage() {
           isRegistered={checkAllRegisteredGroups?.group}
           groupId={groupId}
         />
-        <ApplicationForm name="副代表申請" />
+        <ViceRepresentative
+          isDeadline={!userPageSettings?.isEditSubRep}
+          isRegistered={checkAllRegisteredGroups?.subRep}
+          groupId={groupId}
+        />
         <VenueApplications
           isDeadline={!userPageSettings?.isEditPlace}
           isRegistered={checkAllRegisteredGroups?.placeOrder}
@@ -61,13 +66,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-const ApplicationForm = ({ name }: { name: string }) => {
-  return (
-    <div className="flex flex-col gap-10">
-      <div className="mx-auto flex h-20 w-[450px] items-center justify-center bg-slate-500 md:w-[560px]">
-        {name}
-      </div>
-    </div>
-  );
-};

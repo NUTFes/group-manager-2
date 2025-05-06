@@ -6,8 +6,11 @@ import { FormItem } from '@/components/FormList/type';
 import ViceRepresentativeForm from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm';
 import { useViceRepresentativeHook } from './hook';
 
-// TODO: pageからのデータはここのpropsでバケツリレーし、isEdit,isExistに入れる。
-type ViceRepresentativeProps = { isDeadline?: boolean };
+type ViceRepresentativeProps = {
+  isDeadline: boolean;
+  isRegistered: boolean | undefined;
+  groupId: number;
+};
 
 type ContentProps = {
   isLoading: boolean;
@@ -56,7 +59,11 @@ const Content: FC<ContentProps> = ({
   return <FormList items={formItem} isEdit onEdit={toEdit} />;
 };
 
-const ViceRepresentative: FC<ViceRepresentativeProps> = ({ isDeadline }) => {
+const ViceRepresentative: FC<ViceRepresentativeProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+}) => {
   const {
     formItem,
     isEditing,
@@ -64,12 +71,12 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({ isDeadline }) => {
     viceRepresentative,
     isLoading,
     hasError,
-  } = useViceRepresentativeHook();
+  } = useViceRepresentativeHook(groupId);
   return (
     <AccordionMenu
       title="副代表申請"
-      isEdit={false}
-      isExist={false}
+      isEdit={isDeadline}
+      isExist={isRegistered}
       required
       note="一人での参加者の場合のみ、副代表申請は不要です。"
     >
