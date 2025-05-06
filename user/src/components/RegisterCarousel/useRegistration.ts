@@ -83,12 +83,12 @@ function detectErrorStep(errors: ApiErrors = {}): number {
  * - 登録成功時の処理
  * - ローディング状態の管理
  */
-export function useRegistration(
+export const useRegistration = (
   validateForm: (step: number) => Promise<boolean>, // 各ステップのバリデーション関数
   goToStep: (step: number) => void, // 指定ステップに移動する関数
   currentStep: number, // 現在のステップ番号
   handleSubmit: UseFormHandleSubmit<RegisterFormSchema> // フォーム送信ハンドラー
-) {
+) => {
   const [isLoading, setIsLoading] = useState(false); // ローディング状態
   const [displayError, setDisplayError] = useState<string>(); // 表示するエラーメッセージ
   const router = useRouter(); // ルーターオブジェクト
