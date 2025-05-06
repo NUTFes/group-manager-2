@@ -27,18 +27,7 @@ export default function HomePage() {
         />
         <ApplicationForm name="副代表申請" />
         {groupCategoryId === 6 ? (
-          <>
-            <RentItems
-              isDeadline={!userPageSettings?.isEditRentalOrder}
-              isRegistered={checkAllRegisteredGroups?.rentalItem}
-              groupId={groupId}
-            />
-            <Power
-              isDeadline={!userPageSettings?.isEditPowerOrder}
-              isRegistered={checkAllRegisteredGroups?.powerOrder}
-              groupId={groupId}
-            />
-          </>
+          <></>
         ) : groupCategoryId === 3 ? (
           <>
             <Stage
