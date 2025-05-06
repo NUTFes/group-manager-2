@@ -11,11 +11,13 @@ import { useViceRepresentativeFormHook } from './hook';
 type ViceRepresentativeFormProps = {
   viceRepresentative?: ViceRepresentativeResponse;
   toEdit?: () => void;
+  groupId: number;
 };
 
 const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   viceRepresentative,
   toEdit,
+  groupId,
 }) => {
   const {
     handleSubmit,
@@ -34,7 +36,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
     textTel,
     setIsIndividualById,
     isIndividual,
-  } = useViceRepresentativeFormHook(viceRepresentative);
+  } = useViceRepresentativeFormHook(viceRepresentative, groupId);
 
   return (
     <FormContainer>

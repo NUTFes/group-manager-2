@@ -9,8 +9,7 @@ import {
   optionGrade,
 } from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm/hook';
 
-export const useViceRepresentativeHook = () => {
-  const groupId = 3; // TODO: groupIdを取得する方法を考える
+export const useViceRepresentativeHook = (groupId: number) => {
   const { viceRepresentative, isLoading, hasError } =
     useGetViceRepresentatives(groupId);
   const { unregisteredData } = useGetUnregisteredGroup(
@@ -23,7 +22,7 @@ export const useViceRepresentativeHook = () => {
     if (isUnregistered) {
       return [
         {
-          label: '登録済み',
+          label: '副代表申請は不要（登録済み）',
           content: 'あなたは１人での参加です',
         },
       ];
