@@ -41,7 +41,6 @@ export const useLoginModalHooks = () => {
     })
       .then((res) => {
         if (res?.error) {
-          setError('email', { type: 'login' });
           setError('password', {
             type: 'login',
             message: 'emailかpasswordが違います',
