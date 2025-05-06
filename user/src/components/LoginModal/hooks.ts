@@ -1,34 +1,21 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useAuth } from '@/hooks/useAuth';
 import { LoginModalSchema, loginModalSchema } from './schema';
 
-export const useLoginModalHooks = (onClose: () => void) => {
-  const { login, isLoading } = useAuth();
-  const [loginError, setLoginError] = useState<string | null>(null);
+export const useLoginModalHooks = () => {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const router = useRouter();
 
-  const handleLogin = async (data: LoginModalSchema) => {
-    try {
-      setLoginError(null);
-      const result = await login(data.email, data.password);
-      if (result.success) {
-        toast.success('ログインしました。');
-        onClose();
-      } else {
-        setLoginError('メールアドレスまたはパスワードに誤りがあります');
-      }
-    } catch (error: unknown) {
-      console.error('Login failed (unexpected error):', error);
-      setLoginError('ログイン処理中に予期せぬエラーが発生しました。');
-    }
-  };
-
+  // react-hook-formを初期化
   const {
     setValue,
     watch,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginModalSchema>({
     resolver: zodResolver(loginModalSchema),
@@ -41,15 +28,41 @@ export const useLoginModalHooks = (onClose: () => void) => {
   const email = watch('email');
   const password = watch('password');
 
+  // フォームの送信処理
+  const handleSignInSubmit = handleSubmit((data) => {
+    // ログイン中・・・
+    setIsLoggingIn(true);
+
+    // APIにリクエストを送信してログイン処理を行う
+    signIn('credentials', {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    })
+      .then((res) => {
+        if (res?.error) {
+          setError('password', {
+            type: 'login',
+            message: 'emailかpasswordが違います',
+          });
+          toast.error('ログインに失敗しました');
+          setIsLoggingIn(false);
+          return;
+        }
+        // ログイン成功
+        toast.success('ログインに成功しました');
+        router.push('/home');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
   return {
-    handleLogin,
+    handleSignInSubmit,
     setValue,
-    watch,
-    handleSubmit,
     errors,
     email,
     password,
-    isLoggingIn: isLoading,
-    loginError,
+    isLoggingIn,
   };
 };
