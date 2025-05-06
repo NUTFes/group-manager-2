@@ -44,7 +44,7 @@ export const useLoginModalHooks = () => {
           setError('email', { type: 'login' });
           setError('password', {
             type: 'login',
-            message: 'emailかpassworが違います',
+            message: 'emailかpasswordが違います',
           });
           toast.error('ログインに失敗しました');
           setIsLoggingIn(false);
