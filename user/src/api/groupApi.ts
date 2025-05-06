@@ -5,6 +5,7 @@ import { patchFetcher, postFetcher } from './api';
 const API_ENDPOINTS = {
   GROUPS: '/groups',
   GROUP_CATEGORIES: '/group_categories',
+  GROUP_USERID: '/groups/user',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -37,6 +38,12 @@ export type GroupCategoryResponse = {
   updatedAt: string;
 };
 
+export type GroupUserIdAndGroupCategoryIdResponse = {
+  id: number;
+  userId: number;
+  groupCategoryId: number;
+};
+
 // 既存の団体申請を取得するフック
 export const useGetGroups = (groupId: number | null) => {
   const endpoint = groupId ? `${API_ENDPOINTS.GROUPS}/${groupId}` : null;
@@ -60,6 +67,21 @@ export const useGetGroupCategories = () => {
 
   return {
     groupCategories: data?.status.code === 200 ? data?.data : undefined,
+    isLoading,
+    hasError: !!error,
+  };
+};
+
+// 既存の参加形式を取得するフック
+export const useGetGroupByUserId = (userId: number | undefined) => {
+  const endpoint = userId ? `${API_ENDPOINTS.GROUP_USERID}/${userId}` : null;
+
+  const { data, error, isLoading } =
+    useApiGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(endpoint);
+
+  return {
+    groupUserIdAndGroupCategoryId:
+      data?.status.code === 200 ? data?.data : undefined,
     isLoading,
     hasError: !!error,
   };
