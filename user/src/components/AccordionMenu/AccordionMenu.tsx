@@ -61,7 +61,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
         </div>
       </button>
       {isOpen && (
-        <div className="mb-10 flex justify-center">
+        <div className="mb-10 flex-col justify-center">
           {note && <p className="mb-10 font-bold text-red-500">{note}</p>}
           {children}
         </div>

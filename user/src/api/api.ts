@@ -1,5 +1,5 @@
-import { useAuthStore } from '@/stores/authStore';
 import camelcaseKeys from 'camelcase-keys';
+import type { Session } from 'next-auth';
 import snakecaseKeys from 'snakecase-keys';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -11,25 +11,35 @@ import snakecaseKeys from 'snakecase-keys';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 /**
- * SWR用のフェッチャー関数
- * 認証情報がある場合は自動的にヘッダーに追加
- * レスポンスは自動的にキャメルケースに変換
+ * APIのヘッダーを生成する関数
+ * 認証情報を追加
  */
-export const fetcher = (url: string) => {
-  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-  const auth = useAuthStore.getState();
+export const headers = (session: Session): HeadersInit => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
 
-  if (auth.accessToken) {
-    headers['access-token'] = auth.accessToken;
-    headers['client'] = auth.client!;
-    headers['uid'] = auth.uid!;
-  }
+  // 認証情報がある場合はヘッダーに追加
+  headers['access-token'] = session.accessToken!;
+  headers['client'] = session.client!;
+  headers['uid'] = session.uid!;
+
+  return headers;
+};
+
+/**
+ * SWR用のフェッチャー関数
+ * 認証情報をヘッダーに追加
+ * レスポンスは自動的にキャメルケースに変換
+ */
+export const fetcher = ([url, session]: [string, Session]) => {
+  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  console.log('fetcher', fullUrl, session);
+
+  const requestHeaders = headers(session);
 
   return fetch(fullUrl, {
-    headers,
+    headers: requestHeaders,
   })
     .then(async (res) => {
       if (!res.ok) {
@@ -101,6 +111,32 @@ export async function patchFetcher(
     const errorText = await response.text();
     console.error('PATCH failed:', errorText);
     throw new Error('Error patching data');
+  }
+
+  return response.json();
+}
+//DELETEリクエスト用のfetcher関数
+export async function deleteFetcher(
+  url: string,
+  { arg }: { arg?: { query?: { [key: string]: any } } } = {}
+): Promise<any> {
+  let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  if (arg?.query) {
+    const queryStr = objectToQueryString(arg.query);
+    finalUrl = `${finalUrl}?${queryStr}`;
+  }
+
+  const response = await fetch(finalUrl, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('DELETE failed:', errorText);
+    throw new Error('Error deleting data');
   }
 
   return response.json();
@@ -257,21 +293,12 @@ const parseResponseData = async <T>(
  * 共通のAPIリクエストを実行する関数
  * 認証情報の自動付与とエラーハンドリングを行う
  */
-export const sendRequest = async <T>(
+const sendRequest = async <T>(
   endpoint: string,
+  session: Session,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const { accessToken, client, uid } = useAuthStore.getState();
-
-  const defaultHeaders: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  if (accessToken && client && uid) {
-    defaultHeaders['access-token'] = accessToken;
-    defaultHeaders['client'] = client;
-    defaultHeaders['uid'] = uid;
-  }
+  const defaultHeaders: HeadersInit = headers(session);
 
   const requestOptions: RequestInit = {
     ...options,
@@ -311,9 +338,10 @@ export const sendRequest = async <T>(
  */
 export const postData = async <T>(
   url: string,
-  data: any
+  data: any,
+  session: Session
 ): Promise<ApiResponse<T>> => {
-  return sendRequest<T>(url, createRequestOptions('POST', data));
+  return sendRequest<T>(url, session, createRequestOptions('POST', data));
 };
 
 /**
@@ -322,16 +350,28 @@ export const postData = async <T>(
  */
 export const putData = async <T>(
   url: string,
-  data: any
+  data: any,
+  session: Session
 ): Promise<ApiResponse<T>> => {
-  return sendRequest<T>(url, createRequestOptions('PUT', data));
+  return sendRequest<T>(url, session, createRequestOptions('PUT', data));
 };
 
 /**
  * DELETEリクエスト用の関数
  */
-export const deleteData = async <T>(url: string): Promise<ApiResponse<T>> => {
-  return sendRequest<T>(url, createRequestOptions('DELETE'));
+export const deleteData = async <T>(
+  url: string,
+  session: Session
+): Promise<ApiResponse<T>> => {
+  return sendRequest<T>(url, session, createRequestOptions('DELETE'));
+};
+
+export const patchData = async <T>(
+  url: string,
+  data: any,
+  session: Session
+): Promise<ApiResponse<T>> => {
+  return sendRequest<T>(url, session, createRequestOptions('PATCH', data));
 };
 
 /**

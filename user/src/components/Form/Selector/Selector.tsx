@@ -3,6 +3,7 @@ import { FC } from 'react';
 type Option = {
   id: number;
   name: string;
+  disabled?: boolean;
 };
 
 type SelectorProps = {
@@ -24,7 +25,6 @@ const Selector: FC<SelectorProps> = ({
   note,
   error,
   options = [],
-  disableOptions = [],
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
@@ -46,7 +46,9 @@ const Selector: FC<SelectorProps> = ({
             <option
               key={option.id}
               value={option.id}
-              disabled={disableOptions.includes(option.id)}
+              // disabled={disableOptions.includes(option.id)}
+              disabled={option.disabled}
+              hidden={option.disabled}
             >
               {option.name}
             </option>

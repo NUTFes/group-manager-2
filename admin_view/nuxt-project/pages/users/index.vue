@@ -309,6 +309,7 @@ export default {
         this.users.push(res);
       }
     },
+    // TODO: api/auth/のAPIに変更し、user_detailsをきちんと登録する（現状は電話番号が登録できない）
     async simplyUserCreate() {
       const simply_user_create_url = "/users/simply_user_create"
       var simply_user_create_params = {

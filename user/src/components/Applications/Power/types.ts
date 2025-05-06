@@ -72,6 +72,10 @@ export interface PowerNegativeViewProps {
   submitError: string | null;
   showRegisterButton: boolean;
   radioOptions: RadioOption[];
+  onEdit?: () => void;
+  isEdit?: boolean;
+  onCancel?: () => void;
+  isDeadline?: boolean;
 }
 
 export interface PowerSummaryViewProps {

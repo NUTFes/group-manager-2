@@ -27,3 +27,13 @@ export const stageLabels = [
 ];
 
 export const publicRelationLabels = ['PR文', 'アナウンスの有無', 'PR画像'];
+
+export const viceRepresentativeLabels = [
+  '一人での参加ですか？',
+  '名前',
+  '学籍番号',
+  '課程・学年',
+  '学科・専攻',
+  'メールアドレス',
+  '電話番号',
+];

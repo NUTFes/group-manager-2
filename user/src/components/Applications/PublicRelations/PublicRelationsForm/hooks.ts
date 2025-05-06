@@ -146,17 +146,6 @@ export const usePublicRelationsFormHooks = (
           return resolve(false);
         }
 
-        const fileNamePattern =
-          /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+\.(png|jpe?g)$/;
-        if (!fileNamePattern.test(file.name)) {
-          setError('image', {
-            type: 'manual',
-            message:
-              'ファイル名は「参加形式_団体名」で指定してください（拡張子含む）',
-          });
-          return resolve(false);
-        }
-
         resolve(true);
       };
       img.onerror = () => {
