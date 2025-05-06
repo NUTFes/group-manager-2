@@ -32,9 +32,9 @@ const NewsList: FC<NewsListProps> = () => {
   });
 
   return (
-    <div className="flex w-[497px] items-center justify-center">
+    <div className="flex w-full max-w-[497px] items-center justify-center px-4">
       <FormContainer>
-        <div className="mb-10 w-[497px]">
+        <div className="mb-10 w-full max-w-[497px]">
           <div className="text-4xl font-bold text-main">お知らせ</div>
         </div>
         <div className="flex flex-col gap-4">
