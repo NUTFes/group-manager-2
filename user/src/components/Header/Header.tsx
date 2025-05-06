@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useAuthStore } from '@/stores/authStore';
 import CorporateIcon from '../../../public/corporate_logo.svg';
 import ProfileIcon from '../../../public/profile_icon.svg';
 import UserModal from '../UserModal';
@@ -14,7 +13,6 @@ const Header: FC<HeaderProps> = () => {
   // ルートパス（"/"）の場合はUserModalを表示しない
   const router = useRouter();
   const showUserModal = router.pathname !== '/';
-  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -28,11 +26,7 @@ const Header: FC<HeaderProps> = () => {
         </button>
       )}
       {showUserModal && (
-        <UserModal
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          user={user}
-        />
+        <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       )}
     </div>
   );
