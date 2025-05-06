@@ -20,21 +20,24 @@ type Story = StoryObj<typeof RentItems>;
 
 export const Default: Story = {
   args: {
-    isEdit: true,
-    isExist: false,
+    isDeadline: false,
+    isRegistered: false,
+    groupId: 1,
   },
 };
 
 export const Existing: Story = {
   args: {
-    isEdit: true,
-    isExist: true,
+    isDeadline: false,
+    isRegistered: true,
+    groupId: 1,
   },
 };
 
 export const Closed: Story = {
   args: {
-    isEdit: false,
-    isExist: false,
+    isDeadline: true,
+    isRegistered: false,
+    groupId: 1,
   },
 };

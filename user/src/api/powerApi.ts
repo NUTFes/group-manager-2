@@ -86,7 +86,7 @@ export const useGetPowerOrders = (groupId: number | null) => {
  * 電力申請データを操作するフック
  */
 export const useMutatePowerOrders = () => {
-  const { post, put, delete: deleteMethod } = useApiMutations();
+  const { post, put, remove } = useApiMutations();
 
   /**
    * 複数デバイスの登録・更新を行う
@@ -128,7 +128,7 @@ export const useMutatePowerOrders = () => {
    */
   const deletePowerOrder = async (deviceId: number) => {
     try {
-      await deleteMethod(`${API_ENDPOINTS.POWER_ORDERS}/${deviceId}`);
+      await remove(`${API_ENDPOINTS.POWER_ORDERS}/${deviceId}`);
       return { success: true };
     } catch (error) {
       console.error('電力申請削除エラー:', error);

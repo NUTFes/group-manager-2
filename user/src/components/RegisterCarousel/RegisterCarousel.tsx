@@ -84,20 +84,20 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   // フォーム関連のフック
   const {
-    handleSubmit,
     formState: { errors },
     values,
+    handleSubmit,
     setValue,
     trigger,
     validateCurrentStep,
   } = useRegisterForm();
 
   // 登録処理関連のフック
-  const { handleRegisterSubmit, isLoading, displayError } = useRegistration(
+  const { handleSignUpSubmit, isLoading, displayError } = useRegistration(
     validateCurrentStep,
     goToStep,
     stepIndex,
-    onClose
+    handleSubmit
   );
 
   // 選択肢のオプション
@@ -149,11 +149,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form
-        onSubmit={handleSubmit(handleRegisterSubmit)}
-        ref={formRef}
-        noValidate
-      >
+      <form onSubmit={handleSignUpSubmit} ref={formRef} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
           <FormStep step={stepIndex} />
           <div

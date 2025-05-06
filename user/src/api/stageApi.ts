@@ -3,7 +3,9 @@ import { useApiGet, useApiMutations } from '@/hooks/useApi';
 
 export type FesDate = {
   id: number;
+  daysNum: number;
   date: string;
+  day: string;
 };
 
 export type Stage = {
