@@ -1,4 +1,4 @@
-import { deleteData, fetcher, postData, putData } from '@/api/api';
+import { deleteData, fetcher, patchData, postData, putData } from '@/api/api';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 
@@ -38,7 +38,10 @@ export const useApiMutations = () => {
       put: async () => {
         throw new Error('User is not authenticated');
       },
-      delete: async () => {
+      remove: async () => {
+        throw new Error('User is not authenticated');
+      },
+      patch: async () => {
         throw new Error('User is not authenticated');
       },
     };
@@ -47,6 +50,7 @@ export const useApiMutations = () => {
   return {
     post: (url: string, data: any) => postData(url, data, session),
     put: (url: string, data: any) => putData(url, data, session),
-    delete: (url: string) => deleteData(url, session),
+    remove: (url: string) => deleteData(url, session),
+    patch: (url: string, data: any) => patchData(url, data, session),
   };
 };

@@ -293,7 +293,7 @@ const parseResponseData = async <T>(
  * 共通のAPIリクエストを実行する関数
  * 認証情報の自動付与とエラーハンドリングを行う
  */
-export const sendRequest = async <T>(
+const sendRequest = async <T>(
   endpoint: string,
   session: Session,
   options: RequestInit = {}
@@ -364,6 +364,14 @@ export const deleteData = async <T>(
   session: Session
 ): Promise<ApiResponse<T>> => {
   return sendRequest<T>(url, session, createRequestOptions('DELETE'));
+};
+
+export const patchData = async <T>(
+  url: string,
+  data: any,
+  session: Session
+): Promise<ApiResponse<T>> => {
+  return sendRequest<T>(url, session, createRequestOptions('PATCH', data));
 };
 
 /**

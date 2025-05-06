@@ -1,11 +1,6 @@
 // src/api/rentItemsApi.ts
-import { useApiGet } from '@/hooks/useApi';
-import {
-  createRequestOptions,
-  patchFetcher,
-  postFetcher,
-  sendRequest,
-} from './api';
+import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { patchFetcher, postFetcher } from './api';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -106,6 +101,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
 
 // 物品申請の操作用フック
 export const useMutateRentalOrders = () => {
+  const { remove } = useApiMutations();
   // 物品申請データを送信
   const submitRentalOrders = async (
     items: Array<{ group_id: number; rental_item_id: number; num: number }>,
@@ -144,10 +140,7 @@ export const useMutateRentalOrders = () => {
       if (existingItems.length > items.length) {
         for (let i = items.length; i < existingItems.length; i++) {
           promises.push(
-            sendRequest(
-              `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
-              createRequestOptions('DELETE')
-            )
+            remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
           );
         }
       }
@@ -164,10 +157,7 @@ export const useMutateRentalOrders = () => {
   const deleteRentalOrders = async (itemIds: number[]) => {
     try {
       const promises = itemIds.map((id) =>
-        sendRequest(
-          `${API_ENDPOINTS.RENTAL_ORDERS}/${id}`,
-          createRequestOptions('DELETE')
-        )
+        remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
       );
 
       await Promise.all(promises);
