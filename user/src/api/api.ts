@@ -56,6 +56,28 @@ export const fetcher = ([url, session]: [string, Session]) => {
     });
 };
 
+export const noSessionFetcher = (url: string) => {
+  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  return fetch(fullUrl, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        throw new Error(`API Error: ${res.status}`);
+      }
+      const json = await res.json();
+      return camelcaseKeys(json, { deep: true });
+    })
+    .then((data) => {
+      return data;
+    })
+    .catch((error) => {
+      throw error;
+    });
+};
+
 /**
  * POSTリクエスト用のfetcher関数
  * クエリパラメータとボディをサポート
