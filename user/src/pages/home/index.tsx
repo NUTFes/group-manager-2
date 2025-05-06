@@ -17,6 +17,80 @@ export default function HomePage() {
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
 
+  const GroupCategoryContent = () => {
+    if (groupCategoryId === 6) {
+      return (
+        <>
+          <RentItems
+            isDeadline={!userPageSettings?.isEditRentalOrder}
+            isRegistered={checkAllRegisteredGroups?.rentalItem}
+            groupId={groupId}
+          />
+          <Power
+            isDeadline={!userPageSettings?.isEditPowerOrder}
+            isRegistered={checkAllRegisteredGroups?.powerOrder}
+            groupId={groupId}
+          />
+        </>
+      );
+    } else if (groupCategoryId === 3) {
+      return (
+        <>
+          <Stage
+            isDeadline={!userPageSettings?.isEditStageOrder}
+            isRegistered={checkAllRegisteredGroups?.stageOrder}
+            groupId={groupId}
+          />
+          <StageOptions
+            isDeadline={!userPageSettings?.isEditStageCommonOption}
+            isRegistered={checkAllRegisteredGroups?.stageOption}
+            groupId={groupId}
+          />
+          <RentItems
+            isDeadline={!userPageSettings?.isEditRentalOrder}
+            isRegistered={checkAllRegisteredGroups?.rentalItem}
+            groupId={groupId}
+          />
+          <Power
+            isDeadline={!userPageSettings?.isEditPowerOrder}
+            isRegistered={checkAllRegisteredGroups?.powerOrder}
+            groupId={groupId}
+          />
+          <PublicRelations
+            isDeadline={!userPageSettings?.isEditPublicRelation}
+            isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <VenueApplications
+            isDeadline={!userPageSettings?.isEditPlace}
+            isRegistered={checkAllRegisteredGroups?.placeOrder}
+            groupId={groupId}
+          />
+          <RentItems
+            isDeadline={!userPageSettings?.isEditRentalOrder}
+            isRegistered={checkAllRegisteredGroups?.rentalItem}
+            groupId={groupId}
+          />
+          <Power
+            isDeadline={!userPageSettings?.isEditPowerOrder}
+            isRegistered={checkAllRegisteredGroups?.powerOrder}
+            groupId={groupId}
+          />
+          <PublicRelations
+            isDeadline={!userPageSettings?.isEditPublicRelation}
+            isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+        </>
+      );
+    }
+  };
+
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
       <div className="order-2 flex flex-1 flex-col lg:order-1">
@@ -26,43 +100,7 @@ export default function HomePage() {
           groupId={groupId}
         />
         <ApplicationForm name="副代表申請" />
-        {groupCategoryId === 6 ? (
-          <></>
-        ) : groupCategoryId === 3 ? (
-          <>
-            <Stage
-              isDeadline={!userPageSettings?.isEditStageOrder}
-              isRegistered={checkAllRegisteredGroups?.stageOrder}
-              groupId={groupId}
-            />
-            <StageOptions
-              isDeadline={!userPageSettings?.isEditStageCommonOption}
-              isRegistered={checkAllRegisteredGroups?.stageOption}
-              groupId={groupId}
-            />
-          </>
-        ) : (
-          <VenueApplications
-            isDeadline={!userPageSettings?.isEditPlace}
-            isRegistered={checkAllRegisteredGroups?.placeOrder}
-            groupId={groupId}
-          />
-        )}
-        <RentItems
-          isDeadline={!userPageSettings?.isEditRentalOrder}
-          isRegistered={checkAllRegisteredGroups?.rentalItem}
-          groupId={groupId}
-        />
-        <Power
-          isDeadline={!userPageSettings?.isEditPowerOrder}
-          isRegistered={checkAllRegisteredGroups?.powerOrder}
-          groupId={groupId}
-        />
-        <PublicRelations
-          isDeadline={!userPageSettings?.isEditPublicRelation}
-          isRegistered={checkAllRegisteredGroups?.publicRelation}
-          groupId={groupId}
-        />
+        <GroupCategoryContent />
       </div>
       <div className="order-1 flex flex-1 items-start justify-center lg:order-2">
         <NewsList isLoginPage={false} />
