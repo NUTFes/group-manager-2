@@ -8,6 +8,7 @@ import PublicRelations from '@/components/Applications/PublicRelations';
 import Stage from '@/components/Applications/Stage';
 import StageOptions from '@/components/Applications/StageOptions';
 import VenueApplications from '@/components/Applications/VenueApplication';
+import ViceRepresentative from '@/components/Applications/ViceRepresentative';
 import NewsList from '@/components/NewsList';
 import { useUser } from '@/hooks/useUser';
 
@@ -102,7 +103,11 @@ export default function HomePage() {
           isRegistered={checkAllRegisteredGroups?.group}
           groupId={groupId}
         />
-        <ApplicationForm name="副代表申請" />
+        <ViceRepresentative
+          isDeadline={!userPageSettings?.isEditSubRep}
+          isRegistered={checkAllRegisteredGroups?.subRep}
+          groupId={groupId}
+        />
         <GroupCategoryContent />
       </div>
       <div className="order-1 flex flex-1 items-start justify-center lg:order-2">
@@ -111,13 +116,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-const ApplicationForm = ({ name }: { name: string }) => {
-  return (
-    <div className="flex flex-col gap-10">
-      <div className="mx-auto flex h-20 w-[450px] items-center justify-center bg-slate-500 md:w-[560px]">
-        {name}
-      </div>
-    </div>
-  );
-};

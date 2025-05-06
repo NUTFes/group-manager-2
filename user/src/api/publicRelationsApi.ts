@@ -1,6 +1,6 @@
-import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { fetcher, patchFetcher, postFetcher } from './api';
+import { useApiGet } from '@/hooks/useApi';
+import { patchFetcher, postFetcher } from './api';
 
 // リクエスト用の型定義
 export type PublicRelation = {
@@ -54,7 +54,7 @@ export const usePublicRelationData = (groupId: number) => {
     error,
     isLoading,
     mutate,
-  } = useSWR<ApiResponse<PublicRelationResponse>>(endpoint, fetcher);
+  } = useApiGet<ApiResponse<PublicRelationResponse>>(endpoint);
 
   // APIからのレスポンスを直接取得
   const publicRelation = response?.status.code === 200 ? response.data : null;
