@@ -17,7 +17,8 @@ import { ORDER_TYPES } from '@/components/Applications/Power/types';
 import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
-  viceRepresentative: ViceRepresentativeResponse | undefined
+  viceRepresentative: ViceRepresentativeResponse | undefined,
+  groupId: number
 ) => {
   const {
     handleSubmit,
@@ -29,7 +30,7 @@ export const useViceRepresentativeFormHook = (
   } = useForm<ViceRepresentativeForm>({
     resolver: zodResolver(viceRepresentativeSchema),
     defaultValues: {
-      groupId: 3,
+      groupId: groupId,
       name: viceRepresentative?.name || '',
       studentId: viceRepresentative?.studentId || 0,
       gradeId: viceRepresentative?.gradeId || 0,
@@ -39,7 +40,6 @@ export const useViceRepresentativeFormHook = (
     },
   });
   const values = watch();
-  const groupId = values.groupId;
 
   const [isIndividual, setIsIndividual] = useState<boolean | undefined>(
     undefined

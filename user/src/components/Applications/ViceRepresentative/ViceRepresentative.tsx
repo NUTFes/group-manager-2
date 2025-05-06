@@ -20,6 +20,7 @@ type ContentProps = {
   toEdit: () => void;
   viceRepresentative?: ViceRepresentativeResponse;
   formItem: FormItem[];
+  groupId: number;
 };
 
 const Content: FC<ContentProps> = ({
@@ -30,6 +31,7 @@ const Content: FC<ContentProps> = ({
   toEdit,
   viceRepresentative,
   formItem,
+  groupId,
 }) => {
   if (isLoading) {
     return <div>Loading...</div>;
@@ -52,6 +54,7 @@ const Content: FC<ContentProps> = ({
       <ViceRepresentativeForm
         toEdit={toEdit}
         viceRepresentative={viceRepresentative}
+        groupId={groupId}
       />
     );
   }
@@ -88,6 +91,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
         toEdit={toEdit}
         viceRepresentative={viceRepresentative}
         formItem={formItem}
+        groupId={groupId}
       />
     </AccordionMenu>
   );
