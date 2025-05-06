@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   GroupResponse,
   useCreateGroups,
@@ -14,17 +14,6 @@ export const useGroupFormHooks = (
   // groupsがすでに申請されている場合，formに表示させるため，引数として渡す
   groups: GroupResponse | undefined
 ) => {
-  // ユーザ情報を取得
-  const [userId, setUserId] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch('/api/getUser');
-      const data = await res.json();
-      setUserId(data?.id);
-    };
-    fetchUser();
-  }, []);
   // 団体カテゴリー一覧を取得
   const {
     handleSubmit,
@@ -42,7 +31,7 @@ export const useGroupFormHooks = (
       isExternal: groups?.isExternal ?? false,
       groupCategoryId: groups?.groupCategoryId ?? 1,
       activity: groups?.activity ?? '',
-      userId: groups?.userId ?? userId,
+      userId: groups?.userId ?? 1,
       fesYearId: groups?.fesYearId ?? 1,
       committee: groups?.committee ? 1 : 0,
     },
