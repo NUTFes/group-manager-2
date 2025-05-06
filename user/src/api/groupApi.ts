@@ -38,20 +38,6 @@ export type GroupCategoryResponse = {
 };
 
 // 既存の団体申請を取得するフック
-export const useGetGroupInfo = (userId: number | null) => {
-  const endpoint = userId ? `${API_ENDPOINTS.GROUPS}/${userId}` : null;
-
-  const { data, error, isLoading } =
-    useApiGet<ApiResponse<GroupResponse>>(endpoint);
-
-  return {
-    groups: data?.status.code === 200 ? data?.data : undefined,
-    isLoading,
-    hasError: !!error,
-  };
-};
-
-// 既存の団体申請を取得するフック
 export const useGetGroups = (groupId: number | null) => {
   const endpoint = groupId ? `${API_ENDPOINTS.GROUPS}/group/${groupId}` : null;
 
