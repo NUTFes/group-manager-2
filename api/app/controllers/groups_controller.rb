@@ -14,6 +14,17 @@ class GroupsController < ApplicationController
     render json: fmt(ok, @group)
   end
 
+  # GET /groups/user/:user_id/
+  def get_user_group_id_and_group_category_id
+    @group = Group.find_by(user_id: params[:user_id])
+
+    if @group
+      render json: fmt(ok, { id: @group.id, group_category_id: @group.group_category_id })
+    else
+      render json: fmt(not_found, [], "Group not found for user_id = #{params[:user_id]}")
+    end
+  end
+
   # POST /groups
   # POST /groups.json
   def create
