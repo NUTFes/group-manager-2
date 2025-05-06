@@ -1,4 +1,5 @@
-import { useApiGet } from '@/hooks/useApi';
+import { noSessionFetcher } from '@/api/api';
+import useSWR from 'swr';
 
 // openapiの型定義に変えたい
 export type News = {
@@ -16,7 +17,8 @@ const API_ENDPOINTS = {
 export const useGetNews = () => {
   const endpoint = `${API_ENDPOINTS.ANNOUNCEMENTS}`;
 
-  const { data, error, isLoading } = useApiGet<News[]>(endpoint);
+  // TODO: あとでsessionがいらないAPIのuseApiGetを作る
+  const { data, error, isLoading } = useSWR<News[]>(endpoint, noSessionFetcher);
 
   const news = data;
 

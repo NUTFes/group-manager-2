@@ -36,19 +36,10 @@ export const useDateOptions = (dates: FesDate[]) => {
       return [];
     }
 
-    const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-
     return dates.map((d) => {
-      const dateObj = new Date(d.date);
-      const month = dateObj.getMonth() + 1;
-      const day = dateObj.getDate();
-      const weekday = weekdays[dateObj.getDay()];
-      const formattedDate = `${month}/${day}(${weekday})`;
-      const index = dates.findIndex((date) => date.id === d.id);
-
       return {
         id: d.id,
-        name: `${index + 1}日目 ${formattedDate}`,
+        name: `${d.daysNum}日目 (${d.date}) ${d.day}`,
       };
     });
   }, [dates]);

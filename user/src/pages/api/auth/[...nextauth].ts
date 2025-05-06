@@ -103,4 +103,6 @@ export default NextAuth({
       console.log('signin user:', message.user);
     },
   },
+
+  secret: process.env.NEXTAUTH_SECRET,
 });
