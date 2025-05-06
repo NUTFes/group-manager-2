@@ -39,7 +39,7 @@ export type GroupCategoryResponse = {
 
 // 既存の団体申請を取得するフック
 export const useGetGroups = (groupId: number | null) => {
-  const endpoint = groupId ? `${API_ENDPOINTS.GROUPS}/group/${groupId}` : null;
+  const endpoint = groupId ? `${API_ENDPOINTS.GROUPS}/${groupId}` : null;
 
   const { data, error, isLoading } =
     useApiGet<ApiResponse<GroupResponse>>(endpoint);
