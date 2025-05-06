@@ -20,6 +20,8 @@ export default function HomePage() {
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
+  // Group申請が完了しているかを判定
+  const isGroupRegistered = checkAllRegisteredGroups?.group;
 
   const GroupCategoryContent = () => {
     if (groupCategoryId === 6) {
@@ -98,17 +100,28 @@ export default function HomePage() {
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
       <div className="order-2 flex flex-1 flex-col lg:order-1">
-        <Group
-          isDeadline={!userPageSettings?.isRegistGroup}
-          isRegistered={checkAllRegisteredGroups?.group}
-          groupId={groupId}
-        />
-        <ViceRepresentative
-          isDeadline={!userPageSettings?.isEditSubRep}
-          isRegistered={checkAllRegisteredGroups?.subRep}
-          groupId={groupId}
-        />
-        <GroupCategoryContent />
+        {/* Group申請がまだの場合はGroup申請のみ表示 */}
+        {!isGroupRegistered ? (
+          <Group
+            isDeadline={!userPageSettings?.isRegistGroup}
+            isRegistered={checkAllRegisteredGroups?.group}
+            groupId={groupId}
+          />
+        ) : (
+          <>
+            <Group
+              isDeadline={!userPageSettings?.isRegistGroup}
+              isRegistered={checkAllRegisteredGroups?.group}
+              groupId={groupId}
+            />
+            <ViceRepresentative
+              isDeadline={!userPageSettings?.isEditSubRep}
+              isRegistered={checkAllRegisteredGroups?.subRep}
+              groupId={groupId}
+            />
+            <GroupCategoryContent />
+          </>
+        )}
       </div>
       <div className="order-1 flex flex-1 items-start justify-center lg:order-2">
         <NewsList isLoginPage={false} />
