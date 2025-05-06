@@ -23,5 +23,6 @@ export const Default: Story = {
   args: {
     groupId: 1, // デフォルト値
     isDeadline: false, // デフォルト値
+    isRegistered: false, // デフォルト値
   },
 };
