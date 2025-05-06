@@ -10,12 +10,12 @@ interface LayoutProps {
 
 const Layout = ({ children, headerOnClick = () => {} }: LayoutProps) => {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen w-full flex-col">
       {/* ヘッダー */}
       <Header onClick={headerOnClick} />
 
       {/* メインコンテンツ */}
-      <main className="grow">{children}</main>
+      <main className="w-full grow">{children}</main>
 
       {/* フッター */}
       <Footer />
