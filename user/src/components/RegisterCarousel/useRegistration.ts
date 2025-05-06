@@ -191,4 +191,4 @@ export const useRegistration = (
     displayError, // 表示するエラーメッセージを返す
     setDisplayError, // エラーメッセージを設定する関数を返す
   };
-}
+};
