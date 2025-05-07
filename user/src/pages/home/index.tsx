@@ -10,9 +10,11 @@ import StageOptions from '@/components/Applications/StageOptions';
 import VenueApplications from '@/components/Applications/VenueApplication';
 import ViceRepresentative from '@/components/Applications/ViceRepresentative';
 import NewsList from '@/components/NewsList';
+import { useUser } from '@/hooks/useUser';
 
 export default function HomePage() {
-  const userId = 1;
+  const { user } = useUser();
+  const userId = user?.id;
   const { groupUserIdAndGroupCategoryId } = useGetGroupByUserId(userId);
   const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
@@ -96,17 +98,28 @@ export default function HomePage() {
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
       <div className="order-2 flex flex-1 flex-col lg:order-1">
-        <Group
-          isDeadline={!userPageSettings?.isRegistGroup}
-          isRegistered={checkAllRegisteredGroups?.group}
-          groupId={groupId}
-        />
-        <ViceRepresentative
-          isDeadline={!userPageSettings?.isEditSubRep}
-          isRegistered={checkAllRegisteredGroups?.subRep}
-          groupId={groupId}
-        />
-        <GroupCategoryContent />
+        {/* Group申請がまだの場合はGroup申請のみ表示 */}
+        {!checkAllRegisteredGroups?.group ? (
+          <Group
+            isDeadline={!userPageSettings?.isRegistGroup}
+            isRegistered={checkAllRegisteredGroups?.group}
+            groupId={groupId}
+          />
+        ) : (
+          <>
+            <Group
+              isDeadline={!userPageSettings?.isRegistGroup}
+              isRegistered={checkAllRegisteredGroups?.group}
+              groupId={groupId}
+            />
+            <ViceRepresentative
+              isDeadline={!userPageSettings?.isEditSubRep}
+              isRegistered={checkAllRegisteredGroups?.subRep}
+              groupId={groupId}
+            />
+            <GroupCategoryContent />
+          </>
+        )}
       </div>
       <div className="order-1 flex flex-1 items-start justify-center lg:order-2">
         <NewsList isLoginPage={false} />

@@ -1,6 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import { useUser } from '@/hooks/useUser';
 import CancelButton from '../CancelButton';
 import EditButton from '../EditButton';
 import LogoutButton from '../LogoutButton';
@@ -10,30 +11,8 @@ type UserModalProps = {
   onClose: () => void;
 };
 
-export type UserInfo = {
-  name: string;
-  email: string;
-};
-
-const getUserInfo = async (): Promise<UserInfo> => {
-  const res = await fetch('/api/getUser');
-  const data = await res.json();
-  return data;
-};
-
 const UserModal: FC<UserModalProps> = ({ isOpen, onClose }) => {
-  const [user, setUser] = useState<UserInfo>({
-    name: '',
-    email: '',
-  });
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userInfo = await getUserInfo();
-      setUser(userInfo);
-    };
-    fetchUser();
-  }, []);
+  const { user } = useUser();
 
   const handleLogout = async () => {
     try {
