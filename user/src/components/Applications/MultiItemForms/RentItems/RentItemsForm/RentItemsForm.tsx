@@ -59,34 +59,23 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
   if (!isEditMode && hasExplicitlyDeclinedItems && !hasExisting) {
     return (
       <div className="w-full text-font">
-        <div>
-          <p className="mb-[4px] text-sm text-alert">
-            会場申請を先に申請してください。
-          </p>
-          <br />
-          <Controller
-            name="hasItems"
-            control={control}
-            render={({ field }) => (
-              <Radio
-                label="物品申請を行いますか？"
-                value={field.value ? '1' : '0'}
-                onChange={(value: string) => {
-                  field.onChange(value === '1');
-                  openEditMode();
-                }}
-                required
-                options={[
-                  { id: 1, name: 'はい' },
-                  { id: 0, name: 'いいえ' },
-                ]}
-                error={errors.hasItems?.message?.toString()}
-              />
-            )}
-          />
-        </div>
-        <div className="mt-4 text-center font-medium text-red-500">
-          物品申請を行わない登録が完了しました
+        <div className="flex w-full flex-col gap-10 rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
+          <div className="mb-4">
+            <p className="text-xs">物品申請は不要（登録済み）</p>
+            <p>学校から借用する備品はありません。</p>
+          </div>
+          <div className="mt-4 flex justify-center">
+            <MultiItemFormButton
+              type="button"
+              size="pc"
+              color="edit"
+              onClick={openEditMode}
+            >
+              <div className="flex items-center">
+                <RiEdit2Line size={18} className="mr-1" /> 修正
+              </div>
+            </MultiItemFormButton>
+          </div>
         </div>
       </div>
     );

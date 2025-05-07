@@ -10,6 +10,7 @@ import {
 } from '@/api/rentItemsApi';
 import { useGetPlaceOrder } from '@/api/venueApplication';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { useApiGet } from '@/hooks/useApi';
 import {
   RentItemsFormData,
@@ -43,10 +44,12 @@ export const useRentItemsFormLogic = (groupId: number) => {
       }>;
     }>('/api/v1/get_all_rentable_items');
 
+  // フォーム送信ハンドラー（FormEventを処理）
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
     form.handleSubmit(onSubmit)();
   };
+
   // React Hook Form初期化 (Zodスキーマ使用)
   const form = useForm<RentItemsFormData>({
     defaultValues: {
@@ -114,6 +117,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
     });
   };
 
+  // 編集モードを開始する関数
   const openEditMode = async () => {
     try {
       // 編集に干渉する可能性のあるユーザー固有のフラグをリセット
@@ -173,10 +177,14 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
       // フォームリセット後に検証を強制実行
       setTimeout(() => trigger(), 100);
+
+      // 必要に応じて編集モード開始時のトーストメッセージを表示
+      // toast.info('編集モードを開始しました');
     } catch (error) {
       console.error('編集モード起動エラー:', error);
       setSubmitError('予期せぬエラーが発生しました。');
-      alert('予期せぬエラーが発生しました');
+      // エラー時にトースト通知を表示
+      toast.error('編集モードの開始に失敗しました');
     }
   };
 
@@ -424,6 +432,7 @@ export const useRentItemsFormLogic = (groupId: number) => {
     setTimeout(() => trigger(), 0);
   };
 
+  // 物品申請を行わない場合の登録処理
   const registerNoItems = async () => {
     try {
       setSubmitError('');
@@ -437,7 +446,8 @@ export const useRentItemsFormLogic = (groupId: number) => {
       // エラーチェック
       if (!unRegisteredResult.success) {
         console.error('登録エラー:', unRegisteredResult.error);
-        alert('物品申請の登録に失敗しました');
+        // トースト通知でエラーを表示
+        toast.error('物品申請の登録に失敗しました');
         return false;
       }
 
@@ -449,7 +459,8 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
         if (!result.success) {
           setSubmitError('既存の申請データ削除中にエラーが発生しました');
-          alert('既存の物品申請の削除に失敗しました');
+          // トースト通知でエラーを表示
+          toast.error('既存の物品申請の削除に失敗しました');
           return false;
         }
       }
@@ -461,13 +472,16 @@ export const useRentItemsFormLogic = (groupId: number) => {
 
       // API更新の通知
       await mutateRentalOrders();
+      // 成功時のトースト通知
+      toast.success('物品申請を行わない設定を登録しました');
       return true;
     } catch (error) {
       console.error('予期せぬエラー:', error);
       const errorMessage =
         error instanceof Error ? error.message : '不明なエラー';
       setSubmitError('予期せぬエラーが発生しました: ' + errorMessage);
-      alert('予期せぬエラーが発生しました');
+      // トースト通知でエラーを表示
+      toast.error('予期せぬエラーが発生しました');
       return false;
     }
   };
@@ -499,7 +513,9 @@ export const useRentItemsFormLogic = (groupId: number) => {
       if (result.success) {
         // 既存のUnRegisteredGroupを削除（申請する場合）
         await deleteUnRegisteredGroup(currentGroupId, ORDER_TYPES.RENT_ITEMS);
-        alert(
+
+        // アラートの代わりにトースト通知を使用
+        toast.success(
           rentalOrders.length > 0
             ? '物品申請を更新しました'
             : '物品申請を登録しました'
@@ -512,12 +528,14 @@ export const useRentItemsFormLogic = (groupId: number) => {
         setSubmitError(
           '送信中にエラーが発生しました。もう一度お試しください。'
         );
-        alert('物品申請の送信に失敗しました');
+        // トースト通知でエラーを表示
+        toast.error('物品申請の送信に失敗しました');
       }
     } catch (error) {
       console.error('物品申請エラー:', error);
       setSubmitError('予期せぬエラーが発生しました。もう一度お試しください。');
-      alert('予期せぬエラーが発生しました');
+      // トースト通知でエラーを表示
+      toast.error('予期せぬエラーが発生しました');
     }
   };
 
