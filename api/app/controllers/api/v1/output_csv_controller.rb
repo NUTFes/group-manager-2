@@ -502,7 +502,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 PR文 URL)
+      column_name = %w(参加団体名 PR文 URL アナウンス有無)
       csv << column_name
       @public_relations.each do |public_relations|
         # データが存在しない場合はスキップする
@@ -513,6 +513,7 @@ class Api::V1::OutputCsvController < ApplicationController
           public_relations.group.name,
           public_relations.blurb,
           public_relations.picture_path,
+          public_relations.is_announcement_requested ? "有" : "無",
         ]
         csv << column_values
       end
