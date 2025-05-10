@@ -1,3 +1,12 @@
+---
+name: GM2issueテンプレート
+about: GM2用issueテンプレート
+title: ""
+labels: ''
+assignees: ''
+
+---
+
 # 開発目的
 <!-- なにを改善するための開発なのかを明確にする -->
 
