@@ -12,7 +12,8 @@ import { GroupForm, groupSchema } from './schema';
 
 export const useGroupFormHooks = (
   // groupsがすでに申請されている場合，formに表示させるため，引数として渡す
-  groups: GroupResponse | undefined
+  groups: GroupResponse | undefined,
+  userId: number
 ) => {
   // 団体カテゴリー一覧を取得
   const {
@@ -31,7 +32,7 @@ export const useGroupFormHooks = (
       isExternal: groups?.isExternal ?? false,
       groupCategoryId: groups?.groupCategoryId ?? 1,
       activity: groups?.activity ?? '',
-      userId: groups?.userId ?? 1,
+      userId: groups?.userId ?? userId,
       fesYearId: groups?.fesYearId ?? 1,
       committee: groups?.committee ? 1 : 0,
     },
