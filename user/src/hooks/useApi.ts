@@ -1,6 +1,14 @@
-import { deleteData, fetcher, patchData, postData, putData } from '@/api/api';
+import {
+  deleteData,
+  fetcher,
+  patchData,
+  postData,
+  postFetcherWithSession,
+  putData,
+} from '@/api/api';
 import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -53,4 +61,18 @@ export const useApiMutations = () => {
     remove: (url: string) => deleteData(url, session),
     patch: (url: string, data: any) => patchData(url, data, session),
   };
+};
+
+// データ送信のための共通フック
+export const useSwrMutation = (url: string | null, options?: any) => {
+  // sessionの状態を取得
+  const { data: session, status } = useSession();
+
+  const shouldFetch = status === 'authenticated' && url;
+
+  return useSWRMutation(
+    shouldFetch ? [url, session] : null,
+    postFetcherWithSession,
+    options
+  );
 };

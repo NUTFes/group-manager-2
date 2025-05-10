@@ -21,12 +21,12 @@ const Header: FC<HeaderProps> = () => {
         <CorporateIcon height="60" />
       </Link>
       {showUserModal && (
-        <button onClick={() => setIsOpen(true)}>
-          <ProfileIcon height="56" />
-        </button>
-      )}
-      {showUserModal && (
-        <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        <>
+          <button onClick={() => setIsOpen(true)}>
+            <ProfileIcon height="56" />
+          </button>
+          <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        </>
       )}
     </div>
   );
