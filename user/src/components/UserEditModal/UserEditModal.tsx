@@ -53,7 +53,7 @@ const UserEditModal: FC<UserEditModalProps> = ({
                 note="例：09012345678"
                 required
                 error={errors.tel?.message}
-                onChange={() => {}}
+                onChange={(value: string) => setValue('tel', value)}
                 onBlur={() => trigger('tel')}
               />
               <TextBox
