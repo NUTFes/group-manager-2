@@ -46,7 +46,6 @@ export const useViceRepresentativeHook = (groupId: number) => {
       },
       {
         label: viceRepresentativeLabels[4],
-
         content:
           optionField.find((opt) => opt.id === viceRepresentative?.departmentId)
             ?.name ?? '',

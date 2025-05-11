@@ -10,7 +10,7 @@ type ViceRepresentativeProps = {
   isDeadline: boolean;
   isRegistered: boolean | undefined;
   groupId: number;
-  mutateViceRepresentative: () => void;
+  mutateCheckAllRegisteredGroups: () => void;
 };
 
 type ContentProps = {
@@ -23,6 +23,7 @@ type ContentProps = {
   formItem: FormItem[];
   groupId: number;
   mutateViceRepresentative: () => void;
+  mutateCheckAllRegisteredGroups: () => void;
 };
 
 const Content: FC<ContentProps> = ({
@@ -35,6 +36,7 @@ const Content: FC<ContentProps> = ({
   formItem,
   groupId,
   mutateViceRepresentative,
+  mutateCheckAllRegisteredGroups,
 }) => {
   if (isLoading) {
     return <div>Loading...</div>;
@@ -59,6 +61,7 @@ const Content: FC<ContentProps> = ({
         viceRepresentative={viceRepresentative}
         groupId={groupId}
         mutateViceRepresentative={mutateViceRepresentative}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
       />
     );
   }
@@ -70,7 +73,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   isDeadline,
   isRegistered,
   groupId,
-  mutateViceRepresentative,
+  mutateCheckAllRegisteredGroups,
 }) => {
   const {
     formItem,
@@ -79,6 +82,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
     viceRepresentative,
     isLoading,
     hasError,
+    mutateViceRepresentative,
   } = useViceRepresentativeHook(groupId);
   return (
     <AccordionMenu
@@ -98,6 +102,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
         formItem={formItem}
         groupId={groupId}
         mutateViceRepresentative={mutateViceRepresentative}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
       />
     </AccordionMenu>
   );
