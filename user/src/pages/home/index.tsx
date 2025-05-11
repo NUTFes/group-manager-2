@@ -19,7 +19,8 @@ export default function HomePage() {
   const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const { userPageSettings } = useGetUserPageSettings();
-  const { checkAllRegisteredGroups } = useGetCheckAllRegisteredGroups(groupId);
+  const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
+    useGetCheckAllRegisteredGroups(groupId);
 
   const GroupCategoryContent = () => {
     if (groupCategoryId === 6) {
@@ -116,6 +117,7 @@ export default function HomePage() {
               isDeadline={!userPageSettings?.isEditSubRep}
               isRegistered={checkAllRegisteredGroups?.subRep}
               groupId={groupId}
+              mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             />
             <GroupCategoryContent />
           </>
