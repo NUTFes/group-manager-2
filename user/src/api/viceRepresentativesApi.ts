@@ -26,8 +26,12 @@ export type ViceRepresentativeResponse = {
 export const useGetViceRepresentatives = (groupId: number | null) => {
   const endpoint = groupId ? `${API_ENDPOINT}/group/${groupId}` : null;
 
-  const { data, error, isLoading } =
-    useApiGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateViceRepresentative,
+  } = useApiGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
 
   return {
     // viceRepresentative: data?.status.code === 200 ? data.data : undefined,
@@ -36,6 +40,7 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
     // hasError: !!error, //groupId関連の実装時に切り替える
     hasError: false,
     error,
+    mutateViceRepresentative,
   };
 };
 
