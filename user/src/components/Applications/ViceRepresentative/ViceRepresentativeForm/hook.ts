@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -13,14 +13,49 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
   viceRepresentative: ViceRepresentativeResponse | undefined,
   groupId: number,
-  mutatedViceRepresentative: () => void
+  mutatedViceRepresentative: () => void,
+  mutateCheckAllRegistered: () => void
 ) => {
+  // 副代表申請のAPIを呼び出すためのフック
+  const { trigger: create } = useCreateViceRepresentative();
+  const { trigger: update } = useUpdateViceRepresentative(
+    viceRepresentative?.id
+  );
+  const { trigger: deleteViceRep } = useDeleteViceRepresentative(
+    viceRepresentative?.id
+  );
+
+  // 申請しないを登録するためのAPIを呼び出すためのフック
+  const { registerUnregisteredGroup } = useMutateUnregisteredGroup(
+    ORDER_TYPES.SUB_REP
+  );
+  const { deleteUnregisteredGroup } = useMutateUnregisteredGroup(
+    ORDER_TYPES.SUB_REP
+  );
+  const { unregisteredData, mutateUnregisteredGroup } = useGetUnregisteredGroup(
+    groupId,
+    ORDER_TYPES.SUB_REP
+  );
+
+  const [isIndividual, setIsIndividual] = useState(() => {
+    if (unregisteredData) {
+      return true;
+    } else if (viceRepresentative) {
+      return false;
+    } else {
+      return undefined;
+    }
+  });
+
+  const setIsIndividualById = (id: number) => {
+    setIsIndividual(id === 1);
+  };
+
   const {
     handleSubmit,
     setValue,
@@ -29,7 +64,12 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
   } = useForm<ViceRepresentativeForm>({
-    resolver: zodResolver(viceRepresentativeSchema),
+    resolver: isIndividual
+      ? async (values: ViceRepresentativeForm) => ({
+          values,
+          errors: {},
+        })
+      : zodResolver(viceRepresentativeSchema),
     defaultValues: {
       groupId: groupId,
       name: viceRepresentative?.name || '',
@@ -40,76 +80,29 @@ export const useViceRepresentativeFormHook = (
       tel: viceRepresentative?.tel || '',
     },
   });
+
   const values = watch();
-
-  const [isIndividual, setIsIndividual] = useState<boolean | undefined>(
-    undefined
-  );
-
-  const setIsIndividualById = (id: number) => {
-    setIsIndividual(id === 1);
-  };
-
-  const { trigger: create } = useCreateViceRepresentative();
-
-  const { trigger: update } = useUpdateViceRepresentative(
-    viceRepresentative?.id
-  );
-
-  const { trigger: deleteViceRep } = useDeleteViceRepresentative(
-    viceRepresentative?.id
-  );
-
-  const { registerUnregisteredGroup } = useMutateUnregisteredGroup(
-    ORDER_TYPES.SUB_REP
-  );
-
-  const { deleteUnregisteredGroup } = useMutateUnregisteredGroup(
-    ORDER_TYPES.SUB_REP
-  );
-
-  const { unregisteredData } = useGetUnregisteredGroup(
-    groupId,
-    ORDER_TYPES.SUB_REP
-  );
-
-  useEffect(() => {
-    if (unregisteredData) {
-      setIsIndividual(true);
-    } else if (viceRepresentative) {
-      setIsIndividual(false);
-    } else {
-      setIsIndividual(undefined);
-    }
-  }, [unregisteredData, viceRepresentative]);
 
   const onSubmit = (onSuccess: () => void) =>
     handleSubmit(async (data) => {
       try {
         if (isIndividual === true) {
-          if (!unregisteredData) {
+          if (unregisteredData === null) {
             await registerUnregisteredGroup(data.groupId);
           }
-          await mutate(
-            `/un_registered_groups/group/${data.groupId}?type=${ORDER_TYPES.SUB_REP}`,
-            undefined,
-            {
-              revalidate: true,
-            }
-          );
           await deleteViceRep();
+          await mutateUnregisteredGroup();
         } else {
+          await deleteUnregisteredGroup(unregisteredData);
+          await mutateUnregisteredGroup();
           if (viceRepresentative) {
             await update({ query: data });
-            mutatedViceRepresentative();
+            await mutatedViceRepresentative();
           } else {
             await create({ query: data });
-            mutatedViceRepresentative();
-            await mutate(`/check_all_registered/${data.groupId}`, undefined, {
-              revalidate: true,
-            });
+            await mutatedViceRepresentative();
+            await mutateCheckAllRegistered();
           }
-          await deleteUnregisteredGroup(unregisteredData);
         }
         toast.success('送信に成功しました');
         onSuccess();

@@ -17,6 +17,7 @@ type ViceRepresentativeFormProps = {
   toEdit: () => void;
   groupId: number;
   mutateViceRepresentative?: () => void;
+  mutateCheckAllRegisteredGroups?: () => void;
 };
 
 const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
@@ -24,6 +25,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   toEdit,
   groupId,
   mutateViceRepresentative,
+  mutateCheckAllRegisteredGroups,
 }) => {
   const {
     setValue,
@@ -36,7 +38,8 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   } = useViceRepresentativeFormHook(
     viceRepresentative,
     groupId,
-    mutateViceRepresentative ?? (() => {})
+    mutateViceRepresentative ?? (() => {}),
+    mutateCheckAllRegisteredGroups ?? (() => {})
   );
 
   return (
