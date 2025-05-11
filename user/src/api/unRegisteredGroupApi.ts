@@ -50,7 +50,7 @@ export const useGetUnregisteredGroup = (
     isLoading,
     hasError: !!error,
     hasUnregistered,
-    mutate,
+    mutateUnregisteredGroup: mutate,
   };
 };
 
