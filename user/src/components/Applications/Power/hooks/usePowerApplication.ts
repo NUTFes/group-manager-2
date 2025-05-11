@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGetPowerOrders, useMutatePowerOrders } from '@/api/powerApi';
 import {
+  ORDER_TYPES,
   useGetUnregisteredGroup,
   useMutateUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
@@ -8,7 +9,7 @@ import { toast } from 'react-toastify';
 import { mutate } from 'swr';
 import { DEFAULT_DEVICE } from '../constants';
 import { PowerApplicationFormData } from '../schema';
-import { Device, ORDER_TYPES, PowerApplicationOption } from '../types';
+import { Device, PowerApplicationOption } from '../types';
 import { usePowerForm } from './usePowerForm';
 
 // 電力申請フォームの状態管理型
