@@ -3,7 +3,7 @@ import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
-import ViceRepresentativeForm from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm';
+import ViceRepresentativeForm from './ViceRepresentativeForm';
 import { useViceRepresentativeHook } from './hook';
 
 type ViceRepresentativeProps = {
