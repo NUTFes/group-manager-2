@@ -15,6 +15,16 @@ export type UnregisteredGroupResponse = {
 
 const API_ENDPOINT = '/un_registered_groups';
 
+export const ORDER_TYPES = {
+  RENTAL_ITEM_ORDER: 0,
+  POWER_ORDER: 1,
+  SUB_REP: 2,
+  EMPLOYEE: 3,
+  FIRE_EQUIPMENT_ORDER: 4,
+} as const;
+
+export type OrderType = (typeof ORDER_TYPES)[keyof typeof ORDER_TYPES];
+
 /**
  * 未登録テーブルデータを取得するフック
  * orderType: number（ORDER_TYPESの値）で任意の申請種別に対応
