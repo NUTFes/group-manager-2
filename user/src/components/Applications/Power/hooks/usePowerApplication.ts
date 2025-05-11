@@ -46,7 +46,7 @@ export const usePowerApplication = (groupId: number) => {
     hasUnregistered,
     isLoading: isLoadingUnregistered,
     hasError: hasErrorUnregistered,
-    mutate: mutateUnregistered,
+    mutateUnregisteredGroup,
     unregisteredData,
   } = useGetUnregisteredGroup(groupId, ORDER_TYPES.POWER_ORDER);
 
@@ -170,7 +170,7 @@ export const usePowerApplication = (groupId: number) => {
       if (result.success) {
         updateState({ applyPower: 'no' });
         await mutatePowerOrders();
-        await mutateUnregistered();
+        await mutateUnregisteredGroup();
         mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
         toast.success('電力申請を行わない登録が完了しました');
       } else {
@@ -231,10 +231,9 @@ export const usePowerApplication = (groupId: number) => {
 
       if (result.success) {
         await mutatePowerOrders(); // 電力申請データを再取得
-        await mutateUnregistered(); // 未登録テーブルデータを再取得
-        mutate(`/check_all_registered/${groupId}`); // 全体登録状態を再取得
-        updateState({ isEditing: false });
+        await mutateUnregisteredGroup(); // 未登録テーブルデータを再取得
 
+        updateState({ isEditing: false });
         // 編集か新規登録かによって通知メッセージを変える
         if (hasExisting) {
           toast.success('電力申請情報を更新しました');
