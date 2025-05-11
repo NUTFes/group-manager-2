@@ -1,13 +1,15 @@
-import { useMemo, useState } from 'react';
-import { useGetUnregisteredGroup } from '@/api/unRegisteredGroupApi';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  ORDER_TYPES,
+  useGetUnregisteredGroup,
+} from '@/api/unRegisteredGroupApi';
 import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
-import { FormItem } from '@/components/FormList/type';
-import { ORDER_TYPES } from '../Power';
-import { viceRepresentativeLabels } from '../label';
 import {
   optionField,
   optionGrade,
-} from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm/hook';
+} from '@/components/Applications/ViceRepresentative/options';
+import { FormItem } from '@/components/FormList/type';
+import { viceRepresentativeLabels } from '../label';
 
 export const useViceRepresentativeHook = (groupId: number) => {
   const { viceRepresentative, isLoading, hasError } =
@@ -16,10 +18,9 @@ export const useViceRepresentativeHook = (groupId: number) => {
     groupId,
     ORDER_TYPES.SUB_REP
   );
-  const isUnregistered = !!unregisteredData;
 
   const formItem: FormItem[] = useMemo(() => {
-    if (isUnregistered) {
+    if (unregisteredData) {
       return [
         {
           label: '副代表申請は不要（登録済み）',
@@ -59,9 +60,14 @@ export const useViceRepresentativeHook = (groupId: number) => {
         content: viceRepresentative?.tel ?? '',
       },
     ];
-  }, [isUnregistered, viceRepresentative]);
+  }, [viceRepresentative, unregisteredData]);
 
-  const [isEditing, setIsEditing] = useState(viceRepresentative ? false : true);
+  const [isEditing, setIsEditing] = useState(true);
+  useEffect(() => {
+    if (viceRepresentative) {
+      setIsEditing(false);
+    }
+  }, [viceRepresentative]);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
