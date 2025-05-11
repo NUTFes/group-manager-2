@@ -12,7 +12,7 @@ import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
 
 export const useViceRepresentativeHook = (groupId: number) => {
-  const { viceRepresentative, isLoading, hasError } =
+  const { viceRepresentative, isLoading, hasError, mutateViceRepresentative } =
     useGetViceRepresentatives(groupId);
   const { unregisteredData } = useGetUnregisteredGroup(
     groupId,
@@ -80,5 +80,6 @@ export const useViceRepresentativeHook = (groupId: number) => {
     isEditing,
     toEdit,
     formItem,
+    mutateViceRepresentative,
   };
 };

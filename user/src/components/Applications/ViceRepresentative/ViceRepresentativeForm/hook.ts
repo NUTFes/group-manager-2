@@ -18,7 +18,8 @@ import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
   viceRepresentative: ViceRepresentativeResponse | undefined,
-  groupId: number
+  groupId: number,
+  mutatedViceRepresentative: () => void
 ) => {
   const {
     handleSubmit,
@@ -100,14 +101,10 @@ export const useViceRepresentativeFormHook = (
         } else {
           if (viceRepresentative) {
             await update({ query: data });
-            await mutate(`/sub_reps/group/${data.groupId}`, undefined, {
-              revalidate: true,
-            });
+            mutatedViceRepresentative();
           } else {
             await create({ query: data });
-            await mutate(`/sub_reps/group/${data.groupId}`, undefined, {
-              revalidate: true,
-            });
+            mutatedViceRepresentative();
             await mutate(`/check_all_registered/${data.groupId}`, undefined, {
               revalidate: true,
             });

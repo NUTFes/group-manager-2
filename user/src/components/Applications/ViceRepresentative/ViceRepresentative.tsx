@@ -10,6 +10,7 @@ type ViceRepresentativeProps = {
   isDeadline: boolean;
   isRegistered: boolean | undefined;
   groupId: number;
+  mutateViceRepresentative: () => void;
 };
 
 type ContentProps = {
@@ -21,6 +22,7 @@ type ContentProps = {
   viceRepresentative?: ViceRepresentativeResponse;
   formItem: FormItem[];
   groupId: number;
+  mutateViceRepresentative: () => void;
 };
 
 const Content: FC<ContentProps> = ({
@@ -32,6 +34,7 @@ const Content: FC<ContentProps> = ({
   viceRepresentative,
   formItem,
   groupId,
+  mutateViceRepresentative,
 }) => {
   if (isLoading) {
     return <div>Loading...</div>;
@@ -55,6 +58,7 @@ const Content: FC<ContentProps> = ({
         toEdit={toEdit}
         viceRepresentative={viceRepresentative}
         groupId={groupId}
+        mutateViceRepresentative={mutateViceRepresentative}
       />
     );
   }
@@ -66,6 +70,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   isDeadline,
   isRegistered,
   groupId,
+  mutateViceRepresentative,
 }) => {
   const {
     formItem,
@@ -92,6 +97,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
         viceRepresentative={viceRepresentative}
         formItem={formItem}
         groupId={groupId}
+        mutateViceRepresentative={mutateViceRepresentative}
       />
     </AccordionMenu>
   );
