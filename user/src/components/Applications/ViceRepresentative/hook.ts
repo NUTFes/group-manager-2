@@ -4,10 +4,7 @@ import {
   useGetUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
 import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
-import {
-  optionField,
-  optionGrade,
-} from '@/components/Applications/ViceRepresentative/options';
+import { DepartmentList, GradeList } from '@/utils/list';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
 
@@ -41,14 +38,15 @@ export const useViceRepresentativeHook = (groupId: number) => {
       {
         label: viceRepresentativeLabels[3],
         content:
-          optionGrade.find((opt) => opt.id === viceRepresentative?.gradeId)
+          GradeList.find((opt) => opt.id === viceRepresentative?.gradeId)
             ?.name ?? '',
       },
       {
         label: viceRepresentativeLabels[4],
         content:
-          optionField.find((opt) => opt.id === viceRepresentative?.departmentId)
-            ?.name ?? '',
+          DepartmentList.find(
+            (opt) => opt.id === viceRepresentative?.departmentId
+          )?.name ?? '',
       },
       {
         label: viceRepresentativeLabels[5],
@@ -63,10 +61,10 @@ export const useViceRepresentativeHook = (groupId: number) => {
 
   const [isEditing, setIsEditing] = useState(true);
   useEffect(() => {
-    if (viceRepresentative) {
+    if (viceRepresentative || unregisteredData) {
       setIsEditing(false);
     }
-  }, [viceRepresentative]);
+  }, [viceRepresentative, unregisteredData]);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
