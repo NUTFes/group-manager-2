@@ -7,6 +7,7 @@ const API_ENDPOINTS = {
   // 物品関連
   INSIDE_SHOP_RENTABLE_ITEMS: '/api/v1/get_inside_shop_rentable_items', // 屋内模擬店での貸出物品
   OUTSIDE_SHOP_RENTABLE_ITEMS: '/api/v1/get_outside_shop_rentable_items', // 屋外模擬店での貸出物品
+  ALL_RENTABLE_ITEMS: '/api/v1/get_all_rentable_items', // 全ての貸出物品
 
   // 物品申請関連
   RENTAL_ORDERS: '/rental_orders',
@@ -36,6 +37,7 @@ export type RentalOrder = {
   created_at: string;
   updated_at: string;
 };
+
 // ORDER_TYPESの定義（物品申請用）
 export const ORDER_TYPES = {
   RENT_ITEMS: 0, // 物品申請を表すタイプ
@@ -59,19 +61,34 @@ type ApiResponse<T> = {
   data: T;
 };
 
-// 会場タイプに応じた物品データを取得するフック
+// 団体タイプに応じた物品一覧を取得するフック (API実装不要)
 export const useRentableItemsByType = (locationType: string) => {
   // 会場タイプに応じてエンドポイントを選択
   const endpoint =
-    locationType === '1'
-      ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
-      : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
+      locationType === '1'
+          ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
+          : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
 
   const {
     data: response,
     error,
     isLoading,
   } = useApiGet<ApiResponse<RentalItem[]>>(endpoint);
+
+  return {
+    items: response?.data || [],
+    itemsError: error,
+    itemsLoading: isLoading,
+  };
+};
+
+// 全ての貸出物品を取得するフック (実行委員会用を含む)
+export const useAllRentableItems = () => {
+  const {
+    data: response,
+    error,
+    isLoading,
+  } = useApiGet<ApiResponse<RentalItem[]>>(API_ENDPOINTS.ALL_RENTABLE_ITEMS);
 
   return {
     items: response?.data || [],
@@ -88,7 +105,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
     isLoading,
     mutate,
   } = useApiGet<ApiResponse<RentalOrder[]>>(
-    `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
+      `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
   );
 
   return {
@@ -104,8 +121,8 @@ export const useMutateRentalOrders = () => {
   const { remove } = useApiMutations();
   // 物品申請データを送信
   const submitRentalOrders = async (
-    items: Array<{ group_id: number; rental_item_id: number; num: number }>,
-    existingItems: RentalOrder[] = []
+      items: Array<{ group_id: number; rental_item_id: number; num: number }>,
+      existingItems: RentalOrder[] = []
   ) => {
     try {
       const promises = [];
@@ -116,12 +133,12 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          patchFetcher(
-            `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
-            {
-              arg: { body: items[i] },
-            }
-          )
+            patchFetcher(
+                `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
+                {
+                  arg: { body: items[i] },
+                }
+            )
         );
       }
 
@@ -129,9 +146,9 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-            postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
-              arg: { body: items[i] },
-            })
+              postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+                arg: { body: items[i] },
+              })
           );
         }
       }
@@ -140,7 +157,7 @@ export const useMutateRentalOrders = () => {
       if (existingItems.length > items.length) {
         for (let i = items.length; i < existingItems.length; i++) {
           promises.push(
-            remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
+              remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
           );
         }
       }
@@ -157,7 +174,7 @@ export const useMutateRentalOrders = () => {
   const deleteRentalOrders = async (itemIds: number[]) => {
     try {
       const promises = itemIds.map((id) =>
-        remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
+          remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
       );
 
       await Promise.all(promises);

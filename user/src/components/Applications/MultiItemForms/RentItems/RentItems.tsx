@@ -6,12 +6,14 @@ type RentItemsProps = {
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
   groupId: number;
+  groupCategoryId?: number; // 追加：団体カテゴリID
 };
 
 const RentItems: FC<RentItemsProps> = ({
   isDeadline,
   isRegistered,
   groupId,
+  groupCategoryId,
 }) => {
   return (
     <AccordionMenu
@@ -20,7 +22,7 @@ const RentItems: FC<RentItemsProps> = ({
       isExist={isRegistered}
       required={true}
     >
-      <RentItemsForm groupId={groupId} />
+      <RentItemsForm groupId={groupId} groupCategoryId={groupCategoryId}/>
     </AccordionMenu>
   );
 };
