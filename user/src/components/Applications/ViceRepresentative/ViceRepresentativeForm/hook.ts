@@ -42,8 +42,9 @@ export const useViceRepresentativeFormHook = (
     ORDER_TYPES.SUB_REP
   );
 
+  // 一人での参加かどうかを管理するstate
   const [isIndividual, setIsIndividual] = useState(() => {
-    if (unregisteredData) {
+    if (unregisteredData !== null) {
       return true;
     } else if (viceRepresentative) {
       return false;
@@ -86,19 +87,26 @@ export const useViceRepresentativeFormHook = (
   const onSubmit = (onSuccess: () => void) =>
     handleSubmit(async (data) => {
       try {
-        if (isIndividual === true) {
+        // 一人での参加の場合
+        if (isIndividual) {
+          // 未登録データが存在しなければ、未登録グループの登録処理を実行
           if (unregisteredData === null) {
             await registerUnregisteredGroup(data.groupId);
           }
+          // 副代表の削除処理を実行と未登録データのキャッシュ更新
           await deleteViceRep();
           await mutateUnregisteredGroup();
         } else {
+          // 二人以上の場合
+          // 既存の未登録グループを削除する処理とキャッシュの更新を実行
           await deleteUnregisteredGroup(unregisteredData);
           await mutateUnregisteredGroup();
+          // 副代表が存在する場合の分岐
           if (viceRepresentative) {
             await update({ query: data });
             await mutatedViceRepresentative();
           } else {
+            // 副代表が存在しない場合、未登録グループの新規作成処理を実行し、副代表・登録済みのキャッシュを更新
             await create({ query: data });
             await mutatedViceRepresentative();
             await mutateCheckAllRegistered();
@@ -111,6 +119,11 @@ export const useViceRepresentativeFormHook = (
       }
     });
 
+  const option = [
+    { id: 1, name: 'はい(一人での参加)' },
+    { id: 0, name: 'いいえ(グループで参加)' },
+  ];
+
   return {
     setValue,
     getValues,
@@ -118,14 +131,9 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
     onSubmit,
-    option2,
+    option,
     isIndividual,
     setIsIndividualById,
     values,
   };
 };
-
-export const option2 = [
-  { id: 1, name: 'はい(一人での参加)' },
-  { id: 0, name: 'いいえ(グループで参加)' },
-];
