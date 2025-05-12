@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import LoginModal from '@/components/LoginModal';
 import NewsList from '@/components/NewsList';
 import RegisterCarousel from '@/components/RegisterCarousel';
@@ -38,12 +37,6 @@ export default function Home() {
           handleRegisterClick={() => {
             handleRegisterClick();
           }}
-        />
-        <RentItems
-          isDeadline={false}
-          isRegistered={false}
-          groupId={1}
-          groupCategoryId={2}
         />
       </div>
     </>
