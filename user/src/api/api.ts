@@ -408,3 +408,36 @@ function objectToQueryString(params: { [key: string]: any }): string {
     )
     .join('&');
 }
+
+/**
+ * POSTリクエスト用のfetcher関数
+ * Headersに認証情報を追加
+ * クエリパラメータとボディをサポート
+ */
+export async function postFetcherWithSession(
+  [url, session]: [string, Session],
+  { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
+): Promise<any> {
+  const requestHeaders = headers(session);
+  let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+  if (arg.query) {
+    const queryStr = objectToQueryString(arg.query);
+    finalUrl = `${API_URL}${url}?${queryStr}`;
+  }
+
+  const response = await fetch(finalUrl, {
+    method: 'POST',
+    headers: requestHeaders,
+    body: JSON.stringify(arg.body),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    const error = new Error('Error posting data');
+    (error as any).info = errorBody;
+    (error as any).status = response.status;
+    throw error;
+  }
+
+  return response.json();
+}
