@@ -22,7 +22,7 @@ const RentItems: FC<RentItemsProps> = ({
       isExist={isRegistered}
       required={true}
     >
-      <RentItemsForm groupId={groupId} groupCategoryId={groupCategoryId}/>
+      <RentItemsForm groupId={groupId} groupCategoryId={groupCategoryId} isDeadline={!isDeadline}/>
     </AccordionMenu>
   );
 };

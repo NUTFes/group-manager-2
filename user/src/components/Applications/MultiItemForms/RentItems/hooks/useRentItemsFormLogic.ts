@@ -36,8 +36,7 @@ const OUTDOOR_ITEM_IDS = [
 
 export const useRentItemsFormLogic = (
     groupId: number,
-    groupCategoryId?: number, // 団体カテゴリID
-    isFoodSelling?: boolean   // 食品販売フラグを追加（互換性のために残しておく）
+    groupCategoryId?: number// 食品販売フラグを追加（互換性のために残しておく）
 ) => {
   // 認証基盤ができたら、グループIDを取得する
   const currentGroupId = groupId;

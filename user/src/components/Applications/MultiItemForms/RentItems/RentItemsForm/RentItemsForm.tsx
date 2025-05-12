@@ -20,8 +20,7 @@ type RentItemsFormProps = {
 const RentItemsForm: FC<RentItemsFormProps> = ({
                                                    groupId,
                                                    groupCategoryId,
-                                                   isDeadline,
-                                                   isFoodSelling = false // デフォルトはfalse（互換性のために残す）
+                                                   isDeadline// デフォルトはfalse（互換性のために残す）
                                                }) => {
     // 主に groupCategoryId を使って判断するように変更
     const {
@@ -46,7 +45,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         handleFormSubmit,
         hideLocationTypeSelect, // 会場タイプ選択を非表示にするフラグ
         isFoodSellingGroup,     // 食品販売団体かどうかのフラグ
-    } = useRentItemsFormLogic(groupId, groupCategoryId, isFoodSelling);
+    } = useRentItemsFormLogic(groupId, groupCategoryId);
 
     if (isLoading) {
         return (
