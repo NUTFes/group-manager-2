@@ -65,9 +65,9 @@ type ApiResponse<T> = {
 export const useRentableItemsByType = (locationType: string) => {
   // 会場タイプに応じてエンドポイントを選択
   const endpoint =
-      locationType === '1'
-          ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
-          : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
+    locationType === '1'
+      ? API_ENDPOINTS.INSIDE_SHOP_RENTABLE_ITEMS
+      : API_ENDPOINTS.OUTSIDE_SHOP_RENTABLE_ITEMS;
 
   const {
     data: response,
@@ -105,7 +105,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
     isLoading,
     mutate,
   } = useApiGet<ApiResponse<RentalOrder[]>>(
-      `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
+    `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
   );
 
   return {
@@ -121,8 +121,8 @@ export const useMutateRentalOrders = () => {
   const { remove } = useApiMutations();
   // 物品申請データを送信
   const submitRentalOrders = async (
-      items: Array<{ group_id: number; rental_item_id: number; num: number }>,
-      existingItems: RentalOrder[] = []
+    items: Array<{ group_id: number; rental_item_id: number; num: number }>,
+    existingItems: RentalOrder[] = []
   ) => {
     try {
       const promises = [];
@@ -133,12 +133,12 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-            patchFetcher(
-                `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
-                {
-                  arg: { body: items[i] },
-                }
-            )
+          patchFetcher(
+            `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
+            {
+              arg: { body: items[i] },
+            }
+          )
         );
       }
 
@@ -146,9 +146,9 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-              postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
-                arg: { body: items[i] },
-              })
+            postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+              arg: { body: items[i] },
+            })
           );
         }
       }
@@ -157,7 +157,7 @@ export const useMutateRentalOrders = () => {
       if (existingItems.length > items.length) {
         for (let i = items.length; i < existingItems.length; i++) {
           promises.push(
-              remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
+            remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`)
           );
         }
       }
@@ -174,7 +174,7 @@ export const useMutateRentalOrders = () => {
   const deleteRentalOrders = async (itemIds: number[]) => {
     try {
       const promises = itemIds.map((id) =>
-          remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
+        remove(`${API_ENDPOINTS.RENTAL_ORDERS}/${id}`)
       );
 
       await Promise.all(promises);
