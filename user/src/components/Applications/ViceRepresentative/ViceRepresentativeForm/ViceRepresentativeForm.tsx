@@ -1,9 +1,6 @@
 import type { FC } from 'react';
 import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
-import {
-  optionField,
-  optionGrade,
-} from '@/components/Applications/ViceRepresentative/options';
+import { DepartmentList, GradeList } from '@/utils/list';
 import { viceRepresentativeLabels } from '@/components/Applications/label';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -31,7 +28,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
     setValue,
     errors,
     onSubmit,
-    option2,
+    option,
     values,
     setIsIndividualById,
     isIndividual,
@@ -49,7 +46,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
           <Radio
             label={viceRepresentativeLabels[0]}
             onChange={(value) => setIsIndividualById(Number(value))}
-            options={option2}
+            options={option}
             required
             value={isIndividual === undefined ? '' : isIndividual ? '1' : '0'}
             error={errors.groupId?.message}
@@ -77,7 +74,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
                 value={values.gradeId}
                 onChange={(value) => setValue('gradeId', Number(value))}
                 required
-                options={optionGrade}
+                options={GradeList}
                 error={errors.gradeId?.message}
               />
               <Selector
@@ -85,7 +82,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
                 value={values.departmentId}
                 onChange={(value) => setValue('departmentId', Number(value))}
                 required
-                options={optionField}
+                options={DepartmentList}
                 error={errors.departmentId?.message}
               />
               <TextBox
