@@ -10,6 +10,7 @@ type GroupProps = {
   isDeadline?: boolean | undefined;
   isRegistered?: boolean | undefined;
   groupId: number;
+  userId: number;
 };
 
 type ContentProps = {
@@ -21,6 +22,7 @@ type ContentProps = {
   groups?: GroupResponse;
   formItem: FormItem[];
   groupCategories?: GroupCategoryResponse[];
+  userId: number;
 };
 
 // 表示画面を切り替えるコンポーネント
@@ -33,6 +35,7 @@ const Content: FC<ContentProps> = ({
   groups,
   formItem,
   groupCategories,
+  userId,
 }) => {
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
@@ -57,6 +60,7 @@ const Content: FC<ContentProps> = ({
         toEdit={toEdit}
         groups={groups}
         groupCategories={groupCategories}
+        userId={userId}
       />
     );
   }
@@ -65,7 +69,12 @@ const Content: FC<ContentProps> = ({
 };
 
 // export内容（このファイルのメイン部分）
-const Group: FC<GroupProps> = ({ isDeadline, isRegistered, groupId }) => {
+const Group: FC<GroupProps> = ({
+  isDeadline,
+  isRegistered,
+  groupId,
+  userId,
+}) => {
   const {
     formItem,
     isEditing,
@@ -91,6 +100,7 @@ const Group: FC<GroupProps> = ({ isDeadline, isRegistered, groupId }) => {
         groups={groups}
         formItem={formItem}
         groupCategories={groupCategories}
+        userId={userId}
       />
     </AccordionMenu>
   );

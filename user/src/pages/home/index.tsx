@@ -105,6 +105,7 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isRegistGroup}
             isRegistered={checkAllRegisteredGroups?.group}
             groupId={groupId}
+            userId={userId || 0}
           />
         ) : (
           <>
@@ -112,6 +113,7 @@ export default function HomePage() {
               isDeadline={!userPageSettings?.isRegistGroup}
               isRegistered={checkAllRegisteredGroups?.group}
               groupId={groupId}
+              userId={userId || 0}
             />
             <ViceRepresentative
               isDeadline={!userPageSettings?.isEditSubRep}
