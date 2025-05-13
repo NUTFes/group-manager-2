@@ -117,6 +117,7 @@ export default function HomePage() {
               isRegistered={checkAllRegisteredGroups?.group}
               groupId={groupId}
               userId={userId || 0}
+              mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             />
             <ViceRepresentative
               isDeadline={!userPageSettings?.isEditSubRep}
