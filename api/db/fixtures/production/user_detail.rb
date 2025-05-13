@@ -41,4 +41,22 @@ UserDetail.seed( :id,
                 user_id: 7 ,
                 student_id: 11111111
     },
+    { id: 8 ,   tel: '11111111111' ,
+                grade_id: 4 ,
+                department_id: 5 ,
+                user_id: 8 ,
+                student_id: 11111111
+    },
+    { id: 9 ,   tel: '11111111111' ,
+                grade_id: 4 ,
+                department_id: 5 ,
+                user_id: 9 ,
+                student_id: 11111111
+    },
+    { id: 10 ,   tel: '11111111111' ,
+                grade_id: 4 ,
+                department_id: 5 ,
+                user_id: 10 ,
+                student_id: 11111111
+    },
 )
