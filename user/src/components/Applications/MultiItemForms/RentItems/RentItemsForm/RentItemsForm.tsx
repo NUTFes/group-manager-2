@@ -268,8 +268,6 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                           value={field.value}
                           onChange={(value) => {
                             field.onChange(value);
-                            form.trigger(`items.${index}.itemId`);
-
                             // 物品変更時に個数が上限を超えていたら1にリセットする
                             const maxCount = getMaxCountByItemId(value);
                             const currentCount = form.getValues(
@@ -280,6 +278,8 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                                 shouldValidate: true,
                               });
                             }
+                            // 物品変更時にバリデーションを実行
+                            form.trigger('items');
                           }}
                           required
                           options={filteredOptions}
@@ -320,10 +320,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                             field.onChange(numValue);
 
                             // 再検証を強制実行
-                            setTimeout(
-                              () => form.trigger(`items.${index}.count`),
-                              0
-                            );
+                            form.trigger('items');
                           }}
                           required
                           options={Array.from({ length: maxCount }, (_, i) => ({
