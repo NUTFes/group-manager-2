@@ -23,6 +23,7 @@ type ContentProps = {
   formItem: FormItem[];
   groupCategories?: GroupCategoryResponse[];
   userId: number;
+  mutateGroups: () => void;
 };
 
 // 表示画面を切り替えるコンポーネント
@@ -36,6 +37,7 @@ const Content: FC<ContentProps> = ({
   formItem,
   groupCategories,
   userId,
+  mutateGroups,
 }) => {
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
@@ -61,6 +63,7 @@ const Content: FC<ContentProps> = ({
         groups={groups}
         groupCategories={groupCategories}
         userId={userId}
+        mutateGroups={mutateGroups}
       />
     );
   }
@@ -83,6 +86,7 @@ const Group: FC<GroupProps> = ({
     isLoading,
     hasError,
     groupCategories,
+    mutateGroups,
   } = useGroupHooks(groupId);
   return (
     <AccordionMenu
@@ -101,6 +105,7 @@ const Group: FC<GroupProps> = ({
         formItem={formItem}
         groupCategories={groupCategories}
         userId={userId}
+        mutateGroups={mutateGroups}
       />
     </AccordionMenu>
   );

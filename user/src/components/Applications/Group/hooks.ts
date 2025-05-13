@@ -4,7 +4,7 @@ import { FormItem } from '@/components/FormList/type';
 import { groupLabels } from '../label';
 
 export const useGroupHooks = (groupId: number) => {
-  const { groups, isLoading, hasError } = useGetGroups(groupId);
+  const { groups, isLoading, hasError, mutateGroups } = useGetGroups(groupId);
   const { groupCategories } = useGetGroupCategories();
 
   // 団体申請のフォーム内容
@@ -61,5 +61,6 @@ export const useGroupHooks = (groupId: number) => {
     toEdit,
     formItem,
     groupCategories,
+    mutateGroups,
   };
 };
