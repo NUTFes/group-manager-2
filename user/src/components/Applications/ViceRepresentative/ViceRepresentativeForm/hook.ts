@@ -119,7 +119,7 @@ export const useViceRepresentativeFormHook = (
       }
     });
 
-  const option = [
+  const registerOrNotOption = [
     { id: 1, name: 'はい(一人での参加)' },
     { id: 0, name: 'いいえ(グループで参加)' },
   ];
@@ -131,7 +131,7 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
     onSubmit,
-    option,
+    registerOrNotOption,
     isIndividual,
     setIsIndividualById,
     values,

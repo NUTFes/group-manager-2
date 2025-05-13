@@ -28,7 +28,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
     setValue,
     errors,
     onSubmit,
-    option,
+    registerOrNotOption,
     values,
     setIsIndividualById,
     isIndividual,
@@ -46,7 +46,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
           <Radio
             label={viceRepresentativeLabels[0]}
             onChange={(value) => setIsIndividualById(Number(value))}
-            options={option}
+            options={registerOrNotOption}
             required
             value={isIndividual === undefined ? '' : isIndividual ? '1' : '0'}
             error={errors.groupId?.message}
