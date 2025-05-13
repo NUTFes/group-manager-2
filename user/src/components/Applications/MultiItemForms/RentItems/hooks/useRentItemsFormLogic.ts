@@ -34,9 +34,23 @@ const OUTDOOR_ITEM_IDS = [
   5, // パーテーション足（IDを実際の値に変更する必要あり）
 ];
 
+// 特別な個数制限を持つアイテムID
+const SPECIAL_COUNT_ITEM_IDS = [
+  Number(ITEM_IDS.TABLE), // 机
+  Number(ITEM_IDS.CHAIR), // 椅子
+];
+
+// デフォルトの個数制限
+const DEFAULT_MAX_COUNT = 20;
+// 椅子と机の個数制限 (会場タイプによって異なる)
+const TABLE_CHAIR_MAX_COUNT = {
+  [LOCATION_TYPES.INDOOR]: 100, // 屋内: 100個
+  [LOCATION_TYPES.OUTDOOR]: 20   // 屋外: 20個
+};
+
 export const useRentItemsFormLogic = (
-  groupId: number,
-  groupCategoryId?: number // 食品販売フラグを追加（互換性のために残しておく）
+    groupId: number,
+    groupCategoryId?: number // 団体カテゴリID
 ) => {
   // 認証基盤ができたら、グループIDを取得する
   const currentGroupId = groupId;
@@ -65,8 +79,8 @@ export const useRentItemsFormLogic = (
       hasItems: false,
       // 食品販売団体は強制的に屋外
       locationType: isFoodSellingGroup
-        ? LOCATION_TYPES.OUTDOOR
-        : LOCATION_TYPES.INDOOR,
+          ? LOCATION_TYPES.OUTDOOR
+          : LOCATION_TYPES.INDOOR,
       items: [{ itemId: '', count: 1 }],
     },
     resolver: rentItemsFormResolver,
@@ -88,6 +102,25 @@ export const useRentItemsFormLogic = (
   // フォーム値の監視
   const hasItems = watch('hasItems');
   const locationType = watch('locationType');
+
+  // 物品IDから最大個数を取得する関数
+  const getMaxCountByItemId = (itemId: string): number => {
+    // 空の値や選択なしの場合はデフォルト値を返す
+    if (!itemId || itemId === '' || itemId === '0') {
+      return DEFAULT_MAX_COUNT;
+    }
+
+    const numItemId = Number(itemId);
+
+    // 椅子または机の場合
+    if (SPECIAL_COUNT_ITEM_IDS.includes(numItemId)) {
+      // 屋内の場合は100個、それ以外は20個
+      return TABLE_CHAIR_MAX_COUNT[locationType] || DEFAULT_MAX_COUNT;
+    }
+
+    // その他の物品は20個まで
+    return DEFAULT_MAX_COUNT;
+  };
 
   // 団体タイプがステージ団体、実行委員会、食品販売かを確認
   const isStageGroup = groupCategoryId === 3;
@@ -115,15 +148,15 @@ export const useRentItemsFormLogic = (
     } else if (isStageGroup) {
       // ステージ団体はステージ用物品のみ
       return allItems.filter(
-        (item) =>
-          // ステージ用物品のIDリストに含まれるか、is_stage_rentableフラグがある場合
-          STAGE_ITEM_IDS.includes(item.id) || item.is_stage_rentable
+          (item) =>
+              // ステージ用物品のIDリストに含まれるか、is_stage_rentableフラグがある場合
+              STAGE_ITEM_IDS.includes(item.id) || item.is_stage_rentable
       );
     } else if (isFoodSellingGroup || locationType === LOCATION_TYPES.OUTDOOR) {
       // 食品販売団体または屋外団体は屋外用物品のみ
       return locationTypeItems.filter((item) =>
-        // 屋外用物品のIDリストに含まれる場合
-        OUTDOOR_ITEM_IDS.includes(item.id)
+          // 屋外用物品のIDリストに含まれる場合
+          OUTDOOR_ITEM_IDS.includes(item.id)
       );
     } else {
       // その他の団体は会場タイプに応じた物品をそのまま表示
@@ -147,59 +180,59 @@ export const useRentItemsFormLogic = (
 
   const { submitRentalOrders, deleteRentalOrders } = useMutateRentalOrders();
   const { registerUnRegisteredGroup, deleteUnRegisteredGroup } =
-    useRegisterUnRegisteredGroup();
+      useRegisterUnRegisteredGroup();
   const { checkUnRegisteredGroup } = useCheckUnRegisteredGroup();
 
   const hasExisting = rentalOrders.length > 0;
 
   // 物品のオプション
   const itemOptions = useMemo(
-    () => [
-      { id: 0, name: '選んでください' },
-      ...filteredItems.map((item) => ({
-        id: item.id,
-        name: item.name,
-      })),
-    ],
-    [filteredItems]
+      () => [
+        { id: 0, name: '選んでください' },
+        ...filteredItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+        })),
+      ],
+      [filteredItems]
   );
 
   // 特殊団体の場合に会場タイプの選択を非表示にするフラグ
   // ステージ団体、実行委員会、または食品販売団体の場合は会場タイプ選択を非表示
   const hideLocationTypeSelect =
-    isStageGroup || isCommitteeGroup || isFoodSellingGroup;
+      isStageGroup || isCommitteeGroup || isFoodSellingGroup;
 
   // 会場申請情報を取得するフックを使用
   const { placeOrder, isLoading: placeOrderLoading } =
-    useGetPlaceOrder(currentGroupId);
+      useGetPlaceOrder(currentGroupId);
 
   // ローディング状態の統合
   const isLoading =
-    rentalOrdersLoading ||
-    placeOrderLoading ||
-    (isStageGroup || isCommitteeGroup
-      ? allItemsLoading
-      : locationTypeItemsLoading);
+      rentalOrdersLoading ||
+      placeOrderLoading ||
+      (isStageGroup || isCommitteeGroup
+          ? allItemsLoading
+          : locationTypeItemsLoading);
 
   // エラー状態の統合
   const hasError = !!(
-    rentalOrdersError ||
-    (isStageGroup || isCommitteeGroup ? allItemsError : locationTypeItemsError)
+      rentalOrdersError ||
+      (isStageGroup || isCommitteeGroup ? allItemsError : locationTypeItemsError)
   );
 
   // 全ての貸出物品データを取得（処理に使用）
   const { data: rentableItemsData, isLoading: rentableItemsLoading } =
-    useApiGet<{
-      data: Array<{
-        id: number;
-        name: string;
-        is_inside_shop_rentable: boolean;
-        is_outside_shop_rentable: boolean;
-        is_stage_rentable: boolean;
-        created_at: string;
-        updated_at: string;
-      }>;
-    }>('/api/v1/get_all_rentable_items');
+      useApiGet<{
+        data: Array<{
+          id: number;
+          name: string;
+          is_inside_shop_rentable: boolean;
+          is_outside_shop_rentable: boolean;
+          is_stage_rentable: boolean;
+          created_at: string;
+          updated_at: string;
+        }>;
+      }>('/api/v1/get_all_rentable_items');
 
   // 初期データの設定
   useEffect(() => {
@@ -210,9 +243,9 @@ export const useRentItemsFormLogic = (
 
     // 既に初期化済み、またはユーザーが手動で変更した場合は実行しない
     if (
-      isInitialized.current ||
-      userChangedLocationType.current ||
-      rentalOrders.length === 0
+        isInitialized.current ||
+        userChangedLocationType.current ||
+        rentalOrders.length === 0
     ) {
       return;
     }
@@ -226,8 +259,8 @@ export const useRentItemsFormLogic = (
 
       // デフォルトは屋内('1') - ただし食品販売団体は強制的に屋外('2')
       let initialLocationType = isFoodSellingGroup
-        ? LOCATION_TYPES.OUTDOOR
-        : LOCATION_TYPES.INDOOR;
+          ? LOCATION_TYPES.OUTDOOR
+          : LOCATION_TYPES.INDOOR;
 
       // ステージ団体、実行委員会、食品販売団体でない場合のみ、会場申請から会場タイプを決定
       if (!isStageGroup && !isCommitteeGroup && !isFoodSellingGroup) {
@@ -255,20 +288,20 @@ export const useRentItemsFormLogic = (
           // 各申請物品について、それが屋内専用か屋外専用かを判定
           for (const order of rentalOrders) {
             const item = allRentableItems.find(
-              (i) => i.id === order.rentalItemId
+                (i) => i.id === order.rentalItemId
             );
             if (item) {
               // 屋内専用の物品
               if (
-                item.is_inside_shop_rentable &&
-                !item.is_outside_shop_rentable
+                  item.is_inside_shop_rentable &&
+                  !item.is_outside_shop_rentable
               ) {
                 insideOnlyCount += order.num;
               }
               // 屋外専用の物品
               else if (
-                !item.is_inside_shop_rentable &&
-                item.is_outside_shop_rentable
+                  !item.is_inside_shop_rentable &&
+                  item.is_outside_shop_rentable
               ) {
                 outsideOnlyCount += order.num;
               }
@@ -279,9 +312,9 @@ export const useRentItemsFormLogic = (
           // 専用物品の数で判断（同数なら屋内をデフォルトに）
           if (insideOnlyCount > 0 || outsideOnlyCount > 0) {
             initialLocationType =
-              outsideOnlyCount > insideOnlyCount
-                ? LOCATION_TYPES.OUTDOOR
-                : LOCATION_TYPES.INDOOR;
+                outsideOnlyCount > insideOnlyCount
+                    ? LOCATION_TYPES.OUTDOOR
+                    : LOCATION_TYPES.INDOOR;
           }
         }
       }
@@ -302,8 +335,8 @@ export const useRentItemsFormLogic = (
       console.error('初期データの読み込みエラー:', error);
       // エラーが発生した場合は屋内をデフォルトに設定（食品販売は屋外）
       setValue(
-        'locationType',
-        isFoodSellingGroup ? LOCATION_TYPES.OUTDOOR : LOCATION_TYPES.INDOOR
+          'locationType',
+          isFoodSellingGroup ? LOCATION_TYPES.OUTDOOR : LOCATION_TYPES.INDOOR
       );
       // エラーが発生した場合でも初期化完了をマーク（無限ループ防止）
       isInitialized.current = true;
@@ -323,7 +356,7 @@ export const useRentItemsFormLogic = (
 
   // 物品申請を行わないことを明示的に記録するフラグ
   const [hasExplicitlyDeclinedItems, setHasExplicitlyDeclinedItems] =
-    useState<boolean>(false);
+      useState<boolean>(false);
 
   // 初期化時にUnRegisteredGroupをチェック
   useEffect(() => {
@@ -385,10 +418,10 @@ export const useRentItemsFormLogic = (
 
     // 無視フラグが立っている場合は処理をスキップ
     if (
-      !hasItems ||
-      locationTypeItemsLoading ||
-      autoChangingLocationType.current ||
-      ignoreItemChanges
+        !hasItems ||
+        locationTypeItemsLoading ||
+        autoChangingLocationType.current ||
+        ignoreItemChanges
     )
       return;
 
@@ -415,9 +448,9 @@ export const useRentItemsFormLogic = (
       // 互換性のないアイテムがある場合、会場タイプを自動的に変更
       if (needOtherLocationType) {
         const newLocationType =
-          currentLocationType === LOCATION_TYPES.INDOOR
-            ? LOCATION_TYPES.OUTDOOR
-            : LOCATION_TYPES.INDOOR;
+            currentLocationType === LOCATION_TYPES.INDOOR
+                ? LOCATION_TYPES.OUTDOOR
+                : LOCATION_TYPES.INDOOR;
         autoChangingLocationType.current = true;
 
         // 会場タイプを変更
@@ -479,7 +512,7 @@ export const useRentItemsFormLogic = (
       // 既存の物品申請があれば削除
       if (rentalOrders.length > 0) {
         const result = await deleteRentalOrders(
-          rentalOrders.map((item) => item.id)
+            rentalOrders.map((item) => item.id)
         );
 
         if (!result.success) {
@@ -503,7 +536,7 @@ export const useRentItemsFormLogic = (
     } catch (error) {
       console.error('予期せぬエラー:', error);
       const errorMessage =
-        error instanceof Error ? error.message : '不明なエラー';
+          error instanceof Error ? error.message : '不明なエラー';
       setSubmitError('予期せぬエラーが発生しました: ' + errorMessage);
       // トースト通知でエラーを表示
       toast.error('予期せぬエラーが発生しました');
@@ -541,9 +574,9 @@ export const useRentItemsFormLogic = (
 
         // アラートの代わりにトースト通知を使用
         toast.success(
-          rentalOrders.length > 0
-            ? '物品申請を更新しました'
-            : '物品申請を登録しました'
+            rentalOrders.length > 0
+                ? '物品申請を更新しました'
+                : '物品申請を登録しました'
         );
 
         await mutateRentalOrders();
@@ -551,7 +584,7 @@ export const useRentItemsFormLogic = (
         userChangedLocationType.current = false;
       } else {
         setSubmitError(
-          '送信中にエラーが発生しました。もう一度お試しください。'
+            '送信中にエラーが発生しました。もう一度お試しください。'
         );
         // トースト通知でエラーを表示
         toast.error('物品申請の送信に失敗しました');
@@ -571,8 +604,8 @@ export const useRentItemsFormLogic = (
       hasItems: false,
       // 食品販売団体は強制的に屋外
       locationType: isFoodSellingGroup
-        ? LOCATION_TYPES.OUTDOOR
-        : LOCATION_TYPES.INDOOR,
+          ? LOCATION_TYPES.OUTDOOR
+          : LOCATION_TYPES.INDOOR,
       items: [{ itemId: '', count: 1 }],
     });
   };
@@ -601,23 +634,23 @@ export const useRentItemsFormLogic = (
           setTimeout(() => {
             // 現在の値でフォームをリセット
             reset(
-              {
-                ...currentValues,
-                hasItems: true,
-                // 食品販売団体は強制的に屋外
-                locationType: isFoodSellingGroup
-                  ? LOCATION_TYPES.OUTDOOR
-                  : currentValues.locationType,
-              },
-              {
-                keepValues: true,
-                keepDirty: true,
-                keepIsSubmitted: false,
-                keepTouched: false,
-                keepErrors: false,
-                keepIsValid: false,
-                keepSubmitCount: false,
-              }
+                {
+                  ...currentValues,
+                  hasItems: true,
+                  // 食品販売団体は強制的に屋外
+                  locationType: isFoodSellingGroup
+                      ? LOCATION_TYPES.OUTDOOR
+                      : currentValues.locationType,
+                },
+                {
+                  keepValues: true,
+                  keepDirty: true,
+                  keepIsSubmitted: false,
+                  keepTouched: false,
+                  keepErrors: false,
+                  keepIsValid: false,
+                  keepSubmitCount: false,
+                }
             );
 
             // リセット後に検証を強制実行
@@ -629,8 +662,8 @@ export const useRentItemsFormLogic = (
             hasItems: true,
             // 食品販売団体は強制的に屋外
             locationType: isFoodSellingGroup
-              ? LOCATION_TYPES.OUTDOOR
-              : LOCATION_TYPES.INDOOR,
+                ? LOCATION_TYPES.OUTDOOR
+                : LOCATION_TYPES.INDOOR,
             items: [{ itemId: '', count: 1 }],
           });
         }
@@ -641,8 +674,8 @@ export const useRentItemsFormLogic = (
           hasItems: false,
           // 食品販売団体は強制的に屋外
           locationType: isFoodSellingGroup
-            ? LOCATION_TYPES.OUTDOOR
-            : form.getValues().locationType,
+              ? LOCATION_TYPES.OUTDOOR
+              : form.getValues().locationType,
         });
       }
 
@@ -680,5 +713,6 @@ export const useRentItemsFormLogic = (
     handleFormSubmit,
     hideLocationTypeSelect, // 団体タイプに応じたUI表示制御フラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
+    getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
   };
 };
