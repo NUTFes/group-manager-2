@@ -3,13 +3,14 @@ import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
-import ViceRepresentativeForm from './ViceRepresentativeForm/user/src/components/Applications/ViceRepresentative/ViceRepresentativeForm';
+import ViceRepresentativeForm from './ViceRepresentativeForm';
 import { useViceRepresentativeHook } from './hook';
 
 type ViceRepresentativeProps = {
   isDeadline: boolean;
   isRegistered: boolean | undefined;
   groupId: number;
+  mutateCheckAllRegisteredGroups: () => void;
 };
 
 type ContentProps = {
@@ -21,6 +22,8 @@ type ContentProps = {
   viceRepresentative?: ViceRepresentativeResponse;
   formItem: FormItem[];
   groupId: number;
+  mutateViceRepresentative: () => void;
+  mutateCheckAllRegisteredGroups: () => void;
 };
 
 const Content: FC<ContentProps> = ({
@@ -32,6 +35,8 @@ const Content: FC<ContentProps> = ({
   viceRepresentative,
   formItem,
   groupId,
+  mutateViceRepresentative,
+  mutateCheckAllRegisteredGroups,
 }) => {
   if (isLoading) {
     return <div>Loading...</div>;
@@ -55,6 +60,8 @@ const Content: FC<ContentProps> = ({
         toEdit={toEdit}
         viceRepresentative={viceRepresentative}
         groupId={groupId}
+        mutateViceRepresentative={mutateViceRepresentative}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
       />
     );
   }
@@ -66,6 +73,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   isDeadline,
   isRegistered,
   groupId,
+  mutateCheckAllRegisteredGroups,
 }) => {
   const {
     formItem,
@@ -74,6 +82,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
     viceRepresentative,
     isLoading,
     hasError,
+    mutateViceRepresentative,
   } = useViceRepresentativeHook(groupId);
   return (
     <AccordionMenu
@@ -92,6 +101,8 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
         viceRepresentative={viceRepresentative}
         formItem={formItem}
         groupId={groupId}
+        mutateViceRepresentative={mutateViceRepresentative}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
       />
     </AccordionMenu>
   );

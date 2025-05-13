@@ -21,16 +21,6 @@ export type RadioOption = {
   name: string;
 };
 
-export const ORDER_TYPES = {
-  RENTAL_ITEM_ORDER: 0,
-  POWER_ORDER: 1,
-  SUB_REP: 2,
-  EMPLOYEE: 3,
-  FIRE_EQUIPMENT_ORDER: 4,
-} as const;
-
-export type OrderType = (typeof ORDER_TYPES)[keyof typeof ORDER_TYPES];
-
 export type DeviceField = keyof Device;
 
 export interface PowerFormViewProps {

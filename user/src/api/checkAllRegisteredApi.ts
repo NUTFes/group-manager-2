@@ -35,7 +35,7 @@ const API_ENDPOINTS = {
 export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
   const endpoint = `${API_ENDPOINTS.CHECK_ALL_REGISTERED}/${groupId}`;
 
-  const { data, error, isLoading } =
+  const { data, error, isLoading, mutate } =
     useApiGet<ApiResponse<RegistrationStatus>>(endpoint);
 
   const checkAllRegisteredGroups = data?.data ?? undefined;
@@ -44,5 +44,6 @@ export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
     checkAllRegisteredGroups,
     isLoading,
     error,
+    mutateCheckAllRegisteredGroups: mutate,
   };
 };
