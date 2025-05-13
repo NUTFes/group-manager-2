@@ -11,6 +11,8 @@ type GroupProps = {
   isRegistered?: boolean | undefined;
   groupId: number;
   userId: number;
+  mutateCheckAllRegisteredGroups: () => void;
+  mutateGroupByUserId: () => void;
 };
 
 type ContentProps = {
@@ -23,6 +25,9 @@ type ContentProps = {
   formItem: FormItem[];
   groupCategories?: GroupCategoryResponse[];
   userId: number;
+  mutateGroups: () => void;
+  mutateCheckAllRegisteredGroups: () => void;
+  mutateGroupByUserId: () => void;
 };
 
 // 表示画面を切り替えるコンポーネント
@@ -36,6 +41,9 @@ const Content: FC<ContentProps> = ({
   formItem,
   groupCategories,
   userId,
+  mutateGroups,
+  mutateCheckAllRegisteredGroups,
+  mutateGroupByUserId,
 }) => {
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
@@ -61,6 +69,9 @@ const Content: FC<ContentProps> = ({
         groups={groups}
         groupCategories={groupCategories}
         userId={userId}
+        mutateGroups={mutateGroups}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+        mutateGroupByUserId={mutateGroupByUserId}
       />
     );
   }
@@ -74,6 +85,8 @@ const Group: FC<GroupProps> = ({
   isRegistered,
   groupId,
   userId,
+  mutateCheckAllRegisteredGroups,
+  mutateGroupByUserId,
 }) => {
   const {
     formItem,
@@ -83,6 +96,7 @@ const Group: FC<GroupProps> = ({
     isLoading,
     hasError,
     groupCategories,
+    mutateGroups,
   } = useGroupHooks(groupId);
   return (
     <AccordionMenu
@@ -101,6 +115,9 @@ const Group: FC<GroupProps> = ({
         formItem={formItem}
         groupCategories={groupCategories}
         userId={userId}
+        mutateGroups={mutateGroups}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+        mutateGroupByUserId={mutateGroupByUserId}
       />
     </AccordionMenu>
   );

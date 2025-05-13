@@ -15,7 +15,8 @@ import { useUser } from '@/hooks/useUser';
 export default function HomePage() {
   const { user } = useUser();
   const userId = user?.id;
-  const { groupUserIdAndGroupCategoryId } = useGetGroupByUserId(userId);
+  const { groupUserIdAndGroupCategoryId, mutateGroupByUserId } =
+    useGetGroupByUserId(userId);
   const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const { userPageSettings } = useGetUserPageSettings();
@@ -109,6 +110,8 @@ export default function HomePage() {
             isRegistered={checkAllRegisteredGroups?.group}
             groupId={groupId}
             userId={userId || 0}
+            mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+            mutateGroupByUserId={mutateGroupByUserId}
           />
         ) : (
           <>
@@ -117,6 +120,8 @@ export default function HomePage() {
               isRegistered={checkAllRegisteredGroups?.group}
               groupId={groupId}
               userId={userId || 0}
+              mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+              mutateGroupByUserId={mutateGroupByUserId}
             />
             <ViceRepresentative
               isDeadline={!userPageSettings?.isEditSubRep}

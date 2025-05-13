@@ -7,13 +7,15 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { mutate } from 'swr';
 import { GroupForm, groupSchema } from './schema';
 
 export const useGroupFormHooks = (
   // groupsがすでに申請されている場合，formに表示させるため，引数として渡す
   groups: GroupResponse | undefined,
-  userId: number
+  userId: number,
+  mutateGroups: () => void,
+  mutateCheckAllRegisteredGroups: () => void,
+  mutateGroupByUserId: () => void
 ) => {
   // 団体カテゴリー一覧を取得
   const {
@@ -74,7 +76,7 @@ export const useGroupFormHooks = (
     if (groups) {
       try {
         await update({ query: formData });
-        mutate(`/groups/${formData.id}`);
+        mutateGroups();
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');
@@ -83,8 +85,9 @@ export const useGroupFormHooks = (
     } else {
       try {
         await create({ query: formData });
-        mutate(`/groups/${formData.userId}`);
-        mutate(`/check_all_registered/${formData.userId}`);
+        mutateGroups();
+        mutateCheckAllRegisteredGroups();
+        mutateGroupByUserId();
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');

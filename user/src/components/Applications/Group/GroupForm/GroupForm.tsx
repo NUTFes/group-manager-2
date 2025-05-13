@@ -15,6 +15,9 @@ type GroupFormProps = {
   toEdit?: () => void;
   groupCategories?: { id: number; name: string }[];
   userId: number;
+  mutateGroups: () => void;
+  mutateCheckAllRegisteredGroups: () => void;
+  mutateGroupByUserId: () => void;
 };
 
 const GroupForm: FC<GroupFormProps> = ({
@@ -22,6 +25,9 @@ const GroupForm: FC<GroupFormProps> = ({
   toEdit,
   groupCategories,
   userId,
+  mutateGroups,
+  mutateCheckAllRegisteredGroups,
+  mutateGroupByUserId,
 }) => {
   const {
     handleSubmit,
@@ -34,7 +40,13 @@ const GroupForm: FC<GroupFormProps> = ({
     updateIsMutating,
     validateEdit,
     values,
-  } = useGroupFormHooks(groups, userId);
+  } = useGroupFormHooks(
+    groups,
+    userId,
+    mutateGroups,
+    mutateCheckAllRegisteredGroups,
+    mutateGroupByUserId
+  );
 
   if (createError || updateError) {
     toast.error('送信に失敗しました。時間を置いて再度お試しください');
