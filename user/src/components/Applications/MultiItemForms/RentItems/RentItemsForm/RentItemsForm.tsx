@@ -1,4 +1,4 @@
-// src/components/RentItems/RentItemsForm/RentItemsForm.tsx
+// src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine, RiEdit2Line } from 'react-icons/ri';
@@ -8,12 +8,20 @@ import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
 import FormContainer from '@/components/FormContainer';
 import MultiItemFormButton from '../../MultiItemFormButton';
+import { LOCATION_TYPES } from '../RentItemsForm/schema';
 
 type RentItemsFormProps = {
   groupId: number;
+  groupCategoryId?: number; // 団体カテゴリID
+  isDeadline: boolean;
 };
 
-const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
+const RentItemsForm: FC<RentItemsFormProps> = ({
+  groupId,
+  groupCategoryId,
+  isDeadline,
+}) => {
+  // 主に groupCategoryId を使って判断するように変更
   const {
     form,
     fields,
@@ -34,7 +42,10 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
     isEditMode,
     hasExplicitlyDeclinedItems,
     handleFormSubmit,
-  } = useRentItemsFormLogic(groupId);
+    hideLocationTypeSelect, // 会場タイプ選択を非表示にするフラグ
+    isFoodSellingGroup, // 食品販売団体かどうかのフラグ
+    getMaxCountByItemId, // 物品ID別の最大個数を取得する関数
+  } = useRentItemsFormLogic(groupId, groupCategoryId);
 
   if (isLoading) {
     return (
@@ -64,18 +75,20 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
             <p className="text-xs">物品申請は不要（登録済み）</p>
             <p>学校から借用する備品はありません。</p>
           </div>
-          <div className="mt-4 flex justify-center">
-            <MultiItemFormButton
-              type="button"
-              size="pc"
-              color="edit"
-              onClick={openEditMode}
-            >
-              <div className="flex items-center">
-                <RiEdit2Line size={18} className="mr-1" /> 修正
-              </div>
-            </MultiItemFormButton>
-          </div>
+          {isDeadline && (
+            <div className="mt-4 flex justify-center">
+              <MultiItemFormButton
+                type="button"
+                size="pc"
+                color="edit"
+                onClick={openEditMode}
+              >
+                <div className="flex items-center">
+                  <RiEdit2Line size={18} className="mr-1" /> 修正
+                </div>
+              </MultiItemFormButton>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -85,11 +98,23 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
   if (hasExisting && !isEditMode) {
     return (
       <div className="w-full text-font">
-        <div className="mb-4">
-          <p className="font-bold">
-            第一希望：{form.getValues('locationType') === '1' ? '屋内' : '屋外'}
-          </p>
-        </div>
+        {!hideLocationTypeSelect && ( // 特殊団体でない場合のみ表示
+          <div className="mb-4">
+            <p className="font-bold">
+              第一希望：
+              {form.getValues('locationType') === LOCATION_TYPES.INDOOR
+                ? '屋内'
+                : '屋外'}
+            </p>
+          </div>
+        )}
+        {isFoodSellingGroup && (
+          <div className="mb-4">
+            <p className="font-bold text-alert">
+              ※食品販売団体は屋外での出店のみとなります
+            </p>
+          </div>
+        )}
 
         <div className="flex w-full max-w-full flex-col items-start justify-start gap-10 overflow-hidden rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
           {fields.map((field, index) => (
@@ -115,18 +140,20 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
           ))}
         </div>
 
-        <div className="mt-6 text-center">
-          <MultiItemFormButton
-            type="button"
-            size="pc"
-            color="edit"
-            onClick={openEditMode}
-          >
-            <div className="flex items-center">
-              <RiEdit2Line size={18} className="mr-1" /> 修正
-            </div>
-          </MultiItemFormButton>
-        </div>
+        {isDeadline && (
+          <div className="mt-6 text-center">
+            <MultiItemFormButton
+              type="button"
+              size="pc"
+              color="edit"
+              onClick={openEditMode}
+            >
+              <div className="flex items-center">
+                <RiEdit2Line size={18} className="mr-1" /> 修正
+              </div>
+            </MultiItemFormButton>
+          </div>
+        )}
       </div>
     );
   }
@@ -139,7 +166,8 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
     >
       <div>
         <p className="mb-[4px] text-sm text-alert">
-          会場申請を先に申請してください。
+          {!hideLocationTypeSelect && '会場申請を先に申請してください。'}
+          {isFoodSellingGroup && '※食品販売団体は屋外での出店のみとなります'}
         </p>
         <br />
         <Controller
@@ -187,28 +215,31 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
 
       {hasItems && (
         <>
-          <div>
-            <Controller
-              name="locationType"
-              control={control}
-              render={({ field }) => (
-                <Radio
-                  label="会場申請の第一希望はどちらですか？"
-                  value={field.value}
-                  onChange={(value: string) => {
-                    // 新しい値でupdateLocationTypeを呼び出す
-                    updateLocationType(value);
-                  }}
-                  required
-                  options={[
-                    { id: 1, name: '屋内' },
-                    { id: 2, name: '屋外' },
-                  ]}
-                  error={errors.locationType?.message}
-                />
-              )}
-            />
-          </div>
+          {/* 特殊団体でない場合のみ、会場タイプ選択を表示 */}
+          {!hideLocationTypeSelect && (
+            <div>
+              <Controller
+                name="locationType"
+                control={control}
+                render={({ field }) => (
+                  <Radio
+                    label="会場申請の第一希望はどちらですか？"
+                    value={field.value}
+                    onChange={(value: string) => {
+                      // 新しい値でupdateLocationTypeを呼び出す
+                      updateLocationType(value);
+                    }}
+                    required
+                    options={[
+                      { id: 1, name: '屋内' },
+                      { id: 2, name: '屋外' },
+                    ]}
+                    error={errors.locationType?.message}
+                  />
+                )}
+              />
+            </div>
+          )}
           {fields.map((field, index) => (
             <div key={field.id} className="mx-auto flex w-full justify-center">
               <FormContainer>
@@ -238,6 +269,17 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
                           onChange={(value) => {
                             field.onChange(value);
                             form.trigger(`items.${index}.itemId`);
+
+                            // 物品変更時に個数が上限を超えていたら1にリセットする
+                            const maxCount = getMaxCountByItemId(value);
+                            const currentCount = form.getValues(
+                              `items.${index}.count`
+                            );
+                            if (currentCount > maxCount) {
+                              form.setValue(`items.${index}.count`, 1, {
+                                shouldValidate: true,
+                              });
+                            }
                           }}
                           required
                           options={filteredOptions}
@@ -254,6 +296,12 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
                     name={`items.${index}.count`}
                     control={control}
                     render={({ field }) => {
+                      // 現在選択されている物品に基づいて最大個数を取得
+                      const currentItemId = form.getValues(
+                        `items.${index}.itemId`
+                      );
+                      const maxCount = getMaxCountByItemId(currentItemId);
+
                       return (
                         <Selector
                           label="個数"
@@ -278,7 +326,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
                             );
                           }}
                           required
-                          options={Array.from({ length: 20 }, (_, i) => ({
+                          options={Array.from({ length: maxCount }, (_, i) => ({
                             id: i + 1,
                             name: `${i + 1}`,
                           }))}
@@ -350,6 +398,13 @@ const RentItemsForm: FC<RentItemsFormProps> = ({ groupId }) => {
       {errors.root?.message && (
         <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
           {errors.root.message.toString()}
+        </div>
+      )}
+
+      {/* フォームバリデーションエラーがあれば表示（アイテム制限関連のエラーも含む） */}
+      {errors.items?.message && (
+        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+          {errors.items.message.toString()}
         </div>
       )}
     </form>

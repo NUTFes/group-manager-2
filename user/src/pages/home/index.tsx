@@ -30,6 +30,7 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isEditRentalOrder}
             isRegistered={checkAllRegisteredGroups?.rentalItem}
             groupId={groupId}
+            groupCategoryId={groupCategoryId} // groupCategoryIdを追加
           />
           <Power
             isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -55,6 +56,7 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isEditRentalOrder}
             isRegistered={checkAllRegisteredGroups?.rentalItem}
             groupId={groupId}
+            groupCategoryId={groupCategoryId} // groupCategoryIdを追加
           />
           <Power
             isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -80,6 +82,7 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isEditRentalOrder}
             isRegistered={checkAllRegisteredGroups?.rentalItem}
             groupId={groupId}
+            groupCategoryId={groupCategoryId} // groupCategoryIdを追加
           />
           <Power
             isDeadline={!userPageSettings?.isEditPowerOrder}

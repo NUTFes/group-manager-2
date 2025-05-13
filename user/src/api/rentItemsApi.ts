@@ -7,6 +7,7 @@ const API_ENDPOINTS = {
   // 物品関連
   INSIDE_SHOP_RENTABLE_ITEMS: '/api/v1/get_inside_shop_rentable_items', // 屋内模擬店での貸出物品
   OUTSIDE_SHOP_RENTABLE_ITEMS: '/api/v1/get_outside_shop_rentable_items', // 屋外模擬店での貸出物品
+  ALL_RENTABLE_ITEMS: '/api/v1/get_all_rentable_items', // 全ての貸出物品
 
   // 物品申請関連
   RENTAL_ORDERS: '/rental_orders',
@@ -36,6 +37,7 @@ export type RentalOrder = {
   created_at: string;
   updated_at: string;
 };
+
 // ORDER_TYPESの定義（物品申請用）
 export const ORDER_TYPES = {
   RENT_ITEMS: 0, // 物品申請を表すタイプ
@@ -59,7 +61,7 @@ type ApiResponse<T> = {
   data: T;
 };
 
-// 会場タイプに応じた物品データを取得するフック
+// 団体タイプに応じた物品一覧を取得するフック (API実装不要)
 export const useRentableItemsByType = (locationType: string) => {
   // 会場タイプに応じてエンドポイントを選択
   const endpoint =
@@ -72,6 +74,21 @@ export const useRentableItemsByType = (locationType: string) => {
     error,
     isLoading,
   } = useApiGet<ApiResponse<RentalItem[]>>(endpoint);
+
+  return {
+    items: response?.data || [],
+    itemsError: error,
+    itemsLoading: isLoading,
+  };
+};
+
+// 全ての貸出物品を取得するフック (実行委員会用を含む)
+export const useAllRentableItems = () => {
+  const {
+    data: response,
+    error,
+    isLoading,
+  } = useApiGet<ApiResponse<RentalItem[]>>(API_ENDPOINTS.ALL_RENTABLE_ITEMS);
 
   return {
     items: response?.data || [],
