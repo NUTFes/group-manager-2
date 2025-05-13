@@ -52,6 +52,15 @@ const SPECIAL_COUNT_ITEM_IDS = [
   Number(ITEM_IDS.CHAIR), // 椅子
 ];
 
+// 1個までに制限する物品ID
+const SINGLE_ITEM_IDS = [
+  Number(ITEM_IDS.LONG_TABLE), // 長机
+  Number(ITEM_IDS.DISPLAY_BOARD), // 掲示板
+  Number(ITEM_IDS.TENT), // テント
+  Number(ITEM_IDS.PARTITION), // パーテーション
+  5, // パーテーション足
+];
+
 // デフォルトの個数制限
 const DEFAULT_MAX_COUNT = 20;
 // 椅子と机の個数制限 (会場タイプによって異なる)
@@ -123,6 +132,11 @@ export const useRentItemsFormLogic = (
     }
 
     const numItemId = Number(itemId);
+
+    // 1個までに制限する物品の場合
+    if (SINGLE_ITEM_IDS.includes(numItemId)) {
+      return 1;
+    }
 
     // 椅子または机の場合
     if (SPECIAL_COUNT_ITEM_IDS.includes(numItemId)) {

@@ -268,8 +268,6 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                           value={field.value}
                           onChange={(value) => {
                             field.onChange(value);
-                            form.trigger(`items.${index}.itemId`);
-
                             // 物品変更時に個数が上限を超えていたら1にリセットする
                             const maxCount = getMaxCountByItemId(value);
                             const currentCount = form.getValues(
@@ -280,6 +278,8 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                                 shouldValidate: true,
                               });
                             }
+                            // 物品変更時にバリデーションを実行
+                            form.trigger('items');
                           }}
                           required
                           options={filteredOptions}
@@ -320,10 +320,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                             field.onChange(numValue);
 
                             // 再検証を強制実行
-                            setTimeout(
-                              () => form.trigger(`items.${index}.count`),
-                              0
-                            );
+                            form.trigger('items');
                           }}
                           required
                           options={Array.from({ length: maxCount }, (_, i) => ({
@@ -369,6 +366,26 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </div>
           ))}
 
+          {/* エラーメッセージを追加・登録ボタンの上に移動 */}
+          {submitError && (
+            <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+              {submitError}
+            </div>
+          )}
+
+          {errors.root?.message && (
+            <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+              {errors.root.message.toString()}
+            </div>
+          )}
+
+          {/* フォームバリデーションエラーがあれば表示（アイテム制限関連のエラーも含む） */}
+          {errors.items?.message && (
+            <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+              {errors.items.message.toString()}
+            </div>
+          )}
+
           <div className="mb-2 mt-4 flex justify-center gap-4">
             <MultiItemFormButton
               type="button"
@@ -387,25 +404,6 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             </Button>
           </div>
         </>
-      )}
-
-      {submitError && (
-        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-          {submitError}
-        </div>
-      )}
-
-      {errors.root?.message && (
-        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-          {errors.root.message.toString()}
-        </div>
-      )}
-
-      {/* フォームバリデーションエラーがあれば表示（アイテム制限関連のエラーも含む） */}
-      {errors.items?.message && (
-        <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-          {errors.items.message.toString()}
-        </div>
       )}
     </form>
   );
