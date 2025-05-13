@@ -81,14 +81,19 @@ export const useGetGroupCategories = () => {
 export const useGetGroupByUserId = (userId: number | undefined) => {
   const endpoint = userId ? `${API_ENDPOINTS.GROUP_USERID}/${userId}` : null;
 
-  const { data, error, isLoading } =
-    useApiGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(endpoint);
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateGroupByUserId,
+  } = useApiGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(endpoint);
 
   return {
     groupUserIdAndGroupCategoryId:
       data?.status.code === 200 ? data?.data : undefined,
     isLoading,
     hasError: !!error,
+    mutateGroupByUserId,
   };
 };
 

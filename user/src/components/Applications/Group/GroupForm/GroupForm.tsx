@@ -17,6 +17,7 @@ type GroupFormProps = {
   userId: number;
   mutateGroups: () => void;
   mutateCheckAllRegisteredGroups: () => void;
+  mutateGroupByUserId: () => void;
 };
 
 const GroupForm: FC<GroupFormProps> = ({
@@ -26,6 +27,7 @@ const GroupForm: FC<GroupFormProps> = ({
   userId,
   mutateGroups,
   mutateCheckAllRegisteredGroups,
+  mutateGroupByUserId,
 }) => {
   const {
     handleSubmit,
@@ -42,7 +44,8 @@ const GroupForm: FC<GroupFormProps> = ({
     groups,
     userId,
     mutateGroups,
-    mutateCheckAllRegisteredGroups
+    mutateCheckAllRegisteredGroups,
+    mutateGroupByUserId
   );
 
   if (createError || updateError) {

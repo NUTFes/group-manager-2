@@ -14,7 +14,8 @@ export const useGroupFormHooks = (
   groups: GroupResponse | undefined,
   userId: number,
   mutateGroups: () => void,
-  mutateCheckAllRegisteredGroups: () => void
+  mutateCheckAllRegisteredGroups: () => void,
+  mutateGroupByUserId: () => void
 ) => {
   // 団体カテゴリー一覧を取得
   const {
@@ -86,6 +87,7 @@ export const useGroupFormHooks = (
         await create({ query: formData });
         mutateGroups();
         mutateCheckAllRegisteredGroups();
+        mutateGroupByUserId();
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');
