@@ -135,7 +135,7 @@ export const useRegistration = (
             email: data.mail,
             password: data.password,
             password_confirmation: data.passwordConfirm,
-            role_id: 4, // 固定値としてrole_idを設定
+            role_id: 3, // 固定値としてrole_idを設定
           },
           user_details: {
             tel: data.tel,
