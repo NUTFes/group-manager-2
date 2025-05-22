@@ -1,6 +1,6 @@
 // src/api/rentItemsApi.ts
 import { useApiGet, useApiMutations } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -133,7 +133,7 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          patchFetcher(
+          legacyPatchFetcher(
             `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
             {
               arg: { body: items[i] },
@@ -146,7 +146,7 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-            postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+            legacyPostFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
               arg: { body: items[i] },
             })
           );

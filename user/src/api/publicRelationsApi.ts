@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation';
 import { useApiGet } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // リクエスト用の型定義
 export type PublicRelation = {
@@ -70,13 +70,13 @@ export const usePublicRelationData = (groupId: number) => {
 
 // SWR Mutationを使った新規作成用フック
 export const useCreatePublicRelation = () => {
-  return useSWRMutation(API_ENDPOINTS.PUBLIC_RELATIONS, postFetcher);
+  return useSWRMutation(API_ENDPOINTS.PUBLIC_RELATIONS, legacyPostFetcher);
 };
 
 // SWR Mutationを使った更新用フック
 export const useUpdatePublicRelation = (id: number) => {
   return useSWRMutation(
     `${API_ENDPOINTS.PUBLIC_RELATIONS}/${id}`,
-    patchFetcher
+    legacyPatchFetcher
   );
 };

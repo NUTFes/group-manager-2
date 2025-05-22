@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation';
 import { useApiGet } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 const API_ENDPOINTS = {
   GROUPS: '/groups',
@@ -99,12 +99,12 @@ export const useGetGroupByUserId = (userId: number | undefined) => {
 
 // 新しい団体申請を作成
 export const useCreateGroups = () => {
-  return useSWRMutation(API_ENDPOINTS.GROUPS, postFetcher);
+  return useSWRMutation(API_ENDPOINTS.GROUPS, legacyPostFetcher);
 };
 
 // 既存の団体申請を更新
 export const useUpdateGroups = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.GROUPS}/${id}`, patchFetcher);
+  return useSWRMutation(`${API_ENDPOINTS.GROUPS}/${id}`, legacyPatchFetcher);
 };
 
 export type GroupInfo = GroupResponse;

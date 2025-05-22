@@ -1,4 +1,4 @@
-import { useApiGet, useSwrMutation } from '@/hooks/useApi';
+import { useApiGet, useApiPost } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   USER_DETAILS: '/user_details',
@@ -47,7 +47,7 @@ export const useGetUserDetails = (userId: number) => {
 
 export const useMutateUserDetails = () => {
   const endpoint = API_ENDPOINTS.USER_DETAILS_UPDATE;
-  return useSwrMutation(endpoint);
+  return useApiPost(endpoint);
 };
 
 export const useGetCurrentUserInformation = () => {
