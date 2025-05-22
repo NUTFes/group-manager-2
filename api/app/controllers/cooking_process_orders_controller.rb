@@ -12,6 +12,15 @@ class CookingProcessOrdersController < ApplicationController
     render json: @cooking_process_order
   end
 
+  # GET /cooking_process_orders/group/:group_id
+  def get_by_group_id
+    if @cooking_process_orders
+      render json: fmt(ok, @cooking_process_orders)
+    else
+      render json: fmt(not_found, [], "Not found cooking_process_orders = "+params[:group_id])
+    end
+  end
+
   # POST /cooking_process_orders
   def create
     @cooking_process_order = CookingProcessOrder.new(cooking_process_order_params)

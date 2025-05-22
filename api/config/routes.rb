@@ -102,7 +102,11 @@ Rails.application.routes.draw do
   end
   resources :venue_maps
   resources :announcements
-  resources :cooking_process_orders
+  resources :cooking_process_orders do
+    collection do
+      get 'group/:group_id', to: 'cooking_process_orders#get_by_group_id'
+    end
+  end
   resources :contact_persons
   resources :un_registered_groups do
     collection do
