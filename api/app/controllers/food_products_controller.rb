@@ -16,9 +16,18 @@ class FoodProductsController < ApplicationController
 
   # POST /food_products
   # POST /food_products.json
+  # 複数件の作成も行う。配列で渡すことで複数件も可能。
   def create
-    @food_product = FoodProduct.create(food_product_params)
-    render json: fmt(created, @food_product)
+    ActiveRecord::Base.transaction do
+      @food_products = FoodProduct.create(food_product_array_params)
+
+      if @food_products.all?(&:persisted?)
+        render json: fmt(created, @food_products)
+      else
+        render json: fmt(not_found, [], "Not found food_product = ")
+        raise ActiveRecord::Rollback
+      end
+    end
   end
 
   # PATCH/PUT /food_products/1
@@ -48,5 +57,16 @@ class FoodProductsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def food_product_params
       params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num)
+    end
+
+    # Handle both single and bulk creation parameters
+    def food_product_array_params
+      if params[:food_products].present?
+        params.require(:food_products).map { |f| f.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num) }
+      elsif params.is_a?(Array)
+        params.map { |f| f.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num) }
+      else
+        [food_product_params]
+      end
     end
 end
