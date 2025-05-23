@@ -1,6 +1,6 @@
 // src/api/rentItemsApi.ts
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // APIエンドポイント
 const API_ENDPOINTS = {
@@ -73,7 +73,7 @@ export const useRentableItemsByType = (locationType: string) => {
     data: response,
     error,
     isLoading,
-  } = useApiGet<ApiResponse<RentalItem[]>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<RentalItem[]>>(endpoint);
 
   return {
     items: response?.data || [],
@@ -88,7 +88,9 @@ export const useAllRentableItems = () => {
     data: response,
     error,
     isLoading,
-  } = useApiGet<ApiResponse<RentalItem[]>>(API_ENDPOINTS.ALL_RENTABLE_ITEMS);
+  } = useAuthenticatedGet<ApiResponse<RentalItem[]>>(
+    API_ENDPOINTS.ALL_RENTABLE_ITEMS
+  );
 
   return {
     items: response?.data || [],
@@ -104,7 +106,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
     error,
     isLoading,
     mutate,
-  } = useApiGet<ApiResponse<RentalOrder[]>>(
+  } = useAuthenticatedGet<ApiResponse<RentalOrder[]>>(
     `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
   );
 
@@ -133,7 +135,7 @@ export const useMutateRentalOrders = () => {
       // 更新：既存データの数だけ更新を実行
       for (let i = 0; i < minLength; i++) {
         promises.push(
-          patchFetcher(
+          legacyPatchFetcher(
             `${API_ENDPOINTS.RENTAL_ORDERS}/${existingItems[i].id}`,
             {
               arg: { body: items[i] },
@@ -146,7 +148,7 @@ export const useMutateRentalOrders = () => {
       if (items.length > existingItems.length) {
         for (let i = existingItems.length; i < items.length; i++) {
           promises.push(
-            postFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
+            legacyPostFetcher(API_ENDPOINTS.RENTAL_ORDERS, {
               arg: { body: items[i] },
             })
           );
