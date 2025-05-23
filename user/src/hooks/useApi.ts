@@ -38,15 +38,7 @@ const createMutationHook = <Arg, Data, MK extends Key>(
   };
 };
 
-/**
- * GETリクエスト用のフック
- * @returns {SWRResponse<T, Error>} - データ、ローディング状態、エラー情報を含むオブジェクト
- *   - data: T | undefined - 取得したデータ
- *   - error: Error | undefined - エラー情報
- *   - isLoading: boolean - ローディング中かどうか
- *   - isValidating: boolean - 再検証中かどうか
- *   - mutate: (data?: T | Promise<T>, shouldRevalidate?: boolean) => Promise<T | undefined> - データの更新関数
- */
+/**　GETリクエスト用のフック　　*/
 export const useAuthenticatedGet = <T>(
   url: string | null,
   options?: SWRConfiguration<T, Error>
@@ -62,19 +54,7 @@ export const useUnauthenticatedGet = <T>(
   options?: SWRConfiguration<T, Error>
 ) => useSWR<T, Error>(url ?? null, unauthenticatedGetFetcher, options);
 
-/** 認証ありミューテーション */
-/**
- * @returns {SWRMutationResponse<T, Error>} {
- *   data: T | undefined;        // レスポンスデータ
- *   error: Error | undefined;   // エラー情報
- *   isMutating: boolean;        // ミューテーション実行中かどうか
- *   reset: () => void;          // 状態のリセット関数
- *   // POST,PUT,PATCH
- *   trigger: (arg?: { body?: any; query?: Record<string, any> }) => Promise<T | undefined>; // ミューテーション実行関数
- *   // DELETE
- *   trigger: (arg?: { query?: Record<string, any> }) => Promise<T | undefined>; // ミューテーション実行関数
- * }
- */
+/** 認証ありミューテーション用のフック */
 export const useAuthenticatedPost = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
@@ -111,19 +91,7 @@ export const useAuthenticatedDelete = createMutationHook<
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
 
-/** 認証なしミューテーション */
-/**
- * @returns {SWRMutationResponse<T, Error>} {
- *   data: T | undefined;        // レスポンスデータ
- *   error: Error | undefined;   // エラー情報
- *   isMutating: boolean;        // ミューテーション実行中かどうか
- *   reset: () => void;          // 状態のリセット関数
- *   // POST,PUT,PATCH
- *   trigger: (arg?: { body?: any; query?: Record<string, any> }) => Promise<T | undefined>; // ミューテーション実行関数
- *   // DELETE
- *   trigger: (arg?: { query?: Record<string, any> }) => Promise<T | undefined>; // ミューテーション実行関数
- * }
- */
+/** 認証なしミューテーション用のフック */
 export const useUnauthenticatedPost = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,

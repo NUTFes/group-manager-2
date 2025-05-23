@@ -71,7 +71,7 @@ async function request<T>(
   return camelcaseKeys(json, { deep: true }) as T;
 }
 
-// GET用
+// GET用Fetcher
 export const authenticatedGetFetcher = <T>([url, session]: readonly [
   string,
   Session,
@@ -79,7 +79,7 @@ export const authenticatedGetFetcher = <T>([url, session]: readonly [
 export const unauthenticatedGetFetcher = <T>(url: string): Promise<T> =>
   request<T>(url);
 
-/** セッションあり・なし共通のfetcher */
+/** ミューテーション用Fetcherの共通化 */
 const authenticatedMutationFetcher =
   (method: FetchOptions['method']) =>
   <T>(
@@ -101,14 +101,14 @@ const unauthenticatedMutationFetcher =
     return request<T>(url, opts);
   };
 
-// セッションありミューテーション
+// 認証ありミューテーションFetcher（POST, PUT, PATCH, DELETE）
 export const authenticatedPostFetcher = authenticatedMutationFetcher('POST');
 export const authenticatedPutFetcher = authenticatedMutationFetcher('PUT');
 export const authenticatedPatchFetcher = authenticatedMutationFetcher('PATCH');
 export const authenticatedDeleteFetcher =
   authenticatedMutationFetcher('DELETE');
 
-// セッションなしミューテーション
+// 認証なしミューテーションFetcher（POST, PUT, PATCH, DELETE）
 export const unauthenticatedPostFetcher =
   unauthenticatedMutationFetcher('POST');
 export const unauthenticatedPutFetcher = unauthenticatedMutationFetcher('PUT');
