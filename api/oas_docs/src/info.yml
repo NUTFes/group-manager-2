@@ -1,6 +1,6 @@
 ---
 info:
-  title: OAS API Document Title
+  title: Group Manager API
   description: |-
     This is a sample server Petstore server.  You can find out more about
                 Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,

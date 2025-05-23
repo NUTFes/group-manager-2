@@ -3,7 +3,7 @@ externalDocs:
   description: ''
   url: ''
 info:
-  title: OAS API Document Title
+  title: Group Manager API
   description: |-
     This is a sample server Petstore server.  You can find out more about
                 Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,
@@ -18,6 +18,10 @@ info:
     url: ''
   version: 1.0.0
 openapi: 3.0.0
+security:
+- DeviseAuth: []
+  ClientAuth: []
+  UidAuth: []
 servers:
 - url: http://localhost:3000
   description: localhost
@@ -10810,9 +10814,12 @@ components:
     devisetokenauth.Session:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        email:
+          type: string
+          description: nutfes-taro@email.com
+        password:
+          type: string
+          description: password
     devisetokenauth.TokenValidation:
       type: object
       properties:
@@ -11428,3 +11435,19 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/VenueMap"
+  securitySchemes:
+    ClientAuth:
+      type: apiKey
+      in: header
+      name: client
+      description: Devise認証用のクライアントID
+    DeviseAuth:
+      type: apiKey
+      in: header
+      name: access-token
+      description: Devise認証用のアクセストークン
+    UidAuth:
+      type: apiKey
+      in: header
+      name: uid
+      description: Devise認証用のユーザーID
