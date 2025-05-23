@@ -18,17 +18,17 @@ type FetchOptions = {
   body?: any;
 };
 
-type MutArg = { body?: any; query?: Record<string, any> };
+type MutationArgs = { body?: any; query?: Record<string, any> };
 
 /** ヘッダー組み立て */
 function buildHeaders(session?: Session): HeadersInit {
-  const base: HeadersInit = { 'Content-Type': 'application/json' };
+  const haaders: HeadersInit = { 'Content-Type': 'application/json' };
   if (session) {
-    base['access-token'] = session.accessToken!;
-    base['client'] = session.client!;
-    base['uid'] = session.uid!;
+    haaders['access-token'] = session.accessToken!;
+    haaders['client'] = session.client!;
+    haaders['uid'] = session.uid!;
   }
-  return base;
+  return haaders;
 }
 
 /** クエリ文字列化 */
@@ -36,7 +36,7 @@ function objectToQueryString(params: Record<string, unknown>): string {
   const snake = snakecaseKeys(params, { deep: true });
   const searchParams = new URLSearchParams();
   for (const [key, value] of Object.entries(snake)) {
-    if (value == null) continue;
+    if (value === null) continue;
     if (Array.isArray(value)) {
       value.forEach((v) => searchParams.append(key, String(v)));
     } else {
@@ -51,18 +51,18 @@ async function request<T>(
   url: string,
   { method = 'GET', session, query, body }: FetchOptions = {}
 ): Promise<T> {
-  let full = url.startsWith('http') ? url : `${API_URL}${url}`;
+  let fullURL = url.startsWith('http') ? url : `${API_URL}${url}`;
   if (query) {
-    full += `?${objectToQueryString(query)}`;
+    fullURL += `?${objectToQueryString(query)}`;
   }
-  const res = await fetch(full, {
+  const res = await fetch(fullURL, {
     method,
     headers: buildHeaders(session),
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    const err = new Error(`${method} ${full} failed (status ${res.status})`);
+    const err = new Error(`${method} ${fullURL} failed (status ${res.status})`);
     (err as any).info = errorBody;
     (err as any).status = res.status;
     throw err;
@@ -71,12 +71,20 @@ async function request<T>(
   return camelcaseKeys(json, { deep: true }) as T;
 }
 
+// GET用
+export const authenticatedGetFetcher = <T>([url, session]: readonly [
+  string,
+  Session,
+]): Promise<T> => request<T>(url, { session });
+export const unauthenticatedGetFetcher = <T>(url: string): Promise<T> =>
+  request<T>(url);
+
 /** セッションあり・なし共通のfetcher */
-const createSessionFetcher =
+const authenticatedMutationFetcher =
   (method: FetchOptions['method']) =>
   <T>(
     [url, session]: readonly [string, Session],
-    { arg }: { arg?: MutArg } = {}
+    { arg }: { arg?: MutationArgs } = {}
   ): Promise<T> => {
     const opts: FetchOptions = { method, session };
     if (arg?.body) opts.body = arg.body;
@@ -84,33 +92,30 @@ const createSessionFetcher =
     return request<T>(url, opts);
   };
 
-const createNoSessionFetcher =
+const unauthenticatedMutationFetcher =
   (method: FetchOptions['method']) =>
-  <T>(url: string, { arg }: { arg?: MutArg } = {}): Promise<T> => {
+  <T>(url: string, { arg }: { arg?: MutationArgs } = {}): Promise<T> => {
     const opts: FetchOptions = { method };
     if (arg?.body) opts.body = arg.body;
     if (arg?.query) opts.query = arg.query;
     return request<T>(url, opts);
   };
 
-// GET用
-export const fetcher = <T>([url, session]: readonly [
-  string,
-  Session,
-]): Promise<T> => request<T>(url, { session });
-export const noSessionFetcher = <T>(url: string): Promise<T> => request<T>(url);
-
 // セッションありミューテーション
-export const postFetcherWithSession = createSessionFetcher('POST');
-export const putFetcherWithSession = createSessionFetcher('PUT');
-export const patchFetcherWithSession = createSessionFetcher('PATCH');
-export const deleteFetcherWithSession = createSessionFetcher('DELETE');
+export const authenticatedPostFetcher = authenticatedMutationFetcher('POST');
+export const authenticatedPutFetcher = authenticatedMutationFetcher('PUT');
+export const authenticatedPatchFetcher = authenticatedMutationFetcher('PATCH');
+export const authenticatedDeleteFetcher =
+  authenticatedMutationFetcher('DELETE');
 
 // セッションなしミューテーション
-export const postFetcher = createNoSessionFetcher('POST');
-export const putFetcher = createNoSessionFetcher('PUT');
-export const patchFetcher = createNoSessionFetcher('PATCH');
-export const deleteFetcher = createNoSessionFetcher('DELETE');
+export const unauthenticatedPostFetcher =
+  unauthenticatedMutationFetcher('POST');
+export const unauthenticatedPutFetcher = unauthenticatedMutationFetcher('PUT');
+export const unauthenticatedPatchFetcher =
+  unauthenticatedMutationFetcher('PATCH');
+export const unauthenticatedDeleteFetcher =
+  unauthenticatedMutationFetcher('DELETE');
 
 // ==========================================
 // 独自実装（将来的に削除予定）

@@ -1,14 +1,14 @@
 import {
-  deleteFetcher,
-  deleteFetcherWithSession,
-  fetcher,
-  noSessionFetcher,
-  patchFetcher,
-  patchFetcherWithSession,
-  postFetcher,
-  postFetcherWithSession,
-  putFetcher,
-  putFetcherWithSession,
+  authenticatedDeleteFetcher,
+  authenticatedGetFetcher,
+  authenticatedPatchFetcher,
+  authenticatedPostFetcher,
+  authenticatedPutFetcher,
+  unauthenticatedDeleteFetcher,
+  unauthenticatedGetFetcher,
+  unauthenticatedPatchFetcher,
+  unauthenticatedPostFetcher,
+  unauthenticatedPutFetcher,
 } from '@/api/api';
 // ==========================================
 // 独自実装（将来的に削除予定）
@@ -47,20 +47,20 @@ const createMutationHook = <Arg, Data, MK extends Key>(
  *   - isValidating: boolean - 再検証中かどうか
  *   - mutate: (data?: T | Promise<T>, shouldRevalidate?: boolean) => Promise<T | undefined> - データの更新関数
  */
-export const useApiGet = <T>(
+export const useAuthenticatedGet = <T>(
   url: string | null,
   options?: SWRConfiguration<T, Error>
 ) => {
   const { data: session, status } = useSession();
   const key =
     status === 'authenticated' && url ? ([url, session!] as const) : null;
-  return useSWR<T, Error>(key, fetcher, options);
+  return useSWR<T, Error>(key, authenticatedGetFetcher, options);
 };
 
-export const useApiGetNoAuth = <T>(
+export const useUnauthenticatedGet = <T>(
   url: string | null,
   options?: SWRConfiguration<T, Error>
-) => useSWR<T, Error>(url ?? null, noSessionFetcher, options);
+) => useSWR<T, Error>(url ?? null, unauthenticatedGetFetcher, options);
 
 /** 認証ありミューテーション */
 /**
@@ -75,38 +75,38 @@ export const useApiGetNoAuth = <T>(
  *   trigger: (arg?: { query?: Record<string, any> }) => Promise<T | undefined>; // ミューテーション実行関数
  * }
  */
-export const useApiPost = createMutationHook<
+export const useAuthenticatedPost = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   readonly [string, Session]
->(postFetcherWithSession, (url) => {
+>(authenticatedPostFetcher, (url) => {
   const { data: session, status } = useSession();
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
 
-export const useApiPut = createMutationHook<
+export const useAuthenticatedPut = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   readonly [string, Session]
->(putFetcherWithSession, (url) => {
+>(authenticatedPutFetcher, (url) => {
   const { data: session, status } = useSession();
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
 
-export const useApiPatch = createMutationHook<
+export const useAuthenticatedPatch = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   readonly [string, Session]
->(patchFetcherWithSession, (url) => {
+>(authenticatedPatchFetcher, (url) => {
   const { data: session, status } = useSession();
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
 
-export const useApiDelete = createMutationHook<
+export const useAuthenticatedDelete = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   readonly [string, Session]
->(deleteFetcherWithSession, (url) => {
+>(authenticatedDeleteFetcher, (url) => {
   const { data: session, status } = useSession();
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
@@ -124,29 +124,29 @@ export const useApiDelete = createMutationHook<
  *   trigger: (arg?: { query?: Record<string, any> }) => Promise<T | undefined>; // ミューテーション実行関数
  * }
  */
-export const useApiPostNoAuth = createMutationHook<
+export const useUnauthenticatedPost = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   string
->(postFetcher, (url) => url ?? null);
+>(unauthenticatedPostFetcher, (url) => url ?? null);
 
-export const useApiPutNoAuth = createMutationHook<
+export const useUnauthenticatedPut = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   string
->(putFetcher, (url) => url ?? null);
+>(unauthenticatedPutFetcher, (url) => url ?? null);
 
-export const useApiPatchNoAuth = createMutationHook<
+export const useUnauthenticatedPatch = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   string
->(patchFetcher, (url) => url ?? null);
+>(unauthenticatedPatchFetcher, (url) => url ?? null);
 
-export const useApiDeleteNoAuth = createMutationHook<
+export const useUnauthenticatedDelete = createMutationHook<
   { body?: any; query?: Record<string, any> },
   any,
   string
->(deleteFetcher, (url) => url ?? null);
+>(unauthenticatedDeleteFetcher, (url) => url ?? null);
 
 // ==========================================
 // 独自実装（将来的に削除予定）
