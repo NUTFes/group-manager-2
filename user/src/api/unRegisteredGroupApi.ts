@@ -1,4 +1,4 @@
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 export type UnregisteredGroupData = {
   group_id: number;
@@ -38,7 +38,7 @@ export const useGetUnregisteredGroup = (
       ? `${API_ENDPOINT}/group?group_id=${groupId}&order_type=${orderType}`
       : null;
 
-  const { data, error, isLoading, mutate } = useApiGet<{
+  const { data, error, isLoading, mutate } = useAuthenticatedGet<{
     data: UnregisteredGroupResponse[];
   }>(endpoint);
 

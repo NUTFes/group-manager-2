@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 const API_ENDPOINTS = {
   GROUPS: '/groups',
@@ -53,7 +53,7 @@ export const useGetGroups = (groupId: number | null) => {
     error,
     isLoading,
     mutate: mutateGroups,
-  } = useApiGet<ApiResponse<GroupResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<GroupResponse>>(endpoint);
 
   return {
     groups: data?.status.code === 200 ? data?.data : undefined,
@@ -68,7 +68,7 @@ export const useGetGroupCategories = () => {
   const endpoint = `${API_ENDPOINTS.GROUP_CATEGORIES}`;
 
   const { data, error, isLoading } =
-    useApiGet<ApiResponse<GroupCategoryResponse[]>>(endpoint);
+    useAuthenticatedGet<ApiResponse<GroupCategoryResponse[]>>(endpoint);
 
   return {
     groupCategories: data?.status.code === 200 ? data?.data : undefined,
@@ -86,7 +86,9 @@ export const useGetGroupByUserId = (userId: number | undefined) => {
     error,
     isLoading,
     mutate: mutateGroupByUserId,
-  } = useApiGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(
+    endpoint
+  );
 
   return {
     groupUserIdAndGroupCategoryId:
@@ -99,12 +101,12 @@ export const useGetGroupByUserId = (userId: number | undefined) => {
 
 // 新しい団体申請を作成
 export const useCreateGroups = () => {
-  return useSWRMutation(API_ENDPOINTS.GROUPS, postFetcher);
+  return useSWRMutation(API_ENDPOINTS.GROUPS, legacyPostFetcher);
 };
 
 // 既存の団体申請を更新
 export const useUpdateGroups = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.GROUPS}/${id}`, patchFetcher);
+  return useSWRMutation(`${API_ENDPOINTS.GROUPS}/${id}`, legacyPatchFetcher);
 };
 
 export type GroupInfo = GroupResponse;

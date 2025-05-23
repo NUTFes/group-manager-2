@@ -1,4 +1,4 @@
-import { noSessionFetcher } from '@/api/api';
+import { unauthenticatedGetFetcher } from '@/api/api';
 import useSWR from 'swr';
 
 // openapiの型定義に変えたい
@@ -18,7 +18,10 @@ export const useGetNews = () => {
   const endpoint = `${API_ENDPOINTS.ANNOUNCEMENTS}`;
 
   // TODO: あとでsessionがいらないAPIのuseApiGetを作る
-  const { data, error, isLoading } = useSWR<News[]>(endpoint, noSessionFetcher);
+  const { data, error, isLoading } = useSWR<News[]>(
+    endpoint,
+    unauthenticatedGetFetcher
+  );
 
   const news = data;
 

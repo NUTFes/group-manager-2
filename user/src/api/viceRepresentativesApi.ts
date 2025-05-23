@@ -1,6 +1,10 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
-import { deleteFetcher, patchFetcher, postFetcher } from './api';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import {
+  legacyDeleteFetcher,
+  legacyPatchFetcher,
+  legacyPostFetcher,
+} from './api';
 
 const API_ENDPOINT = '/sub_reps';
 
@@ -31,7 +35,7 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
     error,
     isLoading,
     mutate: mutateViceRepresentative,
-  } = useApiGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
 
   return {
     viceRepresentative: data?.status.code === 200 ? data.data : undefined,
@@ -42,13 +46,13 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
 };
 
 export const useCreateViceRepresentative = () => {
-  return useSWRMutation(API_ENDPOINT, postFetcher);
+  return useSWRMutation(API_ENDPOINT, legacyPostFetcher);
 };
 
 export const useUpdateViceRepresentative = (id: number | undefined) => {
-  return useSWRMutation(`${API_ENDPOINT}/${id}`, patchFetcher);
+  return useSWRMutation(`${API_ENDPOINT}/${id}`, legacyPatchFetcher);
 };
 
 export const useDeleteViceRepresentative = (id: number | undefined) => {
-  return useSWRMutation(`${API_ENDPOINT}/${id}`, deleteFetcher);
+  return useSWRMutation(`${API_ENDPOINT}/${id}`, legacyDeleteFetcher);
 };

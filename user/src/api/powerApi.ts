@@ -1,5 +1,5 @@
 import { Device } from '@/components/Applications/Power/types';
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   POWER_ORDERS: '/power_orders',
@@ -63,7 +63,7 @@ export const useGetPowerOrders = (groupId: number | null) => {
     ? `${API_ENDPOINTS.POWER_ORDERS}/group/${groupId}`
     : null;
 
-  const { data, error, isLoading, mutate } = useApiGet<{
+  const { data, error, isLoading, mutate } = useAuthenticatedGet<{
     data: PowerOrderResponse[];
   }>(endpoint);
 

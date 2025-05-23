@@ -1,4 +1,4 @@
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 
 // openapiの型定義に変えたい
 export type RegistrationStatus = {
@@ -36,7 +36,7 @@ export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
   const endpoint = `${API_ENDPOINTS.CHECK_ALL_REGISTERED}/${groupId}`;
 
   const { data, error, isLoading, mutate } =
-    useApiGet<ApiResponse<RegistrationStatus>>(endpoint);
+    useAuthenticatedGet<ApiResponse<RegistrationStatus>>(endpoint);
 
   const checkAllRegisteredGroups = data?.data ?? undefined;
 

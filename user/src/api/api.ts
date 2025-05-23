@@ -4,84 +4,137 @@ import snakecaseKeys from 'snakecase-keys';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-/**
- * APIのベースURL
- * 環境変数から読み込む
- */
+// ==========================================
+// 簡素化＆共通化したFetcher実装
+// ==========================================
+/** APIのベースURL */
+export type ApiError = Error & {
+  info?: {
+    exception?: string;
+    errors?: Record<string, string[]>;
+  };
+  status?: number;
+};
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-/**
- * APIのヘッダーを生成する関数
- * 認証情報を追加
- */
-export const headers = (session: Session): HeadersInit => {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
+type FetchOptions = {
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  session?: Session;
+  query?: Record<string, unknown>;
+  body?: any;
+};
+
+type MutationArgs = { body?: any; query?: Record<string, any> };
+
+/** ヘッダー組み立て */
+function buildHeaders(session?: Session): HeadersInit {
+  const haaders: HeadersInit = { 'Content-Type': 'application/json' };
+  if (session) {
+    haaders['access-token'] = session.accessToken!;
+    haaders['client'] = session.client!;
+    haaders['uid'] = session.uid!;
+  }
+  return haaders;
+}
+
+/** クエリ文字列化 */
+function objectToQueryString(params: Record<string, unknown>): string {
+  const snake = snakecaseKeys(params, { deep: true });
+  const searchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(snake)) {
+    if (value === null) continue;
+    if (Array.isArray(value)) {
+      value.forEach((v) => searchParams.append(key, String(v)));
+    } else {
+      searchParams.append(key, String(value));
+    }
+  }
+  return searchParams.toString();
+}
+
+/** 汎用リクエスト */
+async function request<T>(
+  url: string,
+  { method = 'GET', session, query, body }: FetchOptions = {}
+): Promise<T> {
+  let fullURL = url.startsWith('http') ? url : `${API_URL}${url}`;
+  if (query) {
+    fullURL += `?${objectToQueryString(query)}`;
+  }
+  const res = await fetch(fullURL, {
+    method,
+    headers: buildHeaders(session),
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    const err = new Error(
+      `${method} ${fullURL} failed (status ${res.status})`
+    ) as ApiError;
+    (err as any).info = errorBody;
+    (err as any).status = res.status;
+    throw err;
+  }
+  const json = await res.json();
+  return camelcaseKeys(json, { deep: true }) as T;
+}
+
+// GET用Fetcher
+export const authenticatedGetFetcher = <T>([url, session]: readonly [
+  string,
+  Session,
+]): Promise<T> => request<T>(url, { session });
+export const unauthenticatedGetFetcher = <T>(url: string): Promise<T> =>
+  request<T>(url);
+
+/** ミューテーション用Fetcherの共通化 */
+const authenticatedMutationFetcher =
+  (method: FetchOptions['method']) =>
+  <T>(
+    [url, session]: readonly [string, Session],
+    { arg }: { arg?: MutationArgs } = {}
+  ): Promise<T> => {
+    const opts: FetchOptions = { method, session };
+    if (arg?.body) opts.body = arg.body;
+    if (arg?.query) opts.query = arg.query;
+    return request<T>(url, opts);
   };
 
-  // 認証情報がある場合はヘッダーに追加
-  headers['access-token'] = session.accessToken!;
-  headers['client'] = session.client!;
-  headers['uid'] = session.uid!;
+const unauthenticatedMutationFetcher =
+  (method: FetchOptions['method']) =>
+  <T>(url: string, { arg }: { arg?: MutationArgs } = {}): Promise<T> => {
+    const opts: FetchOptions = { method };
+    if (arg?.body) opts.body = arg.body;
+    if (arg?.query) opts.query = arg.query;
+    return request<T>(url, opts);
+  };
 
-  return headers;
-};
+// 認証ありミューテーションFetcher（POST, PUT, PATCH, DELETE）
+export const authenticatedPostFetcher = authenticatedMutationFetcher('POST');
+export const authenticatedPutFetcher = authenticatedMutationFetcher('PUT');
+export const authenticatedPatchFetcher = authenticatedMutationFetcher('PATCH');
+export const authenticatedDeleteFetcher =
+  authenticatedMutationFetcher('DELETE');
 
-/**
- * SWR用のフェッチャー関数
- * 認証情報をヘッダーに追加
- * レスポンスは自動的にキャメルケースに変換
- */
-export const fetcher = ([url, session]: [string, Session]) => {
-  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
+// 認証なしミューテーションFetcher（POST, PUT, PATCH, DELETE）
+export const unauthenticatedPostFetcher =
+  unauthenticatedMutationFetcher('POST');
+export const unauthenticatedPutFetcher = unauthenticatedMutationFetcher('PUT');
+export const unauthenticatedPatchFetcher =
+  unauthenticatedMutationFetcher('PATCH');
+export const unauthenticatedDeleteFetcher =
+  unauthenticatedMutationFetcher('DELETE');
 
-  const requestHeaders = headers(session);
-
-  return fetch(fullUrl, {
-    headers: requestHeaders,
-  })
-    .then(async (res) => {
-      if (!res.ok) {
-        throw new Error(`API Error: ${res.status}`);
-      }
-      const json = await res.json();
-      return camelcaseKeys(json, { deep: true });
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      throw error;
-    });
-};
-
-export const noSessionFetcher = (url: string) => {
-  const fullUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-  return fetch(fullUrl, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(async (res) => {
-      if (!res.ok) {
-        throw new Error(`API Error: ${res.status}`);
-      }
-      const json = await res.json();
-      return camelcaseKeys(json, { deep: true });
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      throw error;
-    });
-};
+// ==========================================
+// 独自実装（将来的に削除予定）
+// ==========================================
 
 /**
- * POSTリクエスト用のfetcher関数
+ * POSTリクエスト用の関数（独自実装）
  * クエリパラメータとボディをサポート
  */
-export async function postFetcher(
+export async function legacyPostFetcher(
   url: string,
   { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
 ): Promise<any> {
@@ -106,11 +159,11 @@ export async function postFetcher(
 }
 
 /**
- * PATCHリクエスト用のfetcher関数
+ * PATCHリクエスト用の関数（独自実装）
  * クエリパラメータとボディをサポート
  * エラー時はレスポンスの詳細をログ出力
  */
-export async function patchFetcher(
+export async function legacyPatchFetcher(
   url: string,
   { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
 ): Promise<any> {
@@ -136,8 +189,12 @@ export async function patchFetcher(
 
   return response.json();
 }
-//DELETEリクエスト用のfetcher関数
-export async function deleteFetcher(
+
+/**
+ * DELETEリクエスト用の関数（独自実装）
+ * クエリパラメータをサポート
+ */
+export async function legacyDeleteFetcher(
   url: string,
   { arg }: { arg?: { query?: { [key: string]: any } } } = {}
 ): Promise<any> {
@@ -319,7 +376,7 @@ const sendRequest = async <T>(
   session: Session,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const defaultHeaders: HeadersInit = headers(session);
+  const defaultHeaders: HeadersInit = buildHeaders(session);
 
   const requestOptions: RequestInit = {
     ...options,
@@ -394,50 +451,3 @@ export const patchData = async <T>(
 ): Promise<ApiResponse<T>> => {
   return sendRequest<T>(url, session, createRequestOptions('PATCH', data));
 };
-
-/**
- * オブジェクトをクエリパラメータ文字列に変換する関数
- * キーは自動的にスネークケースに変換
- */
-function objectToQueryString(params: { [key: string]: any }): string {
-  const snakeParams = snakecaseKeys(params, { deep: true });
-  return Object.keys(snakeParams)
-    .map(
-      (key) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(snakeParams[key])}`
-    )
-    .join('&');
-}
-
-/**
- * POSTリクエスト用のfetcher関数
- * Headersに認証情報を追加
- * クエリパラメータとボディをサポート
- */
-export async function postFetcherWithSession(
-  [url, session]: [string, Session],
-  { arg }: { arg: { body?: any; query?: { [key: string]: any } } }
-): Promise<any> {
-  const requestHeaders = headers(session);
-  let finalUrl = url.startsWith('http') ? url : `${API_URL}${url}`;
-  if (arg.query) {
-    const queryStr = objectToQueryString(arg.query);
-    finalUrl = `${API_URL}${url}?${queryStr}`;
-  }
-
-  const response = await fetch(finalUrl, {
-    method: 'POST',
-    headers: requestHeaders,
-    body: JSON.stringify(arg.body),
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.json();
-    const error = new Error('Error posting data');
-    (error as any).info = errorBody;
-    (error as any).status = response.status;
-    throw error;
-  }
-
-  return response.json();
-}
