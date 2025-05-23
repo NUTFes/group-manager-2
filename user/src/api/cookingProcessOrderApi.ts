@@ -3,6 +3,13 @@ import { useAuthenticatedGet } from '@/hooks/useApi';
 import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
 
 export type CookingProcessOrder = {
+  groupId: number;
+  preOpenKitchen: boolean;
+  duringOpenKitchen: boolean;
+  tent?: string | null;
+};
+
+export type CookingProcessOrderResponse = {
   id: number;
   groupId: number;
   createdAt: string;
@@ -30,7 +37,7 @@ export const useGetCookingProcessOrder = (groupId: number | undefined) => {
   const endpoint = `${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${groupId}`;
 
   const { data, error, isLoading, mutate } =
-    useAuthenticatedGet<ApiResponse<CookingProcessOrder>>(endpoint);
+    useAuthenticatedGet<ApiResponse<CookingProcessOrderResponse>>(endpoint);
 
   const cookingProcessOrders = data?.data ?? undefined;
 
