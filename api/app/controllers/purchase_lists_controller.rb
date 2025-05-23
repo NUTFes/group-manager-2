@@ -35,6 +35,17 @@ class PurchaseListsController < ApplicationController
     render json: fmt(ok, [], "Deleted purchase_list = "+params[:id])
   end
 
+  # GET /purchase_lists/group/:group_id
+def get_by_group_id
+  @purchase_lists = PurchaseList.where(group_id: params[:group_id])
+
+  if @purchase_lists.any?
+    render json: fmt(ok, @purchase_lists)
+  else
+    render json: fmt(not_found, [], "Not found purchase_lists with group_id = " + params[:group_id])
+  end
+end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_purchase_list
