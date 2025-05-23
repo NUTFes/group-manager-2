@@ -1,6 +1,8 @@
-import { useSession } from 'next-auth/react';
-import { useAuthenticatedGet } from '@/hooks/useApi';
-import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 export type CookingProcessOrder = {
   groupId: number;
@@ -50,19 +52,9 @@ export const useGetCookingProcessOrder = (groupId: number | undefined) => {
 };
 
 export const usePostCookingProcessOrder = () => {
-  const { data: session } = useSession();
-  if (!session) return null;
-  return authenticatedPostFetcher([
-    API_ENDPOINTS.COOKING_PROCESS_ORDER,
-    session,
-  ]);
+  return useAuthenticatedPost(API_ENDPOINTS.COOKING_PROCESS_ORDER);
 };
 
 export const useUpdateCookingProcessOrder = (id: number) => {
-  const { data: session } = useSession();
-  if (!session) return null;
-  return authenticatedPatchFetcher([
-    `${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${id}`,
-    session,
-  ]);
+  return useAuthenticatedPatch(`${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${id}`);
 };
