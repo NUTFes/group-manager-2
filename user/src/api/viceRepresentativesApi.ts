@@ -1,5 +1,5 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 import {
   legacyDeleteFetcher,
   legacyPatchFetcher,
@@ -35,7 +35,7 @@ export const useGetViceRepresentatives = (groupId: number | null) => {
     error,
     isLoading,
     mutate: mutateViceRepresentative,
-  } = useApiGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<ViceRepresentativeResponse>>(endpoint);
 
   return {
     viceRepresentative: data?.status.code === 200 ? data.data : undefined,

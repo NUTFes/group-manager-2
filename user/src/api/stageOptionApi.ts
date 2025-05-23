@@ -1,5 +1,5 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 const API_ENDPOINTS = {
@@ -39,7 +39,7 @@ export const useGetStageOptions = (groupId: number | null) => {
     : null;
 
   const { data, error, isLoading } =
-    useApiGet<ApiResponse<StageOptionResponse>>(endpoint);
+    useAuthenticatedGet<ApiResponse<StageOptionResponse>>(endpoint);
 
   return {
     stageOptions: data?.status.code === 200 ? data?.data : undefined,

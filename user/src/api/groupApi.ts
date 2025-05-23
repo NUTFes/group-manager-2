@@ -1,5 +1,5 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 const API_ENDPOINTS = {
@@ -53,7 +53,7 @@ export const useGetGroups = (groupId: number | null) => {
     error,
     isLoading,
     mutate: mutateGroups,
-  } = useApiGet<ApiResponse<GroupResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<GroupResponse>>(endpoint);
 
   return {
     groups: data?.status.code === 200 ? data?.data : undefined,
@@ -68,7 +68,7 @@ export const useGetGroupCategories = () => {
   const endpoint = `${API_ENDPOINTS.GROUP_CATEGORIES}`;
 
   const { data, error, isLoading } =
-    useApiGet<ApiResponse<GroupCategoryResponse[]>>(endpoint);
+    useAuthenticatedGet<ApiResponse<GroupCategoryResponse[]>>(endpoint);
 
   return {
     groupCategories: data?.status.code === 200 ? data?.data : undefined,
@@ -86,7 +86,9 @@ export const useGetGroupByUserId = (userId: number | undefined) => {
     error,
     isLoading,
     mutate: mutateGroupByUserId,
-  } = useApiGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<GroupUserIdAndGroupCategoryIdResponse>>(
+    endpoint
+  );
 
   return {
     groupUserIdAndGroupCategoryId:

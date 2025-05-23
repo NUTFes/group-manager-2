@@ -1,5 +1,5 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // リクエスト用の型定義
@@ -54,7 +54,7 @@ export const usePublicRelationData = (groupId: number) => {
     error,
     isLoading,
     mutate,
-  } = useApiGet<ApiResponse<PublicRelationResponse>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<PublicRelationResponse>>(endpoint);
 
   // APIからのレスポンスを直接取得
   const publicRelation = response?.status.code === 200 ? response.data : null;

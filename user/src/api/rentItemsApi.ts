@@ -1,5 +1,5 @@
 // src/api/rentItemsApi.ts
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // APIエンドポイント
@@ -73,7 +73,7 @@ export const useRentableItemsByType = (locationType: string) => {
     data: response,
     error,
     isLoading,
-  } = useApiGet<ApiResponse<RentalItem[]>>(endpoint);
+  } = useAuthenticatedGet<ApiResponse<RentalItem[]>>(endpoint);
 
   return {
     items: response?.data || [],
@@ -88,7 +88,9 @@ export const useAllRentableItems = () => {
     data: response,
     error,
     isLoading,
-  } = useApiGet<ApiResponse<RentalItem[]>>(API_ENDPOINTS.ALL_RENTABLE_ITEMS);
+  } = useAuthenticatedGet<ApiResponse<RentalItem[]>>(
+    API_ENDPOINTS.ALL_RENTABLE_ITEMS
+  );
 
   return {
     items: response?.data || [],
@@ -104,7 +106,7 @@ export const useRentalOrdersByGroupId = (groupId: number) => {
     error,
     isLoading,
     mutate,
-  } = useApiGet<ApiResponse<RentalOrder[]>>(
+  } = useAuthenticatedGet<ApiResponse<RentalOrder[]>>(
     `${API_ENDPOINTS.RENTAL_ORDERS}/group/${groupId}`
   );
 

@@ -1,4 +1,4 @@
-import { useApiGet, useApiPost } from '@/hooks/useApi';
+import { useAuthenticatedGet, useAuthenticatedPost } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   USER_DETAILS: '/user_details',
@@ -36,7 +36,9 @@ export type UserInformation = {
 export const useGetUserDetails = (userId: number) => {
   const endpoint = `${API_ENDPOINTS.USER_DETAILS}?user_id=${userId}`;
 
-  const { data, error, isLoading } = useApiGet<{ data: UserDetails }>(endpoint);
+  const { data, error, isLoading } = useAuthenticatedGet<{ data: UserDetails }>(
+    endpoint
+  );
 
   return {
     userDetails: data?.data,
@@ -47,12 +49,12 @@ export const useGetUserDetails = (userId: number) => {
 
 export const useMutateUserDetails = () => {
   const endpoint = API_ENDPOINTS.USER_DETAILS_UPDATE;
-  return useApiPost(endpoint);
+  return useAuthenticatedPost(endpoint);
 };
 
 export const useGetCurrentUserInformation = () => {
   const endpoint = '/api/v1/current_user';
-  const { data, error, isLoading, mutate } = useApiGet<{
+  const { data, error, isLoading, mutate } = useAuthenticatedGet<{
     data: UserInformation;
   }>(endpoint);
 

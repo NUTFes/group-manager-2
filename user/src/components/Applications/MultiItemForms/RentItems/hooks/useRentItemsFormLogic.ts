@@ -12,7 +12,7 @@ import {
 import { useGetPlaceOrder } from '@/api/venueApplication';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 import {
   ITEM_IDS,
   LOCATION_TYPES,
@@ -248,7 +248,7 @@ export const useRentItemsFormLogic = (
 
   // 全ての貸出物品データを取得（処理に使用）
   const { data: rentableItemsData, isLoading: rentableItemsLoading } =
-    useApiGet<{
+    useAuthenticatedGet<{
       data: Array<{
         id: number;
         name: string;

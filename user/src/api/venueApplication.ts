@@ -1,5 +1,5 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
 import { ApiResponse } from './stageOptionApi';
 
@@ -47,7 +47,7 @@ export const usePlacesData = (group_id: number) => {
     data: fesDateResponse,
     error: fesDateError,
     isLoading: fesDateLoading,
-  } = useApiGet<ApiDataResponse<Place>>(
+  } = useAuthenticatedGet<ApiDataResponse<Place>>(
     `${API_ENDPOINTS.PLACES}?group_id=${group_id}`
   );
   return {
@@ -78,7 +78,7 @@ export const useGetPlaceOrder = (groupId: number | null) => {
     : null;
 
   const { data, isLoading, mutate } =
-    useApiGet<ApiResponse<PlaceOrder>>(endpoint);
+    useAuthenticatedGet<ApiResponse<PlaceOrder>>(endpoint);
 
   return {
     placeOrder: data?.status.code == 200 ? data?.data : undefined,
