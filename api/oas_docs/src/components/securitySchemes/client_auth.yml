@@ -1,0 +1,8 @@
+---
+components:
+  securitySchemes:
+    ClientAuth:
+      type: apiKey
+      in: header
+      name: client
+      description: Devise認証用のクライアントID
