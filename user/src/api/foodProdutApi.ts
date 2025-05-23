@@ -28,6 +28,11 @@ export type CreateFoodProductsRequest = {
   food_products: FoodProduct[];
 };
 
+// 一括更新用のリクエスト型
+export type UpdateFoodProductsRequest = {
+  food_products: (FoodProduct & { id: number })[];
+};
+
 const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
 };
@@ -67,8 +72,17 @@ export const useUpdateFoodProducts = () => {
   const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}`;
   const { trigger, isMutating, error } = useAuthenticatedPatch(endpoint);
 
+  const updateFoodProducts = async (
+    foodProducts: (FoodProduct & { id: number })[]
+  ) => {
+    const request: UpdateFoodProductsRequest = {
+      food_products: foodProducts,
+    };
+    return trigger({ body: request });
+  };
+
   return {
-    trigger,
+    updateFoodProducts,
     isMutating,
     error,
   };
