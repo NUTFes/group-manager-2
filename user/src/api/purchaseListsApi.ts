@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { useAuthenticatedGet } from '@/hooks/useApi';
-import { authenticatedPostFetcher, authenticatedPatchFetcher } from './api';
+import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
 
 export type PurchaseList = {
   groupId: number;
