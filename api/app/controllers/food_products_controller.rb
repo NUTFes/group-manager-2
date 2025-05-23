@@ -8,6 +8,12 @@ class FoodProductsController < ApplicationController
     render json: fmt(ok, @food_products)
   end
 
+  # GET /group/:group_id/food_products
+  def group_food_products
+    @food_products = FoodProduct.where(group_id: params[:group_id])
+    render json: fmt(ok, @food_products)
+  end
+
   # GET /food_products/1
   # GET /food_products/1.json
   def show

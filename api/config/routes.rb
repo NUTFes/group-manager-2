@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   resources :food_products do
     collection do
       patch '', to: 'food_products#update'
+      get 'group/:group_id', to: 'food_products#group_food_products'
     end
   end
   resources :assign_rental_items
