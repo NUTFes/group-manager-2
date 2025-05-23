@@ -7,8 +7,15 @@ import snakecaseKeys from 'snakecase-keys';
 // ==========================================
 // 簡素化＆共通化したFetcher実装
 // ==========================================
-
 /** APIのベースURL */
+export type ApiError = Error & {
+  info?: {
+    exception?: string;
+    errors?: Record<string, string[]>;
+  };
+  status?: number;
+};
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 type FetchOptions = {
@@ -62,7 +69,9 @@ async function request<T>(
   });
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    const err = new Error(`${method} ${fullURL} failed (status ${res.status})`);
+    const err = new Error(
+      `${method} ${fullURL} failed (status ${res.status})`
+    ) as ApiError;
     (err as any).info = errorBody;
     (err as any).status = res.status;
     throw err;

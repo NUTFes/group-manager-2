@@ -12,7 +12,7 @@ import {
 } from '@/api/api';
 // ==========================================
 // 独自実装（将来的に削除予定）
-import { deleteData, patchData, postData, putData } from '@/api/api';
+import { ApiError, deleteData, patchData, postData, putData } from '@/api/api';
 import { Session } from 'next-auth';
 // ==========================================
 
@@ -34,25 +34,25 @@ const createMutationHook = <Arg, Data, MK extends Key>(
 ) => {
   return (url: string | null, options?: any) => {
     const key = getKey(url);
-    return useSWRMutation<Data, Error, MK, Arg>(key!, fetcherFn, options);
+    return useSWRMutation<Data, ApiError, MK, Arg>(key!, fetcherFn, options);
   };
 };
 
 /**　GETリクエスト用のフック　　*/
 export const useAuthenticatedGet = <T>(
   url: string | null,
-  options?: SWRConfiguration<T, Error>
+  options?: SWRConfiguration<T, ApiError>
 ) => {
   const { data: session, status } = useSession();
   const key =
     status === 'authenticated' && url ? ([url, session!] as const) : null;
-  return useSWR<T, Error>(key, authenticatedGetFetcher, options);
+  return useSWR<T, ApiError>(key, authenticatedGetFetcher, options);
 };
 
 export const useUnauthenticatedGet = <T>(
   url: string | null,
-  options?: SWRConfiguration<T, Error>
-) => useSWR<T, Error>(url ?? null, unauthenticatedGetFetcher, options);
+  options?: SWRConfiguration<T, ApiError>
+) => useSWR<T, ApiError>(url ?? null, unauthenticatedGetFetcher, options);
 
 /** 認証ありミューテーション用のフック */
 export const useAuthenticatedPost = createMutationHook<

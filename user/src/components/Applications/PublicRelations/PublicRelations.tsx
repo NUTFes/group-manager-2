@@ -79,7 +79,7 @@ const PublicRelations: FC<PublicRelationsProps> = ({
     >
       <Content
         isLoading={isLoading}
-        hasError={hasError}
+        hasError={!!hasError}
         isDeadline={isDeadline}
         isEditing={isEditing}
         toEdit={toEdit}
