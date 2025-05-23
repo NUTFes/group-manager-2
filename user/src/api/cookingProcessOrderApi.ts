@@ -1,11 +1,15 @@
-import { useApiGet } from '@/hooks/useApi';
+import { useSession } from 'next-auth/react';
+import useSWRMutation from 'swr/mutation';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
 
 export type CookingProcessOrder = {
-  group_id: number;
-  created_at: string;
-  updated_at: string;
-  pre_open_kitchen: boolean;
-  during_open_kitchen: boolean;
+  id: number;
+  groupId: number;
+  createdAt: string;
+  updatedAt: string;
+  preOpenKitchen: boolean;
+  duringOpenKitchen: boolean;
   tent?: string | null;
 };
 
@@ -20,14 +24,14 @@ export type ApiResponse<T> = {
 };
 
 const API_ENDPOINTS = {
-  CHECK_ALL_REGISTERED: '/cooking_process_orders',
+  COOKING_PROCESS_ORDER: '/cooking_process_orders',
 };
 
-export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
-  const endpoint = `${API_ENDPOINTS.CHECK_ALL_REGISTERED}/${groupId}`;
+export const useGetCookingProcessOrder = (groupId: number | undefined) => {
+  const endpoint = `${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${groupId}`;
 
   const { data, error, isLoading, mutate } =
-    useApiGet<ApiResponse<CookingProcessOrder>>(endpoint);
+    useAuthenticatedGet<ApiResponse<CookingProcessOrder>>(endpoint);
 
   const cookingProcessOrders = data?.data ?? undefined;
 
@@ -37,4 +41,20 @@ export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
     error,
     mutateCookingProcessOrders: mutate,
   };
+};
+
+export const usePostCookingProcessOrder = () => {
+  const { data: session } = useSession();
+  return useSWRMutation(
+    session ? [API_ENDPOINTS.COOKING_PROCESS_ORDER, session] : null,
+    authenticatedPostFetcher
+  );
+};
+
+export const useUpdateCookingProcessOrder = (id: number) => {
+  const { data: session } = useSession();
+  return useSWRMutation(
+    session ? [`${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${id}`, session] : null,
+    authenticatedPatchFetcher
+  );
 };
