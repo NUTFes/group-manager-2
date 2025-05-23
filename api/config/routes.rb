@@ -39,7 +39,11 @@ Rails.application.routes.draw do
   resources :news
   resources :purchase_lists
   post "/purchase_lists" => "purchase_lists#create"
-  resources :food_products
+  resources :food_products do
+    collection do
+      patch '', to: 'food_products#update'
+    end
+  end
   resources :assign_rental_items
   resources :rentable_items
   resources :rental_items

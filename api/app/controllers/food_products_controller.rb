@@ -1,5 +1,5 @@
 class FoodProductsController < ApplicationController
-  before_action :set_food_product, only: [:show, :update, :destroy]
+  before_action :set_food_product, only: [:show, :destroy]
 
   # GET /food_products
   # GET /food_products.json
@@ -24,17 +24,42 @@ class FoodProductsController < ApplicationController
       if @food_products.all?(&:persisted?)
         render json: fmt(created, @food_products)
       else
-        render json: fmt(not_found, [], "Not found food_product = ")
+        render json: fmt(not_found, [], "Not found food_products")
         raise ActiveRecord::Rollback
       end
     end
   end
 
-  # PATCH/PUT /food_products/1
-  # PATCH/PUT /food_products/1.json
+  # PATCH/PUT /food_products
+  # PATCH/PUT /food_products.json
   def update
-    @food_product.update(food_product_params)
-    render json: fmt(created, @food_product, "Updated food_product id = "+params[:id])
+    @food_products = []
+    errors = []
+
+    ActiveRecord::Base.transaction do
+      params[:food_products].each do |food_product_data|
+        food_product = FoodProduct.find_by(id: food_product_data[:id])
+        if food_product.nil?
+          errors << { id: food_product_data[:id], error: "Food product not found" }
+          next
+        end
+
+        if food_product.update(food_product_data.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num))
+          @food_products << food_product
+        else
+          errors << { id: food_product_data[:id], errors: food_product.errors.full_messages }
+        end
+      end
+
+      if errors.any?
+        render json: { status: 422, message: "Some updates failed", errors: errors }, status: :unprocessable_entity
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    if errors.empty?
+      render json: fmt(ok, @food_products, "Updated food_products")
+    end
   end
 
   # DELETE /food_products/1
