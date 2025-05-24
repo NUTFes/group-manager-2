@@ -100,7 +100,9 @@ export const useMutatePurchaseLists = () => {
 
     // 余分な分を削除
     for (let i = items.length; i < existingItems.length; i++) {
-      promises.push(remove(`${API_ENDPOINTS.PURCHASE_LIST}/${existingItems[i].id}`));
+      promises.push(
+        remove(`${API_ENDPOINTS.PURCHASE_LIST}/${existingItems[i].id}`)
+      );
     }
 
     await Promise.all(promises);
