@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { useAuthenticatedGet, useApiMutations } from '@/hooks/useApi';
+import { useAuthenticatedGet /*,useApiMutations:*/ } from '@/hooks/useApi';
 import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
 
 export type PurchaseList = {
@@ -75,6 +75,7 @@ export const useUpdatePurchaseList = (id: number) => {
   ]);
 };
 
+/*
 export const useMutatePurchaseLists = () => {
   const { post, put, remove } = useApiMutations();
 
@@ -108,3 +109,5 @@ export const useMutatePurchaseLists = () => {
 
   return { submitPurchaseLists };
 };
+
+*/
