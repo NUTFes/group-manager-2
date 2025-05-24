@@ -1,6 +1,5 @@
-import { useSession } from 'next-auth/react';
-import { useAuthenticatedGet /*,useApiMutations:*/ } from '@/hooks/useApi';
-import { useAuthenticatedPost, useAuthenticatedPatch } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import { useAuthenticatedPatch, useAuthenticatedPost } from '@/hooks/useApi';
 
 export type PurchaseList = {
   groupId: number;
