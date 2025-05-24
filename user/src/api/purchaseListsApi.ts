@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { useAuthenticatedGet /*,useApiMutations:*/ } from '@/hooks/useApi';
-import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
+import { useAuthenticatedPost, useAuthenticatedPatch } from '@/hooks/useApi';
 
 export type PurchaseList = {
   groupId: number;
@@ -60,19 +60,12 @@ export const useGetPurchaseListsByGroupId = (groupId: number | undefined) => {
 
 // 新規作成
 export const usePostPurchaseList = () => {
-  const { data: session } = useSession();
-  if (!session) return null;
-  return authenticatedPostFetcher([API_ENDPOINTS.PURCHASE_LIST, session]);
+  return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST);
 };
 
 // 更新
 export const useUpdatePurchaseList = (id: number) => {
-  const { data: session } = useSession();
-  if (!session) return null;
-  return authenticatedPatchFetcher([
-    `${API_ENDPOINTS.PURCHASE_LIST}/${id}`,
-    session,
-  ]);
+  return useAuthenticatedPatch(`${API_ENDPOINTS.PURCHASE_LIST}/${id}`);
 };
 
 /*
