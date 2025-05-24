@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react';
-import { useAuthenticatedGet } from '@/hooks/useApi';
+import { useAuthenticatedGet, useApiMutations } from '@/hooks/useApi';
 import { authenticatedPatchFetcher, authenticatedPostFetcher } from './api';
 
 export type PurchaseList = {
@@ -73,4 +73,38 @@ export const useUpdatePurchaseList = (id: number) => {
     `${API_ENDPOINTS.PURCHASE_LIST}/${id}`,
     session,
   ]);
+};
+
+export const useMutatePurchaseLists = () => {
+  const { post, put, remove } = useApiMutations();
+
+  const submitPurchaseLists = async (
+    items: PurchaseList[],
+    existingItems: PurchaseListResponse[] = []
+  ) => {
+    const promises = [];
+
+    // 既存データの数だけ更新
+    const minLength = Math.min(items.length, existingItems.length);
+    for (let i = 0; i < minLength; i++) {
+      promises.push(
+        put(`${API_ENDPOINTS.PURCHASE_LIST}/${existingItems[i].id}`, items[i])
+      );
+    }
+
+    // 新規作成（新しい分）
+    for (let i = existingItems.length; i < items.length; i++) {
+      promises.push(post(API_ENDPOINTS.PURCHASE_LIST, items[i]));
+    }
+
+    // 余分な分を削除
+    for (let i = items.length; i < existingItems.length; i++) {
+      promises.push(remove(`${API_ENDPOINTS.PURCHASE_LIST}/${existingItems[i].id}`));
+    }
+
+    await Promise.all(promises);
+    return { success: true };
+  };
+
+  return { submitPurchaseLists };
 };
