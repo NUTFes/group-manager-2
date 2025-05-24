@@ -1,5 +1,8 @@
-import { useAuthenticatedGet } from '@/hooks/useApi';
-import { useAuthenticatedPatch, useAuthenticatedPost } from '@/hooks/useApi';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 export type PurchaseList = {
   groupId: number;
@@ -42,7 +45,11 @@ const API_ENDPOINTS = {
 
 // グループIDで取得
 export const useGetPurchaseListsByGroupId = (groupId: number | undefined) => {
-  const endpoint = `${API_ENDPOINTS.PURCHASE_LIST}/group/${groupId}`;
+  // groupId が undefined の場合は null を渡して SWR 側でフェッチしないようにする
+  const endpoint =
+    groupId !== undefined
+      ? `${API_ENDPOINTS.PURCHASE_LIST}/group/${groupId}`
+      : null;
 
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<PurchaseListResponse[]>>(endpoint);
