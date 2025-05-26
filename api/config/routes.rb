@@ -64,7 +64,14 @@ Rails.application.routes.draw do
     end
   end
   resources :stages
-  resources :employees
+  resources :employees do
+    collection do
+      get   'group/:group_id', to: 'employees#get_by_group'
+      post  'bulk',            to: 'employees#bulk_create'
+      put   'bulk',            to: 'employees#bulk_update'
+      patch 'bulk',            to: 'employees#bulk_update'
+    end
+  end
   resources :sub_reps do
     collection do
       get 'group/:group_id', to: 'sub_reps#get_by_group_id'
