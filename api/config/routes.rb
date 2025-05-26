@@ -67,9 +67,9 @@ Rails.application.routes.draw do
   resources :employees do
     collection do
       get   'group/:group_id', to: 'employees#get_by_group'
-      post  'bulk',            to: 'employees#bulk_create'
-      put   'bulk',            to: 'employees#bulk_update'
-      patch 'bulk',            to: 'employees#bulk_update'
+      post  'bulk_create',            to: 'employees#bulk_create'
+      put   'bulk_update',            to: 'employees#bulk_update'
+      patch 'bulk_update',            to: 'employees#bulk_update'
     end
   end
   resources :sub_reps do
