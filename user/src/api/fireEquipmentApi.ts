@@ -56,6 +56,6 @@ export const usePostFireEquipmentOrder = () => {
 };
 
 // 更新
-export const usePutFireEquipmentOrder = (id: number) => {
+export const usePatchFireEquipmentOrder = (id: number) => {
   return useAuthenticatedPatch(`${API_ENDPOINTS.FIRE_EQUIPMENT_PATH}/${id}`);
 };
