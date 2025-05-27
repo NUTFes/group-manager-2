@@ -34,17 +34,19 @@ class EmployeesController < ApplicationController
     created = Employee.transaction do
       employee_bulk_params.map { |attrs| Employee.create!(attrs) }
     end
-
     render json: fmt(created, created), status: :created
   rescue ActiveRecord::RecordInvalid => e
-    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages), status: :unprocessable_entity
+    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   end
 
   # PATCH/PUT /employees/1
   # PATCH/PUT /employees/1.json
   def update
-    @employee.update(employee_params)
-    render json: fmt(created, @employee, "Updated employee id = "+params[:id])
+    if @employee.update(employee_params)
+      render json: fmt(ok, @employee, "Updated employee id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, [], @employee.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /employees/bulk
@@ -64,14 +66,14 @@ class EmployeesController < ApplicationController
   rescue ActiveRecord::RecordNotFound => e
     render json: fmt(not_found, [], e.message), status: :not_found
   rescue ActiveRecord::RecordInvalid => e
-    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages), status: :unprocessable_entity
+    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   end
 
   # DELETE /employees/1
   # DELETE /employees/1.json
   def destroy
     @employee.destroy
-    render json: fmt(ok, [], "Deleted employee = "+params[:id])
+    render json: fmt(ok, [], "Deleted employee = #{params[:id]}")
   end
 
   private
