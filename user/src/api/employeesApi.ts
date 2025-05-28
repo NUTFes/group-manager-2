@@ -4,17 +4,13 @@ import {
   useAuthenticatedPatch,
   useAuthenticatedPost,
 } from '@/hooks/useApi';
+import { ApiResponse } from './api';
 
 const API_ENDPOINTS = {
   EMPLOYEES: '/employees',
   EMPLOYEES_BULK_CREATE: '/employees/bulk_create',
   EMPLOYEES_BULK_UPDATE: '/employees/bulk_update',
   EMPLOYEES_GROUP: '/employees/group',
-};
-
-export type ApiResponse<T> = {
-  status: { code: number; message: string };
-  data: T;
 };
 
 export type Employee = {
