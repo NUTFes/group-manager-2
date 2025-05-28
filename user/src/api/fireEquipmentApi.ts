@@ -6,8 +6,8 @@ import {
 import { ApiResponse } from './api';
 
 export enum FireEquipmentFuel {
-  GAS = 1,
-  KEROSENE = 2,
+  GAS_BOTTLE = 1,
+  LP_GAS = 2,
   CHARCOAL = 3,
 }
 
@@ -25,7 +25,7 @@ export type FireEquipmentResponse = {
 };
 
 const API_ENDPOINTS = {
-  FIRE_EQUIPMENT_PATH: '/fire_equipment',
+  FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
 };
 
 // グループIDで火器使用申請を取得
@@ -34,7 +34,7 @@ export const useGetFireEquipmentOrderByGroupId = (
 ) => {
   const endpoint =
     groupId !== undefined
-      ? `${API_ENDPOINTS.FIRE_EQUIPMENT_PATH}/group/${groupId}`
+      ? `${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/group/${groupId}`
       : null;
 
   const { data, error, isLoading, mutate } =
@@ -52,10 +52,10 @@ export const useGetFireEquipmentOrderByGroupId = (
 
 // 新規申請
 export const usePostFireEquipmentOrder = () => {
-  return useAuthenticatedPost(API_ENDPOINTS.FIRE_EQUIPMENT_PATH);
+  return useAuthenticatedPost(API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS);
 };
 
 // 更新
 export const usePatchFireEquipmentOrder = (id: number) => {
-  return useAuthenticatedPatch(`${API_ENDPOINTS.FIRE_EQUIPMENT_PATH}/${id}`);
+  return useAuthenticatedPatch(`${API_ENDPOINTS.FIRE_EQUIPMENT_ORDERS}/${id}`);
 };
