@@ -42,19 +42,14 @@ Rails.application.routes.draw do
      get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
    end
   end
-  post "/purchase_lists" => "purchase_lists#create"
-  resources :food_products
-  resources :assign_rental_items
-  resources :rentable_items
-  resources :rental_items
-  resources :rental_item_allow_lists
-  resources :stocker_items
-  resources :stocker_places
-  resources :rental_orders do
-    collection do
-      get 'group/:group_id', to: 'rental_orders#get_by_group_id'
-    end
+  resources :purchase_lists do
+  collection do
+    get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
+    post 'bulk_create', to: 'purchase_lists#bulk_create'
+    put 'bulk_update', to: 'purchase_lists#bulk_update'
+    patch 'bulk_update', to: 'purchase_lists#bulk_update'
   end
+end
 
   resources :assign_items
   resources :assign_stages
