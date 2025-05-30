@@ -1,5 +1,5 @@
 class EmployeesController < ApplicationController
-  # before_action :authenticate_api_user!, except: [:index, :show, :get_by_group]
+  before_action :authenticate_api_user!, except: [:index, :show, :get_by_group]
   before_action :set_employee, only: [:show, :update, :destroy]
 
   # GET /employees
@@ -30,33 +30,26 @@ class EmployeesController < ApplicationController
 
   # POST /employees/upsert
   # POST /employees/upsert.json
-  def upsert
+  def bulk_upsert
     now     = Time.current
-    records = employees_params.map do |attrs|
-      common = {
-        group_id:      attrs[:group_id],
-        name:          attrs[:name],
-        student_id:    attrs[:student_id],
-        stool_test_id: attrs[:stool_test_id]
-      }
+    keys    = %i[id group_id name student_id stool_test_id created_at updated_at]
 
-      if attrs[:id].present?
-        # 更新対象：ID＋updated_at
-        common.merge(id: attrs[:id], updated_at: now)
-      else
-        # 新規作成対象：created_at＋updated_at
-        common.merge(created_at: now, updated_at: now)
-      end
+    records = params.require(:employees).map do |emp|
+      attrs = ActionController::Parameters
+        .new(emp.to_unsafe_h)
+        .permit(*keys)
+        .to_h
+        .symbolize_keys
+      attrs[:created_at] ||= now
+      attrs[:updated_at] = now
     end
 
-    # 一度の SQL で INSERT／UPDATE をまとめ実行
     Employee.upsert_all(
       records,
       unique_by:  :id,
       update_only: %i[group_id name student_id stool_test_id updated_at]
     )
 
-    # 更新／挿入されたレコードを取得して返却
     processed_ids = records.map { |r| r[:id] }.compact
     processed     = Employee.where(id: processed_ids)
 
