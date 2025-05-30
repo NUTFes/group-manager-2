@@ -29,13 +29,27 @@ class FoodProductsController < ApplicationController
     end
   end
 
-  # POST /food_products/bulk_create
-  # 複数レコード作成
-  def bulk_create
-    created = FoodProduct.transaction do
-      food_product_bulk_params.map { |attrs| FoodProduct.create!(attrs) }
+  # POST /food_products/bulk_upsert
+  # 複数レコード作成・更新 (upsert_all使用)
+  def bulk_upsert
+    keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at]
+    now = Time.current
+    upserts = params[:food_products].map do |fp|
+      attrs = ActionController::Parameters
+        .new(fp.to_unsafe_h)
+        .permit(*keys)
+        .to_h
+        .symbolize_keys
+      keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+      attrs[:created_at] ||= now
+      attrs[:updated_at] = now
+      attrs
     end
-    render json: fmt(created, created), status: :created
+
+    upserts = upserts.map { |attrs| attrs.transform_keys(&:to_s) }
+    FoodProduct.upsert_all(upserts)
+
+    render json: fmt(ok)
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   end
@@ -51,23 +65,6 @@ class FoodProductsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /food_products/bulk_update
-  # 複数レコード更新
-  def bulk_update
-    updates = food_product_bulk_params(include_id: true)
-    updated = FoodProduct.transaction do
-      updates.map do |attrs|
-        fp = FoodProduct.find(attrs.delete(:id))
-        fp.update!(attrs)
-        fp
-      end
-    end
-    render json: fmt(ok, updated)
-  rescue ActiveRecord::RecordNotFound => e
-    render json: fmt(not_found, [], e.message), status: :not_found
-  rescue ActiveRecord::RecordInvalid => e
-    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
-  end
 
   # DELETE /food_products/1
   def destroy
@@ -86,20 +83,5 @@ class FoodProductsController < ApplicationController
     # 単一レコード用 Strong Parameters
     def food_product_params
       params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num)
-    end
-
-    # 複数レコード用 Strong Parameters
-    # include_id: true で :id を許可
-    def food_product_bulk_params(include_id: false)
-      permitted = %i[group_id name is_cooking first_day_num second_day_num]
-      permitted << :id if include_id
-
-      params.require(:food_products).map do |fp|
-        ActionController::Parameters
-          .new(fp.to_unsafe_h)
-          .permit(permitted)
-          .to_h
-          .symbolize_keys
-      end
     end
 end

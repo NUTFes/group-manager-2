@@ -43,9 +43,7 @@ Rails.application.routes.draw do
     collection do
       patch '', to: 'food_products#update'
       get 'group/:group_id', to: 'food_products#group_food_products'
-      post 'bulk_create', to: 'food_products#bulk_create'
-      put 'bulk_update', to: 'food_products#bulk_update'
-      patch 'bulk_update', to: 'food_products#bulk_update'
+      post 'bulk_upsert', to: 'food_products#bulk_upsert'
     end
   end
   resources :assign_rental_items
