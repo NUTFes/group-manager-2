@@ -1,6 +1,10 @@
-import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
-import { deleteFetcher, patchFetcher, postFetcher } from './api';
+import { KeyedMutator } from 'swr';
+import {
+  useAuthenticatedDelete,
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 // リクエスト用の型定義
 export type VenueMapRequest = {
@@ -30,38 +34,54 @@ const API_ENDPOINTS = {
   VENUE_MAPS: '/venue_maps',
 };
 
-// 特定の会場図を取得するためのカスタムフック
-export const useGetVenueMap = (id: number | null) => {
-  const endpoint = id ? `${API_ENDPOINTS.VENUE_MAPS}/${id}` : null;
-
+// データ取得用フック
+// groupId に null を渡した場合、API リクエストは実行されません。
+export const useGetVenueMap = (groupId: number | null) => {
+  const endpoint =
+    groupId !== null ? `${API_ENDPOINTS.VENUE_MAPS}/group/${groupId}` : null;
   const {
     data: response,
-    error,
-    isLoading,
-    mutate,
-  } = useApiGet<ApiResponse<VenueMapResponse>>(endpoint);
+    error: apiError,
+    isLoading: apiIsLoading,
+    mutate: apiMutate,
+  } = useAuthenticatedGet<ApiResponse<VenueMapResponse>>(endpoint);
 
+  // groupId が null の場合
+  if (groupId === null) {
+    return {
+      venueMap: null,
+      error: null,
+      isLoading: false, // groupId が null の場合はローディングしない
+      // groupId が null のためAPI呼び出しは行われない。
+      // mutateVenueMap はインターフェースの一貫性のためにダミー関数を返す。
+      mutateVenueMap: (() => Promise.resolve(undefined)) as KeyedMutator<
+        ApiResponse<VenueMapResponse>
+      >,
+    };
+  }
+
+  // groupId が存在する場合の通常の処理
   const venueMap = response?.status.code === 200 ? response.data : null;
 
   return {
     venueMap,
-    error,
-    isLoading,
-    mutate,
+    error: apiError,
+    isLoading: apiIsLoading,
+    mutateVenueMap: apiMutate,
   };
 };
 
-// SWR Mutationを使った新規作成用フック
+// 会場図作成用フック (POST)
 export const useCreateVenueMap = () => {
-  return useSWRMutation(API_ENDPOINTS.VENUE_MAPS, postFetcher);
+  return useAuthenticatedPost(API_ENDPOINTS.VENUE_MAPS);
 };
 
-// SWR Mutationを使った更新用フック
-export const useUpdateVenueMap = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.VENUE_MAPS}/${id}`, patchFetcher);
+// 会場図更新用フック (PATCH)
+export const usePatchVenueMap = (id: number) => {
+  return useAuthenticatedPatch(`${API_ENDPOINTS.VENUE_MAPS}/${id}`);
 };
 
-// SWR Mutationを使った削除用フック
+// 会場図削除用フック (DELETE)
 export const useDeleteVenueMap = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.VENUE_MAPS}/${id}`, deleteFetcher);
+  return useAuthenticatedDelete(`${API_ENDPOINTS.VENUE_MAPS}/${id}`);
 };
