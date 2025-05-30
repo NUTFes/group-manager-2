@@ -1,5 +1,10 @@
 class Api::V1::EmployeesApiController < ApplicationController
 
+  before_action :authenticate_api_user!, only: [
+    :get_employee_index_for_admin_view, :get_employee_show_for_admin_view,
+    :get_refinement_employees, :get_search_employees
+  ]
+
   def get_employee_index_for_admin_view
     @employees = Employee.with_groups
     render json: fmt(ok, @employees)

@@ -1,4 +1,5 @@
 class Api::V1::OrderInfosApiController < ApplicationController
+  before_action :authenticate_api_user!
 
   def get_order_info_for_admin_view
     @groups = Group.with_order_info(params[:id])

@@ -45,6 +45,18 @@
               </td>
             </tr>
             <tr>
+            <th>アナウンス希望</th>
+             <td>
+              <div v-if="publicRelation.is_announcement_requested">
+                はい
+              </div>
+              <div v-else>
+                いいえ
+              </div>
+             </td>
+            </tr>
+
+            <tr>
               <th>登録日時</th>
               <td>
                 <div v-if='publicRelation.blurb === null'>未登録</div>

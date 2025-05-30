@@ -5564,6 +5564,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/Group"
+  "/groups/user/{user_id}":
+    get:
+      tags:
+      - group
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+        '404':
+          description: group description
+        '422':
+          description: group description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Group"
+      deprecated: false
+      parameters:
+      - name: user_id
+        in: path
+        description: user_id
+        required: true
+        schema:
+          type: integer
   "/groups/{id}":
     get:
       tags:
@@ -7483,6 +7512,38 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
+        "/purchase_lists/group/{group_id}":
+  get:
+    tags:
+      - purchase_list
+    summary: Get purchase lists by group ID
+    description: Returns a list of purchase lists associated with the specified group_id.
+    parameters:
+      - name: group_id
+        in: path
+        description: ID of the group to fetch purchase lists for
+        required: true
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: Successful response with list of purchase lists
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PurchaseList"
+      '404':
+        description: No purchase lists found for the specified group_id
+      '422':
+        description: Invalid group_id provided
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Error"
+    deprecated: false
+
   "/purchase_lists/{id}":
     get:
       tags:

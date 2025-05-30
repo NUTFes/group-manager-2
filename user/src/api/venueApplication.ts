@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 import { ApiResponse } from './stageOptionApi';
 
 export type FesDate = {
@@ -42,12 +42,14 @@ const API_ENDPOINTS = {
 };
 
 // フォームデータの取得用フック
-export const usePlacesData = () => {
+export const usePlacesData = (group_id: number) => {
   const {
     data: fesDateResponse,
     error: fesDateError,
     isLoading: fesDateLoading,
-  } = useApiGet<ApiDataResponse<Place>>(API_ENDPOINTS.PLACES);
+  } = useAuthenticatedGet<ApiDataResponse<Place>>(
+    `${API_ENDPOINTS.PLACES}?group_id=${group_id}`
+  );
   return {
     places: fesDateResponse?.data || [],
     placesError: fesDateError,
@@ -58,12 +60,15 @@ export const usePlacesData = () => {
 // データ送信用フック
 export const usePlacesOrderMutations = () => {
   const urlPath = API_ENDPOINTS.VENUE_MAPS;
-  return useSWRMutation(urlPath, postFetcher);
+  return useSWRMutation(urlPath, legacyPostFetcher);
 };
 
 // データ更新用フック
 export const useUpdatePlacesOrderMutations = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.VENUE_MAPS}/${id}`, patchFetcher);
+  return useSWRMutation(
+    `${API_ENDPOINTS.VENUE_MAPS}/${id}`,
+    legacyPatchFetcher
+  );
 };
 
 // 会場申請のデータ取得用フック
@@ -73,7 +78,7 @@ export const useGetPlaceOrder = (groupId: number | null) => {
     : null;
 
   const { data, isLoading, mutate } =
-    useApiGet<ApiResponse<PlaceOrder>>(endpoint);
+    useAuthenticatedGet<ApiResponse<PlaceOrder>>(endpoint);
 
   return {
     placeOrder: data?.status.code == 200 ? data?.data : undefined,

@@ -1,12 +1,13 @@
 class UsersController < ApplicationController
-  # before_action :authenticate_api_user!
   before_action :set_user, only: [:show, :update, :destroy]
+
+  before_action :authenticate_api_user!, only: [:index, :show, :get_current_user,:show_user_detail,:show_user_detail]
 
   def index
     @users = User.all
     render json: fmt(ok, @users)
   end
-  
+
   def show
     render json: fmt(ok, @user)
   end
@@ -39,7 +40,7 @@ class UsersController < ApplicationController
     user_provider = @user.provider
     user_name = @user.name
     email = @user.email
-    
+
     @groups = @user.groups
     groups = []
     for group in @groups

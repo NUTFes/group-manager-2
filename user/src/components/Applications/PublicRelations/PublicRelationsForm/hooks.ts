@@ -8,6 +8,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { mutate } from 'swr';
 import { PublicRelationsFormData, publicRelationsSchema } from './schema';
 
 export const usePublicRelationsFormHooks = (
@@ -141,17 +142,6 @@ export const usePublicRelationsFormHooks = (
           setError('image', {
             type: 'manual',
             message: '画像は正方形にしてください',
-          });
-          return resolve(false);
-        }
-
-        const fileNamePattern =
-          /^[^\\/:*?"<>|\r\n]+_[^\\/:*?"<>|\r\n]+\.(png|jpe?g)$/;
-        if (!fileNamePattern.test(file.name)) {
-          setError('image', {
-            type: 'manual',
-            message:
-              'ファイル名は「参加形式_団体名」で指定してください（拡張子含む）',
           });
           return resolve(false);
         }
@@ -290,14 +280,6 @@ export const usePublicRelationsFormHooks = (
         }
       }
 
-      console.log('PR送信データ:', {
-        url: publicRelation
-          ? `/public_relations/${publicRelation.id}`
-          : '/public_relations',
-        method: publicRelation ? 'PATCH' : 'POST',
-        query: prQueryData,
-      });
-
       // PR関連APIにデータを送信
       if (publicRelation) {
         // 既存データの更新 (PUT)
@@ -309,6 +291,7 @@ export const usePublicRelationsFormHooks = (
 
       // データ更新後、mutateで最新データを取得
       await prMutate();
+      mutate(`check_all_registered/${groupId}`);
 
       toast.success('送信しました');
       return true; // 送信成功を返す

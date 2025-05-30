@@ -8,7 +8,8 @@ import { FormItem } from '@/components/FormList/type';
 
 type PublicRelationsProps = {
   groupId: number;
-  isDeadline: boolean;
+  isDeadline: boolean | undefined;
+  isRegistered: boolean | undefined;
 };
 
 type ContentProps = {
@@ -61,15 +62,24 @@ const Content: FC<ContentProps> = ({
   return <FormList items={formItem} isEdit onEdit={toEdit} />;
 };
 
-const PublicRelations: FC<PublicRelationsProps> = ({ groupId, isDeadline }) => {
+const PublicRelations: FC<PublicRelationsProps> = ({
+  groupId,
+  isDeadline,
+  isRegistered,
+}) => {
   const { formItem, isEditing, toEdit, publicRelation, isLoading, hasError } =
     usePublicRelationsHooks(groupId);
 
   return (
-    <AccordionMenu title="PR文申請" isEdit={false} isExist={false} required>
+    <AccordionMenu
+      title="PR文申請"
+      isEdit={!isDeadline}
+      isExist={isRegistered}
+      required
+    >
       <Content
         isLoading={isLoading}
-        hasError={hasError}
+        hasError={!!hasError}
         isDeadline={isDeadline}
         isEditing={isEditing}
         toEdit={toEdit}

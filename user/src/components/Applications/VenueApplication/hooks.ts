@@ -7,23 +7,26 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     placeOrder,
     isLoading: isPlaceOrderLoading,
     hasError,
-    mutate,
+    mutate: placeOrderMutate,
   } = useGetPlaceOrder(groupId);
-  const { places, placesLoading: isPlacesLoading } = usePlacesData();
+  const { places, placesLoading: isPlacesLoading } = usePlacesData(groupId);
 
+  const firstPlace = places.find((place) => place.id === placeOrder?.first);
+  const secondPlace = places.find((place) => place.id === placeOrder?.second);
+  const thirdPlace = places.find((place) => place.id === placeOrder?.third);
   const formItem: FormItem[] = placeOrder
     ? [
         {
           label: '第一希望',
-          content: places[placeOrder?.first - 1]?.name || '',
+          content: firstPlace?.name || '',
         },
         {
           label: '第二希望',
-          content: places[placeOrder?.second - 1]?.name || '',
+          content: secondPlace?.name || '',
         },
         {
           label: '第三希望',
-          content: places[placeOrder?.third - 1]?.name || '',
+          content: thirdPlace?.name || '',
         },
         {
           label: '備考',
@@ -47,6 +50,6 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     isEditing,
     formItem,
     handleEditClick,
-    mutate,
+    placeOrderMutate,
   };
 };

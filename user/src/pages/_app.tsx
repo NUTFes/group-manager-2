@@ -1,27 +1,42 @@
 import type { AppProps } from 'next/app';
+import type { Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
+import AuthGuard from '@/components/AuthGuard';
 import Layout from '@/components/Layout';
 import '@/styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+// Next.jsのAppコンポーネントをカスタマイズするためのコード
+type CustomAppProps = AppProps<{
+  session: Session;
+}>;
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: CustomAppProps) {
   return (
     <div className="max-h-svh">
-      <Layout>
-        <ToastContainer
-          position="bottom-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          // transition={Bounce}
-        />
-        <Component {...pageProps} />
-      </Layout>
+      <SessionProvider session={session}>
+        <AuthGuard>
+          <Layout>
+            <ToastContainer
+              position="bottom-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              // transition={Bounce}
+            />
+            <Component {...pageProps} />
+          </Layout>
+        </AuthGuard>
+      </SessionProvider>
     </div>
   );
 }

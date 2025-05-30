@@ -10,18 +10,19 @@ type LoginModalProps = {
 };
 
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
-  const { handleLogin, setValue, handleSubmit, errors, email, password } =
+  const { handleSignInSubmit, setValue, errors, email, password, isLoggingIn } =
     useLoginModalHooks();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form
-        onSubmit={handleSubmit(handleLogin)}
+        onSubmit={handleSignInSubmit}
         className="flex flex-col items-center gap-12 rounded-[30px] bg-white px-60 py-20 shadow-2xl"
       >
         <div className="flex w-96 flex-col items-center justify-center gap-12">
           <TextBox
             label="メールアドレス"
+            type="email"
             value={email}
             onChange={(value) => setValue('email', value)}
             error={errors.email?.message}
@@ -30,13 +31,20 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
           />
           <TextBox
             label="パスワード"
+            type="password"
             value={password}
             onChange={(value) => setValue('password', value)}
             error={errors.password?.message}
             required
           />
-          <Button size="pc" color="main" variant type="submit">
-            ログイン
+          <Button
+            size="pc"
+            color="main"
+            variant
+            type="submit"
+            isDisable={isLoggingIn}
+          >
+            {isLoggingIn ? 'ログイン中...' : 'ログイン'}
           </Button>
         </div>
       </form>

@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation';
-import { useApiGet } from '@/hooks/useApi';
-import { patchFetcher, postFetcher } from './api';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 const API_ENDPOINTS = {
   STAGE_OPTIONS: '/stage_common_options',
@@ -39,7 +39,7 @@ export const useGetStageOptions = (groupId: number | null) => {
     : null;
 
   const { data, error, isLoading } =
-    useApiGet<ApiResponse<StageOptionResponse>>(endpoint);
+    useAuthenticatedGet<ApiResponse<StageOptionResponse>>(endpoint);
 
   return {
     stageOptions: data?.status.code === 200 ? data?.data : undefined,
@@ -49,9 +49,12 @@ export const useGetStageOptions = (groupId: number | null) => {
 };
 
 export const useCreateStageOptions = () => {
-  return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, postFetcher);
+  return useSWRMutation(API_ENDPOINTS.STAGE_OPTIONS, legacyPostFetcher);
 };
 
 export const useUpdateStageOptions = (id: number) => {
-  return useSWRMutation(`${API_ENDPOINTS.STAGE_OPTIONS}/${id}`, patchFetcher);
+  return useSWRMutation(
+    `${API_ENDPOINTS.STAGE_OPTIONS}/${id}`,
+    legacyPatchFetcher
+  );
 };

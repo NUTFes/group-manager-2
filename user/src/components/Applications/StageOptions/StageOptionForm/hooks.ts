@@ -10,7 +10,8 @@ import { mutate } from 'swr';
 import { StageOptionForm, stageOptionSchema } from './schema';
 
 export const useStageOptionFormHooks = (
-  stageOptions: StageOptionResponse | undefined
+  stageOptions: StageOptionResponse | undefined,
+  groupId: number | undefined
 ) => {
   const {
     handleSubmit,
@@ -22,7 +23,7 @@ export const useStageOptionFormHooks = (
     resolver: zodResolver(stageOptionSchema),
     mode: 'onChange',
     defaultValues: {
-      groupId: stageOptions?.groupId ?? 9,
+      groupId: groupId,
       ownEquipment: stageOptions?.ownEquipment,
       bgm: stageOptions?.bgm,
       cameraPermission: stageOptions?.cameraPermission,
@@ -54,6 +55,7 @@ export const useStageOptionFormHooks = (
       try {
         await update({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
+
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');
@@ -62,6 +64,7 @@ export const useStageOptionFormHooks = (
       try {
         await create({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
+        mutate(`/check_all_registered/${formData.groupId}`);
         toast.success('送信しました');
       } catch {
         toast.error('送信に失敗しました。');

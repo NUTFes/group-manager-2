@@ -57,8 +57,9 @@
           <tr v-for="(group, index) in groups" :key="index">
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
-            <td :class="{ unregistered: !group.sub_rep }">
+            <td :class="{ unregistered: !group.sub_rep && !isUnregistered(group.group.id, 'sub_rep') }">
               <div v-if="group.sub_rep">◯</div>
+              <div v-else-if="isUnregistered(group.group.id, 'sub_rep')">ー</div>
               <div v-else>✖️</div>
             </td>
             <td :class="{ unregistered: !group.place_order && !group.group.is_international && group.group_category !== 3 }">
@@ -66,12 +67,14 @@
               <div v-else-if="group.group.is_international || group.group_category === 3">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.power_orders }">
+            <td :class="{ unregistered: !group.power_orders && !isUnregistered(group.group.id, 'power_order') }">
               <div v-if="group.power_orders">◯</div>
+              <div v-else-if="isUnregistered(group.group.id, 'power_order')">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.rental_orders }">
+            <td :class="{ unregistered: !group.rental_orders && !isUnregistered(group.group.id, 'rental_item_order') }">
               <div v-if="group.rental_orders">◯</div>
+              <div v-else-if="isUnregistered(group.group.id, 'rental_item_order')">ー</div>
               <div v-else>✖️</div>
             </td>
             <td :class="{ unregistered: !group.stage_orders && group.group_category === 3 }">
@@ -150,6 +153,7 @@ export default {
         "調理工程",
       ],
       groups: [],
+      unregisteredGroups: [],
       group_categories: [],
       group_id: "",
       dialog: false,
@@ -190,8 +194,12 @@ export default {
       return element.id == currentYearRes.data.fes_year_id;
     });
 
+    // 申請しないデータを取得
+    const unregisteredGroupsRes = await $axios.$get("/un_registered_groups");
+
     return {
       groups: groupsRes.data,
+      unregisteredGroups: unregisteredGroupsRes.data,
       groupCategories: groupCategoryRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
@@ -328,6 +336,11 @@ export default {
       for (const res of refRes.data) {
         this.groups.push(res);
       }
+
+      // 申請しないデータも再取得
+      const unregisteredRes = await this.$axios.$get("/un_registered_groups");
+      this.unregisteredGroups = unregisteredRes.data;
+
       const storedSearchText = localStorage.getItem(
         this.$route.path + "SearchText"
       );
@@ -351,6 +364,16 @@ export default {
       for (const res of refRes.data) {
         this.groups.push(res);
       }
+
+      // 検索時も申請しないデータを再取得
+      const unregisteredRes = await this.$axios.$get("/un_registered_groups");
+      this.unregisteredGroups = unregisteredRes.data;
+    },
+    // 申請しないデータかどうかを判定するメソッド
+    isUnregistered(groupId, orderType) {
+      return this.unregisteredGroups.some(item => 
+        item.group_id === groupId && item.order_type === orderType
+      );
     },
   },
 };

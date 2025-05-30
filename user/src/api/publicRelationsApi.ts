@@ -1,6 +1,6 @@
-import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
-import { fetcher, patchFetcher, postFetcher } from './api';
+import { useAuthenticatedGet } from '@/hooks/useApi';
+import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
 // リクエスト用の型定義
 export type PublicRelation = {
@@ -48,17 +48,13 @@ const API_ENDPOINTS = {
 export const usePublicRelationData = (groupId: number) => {
   // 特定のgroup_idに関連する公開関係情報を取得するエンドポイント
   const endpoint = `${API_ENDPOINTS.PUBLIC_RELATIONS}/group/${groupId}`;
-  console.log('Fetching with endpoint:', endpoint);
 
   const {
     data: response,
     error,
     isLoading,
     mutate,
-  } = useSWR<ApiResponse<PublicRelationResponse>>(endpoint, fetcher);
-
-  // Debug the API response
-  console.log('API Response:', response);
+  } = useAuthenticatedGet<ApiResponse<PublicRelationResponse>>(endpoint);
 
   // APIからのレスポンスを直接取得
   const publicRelation = response?.status.code === 200 ? response.data : null;
@@ -74,13 +70,13 @@ export const usePublicRelationData = (groupId: number) => {
 
 // SWR Mutationを使った新規作成用フック
 export const useCreatePublicRelation = () => {
-  return useSWRMutation(API_ENDPOINTS.PUBLIC_RELATIONS, postFetcher);
+  return useSWRMutation(API_ENDPOINTS.PUBLIC_RELATIONS, legacyPostFetcher);
 };
 
 // SWR Mutationを使った更新用フック
 export const useUpdatePublicRelation = (id: number) => {
   return useSWRMutation(
     `${API_ENDPOINTS.PUBLIC_RELATIONS}/${id}`,
-    patchFetcher
+    legacyPatchFetcher
   );
 };

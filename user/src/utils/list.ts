@@ -1,4 +1,5 @@
 export const GradeList: { id: number; name: string }[] = [
+  { id: 0, name: '選択してください' },
   { id: 1, name: 'B1[学部1年]' },
   { id: 2, name: 'B2[学部2年]' },
   { id: 3, name: 'B3[学部3年]' },
@@ -18,6 +19,7 @@ export const GradeList: { id: number; name: string }[] = [
 ];
 
 export const DepartmentList: { id: number; name: string }[] = [
+  { id: 0, name: '選択してください' },
   { id: 1, name: '機械工学分野/機械創造工学過程:Mechanical Engineering' },
   {
     id: 2,

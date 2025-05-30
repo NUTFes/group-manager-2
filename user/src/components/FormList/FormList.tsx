@@ -7,9 +7,17 @@ type FormListProps = {
   items: FormItem[];
   onEdit?: () => void;
   isEdit?: boolean;
+  onDelete?: () => void;
+  isDelete?: boolean;
 };
 
-const FormList: FC<FormListProps> = ({ items, onEdit, isEdit }) => {
+const FormList: FC<FormListProps> = ({
+  items,
+  onEdit,
+  isEdit,
+  onDelete,
+  isDelete,
+}) => {
   return (
     <FormContainer>
       {items.map((item, index) => (
@@ -25,8 +33,9 @@ const FormList: FC<FormListProps> = ({ items, onEdit, isEdit }) => {
           </div>
         </div>
       ))}
-      {isEdit && (
-        <div className="flex w-full items-center justify-center">
+
+      <div className="mt-4 flex w-full items-center justify-center gap-4">
+        {isEdit && onEdit && (
           <Button
             size="pc"
             color="main"
@@ -36,8 +45,20 @@ const FormList: FC<FormListProps> = ({ items, onEdit, isEdit }) => {
           >
             修正
           </Button>
-        </div>
-      )}
+        )}
+        {isDelete && onDelete && (
+          <Button
+            size="pc"
+            color="alert"
+            type="button"
+            icon="cross"
+            variant
+            onClick={onDelete}
+          >
+            削除
+          </Button>
+        )}
+      </div>
     </FormContainer>
   );
 };

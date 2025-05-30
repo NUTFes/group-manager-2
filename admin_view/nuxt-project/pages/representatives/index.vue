@@ -191,46 +191,45 @@ export default {
       studentID: null,
     };
   },
-  async asyncData({ $axios }) {
-    const currentYearUrl = "/user_page_settings/1";
-    const currentYearRes = await $axios.$get(currentYearUrl);
-    // const url = "/api/v1/get_representative_index_for_admin_view";
-
-    const url =
-      "/api/v1/get_refinement_representatives?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    const representativesRes = await $axios.$post(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id;
-    });
-    return {
-      representatives: representativesRes.data,
-      yearList: yearsRes.data,
-      refYearID: currentYearRes.data.fes_year_id,
-      refYears: currentYears[0].year_num,
-      currentYearID: currentYears,
-    };
-  },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
   },
   mounted() {
+    this.fetchInitialData().then(() => {
+    // データ取得後にフィルター処理するの✨
     const storedYearID = localStorage.getItem(this.$route.path + 'RefYear');
     if (storedYearID) {
       this.refYearID = Number(storedYearID);
       this.updateFilters(this.refYearID, this.yearList);
-    } else {
-      this.refYears = 'Year';
     }
-    this.fetchFilteredData();
-
+  });
     window.addEventListener('scroll', this.saveScrollPosition);
+
+    // 初期データ取得
+    this.fetchInitialData();
   },
   methods: {
+    async fetchInitialData() {
+      const currentYearUrl = "/user_page_settings/1";
+      const currentYearRes = await this.$axios.$get(currentYearUrl);
+      const url =
+        "/api/v1/get_refinement_representatives?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      const representativesRes = await this.$axios.$post(url);
+      const yearsUrl = "/fes_years";
+      const yearsRes = await this.$axios.$get(yearsUrl);
+      const currentYears = yearsRes.data.filter(function (element) {
+        return element.id == currentYearRes.data.fes_year_id;
+      });
+      this.representatives = representativesRes.data;
+      this.yearList = yearsRes.data;
+      this.refYearID = currentYearRes.data.fes_year_id;
+      this.refYears = currentYears[0].year_num;
+      this.currentYearID = currentYears;
+      this.fetchFilteredData();
+    },
     saveScrollPosition() {
       localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
     },

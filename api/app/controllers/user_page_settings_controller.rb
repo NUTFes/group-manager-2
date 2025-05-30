@@ -4,8 +4,8 @@ class UserPageSettingsController < ApplicationController
   # GET /user_page_settings
   # GET /user_page_settings.json
   def index
-    @user_page_settings = UserPageSetting.all
-    render json: fmt(ok, @user_page_settings)
+    @user_page_setting = UserPageSetting.first
+    render json: fmt(ok, @user_page_setting)
   end
 
   # GET /user_page_settings/1

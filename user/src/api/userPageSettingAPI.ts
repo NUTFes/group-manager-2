@@ -1,4 +1,4 @@
-import { useApiGet } from '@/hooks/useApi';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   USER_PAGE_SETTINGS: '/user_page_settings',
@@ -38,7 +38,7 @@ export type UserPageSettings = {
 export const useGetUserPageSettings = () => {
   const endpoint = `${API_ENDPOINTS.USER_PAGE_SETTINGS}`;
 
-  const { data, error, isLoading } = useApiGet<{
+  const { data, error, isLoading } = useAuthenticatedGet<{
     data: UserPageSettings;
   }>(endpoint);
 

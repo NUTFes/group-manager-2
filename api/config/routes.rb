@@ -37,7 +37,11 @@ Rails.application.routes.draw do
   resources :user_page_settings
   resources :memos
   resources :news
-  resources :purchase_lists
+  resources :purchase_lists do
+   collection do
+     get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
+   end
+  end
   post "/purchase_lists" => "purchase_lists#create"
   resources :food_products
   resources :assign_rental_items
@@ -85,7 +89,11 @@ Rails.application.routes.draw do
       get 'group/:group_id', to: 'stage_common_options#get_by_group_id'
     end
   end
-  resources :groups
+  resources :groups do
+    collection do
+      get 'user/:user_id', to: 'groups#get_user_group_id_and_group_category_id'
+    end
+  end
   resources :group_categories
   resources :user_details
   resources :shops

@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2",
+    "@vue/runtime-dom": "^3.5.13",
     "eslint": "7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.5.1"

@@ -23,11 +23,5 @@ export const Default: Story = {
     onClose: () => {
       console.log('Modal closed');
     },
-    user: {
-      id: '1',
-      role: 'Developer',
-      name: 'John Doe',
-      email: 's223301@stn.nagaokaut.ac.jp',
-    },
   },
 };

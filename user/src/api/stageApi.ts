@@ -1,9 +1,11 @@
 import { addMinutes } from '@/components/Applications/Stage/hooks/useStageForm';
-import { useApiGet, useApiMutations } from '@/hooks/useApi';
+import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 
 export type FesDate = {
   id: number;
+  daysNum: number;
   date: string;
+  day: string;
 };
 
 export type Stage = {
@@ -62,19 +64,19 @@ export const useStageFormData = () => {
     data: fesDateResponse,
     error: fesDateError,
     isLoading: fesDateLoading,
-  } = useApiGet<ApiResponse<FesDate>>(API_ENDPOINTS.FES_DATES);
+  } = useAuthenticatedGet<ApiResponse<FesDate>>(API_ENDPOINTS.FES_DATES);
 
   const {
     data: sunnyStagesResponse,
     error: sunnyStagesError,
     isLoading: sunnyStagesLoading,
-  } = useApiGet<ApiResponse<Stage>>(API_ENDPOINTS.SUNNY_STAGES);
+  } = useAuthenticatedGet<ApiResponse<Stage>>(API_ENDPOINTS.SUNNY_STAGES);
 
   const {
     data: rainyStagesResponse,
     error: rainyStagesError,
     isLoading: rainyStagesLoading,
-  } = useApiGet<ApiResponse<Stage>>(API_ENDPOINTS.RAINY_STAGES);
+  } = useAuthenticatedGet<ApiResponse<Stage>>(API_ENDPOINTS.RAINY_STAGES);
 
   const isLoading = fesDateLoading || sunnyStagesLoading || rainyStagesLoading;
   const hasError = !!(fesDateError || sunnyStagesError || rainyStagesError);
@@ -94,9 +96,9 @@ export const useGetStageOrders = (groupId: number | null) => {
     ? `${API_ENDPOINTS.STAGE_ORDERS}?group_id=${groupId}`
     : null;
 
-  const { data, error, isLoading } = useApiGet<{ data: StageOrderResponse[] }>(
-    endpoint
-  );
+  const { data, error, isLoading } = useAuthenticatedGet<{
+    data: StageOrderResponse[];
+  }>(endpoint);
 
   const filteredOrders =
     data?.data?.filter((order) => order.groupId === groupId) || [];
