@@ -2,61 +2,56 @@ class PurchaseListsController < ApplicationController
   before_action :set_purchase_list, only: [:show, :update, :destroy]
 
   # GET /purchase_lists
-  # GET /purchase_lists.json
   def index
     @purchase_lists = PurchaseList.all
     render json: fmt(ok, @purchase_lists)
   end
 
   # GET /purchase_lists/1
-  # GET /purchase_lists/1.json
   def show
     render json: fmt(ok, @purchase_list)
   end
 
   # POST /purchase_lists
-  # POST /purchase_lists.json
   def create
-    @purchase_list = PurchaseList.create(purchase_list_params)
-    render json: fmt(created, @purchase_list)
+    @purchase_list = PurchaseList.new(purchase_list_params)
+
+    if @purchase_list.save
+      render json: fmt(created, @purchase_list)
+    else
+      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /purchase_lists/1
-  # PATCH/PUT /purchase_lists/1.json
   def update
-    @purchase_list.update(purchase_list_params)
-    render json: fmt(created, @purchase_list, "Updated purchase_list id = "+params[:id])
+    if @purchase_list.update(purchase_list_params)
+      render json: fmt(ok, @purchase_list, "Updated purchase_list id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', ')), status: :unprocessable_entity
+    end
   end
 
   # DELETE /purchase_lists/1
-  # DELETE /purchase_lists/1.json
   def destroy
     @purchase_list.destroy
-    render json: fmt(ok, [], "Deleted purchase_list = "+params[:id])
+    render json: fmt(ok, [], "Deleted purchase_list = #{params[:id]}")
   end
 
   # GET /purchase_lists/group/:group_id
-def get_by_group_id
-  @purchase_lists = PurchaseList.where(group_id: params[:group_id])
+  def get_by_group_id
+    @purchase_lists = PurchaseList.where(group_id: params[:group_id])
 
-  if @purchase_lists.any?
-    render json: fmt(ok, @purchase_lists)
-  else
-    render json: fmt(not_found, [], "Not found purchase_lists with group_id = " + params[:group_id])
+    if @purchase_lists.any?
+      render json: fmt(ok, @purchase_lists)
+    else
+      render json: fmt(not_found, [], "Not found purchase_lists with group_id = #{params[:group_id]}")
+    end
   end
-end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_purchase_list
-      if PurchaseList.exists?(params[:id])
-        @purchase_list = PurchaseList.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found purhase_list = "+params[:id])
-      end
+  # POST /purchase_lists/bulk_create
+  def bulk_create
+    created = PurchaseList.transaction do
+      purchase_list_bulk_params.map { |attrs| PurchaseList.create!(attrs) }
     end
-    # Only allow a list of trusted parameters through.
-    def purchase_list_params
-      params.permit(:food_product_id, :shop_id, :fes_date_id, :items, :is_fresh, :purchase_date, :url)
-    end
-end
+    render json: fmt(created, created), s
