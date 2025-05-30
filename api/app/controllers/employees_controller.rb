@@ -1,5 +1,5 @@
 class EmployeesController < ApplicationController
-  before_action :authenticate_api_user!, except: [:index, :show, :get_by_group]
+  # before_action :authenticate_api_user!, except: [:index, :show, :get_by_group]
   before_action :set_employee, only: [:show, :update, :destroy]
 
   # GET /employees
@@ -28,15 +28,41 @@ class EmployeesController < ApplicationController
     render json: fmt(created, @employee)
   end
 
-  # POST /employees/bulk
-  # POST /employees/bulk.json
-  def bulk_create
-    created = Employee.transaction do
-      employee_bulk_params.map { |attrs| Employee.create!(attrs) }
+  # POST /employees/upsert
+  # POST /employees/upsert.json
+  def upsert
+    now     = Time.current
+    records = employees_params.map do |attrs|
+      common = {
+        group_id:      attrs[:group_id],
+        name:          attrs[:name],
+        student_id:    attrs[:student_id],
+        stool_test_id: attrs[:stool_test_id]
+      }
+
+      if attrs[:id].present?
+        # 更新対象：ID＋updated_at
+        common.merge(id: attrs[:id], updated_at: now)
+      else
+        # 新規作成対象：created_at＋updated_at
+        common.merge(created_at: now, updated_at: now)
+      end
     end
-    render json: fmt(created, created), status: :created
-  rescue ActiveRecord::RecordInvalid => e
-    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
+
+    # 一度の SQL で INSERT／UPDATE をまとめ実行
+    Employee.upsert_all(
+      records,
+      unique_by:  :id,
+      update_only: %i[group_id name student_id stool_test_id updated_at]
+    )
+
+    # 更新／挿入されたレコードを取得して返却
+    processed_ids = records.map { |r| r[:id] }.compact
+    processed     = Employee.where(id: processed_ids)
+
+    render json: fmt(ok, processed)
+  rescue ActiveRecord::StatementInvalid => e
+    render json: fmt(unprocessable_entity, [], e.message), status: :unprocessable_entity
   end
 
   # PATCH/PUT /employees/1
@@ -47,26 +73,6 @@ class EmployeesController < ApplicationController
     else
       render json: fmt(unprocessable_entity, [], @employee.errors.full_messages.join(', ')), status: :unprocessable_entity
     end
-  end
-
-  # PATCH/PUT /employees/bulk
-  # PATCH/PUT /employees/bulk.json
-  def bulk_update
-    updates = employee_bulk_params(include_id: true)
-
-    updated = Employee.transaction do
-      updates.map do |attrs|
-        emp = Employee.find(attrs.delete(:id))
-        emp.update!(attrs)
-        emp
-      end
-    end
-
-    render json: fmt(ok, updated)
-  rescue ActiveRecord::RecordNotFound => e
-    render json: fmt(not_found, [], e.message), status: :not_found
-  rescue ActiveRecord::RecordInvalid => e
-    render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   end
 
   # DELETE /employees/1
@@ -91,17 +97,14 @@ class EmployeesController < ApplicationController
   end
 
   # 複数レコード用 Strong Parameters
-  # include_id: true で :id を許可
-  def employee_bulk_params(include_id: false)
-    permitted = %i[group_id name student_id stool_test_id]
-    permitted << :id if include_id
-
+  def employees_params
     params.require(:employees).map do |emp|
       ActionController::Parameters
         .new(emp.to_unsafe_h)
-        .permit(permitted)
-        .to_h
-        .symbolize_keys
+        .permit(:id, :group_id, :name, :student_id, :stool_test_id)
+        .to_h.symbolize_keys
     end
   end
 end
+
+
