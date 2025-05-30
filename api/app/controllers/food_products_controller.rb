@@ -29,14 +29,15 @@ class FoodProductsController < ApplicationController
     end
   end
 
-  # POST /food_products/bulk_upsert
+  # POST /food_products/upsert
   # 複数レコード作成・更新 (upsert_all使用)
-  def bulk_upsert
+  def upsert
     keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at]
     now = Time.current
-    upserts = params[:food_products].map do |fp|
+
+    upserts = params[:food_products].map do |foodProduct|
       attrs = ActionController::Parameters
-        .new(fp.to_unsafe_h)
+        .new(foodProduct.to_unsafe_h)
         .permit(*keys)
         .to_h
         .symbolize_keys
@@ -49,7 +50,22 @@ class FoodProductsController < ApplicationController
     upserts = upserts.map { |attrs| attrs.transform_keys(&:to_s) }
     FoodProduct.upsert_all(upserts)
 
-    render json: fmt(ok)
+    # 更新／挿入されたレコードを取得して返却
+    processed = upserts.map do |attrs|
+      if attrs["id"].present?
+        FoodProduct.find_by(id: attrs["id"])
+      else
+        FoodProduct.where(
+          group_id: attrs["group_id"],
+          name: attrs["name"],
+          is_cooking: attrs["is_cooking"],
+          first_day_num: attrs["first_day_num"],
+          second_day_num: attrs["second_day_num"]
+        ).order(created_at: :desc).first
+      end
+    end.compact
+
+    render json: fmt(ok, processed)
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(unprocessable_entity, [], e.record.errors.full_messages.join(', ')), status: :unprocessable_entity
   end
