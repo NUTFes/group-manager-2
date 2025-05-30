@@ -35,6 +35,8 @@ export type ApiResponse<T> = {
 const API_ENDPOINTS = {
   PURCHASE_LIST: '/purchase_lists',
   PURCHASE_LIST_GROUP: '/purchase_lists/group',
+  PURCHASE_LIST_BULK_CREATE: '/purchase_lists/bulk_create',
+  PURCHASE_LIST_BULK_UPDATE: '/purchase_lists/bulk_update',
 };
 
 // グループIDで取得
@@ -55,18 +57,28 @@ export const useGetPurchaseLists = (groupId: number | null) => {
   };
 };
 
-// 新規作成
+// 新規作成（単件）
 export const useCreatePurchaseList = () => {
   return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST);
 };
 
-// 更新
+// 一括作成（bulk_create）
+export const useCreatePurchaseListsBulk = () => {
+  return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST_BULK_CREATE);
+};
+
+// 更新（単件）
 export const useUpdatePurchaseList = (id: number | null) => {
   const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
   return useAuthenticatedPatch(endpoint);
 };
 
-// 削除（必要に応じて）
+// 一括更新（bulk_update）
+export const useUpdatePurchaseListsBulk = () => {
+  return useAuthenticatedPatch(API_ENDPOINTS.PURCHASE_LIST_BULK_UPDATE);
+};
+
+// 削除
 export const useDeletePurchaseList = (id: number | null) => {
   const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
   return useAuthenticatedDelete(endpoint);
