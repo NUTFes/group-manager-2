@@ -8,9 +8,7 @@ import { ApiResponse } from './api';
 
 const API_ENDPOINTS = {
   EMPLOYEES: '/employees',
-  EMPLOYEES_BULK_CREATE: '/employees/bulk_create',
-  EMPLOYEES_BULK_UPDATE: '/employees/bulk_update',
-  EMPLOYEES_GROUP: '/employees/group',
+  EMPLOYEES_UPSERT: '/employees/upsert',
 };
 
 export type Employee = {
@@ -26,7 +24,7 @@ export type Employee = {
 export const useGetEmployees = (groupId: number | null) => {
   const endpoint =
     groupId !== null
-      ? `${API_ENDPOINTS.EMPLOYEES_GROUP}/${groupId}`
+      ? `${API_ENDPOINTS.EMPLOYEES}/group/${groupId}`
       : API_ENDPOINTS.EMPLOYEES;
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<Employee[]>>(endpoint);
@@ -43,17 +41,13 @@ export const useCreateEmployee = () => {
   return useAuthenticatedPost(API_ENDPOINTS.EMPLOYEES);
 };
 
-export const useCreateEmployeesBulk = () => {
-  return useAuthenticatedPost(API_ENDPOINTS.EMPLOYEES_BULK_CREATE);
+export const useUpsertEmployees = () => {
+  return useAuthenticatedPost(API_ENDPOINTS.EMPLOYEES_UPSERT);
 };
 
 export const useUpdateEmployee = (id: number | null) => {
   const endpoint = id !== null ? `${API_ENDPOINTS.EMPLOYEES}/${id}` : null;
   return useAuthenticatedPatch(endpoint);
-};
-
-export const useUpdateEmployeesBulk = () => {
-  return useAuthenticatedPatch(API_ENDPOINTS.EMPLOYEES_BULK_UPDATE);
 };
 
 export const useDeleteEmployee = (id: number | null) => {
