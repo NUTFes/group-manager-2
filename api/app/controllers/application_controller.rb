@@ -7,6 +7,7 @@ class ApplicationController < ActionController::API
   def not_found; return { code: 404, message: 'Not Found' } end
   def internal_server_error; return { code: 500, message: 'Internal Server Error' } end
   def undefined; return { code: 999, message: 'Undefined' } end
+  def unprocessable_entity; return { code: 422, message: 'Unprocessable Entity' } end
 
   # 出力するAPIのフォーマット
   def fmt(status=undefined, data=[], option="")
