@@ -1,4 +1,5 @@
 import {
+  useAuthenticatedDelete,
   useAuthenticatedGet,
   useAuthenticatedPatch,
   useAuthenticatedPost,
@@ -15,16 +16,8 @@ export type PurchaseList = {
   url?: string | null;
 };
 
-export type PurchaseListResponse = {
+export type PurchaseListResponse = PurchaseList & {
   id: number;
-  groupId: number;
-  foodProductId: number;
-  shopId: number;
-  fesDateId: number;
-  items: string;
-  isFresh: boolean;
-  purchaseDate: string;
-  url?: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -41,37 +34,42 @@ export type ApiResponse<T> = {
 
 const API_ENDPOINTS = {
   PURCHASE_LIST: '/purchase_lists',
+  PURCHASE_LIST_GROUP: '/purchase_lists/group',
 };
 
 // グループIDで取得
-export const useGetPurchaseListsByGroupId = (groupId: number | undefined) => {
-  // groupId が undefined の場合は null を渡して SWR 側でフェッチしないようにする
+export const useGetPurchaseLists = (groupId: number | null) => {
   const endpoint =
-    groupId !== undefined
-      ? `${API_ENDPOINTS.PURCHASE_LIST}/group/${groupId}`
-      : null;
+    groupId !== null
+      ? `${API_ENDPOINTS.PURCHASE_LIST_GROUP}/${groupId}`
+      : API_ENDPOINTS.PURCHASE_LIST;
 
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<PurchaseListResponse[]>>(endpoint);
 
-  const purchaseLists = data?.data ?? undefined;
-
   return {
-    purchaseLists,
+    purchaseLists: data?.data ?? [],
     isLoading,
-    error,
+    hasError: !!error,
     mutatePurchaseLists: mutate,
   };
 };
 
 // 新規作成
-export const usePostPurchaseList = () => {
+export const useCreatePurchaseList = () => {
   return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST);
 };
 
 // 更新
-export const useUpdatePurchaseList = (id: number) => {
-  return useAuthenticatedPatch(`${API_ENDPOINTS.PURCHASE_LIST}/${id}`);
+export const useUpdatePurchaseList = (id: number | null) => {
+  const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
+  return useAuthenticatedPatch(endpoint);
+};
+
+// 削除（必要に応じて）
+export const useDeletePurchaseList = (id: number | null) => {
+  const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
+  return useAuthenticatedDelete(endpoint);
 };
 
 /*
