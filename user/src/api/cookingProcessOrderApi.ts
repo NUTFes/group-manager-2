@@ -36,7 +36,7 @@ const API_ENDPOINTS = {
 };
 
 export const useGetCookingProcessOrder = (groupId: number | undefined) => {
-  const endpoint = `${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${groupId}`;
+  const endpoint = `${API_ENDPOINTS.COOKING_PROCESS_ORDER}/group/${groupId}`;
 
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<CookingProcessOrderResponse>>(endpoint);
