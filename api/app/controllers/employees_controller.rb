@@ -30,7 +30,7 @@ class EmployeesController < ApplicationController
 
   # POST /employees/upsert
   # POST /employees/upsert.json
-  def bulk_upsert
+  def upsert
     now     = Time.current
     keys    = %i[id group_id name student_id stool_test_id created_at updated_at]
 
@@ -42,13 +42,10 @@ class EmployeesController < ApplicationController
         .symbolize_keys
       attrs[:created_at] ||= now
       attrs[:updated_at] = now
+      attrs
     end
 
-    Employee.upsert_all(
-      records,
-      unique_by:  :id,
-      update_only: %i[group_id name student_id stool_test_id updated_at]
-    )
+    Employee.upsert_all(records)
 
     processed_ids = records.map { |r| r[:id] }.compact
     processed     = Employee.where(id: processed_ids)
