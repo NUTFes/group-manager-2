@@ -58,6 +58,28 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/FoodProduct"
+  "/food_products/bulk_upsert":
+    post:
+      tags:
+      - food_product
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FoodProduct"
   "/food_products/group/{group_id}":
     get:
       tags:
