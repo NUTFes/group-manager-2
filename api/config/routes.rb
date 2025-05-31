@@ -45,9 +45,7 @@ Rails.application.routes.draw do
   resources :purchase_lists do
   collection do
     get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
-    post 'bulk_create', to: 'purchase_lists#bulk_create'
-    put 'bulk_update', to: 'purchase_lists#bulk_update'
-    patch 'bulk_update', to: 'purchase_lists#bulk_update'
+    post 'upsert', to: 'purchase_lists#upsert_all'
   end
 end
 

@@ -35,8 +35,7 @@ export type ApiResponse<T> = {
 const API_ENDPOINTS = {
   PURCHASE_LIST: '/purchase_lists',
   PURCHASE_LIST_GROUP: '/purchase_lists/group',
-  PURCHASE_LIST_BULK_CREATE: '/purchase_lists/bulk_create',
-  PURCHASE_LIST_BULK_UPDATE: '/purchase_lists/bulk_update',
+  PURCHASE_LIST_UPSERT: '/purchase_lists/upsert',
 };
 
 // グループIDで取得

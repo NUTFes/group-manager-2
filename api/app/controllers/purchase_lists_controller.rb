@@ -49,9 +49,14 @@ class PurchaseListsController < ApplicationController
     end
   end
 
-  # POST /purchase_lists/bulk_create
-  def bulk_create
-    created = PurchaseList.transaction do
-      purchase_list_bulk_params.map { |attrs| PurchaseList.create!(attrs) }
-    end
-    render json: fmt(created, created), s
+ # POST /purchase_lists/bulk_create
+def bulk_create
+  result = PurchaseList.upsert_all(
+    purchase_list_bulk_params,
+    unique_by: [:group_id, :food_product_id, :shop_id, :fes_date_id] # 適宜ユニークキーを指定
+  )
+  render json: fmt(created, result)
+rescue => e
+  render json: fmt(internal_server_error, [], e.message)
+end
+
