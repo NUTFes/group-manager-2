@@ -31,15 +31,9 @@ class EmployeesController < ApplicationController
   # POST /employees/upsert
   # POST /employees/upsert.json
   def upsert
-    now     = Time.current
-    keys    = %i[id group_id name student_id stool_test_id created_at updated_at]
-
-    records = params.require(:employees).map do |emp|
-      attrs = ActionController::Parameters
-        .new(emp.to_unsafe_h)
-        .permit(*keys)
-        .to_h
-        .symbolize_keys
+    now = Time.current
+    records = employees_params.map do |attrs|
+      attrs[:id] ||= nil
       attrs[:created_at] ||= now
       attrs[:updated_at] = now
       attrs
@@ -92,7 +86,8 @@ class EmployeesController < ApplicationController
       ActionController::Parameters
         .new(emp.to_unsafe_h)
         .permit(:id, :group_id, :name, :student_id, :stool_test_id)
-        .to_h.symbolize_keys
+        .to_h
+        .symbolize_keys
     end
   end
 end
