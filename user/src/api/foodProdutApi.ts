@@ -35,10 +35,12 @@ export type UpdateFoodProductsRequest = {
 
 const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
+  FOOD_PRODUCTS_GROUP: '/food_products/group',
+  FOOD_PRODUCTS_UPSERT: '/food_products/upsert',
 };
 
-export const useGetFoodProducts = () => {
-  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}`;
+export const useGetFoodProducts = (groupId: number | null) => {
+  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS_GROUP}/${groupId}`;
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<FoodProductResponse[]>(endpoint);
 
@@ -54,80 +56,19 @@ export const useGetFoodProducts = () => {
  * 単一作成用hook
  */
 export const useCreateFoodProduct = () => {
-  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}`;
-  const { trigger, isMutating, error } = useAuthenticatedPost(endpoint);
-
-  const createFoodProduct = async (foodProduct: FoodProduct) => {
-    return trigger({ body: foodProduct });
-  };
-
-  return {
-    createFoodProduct,
-    isMutating,
-    error,
-  };
-};
-
-/**
- * 複数作成用hook
- */
-export const useCreateFoodProducts = () => {
-  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}`;
-  const { trigger, isMutating, error } = useAuthenticatedPost(endpoint);
-
-  const createFoodProducts = async (foodProducts: FoodProduct[]) => {
-    const request: CreateFoodProductsRequest = {
-      food_products: foodProducts,
-    };
-    return trigger({ body: request });
-  };
-
-  return {
-    createFoodProducts,
-    isMutating,
-    error,
-  };
+  return useAuthenticatedPost(API_ENDPOINTS.FOOD_PRODUCTS);
 };
 
 /**
  * 単一更新用hook
  */
-export const useUpdateFoodProduct = () => {
-  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}`;
-  const { trigger, isMutating, error } = useAuthenticatedPatch(endpoint);
-
-  const updateFoodProduct = async (
-    foodProduct: FoodProduct & { id: number }
-  ) => {
-    return trigger({ body: foodProduct });
-  };
-
-  return {
-    updateFoodProduct,
-    isMutating,
-    error,
-  };
+export const useUpdateFoodProduct = (id: number | null) => {
+  return useAuthenticatedPatch(`${API_ENDPOINTS.FOOD_PRODUCTS}/${id}`);
 };
 
 /**
- * 複数更新用hook
+ * 複数(upsert_all)用hook
  */
 export const useUpdateFoodProducts = () => {
-  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}`;
-  const { trigger, isMutating, error } = useAuthenticatedPatch(endpoint);
-
-  const updateFoodProducts = async (
-    foodProducts: (FoodProduct & { id: number })[]
-  ) => {
-    const request: UpdateFoodProductsRequest = {
-      food_products: foodProducts,
-    };
-    return trigger({ body: request });
-  };
-
-  return {
-    updateFoodProducts,
-    isMutating,
-    error,
-  };
+  return useAuthenticatedPost(API_ENDPOINTS.FOOD_PRODUCTS_UPSERT);
 };
