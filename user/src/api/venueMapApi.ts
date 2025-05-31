@@ -39,12 +39,8 @@ const API_ENDPOINTS = {
 export const useGetVenueMap = (groupId: number | null) => {
   const endpoint =
     groupId !== null ? `${API_ENDPOINTS.VENUE_MAPS}/group/${groupId}` : null;
-  const {
-    data: response,
-    error: apiError,
-    isLoading: apiIsLoading,
-    mutate: apiMutate,
-  } = useAuthenticatedGet<ApiResponse<VenueMapResponse>>(endpoint);
+  const { data, error, isLoading, mutate } =
+    useAuthenticatedGet<ApiResponse<VenueMapResponse>>(endpoint);
 
   // groupId が null の場合
   if (groupId === null) {
@@ -61,13 +57,13 @@ export const useGetVenueMap = (groupId: number | null) => {
   }
 
   // groupId が存在する場合の通常の処理
-  const venueMap = response?.status.code === 200 ? response.data : null;
+  const venueMap = data?.status.code === 200 ? data.data : null;
 
   return {
     venueMap,
-    error: apiError,
-    isLoading: apiIsLoading,
-    mutateVenueMap: apiMutate,
+    error: error,
+    isLoading: isLoading,
+    mutateVenueMap: mutate,
   };
 };
 
