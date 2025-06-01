@@ -42,24 +42,18 @@ class EmployeesController < ApplicationController
     Employee.upsert_all(records)
 
     # より正確な検索条件を構築
-    where_conditions = records.map do |attrs|
+    processed = records.map do |attrs|
       if attrs[:id].present?
-        # 既存レコードは id で絞る
-        "id = #{ActiveRecord::Base.connection.quote(attrs[:id])}"
+        Employee.where(id: attrs[:id])
       else
-        # 新規レコードは、unique と想定しているカラムの組み合わせで絞る
-        <<~SQL.strip
-          (
-            group_id = #{ActiveRecord::Base.connection.quote(attrs[:group_id])} AND
-            name = #{ActiveRecord::Base.connection.quote(attrs[:name])} AND
-            student_id = #{ActiveRecord::Base.connection.quote(attrs[:student_id])} AND
-            stool_test_id = #{ActiveRecord::Base.connection.quote(attrs[:stool_test_id])}
-          )
-        SQL
+        Employee.where(
+          group_id: attrs[:group_id],
+          name: attrs[:name],
+          student_id: attrs[:student_id],
+          stool_test_id: attrs[:stool_test_id]
+        )
       end
-    end.join(" OR ")
-
-    processed = Employee.where(where_conditions)
+    end.reduce { |acc, scope| acc.or(scope) }
 
     render json: fmt(ok, processed)
   rescue ActiveRecord::StatementInvalid => e
