@@ -8,15 +8,19 @@ type FireEquipmentProps = {
   groupId: number;
 };
 
+const Content: FC = () => {
+  return <FireEquipmentFormView />;
+};
+
 const FireEquipment: FC<FireEquipmentProps> = () => {
   return (
     <AccordionMenu
       title={'火器使用申請'}
-      isEdit={false}
+      isEdit={true}
       isExist={false}
       required={true}
     >
-      <FireEquipmentFormView />
+      <Content />
     </AccordionMenu>
   );
 };

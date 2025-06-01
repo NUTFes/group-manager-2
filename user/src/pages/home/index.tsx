@@ -1,6 +1,7 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
+import FireEquipment from '@/components/Applications/FireEquipment';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import Power from '@/components/Applications/Power';
@@ -130,6 +131,7 @@ export default function HomePage() {
               mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             />
             <GroupCategoryContent />
+            <FireEquipment groupId={0} />
           </>
         )}
       </div>
