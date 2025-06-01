@@ -8,6 +8,7 @@ import { ApiResponse } from './api';
 
 const API_ENDPOINTS = {
   EMPLOYEES: '/employees',
+  EMPLOYEES_GROUP: '/employees/group',
   EMPLOYEES_UPSERT: '/employees/upsert',
 };
 
@@ -24,7 +25,7 @@ export type Employee = {
 export const useGetEmployees = (groupId: number | null) => {
   const endpoint =
     groupId !== null
-      ? `${API_ENDPOINTS.EMPLOYEES}/group/${groupId}`
+      ? `${API_ENDPOINTS.EMPLOYEES_GROUP}/${groupId}`
       : API_ENDPOINTS.EMPLOYEES;
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<Employee[]>>(endpoint);
