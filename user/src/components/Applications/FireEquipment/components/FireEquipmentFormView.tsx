@@ -2,8 +2,10 @@ import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import FireEquipmentForm from './FireEquipmentForm';
+import { useFireEquipmentOrder } from './hooks';
 
 export const FireEquipmentFormView: FC = () => {
+  const { values, errors, setValue, submitHandler } = useFireEquipmentOrder();
   return (
     <div className="flex flex-col gap-6">
       <Radio
@@ -17,9 +19,13 @@ export const FireEquipmentFormView: FC = () => {
         ]}
       />
 
-      <form>
+      <form onSubmit={submitHandler}>
         <div className="flex w-full flex-col gap-10">
-          <FireEquipmentForm />
+          <FireEquipmentForm
+            values={values}
+            errors={errors}
+            setValue={setValue}
+          />
         </div>
         <div className="mt-6 flex flex-col items-center gap-4">
           <div className="flex justify-center gap-4">

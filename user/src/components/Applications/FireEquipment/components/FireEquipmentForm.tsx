@@ -1,19 +1,24 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { FireEquipmentFuel } from '@/api/fireEquipmentApi';
+import { FieldErrors, UseFormSetValue } from 'react-hook-form';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
 import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
+import { FireEquipmentSchemaForm } from './schema';
 
-const FireEquipmentForm: FC = () => {
-  const [canTakeHome, setCanTakeHome] = useState<string>('');
-  const [remarks, setRemarks] = useState<string>('');
-  const [equipmentName, setEquipmentName] = useState<string>('');
-  const [equipmentCount, setEquipmentCount] = useState<number | ''>('');
-  const [fuel, setFuel] = useState<number>(1);
-  const [usage, setUsage] = useState<string>('');
+type FireEquipmentFormProps = {
+  values: FireEquipmentSchemaForm;
+  errors: FieldErrors<FireEquipmentSchemaForm>;
+  setValue: UseFormSetValue<FireEquipmentSchemaForm>;
+};
 
+const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
+  values,
+  errors,
+  setValue,
+}) => {
   return (
     <FormContainer>
       <div className="flex flex-col">
@@ -21,21 +26,28 @@ const FireEquipmentForm: FC = () => {
           <TextBox
             label="火器の名称"
             required
-            value={equipmentName}
-            onChange={setEquipmentName}
+            value={values.name}
+            onChange={(value) => setValue('name', value)}
+            error={errors.name?.message}
           />
           <TextBox
             label="火器の台数"
             required
             type="number"
-            value={String(equipmentCount)}
+            value={values.quantity.toString()}
             note="半角数字のみ"
-            onChange={(e) => setEquipmentCount(e ? Number(e) : '')}
+            onChange={(value) => setValue('quantity', Number(value))}
+            error={errors.quantity?.message}
           />
           <Selector
             label="燃料"
             required
             options={[
+              {
+                id: 0,
+                name: '選択してください',
+                disabled: true,
+              },
               {
                 id: Number(FireEquipmentFuel.GAS_BOTTLE),
                 name: 'カセットガス',
@@ -52,14 +64,18 @@ const FireEquipmentForm: FC = () => {
                 disabled: false,
               },
             ]}
-            value={fuel}
-            onChange={(e) => setFuel(Number(e))}
+            value={values.fuel}
+            onChange={(value) =>
+              setValue('fuel', Number(value) as FireEquipmentFuel)
+            }
+            error={errors.fuel?.message}
           />
           <TextArea
             label="使用用途"
             required
-            value={usage}
-            onChange={setUsage}
+            value={values.usage}
+            onChange={(value) => setValue('usage', value)}
+            error={errors.usage?.message}
           />
           <Radio
             label="火器を毎日テントから持ち帰ることができますか？"
@@ -67,8 +83,12 @@ const FireEquipmentForm: FC = () => {
               { id: 1, name: 'はい' },
               { id: 2, name: 'いいえ' },
             ]}
-            value={canTakeHome}
-            onChange={setCanTakeHome}
+            value={convertToBoolToString(values.isTakeaway)}
+            onChange={(value) => {
+              setValue('isTakeaway', value === '1');
+            }}
+            required
+            error={errors.isTakeaway?.message}
           />
           <p className="max-w-[400px] break-words text-xs text-sub">
             火器は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。
@@ -83,8 +103,9 @@ const FireEquipmentForm: FC = () => {
             // 「火器を毎日テントから持ち帰ることができますか？」の質問で必須にするかしないか判定する
             required
             requireMessage="いいえを押した場合必須"
-            value={remarks}
-            onChange={setRemarks}
+            value={values.remarks || ''}
+            onChange={(value) => setValue('remarks', value)}
+            error={errors.remarks?.message}
           />
         </div>
       </div>
@@ -93,3 +114,7 @@ const FireEquipmentForm: FC = () => {
 };
 
 export default FireEquipmentForm;
+
+const convertToBoolToString = (value: boolean): '1' | '2' => {
+  return value ? '1' : '2';
+};
