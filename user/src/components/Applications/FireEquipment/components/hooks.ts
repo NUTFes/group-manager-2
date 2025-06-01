@@ -38,3 +38,7 @@ export const useFireEquipmentOrder = () => {
     submitHandler,
   };
 };
+
+export const convertToBoolToString = (value: boolean): '1' | '2' => {
+  return value ? '1' : '2';
+};

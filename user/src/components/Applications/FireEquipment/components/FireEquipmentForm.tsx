@@ -6,6 +6,7 @@ import Selector from '@/components/Form/Selector/Selector';
 import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
+import { convertToBoolToString } from './hooks';
 import { FireEquipmentSchemaForm } from './schema';
 
 type FireEquipmentFormProps = {
@@ -114,7 +115,3 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
 };
 
 export default FireEquipmentForm;
-
-const convertToBoolToString = (value: boolean): '1' | '2' => {
-  return value ? '1' : '2';
-};
