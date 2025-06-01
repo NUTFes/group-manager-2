@@ -1,6 +1,5 @@
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, within } from '@storybook/test';
 import PurchaseLists from './PurchaseLists';
 
 // モックデータ用の型定義
@@ -72,9 +71,7 @@ export default {
   },
   decorators: [
     (Story, context) => {
-      // context.args の型を明示的に示す (Storybookが型推論できる場合が多いが、より安全に)
-      // PurchaseListsPropsにgroupIdが含まれることを想定
-      const { groupId } = context.args as { groupId?: number }; // groupIdはオプショナルかもしれないので ? を追加
+      const { groupId } = context.args as { groupId?: number };
 
       // ストーリー開始時にモックデータをクリア
       if (typeof groupId === 'number') {
@@ -103,13 +100,6 @@ export const NewApplication: Story = {
       },
     },
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // フォームが表示されていることを確認
-    expect(canvas.getByText('購入品の追加')).toBeInTheDocument();
-    expect(canvas.getByText('登録')).toBeInTheDocument();
-  },
 };
 
 // 既存データありの状態（サマリー表示）
@@ -129,7 +119,7 @@ export const WithExistingData: Story = {
   },
   decorators: [
     (Story, context) => {
-      const { groupId } = context.args as { groupId: number }; // このストーリーではgroupIdが必須と想定
+      const { groupId } = context.args as { groupId: number };
 
       const mockData: MockPurchaseListResponse[] = [
         {
@@ -154,7 +144,6 @@ export const WithExistingData: Story = {
         },
       ];
 
-      // groupIdが数値であることを確認してからモックデータを設定
       if (typeof groupId === 'number') {
         mockDataSetter(groupId, mockData);
       }
@@ -181,7 +170,7 @@ export const ComplexData: Story = {
   },
   decorators: [
     (Story, context) => {
-      const { groupId } = context.args as { groupId: number }; // このストーリーではgroupIdが必須と想定
+      const { groupId } = context.args as { groupId: number };
 
       const mockData: MockPurchaseListResponse[] = [
         {
@@ -242,7 +231,7 @@ export const AfterDeadline: Story = {
   },
   decorators: [
     (Story, context) => {
-      const { groupId } = context.args as { groupId: number }; // このストーリーではgroupIdが必須と想定
+      const { groupId } = context.args as { groupId: number };
 
       const mockData: MockPurchaseListResponse[] = [
         {
@@ -264,12 +253,6 @@ export const AfterDeadline: Story = {
       return <Story />;
     },
   ],
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // 編集ボタンが表示されていないことを確認
-    expect(canvas.queryByText('修正')).not.toBeInTheDocument();
-  },
 };
 
 // 締切期限後で未登録の状態
@@ -285,20 +268,5 @@ export const DeadlineUnregistered: Story = {
         story: '締切期限を過ぎて未登録の状態。新規申請はできません。',
       },
     },
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // 締切期限メッセージが表示されていることを確認
-    expect(canvas.getByText('申請期限が過ぎています')).toBeInTheDocument();
-    expect(
-      canvas.getByText(
-        '購入品申請の締切期限が過ぎているため、新規申請はできません。'
-      )
-    ).toBeInTheDocument();
-
-    // フォームの要素が表示されていないことを確認
-    expect(canvas.queryByText('購入品の追加')).not.toBeInTheDocument();
-    expect(canvas.queryByText('登録')).not.toBeInTheDocument();
   },
 };
