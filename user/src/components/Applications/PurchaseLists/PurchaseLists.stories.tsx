@@ -1,24 +1,15 @@
-import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import PurchaseLists from './PurchaseLists';
+import { PurchaseItem } from './schema';
 
-// モックデータ用の型定義
-type MockPurchaseListResponse = {
-  id: number;
-  groupId: number;
-  foodProductId: number;
-  shopId: number;
-  items: string;
-  isFresh: boolean;
-  purchaseDate: string;
-  url?: string;
-};
+const getStorageKey = (groupId: number) =>
+  `purchase_lists_group_${groupId}_new`;
 
-// ストーリー用のモックデータを準備
-const getStorageKey = (groupId: number) => `purchase_lists_group_${groupId}`;
-
-const mockDataSetter = (groupId: number, data: MockPurchaseListResponse[]) => {
-  // Storybookではlocalstorageが利用可能
+// モックデータ操作関数
+const mockDataSetter = (
+  groupId: number,
+  data: (PurchaseItem & { groupId: number })[]
+) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem(getStorageKey(groupId), JSON.stringify(data));
   }
@@ -30,242 +21,187 @@ const clearMockData = (groupId: number) => {
   }
 };
 
+// Storybookの基本設定
 export default {
   title: 'Components/PurchaseLists',
-  tags: ['autodocs'],
   component: PurchaseLists,
   parameters: {
+    layout: 'padded',
     docs: {
-      source: {
-        type: 'auto',
-      },
       description: {
-        component:
-          '購入品申請コンポーネント - 購入品の申請データを管理します。フォーム入力、データ表示、編集機能を提供します。',
+        component: '購入品申請を行うためのコンポーネント。',
       },
     },
-    layout: 'padded',
   },
   argTypes: {
+    groupId: {
+      control: 'number',
+      description: 'データを一意に識別するためのグループID。',
+      table: {
+        defaultValue: { summary: '1' },
+      },
+    },
     isDeadline: {
       control: 'boolean',
-      description: '締切期限を過ぎているかどうか（編集不可状態）',
+      description:
+        '申請期限が過ぎているかどうかのフラグ。trueの場合、編集や新規作成が制限されます。',
       table: {
         defaultValue: { summary: 'false' },
       },
     },
     isRegistered: {
       control: 'boolean',
-      description: '申請が登録済みかどうか（既存データの有無）',
+      description:
+        '申請データが登録済みとして扱うかのフラグ。AccordionMenuのisExistに影響します。',
       table: {
-        defaultValue: { summary: 'undefined' },
-      },
-    },
-    groupId: {
-      control: 'number',
-      description: 'グループID（データ識別用）',
-      table: {
-        defaultValue: { summary: '1' },
+        defaultValue: { summary: 'false' },
       },
     },
   },
-  decorators: [
-    (Story, context) => {
-      const { groupId } = context.args as { groupId?: number };
-
-      // ストーリー開始時にモックデータをクリア
-      if (typeof groupId === 'number') {
-        clearMockData(groupId);
-      }
-
-      return <Story />;
-    },
-  ],
 } as Meta<typeof PurchaseLists>;
 
 type Story = StoryObj<typeof PurchaseLists>;
 
-// 新規申請（フォーム表示）
+// --- 各シナリオのStory定義 ---
+
+/**
+ * 新規に購入品を申請するシナリオ。
+ * フォームが表示され、ユーザーは購入情報を入力できます。
+ */
 export const NewApplication: Story = {
   args: {
-    groupId: 1,
+    groupId: 100,
     isDeadline: false,
     isRegistered: false,
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'デフォルト状態の購入品申請コンポーネント。新規申請フォームが表示され、購入品の追加や削除が可能です。',
-      },
+  decorators: [
+    (Story, context) => {
+      const { groupId } = context.args as { groupId: number };
+      clearMockData(groupId);
+      return <Story />;
     },
-  },
+  ],
 };
 
-// 既存データありの状態（サマリー表示）
+/**
+ * 既に登録済みの購入品データが存在するシナリオ。
+ * データはFormList形式で表示され、「修正する」ボタンから編集モードに移行できます。
+ */
 export const WithExistingData: Story = {
   args: {
-    groupId: 2,
+    groupId: 202,
     isDeadline: false,
     isRegistered: true,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '申請が登録済みの状態。既存の申請データをサマリー形式で表示し、編集や削除が可能です。',
-      },
-    },
   },
   decorators: [
     (Story, context) => {
       const { groupId } = context.args as { groupId: number };
-
-      const mockData: MockPurchaseListResponse[] = [
+      clearMockData(groupId);
+      const mockData: (PurchaseItem & { groupId: number })[] = [
         {
-          id: 1,
-          groupId: groupId,
+          id: Date.now(),
           foodProductId: 1,
-          shopId: 1,
-          items: 'トマト、玉ねぎ、人参',
+          items: '新鮮な野菜セット（キャベツ、トマト、きゅうり）',
           isFresh: true,
-          purchaseDate: '2025/06/15',
+          shopId: 1,
+          purchaseDate: '2025/07/15',
           url: '',
+          remarks: '特売品',
+          groupId: groupId,
         },
         {
-          id: 2,
-          groupId: groupId,
+          id: Date.now() + 1,
           foodProductId: 2,
-          shopId: 29,
-          items: '調味料セット、油',
+          items: '冷凍シーフードミックス, パスタソース',
           isFresh: false,
-          purchaseDate: '2025/06/10',
-          url: 'https://example.com/seasoning-set',
+          shopId: 29,
+          purchaseDate: '2025/07/10',
+          url: 'https://example.com/seafood-mix',
+          remarks: '',
+          groupId: groupId,
         },
       ];
-
-      if (typeof groupId === 'number') {
-        mockDataSetter(groupId, mockData);
-      }
-
+      mockDataSetter(groupId, mockData);
       return <Story />;
     },
   ],
 };
 
-// 複数の購入品がある複雑なケース
-export const ComplexData: Story = {
+/**
+ * 申請期限が過ぎており、登録済みのデータが存在するシナリオ。
+ * データは表示されますが、編集や削除は行えません。
+ */
+export const AfterDeadlineWithData: Story = {
   args: {
-    groupId: 3,
-    isDeadline: false,
-    isRegistered: true,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '複数の購入品データがある状態。生鮮品と加工品、ネット注文と店舗購入が混在しています。',
-      },
-    },
-  },
-  decorators: [
-    (Story, context) => {
-      const { groupId } = context.args as { groupId: number };
-
-      const mockData: MockPurchaseListResponse[] = [
-        {
-          id: 1,
-          groupId: groupId,
-          foodProductId: 1,
-          shopId: 1,
-          items: '新鮮な野菜セット（キャベツ、レタス、トマト）',
-          isFresh: true,
-          purchaseDate: '2025/06/20',
-          url: '',
-        },
-        {
-          id: 2,
-          groupId: groupId,
-          foodProductId: 2,
-          shopId: 29,
-          items: '業務用調味料、冷凍食品',
-          isFresh: false,
-          purchaseDate: '2025/06/18',
-          url: 'https://business-supply.example.com/order/12345',
-        },
-        {
-          id: 3,
-          groupId: groupId,
-          foodProductId: 4,
-          shopId: 14,
-          items: '肉類（鶏肉、豚肉）',
-          isFresh: true,
-          purchaseDate: '2025/06/19',
-          url: '',
-        },
-      ];
-
-      if (typeof groupId === 'number') {
-        mockDataSetter(groupId, mockData);
-      }
-
-      return <Story />;
-    },
-  ],
-};
-
-// 締切期限後の編集不可状態
-export const AfterDeadline: Story = {
-  args: {
-    groupId: 4,
+    groupId: 203,
     isDeadline: true,
     isRegistered: true,
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '締切期限を過ぎた状態。データは表示されますが編集不可で、修正ボタンなどは表示されません。',
-      },
-    },
-  },
   decorators: [
     (Story, context) => {
       const { groupId } = context.args as { groupId: number };
-
-      const mockData: MockPurchaseListResponse[] = [
+      clearMockData(groupId);
+      const mockData: (PurchaseItem & { groupId: number })[] = [
         {
-          id: 1,
-          groupId: groupId,
-          foodProductId: 1,
-          shopId: 2,
-          items: '最終確定済みの食材リスト',
-          isFresh: true,
+          id: Date.now(),
+          foodProductId: 4,
+          items: 'たこ、小麦粉、ソース',
+          isFresh: false,
+          shopId: 13,
           purchaseDate: '2025/06/01',
           url: '',
+          remarks: '最終確定済みデータ',
+          groupId: groupId,
         },
       ];
-
-      if (typeof groupId === 'number') {
-        mockDataSetter(groupId, mockData);
-      }
-
+      mockDataSetter(groupId, mockData);
       return <Story />;
     },
   ],
 };
 
-// 締切期限後で未登録の状態
-export const DeadlineUnregistered: Story = {
+/**
+ * 申請期限が過ぎており、登録済みのデータも存在しないシナリオ。
+ * 新規申請・編集不可のメッセージが表示されます。
+ */
+export const AfterDeadlineNoData: Story = {
   args: {
-    groupId: 5,
+    groupId: 204,
     isDeadline: true,
     isRegistered: false,
   },
+  decorators: [
+    (Story, context) => {
+      const { groupId } = context.args as { groupId: number };
+      clearMockData(groupId);
+      return <Story />;
+    },
+  ],
+};
+
+/**
+ * 備考欄が必須となる「その他」の店舗を選択した場合のバリデーション確認用（FormList表示）。
+ * ユーザーが手動で操作して確認するシナリオ。
+ */
+export const ForOtherShopValidation: Story = {
+  args: {
+    groupId: 205,
+    isDeadline: false,
+    isRegistered: false,
+  },
+  decorators: [
+    (Story, context) => {
+      const { groupId } = context.args as { groupId: number };
+      clearMockData(groupId);
+
+      return <Story />;
+    },
+  ],
   parameters: {
     docs: {
       description: {
-        story: '締切期限を過ぎて未登録の状態。新規申請はできません。',
+        story:
+          '「購入場所」で「その他」を選択した際に、備考欄が必須となるバリデーションを確認するための初期状態です。フォームを手動で操作して確認してください。',
       },
     },
   },

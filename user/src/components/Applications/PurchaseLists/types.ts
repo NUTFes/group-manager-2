@@ -1,7 +1,5 @@
 import { Control, FieldArrayWithId, UseFormReturn } from 'react-hook-form';
-import { PurchaseListsApplicationFormData } from './schema';
-
-export type FieldType = 'text' | 'number' | 'date' | 'select' | 'radio';
+import { PurchaseItem, PurchaseListsFormData } from './schema';
 
 export type RadioOption = {
   id: number;
@@ -18,62 +16,27 @@ export type FoodProductOption = {
   name: string;
 };
 
-export type PurchaseLists = {
-  id?: number;
-  foodProductId: number;
-  shopId: number;
-  items: string;
-  isFresh: boolean;
-  purchaseDate: string;
-  url?: string;
+// PurchaseLists コンポーネントの Props
+export type PurchaseListsProps = {
+  isDeadline?: boolean;
+  isRegistered?: boolean | undefined;
+  groupId: number;
 };
 
-export type PurchaseListsField =
-  | 'foodProductId'
-  | 'shopId'
-  | 'items'
-  | 'isFresh'
-  | 'purchaseDate'
-  | 'url';
-
-export interface PurchaseListsFormFieldProps {
-  name: PurchaseListsField;
-  label: string;
-  control: Control<PurchaseListsApplicationFormData>;
-  index: number;
-  required?: boolean;
-  note?: string;
-  getErrorMessage: (name: PurchaseListsField) => string | undefined;
-  fieldType: 'text' | 'select' | 'radio' | 'number' | 'date'; // 'date' を追加
-  options?: { id: number | string; name: string }[];
-  radioOptions?: RadioOption[];
-}
-
-export interface PurchaseListsFormProps {
-  index: number;
-  formMethods: UseFormReturn<PurchaseListsApplicationFormData>;
-  onRemove: (index: number) => void;
-  foodProductOptions: FoodProductOption[];
-}
-
-export interface PurchaseListsFormViewProps {
-  formMethods: UseFormReturn<PurchaseListsApplicationFormData>;
-  fields: FieldArrayWithId<
-    PurchaseListsApplicationFormData,
-    'purchaseLists',
-    'id'
-  >[];
-  onRemove: (index: number) => void;
-  onAddItem: () => void;
+// PurchaseListsForm コンポーネントの Props
+export type PurchaseListsFormProps = {
+  control: Control<PurchaseListsFormData>;
+  fields: FieldArrayWithId<PurchaseListsFormData, 'purchaseLists', 'id'>[];
+  append: (item: Partial<PurchaseItem>) => void;
+  remove: (index: number) => void;
+  onSubmit: () => void; // react-hook-formのhandleSubmitをラップしたものを想定
+  onCancel: () => void;
+  errors: UseFormReturn<PurchaseListsFormData>['formState']['errors'];
   isValid: boolean;
-  onSubmit: (data: PurchaseListsApplicationFormData) => void;
   foodProductOptions: FoodProductOption[];
-}
+};
 
-export interface PurchaseListsSummaryViewProps {
-  purchaseLists: PurchaseLists[];
-  onEdit: () => void;
-  onDeleteItem: (id: number) => void;
-  isDeadline: boolean;
-  foodProductOptions: FoodProductOption[];
-}
+// モックAPIレスポンス型 (hooks.ts内で使用)
+export type MockPurchaseListResponse = PurchaseItem & {
+  groupId: number;
+};

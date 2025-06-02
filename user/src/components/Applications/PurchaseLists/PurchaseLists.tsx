@@ -1,83 +1,207 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
-import {
-  PurchaseListsDeadlineView,
-  PurchaseListsFormView,
-  PurchaseListsSummaryView,
-} from './components';
-import { usePurchaseListsApplication, usePurchaseListsDisplay } from './hooks';
-
-type PurchaseListsProps = {
-  isDeadline?: boolean;
-  isRegistered?: boolean | undefined;
-  groupId: number;
-};
+import Button from '@/components/Button';
+import FormList from '@/components/FormList/FormList';
+import PurchaseListsForm from './PurchaseListsForm';
+import { DEFAULT_PURCHASE_ITEM } from './constants';
+import { usePurchaseListsForm, usePurchaseListsState } from './hooks';
+import { PurchaseItem } from './schema';
+import { PurchaseListsProps } from './types';
 
 const PurchaseLists: FC<PurchaseListsProps> = ({
-  isDeadline = false,
-  isRegistered,
   groupId,
+  isDeadline = false,
+  isRegistered: initialIsRegistered,
 }) => {
   const {
-    state,
-    hasExisting,
     purchaseLists,
-    purchaseListsForm,
-    handleFormSubmit,
-    handleDeleteItem,
-    prepareFormForEditing,
-    foodProductOptions,
-  } = usePurchaseListsApplication(groupId);
-
-  const { isEditing } = state;
-  const { fields, addItem, removeItem, isValid, formMethods } =
-    purchaseListsForm;
-
-  const { mode } = usePurchaseListsDisplay({
-    hasExisting: hasExisting || false,
+    isLoading,
+    error,
     isEditing,
-    isDeadline,
-  });
+    toggleEdit,
+    handleDeleteItem,
+    formItems,
+    foodProductOptions,
+    initialFormData,
+    handleFormSuccess,
+  } = usePurchaseListsState(groupId);
 
-  let content;
-  switch (mode) {
-    case 'summary':
-      content = (
-        <PurchaseListsSummaryView
-          purchaseLists={purchaseLists}
-          onEdit={prepareFormForEditing}
-          onDeleteItem={handleDeleteItem}
-          isDeadline={isDeadline}
-          foodProductOptions={foodProductOptions}
-        />
-      );
-      break;
-    case 'deadline-unregistered':
-      content = <PurchaseListsDeadlineView />;
-      break;
-    case 'form':
-    default:
-      content = (
-        <PurchaseListsFormView
-          formMethods={formMethods}
-          fields={fields}
-          onRemove={removeItem}
-          onAddItem={addItem}
-          isValid={isValid}
-          onSubmit={handleFormSubmit}
-          foodProductOptions={foodProductOptions}
-        />
-      );
+  const {
+    control,
+    fields,
+    append,
+    remove,
+    triggerSubmit,
+    errors,
+    isValid,
+    resetForm,
+  } = usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
+
+  const isRegistered =
+    initialIsRegistered ?? (purchaseLists && purchaseLists.length > 0);
+
+  // データロード後にフォームを初期化/リセット
+  useEffect(() => {
+    if (!isLoading) {
+      resetForm(initialFormData);
+    }
+  }, [isLoading, initialFormData, resetForm]);
+
+  if (isLoading) {
+    return (
+      <AccordionMenu
+        title="購入品申請"
+        required
+        isEdit={!isDeadline}
+        isExist={isRegistered}
+      >
+        <div>Loading...</div>
+      </AccordionMenu>
+    );
   }
 
+  if (error) {
+    return (
+      <AccordionMenu
+        title="購入品申請"
+        required
+        isEdit={!isDeadline}
+        isExist={isRegistered}
+      >
+        <div className="py-10 text-center text-red-500">
+          データの取得に失敗しました。
+        </div>
+      </AccordionMenu>
+    );
+  }
+
+  // 締め切り後で、かつデータがない（未登録）場合
+  if (isDeadline && (!purchaseLists || purchaseLists.length === 0)) {
+    return (
+      <AccordionMenu title="購入品申請" required isEdit={false} isExist={false}>
+        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+          <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
+            <div className="mb-4">
+              <svg
+                className="mx-auto size-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-800">
+              申請期限が過ぎています
+            </h3>
+            <p className="text-sm text-gray-600">
+              購入品申請の締切期限が過ぎているため、新規申請はできません。
+            </p>
+          </div>
+        </div>
+      </AccordionMenu>
+    );
+  }
+
+  // 締め切り後で、データがある場合 (表示のみ)
+  if (isDeadline && purchaseLists && purchaseLists.length > 0) {
+    return (
+      <AccordionMenu title="購入品申請" required isEdit={false} isExist={true}>
+        {formItems.map((items, index) => (
+          <div key={`purchase-list-${index}`} className="mb-4">
+            <FormList items={items} />
+          </div>
+        ))}
+      </AccordionMenu>
+    );
+  }
+
+  // 編集モードまたは、まだデータがなく未締め切りの場合 (新規作成含む)
+  if (isEditing || !purchaseLists || purchaseLists.length === 0) {
+    return (
+      <AccordionMenu
+        title="購入品申請"
+        required
+        isEdit={!isDeadline}
+        isExist={isRegistered}
+      >
+        <PurchaseListsForm
+          control={control}
+          fields={fields}
+          append={(item) => append(item as PurchaseItem)}
+          remove={remove}
+          onSubmit={triggerSubmit}
+          onCancel={toggleEdit}
+          errors={errors}
+          isValid={isValid}
+          foodProductOptions={foodProductOptions}
+        />
+      </AccordionMenu>
+    );
+  }
+
+  // 表示モード (データあり、未締め切り)
   return (
     <AccordionMenu
-      title={'購入品申請'}
+      title="購入品申請"
+      required
       isEdit={!isDeadline}
-      isExist={isRegistered === true}
-      required={true}
+      isExist={isRegistered}
     >
-      {content}
+      {formItems.map((items, index) => {
+        const currentItem = purchaseLists?.[index];
+        return (
+          <div
+            key={`purchase-list-${index}-${currentItem?.id ?? index}`}
+            className="mb-4"
+          >
+            <FormList
+              items={items}
+              isDelete={!isDeadline && currentItem?.id !== undefined}
+              onDelete={
+                currentItem?.id
+                  ? () => handleDeleteItem(currentItem.id!)
+                  : undefined
+              }
+            />
+          </div>
+        );
+      })}
+      {!isDeadline && purchaseLists && purchaseLists.length > 0 && (
+        <div className="mt-6 flex justify-center">
+          <Button
+            onClick={toggleEdit}
+            size="pc"
+            color="main"
+            type="button"
+            icon="pencil"
+          >
+            修正
+          </Button>
+        </div>
+      )}
+      {!isDeadline && (!purchaseLists || purchaseLists.length === 0) && (
+        <div className="mt-6 flex justify-center">
+          <Button
+            onClick={() => {
+              resetForm([DEFAULT_PURCHASE_ITEM]);
+              toggleEdit();
+            }}
+            color="main"
+            size="pc"
+            icon="plus"
+            type="button"
+          >
+            購入品を登録する
+          </Button>
+        </div>
+      )}
     </AccordionMenu>
   );
 };
