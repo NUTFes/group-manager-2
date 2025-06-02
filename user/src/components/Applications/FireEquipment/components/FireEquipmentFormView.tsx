@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { FireEquipmentResponse } from '@/api/fireEquipmentApi';
 import { NO_ID_STRING, RADIO_OPTIONS, YES_ID_STRING } from '@/utils/constant';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
@@ -7,9 +8,13 @@ import { useFireEquipmentOrder } from './hooks';
 
 type FireEquipmentFormViewProps = {
   groupId: number;
+  fireEquipmentData?: FireEquipmentResponse;
+  handleEditCancel?: () => void;
 };
 export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
   groupId,
+  fireEquipmentData,
+  handleEditCancel,
 }) => {
   const {
     isRegister,
@@ -21,7 +26,9 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
     errors,
     setValue,
     submitHandler,
-  } = useFireEquipmentOrder(groupId);
+    isEditing,
+    validate,
+  } = useFireEquipmentOrder(groupId, fireEquipmentData);
 
   return (
     <div className="flex flex-col gap-6">
@@ -53,14 +60,10 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
               values={values}
               errors={errors}
               setValue={setValue}
+              isEditing={isEditing}
+              handleEditCancel={handleEditCancel}
+              validate={validate}
             />
-          </div>
-          <div className="mt-6 flex flex-col items-center gap-4">
-            <div className="flex justify-center gap-4">
-              <Button type="submit" size="pc" color="main">
-                登録
-              </Button>
-            </div>
           </div>
         </form>
       )}

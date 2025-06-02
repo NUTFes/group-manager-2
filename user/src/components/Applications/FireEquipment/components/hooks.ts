@@ -1,3 +1,4 @@
+import { FireEquipmentResponse } from '@/api/fireEquipmentApi';
 import { NO_ID_STRING, YES_ID_STRING } from '@/utils/constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -10,7 +11,10 @@ import {
   UnRegisteredFireEquipmentSchemaForm,
 } from './schema';
 
-export const useFireEquipmentOrder = (groupId: number) => {
+export const useFireEquipmentOrder = (
+  groupId: number,
+  fireEquipmentData?: FireEquipmentResponse
+) => {
   const {
     handleSubmit: handleSubmitUnregistered,
     formState: { errors: errorsUnregistered },
@@ -24,6 +28,18 @@ export const useFireEquipmentOrder = (groupId: number) => {
     },
   });
 
+  // 既存の火器申請データがある場合は、編集モードにする
+  const isEditing = !!fireEquipmentData;
+
+  const defaultValues: FireEquipmentSchemaForm = {
+    name: fireEquipmentData?.name || '',
+    quantity: fireEquipmentData?.quantity || 0,
+    fuel: fireEquipmentData?.fuel || 0,
+    usage: fireEquipmentData?.usage || '',
+    isTakeaway: fireEquipmentData?.is_takeaway || true,
+    remarks: fireEquipmentData?.remark || '',
+  };
+
   const {
     handleSubmit,
     formState: { errors },
@@ -31,14 +47,7 @@ export const useFireEquipmentOrder = (groupId: number) => {
     watch,
   } = useForm<FireEquipmentSchemaForm>({
     resolver: zodResolver(FireEquipmentSchema),
-    defaultValues: {
-      name: '',
-      quantity: 0,
-      fuel: 0,
-      usage: '',
-      isTakeaway: true,
-      remarks: '',
-    },
+    defaultValues: defaultValues,
   });
 
   const valuesUnregistered = watchUnregistered();
@@ -66,6 +75,17 @@ export const useFireEquipmentOrder = (groupId: number) => {
 
   const values = watch();
 
+  const validate = () => {
+    return (
+      defaultValues.name === values.name &&
+      defaultValues.quantity === values.quantity &&
+      defaultValues.fuel === values.fuel &&
+      defaultValues.usage === values.usage &&
+      defaultValues.isTakeaway === values.isTakeaway &&
+      defaultValues.remarks === values.remarks
+    );
+  };
+
   const onSubmitFireEquipment = async (formData: FireEquipmentSchemaForm) => {
     console.log('Submitted Data:', formData);
     toast.success('火器申請が送信されました！');
@@ -74,15 +94,21 @@ export const useFireEquipmentOrder = (groupId: number) => {
   const submitHandler = handleSubmit(onSubmitFireEquipment);
 
   return {
+    // 未登録周り
     isRegister,
     submitUnregisteredHandler,
     errorsUnregistered,
     isRegisterValue,
     setIsRegisterValue,
+    // 火器申請周り
     values,
     errors,
     setValue,
     submitHandler,
+    // 既存の火器申請データがあるかどうか
+    isEditing,
+    // バリデーション
+    validate,
   };
 };
 

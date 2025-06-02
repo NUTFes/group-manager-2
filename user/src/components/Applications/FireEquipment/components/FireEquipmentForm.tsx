@@ -1,11 +1,13 @@
 import { FC } from 'react';
 import { FireEquipmentFuel } from '@/api/fireEquipmentApi';
 import { FieldErrors, UseFormSetValue } from 'react-hook-form';
+import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
 import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
+import { fireEquipmentFormFields } from '../constant';
 import { convertToBoolToString } from './hooks';
 import { FireEquipmentSchemaForm } from './schema';
 
@@ -13,26 +15,32 @@ type FireEquipmentFormProps = {
   values: FireEquipmentSchemaForm;
   errors: FieldErrors<FireEquipmentSchemaForm>;
   setValue: UseFormSetValue<FireEquipmentSchemaForm>;
+  isEditing: boolean;
+  handleEditCancel?: () => void;
+  validate?: () => boolean;
 };
 
 const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
   values,
   errors,
   setValue,
+  isEditing,
+  handleEditCancel,
+  validate,
 }) => {
   return (
     <FormContainer>
       <div className="flex flex-col">
         <div className="flex flex-col gap-10 text-[#484848]">
           <TextBox
-            label="火器の名称"
+            label={fireEquipmentFormFields.NAME}
             required
             value={values.name}
             onChange={(value) => setValue('name', value)}
             error={errors.name?.message}
           />
           <TextBox
-            label="火器の台数"
+            label={fireEquipmentFormFields.QUANTITY}
             required
             type="number"
             value={values.quantity.toString()}
@@ -41,7 +49,7 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             error={errors.quantity?.message}
           />
           <Selector
-            label="燃料"
+            label={fireEquipmentFormFields.FUEL}
             required
             options={[
               {
@@ -72,14 +80,14 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             error={errors.fuel?.message}
           />
           <TextArea
-            label="使用用途"
+            label={fireEquipmentFormFields.USAGE}
             required
             value={values.usage}
             onChange={(value) => setValue('usage', value)}
             error={errors.usage?.message}
           />
           <Radio
-            label="火器を毎日テントから持ち帰ることができますか？"
+            label={fireEquipmentFormFields.IS_TAKEAWAY}
             options={[
               { id: 1, name: 'はい' },
               { id: 2, name: 'いいえ' },
@@ -100,7 +108,7 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             いいえを押した場合は火器の備考欄に理由を記載して下さい。
           </p>
           <TextArea
-            label="備考"
+            label={fireEquipmentFormFields.REMARK}
             // 「火器を毎日テントから持ち帰ることができますか？」の質問で必須にするかしないか判定する
             required
             requireMessage="いいえを押した場合必須"
@@ -108,6 +116,29 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             onChange={(value) => setValue('remarks', value)}
             error={errors.remarks?.message}
           />
+        </div>
+        <div className="mt-10 flex w-full items-center justify-center">
+          {isEditing && (
+            <div className="mr-4">
+              <Button
+                size="pc"
+                color="main"
+                variant
+                type="button"
+                onClick={handleEditCancel}
+              >
+                キャンセル
+              </Button>
+            </div>
+          )}
+          <Button
+            size="pc"
+            color="main"
+            type="submit"
+            isDisable={validate && validate()}
+          >
+            {isEditing ? '修正' : '登録'}
+          </Button>
         </div>
       </div>
     </FormContainer>

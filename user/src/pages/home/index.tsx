@@ -131,7 +131,10 @@ export default function HomePage() {
               mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             />
             <GroupCategoryContent />
-            <FireEquipment groupId={groupId} />
+            <FireEquipment
+              groupId={groupId}
+              isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+            />
           </>
         )}
       </div>
