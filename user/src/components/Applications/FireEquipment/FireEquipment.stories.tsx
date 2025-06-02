@@ -1,11 +1,11 @@
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
-import Power from './FireEquipment';
+import FireEquipment from './FireEquipment';
 
 export default {
   title: 'Components/Power',
   tags: ['autodocs'],
-  component: Power,
+  component: FireEquipment,
   parameters: {
     docs: {
       source: {
@@ -13,10 +13,12 @@ export default {
       },
     },
   },
-} as Meta<typeof Power>;
+} as Meta<typeof FireEquipment>;
 
-type Story = StoryObj<typeof Power>;
+type Story = StoryObj<typeof FireEquipment>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    groupId: 0,
+  },
 };

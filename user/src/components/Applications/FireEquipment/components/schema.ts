@@ -30,3 +30,12 @@ export const FireEquipmentSchema = z
   });
 
 export type FireEquipmentSchemaForm = z.infer<typeof FireEquipmentSchema>;
+
+export const UnRegisteredFireEquipmentSchema = z.object({
+  groupId: z.number().min(1, 'グループを選択してください'),
+  isRegister: z.boolean().default(true),
+});
+
+export type UnRegisteredFireEquipmentSchemaForm = z.infer<
+  typeof UnRegisteredFireEquipmentSchema
+>;

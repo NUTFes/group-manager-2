@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-type Option = {
+export type Option = {
   id: number;
   name: string;
 };
