@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import FireEquipment from './FireEquipment';
 
 export default {
-  title: 'Components/Power',
+  title: 'Components/FireEquipment',
   tags: ['autodocs'],
   component: FireEquipment,
   parameters: {
@@ -20,5 +20,7 @@ type Story = StoryObj<typeof FireEquipment>;
 export const Default: Story = {
   args: {
     groupId: 0,
+    isDeadline: false,
+    isRegistered: false,
   },
 };
