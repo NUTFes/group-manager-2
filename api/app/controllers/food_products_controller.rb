@@ -47,13 +47,12 @@ class FoodProductsController < ApplicationController
       attrs
     end
 
-    upserts = upserts.map { |attrs| attrs.transform_keys(&:to_s) }
     FoodProduct.upsert_all(upserts)
 
     # 更新／挿入されたレコードを取得して返却
     processed = upserts.map do |attrs|
       if attrs["id"].present?
-        FoodProduct.find_by(id: attrs["id"])
+        FoodProduct.where(id: attrs["id"])
       else
         FoodProduct.where(
           group_id: attrs["group_id"],
@@ -61,9 +60,9 @@ class FoodProductsController < ApplicationController
           is_cooking: attrs["is_cooking"],
           first_day_num: attrs["first_day_num"],
           second_day_num: attrs["second_day_num"]
-        ).order(created_at: :desc).first
+        )
       end
-    end.compact
+    end.reduce { |acc, scope| acc.or(scope) }
 
     render json: fmt(ok, processed)
   rescue ActiveRecord::RecordInvalid => e
