@@ -48,7 +48,7 @@ export const SHOP_OPTIONS: ShopOption[] = [
   { id: 27, name: '紅屋重正' },
   { id: 28, name: 'ダイレックス喜多町店' },
   { id: 29, name: 'ネット注文' },
-  { id: 30, name: 'その他' },
+  { id: 30, name: 'その他(詳細を備考欄に記入必須)' },
 ];
 
 // ネット注文のショップID
