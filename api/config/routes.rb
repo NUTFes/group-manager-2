@@ -64,7 +64,12 @@ Rails.application.routes.draw do
     end
   end
   resources :stages
-  resources :employees
+  resources :employees do
+    collection do
+      get   'group/:group_id', to: 'employees#get_by_group'
+      post  'upsert', to: 'employees#upsert'
+    end
+  end
   resources :sub_reps do
     collection do
       get 'group/:group_id', to: 'sub_reps#get_by_group_id'
