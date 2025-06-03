@@ -28,7 +28,7 @@ export const useFireEquipmentOrder = (
     },
   });
 
-  // 既存の火器申請データがある場合は、編集モードにする
+  // 既存の火気申請データがある場合は、編集モードにする
   const isEditing = !!fireEquipmentData;
 
   const defaultValues: FireEquipmentSchemaForm = {
@@ -68,7 +68,7 @@ export const useFireEquipmentOrder = (
     }
     console.log('Unregistered Data:', formData);
 
-    toast.success('火器申請を行わない登録が完了しました');
+    toast.success('火気申請を行わない登録が完了しました');
   };
   const submitUnregisteredHandler =
     handleSubmitUnregistered(onSubmitUnregistered);
@@ -88,7 +88,7 @@ export const useFireEquipmentOrder = (
 
   const onSubmitFireEquipment = async (formData: FireEquipmentSchemaForm) => {
     console.log('Submitted Data:', formData);
-    toast.success('火器申請が送信されました！');
+    toast.success('火気申請が送信されました！');
   };
 
   const submitHandler = handleSubmit(onSubmitFireEquipment);
@@ -100,12 +100,12 @@ export const useFireEquipmentOrder = (
     errorsUnregistered,
     isRegisterValue,
     setIsRegisterValue,
-    // 火器申請周り
+    // 火気申請周り
     values,
     errors,
     setValue,
     submitHandler,
-    // 既存の火器申請データがあるかどうか
+    // 既存の火気申請データがあるかどうか
     isEditing,
     // バリデーション
     validate,

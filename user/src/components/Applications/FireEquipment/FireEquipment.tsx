@@ -11,16 +11,28 @@ type FireEquipmentProps = {
 };
 
 const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline }) => {
-  const { isEditing, handleEditClick, formItem, fireEquipment } =
-    useFireEquipmentHooks(groupId);
+  const {
+    isEditing,
+    handleEditClick,
+    formItem,
+    fireEquipment,
+    hasUnregistered,
+    noApplicationItems,
+  } = useFireEquipmentHooks(groupId);
 
   // 締め切り後に表示する画面
   if (isDeadline) {
     return <FormList items={formItem} />;
   }
+  // 未登録がある場合は、フォームリストを表示
+  if (hasUnregistered) {
+    return (
+      <FormList items={noApplicationItems} isEdit onEdit={handleEditClick} />
+    );
+  }
 
   // 未登録の場合は、フォームを表示
-  if (!fireEquipment) {
+  if (!fireEquipment && !hasUnregistered) {
     return <FireEquipmentFormView groupId={groupId} />;
   }
 
@@ -46,7 +58,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
 }) => {
   return (
     <AccordionMenu
-      title={'火器使用申請'}
+      title={'火気使用申請'}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}

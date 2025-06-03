@@ -100,16 +100,16 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             error={errors.isTakeaway?.message}
           />
           <p className="max-w-[400px] break-words text-xs text-sub">
-            火器は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。
+            火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。
             <br />
-            火器はテント内に残す行為は火事の原因になります。
+            火気はテント内に残す行為は火事の原因になります。
           </p>
           <p className="max-w-[400px] break-words text-xs text-sub">
-            いいえを押した場合は火器の備考欄に理由を記載して下さい。
+            いいえを押した場合は火気の備考欄に理由を記載して下さい。
           </p>
           <TextArea
             label={fireEquipmentFormFields.REMARK}
-            // 「火器を毎日テントから持ち帰ることができますか？」の質問で必須にするかしないか判定する
+            // 「火気を毎日テントから持ち帰ることができますか？」の質問で必須にするかしないか判定する
             required
             requireMessage="いいえを押した場合必須"
             value={values.remarks || ''}

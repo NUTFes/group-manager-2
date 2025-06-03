@@ -34,7 +34,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
     <div className="flex flex-col gap-6">
       <form onSubmit={submitUnregisteredHandler}>
         <Radio
-          label="火器申請を使用しますか？"
+          label="火気申請を使用しますか？"
           value={isRegisterValue}
           onChange={(value) => {
             setIsRegisterValue(

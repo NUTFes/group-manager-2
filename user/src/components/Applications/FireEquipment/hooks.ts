@@ -20,7 +20,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
         remark: '',
       }
     : undefined;
-
+  const hasUnregistered = false; // TODO: API実装後に修正
   const formItem: FormItem[] = fireEquipment
     ? [
         {
@@ -55,7 +55,16 @@ export const useFireEquipmentHooks = (groupId: number) => {
     setIsEditing((prev) => !prev);
   };
 
+  const noApplicationItems: FormItem[] = [
+    {
+      label: '火気申請は不要（登録済み）',
+      content: '火気は使用しません。',
+    },
+  ];
+
   return {
+    hasUnregistered,
+    noApplicationItems,
     isEditing,
     formItem,
     handleEditClick,

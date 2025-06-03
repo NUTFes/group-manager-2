@@ -28,7 +28,7 @@ const API_ENDPOINTS = {
   FIRE_EQUIPMENT_ORDERS: '/fire_equipment_orders',
 };
 
-// グループIDで火器使用申請を取得
+// グループIDで火気使用申請を取得
 export const useGetFireEquipmentOrderByGroupId = (
   groupId: number | undefined
 ) => {
