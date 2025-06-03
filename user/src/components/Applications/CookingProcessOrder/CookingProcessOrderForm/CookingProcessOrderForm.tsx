@@ -29,7 +29,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
   const confirmCookingProcess = [
     {
       id: '1',
-      name: '衛生管理のため工程をできるだけ詳しく記載しました',
+      name: '衛生管理の工程をできるだけ詳しく記載しました',
     },
     {
       id: '2',
@@ -82,7 +82,6 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
           }
           onChange={(val) => setValue('tent', val)}
           error={errors.tent?.message}
-          note="注意書き"
           required
         />
         <CheckBox
@@ -91,6 +90,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
           onChange={handleConfirmCookingProcessChange}
           options={confirmCookingProcess}
           note="確認事項にチェックを入れてください"
+          required
         />
         <Button type="submit" size="pc" color="main" isDisable={false}>
           登録
