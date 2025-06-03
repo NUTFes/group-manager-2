@@ -76,6 +76,10 @@ export const useFireEquipmentOrder = (
   const values = watch();
 
   const validate = () => {
+    if (!fireEquipmentData) {
+      return false; // 既存の火気申請データがない場合は常に有効
+    }
+
     return (
       defaultValues.name === values.name &&
       defaultValues.quantity === values.quantity &&

@@ -45,6 +45,9 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
           options={RADIO_OPTIONS}
           error={errorsUnregistered.isRegister?.message}
         />
+        <p className="max-w-[400px] break-words text-xs text-[#484848]">
+          電気ホットプレートとIHは含まれません。
+        </p>
         {!isRegister && (
           <div className="flex flex-col items-center gap-4">
             <Button type="submit" size="pc" color="main">

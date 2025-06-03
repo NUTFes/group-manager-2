@@ -99,12 +99,12 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             required
             error={errors.isTakeaway?.message}
           />
-          <p className="max-w-[400px] break-words text-xs text-sub">
+          <p className="max-w-[400px] break-words text-xs text-[#484848]">
             火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。
             <br />
             火気はテント内に残す行為は火事の原因になります。
           </p>
-          <p className="max-w-[400px] break-words text-xs text-sub">
+          <p className="max-w-[400px] break-words text-xs text-[#484848]">
             いいえを押した場合は火気の備考欄に理由を記載して下さい。
           </p>
           <TextArea

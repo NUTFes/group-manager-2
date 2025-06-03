@@ -8,7 +8,7 @@ import { fireEquipmentFormFields } from './constant';
 
 export const useFireEquipmentHooks = (groupId: number) => {
   // NOTE:API繋いでないのでフラグで登録済みを判定、TODO: API実装後に削除
-  const isRegistered = true;
+  const isRegistered = false;
   const fireEquipment: FireEquipmentResponse | undefined = isRegistered
     ? {
         group_id: groupId,
