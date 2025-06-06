@@ -61,20 +61,10 @@ export const useCreatePurchaseList = () => {
   return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST);
 };
 
-// 一括作成（bulk_create）
-export const useCreatePurchaseListsBulk = () => {
-  return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST_BULK_CREATE);
-};
-
 // 更新（単件）
 export const useUpdatePurchaseList = (id: number | null) => {
   const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
   return useAuthenticatedPatch(endpoint);
-};
-
-// 一括更新（bulk_update）
-export const useUpdatePurchaseListsBulk = () => {
-  return useAuthenticatedPatch(API_ENDPOINTS.PURCHASE_LIST_BULK_UPDATE);
 };
 
 // 削除

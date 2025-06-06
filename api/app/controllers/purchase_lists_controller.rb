@@ -49,14 +49,44 @@ class PurchaseListsController < ApplicationController
     end
   end
 
- # POST /purchase_lists/bulk_create
-def bulk_create
-  result = PurchaseList.upsert_all(
-    purchase_list_bulk_params,
-    unique_by: [:group_id, :food_product_id, :shop_id, :fes_date_id] # 適宜ユニークキーを指定
+ # POST /purchase_lists/upsert
+def upsert_all
+  now = Time.current
+  keys = %i[
+    group_id food_product_id shop_id fes_date_id
+    items is_fresh purchase_date url created_at updated_at
+  ]
+
+  upserts = purchase_list_bulk_params.map do |attrs|
+    # nil補完（すべてのキーを明示的に持たせる）
+    keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+    attrs[:created_at] ||= now
+    attrs[:updated_at] = now
+    attrs
+  end
+
+  PurchaseList.upsert_all(
+    upserts,
+    unique_by: %i[group_id food_product_id shop_id fes_date_id] # ユニークキーに合わせて変更
   )
-  render json: fmt(created, result)
+
+  # 登録または更新されたレコードを抽出
+  processed = upserts.map do |attrs|
+    if attrs[:id].present?
+      PurchaseList.where(id: attrs[:id])
+    else
+      PurchaseList.where(
+        group_id: attrs[:group_id],
+        food_product_id: attrs[:food_product_id],
+        shop_id: attrs[:shop_id],
+        fes_date_id: attrs[:fes_date_id]
+      )
+    end
+  end.reduce { |acc, scope| acc.or(scope) }
+
+  render json: fmt(created, processed)
 rescue => e
-  render json: fmt(internal_server_error, [], e.message)
+  render json: fmt(internal_server_error, [], e.message), status: :internal_server_error
+end
 end
 
