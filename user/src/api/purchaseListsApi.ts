@@ -67,6 +67,11 @@ export const useUpdatePurchaseList = (id: number | null) => {
   return useAuthenticatedPatch(endpoint);
 };
 
+//複数申請
+export const useUpsertPurchaseLists = () => {
+  return useAuthenticatedPost(API_ENDPOINTS.PURCHASE_LIST_UPSERT);
+};
+
 // 削除
 export const useDeletePurchaseList = (id: number | null) => {
   const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
