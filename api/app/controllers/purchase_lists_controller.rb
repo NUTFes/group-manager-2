@@ -54,10 +54,10 @@ def upsert_all
   now = Time.current
   keys = %i[
     group_id food_product_id shop_id fes_date_id
-    items is_fresh purchase_date url created_at updated_at
+    items is_fresh purchase_date url remark created_at updated_at
   ]
 
-  upserts = purchase_list_bulk_params.map do |attrs|
+  upsert = purchase_list_bulk_params.map do |attrs|
     # nil補完（すべてのキーを明示的に持たせる）
     keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
     attrs[:created_at] ||= now
@@ -66,12 +66,12 @@ def upsert_all
   end
 
   PurchaseList.upsert_all(
-    upserts,
+    upsert,
     unique_by: %i[group_id food_product_id shop_id fes_date_id] # ユニークキーに合わせて変更
   )
 
   # 登録または更新されたレコードを抽出
-  processed = upserts.map do |attrs|
+  processed = upsert.map do |attrs|
     if attrs[:id].present?
       PurchaseList.where(id: attrs[:id])
     else
@@ -90,3 +90,22 @@ rescue => e
 end
 end
 
+private
+
+# 一括登録・更新のStrong Parameters（upsert_all用）
+def purchase_list_bulk_params
+  params.require(:purchase_lists).map do |p|
+    ActionController::Parameters.new(p.to_unsafe_h).permit(
+      :id,
+      :group_id,
+      :food_product_id,
+      :shop_id,
+      :fes_date_id,
+      :items,
+      :is_fresh,
+      :purchase_date,
+      :url,
+      :remark # ← 追加カラム
+    ).to_h.symbolize_keys
+  end
+end
