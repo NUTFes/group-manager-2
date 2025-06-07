@@ -53,7 +53,7 @@ class PurchaseListsController < ApplicationController
 def upsert_all
   now = Time.current
   keys = %i[
-    group_id food_product_id shop_id fes_date_id
+    food_product_id shop_id fes_date_id
     items is_fresh purchase_date url remark created_at updated_at
   ]
 
@@ -65,7 +65,7 @@ def upsert_all
     attrs
   end
 
-
+  PurchaseList.upsert_all(upsert)
   # 登録または更新されたレコードを抽出
   processed = upsert.map do |attrs|
     if attrs[:id].present?
