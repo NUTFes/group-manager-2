@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
@@ -22,34 +22,17 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     isLoading,
     error,
     isEditing,
+    isRegistered,
     toggleEdit,
     handleDeleteItem,
     formItems,
     foodProductOptions,
     initialFormData,
     handleFormSuccess,
-  } = usePurchaseListsState(groupId);
+  } = usePurchaseListsState(groupId, initialIsRegistered);
 
-  const {
-    control,
-    fields,
-    append,
-    remove,
-    triggerSubmit,
-    errors,
-    isValid,
-    resetForm,
-  } = usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
-
-  const isRegistered =
-    initialIsRegistered ?? (purchaseLists && purchaseLists.length > 0);
-
-  // データロード後にフォームを初期化/リセット
-  useEffect(() => {
-    if (!isLoading) {
-      resetForm(initialFormData);
-    }
-  }, [isLoading, initialFormData, resetForm]);
+  const { control, fields, append, remove, triggerSubmit, errors, isValid } =
+    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
 
   if (isLoading) {
     return (

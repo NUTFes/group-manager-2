@@ -31,6 +31,7 @@ const useMockGetPurchaseListsByGroupId = (groupId: number) => {
   const loadData = useCallback(() => {
     try {
       setIsLoading(true);
+      // TODO: API連携時には、localStorageからではなくAPIからデータを取得する
       const storageKey = getStorageKey(groupId);
       const storedData = localStorage.getItem(storageKey);
       if (storedData) {
@@ -66,18 +67,27 @@ const useMockGetPurchaseListsByGroupId = (groupId: number) => {
   };
 };
 
-export const usePurchaseListsState = (groupId: number) => {
+export const usePurchaseListsState = (
+  groupId: number,
+  initialIsRegisteredProp?: boolean
+) => {
   const { purchaseListsData, isLoading, error, mutatePurchaseLists } =
     useMockGetPurchaseListsByGroupId(groupId);
 
   const [isEditing, setIsEditing] = useState(true); // 初期状態は編集モード
+  const [isRegistered, setIsRegistered] = useState<boolean | undefined>(
+    initialIsRegisteredProp
+  );
 
   // 販売品オプション
   const foodProductOptions = FOOD_PRODUCT_OPTIONS;
 
   useEffect(() => {
     if (!isLoading) {
-      if (purchaseListsData && purchaseListsData.length > 0) {
+      const hasData = purchaseListsData && purchaseListsData.length > 0;
+      setIsRegistered(hasData);
+
+      if (hasData) {
         setIsEditing(false); // データがあれば表示モード
       } else {
         setIsEditing(true); // データがなければ編集モード
@@ -90,6 +100,7 @@ export const usePurchaseListsState = (groupId: number) => {
   const handleDeleteItem = async (itemId: number) => {
     if (!purchaseListsData) return;
     try {
+      // TODO: API連携時には、APIに削除リクエストを送信する
       const updatedData = purchaseListsData.filter(
         (item) => item.id !== itemId
       );
@@ -142,6 +153,7 @@ export const usePurchaseListsState = (groupId: number) => {
     isLoading,
     error,
     isEditing,
+    isRegistered,
     toggleEdit,
     handleDeleteItem,
     formItems,
@@ -192,6 +204,7 @@ export const usePurchaseListsForm = (
 
   const handleActualSubmit = async (formData: PurchaseListsFormData) => {
     try {
+      // TODO: API連携時には、APIに登録・更新リクエストを送信する
       const mockDataToSave = formData.purchaseLists.map((item, index) => ({
         ...item,
         id: item.id || Date.now() + index,
