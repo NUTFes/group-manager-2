@@ -44,10 +44,23 @@ Rails.application.routes.draw do
      get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
    end
   end
+
   resources :purchase_lists do
   collection do
     get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
     post 'upsert', to: 'purchase_lists#upsert_all'
+
+ 
+  resources :assign_rental_items
+  resources :rentable_items
+  resources :rental_items
+  resources :rental_item_allow_lists
+  resources :stocker_items
+  resources :stocker_places
+  resources :rental_orders do
+    collection do
+      get 'group/:group_id', to: 'rental_orders#get_by_group_id'
+    end
   end
 end
 
@@ -59,7 +72,12 @@ end
     end
   end
   resources :stages
-  resources :employees
+  resources :employees do
+    collection do
+      get   'group/:group_id', to: 'employees#get_by_group'
+      post  'upsert', to: 'employees#upsert'
+    end
+  end
   resources :sub_reps do
     collection do
       get 'group/:group_id', to: 'sub_reps#get_by_group_id'
@@ -99,9 +117,17 @@ end
       get 'group/:group_id', to: 'public_relations#get_by_group_id'
     end
   end
-  resources :venue_maps
+  resources :venue_maps do
+    collection do
+      get 'group/:group_id', to: 'venue_maps#get_by_group_id'
+    end
+  end
   resources :announcements
-  resources :cooking_process_orders
+  resources :cooking_process_orders do
+    collection do
+      get 'group/:group_id', to: 'cooking_process_orders#get_by_group_id'
+    end
+  end
   resources :contact_persons
   resources :un_registered_groups do
     collection do

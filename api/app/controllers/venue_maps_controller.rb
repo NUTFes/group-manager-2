@@ -35,6 +35,16 @@ class VenueMapsController < ApplicationController
     render json: fmt(ok, [], "Deleted venue_map = "+params[:id])
   end
 
+  # GET /venue_maps/group/:group_id
+  def get_by_group_id
+    venue_map = VenueMap.find_by(group_id: params[:group_id])
+    if venue_map
+      render json: fmt(ok, venue_map)
+    else
+      render json: fmt(not_found, [], "VenueMap not found for group_id: #{params[:group_id]}")
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_venue_map
