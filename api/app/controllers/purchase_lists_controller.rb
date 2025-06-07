@@ -19,7 +19,7 @@ class PurchaseListsController < ApplicationController
     if @purchase_list.save
       render json: fmt(created, @purchase_list)
     else
-      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', '))
     end
   end
 
@@ -28,7 +28,7 @@ class PurchaseListsController < ApplicationController
     if @purchase_list.update(purchase_list_params)
       render json: fmt(ok, @purchase_list, "Updated purchase_list id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', ')), status: :unprocessable_entity
+      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', '))
     end
   end
 
@@ -65,10 +65,6 @@ def upsert_all
     attrs
   end
 
-  PurchaseList.upsert_all(
-    upsert,
-    unique_by: %i[group_id food_product_id shop_id fes_date_id] # ユニークキーに合わせて変更
-  )
 
   # 登録または更新されたレコードを抽出
   processed = upsert.map do |attrs|
@@ -76,7 +72,6 @@ def upsert_all
       PurchaseList.where(id: attrs[:id])
     else
       PurchaseList.where(
-        group_id: attrs[:group_id],
         food_product_id: attrs[:food_product_id],
         shop_id: attrs[:shop_id],
         fes_date_id: attrs[:fes_date_id]
@@ -97,7 +92,6 @@ def purchase_list_bulk_params
   params.require(:purchase_lists).map do |p|
     ActionController::Parameters.new(p.to_unsafe_h).permit(
       :id,
-      :group_id,
       :food_product_id,
       :shop_id,
       :fes_date_id,
