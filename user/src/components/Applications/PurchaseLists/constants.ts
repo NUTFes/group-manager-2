@@ -86,7 +86,7 @@ export const VALIDATION_MESSAGES = {
   REQUIRED_SHOP: '購入場所を選択してください',
   REQUIRED_ITEMS: '食材・材料を入力してください',
   REQUIRED_PURCHASE_DATE: '購入日を入力してください',
-  INVALID_DATE_FORMAT: '日付はYYYY/MM/DD形式で入力してください',
+  INVALID_DATE_FORMAT: '日付を入力してください',
   INVALID_URL: '有効なURLを入力してください',
   REQUIRED_URL_FOR_NET_ORDER: 'ネット注文の場合はURLを入力してください',
   REQUIRED_REMARKS_FOR_OTHER:
