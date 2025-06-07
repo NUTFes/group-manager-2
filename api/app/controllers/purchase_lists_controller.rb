@@ -2,61 +2,104 @@ class PurchaseListsController < ApplicationController
   before_action :set_purchase_list, only: [:show, :update, :destroy]
 
   # GET /purchase_lists
-  # GET /purchase_lists.json
   def index
     @purchase_lists = PurchaseList.all
     render json: fmt(ok, @purchase_lists)
   end
 
   # GET /purchase_lists/1
-  # GET /purchase_lists/1.json
   def show
     render json: fmt(ok, @purchase_list)
   end
 
   # POST /purchase_lists
-  # POST /purchase_lists.json
   def create
-    @purchase_list = PurchaseList.create(purchase_list_params)
-    render json: fmt(created, @purchase_list)
+    @purchase_list = PurchaseList.new(purchase_list_params)
+
+    if @purchase_list.save
+      render json: fmt(created, @purchase_list)
+    else
+      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', '))
+    end
   end
 
   # PATCH/PUT /purchase_lists/1
-  # PATCH/PUT /purchase_lists/1.json
   def update
-    @purchase_list.update(purchase_list_params)
-    render json: fmt(created, @purchase_list, "Updated purchase_list id = "+params[:id])
+    if @purchase_list.update(purchase_list_params)
+      render json: fmt(ok, @purchase_list, "Updated purchase_list id = #{params[:id]}")
+    else
+      render json: fmt(unprocessable_entity, [], @purchase_list.errors.full_messages.join(', '))
+    end
   end
 
   # DELETE /purchase_lists/1
-  # DELETE /purchase_lists/1.json
   def destroy
     @purchase_list.destroy
-    render json: fmt(ok, [], "Deleted purchase_list = "+params[:id])
+    render json: fmt(ok, [], "Deleted purchase_list = #{params[:id]}")
   end
 
   # GET /purchase_lists/group/:group_id
-def get_by_group_id
-  @purchase_lists = PurchaseList.where(group_id: params[:group_id])
+  def get_by_group_id
+    @purchase_lists = PurchaseList.where(group_id: params[:group_id])
 
-  if @purchase_lists.any?
-    render json: fmt(ok, @purchase_lists)
-  else
-    render json: fmt(not_found, [], "Not found purchase_lists with group_id = " + params[:group_id])
+    if @purchase_lists.any?
+      render json: fmt(ok, @purchase_lists)
+    else
+      render json: fmt(not_found, [], "Not found purchase_lists with group_id = #{params[:group_id]}")
+    end
   end
+
+ # POST /purchase_lists/upsert
+def upsert_all
+  now = Time.current
+  keys = %i[
+    food_product_id shop_id fes_date_id
+    items is_fresh purchase_date url remark created_at updated_at
+  ]
+
+  upsert = purchase_list_bulk_params.map do |attrs|
+    # nil補完（すべてのキーを明示的に持たせる）
+    keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+    attrs[:created_at] ||= now
+    attrs[:updated_at] = now
+    attrs
+  end
+
+  PurchaseList.upsert_all(upsert)
+  # 登録または更新されたレコードを抽出
+  processed = upsert.map do |attrs|
+    if attrs[:id].present?
+      PurchaseList.where(id: attrs[:id])
+    else
+      PurchaseList.where(
+        food_product_id: attrs[:food_product_id],
+        shop_id: attrs[:shop_id],
+        fes_date_id: attrs[:fes_date_id]
+      )
+    end
+  end.reduce { |acc, scope| acc.or(scope) }
+
+  render json: fmt(created, processed)
+rescue => e
+  render json: fmt(internal_server_error, [], e.message), status: :internal_server_error
+end
 end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_purchase_list
-      if PurchaseList.exists?(params[:id])
-        @purchase_list = PurchaseList.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found purhase_list = "+params[:id])
-      end
-    end
-    # Only allow a list of trusted parameters through.
-    def purchase_list_params
-      params.permit(:food_product_id, :shop_id, :fes_date_id, :items, :is_fresh, :purchase_date, :url)
-    end
+private
+
+# 一括登録・更新のStrong Parameters（upsert_all用）
+def purchase_list_bulk_params
+  params.require(:purchase_lists).map do |p|
+    ActionController::Parameters.new(p.to_unsafe_h).permit(
+      :id,
+      :food_product_id,
+      :shop_id,
+      :fes_date_id,
+      :items,
+      :is_fresh,
+      :purchase_date,
+      :url,
+      :remark # ← 追加カラム
+    ).to_h.symbolize_keys
+  end
 end
