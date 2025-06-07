@@ -8,8 +8,7 @@ import {
   PurchaseListsFormData,
   purchaseListsFormSchema,
 } from '../schema';
-import { PurchaseListsFormProps } from '../types';
-import PurchaseListsForm from './PurchaseListsForm';
+import PurchaseListsForm, { PurchaseListsFormProps } from './PurchaseListsForm';
 
 export default {
   title: 'Components/PurchaseListsForm',

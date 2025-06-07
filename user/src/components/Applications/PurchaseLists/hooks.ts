@@ -221,3 +221,34 @@ export const usePurchaseListsForm = (
     getValues: formMethods.getValues,
   };
 };
+
+// 日付変換のカスタムフック
+export const useDateFormatters = () => {
+  // YYYY/MM/DD -> YYYY-MM-DD (input[type="date"]用)
+  const formatDateForInput = (dateString: string | undefined) => {
+    if (!dateString) return '';
+    const parts = dateString.split('/');
+    if (parts.length === 3) {
+      return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(
+        2,
+        '0'
+      )}`;
+    }
+    return dateString;
+  };
+
+  // YYYY-MM-DD -> YYYY/MM/DD (保存用)
+  const formatDateForStore = (dateString: string | undefined) => {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+      return `${parts[0]}/${Number(parts[1])}/${Number(parts[2])}`;
+    }
+    return dateString;
+  };
+
+  return {
+    formatDateForInput,
+    formatDateForStore,
+  };
+};

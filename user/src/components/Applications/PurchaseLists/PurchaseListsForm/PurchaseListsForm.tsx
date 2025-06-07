@@ -1,5 +1,11 @@
 import { FC } from 'react';
-import { Controller, useWatch } from 'react-hook-form';
+import {
+  Control,
+  Controller,
+  FieldArrayWithId,
+  UseFormReturn,
+  useWatch,
+} from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector/Selector';
@@ -14,8 +20,21 @@ import {
   PurchaseItemFieldNames,
   SHOP_OPTIONS,
 } from '../constants';
-import { PurchaseItem } from '../schema';
-import { PurchaseListsFormProps } from '../types';
+import { useDateFormatters } from '../hooks';
+import { PurchaseItem, PurchaseListsFormData } from '../schema';
+import { FoodProductOption } from '../types';
+
+export type PurchaseListsFormProps = {
+  control: Control<PurchaseListsFormData>;
+  fields: FieldArrayWithId<PurchaseListsFormData, 'purchaseLists', 'id'>[];
+  append: (item: Partial<PurchaseItem>) => void;
+  remove: (index: number) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+  errors: UseFormReturn<PurchaseListsFormData>['formState']['errors'];
+  isValid: boolean;
+  foodProductOptions: FoodProductOption[];
+};
 
 const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   control,
@@ -27,34 +46,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   isValid,
   foodProductOptions,
 }) => {
+  const { formatDateForInput, formatDateForStore } = useDateFormatters();
+
   // フォーム全体の値を監視
   const watchedFormValues = useWatch({
     control,
     name: 'purchaseLists',
   });
-
-  // YYYY/MM/DD -> YYYY-MM-DD (input[type="date"]用)
-  const formatDateForInput = (dateString: string | undefined) => {
-    if (!dateString) return '';
-    const parts = dateString.split('/');
-    if (parts.length === 3) {
-      return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(
-        2,
-        '0'
-      )}`;
-    }
-    return dateString;
-  };
-
-  // YYYY-MM-DD -> YYYY/MM/DD (保存用)
-  const formatDateForStore = (dateString: string | undefined) => {
-    if (!dateString) return '';
-    const parts = dateString.split('-');
-    if (parts.length === 3) {
-      return `${parts[0]}/${Number(parts[1])}/${Number(parts[2])}`;
-    }
-    return dateString;
-  };
 
   return (
     <form onSubmit={onSubmit} className="w-fit">

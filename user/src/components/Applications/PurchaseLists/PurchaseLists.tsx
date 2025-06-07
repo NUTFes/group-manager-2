@@ -3,10 +3,14 @@ import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
 import PurchaseListsForm from './PurchaseListsForm';
-import { DEFAULT_PURCHASE_ITEM } from './constants';
 import { usePurchaseListsForm, usePurchaseListsState } from './hooks';
 import { PurchaseItem } from './schema';
-import { PurchaseListsProps } from './types';
+
+export type PurchaseListsProps = {
+  isDeadline?: boolean;
+  isRegistered?: boolean | undefined;
+  groupId: number;
+};
 
 const PurchaseLists: FC<PurchaseListsProps> = ({
   groupId,
@@ -183,22 +187,6 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
             icon="pencil"
           >
             修正
-          </Button>
-        </div>
-      )}
-      {!isDeadline && (!purchaseLists || purchaseLists.length === 0) && (
-        <div className="mt-6 flex justify-center">
-          <Button
-            onClick={() => {
-              resetForm([DEFAULT_PURCHASE_ITEM]);
-              toggleEdit();
-            }}
-            color="main"
-            size="pc"
-            icon="plus"
-            type="button"
-          >
-            購入品を登録する
           </Button>
         </div>
       )}
