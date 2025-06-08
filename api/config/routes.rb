@@ -43,6 +43,12 @@ Rails.application.routes.draw do
       post 'upsert', to: 'purchase_lists#upsert_all'
     end
   end
+  resources :food_products do
+    collection do
+      get 'group/:group_id', to: 'food_products#group_food_products'
+      post 'upsert', to: 'food_products#upsert'
+    end
+  end
 
   resources :assign_rental_items
   resources :rentable_items

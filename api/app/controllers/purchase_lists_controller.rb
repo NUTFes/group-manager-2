@@ -49,6 +49,17 @@ class PurchaseListsController < ApplicationController
     end
   end
 
+  # GET /purchase_lists/food_product/:food_product_id
+  def get_by_food_product_id
+    @purchase_lists = PurchaseList.where(food_product_id: params[:food_product_id])
+
+    if @purchase_lists.any?
+      render json: fmt(ok, @purchase_lists)
+    else
+      render json: fmt(not_found, [], "Not found purchase_lists with food_product_id = #{params[:food_product_id]}")
+    end
+  end
+
  # POST /purchase_lists/upsert
 def upsert_all
   now = Time.current
