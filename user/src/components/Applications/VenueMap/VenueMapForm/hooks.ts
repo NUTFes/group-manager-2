@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
-import { VenueMapFormData, venueMapSchema } from './schema';
+import { VenueMapFormData, venueMapFormSchema } from './schema';
 
 export const useVenueMapFormHooks = (
   groupId: number,
@@ -29,7 +29,11 @@ export const useVenueMapFormHooks = (
     context: unknown,
     options: ResolverOptions<VenueMapFormData>
   ) => {
-    const result = await zodResolver(venueMapSchema)(values, context, options);
+    const result = await zodResolver(venueMapFormSchema)(
+      values,
+      context,
+      options
+    );
 
     const errors = result.errors as Record<
       string,
