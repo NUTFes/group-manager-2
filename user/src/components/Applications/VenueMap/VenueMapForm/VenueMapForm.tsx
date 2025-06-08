@@ -77,7 +77,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({ groupId, venueMap }) => {
               error={errors.image?.message as string | undefined}
             />
             {fileName && (
-              <div className="text-font mt-2 text-sm">
+              <div className="mt-2 text-sm text-font">
                 アップロード済み: {fileName}
               </div>
             )}
