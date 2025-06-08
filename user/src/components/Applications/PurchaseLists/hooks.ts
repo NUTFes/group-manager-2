@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  useCreatePurchaseList,
+  useDeletePurchaseList,
+  useGetPurchaseLists,
+  useUpdatePurchaseList,
+  useUpsertPurchaseLists,
+} from '@/api/purchaseListsApi';
+import { useGetShops } from '@/api/shopApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -7,119 +15,58 @@ import {
   DEFAULT_PURCHASE_ITEM,
   FOOD_PRODUCT_OPTIONS,
   FRESH_OPTIONS,
-  SHOP_OPTIONS,
+  NET_ORDER_SHOP_ID,
+  OTHER_SHOP_ID,
 } from './constants';
 import {
   PurchaseItem,
   PurchaseListsFormData,
   purchaseListsFormSchema,
 } from './schema';
-import { MockPurchaseListResponse } from './types';
-
-// モックデータ管理のためのローカルストレージキー
-const getStorageKey = (groupId: number) =>
-  `purchase_lists_group_${groupId}_new`;
-
-// モック API フック
-const useMockGetPurchaseListsByGroupId = (groupId: number) => {
-  const [data, setData] = useState<MockPurchaseListResponse[] | undefined>(
-    undefined
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const loadData = useCallback(() => {
-    try {
-      setIsLoading(true);
-      // TODO: API連携時には、localStorageからではなくAPIからデータを取得する
-      const storageKey = getStorageKey(groupId);
-      const storedData = localStorage.getItem(storageKey);
-      if (storedData) {
-        const parsedData = JSON.parse(storedData) as MockPurchaseListResponse[];
-        setData(parsedData);
-      } else {
-        setData([]);
-      }
-      setError(null);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error('データの読み込みに失敗しました')
-      );
-      setData([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [groupId]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  const mutatePurchaseLists = useCallback(() => {
-    loadData();
-  }, [loadData]);
-
-  return {
-    purchaseListsData: data,
-    isLoading,
-    error,
-    mutatePurchaseLists,
-  };
-};
 
 export const usePurchaseListsState = (
   groupId: number,
   initialIsRegisteredProp?: boolean
 ) => {
-  const { purchaseListsData, isLoading, error, mutatePurchaseLists } =
-    useMockGetPurchaseListsByGroupId(groupId);
+  const { purchaseLists, isLoading, hasError, mutatePurchaseLists } =
+    useGetPurchaseLists(groupId);
+  const { trigger: deletePurchaseList } = useDeletePurchaseList(1);
+  const { shops, isLoading: isShopsLoading } = useGetShops();
 
-  const [isEditing, setIsEditing] = useState(true); // 初期状態は編集モード
-  const [isRegistered, setIsRegistered] = useState<boolean | undefined>(
-    initialIsRegisteredProp
-  );
+  const [isEditing, setIsEditing] = useState(!initialIsRegisteredProp);
 
   // 販売品オプション
   const foodProductOptions = FOOD_PRODUCT_OPTIONS;
 
-  useEffect(() => {
-    if (!isLoading) {
-      const hasData = purchaseListsData && purchaseListsData.length > 0;
-      setIsRegistered(hasData);
-
-      if (hasData) {
-        setIsEditing(false); // データがあれば表示モード
-      } else {
-        setIsEditing(true); // データがなければ編集モード
-      }
-    }
-  }, [purchaseListsData, isLoading]);
+  // ショップオプションをAPIから取得したデータで作成
+  const shopOptions = [
+    { id: 0, name: '選択してください' },
+    ...shops,
+    { id: NET_ORDER_SHOP_ID, name: 'ネット注文' },
+    { id: OTHER_SHOP_ID, name: 'その他(詳細を備考欄に記入必須)' },
+  ];
 
   const toggleEdit = () => setIsEditing((prev) => !prev);
 
   const handleDeleteItem = async (itemId: number) => {
-    if (!purchaseListsData) return;
+    if (!purchaseLists) return;
     try {
-      // TODO: API連携時には、APIに削除リクエストを送信する
-      const updatedData = purchaseListsData.filter(
-        (item) => item.id !== itemId
-      );
-      localStorage.setItem(getStorageKey(groupId), JSON.stringify(updatedData));
+      await deletePurchaseList({ body: { id: itemId } });
       toast.success('購入品が削除されました');
-      mutatePurchaseLists();
-      if (updatedData.length === 0) {
-        setIsEditing(true); // 全て削除されたら編集モードへ
+      await mutatePurchaseLists();
+      // 最後のアイテムを削除した場合のみ編集モードに切り替え
+      if (purchaseLists.length === 1) {
+        setIsEditing(true);
       }
     } catch {
       toast.error('削除に失敗しました。');
     }
   };
 
-  const formItems: FormItem[][] = useMemo(() => {
-    if (!purchaseListsData) return [];
-    return purchaseListsData.map((item) => {
+  const formItems =
+    purchaseLists?.map((item) => {
       const shopName =
-        SHOP_OPTIONS.find((shop) => shop.id === item.shopId)?.name || '不明';
+        shopOptions.find((shop) => shop.id === item.shopId)?.name || '不明';
       const foodProductName =
         foodProductOptions.find((product) => product.id === item.foodProductId)
           ?.name || '不明';
@@ -137,28 +84,28 @@ export const usePurchaseListsState = (
       if (item.url) {
         singleItemForm.push({ label: 'URL', content: item.url });
       }
-      if (item.remarks) {
-        singleItemForm.push({ label: '備考', content: item.remarks });
-      }
       return singleItemForm;
-    });
-  }, [purchaseListsData, foodProductOptions]);
+    }) || [];
 
   const handleFormSuccess = () => {
     mutatePurchaseLists();
   };
 
   return {
-    purchaseLists: purchaseListsData,
-    isLoading,
-    error,
+    purchaseLists,
+    isLoading: isLoading || isShopsLoading,
+    hasError,
     isEditing,
-    isRegistered,
     toggleEdit,
     handleDeleteItem,
     formItems,
     foodProductOptions,
-    initialFormData: purchaseListsData,
+    shopOptions,
+    initialFormData:
+      purchaseLists?.map((item) => ({
+        ...item,
+        url: item.url || undefined,
+      })) || [],
     handleFormSuccess,
     mutatePurchaseLists,
   };
@@ -167,8 +114,13 @@ export const usePurchaseListsState = (
 export const usePurchaseListsForm = (
   groupId: number,
   initialData: PurchaseItem[] | undefined,
-  onSuccess: () => void
+  onSuccess: () => void,
+  shopOptions: { id: number; name: string }[]
 ) => {
+  const { trigger: createPurchaseList } = useCreatePurchaseList();
+  const { trigger: updatePurchaseList } = useUpdatePurchaseList(null);
+  const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
+
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
     defaultValues: {
@@ -187,7 +139,6 @@ export const usePurchaseListsForm = (
     name: 'purchaseLists',
   });
 
-  // フォームの値をリセットする関数
   const resetForm = useCallback(
     (data?: PurchaseItem[]) => {
       reset({
@@ -197,23 +148,33 @@ export const usePurchaseListsForm = (
     [reset]
   );
 
-  // initialDataが変更されたらフォームをリセット
+  // initialDataが変更された場合のみフォームをリセット
   useEffect(() => {
-    resetForm(initialData);
+    if (initialData) {
+      resetForm(initialData);
+    }
   }, [initialData, resetForm]);
 
   const handleActualSubmit = async (formData: PurchaseListsFormData) => {
     try {
-      // TODO: API連携時には、APIに登録・更新リクエストを送信する
-      const mockDataToSave = formData.purchaseLists.map((item, index) => ({
-        ...item,
-        id: item.id || Date.now() + index,
-        groupId,
-      }));
-      localStorage.setItem(
-        getStorageKey(groupId),
-        JSON.stringify(mockDataToSave)
-      );
+      if (formData.purchaseLists.length > 1) {
+        // 複数個の場合はupsertを使用
+        const purchaseLists = formData.purchaseLists.map((item) => ({
+          ...item,
+          groupId,
+        }));
+        await upsertPurchaseLists({ body: purchaseLists });
+      } else {
+        // 単体の場合は個別のAPIを使用
+        const item = formData.purchaseLists[0];
+        if (item.id) {
+          // 更新
+          await updatePurchaseList({ body: { ...item, groupId } });
+        } else {
+          // 新規作成
+          await createPurchaseList({ body: { ...item, groupId } });
+        }
+      }
       toast.success('購入品申請が登録されました');
       onSuccess();
     } catch {
@@ -232,6 +193,7 @@ export const usePurchaseListsForm = (
     isValid: formState.isValid,
     resetForm,
     getValues: formMethods.getValues,
+    shopOptions,
   };
 };
 

@@ -16,6 +16,6 @@ export type FoodProductOption = {
 };
 
 // モックAPIレスポンス型 (hooks.ts内で使用)
-export type MockPurchaseListResponse = PurchaseItem & {
+export type PurchaseListResponse = PurchaseItem & {
   groupId: number;
 };

@@ -18,7 +18,6 @@ import {
   NET_ORDER_SHOP_ID,
   OTHER_SHOP_ID,
   PurchaseItemFieldNames,
-  SHOP_OPTIONS,
 } from '../constants';
 import { useDateFormatters } from '../hooks';
 import { PurchaseItem, PurchaseListsFormData } from '../schema';
@@ -34,6 +33,7 @@ export type PurchaseListsFormProps = {
   errors: UseFormReturn<PurchaseListsFormData>['formState']['errors'];
   isValid: boolean;
   foodProductOptions: FoodProductOption[];
+  shopOptions: { id: number; name: string }[];
 };
 
 const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
@@ -45,6 +45,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   errors,
   isValid,
   foodProductOptions,
+  shopOptions,
 }) => {
   const { formatDateForInput, formatDateForStore } = useDateFormatters();
 
@@ -124,7 +125,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                         controllerField.onChange(Number(value))
                       }
                       required
-                      options={SHOP_OPTIONS}
+                      options={shopOptions}
                       error={fieldState.error?.message}
                       note="ネット注文選択時はURL入力が必要です"
                     />

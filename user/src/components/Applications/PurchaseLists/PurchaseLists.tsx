@@ -20,19 +20,24 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   const {
     purchaseLists,
     isLoading,
-    error,
+    hasError,
     isEditing,
-    isRegistered,
     toggleEdit,
     handleDeleteItem,
     formItems,
     foodProductOptions,
+    shopOptions,
     initialFormData,
     handleFormSuccess,
   } = usePurchaseListsState(groupId, initialIsRegistered);
 
   const { control, fields, append, remove, triggerSubmit, errors, isValid } =
-    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
+    usePurchaseListsForm(
+      groupId,
+      initialFormData,
+      handleFormSuccess,
+      shopOptions
+    );
 
   if (isLoading) {
     return (
@@ -40,20 +45,20 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         title="購入品申請"
         required
         isEdit={!isDeadline}
-        isExist={isRegistered}
+        isExist={initialIsRegistered}
       >
         <div>Loading...</div>
       </AccordionMenu>
     );
   }
 
-  if (error) {
+  if (hasError) {
     return (
       <AccordionMenu
         title="購入品申請"
         required
         isEdit={!isDeadline}
-        isExist={isRegistered}
+        isExist={initialIsRegistered}
       >
         <div className="py-10 text-center text-red-500">
           データの取得に失敗しました。
@@ -116,7 +121,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         title="購入品申請"
         required
         isEdit={!isDeadline}
-        isExist={isRegistered}
+        isExist={initialIsRegistered}
       >
         <PurchaseListsForm
           control={control}
@@ -128,6 +133,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           errors={errors}
           isValid={isValid}
           foodProductOptions={foodProductOptions}
+          shopOptions={shopOptions}
         />
       </AccordionMenu>
     );
@@ -139,7 +145,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       title="購入品申請"
       required
       isEdit={!isDeadline}
-      isExist={isRegistered}
+      isExist={initialIsRegistered}
     >
       {formItems.map((items, index) => {
         const currentItem = purchaseLists?.[index];
