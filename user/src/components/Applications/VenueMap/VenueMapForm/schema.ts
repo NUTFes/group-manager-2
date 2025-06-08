@@ -5,23 +5,13 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
 
 export const venueMapSchema = z.object({
   image: z
-    .any()
-    .refine(
-      (files) => {
-        if (!files || typeof files === 'string' || files.length === 0)
-          return true;
-        return files[0].size <= MAX_FILE_SIZE;
-      },
-      { message: `ファイルサイズは20MBまでです。` }
-    )
-    .refine(
-      (files) => {
-        if (!files || typeof files === 'string' || files.length === 0)
-          return true;
-        return ACCEPTED_IMAGE_TYPES.includes(files[0].type);
-      },
-      { message: 'ファイル形式はpng、jpegのみです。' }
-    )
+    .instanceof(File, { message: '画像をアップロードしてください' })
+    .refine((file) => file.size < MAX_FILE_SIZE, {
+      message: 'ファイルサイズは20MB未満にしてください',
+    })
+    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
+      message: 'ファイル形式はpngまたはjpegにしてください',
+    })
     .optional(),
   checklist: z
     .string()

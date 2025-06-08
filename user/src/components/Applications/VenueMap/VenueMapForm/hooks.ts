@@ -68,7 +68,6 @@ export const useVenueMapFormHooks = (
     criteriaMode: 'all',
     resolver: resolver,
     defaultValues: {
-      image: venueMap?.picturePath || undefined,
       checklist: [],
     },
   });
@@ -107,14 +106,53 @@ export const useVenueMapFormHooks = (
     input.click();
   };
 
-  const uploadImageToImgur = async (file: File): Promise<string> => {
-    console.log('uploadImageToImgur called with:', file.name);
-    return new Promise((resolve) =>
-      setTimeout(
-        () => resolve(`https://i.imgur.com/dummy_${file.name}.png`),
-        1000
-      )
-    );
+  const convertImageToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          resolve(e.target.result as string);
+        } else {
+          reject(new Error('Failed to convert image to base64'));
+        }
+      };
+      reader.onerror = (e) => {
+        reject(e);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const uploadImageToImgur = async (base64Image: string): Promise<string> => {
+    const imgurClientId = process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID;
+
+    if (!imgurClientId) {
+      throw new Error(
+        'Imgur Client IDが設定されていません。環境変数を確認してください。'
+      );
+    }
+    const base64 = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
+
+    try {
+      const response = await fetch('https://api.imgur.com/3/image', {
+        method: 'POST',
+        headers: {
+          Authorization: `Client-ID ${imgurClientId}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64 }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`エラー: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data.link;
+    } catch (error) {
+      console.error('Imgurアップロードエラー:', error);
+      throw new Error('画像のアップロードに失敗しました');
+    }
   };
 
   useEffect(() => {
@@ -129,7 +167,8 @@ export const useVenueMapFormHooks = (
       let pictureName = venueMap?.pictureName || '';
 
       if (formData.image && typeof formData.image !== 'string') {
-        picturePath = await uploadImageToImgur(formData.image as File);
+        const base64Image = await convertImageToBase64(formData.image as File);
+        picturePath = await uploadImageToImgur(base64Image);
         pictureName = (formData.image as File).name;
       } else if (typeof formData.image === 'string') {
         picturePath = formData.image;
@@ -151,7 +190,7 @@ export const useVenueMapFormHooks = (
       mutate(`check_all_registered/${groupId}`);
 
       toast.success(venueMap ? '修正しました' : '登録しました');
-      reset({ ...formData, image: picturePath }); // 送信後の画像パスを維持しつつリセット
+      reset({ ...formData, image: undefined }); // 送信後は image フィールドをクリア
       return true;
     } catch (error) {
       console.error('送信エラー:', error);
