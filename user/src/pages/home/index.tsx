@@ -5,6 +5,7 @@ import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import Power from '@/components/Applications/Power';
 import PublicRelations from '@/components/Applications/PublicRelations';
+import PurchaseLists from '@/components/Applications/PurchaseLists/PurchaseLists';
 import Stage from '@/components/Applications/Stage';
 import StageOptions from '@/components/Applications/StageOptions';
 import VenueApplications from '@/components/Applications/VenueApplication';
@@ -69,6 +70,11 @@ export default function HomePage() {
             isRegistered={checkAllRegisteredGroups?.publicRelation}
             groupId={groupId}
           />
+          <PurchaseLists
+            isDeadline={!userPageSettings?.isEditPurchaseList}
+            isRegistered={checkAllRegisteredGroups?.purchaseList}
+            groupId={groupId}
+          />
         </>
       );
     } else {
@@ -93,6 +99,11 @@ export default function HomePage() {
           <PublicRelations
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+          <PurchaseLists
+            isDeadline={!userPageSettings?.isEditPurchaseList}
+            isRegistered={checkAllRegisteredGroups?.purchaseList}
             groupId={groupId}
           />
         </>
