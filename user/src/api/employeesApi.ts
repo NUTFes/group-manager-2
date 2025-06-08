@@ -1,12 +1,12 @@
 import {
-  useAuthenticatedDelete,
   useAuthenticatedGet,
-  useAuthenticatedPatch,
   useAuthenticatedPost,
+  useAuthenticatedWithIdDelete,
+  useAuthenticatedWithIdPatch,
 } from '@/hooks/useApi';
 import { ApiResponse } from './api';
 
-const API_ENDPOINTS = {
+export const API_ENDPOINTS = {
   EMPLOYEES: '/employees',
   EMPLOYEES_GROUP: '/employees/group',
   EMPLOYEES_UPSERT: '/employees/upsert',
@@ -46,12 +46,10 @@ export const useUpsertEmployees = () => {
   return useAuthenticatedPost(API_ENDPOINTS.EMPLOYEES_UPSERT);
 };
 
-export const useUpdateEmployee = (id: number | null) => {
-  const endpoint = id !== null ? `${API_ENDPOINTS.EMPLOYEES}/${id}` : null;
-  return useAuthenticatedPatch(endpoint);
+export const useUpdateEmployee = () => {
+  return useAuthenticatedWithIdPatch(API_ENDPOINTS.EMPLOYEES);
 };
 
-export const useDeleteEmployee = (id: number | null) => {
-  const endpoint = id !== null ? `${API_ENDPOINTS.EMPLOYEES}/${id}` : null;
-  return useAuthenticatedDelete(endpoint);
+export const useDeleteEmployee = () => {
+  return useAuthenticatedWithIdDelete(API_ENDPOINTS.EMPLOYEES);
 };
