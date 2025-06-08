@@ -37,3 +37,7 @@ export const viceRepresentativeLabels = [
   'メールアドレス',
   '電話番号',
 ];
+
+export const venueMapLabels = {
+  pictureName: '模擬店平面図画像',
+};
