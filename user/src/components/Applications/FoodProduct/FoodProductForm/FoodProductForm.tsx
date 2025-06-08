@@ -3,6 +3,8 @@ import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
+import FormList from '@/components/FormList/FormList';
+import { FormItem } from '@/components/FormList/type';
 import { useFoodProductFormHooks } from './hooks';
 
 type RegisteredProduct = {
@@ -78,68 +80,51 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
 
     return (
       <div className="flex flex-col gap-6">
-        {foodProducts.map((product) => (
-          <div
-            key={product.id}
-            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
-          >
-            <div className="flex flex-col gap-4">
-              <div>
-                <h3 className="mb-1 text-base font-medium text-gray-900">
-                  販売品名
-                </h3>
-                <p className="text-gray-700">{product.name}</p>
-              </div>
-              <div>
-                <h3 className="mb-1 text-base font-medium text-gray-900">
-                  酒類ですか？
-                </h3>
-                <p className="text-gray-700">
-                  {product.isAlcohol ? 'はい' : 'いいえ'}
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-1 text-base font-medium text-gray-900">
-                  調理の有無
-                </h3>
-                <p className="text-gray-700">
-                  {product.hasLicense ? '有り' : '無し'}
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-1 text-base font-medium text-gray-900">
-                  1日目の販売予定数
-                </h3>
-                <p className="text-gray-700">{product.day1Quantity}</p>
-              </div>
-              <div>
-                <h3 className="mb-1 text-base font-medium text-gray-900">
-                  2日目の販売予定数
-                </h3>
-                <p className="text-gray-700">{product.day2Quantity}</p>
-              </div>
-              <div className="mt-4 flex justify-center">
-                <Button
-                  size="pc"
-                  color="alert"
-                  type="button"
-                  variant
-                  onClick={() => {
-                    if (removeFoodProduct) {
-                      removeFoodProduct(product.id);
-                    }
-                  }}
-                >
-                  ✕ 削除
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
+        {foodProducts.map((product) => {
+          const items: FormItem[] = [
+            { label: '販売品名', content: product.name ?? '-' },
+            {
+              label: '酒類ですか？',
+              content: product.isAlcohol ? 'はい' : 'いいえ',
+            },
+            {
+              label: '調理の有無',
+              content: product.hasLicense ? '有り' : '無し',
+            },
+            {
+              label: '1日目の販売予定数',
+              content: product.day1Quantity ?? '-',
+            },
+            {
+              label: '2日目の販売予定数',
+              content: product.day2Quantity ?? '-',
+            },
+          ];
 
-        <div className="mt-6 flex justify-center gap-4">
-          <Button type="button" size="pc" color="main" onClick={toEdit}>
-            ✏ 修正
+          return (
+            <div key={product.id} className="mb-4">
+              <FormList
+                items={items}
+                isDelete={!!removeFoodProduct}
+                onDelete={
+                  removeFoodProduct
+                    ? () => removeFoodProduct(product.id)
+                    : undefined
+                }
+              />
+            </div>
+          );
+        })}
+
+        <div className="mt-6 flex justify-center">
+          <Button
+            type="button"
+            size="pc"
+            color="main"
+            onClick={toEdit}
+            icon="pencil"
+          >
+            修正
           </Button>
         </div>
       </div>
