@@ -20,6 +20,15 @@ type RegisteredProduct = {
   day2Quantity: string;
 };
 
+type ProductInput = {
+  id?: string;
+  name: string;
+  isAlcohol: boolean;
+  hasLicense: boolean;
+  day1Quantity: string;
+  day2Quantity: string;
+};
+
 type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
@@ -29,33 +38,33 @@ type ContentProps = {
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
   groupId: number;
-  addFoodProducts: (products: any[]) => void;
+  addFoodProducts: (products: ProductInput[]) => void;
   removeFoodProduct: (id: string) => void;
-  setFoodProductsData: (products: any[]) => void;
+  setFoodProductsData: (products: ProductInput[]) => void;
 };
 
 const Content: FC<ContentProps> = ({
-  isLoading,
-  hasError,
-  isDeadline,
-  isEditing,
-  toEdit,
-  foodProducts,
-  formItem,
-  groupId,
-  addFoodProducts,
-  removeFoodProduct,
-  setFoodProductsData,
-}) => {
+                                     isLoading,
+                                     hasError,
+                                     isDeadline,
+                                     isEditing,
+                                     toEdit,
+                                     foodProducts,
+                                     formItem,
+                                     groupId,
+                                     addFoodProducts,
+                                     removeFoodProduct,
+                                     setFoodProductsData,
+                                   }) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (hasError) {
     return (
-      <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
-      </div>
+        <div className="py-10 text-center text-red-500">
+          データの取得に失敗しました。
+        </div>
     );
   }
 
@@ -65,35 +74,35 @@ const Content: FC<ContentProps> = ({
 
   if (isEditing) {
     return (
-      <FoodProductForm
-        groupId={groupId}
-        toEdit={toEdit}
-        foodProducts={foodProducts}
-        addFoodProducts={addFoodProducts}
-        removeFoodProduct={removeFoodProduct}
-        setFoodProductsData={setFoodProductsData}
-      />
+        <FoodProductForm
+            groupId={groupId}
+            toEdit={toEdit}
+            foodProducts={foodProducts}
+            addFoodProducts={addFoodProducts}
+            removeFoodProduct={removeFoodProduct}
+            setFoodProductsData={setFoodProductsData}
+        />
     );
   }
 
   return (
-    <FoodProductForm
-      groupId={groupId}
-      toEdit={toEdit}
-      foodProducts={foodProducts}
-      addFoodProducts={addFoodProducts}
-      removeFoodProduct={removeFoodProduct}
-      setFoodProductsData={setFoodProductsData}
-      isViewMode={true}
-    />
+      <FoodProductForm
+          groupId={groupId}
+          toEdit={toEdit}
+          foodProducts={foodProducts}
+          addFoodProducts={addFoodProducts}
+          removeFoodProduct={removeFoodProduct}
+          setFoodProductsData={setFoodProductsData}
+          isViewMode={true}
+      />
   );
 };
 
 const FoodProduct: FC<FoodProductProps> = ({
-  groupId,
-  isDeadline,
-  isRegistered,
-}) => {
+                                             groupId,
+                                             isDeadline,
+                                             isRegistered,
+                                           }) => {
   const {
     formItem,
     isEditing,
@@ -107,26 +116,26 @@ const FoodProduct: FC<FoodProductProps> = ({
   } = useFoodProductHooks();
 
   return (
-    <AccordionMenu
-      title="販売品申請"
-      isEdit={!isDeadline}
-      isExist={isRegistered}
-      required
-    >
-      <Content
-        isLoading={isLoading}
-        hasError={hasError}
-        isDeadline={isDeadline}
-        isEditing={isEditing}
-        toEdit={toEdit}
-        foodProducts={foodProducts}
-        formItem={formItem}
-        groupId={groupId}
-        addFoodProducts={addFoodProducts}
-        removeFoodProduct={removeFoodProduct}
-        setFoodProductsData={setFoodProductsData}
-      />
-    </AccordionMenu>
+      <AccordionMenu
+          title="販売品申請"
+          isEdit={!isDeadline}
+          isExist={isRegistered}
+          required
+      >
+        <Content
+            isLoading={isLoading}
+            hasError={hasError}
+            isDeadline={isDeadline}
+            isEditing={isEditing}
+            toEdit={toEdit}
+            foodProducts={foodProducts}
+            formItem={formItem}
+            groupId={groupId}
+            addFoodProducts={addFoodProducts}
+            removeFoodProduct={removeFoodProduct}
+            setFoodProductsData={setFoodProductsData}
+        />
+      </AccordionMenu>
   );
 };
 

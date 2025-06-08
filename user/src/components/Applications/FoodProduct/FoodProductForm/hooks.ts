@@ -1,15 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { FoodProductFormData, foodProductSchema } from './schema';
 
+type RegisteredProduct = {
+  id: string;
+  name: string;
+  isAlcohol: boolean;
+  hasLicense: boolean;
+  day1Quantity: string;
+  day2Quantity: string;
+};
+
+type ProductInput = {
+  id?: string;
+  name: string;
+  isAlcohol: boolean;
+  hasLicense: boolean;
+  day1Quantity: string;
+  day2Quantity: string;
+};
+
 export const useFoodProductFormHooks = (
-  groupId: number,
-  foodProductsProp?: any[] | null,
-  addFoodProducts?: (products: any[]) => void,
-  setFoodProductsData?: (products: any[]) => void
+    groupId: number,
+    foodProductsProp?: RegisteredProduct[] | null,
+    addFoodProducts?: (products: ProductInput[]) => void,
+    setFoodProductsData?: (products: ProductInput[]) => void
 ) => {
-  const getDefaultProducts = () => {
+  const getDefaultProducts = useCallback(() => {
     if (foodProductsProp && foodProductsProp.length > 0) {
       return foodProductsProp.map((product) => ({
         id: product.id || '',
@@ -30,7 +48,7 @@ export const useFoodProductFormHooks = (
         day2Quantity: '',
       },
     ];
-  };
+  }, [foodProductsProp]);
 
   const {
     handleSubmit,
@@ -57,7 +75,7 @@ export const useFoodProductFormHooks = (
   useEffect(() => {
     const defaultProducts = getDefaultProducts();
     replace(defaultProducts);
-  }, [foodProductsProp, replace]);
+  }, [getDefaultProducts, replace]);
 
   const alcoholOptions = [
     { id: 1, name: 'はい' },
