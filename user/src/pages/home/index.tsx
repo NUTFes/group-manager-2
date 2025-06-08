@@ -1,6 +1,7 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
+import Employees from '@/components/Applications/Employees/Employees';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import Power from '@/components/Applications/Power';
@@ -24,7 +25,17 @@ export default function HomePage() {
     useGetCheckAllRegisteredGroups(groupId);
 
   const GroupCategoryContent = () => {
-    if (groupCategoryId === 6) {
+    if (groupCategoryId === 1) {
+      return (
+        <>
+          <Employees
+            isDeadline={!userPageSettings?.isEditEmployee}
+            isRegistered={checkAllRegisteredGroups?.employee}
+            groupId={groupId}
+          />
+        </>
+      );
+    } else if (groupCategoryId === 6) {
       return (
         <>
           <RentItems
