@@ -40,7 +40,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({ groupId, venueMap }) => {
     },
     {
       id: 'fireHazardousMaterials',
-      name: '火器・電化製品の使用場所を明記しました。',
+      name: '火気・電化製品の使用場所を明記しました。',
     },
     {
       id: 'partitionPlacement',
