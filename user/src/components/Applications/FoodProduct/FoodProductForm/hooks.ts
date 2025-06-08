@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { FoodProductFormData, foodProductSchema } from './schema';
@@ -22,10 +22,10 @@ type ProductInput = {
 };
 
 export const useFoodProductFormHooks = (
-    groupId: number,
-    foodProductsProp?: RegisteredProduct[] | null,
-    addFoodProducts?: (products: ProductInput[]) => void,
-    setFoodProductsData?: (products: ProductInput[]) => void
+  groupId: number,
+  foodProductsProp?: RegisteredProduct[] | null,
+  addFoodProducts?: (products: ProductInput[]) => void,
+  setFoodProductsData?: (products: ProductInput[]) => void
 ) => {
   const getDefaultProducts = useCallback(() => {
     if (foodProductsProp && foodProductsProp.length > 0) {
