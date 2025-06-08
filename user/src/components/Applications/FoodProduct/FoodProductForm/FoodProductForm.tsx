@@ -85,13 +85,13 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
           >
             <div className="flex flex-col gap-4">
               <div>
-                <h3 className="text-base font-medium text-gray-900 mb-1">
+                <h3 className="mb-1 text-base font-medium text-gray-900">
                   販売品名
                 </h3>
                 <p className="text-gray-700">{product.name}</p>
               </div>
               <div>
-                <h3 className="text-base font-medium text-gray-900 mb-1">
+                <h3 className="mb-1 text-base font-medium text-gray-900">
                   酒類ですか？
                 </h3>
                 <p className="text-gray-700">
@@ -99,7 +99,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                 </p>
               </div>
               <div>
-                <h3 className="text-base font-medium text-gray-900 mb-1">
+                <h3 className="mb-1 text-base font-medium text-gray-900">
                   調理の有無
                 </h3>
                 <p className="text-gray-700">
@@ -107,18 +107,18 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                 </p>
               </div>
               <div>
-                <h3 className="text-base font-medium text-gray-900 mb-1">
+                <h3 className="mb-1 text-base font-medium text-gray-900">
                   1日目の販売予定数
                 </h3>
                 <p className="text-gray-700">{product.day1Quantity}</p>
               </div>
               <div>
-                <h3 className="text-base font-medium text-gray-900 mb-1">
+                <h3 className="mb-1 text-base font-medium text-gray-900">
                   2日目の販売予定数
                 </h3>
                 <p className="text-gray-700">{product.day2Quantity}</p>
               </div>
-              <div className="flex justify-center mt-4">
+              <div className="mt-4 flex justify-center">
                 <Button
                   size="pc"
                   color="alert"
@@ -137,7 +137,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
           </div>
         ))}
 
-        <div className="flex justify-center gap-4 mt-6">
+        <div className="mt-6 flex justify-center gap-4">
           <Button type="button" size="pc" color="main" onClick={toEdit}>
             ✏ 修正
           </Button>
@@ -241,7 +241,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                 </div>
               </FormContainer>
             ))}
-            <div className="flex justify-center mx-auto gap-4">
+            <div className="mx-auto flex justify-center gap-4">
               <div className="flex w-full justify-center">
                 <Button
                   size="pc"
