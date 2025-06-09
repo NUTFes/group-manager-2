@@ -11,6 +11,7 @@
  * - 未登録グループの管理
  * - エラーハンドリングとトースト通知
  */
+import { useState } from 'react';
 import {
   useCreateEmployee,
   useDeleteEmployee,
@@ -23,6 +24,12 @@ import {
   useGetUnregisteredGroup,
   useMutateUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
+import { toast } from 'react-toastify';
+import {
+  useEmployeesForm,
+  useEmployeesFormHandlers,
+  useEmployeesFormState,
+} from './EmployeesFrom/hooks';
 import { EmployeeFormItem } from './schema';
 
 /**
@@ -327,5 +334,183 @@ export const useUnregisteredGroupLogic = (
     mutateUnregisteredGroup,
     handleRegisterUnregisteredGroup,
     handleDeleteUnregisteredGroup,
+  };
+};
+
+/**
+ * Employeesコンポーネントのメインロジックを管理するhook
+ *
+ * このhookはEmployeesコンポーネントのすべてのビジネスロジック、
+ * 状態管理、イベントハンドリングを担当します。
+ * UIコンポーネントからはこのhookのみを使用することで、
+ * ロジックとUIの完全な分離を実現します。
+ *
+ * @param groupId - 対象のグループID
+ * @param isDeadline - 申請期限が過ぎているかどうか
+ * @returns コンポーネントで必要なすべての状態とハンドラ
+ */
+export const useEmployeesMainLogic = (
+  groupId: number,
+  isDeadline?: boolean
+) => {
+  const [isEditing, setEditing] = useState(false);
+
+  // トースト通知のコールバック
+  const toastCallbacks = {
+    onSuccess: (message: string) => toast.success(message),
+    onError: (message: string) => toast.error(message),
+  };
+
+  // ビジネスロジック関連のhooks
+  const businessLogic = useEmployeesBusinessLogic(groupId, toastCallbacks);
+  const unregisteredLogic = useUnregisteredGroupLogic(groupId, toastCallbacks);
+
+  // フォーム関連のhooks（既存データがある場合はそれを、ない場合は空配列を初期値に設定）
+  const form = useEmployeesForm(
+    businessLogic.getEmployeesData && businessLogic.getEmployeesData.length > 0
+      ? {
+          needApplication: undefined,
+          employees: businessLogic.getEmployeesData,
+        }
+      : { needApplication: undefined, employees: [] }
+  );
+
+  // フォーム状態の監視
+  const formState = useEmployeesFormState(form);
+
+  // フォーム操作のイベントハンドラ
+  const formHandlers = useEmployeesFormHandlers(form, {
+    onEmployeeDelete: businessLogic.handleEmployeeDeleteWithToast,
+    onMutateEmployees: async () => {
+      await businessLogic.mutateEmployees();
+    },
+  });
+
+  // ===============================
+  // UIイベントハンドラ群
+  // ===============================
+
+  /**
+   * 編集ボタンクリック時の処理
+   */
+  const handleEdit = async () => {
+    await formHandlers.handleEditStart(businessLogic.getEmployeesData);
+    setEditing(true);
+  };
+
+  /**
+   * ラジオボタン変更時の処理
+   */
+  const handleRadioChange = async (value: string) => {
+    await formHandlers.handleNeedApplicationChange(
+      value,
+      businessLogic.getEmployeesData
+    );
+    setEditing(true);
+  };
+
+  /**
+   * 従業員削除ボタンクリック時の処理
+   */
+  const handleEmployeeDelete = async (field: EmployeeFormItem, idx: number) => {
+    await formHandlers.handleEmployeeRemove(field, idx);
+  };
+
+  /**
+   * 未登録グループ状態での編集ボタンクリック時の処理
+   */
+  const handleEditClick = async () => {
+    await unregisteredLogic.handleDeleteUnregisteredGroup();
+    setEditing(true);
+  };
+
+  /**
+   * 「代表・副代表のみで活動」選択時の登録処理
+   */
+  const handleNoApplicationClick = async () => {
+    try {
+      await businessLogic.handleNoApplicationSubmit();
+      await unregisteredLogic.handleRegisterUnregisteredGroup();
+      setEditing(false);
+    } catch {
+      // エラーハンドリングはhook内で処理済み
+    }
+  };
+
+  /**
+   * フォーム送信時の処理
+   */
+  const handleSubmit = form.handleSubmit(async (data) => {
+    try {
+      if (data.needApplication === 'yes' && data.employees) {
+        // 従業員申請ありの場合
+        await unregisteredLogic.handleDeleteUnregisteredGroup();
+        await businessLogic.handleEmployeeApplicationSubmit({
+          needApplication: data.needApplication,
+          employees: data.employees,
+        });
+      } else if (data.needApplication === 'no') {
+        // 従業員申請なしの場合
+        await businessLogic.handleNoApplicationSubmit();
+        await unregisteredLogic.handleRegisterUnregisteredGroup();
+      }
+      setEditing(false);
+    } catch {
+      // エラーハンドリングはhook内で処理済み
+    }
+  });
+
+  // ===============================
+  // 表示状態の判定ロジック
+  // ===============================
+
+  /**
+   * 未登録グループ状態かどうか
+   */
+  const isUnregisteredGroup = !!unregisteredLogic.unregisteredData;
+
+  /**
+   * フォームリスト表示状態かどうか
+   */
+  const isFormListMode =
+    businessLogic.getEmployeesData &&
+    businessLogic.getEmployeesData.length > 0 &&
+    !isDeadline &&
+    !isEditing;
+
+  /**
+   * フォーム表示用のテーブルデータ
+   */
+  const tableData =
+    businessLogic.getEmployeesData?.map((i) => ({
+      name: i.name,
+      studentId: i.studentId,
+    })) || [];
+
+  return {
+    // 状態
+    isEditing,
+    isUnregisteredGroup,
+    isFormListMode,
+    tableData,
+
+    // フォーム関連
+    form,
+    formState,
+
+    // ビジネスロジック
+    businessLogic,
+    unregisteredLogic,
+
+    // イベントハンドラ
+    handleEdit,
+    handleRadioChange,
+    handleEmployeeDelete,
+    handleEditClick,
+    handleNoApplicationClick,
+    handleSubmit,
+
+    // UI用プロパティ
+    isDeadline,
   };
 };
