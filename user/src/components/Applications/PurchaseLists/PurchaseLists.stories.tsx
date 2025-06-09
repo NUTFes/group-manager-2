@@ -105,8 +105,9 @@ export const WithExistingData: Story = {
           isFresh: true,
           shopId: 1,
           purchaseDate: '2025/07/15',
+          fesDateId: 1,
           url: '',
-          remarks: '特売品',
+          remark: '特売品',
           groupId: groupId,
         },
         {
@@ -116,8 +117,9 @@ export const WithExistingData: Story = {
           isFresh: false,
           shopId: 29,
           purchaseDate: '2025/07/10',
+          fesDateId: 1,
           url: 'https://example.com/seafood-mix',
-          remarks: '',
+          remark: '',
           groupId: groupId,
         },
       ];
@@ -149,8 +151,9 @@ export const AfterDeadlineWithData: Story = {
           isFresh: false,
           shopId: 13,
           purchaseDate: '2025/06/01',
+          fesDateId: 1,
           url: '',
-          remarks: '最終確定済みデータ',
+          remark: '最終確定済みデータ',
           groupId: groupId,
         },
       ];
