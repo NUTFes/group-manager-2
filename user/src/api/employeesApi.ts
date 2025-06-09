@@ -1,8 +1,8 @@
 import {
+  useAuthenticatedDeleteWithId,
   useAuthenticatedGet,
+  useAuthenticatedPatchWithId,
   useAuthenticatedPost,
-  useAuthenticatedWithIdDelete,
-  useAuthenticatedWithIdPatch,
 } from '@/hooks/useApi';
 import { ApiResponse } from './api';
 
@@ -47,9 +47,9 @@ export const useUpsertEmployees = () => {
 };
 
 export const useUpdateEmployee = () => {
-  return useAuthenticatedWithIdPatch(API_ENDPOINTS.EMPLOYEES);
+  return useAuthenticatedPatchWithId(API_ENDPOINTS.EMPLOYEES);
 };
 
 export const useDeleteEmployee = () => {
-  return useAuthenticatedWithIdDelete(API_ENDPOINTS.EMPLOYEES);
+  return useAuthenticatedDeleteWithId(API_ENDPOINTS.EMPLOYEES);
 };

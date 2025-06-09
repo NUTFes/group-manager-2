@@ -151,17 +151,17 @@ export const useAuthenticatedDelete = createMutationHook<
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
 
-export const useAuthenticatedWithIdPut = createMutationHookWithId<
+export const useAuthenticatedPutWithId = createMutationHookWithId<
   { id: number; body: any; query?: Record<string, any> },
   any
 >(authenticatedPutFetcherWithId);
 
-export const useAuthenticatedWithIdPatch = createMutationHookWithId<
+export const useAuthenticatedPatchWithId = createMutationHookWithId<
   { id: number; body: any; query?: Record<string, any> }, // arg 型
   any // PATCH の返り値の型
 >(authenticatedPatchFetcherWithId);
 
-export const useAuthenticatedWithIdDelete = createMutationHookWithId<
+export const useAuthenticatedDeleteWithId = createMutationHookWithId<
   number, // trigger(arg) の arg 型
   void // DELETE の返り値の型
 >(authenticatedDeleteFetcherWithId);
