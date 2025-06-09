@@ -30,19 +30,20 @@ export const PurchaseItemFieldNames = {
   SHOP_ID: 'shopId',
   PURCHASE_DATE: 'purchaseDate',
   URL: 'url',
-  REMARKS: 'remarks',
+  REMARK: 'remark',
 } as const;
 
 // デフォルトの購入品アイテム
 export const DEFAULT_PURCHASE_ITEM = {
-  id: undefined,
+  id: 0,
   foodProductId: 0,
-  items: '',
   isFresh: true,
-  shopId: 0,
+  items: '',
   purchaseDate: '',
+  shopId: 0,
   url: '',
-  remarks: '',
+  remark: '',
+  fesDateId: 1,
 };
 
 // バリデーションメッセージ

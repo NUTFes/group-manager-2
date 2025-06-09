@@ -19,7 +19,6 @@ import {
   OTHER_SHOP_ID,
   PurchaseItemFieldNames,
 } from '../constants';
-import { useDateFormatters } from '../hooks';
 import { PurchaseItem, PurchaseListsFormData } from '../schema';
 import { FoodProductOption } from '../types';
 
@@ -34,6 +33,7 @@ export type PurchaseListsFormProps = {
   isValid: boolean;
   foodProductOptions: FoodProductOption[];
   shopOptions: { id: number; name: string }[];
+  onFoodProductChange?: (foodProductId: number, index: number) => void;
 };
 
 const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
@@ -42,21 +42,32 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   append,
   remove,
   onSubmit,
+  onCancel,
   errors,
   isValid,
   foodProductOptions,
   shopOptions,
+  onFoodProductChange,
 }) => {
-  const { formatDateForInput, formatDateForStore } = useDateFormatters();
-
   // フォーム全体の値を監視
   const watchedFormValues = useWatch({
     control,
     name: 'purchaseLists',
   });
 
+  console.log('form status:', {
+    isValid,
+    errors,
+    watchedFormValues,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit();
+  };
+
   return (
-    <form onSubmit={onSubmit} className="w-fit">
+    <form onSubmit={handleSubmit} className="w-fit">
       <div className="flex flex-col space-y-10">
         {fields.map((field, index) => {
           const fieldPathPrefix = `purchaseLists.${index}` as const;
@@ -74,9 +85,12 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                     <Selector
                       label="販売品名"
                       value={controllerField.value}
-                      onChange={(value) =>
-                        controllerField.onChange(Number(value))
-                      }
+                      onChange={(value) => {
+                        controllerField.onChange(Number(value));
+                        if (value) {
+                          onFoodProductChange?.(Number(value), index);
+                        }
+                      }}
                       required
                       options={foodProductOptions}
                       error={fieldState.error?.message}
@@ -138,10 +152,8 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                     <TextBox
                       label="購入日"
                       type="date"
-                      value={formatDateForInput(controllerField.value)}
-                      onChange={(value) =>
-                        controllerField.onChange(formatDateForStore(value))
-                      }
+                      value={controllerField.value}
+                      onChange={controllerField.onChange}
                       required
                       error={fieldState.error?.message}
                       note="例：2025/03/14"
@@ -167,7 +179,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                 )}
                 {/* 備考フィールド*/}
                 <Controller
-                  name={`${fieldPathPrefix}.${PurchaseItemFieldNames.REMARKS}`}
+                  name={`${fieldPathPrefix}.${PurchaseItemFieldNames.REMARK}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextArea
@@ -203,6 +215,15 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
           );
         })}
         <div className="flex justify-center gap-3">
+          <Button
+            type="button"
+            size="pc"
+            color="secondary"
+            variant
+            onClick={onCancel}
+          >
+            キャンセル
+          </Button>
           <Button
             type="button"
             size="pc"

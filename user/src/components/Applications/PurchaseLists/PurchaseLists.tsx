@@ -3,7 +3,12 @@ import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
 import PurchaseListsForm from './PurchaseListsForm';
-import { usePurchaseListsForm, usePurchaseListsState } from './hooks';
+import {
+  useFoodProducts,
+  usePurchaseListRowUpdater,
+  usePurchaseListsForm,
+  usePurchaseListsState,
+} from './hooks';
 import { PurchaseItem } from './schema';
 
 export type PurchaseListsProps = {
@@ -17,10 +22,12 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   isDeadline = false,
   isRegistered: initialIsRegistered,
 }) => {
+  const { isLoading: isFoodProductsLoading, hasError: hasFoodProductsError } =
+    useFoodProducts(groupId);
+
   const {
     purchaseLists,
-    isLoading,
-    hasError,
+    isLoading: isPurchaseListsLoading,
     isEditing,
     toggleEdit,
     handleDeleteItem,
@@ -29,17 +36,29 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     shopOptions,
     initialFormData,
     handleFormSuccess,
-  } = usePurchaseListsState(groupId, initialIsRegistered);
+  } = usePurchaseListsState(groupId, null, initialIsRegistered);
 
-  const { control, fields, append, remove, triggerSubmit, errors, isValid } =
-    usePurchaseListsForm(
-      groupId,
-      initialFormData,
-      handleFormSuccess,
-      shopOptions
-    );
+  const {
+    control,
+    fields,
+    append,
+    remove,
+    triggerSubmit,
+    errors,
+    isValid,
+    setValue,
+  } = usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
 
-  if (isLoading) {
+  const updateRowBySelector = usePurchaseListRowUpdater(
+    purchaseLists,
+    setValue
+  );
+
+  const handleFoodProductChange = (foodProductId: number, index: number) => {
+    updateRowBySelector(foodProductId, index);
+  };
+
+  if (isFoodProductsLoading || isPurchaseListsLoading) {
     return (
       <AccordionMenu
         title="購入品申請"
@@ -52,7 +71,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     );
   }
 
-  if (hasError) {
+  if (hasFoodProductsError) {
     return (
       <AccordionMenu
         title="購入品申請"
@@ -134,6 +153,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           isValid={isValid}
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
+          onFoodProductChange={handleFoodProductChange}
         />
       </AccordionMenu>
     );
@@ -150,29 +170,23 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       {formItems.map((items, index) => {
         const currentItem = purchaseLists?.[index];
         return (
-          <div
-            key={`purchase-list-${index}-${currentItem?.id ?? index}`}
-            className="mb-4"
-          >
+          <div key={`purchase-list-${index}`} className="mb-4">
             <FormList
               items={items}
-              isDelete={!isDeadline && currentItem?.id !== undefined}
-              onDelete={
-                currentItem?.id
-                  ? () => handleDeleteItem(currentItem.id!)
-                  : undefined
-              }
+              onDelete={() => handleDeleteItem(currentItem?.id || 0)}
+              isDelete
             />
           </div>
         );
       })}
-      {!isDeadline && purchaseLists && purchaseLists.length > 0 && (
-        <div className="mt-6 flex justify-center">
+      {!isDeadline && (
+        <div className="mt-4 flex justify-center space-x-4">
           <Button
-            onClick={toggleEdit}
+            type="button"
             size="pc"
             color="main"
-            type="button"
+            variant
+            onClick={toggleEdit}
             icon="pencil"
           >
             修正
