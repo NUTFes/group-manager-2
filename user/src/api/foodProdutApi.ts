@@ -1,7 +1,7 @@
 import {
+  useAuthenticatedDelete,
   useAuthenticatedGet,
   useAuthenticatedPost,
-  useAuthenticatedDelete,
 } from '@/hooks/useApi';
 
 export type FoodProduct = {
@@ -64,7 +64,7 @@ export const useGetFoodProducts = (groupId: number | null) => {
   }
 
   const { data, error, isLoading, mutate } =
-      useAuthenticatedGet<ApiResponse<FoodProductResponse[]>>(endpoint);
+    useAuthenticatedGet<ApiResponse<FoodProductResponse[]>>(endpoint);
 
   // エラーハンドリング
   if (error) {
@@ -132,7 +132,9 @@ export const useDeleteFoodProduct = (id: number | null) => {
  * upsert用hook（レスポンス形式を考慮）
  */
 export const useUpdateFoodProducts = () => {
-  const { trigger, isMutating } = useAuthenticatedPost(API_ENDPOINTS.FOOD_PRODUCTS_UPSERT);
+  const { trigger, isMutating } = useAuthenticatedPost(
+    API_ENDPOINTS.FOOD_PRODUCTS_UPSERT
+  );
 
   const updateFoodProducts = async (data: UpdateFoodProductsRequest) => {
     try {
@@ -140,7 +142,7 @@ export const useUpdateFoodProducts = () => {
       console.log('📋 Payload:', data);
 
       const response = await trigger({
-        body: data
+        body: data,
       });
 
       // レスポンスが {status: {...}, data: [...]} 形式の場合

@@ -8,10 +8,10 @@ import {
 } from './schema';
 
 export const useFoodProductFormHooks = (
-    groupId: number,
-    foodProductsProp?: RegisteredProduct[] | null,
-    addFoodProducts?: (products: ProductInput[]) => Promise<void>,
-    setFoodProductsData?: (products: ProductInput[]) => Promise<void>
+  groupId: number,
+  foodProductsProp?: RegisteredProduct[] | null,
+  addFoodProducts?: (products: ProductInput[]) => Promise<void>,
+  setFoodProductsData?: (products: ProductInput[]) => Promise<void>
 ) => {
   // 安全なデフォルト値生成関数
   const createDefaultProducts = (propsData?: RegisteredProduct[] | null) => {
