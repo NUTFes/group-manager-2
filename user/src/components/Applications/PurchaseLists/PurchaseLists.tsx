@@ -12,18 +12,22 @@ import {
 import { PurchaseItem } from './schema';
 
 export type PurchaseListsProps = {
-  isDeadline?: boolean;
+  isDeadline: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
 };
 
 const PurchaseLists: FC<PurchaseListsProps> = ({
   groupId,
-  isDeadline = false,
+  isDeadline,
   isRegistered: initialIsRegistered,
 }) => {
-  const { isLoading: isFoodProductsLoading, hasError: hasFoodProductsError } =
-    useFoodProducts(groupId);
+  const {
+    foodProducts,
+    foodProductOptions,
+    isLoading: isFoodProductsLoading,
+    hasError: hasFoodProductsError,
+  } = useFoodProducts(groupId);
 
   const {
     purchaseLists,
@@ -32,11 +36,14 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     toggleEdit,
     handleDeleteItem,
     formItems,
-    foodProductOptions,
     shopOptions,
     initialFormData,
     handleFormSuccess,
-  } = usePurchaseListsState(groupId, null, initialIsRegistered);
+  } = usePurchaseListsState(
+    foodProducts,
+    foodProductOptions,
+    initialIsRegistered
+  );
 
   const {
     control,

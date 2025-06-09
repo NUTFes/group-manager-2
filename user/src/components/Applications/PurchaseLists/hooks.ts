@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useGetFoodProducts } from '@/api/foodProductApi';
+import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
   UpdatePurchaseListsRequest,
   useCreatePurchaseList,
@@ -78,18 +78,17 @@ export const useFoodProducts = (groupId: number) => {
 };
 
 export const usePurchaseListsState = (
-  groupId: number,
-  selectedFoodProductId: number | null,
-  initialIsRegisteredProp?: boolean
+  foodProducts: FoodProductResponse[],
+  foodProductOptions: FoodProductOption[],
+  isRegistered: boolean | undefined
 ) => {
   const { purchaseLists, isLoading, hasError, mutatePurchaseLists } =
-    useGetPurchaseListsByFoodProduct(selectedFoodProductId);
+    useGetPurchaseListsByFoodProduct(foodProducts[0]?.id);
 
   const { trigger: deletePurchaseList } = useDeletePurchaseList();
   const { shops, isLoading: isShopsLoading } = useGetShops();
-  const { foodProductOptions } = useFoodProducts(groupId);
 
-  const [isEditing, setIsEditing] = useState(!initialIsRegisteredProp);
+  const [isEditing, setIsEditing] = useState(!isRegistered);
 
   // ショップオプションをAPIから取得したデータで作成
   const shopOptions = useMemo(
@@ -119,13 +118,13 @@ export const usePurchaseListsState = (
   const formItems =
     purchaseLists?.map((item) => {
       const shopName =
-        shopOptions.find((shop) => shop.id === item.shopId)?.name || '不明';
+        shopOptions.find((shop) => shop.id === item.shopId)?.name || '';
       const foodProductName =
         foodProductOptions.find((product) => product.id === item.foodProductId)
-          ?.name || '不明';
+          ?.name || '';
       const freshName =
         FRESH_OPTIONS.find((opt) => opt.id === (item.isFresh ? 1 : 2))?.name ||
-        '不明';
+        '';
 
       const singleItemForm: FormItem[] = [
         { label: '販売品名', content: foodProductName },
