@@ -20,7 +20,7 @@ type ContentProps = {
   venueMapData: ReturnType<typeof useVenueMapHooks>['venueMap'];
   formItems: ReturnType<typeof useVenueMapHooks>['formItems'];
   groupId: number;
-  onFormSubmitted: () => void;
+  handleFormSubmitted: () => void;
 };
 
 const Content: FC<ContentProps> = ({
@@ -32,7 +32,7 @@ const Content: FC<ContentProps> = ({
   venueMapData,
   formItems,
   groupId,
-  onFormSubmitted,
+  handleFormSubmitted,
 }) => {
   if (isLoading) {
     return <div className="py-10 text-center">Loading...</div>;
@@ -57,13 +57,23 @@ const Content: FC<ContentProps> = ({
         groupId={groupId}
         venueMap={venueMapData}
         toEdit={toEdit} // フォーム側でキャンセル時に使用
-        onSubmitted={onFormSubmitted} // フォーム送信成功時に呼び出される
+        onSubmitted={handleFormSubmitted}
       />
     );
   }
 
-  // データがあり、編集モードでない場合はFormListを表示 (編集可能)
-  return <FormList items={formItems} isEdit onEdit={toEdit} />;
+  if (formItems.length > 0) {
+    return <FormList items={formItems} isEdit onEdit={toEdit} />;
+  }
+
+  return (
+    <VenueMapForm
+      groupId={groupId}
+      venueMap={venueMapData}
+      toEdit={toEdit}
+      onSubmitted={handleFormSubmitted}
+    />
+  );
 };
 
 const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
@@ -73,15 +83,9 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
     hasError,
     isEditing,
     toEdit,
-    formItems, // hooks.ts からは formItems として返される
+    formItems,
+    handleFormSubmitted,
   } = useVenueMapHooks(groupId);
-
-  // フォーム送信が成功したら表示モードに切り替える
-  const handleFormSubmitted = () => {
-    if (isEditing) {
-      toEdit(); // 表示モードに切り替え
-    }
-  };
 
   return (
     <AccordionMenu
@@ -99,7 +103,7 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
         venueMapData={venueMap}
         formItems={formItems}
         groupId={groupId}
-        onFormSubmitted={handleFormSubmitted}
+        handleFormSubmitted={handleFormSubmitted}
       />
     </AccordionMenu>
   );

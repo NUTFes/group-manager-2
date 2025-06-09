@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
@@ -9,24 +9,19 @@ export const useVenueMapHooks = (groupId: number) => {
     error: fetchError,
     isLoading: isFetching,
     mutateVenueMap,
-  } = useGetVenueMap(groupId || 0);
+  } = useGetVenueMap(groupId);
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
   };
 
-  // データが読み込まれたら表示モードに（データがあれば）
-  useEffect(() => {
-    if (venueMap) {
-      setIsEditing(false);
-    } else {
-      setIsEditing(true); // データがなければ編集モードのまま
-    }
-  }, [venueMap]);
+  // フォーム送信が成功したら表示モードに切り替え
+  const handleFormSubmitted = () => {
+    setIsEditing(false);
+  };
 
-  // backup.md から流用し、現在の VenueMapResponse 型に合わせて修正
   const formItems: FormItem[] = venueMap
     ? [
         {
@@ -44,5 +39,6 @@ export const useVenueMapHooks = (groupId: number) => {
     toEdit,
     formItems,
     mutate: mutateVenueMap,
+    handleFormSubmitted,
   };
 };
