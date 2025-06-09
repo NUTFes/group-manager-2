@@ -1,7 +1,7 @@
 import {
-  useAuthenticatedDelete,
+  useAuthenticatedDeleteWithId,
   useAuthenticatedGet,
-  useAuthenticatedPatch,
+  useAuthenticatedPatchWithId,
   useAuthenticatedPost,
 } from '@/hooks/useApi';
 
@@ -13,6 +13,7 @@ export type PurchaseList = {
   isFresh: boolean;
   purchaseDate: string;
   url?: string | null;
+  remark?: string | null;
 };
 
 export type UpdatePurchaseListsRequest = {
@@ -86,9 +87,10 @@ export const useCreatePurchaseList = () => {
 };
 
 // 更新（単件）
-export const useUpdatePurchaseList = (id: number | null) => {
-  const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
-  return useAuthenticatedPatch(endpoint);
+export const useUpdatePurchaseList = () => {
+  return useAuthenticatedPatchWithId<{ id: number; body: PurchaseList }>(
+    API_ENDPOINTS.PURCHASE_LIST
+  );
 };
 
 //複数申請
@@ -97,7 +99,8 @@ export const useUpsertPurchaseLists = () => {
 };
 
 // 削除
-export const useDeletePurchaseList = (id: number | null) => {
-  const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
-  return useAuthenticatedDelete(endpoint);
+export const useDeletePurchaseList = () => {
+  return useAuthenticatedDeleteWithId<{ id: number }>(
+    API_ENDPOINTS.PURCHASE_LIST
+  );
 };
