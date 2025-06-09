@@ -110,36 +110,38 @@ const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
         {/* 「はい」選択時：従業員入力フォーム表示 */}
         {logic.form.watch('needApplication') === NEED_APPLICATION.YES && (
           <>
-            {logic.form.fieldArray.fields.map((field, idx) => (
-              <EmployeeForm
-                key={field.fieldId}
-                index={idx}
-                onDelete={() => logic.handleEmployeeDelete(field, idx)}
-              />
-            ))}
-            <div className="flex justify-center gap-4">
-              <Button
-                type="button"
-                size="pc"
-                color="main"
-                icon="plus"
-                variant
-                onClick={logic.form.appendEmpty}
-              >
-                従業員の追加
-              </Button>
-              <Button
-                size="pc"
-                color="main"
-                type="submit"
-                isDisable={
-                  logic.formState.isSubmitDisabled ||
-                  logic.businessLogic.isCreating ||
-                  logic.businessLogic.isUpserting
-                }
-              >
-                登録
-              </Button>
+            <div className="flex w-full flex-col gap-10">
+              {logic.form.fieldArray.fields.map((field, idx) => (
+                <EmployeeForm
+                  key={field.fieldId}
+                  index={idx}
+                  onDelete={() => logic.handleEmployeeDelete(field, idx)}
+                />
+              ))}
+              <div className="flex justify-center gap-4">
+                <Button
+                  type="button"
+                  size="pc"
+                  color="main"
+                  icon="plus"
+                  variant
+                  onClick={logic.form.appendEmpty}
+                >
+                  従業員の追加
+                </Button>
+                <Button
+                  size="pc"
+                  color="main"
+                  type="submit"
+                  isDisable={
+                    logic.formState.isSubmitDisabled ||
+                    logic.businessLogic.isCreating ||
+                    logic.businessLogic.isUpserting
+                  }
+                >
+                  登録
+                </Button>
+              </div>
             </div>
           </>
         )}
