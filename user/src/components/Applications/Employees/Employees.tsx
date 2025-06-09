@@ -243,13 +243,13 @@ const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
       <form onSubmit={handleSubmit}>
         {/* ラジオボタン：従業員申請の必要性 */}
         <Radio
-          label="あなたの団体は「代表」と「副代表」だけで活動していますか？"
+          label="「代表」と「副代表」以外の従業員申請を行いますか？"
           required
           value={
             needApplication === 'yes'
-              ? '1' // 「はい」→ 従業員申請なし
+              ? '1' // 「はい」→ 従業員申請あり
               : needApplication === 'no'
-                ? '2' // 「いいえ」→ 従業員申請あり
+                ? '2' // 「いいえ」→ 従業員申請なし
                 : ''
           }
           onChange={handleRadioChange}
