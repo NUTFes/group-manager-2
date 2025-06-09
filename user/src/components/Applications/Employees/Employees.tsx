@@ -92,7 +92,7 @@ const Content: FC<ContentProps> = ({
     );
   }
 
-  // 「申請しない」を登録した場合のリスト表示
+  // 「申請しない」を登録した場合のリスト表示（onEditとidEditで期限内・期限外のボタン表示を切り替える）
   if (logic.isUnregisteredGroup) {
     return (
       <FormList
@@ -108,7 +108,7 @@ const Content: FC<ContentProps> = ({
     );
   }
 
-  // 従業員登録後のフォームリスト表示
+  // 従業員登録後のフォームリスト表示（onEditとidEditで期限内・期限外のボタン表示を切り替える）
   if (logic.isFormListMode) {
     return (
       <FormList
@@ -122,11 +122,10 @@ const Content: FC<ContentProps> = ({
     );
   }
 
-  // 申請前のフォーム表示
+  // 期限前・修正可能な状態での表示
   return (
     <FormProvider {...logic.form}>
       <form onSubmit={logic.handleSubmit}>
-        {/* ラジオボタン：従業員申請の必要性 */}
         <Radio
           label="「代表」と「副代表」以外の従業員申請を行いますか？"
           required
