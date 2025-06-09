@@ -91,6 +91,45 @@ export const useAuthenticatedDelete = createMutationHook<
   return status === 'authenticated' && url ? ([url, session!] as const) : null;
 });
 
+export const useAuthenticatedDeleteWithId = <Arg extends { id: number }>(
+  url: string | null
+) => {
+  const { data: session, status } = useSession();
+  const key =
+    status === 'authenticated' && url ? ([url, session!] as const) : null;
+
+  return useSWRMutation<any, ApiError, readonly [string, Session], Arg>(
+    key!,
+    (key, { arg }) => {
+      const fullUrl = `${key[0]}/${arg.id}`;
+      return authenticatedDeleteFetcher(
+        [fullUrl, key[1]] as const,
+        { arg } as { arg: { body?: any } }
+      );
+    }
+  );
+};
+
+export const useAuthenticatedPatchWithId = <
+  Arg extends { id: number; body?: any },
+>(
+  url: string | null
+) => {
+  const { data: session, status } = useSession();
+  const key =
+    status === 'authenticated' && url ? ([url, session!] as const) : null;
+
+  return useSWRMutation<any, ApiError, readonly [string, Session], Arg>(
+    key!,
+    (key, { arg }) => {
+      const fullUrl = `${key[0]}/${arg.id}`;
+      return authenticatedPatchFetcher([fullUrl, key[1]], {
+        arg: { body: arg.body },
+      });
+    }
+  );
+};
+
 /** 認証なしミューテーション用のフック */
 export const useUnauthenticatedPost = createMutationHook<
   { body?: any; query?: Record<string, any> },
