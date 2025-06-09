@@ -60,49 +60,67 @@ class PurchaseListsController < ApplicationController
     end
   end
 
- # POST /purchase_lists/upsert
-def upsert_all
-  now = Time.current
-  keys = %i[
-    food_product_id shop_id fes_date_id
-    items is_fresh purchase_date url remark created_at updated_at
-  ]
+  # POST /purchase_lists/upsert
+  def upsert_all
+    now = Time.current
+    keys = %i[
+      food_product_id shop_id fes_date_id
+      items is_fresh purchase_date url remark created_at updated_at
+    ]
 
-  upsert = purchase_list_bulk_params.map do |attrs|
-    # nil補完（すべてのキーを明示的に持たせる）
-    keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
-    attrs[:created_at] ||= now
-    attrs[:updated_at] = now
-    attrs
+    upsert = purchase_list_bulk_params.map do |attrs|
+      # nil補完（すべてのキーを明示的に持たせる）
+      keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
+      attrs[:created_at] ||= now
+      attrs[:updated_at] = now
+      attrs
+    end
+
+    PurchaseList.upsert_all(upsert)
+    # 登録または更新されたレコードを抽出
+    processed = upsert.map do |attrs|
+      if attrs[:id].present?
+        PurchaseList.where(id: attrs[:id])
+      else
+        PurchaseList.where(
+          food_product_id: attrs[:food_product_id],
+          shop_id: attrs[:shop_id],
+          fes_date_id: attrs[:fes_date_id]
+        )
+      end
+    end.reduce { |acc, scope| acc.or(scope) }
+
+    render json: fmt(created, processed)
+  rescue => e
+    render json: fmt(internal_server_error, [], e.message), status: :internal_server_error
   end
 
-  PurchaseList.upsert_all(upsert)
-  # 登録または更新されたレコードを抽出
-  processed = upsert.map do |attrs|
-    if attrs[:id].present?
-      PurchaseList.where(id: attrs[:id])
-    else
-      PurchaseList.where(
-        food_product_id: attrs[:food_product_id],
-        shop_id: attrs[:shop_id],
-        fes_date_id: attrs[:fes_date_id]
-      )
+  private
+
+  def set_purchase_list
+    @purchase_list = PurchaseList.find(params[:id])
+  end
+
+  # 一括登録・更新のStrong Parameters（upsert_all用）
+  def purchase_list_bulk_params
+    params.require(:purchase_lists).map do |p|
+      ActionController::Parameters.new(p.to_unsafe_h).permit(
+        :id,
+        :food_product_id,
+        :shop_id,
+        :fes_date_id,
+        :items,
+        :is_fresh,
+        :purchase_date,
+        :url,
+        :remark
+      ).to_h.symbolize_keys
     end
-  end.reduce { |acc, scope| acc.or(scope) }
+  end
 
-  render json: fmt(created, processed)
-rescue => e
-  render json: fmt(internal_server_error, [], e.message), status: :internal_server_error
-end
-end
-
-private
-
-# 一括登録・更新のStrong Parameters（upsert_all用）
-def purchase_list_bulk_params
-  params.require(:purchase_lists).map do |p|
-    ActionController::Parameters.new(p.to_unsafe_h).permit(
-      :id,
+  # 単一レコード用のStrong Parameters
+  def purchase_list_params
+    params.permit(
       :food_product_id,
       :shop_id,
       :fes_date_id,
@@ -111,20 +129,6 @@ def purchase_list_bulk_params
       :purchase_date,
       :url,
       :remark
-    ).to_h.symbolize_keys
+    )
   end
-end
-
-# 単一レコード用のStrong Parameters
-def purchase_list_params
-  params.permit(
-    :food_product_id,
-    :shop_id,
-    :fes_date_id,
-    :items,
-    :is_fresh,
-    :purchase_date,
-    :url,
-    :remark
-  )
 end
