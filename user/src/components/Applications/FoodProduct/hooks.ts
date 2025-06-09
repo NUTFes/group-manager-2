@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
+import {
+  FoodProductResponse,
+  useGetFoodProducts,
+  useUpdateFoodProducts,
+} from '@/api/foodProdutApi';
 import { toast } from 'react-toastify';
 import {
   ProductInput,
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { FormItem } from '@/components/FormList/type';
-import {
-  useGetFoodProducts,
-  useUpdateFoodProducts,
-  FoodProductResponse
-} from '@/api/foodProdutApi';
 import { useApiMutations } from '@/hooks/useApi';
 
 export const useFoodProductHooks = (groupId: number) => {
@@ -21,7 +21,7 @@ export const useFoodProductHooks = (groupId: number) => {
     foodProducts: apiFoodProducts,
     isLoading,
     error,
-    mutateFoodProducts
+    mutateFoodProducts,
   } = useGetFoodProducts(groupId || 0);
 
   // upsert用のhook
@@ -31,15 +31,16 @@ export const useFoodProductHooks = (groupId: number) => {
   const { remove } = useApiMutations();
 
   // APIレスポンスをコンポーネント用の型に変換
-  const foodProducts: RegisteredProduct[] | null = apiFoodProducts?.length > 0
+  const foodProducts: RegisteredProduct[] | null =
+    apiFoodProducts?.length > 0
       ? apiFoodProducts.map((product: FoodProductResponse) => ({
-        id: product.id.toString(),
-        name: product.name,
-        isAlcohol: product.isCooking ?? false,
-        hasLicense: product.isCooking ?? false,
-        day1Quantity: product.firstDayNum?.toString() || '0',
-        day2Quantity: product.secondDayNum?.toString() || '0',
-      }))
+          id: product.id.toString(),
+          name: product.name,
+          isAlcohol: product.isCooking ?? false,
+          hasLicense: product.isCooking ?? false,
+          day1Quantity: product.firstDayNum?.toString() || '0',
+          day2Quantity: product.secondDayNum?.toString() || '0',
+        }))
       : null;
 
   const hasError = !!error;
@@ -48,8 +49,8 @@ export const useFoodProductHooks = (groupId: number) => {
     {
       label: '販売品一覧',
       content: foodProducts?.length
-          ? `${foodProducts.length}品目登録済み`
-          : '未登録',
+        ? `${foodProducts.length}品目登録済み`
+        : '未登録',
     },
   ];
 
@@ -87,10 +88,13 @@ export const useFoodProductHooks = (groupId: number) => {
       });
     } catch (error) {
       console.error('販売品更新エラー:', error);
-      toast.error(`販売品の更新に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`, {
-        position: 'top-right',
-        autoClose: 5000,
-      });
+      toast.error(
+        `販売品の更新に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`,
+        {
+          position: 'top-right',
+          autoClose: 5000,
+        }
+      );
     }
   };
 
@@ -123,10 +127,13 @@ export const useFoodProductHooks = (groupId: number) => {
       });
     } catch (error) {
       console.error('販売品登録エラー:', error);
-      toast.error(`販売品の登録に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`, {
-        position: 'top-right',
-        autoClose: 5000,
-      });
+      toast.error(
+        `販売品の登録に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`,
+        {
+          position: 'top-right',
+          autoClose: 5000,
+        }
+      );
     }
   };
 
@@ -134,7 +141,7 @@ export const useFoodProductHooks = (groupId: number) => {
   const removeFoodProduct = async (id: string) => {
     try {
       const productToRemove = foodProducts?.find(
-          (product) => product.id === id
+        (product) => product.id === id
       );
 
       if (!productToRemove) {
