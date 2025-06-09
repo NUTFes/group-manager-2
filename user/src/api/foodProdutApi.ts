@@ -33,6 +33,16 @@ export type UpdateFoodProductsRequest = {
   food_products: (FoodProduct & { id: number })[];
 };
 
+export type ApiStatus = {
+  code: number;
+  message: string;
+};
+
+export type ApiResponse<T> = {
+  status: ApiStatus;
+  data: T;
+};
+
 const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
   FOOD_PRODUCTS_GROUP: '/food_products/group',
@@ -42,10 +52,10 @@ const API_ENDPOINTS = {
 export const useGetFoodProducts = (groupId: number | null) => {
   const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS_GROUP}/${groupId}`;
   const { data, error, isLoading, mutate } =
-    useAuthenticatedGet<FoodProductResponse[]>(endpoint);
+    useAuthenticatedGet<ApiResponse<FoodProductResponse[]>>(endpoint);
 
   return {
-    foodProducts: data ?? [],
+    foodProducts: data?.data ?? [],
     isLoading,
     error,
     mutateFoodProducts: mutate,
