@@ -4,6 +4,23 @@ import { ToastContainer } from 'react-toastify';
 import { SWRConfig } from 'swr';
 import { Employees } from './Employees';
 
+/**
+ * モック用のコールバック関数
+ * 実際のアプリケーションでの動作をシミュレートし、Storybookでの動作確認を可能にします
+ *
+ * 実際のコンポーネントでは以下3つのメッセージが表示されます：
+ * 1. 「はい」登録 → '従業員申請が完了しました'
+ * 2. 「いいえ」登録 → '従業員申請を行わない登録が完了しました'
+ * 3. 削除 → '従業員を削除しました'
+ */
+const mockMutateCheckAllRegisteredGroups = () => {
+  console.log('📊 グループ登録状況更新がトリガーされました');
+  // 実際のアプリケーションのような動作をシミュレート
+  import('react-toastify').then(({ toast }) => {
+    toast.info('✅ グループ登録状況が更新されました');
+  });
+};
+
 // Storybook用のSWR設定
 const swrConfig = {
   dedupingInterval: 0,
@@ -11,16 +28,38 @@ const swrConfig = {
   revalidateOnReconnect: false,
   refreshInterval: 0,
   fallback: {
-    // API のモックデータを提供
+    // 従業員データのモック
     '/api/employees/1': [
       { id: 1, name: '技大 太郎', studentId: '12345678' },
       { id: 2, name: '技大 花子', studentId: '87654321' },
     ],
     '/api/employees/2': [{ id: 3, name: '長岡 三郎', studentId: '11111111' }],
     '/api/employees/3': [{ id: 4, name: '技術 四郎', studentId: '22222222' }],
-    '/api/unregistered-groups/1': null,
-    '/api/unregistered-groups/2': { id: 1, groupId: 2 },
-    '/api/unregistered-groups/3': { id: 2, groupId: 3 },
+    '/api/employees/4': [], // 新規グループ：従業員データなし
+
+    // 未登録グループデータのモック
+    '/api/unregistered-groups/1': null, // 従業員申請あり
+    '/api/unregistered-groups/2': { id: 1, groupId: 2 }, // 従業員申請なし
+    '/api/unregistered-groups/3': { id: 2, groupId: 3 }, // 従業員申請なし
+    '/api/unregistered-groups/4': null, // 新規グループ：未登録データなし
+
+    // グループ登録状況確認データのモック
+    '/api/check_all_registered/1': {
+      status: { code: 200, message: 'success' },
+      data: { employee: true, group: true, subRep: true },
+    },
+    '/api/check_all_registered/2': {
+      status: { code: 200, message: 'success' },
+      data: { employee: true, group: true, subRep: true },
+    },
+    '/api/check_all_registered/3': {
+      status: { code: 200, message: 'success' },
+      data: { employee: true, group: true, subRep: true },
+    },
+    '/api/check_all_registered/4': {
+      status: { code: 200, message: 'success' },
+      data: { employee: false, group: true, subRep: true },
+    },
   },
 };
 
@@ -32,6 +71,26 @@ const swrConfig = {
  * - 登録済み状態の表示
  * - 従業員データの入力・編集・削除
  * - 未登録グループ（代表・副代表のみ）の管理
+ * - グループ登録状況の更新コールバック処理
+ *
+ * ## 実際のトースト通知パターン
+ *
+ * 実際のアプリケーションでは以下の3つの異なる通知メッセージが表示されます：
+ *
+ * 1. **「はい」選択（従業員申請する）**
+ *    - メッセージ: "従業員申請が完了しました"
+ *    - 処理: 従業員データを作成/更新 + 未登録グループを削除
+ *
+ * 2. **「いいえ」選択（代表・副代表のみ）**
+ *    - メッセージ: "従業員申請を行わない登録が完了しました"
+ *    - 処理: 従業員データを削除 + 未登録グループを登録
+ *
+ * 3. **個別削除操作**
+ *    - メッセージ: "従業員を削除しました"
+ *    - 処理: 特定の従業員データを削除
+ *
+ * すべての成功時に `mutateCheckAllRegisteredGroups` コールバックが実行され、
+ * グループ全体の登録状況が更新されます。
  */
 export default {
   title: 'Applications/Employees',
@@ -110,6 +169,10 @@ export default {
         '既に登録済みかどうか。未登録の場合は必須項目として表示されます',
       control: { type: 'boolean' },
     },
+    mutateCheckAllRegisteredGroups: {
+      description: 'グループ登録状況を更新するコールバック関数',
+      action: 'mutateCheckAllRegisteredGroups',
+    },
   },
 } as Meta<typeof Employees>;
 
@@ -124,6 +187,7 @@ export const Default: Story = {
     groupId: 1,
     isDeadline: false,
     isRegistered: false,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
@@ -144,6 +208,7 @@ export const Registered: Story = {
     groupId: 2,
     isDeadline: false,
     isRegistered: true,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
@@ -164,6 +229,7 @@ export const AfterDeadline: Story = {
     groupId: 3,
     isDeadline: true,
     isRegistered: true,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
@@ -184,6 +250,7 @@ export const NewGroup: Story = {
     groupId: 4,
     isDeadline: false,
     isRegistered: false,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
@@ -204,6 +271,7 @@ export const UnregisteredGroup: Story = {
     groupId: 2,
     isDeadline: false,
     isRegistered: true,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
@@ -226,25 +294,45 @@ export const AllStates: Story = {
         <h2 className="mb-4 text-xl font-bold text-gray-800">
           🆕 期限内・未登録（新規グループ）
         </h2>
-        <Employees groupId={4} isDeadline={false} isRegistered={false} />
+        <Employees
+          groupId={4}
+          isDeadline={false}
+          isRegistered={false}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
       </div>
       <div>
         <h2 className="mb-4 text-xl font-bold text-gray-800">
           ✅ 期限内・登録済み（従業員あり）
         </h2>
-        <Employees groupId={1} isDeadline={false} isRegistered={true} />
+        <Employees
+          groupId={1}
+          isDeadline={false}
+          isRegistered={true}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
       </div>
       <div>
         <h2 className="mb-4 text-xl font-bold text-gray-800">
           👥 期限内・未登録グループ（代表・副代表のみ）
         </h2>
-        <Employees groupId={2} isDeadline={false} isRegistered={true} />
+        <Employees
+          groupId={2}
+          isDeadline={false}
+          isRegistered={true}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
       </div>
       <div>
         <h2 className="mb-4 text-xl font-bold text-gray-800">
           🔒 期限後・登録済み（編集不可）
         </h2>
-        <Employees groupId={3} isDeadline={true} isRegistered={true} />
+        <Employees
+          groupId={3}
+          isDeadline={true}
+          isRegistered={true}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
       </div>
     </div>
   ),
@@ -267,6 +355,7 @@ export const Interactive: Story = {
     groupId: 1,
     isDeadline: false,
     isRegistered: false,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
@@ -279,5 +368,68 @@ export const Interactive: Story = {
   play: async () => {
     // Storybookのインタラクションテストのサンプル
     // 実際のテストコードはここに記述
+  },
+};
+
+/**
+ * 「はい」登録の挙動テスト
+ * 従業員申請ありでの登録完了時の動作確認
+ */
+export const YesRegistrationBehavior: Story = {
+  args: {
+    groupId: 4,
+    isDeadline: false,
+    isRegistered: false,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '「はい」を選択して従業員申請を行う場合の挙動をテストします。登録完了時にmutateCheckAllRegisteredGroupsが呼ばれることを確認できます。',
+      },
+    },
+  },
+};
+
+/**
+ * 「いいえ」登録の挙動テスト
+ * 従業員申請なしでの登録完了時の動作確認
+ */
+export const NoRegistrationBehavior: Story = {
+  args: {
+    groupId: 4,
+    isDeadline: false,
+    isRegistered: false,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '「いいえ」を選択して代表・副代表のみで活動する場合の挙動をテストします。登録完了時にmutateCheckAllRegisteredGroupsが呼ばれることを確認できます。',
+      },
+    },
+  },
+};
+
+/**
+ * 削除操作の挙動テスト
+ * 従業員削除時の動作確認
+ */
+export const DeleteBehavior: Story = {
+  args: {
+    groupId: 1,
+    isDeadline: false,
+    isRegistered: true,
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '従業員データの削除操作時の挙動をテストします。削除完了時にmutateCheckAllRegisteredGroupsが呼ばれることを確認できます。',
+      },
+    },
   },
 };

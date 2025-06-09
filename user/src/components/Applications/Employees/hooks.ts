@@ -356,6 +356,7 @@ export const useEmployeesMainLogic = (
   isDeadline?: boolean,
   mutateCheckAllRegisteredGroups?: () => void
 ) => {
+  // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
 
   // トースト通知とステータス更新のコールバック
@@ -472,18 +473,21 @@ export const useEmployeesMainLogic = (
   // ===============================
 
   /**
-   * 未登録グループ状態かどうか
+   * 申請しないデータがあるかどうか
    */
   const isUnregisteredGroup = !!unregisteredLogic.unregisteredData;
+  const isEmployeesData = businessLogic.getEmployeesData?.length > 0;
+
+  /**
+   * 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）
+   */
+  const isDeadlineMode = isDeadline && !isUnregisteredGroup && !isEmployeesData;
 
   /**
    * フォームリスト表示状態かどうか
+   * 期限内かつ、従業員データがあり、非編集モードの場合
    */
-  const isFormListMode =
-    businessLogic.getEmployeesData &&
-    businessLogic.getEmployeesData.length > 0 &&
-    !isDeadline &&
-    !isEditing;
+  const isFormListMode = isEmployeesData && !isEditing;
 
   /**
    * フォーム表示用のテーブルデータ
@@ -496,9 +500,9 @@ export const useEmployeesMainLogic = (
 
   return {
     // 状態
-    isEditing,
     isUnregisteredGroup,
     isFormListMode,
+    isDeadlineMode,
     tableData,
 
     // フォーム関連
