@@ -32,6 +32,7 @@ export default function HomePage() {
           <Employees
             isDeadline={!userPageSettings?.isEditEmployee}
             isRegistered={checkAllRegisteredGroups?.employee}
+            mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             groupId={groupId}
           />
         </>

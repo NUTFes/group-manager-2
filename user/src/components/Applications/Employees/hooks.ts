@@ -348,17 +348,23 @@ export const useUnregisteredGroupLogic = (
  *
  * @param groupId - 対象のグループID
  * @param isDeadline - 申請期限が過ぎているかどうか
+ * @param mutateCheckAllRegisteredGroups - グループ登録状況を更新するコールバック
  * @returns コンポーネントで必要なすべての状態とハンドラ
  */
 export const useEmployeesMainLogic = (
   groupId: number,
-  isDeadline?: boolean
+  isDeadline?: boolean,
+  mutateCheckAllRegisteredGroups?: () => void
 ) => {
   const [isEditing, setEditing] = useState(false);
 
-  // トースト通知のコールバック
+  // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
-    onSuccess: (message: string) => toast.success(message),
+    onSuccess: (message: string) => {
+      toast.success(message);
+      // 従業員申請完了後にグループ登録状況を更新
+      mutateCheckAllRegisteredGroups?.();
+    },
     onError: (message: string) => toast.error(message),
   };
 

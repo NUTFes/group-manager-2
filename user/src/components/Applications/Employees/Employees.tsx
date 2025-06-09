@@ -12,6 +12,7 @@ type EmployeesProps = {
   isDeadline?: boolean; // 申請期限が過ぎているかどうか
   isRegistered?: boolean; // 既に登録済みかどうか
   groupId: number; // 対象のグループID
+  mutateCheckAllRegisteredGroups: () => void;
 };
 
 /**
@@ -21,6 +22,7 @@ export const Employees: FC<EmployeesProps> = ({
   isDeadline,
   isRegistered,
   groupId,
+  mutateCheckAllRegisteredGroups,
 }) => {
   return (
     <AccordionMenu
@@ -29,7 +31,11 @@ export const Employees: FC<EmployeesProps> = ({
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
     >
-      <Content groupId={groupId} isDeadline={isDeadline} />
+      <Content
+        groupId={groupId}
+        isDeadline={isDeadline}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+      />
     </AccordionMenu>
   );
 };
@@ -37,14 +43,23 @@ export const Employees: FC<EmployeesProps> = ({
 type ContentProps = {
   groupId: number;
   isDeadline?: boolean;
+  mutateCheckAllRegisteredGroups: () => void;
 };
 
 /**
  * 従業員申請のコンテンツ部分
  */
-const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
+const Content: FC<ContentProps> = ({
+  groupId,
+  isDeadline,
+  mutateCheckAllRegisteredGroups,
+}) => {
   // すべてのロジックをhookに委譲
-  const logic = useEmployeesMainLogic(groupId, isDeadline);
+  const logic = useEmployeesMainLogic(
+    groupId,
+    isDeadline,
+    mutateCheckAllRegisteredGroups
+  );
 
   // 「申請しない」を登録した場合のリスト表示
   if (logic.isUnregisteredGroup) {
