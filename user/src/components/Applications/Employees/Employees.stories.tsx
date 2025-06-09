@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import { ToastContainer } from 'react-toastify';
@@ -21,6 +22,79 @@ const mockMutateCheckAllRegisteredGroups = () => {
   });
 };
 
+/**
+ * Storybook用のフォーム状態管理ラッパー
+ * needApplicationの状態を管理し、フォームのインタラクションをテスト可能にします
+ */
+interface EmployeesWrapperProps {
+  groupId: number;
+  isDeadline: boolean;
+  isRegistered: boolean;
+  mutateCheckAllRegisteredGroups: () => void;
+  /**
+   * needApplicationの初期値
+   * - undefined: 未選択状態
+   * - true: 「はい」選択済み（従業員申請する）
+   * - false: 「いいえ」選択済み（代表・副代表のみ）
+   */
+  initialNeedApplication?: boolean;
+}
+
+const EmployeesWrapper: React.FC<EmployeesWrapperProps> = ({
+  groupId,
+  isDeadline,
+  isRegistered,
+  mutateCheckAllRegisteredGroups,
+  initialNeedApplication,
+}) => {
+  const [needApplication] = useState<boolean | undefined>(
+    initialNeedApplication
+  );
+
+  console.log(
+    `🎯 needApplication状態: ${needApplication} (groupId: ${groupId})`
+  );
+
+  return (
+    <div>
+      {/* デバッグ用：現在の状態表示 */}
+      <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+        <h3 className="mb-2 text-sm font-semibold text-blue-800">
+          📊 Storybook Debug Info
+        </h3>
+        <div className="space-y-1 text-xs text-blue-700">
+          <div>GroupID: {groupId}</div>
+          <div>IsDeadline: {isDeadline ? 'Yes' : 'No'}</div>
+          <div>IsRegistered: {isRegistered ? 'Yes' : 'No'}</div>
+          <div>
+            InitialNeedApplication:{' '}
+            {needApplication === undefined
+              ? 'Unselected'
+              : needApplication
+                ? 'Yes (設定値)'
+                : 'No (設定値)'}
+          </div>
+          <div className="mt-2 text-xs text-blue-600">
+            💡
+            現在の実装では、コンポーネント内部でAPIデータから初期状態を決定します
+          </div>
+          <div className="text-xs text-blue-600">
+            🔧
+            ラジオボタンの初期選択は、APIのemployeesデータ・unregistered-groupsデータで決まります
+          </div>
+        </div>
+      </div>
+
+      <Employees
+        groupId={groupId}
+        isDeadline={isDeadline}
+        isRegistered={isRegistered}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+      />
+    </div>
+  );
+};
+
 // Storybook用のSWR設定
 const swrConfig = {
   dedupingInterval: 0,
@@ -29,24 +103,31 @@ const swrConfig = {
   refreshInterval: 0,
   fallback: {
     // 従業員データのモック
-    '/api/employees/1': [
+    '/api/employees/1': [], // 期限内・未登録（従業員データなし）
+    '/api/employees/2': [
       { id: 1, name: '技大 太郎', studentId: '12345678' },
       { id: 2, name: '技大 花子', studentId: '87654321' },
-    ],
-    '/api/employees/2': [{ id: 3, name: '長岡 三郎', studentId: '11111111' }],
-    '/api/employees/3': [{ id: 4, name: '技術 四郎', studentId: '22222222' }],
-    '/api/employees/4': [], // 新規グループ：従業員データなし
+    ], // 期限内・従業員申請あり
+    '/api/employees/3': [], // 期限内・「申請しない」登録済み（従業員データなし）
+    '/api/employees/4': [], // 申請期限後・未登録
+    '/api/employees/5': [
+      { id: 1, name: '技大 太郎', studentId: '12345678' },
+      { id: 2, name: '技大 花子', studentId: '87654321' },
+    ], // 申請期限後・従業員申請あり
+    '/api/employees/6': [], // 申請期限後・「申請しない」登録済み（従業員データなし）
 
     // 未登録グループデータのモック
-    '/api/unregistered-groups/1': null, // 従業員申請あり
-    '/api/unregistered-groups/2': { id: 1, groupId: 2 }, // 従業員申請なし
-    '/api/unregistered-groups/3': { id: 2, groupId: 3 }, // 従業員申請なし
-    '/api/unregistered-groups/4': null, // 新規グループ：未登録データなし
+    '/api/unregistered-groups/1': null, // 期限内・未登録（未登録グループデータなし）
+    '/api/unregistered-groups/2': null, // 期限内・従業員申請あり（未登録グループデータなし）
+    '/api/unregistered-groups/3': { id: 1, groupId: 3 }, // 期限内・「申請しない」登録済み
+    '/api/unregistered-groups/4': null, // 申請期限後・未登録（未登録グループデータなし）
+    '/api/unregistered-groups/5': null, // 申請期限後・従業員申請あり（未登録グループデータなし）
+    '/api/unregistered-groups/6': { id: 1, groupId: 6 }, // 申請期限後・「申請しない」登録済み
 
     // グループ登録状況確認データのモック
     '/api/check_all_registered/1': {
       status: { code: 200, message: 'success' },
-      data: { employee: true, group: true, subRep: true },
+      data: { employee: false, group: true, subRep: true },
     },
     '/api/check_all_registered/2': {
       status: { code: 200, message: 'success' },
@@ -59,6 +140,14 @@ const swrConfig = {
     '/api/check_all_registered/4': {
       status: { code: 200, message: 'success' },
       data: { employee: false, group: true, subRep: true },
+    },
+    '/api/check_all_registered/5': {
+      status: { code: 200, message: 'success' },
+      data: { employee: true, group: true, subRep: true },
+    },
+    '/api/check_all_registered/6': {
+      status: { code: 200, message: 'success' },
+      data: { employee: true, group: true, subRep: true },
     },
   },
 };
@@ -94,7 +183,7 @@ const swrConfig = {
  */
 export default {
   title: 'Applications/Employees',
-  component: Employees,
+  component: EmployeesWrapper, // ラッパーコンポーネントを使用
   tags: ['autodocs'],
   decorators: [
     (Story) => (
@@ -169,115 +258,149 @@ export default {
         '既に登録済みかどうか。未登録の場合は必須項目として表示されます',
       control: { type: 'boolean' },
     },
+    initialNeedApplication: {
+      description:
+        'needApplicationの初期値（undefined: 未選択、true: はい、false: いいえ）',
+      control: {
+        type: 'radio',
+        options: [undefined, true, false],
+        labels: {
+          undefined: '未選択',
+          true: 'はい（従業員申請する）',
+          false: 'いいえ（代表・副代表のみ）',
+        },
+      },
+    },
     mutateCheckAllRegisteredGroups: {
       description: 'グループ登録状況を更新するコールバック関数',
       action: 'mutateCheckAllRegisteredGroups',
     },
   },
-} as Meta<typeof Employees>;
+} as Meta<typeof EmployeesWrapper>;
 
-type Story = StoryObj<typeof Employees>;
+type Story = StoryObj<typeof EmployeesWrapper>;
 
 /**
- * 基本的な従業員申請コンポーネント
- * 期限内で未登録の状態
+ * 期限内・未登録状態（フォームインタラクション可能）
  */
 export const Default: Story = {
   args: {
     groupId: 1,
     isDeadline: false,
     isRegistered: false,
+    initialNeedApplication: undefined, // 未選択状態でスタート
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '最も基本的な状態の従業員申請コンポーネントです。期限内かつ未登録の状態で表示されます。ユーザーは従業員申請が必要かどうかを選択できます。',
+          '🆕 新規グループの初期状態です。従業員データも未登録グループデータもない状態で、ラジオボタンは未選択状態から開始します。現在の実装では、コンポーネント内部でAPIデータから状態を決定するため、外部からの初期値注入はできません。実際のフォーム操作をテストできます。',
       },
     },
   },
 };
 
 /**
- * 登録済み状態
- * 既に従業員申請が完了している状態
+ * 期限内・従業員申請済み（「はい」選択済み）
  */
-export const Registered: Story = {
+export const BeforeDeadlineWithEmployees: Story = {
   args: {
     groupId: 2,
     isDeadline: false,
     isRegistered: true,
+    initialNeedApplication: true, // 「はい」選択済み
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '既に従業員申請が登録済みの状態です。アコーディオンが開いた状態で表示され、編集ボタンから内容を変更できます。',
+          '✅ 既に従業員申請が登録済みの状態です。従業員データが存在するため、コンポーネントが自動的に従業員一覧モードで表示されます。アコーディオンが開いた状態で表示され、編集ボタンから内容を変更できます。',
       },
     },
   },
 };
 
 /**
- * 申請期限後
- * 期限が過ぎて編集不可になった状態
+ * 期限内・「申請しない」登録済み（「いいえ」選択済み）
  */
-export const AfterDeadline: Story = {
+export const BeforeDeadlineUnregisteredGroup: Story = {
   args: {
     groupId: 3,
-    isDeadline: true,
+    isDeadline: false,
     isRegistered: true,
+    initialNeedApplication: false, // 「いいえ」選択済み
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '申請期限が過ぎた状態です。編集ボタンが表示されず、閲覧専用になります。AccordionMenuの編集可能フラグがfalseになっています。',
+          '🚫 代表・副代表のみで活動する状態です。未登録グループデータが存在するため、コンポーネントが自動的に「従業員申請は不要(登録済み)」メッセージを表示します。編集ボタンから変更可能です。',
       },
     },
   },
 };
 
 /**
- * 期限内・未登録状態
- * 新規グループの初期状態
+ * 申請期限後・未登録
  */
-export const NewGroup: Story = {
+export const AfterDeadlineNoApplication: Story = {
   args: {
     groupId: 4,
-    isDeadline: false,
+    isDeadline: true,
     isRegistered: false,
+    initialNeedApplication: undefined, // 期限後なので選択不可
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '新規グループの初期状態です。必須項目として表示され、従業員申請の選択から開始できます。まだ何もデータが入っていない状態です。',
+          '⏰ 申請期限が過ぎており、何も登録されていない状態です。期限切れメッセージが表示され、新規申請はできません。この状態では「申請期限が過ぎています」というメッセージが表示されます。',
       },
     },
   },
 };
 
 /**
- * 未登録グループ状態
- * 代表・副代表のみで活動する状態
+ * 申請期限後・従業員申請済み（「はい」選択済み・読み取り専用）
  */
-export const UnregisteredGroup: Story = {
+export const AfterDeadlineWithEmployees: Story = {
   args: {
-    groupId: 2,
-    isDeadline: false,
+    groupId: 5,
+    isDeadline: true,
     isRegistered: true,
+    initialNeedApplication: true, // 「はい」選択済み（読み取り専用）
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '「代表」または「副代表」だけで活動する状態です。従業員申請が不要として登録済みの状態を表示します。',
+          '📋 申請期限が過ぎた状態で、従業員データが登録済みの場合です。従業員の一覧が表示されますが、編集ボタンは表示されず閲覧専用になります。',
+      },
+    },
+  },
+};
+
+/**
+ * 申請期限後・「申請しない」登録済み（「いいえ」選択済み・読み取り専用）
+ */
+export const AfterDeadlineUnregistered: Story = {
+  args: {
+    groupId: 6,
+    isDeadline: true,
+    isRegistered: true,
+    initialNeedApplication: false, // 「いいえ」選択済み（読み取り専用）
+    mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '🔒 申請期限が過ぎた状態で、代表・副代表のみで活動として登録済みの場合です。「従業員申請は不要(登録済み)」と表示されますが、編集ボタンは表示されません。',
       },
     },
   },
@@ -285,52 +408,80 @@ export const UnregisteredGroup: Story = {
 
 /**
  * 複数の状態を並べて表示
- * 全パターンの動作確認用
+ * 全パターンの動作確認用（フォーム状態管理付き）
  */
 export const AllStates: Story = {
   render: () => (
     <div className="space-y-8">
       <div>
         <h2 className="mb-4 text-xl font-bold text-gray-800">
-          🆕 期限内・未登録（新規グループ）
+          🆕 期限内・未登録状態（インタラクティブ）
         </h2>
-        <Employees
-          groupId={4}
-          isDeadline={false}
-          isRegistered={false}
-          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
-        />
-      </div>
-      <div>
-        <h2 className="mb-4 text-xl font-bold text-gray-800">
-          ✅ 期限内・登録済み（従業員あり）
-        </h2>
-        <Employees
+        <EmployeesWrapper
           groupId={1}
           isDeadline={false}
-          isRegistered={true}
+          isRegistered={false}
+          initialNeedApplication={undefined}
           mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
         />
       </div>
       <div>
         <h2 className="mb-4 text-xl font-bold text-gray-800">
-          👥 期限内・未登録グループ（代表・副代表のみ）
+          ✅ 期限内・従業員申請済み（「はい」選択済み）
         </h2>
-        <Employees
+        <EmployeesWrapper
           groupId={2}
           isDeadline={false}
           isRegistered={true}
+          initialNeedApplication={true}
           mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
         />
       </div>
       <div>
         <h2 className="mb-4 text-xl font-bold text-gray-800">
-          🔒 期限後・登録済み（編集不可）
+          🚫 期限内・「申請しない」登録済み（「いいえ」選択済み）
         </h2>
-        <Employees
+        <EmployeesWrapper
           groupId={3}
+          isDeadline={false}
+          isRegistered={true}
+          initialNeedApplication={false}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
+      </div>
+      <div>
+        <h2 className="mb-4 text-xl font-bold text-gray-800">
+          ⏰ 申請期限後・未登録
+        </h2>
+        <EmployeesWrapper
+          groupId={4}
+          isDeadline={true}
+          isRegistered={false}
+          initialNeedApplication={undefined}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
+      </div>
+      <div>
+        <h2 className="mb-4 text-xl font-bold text-gray-800">
+          📋 申請期限後・従業員申請済み（読み取り専用）
+        </h2>
+        <EmployeesWrapper
+          groupId={5}
           isDeadline={true}
           isRegistered={true}
+          initialNeedApplication={true}
+          mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
+        />
+      </div>
+      <div>
+        <h2 className="mb-4 text-xl font-bold text-gray-800">
+          🔒 申請期限後・「申請しない」登録済み（読み取り専用）
+        </h2>
+        <EmployeesWrapper
+          groupId={6}
+          isDeadline={true}
+          isRegistered={true}
+          initialNeedApplication={false}
           mutateCheckAllRegisteredGroups={mockMutateCheckAllRegisteredGroups}
         />
       </div>
@@ -340,7 +491,7 @@ export const AllStates: Story = {
     docs: {
       description: {
         story:
-          '異なる状態の従業員申請コンポーネントを並べて表示し、各状態での動作を確認できます。実際のアプリケーションで遭遇する様々なシナリオを網羅しています。',
+          '📊 異なる状態の従業員申請コンポーネントを並べて表示し、各状態での動作を確認できます。実際のアプリケーションで遭遇する様々なシナリオを網羅しています。ラッパーコンポーネントによってフォーム状態が管理され、各パターンでのインタラクションをテストできます。全6パターン：未選択、はい選択済み、いいえ選択済み + 期限前後の組み合わせ。',
       },
     },
   },
@@ -348,20 +499,21 @@ export const AllStates: Story = {
 
 /**
  * インタラクションテスト用
- * フォーム操作のテストケース
+ * フォーム操作のテストケース（ラジオボタン選択可能）
  */
 export const Interactive: Story = {
   args: {
     groupId: 1,
     isDeadline: false,
     isRegistered: false,
+    initialNeedApplication: undefined, // フォームのインタラクションをテスト可能
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          'フォームの操作性をテストするためのストーリーです。ラジオボタンの選択、従業員の追加・削除、フォームバリデーションなどの動作を確認できます。',
+          '🎮 フォームの操作性をテストするためのストーリーです。初期状態では従業員データも未登録グループデータもないため、ラジオボタンが未選択状態で表示されます。ラジオボタンの選択、従業員の追加・削除、フォームバリデーションなどの動作を確認できます。Debug Infoで設定値と実際の動作の違いを確認できます。',
       },
     },
   },
@@ -377,16 +529,17 @@ export const Interactive: Story = {
  */
 export const YesRegistrationBehavior: Story = {
   args: {
-    groupId: 4,
+    groupId: 2,
     isDeadline: false,
     isRegistered: false,
+    initialNeedApplication: true, // 「はい」を事前選択
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '「はい」を選択して従業員申請を行う場合の挙動をテストします。登録完了時にmutateCheckAllRegisteredGroupsが呼ばれることを確認できます。',
+          '✅「はい」を選択して従業員申請を行う場合の挙動をテストします。登録完了時に`mutateCheckAllRegisteredGroups`が呼ばれ、トーストメッセージ「従業員申請が完了しました」が表示されることを確認できます。',
       },
     },
   },
@@ -398,16 +551,17 @@ export const YesRegistrationBehavior: Story = {
  */
 export const NoRegistrationBehavior: Story = {
   args: {
-    groupId: 4,
+    groupId: 3,
     isDeadline: false,
     isRegistered: false,
+    initialNeedApplication: false, // 「いいえ」を事前選択
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '「いいえ」を選択して代表・副代表のみで活動する場合の挙動をテストします。登録完了時にmutateCheckAllRegisteredGroupsが呼ばれることを確認できます。',
+          '🚫「いいえ」を選択して代表・副代表のみで活動する場合の挙動をテストします。登録完了時に`mutateCheckAllRegisteredGroups`が呼ばれ、トーストメッセージ「従業員申請を行わない登録が完了しました」が表示されることを確認できます。',
       },
     },
   },
@@ -419,16 +573,17 @@ export const NoRegistrationBehavior: Story = {
  */
 export const DeleteBehavior: Story = {
   args: {
-    groupId: 1,
+    groupId: 2,
     isDeadline: false,
     isRegistered: true,
+    initialNeedApplication: true, // 従業員データがある状態
     mutateCheckAllRegisteredGroups: mockMutateCheckAllRegisteredGroups,
   },
   parameters: {
     docs: {
       description: {
         story:
-          '従業員データの削除操作時の挙動をテストします。削除完了時にmutateCheckAllRegisteredGroupsが呼ばれることを確認できます。',
+          '🗑️ 従業員データの削除操作時の挙動をテストします。削除完了時に`mutateCheckAllRegisteredGroups`が呼ばれ、トーストメッセージ「従業員を削除しました」が表示されることを確認できます。既存の従業員データがある状態からテストできます。',
       },
     },
   },
