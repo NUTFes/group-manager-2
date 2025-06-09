@@ -114,9 +114,10 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
             {venueMap && (
               <Button
                 size="pc"
-                color="secondary"
+                color="main"
                 onClick={toEdit}
                 type="button"
+                variant
               >
                 キャンセル
               </Button>
@@ -127,7 +128,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
               color="main"
               isDisable={isMutating || (venueMap ? !isDirty : false)}
             >
-              {isMutating ? '送信中...' : venueMap ? '修正する' : '登録する'}
+              {isMutating ? '送信中...' : venueMap ? '修正' : '登録する'}
             </Button>
           </div>
         </form>
