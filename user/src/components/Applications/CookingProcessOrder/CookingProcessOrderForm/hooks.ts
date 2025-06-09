@@ -11,6 +11,7 @@ import { CookingProcessOrderSchema, cookingProcessOrderSchema } from './schema';
 
 export const useCookingProcessOrderForm = (
   groupId: number | undefined,
+  foodProductId: number,
   onSuccess: () => void,
   defaultValues?: CookingProcessOrderResponse
 ) => {
@@ -18,6 +19,7 @@ export const useCookingProcessOrderForm = (
     resolver: zodResolver(cookingProcessOrderSchema),
     defaultValues: {
       groupId: groupId,
+      foodProductId: foodProductId,
       preOpenKitchen: defaultValues?.preOpenKitchen ?? false,
       duringOpenKitchen: defaultValues?.duringOpenKitchen ?? false,
       tent: defaultValues?.tent ?? '',
@@ -29,7 +31,7 @@ export const useCookingProcessOrderForm = (
     useUpdateCookingProcessOrder(defaultValues?.id ?? 0);
 
   const onSubmit = methods.handleSubmit(async (data) => {
-    const payload = { ...data, groupId };
+    const payload = { ...data, groupId, foodProductId };
     try {
       if (defaultValues) {
         await update({ body: payload });

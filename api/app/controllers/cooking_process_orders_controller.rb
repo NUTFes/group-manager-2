@@ -14,10 +14,11 @@ class CookingProcessOrdersController < ApplicationController
 
   # GET /cooking_process_orders/group/:group_id
   def get_by_group_id
-    if @cooking_process_orders
+    @cooking_process_orders = CookingProcessOrder.where(group_id: params[:group_id])
+    if @cooking_process_orders.present?
       render json: fmt(ok, @cooking_process_orders)
     else
-      render json: fmt(not_found, [], "Not found cooking_process_orders = "+params[:group_id])
+      render json: fmt(not_found, [], "Not found cooking_process_orders for group_id = "+params[:group_id])
     end
   end
 
@@ -54,6 +55,6 @@ class CookingProcessOrdersController < ApplicationController
 
     # Only allow a list of trusted parameters through
     def cooking_process_order_params
-      params.require(:cooking_process_order).permit(:pre_open_kitchen, :during_open_kitchen, :tent)
+      params.require(:cooking_process_order).permit(:pre_open_kitchen, :during_open_kitchen, :tent, :food_product_id)
     end
 end

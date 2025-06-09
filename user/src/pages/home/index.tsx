@@ -1,6 +1,7 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
+import CookingProcessOrder from '@/components/Applications/CookingProcessOrder';
 import FoodProduct from '@/components/Applications/FoodProduct';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
@@ -26,6 +27,7 @@ export default function HomePage() {
 
   const GroupCategoryContent = () => {
     if (groupCategoryId === 6) {
+      // 実行委員の場合
       return (
         <>
           <RentItems
@@ -42,6 +44,7 @@ export default function HomePage() {
         </>
       );
     } else if (groupCategoryId === 3) {
+      // ステージ申請の場合
       return (
         <>
           <Stage
@@ -100,6 +103,11 @@ export default function HomePage() {
             groupId={groupId}
             isDeadline={!userPageSettings?.isEditFoodProduct}
             isRegistered={checkAllRegisteredGroups?.foodProduct}
+          />
+          <CookingProcessOrder
+            isEdit={!!userPageSettings?.isEditCookingProcess}
+            isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
+            groupId={groupId}
           />
         </>
       );

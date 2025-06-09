@@ -6,6 +6,7 @@ import {
 
 export type CookingProcessOrder = {
   groupId: number;
+  foodProductId: number;
   preOpenKitchen: boolean;
   duringOpenKitchen: boolean;
   tent?: string | null;
@@ -14,6 +15,7 @@ export type CookingProcessOrder = {
 export type CookingProcessOrderResponse = {
   id: number;
   groupId: number;
+  foodProductId: number;
   createdAt: string;
   updatedAt: string;
   preOpenKitchen: boolean;
@@ -39,9 +41,9 @@ export const useGetCookingProcessOrder = (groupId: number | undefined) => {
   const endpoint = `${API_ENDPOINTS.COOKING_PROCESS_ORDER}/group/${groupId}`;
 
   const { data, error, isLoading, mutate } =
-    useAuthenticatedGet<ApiResponse<CookingProcessOrderResponse>>(endpoint);
+    useAuthenticatedGet<ApiResponse<CookingProcessOrderResponse[]>>(endpoint);
 
-  const cookingProcessOrders = data?.data ?? undefined;
+  const cookingProcessOrders = data?.data ?? [];
 
   return {
     cookingProcessOrders,

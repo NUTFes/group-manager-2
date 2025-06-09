@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { CookingProcessOrderResponse } from '@/api/cookingProcessOrderApi';
-import Selector from '@/components/Form/Selector';
 import Button from '../../../Button';
 import CheckBox from '../../../Form/CheckBox';
 import Radio from '../../../Form/Radio';
@@ -10,12 +9,16 @@ import { useCookingProcessOrderForm } from './hooks';
 
 type CookingProcessOrderFormProps = {
   groupId: number | undefined;
+  foodProductId: number;
+  foodProductName: string;
   onSuccess: () => void;
   defaultValues?: CookingProcessOrderResponse;
 };
 
 const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
   groupId,
+  foodProductId,
+  foodProductName,
   onSuccess,
   defaultValues,
 }) => {
@@ -26,7 +29,12 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
     handleConfirmCookingProcessChange,
     onSubmit,
     isSubmitting,
-  } = useCookingProcessOrderForm(groupId, onSuccess, defaultValues);
+  } = useCookingProcessOrderForm(
+    groupId,
+    foodProductId,
+    onSuccess,
+    defaultValues
+  );
   const {
     setValue,
     formState: { errors, isDirty },
@@ -55,15 +63,10 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
   return (
     <FormContainer>
       <form onSubmit={onSubmit} className="flex flex-col gap-6">
-        <Selector
-          label="販売品名"
-          value={'テスト'}
-          options={[
-            { id: 1, name: 'テスト' },
-            { id: 2, name: 'テスト２' },
-          ]}
-          onChange={() => {}}
-        />
+        <div>
+          <div className="text-font-color text-xs font-bold">販売品名</div>
+          <div className="text-font-color text-base">{foodProductName}</div>
+        </div>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">調理場の仕様有無</p>
           <p className="text-xs text-alert">※必須</p>
