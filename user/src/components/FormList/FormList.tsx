@@ -35,7 +35,7 @@ const FormList: FC<FormListProps> = ({
           <thead>
             <tr>
               {headers.map((header, idx) => (
-                <th key={idx} className="px-8 py-4 text-xl font-bold">
+                <th key={idx} className="text-font px-8 py-3 text-xs">
                   {header}
                 </th>
               ))}
@@ -43,9 +43,12 @@ const FormList: FC<FormListProps> = ({
           </thead>
           <tbody>
             {tableItems.map((item, idx) => (
-              <tr key={idx} className="h-24">
+              <tr key={idx} className="h-12">
                 {keys.map((key, kidx) => (
-                  <td key={kidx} className="px-8 py-4 text-3xl font-medium">
+                  <td
+                    key={kidx}
+                    className="text-font px-8 py-2 text-base font-medium"
+                  >
                     {item[key]}
                   </td>
                 ))}
@@ -90,12 +93,12 @@ const FormList: FC<FormListProps> = ({
       {items.map((item, index) => (
         <div key={index} className="flex w-auto flex-col md:w-[400px]">
           <div className="flex">
-            <div className="text-xs text-font">{(item as FormItem).label}</div>
+            <div className="text-font text-xs">{(item as FormItem).label}</div>
             {(item as FormItem).isEditable && (
               <span className="ml-6 text-xs text-red-500">※変更できません</span>
             )}
           </div>
-          <div className="mt-2 h-6 text-base font-medium text-font md:h-10">
+          <div className="text-font mt-2 h-6 text-base font-medium md:h-10">
             {(item as FormItem).content}
           </div>
         </div>
