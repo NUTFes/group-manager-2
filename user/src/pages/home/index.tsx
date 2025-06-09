@@ -1,6 +1,7 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
+import { GROUP_CATEGORY } from '@/utils/constants';
 import Employees from '@/components/Applications/Employees/Employees';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
@@ -25,7 +26,7 @@ export default function HomePage() {
     useGetCheckAllRegisteredGroups(groupId);
 
   const GroupCategoryContent = () => {
-    if (groupCategoryId === 1) {
+    if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
       return (
         <>
           <Employees
@@ -35,7 +36,7 @@ export default function HomePage() {
           />
         </>
       );
-    } else if (groupCategoryId === 6) {
+    } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
       return (
         <>
           <RentItems
@@ -51,7 +52,7 @@ export default function HomePage() {
           />
         </>
       );
-    } else if (groupCategoryId === 3) {
+    } else if (groupCategoryId === GROUP_CATEGORY.STAGE) {
       return (
         <>
           <Stage

@@ -1,3 +1,4 @@
+import { GROUP_CATEGORY } from '@/utils/constants';
 import '@globals';
 import { Meta, StoryObj } from '@storybook/react';
 import GroupApplicationForm from './GroupForm';
@@ -40,7 +41,7 @@ export const Edit: Story = {
       projectName: 'ギダイジャー',
       isInternational: false,
       isExternal: false,
-      groupCategoryId: 1,
+      groupCategoryId: GROUP_CATEGORY.FOOD_SALES,
       activity: '技大祭の運営',
       committee: false,
       createdAt: new Date().toISOString(),
