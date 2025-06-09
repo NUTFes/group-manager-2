@@ -110,7 +110,21 @@ def purchase_list_bulk_params
       :is_fresh,
       :purchase_date,
       :url,
-      :remark # ← 追加カラム
+      :remark
     ).to_h.symbolize_keys
   end
+end
+
+# 単一レコード用のStrong Parameters
+def purchase_list_params
+  params.permit(
+    :food_product_id,
+    :shop_id,
+    :fes_date_id,
+    :items,
+    :is_fresh,
+    :purchase_date,
+    :url,
+    :remark
+  )
 end
