@@ -46,24 +46,19 @@ const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
   // すべてのロジックをhookに委譲
   const logic = useEmployeesMainLogic(groupId, isDeadline);
 
-  // 「申請しない」を登録した場合のカード表示
+  // 「申請しない」を登録した場合のリスト表示
   if (logic.isUnregisteredGroup) {
     return (
-      <div className="flex flex-col items-center rounded-2xl border bg-white p-8 shadow-md">
-        <div className="mb-6 text-center">
-          <div className="mb-2 text-lg font-bold">従業員申請は不要</div>
-          <div>「代表」と「副代表」だけで活動します。</div>
-        </div>
-        <Button
-          size="pc"
-          color="main"
-          icon="pencil"
-          type="button"
-          onClick={logic.handleEditClick}
-        >
-          修正
-        </Button>
-      </div>
+      <FormList
+        items={[
+          {
+            label: '従業員申請は不要(登録済み)',
+            content: '代表と副代表だけで活動します。',
+          },
+        ]}
+        onEdit={logic.handleEditClick}
+        isEdit={!isDeadline}
+      ></FormList>
     );
   }
 
