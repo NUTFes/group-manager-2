@@ -1,16 +1,37 @@
 import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
+import FormList from '@/components/FormList';
 import CookingProcessOrderForm from './CookingProcessOrderForm';
+import { useCookingProcessOrder } from './hooks';
 
-type CookingProcessOrderFormProps = {
+type CookingProcessOrderProps = {
   isEdit: boolean;
-  isExist: boolean;
+  groupId: number;
 };
 
-const CookingProcessOrder: FC<CookingProcessOrderFormProps> = ({
+const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   isEdit,
-  isExist,
+  groupId,
 }) => {
+  const {
+    cookingProcessOrder,
+    isLoading,
+    isExist,
+    isEditing,
+    handleEditClick,
+    mutateCookingProcessOrders,
+    formItems,
+  } = useCookingProcessOrder(groupId);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const onSuccess = () => {
+    mutateCookingProcessOrders();
+    handleEditClick();
+  };
+
   return (
     <AccordionMenu
       title="調理工程申請"
@@ -19,7 +40,15 @@ const CookingProcessOrder: FC<CookingProcessOrderFormProps> = ({
       isExist={isExist}
       required
     >
-      <CookingProcessOrderForm />
+      {isEditing ? (
+        <CookingProcessOrderForm
+          groupId={groupId}
+          onSuccess={onSuccess}
+          defaultValues={cookingProcessOrder}
+        />
+      ) : (
+        <FormList items={formItems} isEdit={isEdit} onEdit={handleEditClick} />
+      )}
     </AccordionMenu>
   );
 };

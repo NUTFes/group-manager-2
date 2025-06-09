@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { CookingProcessOrderResponse } from '@/api/cookingProcessOrderApi';
 import Selector from '@/components/Form/Selector';
 import Button from '../../../Button';
 import CheckBox from '../../../Form/CheckBox';
@@ -7,19 +8,29 @@ import TextArea from '../../../Form/TextArea';
 import FormContainer from '../../../FormContainer';
 import { useCookingProcessOrderForm } from './hooks';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type CookingProcessOrderFormProps = {};
+type CookingProcessOrderFormProps = {
+  groupId: number | undefined;
+  onSuccess: () => void;
+  defaultValues?: CookingProcessOrderResponse;
+};
 
-const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
+const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
+  groupId,
+  onSuccess,
+  defaultValues,
+}) => {
   const {
-    handleSubmit,
-    setValue,
-    errors,
-    onSubmit,
+    methods,
     values,
     confirmCookingProcessValues,
     handleConfirmCookingProcessChange,
-  } = useCookingProcessOrderForm();
+    onSubmit,
+    isSubmitting,
+  } = useCookingProcessOrderForm(groupId, onSuccess, defaultValues);
+  const {
+    setValue,
+    formState: { errors, isDirty },
+  } = methods;
 
   const option = [
     { id: 1, name: '使用する' },
@@ -43,7 +54,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
 
   return (
     <FormContainer>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <form onSubmit={onSubmit} className="flex flex-col gap-6">
         <Selector
           label="販売品名"
           value={'テスト'}
@@ -63,7 +74,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
           value={values.preOpenKitchen ? '1' : '0'}
           onChange={(val) => setValue('preOpenKitchen', val === '1')}
           options={option}
-          error={errors.preOpenKitchen?.message}
+          error={errors.preOpenKitchen?.message as string | undefined}
         />
         <Radio
           label="(営業中)"
@@ -71,7 +82,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
           value={values.duringOpenKitchen ? '1' : '0'}
           onChange={(val) => setValue('duringOpenKitchen', val === '1')}
           options={option}
-          error={errors.duringOpenKitchen?.message}
+          error={errors.duringOpenKitchen?.message as string | undefined}
         />
         <TextArea
           label="調理内容"
@@ -81,7 +92,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
               : '例）\n1. コーヒー豆を15g測る\n2. 入れる\n3. 温める\n4. 皿に乗せる'
           }
           onChange={(val) => setValue('tent', val)}
-          error={errors.tent?.message}
+          error={errors.tent?.message as string | undefined}
           required
         />
         <CheckBox
@@ -92,7 +103,12 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
           note="確認事項にチェックを入れてください"
           required
         />
-        <Button type="submit" size="pc" color="main" isDisable={false}>
+        <Button
+          type="submit"
+          size="pc"
+          color="main"
+          isDisable={isSubmitting || !isDirty}
+        >
           登録
         </Button>
       </form>
