@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useGetFoodProducts } from '@/api/foodProdutApi';
+import { useGetFoodProducts } from '@/api/foodProductApi';
 import {
   UpdatePurchaseListsRequest,
   useCreatePurchaseList,
@@ -13,12 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
-import {
-  DEFAULT_PURCHASE_ITEM,
-  FRESH_OPTIONS,
-  NET_ORDER_SHOP_ID,
-  OTHER_SHOP_ID,
-} from './constants';
+import { DEFAULT_PURCHASE_ITEM, FRESH_OPTIONS } from './constants';
 import {
   PurchaseItem,
   PurchaseListsFormData,
@@ -90,7 +85,7 @@ export const usePurchaseListsState = (
   const { purchaseLists, isLoading, hasError, mutatePurchaseLists } =
     useGetPurchaseListsByFoodProduct(selectedFoodProductId);
 
-  const { trigger: deletePurchaseList } = useDeletePurchaseList(1);
+  const { trigger: deletePurchaseList } = useDeletePurchaseList();
   const { shops, isLoading: isShopsLoading } = useGetShops();
   const { foodProductOptions } = useFoodProducts(groupId);
 
@@ -98,21 +93,16 @@ export const usePurchaseListsState = (
 
   // ショップオプションをAPIから取得したデータで作成
   const shopOptions = useMemo(
-    () => [
-      { id: 0, name: '選択してください' },
-      ...shops,
-      { id: NET_ORDER_SHOP_ID, name: 'ネット注文' },
-      { id: OTHER_SHOP_ID, name: 'その他(詳細を備考欄に記入必須)' },
-    ],
+    () => [{ id: 0, name: '選択してください' }, ...shops],
     [shops]
   );
 
   const toggleEdit = () => setIsEditing((prev) => !prev);
 
   const handleDeleteItem = async (itemId: number) => {
-    if (!purchaseLists) return;
+    if (!purchaseLists || !itemId) return;
     try {
-      await deletePurchaseList({ body: { id: itemId } });
+      await deletePurchaseList({ id: itemId });
       toast.success('購入品が削除されました');
       await mutatePurchaseLists();
       // 最後のアイテムを削除した場合のみ編集モードに切り替え
@@ -190,8 +180,9 @@ export const usePurchaseListsForm = (
   onSuccess: () => void
 ) => {
   const { trigger: createPurchaseList } = useCreatePurchaseList();
-  const { trigger: updatePurchaseList } = useUpdatePurchaseList(null);
+  const { trigger: updatePurchaseList } = useUpdatePurchaseList();
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
+  const { trigger: deletePurchaseList } = useDeletePurchaseList();
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
@@ -221,6 +212,22 @@ export const usePurchaseListsForm = (
     name: 'purchaseLists',
   });
 
+  const onRemove = async (index: number) => {
+    const item = formMethods.getValues().purchaseLists[index];
+    if (item && item.id) {
+      try {
+        await deletePurchaseList({ id: item.id });
+        toast.success('購入品が削除されました');
+        remove(index);
+      } catch (error) {
+        toast.error('削除に失敗しました。');
+        console.error(error);
+      }
+    } else {
+      remove(index);
+    }
+  };
+
   const handleActualSubmit = async (formData: PurchaseListsFormData) => {
     try {
       if (formData.purchaseLists.length > 1) {
@@ -233,6 +240,7 @@ export const usePurchaseListsForm = (
           })),
         };
         await upsertPurchaseLists({ body: requestBody });
+        toast.success('複数の購入品申請が登録されました');
       } else {
         // 単体の場合は個別のAPIを使用
         const item = formData.purchaseLists[0];
@@ -240,39 +248,35 @@ export const usePurchaseListsForm = (
 
         if (item.id) {
           // 更新
-          await updatePurchaseList({ body: itemWithFesDateId });
+          await updatePurchaseList({
+            id: item.id,
+            body: itemWithFesDateId,
+          });
+          toast.success('購入品申請が更新されました');
         } else {
           // 新規作成
           await createPurchaseList({ body: itemWithFesDateId });
+          toast.success('購入品申請が登録されました');
         }
       }
-      toast.success('購入品申請が登録されました');
       onSuccess();
-      reset({
-        purchaseLists:
-          formData.purchaseLists.length > 0
-            ? formData.purchaseLists
-            : [DEFAULT_PURCHASE_ITEM],
-      });
-    } catch {
-      toast.error('登録に失敗しました。');
+      reset(formData); // 送信後もフォーム内容は維持
+    } catch (error) {
+      toast.error('登録に失敗しました');
+      console.error(error);
     }
-  };
-
-  const addRow = () => {
-    append(DEFAULT_PURCHASE_ITEM);
   };
 
   return {
     control,
     fields,
     append,
-    remove,
+    remove: onRemove,
     triggerSubmit: handleSubmit(handleActualSubmit),
     errors: formState.errors,
     isValid: formState.isValid,
     setValue,
-    addRow,
+    reset,
   };
 };
 
