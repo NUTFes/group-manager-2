@@ -6,7 +6,6 @@ import {
 } from '@/hooks/useApi';
 
 export type PurchaseList = {
-  groupId: number;
   foodProductId: number;
   shopId: number;
   fesDateId: number;
@@ -14,6 +13,10 @@ export type PurchaseList = {
   isFresh: boolean;
   purchaseDate: string;
   url?: string | null;
+};
+
+export type UpdatePurchaseListsRequest = {
+  purchaseLists: (PurchaseList & { id?: number })[];
 };
 
 export type PurchaseListResponse = PurchaseList & {
@@ -36,6 +39,7 @@ const API_ENDPOINTS = {
   PURCHASE_LIST: '/purchase_lists',
   PURCHASE_LIST_GROUP: '/purchase_lists/group',
   PURCHASE_LIST_UPSERT: '/purchase_lists/upsert',
+  PURCHASE_LIST_FOOD_PRODUCT: '/purchase_lists/food_product',
 };
 
 // グループIDで取得
@@ -43,6 +47,26 @@ export const useGetPurchaseLists = (groupId: number | null) => {
   const endpoint =
     groupId !== null
       ? `${API_ENDPOINTS.PURCHASE_LIST_GROUP}/${groupId}`
+      : API_ENDPOINTS.PURCHASE_LIST;
+
+  const { data, error, isLoading, mutate } =
+    useAuthenticatedGet<ApiResponse<PurchaseListResponse[]>>(endpoint);
+
+  return {
+    purchaseLists: data?.data ?? [],
+    isLoading,
+    hasError: !!error,
+    mutatePurchaseLists: mutate,
+  };
+};
+
+// 食品商品IDで取得
+export const useGetPurchaseListsByFoodProduct = (
+  foodProductId: number | null
+) => {
+  const endpoint =
+    foodProductId !== null
+      ? `${API_ENDPOINTS.PURCHASE_LIST_FOOD_PRODUCT}/${foodProductId}`
       : API_ENDPOINTS.PURCHASE_LIST;
 
   const { data, error, isLoading, mutate } =
@@ -77,42 +101,3 @@ export const useDeletePurchaseList = (id: number | null) => {
   const endpoint = id !== null ? `${API_ENDPOINTS.PURCHASE_LIST}/${id}` : null;
   return useAuthenticatedDelete(endpoint);
 };
-
-/*
-export const useMutatePurchaseLists = () => {
-  const { post, put, remove } = useApiMutations();
-
-  const submitPurchaseLists = async (
-    items: PurchaseList[],
-    existingItems: PurchaseListResponse[] = []
-  ) => {
-    const promises = [];
-
-    // 既存データの数だけ更新
-    const minLength = Math.min(items.length, existingItems.length);
-    for (let i = 0; i < minLength; i++) {
-      promises.push(
-        put(`${API_ENDPOINTS.PURCHASE_LIST}/${existingItems[i].id}`, items[i])
-      );
-    }
-
-    // 新規作成（新しい分）
-    for (let i = existingItems.length; i < items.length; i++) {
-      promises.push(post(API_ENDPOINTS.PURCHASE_LIST, items[i]));
-    }
-
-    // 余分な分を削除
-    for (let i = items.length; i < existingItems.length; i++) {
-      promises.push(
-        remove(`${API_ENDPOINTS.PURCHASE_LIST}/${existingItems[i].id}`)
-      );
-    }
-
-    await Promise.all(promises);
-    return { success: true };
-  };
-
-  return { submitPurchaseLists };
-};
-
-*/
