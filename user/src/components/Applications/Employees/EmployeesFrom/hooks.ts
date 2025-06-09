@@ -14,6 +14,11 @@ import { useCallback, useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import {
+  NEED_APPLICATION,
+  type NeedApplicationValue,
+  RADIO_VALUE,
+} from '../constants';
+import {
   EmployeeFormItem,
   EmployeesForm,
   employeesFormSchema,
@@ -63,8 +68,7 @@ export const useEmployeesFormState = (
 ) => {
   // 従業員申請の必要性（ラジオボタンの値）
   const needApplication = form.watch('needApplication') as
-    | 'yes'
-    | 'no'
+    | NeedApplicationValue
     | undefined;
 
   // フォーム全体のバリデーション状態
@@ -75,11 +79,11 @@ export const useEmployeesFormState = (
 
   // 送信ボタンの有効/無効状態を計算
   const isSubmitDisabled = useMemo(() => {
-    if (needApplication === 'yes') {
-      // 「いいえ」選択時：フォームが有効かつ従業員が1人以上必要
+    if (needApplication === NEED_APPLICATION.YES) {
+      // 「はい」選択時：フォームが有効かつ従業員が1人以上必要
       return !isFormValid || !hasEmployees;
-    } else if (needApplication === 'no') {
-      // 「はい」選択時：常に送信可能
+    } else if (needApplication === NEED_APPLICATION.NO) {
+      // 「いいえ」選択時：常に送信可能
       return false;
     }
     // 未選択時：送信不可
@@ -145,15 +149,15 @@ export const useEmployeesFormHandlers = (
       const employees = convertEmployeesToFormData(existingEmployees);
 
       if (existingEmployees && existingEmployees.length > 0) {
-        // 既存データがある場合：「いいえ」を選択状態にして既存データを表示
+        // 既存データがある場合：「はい」を選択状態にして既存データを表示
         form.reset({
-          needApplication: 'yes',
+          needApplication: NEED_APPLICATION.YES,
           employees: employees,
         });
       } else {
-        // データがない場合：「はい」を選択状態にして空フィールド1つを表示
+        // データがない場合：「いいえ」を選択状態にして空フィールド1つを表示
         form.reset({
-          needApplication: 'no',
+          needApplication: NEED_APPLICATION.NO,
           employees: [{ name: '', studentId: '' }],
         });
       }
@@ -168,8 +172,9 @@ export const useEmployeesFormHandlers = (
    */
   const handleNeedApplicationChange = useCallback(
     async (value: string, existingEmployees?: EmployeeDataItem[]) => {
-      // 文字列値をyes/noに変換（1='はい'=no, 2='いいえ'=yes）
-      const newValue = value === '1' ? 'yes' : 'no';
+      // 文字列値をyes/noに変換（1='はい'=yes, 2='いいえ'=no）
+      const newValue =
+        value === RADIO_VALUE.YES ? NEED_APPLICATION.YES : NEED_APPLICATION.NO;
       await form.setValue('needApplication', newValue, {
         shouldValidate: true,
         shouldDirty: true,
@@ -178,10 +183,10 @@ export const useEmployeesFormHandlers = (
       const employees = convertEmployeesToFormData(existingEmployees);
       await form.trigger();
 
-      if (newValue === 'yes') {
-        // 「いいえ」選択時：従業員フィールドを表示
+      if (newValue === NEED_APPLICATION.YES) {
+        // 「はい」選択時：従業員フィールドを表示
         form.reset({
-          needApplication: 'yes',
+          needApplication: NEED_APPLICATION.YES,
           employees:
             employees && employees.length > 0
               ? employees

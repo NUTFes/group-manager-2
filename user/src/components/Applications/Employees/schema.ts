@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { NEED_APPLICATION } from './constants';
 
 export const employeeFormItemSchema = z.object({
   id: z.number().optional(),
@@ -7,7 +8,9 @@ export const employeeFormItemSchema = z.object({
 });
 
 export const employeesFormSchema = z.object({
-  needApplication: z.enum(['yes', 'no']).optional(),
+  needApplication: z
+    .enum([NEED_APPLICATION.YES, NEED_APPLICATION.NO])
+    .optional(),
   employees: z.array(employeeFormItemSchema).optional(),
 });
 

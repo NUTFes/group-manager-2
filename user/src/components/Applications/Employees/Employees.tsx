@@ -5,6 +5,7 @@ import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormList from '@/components/FormList';
 import { EmployeeForm } from './EmployeesFrom/EmployeesForm';
+import { NEED_APPLICATION, RADIO_VALUE } from './constants';
 import { useEmployeesMainLogic } from './hooks';
 
 type EmployeesProps = {
@@ -89,10 +90,10 @@ const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
           label="「代表」と「副代表」以外の従業員申請を行いますか？"
           required
           value={
-            logic.formState.needApplication === 'yes'
-              ? '1'
-              : logic.formState.needApplication === 'no'
-                ? '2'
+            logic.formState.needApplication === NEED_APPLICATION.YES
+              ? RADIO_VALUE.YES
+              : logic.formState.needApplication === NEED_APPLICATION.NO
+                ? RADIO_VALUE.NO
                 : ''
           }
           onChange={logic.handleRadioChange}
@@ -112,7 +113,7 @@ const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
         )}
 
         {/* 「はい」選択時：従業員入力フォーム表示 */}
-        {logic.form.watch('needApplication') === 'yes' && (
+        {logic.form.watch('needApplication') === NEED_APPLICATION.YES && (
           <>
             {logic.form.fieldArray.fields.map((field, idx) => (
               <EmployeeForm
@@ -149,7 +150,7 @@ const Content: FC<ContentProps> = ({ groupId, isDeadline }) => {
         )}
 
         {/* 「いいえ」選択時：代表・副代表のみで活動 */}
-        {logic.formState.needApplication === 'no' && (
+        {logic.formState.needApplication === NEED_APPLICATION.NO && (
           <div className="mt-6 flex w-full items-center justify-center">
             <Button
               size="pc"

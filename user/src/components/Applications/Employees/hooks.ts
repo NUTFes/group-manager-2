@@ -30,6 +30,7 @@ import {
   useEmployeesFormHandlers,
   useEmployeesFormState,
 } from './EmployeesFrom/hooks';
+import { NEED_APPLICATION } from './constants';
 import { EmployeeFormItem } from './schema';
 
 /**
@@ -442,14 +443,14 @@ export const useEmployeesMainLogic = (
    */
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      if (data.needApplication === 'yes' && data.employees) {
+      if (data.needApplication === NEED_APPLICATION.YES && data.employees) {
         // 従業員申請ありの場合
         await unregisteredLogic.handleDeleteUnregisteredGroup();
         await businessLogic.handleEmployeeApplicationSubmit({
           needApplication: data.needApplication,
           employees: data.employees,
         });
-      } else if (data.needApplication === 'no') {
+      } else if (data.needApplication === NEED_APPLICATION.NO) {
         // 従業員申請なしの場合
         await businessLogic.handleNoApplicationSubmit();
         await unregisteredLogic.handleRegisterUnregisteredGroup();
