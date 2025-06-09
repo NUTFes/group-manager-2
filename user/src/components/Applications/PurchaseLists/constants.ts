@@ -1,19 +1,9 @@
-import { FoodProductOption, RadioOption } from './types';
+import { RadioOption } from './types';
 
 // 商品の種類
 export const FRESH_OPTIONS: RadioOption[] = [
   { id: 1, name: '生鮮品' },
   { id: 2, name: '加工品' },
-];
-
-// 販売品オプション
-export const FOOD_PRODUCT_OPTIONS: FoodProductOption[] = [
-  { id: 0, name: '選択してください' },
-  { id: 1, name: 'からあげ（仮）' },
-  { id: 2, name: 'フランクフルト（仮）' },
-  { id: 3, name: 'チョコバナナ（仮）' },
-  { id: 4, name: 'たこ焼き（仮）' },
-  { id: 5, name: 'かき氷（仮）' },
 ];
 
 // ネット注文のショップID

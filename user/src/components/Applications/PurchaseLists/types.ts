@@ -1,5 +1,3 @@
-import { PurchaseItem } from './schema';
-
 export type RadioOption = {
   id: number;
   name: string;
@@ -13,9 +11,4 @@ export type ShopOption = {
 export type FoodProductOption = {
   id: number;
   name: string;
-};
-
-// モックAPIレスポンス型 (hooks.ts内で使用)
-export type PurchaseListResponse = PurchaseItem & {
-  groupId: number;
 };
