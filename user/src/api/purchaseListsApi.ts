@@ -38,37 +38,20 @@ export type ApiResponse<T> = {
 
 const API_ENDPOINTS = {
   PURCHASE_LIST: '/purchase_lists',
-  PURCHASE_LIST_GROUP: '/purchase_lists/group',
   PURCHASE_LIST_UPSERT: '/purchase_lists/upsert',
   PURCHASE_LIST_FOOD_PRODUCT: '/purchase_lists/food_product',
 };
 
-// グループIDで取得
-export const useGetPurchaseLists = (groupId: number | null) => {
-  const endpoint =
-    groupId !== null
-      ? `${API_ENDPOINTS.PURCHASE_LIST_GROUP}/${groupId}`
-      : API_ENDPOINTS.PURCHASE_LIST;
-
-  const { data, error, isLoading, mutate } =
-    useAuthenticatedGet<ApiResponse<PurchaseListResponse[]>>(endpoint);
-
-  return {
-    purchaseLists: data?.data ?? [],
-    isLoading,
-    hasError: !!error,
-    mutatePurchaseLists: mutate,
-  };
-};
-
 // 食品商品IDで取得
 export const useGetPurchaseListsByFoodProduct = (
-  foodProductId: number | null
+  foodProductIds: number[] | null
 ) => {
   const endpoint =
-    foodProductId !== null
-      ? `${API_ENDPOINTS.PURCHASE_LIST_FOOD_PRODUCT}/${foodProductId}`
-      : API_ENDPOINTS.PURCHASE_LIST;
+    foodProductIds && foodProductIds.length > 0
+      ? `${API_ENDPOINTS.PURCHASE_LIST_FOOD_PRODUCT}?${new URLSearchParams(
+          foodProductIds.map((id) => ['food_product_ids[]', String(id)])
+        ).toString()}`
+      : null;
 
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<PurchaseListResponse[]>>(endpoint);

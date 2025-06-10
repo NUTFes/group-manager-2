@@ -54,23 +54,28 @@ export const useDateFormatters = () => {
 export const useFoodProducts = (groupId: number) => {
   const { foodProducts, isLoading, error } = useGetFoodProducts(groupId);
 
+  const memoizedFoodProducts = useMemo(
+    () => foodProducts || [],
+    [foodProducts]
+  );
+
   const foodProductOptions = useMemo((): FoodProductOption[] => {
     const initialOptions: FoodProductOption[] = [
       { id: 0, name: '選択してください' },
     ];
 
-    if (!foodProducts) {
+    if (!memoizedFoodProducts) {
       return initialOptions;
     }
-    const fetchedOptions = foodProducts.map((p) => ({
+    const fetchedOptions = memoizedFoodProducts.map((p) => ({
       id: p.id,
       name: p.name,
     }));
     return [...initialOptions, ...fetchedOptions];
-  }, [foodProducts]);
+  }, [memoizedFoodProducts]);
 
   return {
-    foodProducts: foodProducts || [],
+    foodProducts: memoizedFoodProducts,
     foodProductOptions,
     isLoading,
     hasError: !!error,
@@ -83,7 +88,7 @@ export const usePurchaseListsState = (
   isRegistered: boolean | undefined
 ) => {
   const { purchaseLists, isLoading, hasError, mutatePurchaseLists } =
-    useGetPurchaseListsByFoodProduct(foodProducts[0]?.id);
+    useGetPurchaseListsByFoodProduct(foodProducts.map((p) => p.id));
 
   const { trigger: deletePurchaseList } = useDeletePurchaseList();
   const { shops, isLoading: isShopsLoading } = useGetShops();
@@ -115,29 +120,33 @@ export const usePurchaseListsState = (
 
   const { formatDateForInput, formatDateForDisplay } = useDateFormatters();
 
-  const formItems =
-    purchaseLists?.map((item) => {
-      const shopName =
-        shopOptions.find((shop) => shop.id === item.shopId)?.name || '';
-      const foodProductName =
-        foodProductOptions.find((product) => product.id === item.foodProductId)
-          ?.name || '';
-      const freshName =
-        FRESH_OPTIONS.find((opt) => opt.id === (item.isFresh ? 1 : 2))?.name ||
-        '';
+  const formItems = useMemo(
+    () =>
+      purchaseLists?.map((item) => {
+        const shopName =
+          shopOptions.find((shop) => shop.id === item.shopId)?.name || '';
+        const foodProductName =
+          foodProductOptions.find(
+            (product) => product.id === item.foodProductId
+          )?.name || '';
+        const freshName =
+          FRESH_OPTIONS.find((opt) => opt.id === (item.isFresh ? 1 : 2))
+            ?.name || '';
 
-      const singleItemForm: FormItem[] = [
-        { label: '販売品名', content: foodProductName },
-        { label: '食材・材料', content: item.items },
-        { label: '商品の種類', content: freshName },
-        { label: '購入場所', content: shopName },
-        { label: '購入日', content: formatDateForDisplay(item.purchaseDate) },
-      ];
-      if (item.url) {
-        singleItemForm.push({ label: 'URL', content: item.url });
-      }
-      return singleItemForm;
-    }) || [];
+        const singleItemForm: FormItem[] = [
+          { label: '販売品名', content: foodProductName },
+          { label: '食材・材料', content: item.items },
+          { label: '商品の種類', content: freshName },
+          { label: '購入場所', content: shopName },
+          { label: '購入日', content: formatDateForDisplay(item.purchaseDate) },
+        ];
+        if (item.url) {
+          singleItemForm.push({ label: 'URL', content: item.url });
+        }
+        return singleItemForm;
+      }) || [],
+    [purchaseLists, shopOptions, foodProductOptions, formatDateForDisplay]
+  );
 
   const handleFormSuccess = () => {
     mutatePurchaseLists();
@@ -155,10 +164,15 @@ export const usePurchaseListsState = (
     [purchaseLists, formatDateForInput]
   );
 
-  return {
-    purchaseLists:
+  const memoizedPurchaseLists = useMemo(
+    () =>
       purchaseLists?.map((item) => ({ ...item, url: item.url || undefined })) ??
       [],
+    [purchaseLists]
+  );
+
+  return {
+    purchaseLists: memoizedPurchaseLists,
     isLoading: isLoading || isShopsLoading,
     hasError,
     isEditing,
@@ -204,7 +218,7 @@ export const usePurchaseListsForm = (
         initialData.length > 0 ? initialData : [DEFAULT_PURCHASE_ITEM]
       );
     }
-  }, [initialData, setValue]);
+  }, [JSON.stringify(initialData), setValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -284,28 +298,31 @@ export const usePurchaseListRowUpdater = (
   setValue: UseFormSetValue<PurchaseListsFormData>
 ) => {
   // 指定したfoodProductIdとindexに該当するデータでフォームの値を更新
-  return (foodProductId: number, index: number) => {
-    const filtered =
-      purchaseLists?.filter((item) => item.foodProductId === foodProductId) ||
-      [];
-    const item = filtered[index];
-    if (item) {
-      setValue(`purchaseLists.${index}.items`, item.items);
-      setValue(`purchaseLists.${index}.isFresh`, item.isFresh);
-      setValue(`purchaseLists.${index}.shopId`, item.shopId);
-      setValue(`purchaseLists.${index}.purchaseDate`, item.purchaseDate);
-      setValue(`purchaseLists.${index}.url`, item.url ?? undefined);
-      setValue(
-        `purchaseLists.${index}.remark`,
-        (item as { remark?: string }).remark ?? undefined
-      );
-    } else {
-      setValue(`purchaseLists.${index}.items`, '');
-      setValue(`purchaseLists.${index}.isFresh`, true);
-      setValue(`purchaseLists.${index}.shopId`, 0);
-      setValue(`purchaseLists.${index}.purchaseDate`, '');
-      setValue(`purchaseLists.${index}.url`, undefined);
-      setValue(`purchaseLists.${index}.remark`, undefined);
-    }
-  };
+  return useCallback(
+    (foodProductId: number, index: number) => {
+      const filtered =
+        purchaseLists?.filter((item) => item.foodProductId === foodProductId) ||
+        [];
+      const item = filtered[0];
+      if (item) {
+        setValue(`purchaseLists.${index}.items`, item.items);
+        setValue(`purchaseLists.${index}.isFresh`, item.isFresh);
+        setValue(`purchaseLists.${index}.shopId`, item.shopId);
+        setValue(`purchaseLists.${index}.purchaseDate`, item.purchaseDate);
+        setValue(`purchaseLists.${index}.url`, item.url ?? undefined);
+        setValue(
+          `purchaseLists.${index}.remark`,
+          (item as { remark?: string }).remark ?? undefined
+        );
+      } else {
+        setValue(`purchaseLists.${index}.items`, '');
+        setValue(`purchaseLists.${index}.isFresh`, true);
+        setValue(`purchaseLists.${index}.shopId`, 0);
+        setValue(`purchaseLists.${index}.purchaseDate`, '');
+        setValue(`purchaseLists.${index}.url`, undefined);
+        setValue(`purchaseLists.${index}.remark`, undefined);
+      }
+    },
+    [purchaseLists, setValue]
+  );
 };

@@ -38,25 +38,14 @@ class PurchaseListsController < ApplicationController
     render json: fmt(ok, [], "Deleted purchase_list = #{params[:id]}")
   end
 
-  # GET /purchase_lists/group/:group_id
-  def get_by_group_id
-    @purchase_lists = PurchaseList.where(group_id: params[:group_id])
-
-    if @purchase_lists.any?
-      render json: fmt(ok, @purchase_lists)
-    else
-      render json: fmt(not_found, [], "Not found purchase_lists with group_id = #{params[:group_id]}")
-    end
-  end
-
-  # GET /purchase_lists/food_product/:food_product_id
+  # GET /purchase_lists/food_product
   def get_by_food_product_id
-    @purchase_lists = PurchaseList.where(food_product_id: params[:food_product_id])
+    @purchase_lists = PurchaseList.where(food_product_id: params[:food_product_ids])
 
     if @purchase_lists.any?
       render json: fmt(ok, @purchase_lists)
     else
-      render json: fmt(not_found, [], "Not found purchase_lists with food_product_id = #{params[:food_product_id]}")
+      render json: fmt(not_found, [], "Not found purchase_lists with food_product_ids = #{params[:food_product_ids]}")
     end
   end
 
