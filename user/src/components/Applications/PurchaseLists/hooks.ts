@@ -13,6 +13,7 @@ import { UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
 import {
+  DATE_FORMAT,
   DEFAULT_PURCHASE_ITEM,
   FES_DATE_ID,
   FRESH_OPTIONS,
@@ -36,10 +37,10 @@ export const useDateFormatters = () => {
   const formatDateForInput = useCallback((dateString: string | undefined) => {
     if (!dateString) return '';
     const parts = dateString.split('/');
-    if (parts.length === 3) {
-      return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(
-        2,
-        '0'
+    if (parts.length === DATE_FORMAT.EXPECTED_PARTS_LENGTH) {
+      return `${parts[0]}-${parts[1].padStart(DATE_FORMAT.PAD_LENGTH, DATE_FORMAT.PAD_CHAR)}-${parts[2].padStart(
+        DATE_FORMAT.PAD_LENGTH,
+        DATE_FORMAT.PAD_CHAR
       )}`;
     }
     return dateString;
@@ -48,7 +49,7 @@ export const useDateFormatters = () => {
   const formatDateForDisplay = useCallback((dateString: string | undefined) => {
     if (!dateString) return '';
     const parts = dateString.replace(/-/g, '/').split('/');
-    if (parts.length === 3) {
+    if (parts.length === DATE_FORMAT.EXPECTED_PARTS_LENGTH) {
       return `${parts[0]}/${Number(parts[1])}/${Number(parts[2])}`;
     }
     return dateString;

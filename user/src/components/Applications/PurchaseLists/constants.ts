@@ -62,3 +62,10 @@ export const VALIDATION_MESSAGES = {
     '「その他」の場合は、店名・住所・電話番号・営業時間を記入してください',
   MIN_ITEMS: '少なくとも1つの購入品を登録してください',
 };
+
+// 日付フォーマット関連の定数
+export const DATE_FORMAT = {
+  EXPECTED_PARTS_LENGTH: 3, // YYYY/MM/DD または YYYY-MM-DD の分割後の期待される配列長
+  PAD_LENGTH: 2, // 月日の0埋めの桁数
+  PAD_CHAR: '0', // 0埋めに使用する文字
+} as const;
