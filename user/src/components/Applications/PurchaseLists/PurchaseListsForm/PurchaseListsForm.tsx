@@ -55,12 +55,6 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
     name: 'purchaseLists',
   });
 
-  console.log('form status:', {
-    isValid,
-    errors,
-    watchedFormValues,
-  });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit();

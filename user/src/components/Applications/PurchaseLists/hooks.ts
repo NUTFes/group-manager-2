@@ -21,7 +21,12 @@ import {
 } from './schema';
 import { FoodProductOption } from './types';
 
-// 日付変換のカスタムフック
+/**
+ * 日付の表示形式を変換するためのカスタムフック。
+ * - `formatDateForInput`: API等から受け取った `YYYY/MM/DD` 形式を `input[type="date"]` で扱える `YYYY-MM-DD` 形式に変換します。
+ * - `formatDateForDisplay`: `YYYY-MM-DD` 形式を `YYYY/MM/DD` の表示形式に変換します。
+ * @returns 日付フォーマット関数を含むオブジェクト。
+ */
 export const useDateFormatters = () => {
   // YYYY/MM/DD -> YYYY-MM-DD (input[type="date"]用)
   const formatDateForInput = useCallback((dateString: string | undefined) => {
@@ -51,6 +56,11 @@ export const useDateFormatters = () => {
   };
 };
 
+/**
+ * 指定されたグループIDに基づいて食品情報を取得し、セレクトボックス用のオプションを生成するカスタムフック。
+ * @param groupId - 食品情報を取得する対象のグループID。
+ * @returns 食品リスト、セレクトボックス用オプション、ローディング状態、エラー状態。
+ */
 export const useFoodProducts = (groupId: number) => {
   const { foodProducts, isLoading, error } = useGetFoodProducts(groupId);
 
@@ -82,6 +92,14 @@ export const useFoodProducts = (groupId: number) => {
   };
 };
 
+/**
+ * 購入品リストの表示に関連する状態管理を行うカスタムフック。
+ * データ取得、編集状態の管理、表示用データの整形などを行います。
+ * @param foodProducts - 食品リスト。
+ * @param foodProductOptions - 食品のセレクトボックス用オプション。
+ * @param isRegistered - 登録済みかどうかを示すフラグ。
+ * @returns 購入品リストの表示に必要なデータとハンドラ。
+ */
 export const usePurchaseListsState = (
   foodProducts: FoodProductResponse[],
   foodProductOptions: FoodProductOption[],
@@ -93,9 +111,10 @@ export const usePurchaseListsState = (
   const { trigger: deletePurchaseList } = useDeletePurchaseList();
   const { shops, isLoading: isShopsLoading } = useGetShops();
 
+  // isRegisteredがfalseの場合、つまり未登録の場合は初期状態で編集モードにする
   const [isEditing, setIsEditing] = useState(!isRegistered);
 
-  // ショップオプションをAPIから取得したデータで作成
+  // ショップ情報を取得し、セレクトボックス用のオプションを生成
   const shopOptions = useMemo(
     () => [{ id: 0, name: '選択してください' }, ...shops],
     [shops]
@@ -109,7 +128,7 @@ export const usePurchaseListsState = (
       await deletePurchaseList({ id: itemId });
       toast.success('購入品が削除されました');
       await mutatePurchaseLists();
-      // 最後のアイテムを削除した場合のみ編集モードに切り替え
+      // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
       if (purchaseLists.length === 1) {
         setIsEditing(true);
       }
@@ -120,6 +139,7 @@ export const usePurchaseListsState = (
 
   const { formatDateForInput, formatDateForDisplay } = useDateFormatters();
 
+  // 表示用に整形済みの購入品リストアイテム
   const formItems = useMemo(
     () =>
       purchaseLists?.map((item) => {
@@ -148,11 +168,13 @@ export const usePurchaseListsState = (
     [purchaseLists, shopOptions, foodProductOptions, formatDateForDisplay]
   );
 
+  // フォーム送信成功後は表示モードに切り替え
   const handleFormSuccess = () => {
     mutatePurchaseLists();
+    setIsEditing(false);
   };
 
-  // 選択された販売品の購入リストを初期値として設定
+  // フォームの初期値として使用するデータ。APIから取得したデータをフォームの形式に合わせる
   const initialFormData = useMemo(
     () =>
       purchaseLists?.map((item) => ({
@@ -187,6 +209,14 @@ export const usePurchaseListsState = (
   };
 };
 
+/**
+ * 購入品リストのフォームの状態管理と送信処理を行うカスタムフック。
+ * react-hook-formを利用して、動的なフォームの追加・削除、バリデーション、送信処理を責務に持つ。
+ * @param groupId - グループID。
+ * @param initialData - フォームの初期データ。
+ * @param onSuccess - フォーム送信成功時のコールバック関数。
+ * @returns react-hook-formのメソッドと状態。
+ */
 export const usePurchaseListsForm = (
   groupId: number,
   initialData: PurchaseItem[] | undefined,
@@ -211,6 +241,8 @@ export const usePurchaseListsForm = (
 
   const { control, handleSubmit, formState, reset, setValue } = formMethods;
 
+  // initialDataが変更されたら、フォームの値をリセットする
+  // fix: JSON.stringifyを使用しないと再レンダリングをし続ける無限ループに陥ったのでひとまずの対処。
   useEffect(() => {
     if (initialData) {
       setValue(
@@ -225,6 +257,8 @@ export const usePurchaseListsForm = (
     name: 'purchaseLists',
   });
 
+  // フォームからアイテムを削除する
+  // 既に永続化されているアイテム（IDを持つ）の場合は、APIを呼び出して削除する
   const onRemove = async (index: number) => {
     const item = formMethods.getValues().purchaseLists[index];
     if (item && item.id) {
@@ -237,14 +271,16 @@ export const usePurchaseListsForm = (
         console.error(error);
       }
     } else {
+      // 新規追加されただけのアイテムは、フォームの状態から削除するだけ
       remove(index);
     }
   };
 
+  // フォームの送信処理
   const handleActualSubmit = async (formData: PurchaseListsFormData) => {
     try {
+      // 申請が複数ある場合はupsert、単数の場合は作成/更新APIを使い分ける
       if (formData.purchaseLists.length > 1) {
-        // 複数個の場合はupsertを使用
         const requestBody: UpdatePurchaseListsRequest = {
           purchaseLists: formData.purchaseLists.map((item) => ({
             ...item,
@@ -293,6 +329,13 @@ export const usePurchaseListsForm = (
   };
 };
 
+/**
+ * フォームの特定の行を、選択された食品に基づいて更新するためのコールバック関数を提供するカスタムフック。
+ * 販売品名が選択された際に、関連するフォーム項目を自動入力する目的で使用する。
+ * @param purchaseLists - 既存の購入品リスト。これをもとに自動入力される。
+ * @param setValue - react-hook-formのsetValue関数。
+ * @returns foodProductIdとindexを受け取り、フォームの行を更新する関数。
+ */
 export const usePurchaseListRowUpdater = (
   purchaseLists: PurchaseItem[] | undefined,
   setValue: UseFormSetValue<PurchaseListsFormData>
@@ -310,11 +353,14 @@ export const usePurchaseListRowUpdater = (
         setValue(`purchaseLists.${index}.shopId`, item.shopId);
         setValue(`purchaseLists.${index}.purchaseDate`, item.purchaseDate);
         setValue(`purchaseLists.${index}.url`, item.url ?? undefined);
+        // `remark`はPurchaseItemに含まれていない可能性があるため、型キャストで対応。
+        // 本来はスキーマで定義されているべき項目。
         setValue(
           `purchaseLists.${index}.remark`,
           (item as { remark?: string }).remark ?? undefined
         );
       } else {
+        // 該当するデータがない場合はフォームの値をリセット
         setValue(`purchaseLists.${index}.items`, '');
         setValue(`purchaseLists.${index}.isFresh`, true);
         setValue(`purchaseLists.${index}.shopId`, 0);
