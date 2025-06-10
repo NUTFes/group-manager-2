@@ -37,6 +37,11 @@ export default function HomePage() {
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             groupId={groupId}
           />
+          <FoodProduct
+            groupId={groupId}
+            isDeadline={!userPageSettings?.isEditFoodProduct}
+            isRegistered={checkAllRegisteredGroups?.foodProduct}
+          />
           <PurchaseLists
             isDeadline={!userPageSettings?.isEditPurchaseList}
             isRegistered={checkAllRegisteredGroups?.purchaseList}
