@@ -55,7 +55,7 @@ const PurchaseListsFormWrapper: React.FC<
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
     defaultValues: initialData,
@@ -81,9 +81,7 @@ const PurchaseListsFormWrapper: React.FC<
         append={handleAppend}
         remove={remove}
         onSubmit={onSubmit}
-        onCancel={() => console.log('Cancel clicked')}
         errors={errors}
-        isValid={isValid}
         foodProductOptions={foodProductOptions}
         {...props}
       />
