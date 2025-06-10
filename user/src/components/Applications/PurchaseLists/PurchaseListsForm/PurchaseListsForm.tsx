@@ -15,6 +15,7 @@ import FormContainer from '@/components/FormContainer/FormContainer';
 import {
   DEFAULT_PURCHASE_ITEM,
   FRESH_OPTIONS,
+  FRESH_TYPE_ID,
   NET_ORDER_SHOP_ID,
   OTHER_SHOP_ID,
   PurchaseItemFieldNames,
@@ -108,9 +109,15 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                     <Radio
                       label="商品の種類"
                       name={`isFresh-${index}`}
-                      value={controllerField.value ? '1' : '2'} // true: 生鮮品(1), false: 加工品(2)
+                      value={
+                        controllerField.value
+                          ? FRESH_TYPE_ID.FRESH.toString()
+                          : FRESH_TYPE_ID.PROCESSED.toString()
+                      } // true: 生鮮品, false: 加工品
                       onChange={(value) =>
-                        controllerField.onChange(value === '1')
+                        controllerField.onChange(
+                          value === FRESH_TYPE_ID.FRESH.toString()
+                        )
                       }
                       required
                       options={FRESH_OPTIONS}

@@ -12,7 +12,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
-import { DEFAULT_PURCHASE_ITEM, FRESH_OPTIONS } from './constants';
+import {
+  DEFAULT_PURCHASE_ITEM,
+  FES_DATE_ID,
+  FRESH_OPTIONS,
+  FRESH_TYPE_ID,
+} from './constants';
 import {
   PurchaseItem,
   PurchaseListsFormData,
@@ -149,8 +154,11 @@ export const usePurchaseListsState = (
             (product) => product.id === item.foodProductId
           )?.name || '';
         const freshName =
-          FRESH_OPTIONS.find((opt) => opt.id === (item.isFresh ? 1 : 2))
-            ?.name || '';
+          FRESH_OPTIONS.find(
+            (opt) =>
+              opt.id ===
+              (item.isFresh ? FRESH_TYPE_ID.FRESH : FRESH_TYPE_ID.PROCESSED)
+          )?.name || '';
 
         const singleItemForm: FormItem[] = [
           { label: '販売品名', content: foodProductName },
@@ -178,7 +186,7 @@ export const usePurchaseListsState = (
     () =>
       purchaseLists?.map((item) => ({
         ...item,
-        fesDateId: 1,
+        fesDateId: FES_DATE_ID,
         purchaseDate: formatDateForInput(item.purchaseDate),
         url: item.url || undefined,
       })) || [DEFAULT_PURCHASE_ITEM],
@@ -284,7 +292,7 @@ export const usePurchaseListsForm = (
           purchaseLists: formData.purchaseLists.map(({ ...item }) => ({
             ...item,
             ...(item.id && { id: item.id }),
-            fesDateId: 1,
+            fesDateId: FES_DATE_ID,
             groupId,
           })),
         };
@@ -293,7 +301,7 @@ export const usePurchaseListsForm = (
       } else {
         // 単体の場合は個別のAPIを使用
         const item = formData.purchaseLists[0];
-        const itemWithFesDateId = { ...item, fesDateId: 1, groupId };
+        const itemWithFesDateId = { ...item, fesDateId: FES_DATE_ID, groupId };
 
         if (item.id) {
           // 更新

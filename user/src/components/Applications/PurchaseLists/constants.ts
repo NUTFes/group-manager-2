@@ -1,9 +1,22 @@
 import { RadioOption } from './types';
 
+// 商品の種類のID定数
+export const FRESH_TYPE_ID = {
+  FRESH: 1, // 生鮮品
+  PROCESSED: 2, // 加工品
+} as const;
+
+// 商品の種類のID型定義
+export type FreshTypeIdValue =
+  (typeof FRESH_TYPE_ID)[keyof typeof FRESH_TYPE_ID];
+
+// フェス日付ID
+export const FES_DATE_ID = 1;
+
 // 商品の種類
 export const FRESH_OPTIONS: RadioOption[] = [
-  { id: 1, name: '生鮮品' },
-  { id: 2, name: '加工品' },
+  { id: FRESH_TYPE_ID.FRESH, name: '生鮮品' },
+  { id: FRESH_TYPE_ID.PROCESSED, name: '加工品' },
 ];
 
 // ネット注文のショップID
@@ -33,7 +46,7 @@ export const DEFAULT_PURCHASE_ITEM = {
   shopId: 0,
   url: '',
   remark: '',
-  fesDateId: 1,
+  fesDateId: FES_DATE_ID,
 };
 
 // バリデーションメッセージ
