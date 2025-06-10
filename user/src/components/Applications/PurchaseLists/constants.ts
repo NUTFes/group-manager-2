@@ -68,4 +68,7 @@ export const DATE_FORMAT = {
   EXPECTED_PARTS_LENGTH: 3, // YYYY/MM/DD または YYYY-MM-DD の分割後の期待される配列長
   PAD_LENGTH: 2, // 月日の0埋めの桁数
   PAD_CHAR: '0', // 0埋めに使用する文字
+  YEAR_INDEX: 0, // 日付配列での年の位置
+  MONTH_INDEX: 1, // 日付配列での月の位置
+  DAY_INDEX: 2, // 日付配列での日の位置
 } as const;

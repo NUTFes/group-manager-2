@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
   useCreatePurchaseList,
@@ -38,10 +38,11 @@ export const useDateFormatters = () => {
     if (!dateString) return '';
     const parts = dateString.split('/');
     if (parts.length === DATE_FORMAT.EXPECTED_PARTS_LENGTH) {
-      return `${parts[0]}-${parts[1].padStart(DATE_FORMAT.PAD_LENGTH, DATE_FORMAT.PAD_CHAR)}-${parts[2].padStart(
-        DATE_FORMAT.PAD_LENGTH,
-        DATE_FORMAT.PAD_CHAR
-      )}`;
+      return `${parts[DATE_FORMAT.YEAR_INDEX]}-${parts[
+        DATE_FORMAT.MONTH_INDEX
+      ].padStart(DATE_FORMAT.PAD_LENGTH, DATE_FORMAT.PAD_CHAR)}-${parts[
+        DATE_FORMAT.DAY_INDEX
+      ].padStart(DATE_FORMAT.PAD_LENGTH, DATE_FORMAT.PAD_CHAR)}`;
     }
     return dateString;
   }, []);
@@ -50,7 +51,9 @@ export const useDateFormatters = () => {
     if (!dateString) return '';
     const parts = dateString.replace(/-/g, '/').split('/');
     if (parts.length === DATE_FORMAT.EXPECTED_PARTS_LENGTH) {
-      return `${parts[0]}/${Number(parts[1])}/${Number(parts[2])}`;
+      return `${parts[DATE_FORMAT.YEAR_INDEX]}/${Number(
+        parts[DATE_FORMAT.MONTH_INDEX]
+      )}/${Number(parts[DATE_FORMAT.DAY_INDEX])}`;
     }
     return dateString;
   }, []);
@@ -110,8 +113,14 @@ export const usePurchaseListsState = (
   foodProductOptions: FoodProductOption[],
   isRegistered: boolean | undefined
 ) => {
+  // 食品IDリストを最適化
+  const foodProductIds = useMemo(
+    () => foodProducts.map((p) => p.id),
+    [foodProducts]
+  );
+
   const { purchaseLists, isLoading, hasError, mutatePurchaseLists } =
-    useGetPurchaseListsByFoodProduct(foodProducts.map((p) => p.id));
+    useGetPurchaseListsByFoodProduct(foodProductIds);
 
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
   const { shops, isLoading: isShopsLoading } = useGetShops();
@@ -125,22 +134,25 @@ export const usePurchaseListsState = (
     [shops]
   );
 
-  const toggleEdit = () => setIsEditing((prev) => !prev);
+  const toggleEdit = useCallback(() => setIsEditing((prev) => !prev), []);
 
-  const handleDeleteItem = async (itemId: number) => {
-    if (!purchaseLists || !itemId) return;
-    try {
-      await deletePurchaseList(itemId);
-      toast.success('購入品が削除されました');
-      await mutatePurchaseLists();
-      // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
-      if (purchaseLists.length === 1) {
-        setIsEditing(true);
+  const handleDeleteItem = useCallback(
+    async (itemId: number) => {
+      if (!purchaseLists || !itemId) return;
+      try {
+        await deletePurchaseList(itemId);
+        toast.success('購入品が削除されました');
+        await mutatePurchaseLists();
+        // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
+        if (purchaseLists.length === 1) {
+          setIsEditing(true);
+        }
+      } catch {
+        toast.error('削除に失敗しました。');
       }
-    } catch {
-      toast.error('削除に失敗しました。');
-    }
-  };
+    },
+    [purchaseLists, deletePurchaseList, mutatePurchaseLists]
+  );
 
   const { formatDateForInput, formatDateForDisplay } = useDateFormatters();
 
@@ -178,10 +190,10 @@ export const usePurchaseListsState = (
   );
 
   // フォーム送信成功後は表示モードに切り替え
-  const handleFormSuccess = () => {
+  const handleFormSuccess = useCallback(() => {
     mutatePurchaseLists();
     toggleEdit();
-  };
+  }, [mutatePurchaseLists, toggleEdit]);
 
   // フォームの初期値として使用するデータ。APIから取得したデータをフォームの形式に合わせる
   const initialFormData = useMemo(
@@ -195,15 +207,8 @@ export const usePurchaseListsState = (
     [purchaseLists, formatDateForInput]
   );
 
-  const memoizedPurchaseLists = useMemo(
-    () =>
-      purchaseLists?.map((item) => ({ ...item, url: item.url || undefined })) ??
-      [],
-    [purchaseLists]
-  );
-
   return {
-    purchaseLists: memoizedPurchaseLists,
+    purchaseLists: purchaseLists ?? [],
     isLoading: isLoading || isShopsLoading,
     hasError,
     isEditing,
@@ -251,15 +256,23 @@ export const usePurchaseListsForm = (
   const { control, handleSubmit, formState, reset, setValue } = formMethods;
 
   // initialDataが変更されたら、フォームの値をリセットする
-  // fix: JSON.stringifyを使用しないと再レンダリングをし続ける無限ループに陥ったのでひとまずの対処。
+  // 深い比較のためにJSONを使用し、パフォーマンスを考慮してuseRefで前回の値を記録
+  const previousInitialDataRef = useRef<string>();
+  const currentInitialDataJson = JSON.stringify(initialData);
+
   useEffect(() => {
-    if (initialData) {
+    // 前回の値と比較して変更があった場合のみ更新
+    if (
+      previousInitialDataRef.current !== currentInitialDataJson &&
+      initialData
+    ) {
       setValue(
         'purchaseLists',
         initialData.length > 0 ? initialData : [DEFAULT_PURCHASE_ITEM]
       );
+      previousInitialDataRef.current = currentInitialDataJson;
     }
-  }, [JSON.stringify(initialData), setValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentInitialDataJson, initialData, setValue]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -275,9 +288,8 @@ export const usePurchaseListsForm = (
         await deletePurchaseList(item.id);
         toast.success('購入品が削除されました');
         remove(index);
-      } catch (error) {
+      } catch {
         toast.error('削除に失敗しました。');
-        console.error(error);
       }
     } else {
       // 新規追加されただけのアイテムは、フォームの状態から削除するだけ
@@ -320,9 +332,8 @@ export const usePurchaseListsForm = (
       }
       onSuccess();
       reset(formData); // 送信後もフォーム内容は維持
-    } catch (error) {
+    } catch {
       toast.error('登録に失敗しました');
-      console.error(error);
     }
   };
 
@@ -362,12 +373,7 @@ export const usePurchaseListRowUpdater = (
         setValue(`purchaseLists.${index}.shopId`, item.shopId);
         setValue(`purchaseLists.${index}.purchaseDate`, item.purchaseDate);
         setValue(`purchaseLists.${index}.url`, item.url ?? undefined);
-        // `remark`はPurchaseItemに含まれていない可能性があるため、型キャストで対応。
-        // 本来はスキーマで定義されているべき項目。
-        setValue(
-          `purchaseLists.${index}.remark`,
-          (item as { remark?: string }).remark ?? undefined
-        );
+        setValue(`purchaseLists.${index}.remark`, item.remark ?? undefined);
       } else {
         // 該当するデータがない場合はフォームの値をリセット
         setValue(`purchaseLists.${index}.items`, '');
