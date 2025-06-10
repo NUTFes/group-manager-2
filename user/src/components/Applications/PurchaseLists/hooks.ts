@@ -171,7 +171,7 @@ export const usePurchaseListsState = (
   // フォーム送信成功後は表示モードに切り替え
   const handleFormSuccess = () => {
     mutatePurchaseLists();
-    setIsEditing(false);
+    toggleEdit();
   };
 
   // フォームの初期値として使用するデータ。APIから取得したデータをフォームの形式に合わせる
@@ -323,7 +323,6 @@ export const usePurchaseListsForm = (
     remove: onRemove,
     triggerSubmit: handleSubmit(handleActualSubmit),
     errors: formState.errors,
-    isValid: formState.isValid,
     setValue,
     reset,
   };

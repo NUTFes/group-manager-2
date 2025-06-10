@@ -45,16 +45,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     initialIsRegistered
   );
 
-  const {
-    control,
-    fields,
-    append,
-    remove,
-    triggerSubmit,
-    errors,
-    isValid,
-    setValue,
-  } = usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
+  const { control, fields, append, remove, triggerSubmit, errors, setValue } =
+    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
 
   const updateRowBySelector = usePurchaseListRowUpdater(
     purchaseLists,
@@ -155,9 +147,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           append={(item) => append(item as PurchaseItem)}
           remove={remove}
           onSubmit={triggerSubmit}
-          onCancel={toggleEdit}
           errors={errors}
-          isValid={isValid}
           foodProductOptions={foodProductOptions}
           shopOptions={shopOptions}
           onFoodProductChange={handleFoodProductChange}

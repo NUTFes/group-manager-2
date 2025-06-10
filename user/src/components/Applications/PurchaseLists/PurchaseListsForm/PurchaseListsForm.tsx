@@ -28,9 +28,7 @@ export type PurchaseListsFormProps = {
   append: (item: Partial<PurchaseItem>) => void;
   remove: (index: number) => void;
   onSubmit: () => void;
-  onCancel: () => void;
   errors: UseFormReturn<PurchaseListsFormData>['formState']['errors'];
-  isValid: boolean;
   foodProductOptions: FoodProductOption[];
   shopOptions: { id: number; name: string }[];
   onFoodProductChange?: (foodProductId: number, index: number) => void;
@@ -42,9 +40,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   append,
   remove,
   onSubmit,
-  onCancel,
   errors,
-  isValid,
   foodProductOptions,
   shopOptions,
   onFoodProductChange,
@@ -212,15 +208,6 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
           <Button
             type="button"
             size="pc"
-            color="secondary"
-            variant
-            onClick={onCancel}
-          >
-            キャンセル
-          </Button>
-          <Button
-            type="button"
-            size="pc"
             color="main"
             variant
             icon="plus"
@@ -228,7 +215,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
           >
             購入品を追加
           </Button>
-          <Button size="pc" color="main" type="submit" isDisable={!isValid}>
+          <Button size="pc" color="main" type="submit">
             登録
           </Button>
         </div>
