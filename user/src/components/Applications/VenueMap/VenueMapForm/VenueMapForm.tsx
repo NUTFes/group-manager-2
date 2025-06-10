@@ -9,9 +9,16 @@ import { useVenueMapFormHooks } from './hooks';
 type VenueMapFormProps = {
   groupId: number;
   venueMap?: VenueMapResponse | null;
+  toEdit?: () => void;
+  onSubmitted?: () => void;
 };
 
-const VenueMapForm: FC<VenueMapFormProps> = ({ groupId, venueMap }) => {
+const VenueMapForm: FC<VenueMapFormProps> = ({
+  groupId,
+  venueMap,
+  toEdit,
+  onSubmitted,
+}) => {
   const {
     handleSubmit,
     errors,
@@ -23,7 +30,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({ groupId, venueMap }) => {
     handleImageUpload,
     onSubmit,
     isDirty,
-  } = useVenueMapFormHooks(groupId, venueMap);
+  } = useVenueMapFormHooks(groupId, venueMap, onSubmitted);
 
   const checklistOptions = [
     {
@@ -104,13 +111,24 @@ const VenueMapForm: FC<VenueMapFormProps> = ({ groupId, venueMap }) => {
 
           {/* ボタン */}
           <div className="mt-6 flex w-full items-center justify-center gap-4">
+            {venueMap && (
+              <Button
+                size="pc"
+                color="main"
+                onClick={toEdit}
+                type="button"
+                variant
+              >
+                キャンセル
+              </Button>
+            )}
             <Button
               size="pc"
               type="submit"
               color="main"
               isDisable={isMutating || (venueMap ? !isDirty : false)}
             >
-              {isMutating ? '送信中...' : venueMap ? '修正する' : '登録する'}
+              {isMutating ? '送信中...' : venueMap ? '修正' : '登録する'}
             </Button>
           </div>
         </form>
