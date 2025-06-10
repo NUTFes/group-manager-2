@@ -7,14 +7,12 @@ import CookingProcessOrderForm from './CookingProcessOrderForm';
 import { useCookingProcessOrder } from './hooks';
 
 type CookingProcessOrderProps = {
-  isEdit: boolean;
   isRegistered: boolean | undefined;
   groupId: number;
   isDeadline: boolean;
 };
 
 const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
-  isEdit,
   isRegistered,
   groupId,
   isDeadline,
@@ -28,6 +26,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     handleEditClick,
     onSubmit,
     mergedData,
+    shouldShowWarning,
   } = useCookingProcessOrder(groupId, isDeadline);
 
   if (isLoading) {
@@ -37,95 +36,101 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   return (
     <AccordionMenu
       title="調理工程申請"
-      isEdit={isEdit}
-      isExist={isExist}
+      isEdit={!isDeadline}
+      isExist={isRegistered}
       isRegistered={isRegistered}
       required
     >
-      <FormProvider {...methods}>
-        <form onSubmit={onSubmit}>
-          {isEditing ? (
-            <>
-              {fields.map((field, index) => (
-                <div key={field.id} className="mb-8">
-                  <CookingProcessOrderForm
-                    index={index}
-                    foodProductName={field.foodProductName}
-                  />
+      {shouldShowWarning ? (
+        <p className="text-center text-alert">
+          販売品申請を先に申請してください
+        </p>
+      ) : (
+        <FormProvider {...methods}>
+          <form onSubmit={onSubmit}>
+            {isEditing ? (
+              <>
+                {fields.map((field, index) => (
+                  <div key={field.id} className="mb-8">
+                    <CookingProcessOrderForm
+                      index={index}
+                      foodProductName={field.foodProductName}
+                    />
+                  </div>
+                ))}
+                <div className="flex justify-center">
+                  <Button
+                    type="submit"
+                    size="pc"
+                    color="main"
+                    isDisable={
+                      !methods.formState.isValid ||
+                      methods.formState.isSubmitting ||
+                      isDeadline
+                    }
+                    icon={isExist ? 'save' : 'send'}
+                  >
+                    {isExist ? '更新' : '登録'}
+                  </Button>
                 </div>
-              ))}
+              </>
+            ) : (
+              <>
+                {mergedData.map(({ foodProduct, cookingProcessOrder }) => (
+                  <div key={foodProduct.id} className="mb-8">
+                    <FormList
+                      items={
+                        cookingProcessOrder
+                          ? [
+                              {
+                                label: '販売品名',
+                                content: foodProduct.name,
+                              },
+                              {
+                                label: '調理場の仕様有無(営業前)',
+                                content: cookingProcessOrder.preOpenKitchen
+                                  ? '使用する'
+                                  : '使用しない',
+                              },
+                              {
+                                label: '調理場の仕様有無(営業中)',
+                                content: cookingProcessOrder.duringOpenKitchen
+                                  ? '使用する'
+                                  : '使用しない',
+                              },
+                              {
+                                label: '調理内容',
+                                content: cookingProcessOrder.tent || '',
+                              },
+                            ]
+                          : [
+                              {
+                                label: '販売品名',
+                                content: foodProduct.name,
+                              },
+                              { label: '調理工程', content: '未登録' },
+                            ]
+                      }
+                    />
+                  </div>
+                ))}
+              </>
+            )}
+            {!isEditing && isExist && !isDeadline && (
               <div className="flex justify-center">
                 <Button
-                  type="submit"
+                  type="button"
+                  onClick={handleEditClick}
                   size="pc"
                   color="main"
-                  isDisable={
-                    !methods.formState.isValid ||
-                    methods.formState.isSubmitting ||
-                    isDeadline
-                  }
-                  icon={isExist ? 'save' : 'send'}
                 >
-                  {isExist ? '更新' : '登録'}
+                  修正
                 </Button>
               </div>
-            </>
-          ) : (
-            <>
-              {mergedData.map(({ foodProduct, cookingProcessOrder }) => (
-                <div key={foodProduct.id} className="mb-8">
-                  <FormList
-                    items={
-                      cookingProcessOrder
-                        ? [
-                            {
-                              label: '販売品名',
-                              content: foodProduct.name,
-                            },
-                            {
-                              label: '調理場の仕様有無(営業前)',
-                              content: cookingProcessOrder.preOpenKitchen
-                                ? '使用する'
-                                : '使用しない',
-                            },
-                            {
-                              label: '調理場の仕様有無(営業中)',
-                              content: cookingProcessOrder.duringOpenKitchen
-                                ? '使用する'
-                                : '使用しない',
-                            },
-                            {
-                              label: '調理内容',
-                              content: cookingProcessOrder.tent || '',
-                            },
-                          ]
-                        : [
-                            {
-                              label: '販売品名',
-                              content: foodProduct.name,
-                            },
-                            { label: '調理工程', content: '未登録' },
-                          ]
-                    }
-                  />
-                </div>
-              ))}
-            </>
-          )}
-          {!isEditing && isExist && !isDeadline && (
-            <div className="flex justify-center">
-              <Button
-                type="button"
-                onClick={handleEditClick}
-                size="pc"
-                color="main"
-              >
-                修正
-              </Button>
-            </div>
-          )}
-        </form>
-      </FormProvider>
+            )}
+          </form>
+        </FormProvider>
+      )}
     </AccordionMenu>
   );
 };

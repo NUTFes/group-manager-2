@@ -87,6 +87,11 @@ export const useCookingProcessOrder = (
     [cookingProcessOrders]
   );
 
+  const shouldShowWarning = useMemo(() => {
+    if (isLoadingFoodProducts) return false;
+    return cookingTargetFoodProducts.length === 0;
+  }, [isLoadingFoodProducts, cookingTargetFoodProducts]);
+
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };
@@ -137,5 +142,6 @@ export const useCookingProcessOrder = (
     handleEditClick,
     onSubmit,
     mergedData,
+    shouldShowWarning,
   };
 };
