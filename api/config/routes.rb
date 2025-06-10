@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
   # 識別番号割り当て
   get 'group_identification' => "group_identification#index"
   post 'group_identification' => "group_identification#create"
@@ -42,15 +40,10 @@ Rails.application.routes.draw do
   resources :purchase_lists do
    collection do
      get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
+     post 'upsert', to: 'purchase_lists#upsert_all'
    end
   end
 
-  resources :purchase_lists do
-  collection do
-    get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
-    post 'upsert', to: 'purchase_lists#upsert_all'
-
- 
   resources :assign_rental_items
   resources :rentable_items
   resources :rental_items
@@ -62,7 +55,6 @@ Rails.application.routes.draw do
       get 'group/:group_id', to: 'rental_orders#get_by_group_id'
     end
   end
-end
 
   resources :assign_items
   resources :assign_stages
@@ -96,7 +88,6 @@ end
       get 'group/:group_id', to: 'place_orders#get_by_group_id'
     end
   end
-  resources :stage_common_options
   resources :stage_common_options do
     collection do
       get 'group/:group_id', to: 'stage_common_options#get_by_group_id'
