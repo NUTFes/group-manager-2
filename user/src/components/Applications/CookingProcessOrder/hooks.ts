@@ -12,7 +12,10 @@ import {
   cookingProcessOrderSchema,
 } from './CookingProcessOrderForm/schema';
 
-export const useCookingProcessOrder = (groupId: number | undefined) => {
+export const useCookingProcessOrder = (
+  groupId: number | undefined,
+  isDeadline: boolean
+) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const {
@@ -116,7 +119,8 @@ export const useCookingProcessOrder = (groupId: number | undefined) => {
     if (!isLoading && cookingProcessOrders) {
       if (
         cookingProcessOrders.length === 0 &&
-        cookingTargetFoodProducts.length > 0
+        cookingTargetFoodProducts.length > 0 &&
+        !isDeadline
       ) {
         setIsEditing(true);
       }

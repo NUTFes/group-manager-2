@@ -10,12 +10,14 @@ type CookingProcessOrderProps = {
   isEdit: boolean;
   isRegistered: boolean | undefined;
   groupId: number;
+  isDeadline: boolean;
 };
 
 const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   isEdit,
   isRegistered,
   groupId,
+  isDeadline,
 }) => {
   const {
     methods,
@@ -26,7 +28,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     handleEditClick,
     onSubmit,
     mergedData,
-  } = useCookingProcessOrder(groupId);
+  } = useCookingProcessOrder(groupId, isDeadline);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -58,7 +60,9 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                   size="pc"
                   color="main"
                   isDisable={
-                    !methods.formState.isValid || methods.formState.isSubmitting
+                    !methods.formState.isValid ||
+                    methods.formState.isSubmitting ||
+                    isDeadline
                   }
                   icon={isExist ? 'save' : 'send'}
                 >
@@ -108,7 +112,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
               ))}
             </>
           )}
-          {!isEditing && isExist && (
+          {!isEditing && isExist && !isDeadline && (
             <div className="flex justify-center">
               <Button
                 type="button"

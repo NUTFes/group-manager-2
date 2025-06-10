@@ -105,6 +105,7 @@ export default function HomePage() {
             isRegistered={checkAllRegisteredGroups?.foodProduct}
           />
           <CookingProcessOrder
+            isDeadline={!userPageSettings?.isEditCookingProcess}
             isEdit={!!userPageSettings?.isEditCookingProcess}
             isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
             groupId={groupId}
