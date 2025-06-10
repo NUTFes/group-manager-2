@@ -166,6 +166,7 @@ export const usePurchaseListsState = (
           { label: '商品の種類', content: freshName },
           { label: '購入場所', content: shopName },
           { label: '購入日', content: formatDateForDisplay(item.purchaseDate) },
+          { label: '備考', content: item.remark || '' },
         ];
         if (item.url) {
           singleItemForm.push({ label: 'URL', content: item.url });
