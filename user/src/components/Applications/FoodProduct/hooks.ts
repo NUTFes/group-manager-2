@@ -36,16 +36,16 @@ export const useFoodProductHooks = (groupId: number) => {
 
   // APIレスポンスをコンポーネント用の型に変換
   const foodProducts: RegisteredProduct[] | null =
-      apiFoodProducts?.length > 0
-          ? apiFoodProducts.map((product: FoodProductResponse) => ({
-            id: product.id.toString(),
-            name: product.name,
-            isAlcohol: product.isCooking ?? false,
-            hasLicense: product.isCooking ?? false,
-            day1Quantity: product.firstDayNum?.toString() || '0',
-            day2Quantity: product.secondDayNum?.toString() || '0',
-          }))
-          : null;
+    apiFoodProducts?.length > 0
+      ? apiFoodProducts.map((product: FoodProductResponse) => ({
+          id: product.id.toString(),
+          name: product.name,
+          isAlcohol: product.isCooking ?? false,
+          hasLicense: product.isCooking ?? false,
+          day1Quantity: product.firstDayNum?.toString() || '0',
+          day2Quantity: product.secondDayNum?.toString() || '0',
+        }))
+      : null;
 
   const hasError = !!error;
 
@@ -53,8 +53,8 @@ export const useFoodProductHooks = (groupId: number) => {
     {
       label: '販売品一覧',
       content: foodProducts?.length
-          ? `${foodProducts.length}品目登録済み`
-          : '未登録',
+        ? `${foodProducts.length}品目登録済み`
+        : '未登録',
     },
   ];
 
@@ -66,15 +66,17 @@ export const useFoodProductHooks = (groupId: number) => {
   const setFoodProductsData = async (products: ProductInput[]) => {
     try {
       // 現在の登録済み商品のIDを取得
-      const currentProductIds = foodProducts?.map(p => parseInt(p.id)) || [];
+      const currentProductIds = foodProducts?.map((p) => parseInt(p.id)) || [];
 
       // 新しいフォームデータのIDを取得（既存の商品のID）
       const newProductIds = products
-          .map(p => p.id ? parseInt(p.id) : null)
-          .filter((id): id is number => id !== null);
+        .map((p) => (p.id ? parseInt(p.id) : null))
+        .filter((id): id is number => id !== null);
 
       // 削除すべき商品ID（現在の商品から新しいフォームに含まれないもの）
-      const toDeleteIds = currentProductIds.filter(id => !newProductIds.includes(id));
+      const toDeleteIds = currentProductIds.filter(
+        (id) => !newProductIds.includes(id)
+      );
 
       // まず削除を実行
       for (const deleteId of toDeleteIds) {
@@ -124,8 +126,8 @@ export const useFoodProductHooks = (groupId: number) => {
 
       if (error instanceof Error) {
         if (
-            error.message.includes('認証が必要') ||
-            error.message.includes('User is not authenticated')
+          error.message.includes('認証が必要') ||
+          error.message.includes('User is not authenticated')
         ) {
           errorMessage = '認証が必要です。ログインしてください。';
         } else {
@@ -179,8 +181,8 @@ export const useFoodProductHooks = (groupId: number) => {
 
       if (error instanceof Error) {
         if (
-            error.message.includes('認証が必要') ||
-            error.message.includes('User is not authenticated')
+          error.message.includes('認証が必要') ||
+          error.message.includes('User is not authenticated')
         ) {
           errorMessage = '認証が必要です。ログインしてください。';
         } else {
@@ -199,7 +201,7 @@ export const useFoodProductHooks = (groupId: number) => {
   const removeFoodProduct = async (id: string) => {
     try {
       const productToRemove = foodProducts?.find(
-          (product) => product.id === id
+        (product) => product.id === id
       );
 
       if (!productToRemove) {
@@ -214,10 +216,10 @@ export const useFoodProductHooks = (groupId: number) => {
 
       // 結果が {success: false} の場合はエラーを投げる
       if (
-          result &&
-          typeof result === 'object' &&
-          'success' in result &&
-          !result.success
+        result &&
+        typeof result === 'object' &&
+        'success' in result &&
+        !result.success
       ) {
         throw new Error(result.error?.message || '削除に失敗しました');
       }
@@ -240,8 +242,8 @@ export const useFoodProductHooks = (groupId: number) => {
       // エラーの詳細を分析
       if (error instanceof Error) {
         if (
-            error.message.includes('User is not authenticated') ||
-            error.message.includes('認証が必要')
+          error.message.includes('User is not authenticated') ||
+          error.message.includes('認証が必要')
         ) {
           toast.error('認証が必要です。ログインしてください。', {
             position: 'top-right',

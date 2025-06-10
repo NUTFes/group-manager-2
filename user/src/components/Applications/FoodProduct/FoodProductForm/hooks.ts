@@ -1,6 +1,6 @@
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useEffect } from 'react';
 import {
   FoodProductFormData,
   ProductInput,
@@ -9,10 +9,10 @@ import {
 } from './schema';
 
 export const useFoodProductFormHooks = (
-    groupId: number,
-    foodProductsProp?: RegisteredProduct[] | null,
-    addFoodProducts?: (products: ProductInput[]) => Promise<void>,
-    setFoodProductsData?: (products: ProductInput[]) => Promise<void>
+  groupId: number,
+  foodProductsProp?: RegisteredProduct[] | null,
+  addFoodProducts?: (products: ProductInput[]) => Promise<void>,
+  setFoodProductsData?: (products: ProductInput[]) => Promise<void>
 ) => {
   // 安全なデフォルト値生成関数
   const createDefaultProducts = (propsData?: RegisteredProduct[] | null) => {
