@@ -1,6 +1,7 @@
 import camelcaseKeys from 'camelcase-keys';
 import type { Session } from 'next-auth';
 import snakecaseKeys from 'snakecase-keys';
+import { MutationFetcher } from 'swr/mutation';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -101,6 +102,24 @@ const authenticatedMutationFetcher =
     return request<T>(url, opts);
   };
 
+const authenticatedMutationFetcherWithId =
+  <Data, Arg = undefined>(
+    method: FetchOptions['method']
+  ): MutationFetcher<Data, readonly [string, Session], Arg> =>
+  async (
+    [url, session],
+    // 明示的に { arg: Arg } 型を受ける
+    { arg }: { arg: Arg }
+  ) => {
+    const opts: FetchOptions = { method, session };
+    // Arg が { body, query } を持っていればコピー
+    if (arg && typeof arg === 'object') {
+      if ('body' in arg) opts.body = (arg as any).body;
+      if ('query' in arg) opts.query = (arg as any).query;
+    }
+    return request<Data>(url, opts);
+  };
+
 const unauthenticatedMutationFetcher =
   (method: FetchOptions['method']) =>
   <T>(url: string, { arg }: { arg?: MutationArgs } = {}): Promise<T> => {
@@ -116,6 +135,18 @@ export const authenticatedPutFetcher = authenticatedMutationFetcher('PUT');
 export const authenticatedPatchFetcher = authenticatedMutationFetcher('PATCH');
 export const authenticatedDeleteFetcher =
   authenticatedMutationFetcher('DELETE');
+
+export const authenticatedPutFetcherWithId = authenticatedMutationFetcherWithId<
+  any,
+  { id: number; body: any; query?: any }
+>('PUT');
+export const authenticatedPatchFetcherWithId =
+  authenticatedMutationFetcherWithId<
+    any,
+    { id: number; body: any; query?: any }
+  >('PATCH');
+export const authenticatedDeleteFetcherWithId =
+  authenticatedMutationFetcherWithId<void, number>('DELETE');
 
 // 認証なしミューテーションFetcher（POST, PUT, PATCH, DELETE）
 export const unauthenticatedPostFetcher =

@@ -4,6 +4,7 @@ import {
   useCreateGroups,
   useUpdateGroups,
 } from '@/api/groupApi';
+import { GROUP_CATEGORY } from '@/utils/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -32,7 +33,7 @@ export const useGroupFormHooks = (
       projectName: groups?.projectName ?? '',
       isInternational: groups?.isInternational ?? false,
       isExternal: groups?.isExternal ?? false,
-      groupCategoryId: groups?.groupCategoryId ?? 1,
+      groupCategoryId: groups?.groupCategoryId ?? GROUP_CATEGORY.FOOD_SALES,
       activity: groups?.activity ?? '',
       userId: groups?.userId ?? userId,
       fesYearId: groups?.fesYearId ?? 1,
@@ -45,7 +46,7 @@ export const useGroupFormHooks = (
 
   // 団体カテゴリーが「実行委員」の場合は，committeeを1にする
   useEffect(() => {
-    if (values.groupCategoryId === 6) {
+    if (values.groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
       setValue('committee', 1);
     } else {
       setValue('committee', 0);
