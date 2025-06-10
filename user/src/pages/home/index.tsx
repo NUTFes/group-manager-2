@@ -36,6 +36,11 @@ export default function HomePage() {
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             groupId={groupId}
           />
+          <PurchaseLists
+            isDeadline={!userPageSettings?.isEditPurchaseList}
+            isRegistered={checkAllRegisteredGroups?.purchaseList}
+            groupId={groupId}
+          />
         </>
       );
     } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
@@ -83,11 +88,6 @@ export default function HomePage() {
             isRegistered={checkAllRegisteredGroups?.publicRelation}
             groupId={groupId}
           />
-          <PurchaseLists
-            isDeadline={!userPageSettings?.isEditPurchaseList}
-            isRegistered={checkAllRegisteredGroups?.purchaseList}
-            groupId={groupId}
-          />
         </>
       );
     } else {
@@ -112,11 +112,6 @@ export default function HomePage() {
           <PublicRelations
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
-            groupId={groupId}
-          />
-          <PurchaseLists
-            isDeadline={!userPageSettings?.isEditPurchaseList}
-            isRegistered={checkAllRegisteredGroups?.purchaseList}
             groupId={groupId}
           />
         </>
