@@ -51,6 +51,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
         </div>
         <Radio
           label="(営業前)"
+          name={`cookingProcessOrders.${index}.preOpenKitchen`}
           required
           value={values.preOpenKitchen ? '1' : '0'}
           onChange={(val) => {
@@ -68,6 +69,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
         />
         <Radio
           label="(営業中)"
+          name={`cookingProcessOrders.${index}.duringOpenKitchen`}
           required
           value={values.duringOpenKitchen ? '1' : '0'}
           onChange={(val) => {
