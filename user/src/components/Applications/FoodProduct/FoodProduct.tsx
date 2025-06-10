@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { ApiResponse } from '@/api/api';
+import { KeyedMutator } from 'swr';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
 import {
@@ -8,8 +10,6 @@ import {
 import { useFoodProductHooks } from '@/components/Applications/FoodProduct/hooks';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
-import { KeyedMutator } from 'swr';
-import { ApiResponse } from '@/api/api';
 
 // checkAllRegisteredGroupsの型定義
 type RegistrationStatus = {
@@ -23,7 +23,9 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
-  mutateCheckAllRegisteredGroups?: KeyedMutator<ApiResponse<RegistrationStatus>>;
+  mutateCheckAllRegisteredGroups?: KeyedMutator<
+    ApiResponse<RegistrationStatus>
+  >;
 };
 
 type ContentProps = {
@@ -38,37 +40,39 @@ type ContentProps = {
   addFoodProducts: (products: ProductInput[]) => Promise<void>;
   removeFoodProduct: (id: string) => Promise<void>;
   setFoodProductsData: (products: ProductInput[]) => Promise<void>;
-  mutateCheckAllRegisteredGroups?: KeyedMutator<ApiResponse<RegistrationStatus>>;
+  mutateCheckAllRegisteredGroups?: KeyedMutator<
+    ApiResponse<RegistrationStatus>
+  >;
 };
 
 const Content: FC<ContentProps> = ({
-                                     isLoading,
-                                     hasError,
-                                     isDeadline,
-                                     isEditing,
-                                     toEdit,
-                                     foodProducts,
-                                     formItem,
-                                     groupId,
-                                     addFoodProducts,
-                                     removeFoodProduct,
-                                     setFoodProductsData,
-                                     mutateCheckAllRegisteredGroups,
-                                   }) => {
+  isLoading,
+  hasError,
+  isDeadline,
+  isEditing,
+  toEdit,
+  foodProducts,
+  formItem,
+  groupId,
+  addFoodProducts,
+  removeFoodProduct,
+  setFoodProductsData,
+  mutateCheckAllRegisteredGroups,
+}) => {
   if (isLoading) {
     return (
-        <div className="flex items-center justify-center py-8">
-          <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
-          <span className="ml-2">Loading...</span>
-        </div>
+      <div className="flex items-center justify-center py-8">
+        <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
+        <span className="ml-2">Loading...</span>
+      </div>
     );
   }
 
   if (hasError) {
     return (
-        <div className="py-10 text-center text-red-500">
-          データの取得に失敗しました。
-        </div>
+      <div className="py-10 text-center text-red-500">
+        データの取得に失敗しました。
+      </div>
     );
   }
 
@@ -78,38 +82,38 @@ const Content: FC<ContentProps> = ({
 
   if (isEditing) {
     return (
-        <FoodProductForm
-            groupId={groupId}
-            toEdit={toEdit}
-            foodProducts={foodProducts}
-            addFoodProducts={addFoodProducts}
-            removeFoodProduct={removeFoodProduct}
-            setFoodProductsData={setFoodProductsData}
-            mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
-        />
+      <FoodProductForm
+        groupId={groupId}
+        toEdit={toEdit}
+        foodProducts={foodProducts}
+        addFoodProducts={addFoodProducts}
+        removeFoodProduct={removeFoodProduct}
+        setFoodProductsData={setFoodProductsData}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+      />
     );
   }
 
   return (
-      <FoodProductForm
-          groupId={groupId}
-          toEdit={toEdit}
-          foodProducts={foodProducts}
-          addFoodProducts={addFoodProducts}
-          removeFoodProduct={removeFoodProduct}
-          setFoodProductsData={setFoodProductsData}
-          mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
-          isViewMode={true}
-      />
+    <FoodProductForm
+      groupId={groupId}
+      toEdit={toEdit}
+      foodProducts={foodProducts}
+      addFoodProducts={addFoodProducts}
+      removeFoodProduct={removeFoodProduct}
+      setFoodProductsData={setFoodProductsData}
+      mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+      isViewMode={true}
+    />
   );
 };
 
 const FoodProduct: FC<FoodProductProps> = ({
-                                             groupId,
-                                             isDeadline,
-                                             isRegistered,
-                                             mutateCheckAllRegisteredGroups,
-                                           }) => {
+  groupId,
+  isDeadline,
+  isRegistered,
+  mutateCheckAllRegisteredGroups,
+}) => {
   const {
     formItem,
     isEditing,
@@ -123,27 +127,27 @@ const FoodProduct: FC<FoodProductProps> = ({
   } = useFoodProductHooks(groupId, mutateCheckAllRegisteredGroups);
 
   return (
-      <AccordionMenu
-          title="販売品申請"
-          isEdit={!isDeadline}
-          isExist={isRegistered}
-          required
-      >
-        <Content
-            isLoading={isLoading}
-            hasError={hasError}
-            isDeadline={isDeadline}
-            isEditing={isEditing}
-            toEdit={toEdit}
-            foodProducts={foodProducts}
-            formItem={formItem}
-            groupId={groupId}
-            addFoodProducts={addFoodProducts}
-            removeFoodProduct={removeFoodProduct}
-            setFoodProductsData={setFoodProductsData}
-            mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
-        />
-      </AccordionMenu>
+    <AccordionMenu
+      title="販売品申請"
+      isEdit={!isDeadline}
+      isExist={isRegistered}
+      required
+    >
+      <Content
+        isLoading={isLoading}
+        hasError={hasError}
+        isDeadline={isDeadline}
+        isEditing={isEditing}
+        toEdit={toEdit}
+        foodProducts={foodProducts}
+        formItem={formItem}
+        groupId={groupId}
+        addFoodProducts={addFoodProducts}
+        removeFoodProduct={removeFoodProduct}
+        setFoodProductsData={setFoodProductsData}
+        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+      />
+    </AccordionMenu>
   );
 };
 
