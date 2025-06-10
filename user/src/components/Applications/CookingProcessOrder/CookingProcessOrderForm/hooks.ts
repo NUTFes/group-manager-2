@@ -1,66 +1,24 @@
-import { useState } from 'react';
-import {
-  CookingProcessOrderResponse,
-  usePostCookingProcessOrder,
-  useUpdateCookingProcessOrder,
-} from '@/api/cookingProcessOrderApi';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { CookingProcessOrderSchema, cookingProcessOrderSchema } from './schema';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-export const useCookingProcessOrderForm = (
-  groupId: number | undefined,
-  foodProductId: number,
-  onSuccess: () => void,
-  defaultValues?: CookingProcessOrderResponse
-) => {
-  const methods = useForm<CookingProcessOrderSchema>({
-    resolver: zodResolver(cookingProcessOrderSchema),
-    defaultValues: {
-      groupId: groupId,
-      foodProductId: foodProductId,
-      preOpenKitchen: defaultValues?.preOpenKitchen ?? false,
-      duringOpenKitchen: defaultValues?.duringOpenKitchen ?? false,
-      tent: defaultValues?.tent ?? '',
-    },
+export const useCookingProcessOrderForm = (index: number) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
+
+  const values = useWatch({
+    control,
+    name: `cookingProcessOrders.${index}`,
   });
 
-  const { trigger: post, isMutating: isPosting } = usePostCookingProcessOrder();
-  const { trigger: update, isMutating: isUpdating } =
-    useUpdateCookingProcessOrder(defaultValues?.id ?? 0);
-
-  const onSubmit = methods.handleSubmit(async (data) => {
-    const payload = { ...data, groupId, foodProductId };
-    try {
-      if (defaultValues) {
-        await update({ body: payload });
-      } else {
-        await post({ body: payload });
-      }
-      toast.success('登録しました。');
-      onSuccess();
-    } catch (e) {
-      console.error(e);
-      toast.error('登録に失敗しました。');
-    }
-  });
-
-  const values = methods.watch();
-
-  const [confirmCookingProcessValues, setConfirmCookingProcessValues] =
-    useState<string[]>([]);
-
-  const handleConfirmCookingProcessChange = (newValues: string[]) => {
-    setConfirmCookingProcessValues(newValues);
+  const getError = (fieldName: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fieldErrors = errors.cookingProcessOrders as any;
+    return fieldErrors?.[index]?.[fieldName]?.message as string | undefined;
   };
 
   return {
-    methods,
     values,
-    confirmCookingProcessValues,
-    handleConfirmCookingProcessChange,
-    onSubmit,
-    isSubmitting: isPosting || isUpdating,
+    getError,
   };
 };

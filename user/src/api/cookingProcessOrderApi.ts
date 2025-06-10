@@ -35,6 +35,7 @@ export type ApiResponse<T> = {
 
 const API_ENDPOINTS = {
   COOKING_PROCESS_ORDER: '/cooking_process_orders',
+  COOKING_PROCESS_ORDERS_UPSERT: '/cooking_process_orders/upsert',
 };
 
 export const useGetCookingProcessOrder = (groupId: number | undefined) => {
@@ -59,4 +60,8 @@ export const usePostCookingProcessOrder = () => {
 
 export const useUpdateCookingProcessOrder = (id: number) => {
   return useAuthenticatedPatch(`${API_ENDPOINTS.COOKING_PROCESS_ORDER}/${id}`);
+};
+
+export const useUpsertCookingProcessOrders = () => {
+  return useAuthenticatedPost(API_ENDPOINTS.COOKING_PROCESS_ORDERS_UPSERT);
 };
