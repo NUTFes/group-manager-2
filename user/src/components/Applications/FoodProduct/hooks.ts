@@ -36,16 +36,16 @@ export const useFoodProductHooks = (groupId: number) => {
 
   // APIレスポンスをコンポーネント用の型に変換
   const foodProducts: RegisteredProduct[] | null =
-      apiFoodProducts?.length > 0
-          ? apiFoodProducts.map((product: FoodProductResponse) => ({
-            id: product.id.toString(),
-            name: product.name,
-            isAlcohol: product.isCooking ?? false,
-            hasLicense: product.isCooking ?? false,
-            day1Quantity: product.firstDayNum?.toString() || '0',
-            day2Quantity: product.secondDayNum?.toString() || '0',
-          }))
-          : null;
+    apiFoodProducts?.length > 0
+      ? apiFoodProducts.map((product: FoodProductResponse) => ({
+          id: product.id.toString(),
+          name: product.name,
+          isAlcohol: product.isCooking ?? false,
+          hasLicense: product.isCooking ?? false,
+          day1Quantity: product.firstDayNum?.toString() || '0',
+          day2Quantity: product.secondDayNum?.toString() || '0',
+        }))
+      : null;
 
   const hasError = !!error;
 
@@ -53,8 +53,8 @@ export const useFoodProductHooks = (groupId: number) => {
     {
       label: '販売品一覧',
       content: foodProducts?.length
-          ? `${foodProducts.length}品目登録済み`
-          : '未登録',
+        ? `${foodProducts.length}品目登録済み`
+        : '未登録',
     },
   ];
 
@@ -94,7 +94,10 @@ export const useFoodProductHooks = (groupId: number) => {
       let errorMessage = '販売品の更新に失敗しました';
 
       if (error instanceof Error) {
-        if (error.message.includes('認証が必要') || error.message.includes('User is not authenticated')) {
+        if (
+          error.message.includes('認証が必要') ||
+          error.message.includes('User is not authenticated')
+        ) {
           errorMessage = '認証が必要です。ログインしてください。';
         } else {
           errorMessage = `販売品の更新に失敗しました: ${error.message}`;
@@ -139,7 +142,10 @@ export const useFoodProductHooks = (groupId: number) => {
       let errorMessage = '販売品の登録に失敗しました';
 
       if (error instanceof Error) {
-        if (error.message.includes('認証が必要') || error.message.includes('User is not authenticated')) {
+        if (
+          error.message.includes('認証が必要') ||
+          error.message.includes('User is not authenticated')
+        ) {
           errorMessage = '認証が必要です。ログインしてください。';
         } else {
           errorMessage = `販売品の登録に失敗しました: ${error.message}`;
@@ -157,7 +163,7 @@ export const useFoodProductHooks = (groupId: number) => {
   const removeFoodProduct = async (id: string) => {
     try {
       const productToRemove = foodProducts?.find(
-          (product) => product.id === id
+        (product) => product.id === id
       );
 
       if (!productToRemove) {
@@ -171,7 +177,12 @@ export const useFoodProductHooks = (groupId: number) => {
       const result = await remove(deleteEndpoint);
 
       // 結果が {success: false} の場合はエラーを投げる
-      if (result && typeof result === 'object' && 'success' in result && !result.success) {
+      if (
+        result &&
+        typeof result === 'object' &&
+        'success' in result &&
+        !result.success
+      ) {
         throw new Error(result.error?.message || '削除に失敗しました');
       }
 
@@ -185,7 +196,10 @@ export const useFoodProductHooks = (groupId: number) => {
     } catch (error) {
       // エラーの詳細を分析
       if (error instanceof Error) {
-        if (error.message.includes('User is not authenticated') || error.message.includes('認証が必要')) {
+        if (
+          error.message.includes('User is not authenticated') ||
+          error.message.includes('認証が必要')
+        ) {
           toast.error('認証が必要です。ログインしてください。', {
             position: 'top-right',
             autoClose: 5000,

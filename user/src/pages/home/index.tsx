@@ -3,6 +3,7 @@ import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import Employees from '@/components/Applications/Employees/Employees';
+import FoodProduct from '@/components/Applications/FoodProduct';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import Power from '@/components/Applications/Power';
@@ -13,7 +14,6 @@ import VenueApplications from '@/components/Applications/VenueApplication';
 import ViceRepresentative from '@/components/Applications/ViceRepresentative';
 import NewsList from '@/components/NewsList';
 import { useUser } from '@/hooks/useUser';
-import FoodProduct from "@/components/Applications/FoodProduct";
 
 export default function HomePage() {
   const { user } = useUser();
@@ -143,12 +143,12 @@ export default function HomePage() {
               groupId={groupId}
               mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             />
-              <FoodProduct
-                  isDeadline={!userPageSettings?.isEditSubRep}
-                  isRegistered={checkAllRegisteredGroups?.subRep}
-                  groupId={groupId}
-                  mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
-              />
+            <FoodProduct
+              isDeadline={!userPageSettings?.isEditSubRep}
+              isRegistered={checkAllRegisteredGroups?.subRep}
+              groupId={groupId}
+              mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+            />
             <GroupCategoryContent />
           </>
         )}
