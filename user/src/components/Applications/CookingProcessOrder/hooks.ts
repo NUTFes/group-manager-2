@@ -130,7 +130,7 @@ export const useCookingProcessOrder = (
         setIsEditing(true);
       }
     }
-  }, [isLoading, cookingProcessOrders, cookingTargetFoodProducts]);
+  }, [isLoading, isDeadline, cookingProcessOrders, cookingTargetFoodProducts]);
 
   return {
     methods,
