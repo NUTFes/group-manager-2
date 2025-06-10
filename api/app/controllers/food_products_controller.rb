@@ -32,7 +32,7 @@ class FoodProductsController < ApplicationController
   # POST /food_products/upsert
   # 複数レコード作成・更新 (upsert_all使用)
   def upsert
-    keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at]
+    keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at, :is_alcohol]
     now = Time.current
 
     upserts = params[:food_products].map do |foodProduct|
@@ -59,7 +59,8 @@ class FoodProductsController < ApplicationController
           name: attrs["name"],
           is_cooking: attrs["is_cooking"],
           first_day_num: attrs["first_day_num"],
-          second_day_num: attrs["second_day_num"]
+          second_day_num: attrs["second_day_num"],
+          is_alcohol: attrs["is_alcohol"]
         )
       end
     end.reduce { |acc, scope| acc.or(scope) }
@@ -97,6 +98,6 @@ class FoodProductsController < ApplicationController
 
     # 単一レコード用 Strong Parameters
     def food_product_params
-      params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num)
+      params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num, :is_alcohol)
     end
 end
