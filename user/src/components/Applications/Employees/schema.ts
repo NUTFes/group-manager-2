@@ -1,5 +1,5 @@
+import { NEED_APPLICATION } from '@/utils/constants';
 import { z } from 'zod';
-import { NEED_APPLICATION } from './constants';
 
 export const employeeFormItemSchema = z.object({
   id: z.number().optional(),

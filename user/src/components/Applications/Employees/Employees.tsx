@@ -1,11 +1,11 @@
 import { FC } from 'react';
+import { NEED_APPLICATION, RADIO_VALUE } from '@/utils/constants';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormList from '@/components/FormList';
 import { EmployeeForm } from './EmployeesFrom/EmployeesForm';
-import { NEED_APPLICATION, RADIO_VALUE } from './constants';
 import { useEmployeesMainLogic } from './hooks';
 
 type EmployeesProps = {
