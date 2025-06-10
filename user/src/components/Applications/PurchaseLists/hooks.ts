@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
-  UpdatePurchaseListsRequest,
   useCreatePurchaseList,
   useDeletePurchaseList,
   useGetPurchaseListsByFoodProduct,
@@ -281,10 +280,10 @@ export const usePurchaseListsForm = (
     try {
       // 申請が複数ある場合はupsert、単数の場合は作成/更新APIを使い分ける
       if (formData.purchaseLists.length > 1) {
-        const requestBody: UpdatePurchaseListsRequest = {
-          purchaseLists: formData.purchaseLists.map(({ id, ...item }) => ({
+        const requestBody: PurchaseListsFormData = {
+          purchaseLists: formData.purchaseLists.map(({ ...item }) => ({
             ...item,
-            ...(id && { id }),
+            ...(item.id && { id: item.id }),
             fesDateId: 1,
             groupId,
           })),

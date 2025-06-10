@@ -6,6 +6,7 @@ import {
 } from '@/hooks/useApi';
 
 export type PurchaseList = {
+  id: number;
   foodProductId: number;
   shopId: number;
   fesDateId: number;
@@ -16,12 +17,7 @@ export type PurchaseList = {
   remark?: string | null;
 };
 
-export type UpdatePurchaseListsRequest = {
-  purchaseLists: (PurchaseList & { id?: number })[];
-};
-
 export type PurchaseListResponse = PurchaseList & {
-  id: number;
   createdAt: string;
   updatedAt: string;
 };
