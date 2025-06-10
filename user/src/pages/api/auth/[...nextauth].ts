@@ -100,7 +100,12 @@ export default NextAuth({
   events: {
     async signIn(message) {
       /* on successful sign in */
-      console.log('signin user:', message.user);
+      console.log('signin user:', {
+        ...message.user,
+        timestamp: new Date().toLocaleString('ja-JP', {
+          timeZone: 'Asia/Tokyo',
+        }),
+      });
     },
   },
 
