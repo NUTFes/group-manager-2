@@ -18,9 +18,15 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
   const { setValue } = useFormContext();
   const { values, getError } = useCookingProcessOrderForm(index);
 
+  // 調理場使用状況の定数
+  const KITCHEN_USAGE = {
+    USE: 1,
+    NOT_USE: 0,
+  } as const;
+
   const option = [
-    { id: 1, name: '使用する' },
-    { id: 0, name: '使用しない' },
+    { id: KITCHEN_USAGE.USE, name: '使用する' },
+    { id: KITCHEN_USAGE.NOT_USE, name: '使用しない' },
   ];
 
   const confirmCookingProcess = [
@@ -53,11 +59,15 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           label="(営業前)"
           name={`cookingProcessOrders.${index}.preOpenKitchen`}
           required
-          value={values.preOpenKitchen ? '1' : '0'}
+          value={
+            values.preOpenKitchen
+              ? String(KITCHEN_USAGE.USE)
+              : String(KITCHEN_USAGE.NOT_USE)
+          }
           onChange={(val) => {
             setValue(
               `cookingProcessOrders.${index}.preOpenKitchen`,
-              val === '1',
+              val === String(KITCHEN_USAGE.USE),
               {
                 shouldValidate: true,
                 shouldDirty: true,
@@ -71,11 +81,15 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           label="(営業中)"
           name={`cookingProcessOrders.${index}.duringOpenKitchen`}
           required
-          value={values.duringOpenKitchen ? '1' : '0'}
+          value={
+            values.duringOpenKitchen
+              ? String(KITCHEN_USAGE.USE)
+              : String(KITCHEN_USAGE.NOT_USE)
+          }
           onChange={(val) => {
             setValue(
               `cookingProcessOrders.${index}.duringOpenKitchen`,
-              val === '1',
+              val === String(KITCHEN_USAGE.USE),
               {
                 shouldValidate: true,
                 shouldDirty: true,
