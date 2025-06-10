@@ -241,15 +241,16 @@ export const usePurchaseListsForm = (
   const { control, handleSubmit, formState, reset, setValue } = formMethods;
 
   // initialDataが変更されたら、フォームの値をリセットする
-  // fix: JSON.stringifyを使用しないと再レンダリングをし続ける無限ループに陥ったのでひとまずの対処。
+  // 親コンポーネントから渡される initialData が変更された場合に、フォーム全体をそのデータでリセットします。
+  // react-hook-formの `reset` を使うことで、より効率的かつ安全にフォームの状態を同期させます。
   useEffect(() => {
     if (initialData) {
-      setValue(
-        'purchaseLists',
-        initialData.length > 0 ? initialData : [DEFAULT_PURCHASE_ITEM]
-      );
+      reset({
+        purchaseLists:
+          initialData.length > 0 ? initialData : [DEFAULT_PURCHASE_ITEM],
+      });
     }
-  }, [JSON.stringify(initialData), setValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(initialData), reset]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { fields, append, remove } = useFieldArray({
     control,
