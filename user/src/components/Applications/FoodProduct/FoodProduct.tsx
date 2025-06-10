@@ -24,9 +24,9 @@ type ContentProps = {
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
   groupId: number;
-  addFoodProducts: (products: ProductInput[]) => void;
-  removeFoodProduct: (id: string) => void;
-  setFoodProductsData: (products: ProductInput[]) => void;
+  addFoodProducts: (products: ProductInput[]) => Promise<void>;
+  removeFoodProduct: (id: string) => Promise<void>;
+  setFoodProductsData: (products: ProductInput[]) => Promise<void>;
 };
 
 const Content: FC<ContentProps> = ({
@@ -104,7 +104,7 @@ const FoodProduct: FC<FoodProductProps> = ({
     addFoodProducts,
     removeFoodProduct,
     setFoodProductsData,
-  } = useFoodProductHooks();
+  } = useFoodProductHooks(groupId);
 
   return (
     <AccordionMenu

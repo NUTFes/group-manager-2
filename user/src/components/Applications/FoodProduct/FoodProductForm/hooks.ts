@@ -1,7 +1,6 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import {
   FoodProductFormData,
   ProductInput,
@@ -12,18 +11,19 @@ import {
 export const useFoodProductFormHooks = (
   groupId: number,
   foodProductsProp?: RegisteredProduct[] | null,
-  addFoodProducts?: (products: ProductInput[]) => void,
-  setFoodProductsData?: (products: ProductInput[]) => void
+  addFoodProducts?: (products: ProductInput[]) => Promise<void>,
+  setFoodProductsData?: (products: ProductInput[]) => Promise<void>
 ) => {
-  const getDefaultProducts = useCallback(() => {
-    if (foodProductsProp && foodProductsProp.length > 0) {
-      return foodProductsProp.map((product) => ({
+  // 安全なデフォルト値生成関数
+  const createDefaultProducts = (propsData?: RegisteredProduct[] | null) => {
+    if (propsData && propsData.length > 0) {
+      return propsData.map((product) => ({
         id: product.id || '',
         name: product.name || '',
-        isAlcohol: product.isAlcohol || false,
-        hasLicense: product.hasLicense || false,
-        day1Quantity: product.day1Quantity?.toString() || '',
-        day2Quantity: product.day2Quantity?.toString() || '',
+        isAlcohol: product.isAlcohol ?? false,
+        hasLicense: product.hasLicense ?? false,
+        day1Quantity: product.day1Quantity || '0',
+        day2Quantity: product.day2Quantity || '0',
       }));
     }
     return [
@@ -32,38 +32,42 @@ export const useFoodProductFormHooks = (
         name: '',
         isAlcohol: false,
         hasLicense: false,
-        day1Quantity: '',
-        day2Quantity: '',
+        day1Quantity: '1',
+        day2Quantity: '1',
       },
     ];
-  }, [foodProductsProp]);
+  };
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue,
     watch,
     control,
+    reset,
   } = useForm<FoodProductFormData>({
     mode: 'onSubmit',
     resolver: zodResolver(foodProductSchema),
     defaultValues: {
-      products: getDefaultProducts(),
+      products: createDefaultProducts(foodProductsProp),
     },
   });
 
-  const { append, remove, replace } = useFieldArray({
+  // foodProductsPropが変更された時にフォームをリセット
+  useEffect(() => {
+    const newProducts = createDefaultProducts(foodProductsProp);
+    reset({
+      products: newProducts,
+    });
+  }, [foodProductsProp, reset]);
+
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: 'products',
   });
 
   const values = watch();
   const products = values.products || [];
-
-  useEffect(() => {
-    const defaultProducts = getDefaultProducts();
-    replace(defaultProducts);
-  }, [getDefaultProducts, replace]);
 
   const alcoholOptions = [
     { id: 1, name: 'はい' },
@@ -94,8 +98,8 @@ export const useFoodProductFormHooks = (
       name: '',
       isAlcohol: false,
       hasLicense: false,
-      day1Quantity: '',
-      day2Quantity: '',
+      day1Quantity: '1',
+      day2Quantity: '1',
     });
   };
 
@@ -105,14 +109,8 @@ export const useFoodProductFormHooks = (
     }
   };
 
-  const onSubmit = async (formData: FoodProductFormData) => {
+  const onSubmit = async (formData: FoodProductFormData): Promise<boolean> => {
     try {
-      // ローディング開始のトースト
-      const loadingToastId = toast.loading('処理中...');
-
-      // 実際のAPI呼び出し（現在はモック）
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       if (foodProductsProp && foodProductsProp.length > 0) {
         // 更新モード
         const productsWithId = formData.products.map((product, index) => ({
@@ -121,16 +119,8 @@ export const useFoodProductFormHooks = (
         }));
 
         if (setFoodProductsData) {
-          setFoodProductsData(productsWithId);
+          await setFoodProductsData(productsWithId);
         }
-
-        // 成功トースト
-        toast.update(loadingToastId, {
-          render: '販売品を更新しました',
-          type: 'success',
-          isLoading: false,
-          autoClose: 3000,
-        });
       } else {
         // 新規登録モード
         if (addFoodProducts) {
@@ -138,24 +128,12 @@ export const useFoodProductFormHooks = (
             ...product,
             id: `product_${Date.now()}_${index}`,
           }));
-          addFoodProducts(productsWithId);
+          await addFoodProducts(productsWithId);
         }
-
-        // 成功トースト
-        toast.update(loadingToastId, {
-          render: '販売品申請を送信しました',
-          type: 'success',
-          isLoading: false,
-          autoClose: 3000,
-        });
       }
 
       return true;
     } catch (error) {
-      // エラートースト
-      toast.error('送信に失敗しました。もう一度お試しください。', {
-        autoClose: 5000,
-      });
       console.error('送信エラー:', error);
       return false;
     }
@@ -166,7 +144,7 @@ export const useFoodProductFormHooks = (
     errors,
     setValue,
     isFetching: false,
-    isMutating: false,
+    isMutating: isSubmitting,
     handleAlcoholChange,
     handleHasLicenseChange,
     alcoholOptions,
@@ -175,5 +153,7 @@ export const useFoodProductFormHooks = (
     addProduct,
     removeProduct,
     products,
+    fields,
+    replace,
   };
 };

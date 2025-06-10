@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { ApiResponse } from '@/api/api';
+import { KeyedMutator } from 'swr';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import TextBox from '@/components/Form/TextBox/TextBox';
@@ -8,14 +10,30 @@ import { FormItem } from '@/components/FormList/type';
 import { useFoodProductFormHooks } from './hooks';
 import { ProductInput, RegisteredProduct } from './schema';
 
+// checkAllRegisteredGroupsの型定義
+type RegistrationStatus = {
+  group?: boolean;
+  subRep?: boolean;
+  foodProduct?: boolean;
+  rentalItem?: boolean;
+  powerOrder?: boolean;
+  publicRelation?: boolean;
+  placeOrder?: boolean;
+  stageOrder?: boolean;
+  stageOption?: boolean;
+};
+
 type FoodProductFormProps = {
   groupId: number;
   foodProducts?: RegisteredProduct[] | null;
   toEdit: () => void;
-  addFoodProducts?: (products: ProductInput[]) => void;
-  removeFoodProduct?: (id: string) => void;
-  setFoodProductsData?: (products: ProductInput[]) => void;
+  addFoodProducts?: (products: ProductInput[]) => Promise<void>;
+  removeFoodProduct?: (id: string) => Promise<void>;
+  setFoodProductsData?: (products: ProductInput[]) => Promise<void>;
   isViewMode?: boolean;
+  mutateCheckAllRegisteredGroups?: KeyedMutator<
+    ApiResponse<RegistrationStatus>
+  >;
 };
 
 const FoodProductForm: FC<FoodProductFormProps> = ({
@@ -26,6 +44,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
   removeFoodProduct,
   setFoodProductsData,
   isViewMode = false,
+  mutateCheckAllRegisteredGroups,
 }) => {
   const {
     handleSubmit,
@@ -82,11 +101,11 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             },
             {
               label: '1日目の販売予定数',
-              content: product.day1Quantity ?? '-',
+              content: product.day1Quantity || '0',
             },
             {
               label: '2日目の販売予定数',
-              content: product.day2Quantity ?? '-',
+              content: product.day2Quantity || '0',
             },
           ];
 
@@ -132,9 +151,18 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
         <form
           className="w-full"
           onSubmit={handleSubmit(async (data) => {
-            const success = await onSubmit(data);
-            if (success) {
-              toEdit();
+            try {
+              const success = await onSubmit(data);
+              if (success) {
+                toEdit();
+                // checkAllRegisteredGroupsを更新
+                if (mutateCheckAllRegisteredGroups) {
+                  await mutateCheckAllRegisteredGroups();
+                }
+              }
+            } catch (error) {
+              console.error('Form submission error:', error);
+              // エラーは各API関数内でトーストで表示されるため、ここでは特に何もしない
             }
           })}
         >

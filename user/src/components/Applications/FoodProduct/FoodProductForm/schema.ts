@@ -30,13 +30,19 @@ const productSchema = z
         required_error: '1日目の販売予定数を入力してください',
       })
       .min(1, { message: '1日目の販売予定数を入力してください' })
-      .regex(/^\d+$/, { message: '半角数字で入力してください' }),
+      .regex(/^\d+$/, { message: '半角数字で入力してください' })
+      .refine((val) => parseInt(val) > 0, {
+        message: '1以上の数値を入力してください',
+      }),
     day2Quantity: z
       .string({
         required_error: '2日目の販売予定数を入力してください',
       })
       .min(1, { message: '2日目の販売予定数を入力してください' })
-      .regex(/^\d+$/, { message: '半角数字で入力してください' }),
+      .regex(/^\d+$/, { message: '半角数字で入力してください' })
+      .refine((val) => parseInt(val) > 0, {
+        message: '1以上の数値を入力してください',
+      }),
   })
   .refine(
     (data) => {

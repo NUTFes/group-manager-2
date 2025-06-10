@@ -1,8 +1,7 @@
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
-import { GROUP_CATEGORY } from '@/utils/constants';
-import Employees from '@/components/Applications/Employees/Employees';
+import FoodProduct from '@/components/Applications/FoodProduct';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
 import Power from '@/components/Applications/Power';
@@ -26,25 +25,14 @@ export default function HomePage() {
     useGetCheckAllRegisteredGroups(groupId);
 
   const GroupCategoryContent = () => {
-    if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
-      return (
-        <>
-          <Employees
-            isDeadline={!userPageSettings?.isEditEmployee}
-            isRegistered={checkAllRegisteredGroups?.employee}
-            mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
-            groupId={groupId}
-          />
-        </>
-      );
-    } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
+    if (groupCategoryId === 6) {
       return (
         <>
           <RentItems
             isDeadline={!userPageSettings?.isEditRentalOrder}
             isRegistered={checkAllRegisteredGroups?.rentalItem}
             groupId={groupId}
-            groupCategoryId={groupCategoryId} // groupCategoryIdを追加
+            groupCategoryId={groupCategoryId}
           />
           <Power
             isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -53,7 +41,7 @@ export default function HomePage() {
           />
         </>
       );
-    } else if (groupCategoryId === GROUP_CATEGORY.STAGE) {
+    } else if (groupCategoryId === 3) {
       return (
         <>
           <Stage
@@ -70,7 +58,7 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isEditRentalOrder}
             isRegistered={checkAllRegisteredGroups?.rentalItem}
             groupId={groupId}
-            groupCategoryId={groupCategoryId} // groupCategoryIdを追加
+            groupCategoryId={groupCategoryId}
           />
           <Power
             isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -96,7 +84,7 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isEditRentalOrder}
             isRegistered={checkAllRegisteredGroups?.rentalItem}
             groupId={groupId}
-            groupCategoryId={groupCategoryId} // groupCategoryIdを追加
+            groupCategoryId={groupCategoryId}
           />
           <Power
             isDeadline={!userPageSettings?.isEditPowerOrder}
@@ -107,6 +95,11 @@ export default function HomePage() {
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
             groupId={groupId}
+          />
+          <FoodProduct
+            groupId={groupId}
+            isDeadline={!userPageSettings?.isEditFoodProduct}
+            isRegistered={checkAllRegisteredGroups?.foodProduct}
           />
         </>
       );
