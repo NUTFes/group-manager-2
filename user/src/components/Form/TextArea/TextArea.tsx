@@ -31,9 +31,11 @@ const TextArea: FC<TextAreaProps> = ({
         <textarea
           value={value}
           onChange={handleChange}
-          className={`mb-[4px] block h-32 w-[400px] rounded-[10px] border-2 text-font ${error ? 'border-alert' : 'border-main'}`}
+          className={`mb-[4px] block h-32 w-[400px] rounded-[10px] border-2 text-font scrollbar-hide ${error ? 'border-alert' : 'border-main'}`}
         />
-        <p className="max-w-[400px] break-words text-xs text-sub">{note}</p>
+        <p className="max-w-[400px] whitespace-pre-wrap break-words text-xs text-sub">
+          {note}
+        </p>
         <p className="text-xs text-alert">{error}</p>
       </label>
     </>

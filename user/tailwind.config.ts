@@ -1,4 +1,5 @@
 import forms from '@tailwindcss/forms';
+import scrollbarHide from 'tailwind-scrollbar-hide';
 import type { Config } from 'tailwindcss';
 
 export default {
@@ -24,5 +25,5 @@ export default {
       },
     },
   },
-  plugins: [forms],
+  plugins: [forms, scrollbarHide],
 } satisfies Config;

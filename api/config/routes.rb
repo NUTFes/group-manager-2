@@ -94,7 +94,6 @@ Rails.application.routes.draw do
       get 'group/:group_id', to: 'place_orders#get_by_group_id'
     end
   end
-  resources :stage_common_options
   resources :stage_common_options do
     collection do
       get 'group/:group_id', to: 'stage_common_options#get_by_group_id'

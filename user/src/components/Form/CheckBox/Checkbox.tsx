@@ -37,7 +37,7 @@ const Checkbox: FC<CheckboxProps> = ({
     <>
       <label>
         <div className="mb-[5px] flex items-center gap-6">
-          <p className="text-base">{label}</p>
+          <p className="text-base text-font">{label}</p>
           {required && <p className="text-xs text-alert">※必須</p>}
         </div>
         <div className="my-6 flex flex-col gap-4">
@@ -51,7 +51,7 @@ const Checkbox: FC<CheckboxProps> = ({
                 onChange={handleChange}
                 className={`form-checkbox size-4 ${error ? 'accent-alert' : 'accent-main'}`}
               />
-              <span>{option.name}</span>
+              <span className="text-font">{option.name}</span>
             </label>
           ))}
         </div>
