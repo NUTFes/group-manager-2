@@ -1,6 +1,7 @@
 class FoodProduct < ApplicationRecord
     belongs_to :group
     has_many :purchase_lists, dependent: :destroy
+    has_many :cooking_process_orders, dependent: :destroy
 
     def self.with_groups
       @record = FoodProduct.preload(:group)
