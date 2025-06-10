@@ -13,7 +13,8 @@ import { VenueMapFormData, venueMapFormSchema } from './schema';
 
 export const useVenueMapFormHooks = (
   groupId: number,
-  venueMapProp?: VenueMapResponse | null
+  venueMapProp?: VenueMapResponse | null,
+  onSubmitted?: () => void
 ) => {
   const {
     venueMap: fetchedVenueMap,
@@ -195,6 +196,7 @@ export const useVenueMapFormHooks = (
 
       toast.success(venueMap ? '修正しました' : '登録しました');
       reset({ ...formData, image: undefined }); // 送信後は image フィールドをクリア
+      onSubmitted?.();
       return true;
     } catch (error) {
       console.error('送信エラー:', error);
