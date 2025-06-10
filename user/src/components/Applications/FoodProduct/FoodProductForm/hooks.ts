@@ -21,7 +21,7 @@ export const useFoodProductFormHooks = (
         id: product.id || '',
         name: product.name || '',
         isAlcohol: product.isAlcohol ?? false,
-        hasLicense: product.hasLicense ?? false,
+        isCooking: product.isCooking ?? false,
         day1Quantity: product.day1Quantity || '0',
         day2Quantity: product.day2Quantity || '0',
       }));
@@ -31,7 +31,7 @@ export const useFoodProductFormHooks = (
         id: '',
         name: '',
         isAlcohol: false,
-        hasLicense: false,
+        isCooking: false,
         day1Quantity: '1',
         day2Quantity: '1',
       },
@@ -84,12 +84,12 @@ export const useFoodProductFormHooks = (
     setValue(`products.${index}.isAlcohol`, isAlcohol);
 
     if (isAlcohol) {
-      setValue(`products.${index}.hasLicense`, true);
+      setValue(`products.${index}.isCooking`, true);
     }
   };
 
   const handleHasLicenseChange = (index: number, value: string) => {
-    setValue(`products.${index}.hasLicense`, parseInt(value) === 1);
+    setValue(`products.${index}.isCooking`, parseInt(value) === 1);
   };
 
   const addProduct = () => {
@@ -97,7 +97,7 @@ export const useFoodProductFormHooks = (
       id: '',
       name: '',
       isAlcohol: false,
-      hasLicense: false,
+      isCooking: false,
       day1Quantity: '1',
       day2Quantity: '1',
     });

@@ -97,7 +97,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             },
             {
               label: '調理の有無',
-              content: product.hasLicense ? '有り' : '無し',
+              content: product.isCooking ? '有り' : '無し',
             },
             {
               label: '1日目の販売予定数',
@@ -197,11 +197,11 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                     <Radio
                       label="調理の有無"
                       name={`license_${index}`}
-                      value={product.hasLicense ? '1' : '0'}
+                      value={product.isCooking ? '1' : '0'}
                       onChange={(value) => handleHasLicenseChange(index, value)}
                       required
                       options={licenseOptions}
-                      error={errors.products?.[index]?.hasLicense?.message}
+                      error={errors.products?.[index]?.isCooking?.message}
                     />
                   </div>
                   <div className="relative w-96">

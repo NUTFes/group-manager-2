@@ -40,8 +40,8 @@ export const useFoodProductHooks = (groupId: number) => {
       ? apiFoodProducts.map((product: FoodProductResponse) => ({
           id: product.id.toString(),
           name: product.name,
-          isAlcohol: product.isCooking ?? false,
-          hasLicense: product.isCooking ?? false,
+          isAlcohol: product.isAlcohol ?? false,
+          isCooking: product.isCooking ?? false,
           day1Quantity: product.firstDayNum?.toString() || '0',
           day2Quantity: product.secondDayNum?.toString() || '0',
         }))
@@ -94,9 +94,10 @@ export const useFoodProductHooks = (groupId: number) => {
         id: product.id ? parseInt(product.id) : undefined,
         group_id: groupId,
         name: product.name,
-        is_cooking: product.hasLicense,
+        is_cooking: product.isCooking,
         first_day_num: parseInt(product.day1Quantity) || 0,
         second_day_num: parseInt(product.day2Quantity) || 0,
+        is_alcohol: product.isAlcohol,
       }));
 
       // upsert処理を実行
@@ -149,9 +150,10 @@ export const useFoodProductHooks = (groupId: number) => {
       const apiProducts = products.map((product) => ({
         group_id: groupId,
         name: product.name,
-        is_cooking: product.hasLicense,
+        is_cooking: product.isCooking,
         first_day_num: parseInt(product.day1Quantity) || 0,
         second_day_num: parseInt(product.day2Quantity) || 0,
+        is_alcohol: product.isAlcohol,
       }));
 
       // SWR Mutationを使用してAPI呼び出し

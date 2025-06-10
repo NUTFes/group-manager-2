@@ -1,9 +1,9 @@
+import { ApiResponse } from '@/api/api';
 import {
   useAuthenticatedGet,
   useAuthenticatedPatch,
   useAuthenticatedPost,
 } from '@/hooks/useApi';
-import { ApiResponse } from './api';
 
 export type FoodProductResponse = {
   id: number;
@@ -12,6 +12,7 @@ export type FoodProductResponse = {
   isCooking: boolean;
   firstDayNum: number;
   secondDayNum: number;
+  isAlcohol: boolean;
   createdAt: string;
   updatedAt: string;
 };

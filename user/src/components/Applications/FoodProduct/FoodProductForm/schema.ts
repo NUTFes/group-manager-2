@@ -5,7 +5,7 @@ const baseProductSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   isAlcohol: z.boolean(),
-  hasLicense: z.boolean(),
+  isCooking: z.boolean(),
   day1Quantity: z.string(),
   day2Quantity: z.string(),
 });
@@ -22,7 +22,7 @@ const productSchema = z
     isAlcohol: z.boolean({
       required_error: '酒類かどうかを選択してください',
     }),
-    hasLicense: z.boolean({
+    isCooking: z.boolean({
       required_error: '調理の有無を選択してください',
     }),
     day1Quantity: z
@@ -46,11 +46,11 @@ const productSchema = z
   })
   .refine(
     (data) => {
-      return !(data.isAlcohol && !data.hasLicense);
+      return !(data.isAlcohol && !data.isCooking);
     },
     {
       message: '酒類を販売する場合は調理の有無を「有り」にしてください',
-      path: ['hasLicense'],
+      path: ['isCooking'],
     }
   );
 
