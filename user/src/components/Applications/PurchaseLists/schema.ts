@@ -8,7 +8,7 @@ import {
 // 単一の購入品アイテムのスキーマ
 export const purchaseItemSchema = z
   .object({
-    id: z.number().optional(),
+    id: z.number().optional().nullable(),
     foodProductId: z
       .number()
       .min(1, { message: VALIDATION_MESSAGES.REQUIRED_FOOD_PRODUCT }),

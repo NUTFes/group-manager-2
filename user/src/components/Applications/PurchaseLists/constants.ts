@@ -25,7 +25,7 @@ export const PurchaseItemFieldNames = {
 
 // デフォルトの購入品アイテム
 export const DEFAULT_PURCHASE_ITEM = {
-  id: 0,
+  id: null,
   foodProductId: 0,
   isFresh: true,
   items: '',
