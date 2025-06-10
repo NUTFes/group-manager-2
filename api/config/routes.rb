@@ -39,18 +39,16 @@ Rails.application.routes.draw do
   resources :news
   resources :purchase_lists do
     collection do
-      get 'group/:group_id', to: 'purchase_lists#get_by_group_id'
+      get 'food_product', to: 'purchase_lists#get_by_food_product_id'
       post 'upsert', to: 'purchase_lists#upsert_all'
     end
   end
-
-   resources :food_products do
+  resources :food_products do
     collection do
       get 'group/:group_id', to: 'food_products#group_food_products'
       post 'upsert', to: 'food_products#upsert'
     end
   end
-  
   resources :assign_rental_items
   resources :rentable_items
   resources :rental_items

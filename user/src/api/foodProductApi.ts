@@ -1,12 +1,15 @@
-import { ApiResponse } from '@/api/api';
-import { useAuthenticatedGet, useAuthenticatedPost } from '@/hooks/useApi';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatch,
+  useAuthenticatedPost,
+} from '@/hooks/useApi';
 
 export type FoodProduct = {
-  group_id: number;
+  groupId: number;
   name: string;
-  is_cooking: boolean;
-  first_day_num: number;
-  second_day_num: number;
+  isCooking: boolean;
+  firstDayNum: number;
+  secondDayNum: number;
 };
 
 export type FoodProductResponse = {
@@ -20,40 +23,39 @@ export type FoodProductResponse = {
   updatedAt: string;
 };
 
-// 一括更新用のリクエスト型（upsert用）
+// 一括作成用のリクエスト型
+export type CreateFoodProductsRequest = {
+  food_products: FoodProduct[];
+};
+
+// 一括更新用のリクエスト型
 export type UpdateFoodProductsRequest = {
-  food_products: (FoodProduct & { id?: number })[];
+  food_products: (FoodProduct & { id: number })[];
+};
+
+export type ApiStatus = {
+  code: number;
+  message: string;
+};
+
+export type ApiResponse<T> = {
+  status: ApiStatus;
+  data: T;
 };
 
 const API_ENDPOINTS = {
-  GET_FOOD_PRODUCTS_BY_GROUP_ID: (groupId: number) =>
-    `/api/v1/get_food_products_by_group_id/${groupId}`,
+  FOOD_PRODUCTS: '/food_products',
+  FOOD_PRODUCTS_GROUP: '/food_products/group',
   FOOD_PRODUCTS_UPSERT: '/food_products/upsert',
-} as const;
+};
 
 export const useGetFoodProducts = (groupId: number | null) => {
-  const endpoint = groupId
-    ? API_ENDPOINTS.GET_FOOD_PRODUCTS_BY_GROUP_ID(groupId)
-    : null;
-
-  const { data, error, isLoading, mutate } = useAuthenticatedGet<
-    ApiResponse<FoodProductResponse[]>
-  >(endpoint, {
-    // キャッシュを短時間で無効にしてリアルタイム性を向上
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-    revalidateIfStale: true,
-    // フォーカス時に再検証を有効化
-    focusThrottleInterval: 0,
-    // 定期的なバックグラウンド更新
-    refreshInterval: 30000, // 30秒ごと
-  });
-
-  // レスポンスからdataを取得
-  const foodProducts = data?.data ?? [];
+  const endpoint = `${API_ENDPOINTS.FOOD_PRODUCTS_GROUP}/${groupId}`;
+  const { data, error, isLoading, mutate } =
+    useAuthenticatedGet<ApiResponse<FoodProductResponse[]>>(endpoint);
 
   return {
-    foodProducts,
+    foodProducts: data?.data ?? [],
     isLoading,
     error,
     mutateFoodProducts: mutate,
@@ -61,58 +63,22 @@ export const useGetFoodProducts = (groupId: number | null) => {
 };
 
 /**
- * upsert用hook（改善版）
+ * 単一作成用hook
+ */
+export const useCreateFoodProduct = () => {
+  return useAuthenticatedPost(API_ENDPOINTS.FOOD_PRODUCTS);
+};
+
+/**
+ * 単一更新用hook
+ */
+export const useUpdateFoodProduct = (id: number | null) => {
+  return useAuthenticatedPatch(`${API_ENDPOINTS.FOOD_PRODUCTS}/${id}`);
+};
+
+/**
+ * 複数(upsert_all)用hook
  */
 export const useUpdateFoodProducts = () => {
-  const { trigger, isMutating } = useAuthenticatedPost(
-    API_ENDPOINTS.FOOD_PRODUCTS_UPSERT,
-    {
-      // 成功時に関連するキャッシュを無効化
-      onSuccess: () => {
-        // SWRのキャッシュをクリア
-        if (typeof window !== 'undefined') {
-          // 全てのfood_productsに関連するキャッシュを無効化
-          const swrKeys = Object.keys(localStorage).filter((key) =>
-            key.includes('get_food_products_by_group_id')
-          );
-          swrKeys.forEach((key) => localStorage.removeItem(key));
-        }
-      },
-    }
-  );
-
-  const updateFoodProducts = async (data: UpdateFoodProductsRequest) => {
-    try {
-      // triggerが存在しない場合（セッションロード中など）の対応
-      if (!trigger) {
-        throw new Error(
-          '認証情報を確認中です。しばらく待ってから再度お試しください。'
-        );
-      }
-
-      const response = await trigger({
-        body: data,
-      });
-
-      // レスポンスが {data: [...]} 形式の場合
-      if (response && typeof response === 'object' && 'data' in response) {
-        return response.data;
-      } else {
-        return response;
-      }
-    } catch (error) {
-      // missing keyエラーの場合は、より分かりやすいメッセージに変換
-      if (error instanceof Error && error.message.includes('missing key')) {
-        throw new Error(
-          '認証情報を確認中です。しばらく待ってから再度お試しください。'
-        );
-      }
-      throw error;
-    }
-  };
-
-  return {
-    trigger: updateFoodProducts,
-    isMutating,
-  };
+  return useAuthenticatedPost(API_ENDPOINTS.FOOD_PRODUCTS_UPSERT);
 };

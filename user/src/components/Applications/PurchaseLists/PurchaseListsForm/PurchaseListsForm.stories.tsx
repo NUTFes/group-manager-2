@@ -2,13 +2,21 @@ import '@globals';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Meta, StoryFn } from '@storybook/react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { DEFAULT_PURCHASE_ITEM, FOOD_PRODUCT_OPTIONS } from '../constants';
+import { DEFAULT_PURCHASE_ITEM } from '../constants';
 import {
   PurchaseItem,
   PurchaseListsFormData,
   purchaseListsFormSchema,
 } from '../schema';
 import PurchaseListsForm, { PurchaseListsFormProps } from './PurchaseListsForm';
+
+const FOOD_PRODUCT_OPTIONS = [
+  { id: 0, name: '選択してください' },
+  { id: 1, name: 'からあげ' },
+  { id: 2, name: 'フランクフルト' },
+  { id: 3, name: 'チョコバナナ' },
+  { id: 4, name: 'たこやき' },
+];
 
 export default {
   title: 'Components/PurchaseListsForm',
@@ -47,7 +55,7 @@ const PurchaseListsFormWrapper: React.FC<
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
     defaultValues: initialData,
@@ -73,9 +81,7 @@ const PurchaseListsFormWrapper: React.FC<
         append={handleAppend}
         remove={remove}
         onSubmit={onSubmit}
-        onCancel={() => console.log('Cancel clicked')}
         errors={errors}
-        isValid={isValid}
         foodProductOptions={foodProductOptions}
         {...props}
       />
@@ -104,7 +110,7 @@ WithMultipleItems.args = {
         isFresh: true,
         shopId: 1,
         purchaseDate: '2025/6/15',
-        remarks: 'アピタで購入予定',
+        remark: 'アピタで購入予定',
       },
       {
         ...DEFAULT_PURCHASE_ITEM,
@@ -113,7 +119,7 @@ WithMultipleItems.args = {
         isFresh: false,
         shopId: 2,
         purchaseDate: '2025/6/16',
-        remarks: 'イオンで購入予定',
+        remark: 'イオンで購入予定',
       },
     ],
   },
@@ -132,7 +138,7 @@ WithNetOrder.args = {
         shopId: 29, // ネット注文
         purchaseDate: '2025/6/20',
         url: 'https://example.com/chocolate-banana',
-        remarks: 'ネット注文で購入',
+        remark: 'ネット注文で購入',
       },
     ],
   },
@@ -150,7 +156,7 @@ WithOtherShop.args = {
         isFresh: true,
         shopId: 30, // その他
         purchaseDate: '2025/6/18',
-        remarks:
+        remark:
           'ローカル商店\n住所: 長岡市○○町\n電話: 0258-XX-XXXX\n営業時間: 9:00-18:00',
       },
     ],

@@ -8,7 +8,7 @@ import {
 // 単一の購入品アイテムのスキーマ
 export const purchaseItemSchema = z
   .object({
-    id: z.number().optional(),
+    id: z.number().optional().nullable(),
     foodProductId: z
       .number()
       .min(1, { message: VALIDATION_MESSAGES.REQUIRED_FOOD_PRODUCT }),
@@ -17,17 +17,15 @@ export const purchaseItemSchema = z
     isFresh: z.boolean(),
     purchaseDate: z
       .string()
-      .min(1, { message: VALIDATION_MESSAGES.REQUIRED_PURCHASE_DATE })
-      .regex(/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/, {
-        // YYYY/M/D or YYYY/MM/DD
-        message: VALIDATION_MESSAGES.INVALID_DATE_FORMAT,
-      }),
+      .min(1, { message: VALIDATION_MESSAGES.REQUIRED_PURCHASE_DATE }),
     url: z
       .string()
       .url({ message: VALIDATION_MESSAGES.INVALID_URL })
       .optional()
+      .nullable()
       .or(z.literal('')),
-    remarks: z.string().optional().or(z.literal('')),
+    remark: z.string().optional().nullable().or(z.literal('')),
+    fesDateId: z.number().default(1),
   })
   .superRefine((data, ctx) => {
     if (
@@ -43,12 +41,12 @@ export const purchaseItemSchema = z
 
     if (
       data.shopId === OTHER_SHOP_ID &&
-      (!data.remarks || data.remarks.trim() === '')
+      (!data.remark || data.remark.trim() === '')
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: VALIDATION_MESSAGES.REQUIRED_REMARKS_FOR_OTHER,
-        path: ['remarks'],
+        path: ['remark'],
       });
     }
   });
