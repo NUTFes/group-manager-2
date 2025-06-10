@@ -1,25 +1,22 @@
 import { FC } from 'react';
-import Selector from '@/components/Form/Selector';
-import Button from '../../../Button';
+import { useFormContext } from 'react-hook-form';
 import CheckBox from '../../../Form/CheckBox';
 import Radio from '../../../Form/Radio';
 import TextArea from '../../../Form/TextArea';
 import FormContainer from '../../../FormContainer';
 import { useCookingProcessOrderForm } from './hooks';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type CookingProcessOrderFormProps = {};
+type CookingProcessOrderFormProps = {
+  index: number;
+  foodProductName: string;
+};
 
-const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
-  const {
-    handleSubmit,
-    setValue,
-    errors,
-    onSubmit,
-    values,
-    confirmCookingProcessValues,
-    handleConfirmCookingProcessChange,
-  } = useCookingProcessOrderForm();
+const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
+  index,
+  foodProductName,
+}) => {
+  const { setValue } = useFormContext();
+  const { values, getError } = useCookingProcessOrderForm(index);
 
   const option = [
     { id: 1, name: '使用する' },
@@ -43,59 +40,85 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({}) => {
 
   return (
     <FormContainer>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-        <Selector
-          label="販売品名"
-          value={'テスト'}
-          options={[
-            { id: 1, name: 'テスト' },
-            { id: 2, name: 'テスト２' },
-          ]}
-          onChange={() => {}}
-        />
+      <div className="flex flex-col gap-6">
+        <div>
+          <div className="text-xs font-bold text-font">販売品名</div>
+          <div className="text-base text-font">{foodProductName}</div>
+        </div>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">調理場の仕様有無</p>
           <p className="text-xs text-alert">※必須</p>
         </div>
         <Radio
           label="(営業前)"
+          name={`cookingProcessOrders.${index}.preOpenKitchen`}
           required
           value={values.preOpenKitchen ? '1' : '0'}
-          onChange={(val) => setValue('preOpenKitchen', val === '1')}
+          onChange={(val) => {
+            setValue(
+              `cookingProcessOrders.${index}.preOpenKitchen`,
+              val === '1',
+              {
+                shouldValidate: true,
+                shouldDirty: true,
+              }
+            );
+          }}
           options={option}
-          error={errors.preOpenKitchen?.message}
+          error={getError('preOpenKitchen')}
         />
         <Radio
           label="(営業中)"
+          name={`cookingProcessOrders.${index}.duringOpenKitchen`}
           required
           value={values.duringOpenKitchen ? '1' : '0'}
-          onChange={(val) => setValue('duringOpenKitchen', val === '1')}
+          onChange={(val) => {
+            setValue(
+              `cookingProcessOrders.${index}.duringOpenKitchen`,
+              val === '1',
+              {
+                shouldValidate: true,
+                shouldDirty: true,
+              }
+            );
+          }}
           options={option}
-          error={errors.duringOpenKitchen?.message}
+          error={getError('duringOpenKitchen')}
         />
         <TextArea
           label="調理内容"
-          value={
-            values.tent
-              ? values.tent
-              : '例）\n1. コーヒー豆を15g測る\n2. 入れる\n3. 温める\n4. 皿に乗せる'
+          value={values.tent || ''}
+          placeholder={
+            '例）\n1. コーヒー豆を15g測る\n2. 入れる\n3. 温める\n4. 皿に乗せる'
           }
-          onChange={(val) => setValue('tent', val)}
-          error={errors.tent?.message}
+          onChange={(val) =>
+            setValue(`cookingProcessOrders.${index}.tent`, val, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
+          }
+          error={getError('tent')}
           required
         />
         <CheckBox
           label="調理工程確認事項"
-          value={confirmCookingProcessValues}
-          onChange={handleConfirmCookingProcessChange}
+          value={values.confirmCookingProcess}
+          onChange={(val) => {
+            setValue(
+              `cookingProcessOrders.${index}.confirmCookingProcess`,
+              val,
+              {
+                shouldValidate: true,
+                shouldDirty: true,
+              }
+            );
+          }}
           options={confirmCookingProcess}
+          error={getError('confirmCookingProcess')}
           note="確認事項にチェックを入れてください"
           required
         />
-        <Button type="submit" size="pc" color="main" isDisable={false}>
-          登録
-        </Button>
-      </form>
+      </div>
     </FormContainer>
   );
 };

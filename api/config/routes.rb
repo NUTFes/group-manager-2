@@ -122,6 +122,7 @@ Rails.application.routes.draw do
   resources :cooking_process_orders do
     collection do
       get 'group/:group_id', to: 'cooking_process_orders#get_by_group_id'
+      post 'upsert', to: 'cooking_process_orders#upsert'
     end
   end
   resources :contact_persons

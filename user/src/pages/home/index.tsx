@@ -2,6 +2,7 @@ import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
+import CookingProcessOrder from '@/components/Applications/CookingProcessOrder';
 import Employees from '@/components/Applications/Employees/Employees';
 import FoodProduct from '@/components/Applications/FoodProduct';
 import Group from '@/components/Applications/Group';
@@ -124,6 +125,11 @@ export default function HomePage() {
             groupId={groupId}
             isDeadline={!userPageSettings?.isEditFoodProduct}
             isRegistered={checkAllRegisteredGroups?.foodProduct}
+          />
+          <CookingProcessOrder
+            isDeadline={!userPageSettings?.isEditCookingProcess}
+            isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
+            groupId={groupId}
           />
         </>
       );

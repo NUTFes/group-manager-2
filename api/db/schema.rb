@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 2025_06_10_212842) do
     t.boolean "pre_open_kitchen", default: false, null: false
     t.boolean "during_open_kitchen", default: false, null: false
     t.text "tent"
+    t.bigint "food_product_id", null: false
+    t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
     t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
 
@@ -463,6 +465,7 @@ ActiveRecord::Schema.define(version: 2025_06_10_212842) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
   add_foreign_key "un_registered_groups", "groups"
