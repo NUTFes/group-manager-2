@@ -37,7 +37,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   return (
     <AccordionMenu
       title="調理工程申請"
-      isEdit={isEdit && isExist}
+      isEdit={isEdit}
       isExist={isExist}
       isRegistered={isRegistered}
       required
