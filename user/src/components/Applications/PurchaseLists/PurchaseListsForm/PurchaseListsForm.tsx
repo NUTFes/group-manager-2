@@ -64,12 +64,14 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
           const fieldPathPrefix = `purchaseLists.${index}` as const;
           const currentShopIdPath = `${fieldPathPrefix}.shopId` as const;
 
-          const currentShopId = watchedFormValues?.[index]?.shopId;
+          // より安全にshopIdを取得
+          const currentShopId = watchedFormValues?.[index]?.shopId ?? 0;
 
           return (
-            <FormContainer key={field.id}>
+            <FormContainer key={`${field.id}-${index}`}>
               <div className="flex flex-col space-y-6">
                 <Controller
+                  key={`food-product-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.FOOD_PRODUCT_ID}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
@@ -90,12 +92,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`items-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.ITEMS}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
                       label="選択した料理に使用した食材・使用する材料"
-                      value={controllerField.value || ''}
+                      value={controllerField.value ?? ''}
                       onChange={controllerField.onChange}
                       required
                       error={fieldState.error?.message}
@@ -103,6 +106,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`is-fresh-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.IS_FRESH}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
@@ -126,6 +130,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`shop-${field.id}-${index}`}
                   name={currentShopIdPath}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
@@ -143,6 +148,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`purchase-date-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.PURCHASE_DATE}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
@@ -160,6 +166,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                 {/* URLフィールド：ネット注文が選択された時のみ表示 */}
                 {currentShopId === NET_ORDER_SHOP_ID && (
                   <Controller
+                    key={`url-${field.id}-${index}`}
                     name={`${fieldPathPrefix}.${PurchaseItemFieldNames.URL}`}
                     control={control}
                     render={({ field: controllerField, fieldState }) => (
@@ -176,6 +183,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                 )}
                 {/* 備考フィールド*/}
                 <Controller
+                  key={`remark-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.REMARK}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
