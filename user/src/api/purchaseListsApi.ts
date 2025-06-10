@@ -71,9 +71,7 @@ export const useCreatePurchaseList = () => {
 
 // 更新（単件）
 export const useUpdatePurchaseList = () => {
-  return useAuthenticatedPatchWithId<{ id: number; body: PurchaseList }>(
-    API_ENDPOINTS.PURCHASE_LIST
-  );
+  return useAuthenticatedPatchWithId(API_ENDPOINTS.PURCHASE_LIST);
 };
 
 //複数申請
@@ -83,7 +81,5 @@ export const useUpsertPurchaseLists = () => {
 
 // 削除
 export const useDeletePurchaseList = () => {
-  return useAuthenticatedDeleteWithId<{ id: number }>(
-    API_ENDPOINTS.PURCHASE_LIST
-  );
+  return useAuthenticatedDeleteWithId(API_ENDPOINTS.PURCHASE_LIST);
 };

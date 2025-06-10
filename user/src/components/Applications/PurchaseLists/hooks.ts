@@ -108,7 +108,7 @@ export const usePurchaseListsState = (
   const { purchaseLists, isLoading, hasError, mutatePurchaseLists } =
     useGetPurchaseListsByFoodProduct(foodProducts.map((p) => p.id));
 
-  const { trigger: deletePurchaseList } = useDeletePurchaseList();
+  const { trigger: deletePurchaseList } = useDeletePurchaseList()();
   const { shops, isLoading: isShopsLoading } = useGetShops();
 
   // isRegisteredがfalseの場合、つまり未登録の場合は初期状態で編集モードにする
@@ -125,7 +125,7 @@ export const usePurchaseListsState = (
   const handleDeleteItem = async (itemId: number) => {
     if (!purchaseLists || !itemId) return;
     try {
-      await deletePurchaseList({ id: itemId });
+      await deletePurchaseList(itemId);
       toast.success('購入品が削除されました');
       await mutatePurchaseLists();
       // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
@@ -223,9 +223,9 @@ export const usePurchaseListsForm = (
   onSuccess: () => void
 ) => {
   const { trigger: createPurchaseList } = useCreatePurchaseList();
-  const { trigger: updatePurchaseList } = useUpdatePurchaseList();
+  const { trigger: updatePurchaseList } = useUpdatePurchaseList()();
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
-  const { trigger: deletePurchaseList } = useDeletePurchaseList();
+  const { trigger: deletePurchaseList } = useDeletePurchaseList()();
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
@@ -263,7 +263,7 @@ export const usePurchaseListsForm = (
     const item = formMethods.getValues().purchaseLists[index];
     if (item && item.id) {
       try {
-        await deletePurchaseList({ id: item.id });
+        await deletePurchaseList(item.id);
         toast.success('購入品が削除されました');
         remove(index);
       } catch (error) {
