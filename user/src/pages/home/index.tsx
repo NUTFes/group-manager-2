@@ -18,7 +18,7 @@ export default function HomePage() {
   const userId = user?.id;
   const { groupUserIdAndGroupCategoryId, mutateGroupByUserId } =
     useGetGroupByUserId(userId);
-  const groupId = groupUserIdAndGroupCategoryId?.id ?? 1;
+  const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
