@@ -106,7 +106,6 @@ export default function HomePage() {
           />
           <CookingProcessOrder
             isDeadline={!userPageSettings?.isEditCookingProcess}
-            isEdit={!!userPageSettings?.isEditCookingProcess}
             isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
             groupId={groupId}
           />
