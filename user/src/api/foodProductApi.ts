@@ -3,14 +3,7 @@ import {
   useAuthenticatedPatch,
   useAuthenticatedPost,
 } from '@/hooks/useApi';
-
-export type FoodProduct = {
-  groupId: number;
-  name: string;
-  isCooking: boolean;
-  firstDayNum: number;
-  secondDayNum: number;
-};
+import { ApiResponse } from './api';
 
 export type FoodProductResponse = {
   id: number;
@@ -21,26 +14,6 @@ export type FoodProductResponse = {
   secondDayNum: number;
   createdAt: string;
   updatedAt: string;
-};
-
-// 一括作成用のリクエスト型
-export type CreateFoodProductsRequest = {
-  food_products: FoodProduct[];
-};
-
-// 一括更新用のリクエスト型
-export type UpdateFoodProductsRequest = {
-  food_products: (FoodProduct & { id: number })[];
-};
-
-export type ApiStatus = {
-  code: number;
-  message: string;
-};
-
-export type ApiResponse<T> = {
-  status: ApiStatus;
-  data: T;
 };
 
 const API_ENDPOINTS = {
@@ -79,6 +52,6 @@ export const useUpdateFoodProduct = (id: number | null) => {
 /**
  * 複数(upsert_all)用hook
  */
-export const useUpdateFoodProducts = () => {
+export const useUpsertFoodProducts = () => {
   return useAuthenticatedPost(API_ENDPOINTS.FOOD_PRODUCTS_UPSERT);
 };

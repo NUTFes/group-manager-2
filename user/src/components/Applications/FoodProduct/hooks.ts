@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   FoodProductResponse,
   useGetFoodProducts,
-  useUpdateFoodProducts,
+  useUpsertFoodProducts,
 } from '@/api/foodProductApi';
 import { toast } from 'react-toastify';
 import {
@@ -29,7 +29,7 @@ export const useFoodProductHooks = (groupId: number) => {
   } = useGetFoodProducts(groupId || 0);
 
   // upsert用のhook
-  const { trigger: updateFoodProducts, isMutating } = useUpdateFoodProducts();
+  const { trigger: upsertFoodProducts, isMutating } = useUpsertFoodProducts();
 
   // 認証付きAPI呼び出し用（既存の独自実装を使用）
   const { remove } = useApiMutations();
@@ -100,8 +100,8 @@ export const useFoodProductHooks = (groupId: number) => {
       }));
 
       // upsert処理を実行
-      await updateFoodProducts({
-        food_products: apiProducts,
+      await upsertFoodProducts({
+        body: { food_products: apiProducts },
       });
 
       // データを強制的に再取得（optimistic updateではなく確実な更新）
@@ -155,8 +155,8 @@ export const useFoodProductHooks = (groupId: number) => {
       }));
 
       // SWR Mutationを使用してAPI呼び出し
-      await updateFoodProducts({
-        food_products: apiProducts,
+      await upsertFoodProducts({
+        body: { food_products: apiProducts },
       });
 
       // データを強制的に再取得
