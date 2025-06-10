@@ -54,7 +54,7 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", ["@nuxtjs/moment", ["ja"]]],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth-next", ["@nuxtjs/moment", ["ja"]]],
 
   axios: {
     // baseURL: 'http://localhost:3000'
@@ -64,23 +64,40 @@ export default {
 
   auth: {
     redirect: {
-      login: "/",
-      logout: "/",
+      login: '/',
+      logout: '/',
       callback: false,
-      home: "/dashboard",
+      home: '/dashboard'
     },
     strategies: {
       local: {
         endpoints: {
           login: {
-            url: "/api/auth/sign_in",
-            method: "post",
-            propertyName: false,
+            url: '/api/auth/sign_in',
+            method: 'post',
+            propertyName: 'data'
           },
-          logout: false,
-          user: false,
+          logout: {
+            url: '/api/auth/sign_out',
+            method: 'post'
+          },
+          user: {
+            url: '/api/v1/current_user',
+            method: 'get',
+            propertyName: 'data'
+          }
         },
-      },
-    },
-  },
-};
+        token: {
+          property: 'access-token',
+          required: true,
+          type: false,
+          global: true,
+          maxAge: 7200
+        },
+        user: {
+          property: false,
+          autoFetch: true
+        }
+      }
+    }
+  }};

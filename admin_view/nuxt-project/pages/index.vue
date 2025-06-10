@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -54,43 +54,31 @@ export default {
   },
   methods: {
     ...mapActions('users', ['getUser']),
-    async loginWithAuthModule() {
-      // this.formHasErrors = false;
-      // Object.keys(this.form).forEach((f) => {
-      //   if (!this.form[f]) this.formHasErrors = true;
-      //   this.$refs[f].validate(true);
-      // });
-      // if (!this.formHasErrors) return "Can't Sign Up";
-      await this.$auth
+    loginWithAuthModule() {
+      this.$auth
         .loginWith("local", {
           data: {
             email: this.email,
             password: this.password,
           },
         })
-        .then(
-          (response) => {
-            localStorage.setItem(
-              "access-token",
-              response.headers["access-token"]
-            );
-            localStorage.setItem("client", response.headers.client);
-            localStorage.setItem("uid", response.headers.uid);
-            localStorage.setItem("token-type", response.headers["token-type"]);
-            this.getUser()
-            return response;
-          },
-        )
-          // (error) => {
-          //   this.message = "メールアドレスかパスワードが違います。";
-          //   return error;
-          // }
-          .catch(() => {
-            alert(
-              "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
-            );
-          });
-      
+        .then((response) => {
+          // トークンを設定
+          this.$auth.setUserToken(response.headers['access-token']);
+          
+          // デバッグ用のログ
+          console.log('Response:', response);
+          console.log('Token:', this.$auth.strategy.token.get());
+          console.log('Auth state:', this.$auth.loggedIn);
+          
+          // ユーザー情報を取得
+          this.$auth.fetchUser();
+        })
+        .catch(() => {
+          alert(
+            "ログインに失敗しました。メールアドレスとパスワードを確認してください。\nLogin failed. Please check your email address and password."
+          );
+        });
     },
   },
 };
