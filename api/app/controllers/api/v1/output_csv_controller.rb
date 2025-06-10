@@ -374,7 +374,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 販売品 購入品 なまもの 購入店 購入日 曜日 何日目 URL)
+      column_name = %w(参加団体名 販売品 購入品 なまもの 購入店 購入日 曜日 何日目 URL 備考)
       csv << column_name
       @purchase_lists.each do |food_product|
         # データが存在しない場合はスキップする
@@ -395,7 +395,8 @@ class Api::V1::OutputCsvController < ApplicationController
             purchase_list.fes_date.date,
             purchase_list.fes_date.day,
             purchase_list.fes_date.days_num,
-            purchase_list.url
+            purchase_list.url,
+            purchase_list.remark
           ]
           csv << column_values
         end

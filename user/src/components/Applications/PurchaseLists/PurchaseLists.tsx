@@ -3,57 +3,80 @@ import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
 import PurchaseListsForm from './PurchaseListsForm';
-import { usePurchaseListsForm, usePurchaseListsState } from './hooks';
+import {
+  useFoodProducts,
+  usePurchaseListRowUpdater,
+  usePurchaseListsForm,
+  usePurchaseListsState,
+} from './hooks';
 import { PurchaseItem } from './schema';
 
 export type PurchaseListsProps = {
-  isDeadline?: boolean;
+  isDeadline: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
 };
 
 const PurchaseLists: FC<PurchaseListsProps> = ({
   groupId,
-  isDeadline = false,
+  isDeadline,
   isRegistered: initialIsRegistered,
 }) => {
   const {
+    foodProducts,
+    foodProductOptions,
+    isLoading: isFoodProductsLoading,
+    hasError: hasFoodProductsError,
+  } = useFoodProducts(groupId);
+
+  const {
     purchaseLists,
-    isLoading,
-    error,
+    isLoading: isPurchaseListsLoading,
     isEditing,
-    isRegistered,
     toggleEdit,
     handleDeleteItem,
     formItems,
-    foodProductOptions,
+    shopOptions,
     initialFormData,
     handleFormSuccess,
-  } = usePurchaseListsState(groupId, initialIsRegistered);
+  } = usePurchaseListsState(
+    foodProducts,
+    foodProductOptions,
+    initialIsRegistered
+  );
 
-  const { control, fields, append, remove, triggerSubmit, errors, isValid } =
+  const { control, fields, append, remove, triggerSubmit, errors, setValue } =
     usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
 
-  if (isLoading) {
+  const updateRowBySelector = usePurchaseListRowUpdater(
+    purchaseLists,
+    setValue
+  );
+
+  const handleFoodProductChange = (foodProductId: number, index: number) => {
+    updateRowBySelector(foodProductId, index);
+  };
+
+  if (isFoodProductsLoading || isPurchaseListsLoading) {
     return (
       <AccordionMenu
         title="購入品申請"
         required
         isEdit={!isDeadline}
-        isExist={isRegistered}
+        isExist={initialIsRegistered}
       >
         <div>Loading...</div>
       </AccordionMenu>
     );
   }
 
-  if (error) {
+  if (hasFoodProductsError) {
     return (
       <AccordionMenu
         title="購入品申請"
         required
         isEdit={!isDeadline}
-        isExist={isRegistered}
+        isExist={initialIsRegistered}
       >
         <div className="py-10 text-center text-red-500">
           データの取得に失敗しました。
@@ -116,7 +139,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         title="購入品申請"
         required
         isEdit={!isDeadline}
-        isExist={isRegistered}
+        isExist={initialIsRegistered}
       >
         <PurchaseListsForm
           control={control}
@@ -124,10 +147,10 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
           append={(item) => append(item as PurchaseItem)}
           remove={remove}
           onSubmit={triggerSubmit}
-          onCancel={toggleEdit}
           errors={errors}
-          isValid={isValid}
           foodProductOptions={foodProductOptions}
+          shopOptions={shopOptions}
+          onFoodProductChange={handleFoodProductChange}
         />
       </AccordionMenu>
     );
@@ -139,34 +162,28 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       title="購入品申請"
       required
       isEdit={!isDeadline}
-      isExist={isRegistered}
+      isExist={initialIsRegistered}
     >
       {formItems.map((items, index) => {
         const currentItem = purchaseLists?.[index];
         return (
-          <div
-            key={`purchase-list-${index}-${currentItem?.id ?? index}`}
-            className="mb-4"
-          >
+          <div key={`purchase-list-${index}`} className="mb-4">
             <FormList
               items={items}
-              isDelete={!isDeadline && currentItem?.id !== undefined}
-              onDelete={
-                currentItem?.id
-                  ? () => handleDeleteItem(currentItem.id!)
-                  : undefined
-              }
+              onDelete={() => handleDeleteItem(currentItem?.id || 0)}
+              isDelete
             />
           </div>
         );
       })}
-      {!isDeadline && purchaseLists && purchaseLists.length > 0 && (
-        <div className="mt-6 flex justify-center">
+      {!isDeadline && (
+        <div className="mt-4 flex justify-center space-x-4">
           <Button
-            onClick={toggleEdit}
+            type="button"
             size="pc"
             color="main"
-            type="button"
+            variant
+            onClick={toggleEdit}
             icon="pencil"
           >
             修正

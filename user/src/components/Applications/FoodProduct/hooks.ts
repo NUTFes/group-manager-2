@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   FoodProductResponse,
   useGetFoodProducts,
-  useUpdateFoodProducts,
+  useUpsertFoodProducts,
 } from '@/api/foodProductApi';
 import { toast } from 'react-toastify';
 import {
@@ -29,7 +29,7 @@ export const useFoodProductHooks = (groupId: number) => {
   } = useGetFoodProducts(groupId || 0);
 
   // upsert用のhook
-  const { trigger: updateFoodProducts, isMutating } = useUpdateFoodProducts();
+  const { trigger: upsertFoodProducts, isMutating } = useUpsertFoodProducts();
 
   // 認証付きAPI呼び出し用（既存の独自実装を使用）
   const { remove } = useApiMutations();
@@ -40,8 +40,8 @@ export const useFoodProductHooks = (groupId: number) => {
       ? apiFoodProducts.map((product: FoodProductResponse) => ({
           id: product.id.toString(),
           name: product.name,
-          isAlcohol: product.isCooking ?? false,
-          hasLicense: product.isCooking ?? false,
+          isAlcohol: product.isAlcohol ?? false,
+          isCooking: product.isCooking ?? false,
           day1Quantity: product.firstDayNum?.toString() || '0',
           day2Quantity: product.secondDayNum?.toString() || '0',
         }))
@@ -94,14 +94,15 @@ export const useFoodProductHooks = (groupId: number) => {
         id: product.id ? parseInt(product.id) : undefined,
         group_id: groupId,
         name: product.name,
-        is_cooking: product.hasLicense,
+        is_cooking: product.isCooking,
         first_day_num: parseInt(product.day1Quantity) || 0,
         second_day_num: parseInt(product.day2Quantity) || 0,
+        is_alcohol: product.isAlcohol,
       }));
 
       // upsert処理を実行
-      await updateFoodProducts({
-        food_products: apiProducts,
+      await upsertFoodProducts({
+        body: { food_products: apiProducts },
       });
 
       // データを強制的に再取得（optimistic updateではなく確実な更新）
@@ -149,14 +150,15 @@ export const useFoodProductHooks = (groupId: number) => {
       const apiProducts = products.map((product) => ({
         group_id: groupId,
         name: product.name,
-        is_cooking: product.hasLicense,
+        is_cooking: product.isCooking,
         first_day_num: parseInt(product.day1Quantity) || 0,
         second_day_num: parseInt(product.day2Quantity) || 0,
+        is_alcohol: product.isAlcohol,
       }));
 
       // SWR Mutationを使用してAPI呼び出し
-      await updateFoodProducts({
-        food_products: apiProducts,
+      await upsertFoodProducts({
+        body: { food_products: apiProducts },
       });
 
       // データを強制的に再取得

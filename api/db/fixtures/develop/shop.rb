@@ -5,7 +5,7 @@ Shop.seed( :id,
                 address: '新潟県長岡市千秋 2丁目 278 リバーサイド千秋 1F'
     },
     { id: 2 ,   name: 'イオン長岡店' ,
-                tel: '0258-28-0880' , 
+                tel: '0258-28-0880' ,
                 opening_hours: '07:00 - 22:00' ,
                 address: '新潟県長岡市古正寺 1-249-1'
     },
@@ -80,12 +80,12 @@ Shop.seed( :id,
                 address: '新潟県長岡市寺島町 7-1'
     },
     { id: 17,   name: '原信 来迎寺店' ,
-                tel: '0258-92-2090' , 
+                tel: '0258-92-2090' ,
                 opening_hours: '09:00 - 23:00' ,
                 address: '新潟県長岡市浦 610'
     },
     { id: 18,   name: 'PLANT-5 見附店' ,
-                tel: '0258-61-4400' , 
+                tel: '0258-61-4400' ,
                 opening_hours: '09:00 - 22:00' ,
                 address: '新潟県見附市上新田町 725-1'
     },
@@ -138,5 +138,15 @@ Shop.seed( :id,
                 tel: '0258-94-5896' ,
                 opening_hours: '09:00 - 22:00' ,
                 address: '新潟県長岡市喜多町土地区画整理事業内 4 街区 3'
+    },
+    { id: 29,   name: 'ネット注文',
+                tel: '' ,
+                opening_hours: '' ,
+                address: ''
+    },
+    { id: 30, name: 'その他(詳細を備考欄に記入必須)',
+                tel: '' ,
+                opening_hours: '' ,
+                address: ''
     }
 )

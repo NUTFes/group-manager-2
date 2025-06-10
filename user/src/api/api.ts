@@ -66,7 +66,9 @@ async function request<T>(
   const res = await fetch(fullURL, {
     method,
     headers: buildHeaders(session),
-    body: body ? JSON.stringify(body) : undefined,
+    body: body
+      ? JSON.stringify(snakecaseKeys(body, { deep: true }))
+      : undefined,
   });
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));

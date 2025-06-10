@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import PurchaseLists from './PurchaseLists';
+import { FES_DATE_ID } from './constants';
 import { PurchaseItem } from './schema';
 
 const getStorageKey = (groupId: number) =>
@@ -105,8 +106,9 @@ export const WithExistingData: Story = {
           isFresh: true,
           shopId: 1,
           purchaseDate: '2025/07/15',
+          fesDateId: FES_DATE_ID,
           url: '',
-          remarks: '特売品',
+          remark: '特売品',
           groupId: groupId,
         },
         {
@@ -116,8 +118,9 @@ export const WithExistingData: Story = {
           isFresh: false,
           shopId: 29,
           purchaseDate: '2025/07/10',
+          fesDateId: FES_DATE_ID,
           url: 'https://example.com/seafood-mix',
-          remarks: '',
+          remark: '',
           groupId: groupId,
         },
       ];
@@ -149,8 +152,9 @@ export const AfterDeadlineWithData: Story = {
           isFresh: false,
           shopId: 13,
           purchaseDate: '2025/06/01',
+          fesDateId: FES_DATE_ID,
           url: '',
-          remarks: '最終確定済みデータ',
+          remark: '最終確定済みデータ',
           groupId: groupId,
         },
       ];

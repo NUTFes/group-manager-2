@@ -3,6 +3,7 @@ FoodProduct.seed( :id,
                 name: 'baked tomato' ,
                 is_cooking: true ,
                 first_day_num: 10 ,
-                second_day_num: 10
+                second_day_num: 10,
+                is_alcohol: false
     }
 )

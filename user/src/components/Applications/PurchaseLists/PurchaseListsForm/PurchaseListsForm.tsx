@@ -15,12 +15,11 @@ import FormContainer from '@/components/FormContainer/FormContainer';
 import {
   DEFAULT_PURCHASE_ITEM,
   FRESH_OPTIONS,
+  FRESH_TYPE_ID,
   NET_ORDER_SHOP_ID,
   OTHER_SHOP_ID,
   PurchaseItemFieldNames,
-  SHOP_OPTIONS,
 } from '../constants';
-import { useDateFormatters } from '../hooks';
 import { PurchaseItem, PurchaseListsFormData } from '../schema';
 import { FoodProductOption } from '../types';
 
@@ -30,10 +29,10 @@ export type PurchaseListsFormProps = {
   append: (item: Partial<PurchaseItem>) => void;
   remove: (index: number) => void;
   onSubmit: () => void;
-  onCancel: () => void;
   errors: UseFormReturn<PurchaseListsFormData>['formState']['errors'];
-  isValid: boolean;
   foodProductOptions: FoodProductOption[];
+  shopOptions: { id: number; name: string }[];
+  onFoodProductChange?: (foodProductId: number, index: number) => void;
 };
 
 const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
@@ -43,39 +42,48 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   remove,
   onSubmit,
   errors,
-  isValid,
   foodProductOptions,
+  shopOptions,
+  onFoodProductChange,
 }) => {
-  const { formatDateForInput, formatDateForStore } = useDateFormatters();
-
   // フォーム全体の値を監視
   const watchedFormValues = useWatch({
     control,
     name: 'purchaseLists',
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit();
+  };
+
   return (
-    <form onSubmit={onSubmit} className="w-fit">
+    <form onSubmit={handleSubmit} className="w-fit">
       <div className="flex flex-col space-y-10">
         {fields.map((field, index) => {
           const fieldPathPrefix = `purchaseLists.${index}` as const;
           const currentShopIdPath = `${fieldPathPrefix}.shopId` as const;
 
-          const currentShopId = watchedFormValues?.[index]?.shopId;
+          // より安全にshopIdを取得
+          const currentShopId = watchedFormValues?.[index]?.shopId ?? 0;
 
           return (
-            <FormContainer key={field.id}>
+            <FormContainer key={`${field.id}-${index}`}>
               <div className="flex flex-col space-y-6">
                 <Controller
+                  key={`food-product-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.FOOD_PRODUCT_ID}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Selector
                       label="販売品名"
                       value={controllerField.value}
-                      onChange={(value) =>
-                        controllerField.onChange(Number(value))
-                      }
+                      onChange={(value) => {
+                        controllerField.onChange(Number(value));
+                        if (value) {
+                          onFoodProductChange?.(Number(value), index);
+                        }
+                      }}
                       required
                       options={foodProductOptions}
                       error={fieldState.error?.message}
@@ -84,12 +92,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`items-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.ITEMS}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
                       label="選択した料理に使用した食材・使用する材料"
-                      value={controllerField.value || ''}
+                      value={controllerField.value ?? ''}
                       onChange={controllerField.onChange}
                       required
                       error={fieldState.error?.message}
@@ -97,15 +106,22 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`is-fresh-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.IS_FRESH}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Radio
                       label="商品の種類"
                       name={`isFresh-${index}`}
-                      value={controllerField.value ? '1' : '2'} // true: 生鮮品(1), false: 加工品(2)
+                      value={
+                        controllerField.value
+                          ? FRESH_TYPE_ID.FRESH.toString()
+                          : FRESH_TYPE_ID.PROCESSED.toString()
+                      } // true: 生鮮品, false: 加工品
                       onChange={(value) =>
-                        controllerField.onChange(value === '1')
+                        controllerField.onChange(
+                          value === FRESH_TYPE_ID.FRESH.toString()
+                        )
                       }
                       required
                       options={FRESH_OPTIONS}
@@ -114,6 +130,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   )}
                 />
                 <Controller
+                  key={`shop-${field.id}-${index}`}
                   name={currentShopIdPath}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
@@ -124,23 +141,22 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                         controllerField.onChange(Number(value))
                       }
                       required
-                      options={SHOP_OPTIONS}
+                      options={shopOptions}
                       error={fieldState.error?.message}
                       note="ネット注文選択時はURL入力が必要です"
                     />
                   )}
                 />
                 <Controller
+                  key={`purchase-date-${field.id}-${index}`}
                   name={`${fieldPathPrefix}.${PurchaseItemFieldNames.PURCHASE_DATE}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
                       label="購入日"
                       type="date"
-                      value={formatDateForInput(controllerField.value)}
-                      onChange={(value) =>
-                        controllerField.onChange(formatDateForStore(value))
-                      }
+                      value={controllerField.value}
+                      onChange={controllerField.onChange}
                       required
                       error={fieldState.error?.message}
                       note="例：2025/03/14"
@@ -150,6 +166,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                 {/* URLフィールド：ネット注文が選択された時のみ表示 */}
                 {currentShopId === NET_ORDER_SHOP_ID && (
                   <Controller
+                    key={`url-${field.id}-${index}`}
                     name={`${fieldPathPrefix}.${PurchaseItemFieldNames.URL}`}
                     control={control}
                     render={({ field: controllerField, fieldState }) => (
@@ -166,7 +183,8 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                 )}
                 {/* 備考フィールド*/}
                 <Controller
-                  name={`${fieldPathPrefix}.${PurchaseItemFieldNames.REMARKS}`}
+                  key={`remark-${field.id}-${index}`}
+                  name={`${fieldPathPrefix}.${PurchaseItemFieldNames.REMARK}`}
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextArea
@@ -212,7 +230,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
           >
             購入品を追加
           </Button>
-          <Button size="pc" color="main" type="submit" isDisable={!isValid}>
+          <Button size="pc" color="main" type="submit">
             登録
           </Button>
         </div>

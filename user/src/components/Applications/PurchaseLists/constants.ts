@@ -1,54 +1,22 @@
-import { FoodProductOption, RadioOption, ShopOption } from './types';
+import { RadioOption } from './types';
+
+// 商品の種類のID定数
+export const FRESH_TYPE_ID = {
+  FRESH: 1, // 生鮮品
+  PROCESSED: 2, // 加工品
+} as const;
+
+// 商品の種類のID型定義
+export type FreshTypeIdValue =
+  (typeof FRESH_TYPE_ID)[keyof typeof FRESH_TYPE_ID];
+
+// フェス日付ID
+export const FES_DATE_ID = 1;
 
 // 商品の種類
 export const FRESH_OPTIONS: RadioOption[] = [
-  { id: 1, name: '生鮮品' },
-  { id: 2, name: '加工品' },
-];
-
-// 販売品オプション
-export const FOOD_PRODUCT_OPTIONS: FoodProductOption[] = [
-  { id: 0, name: '選択してください' },
-  { id: 1, name: 'からあげ（仮）' },
-  { id: 2, name: 'フランクフルト（仮）' },
-  { id: 3, name: 'チョコバナナ（仮）' },
-  { id: 4, name: 'たこ焼き（仮）' },
-  { id: 5, name: 'かき氷（仮）' },
-];
-
-// 購入場所の選択肢
-export const SHOP_OPTIONS: ShopOption[] = [
-  { id: 0, name: '選択してください' },
-  { id: 1, name: 'アピタ長岡店' },
-  { id: 2, name: 'イオン長岡店' },
-  { id: 3, name: 'ウオロク 北山店' },
-  { id: 4, name: 'ウオロク 長岡店' },
-  { id: 5, name: 'カトウ食材' },
-  { id: 6, name: '業務スーパー 中沢店' },
-  { id: 7, name: 'サンマート' },
-  { id: 8, name: 'スーパーセンタームサシ' },
-  { id: 9, name: 'チャレンジャー 北長岡店' },
-  { id: 10, name: 'ドン・キホーテ 長岡インター店' },
-  { id: 11, name: 'ナルス 大島店' },
-  { id: 12, name: 'なんじゃ村' },
-  { id: 13, name: '原信 今朝白店' },
-  { id: 14, name: '原信 古正寺店' },
-  { id: 15, name: '原信 関原店' },
-  { id: 16, name: '原信 寺島店' },
-  { id: 17, name: '原信 来迎寺店' },
-  { id: 18, name: 'PLANT-5 見附店' },
-  { id: 19, name: '三和園茶舗' },
-  { id: 20, name: '大和屋 本店' },
-  { id: 21, name: 'やまや' },
-  { id: 22, name: 'リカードコミュニケーション おぐまや' },
-  { id: 23, name: '良食生活館 きたまち店' },
-  { id: 24, name: '山ス流通サービス株式会社' },
-  { id: 25, name: '菜加' },
-  { id: 26, name: 'ひらせい 長岡ニュータウン店' },
-  { id: 27, name: '紅屋重正' },
-  { id: 28, name: 'ダイレックス喜多町店' },
-  { id: 29, name: 'ネット注文' },
-  { id: 30, name: 'その他(詳細を備考欄に記入必須)' },
+  { id: FRESH_TYPE_ID.FRESH, name: '生鮮品' },
+  { id: FRESH_TYPE_ID.PROCESSED, name: '加工品' },
 ];
 
 // ネット注文のショップID
@@ -65,19 +33,20 @@ export const PurchaseItemFieldNames = {
   SHOP_ID: 'shopId',
   PURCHASE_DATE: 'purchaseDate',
   URL: 'url',
-  REMARKS: 'remarks',
+  REMARK: 'remark',
 } as const;
 
 // デフォルトの購入品アイテム
 export const DEFAULT_PURCHASE_ITEM = {
-  id: undefined,
+  id: null,
   foodProductId: 0,
-  items: '',
   isFresh: true,
-  shopId: 0,
+  items: '',
   purchaseDate: '',
+  shopId: 0,
   url: '',
-  remarks: '',
+  remark: '',
+  fesDateId: FES_DATE_ID,
 };
 
 // バリデーションメッセージ
@@ -93,3 +62,13 @@ export const VALIDATION_MESSAGES = {
     '「その他」の場合は、店名・住所・電話番号・営業時間を記入してください',
   MIN_ITEMS: '少なくとも1つの購入品を登録してください',
 };
+
+// 日付フォーマット関連の定数
+export const DATE_FORMAT = {
+  EXPECTED_PARTS_LENGTH: 3, // YYYY/MM/DD または YYYY-MM-DD の分割後の期待される配列長
+  PAD_LENGTH: 2, // 月日の0埋めの桁数
+  PAD_CHAR: '0', // 0埋めに使用する文字
+  YEAR_INDEX: 0, // 日付配列での年の位置
+  MONTH_INDEX: 1, // 日付配列での月の位置
+  DAY_INDEX: 2, // 日付配列での日の位置
+} as const;

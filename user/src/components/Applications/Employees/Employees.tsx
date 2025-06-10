@@ -158,7 +158,7 @@ const Content: FC<ContentProps> = ({
             <div className="flex w-full flex-col gap-10">
               {logic.form.fieldArray.fields.map((field, idx) => (
                 <EmployeeForm
-                  key={field.fieldId}
+                  key={`${field.fieldId}-${idx}`}
                   index={idx}
                   onDelete={() => logic.handleEmployeeDelete(field, idx)}
                 />

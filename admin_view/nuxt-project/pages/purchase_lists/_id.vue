@@ -61,6 +61,10 @@
             <td>{{ purchaseList.purchase_list.url }}</td>
           </tr>
           <tr>
+            <th>備考</th>
+            <td>{{ purchaseList.purchase_list.remark }}</td>
+          </tr>
+          <tr>
             <th>登録日時</th>
             <td>{{ purchaseList.purchase_list.created_at | formatDate }}</td>
           </tr>
@@ -112,6 +116,10 @@
           <h3>ネットで買った場合はURLを記入してください</h3>
           <input v-model="url" placeholder="入力してください" />
         </div>
+        <div>
+          <h3>備考</h3>
+          <input v-model="remark" placeholder="入力してください" />
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="edit" :on_click="edit">編集</CommonButton>
@@ -157,17 +165,28 @@ export default {
       fesDatesList: [],
       purchase_date: null,
       url: null,
+      remark: null,
     };
   },
-  async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/purchase_lists/", "");
-    const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
-    const response = await $axios.$get(url);
-    return {
-      purchaseList: response.data,
-      route: url,
-      routeId: routeId,
-    };
+  async asyncData({ $axios, route, error }) {
+    try {
+      const routeId = route.params.id;
+      const url = "/api/v1/get_purchase_list_show_for_admin_view/" + routeId;
+      const response = await $axios.$get(url);
+
+      if (!response.data) {
+        throw new Error('データが見つかりません');
+      }
+
+      return {
+        purchaseList: response.data,
+        route: url,
+        routeId: routeId,
+      };
+    } catch (err) {
+      console.error('データ取得エラー:', err);
+      error({ statusCode: 404, message: '購入品申請が見つかりません' });
+    }
   },
   computed: {
     ...mapState({
@@ -191,6 +210,7 @@ export default {
       this.isFresh = this.purchaseList.purchase_list.isFresh;
       this.purchase_date = this.purchaseList.purchase_list.purchase_date;
       this.url = this.purchaseList.purchase_list.url;
+      this.remark = this.purchaseList.purchase_list.remark;
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;
     },
@@ -232,7 +252,9 @@ export default {
         "&is_fresh=" +
         this.isFresh +
         "&url=" +
-        this.url;
+        this.url +
+        "&remark=" +
+        this.remark;
 
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(this.items + "を編集しました");
@@ -241,6 +263,7 @@ export default {
         this.shopID = null;
         this.isFresh = null;
         this.url = null;
+        this.remark = null;
         this.reload(response.data.id);
         this.closeEditModal();
       });

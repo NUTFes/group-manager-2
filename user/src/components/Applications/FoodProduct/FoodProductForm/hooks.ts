@@ -8,6 +8,15 @@ import {
   foodProductSchema,
 } from './schema';
 
+// 定数定義
+const FORM_VALUES = {
+  YES: 1,
+  NO: 0,
+  DEFAULT_QUANTITY: '1',
+  INITIAL_QUANTITY: '0',
+  MIN_PRODUCTS_COUNT: 1,
+} as const;
+
 export const useFoodProductFormHooks = (
   groupId: number,
   foodProductsProp?: RegisteredProduct[] | null,
@@ -21,9 +30,9 @@ export const useFoodProductFormHooks = (
         id: product.id || '',
         name: product.name || '',
         isAlcohol: product.isAlcohol ?? false,
-        hasLicense: product.hasLicense ?? false,
-        day1Quantity: product.day1Quantity || '0',
-        day2Quantity: product.day2Quantity || '0',
+        isCooking: product.isCooking ?? false,
+        day1Quantity: product.day1Quantity || FORM_VALUES.INITIAL_QUANTITY,
+        day2Quantity: product.day2Quantity || FORM_VALUES.INITIAL_QUANTITY,
       }));
     }
     return [
@@ -31,9 +40,9 @@ export const useFoodProductFormHooks = (
         id: '',
         name: '',
         isAlcohol: false,
-        hasLicense: false,
-        day1Quantity: '1',
-        day2Quantity: '1',
+        isCooking: false,
+        day1Quantity: FORM_VALUES.DEFAULT_QUANTITY,
+        day2Quantity: FORM_VALUES.DEFAULT_QUANTITY,
       },
     ];
   };
@@ -70,26 +79,29 @@ export const useFoodProductFormHooks = (
   const products = values.products || [];
 
   const alcoholOptions = [
-    { id: 1, name: 'はい' },
-    { id: 0, name: 'いいえ' },
+    { id: FORM_VALUES.YES, name: 'はい' },
+    { id: FORM_VALUES.NO, name: 'いいえ' },
   ];
 
   const licenseOptions = [
-    { id: 1, name: '有り　（例：酒類、加熱調理をするものなど）' },
-    { id: 0, name: '無し　（例：ソフトドリンク）' },
+    { id: FORM_VALUES.YES, name: '有り　（例：酒類、加熱調理をするものなど）' },
+    { id: FORM_VALUES.NO, name: '無し　（例：ソフトドリンク）' },
   ];
 
   const handleAlcoholChange = (index: number, value: string) => {
-    const isAlcohol = parseInt(value) === 1;
+    const isAlcohol = parseInt(value) === FORM_VALUES.YES;
     setValue(`products.${index}.isAlcohol`, isAlcohol);
 
     if (isAlcohol) {
-      setValue(`products.${index}.hasLicense`, true);
+      setValue(`products.${index}.isCooking`, true);
     }
   };
 
   const handleHasLicenseChange = (index: number, value: string) => {
-    setValue(`products.${index}.hasLicense`, parseInt(value) === 1);
+    setValue(
+      `products.${index}.isCooking`,
+      parseInt(value) === FORM_VALUES.YES
+    );
   };
 
   const addProduct = () => {
@@ -97,14 +109,14 @@ export const useFoodProductFormHooks = (
       id: '',
       name: '',
       isAlcohol: false,
-      hasLicense: false,
-      day1Quantity: '1',
-      day2Quantity: '1',
+      isCooking: false,
+      day1Quantity: FORM_VALUES.DEFAULT_QUANTITY,
+      day2Quantity: FORM_VALUES.DEFAULT_QUANTITY,
     });
   };
 
   const removeProduct = (index: number) => {
-    if (products.length > 1) {
+    if (products.length > FORM_VALUES.MIN_PRODUCTS_COUNT) {
       remove(index);
     }
   };
