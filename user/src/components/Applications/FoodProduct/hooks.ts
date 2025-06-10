@@ -3,7 +3,7 @@ import {
   FoodProductResponse,
   useGetFoodProducts,
   useUpdateFoodProducts,
-} from '@/api/foodProdutApi';
+} from '@/api/foodProductApi';
 import { toast } from 'react-toastify';
 import {
   ProductInput,
@@ -11,6 +11,10 @@ import {
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { FormItem } from '@/components/FormList/type';
 import { useApiMutations } from '@/hooks/useApi';
+
+const API_ENDPOINTS = {
+  FOOD_PRODUCTS: '/food_products',
+} as const;
 
 export const useFoodProductHooks = (groupId: number) => {
   const [isEditing, setIsEditing] = useState(true);
@@ -27,21 +31,21 @@ export const useFoodProductHooks = (groupId: number) => {
   // upsert用のhook
   const { trigger: updateFoodProducts, isMutating } = useUpdateFoodProducts();
 
-  // 認証付きAPI呼び出し用
+  // 認証付きAPI呼び出し用（既存の独自実装を使用）
   const { remove } = useApiMutations();
 
   // APIレスポンスをコンポーネント用の型に変換
   const foodProducts: RegisteredProduct[] | null =
-    apiFoodProducts?.length > 0
-      ? apiFoodProducts.map((product: FoodProductResponse) => ({
-          id: product.id.toString(),
-          name: product.name,
-          isAlcohol: product.isCooking ?? false,
-          hasLicense: product.isCooking ?? false,
-          day1Quantity: product.firstDayNum?.toString() || '0',
-          day2Quantity: product.secondDayNum?.toString() || '0',
-        }))
-      : null;
+      apiFoodProducts?.length > 0
+          ? apiFoodProducts.map((product: FoodProductResponse) => ({
+            id: product.id.toString(),
+            name: product.name,
+            isAlcohol: product.isCooking ?? false,
+            hasLicense: product.isCooking ?? false,
+            day1Quantity: product.firstDayNum?.toString() || '0',
+            day2Quantity: product.secondDayNum?.toString() || '0',
+          }))
+          : null;
 
   const hasError = !!error;
 
@@ -49,8 +53,8 @@ export const useFoodProductHooks = (groupId: number) => {
     {
       label: '販売品一覧',
       content: foodProducts?.length
-        ? `${foodProducts.length}品目登録済み`
-        : '未登録',
+          ? `${foodProducts.length}品目登録済み`
+          : '未登録',
     },
   ];
 
@@ -87,14 +91,20 @@ export const useFoodProductHooks = (groupId: number) => {
         autoClose: 3000,
       });
     } catch (error) {
-      console.error('販売品更新エラー:', error);
-      toast.error(
-        `販売品の更新に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`,
-        {
-          position: 'top-right',
-          autoClose: 5000,
+      let errorMessage = '販売品の更新に失敗しました';
+
+      if (error instanceof Error) {
+        if (error.message.includes('認証が必要') || error.message.includes('User is not authenticated')) {
+          errorMessage = '認証が必要です。ログインしてください。';
+        } else {
+          errorMessage = `販売品の更新に失敗しました: ${error.message}`;
         }
-      );
+      }
+
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 5000,
+      });
     }
   };
 
@@ -126,22 +136,28 @@ export const useFoodProductHooks = (groupId: number) => {
         autoClose: 3000,
       });
     } catch (error) {
-      console.error('販売品登録エラー:', error);
-      toast.error(
-        `販売品の登録に失敗しました: ${error instanceof Error ? error.message : '不明なエラー'}`,
-        {
-          position: 'top-right',
-          autoClose: 5000,
+      let errorMessage = '販売品の登録に失敗しました';
+
+      if (error instanceof Error) {
+        if (error.message.includes('認証が必要') || error.message.includes('User is not authenticated')) {
+          errorMessage = '認証が必要です。ログインしてください。';
+        } else {
+          errorMessage = `販売品の登録に失敗しました: ${error.message}`;
         }
-      );
+      }
+
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 5000,
+      });
     }
   };
 
-  // 販売品を削除する関数（認証付きDELETE APIを使用）
+  // 販売品を削除する関数（既存のuseApiMutationsを使用）
   const removeFoodProduct = async (id: string) => {
     try {
       const productToRemove = foodProducts?.find(
-        (product) => product.id === id
+          (product) => product.id === id
       );
 
       if (!productToRemove) {
@@ -149,10 +165,15 @@ export const useFoodProductHooks = (groupId: number) => {
       }
 
       const productId = parseInt(id);
-      const deleteEndpoint = `/food_products/${productId}`;
+      const deleteEndpoint = `${API_ENDPOINTS.FOOD_PRODUCTS}/${productId}`;
 
       // useApiMutationsのremove関数を使用（認証付き）
-      await remove(deleteEndpoint);
+      const result = await remove(deleteEndpoint);
+
+      // 結果が {success: false} の場合はエラーを投げる
+      if (result && typeof result === 'object' && 'success' in result && !result.success) {
+        throw new Error(result.error?.message || '削除に失敗しました');
+      }
 
       // データを再取得
       await mutateFoodProducts();
@@ -162,11 +183,9 @@ export const useFoodProductHooks = (groupId: number) => {
         autoClose: 3000,
       });
     } catch (error) {
-      console.error('認証付き削除処理エラー:', error);
-
       // エラーの詳細を分析
       if (error instanceof Error) {
-        if (error.message.includes('User is not authenticated')) {
+        if (error.message.includes('User is not authenticated') || error.message.includes('認証が必要')) {
           toast.error('認証が必要です。ログインしてください。', {
             position: 'top-right',
             autoClose: 5000,
@@ -204,7 +223,7 @@ export const useFoodProductHooks = (groupId: number) => {
     }
   }, [apiFoodProducts, isLoading, hasInitialized]);
 
-  // ローディング状態はAPIとMutation両方を考慮
+  // ローディング状態はAPIとMutationを考慮
   const isLoadingWithMutation = isLoading || isMutating;
 
   // フォーム送信後にデータを再取得するための関数
