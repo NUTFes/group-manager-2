@@ -109,12 +109,24 @@ export default function HomePage() {
             isRegistered={checkAllRegisteredGroups?.publicRelation}
             groupId={groupId}
           />
+          <FoodProduct
+            groupId={groupId}
+            isDeadline={!userPageSettings?.isEditFoodProduct}
+            isRegistered={checkAllRegisteredGroups?.foodProduct}
+          />
+          {/* TODO: 火器使用申請コンポーネントを追加予定 */}
         </>
       );
     } else if (groupCategoryId === GROUP_CATEGORY.STAGE) {
       // 🎤 ステージ団体: ステージ申請、ステージオプション申請、電力申請、PR文申請
       return (
         <>
+          <RentItems
+            isDeadline={!userPageSettings?.isEditRentalOrder}
+            isRegistered={checkAllRegisteredGroups?.rentalItem}
+            groupId={groupId}
+            groupCategoryId={groupCategoryId}
+          />
           <Stage
             isDeadline={!userPageSettings?.isEditStageOrder}
             isRegistered={checkAllRegisteredGroups?.stageOrder}
@@ -195,33 +207,6 @@ export default function HomePage() {
       );
     } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
       // 📋 実行委員会: 会場申請、物品申請、電力申請、PR文申請
-      return (
-        <>
-          <VenueApplications
-            isDeadline={!userPageSettings?.isEditPlace}
-            isRegistered={checkAllRegisteredGroups?.placeOrder}
-            groupId={groupId}
-          />
-          <RentItems
-            isDeadline={!userPageSettings?.isEditRentalOrder}
-            isRegistered={checkAllRegisteredGroups?.rentalItem}
-            groupId={groupId}
-            groupCategoryId={groupCategoryId}
-          />
-          <Power
-            isDeadline={!userPageSettings?.isEditPowerOrder}
-            isRegistered={checkAllRegisteredGroups?.powerOrder}
-            groupId={groupId}
-          />
-          <PublicRelations
-            isDeadline={!userPageSettings?.isEditPublicRelation}
-            isRegistered={checkAllRegisteredGroups?.publicRelation}
-            groupId={groupId}
-          />
-        </>
-      );
-    } else {
-      // その他のカテゴリー: デフォルトは基本的な申請のみ
       return (
         <>
           <VenueApplications
