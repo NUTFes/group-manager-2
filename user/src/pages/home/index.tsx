@@ -85,7 +85,7 @@ export default function HomePage() {
         </>
       );
     } else if (groupCategoryId === GROUP_CATEGORY.GOODS_SALES) {
-      // 📦 物品販売: 会場申請、物品申請、電力申請、PR文申請
+      // 📦 物品販売: 会場申請、物品申請、電力申請、PR文申請、模擬店平面図申請
       return (
         <>
           <VenueApplications
@@ -107,6 +107,11 @@ export default function HomePage() {
           <PublicRelations
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+          <VenueMap
+            isDeadline={!userPageSettings?.isEditVenueMap}
+            isRegistered={checkAllRegisteredGroups?.venueMap}
             groupId={groupId}
           />
           <FoodProduct
@@ -150,7 +155,7 @@ export default function HomePage() {
         </>
       );
     } else if (groupCategoryId === GROUP_CATEGORY.RESEARCH_LAB) {
-      // 🔬 研究室公開: 会場申請、物品申請、電力申請、PR文申請、火器使用申請
+      // 🔬 研究室公開: 会場申請、物品申請、電力申請、PR文申請、模擬店平面図申請、火器使用申請
       return (
         <>
           <VenueApplications
@@ -172,13 +177,18 @@ export default function HomePage() {
           <PublicRelations
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+          <VenueMap
+            isDeadline={!userPageSettings?.isEditVenueMap}
+            isRegistered={checkAllRegisteredGroups?.venueMap}
             groupId={groupId}
           />
           {/* TODO: 火器使用申請コンポーネントを追加予定 */}
         </>
       );
     } else if (groupCategoryId === GROUP_CATEGORY.EXHIBITION) {
-      // 🎨 展示・体験: 会場申請、物品申請、電力申請、PR文申請、火器使用申請
+      // 🎨 展示・体験: 会場申請、物品申請、電力申請、PR文申請、模擬店平面図申請、火器使用申請
       return (
         <>
           <VenueApplications
@@ -200,13 +210,18 @@ export default function HomePage() {
           <PublicRelations
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+          <VenueMap
+            isDeadline={!userPageSettings?.isEditVenueMap}
+            isRegistered={checkAllRegisteredGroups?.venueMap}
             groupId={groupId}
           />
           {/* TODO: 火器使用申請コンポーネントを追加予定 */}
         </>
       );
     } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
-      // 📋 実行委員会: 会場申請、物品申請、電力申請、PR文申請
+      // 📋 実行委員会: 会場申請、物品申請、電力申請、PR文申請、模擬店平面図申請
       return (
         <>
           <VenueApplications
@@ -228,6 +243,11 @@ export default function HomePage() {
           <PublicRelations
             isDeadline={!userPageSettings?.isEditPublicRelation}
             isRegistered={checkAllRegisteredGroups?.publicRelation}
+            groupId={groupId}
+          />
+          <VenueMap
+            isDeadline={!userPageSettings?.isEditVenueMap}
+            isRegistered={checkAllRegisteredGroups?.venueMap}
             groupId={groupId}
           />
         </>
