@@ -18,8 +18,5 @@ export default {
 type Story = StoryObj<typeof CookingProcessOrder>;
 
 export const Default: Story = {
-  args: {
-    isEdit: true,
-    isExist: false,
-  },
+  args: {},
 };
