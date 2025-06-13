@@ -73,11 +73,11 @@
     >
       <template v-slot:form>
         <label for="manager" style="color: black">Manager</label>
-        <input type="radio" id="manager" value="2" v-model="picked" />
+        <input type="radio" id="manager" value="1" v-model="picked" />
         <label for="staff" style="color: black">Staff</label>
-        <input type="radio" id="staff" value="3" v-model="picked" />
+        <input type="radio" id="staff" value="2" v-model="picked" />
         <label for="user" style="color: black">User</label>
-        <input type="radio" id="user" value="4" v-model="picked" />
+        <input type="radio" id="user" value="3" v-model="picked" />
         <span style="color: black"
           >{{ roles[role - 1].name }} → {{ roles[picked - 1].name }}</span
         >
@@ -152,9 +152,9 @@ export default {
       passwordConfirm: "",
       isOpenSnackBar: false,
       roles: [
-        { id: 2, name: "manager" },
-        { id: 3, name: "staff" },
-        { id: 4, name: "user" },
+        { id: 1, name: "manager" },
+        { id: 2, name: "staff" },
+        { id: 3, name: "user" },
       ],
       user: {
         user: {
