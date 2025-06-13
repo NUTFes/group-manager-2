@@ -2,10 +2,9 @@ class Api::V1::DashboardApiController < ApplicationController
     def get_dashboard_info
         # ユーザー数
         all_user_num = User.all.length
-        developer_num = User.where(role_id:1).length
-        manager_num = User.where(role_id:2).length
-        staff_num = User.where(role_id:3).length
-        user_num = User.where(role_id:4).length
+        manager_num = User.where(role_id:1).length
+        staff_num = User.where(role_id:2).length
+        user_num = User.where(role_id:3).length
         groups = Group.all
         groups_length = groups.length
         cate_1_length = groups.where(group_category:1).length
@@ -29,7 +28,6 @@ class Api::V1::DashboardApiController < ApplicationController
         progress_assign_item_3 = (assign_item_status_3*100) / all_length
         group_data = {
             all_user_num: all_user_num,
-            developer_num: developer_num,
             manager_num: manager_num,
             staff_num: staff_num,
             user_num: user_num,

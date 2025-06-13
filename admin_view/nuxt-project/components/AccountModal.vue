@@ -7,10 +7,9 @@
           <Row justify="start">
             <slot></slot>
           </Row>
-          <h6 v-if="user.role_id == 1" class="developer">Developer</h6>
-          <h6 v-if="user.role_id == 2" class="manager">Manager</h6>
-          <h6 v-if="user.role_id == 3" class="staff">Staff</h6>
-          <h6 v-if="user.role_id == 4" class="user">User</h6>
+          <h6 v-if="user.role_id == 1" class="manager">Manager</h6>
+          <h6 v-if="user.role_id == 2" class="staff">Staff</h6>
+          <h6 v-if="user.role_id == 3" class="user">User</h6>
           <h3>{{ user.name }}</h3>
           <p>{{ user.email }}</p>
           <IconButton icon_name="edit" :on_click="openEditModal" />

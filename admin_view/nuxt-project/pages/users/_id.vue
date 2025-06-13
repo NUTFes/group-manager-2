@@ -72,8 +72,6 @@
       title="権限の編集"
     >
       <template v-slot:form>
-        <label for="developer" style="color: black">Developer</label>
-        <input type="radio" id="developer" value="1" v-model="picked" />
         <label for="manager" style="color: black">Manager</label>
         <input type="radio" id="manager" value="2" v-model="picked" />
         <label for="staff" style="color: black">Staff</label>
@@ -154,7 +152,6 @@ export default {
       passwordConfirm: "",
       isOpenSnackBar: false,
       roles: [
-        { id: 1, name: "developer" },
         { id: 2, name: "manager" },
         { id: 3, name: "staff" },
         { id: 4, name: "user" },
