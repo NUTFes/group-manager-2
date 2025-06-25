@@ -1,5 +1,5 @@
 <template>
-  <div class="table-scroll-x">
+  <div class="table-scroll">
     <table class="normal-table">
       <thead>
         <slot name="table-header"></slot>
@@ -11,9 +11,10 @@
   </div>
 </template>
 <style>
-.table-scroll-x {
+.table-scroll{
   width: 100%;
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 70vh;
 }
 .normal-table {
   font-size: 14px;
@@ -31,7 +32,8 @@
   font-weight: 500;
   padding: 5px;
   border-bottom: solid 1px var(--accent-3);
-  top: 60px;
+  position: sticky;
+  top: 0;
   background: white;
   z-index: 1;
 }
