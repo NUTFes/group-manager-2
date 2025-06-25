@@ -16,6 +16,7 @@ class Group < ApplicationRecord
     has_one :venue_map
     has_one :announcement
     has_one :cooking_process_order
+    has_many :un_registered_groups, dependent: :destroy
     has_many :fire_equipment_orders
 
     ### group_category (参加団体カテゴリ)
