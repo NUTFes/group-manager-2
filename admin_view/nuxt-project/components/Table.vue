@@ -1,16 +1,23 @@
 <template>
-  <table class="normal-table">
-    <thead>
-      <slot name="table-header"></slot>
-    </thead>
-    <tbody>
-      <slot name="table-body"></slot>
-    </tbody>
-  </table>
+  <div class="table-scroll-x">
+    <table class="normal-table">
+      <thead>
+        <slot name="table-header"></slot>
+      </thead>
+      <tbody>
+        <slot name="table-body"></slot>
+      </tbody>
+    </table>
+  </div>
 </template>
 <style>
+.table-scroll-x {
+  width: 100%;
+  overflow-x: auto;
+}
 .normal-table {
   font-size: 14px;
+  min-width: max-content;
   width: 100%;
   border-collapse: collapse;
 }
@@ -24,7 +31,6 @@
   font-weight: 500;
   padding: 5px;
   border-bottom: solid 1px var(--accent-3);
-  position: sticky;
   top: 60px;
   background: white;
   z-index: 1;

@@ -61,6 +61,7 @@ export default {
 <style scoped>
 .card-container {
   min-width: var(--card-width);
+  max-width: 100%;
   min-height: var(--card-height);
   display: flex;
   align-items: center;
