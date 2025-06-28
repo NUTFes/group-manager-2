@@ -51,7 +51,9 @@ services:
       dockerfile: Dockerfile
     container_name: "ADMIN"
     volumes: [./admin:/app]
-    ports: ["3001:3001"]
+    ports:
+      - "8004:3000"
+
     command: pnpm run dev
 
   user_front:
