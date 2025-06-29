@@ -413,13 +413,13 @@ class Api::V1::OutputCsvController < ApplicationController
       @groups = Group.where(fes_year_id: params[:fes_year_id]).preload(:user, :sub_rep, user: :user_detail) # 必要な関連を事前にロード
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-  
+
     @categories = []
     for i in 1..6 do
       group = @groups.where(group_category_id: i)
       @categories << group
     end
-  
+
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w(参加団体形式 団体番号 団体名 氏名 電話番号 メールアドレス 備考欄)
@@ -452,10 +452,10 @@ class Api::V1::OutputCsvController < ApplicationController
         end
       end
     end
-  
+
     send_data(csv_data, filename: "連絡先リスト_#{filename_year}年度.csv")
   end
-  
+
 
   def output_announcements_csv
     @announcements = Announcement.all
@@ -483,8 +483,8 @@ class Api::V1::OutputCsvController < ApplicationController
       @cooking_process_orders.each do |cooking_process_order|
         column_values = [
           cooking_process_order.group.name,
-          cooking_process_order.pre_open_kitchen ? "申請する" : "申請しない",  
-          cooking_process_order.during_open_kitchen ? "申請する" : "申請しない",  
+          cooking_process_order.pre_open_kitchen ? "申請する" : "申請しない",
+          cooking_process_order.during_open_kitchen ? "申請する" : "申請しない",
           cooking_process_order.tent
         ]
         csv << column_values
@@ -503,23 +503,54 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 PR文 URL アナウンス有無)
+      column_name = %w(参加団体名 PR文 PR画像)
       csv << column_name
-      @public_relations.each do |public_relations|
-        # データが存在しない場合はスキップする
-        if public_relations.nil?
+      @public_relations.each do |public_relation|
+        if public_relation.nil?
           next
         end
         column_values = [
-          public_relations.group.name,
-          public_relations.blurb,
-          public_relations.picture_path,
-          public_relations.is_announcement_requested ? "有" : "無",
+          public_relation.group.name,
+          public_relation.pr_comment,
+          public_relation.pr_image,
         ]
         csv << column_values
       end
     end
     send_data(csv_data, filename:"参加団体PR申請_#{filename_year}年度.csv")
+  end
+
+  def output_fire_equipment_orders_csv
+    if params[:fes_year_id].to_i == 0
+      @fire_equipment_orders = FireEquipmentOrder.all
+      filename_year = "全"
+    else
+      fes_year = FesYear.find(params[:fes_year_id])
+      @fire_equipment_orders = FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year.id })
+      filename_year = fes_year.year_num
+    end
+    bom = "\uFEFF"
+    csv_data = CSV.generate(bom) do |csv|
+      column_name = %w(ID 団体名 品目 数量 燃料 使用場所 持ち帰り 備考)
+      csv << column_name
+      @fire_equipment_orders.each do |order|
+        if order.nil?
+          next
+        end
+        column_values = [
+          order.id,
+          order.group.name,
+          order.name,
+          order.quantity,
+          order.fuel,
+          order.usage,
+          order.is_takeaway ? 'はい' : 'いいえ',
+          order.remark,
+        ]
+        csv << column_values
+      end
+    end
+    send_data(csv_data, filename: "火気使用申請_#{filename_year}年度.csv")
   end
 
 end
