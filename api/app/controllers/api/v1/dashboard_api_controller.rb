@@ -26,6 +26,9 @@ class Api::V1::DashboardApiController < ApplicationController
         progress_assign_item_1 = (assign_item_status_1*100) / all_length
         progress_assign_item_2 = (assign_item_status_2*100) / all_length
         progress_assign_item_3 = (assign_item_status_3*100) / all_length
+        fire_equipment_orders_length = FireEquipmentOrder.all.length
+        takeaway_true_num = FireEquipmentOrder.where(is_takeaway: true).length
+        takeaway_false_num = FireEquipmentOrder.where(is_takeaway: false).length
         group_data = {
             all_user_num: all_user_num,
             manager_num: manager_num,
@@ -44,6 +47,9 @@ class Api::V1::DashboardApiController < ApplicationController
             progress_assign_item_1: progress_assign_item_1,
             progress_assign_item_2: progress_assign_item_2,
             progress_assign_item_3: progress_assign_item_3,
+            fire_equipment_orders_length: fire_equipment_orders_length,
+            takeaway_true_num: takeaway_true_num,
+            takeaway_false_num: takeaway_false_num,
         }
 
         render json: group_data
