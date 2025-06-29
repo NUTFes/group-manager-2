@@ -169,6 +169,11 @@ export default {
           title: "調理工程申請",
           icon: "restaurant",
           click: "/cooking_process_order",
+        },
+        {
+          title: "火気使用申請",
+          icon: "local_fire_department",
+          click: "/fire_equipment_orders",
         }
       ],
       // 操作系
