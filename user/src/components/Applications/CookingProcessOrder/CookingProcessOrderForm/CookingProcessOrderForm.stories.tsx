@@ -1,10 +1,9 @@
 import '@globals';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryContext, StoryFn, StoryObj } from '@storybook/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import CookingProcessOrderForm from './CookingProcessOrderForm';
 
-// FormProviderでラップするためのデコレーター
-const FormProviderDecorator = (Story: any, context: any) => {
+const FormProviderDecorator = (Story: StoryFn, context: StoryContext) => {
   const methods = useForm({
     defaultValues: {
       cookingProcessOrders: [
