@@ -124,13 +124,13 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
           );
         })}
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-4 flex w-full items-center justify-center gap-4">
           <Button
-            type="button"
             size="pc"
             color="main"
+            type="button"
+            icon="pencil"
             onClick={toEdit}
-            icon="edit"
           >
             修正
           </Button>
