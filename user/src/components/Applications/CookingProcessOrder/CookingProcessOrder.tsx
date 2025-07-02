@@ -117,12 +117,13 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
               </>
             )}
             {!isEditing && isExist && !isDeadline && (
-              <div className="flex justify-center">
+              <div className="mt-4 flex w-full items-center justify-center gap-4">
                 <Button
-                  type="button"
-                  onClick={handleEditClick}
                   size="pc"
                   color="main"
+                  type="button"
+                  icon="pencil"
+                  onClick={handleEditClick}
                 >
                   修正
                 </Button>
