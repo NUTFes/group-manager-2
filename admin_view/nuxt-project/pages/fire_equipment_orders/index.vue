@@ -24,9 +24,7 @@
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
-          <th v-for="(header, index) in headers" v-bind:key="index">
-            {{ header }}
-          </th>
+          <th v-for="header in headers" :key="header">{{ header }}</th>
         </template>
         <template v-slot:table-body>
           <tr
@@ -40,7 +38,7 @@
             :key="order.id"
           >
             <td>{{ order.id }}</td>
-            <td>{{ getGroupName(order.group_id) }}</td>
+            <td>{{ order.group.name }}</td>
             <td>{{ order.name }}</td>
             <td>{{ order.quantity }}</td>
             <td>{{ getFuelName(order.fuel) }}</td>
@@ -85,7 +83,8 @@
         <div>
           <h3>燃料</h3>
           <select v-model="fuel">
-            <option value="gas_bomve">ガスボンベ</option>
+            <option value="">選択してください</option>
+            <option value="gas_bottle">ガスボンベ</option>
             <option value="lp_gas">LPガス</option>
             <option value="charcoal">炭</option>
           </select>
@@ -141,7 +140,7 @@ export default {
       groupId: null,
       name: "",
       quantity: 1,
-      fuel: "gas_bomve",
+      fuel: "",
       usage: "",
       isTakeaway: false,
       remark: "",
@@ -217,10 +216,7 @@ export default {
       const groupsRes = await this.$axios.$get(groupsUrl);
       this.groups = groupsRes.data;
     },
-    getGroupName(groupId) {
-      const group = this.groups.find((g) => g.id === groupId);
-      return group ? group.name : "";
-    },
+
     getFuelName(fuel) {
       const fuelMap = {
         gas_bomve: "ガスボンベ",
@@ -246,6 +242,14 @@ export default {
       await this.refinement(this.refYearID);
       this.closeAddModal();
       this.openSnackBar("申請を追加しました");
+      // フォームの内容をリセット
+      this.groupId = null;
+      this.name = "";
+      this.quantity = 1;
+      this.fuel = "";
+      this.usage = "";
+      this.isTakeaway = false;
+      this.remark = "";
     },
     async downloadCSV() {
       const url =
@@ -257,7 +261,9 @@ export default {
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = `火気使用申請一覧_${this.refYears}.csv`;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       window.URL.revokeObjectURL(link.href);
       this.openSnackBar("火気使用申請のCSVをダウンロードしました");
     },

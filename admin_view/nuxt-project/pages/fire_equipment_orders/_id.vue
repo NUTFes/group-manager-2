@@ -23,7 +23,7 @@
           </tr>
           <tr>
             <th>団体</th>
-            <td>{{ group.name }}</td>
+            <td>{{ fireEquipmentOrder.group.name }}</td>
           </tr>
           <tr>
             <th>品目</th>
@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>燃料</th>
-            <td>{{ fireEquipmentOrder.fuel }}</td>
+            <td>{{ getFuelName(fireEquipmentOrder.fuel) }}</td>
           </tr>
           <tr>
             <th>使用方法</th>
@@ -77,7 +77,12 @@
         </div>
         <div>
           <h3>燃料</h3>
-          <input v-model="fuel" placeholder="入力してください" />
+          <select v-model="fuel">
+            <option value="">選択してください</option>
+            <option value="gas_bottle">ガスボンベ</option>
+            <option value="lp_gas">LPガス</option>
+            <option value="charcoal">炭</option>
+          </select>
         </div>
         <div>
           <h3>使用方法</h3>
@@ -138,11 +143,8 @@ export default {
     const routeId = route.path.replace("/fire_equipment_orders/", "");
     const url = "/fire_equipment_orders/" + routeId;
     const response = await $axios.$get(url);
-    const groupUrl = "/api/v1/get_group_show_for_admin_view/" + response.data.group_id;
-    const groupRes = await $axios.$get(groupUrl);
     return {
       fireEquipmentOrder: response.data,
-      group: groupRes.data,
       routeId: routeId,
     };
   },
@@ -205,6 +207,14 @@ export default {
       const url = "/fire_equipment_orders/" + this.routeId;
       await this.$axios.$delete(url);
       this.$router.push("/fire_equipment_orders");
+    },
+    getFuelName(fuel) {
+      const fuelMap = {
+        gas_bottle: "ガスボンベ",
+        lp_gas: "LPガス",
+        charcoal: "炭",
+      };
+      return fuelMap[fuel] || fuel;
     },
   },
 };
