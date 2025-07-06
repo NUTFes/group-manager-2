@@ -67,7 +67,9 @@
                   未登録
                 </div>
                 <div v-else>
-                  {{ cooking_process_order.cooking_process_order.tent }}
+                  <div style="white-space: pre-line">
+                    {{ cooking_process_order.cooking_process_order.tent }}
+                  </div>
                 </div>
               </td>
             </tr>
@@ -129,7 +131,7 @@
         </div>
         <div>
           <h3>テント内での作業内容</h3>
-          <input v-model="tent" placeholder="入力してください" />
+          <textarea v-model="tent" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
         </div>
       </template>
       <template v-slot:method>
