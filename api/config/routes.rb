@@ -209,6 +209,7 @@ Rails.application.routes.draw do
       post "get_refinement_food_products" => "food_products_api#get_refinement_food_products"
       post "get_search_food_products" => "food_products_api#get_search_food_products"
       get "get_food_products_by_group_id/:group_id" => "food_products_api#get_food_products_by_group_id"
+      get "get_food_products_have_no_cooking_process_order" => "food_products_api#get_food_products_have_no_cooking_process_order"
 
       #---購入品申請ページ
       get "get_purchase_list_index_for_admin_view" => "purchase_lists_api#get_purchase_list_index_for_admin_view"
@@ -240,6 +241,7 @@ Rails.application.routes.draw do
       get "get_cooking_process_order_for_admin_view/:id" => "cooking_process_orders_api#get_cooking_process_order_for_admin_view"
       post "get_refinement_cooking_process_orders" => "cooking_process_orders_api#get_refinement_cooking_process_orders"
       post "get_search_cooking_process_orders" => "cooking_process_orders_api#get_search_cooking_process_orders"
+      get "get_cooking_process_order_by_food_product_id/:food_product_id" => "cooking_process_orders_api#get_cooking_process_order_by_food_product_id"
       get "get_groups_have_no_cooking_process_order" => "groups_api#get_groups_have_no_cooking_process_order"
 
       #---実行委員担当者申請ページ

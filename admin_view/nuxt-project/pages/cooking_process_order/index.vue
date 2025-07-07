@@ -49,20 +49,20 @@
         </template>
         <template v-slot:table-body>
           <tr
-            v-for="(cooking_process_order, index) in cooking_process_orders"
-            :key="index"
+            v-for="food_product in food_products"
+            :key="food_product.id"
             @click="
               () =>
                 $router.push({
-                  path:
-                    `/cooking_process_order/` + cooking_process_order.group.id,
+                  path: `/cooking_process_order/${food_product.id}`,
                 })
             "
           >
-            <td>{{ cooking_process_order.group.id }}</td>
-            <td>{{ cooking_process_order.group.name }}</td>
+            <td>{{ food_product.id }}</td>
+            <td>{{ food_product.group.name }}</td>
+            <td>{{ food_product.name }}</td>
             <td>
-              <div v-if="cooking_process_order.cooking_process_order">
+              <div v-if="food_product.cooking_process_order">
                 登録済み
               </div>
               <div v-else>未登録</div>
@@ -79,10 +79,10 @@
     >
       <template v-slot:form>
         <div>
-          <h3>参加団体</h3>
-          <select v-model="group_id">
-            <option v-for="group in groups" :key="group.id" :value="group.id">
-              {{ group.name }}
+          <h3>販売品</h3>
+          <select v-model="food_product_id">
+            <option v-for="food_product in food_products_have_no_cooking_process_order" :key="food_product.id" :value="food_product.id">
+              {{ food_product.group.name }} - {{ food_product.name }}
             </option>
           </select>
         </div>
@@ -156,12 +156,12 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "申請状況"],
+      headers: ["ID", "参加団体", "販売品名", "申請状況"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
-      group_id: "",
-      cooking_process_orders: [],
-      groups: [],
+      food_product_id: null,
+      food_products: [],
+      food_products_have_no_cooking_process_order: [],
       dialog: false,
       snackMessage: "",
       refYears: "Years",
@@ -186,7 +186,7 @@ export default {
     });
 
     return {
-      cooking_process_orders: cooking_process_ordersRes.data,
+      food_products: cooking_process_ordersRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
       refYears: currentYears[0].year_num,
@@ -205,9 +205,9 @@ export default {
   methods: {
 
     async openAddModal() {
-      const groupUrl = "/api/v1/get_groups_have_no_cooking_process_order";
-      const groupRes = await this.$axios.$get(groupUrl);
-      this.groups = groupRes.data;
+      const url = "/api/v1/get_food_products_have_no_cooking_process_order";
+      const res = await this.$axios.$get(url);
+      this.food_products_have_no_cooking_process_order = res.data;
       this.isOpenAddModal = true;
     },
     closeAddModal() {
@@ -226,33 +226,33 @@ export default {
         "/api/v1/get_refinement_cooking_process_orders?fes_year_id=" +
         this.refYearID;
       this.$axios.post(url).then((res) => {
-        this.cooking_process_orders = res.data.data;
+        this.food_products = res.data.data;
       });
     },
     async submit() {
       // フォーム入力のバリデーション
       if (
-        !this.group_id ||
-        !this.pre_open_kitchen ||
-        !this.during_open_kitchen ||
+        !this.food_product_id ||
+        this.pre_open_kitchen === null ||
+        this.during_open_kitchen === null ||
         !this.tent
       ) {
-        this.openSnackBar("参加団体と全ての調理工程申請を入力してください");
+        this.openSnackBar("販売品と全ての調理工程申請を入力してください");
         return;
       }
       const cookingProcessOrderData = {
+        food_product_id: this.food_product_id,
         pre_open_kitchen: this.pre_open_kitchen,
         during_open_kitchen: this.during_open_kitchen,
         tent: this.tent,
       };
 
-      // POSTリクエストのURL
-      const postCookingProcessOrderUrl = `/cooking_process_orders?group_id=${this.group_id}`;
+      const url = `/cooking_process_orders`;
 
       try {
         const response = await this.$axios.$post(
-          postCookingProcessOrderUrl,
-          cookingProcessOrderData
+          url,
+          { cooking_process_order: cookingProcessOrderData }
         );
         this.openSnackBar("調理工程申請を登録しました");
         this.clearForm();
@@ -265,9 +265,9 @@ export default {
       }
     },
     clearForm() {
-      this.group_id = null;
-      this.pre_open_kitchen = "";
-      this.during_open_kitchen = "";
+      this.food_product_id = null;
+      this.pre_open_kitchen = null;
+      this.during_open_kitchen = null;
       this.tent = "";
     },
 
@@ -280,14 +280,12 @@ export default {
       } else {
         this.refYears = name_list[item_id - 1].year_num;
       }
-      this.cooking_process_orders = [];
+      this.food_products = [];
       const refUrl =
         "/api/v1/get_refinement_cooking_process_orders?fes_year_id=" +
         this.refYearID;
       const refRes = await this.$axios.$post(refUrl);
-      for (const res of refRes.data) {
-        this.cooking_process_orders.push(res);
-      }
+      this.food_products = refRes.data;
       const storedSearchText = localStorage.getItem(
         this.$route.path + "SearchText"
       );
@@ -298,13 +296,11 @@ export default {
     },
     async searchCookingProcessOrders() {
       localStorage.setItem(this.$route.path + "SearchText", this.searchText);
-      this.cooking_process_orders = [];
+      this.food_products = [];
       const searchUrl =
         "/api/v1/get_search_cooking_process_orders?word=" + this.searchText;
       const refRes = await this.$axios.$post(searchUrl);
-      for (const res of refRes.data) {
-        this.cooking_process_orders.push(res);
-      }
+      this.food_products = refRes.data;
     },
     // TODO: get_cooking_process_orders_csvを年数指定できるように
     async downloadCSV() {

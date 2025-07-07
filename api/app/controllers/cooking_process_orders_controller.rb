@@ -25,7 +25,8 @@ class CookingProcessOrdersController < ApplicationController
   # POST /cooking_process_orders
   def create
     @cooking_process_order = CookingProcessOrder.new(cooking_process_order_params)
-    @cooking_process_order.group_id = params[:group_id]
+    food_product = FoodProduct.find(params[:cooking_process_order][:food_product_id])
+    @cooking_process_order.group_id = food_product.group_id
     if @cooking_process_order.save
       render json: fmt(created, @cooking_process_order)
     else
