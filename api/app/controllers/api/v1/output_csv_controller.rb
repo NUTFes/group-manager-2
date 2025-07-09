@@ -475,16 +475,17 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_cooking_process_orders_csv
-    @cooking_process_orders = CookingProcessOrder.all
+    @cooking_process_orders = CookingProcessOrder.includes(:group, :food_product).all
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 営業前:調理場 営業中:調理場 テント内)
+      column_name = %w(参加団体名 販売品名 営業前:調理場 営業中:調理場 テント内)
       csv << column_name
       @cooking_process_orders.each do |cooking_process_order|
         column_values = [
           cooking_process_order.group.name,
-          cooking_process_order.pre_open_kitchen ? "申請する" : "申請しない",  
-          cooking_process_order.during_open_kitchen ? "申請する" : "申請しない",  
+          cooking_process_order.food_product.name,
+          cooking_process_order.pre_open_kitchen ? "申請する" : "申請しない",
+          cooking_process_order.during_open_kitchen ? "申請する" : "申請しない",
           cooking_process_order.tent
         ]
         csv << column_values
