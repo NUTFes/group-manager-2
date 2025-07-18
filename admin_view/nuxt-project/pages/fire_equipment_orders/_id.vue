@@ -38,7 +38,7 @@
             <td>{{ getFuelName(fireEquipmentOrder.fuel) }}</td>
           </tr>
           <tr>
-            <th>使用方法</th>
+            <th>使用用途</th>
             <td>{{ fireEquipmentOrder.usage }}</td>
           </tr>
           <tr>
@@ -85,7 +85,7 @@
           </select>
         </div>
         <div>
-          <h3>使用方法</h3>
+          <h3>使用用途</h3>
           <input v-model="usage" placeholder="入力してください" />
         </div>
         <div>

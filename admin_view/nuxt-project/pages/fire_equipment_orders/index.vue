@@ -90,7 +90,7 @@
           </select>
         </div>
         <div>
-          <h3>使用場所</h3>
+          <h3>使用用途</h3>
           <input v-model="usage" placeholder="入力してください" />
         </div>
         <div>
@@ -128,7 +128,7 @@ export default {
         "品目",
         "数量",
         "燃料",
-        "使用場所",
+        "使用用途",
         "持ち帰り",
         "備考",
       ],
