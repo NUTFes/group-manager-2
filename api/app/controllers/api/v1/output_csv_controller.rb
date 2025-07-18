@@ -503,7 +503,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(参加団体名 PR文 PR画像)
+      column_name = %w(参加団体名 PR文 URL アナウンス有無)
       csv << column_name
       @public_relations.each do |public_relation|
         if public_relation.nil?
@@ -511,8 +511,9 @@ class Api::V1::OutputCsvController < ApplicationController
         end
         column_values = [
           public_relation.group.name,
-          public_relation.pr_comment,
-          public_relation.pr_image,
+          public_relation.blurb,
+          public_relation.picture_path,
+          public_relation.is_announcement_requested ? "有" : "無",
         ]
         csv << column_values
       end
@@ -531,7 +532,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(ID 団体名 火気の名称 火気の台数 燃料 使用用途 持ち帰り 備考)
+      column_name = %w(ID 団体名 火気の名称 火気の台数 燃料 使用用途 備考)
       csv << column_name
       @fire_equipment_orders.each do |order|
         next if order.nil?
@@ -550,7 +551,6 @@ class Api::V1::OutputCsvController < ApplicationController
           order.quantity,
           fuel_jp,
           order.usage,
-          order.is_takeaway ? 'はい' : 'いいえ',
           order.remark,
         ]
         csv << column_values
