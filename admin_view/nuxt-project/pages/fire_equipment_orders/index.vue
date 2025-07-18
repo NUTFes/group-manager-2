@@ -69,11 +69,11 @@
           </select>
         </div>
         <div>
-          <h3>品目</h3>
+          <h3>火気の名称</h3>
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>数量</h3>
+          <h3>火気の台数</h3>
           <input
             v-model="quantity"
             type="number"
@@ -125,8 +125,8 @@ export default {
       headers: [
         "ID",
         "団体名",
-        "品目",
-        "数量",
+        "火気の名称",
+        "火気の台数",
         "燃料",
         "使用用途",
         "持ち帰り",

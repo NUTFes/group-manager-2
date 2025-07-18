@@ -26,11 +26,11 @@
             <td>{{ fireEquipmentOrder.group.name }}</td>
           </tr>
           <tr>
-            <th>品目</th>
+            <th>火気の名称</th>
             <td>{{ fireEquipmentOrder.name }}</td>
           </tr>
           <tr>
-            <th>数量</th>
+            <th>火気の台数</th>
             <td>{{ fireEquipmentOrder.quantity }}</td>
           </tr>
           <tr>
@@ -68,11 +68,11 @@
     >
       <template v-slot:form>
         <div>
-          <h3>品目</h3>
+          <h3>火気の名称</h3>
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>数量</h3>
+          <h3>火気の台数</h3>
           <input v-model="quantity" type="number" placeholder="入力してください" />
         </div>
         <div>
