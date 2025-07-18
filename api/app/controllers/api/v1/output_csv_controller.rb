@@ -536,20 +536,13 @@ class Api::V1::OutputCsvController < ApplicationController
       csv << column_name
       @fire_equipment_orders.each do |order|
         next if order.nil?
-        # fuelを日本語に変換
-        fuel_jp = case order.fuel
-                  when "gas_bottle" then "ガスボンベ"
-                  when "lp_gas"     then "LPガス"
-                  when "charcoal"   then "炭"
-                  else order.fuel.to_s
-                  end
         group_name = order.group&.name || ""
         column_values = [
           order.id,
           group_name,
           order.name,
           order.quantity,
-          fuel_jp,
+          order.fuel_japanese,
           order.usage,
           order.remark,
         ]

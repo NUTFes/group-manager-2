@@ -41,7 +41,7 @@
             <td>{{ order.group.name }}</td>
             <td>{{ order.name }}</td>
             <td>{{ order.quantity }}</td>
-            <td>{{ getFuelName(order.fuel) }}</td>
+                            <td>{{ order.fuel_japanese }}</td>
             <td>{{ order.usage }}</td>
             <td>{{ order.is_takeaway ? "はい" : "いいえ" }}</td>
             <td>{{ order.remark }}</td>
@@ -217,14 +217,7 @@ export default {
       this.groups = groupsRes.data;
     },
 
-    getFuelName(fuel) {
-      const fuelMap = {
-        gas_bomve: "ガスボンベ",
-        lp_gas: "LPガス",
-        charcoal: "炭",
-      };
-      return fuelMap[fuel] || "";
-    },
+
     async submit() {
       const url = `/fire_equipment_orders`;
       const params = {

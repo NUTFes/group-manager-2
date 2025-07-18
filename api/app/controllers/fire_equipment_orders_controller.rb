@@ -10,12 +10,20 @@ class FireEquipmentOrdersController < ApplicationController
     else
       @fire_equipment_orders = FireEquipmentOrder.includes(:group).all
     end
-    render json: fmt(ok, @fire_equipment_orders.as_json(include: { group: { only: [:id, :name] } }))
+    orders_with_fuel_japanese = @fire_equipment_orders.map do |order|
+      order.as_json(include: { group: { only: [:id, :name] } }).merge(
+        fuel_japanese: order.fuel_japanese
+      )
+    end
+    render json: fmt(ok, orders_with_fuel_japanese)
   end
 
   # GET /fire_equipment_orders/:id
   def show
-    render json: fmt(ok, @fire_equipment_order.as_json(include: { group: { only: [:id, :name] } }))
+    order_with_fuel_japanese = @fire_equipment_order.as_json(include: { group: { only: [:id, :name] } }).merge(
+      fuel_japanese: @fire_equipment_order.fuel_japanese
+    )
+    render json: fmt(ok, order_with_fuel_japanese)
   end
 
   # POST /fire_equipment_orders

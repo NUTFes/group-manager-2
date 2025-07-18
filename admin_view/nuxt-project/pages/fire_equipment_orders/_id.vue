@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>燃料</th>
-            <td>{{ getFuelName(fireEquipmentOrder.fuel) }}</td>
+                          <td>{{ fireEquipmentOrder.fuel_japanese }}</td>
           </tr>
           <tr>
             <th>使用用途</th>
@@ -208,14 +208,7 @@ export default {
       await this.$axios.$delete(url);
       this.$router.push("/fire_equipment_orders");
     },
-    getFuelName(fuel) {
-      const fuelMap = {
-        gas_bottle: "ガスボンベ",
-        lp_gas: "LPガス",
-        charcoal: "炭",
-      };
-      return fuelMap[fuel] || fuel;
-    },
+
   },
 };
 </script>
