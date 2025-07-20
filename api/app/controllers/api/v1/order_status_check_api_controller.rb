@@ -27,7 +27,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
           "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
           "announcement": group.announcement.nil? ? nil : group.announcement.status,
           "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id,
-          "fire_equipment_order_status": group.fire_equipment_orders.count == 0 ? "未申請" : group.fire_equipment_orders[0].status
+          "fire_equipment_order": group.fire_equipment_orders.count == 0 ? nil : group.fire_equipment_orders[0].status
         }
       }
     end
