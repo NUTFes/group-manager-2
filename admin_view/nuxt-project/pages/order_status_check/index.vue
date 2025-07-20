@@ -97,9 +97,6 @@
               <div v-else-if="group.group_category !== 1">ー</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.fire_equipment_order_status && group.group_category === 1 }">
-              <div>{{ getFireStatusLabel(group.fire_equipment_order_status, group.group_category) }}</div>
-            </td>
             <td :class="{ unregistered: !group.food_product && (group.group_category === 1 || group.group_category === 2) }">
               <div v-if="group.food_product">◯</div>
               <div v-else-if="group.group_category !== 1 && group.group_category !== 2">ー</div>
@@ -122,6 +119,11 @@
             <td :class="{ unregistered: !group.venue_map && group.group_category === 1 }">
               <div v-if="group.venue_map">◯</div>
               <div v-else-if="group.group_category !== 1">ー</div>
+              <div v-else>✖️</div>
+            </td>
+            <td :class="{ unregistered: !group.fire_equipment_order_status && !isUnregistered(group.group.id, 'fire_equipment_order') && [1, 2, 4, 5].includes(group.group_category) }">
+              <div v-if="group.fire_equipment_order_status && [1, 2, 4, 5].includes(group.group_category)">◯</div>
+              <div v-else-if="isUnregistered(group.group.id, 'fire_equipment_order') || ![1, 2, 4, 5].includes(group.group_category)">ー</div>
               <div v-else>✖️</div>
             </td>
           </tr>
@@ -148,7 +150,6 @@ export default {
         "ステージ",
         "ステージオプション",
         "従業員",
-        "火気使用申請",
         "販売品",
         "購入品",
         "PR",
@@ -380,23 +381,7 @@ export default {
         item.group_id === groupId && item.order_type === orderType
       );
     },
-    getFireStatusLabel(status, groupCategory) {
-      if (!status && groupCategory === 1) return '未申請';
-      if (!status) return 'ー';
-      switch (status) {
-        case 'pending':
-        case '申請中':
-          return '申請中';
-        case 'approved':
-        case '承認済み':
-          return '承認済み';
-        case 'rejected':
-        case '却下':
-          return '却下';
-        default:
-          return status;
-      }
-    },
+
   },
 };
 </script>
