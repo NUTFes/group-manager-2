@@ -82,7 +82,6 @@ class GroupsController < ApplicationController
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-    @group.un_registered_groups.destroy_all
     @group.destroy
     render json: fmt(ok, [], "Deleted group id = "+params[:id])
 
