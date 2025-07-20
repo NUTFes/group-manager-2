@@ -39,17 +39,6 @@
         </Row>
       </Card>
     </Row>
-    <Row>
-      <Card width="300px" gap="10px">
-        <Row justify="start">
-          <h4>火気使用申請</h4>
-        </Row>
-        <hr />
-        <p>申請数：{{ dashboard_data.fire_equipment_orders_length }}</p>
-        <p>持ち帰り有：{{ dashboard_data.takeaway_true_num }}</p>
-        <p>持ち帰り無：{{ dashboard_data.takeaway_false_num }}</p>
-      </Card>
-    </Row>
   </div>
   <h1 v-else>閲覧権限がありません</h1>
 </template>
