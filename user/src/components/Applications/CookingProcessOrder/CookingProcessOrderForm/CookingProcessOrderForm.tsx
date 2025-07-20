@@ -52,7 +52,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           <div className="text-base text-font">{foodProductName}</div>
         </div>
         <div className="mb-[4px] flex items-center gap-6">
-          <p className="text-base text-font">調理場の仕様有無</p>
+          <p className="text-base text-font">調理場の使用有無</p>
           <p className="text-xs text-alert">※必須</p>
         </div>
         <Radio

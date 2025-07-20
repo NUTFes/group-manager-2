@@ -1,7 +1,8 @@
 <template>
   <div class="main-content">
     <SubHeader
-      v-bind:pageTitle="cooking_process_order.group.name"
+      v-if="cooking_process_order"
+      v-bind:pageTitle="`${cooking_process_order.group.name} - ${cooking_process_order.food_product.name}`"
       pageSubTitle="調理工程申請一覧"
     >
       <CommonButton
@@ -26,7 +27,11 @@
           <VerticalTable>
             <tr>
               <th colspan="2">ID</th>
-              <td>{{ cooking_process_order.group.id }}</td>
+              <td>{{ cooking_process_order.food_product.id }}</td>
+            </tr>
+            <tr>
+              <th colspan="2">販売品名</th>
+              <td>{{ cooking_process_order.food_product.name }}</td>
             </tr>
             <tr>
               <th colspan="2">参加団体</th>
@@ -62,7 +67,9 @@
                   未登録
                 </div>
                 <div v-else>
-                  {{ cooking_process_order.cooking_process_order.tent }}
+                  <div style="white-space: pre-line">
+                    {{ cooking_process_order.cooking_process_order.tent }}
+                  </div>
                 </div>
               </td>
             </tr>
@@ -124,7 +131,7 @@
         </div>
         <div>
           <h3>テント内での作業内容</h3>
-          <input v-model="tent" placeholder="入力してください" />
+          <textarea v-model="tent" placeholder="入力してください" rows="4" style="width: 100%"></textarea>
         </div>
       </template>
       <template v-slot:method>
@@ -157,13 +164,11 @@ export default {
   data() {
     return {
       cooking_process_order: {},
-      groups: [],
       isOpenEditModal: false,
       isOpenDeleteModal: false,
       isOpenSnackBar: false,
       snackMessage: null,
-      group_id: null,
-      routeId: null,
+      food_product_id: null,
       pre_open_kitchen: null,
       during_open_kitchen: null,
       tent: "",
@@ -175,18 +180,17 @@ export default {
     }),
   },
   async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/cooking_process_order", "");
-    const url = "/api/v1/get_cooking_process_order_for_admin_view/" + routeId;
+    const foodProductId = route.params.id;
+    const url = `/api/v1/get_cooking_process_order_by_food_product_id/${foodProductId}`;
     const res = await $axios.$get(url);
     return {
-      cooking_process_order: res.data[0],
-      route: url,
+      cooking_process_order: res.data,
     };
   },
   methods: {
     openEditModal() {
       if (this.cooking_process_order.cooking_process_order) {
-        this.group_id = this.cooking_process_order.group.id;
+        this.food_product_id = this.cooking_process_order.food_product.id;
         this.pre_open_kitchen =
           this.cooking_process_order.cooking_process_order.pre_open_kitchen;
         this.during_open_kitchen =
@@ -195,7 +199,7 @@ export default {
           this.cooking_process_order.cooking_process_order.tent;
         this.isOpenEditModal = true;
       } else {
-        this.group_id = this.cooking_process_order.group.id;
+        this.food_product_id = this.cooking_process_order.food_product.id;
         this.pre_open_kitchen = null;
         this.during_open_kitchen = null;
         this.tent = null;
@@ -221,9 +225,9 @@ export default {
       this.isOpenSnackBar = false;
     },
     async reload(id) {
-      const url = "/api/v1/get_cooking_process_order_for_admin_view/" + id;
+      const url = `/api/v1/get_cooking_process_order_by_food_product_id/${this.cooking_process_order.food_product.id}`;
       const res = await this.$axios.$get(url);
-      this.cooking_process_order = res.data[0];
+      this.cooking_process_order = res.data;
     },
     async edit() {
       if (
@@ -235,20 +239,21 @@ export default {
         return;
       }
       const cookingProcessOrderData = {
+        food_product_id: this.food_product_id,
         pre_open_kitchen: this.pre_open_kitchen,
         during_open_kitchen: this.during_open_kitchen,
         tent: this.tent,
       };
       if (this.cooking_process_order.cooking_process_order) {
         // 既存の調理工程を編集
-        const editUrl = `/cooking_process_orders/${this.cooking_process_order.cooking_process_order.id}?group_id=${this.group_id}`;
+        const editUrl = `/cooking_process_orders/${this.cooking_process_order.cooking_process_order.id}`;
         try {
           const response = await this.$axios.$put(
             editUrl,
-            cookingProcessOrderData
+            { cooking_process_order: cookingProcessOrderData }
           );
           this.openSnackBar("調理工程を編集しました");
-          this.reload(response.data.group_id);
+          this.reload();
           this.closeEditModal();
         } catch (error) {
           this.openSnackBar(
@@ -257,14 +262,14 @@ export default {
         }
       } else {
         // 新しい調理工程を登録
-        const postUrl = `/cooking_process_orders?group_id=${this.group_id}`;
+        const postUrl = `/cooking_process_orders`;
         try {
           const response = await this.$axios.$post(
             postUrl,
-            cookingProcessOrderData
+            { cooking_process_order: cookingProcessOrderData }
           );
           this.openSnackBar("調理工程を登録しました");
-          this.reload(response.data.group_id);
+          this.reload();
           this.closeEditModal();
         } catch (error) {
           this.openSnackBar(

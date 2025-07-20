@@ -93,4 +93,10 @@ class Api::V1::FoodProductsApiController < ApplicationController
     end
   end
 
+  def get_food_products_have_no_cooking_process_order
+    @food_products = FoodProduct.left_joins(:cooking_process_order)
+                                .where(cooking_process_orders: { id: nil })
+                                .where(is_cooking: true)
+    render json: fmt(ok, @food_products.as_json(include: :group))
+  end
 end
