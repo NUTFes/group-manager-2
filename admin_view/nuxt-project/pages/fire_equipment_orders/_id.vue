@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>燃料</th>
-                          <td>{{ fireEquipmentOrder.fuel_japanese }}</td>
+            <td>{{ fireEquipmentOrder.fuel_japanese }}</td>
           </tr>
           <tr>
             <th>使用用途</th>

@@ -41,7 +41,7 @@
             <td>{{ order.group.name }}</td>
             <td>{{ order.name }}</td>
             <td>{{ order.quantity }}</td>
-                            <td>{{ order.fuel_japanese }}</td>
+            <td>{{ order.fuel_japanese }}</td>
             <td>{{ order.usage }}</td>
             <td>{{ order.is_takeaway ? "はい" : "いいえ" }}</td>
             <td>{{ order.remark }}</td>
