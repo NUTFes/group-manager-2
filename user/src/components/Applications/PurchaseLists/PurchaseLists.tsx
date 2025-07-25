@@ -177,14 +177,13 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         );
       })}
       {!isDeadline && (
-        <div className="mt-4 flex justify-center space-x-4">
+        <div className="mt-4 flex w-full items-center justify-center gap-4">
           <Button
-            type="button"
             size="pc"
             color="main"
-            variant
-            onClick={toggleEdit}
+            type="button"
             icon="pencil"
+            onClick={toggleEdit}
           >
             修正
           </Button>
