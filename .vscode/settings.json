@@ -6,9 +6,9 @@
   // Prettierをデフォルトのフォーマッタに設定
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   // eslintのpathを指定
-  "eslint.workingDirectories": ["./user"],
-    // Prettierの設定ファイルを指定
-  "prettier.configPath": "./user/.prettierrc.json",
+  "eslint.workingDirectories": ["./admin"],
+  // Prettierの設定ファイルを指定
+  "prettier.configPath": "./admin/.prettierrc.json",
 
   // 自動保存時に実行するアクションを設定
   "editor.codeActionsOnSave": {
