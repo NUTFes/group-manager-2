@@ -45,17 +45,17 @@ class PlaceOrdersController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_place_order_by_group_id
-      if PlaceOrder.exists?(group_id: params[:group_id])
-        @place_order = PlaceOrder.find_by(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found place_order = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_place_order_by_group_id
+    if PlaceOrder.exists?(group_id: params[:group_id])
+      @place_order = PlaceOrder.find_by(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found place_order = #{params[:group_id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def place_order_params
-      params.permit(:group_id, :first, :second, :third, :remark)
-    end
+  # Only allow a list of trusted parameters through.
+  def place_order_params
+    params.permit(:group_id, :first, :second, :third, :remark)
+  end
 end

@@ -48,17 +48,17 @@ class SubRepsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_sub_reps_by_group_id
-      if SubRep.exists?(group_id: params[:group_id])
-        @sub_rep = SubRep.find_by(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found sub_rep = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_sub_reps_by_group_id
+    if SubRep.exists?(group_id: params[:group_id])
+      @sub_rep = SubRep.find_by(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found sub_rep = #{params[:group_id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def sub_rep_params
-      params.permit(:group_id, :name, :department_id, :grade_id, :tel, :email, :student_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def sub_rep_params
+    params.permit(:group_id, :name, :department_id, :grade_id, :tel, :email, :student_id)
+  end
 end

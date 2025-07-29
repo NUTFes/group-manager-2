@@ -29,11 +29,12 @@ class CookingProcessOrder < ApplicationRecord
   def self.with_group_by_food_product_id(food_product_id)
     food_product = FoodProduct.find_by(id: food_product_id)
     return nil unless food_product
+
     cooking_process_order = food_product.cooking_process_order
     {
-      "cooking_process_order": cooking_process_order,
-      "group": food_product.group,
-      "food_product": food_product
+      cooking_process_order: cooking_process_order,
+      group: food_product.group,
+      food_product: food_product
     }
   end
 

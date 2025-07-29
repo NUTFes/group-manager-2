@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class FoodProduct < ApplicationRecord
-    belongs_to :group
-    has_many :purchase_lists, dependent: :destroy
-    has_one :cooking_process_order, dependent: :destroy
+  belongs_to :group
+  has_many :purchase_lists, dependent: :destroy
+  has_one :cooking_process_order, dependent: :destroy
 
   def self.with_groups
     @record = FoodProduct.preload(:group)

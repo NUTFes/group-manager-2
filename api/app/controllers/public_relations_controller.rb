@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PublicRelationsController < ApplicationController
-  before_action :set_public_relation, only: %i[ show update destroy ]
+  before_action :set_public_relation, only: %i[show update destroy]
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
 
   def index
@@ -35,17 +35,17 @@ class PublicRelationsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_public_relation_by_group_id
-      if PublicRelation.exists?(group_id: params[:group_id])
-        @public_relation = PublicRelation.find_by(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found public_relation with group_id = " + params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_public_relation_by_group_id
+    if PublicRelation.exists?(group_id: params[:group_id])
+      @public_relation = PublicRelation.find_by(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found public_relation with group_id = #{params[:group_id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def public_relation_params
-      params.permit(:group_id, :picture_name, :picture_path, :blurb, :is_announcement_requested)
-    end
+  # Only allow a list of trusted parameters through.
+  def public_relation_params
+    params.permit(:group_id, :picture_name, :picture_path, :blurb, :is_announcement_requested)
+  end
 end

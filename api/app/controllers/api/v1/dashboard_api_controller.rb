@@ -6,9 +6,9 @@ module Api
       def get_dashboard_info
         # ユーザー数
         all_user_num = User.all.length
-        manager_num = User.where(role_id:1).length
-        staff_num = User.where(role_id:2).length
-        user_num = User.where(role_id:3).length
+        manager_num = User.where(role_id: 1).length
+        staff_num = User.where(role_id: 2).length
+        user_num = User.where(role_id: 3).length
         groups = Group.all
         groups_length = groups.length
         cate_1_length = groups.where(group_category: 1).length

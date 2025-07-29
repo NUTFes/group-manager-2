@@ -341,7 +341,7 @@ class Group < ApplicationRecord
 
   def is_food_sales
     # 食品販売グループかどうかを判定するメソッド
-    return self.group_category_id == 1
+    return group_category_id == 1
   end
 
   # 指定したIDのgroupとそのgroup_categoryとfes_yearを取得する

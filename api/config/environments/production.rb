@@ -88,7 +88,7 @@ Rails.application.configure do
     # "localhost",
     # "localhost:3000",
     # "api:3000",
-    "group-manager-api.nutfes.net"
+    'group-manager-api.nutfes.net'
   ]
 
   # Inserts middleware to perform automatic connection switching.

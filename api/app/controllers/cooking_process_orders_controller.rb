@@ -20,7 +20,7 @@ class CookingProcessOrdersController < ApplicationController
     if @cooking_process_orders.present?
       render json: fmt(ok, @cooking_process_orders)
     else
-      render json: fmt(not_found, [], "Not found cooking_process_orders for group_id = "+params[:group_id])
+      render json: fmt(not_found, [], "Not found cooking_process_orders for group_id = #{params[:group_id]}")
     end
   end
 
@@ -49,10 +49,10 @@ class CookingProcessOrdersController < ApplicationController
 
     upserts = params[:cooking_process_orders].map do |order|
       attrs = ActionController::Parameters
-        .new(order.to_unsafe_h)
-        .permit(*keys)
-        .to_h
-        .symbolize_keys
+              .new(order.to_unsafe_h)
+              .permit(*keys)
+              .to_h
+              .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
       attrs[:created_at] ||= now
       attrs[:updated_at] = now

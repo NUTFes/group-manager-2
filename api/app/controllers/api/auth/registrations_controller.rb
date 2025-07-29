@@ -72,11 +72,11 @@ module Api
         # role_idが4の場合、user_detailsの必須キーをチェック
         if role == 4
           missing = %i[student_id department_id grade_id tel].map(&:to_s) - details.keys.map(&:to_s)
-          return missing.empty? ? true : missing
+          return missing.empty? || missing
         elsif details.present?
           # role_idが4以外でuser_detailsが存在する場合、必須キーをチェック
           missing = %i[student_id department_id grade_id tel].map(&:to_s) - details.keys.map(&:to_s)
-          return missing.empty? ? true : missing
+          return missing.empty? || missing
         end
 
         # user_detailsが不要な場合はtrueを返す
@@ -89,9 +89,7 @@ module Api
         # user_detailsのチェックを実行
         check_req = check_user_details
         # 必須パラメータが不足している場合、エラーレスポンスを返す
-        if check_req.is_a?(Array)
-          return render json: { errors: { user_details: check_req.map { |k| "user_details.#{k} が存在しません" } } }, status: :unprocessable_entity
-        end
+        return render json: { errors: { user_details: check_req.map { |k| "user_details.#{k} が存在しません" } } }, status: :unprocessable_entity if check_req.is_a?(Array)
 
         # トランザクションの開始
         ActiveRecord::Base.transaction do

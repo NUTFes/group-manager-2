@@ -45,18 +45,18 @@ class StageOrdersController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stage_order_by_group_id
-      if StageOrder.exists?(group_id: params[:group_id])
-        @stage_order = StageOrder.find_by(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found stage_order = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stage_order_by_group_id
+    if StageOrder.exists?(group_id: params[:group_id])
+      @stage_order = StageOrder.find_by(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found stage_order = #{params[:group_id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def stage_order_params
-      params.permit(:group_id, :is_sunny, :fes_date_id, :stage_first, :stage_second, :use_time_interval,
-                    :prepare_time_interval, :cleanup_time_interval, :prepare_start_time, :performance_start_time, :performance_end_time, :cleanup_end_time)
-    end
+  # Only allow a list of trusted parameters through.
+  def stage_order_params
+    params.permit(:group_id, :is_sunny, :fes_date_id, :stage_first, :stage_second, :use_time_interval,
+                  :prepare_time_interval, :cleanup_time_interval, :prepare_start_time, :performance_start_time, :performance_end_time, :cleanup_end_time)
+  end
 end

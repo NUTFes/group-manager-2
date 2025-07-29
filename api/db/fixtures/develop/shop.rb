@@ -120,5 +120,4 @@ Shop.seed(:id,
           { id: 30, name: 'その他(詳細を備考欄に記入必須)',
             tel: '',
             opening_hours: '',
-            address: '' },
-)
+            address: '' })

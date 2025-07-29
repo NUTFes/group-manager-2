@@ -43,7 +43,7 @@ class FireEquipmentOrdersController < ApplicationController
     if @fire_equipment_order
       render json: fmt(ok, @fire_equipment_order)
     else
-      render json: fmt(not_found, [], "Not found fire_equipment_order = "+params[:group_id])
+      render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:group_id]}")
     end
   end
 
@@ -53,7 +53,7 @@ class FireEquipmentOrdersController < ApplicationController
     if FireEquipmentOrder.exists?(params[:id])
       @fire_equipment_order = FireEquipmentOrder.find(params[:id])
     else
-      render json: fmt(not_found, [], "Not found fire_equipment_order = "+params[:id])
+      render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:id]}")
     end
   end
 
@@ -61,7 +61,7 @@ class FireEquipmentOrdersController < ApplicationController
     if FireEquipmentOrder.exists?(group_id: params[:group_id])
       @fire_equipment_order = FireEquipmentOrder.find_by(group_id: params[:group_id])
     else
-      render json: fmt(not_found, [], "Not found fire_equipment_order = "+params[:group_id])
+      render json: fmt(not_found, [], "Not found fire_equipment_order = #{params[:group_id]}")
     end
   end
 
