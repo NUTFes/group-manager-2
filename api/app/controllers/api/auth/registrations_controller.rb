@@ -13,7 +13,7 @@ module Api
       # これらのキーはparamsの中にネストされている必要がある
       # 例: { registration: { name: "ユーザー名", email: "メールアドレス", password: "パスワード" }, user_details: { student_id: "学籍番号", department_id: "学部ID", grade_id: "学年ID", tel: "電話番号" } }
       # これにより、Strong Parametersを使用して、許可されたパラメータのみを受け取ることができる
-  
+
       def sign_up_params
         # 許可するパラメータを定義
         allowed_attrs = %i[name email password password_confirmation role_id confirm_success_url]
@@ -111,7 +111,6 @@ module Api
           end
         end
       end
-
     end
   end
 end

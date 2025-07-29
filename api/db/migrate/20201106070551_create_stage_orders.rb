@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateStageOrders < ActiveRecord::Migration[6.0]
   def change
     create_table :stage_orders do |t|

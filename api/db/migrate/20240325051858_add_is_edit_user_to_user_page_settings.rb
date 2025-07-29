@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIsEditUserToUserPageSettings < ActiveRecord::Migration[6.1]
   def change
     add_column :user_page_settings, :is_edit_user, :boolean

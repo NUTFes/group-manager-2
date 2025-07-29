@@ -1,2 +1,8 @@
-class Api::V1::PlaceAllowListsApiController < ApplicationController
+# frozen_string_literal: true
+
+module Api
+  module V1
+    class PlaceAllowListsApiController < ApplicationController
+    end
+  end
 end

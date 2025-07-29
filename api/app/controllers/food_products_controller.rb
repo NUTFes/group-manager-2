@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class FoodProductsController < ApplicationController
-  before_action :set_food_product, only: [:show, :destroy]
+  before_action :set_food_product, only: %i[show update destroy]
 
   # GET /food_products
   def index
@@ -100,4 +102,5 @@ class FoodProductsController < ApplicationController
     def food_product_params
       params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num, :is_alcohol)
     end
+  end
 end

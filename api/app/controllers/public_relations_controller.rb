@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublicRelationsController < ApplicationController
   before_action :set_public_relation, only: %i[ show update destroy ]
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]
@@ -18,12 +20,12 @@ class PublicRelationsController < ApplicationController
 
   def update
     @public_relation.update(public_relation_params)
-    render json: fmt(created, @public_relation, "Updated public_relation id = "+params[:id])
+    render json: fmt(created, @public_relation, "Updated public_relation id = #{params[:id]}")
   end
 
   def destroy
     @public_relation.destroy
-    render json: fmt(ok, [], "Deleted public_relation = "+params[:id])
+    render json: fmt(ok, [], "Deleted public_relation = #{params[:id]}")
   end
 
   # GET /public_relations/group_id/1
@@ -32,14 +34,6 @@ class PublicRelationsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_public_relation
-      if PublicRelation.exists?(params[:id])
-        @public_relation = PublicRelation.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found public_relation = "+params[:id])
-      end
-    end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_public_relation_by_group_id

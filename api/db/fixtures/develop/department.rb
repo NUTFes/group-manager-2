@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Department.seed( :id,
   { id: 1,  name: "機械工学分野/機械創造工学課程" },
   { id: 2,  name: "電気電子情報工学分野/電気電子情報工学課程" },

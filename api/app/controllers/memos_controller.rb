@@ -1,17 +1,18 @@
+# frozen_string_literal: true
+
 class MemosController < ApplicationController
-  before_action :set_memo, only: [:show, :update, :destroy]
+  before_action :set_memo, only: %i[show update destroy]
 
   # GET /memos
   # GET /memos.json
   def index
-    @memos = Memo.preload(:user).order(id: "DESC").limit(100)
-      .map{ 
-        |memo| 
-        {
-          "memo": memo,
-          "user": memo.user
-        }
+    @memos = Memo.preload(:user).order(id: 'DESC').limit(100)
+                 .map do |memo|
+      {
+        memo: memo,
+        user: memo.user
       }
+    end
     render json: fmt(ok, @memos)
   end
 
@@ -26,8 +27,8 @@ class MemosController < ApplicationController
   def create
     @new_memo = Memo.create(memo_params)
     @memo = {
-      "memo": @new_memo,
-      "user": @new_memo.user
+      memo: @new_memo,
+      user: @new_memo.user
     }
     render json: fmt(created, @memo)
     # render json: @memos
@@ -37,9 +38,9 @@ class MemosController < ApplicationController
   # PATCH/PUT /memos/1.json
   def update
     @memo.update(memo_params)
-    @memos = Memo.all.order(id: "DESC")
+    @memos = Memo.order(id: 'DESC')
     memo_list = []
-    for memo in @memos
+    @memos.each do |memo|
       user = memo.user.name
       memo_list << {
         memo: memo,
@@ -54,21 +55,22 @@ class MemosController < ApplicationController
   # DELETE /memos/1.json
   def destroy
     @memo.destroy
-    render json: fmt(ok, [], "Deleted memo = "+params[:id])
+    render json: fmt(ok, [], "Deleted memo = #{params[:id]}")
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_memo
-      if Memo.exists?(params[:id])
-        @memo = Memo.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found memo = "+params[:id])
-      end
-    end
 
-    # Only allow a list of trusted parameters through.
-    def memo_params
-      params.permit(:content, :user_id)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_memo
+    if Memo.exists?(params[:id])
+      @memo = Memo.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found memo = #{params[:id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def memo_params
+    params.permit(:content, :user_id)
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateRentalItemAllowLists < ActiveRecord::Migration[6.0]
   def change
     create_table :rental_item_allow_lists do |t|

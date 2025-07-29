@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateAssignRentalItems < ActiveRecord::Migration[6.0]
   def change
     create_table :assign_rental_items do |t|

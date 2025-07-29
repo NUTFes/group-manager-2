@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateStockerItems < ActiveRecord::Migration[6.0]
   def change
     create_table :stocker_items do |t|
