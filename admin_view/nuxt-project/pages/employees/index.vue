@@ -270,7 +270,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_employees_csv/" + this.refYearID;
-      await downloadFile(this.$axios,url, "従業員一覧_CSV", "text/csv");
+      const fname = `従業員一覧_${this.refYearID === 0 ? '全' : this.refYears}年度`;
+      await downloadFile(this.$axios, url, fname, "text/csv");
       this.openSnackBar("従業員一覧のCSVをダウンロードしました");
     },
   },
