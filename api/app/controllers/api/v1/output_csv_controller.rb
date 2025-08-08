@@ -296,10 +296,12 @@ class Api::V1::OutputCsvController < ApplicationController
 
   def output_employees_csv
     if params[:fes_year_id].to_i == 0
-      groups = Group.preload(:employees, :sub_rep, user: :user_detail)
+      # 食品団体（食販）のみ対象
+      groups = Group.where(group_category_id: 1).preload(:employees, :sub_rep, user: :user_detail)
       filename_year = "全"
     else
-      groups = Group.where(fes_year_id: params[:fes_year_id]).preload(:employees, :sub_rep, user: :user_detail)
+      # 開催年かつ食品団体（食販）のみ対象
+      groups = Group.where(fes_year_id: params[:fes_year_id], group_category_id: 1).preload(:employees, :sub_rep, user: :user_detail)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
