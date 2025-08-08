@@ -143,6 +143,25 @@ export default {
       roleID: (state) => state.users.role,
     }),
   },
+  async asyncData({ $axios }) {
+    const currentYearUrl = "/user_page_settings/1";
+    const currentYearRes = await $axios.$get(currentYearUrl);
+    const url =
+      "/api/v1/get_refinement_employees?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
+    const employeesRes = await $axios.$post(url);
+    const yearsUrl = "/fes_years";
+    const yearsRes = await $axios.$get(yearsUrl);
+    const currentYears = yearsRes.data.filter(function (element) {
+      return element.id == currentYearRes.data.fes_year_id;
+    });
+    return {
+      employees: employeesRes.data,
+      yearList: yearsRes.data,
+      refYearID: currentYearRes.data.fes_year_id,
+      refYears: currentYears[0].year_num,
+    };
+  },
   mounted() {
     window.addEventListener('scroll', this.saveScrollPosition);
 
