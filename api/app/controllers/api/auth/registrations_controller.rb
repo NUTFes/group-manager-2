@@ -66,21 +66,13 @@ module Api
 
       # user_detailsの必須チェックを行う関数
       def check_user_details
-        role = (params[:registration]&.dig(:role_id) || params[:role_id]).to_i
-        details = user_details_params
+        details  = user_details_params
+        required = %w[student_id department_id grade_id tel]
 
-        # role_idが4の場合、user_detailsの必須キーをチェック
-        if role == 4
-          missing = %i[student_id department_id grade_id tel].map(&:to_s) - details.keys.map(&:to_s)
-          return missing.empty? || missing
-        elsif details.present?
-          # role_idが4以外でuser_detailsが存在する場合、必須キーをチェック
-          missing = %i[student_id department_id grade_id tel].map(&:to_s) - details.keys.map(&:to_s)
-          return missing.empty? || missing
-        end
+        return true if details.blank?  # user_details 自体が来ていないならOK
 
-        # user_detailsが不要な場合はtrueを返す
-        true
+        missing = required - details.keys.map(&:to_s)
+        missing.empty? ? true : missing
       end
 
       public
