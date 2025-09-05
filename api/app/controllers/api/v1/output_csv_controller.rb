@@ -502,8 +502,8 @@ module Api
             column_values = [
               public_relations.group.name,
               public_relations.blurb,
-              public_relations.picture_path
-              public_relations.is_announcement_requested ? "有" : "無",
+              public_relations.picture_path,
+              public_relations.is_announcement_requested ? '有' : '無'
             ]
             csv << column_values
           end
