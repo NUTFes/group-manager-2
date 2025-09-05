@@ -296,32 +296,53 @@ class Api::V1::OutputCsvController < ApplicationController
 
   def output_employees_csv
     if params[:fes_year_id].to_i == 0
-      @employees = Group.preload(:employees).map{ |group| group.employees }
+      # 食品団体（食販）のみ対象
+      groups = Group.where(group_category_id: 1).preload(:employees, :sub_rep, user: :user_detail)
       filename_year = "全"
     else
-      @employees = Group.where(fes_year_id:params[:fes_year_id]).preload(:employees).map{ |group| group.employees }
+      # 開催年かつ食品団体（食販）のみ対象
+      groups = Group.where(fes_year_id: params[:fes_year_id], group_category_id: 1).preload(:employees, :sub_rep, user: :user_detail)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w(参加団体名 名前 学籍番号)
       csv << column_name
-      @employees.each do |group|
-        # データが存在しない場合はスキップする
-        if group.nil?
-          next
-        end
-        group.each do |employee|
-          # データが存在しない場合はスキップする
-          if employee.nil?
-            next
+      groups.each do |group|
+        next if group.nil?
+
+        # 1団体内で重複（代表・副代表・従業員の重複含む）を排除するためのキー集合
+        used = {}
+
+        # 代表
+        rep = group.user
+        rep_name = rep&.name
+        rep_student_id = rep&.user_detail&.student_id
+        if rep_name.present?
+          key = "#{rep_name}\t#{rep_student_id}"
+          unless used[key]
+            csv << [group.name, rep_name, rep_student_id]
+            used[key] = true
           end
-          column_values = [
-            employee.group.name,
-            employee.name,
-            employee.student_id
-          ]
-          csv << column_values
+        end
+
+        # 副代表（存在しない場合はスキップ）
+        sub_rep = group.sub_rep
+        if sub_rep
+          key = "#{sub_rep.name}\t#{sub_rep.student_id}"
+          unless used[key]
+            csv << [group.name, sub_rep.name, sub_rep.student_id]
+            used[key] = true
+          end
+        end
+
+        # 従業員
+        (group.employees || []).each do |employee|
+          next if employee.nil?
+          key = "#{employee.name}\t#{employee.student_id}"
+          next if used[key]
+          csv << [group.name, employee.name, employee.student_id]
+          used[key] = true
         end
       end
     end
@@ -413,13 +434,13 @@ class Api::V1::OutputCsvController < ApplicationController
       @groups = Group.where(fes_year_id: params[:fes_year_id]).preload(:user, :sub_rep, user: :user_detail) # 必要な関連を事前にロード
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-  
+
     @categories = []
     for i in 1..6 do
       group = @groups.where(group_category_id: i)
       @categories << group
     end
-  
+
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w(参加団体形式 団体番号 団体名 氏名 電話番号 メールアドレス 備考欄)
@@ -452,10 +473,10 @@ class Api::V1::OutputCsvController < ApplicationController
         end
       end
     end
-  
+
     send_data(csv_data, filename: "連絡先リスト_#{filename_year}年度.csv")
   end
-  
+
 
   def output_announcements_csv
     @announcements = Announcement.all
