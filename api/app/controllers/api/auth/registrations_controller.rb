@@ -72,7 +72,7 @@ module Api
         return true if details.blank?  # user_details 自体が来ていないならOK
 
         missing = required - details.keys.map(&:to_s)
-        missing.empty? ? true : missing
+        missing.empty? || missing
       end
 
       public

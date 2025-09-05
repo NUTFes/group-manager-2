@@ -37,9 +37,9 @@ class FoodProductsController < ApplicationController
     keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at, :is_alcohol]
     now = Time.current
 
-    upserts = params[:food_products].map do |foodProduct|
+    upserts = params[:food_products].map do |food_product_param|
       attrs = ActionController::Parameters
-              .new(foodProduct.to_unsafe_h)
+              .new(food_product_param.to_unsafe_h)
               .permit(*keys)
               .to_h
               .symbolize_keys
@@ -81,7 +81,9 @@ class FoodProductsController < ApplicationController
     if @food_product&.update(food_product_params)
       render json: fmt(ok, @food_product, "Updated food_product id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @food_product&.errors&.full_messages&.join(', ') || 'Not found'), status: :unprocessable_entity
+      error = @food_product&.errors
+      errors_text = error&.full_messages&.join(', ') || 'Not found'
+      render json: fmt(unprocessable_entity, [], errors_text), status: :unprocessable_entity
     end
   end
 

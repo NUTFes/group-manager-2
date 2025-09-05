@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_many :memos
 
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
-  @@no_sub_rep = {
+  NO_SUB_REP = {
     id: nil,
     name: nil,
     department_id: nil,
@@ -22,7 +22,7 @@ class User < ApplicationRecord
     created_at: nil,
     updated_at: nil,
     student_id: nil
-  }
+  }.freeze
 
   def self.with_sub_reps
     @record = Group.preload(:user, :sub_rep)
@@ -30,7 +30,7 @@ class User < ApplicationRecord
       {
         user: group.user,
         group: group,
-        sub_rep: group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
+        sub_rep: group.sub_rep.nil? ? NO_SUB_REP : group.sub_rep
       }
     end
   end
@@ -40,7 +40,7 @@ class User < ApplicationRecord
     {
       user: group.user,
       group: group,
-      sub_rep: group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
+      sub_rep: group.sub_rep.nil? ? NO_SUB_REP : group.sub_rep
     }
   end
 

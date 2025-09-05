@@ -46,8 +46,6 @@ class CheckAllRegisteredController < ApplicationController
     render json: fmt(:not_found, [], "Not found group_id = #{group_id}")
   end
 
-  private
-
   ORDER_TYPE_MAPPING = {
     sub_rep_application: 'sub_rep',
     rental_item_application: 'rental_item_order',
@@ -56,6 +54,7 @@ class CheckAllRegisteredController < ApplicationController
     employee_application: 'employee'
   }.with_indifferent_access.freeze
 
+  private
 
   def present_or_unregistered?(value_or_condition, unregistered_types, status_key)
     is_present = value_or_condition.respond_to?(:present?) ? value_or_condition.present? : !value_or_condition.nil?
