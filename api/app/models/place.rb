@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Place < ApplicationRecord
-  has_many :assign_group_places
-  has_many :place_allow_lists
-  has_many :place_numbers
+  has_many :assign_group_places, dependent: :destroy
+  has_many :place_allow_lists, dependent: :destroy
+  has_many :place_numbers, dependent: :destroy
 
   def to_name
     name
