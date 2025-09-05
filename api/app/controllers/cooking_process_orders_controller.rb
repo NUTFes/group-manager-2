@@ -62,7 +62,7 @@ class CookingProcessOrdersController < ApplicationController
     CookingProcessOrder.upsert_all(upserts)
 
     # 更新／挿入されたレコードを取得して返却
-    processed = upserts.map do |attrs|
+    processed_scopes = upserts.map do |attrs|
       if attrs[:id].present?
         CookingProcessOrder.where(id: attrs[:id])
       else
@@ -71,7 +71,9 @@ class CookingProcessOrdersController < ApplicationController
           food_product_id: attrs[:food_product_id]
         )
       end
-    end.reduce { |acc, scope| acc.or(scope) }
+    end
+
+    processed = processed_scopes.reduce { |acc, scope| acc.or(scope) }
 
     render json: fmt(ok, processed)
   rescue ActiveRecord::RecordInvalid => e

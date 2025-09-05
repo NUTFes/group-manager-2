@@ -69,7 +69,7 @@ class PurchaseListsController < ApplicationController
 
     PurchaseList.upsert_all(upsert)
     # 登録または更新されたレコードを抽出
-    processed = upsert.map do |attrs|
+    processed_scopes = upsert.map do |attrs|
       if attrs[:id].present?
         PurchaseList.where(id: attrs[:id])
       else
@@ -79,7 +79,9 @@ class PurchaseListsController < ApplicationController
           fes_date_id: attrs[:fes_date_id]
         )
       end
-    end.reduce { |acc, scope| acc.or(scope) }
+    end
+
+    processed = processed_scopes.reduce { |acc, scope| acc.or(scope) }
 
     render json: fmt(created, processed)
   rescue StandardError => e
