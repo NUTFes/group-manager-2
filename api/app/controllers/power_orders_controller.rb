@@ -45,17 +45,18 @@ class PowerOrdersController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_power_orders_by_group_id
-      if PowerOrder.exists?(group_id: params[:group_id])
-        @power_orders = PowerOrder.where(group_id: params[:group_id])
-      else
-        puts "PowerOrder.exists?(params[:group_id]) else"
-        render json: fmt(not_found, [], "Not found power_order = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_power_orders_by_group_id
+    if PowerOrder.exists?(group_id: params[:group_id])
+      @power_orders = PowerOrder.where(group_id: params[:group_id])
+    else
+      Rails.logger.debug 'PowerOrder.exists?(params[:group_id]) else'
+      render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def power_order_params
-      params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
+  # Only allow a list of trusted parameters through.
+  def power_order_params
+    params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
+  end
 end
