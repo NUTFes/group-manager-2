@@ -4,7 +4,7 @@ module Api
   module V1
     class RepresentativesApiController < ApplicationController
       # sub_repがない場合はnilが入ったsub_repみたいなのを返す
-      @@no_sub_rep = {
+      NO_SUB_REP = {
         id: nil,
         name: nil,
         department_id: nil,
@@ -14,14 +14,14 @@ module Api
         created_at: nil,
         updated_at: nil,
         student_id: nil
-      }
+      }.freeze
 
       def fit_representatives_index_for_admin_view(groups)
         groups.map do |group|
           {
             user: group.user,
             group: group,
-            sub_rep: group.sub_rep.nil? ? @@no_sub_rep : group.sub_rep
+            sub_rep: group.sub_rep.nil? ? NO_SUB_REP : group.sub_rep
           }
         end
       end
