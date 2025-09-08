@@ -56,12 +56,6 @@ Layout/LineLength:
     - 'spec/**/*'
     - 'config/**/*'
 
-Layout/ParameterAlignment:
-  Enabled: false
-
-Layout/EmptyLines:
-  Enabled: false
-
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: false
 
