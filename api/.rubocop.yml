@@ -59,9 +59,6 @@ Layout/LineLength:
 Layout/ParameterAlignment:
   Enabled: false
 
-Layout/EmptyLineBetweenDefs:
-  Enabled: false
-
 Layout/EmptyLines:
   Enabled: false
 

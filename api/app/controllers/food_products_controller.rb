@@ -87,7 +87,6 @@ class FoodProductsController < ApplicationController
     end
   end
 
-
   # DELETE /food_products/1
   def destroy
     @food_product.destroy
