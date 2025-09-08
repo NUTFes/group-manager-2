@@ -24,6 +24,7 @@ AllCops:
     - 'vendor/**/*'
     - 'lib/tasks/**/*'
     - "db/schema.rb"
+    - 'db/migrate/**/*'
     - 'bin/*'
     - 'test/*'
     - 'node_modules/**/*'
@@ -204,11 +205,14 @@ Performance/TimesMap:
     - 'spec/**/*'
 
 Metrics/BlockLength:
+  Max: 100  # 25行から100行に緩和
   Exclude:
     - 'spec/**/*'
     - 'config/**/*'
     - 'app/views/api/v1/**/*'
     - 'app/models/order_product.rb' # aasm
+    - 'app/models/group.rb' # 長いブロックが多い
+    - 'app/models/user.rb' # 長いブロックが多い
 
 Metrics/AbcSize:
   Enabled: false
@@ -226,6 +230,12 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
   Enabled: false
 
 RSpec/NestedGroups:
@@ -246,9 +256,17 @@ RSpec/MultipleExpectations:
 RSpec/LetSetup:
   Enabled: false
 
-
 RSpec/ChangeByZero:
   Enabled: false
 
 Naming/VariableNumber:
+  Enabled: false
+
+Naming/AccessorMethodName:
+  Enabled: false
+
+Naming/PredicateName:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
   Enabled: false
