@@ -87,6 +87,7 @@ class CookingProcessOrdersController < ApplicationController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions
   def set_cooking_process_order
     @cooking_process_order = CookingProcessOrder.find(params[:id])

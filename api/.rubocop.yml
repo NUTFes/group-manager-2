@@ -56,9 +56,6 @@ Layout/LineLength:
     - 'spec/**/*'
     - 'config/**/*'
 
-Layout/EmptyLinesAroundAccessModifier:
-  Enabled: false
-
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
