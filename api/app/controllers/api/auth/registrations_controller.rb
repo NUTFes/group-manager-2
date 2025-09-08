@@ -2,7 +2,6 @@
 module Api
   module Auth
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
-
       private
 
       # 困惑しないように解説コメント

@@ -56,9 +56,6 @@ Layout/LineLength:
     - 'spec/**/*'
     - 'config/**/*'
 
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
-
 Layout/EmptyLinesAroundMethodBody:
   Enabled: false
 
