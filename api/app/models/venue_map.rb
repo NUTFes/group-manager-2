@@ -8,7 +8,7 @@ class VenueMap < ApplicationRecord
       picture_name: picture_name,
       picture_path: picture_path,
       created_at: created_at,
-      updated_at: updated_at,
+      updated_at: updated_at
     }
   end
 end

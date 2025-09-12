@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class PlaceNumberTest < ActiveSupport::TestCase
   # test "the truth" do

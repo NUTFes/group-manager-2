@@ -2,7 +2,6 @@
 module Api
   module Auth
     class RegistrationsController < DeviseTokenAuth::RegistrationsController
-
       private
 
       # 困惑しないように解説コメント
@@ -13,7 +12,7 @@ module Api
       # これらのキーはparamsの中にネストされている必要がある
       # 例: { registration: { name: "ユーザー名", email: "メールアドレス", password: "パスワード" }, user_details: { student_id: "学籍番号", department_id: "学部ID", grade_id: "学年ID", tel: "電話番号" } }
       # これにより、Strong Parametersを使用して、許可されたパラメータのみを受け取ることができる
-  
+
       def sign_up_params
         # 許可するパラメータを定義
         allowed_attrs = %i[name email password password_confirmation role_id confirm_success_url]
@@ -72,11 +71,11 @@ module Api
         # role_idが4の場合、user_detailsの必須キーをチェック
         if role == 4
           missing = %i[student_id department_id grade_id tel].map(&:to_s) - details.keys.map(&:to_s)
-          return missing.empty? ? true : missing
+          return missing.empty? || missing
         elsif details.present?
           # role_idが4以外でuser_detailsが存在する場合、必須キーをチェック
           missing = %i[student_id department_id grade_id tel].map(&:to_s) - details.keys.map(&:to_s)
-          return missing.empty? ? true : missing
+          return missing.empty? || missing
         end
 
         # user_detailsが不要な場合はtrueを返す
@@ -89,9 +88,7 @@ module Api
         # user_detailsのチェックを実行
         check_req = check_user_details
         # 必須パラメータが不足している場合、エラーレスポンスを返す
-        if check_req.is_a?(Array)
-          return render json: { errors: { user_details: check_req.map { |k| "user_details.#{k} が存在しません" } } }, status: :unprocessable_entity
-        end
+        return render json: { errors: { user_details: check_req.map { |k| "user_details.#{k} が存在しません" } } }, status: :unprocessable_entity if check_req.is_a?(Array)
 
         # トランザクションの開始
         ActiveRecord::Base.transaction do
@@ -111,7 +108,6 @@ module Api
           end
         end
       end
-
     end
   end
 end

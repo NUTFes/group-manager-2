@@ -8,7 +8,7 @@ class Api::V1::CurrentUserApiController < ApplicationController
     render json: fmt(ok, @groups)
   end
 
-  def password_reset 
+  def password_reset
     @user = current_api_user
     @user.password = password_reset_params[:password]
     @user.password_confirmation = password_reset_params[:password_confirmation]
@@ -47,11 +47,12 @@ class Api::V1::CurrentUserApiController < ApplicationController
   end
 
   private
-    def edit_user_info_params
-      params.permit(:name, :email, :student_id, :tel, :department_id, :grade_id)
-    end
 
-    def password_reset_params
-      params.permit(:password, :password_confirmation)
-    end
+  def edit_user_info_params
+    params.permit(:name, :email, :student_id, :tel, :department_id, :grade_id)
+  end
+
+  def password_reset_params
+    params.permit(:password, :password_confirmation)
+  end
 end

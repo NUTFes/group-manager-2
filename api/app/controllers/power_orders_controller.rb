@@ -26,14 +26,14 @@ class PowerOrdersController < ApplicationController
   # PATCH/PUT /power_orders/1.json
   def update
     @power_order.update(power_order_params)
-    render json: fmt(created, @power_order, "Updated power_order id = "+params[:id])
+    render json: fmt(created, @power_order, "Updated power_order id = #{params[:id]}")
   end
 
   # DELETE /power_orders/1
   # DELETE /power_orders/1.json
   def destroy
     @power_order.destroy
-    render json: fmt(ok, [], "Deleted power_order = "+params[:id])
+    render json: fmt(ok, [], "Deleted power_order = #{params[:id]}")
   end
 
   # GET /power_orders/group_id/1
@@ -42,27 +42,28 @@ class PowerOrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_power_order
-      if PowerOrder.exists?(params[:id])
-        @power_order = PowerOrder.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found power_order = "+params[:id])
-      end
-    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_power_orders_by_group_id
-      if PowerOrder.exists?(group_id: params[:group_id])
-        @power_orders = PowerOrder.where(group_id: params[:group_id])
-      else
-        puts "PowerOrder.exists?(params[:group_id]) else"
-        render json: fmt(not_found, [], "Not found power_order = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_power_order
+    if PowerOrder.exists?(params[:id])
+      @power_order = PowerOrder.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found power_order = #{params[:id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def power_order_params
-      params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_power_orders_by_group_id
+    if PowerOrder.exists?(group_id: params[:group_id])
+      @power_orders = PowerOrder.where(group_id: params[:group_id])
+    else
+      Rails.logger.debug 'PowerOrder.exists?(params[:group_id]) else'
+      render json: fmt(not_found, [], "Not found power_order = #{params[:group_id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def power_order_params
+    params.permit(:group_id, :item, :power, :manufacturer, :model, :item_url)
+  end
 end

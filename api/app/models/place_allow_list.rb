@@ -1,4 +1,4 @@
 class PlaceAllowList < ApplicationRecord
-    belongs_to :place
-    belongs_to :group_category
+  belongs_to :place
+  belongs_to :group_category
 end

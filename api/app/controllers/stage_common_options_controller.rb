@@ -26,46 +26,48 @@ class StageCommonOptionsController < ApplicationController
   # PATCH/PUT /stage_common_options/1.json
   def update
     @stage_common_option.update(stage_common_option_params)
-    render json: fmt(created, @stage_common_option, "Updated stage_common_option id = "+params[:id])
+    render json: fmt(created, @stage_common_option, "Updated stage_common_option id = #{params[:id]}")
   end
 
   # DELETE /stage_common_options/1
   # DELETE /stage_common_options/1.json
   def destroy
     @stage_common_option.destroy
-    render json: fmt(ok, [], "Deleted stage_common_option = "+params[:id])
+    render json: fmt(ok, [], "Deleted stage_common_option = #{params[:id]}")
   end
 
-    # GET /place_orders/group_id/1
-    def get_by_group_id
-      render json: fmt(ok, @place_order)
-    end
+  # GET /place_orders/group_id/1
+  def get_by_group_id
+    render json: fmt(ok, @place_order)
+  end
+
   # GET /stage_common_options/group_id/1
   def get_by_group_id
     render json: fmt(ok, @stage_common_option)
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stage_common_option
-      if StageCommonOption.exists?(params[:id])
-        @stage_common_option = StageCommonOption.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found stage_common_option = "+params[:id])
-      end
-    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stage_common_option_by_group_id
-      if StageCommonOption.exists?(group_id: params[:group_id])
-        @stage_common_option = StageCommonOption.find_by(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found stage_common_option = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stage_common_option
+    if StageCommonOption.exists?(params[:id])
+      @stage_common_option = StageCommonOption.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def stage_common_option_params
-      params.permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stage_common_option_by_group_id
+    if StageCommonOption.exists?(group_id: params[:group_id])
+      @stage_common_option = StageCommonOption.find_by(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found stage_common_option = #{params[:group_id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def stage_common_option_params
+    params.permit(:group_id, :own_equipment, :bgm, :camera_permission, :loud_sound)
+  end
 end
