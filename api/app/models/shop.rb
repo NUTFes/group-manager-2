@@ -1,4 +1,4 @@
 class Shop < ApplicationRecord
-    has_many :purchase_lists
+    has_many :purchase_lists, dependent: :destroy
 end
 

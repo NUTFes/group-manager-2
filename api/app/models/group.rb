@@ -12,12 +12,12 @@ class Group < ApplicationRecord
     has_many :rental_orders, dependent: :destroy
     has_many :assign_rental_items, dependent: :destroy
     has_one :group_identification, dependent: :destroy
-    has_one :public_relation
-    has_one :venue_map
-    has_one :announcement
-    has_one :cooking_process_order
+    has_one :public_relation, dependent: :destroy
+    has_one :venue_map, dependent: :destroy
+    has_one :announcement, dependent: :destroy
+    has_one :cooking_process_order, dependent: :destroy
     has_many :un_registered_groups, dependent: :destroy
-    has_many :fire_equipment_orders
+    has_many :fire_equipment_orders, dependent: :destroy
 
     ### group_category (参加団体カテゴリ)
 

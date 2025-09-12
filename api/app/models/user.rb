@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   belongs_to :role
   has_one :user_detail, dependent: :destroy
   has_many :groups, dependent: :destroy
-  has_many :memos
+  has_many :memos, dependent: :destroy
 
 
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
