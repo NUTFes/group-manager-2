@@ -78,28 +78,28 @@ module Api
           @rental_orders.each do |rental_order|
             unassigned_num = rental_order.num - AssignRentalItem.where(group_id: rental_order.group_id,
                                                                        rental_item_id: rental_order.rental_item_id).sum(:num)
-              assign_place = if (place_order = rental_order.group.place_order)
-                               if (assign_group_place = place_order.assign_group_place)
-                                 assign_group_place.place.name
-                               else
-                                 'not yet'
-                               end
+            assign_place = if (place_order = rental_order.group.place_order)
+                             if (assign_group_place = place_order.assign_group_place)
+                               assign_group_place.place.name
                              else
                                'not yet'
                              end
+                           else
+                             'not yet'
+                           end
 
-              temp = {
-                id: rental_order.id,
-                group_name: rental_order.group.name,
-                assign_place: assign_place,
-                rental_item: rental_order.rental_item.name,
-                num: rental_order.num,
-                unassigned_num: unassigned_num
-              }
-              output << temp
+            temp = {
+              id: rental_order.id,
+              group_name: rental_order.group.name,
+              assign_place: assign_place,
+              rental_item: rental_order.rental_item.name,
+              num: rental_order.num,
+              unassigned_num: unassigned_num
+            }
+            output << temp
           end
 
-            render json: fmt(ok, output)
+          render json: fmt(ok, output)
 
           # place_idが指定
         elsif place_id != 0
@@ -123,11 +123,11 @@ module Api
             output << temp
           end
 
-            if output.empty?
-              render json: fmt(not_found, [], 'Not found stocker_items')
-            else
-              render json: fmt(ok, output)
-            end
+          if output.empty?
+            render json: fmt(not_found, [], 'Not found stocker_items')
+          else
+            render json: fmt(ok, output)
+          end
         end
       end
     end

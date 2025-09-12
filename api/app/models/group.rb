@@ -202,7 +202,7 @@ class Group < ApplicationRecord
   # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_fes_year(fes_year_id)
     @record = Group.where(groups: { fes_year_id: fes_year_id })
-                   .map  do |group|
+                   .map do |group|
       {
         group: group,
         user: group.user.nil? ? nil : group.user,
@@ -272,7 +272,7 @@ class Group < ApplicationRecord
   # 検索ワードに対応するgroupとそれが持つorderを取得する
   def self.with_order_info_narrow_down_by_search_word(word)
     @record = Group.where('name like ?', "%#{word}%")
-                   .map  do |group|
+                   .map do |group|
       {
         group: group,
         user: group.user.nil? ? nil : group.user,

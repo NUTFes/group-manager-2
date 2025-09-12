@@ -56,20 +56,6 @@ Layout/LineLength:
     - 'spec/**/*'
     - 'config/**/*'
 
-Layout/EmptyLinesAroundMethodBody:
-  Enabled: false
-
-Layout/ExtraSpacing:
-  Enabled: false
-
-Layout/IndentationConsistency:
-  Enabled: false
-
-Layout/SpaceBeforeBlockBraces:
-  Enabled: false
-
-Layout/SpaceInsideHashLiteralBraces:
-  Enabled: false
 
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true

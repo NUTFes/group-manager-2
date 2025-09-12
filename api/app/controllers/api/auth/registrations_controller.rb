@@ -68,7 +68,7 @@ module Api
         details  = user_details_params
         required = %w[student_id department_id grade_id tel]
 
-        return true if details.blank?  # user_details 自体が来ていないならOK
+        return true if details.blank? # user_details 自体が来ていないならOK
 
         missing = required - details.keys.map(&:to_s)
         missing.empty? || missing
