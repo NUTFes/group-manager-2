@@ -56,7 +56,6 @@ Layout/LineLength:
     - 'spec/**/*'
     - 'config/**/*'
 
-
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 
@@ -123,9 +122,6 @@ Style/CaseLikeIf:
 Style/ExponentialNotation:
   Enabled: true
 
-Style/HashAsLastArrayItem:
-  Enabled: false
-
 Style/HashEachMethods:
   Enabled: true
 
@@ -156,14 +152,8 @@ Style/RedundantRegexpEscape:
 Style/SlicingWithRange:
   Enabled: true
 
-Style/TrailingCommaInHashLiteral:
-  Enabled: false
-
 ## Configuration parameters: EnforcedStyle, SupportedStyles.
 ## SupportedStyles: all_comparison_operators, equality_operators_only
-Style/YodaCondition:
-  # Readability is more important
-  Enabled: false
 
 Style/FormatStringToken:
   EnforcedStyle: template

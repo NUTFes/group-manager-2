@@ -47,7 +47,7 @@ module Api
           progress_stock_item_3: progress_stock_item_3,
           progress_assign_item_1: progress_assign_item_1,
           progress_assign_item_2: progress_assign_item_2,
-          progress_assign_item_3: progress_assign_item_3,
+          progress_assign_item_3: progress_assign_item_3
         }
 
         render json: group_data
