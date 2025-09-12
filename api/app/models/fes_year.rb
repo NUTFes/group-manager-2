@@ -1,6 +1,6 @@
 class FesYear < ApplicationRecord
-    has_many :groups, dependent: :destroy
-    has_many :fes_dates, dependent: :destroy
-    has_many :stocker_items, dependent: :destroy
-    has_one :user_page_settings, dependent: :destroy
+  has_many :groups, dependent: :destroy
+  has_many :fes_dates, dependent: :destroy
+  has_many :stocker_items, dependent: :destroy
+  has_one :user_page_settings, dependent: :destroy
 end

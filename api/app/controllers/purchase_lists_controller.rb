@@ -80,7 +80,7 @@ class PurchaseListsController < ApplicationController
     end.reduce { |acc, scope| acc.or(scope) }
 
     render json: fmt(created, processed)
-  rescue => e
+  rescue StandardError => e
     render json: fmt(internal_server_error, [], e.message), status: :internal_server_error
   end
 

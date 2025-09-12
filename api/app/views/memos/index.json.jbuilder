@@ -1,1 +1,1 @@
-json.array! @memos, partial: "memos/memo", as: :memo
+json.array! @memos, partial: 'memos/memo', as: :memo

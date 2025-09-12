@@ -102,5 +102,3 @@ class EmployeesController < ApplicationController
     end
   end
 end
-
-

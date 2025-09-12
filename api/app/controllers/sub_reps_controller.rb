@@ -29,14 +29,14 @@ class SubRepsController < ApplicationController
   # PATCH/PUT /sub_reps/1.json
   def update
     @sub_rep.update(sub_rep_params)
-    render json: fmt(created, @sub_rep, "Updated sub_rep id = "+params[:id])
+    render json: fmt(created, @sub_rep, "Updated sub_rep id = #{params[:id]}")
   end
 
   # DELETE /sub_reps/1
   # DELETE /sub_reps/1.json
   def destroy
     @sub_rep.destroy
-    render json: fmt(ok, [], "Deleted sub_rep = "+params[:id])
+    render json: fmt(ok, [], "Deleted sub_rep = #{params[:id]}")
   end
 
   # GET /sub_reps/group_id/1
@@ -45,26 +45,27 @@ class SubRepsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_sub_rep
-      if SubRep.exists?(params[:id])
-        @sub_rep = SubRep.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found sub_rep = "+params[:id])
-      end
-    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_sub_reps_by_group_id
-      if SubRep.exists?(group_id: params[:group_id])
-        @sub_rep = SubRep.find_by(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found sub_rep = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_sub_rep
+    if SubRep.exists?(params[:id])
+      @sub_rep = SubRep.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found sub_rep = #{params[:id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def sub_rep_params
-      params.permit(:group_id, :name, :department_id, :grade_id, :tel, :email, :student_id) 
+  # Use callbacks to share common setup or constraints between actions.
+  def set_sub_reps_by_group_id
+    if SubRep.exists?(group_id: params[:group_id])
+      @sub_rep = SubRep.find_by(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found sub_rep = #{params[:group_id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def sub_rep_params
+    params.permit(:group_id, :name, :department_id, :grade_id, :tel, :email, :student_id)
+  end
 end
