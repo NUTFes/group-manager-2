@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ログイン状態確認用コントローラー
 module Api
   module Auth

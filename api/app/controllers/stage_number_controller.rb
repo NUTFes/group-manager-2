@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StageNumberController < ApplicationController
   before_action :set_stage_number, only: [:show, :update, :destroy]
 

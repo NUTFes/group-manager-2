@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmployeesController < ApplicationController
   before_action :authenticate_api_user!, except: [:index, :show, :get_by_group]
   before_action :set_employee, only: [:show, :update, :destroy]

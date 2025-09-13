@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 User.seed(:id,
           { id: 1, name: '技大太朗(dev)',
             email: 'nutfes-taro@email.com',

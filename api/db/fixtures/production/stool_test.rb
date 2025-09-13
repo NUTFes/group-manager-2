@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 StoolTest.seed(:id,
                { id: 1, status: '検便準備中' },
                { id: 2, status: '検便無' },

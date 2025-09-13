@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   # 識別番号割り当て
   get 'group_identification' => 'group_identification#index'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CookingProcessOrdersController < ApplicationController
   before_action :set_cooking_process_order, only: [:show, :update, :destroy]
 

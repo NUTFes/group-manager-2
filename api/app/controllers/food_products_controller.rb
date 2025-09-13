@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FoodProductsController < ApplicationController
   before_action :set_food_product, only: [:show, :destroy]
 

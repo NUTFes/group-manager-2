@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupIdentificationController < ApplicationController
   before_action :set_group_identification, only: [:update, :destroy]
 

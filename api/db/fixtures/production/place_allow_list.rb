@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 PlaceAllowList.seed(:id,
                     { id: 1,  place_id: 1,  group_category_id: 1, enable: true },
                     { id: 2,  place_id: 1,  group_category_id: 2, enable: true },

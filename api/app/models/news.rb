@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class News < ApplicationRecord
   before_save :normalize_body_newlines
 

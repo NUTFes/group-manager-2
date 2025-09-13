@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::DashboardApiController < ApplicationController
   def get_dashboard_info
     # ユーザー数

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 User.seed(:id,
           { id: 1, name: '秋本真夏', email: 'akimoto@hangout.com', password: 'hangout', password_confirmation: 'hangout', role_id: 1 },
           { id: 2, name: '生田絵梨華', email: 'ikuta@hangout.com', password: 'hangout', password_confirmation: 'hangout', role_id: 2 },

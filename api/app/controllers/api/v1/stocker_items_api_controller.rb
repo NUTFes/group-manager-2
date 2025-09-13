@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::StockerItemsApiController < ApplicationController
   def get_stocker_items_with_remaining_num
     rental_item_id = params[:rental_item_id].to_i

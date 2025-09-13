@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MemosController < ApplicationController
   before_action :set_memo, only: [:show, :update, :destroy]
 

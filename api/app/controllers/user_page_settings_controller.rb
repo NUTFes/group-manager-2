@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserPageSettingsController < ApplicationController
   before_action :set_user_page_setting, only: [:show, :update, :destroy]
 

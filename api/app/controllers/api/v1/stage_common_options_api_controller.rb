@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::StageCommonOptionsApiController < ApplicationController
   def get_stage_common_option_index_for_admin_view
     @stage_common_options = StageCommonOption.with_groups

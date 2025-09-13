@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::FesDatesApiController < ApplicationController
   def get_refinement_fes_date_by_fes_year
     fes_year_id = params[:fes_year_id]

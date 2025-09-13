@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::OrderStatusCheckApiController < ApplicationController
   def get_order_status_check_for_admin_view
     @groups = Group.with_order_status_check(params[:id])

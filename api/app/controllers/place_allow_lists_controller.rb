@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaceAllowListsController < ApplicationController
   before_action :set_place_allow_list, only: [:show, :update, :destroy]
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/controllers/api/auth/registrations_controller.rb
 module Api
   module Auth

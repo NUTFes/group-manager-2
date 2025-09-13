@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SubRep.seed(:id,
             { id: 1, group_id: 1,
               name: '技大花子',

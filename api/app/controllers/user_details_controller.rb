@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserDetailsController < ApplicationController
   before_action :set_user_detail, only: [:show, :update, :destroy]
 

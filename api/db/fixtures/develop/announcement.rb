@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Announcement.seed(:id,
                   {
                     id: 1,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CurrentStocksController < ApplicationController
   before_action :set_current_stock, only: [:show, :update, :destroy]
 

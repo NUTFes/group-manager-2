@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Grade.seed(:id,
            { id: 1, name: 'B1[学部1年]' },
            { id: 2, name: 'B2[学部2年]' },

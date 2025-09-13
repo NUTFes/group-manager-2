@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RentalItemAllowList.seed(:id,
                          { id: 1,  rental_item_id: 1,  group_category_id: 1 },
                          { id: 2,  rental_item_id: 1,  group_category_id: 2 },

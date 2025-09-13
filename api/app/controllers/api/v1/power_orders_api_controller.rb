@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::PowerOrdersApiController < ApplicationController
   def get_power_order_index_for_admin_view
     @power_orders = PowerOrder.with_groups

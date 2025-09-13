@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CookingProcessOrder < ApplicationRecord
   # group_id という名前の外部キーを持つ group への belongs_to 関連
   belongs_to :group

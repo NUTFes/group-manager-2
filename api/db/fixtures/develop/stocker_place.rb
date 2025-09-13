@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 StockerPlace.seed(:id,
                   { id: 1, name: '講義棟101', stock_item_status: 1, assign_item_status: 1 },
                   { id: 2, name: '講義棟102', stock_item_status: 1, assign_item_status: 1 },

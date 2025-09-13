@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FesYearsController < ApplicationController
   before_action :set_fes_year, only: [:show, :update, :destroy]
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StageOrder < ApplicationRecord
   belongs_to :group
   belongs_to :fes_date
