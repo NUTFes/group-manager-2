@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ContactPersonsController < ApplicationController
-  before_action :set_contact_person, only: [:show, :update, :destroy]
+  before_action :set_contact_person, only: %i[show update destroy]
 
   # GET /contact_persons
   # GET /contact_persons.json

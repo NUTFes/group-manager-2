@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RentalItemsController < ApplicationController
-  before_action :set_rental_item, only: [:show, :update, :destroy]
+  before_action :set_rental_item, only: %i[show update destroy]
 
   def index
     @rental_items = RentalItem.all

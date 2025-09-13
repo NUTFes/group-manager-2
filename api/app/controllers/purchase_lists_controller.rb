@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PurchaseListsController < ApplicationController
-  before_action :set_purchase_list, only: [:show, :update, :destroy]
+  before_action :set_purchase_list, only: %i[show update destroy]
 
   # GET /purchase_lists
   def index

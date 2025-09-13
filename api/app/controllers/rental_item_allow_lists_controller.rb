@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RentalItemAllowListsController < ApplicationController
-  before_action :set_rental_item_allow_list, only: [:show, :update, :destroy]
+  before_action :set_rental_item_allow_list, only: %i[show update destroy]
 
   def index
     @rental_item_allow_lists = RentalItemAllowList.all

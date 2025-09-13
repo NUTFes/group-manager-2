@@ -19,7 +19,7 @@ class Api::V1::CookingProcessOrdersApiController < ApplicationController
     if @food_products.empty?
       render json: fmt(not_found, [], 'Not found food products')
     else
-      render json: fmt(ok, @food_products.as_json(include: [:group, :cooking_process_order]))
+      render json: fmt(ok, @food_products.as_json(include: %i[group cooking_process_order]))
     end
   end
 
@@ -33,7 +33,7 @@ class Api::V1::CookingProcessOrdersApiController < ApplicationController
     if @food_products.empty?
       render json: fmt(not_found, [], 'Not found food products')
     else
-      render json: fmt(ok, @food_products.as_json(include: [:group, :cooking_process_order]))
+      render json: fmt(ok, @food_products.as_json(include: %i[group cooking_process_order]))
     end
   end
 

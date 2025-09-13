@@ -209,10 +209,6 @@ Style/SlicingWithRange:
 Style/FormatStringToken:
   EnforcedStyle: template
 
-# 記号配列(%i/%w)の強制はしない
-Style/SymbolArray:
-  Enabled: false
-
 # rescue 修飾子(式の末尾での rescue)を許可
 Style/RescueModifier:
   Enabled: false

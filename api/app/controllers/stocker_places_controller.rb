@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StockerPlacesController < ApplicationController
-  before_action :set_stocker_place, only: [:show, :update, :destroy]
+  before_action :set_stocker_place, only: %i[show update destroy]
 
   def index
     @stocker_places = StockerPlace.all

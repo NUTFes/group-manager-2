@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StagesController < ApplicationController
-  before_action :set_stage, only: [:show, :update, :destroy]
+  before_action :set_stage, only: %i[show update destroy]
 
   def index
     @stages = Stage.all

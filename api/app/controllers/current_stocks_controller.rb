@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CurrentStocksController < ApplicationController
-  before_action :set_current_stock, only: [:show, :update, :destroy]
+  before_action :set_current_stock, only: %i[show update destroy]
 
   # GET /current_stocks
   # GET /current_stocks.json

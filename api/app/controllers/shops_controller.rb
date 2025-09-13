@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ShopsController < ApplicationController
-  before_action :set_shop, only: [:show, :update, :destroy]
+  before_action :set_shop, only: %i[show update destroy]
 
   def index
     @shops = Shop.all
