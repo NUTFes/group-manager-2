@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::PublicRelationsApiController < ApplicationController
   def get_public_relation_for_admin_view
     @groups = Group.with_public_relation(params[:id])

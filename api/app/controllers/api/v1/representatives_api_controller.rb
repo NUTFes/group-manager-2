@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::RepresentativesApiController < ApplicationController
   # sub_repがない場合はnilが入ったsub_repみたいなのを返す
   @@no_sub_rep = {

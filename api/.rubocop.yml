@@ -133,10 +133,6 @@ Style/Documentation:
 Style/EmptyMethod:
   Enabled: false
 
-# frozen_string_literal のマジックコメントを強制しない
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 # 早期return(guard句)の強制をしない（読みやすさ優先のため任意）
 Style/GuardClause:
   Enabled: false

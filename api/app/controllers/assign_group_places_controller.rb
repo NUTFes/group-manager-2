@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignGroupPlacesController < ApplicationController
   before_action :set_assign_group_place, only: [:show, :update, :destroy]
 

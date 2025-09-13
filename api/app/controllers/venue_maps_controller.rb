@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VenueMapsController < ApplicationController
   before_action :set_venue_map, only: [:show, :update, :destroy]
 

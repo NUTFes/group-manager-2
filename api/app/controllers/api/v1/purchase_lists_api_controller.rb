@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::PurchaseListsApiController < ApplicationController
   def get_purchase_list_index_for_admin_view
     @purchase_lists = PurchaseList.with_groups_and_info

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FesYear < ApplicationRecord
   has_many :groups, dependent: :destroy
   has_many :fes_dates, dependent: :destroy

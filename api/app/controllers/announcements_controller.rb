@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AnnouncementsController < ApplicationController
   before_action :set_announcement, only: [:show, :update, :destroy]
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::AnnouncementsApiController < ApplicationController
   def get_announcement_index_for_admin_view
     @announcements = Announcement.with_groups

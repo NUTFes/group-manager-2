@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::VenueMapsApiController < ApplicationController
   def get_venue_map_for_admin_view
     @groups = Group.with_venue_map(params[:id])

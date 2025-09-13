@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CheckAllRegisteredController < ApplicationController
   # GET /all_check_registered/:group_id
   def show

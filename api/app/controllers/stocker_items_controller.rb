@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StockerItemsController < ApplicationController
   before_action :set_stocker_item, only: [:show, :update, :destroy]
 

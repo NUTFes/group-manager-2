@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UnRegisteredGroup < ApplicationRecord
   belongs_to :group
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignStagesController < ApplicationController
   before_action :set_assign_stage, only: [:show, :update, :destroy]
 

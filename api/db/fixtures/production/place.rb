@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Place.seed(:id,
            { id: 1, name: '希望なし' },
            { id: 2, name: '講義棟部屋A (103講義室などの大きい講義室)' },

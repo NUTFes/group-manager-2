@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrintPdfController < ApplicationController
   include ActionController::MimeResponds
   before_action :authenticate_api_user!

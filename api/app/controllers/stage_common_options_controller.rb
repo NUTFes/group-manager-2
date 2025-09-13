@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StageCommonOptionsController < ApplicationController
   before_action :set_stage_common_option, only: [:show, :update, :destroy]
   before_action :set_stage_common_option_by_group_id, only: [:get_by_group_id]

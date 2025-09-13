@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 StageOrder.seed(:id,
                 { id: 1,    group_id: 1,
                   is_sunny: true,

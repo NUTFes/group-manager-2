@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignRentalItemsController < ApplicationController
   before_action :set_assign_rental_item, only: [:show, :update, :destroy]
 

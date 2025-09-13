@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FesYear.seed(:id,
              { id: 1, year_num: 2020 },
              { id: 2, year_num: 2021 },

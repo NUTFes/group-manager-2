@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::PlaceOrdersApiController < ApplicationController
   def get_place_order_index_for_admin_view
     @place_orders = PlaceOrder.get_with_groups

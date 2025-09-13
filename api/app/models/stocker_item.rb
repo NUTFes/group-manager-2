@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StockerItem < ApplicationRecord
   belongs_to :rental_item
   belongs_to :stocker_place

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublicRelationsController < ApplicationController
   before_action :set_public_relation, only: %i[show update destroy]
   before_action :set_public_relation_by_group_id, only: [:get_by_group_id]

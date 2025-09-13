@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::EmployeesApiController < ApplicationController
   before_action :authenticate_api_user!, only: [
     :get_employee_index_for_admin_view, :get_employee_show_for_admin_view,

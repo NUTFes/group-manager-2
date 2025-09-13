@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaceNumberController < ApplicationController
   before_action :set_place_number, only: [:show, :update, :destroy]
 

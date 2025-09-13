@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StageCommonOption < ApplicationRecord
   belongs_to :group
 

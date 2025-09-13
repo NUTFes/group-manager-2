@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_api_user!, only: [
     :get_user_index_for_admin_view, :get_user_show_for_admin_view,

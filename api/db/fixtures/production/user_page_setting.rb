@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 UserPageSetting.seed(:id,
                      { id: 1, is_regist_group: true,
                        is_regist_food_product: true,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::StageOrdersApiController < ApplicationController
   def get_stage_order_index_for_admin_view
     @stage_orders = StageOrder.with_groups

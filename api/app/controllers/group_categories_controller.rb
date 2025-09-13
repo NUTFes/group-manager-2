@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupCategoriesController < ApplicationController
   before_action :set_group_category, only: [:show, :update, :destroy]
 

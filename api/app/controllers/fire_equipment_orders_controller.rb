@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FireEquipmentOrdersController < ApplicationController
   before_action :set_fire_equipment_order, only: [:show, :update, :destroy]
   before_action :set_fire_equipment_order_by_group_id, only: [:get_by_group_id]
