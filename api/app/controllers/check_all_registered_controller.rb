@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class CheckAllRegisteredController < ApplicationController
+  ORDER_TYPE_MAPPING = {
+    sub_rep_application: 'sub_rep',
+    rental_item_application: 'rental_item_order',
+    power_order_application: 'power_order',
+    fire_equipment_order_application: 'fire_equipment_order',
+    employee_application: 'employee'
+  }.with_indifferent_access.freeze
+
   # GET /all_check_registered/:group_id
   def show
     group_id = params[:group_id]
@@ -49,14 +57,6 @@ class CheckAllRegisteredController < ApplicationController
   end
 
   private
-
-  ORDER_TYPE_MAPPING = {
-    sub_rep_application: 'sub_rep',
-    rental_item_application: 'rental_item_order',
-    power_order_application: 'power_order',
-    fire_equipment_order_application: 'fire_equipment_order',
-    employee_application: 'employee'
-  }.with_indifferent_access.freeze
 
   def present_or_unregistered?(value_or_condition, unregistered_types, status_key)
     is_present = value_or_condition.respond_to?(:present?) ? value_or_condition.present? : !value_or_condition.nil?

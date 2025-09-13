@@ -37,7 +37,7 @@ class UnRegisteredGroupsController < ApplicationController
   # DELETE /un_registered_groups/:id
   def destroy
     @un_registered_group.destroy
-    render json: fmt(:no_content, nil), status: :no_content
+    head :no_content
   end
 
   # GET /un_registered_groups/group

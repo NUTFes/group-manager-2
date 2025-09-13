@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PlaceNumberController < ApplicationController
-  before_action :set_place_number, only: %i[show update destroy]
+  before_action :set_place_number, only: %i[update destroy]
 
   # 会場割り当て
 
