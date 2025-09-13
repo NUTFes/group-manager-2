@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StageNumberController < ApplicationController
-  before_action :set_stage_number, only: [:show, :update, :destroy]
+  before_action :set_stage_number, only: %i[show update destroy]
 
   # ステージ割り当て
 

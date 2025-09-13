@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RentalOrdersController < ApplicationController
-  before_action :set_rental_order, only: [:show, :update, :destroy]
+  before_action :set_rental_order, only: %i[show update destroy]
   before_action :set_rental_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /rental_orders

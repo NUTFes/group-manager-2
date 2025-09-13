@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FoodProductsController < ApplicationController
-  before_action :set_food_product, only: [:show, :destroy]
+  before_action :set_food_product, only: %i[show destroy]
 
   # GET /food_products
   def index
@@ -34,7 +34,7 @@ class FoodProductsController < ApplicationController
   # POST /food_products/upsert
   # 複数レコード作成・更新 (upsert_all使用)
   def upsert
-    keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at, :is_alcohol]
+    keys = %i[id group_id name is_cooking first_day_num second_day_num created_at updated_at is_alcohol]
     now = Time.current
 
     upserts = params[:food_products].map do |foodProduct|

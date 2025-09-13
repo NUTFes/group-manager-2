@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignRentalItemsController < ApplicationController
-  before_action :set_assign_rental_item, only: [:show, :update, :destroy]
+  before_action :set_assign_rental_item, only: %i[show update destroy]
 
   # GET /assign_rental_items
   # GET /assign_rental_items.json
@@ -61,6 +61,6 @@ class AssignRentalItemsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assign_rental_items_params
-    params.permit(:rentalItemId, :stockerPlaceId, items: [:group_id, :num])
+    params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num])
   end
 end

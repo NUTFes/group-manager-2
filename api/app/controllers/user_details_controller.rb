@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class UserDetailsController < ApplicationController
-  before_action :set_user_detail, only: [:show, :update, :destroy]
+  before_action :set_user_detail, only: %i[show update destroy]
 
-  before_action :authenticate_api_user!, only: [:index, :show]
+  before_action :authenticate_api_user!, only: %i[index show]
 
   # GET /user_details
   # GET /user_details.json

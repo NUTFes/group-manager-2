@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PlaceAllowListsController < ApplicationController
-  before_action :set_place_allow_list, only: [:show, :update, :destroy]
+  before_action :set_place_allow_list, only: %i[show update destroy]
 
   # GET /place_allow_lists
   # GET /place_allow_lists.json

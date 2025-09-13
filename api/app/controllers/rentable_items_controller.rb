@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RentableItemsController < ApplicationController
-  before_action :set_rentable_item, only: [:show, :update, :destroy]
+  before_action :set_rentable_item, only: %i[show update destroy]
 
   # GET /rentable_items
   # GET /rentable_items.json

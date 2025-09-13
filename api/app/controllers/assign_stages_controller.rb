@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignStagesController < ApplicationController
-  before_action :set_assign_stage, only: [:show, :update, :destroy]
+  before_action :set_assign_stage, only: %i[show update destroy]
 
   # GET /assign_stages
   # GET /assign_stages.json

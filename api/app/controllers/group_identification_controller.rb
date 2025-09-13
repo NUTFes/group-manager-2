@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupIdentificationController < ApplicationController
-  before_action :set_group_identification, only: [:update, :destroy]
+  before_action :set_group_identification, only: %i[update destroy]
 
   def index
     # fes_year_idで絞り込み

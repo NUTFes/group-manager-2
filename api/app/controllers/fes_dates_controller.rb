@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FesDatesController < ApplicationController
-  before_action :set_fes_date, only: [:show, :update, :destroy]
+  before_action :set_fes_date, only: %i[show update destroy]
 
   def index
     @fes_dates = FesDate.preload(:fes_year)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StockerItemsController < ApplicationController
-  before_action :set_stocker_item, only: [:show, :update, :destroy]
+  before_action :set_stocker_item, only: %i[show update destroy]
 
   # GET /stocker_items
   # GET /stocker_items.json

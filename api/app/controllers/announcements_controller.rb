@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AnnouncementsController < ApplicationController
-  before_action :set_announcement, only: [:show, :update, :destroy]
+  before_action :set_announcement, only: %i[show update destroy]
 
   # GET /announcements
   # GET /announcements.json

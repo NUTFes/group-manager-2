@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PlacesController < ApplicationController
-  before_action :set_place, only: [:show, :update, :destroy]
+  before_action :set_place, only: %i[show update destroy]
 
   def index
     group_id = params[:group_id]
