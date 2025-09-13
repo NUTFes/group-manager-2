@@ -5,7 +5,7 @@ class Api::V1::UsersController < ApplicationController
     get_user_index_for_admin_view get_user_show_for_admin_view
     get_representative_index_for_admin_view get_representative_show_for_admin_view
     get_refinement_users get_search_users show
-    create update destroy edit_user_info reset_password
+    update edit_user_info reset_password
   ]
 
   def get_user_index_for_admin_view

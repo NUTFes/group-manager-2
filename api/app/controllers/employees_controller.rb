@@ -44,7 +44,7 @@ class EmployeesController < ApplicationController
     Employee.upsert_all(records)
 
     # より正確な検索条件を構築
-    processed = records.map do |attrs|
+    scopes = records.map do |attrs|
       if attrs[:id].present?
         Employee.where(id: attrs[:id])
       else
@@ -55,7 +55,8 @@ class EmployeesController < ApplicationController
           stool_test_id: attrs[:stool_test_id]
         )
       end
-    end.reduce { |acc, scope| acc.or(scope) }
+    end
+    processed = scopes.reduce(Employee.none, &:or)
 
     render json: fmt(ok, processed)
   rescue ActiveRecord::StatementInvalid => e

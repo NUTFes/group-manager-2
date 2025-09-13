@@ -37,9 +37,9 @@ class FoodProductsController < ApplicationController
     keys = %i[id group_id name is_cooking first_day_num second_day_num created_at updated_at is_alcohol]
     now = Time.current
 
-    upserts = params[:food_products].map do |foodProduct|
+    upserts = params[:food_products].map do |food_product|
       attrs = ActionController::Parameters
-              .new(foodProduct.to_unsafe_h)
+              .new(food_product.to_unsafe_h)
               .permit(*keys)
               .to_h
               .symbolize_keys
@@ -52,20 +52,21 @@ class FoodProductsController < ApplicationController
     FoodProduct.upsert_all(upserts)
 
     # 更新／挿入されたレコードを取得して返却
-    processed = upserts.map do |attrs|
-      if attrs['id'].present?
-        FoodProduct.where(id: attrs['id'])
+    scopes = upserts.map do |attrs|
+      if attrs[:id].present?
+        FoodProduct.where(id: attrs[:id])
       else
         FoodProduct.where(
-          group_id: attrs['group_id'],
-          name: attrs['name'],
-          is_cooking: attrs['is_cooking'],
-          first_day_num: attrs['first_day_num'],
-          second_day_num: attrs['second_day_num'],
-          is_alcohol: attrs['is_alcohol']
+          group_id: attrs[:group_id],
+          name: attrs[:name],
+          is_cooking: attrs[:is_cooking],
+          first_day_num: attrs[:first_day_num],
+          second_day_num: attrs[:second_day_num],
+          is_alcohol: attrs[:is_alcohol]
         )
       end
-    end.reduce { |acc, scope| acc.or(scope) }
+    end
+    processed = scopes.reduce(FoodProduct.none, &:or)
 
     render json: fmt(ok, processed)
   rescue ActiveRecord::RecordInvalid => e
@@ -79,7 +80,9 @@ class FoodProductsController < ApplicationController
     if @food_product&.update(food_product_params)
       render json: fmt(ok, @food_product, "Updated food_product id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @food_product&.errors&.full_messages&.join(', ') || 'Not found'), status: :unprocessable_entity
+      error = @food_product&.errors
+      errors_text = error&.full_messages&.join(', ') || 'Not found'
+      render json: fmt(unprocessable_entity, [], errors_text), status: :unprocessable_entity
     end
   end
 
