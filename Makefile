@@ -83,3 +83,21 @@ run-swagger:
 openapi:
 	docker compose run --rm api bundle exec rake routes:oas:docs
 	docker compose run --rm api bundle exec rake routes:oas:build
+
+# --- OAS design-first helpers ---
+# Generate Rails server stub from openapi/openapi.yaml (edit: forbidden in api/generated/server)
+oas-codegen-rails:
+	docker run --rm -v $$(PWD):/local openapitools/openapi-generator-cli:v7.10.0 generate 	  -g ruby-on-rails 	  -i /local/openapi/openapi.yaml 	  -o /local/api/generated/server 	  --skip-validate-spec
+
+# --- OAS design-first helpers ---
+
+
+oas-codegen-web:
+	docker compose run --rm user pnpm api:generate
+
+
+oas-sync: oas-codegen-rails oas-codegen-web
+
+
+oas-lint:
+	@echo TODO: spectral rules are not configured yet - openapi/.spectral.yaml
