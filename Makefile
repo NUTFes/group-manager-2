@@ -87,7 +87,11 @@ openapi:
 # --- OAS design-first helpers ---
 # Generate Rails server stub from openapi/openapi.yaml (edit: forbidden in api/generated/server)
 oas-codegen-rails:
-	docker run --rm -v $$(PWD):/local openapitools/openapi-generator-cli:v7.10.0 generate 	  -g ruby-on-rails 	  -i /local/openapi/openapi.yaml 	  -o /local/api/generated/server 	  --skip-validate-spec
+	docker run --rm -v $(CURDIR):/local openapitools/openapi-generator-cli:v7.10.0 generate \
+	  -g ruby-on-rails \
+	  -i /local/openapi/openapi.yaml \
+	  -o /local/api/generated/server \
+	  --skip-validate-spec
 
 # --- OAS design-first helpers ---
 
