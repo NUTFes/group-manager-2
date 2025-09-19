@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SPEC="$REPO_ROOT/../openapi/openapi.yaml"
+OUT_DIR="$REPO_ROOT/generated/server"
+mkdir -p "$OUT_DIR"
+exec npx --yes @openapitools/openapi-generator-cli generate \
+  -g ruby-on-rails \
+  -i "$SPEC" \
+  -o "$OUT_DIR" \
+  --skip-validate-spec

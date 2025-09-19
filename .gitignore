@@ -125,3 +125,7 @@ cloudflare/**/cert.pem
 
 # phpmyadmin
 /phpmyadmin
+
+# openapi generated code
+/api/generated/server/
+/user/src/api/
