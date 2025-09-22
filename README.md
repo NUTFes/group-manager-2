@@ -31,3 +31,18 @@ nuxt.js<br>
 
 ## セットアップ
 [git cloneをしたら](https://github.com/NUTFes/group-manager-2/wiki/git-clone-%E3%82%92%E3%81%97%E3%81%9F%E3%82%89)
+
+## OpenAPI Generator
+- `scripts/openapi-generator` で [openapi-generator-cli](https://github.com/OpenAPITools/openapi-generator) を Docker 経由で利用できます。
+- 初回実行時は `docker` がイメージ `openapitools/openapi-generator-cli:v7.5.0` を取得します。
+- 例: Rails サーバースタブを生成する場合
+  ```bash
+  scripts/openapi-generator generate \
+    -i openapi/openapi.yml \
+    -g ruby-on-rails \
+    -o api/generated/server
+  ```
+- 生成物の出力先はマウント済みのリポジトリ内なら自由に指定できます。
+- `make openapi-cli cmd="<コマンド>"` で CLI をそのまま呼び出せます（例: `cmd="version"`）。
+- `make openapi-generate` では `openapi/openapi.yml` を元に Rails サーバースタブを `api/generated/server` へ生成します。
+  - `spec`, `output`, `generator`, `extra` を渡すと動作を上書きできます。
