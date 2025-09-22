@@ -1,0 +1,10 @@
+---
+components:
+  requestBodies:
+    api:
+      v1:
+        VenueMapsApi:
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.VenueMapsApi"

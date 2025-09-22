@@ -1,0 +1,44 @@
+---
+paths:
+  "/rails/conductor/action_mailbox/inbound_emails/sources":
+    post:
+      tags:
+      - rails/conductor/action_mailbox/inbound_emails/source
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: rails/conductor/action_mailbox/inbound_emails/source description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
+        '422':
+          description: rails/conductor/action_mailbox/inbound_emails/source description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/rails.conductor.actionmailbox.inboundemails.Source"
+  "/rails/conductor/action_mailbox/inbound_emails/sources/new":
+    get:
+      tags:
+      - rails/conductor/action_mailbox/inbound_emails/source
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: rails/conductor/action_mailbox/inbound_emails/source description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
+        '422':
+          description: rails/conductor/action_mailbox/inbound_emails/source description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/rails.conductor.actionmailbox.inboundemails.Source"
+      deprecated: false
