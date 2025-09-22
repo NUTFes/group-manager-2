@@ -1,9 +1,0 @@
----
-components:
-  schemas:
-    FesDate:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64

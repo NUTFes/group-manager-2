@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    StageNumber:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/StageNumber"

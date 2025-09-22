@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    ContactPerson:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/ContactPerson"

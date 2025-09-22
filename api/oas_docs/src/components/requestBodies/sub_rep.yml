@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    SubRep:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/SubRep"

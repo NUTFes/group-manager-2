@@ -1,9 +1,0 @@
----
-components:
-  schemas:
-    devisetokenauth.Session:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64

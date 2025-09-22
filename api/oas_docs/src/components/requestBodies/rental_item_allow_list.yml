@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    RentalItemAllowList:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/RentalItemAllowList"

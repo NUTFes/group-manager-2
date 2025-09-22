@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    api.v1.PlaceOrdersApi:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/api.v1.PlaceOrdersApi"

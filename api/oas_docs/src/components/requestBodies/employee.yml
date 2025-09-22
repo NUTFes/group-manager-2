@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    Employee:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/Employee"

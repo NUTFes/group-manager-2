@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    Group:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/Group"

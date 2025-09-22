@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    News:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/News"

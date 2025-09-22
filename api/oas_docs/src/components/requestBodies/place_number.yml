@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    PlaceNumber:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/PlaceNumber"

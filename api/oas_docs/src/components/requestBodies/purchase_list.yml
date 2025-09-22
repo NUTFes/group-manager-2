@@ -1,8 +1,0 @@
----
-components:
-  requestBodies:
-    PurchaseList:
-      content:
-        application/json:
-          schema:
-            "$ref": "#/components/schemas/PurchaseList"
