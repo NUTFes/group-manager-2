@@ -16,6 +16,9 @@ RUN wget --quiet -O - /tmp/pubkey.gpg https://dl.yarnpkg.com/debian/pubkey.gpg |
       && apt-get install fonts-ipa* \
       && mkdir /myapp
 
+# GraphViz is required by rails-erd
+RUN apt-get update && apt-get install -y graphviz
+
 # PLATFORMが'arm64-darwin'の場合のみ、特定のコマンドを実行
 RUN if [ "$PLATFORM" = "arm64-darwin" ]; then \
       apt-get install -y wget xz-utils fontconfig libxrender1 libxext6 libfreetype6 xfonts-75dpi xfonts-base && \
