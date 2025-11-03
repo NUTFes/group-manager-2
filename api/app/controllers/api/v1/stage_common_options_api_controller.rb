@@ -40,7 +40,7 @@ class Api::V1::StageCommonOptionsApiController < ApplicationController
     @stage_common_options = @stage_common_options.where('(loud_sound = ?)', option_list[loud_sound]) if loud_sound != 0
     @stage_common_options = @stage_common_options.preload(:group).select { |stage_common_option| stage_common_option.group.fes_year_id == fes_year_id } if fes_year_id != 0
 
-    if @stage_common_options.count == 0
+    if @stage_common_options.none?
       render json: fmt(not_found, [], 'Not found stage_common_options')
     else
       render json: fmt(ok, fit_stage_common_option_index_for_admin_view(@stage_common_options))
@@ -51,7 +51,7 @@ class Api::V1::StageCommonOptionsApiController < ApplicationController
   def get_search_stage_common_options
     word = params[:word]
     @stage_common_options = StageCommonOption.preload(:group).select { |stage_common_option| stage_common_option.group.name.include?(word) }
-    if @stage_common_options.count == 0
+    if @stage_common_options.none?
       render json: fmt(not_found, [], 'Not found stage_common_options')
     else
       render json: fmt(ok, fit_stage_common_option_index_for_admin_view(@stage_common_options))

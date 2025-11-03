@@ -32,7 +32,7 @@ class Api::V1::AssignRentalItemsApiController < ApplicationController
 
     @stocker_place = StockerPlace.find(params[:stocker_place_id])
 
-    if @stocker_items.count == 0
+    if @stocker_items.none?
       render json: fmt(not_found, { stocker_place: @stocker_place, stocker_items: [] }, 'Not found stocker_items')
     else
       render json: fmt(ok, { stocker_place: @stocker_place, stocker_items: fit_stocker_item_index_for_admin_view(@stocker_items) })
@@ -69,7 +69,7 @@ class Api::V1::AssignRentalItemsApiController < ApplicationController
                              AssignRentalItem.where(stocker_place_id: stocker_place_id)
                            end
 
-    if @assign_rental_items.count == 0
+    if @assign_rental_items.none?
       render json: fmt(not_found, [], 'Not found assign_rental_items')
     else
       render json: fmt(ok, fit_assign_rental_item_index_for_admin_view(@assign_rental_items))

@@ -19,7 +19,7 @@ class Api::V1::OrderInfosApiController < ApplicationController
       @groups = Group.with_order_info_narrow_down_by_fes_year(fes_year_id)
     end
 
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)
@@ -30,7 +30,7 @@ class Api::V1::OrderInfosApiController < ApplicationController
   def get_search_order_infos
     word = params[:word]
     @groups = Group.with_order_info_narrow_down_by_search_word(word)
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)

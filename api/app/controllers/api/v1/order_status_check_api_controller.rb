@@ -16,11 +16,11 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
         fes_year: group.fes_year&.id,
         sub_rep: group.sub_rep&.id,
         place_order: group.place_order&.id,
-        stage_orders: group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
+        stage_orders: group.stage_orders.none? ? nil : group.stage_orders[0].id,
         stage_common_option: group.stage_common_option&.id,
-        power_orders: group.power_orders.count == 0 ? nil : group.power_orders[0].id,
-        rental_orders: group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
-        employees: group.employees.count == 0 ? nil : group.employees[0].id,
+        power_orders: group.power_orders.none? ? nil : group.power_orders[0].id,
+        rental_orders: group.rental_orders.none? ? nil : group.rental_orders[0].id,
+        employees: group.employees.none? ? nil : group.employees[0].id,
         food_product: group.food_products.empty? ? nil : true,
         purchase_list: if group.food_products.empty?
                          nil
@@ -48,7 +48,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
     @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
@@ -59,7 +59,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
   def get_search_order_status_check
     word = params[:word]
     @groups = Group.with_order_status_check_narrow_down_by_search_word(word)
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)

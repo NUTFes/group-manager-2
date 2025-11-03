@@ -6,6 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
+
   belongs_to :role
   has_one :user_detail, dependent: :destroy
   has_many :groups, dependent: :destroy
@@ -86,7 +87,7 @@ class User < ApplicationRecord
         group_category: group.group_category&.name,
         sub_rep: group.sub_rep&.to_info_h,
         place_order: group.place_order&.to_place_name_h,
-        stage_orders: if group.stage_orders.count == 0
+        stage_orders: if group.stage_orders.none?
                         nil
                       else
                         group.stage_orders.map do |stage_order|
@@ -96,7 +97,7 @@ class User < ApplicationRecord
                         end
                       end,
         stage_common_option: group.stage_common_option&.to_info_h,
-        power_orders: if group.power_orders.count == 0
+        power_orders: if group.power_orders.none?
                         nil
                       else
                         group.power_orders.map do |power_order|
@@ -105,7 +106,7 @@ class User < ApplicationRecord
                           }
                         end
                       end,
-        rental_orders: if group.rental_orders.count == 0
+        rental_orders: if group.rental_orders.none?
                          nil
                        else
                          group.rental_orders.map do |rental_order|
@@ -114,7 +115,7 @@ class User < ApplicationRecord
                            }
                          end
                        end,
-        employees: if group.employees.count == 0
+        employees: if group.employees.none?
                      nil
                    else
                      group.employees.map do |employee|
@@ -123,7 +124,7 @@ class User < ApplicationRecord
                        }
                      end
                    end,
-        food_products: if group.food_products.count == 0
+        food_products: if group.food_products.none?
                          nil
                        else
                          group.food_products.map do |food_product|

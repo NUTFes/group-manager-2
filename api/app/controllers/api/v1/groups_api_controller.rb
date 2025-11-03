@@ -73,7 +73,7 @@ class Api::V1::GroupsApiController < ApplicationController
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
     @groups = @groups.where(is_external: is_external == 1) unless is_external == 0
 
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
@@ -89,7 +89,7 @@ class Api::V1::GroupsApiController < ApplicationController
 
     @groups = (groups_name + groups_category + project_name).uniq
 
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))

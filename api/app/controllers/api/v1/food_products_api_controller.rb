@@ -64,7 +64,7 @@ class Api::V1::FoodProductsApiController < ApplicationController
       @food_products = @food_products.select { |food_product| food_product.group.name.include?(search_word) || food_product.name.include?(search_word) }
     end
 
-    if @food_products.count == 0
+    if @food_products.none?
       render json: fmt(not_found, [], 'Not found food_products')
     else
       render json: fmt(ok, fit_food_product_index_for_admin_view(@food_products))
@@ -75,7 +75,7 @@ class Api::V1::FoodProductsApiController < ApplicationController
   def get_search_food_products
     word = params[:word]
     @food_products = FoodProduct.all.select { |food_product| food_product.group.name.include?(word) || food_product.name.include?(word) }
-    if @food_products.count == 0
+    if @food_products.none?
       render json: fmt(not_found, [], 'Not found food_products')
     else
       render json: fmt(ok, fit_food_product_index_for_admin_view(@food_products))
@@ -86,7 +86,7 @@ class Api::V1::FoodProductsApiController < ApplicationController
   def get_food_products_by_group_id
     group_id = params[:group_id]
     @food_products = FoodProduct.where(group_id: group_id)
-    if @food_products.count == 0
+    if @food_products.none?
       render json: fmt(not_found, [], 'Not found food_products')
     else
       render json: fmt(ok, @food_products)

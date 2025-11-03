@@ -28,7 +28,7 @@ class Api::V1::PublicRelationsApiController < ApplicationController
       @groups = Group.with_public_relation_narrow_down_by_fes_year(fes_year_id)
     end
 
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)
@@ -39,7 +39,7 @@ class Api::V1::PublicRelationsApiController < ApplicationController
   def get_search_public_relations
     word = params[:word]
     @groups = Group.with_public_relation_narrow_down_by_search_word(word)
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, @groups)

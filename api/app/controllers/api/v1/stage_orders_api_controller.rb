@@ -55,7 +55,7 @@ class Api::V1::StageOrdersApiController < ApplicationController
   def get_search_stage_orders
     word = params[:word]
     @stage_orders = StageOrder.preload(:group).select { |stage_order| stage_order.group.name.include?(word) }
-    if @stage_orders.count == 0
+    if @stage_orders.none?
       render json: fmt(not_found, [], 'Not found stage_orders')
     else
       render json: fmt(ok, fit_stage_order_index_for_admin_view(@stage_orders))

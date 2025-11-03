@@ -35,7 +35,7 @@ class Api::V1::RepresentativesApiController < ApplicationController
                 Group.where(fes_year_id: fes_year_id)
               end
 
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found representatives')
     else
       render json: fmt(ok, fit_representatives_index_for_admin_view(@groups))
@@ -57,7 +57,7 @@ class Api::V1::RepresentativesApiController < ApplicationController
   def get_search_representatives
     word = params[:word]
     @groups = Group.all.select { |group| is_search_condition(group, word) }
-    if @groups.count == 0
+    if @groups.none?
       render json: fmt(not_found, [], 'Not found representatives')
     else
       render json: fmt(ok, fit_representatives_index_for_admin_view(@groups))
