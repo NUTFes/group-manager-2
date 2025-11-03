@@ -47,7 +47,9 @@ jobs:
       # リポジトリを取得（履歴が必要な場合に備え fetch-depth: 0）
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
+          persist-credentials: true
 
       # Ruby をセットアップ（bundler-cache: true で Gem をキャッシュ）
       - name: Set up Ruby
