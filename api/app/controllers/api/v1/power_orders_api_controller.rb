@@ -33,7 +33,7 @@ class Api::V1::PowerOrdersApiController < ApplicationController
     @power_orders = @power_orders.preload(:group).where(power: power..) if power != 0
     @power_orders = @power_orders.joins(:group).where(groups: { group_category_id: group_category_id }) if group_category_id != 0
 
-    if @power_orders.count == 0
+    if @power_orders.none?
       render json: fmt(not_found, [], 'Not found power_orders')
     else
       render json: fmt(ok, fit_power_order_index_for_admin_view(@power_orders))
@@ -44,7 +44,7 @@ class Api::V1::PowerOrdersApiController < ApplicationController
   def get_search_power_orders
     word = params[:word]
     @power_orders = PowerOrder.all.select { |power_order| power_order.group.name.include?(word) || power_order.item.include?(word) }
-    if @power_orders.count == 0
+    if @power_orders.none?
       render json: fmt(not_found, [], 'Not found power_orders')
     else
       render json: fmt(ok, fit_power_order_index_for_admin_view(@power_orders))

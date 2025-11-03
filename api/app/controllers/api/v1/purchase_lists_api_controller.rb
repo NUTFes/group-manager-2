@@ -40,7 +40,7 @@ class Api::V1::PurchaseListsApiController < ApplicationController
                         PurchaseList.where(is_fresh: is_fresh_list[is_fresh]).preload(:food_product).select { |purchase_list| purchase_list.food_product.group.fes_year_id == fes_year_id }
                       end
 
-    if @purchase_lists.count == 0
+    if @purchase_lists.none?
       render json: fmt(not_found, [], 'Not found purchase_lists')
     else
       render json: fmt(ok, fit_purchase_list_index_for_admin_view(@purchase_lists))
@@ -51,7 +51,7 @@ class Api::V1::PurchaseListsApiController < ApplicationController
   def get_search_purchase_lists
     word = params[:word]
     @purchase_lists = PurchaseList.preload(:food_product).select { |purchase_list| purchase_list.items.include?(word) || purchase_list.food_product.name.include?(word) || purchase_list.food_product.group.name.include?(word) }
-    if @purchase_lists.count == 0
+    if @purchase_lists.none?
       render json: fmt(not_found, [], 'Not found purchase_lists')
     else
       render json: fmt(ok, fit_purchase_list_index_for_admin_view(@purchase_lists))

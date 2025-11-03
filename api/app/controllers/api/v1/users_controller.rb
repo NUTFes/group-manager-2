@@ -48,7 +48,7 @@ class Api::V1::UsersController < ApplicationController
       @users = User.where(role_id: role_id)
     end
 
-    if @users.count == 0
+    if @users.none?
       render json: fmt(not_found, [], 'Not found users')
     else
       render json: fmt(ok, fit_user_index_for_admin_view(@users))
@@ -59,7 +59,7 @@ class Api::V1::UsersController < ApplicationController
   def get_search_users
     word = params[:word]
     @users = User.where('name like ? or email like ?', "%#{word}%", "%#{word}%")
-    if @users.count == 0
+    if @users.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
       render json: fmt(ok, fit_user_index_for_admin_view(@users))

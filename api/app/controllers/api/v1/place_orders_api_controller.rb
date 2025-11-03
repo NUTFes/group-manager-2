@@ -50,7 +50,7 @@ class Api::V1::PlaceOrdersApiController < ApplicationController
   def get_search_place_orders
     word = params[:word]
     @place_orders = PlaceOrder.all.select { |place_order| place_order.group.name.include?(word) || place_order.to_place_name_h[:first].include?(word) || place_order.to_place_name_h[:second].include?(word) || place_order.to_place_name_h[:third].include?(word) }
-    if @place_orders.count == 0
+    if @place_orders.none?
       render json: fmt(not_found, [], 'Not found place_orders')
     else
       render json: fmt(ok, fit_place_order_index_for_admin_view(@place_orders))

@@ -37,7 +37,7 @@ class Api::V1::EmployeesApiController < ApplicationController
                    Employee.preload(:group).select { |employee| employee.group.fes_year_id == fes_year_id }
                  end
 
-    if @employees.count == 0
+    if @employees.none?
       render json: fmt(not_found, [], 'Not found empolees')
     else
       render json: fmt(ok, fit_employee_index_for_admin_view(@employees))
@@ -48,7 +48,7 @@ class Api::V1::EmployeesApiController < ApplicationController
   def get_search_employees
     word = params[:word]
     @employees = Employee.all.select { |employee| employee.group.name.include?(word) || employee.name.include?(word) }
-    if @employees.count == 0
+    if @employees.none?
       render json: fmt(not_found, [], 'Not found employees')
     else
       render json: fmt(ok, fit_employee_index_for_admin_view(@employees))

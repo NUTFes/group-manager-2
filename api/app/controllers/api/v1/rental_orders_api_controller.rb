@@ -35,7 +35,7 @@ class Api::V1::RentalOrdersApiController < ApplicationController
 
     @rental_orders = @rental_orders.joins(:group).where(groups: { group_category_id: group_category_id }) if group_category_id != 0
 
-    if @rental_orders.count == 0
+    if @rental_orders.none?
       render json: fmt(not_found, [], 'Not found rental_orders')
     else
       render json: fmt(ok, fit_rental_order_index_for_admin_view(@rental_orders))
@@ -46,7 +46,7 @@ class Api::V1::RentalOrdersApiController < ApplicationController
   def get_search_rental_orders
     word = params[:word]
     @rental_orders = RentalOrder.preload(:group).select { |rental_order| rental_order.group.name.include?(word) }
-    if @rental_orders.count == 0
+    if @rental_orders.none?
       render json: fmt(not_found, [], 'Not found rental_orders')
     else
       render json: fmt(ok, fit_rental_order_index_for_admin_view(@rental_orders))
