@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class RentalOrdersController < ApplicationController
-  before_action :set_rental_order, only: [:show, :update, :destroy]
+  before_action :set_rental_order, only: %i[show update destroy]
   before_action :set_rental_orders_by_group_id, only: [:get_by_group_id]
 
   # GET /rental_orders
@@ -26,14 +28,14 @@ class RentalOrdersController < ApplicationController
   # PATCH/PUT /rental_orders/1.json
   def update
     @rental_order.update(rental_order_params)
-    render json: fmt(created, @rental_order, "Updated rental_order id = "+params[:id])
+    render json: fmt(created, @rental_order, "Updated rental_order id = #{params[:id]}")
   end
 
   # DELETE /rental_orders/1
   # DELETE /rental_orders/1.json
   def destroy
     @rental_order.destroy
-    render json: fmt(ok, [], "Deleted rental_order = "+params[:id]) 
+    render json: fmt(ok, [], "Deleted rental_order = #{params[:id]}")
   end
 
   # GET /rental_orders/group_id/1
@@ -42,26 +44,27 @@ class RentalOrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_rental_order
-      if RentalOrder.exists?(params[:id])
-        @rental_order = RentalOrder.find(params[:id])
-      else
-        render json: fmt(not_found, [], "Not found rental_order = "+params[:id])
-      end
-    end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_rental_orders_by_group_id
-      if RentalOrder.exists?(group_id: params[:group_id])
-        @rental_orders = RentalOrder.where(group_id: params[:group_id])
-      else
-        render json: fmt(not_found, [], "Not found rental_order = "+params[:group_id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_rental_order
+    if RentalOrder.exists?(params[:id])
+      @rental_order = RentalOrder.find(params[:id])
+    else
+      render json: fmt(not_found, [], "Not found rental_order = #{params[:id]}")
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def rental_order_params
-      params.permit(:group_id, :rental_item_id, :num)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_rental_orders_by_group_id
+    if RentalOrder.exists?(group_id: params[:group_id])
+      @rental_orders = RentalOrder.where(group_id: params[:group_id])
+    else
+      render json: fmt(not_found, [], "Not found rental_order = #{params[:group_id]}")
     end
+  end
+
+  # Only allow a list of trusted parameters through.
+  def rental_order_params
+    params.permit(:group_id, :rental_item_id, :num)
+  end
 end

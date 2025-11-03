@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PurchaseListsController < ApplicationController
-  before_action :set_purchase_list, only: [:show, :update, :destroy]
+  before_action :set_purchase_list, only: %i[show update destroy]
 
   # GET /purchase_lists
   def index
@@ -67,7 +69,7 @@ class PurchaseListsController < ApplicationController
 
     PurchaseList.upsert_all(upsert)
     # 登録または更新されたレコードを抽出
-    processed = upsert.map do |attrs|
+    scopes = upsert.map do |attrs|
       if attrs[:id].present?
         PurchaseList.where(id: attrs[:id])
       else
@@ -77,10 +79,11 @@ class PurchaseListsController < ApplicationController
           fes_date_id: attrs[:fes_date_id]
         )
       end
-    end.reduce { |acc, scope| acc.or(scope) }
+    end
+    processed = scopes.reduce(PurchaseList.none, &:or)
 
     render json: fmt(created, processed)
-  rescue => e
+  rescue StandardError => e
     render json: fmt(internal_server_error, [], e.message), status: :internal_server_error
   end
 
