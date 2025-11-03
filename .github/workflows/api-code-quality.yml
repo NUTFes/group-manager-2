@@ -71,16 +71,13 @@ jobs:
       #  - [skip ci]: そのコミットで再度 CI を走らせない抑制用タグ
       - name: Commit auto-fixed files
         if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.repository == github.event.pull_request.head.repo.full_name)
-        run: |
-          if ! git diff --quiet; then
-            git config user.name  "github-actions[bot]"                                # bot としてコミット
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add api/
-            git commit -m "chore(rubocop): auto fix (-A) [skip ci]"
-            git push
-          else
-            echo "No changes to commit."
-          fi
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions[bot]
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: "chore(rubocop): auto fix (-A) [skip ci]"
+          add: "api/"
+          push: true
 
       # ③ 最終チェック
       #  - --parallel: 並列化で高速化
