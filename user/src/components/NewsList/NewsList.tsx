@@ -10,7 +10,7 @@ type NewsListProps = {
 const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
 
-  const sortedNews = (news || []).slice().sort((a, b) => a.id - b.id);
+  const sortedNews = news || [];
 
   const formattedDates = sortedNews.map((item) => {
     const date = new Date(item.createdAt);
