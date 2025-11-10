@@ -34,7 +34,7 @@
             <td>{{ powerOrder.power_order.item }}</td>
           </tr>
           <tr>
-            <th>電力 [w]</th>
+            <th>消費電力 [w]</th>
             <td>{{ powerOrder.power_order.power }}</td>
           </tr>
           <tr>
