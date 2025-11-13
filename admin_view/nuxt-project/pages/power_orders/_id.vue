@@ -72,7 +72,7 @@
           <input v-model="item" placeholder="入力してください" />
         </div>
         <div>
-          <h3>電力</h3>
+          <h3>消費電力</h3>
           <input v-model="power" type="number" placeholder="入力してください" />
         </div>
         <div>
