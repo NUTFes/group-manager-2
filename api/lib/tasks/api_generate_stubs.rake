@@ -2,11 +2,11 @@
 
 namespace :api do
   desc 'Generate API stubs from OpenAPI specification using openapi-generator-cli'
-  task generate_stubs: :environment do
+  task :generate_stubs do
     puts '🚀 Starting API stub generation from OpenAPI spec...'
 
-    # プロジェクトルートディレクトリ
-    rails_root = Rails.root.to_s
+    # プロジェクトルートディレクトリ（Rakeタスク実行時のカレントディレクトリから取得）
+    rails_root = Dir.pwd
     
     # 入力ファイルと出力ディレクトリの定義
     openapi_file = 'doc/openapi.yaml'
