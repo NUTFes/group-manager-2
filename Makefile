@@ -83,3 +83,21 @@ run-swagger:
 openapi:
 	docker compose run --rm api bundle exec rake routes:oas:docs
 	docker compose run --rm api bundle exec rake routes:oas:build
+
+openapi-cli:
+	@if [ -z "$(cmd)" ]; then \
+		echo "Usage: make openapi-cli cmd=\"version\""; \
+		exit 1; \
+	fi
+	./scripts/openapi-generator $(cmd)
+
+openapi-generate:
+	spec=$${spec:-openapi/openapi.yml}; \
+	output=$${output:-api/generated/server}; \
+	generator=$${generator:-ruby-on-rails}; \
+	extra=$${extra:-}; \
+	./scripts/openapi-generator generate \
+	  -i $$spec \
+	  -g $$generator \
+	  -o $$output \
+	  $$extra

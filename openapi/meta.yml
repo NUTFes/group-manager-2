@@ -1,4 +1,5 @@
 ---
+openapi: 3.0.0
 info:
   title: OAS API Document Title
   description: |-
@@ -14,3 +15,15 @@ info:
     name: ''
     url: ''
   version: 1.0.0
+externalDocs:
+  description: ''
+  url: ''
+servers:
+- url: http://localhost:3000
+  description: localhost
+tags:
+- name: venue_map
+  description: venue_map description
+  externalDocs:
+    description: description
+    url: url
