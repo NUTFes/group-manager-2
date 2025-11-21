@@ -11,6 +11,9 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        sidebar: '260px',
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
@@ -20,7 +23,7 @@ export default {
         font: 'var(--font-color)',
         alert: 'var(--alert-color)',
         sub: 'var(--sub-color)',
-        // fix: text-baseが元々あるから渋々変更
+        // Note: Using 'baseColor' instead of 'base' to avoid conflict with Tailwind's built-in 'text-base' class
         baseColor: 'var(--base-color)',
       },
     },

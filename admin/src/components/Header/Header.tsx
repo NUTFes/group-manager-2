@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Link from 'next/link';
+import Modal from '@/components/Modal';
 import { useHeaderHooks } from './hooks';
 
 const Header: FC = () => {
@@ -46,51 +47,26 @@ const Header: FC = () => {
         </div>
       </header>
 
-      {/* Modals - シンプルなプレースホルダー */}
-      {isOpenNotificationModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={closeNotificationModal}
-        >
-          <div
-            className="rounded-lg bg-white p-8 text-black"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2>通知</h2>
-            <button onClick={closeNotificationModal}>閉じる</button>
-          </div>
-        </div>
-      )}
+      {/* Modals */}
+      <Modal
+        isOpen={isOpenNotificationModal}
+        onClose={closeNotificationModal}
+        title="通知"
+      >
+        <p>通知はありません</p>
+      </Modal>
 
-      {isOpenMemoModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={closeMemoModal}
-        >
-          <div
-            className="rounded-lg bg-white p-8 text-black"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2>メモ</h2>
-            <button onClick={closeMemoModal}>閉じる</button>
-          </div>
-        </div>
-      )}
+      <Modal isOpen={isOpenMemoModal} onClose={closeMemoModal} title="メモ">
+        <p>メモはありません</p>
+      </Modal>
 
-      {isOpenAccountModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={closeAccountModal}
-        >
-          <div
-            className="rounded-lg bg-white p-8 text-black"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2>アカウント</h2>
-            <button onClick={closeAccountModal}>閉じる</button>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isOpenAccountModal}
+        onClose={closeAccountModal}
+        title="アカウント"
+      >
+        <p>アカウント情報</p>
+      </Modal>
     </div>
   );
 };

@@ -16,15 +16,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffffff;
-    --foreground: #ededed;
+    --background: #1a1a1a;
+    --foreground: #e0e0e0;
     --main-color: #34a854;
     --secondary-color: #98bf00;
     --thirdly-color: #324cd7;
-    --font-color: #484848;
+    --font-color: #e0e0e0;
     --alert-color: #ff6752;
     --sub-color: #b2b2b2;
-    --base-color: #ffffff;
+    --base-color: #2a2a2a;
   }
 }
 

@@ -11,7 +11,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen">
       <Header />
       <Menu />
-      <main className="ml-[260px] mt-[60px] p-8">{children}</main>
+      <main className="ml-sidebar mt-[60px] p-8">{children}</main>
     </div>
   );
 };

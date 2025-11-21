@@ -6,7 +6,7 @@ const Menu: FC = () => {
   const { menuSections } = useMenuHooks();
 
   return (
-    <div className="fixed left-0 z-[1] h-full w-[260px] overflow-auto bg-gradient-to-br from-gray-800/90 to-gray-800/80 pb-5 backdrop-blur-sm">
+    <div className="fixed left-0 z-[1] h-full w-sidebar overflow-auto bg-gradient-to-br from-gray-800/90 to-gray-800/80 pb-5 backdrop-blur-sm">
       <div className="flex w-full flex-col items-start justify-start gap-1.5 pb-[60px]">
         {menuSections.map((section) => (
           <div key={section.title} className="w-full">
