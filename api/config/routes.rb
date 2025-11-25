@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: '/letter_opener'
+  end
+
   # 識別番号割り当て
   get 'group_identification' => 'group_identification#index'
   post 'group_identification' => 'group_identification#create'
@@ -336,7 +340,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-      registrations: 'api/auth/registrations'
+      registrations: 'api/auth/registrations',
+      passwords: 'api/auth/passwords'
     }
     namespace :auth do
       resources :sessions
