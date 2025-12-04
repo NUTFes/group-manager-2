@@ -257,7 +257,7 @@ export const usePurchaseListsForm = (
 
   // initialDataが変更されたら、フォームの値をリセットする
   // 深い比較のためにJSONを使用し、パフォーマンスを考慮してuseRefで前回の値を記録
-  const previousInitialDataRef = useRef<string>();
+  const previousInitialDataRef = useRef<string | undefined>(undefined);
   const currentInitialDataJson = JSON.stringify(initialData);
 
   useEffect(() => {
