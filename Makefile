@@ -83,3 +83,6 @@ run-swagger:
 openapi:
 	docker compose run --rm api bundle exec rake routes:oas:docs
 	docker compose run --rm api bundle exec rake routes:oas:build
+
+erd:
+	docker compose run --rm api bundle exec rake erd filetype=png filename=er
