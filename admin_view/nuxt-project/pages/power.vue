@@ -74,7 +74,7 @@ export default {
           text: '製品'
         },
         {
-          text: '電力'
+          text: '消費電力'
         },
         {
           text: 'メーカー'

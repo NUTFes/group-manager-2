@@ -34,7 +34,7 @@
             <td>{{ powerOrder.power_order.item }}</td>
           </tr>
           <tr>
-            <th>電力 [w]</th>
+            <th>消費電力 [W]</th>
             <td>{{ powerOrder.power_order.power }}</td>
           </tr>
           <tr>
@@ -72,7 +72,7 @@
           <input v-model="item" placeholder="入力してください" />
         </div>
         <div>
-          <h3>電力</h3>
+          <h3>消費電力 [W]</h3>
           <input v-model="power" type="number" placeholder="入力してください" />
         </div>
         <div>
