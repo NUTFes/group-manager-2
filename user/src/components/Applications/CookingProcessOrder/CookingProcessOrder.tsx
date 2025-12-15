@@ -87,13 +87,13 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                                 content: foodProduct.name,
                               },
                               {
-                                label: '調理場の仕様有無(営業前)',
+                                label: '調理場の使用有無(営業前)',
                                 content: cookingProcessOrder.preOpenKitchen
                                   ? '使用する'
                                   : '使用しない',
                               },
                               {
-                                label: '調理場の仕様有無(営業中)',
+                                label: '調理場の使用有無(営業中)',
                                 content: cookingProcessOrder.duringOpenKitchen
                                   ? '使用する'
                                   : '使用しない',
