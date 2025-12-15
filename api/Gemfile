@@ -65,5 +65,5 @@ gem 'rubocop-rails', require: false
 gem 'rubocop-rspec', require: false
 
 group :development do
-  gem "rails-erd"
+  gem 'rails-erd'
 end
