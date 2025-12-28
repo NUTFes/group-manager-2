@@ -84,7 +84,7 @@ export default {
 .drop-down-button {
   border-radius: 0px;
   width: 160px;
-  height: 35px;
+  height: auto;
   padding: 5px 5px 5px 15px;
   backdrop-filter: blur(4px);
   text-align: center;

@@ -212,7 +212,7 @@ export default {
       groupCategories: [],
       headers: [
         "ID",
-        "グループ名",
+        "参加団体",
         "委員",
         "国際",
         "学外",
