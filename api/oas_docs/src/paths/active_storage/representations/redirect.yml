@@ -1,0 +1,72 @@
+---
+paths:
+  "/rails/active_storage/representations/redirect/{signed_blob_id}/{variation_key}/*filename":
+    get:
+      tags:
+      - active_storage/representations/redirect
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: active_storage/representations/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.representations.Redirect"
+        '404':
+          description: active_storage/representations/redirect description
+        '422':
+          description: active_storage/representations/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.representations.Redirect"
+      deprecated: false
+      parameters:
+      - name: signed_blob_id
+        in: path
+        description: signed_blob_id
+        required: true
+        schema:
+          type: integer
+      - name: variation_key
+        in: path
+        description: variation_key
+        required: true
+        schema:
+          type: string
+  "/rails/active_storage/representations/{signed_blob_id}/{variation_key}/*filename":
+    get:
+      tags:
+      - active_storage/representations/redirect
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: active_storage/representations/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.representations.Redirect"
+        '404':
+          description: active_storage/representations/redirect description
+        '422':
+          description: active_storage/representations/redirect description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/activestorage.representations.Redirect"
+      deprecated: false
+      parameters:
+      - name: signed_blob_id
+        in: path
+        description: signed_blob_id
+        required: true
+        schema:
+          type: integer
+      - name: variation_key
+        in: path
+        description: variation_key
+        required: true
+        schema:
+          type: string

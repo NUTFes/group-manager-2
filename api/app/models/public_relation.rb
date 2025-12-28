@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PublicRelation < ApplicationRecord
   belongs_to :group
 
@@ -8,8 +10,9 @@ class PublicRelation < ApplicationRecord
       picture_name: picture_name,
       picture_path: picture_path,
       blurb: blurb,
+      is_announcement_requested: is_announcement_requested,
       created_at: created_at,
-      updated_at: updated_at,
+      updated_at: updated_at
     }
   end
 end

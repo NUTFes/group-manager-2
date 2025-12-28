@@ -60,10 +60,9 @@ export default {
     Update,
   },
   roles: [
-    { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
-    { id: 2, name: "manager" }, //　参加者( 参加団体部門長+国際交流部門長)
-    { id: 3, name: "staff" }, //総務局員
-    { id: 4, name: "user" }, //参加団体,企画局員
+    { id: 1, name: "manager" }, //　GM2メンバー,総務局長,総務副局長
+    { id: 2, name: "staff" }, //総務局員
+    { id: 3, name: "user" }, //参加団体,企画局員
   ],
   mounted() {
     window.addEventListener("scroll", this.saveScrollPosition);

@@ -1,0 +1,12 @@
+---
+components:
+  schemas:
+    devisetokenauth.Session:
+      type: object
+      properties:
+        email:
+          type: string
+          description: nutfes-taro@email.com
+        password:
+          type: string
+          description: password

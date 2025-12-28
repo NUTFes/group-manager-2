@@ -1,4 +1,10 @@
+# frozen_string_literal: true
+
 class Api::V1::EmployeesApiController < ApplicationController
+  before_action :authenticate_api_user!, only: %i[
+    get_employee_index_for_admin_view get_employee_show_for_admin_view
+    get_refinement_employees get_search_employees
+  ]
 
   def get_employee_index_for_admin_view
     @employees = Employee.with_groups
@@ -11,43 +17,41 @@ class Api::V1::EmployeesApiController < ApplicationController
   end
 
   def fit_employee_index_for_admin_view(employees)
-    employees.map{
-      |employee|
+    employees.map do |employee|
       {
-        "employee": employee,
-        "group": employee.group,
-        "stool_test": employee.stool_test
+        employee: employee,
+        group: employee.group,
+        stool_test: employee.stool_test
       }
-    }
+    end
   end
 
   # 絞り込み機能
   def get_refinement_employees
     fes_year_id = params[:fes_year_id].to_i
     # 指定なし
-    if fes_year_id == 0
-      @employees = Employee.all
-      #fes_year_id指定
-    else
-      @employees = Employee.preload(:group).map{ |employee| employee if employee.group.fes_year_id == fes_year_id }.compact
-    end
+    @employees = if fes_year_id == 0
+                   Employee.all
+                 # fes_year_id指定
+                 else
+                   Employee.preload(:group).select { |employee| employee.group.fes_year_id == fes_year_id }
+                 end
 
-    if @employees.count == 0
-      render json: fmt(not_found, [], "Not found empolees")
-    else 
+    if @employees.none?
+      render json: fmt(not_found, [], 'Not found empolees')
+    else
       render json: fmt(ok, fit_employee_index_for_admin_view(@employees))
     end
   end
 
-  #あいまい検索
+  # あいまい検索
   def get_search_employees
     word = params[:word]
-    @employees = Employee.all.map{ |employee| employee if employee.group.name.include?(word) || employee.name.include?(word) }.compact
-    if @employees.count == 0
-      render json: fmt(not_found, [], "Not found employees")
+    @employees = Employee.all.select { |employee| employee.group.name.include?(word) || employee.name.include?(word) }
+    if @employees.none?
+      render json: fmt(not_found, [], 'Not found employees')
     else
       render json: fmt(ok, fit_employee_index_for_admin_view(@employees))
     end
   end
-
 end

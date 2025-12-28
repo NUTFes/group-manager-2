@@ -1,0 +1,24 @@
+---
+paths:
+  "/rails/action_mailbox/postmark/inbound_emails":
+    post:
+      tags:
+      - action_mailbox/ingresses/postmark/inbound_email
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: action_mailbox/ingresses/postmark/inbound_email description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
+        '422':
+          description: action_mailbox/ingresses/postmark/inbound_email description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/actionmailbox.ingresses.postmark.InboundEmail"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/actionmailbox.ingresses.postmark.InboundEmail"

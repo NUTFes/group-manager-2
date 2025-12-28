@@ -102,7 +102,7 @@
           <input v-model="item" placeholder="入力してください" />
         </div>
         <div>
-          <h3>電力</h3>
+          <h3>消費電力</h3>
           <input v-model="power" type="number" placeholder="入力してください" />
         </div>
         <div>
@@ -134,12 +134,14 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
+
 export default {
   watchQuery: ["page"],
   data() {
     return {
       powerOrders: [],
-      headers: ["ID", "参加団体", "委員", "製品", "電力 [w]"],
+      headers: ["ID", "参加団体", "委員", "製品", "消費電力 [W]"],
       isOpenAddModal: false,
       refYears: "Years",
       refYearID: 0,
@@ -364,7 +366,8 @@ export default {
     async downloadCSV() {
       const url =
         this.$config.apiURL + "/api/v1/get_power_orders_csv/" + this.refYearID;
-      window.open(url, "電力申請_CSV");
+      await downloadFile(this.$axios,url, "電力申請_CSV", "text/csv");
+      this.openSnackBar("電力申請のCSVをダウンロードしました");
     },
   },
 };

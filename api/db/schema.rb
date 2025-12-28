@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_22_012844) do
+ActiveRecord::Schema.define(version: 2025_06_10_212842) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.boolean "pre_open_kitchen", default: false, null: false
     t.boolean "during_open_kitchen", default: false, null: false
     t.text "tent"
+    t.bigint "food_product_id", null: false
+    t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
     t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
 
@@ -103,6 +105,19 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "fire_equipment_orders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "quantity", null: false
+    t.integer "fuel", default: 0
+    t.text "usage"
+    t.boolean "is_takeaway"
+    t.text "remark"
+    t.bigint "group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_fire_equipment_orders_on_group_id"
+  end
+
   create_table "food_products", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
     t.string "name"
@@ -111,6 +126,7 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.integer "second_day_num"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_alcohol"
   end
 
   create_table "grades", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -223,6 +239,7 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.text "blurb"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_announcement_requested", default: false, null: false
   end
 
   create_table "purchase_lists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -235,6 +252,7 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "purchase_date"
     t.string "url"
+    t.string "remark"
   end
 
   create_table "rentable_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -361,6 +379,14 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.integer "student_id"
   end
 
+  create_table "un_registered_groups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.integer "order_type", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id"], name: "index_un_registered_groups_on_group_id"
+  end
+
   create_table "user_details", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "tel"
     t.integer "grade_id"
@@ -439,6 +465,9 @@ ActiveRecord::Schema.define(version: 2024_05_22_012844) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
+  add_foreign_key "fire_equipment_orders", "groups"
+  add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
 end

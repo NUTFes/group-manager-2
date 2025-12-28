@@ -135,23 +135,23 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   watchQuery: ["page"],
   data() {
     return {
       headers: ["ID", "名前", "権限"],
       roles: [
-        { id: 1, name: "developer" }, //　開発者( GM2開発者と局長/副局長 全権限を与える)
-        { id: 2, name: "manager" }, //　参加者( 参加団体部門長+国際交流部門長)
-        { id: 3, name: "staff" }, //総務局員
-        { id: 4, name: "user" }, //参加団体,企画局員
+        { id: 1, name: "manager" },
+        { id: 2, name: "staff" },
+        { id: 3, name: "user" },
       ],
       departmentList: [
         { id: 1,  name: "機械工学分野/機械創造工学課程" },
-        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学過程" },
-        { id: 3,  name: "物質生物工学分野/物質材料工学過程/生物機能工学過程" },
-        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学過程" },
-        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学過程" },
+        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学課程" },
+        { id: 3,  name: "物質生物工学分野/物質材料工学課程/生物機能工学課程" },
+        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学課程" },
+        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学課程" },
         { id: 6,  name: "機械工学分野/機械創造工学専攻" },
         { id: 7,  name: "電気電子情報工学分野/電気電子情報工学専攻" },
         { id: 8,  name: "物質生物工学分野/物質材料工学専攻/生物機能工学専攻" },
@@ -199,39 +199,59 @@ export default {
       createPassword: null,
       createPasswordConfirmation: null,
       createUserId: null,
-      createRoleId: 4,
-    };
-  },
-  async asyncData({ $axios }) {
-    const url = "/api/v1/get_user_index_for_admin_view";
-    const userRes = await $axios.$get(url);
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    return {
-      users: userRes.data,
-      yearList: yearsRes.data,
+      createRoleId: 3,
     };
   },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
+    canCreate() {
+      return (
+        this.createName &&
+        this.createStudentId &&
+        this.createEmail &&
+        this.createTel &&
+        this.createDepartmentId &&
+        this.createGradeId &&
+        this.createPassword &&
+        this.createPasswordConfirmation &&
+        this.createPassword === this.createPasswordConfirmation
+      );
+    },
   },
   mounted() {
-    window.addEventListener('scroll', this.saveScrollPosition);
+    // スクロール位置の復元リスナー
+    window.addEventListener("scroll", this.saveScrollPosition);
 
-    const storedRoleID = localStorage.getItem(this.$route.path + 'RefRole');
-    if (storedRoleID) {
-      this.refRoleID = Number(storedRoleID);
-      this.updateFilters(this.refRoleID, this.roles);
-    } else {
-      this.refRoles = 'Role';
-    }
-    this.fetchFilteredData();
+    // 初期データ取得
+    this.fetchInitialData();
   },
   methods: {
     saveScrollPosition() {
-      localStorage.setItem('scrollPosition-' + this.$route.path, window.scrollY);
+      localStorage.setItem(
+        "scrollPosition-" + this.$route.path,
+        window.scrollY
+      );
+    },
+    async fetchInitialData() {
+      // ユーザー一覧と年度リストを同時取得
+      const [userRes, yearsRes] = await Promise.all([
+        this.$axios.$get("/api/v1/get_user_index_for_admin_view"),
+        this.$axios.$get("/fes_years"),
+      ]);
+      this.users = userRes.data;
+      this.yearList = yearsRes.data;
+
+      // フィルタ・検索・スクロール復元
+      const storedRoleID = localStorage.getItem(
+        this.$route.path + "RefRole"
+      );
+      if (storedRoleID) {
+        this.refRoleID = Number(storedRoleID);
+        this.updateFilters(this.refRoleID, this.roles);
+      }
+      this.fetchFilteredData();
     },
     openAddModal() {
       this.isOpenAddModal = false;
@@ -288,6 +308,7 @@ export default {
         this.users.push(res);
       }
     },
+    // TODO: api/auth/のAPIに変更し、user_detailsをきちんと登録する（現状は電話番号が登録できない）
     async simplyUserCreate() {
       const simply_user_create_url = "/users/simply_user_create"
       var simply_user_create_params = {

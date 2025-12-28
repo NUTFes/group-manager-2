@@ -72,14 +72,12 @@
       title="権限の編集"
     >
       <template v-slot:form>
-        <label for="developer" style="color: black">Developer</label>
-        <input type="radio" id="developer" value="1" v-model="picked" />
         <label for="manager" style="color: black">Manager</label>
-        <input type="radio" id="manager" value="2" v-model="picked" />
+        <input type="radio" id="manager" value="1" v-model="picked" />
         <label for="staff" style="color: black">Staff</label>
-        <input type="radio" id="staff" value="3" v-model="picked" />
+        <input type="radio" id="staff" value="2" v-model="picked" />
         <label for="user" style="color: black">User</label>
-        <input type="radio" id="user" value="4" v-model="picked" />
+        <input type="radio" id="user" value="3" v-model="picked" />
         <span style="color: black"
           >{{ roles[role - 1].name }} → {{ roles[picked - 1].name }}</span
         >
@@ -142,6 +140,7 @@ export default {
     ...mapState({
       selfRoleId: (state) => state.users.role,
       uid: (state) => state.users.uid,
+      roleID: (state) => state.users.role,
     }),
   },
   data() {
@@ -153,33 +152,51 @@ export default {
       passwordConfirm: "",
       isOpenSnackBar: false,
       roles: [
-        { id: 1, name: "developer" },
-        { id: 2, name: "manager" },
-        { id: 3, name: "staff" },
-        { id: 4, name: "user" },
+        { id: 1, name: "manager" },
+        { id: 2, name: "staff" },
+        { id: 3, name: "user" },
       ],
+      user: {
+        user: {
+          id: "",
+          name: "",
+          email: "",
+          created_at: "",
+          updated_at: "",
+        },
+        user_detail: {
+          tel: "",
+          student_id: "",
+        },
+        user_detail_info: {
+          department: "",
+          grade: "",
+        },
+        role: {
+          id: "",
+          name: "",
+        },
+      },
     };
-  },
-  async asyncData({ $axios, route }) {
-    const routeId = route.path.replace("/users/", "");
-    const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
-    const response = await $axios.$get(url);
-    return {
-      user: response.data,
-      role: response.data.role.id,
-      routeId: routeId,
-      route: url,
-    };
-  },
-  computed: {
-    ...mapState({
-      roleID: (state) => state.users.role,
-    }),
   },
   mounted() {
     window.scrollTo(0, 0);
+
+    // データ取得
+    this.fetchInitialData();
   },
   methods: {
+
+    async fetchInitialData() {
+      const routeId = this.$route.path.replace("/users/", "");
+      this.routeId = routeId
+      const url = "/api/v1/get_user_show_for_admin_view/" + routeId;
+      const response = await this.$axios.$get(url);
+      this.user = response.data;
+      this.role = response.data.role.id,
+      this.route = url;
+
+    },
     openEditModal() {
       this.isOpenEditModal = false;
       this.isOpenEditModal = true;

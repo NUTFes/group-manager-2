@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    activestorage.DirectUpload:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/activestorage.DirectUpload"

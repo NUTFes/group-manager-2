@@ -7,12 +7,18 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # origins 'http://localhost:8080',
-    origins '*'
+    if Rails.env.production?
+      # 本番環境用のドメインたち✨
+      origins 'https://group-manager.nutfes.net', 'https://group-manager-admin.nutfes.net'
+    else
+      # 開発環境用のローカルホスト系🔧
+      origins 'http://localhost:8000', 'http://localhost:8003','http://localhost:8004','http://admin_view:8000','http://user:8003','http://swagger-ui:8004', 'http://user:6006', 'http://localhost:6006'
+    end
 
     resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      credentials: true, # ←認証情報使うなら必須！
       expose: ['access-token', 'client', 'uid']
   end
 end

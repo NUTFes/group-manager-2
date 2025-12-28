@@ -121,12 +121,14 @@ export default {
       });
     },
     async submit() {
+      const encodedBody = encodeURIComponent(this.body.replace(/\r\n?/g, "\n"));
+
       const url =
         "/news/" +
         "?title=" +
         this.title +
         "&body=" +
-        this.body
+        encodedBody
 
       this.$axios.$post(url).then((res) => {
         this.title = "";

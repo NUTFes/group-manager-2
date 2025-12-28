@@ -70,6 +70,7 @@
             <td v-if="purchaseList.purchase_list.is_fresh" class="fresh">〇</td>
             <td v-if="!purchaseList.purchase_list.is_fresh" class="fresh">×</td>
             <td class="url">{{ purchaseList.purchase_list.url }}</td>
+            <td class="remark">{{ purchaseList.purchase_list.remark }}</td>
           </tr>
         </template>
       </Table>
@@ -141,6 +142,10 @@
           <h3>ネットで買った場合はURLを記入してください</h3>
           <input v-model="url" placeholder="入力してください" />
         </div>
+        <div>
+          <h3>備考</h3>
+          <input v-model="remark" placeholder="入力してください" />
+        </div>
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
@@ -157,11 +162,12 @@
 
 <script>
 import { mapState } from "vuex";
+import { downloadFile } from '~/utils/download-file';
 export default {
   watchQuery: ["page"],
   data() {
     return {
-      headers: ["ID", "参加団体", "販売品名", "購入品", "なまもの", "URL"],
+      headers: ["ID", "参加団体", "販売品名", "購入品", "なまもの", "URL", "備考"],
       isOpenAddModal: false,
       isOpenSnackBar: false,
       isFreshList: [
@@ -186,6 +192,7 @@ export default {
       purchase_date: null,
       isFresh: null,
       url: null,
+      remark: null,
     };
   },
   async asyncData({ $axios }) {
@@ -203,6 +210,7 @@ export default {
     const currentYears = yearsRes.data.filter(function (element) {
       return element.id == currentYearRes.data.fes_year_id;
     });
+    console.log(purchaseListsRes.data);
     return {
       purchaseLists: purchaseListsRes.data,
       yearList: yearsRes.data,
@@ -351,7 +359,9 @@ export default {
         "&purchase_date=" +
         this.purchase_date +
         "&url=" +
-        this.url;
+        this.url +
+        "&remark=" +
+        this.remark;
 
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(this.items + "を追加しました");
@@ -362,6 +372,7 @@ export default {
         this.isFresh = null;
         this.purchase_date = null;
         this.url = null;
+        this.remark = null;
         this.reload(response.data.id);
         this.closeAddModal();
       });
@@ -371,7 +382,8 @@ export default {
         this.$config.apiURL +
         "/api/v1/get_purchase_lists_csv/" +
         this.refYearID;
-      window.open(url, "購入品申請_CSV");
+      await downloadFile(this.$axios,url, "購入品申請_" + this.refYears + ".csv","text/csv");
+      this.openSnackBar("購入申請のCSVをダウンロードしました");
     },
   },
 };
@@ -379,19 +391,19 @@ export default {
 
 <style scoped>
 .id {
-  width: 5%;
+  width: 10%;
   word-break: break-all;
 }
 .group {
-  width: 20%;
+  width: 15%;
   word-break: break-all;
 }
 .food {
-  width: 20%;
+  width: 15%;
   word-break: break-all;
 }
 .purchase {
-  width: 20%;
+  width: 15%;
   word-break: break-all;
 }
 .fresh {
@@ -399,7 +411,11 @@ export default {
   word-break: break-all;
 }
 .url {
-  width: 25%;
+  width: 15%;
+  word-break: break-all;
+}
+.remark {
+  width: 10%;
   word-break: break-all;
 }
 </style>

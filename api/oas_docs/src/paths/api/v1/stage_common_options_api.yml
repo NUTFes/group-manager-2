@@ -1,0 +1,95 @@
+---
+paths:
+  "/api/v1/get_refinement_stage_common_options":
+    post:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
+  "/api/v1/get_search_stage_common_options":
+    post:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.StageCommonOptionsApi"
+  "/api/v1/get_stage_common_option_index_for_admin_view":
+    get:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+      deprecated: false
+  "/api/v1/get_stage_common_option_show_for_admin_view/{id}":
+    get:
+      tags:
+      - api/v1/stage_common_options_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+        '404':
+          description: api/v1/stage_common_options_api description
+        '422':
+          description: api/v1/stage_common_options_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.StageCommonOptionsApi"
+      deprecated: false
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer

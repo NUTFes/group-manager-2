@@ -22,31 +22,51 @@ build db:
 	docker compose run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/develop
 
 prod-build:
-	docker-compose -f docker-compose.prod.yml build
-	docker-compose -f docker-compose.prod.yml run --rm user_front npm install
-	docker-compose -f docker-compose.prod.yml run --rm admin_view npm install
-	docker-compose -f docker-compose.prod.yml run --rm user_front npm run build
-	docker-compose -f docker-compose.prod.yml run --rm admin_view npm run build
-	docker-compose -f docker-compose.prod.yml run --rm api rails db:migrate
+	docker compose -f compose.prod.yml build
+	docker compose -f compose.prod.yml run --rm user_front npm install
+	docker compose -f compose.prod.yml run --rm admin_view npm install
+	docker compose -f compose.prod.yml run --rm user_front npm run build
+	docker compose -f compose.prod.yml run --rm admin_view npm run build
+	docker compose -f compose.prod.yml run --rm api rails db:migrate
 
 prod-build-seed:
-	docker-compose -f docker-compose.prod.yml build
-	docker-compose -f docker-compose.prod.yml run --rm user_front npm install
-	docker-compose -f docker-compose.prod.yml run --rm admin_view npm install
-	docker-compose -f docker-compose.prod.yml run --rm user_front npm run build
-	docker-compose -f docker-compose.prod.yml run --rm admin_view npm build
-	docker-compose -f docker-compose.prod.yml run --rm api rails db:migrate
-	docker-compose -f docker-compose.prod.yml run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/production
+	docker compose -f compose.prod.yml build
+	docker compose -f compose.prod.yml run --rm user_front npm install
+	docker compose -f compose.prod.yml run --rm admin_view npm install
+	docker compose -f compose.prod.yml run --rm user_front npm run build
+	docker compose -f compose.prod.yml run --rm admin_view npm build
+	docker compose -f compose.prod.yml run --rm api rails db:migrate
+	docker compose -f compose.prod.yml run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/production
 
 prod-up:
-	docker-compose -f docker-compose.prod.yml up -d
+	docker compose -f compose.prod.yml up -d
 
 prod-down:
-	docker-compose -f docker-compose.prod.yml down
+	docker compose -f compose.prod.yml down
 
 prod-restart:
-	docker-compose -f docker-compose.prod.yml down
-	docker-compose -f docker-compose.prod.yml up -d
+	docker compose -f compose.prod.yml down
+	docker compose -f compose.prod.yml up -d
 
 prod-logs:
-	docker-compose -f docker-compose.prod.yml logs
+	docker compose -f compose.prod.yml logs
+
+gen-component:
+	docker compose run --rm user pnpm run scaff:component
+	docker compose run --rm user pnpm run fmt
+
+run-storybook:
+	docker compose run --rm -p 6006:6006 user pnpm run storybook
+
+fmt:
+	docker compose run --rm user pnpm run fmt
+
+run-swagger:
+	docker compose -f compose.swagger.yml up -d
+
+openapi:
+	docker compose run --rm api bundle exec rake routes:oas:docs
+	docker compose run --rm api bundle exec rake routes:oas:build
+
+erd:
+	docker compose run --rm api bundle exec rake erd filetype=png filename=er

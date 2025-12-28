@@ -1,0 +1,8 @@
+---
+components:
+  requestBodies:
+    PublicRelation:
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/PublicRelation"

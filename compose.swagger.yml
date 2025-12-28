@@ -1,0 +1,10 @@
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "nutfes-gm3-swagger-ui"
+    ports:
+      - "8004:8080"
+    volumes:
+      - ./api/oas_docs/dist:/oas_docs
+    environment:
+      SWAGGER_JSON: /oas_docs/oas_doc.yml

@@ -1,7 +1,8 @@
-Announcement.seed( :id,
-  {
-    id: 1,
-    group_id: 1,
-    message: 'announcement test'
-  },
-)
+# frozen_string_literal: true
+
+Announcement.seed(:id,
+                  {
+                    id: 1,
+                    group_id: 1,
+                    message: 'announcement test'
+                  })

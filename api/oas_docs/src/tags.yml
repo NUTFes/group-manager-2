@@ -1,0 +1,7 @@
+---
+tags:
+- name: venue_map
+  description: venue_map description
+  externalDocs:
+    description: description
+    url: url
