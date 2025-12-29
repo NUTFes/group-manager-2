@@ -1,0 +1,100 @@
+{
+  "languageSwitcher": {
+    "label": "言語切り替え",
+    "japanese": "日本語",
+    "english": "English"
+  },
+  "news": {
+    "title": "お知らせ",
+    "none": "お知らせはありません。",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました"
+  },
+  "welcomeBox": {
+    "register": "新規登録",
+    "registerDescription": "初めての方はこちら",
+    "login": "ログイン",
+    "loginDescription": "すでにアカウントをお持ちの方はこちら"
+  },
+  "loginModal": {
+    "emailLabel": "メールアドレス",
+    "emailNote": "例：s123456@stn.nagaokaut.ac.jp",
+    "passwordLabel": "パスワード",
+    "submit": "ログイン",
+    "submitting": "ログイン中...",
+    "errors": {
+      "invalidCredentials": "emailかpasswordが違います"
+    },
+    "toasts": {
+      "loginFailed": "ログインに失敗しました",
+      "loginSuccess": "ログインに成功しました"
+    }
+  },
+  "registerCarousel": {
+    "steps": {
+      "email": "メールアドレス",
+      "representative": "代表者情報",
+      "confirm": "確認"
+    },
+    "placeholders": {
+      "select": "選択してください"
+    },
+    "labels": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "passwordConfirm": "パスワード（確認用）",
+      "name": "名前",
+      "tel": "電話番号",
+      "studentId": "学籍番号",
+      "grade": "学年",
+      "department": "学科"
+    },
+    "notes": {
+      "email": "例：s123456@stn.nagaokaut.ac.jp",
+      "password": "英数字8文字以上",
+      "passwordConfirm": "英数字8文字以上",
+      "name": "例：長岡 太郎",
+      "tel": "例：09012345678",
+      "studentId": "例：12345678"
+    },
+    "review": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "name": "名前",
+      "tel": "電話番号",
+      "studentId": "学籍番号",
+      "grade": "学年",
+      "department": "学科"
+    },
+    "buttons": {
+      "previous": "修正",
+      "submit": "登録",
+      "next": "次へ"
+    },
+    "errors": {
+      "emailTaken": "このメールアドレスは既に登録されています。",
+      "emailDefault": "メールアドレスに誤りがあります。",
+      "passwordShort": "パスワードは6文字以上である必要があります。",
+      "passwordDefault": "パスワードに誤りがあります。",
+      "passwordConfirmMismatch": "パスワードが一致しません。",
+      "passwordConfirmDefault": "パスワード確認に誤りがあります。",
+      "telInvalid": "電話番号に誤りがあります。",
+      "studentIdInvalid": "学籍番号に誤りがあります。",
+      "gradeInvalid": "学年に誤りがあります。",
+      "departmentInvalid": "学科に誤りがあります。",
+      "userDetailsDefault": "ユーザー詳細情報に誤りがあります。",
+      "requestError": "通信エラーが発生しました。",
+      "requestFailed": "通信に失敗しました。時間をおいて再度お試しください。"
+    },
+    "toasts": {
+      "registrationSuccess": "登録が完了しました。",
+      "autoLogin": "自動でログインします。そのままお待ちください。",
+      "loginSuccess": "ログインしました。",
+      "loginFailed": "ログインに失敗しました。",
+      "retryLogin": "再度ログインしてください。"
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."
+  }
+}

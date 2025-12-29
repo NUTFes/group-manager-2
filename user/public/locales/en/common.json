@@ -1,0 +1,100 @@
+{
+  "languageSwitcher": {
+    "label": "Language selector",
+    "japanese": "Japanese",
+    "english": "English"
+  },
+  "news": {
+    "title": "News",
+    "none": "No news available.",
+    "loading": "Loading...",
+    "error": "An error has occurred"
+  },
+  "welcomeBox": {
+    "register": "Register",
+    "registerDescription": "New users start here",
+    "login": "Log in",
+    "loginDescription": "Existing users sign in here"
+  },
+  "loginModal": {
+    "emailLabel": "Email address",
+    "emailNote": "e.g., s123456@stn.nagaokaut.ac.jp",
+    "passwordLabel": "Password",
+    "submit": "Log in",
+    "submitting": "Signing in...",
+    "errors": {
+      "invalidCredentials": "Email or password is incorrect"
+    },
+    "toasts": {
+      "loginFailed": "Failed to sign in",
+      "loginSuccess": "Signed in successfully"
+    }
+  },
+  "registerCarousel": {
+    "steps": {
+      "email": "Email",
+      "representative": "Representative",
+      "confirm": "Review"
+    },
+    "placeholders": {
+      "select": "Please select"
+    },
+    "labels": {
+      "email": "Email address",
+      "password": "Password",
+      "passwordConfirm": "Confirm password",
+      "name": "Name",
+      "tel": "Phone number",
+      "studentId": "Student ID",
+      "grade": "Grade",
+      "department": "Department"
+    },
+    "notes": {
+      "email": "e.g., s123456@stn.nagaokaut.ac.jp",
+      "password": "At least 8 alphanumeric characters",
+      "passwordConfirm": "At least 8 alphanumeric characters",
+      "name": "e.g., Taro Nagaoka",
+      "tel": "e.g., 09012345678",
+      "studentId": "e.g., 12345678"
+    },
+    "review": {
+      "email": "Email address",
+      "password": "Password",
+      "name": "Name",
+      "tel": "Phone number",
+      "studentId": "Student ID",
+      "grade": "Grade",
+      "department": "Department"
+    },
+    "buttons": {
+      "previous": "Edit",
+      "submit": "Submit",
+      "next": "Next"
+    },
+    "errors": {
+      "emailTaken": "This email address is already registered.",
+      "emailDefault": "There is an issue with the email address.",
+      "passwordShort": "Password must be at least 6 characters.",
+      "passwordDefault": "There is an issue with the password.",
+      "passwordConfirmMismatch": "Passwords do not match.",
+      "passwordConfirmDefault": "There is an issue with the password confirmation.",
+      "telInvalid": "There is an issue with the phone number.",
+      "studentIdInvalid": "There is an issue with the student ID.",
+      "gradeInvalid": "There is an issue with the grade selection.",
+      "departmentInvalid": "There is an issue with the department selection.",
+      "userDetailsDefault": "There is an issue with the user details.",
+      "requestError": "A network error has occurred.",
+      "requestFailed": "The request failed. Please try again later."
+    },
+    "toasts": {
+      "registrationSuccess": "Registration completed.",
+      "autoLogin": "Signing you in automatically. Please wait.",
+      "loginSuccess": "Signed in successfully.",
+      "loginFailed": "Failed to sign in.",
+      "retryLogin": "Please try signing in again."
+    }
+  },
+  "footer": {
+    "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."
+  }
+}
