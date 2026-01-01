@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useGetVenueMap } from '@/api/venueMapApi';
+import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
 
 export const useVenueMapHooks = (groupId: number) => {
+  const { t } = useTranslation('common');
   const {
     venueMap,
     error: fetchError,
@@ -25,8 +27,9 @@ export const useVenueMapHooks = (groupId: number) => {
   const formItems: FormItem[] = venueMap
     ? [
         {
-          label: venueMapLabels.pictureName,
-          content: venueMap.pictureName || '未設定',
+          label: t(venueMapLabels.pictureName),
+          content:
+            venueMap.pictureName || t('applications.venueMap.summary.notSet'),
         },
       ]
     : [];
