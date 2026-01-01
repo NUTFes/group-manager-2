@@ -1,6 +1,7 @@
-import type { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
-import { DepartmentList, GradeList } from '@/utils/list';
+import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
+import { useTranslation } from 'next-i18next';
 import { viceRepresentativeLabels } from '@/components/Applications/label';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -24,6 +25,9 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
   mutateViceRepresentative,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const { t } = useTranslation('common');
+  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
+  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
   const {
     setValue,
     errors,
@@ -44,7 +48,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
       <form onSubmit={onSubmit(toEdit)} className="w-full">
         <div>
           <Radio
-            label={viceRepresentativeLabels[0]}
+            label={t(viceRepresentativeLabels[0])}
             onChange={(value) => setIsIndividualById(Number(value))}
             options={registerOrNotOption}
             required
@@ -54,50 +58,50 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
           {isIndividual === false && (
             <div>
               <TextBox
-                label={viceRepresentativeLabels[1]}
+                label={t(viceRepresentativeLabels[1])}
                 value={values.name}
                 onChange={(value) => setValue('name', value)}
-                note="例：長岡　太郎"
+                note={t('applications.viceRepresentative.notes.name')}
                 required
                 error={errors.name?.message}
               />
               <TextBox
-                label={viceRepresentativeLabels[2]}
+                label={t(viceRepresentativeLabels[2])}
                 value={values.studentId ? values.studentId.toString() : ''}
                 onChange={(value) => setValue('studentId', Number(value))}
-                note="半角数字のみ8桁(例：12345678)"
+                note={t('applications.viceRepresentative.notes.studentId')}
                 required
                 error={errors.studentId?.message}
               />
               <Selector
-                label={viceRepresentativeLabels[3]}
+                label={t(viceRepresentativeLabels[3])}
                 value={values.gradeId}
                 onChange={(value) => setValue('gradeId', Number(value))}
                 required
-                options={GradeList}
+                options={gradeOptions}
                 error={errors.gradeId?.message}
               />
               <Selector
-                label={viceRepresentativeLabels[4]}
+                label={t(viceRepresentativeLabels[4])}
                 value={values.departmentId}
                 onChange={(value) => setValue('departmentId', Number(value))}
                 required
-                options={DepartmentList}
+                options={departmentOptions}
                 error={errors.departmentId?.message}
               />
               <TextBox
-                label={viceRepresentativeLabels[5]}
+                label={t(viceRepresentativeLabels[5])}
                 value={values.email}
                 onChange={(value) => setValue('email', value)}
-                note="例：123456@stn.nagaokaut.ac.jp"
+                note={t('applications.viceRepresentative.notes.email')}
                 required
                 error={errors.email?.message}
               />
               <TextBox
-                label={viceRepresentativeLabels[6]}
+                label={t(viceRepresentativeLabels[6])}
                 value={values.tel}
                 onChange={(value) => setValue('tel', value)}
-                note="例：09012345678 (ハイフンなし)"
+                note={t('applications.viceRepresentative.notes.tel')}
                 required
                 error={errors.tel?.message}
               />
@@ -106,7 +110,7 @@ const ViceRepresentativeForm: FC<ViceRepresentativeFormProps> = ({
         </div>
         <div className="mt-10 flex w-full items-center justify-center">
           <Button size="pc" color="main" type="submit">
-            登録
+            {t('form.actions.register')}
           </Button>
         </div>
       </form>

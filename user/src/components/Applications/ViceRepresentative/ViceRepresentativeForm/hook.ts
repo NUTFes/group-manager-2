@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -11,6 +11,7 @@ import {
   useUpdateViceRepresentative,
 } from '@/api/viceRepresentativesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
@@ -21,6 +22,7 @@ export const useViceRepresentativeFormHook = (
   mutatedViceRepresentative: () => void,
   mutateCheckAllRegistered: () => void
 ) => {
+  const { t } = useTranslation('common');
   // 副代表申請のAPIを呼び出すためのフック
   const { trigger: create } = useCreateViceRepresentative();
   const { trigger: update } = useUpdateViceRepresentative(
@@ -112,17 +114,28 @@ export const useViceRepresentativeFormHook = (
             await mutateCheckAllRegistered();
           }
         }
-        toast.success('送信に成功しました');
+        toast.success(
+          t('applications.viceRepresentative.messages.submitSuccess')
+        );
         onSuccess();
       } catch {
-        toast.error('送信に失敗しました');
+        toast.error(t('applications.viceRepresentative.messages.submitFailed'));
       }
     });
 
-  const registerOrNotOption = [
-    { id: 1, name: 'はい(一人での参加)' },
-    { id: 0, name: 'いいえ(グループで参加)' },
-  ];
+  const registerOrNotOption = useMemo(
+    () => [
+      {
+        id: 1,
+        name: t('applications.viceRepresentative.radio.options.individual'),
+      },
+      {
+        id: 0,
+        name: t('applications.viceRepresentative.radio.options.group'),
+      },
+    ],
+    [t]
+  );
 
   return {
     setValue,

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
@@ -38,14 +39,15 @@ const Content: FC<ContentProps> = ({
   mutateViceRepresentative,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('general.loading')}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {t('general.errors.fetch')}
       </div>
     );
   }
@@ -75,6 +77,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   groupId,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const { t } = useTranslation('common');
   const {
     formItem,
     isEditing,
@@ -86,11 +89,11 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   } = useViceRepresentativeHook(groupId);
   return (
     <AccordionMenu
-      title="副代表申請"
+      title={t('applications.viceRepresentative.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
-      note="一人での参加者の場合のみ、副代表申請は不要です。"
+      note={t('applications.viceRepresentative.note')}
     >
       <Content
         isLoading={isLoading}
