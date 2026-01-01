@@ -1,3 +1,5 @@
+import { useTranslation } from 'next-i18next';
+
 type ValidStatus =
   | { statusType: 'reception'; status: 'open' | 'deadline' | 'closed' }
   | { statusType: 'registration'; status: 'registered' | 'unregistered' }
@@ -12,68 +14,71 @@ type StatusProps<T extends ValidStatus['statusType']> = Extract<
 >;
 
 type StyleDefinition = {
-  statusText: string;
   backgroundColor: string;
   textColor: string;
   statusType: ValidStatus['statusType'];
 };
 
-const STATUS_MAP: Record<ValidStatus['status'], StyleDefinition> = {
+const STATUS_STYLE_MAP: Record<ValidStatus['status'], StyleDefinition> = {
   open: {
     statusType: 'reception',
-    statusText: '受付中',
     backgroundColor: 'bg-main border-main',
     textColor: 'text-baseColor',
   },
   deadline: {
     statusType: 'reception',
-    statusText: '締切間近',
     backgroundColor: 'bg-alert border-alert',
     textColor: 'text-baseColor',
   },
   closed: {
     statusType: 'reception',
-    statusText: '受付終了',
     backgroundColor: 'bg-baseColor border-sub',
     textColor: 'text-sub',
   },
   registered: {
     statusType: 'registration',
-    statusText: '登録済',
     backgroundColor: 'bg-baseColor border-sub',
     textColor: 'text-sub',
   },
   unregistered: {
     statusType: 'registration',
-    statusText: '未登録',
     backgroundColor: 'bg-alert border-alert',
     textColor: 'text-baseColor',
   },
   not_required: {
     statusType: 'progress',
-    statusText: '不要',
     backgroundColor: 'bg-baseColor border-sub',
     textColor: 'text-sub',
   },
   completed: {
     statusType: 'progress',
-    statusText: '済',
     backgroundColor: 'bg-main border-main',
     textColor: 'text-baseColor',
   },
   pending: {
     statusType: 'progress',
-    statusText: '末',
     backgroundColor: 'bg-alert border-alert',
     textColor: 'text-baseColor',
   },
 } as const;
 
+const STATUS_TRANSLATION_KEY: Record<ValidStatus['status'], string> = {
+  open: 'status.reception.open',
+  deadline: 'status.reception.deadline',
+  closed: 'status.reception.closed',
+  registered: 'status.registration.registered',
+  unregistered: 'status.registration.unregistered',
+  not_required: 'status.progress.notRequired',
+  completed: 'status.progress.completed',
+  pending: 'status.progress.pending',
+};
+
 const Status = <T extends ValidStatus['statusType']>({
   statusType,
   status,
 }: StatusProps<T>) => {
-  const statusInfo = STATUS_MAP[status];
+  const { t } = useTranslation('common');
+  const statusInfo = STATUS_STYLE_MAP[status];
 
   const commonBgStyle =
     'flex items-center justify-center rounded-[15px] border-2 border-solid';
@@ -99,7 +104,7 @@ const Status = <T extends ValidStatus['statusType']>({
       <div
         className={`${commonTextStyle} ${sizeStyles[statusType].text} ${statusInfo.textColor}`}
       >
-        {statusInfo.statusText}
+        {t(STATUS_TRANSLATION_KEY[status])}
       </div>
     </div>
   );
