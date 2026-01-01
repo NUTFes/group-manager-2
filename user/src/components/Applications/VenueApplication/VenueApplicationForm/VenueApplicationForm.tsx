@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { ApiResponse } from '@/api/stageOptionApi';
 import { PlaceOrder } from '@/api/venueApplication';
+import { useTranslation } from 'next-i18next';
 import { KeyedMutator } from 'swr';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
@@ -21,6 +22,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
   handleEditClick,
   placeOrderMutate,
 }) => {
+  const { t } = useTranslation('common');
   const {
     placesLoading,
     isLoading,
@@ -34,7 +36,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     validateEdit,
   } = useVenueMapHooks(groupId, placeOrderMutate, placeOrder, handleEditClick);
   if (placesLoading || isLoading) {
-    return <div>loading...</div>;
+    return <div>{t('applications.venue.loading')}</div>;
   }
 
   return (
@@ -43,7 +45,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
         <div className="flex flex-col space-y-10"></div>
         <div className="flex w-full flex-col items-center justify-center gap-10">
           <Selector
-            label="第一希望"
+            label={t('applications.venue.fields.firstChoice')}
             options={options}
             disableOptions={disableOptions}
             value={values.first}
@@ -51,7 +53,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.first?.message}
           />
           <Selector
-            label="第二希望"
+            label={t('applications.venue.fields.secondChoice')}
             options={options}
             disableOptions={disableOptions}
             value={values.second}
@@ -59,7 +61,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.second?.message}
           />
           <Selector
-            label="第三希望"
+            label={t('applications.venue.fields.thirdChoice')}
             options={options}
             disableOptions={disableOptions}
             value={values.third}
@@ -67,7 +69,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.third?.message}
           />
           <TextArea
-            label="備考"
+            label={t('applications.venue.fields.remark')}
             value={values.remark ?? ''}
             onChange={(value) => setValue('remark', value)}
             error={errors.remark?.message}
@@ -82,7 +84,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
                   type="button"
                   onClick={handleEditClick}
                 >
-                  キャンセル
+                  {t('form.actions.cancel')}
                 </Button>
               </div>
             )}
@@ -92,7 +94,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
               type="submit"
               isDisable={validateEdit()}
             >
-              {placeOrder ? '修正' : '登録'}
+              {placeOrder ? t('form.actions.edit') : t('form.actions.register')}
             </Button>
           </div>
         </div>

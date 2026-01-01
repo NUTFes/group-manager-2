@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useGetPlaceOrder, usePlacesData } from '@/api/venueApplication';
+import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 
 export const usePlaceOrdersHooks = (groupId: number) => {
+  const { t } = useTranslation('common');
   const {
     placeOrder,
     isLoading: isPlaceOrderLoading,
@@ -17,19 +19,19 @@ export const usePlaceOrdersHooks = (groupId: number) => {
   const formItem: FormItem[] = placeOrder
     ? [
         {
-          label: '第一希望',
+          label: t('applications.venue.fields.firstChoice'),
           content: firstPlace?.name || '',
         },
         {
-          label: '第二希望',
+          label: t('applications.venue.fields.secondChoice'),
           content: secondPlace?.name || '',
         },
         {
-          label: '第三希望',
+          label: t('applications.venue.fields.thirdChoice'),
           content: thirdPlace?.name || '',
         },
         {
-          label: '備考',
+          label: t('applications.venue.fields.remark'),
           content: placeOrder?.remark || '',
         },
       ]

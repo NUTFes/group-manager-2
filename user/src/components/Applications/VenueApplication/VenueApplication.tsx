@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import FormList from '@/components/FormList';
 import AccordionMenu from '../../AccordionMenu';
 import VenueApplicationForm from './VenueApplicationForm';
@@ -15,9 +16,11 @@ const VenueApplication: FC<VenueApplicationProps> = ({
   isRegistered,
   groupId,
 }) => {
+  const { t } = useTranslation('common');
+
   return (
     <AccordionMenu
-      title="会場申請"
+      title={t('applications.venue.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -36,9 +39,10 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
     handleEditClick,
     placeOrderMutate,
   } = usePlaceOrdersHooks(groupId);
+  const { t } = useTranslation('common');
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('applications.venue.loading')}</div>;
   }
 
   if (isDeadline) {
