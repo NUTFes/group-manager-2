@@ -6,6 +6,7 @@ import {
   useStageFormData,
 } from '@/api/stageApi';
 import { StageFormData } from '@/utils/validate/validate';
+import { useTranslation } from 'next-i18next';
 import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
@@ -17,6 +18,7 @@ import {
 } from './useStageHelpers';
 
 export const useStageFormLogic = (groupId: number) => {
+  const { t } = useTranslation('common');
   const [currentGroupId] = useState<number>(groupId);
   const [submitError, setSubmitError] = useState<string>('');
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -105,7 +107,7 @@ export const useStageFormLogic = (groupId: number) => {
 
     try {
       if (!currentGroupId) {
-        setSubmitError('グループIDが見つかりません');
+        setSubmitError(t('applications.stage.messages.missingGroup'));
         return;
       }
 
@@ -150,17 +152,15 @@ export const useStageFormLogic = (groupId: number) => {
         mutate(`check_all_registered/${currentGroupId}`);
         toast.success(
           hasExisting
-            ? 'ステージ希望を更新しました。'
-            : 'ステージ希望を登録しました。'
+            ? t('applications.stage.messages.updateSuccess')
+            : t('applications.stage.messages.createSuccess')
         );
         setIsSubmitted(true);
       } else {
-        setSubmitError(
-          '送信中にエラーが発生しました。もう一度お試しください。'
-        );
+        setSubmitError(t('applications.stage.messages.submitError'));
       }
     } catch {
-      setSubmitError('予期せぬエラーが発生しました。もう一度お試しください。');
+      setSubmitError(t('applications.stage.messages.unexpectedError'));
     }
   });
 

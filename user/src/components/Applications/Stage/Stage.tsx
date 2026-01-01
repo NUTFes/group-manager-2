@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import StageForm from './StageForm';
 
@@ -9,9 +10,11 @@ type StageProps = {
 };
 
 const Stage: FC<StageProps> = ({ isDeadline, isRegistered, groupId }) => {
+  const { t } = useTranslation('common');
+
   return (
     <AccordionMenu
-      title="ステージ申請"
+      title={t('applications.stage.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
