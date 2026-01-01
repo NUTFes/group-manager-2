@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
 import {
@@ -42,11 +43,13 @@ const Content: FC<ContentProps> = ({
   removeFoodProduct,
   setFoodProductsData,
 }) => {
+  const { t } = useTranslation('common');
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
-        <span className="ml-2">Loading...</span>
+        <span className="ml-2">{t('applications.foodProduct.loading')}</span>
       </div>
     );
   }
@@ -54,7 +57,7 @@ const Content: FC<ContentProps> = ({
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {t('applications.foodProduct.errors.fetch')}
       </div>
     );
   }
@@ -81,10 +84,10 @@ const Content: FC<ContentProps> = ({
             </svg>
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-800">
-            申請期限が過ぎています
+            {t('applications.foodProduct.deadline.title')}
           </h3>
           <p className="text-sm text-gray-600">
-            販売品申請の締切期限が過ぎているため、新規申請はできません。
+            {t('applications.foodProduct.deadline.description')}
           </p>
         </div>
       </div>
@@ -126,6 +129,7 @@ const FoodProduct: FC<FoodProductProps> = ({
   isDeadline,
   isRegistered,
 }) => {
+  const { t } = useTranslation('common');
   const {
     formItem,
     isEditing,
@@ -140,7 +144,7 @@ const FoodProduct: FC<FoodProductProps> = ({
 
   return (
     <AccordionMenu
-      title="販売品申請"
+      title={t('applications.foodProduct.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required

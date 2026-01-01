@@ -4,6 +4,7 @@ import {
   useGetFoodProducts,
   useUpsertFoodProducts,
 } from '@/api/foodProductApi';
+import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import {
   ProductInput,
@@ -17,6 +18,7 @@ const API_ENDPOINTS = {
 } as const;
 
 export const useFoodProductHooks = (groupId: number) => {
+  const { t } = useTranslation('common');
   const [isEditing, setIsEditing] = useState(true);
   const [hasInitialized, setHasInitialized] = useState(false);
 
@@ -51,10 +53,12 @@ export const useFoodProductHooks = (groupId: number) => {
 
   const formItem: FormItem[] = [
     {
-      label: '販売品一覧',
+      label: t('applications.foodProduct.view.summaryLabel'),
       content: foodProducts?.length
-        ? `${foodProducts.length}品目登録済み`
-        : '未登録',
+        ? t('applications.foodProduct.view.registered', {
+            count: foodProducts.length,
+          })
+        : t('applications.foodProduct.view.none'),
     },
   ];
 
@@ -116,23 +120,28 @@ export const useFoodProductHooks = (groupId: number) => {
       // 成功時のみビューモードに戻す
       setIsEditing(false);
 
-      toast.success('販売品を更新しました', {
+      toast.success(t('applications.foodProduct.messages.updateSuccess'), {
         position: 'top-right',
         autoClose: 3000,
       });
     } catch (error) {
       console.error('販売品更新エラー:', error);
 
-      let errorMessage = '販売品の更新に失敗しました';
+      let errorMessage = t('applications.foodProduct.messages.updateFailed');
 
       if (error instanceof Error) {
         if (
           error.message.includes('認証が必要') ||
           error.message.includes('User is not authenticated')
         ) {
-          errorMessage = '認証が必要です。ログインしてください。';
+          errorMessage = t('applications.foodProduct.messages.authRequired');
         } else {
-          errorMessage = `販売品の更新に失敗しました: ${error.message}`;
+          errorMessage = t(
+            'applications.foodProduct.messages.updateFailedDetail',
+            {
+              message: error.message,
+            }
+          );
         }
       }
 
@@ -172,23 +181,26 @@ export const useFoodProductHooks = (groupId: number) => {
       // 成功時のみビューモードに戻す
       setIsEditing(false);
 
-      toast.success('販売品申請を送信しました', {
+      toast.success(t('applications.foodProduct.messages.createSuccess'), {
         position: 'top-right',
         autoClose: 3000,
       });
     } catch (error) {
       console.error('販売品登録エラー:', error);
 
-      let errorMessage = '販売品の登録に失敗しました';
+      let errorMessage = t('applications.foodProduct.messages.createFailed');
 
       if (error instanceof Error) {
         if (
           error.message.includes('認証が必要') ||
           error.message.includes('User is not authenticated')
         ) {
-          errorMessage = '認証が必要です。ログインしてください。';
+          errorMessage = t('applications.foodProduct.messages.authRequired');
         } else {
-          errorMessage = `販売品の登録に失敗しました: ${error.message}`;
+          errorMessage = t(
+            'applications.foodProduct.messages.createFailedDetail',
+            { message: error.message }
+          );
         }
       }
 
@@ -223,7 +235,10 @@ export const useFoodProductHooks = (groupId: number) => {
         'success' in result &&
         !result.success
       ) {
-        throw new Error(result.error?.message || '削除に失敗しました');
+        throw new Error(
+          result.error?.message ||
+            t('applications.foodProduct.messages.deleteFailed')
+        );
       }
 
       // データを強制的に再取得
@@ -234,10 +249,15 @@ export const useFoodProductHooks = (groupId: number) => {
         await mutateFoodProducts();
       }, 500);
 
-      toast.success(`「${productToRemove.name}」を削除しました`, {
-        position: 'top-right',
-        autoClose: 3000,
-      });
+      toast.success(
+        t('applications.foodProduct.messages.deleteSuccess', {
+          name: productToRemove.name,
+        }),
+        {
+          position: 'top-right',
+          autoClose: 3000,
+        }
+      );
     } catch (error) {
       console.error('販売品削除エラー:', error);
 
@@ -247,23 +267,28 @@ export const useFoodProductHooks = (groupId: number) => {
           error.message.includes('User is not authenticated') ||
           error.message.includes('認証が必要')
         ) {
-          toast.error('認証が必要です。ログインしてください。', {
+          toast.error(t('applications.foodProduct.messages.authRequired'), {
             position: 'top-right',
             autoClose: 5000,
           });
         } else if (error.message.includes('404')) {
-          toast.error('削除対象の商品が見つかりませんでした。', {
+          toast.error(t('applications.foodProduct.messages.deleteNotFound'), {
             position: 'top-right',
             autoClose: 5000,
           });
         } else {
-          toast.error(`販売品の削除に失敗しました: ${error.message}`, {
-            position: 'top-right',
-            autoClose: 5000,
-          });
+          toast.error(
+            t('applications.foodProduct.messages.deleteFailedDetail', {
+              message: error.message,
+            }),
+            {
+              position: 'top-right',
+              autoClose: 5000,
+            }
+          );
         }
       } else {
-        toast.error('販売品の削除に失敗しました。', {
+        toast.error(t('applications.foodProduct.messages.deleteFailed'), {
           position: 'top-right',
           autoClose: 5000,
         });

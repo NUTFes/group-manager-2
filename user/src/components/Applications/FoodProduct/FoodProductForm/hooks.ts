@@ -79,13 +79,25 @@ export const useFoodProductFormHooks = (
   const products = values.products || [];
 
   const alcoholOptions = [
-    { id: FORM_VALUES.YES, name: 'はい' },
-    { id: FORM_VALUES.NO, name: 'いいえ' },
+    {
+      id: FORM_VALUES.YES,
+      labelKey: 'applications.foodProduct.radio.alcohol.options.yes',
+    },
+    {
+      id: FORM_VALUES.NO,
+      labelKey: 'applications.foodProduct.radio.alcohol.options.no',
+    },
   ];
 
   const licenseOptions = [
-    { id: FORM_VALUES.YES, name: '有り　（例：酒類、加熱調理をするものなど）' },
-    { id: FORM_VALUES.NO, name: '無し　（例：ソフトドリンク）' },
+    {
+      id: FORM_VALUES.YES,
+      labelKey: 'applications.foodProduct.radio.cooking.options.yes',
+    },
+    {
+      id: FORM_VALUES.NO,
+      labelKey: 'applications.foodProduct.radio.cooking.options.no',
+    },
   ];
 
   const handleAlcoholChange = (index: number, value: string) => {
