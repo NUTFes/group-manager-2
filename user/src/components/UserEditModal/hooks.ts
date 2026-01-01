@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { UserInformation, useMutateUserDetails } from '@/api/useUserDetailApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signOut } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { EditUserDetailsFormSchema, EditUserDetailsSchema } from './schema';
@@ -10,6 +11,7 @@ export const useUserEditModalHooks = (
   userInformation?: UserInformation,
   mutate?: () => void
 ) => {
+  const { t } = useTranslation('common');
   // フォームの初期化
   const formMethods = useForm<EditUserDetailsFormSchema>({
     resolver: zodResolver(EditUserDetailsSchema),
@@ -45,11 +47,9 @@ export const useUserEditModalHooks = (
     // emailの変更を行う場合はリダイレクトされることをメッセージに出す
     if (
       isChangeEmail &&
-      !window.confirm(
-        'メールアドレスを変更する場合は、変更後のメールアドレスで再度ログインする必要があります。パスワードは以前のものと同じです。'
-      )
+      !window.confirm(t('userEditModal.messages.emailChangeConfirm'))
     ) {
-      toast.success('変更はキャンセルされました。');
+      toast.success(t('userEditModal.toasts.cancelled'));
       return;
     }
 
@@ -66,12 +66,10 @@ export const useUserEditModalHooks = (
       await trigger({
         query: submitData,
       });
-      toast.success('ユーザー情報を登録しました。');
+      toast.success(t('userEditModal.toasts.updateSuccess'));
       // メールアドレスを変更した場合はサインアウト
       if (isChangeEmail) {
-        toast.success(
-          'メールアドレスを変更しました。再度ログインしてください。'
-        );
+        toast.success(t('userEditModal.toasts.emailChanged'));
         // 1秒待ってからサインアウト
         await new Promise((resolve) => setTimeout(resolve, 1000));
         await signOut({ redirect: false });
@@ -87,9 +85,9 @@ export const useUserEditModalHooks = (
         exception?.includes('RecordNotUnique') ||
         exception?.includes('Duplicate entry')
       ) {
-        toast.error('このメールアドレスはすでに使われています');
+        toast.error(t('userEditModal.errors.duplicateEmail'));
       }
-      toast.error('更新に失敗しました。');
+      toast.error(t('userEditModal.errors.updateFailed'));
     }
   };
 

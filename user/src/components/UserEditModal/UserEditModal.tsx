@@ -1,6 +1,7 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { UserInformation } from '@/api/useUserDetailApi';
-import { DepartmentList, GradeList } from '@/utils/list';
+import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
+import { useTranslation } from 'next-i18next';
 import Button from '../Button';
 import Selector from '../Form/Selector';
 import TextBox from '../Form/TextBox';
@@ -20,6 +21,9 @@ const UserEditModal: FC<UserEditModalProps> = ({
   userInformation,
   mutate,
 }) => {
+  const { t } = useTranslation('common');
+  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
+  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
   const { errors, values, setValue, trigger, validateEdit, handleSubmitForm } =
     useUserEditModalHooks(userInformation, mutate);
   return (
@@ -29,57 +33,57 @@ const UserEditModal: FC<UserEditModalProps> = ({
           <div className="min-w-0 flex-none basis-full p-4">
             <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
               <TextBox
-                label="名前"
+                label={t('userEditModal.labels.name')}
                 value={values.name || ''}
-                note="例：長岡 太郎"
+                note={t('userEditModal.notes.name')}
                 required
                 error={errors.name?.message}
                 onChange={(value: string) => setValue('name', value)}
                 onBlur={() => trigger('name')}
               />
               <TextBox
-                label="メールアドレス"
+                label={t('userEditModal.labels.email')}
                 type="email"
                 value={values.mail || ''}
-                note="例：s123456@stn.nagaokaut.ac.jp"
+                note={t('userEditModal.notes.email')}
                 required
                 error={errors.mail?.message}
                 onChange={(value: string) => setValue('mail', value)}
                 onBlur={() => trigger('mail')}
               />
               <TextBox
-                label="電話番号"
+                label={t('userEditModal.labels.tel')}
                 value={String(values?.tel) || ''}
-                note="例：09012345678"
+                note={t('userEditModal.notes.tel')}
                 required
                 error={errors.tel?.message}
                 onChange={(value: string) => setValue('tel', value)}
                 onBlur={() => trigger('tel')}
               />
               <TextBox
-                label="学籍番号"
+                label={t('userEditModal.labels.studentId')}
                 value={String(values?.studentId) || ''}
-                note="例：12345678"
+                note={t('userEditModal.notes.studentId')}
                 required
                 error={errors.studentId?.message}
                 onChange={(value: string) => setValue('studentId', value)}
                 onBlur={() => trigger('studentId')}
               />
               <Selector
-                label="学年"
+                label={t('userEditModal.labels.grade')}
                 required
                 onChange={(value: string) => setValue('gradeId', Number(value))}
-                options={GradeList}
+                options={gradeOptions}
                 value={values?.gradeId || 0}
                 error={errors.gradeId?.message}
               />
               <Selector
-                label="学科"
+                label={t('userEditModal.labels.department')}
                 required
                 onChange={(value: string) =>
                   setValue('departmentId', Number(value))
                 }
-                options={DepartmentList}
+                options={departmentOptions}
                 value={values?.departmentId || 0}
                 error={errors.departmentId?.message}
               />
@@ -89,7 +93,7 @@ const UserEditModal: FC<UserEditModalProps> = ({
                 color="main"
                 isDisable={validateEdit()}
               >
-                修正
+                {t('form.actions.edit')}
               </Button>
             </div>
           </div>
