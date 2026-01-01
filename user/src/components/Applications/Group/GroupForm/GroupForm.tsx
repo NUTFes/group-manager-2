@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { GroupResponse } from '@/api/groupApi';
+import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -29,6 +30,7 @@ const GroupForm: FC<GroupFormProps> = ({
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
+  const { t } = useTranslation('common');
   const {
     handleSubmit,
     errors,
@@ -49,7 +51,7 @@ const GroupForm: FC<GroupFormProps> = ({
   );
 
   if (createError || updateError) {
-    toast.error('送信に失敗しました。時間を置いて再度お試しください');
+    toast.error(t('form.messages.registerFailed'));
   }
 
   return (
@@ -60,51 +62,54 @@ const GroupForm: FC<GroupFormProps> = ({
       >
         <div className="flex flex-col space-y-10">
           <TextBox
-            label={groupLabels[0]}
+            label={t(groupLabels[0])}
             value={values.name}
             onChange={(value) => setValue('name', value)}
-            note={'例：技大祭実行委員会'}
+            note={t('applications.group.notes.name')}
             required={true}
             error={errors.name?.message}
           ></TextBox>
           <TextBox
-            label={groupLabels[1]}
+            label={t(groupLabels[1])}
             value={values.projectName}
             onChange={(value) => setValue('projectName', value)}
-            note={'例：ギダイジャー'}
+            note={t('applications.group.notes.projectName')}
             required={true}
             error={errors.projectName?.message}
           ></TextBox>
           <Radio
-            label={groupLabels[2]}
+            label={t(groupLabels[2])}
             value={values.isInternational ? '1' : '0'}
             onChange={(value) => setValue('isInternational', value === '1')}
             required={true}
-            note={'注意書き'}
+            note={t('applications.group.notes.international')}
             error={errors.isInternational?.message}
             options={[
-              { id: 0, name: 'いいえ、国際団体（留学生団体）ではありません。' },
-              { id: 1, name: 'はい、国際団体（留学生団体）です。' },
+              { id: 0, name: t('applications.group.options.international.no') },
+              {
+                id: 1,
+                name: t('applications.group.options.international.yes'),
+              },
             ]}
           ></Radio>
           <Radio
-            label={groupLabels[3]}
+            label={t(groupLabels[3])}
             value={values.isExternal ? '1' : '0'}
             onChange={(value) => setValue('isExternal', value === '1')}
             required={true}
-            note={'注意書き'}
+            note={t('applications.group.notes.external')}
             error={errors.isExternal?.message}
             options={[
-              { id: 0, name: 'いいえ、学内の団体です。' },
-              { id: 1, name: 'はい、学外の団体です。' },
+              { id: 0, name: t('applications.group.options.external.no') },
+              { id: 1, name: t('applications.group.options.external.yes') },
             ]}
           ></Radio>
           <Selector
-            label={groupLabels[4]}
+            label={t(groupLabels[4])}
             value={values.groupCategoryId}
             onChange={(value) => setValue('groupCategoryId', parseInt(value))}
             required={true}
-            note={'注意書き'}
+            note={t('applications.group.notes.groupCategory')}
             error={errors.groupCategoryId?.message}
             options={
               groupCategories?.map((category) => ({
@@ -114,11 +119,11 @@ const GroupForm: FC<GroupFormProps> = ({
             }
           ></Selector>
           <TextArea
-            label={groupLabels[5]}
+            label={t(groupLabels[5])}
             value={values.activity}
             onChange={(value) => setValue('activity', value)}
             required={true}
-            note={'〇〇の販売、〇〇のパフォーマンスなど'}
+            note={t('applications.group.notes.activity')}
             error={errors.activity?.message}
           ></TextArea>
         </div>
@@ -132,7 +137,7 @@ const GroupForm: FC<GroupFormProps> = ({
                 type="button"
                 onClick={toEdit}
               >
-                キャンセル
+                {t('form.actions.cancel')}
               </Button>
             </div>
           )}
@@ -142,7 +147,7 @@ const GroupForm: FC<GroupFormProps> = ({
             type="submit"
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
-            {groups ? '修正' : '登録'}
+            {groups ? t('form.actions.edit') : t('form.actions.register')}
           </Button>
         </div>
       </form>

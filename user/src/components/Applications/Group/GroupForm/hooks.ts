@@ -6,6 +6,7 @@ import {
 } from '@/api/groupApi';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { GroupForm, groupSchema } from './schema';
@@ -18,6 +19,7 @@ export const useGroupFormHooks = (
   mutateCheckAllRegisteredGroups: () => void,
   mutateGroupByUserId: () => void
 ) => {
+  const { t } = useTranslation('common');
   // 団体カテゴリー一覧を取得
   const {
     handleSubmit,
@@ -78,9 +80,9 @@ export const useGroupFormHooks = (
       try {
         await update({ query: formData });
         mutateGroups();
-        toast.success('送信しました');
+        toast.success(t('form.messages.updateSuccess'));
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(t('form.messages.updateFailed'));
       }
       // 団体申請がない場合は新規作成
     } else {
@@ -89,9 +91,9 @@ export const useGroupFormHooks = (
         mutateGroups();
         mutateCheckAllRegisteredGroups();
         mutateGroupByUserId();
-        toast.success('送信しました');
+        toast.success(t('form.messages.registerSuccess'));
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(t('form.messages.registerFailed'));
       }
       reset();
     }

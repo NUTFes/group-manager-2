@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { GroupCategoryResponse, GroupResponse } from '@/api/groupApi';
+import { useTranslation } from 'next-i18next';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import AccordionMenu from '../../AccordionMenu';
@@ -45,15 +46,16 @@ const Content: FC<ContentProps> = ({
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
+  const { t } = useTranslation('common');
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('applications.group.loading')}</div>;
   }
   // データ取得に失敗した場合に表示する画面
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {t('applications.group.errors.fetch')}
       </div>
     );
   }
@@ -88,6 +90,7 @@ const Group: FC<GroupProps> = ({
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
+  const { t } = useTranslation('common');
   const {
     formItem,
     isEditing,
@@ -100,7 +103,7 @@ const Group: FC<GroupProps> = ({
   } = useGroupHooks(groupId);
   return (
     <AccordionMenu
-      title="団体申請"
+      title={t('applications.group.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
