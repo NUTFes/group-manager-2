@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { usePublicRelationData } from '@/api/publicRelationsApi';
+import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { publicRelationLabels } from '../label';
 
 export const usePublicRelationsHooks = (groupId: number) => {
+  const { t } = useTranslation('common');
   const {
     publicRelation,
     error: prError,
@@ -15,29 +17,33 @@ export const usePublicRelationsHooks = (groupId: number) => {
   // publicRelationsのisAnnouncementRequestedフィールドに基づいて状態を決定
   const getAnnounceStatus = () => {
     if (publicRelation?.isAnnouncementRequested) {
-      return 'はい';
+      return t('applications.publicRelations.options.announce.yes');
     } else if (publicRelation) {
-      return 'いいえ';
+      return t('applications.publicRelations.options.announce.no');
     } else {
-      return '未設定';
+      return t('applications.publicRelations.state.notSet');
     }
   };
 
   // モックデータのフォールバックなしでAPIベースのformItemsを作成
   const formItem: FormItem[] = [
     {
-      label: publicRelationLabels[0],
+      label: t(publicRelationLabels[0]),
       // APIは'blurb'フィールドでPRテキストを返す
-      content: publicRelation?.blurb || '(PR文が未入力です)',
+      content:
+        publicRelation?.blurb ||
+        t('applications.publicRelations.state.missingText'),
     },
     {
-      label: publicRelationLabels[1],
+      label: t(publicRelationLabels[1]),
       content: getAnnounceStatus(),
     },
     {
-      label: publicRelationLabels[2],
+      label: t(publicRelationLabels[2]),
       // APIからpictureNameを使用
-      content: publicRelation?.pictureName || '未設定',
+      content:
+        publicRelation?.pictureName ||
+        t('applications.publicRelations.state.notSet'),
     },
   ];
 

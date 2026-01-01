@@ -6,6 +6,7 @@ import {
   useUpdatePublicRelation,
 } from '@/api/publicRelationsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
@@ -15,6 +16,7 @@ export const usePublicRelationsFormHooks = (
   groupId: number,
   publicRelationProp?: PublicRelationResponse | null
 ) => {
+  const { t } = useTranslation('common');
   const {
     publicRelation: fetchedPublicRelation,
     error: fetchPrError,
@@ -50,7 +52,8 @@ export const usePublicRelationsFormHooks = (
         errors.image &&
         typeof errors.image === 'object' &&
         errors.image.type === 'custom' &&
-        errors.image.message === '画像をアップロードしてください'
+        errors.image.message ===
+          'applications.publicRelations.validation.imageRequired'
       ) {
         // 画像のエラーを削除
         delete errors.image;
@@ -60,7 +63,7 @@ export const usePublicRelationsFormHooks = (
       if (!values.image) {
         errors.image = {
           type: 'custom',
-          message: '画像をアップロードしてください',
+          message: 'applications.publicRelations.validation.imageRequired',
         };
       }
     }
@@ -141,7 +144,7 @@ export const usePublicRelationsFormHooks = (
         if (!isSquare) {
           setError('image', {
             type: 'manual',
-            message: '画像は正方形にしてください',
+            message: 'applications.publicRelations.validation.imageSquare',
           });
           return resolve(false);
         }
@@ -151,7 +154,7 @@ export const usePublicRelationsFormHooks = (
       img.onerror = () => {
         setError('image', {
           type: 'manual',
-          message: '画像の読み込みに失敗しました',
+          message: 'applications.publicRelations.validation.imageLoadFailed',
         });
         resolve(false);
       };
@@ -179,8 +182,14 @@ export const usePublicRelationsFormHooks = (
   };
 
   const announceOptions = [
-    { id: 1, name: 'はい' },
-    { id: 0, name: 'いいえ' },
+    {
+      id: 1,
+      name: t('applications.publicRelations.options.announce.yes'),
+    },
+    {
+      id: 0,
+      name: t('applications.publicRelations.options.announce.no'),
+    },
   ];
 
   const handleAnnounceChange = (value: string) => {
@@ -210,9 +219,7 @@ export const usePublicRelationsFormHooks = (
     const imgurClientId = process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID;
 
     if (!imgurClientId) {
-      throw new Error(
-        'Imgur Client IDが設定されていません。環境変数を確認してください。'
-      );
+      throw new Error(t('applications.publicRelations.messages.imgurMissing'));
     }
     const base64 = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
 
@@ -227,20 +234,22 @@ export const usePublicRelationsFormHooks = (
       });
 
       if (!response.ok) {
-        throw new Error(`エラー: ${response.status}`);
+        throw new Error(`Error: ${response.status}`);
       }
 
       const data = await response.json();
       return data.data.link;
     } catch (error) {
-      console.error('Imgurアップロードエラー:', error);
-      throw new Error('画像のアップロードに失敗しました');
+      console.error('Imgur upload error:', error);
+      throw new Error(
+        t('applications.publicRelations.messages.imgurUploadFailed')
+      );
     }
   };
 
   // エラー処理を直接行う（useEffectではなく）
   if (createPrError || updatePrError) {
-    toast.error('送信に失敗しました。時間を置いて再度お試しください');
+    toast.error(t('applications.publicRelations.messages.submitFailed'));
   }
 
   // 更新されたonSubmit実装
@@ -293,11 +302,11 @@ export const usePublicRelationsFormHooks = (
       await prMutate();
       mutate(`check_all_registered/${groupId}`);
 
-      toast.success('送信しました');
+      toast.success(t('applications.publicRelations.messages.submitSuccess'));
       return true; // 送信成功を返す
     } catch (error) {
-      console.error('送信エラー:', error);
-      toast.error('送信に失敗しました。時間を置いて再度お試しください');
+      console.error('submission error:', error);
+      toast.error(t('applications.publicRelations.messages.submitFailed'));
       return false; // 送信失敗を返す
     }
   };

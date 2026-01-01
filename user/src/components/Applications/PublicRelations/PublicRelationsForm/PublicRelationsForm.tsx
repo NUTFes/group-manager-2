@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
+import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import TextArea from '@/components/Form/TextArea/TextArea';
@@ -18,6 +19,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
   publicRelation,
   toEdit,
 }) => {
+  const { t } = useTranslation('common');
   // PublicRelationsForm receives toEdit as a required prop
   const {
     handleSubmit,
@@ -33,11 +35,14 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
     onSubmit,
     validateEdit,
   } = usePublicRelationsFormHooks(groupId, publicRelation);
+  const uploadNote = t('applications.publicRelations.notes.upload', {
+    returnObjects: true,
+  }) as string[];
 
   return (
     <FormContainer>
       {isFetching || isMutating ? (
-        <div>loading...</div>
+        <div>{t('general.loading')}</div>
       ) : (
         <form
           className="w-full"
@@ -53,11 +58,11 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
             {/* PR文入力 */}
             <div className="relative h-44 w-96">
               <TextArea
-                label="PR文(HP,パンフレット,アナウンスに使用)"
+                label={t('applications.publicRelations.fields.text')}
                 value={values.prText || ''}
                 onChange={(value) => setValue('prText', value)}
                 required
-                note="日本語の場合：0~50文字、英語の場合：0~25words"
+                note={t('applications.publicRelations.notes.text')}
                 error={errors.prText?.message}
               />
             </div>
@@ -65,7 +70,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
             {/* アナウンス選択 */}
             <div className="flex flex-col items-start justify-start gap-6">
               <Radio
-                label="アナウンスを行いますか？"
+                label={t('applications.publicRelations.fields.announce')}
                 value={
                   values.announce === 'yes'
                     ? '1'
@@ -83,22 +88,22 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
             {/* PR画像アップロード */}
             <div className="flex w-96 flex-col items-start justify-start gap-1">
               <Upload
-                title="PR画像"
-                note={[
-                  'ファイル形式：png、jpeg',
-                  'ファイルサイズ：10MB未満',
-                  '画像、イラストの形：正方形（できれば料理の写真）',
-                ]}
+                title={t('applications.publicRelations.fields.image')}
+                note={uploadNote}
                 onClick={handleImageUpload}
                 idDisable={false}
                 error={errors.image?.message}
               />
               {fileName && (
                 <div className="mt-2 text-sm text-font">
-                  <p>アップロード済み: {fileName}</p>
+                  <p>
+                    {t('applications.publicRelations.uploadStatus', {
+                      fileName,
+                    })}
+                  </p>
                   {publicRelation && (
                     <p className="mt-1 text-gray-500">
-                      ※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます
+                      {t('applications.publicRelations.notes.existingImage')}
                     </p>
                   )}
                 </div>
@@ -116,7 +121,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                     type="button"
                     onClick={toEdit}
                   >
-                    キャンセル
+                    {t('form.actions.cancel')}
                   </Button>
                 </div>
               )}
@@ -126,7 +131,9 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                 type="submit"
                 isDisable={isMutating || validateEdit()}
               >
-                {publicRelation ? '修正' : '登録'}
+                {publicRelation
+                  ? t('form.actions.edit')
+                  : t('form.actions.register')}
               </Button>
             </div>
           </div>

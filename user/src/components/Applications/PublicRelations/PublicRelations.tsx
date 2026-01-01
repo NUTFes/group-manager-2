@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm/PublicRelationsForm';
 import { usePublicRelationsHooks } from '@/components/Applications/PublicRelations/hooks';
@@ -33,14 +34,15 @@ const Content: FC<ContentProps> = ({
   formItem,
   groupId,
 }) => {
+  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('general.loading')}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {t('general.errors.fetch')}
       </div>
     );
   }
@@ -67,12 +69,13 @@ const PublicRelations: FC<PublicRelationsProps> = ({
   isDeadline,
   isRegistered,
 }) => {
+  const { t } = useTranslation('common');
   const { formItem, isEditing, toEdit, publicRelation, isLoading, hasError } =
     usePublicRelationsHooks(groupId);
 
   return (
     <AccordionMenu
-      title="PR文申請"
+      title={t('applications.publicRelations.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
