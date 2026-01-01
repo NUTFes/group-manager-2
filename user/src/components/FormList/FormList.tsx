@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button';
 import FormContainer from '@/components/FormContainer';
 import { FormItem } from './type';
@@ -27,6 +28,7 @@ const FormList: FC<FormListProps> = ({
   headers = [],
   keys = [],
 }) => {
+  const { t } = useTranslation('common');
   if (tableMode) {
     const tableItems = items as TableItem[];
     return (
@@ -65,7 +67,7 @@ const FormList: FC<FormListProps> = ({
               icon="pencil"
               onClick={onEdit}
             >
-              修正
+              {t('form.actions.edit')}
             </Button>
           </div>
         )}
@@ -79,7 +81,7 @@ const FormList: FC<FormListProps> = ({
               variant
               onClick={onDelete}
             >
-              削除
+              {t('form.actions.delete')}
             </Button>
           </div>
         )}
@@ -95,7 +97,9 @@ const FormList: FC<FormListProps> = ({
           <div className="flex">
             <div className="text-xs text-font">{(item as FormItem).label}</div>
             {(item as FormItem).isEditable && (
-              <span className="ml-6 text-xs text-red-500">※変更できません</span>
+              <span className="ml-6 text-xs text-red-500">
+                {t('form.messages.nonEditable')}
+              </span>
             )}
           </div>
           <div className="mt-2 h-6 text-base font-medium text-font md:h-10">
@@ -113,7 +117,7 @@ const FormList: FC<FormListProps> = ({
             icon="pencil"
             onClick={onEdit}
           >
-            修正
+            {t('form.actions.edit')}
           </Button>
         )}
         {isDelete && onDelete && (
@@ -125,7 +129,7 @@ const FormList: FC<FormListProps> = ({
             variant
             onClick={onDelete}
           >
-            削除
+            {t('form.actions.delete')}
           </Button>
         )}
       </div>
