@@ -25,6 +25,7 @@ import {
   useMutateUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
 import { NEED_APPLICATION } from '@/utils/constants';
+import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import {
   useEmployeesForm,
@@ -180,6 +181,7 @@ export const useEmployeesBusinessLogic = (
     onError?: (message: string) => void;
   }
 ) => {
+  const { t } = useTranslation('common');
   const {
     getEmployeesData,
     mutateEmployees,
@@ -213,10 +215,14 @@ export const useEmployeesBusinessLogic = (
         await upsertEmployees(data.employees);
       }
       await mutateEmployees();
-      callbacks.onSuccess?.('従業員申請が完了しました');
+      callbacks.onSuccess?.(
+        t('applications.employees.messages.applicationSuccess')
+      );
     } catch (error) {
       console.error('Error in employee application:', error);
-      callbacks.onError?.('登録に失敗しました');
+      callbacks.onError?.(
+        t('applications.employees.messages.applicationFailed')
+      );
       throw error;
     }
   };
@@ -236,10 +242,14 @@ export const useEmployeesBusinessLogic = (
         }
         await mutateEmployees();
       }
-      callbacks.onSuccess?.('従業員申請を行わない登録が完了しました');
+      callbacks.onSuccess?.(
+        t('applications.employees.messages.noApplicationSuccess')
+      );
     } catch (error) {
       console.error('Error in no application:', error);
-      callbacks.onError?.('登録に失敗しました');
+      callbacks.onError?.(
+        t('applications.employees.messages.noApplicationFailed')
+      );
       throw error;
     }
   };
@@ -251,11 +261,11 @@ export const useEmployeesBusinessLogic = (
   const handleEmployeeDeleteWithToast = async (employeeId: number) => {
     try {
       await deleteEmployee(employeeId);
-      callbacks.onSuccess?.('従業員を削除しました');
+      callbacks.onSuccess?.(t('applications.employees.messages.deleteSuccess'));
       await mutateEmployees();
     } catch (error) {
       console.error('Error deleting employee:', error);
-      callbacks.onError?.('削除に失敗しました');
+      callbacks.onError?.(t('applications.employees.messages.deleteFailed'));
       throw error;
     }
   };
@@ -288,6 +298,7 @@ export const useUnregisteredGroupLogic = (
     onError?: (message: string) => void;
   }
 ) => {
+  const { t } = useTranslation('common');
   // 未登録グループの操作API
   const { registerUnregisteredGroup, deleteUnregisteredGroup } =
     useMutateUnregisteredGroup(ORDER_TYPES.EMPLOYEE);
@@ -308,7 +319,9 @@ export const useUnregisteredGroupLogic = (
       await mutateUnregisteredGroup(); // データ再取得
     } catch (error) {
       console.error('Error registering unregistered group:', error);
-      callbacks.onError?.('登録に失敗しました');
+      callbacks.onError?.(
+        t('applications.employees.messages.registerUnregisteredFailed')
+      );
       throw error;
     }
   };
@@ -325,7 +338,9 @@ export const useUnregisteredGroupLogic = (
       }
     } catch (error) {
       console.error('Error deleting unregistered group:', error);
-      callbacks.onError?.('削除に失敗しました');
+      callbacks.onError?.(
+        t('applications.employees.messages.deleteUnregisteredFailed')
+      );
       throw error;
     }
   };

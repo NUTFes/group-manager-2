@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import { Controller, useFormContext } from 'react-hook-form';
 import Button from '@/components/Button';
 import TextBox from '@/components/Form/TextBox';
@@ -11,6 +12,7 @@ type Props = {
 
 export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
   const { control } = useFormContext();
+  const { t } = useTranslation('common');
 
   return (
     <FormContainer>
@@ -19,13 +21,13 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
         name={`employees.${index}.name` as const}
         render={({ field, fieldState }) => (
           <TextBox
-            label="従業員名"
+            label={t('applications.employees.form.labels.name')}
             required
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
-            note="例：技大 花子"
+            note={t('applications.employees.form.notes.name')}
           />
         )}
       />
@@ -34,13 +36,13 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
         name={`employees.${index}.studentId` as const}
         render={({ field, fieldState }) => (
           <TextBox
-            label="学籍番号"
+            label={t('applications.employees.form.labels.studentId')}
             required
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
-            note="例：12345678"
+            note={t('applications.employees.form.notes.studentId')}
           />
         )}
       />
@@ -53,7 +55,7 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
           variant
           onClick={onDelete}
         >
-          削除
+          {t('form.actions.delete')}
         </Button>
       </div>
     </FormContainer>

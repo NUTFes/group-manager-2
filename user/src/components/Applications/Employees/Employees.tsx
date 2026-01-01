@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { NEED_APPLICATION, RADIO_VALUE } from '@/utils/constants';
+import { useTranslation } from 'next-i18next';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
@@ -24,9 +25,10 @@ export const Employees: FC<EmployeesProps> = ({
   groupId,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const { t } = useTranslation('common');
   return (
     <AccordionMenu
-      title="従業員申請"
+      title={t('applications.employees.title')}
       isEdit={!isDeadline} // 期限内（isDeadline=false）の場合のみ編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
@@ -53,6 +55,7 @@ const Content: FC<ContentProps> = ({
   isDeadline,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const { t } = useTranslation('common');
   // すべてのロジックをhookに委譲
   const logic = useEmployeesMainLogic(
     groupId,
@@ -82,10 +85,10 @@ const Content: FC<ContentProps> = ({
             </svg>
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-800">
-            申請期限が過ぎています
+            {t('applications.employees.deadline.title')}
           </h3>
           <p className="text-sm text-gray-600">
-            従業員申請の締切期限が過ぎているため、新規申請はできません。
+            {t('applications.employees.deadline.description')}
           </p>
         </div>
       </div>
@@ -98,8 +101,10 @@ const Content: FC<ContentProps> = ({
       <FormList
         items={[
           {
-            label: '従業員申請は不要(登録済み)',
-            content: '代表と副代表だけで活動します。',
+            label: t('applications.employees.summary.noApplication.label'),
+            content: t(
+              'applications.employees.summary.noApplication.description'
+            ),
           },
         ]}
         onEdit={!isDeadline ? logic.handleEditClick : undefined} // 期限内の場合のみ編集可能
@@ -113,7 +118,10 @@ const Content: FC<ContentProps> = ({
     return (
       <FormList
         items={logic.tableData}
-        headers={['従業員名', '学籍番号']}
+        headers={[
+          t('applications.employees.summary.headers.name'),
+          t('applications.employees.summary.headers.studentId'),
+        ]}
         keys={['name', 'studentId']}
         tableMode
         onEdit={!isDeadline ? logic.handleEdit : undefined} // 期限内の場合のみ編集可能
@@ -127,7 +135,7 @@ const Content: FC<ContentProps> = ({
     <FormProvider {...logic.form}>
       <form onSubmit={logic.handleSubmit}>
         <Radio
-          label="「代表」と「副代表」以外の従業員申請を行いますか？"
+          label={t('applications.employees.radio.label')}
           required
           value={
             logic.formState.needApplication === NEED_APPLICATION.YES
@@ -138,8 +146,8 @@ const Content: FC<ContentProps> = ({
           }
           onChange={logic.handleRadioChange}
           options={[
-            { id: 1, name: 'はい' },
-            { id: 2, name: 'いいえ' },
+            { id: 1, name: t('applications.employees.radio.options.yes') },
+            { id: 2, name: t('applications.employees.radio.options.no') },
           ]}
         />
 
@@ -147,7 +155,7 @@ const Content: FC<ContentProps> = ({
         {logic.form.watch('needApplication') === undefined && (
           <div className="mt-6 flex w-full items-center justify-center">
             <Button size="pc" color="main" type="submit" isDisable>
-              登録
+              {t('form.actions.register')}
             </Button>
           </div>
         )}
@@ -172,7 +180,7 @@ const Content: FC<ContentProps> = ({
                   variant
                   onClick={logic.form.appendEmpty}
                 >
-                  従業員の追加
+                  {t('applications.employees.buttons.addEmployee')}
                 </Button>
                 <Button
                   size="pc"
@@ -184,7 +192,7 @@ const Content: FC<ContentProps> = ({
                     logic.businessLogic.isUpserting
                   }
                 >
-                  登録
+                  {t('form.actions.register')}
                 </Button>
               </div>
             </div>
@@ -200,7 +208,7 @@ const Content: FC<ContentProps> = ({
               type="button"
               onClick={logic.handleNoApplicationClick}
             >
-              登録
+              {t('form.actions.register')}
             </Button>
           </div>
         )}
