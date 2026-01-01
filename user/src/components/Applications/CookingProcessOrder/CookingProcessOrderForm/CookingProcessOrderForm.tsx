@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import { useFormContext } from 'react-hook-form';
 import CheckBox from '../../../Form/CheckBox';
 import Radio from '../../../Form/Radio';
@@ -16,6 +17,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
   foodProductName,
 }) => {
   const { setValue } = useFormContext();
+  const { t } = useTranslation('common');
   const { values, getError } = useCookingProcessOrderForm(index);
 
   // 調理場使用状況の定数
@@ -25,38 +27,42 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
   } as const;
 
   const option = [
-    { id: KITCHEN_USAGE.USE, name: '使用する' },
-    { id: KITCHEN_USAGE.NOT_USE, name: '使用しない' },
+    {
+      id: KITCHEN_USAGE.USE,
+      name: t('applications.cookingProcessOrder.options.kitchenUsage.use'),
+    },
+    {
+      id: KITCHEN_USAGE.NOT_USE,
+      name: t('applications.cookingProcessOrder.options.kitchenUsage.notUse'),
+    },
   ];
 
-  const confirmCookingProcess = [
-    {
-      id: '1',
-      name: '衛生管理の工程をできるだけ詳しく記載しました',
-    },
-    {
-      id: '2',
-      name: '最終的に加熱して提供するか確認しました',
-    },
-    {
-      id: '3',
-      name: 'お酒の調理工程も提出しました',
-    },
-  ];
+  const confirmCookingProcess = (
+    t('applications.cookingProcessOrder.checkbox.options', {
+      returnObjects: true,
+    }) as string[]
+  ).map((label, idx) => ({
+    id: String(idx + 1),
+    name: label,
+  }));
 
   return (
     <FormContainer>
       <div className="flex flex-col gap-6">
         <div>
-          <div className="text-xs font-bold text-font">販売品名</div>
+          <div className="text-xs font-bold text-font">
+            {t('applications.cookingProcessOrder.summary.labels.foodProduct')}
+          </div>
           <div className="text-base text-font">{foodProductName}</div>
         </div>
         <div className="mb-[4px] flex items-center gap-6">
-          <p className="text-base text-font">調理場の使用有無</p>
-          <p className="text-xs text-alert">※必須</p>
+          <p className="text-base text-font">
+            {t('applications.cookingProcessOrder.fields.kitchenUsage')}
+          </p>
+          <p className="text-xs text-alert">※{t('form.required')}</p>
         </div>
         <Radio
-          label="(営業前)"
+          label={t('applications.cookingProcessOrder.fields.preOpen')}
           name={`cookingProcessOrders.${index}.preOpenKitchen`}
           required
           value={
@@ -78,7 +84,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           error={getError('preOpenKitchen')}
         />
         <Radio
-          label="(営業中)"
+          label={t('applications.cookingProcessOrder.fields.duringOpen')}
           name={`cookingProcessOrders.${index}.duringOpenKitchen`}
           required
           value={
@@ -100,11 +106,9 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           error={getError('duringOpenKitchen')}
         />
         <TextArea
-          label="調理内容"
+          label={t('applications.cookingProcessOrder.fields.tent')}
           value={values.tent || ''}
-          placeholder={
-            '例）\n1. コーヒー豆を15g測る\n2. 入れる\n3. 温める\n4. 皿に乗せる'
-          }
+          placeholder={t('applications.cookingProcessOrder.placeholders.tent')}
           onChange={(val) =>
             setValue(`cookingProcessOrders.${index}.tent`, val, {
               shouldValidate: true,
@@ -115,7 +119,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           required
         />
         <CheckBox
-          label="調理工程確認事項"
+          label={t('applications.cookingProcessOrder.fields.confirm')}
           value={values.confirmCookingProcess}
           onChange={(val) => {
             setValue(
@@ -129,7 +133,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           }}
           options={confirmCookingProcess}
           error={getError('confirmCookingProcess')}
-          note="確認事項にチェックを入れてください"
+          note={t('applications.cookingProcessOrder.notes.confirm')}
           required
         />
       </div>

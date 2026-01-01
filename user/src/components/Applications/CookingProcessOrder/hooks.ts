@@ -5,6 +5,7 @@ import {
 } from '@/api/cookingProcessOrderApi';
 import { useGetFoodProducts } from '@/api/foodProductApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import {
@@ -17,6 +18,7 @@ export const useCookingProcessOrder = (
   isDeadline: boolean
 ) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { t } = useTranslation('common');
 
   const {
     cookingProcessOrders,
@@ -112,11 +114,13 @@ export const useCookingProcessOrder = (
       });
 
       await mutateCookingProcessOrders();
-      toast.success('調理工程を更新しました');
+      toast.success(
+        t('applications.cookingProcessOrder.messages.updateSuccess')
+      );
       setIsEditing(false);
     } catch (e) {
       console.error(e);
-      toast.error('調理工程の更新に失敗しました');
+      toast.error(t('applications.cookingProcessOrder.messages.updateFailed'));
     }
   });
 
