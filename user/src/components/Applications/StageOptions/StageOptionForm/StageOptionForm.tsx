@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
+import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -18,6 +19,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
   toEdit,
   groupId,
 }) => {
+  const { t } = useTranslation('common');
   const {
     handleSubmit,
     errors,
@@ -35,7 +37,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
   } = useStageOptionFormHooks(stageOptions, groupId);
 
   if (createError || updateError) {
-    toast.error('送信に失敗しました。時間を置いて再度お試しください');
+    toast.error(t('applications.stageOptions.messages.submitFailed'));
   }
 
   return (
@@ -46,8 +48,8 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
       >
         <div className="flex flex-col space-y-10">
           <Radio
-            label={stageOptionLabels[0]}
-            note="選んでください"
+            label={t(stageOptionLabels[0])}
+            note={t('applications.stageOptions.notes.select')}
             onChange={(value) =>
               setValue('ownEquipment', convertToBoolean(value))
             }
@@ -57,8 +59,8 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
             error={errors.ownEquipment?.message}
           />
           <Radio
-            label={stageOptionLabels[1]}
-            note="選んでください"
+            label={t(stageOptionLabels[1])}
+            note={t('applications.stageOptions.notes.select')}
             onChange={(value) => setValue('bgm', convertToBoolean(value))}
             options={options}
             required
@@ -66,8 +68,8 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
             error={errors.bgm?.message}
           />
           <Radio
-            label={stageOptionLabels[2]}
-            note="選んでください"
+            label={t(stageOptionLabels[2])}
+            note={t('applications.stageOptions.notes.select')}
             onChange={(value) =>
               setValue('cameraPermission', convertToBoolean(value))
             }
@@ -77,8 +79,8 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
             error={errors.cameraPermission?.message}
           />
           <Radio
-            label={stageOptionLabels[3]}
-            note="選んでください"
+            label={t(stageOptionLabels[3])}
+            note={t('applications.stageOptions.notes.select')}
             onChange={(value) => setValue('loudSound', convertToBoolean(value))}
             options={options}
             required
@@ -96,7 +98,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
                 type="button"
                 onClick={toEdit}
               >
-                キャンセル
+                {t('form.actions.cancel')}
               </Button>
             </div>
           )}
@@ -106,7 +108,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
             type="submit"
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
-            {stageOptions ? '修正' : '登録'}
+            {stageOptions ? t('form.actions.edit') : t('form.actions.register')}
           </Button>
         </div>
       </form>

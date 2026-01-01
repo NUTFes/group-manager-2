@@ -4,6 +4,7 @@ import {
   useUpdateStageOptions,
 } from '@/api/stageOptionApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
@@ -13,6 +14,7 @@ export const useStageOptionFormHooks = (
   stageOptions: StageOptionResponse | undefined,
   groupId: number | undefined
 ) => {
+  const { t } = useTranslation('common');
   const {
     handleSubmit,
     setValue,
@@ -56,26 +58,26 @@ export const useStageOptionFormHooks = (
         await update({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
 
-        toast.success('送信しました');
+        toast.success(t('applications.stageOptions.messages.submitSuccess'));
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(t('applications.stageOptions.messages.submitFailed'));
       }
     } else {
       try {
         await create({ query: formData });
         mutate(`/stage_common_options/group/${formData.groupId}`);
         mutate(`/check_all_registered/${formData.groupId}`);
-        toast.success('送信しました');
+        toast.success(t('applications.stageOptions.messages.submitSuccess'));
       } catch {
-        toast.error('送信に失敗しました。');
+        toast.error(t('applications.stageOptions.messages.submitFailed'));
       }
       reset();
     }
   };
 
   const options = [
-    { id: 1, name: 'はい' },
-    { id: 0, name: 'いいえ' },
+    { id: 1, name: t('applications.stageOptions.options.yes') },
+    { id: 0, name: t('applications.stageOptions.options.no') },
   ];
 
   const convertToBoolean = (value: string): boolean => {

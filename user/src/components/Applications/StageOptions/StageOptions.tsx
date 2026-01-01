@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import StageOptionForm from '@/components/Applications/StageOptions/StageOptionForm';
 import { useStageOptionHooks } from '@/components/Applications/StageOptions/hooks';
@@ -33,14 +34,15 @@ const Content: FC<ContentProps> = ({
   formItem,
   groupId,
 }) => {
+  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('general.loading')}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {t('general.errors.fetch')}
       </div>
     );
   }
@@ -67,12 +69,13 @@ const StageOptions: FC<StageOptionsProps> = ({
   isRegistered,
   groupId,
 }) => {
+  const { t } = useTranslation('common');
   const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
     useStageOptionHooks(groupId);
 
   return (
     <AccordionMenu
-      title="ステージオプション申請"
+      title={t('applications.stageOptions.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
