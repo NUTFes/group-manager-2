@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import RentItemsForm from '@/components/Applications/MultiItemForms/RentItems/RentItemsForm';
 
@@ -15,9 +16,10 @@ const RentItems: FC<RentItemsProps> = ({
   groupId,
   groupCategoryId,
 }) => {
+  const { t } = useTranslation('common');
   return (
     <AccordionMenu
-      title="物品申請"
+      title={t('applications.rentItems.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}

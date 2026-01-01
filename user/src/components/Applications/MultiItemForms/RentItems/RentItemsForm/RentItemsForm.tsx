@@ -1,5 +1,6 @@
 // src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic';
@@ -21,6 +22,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   groupCategoryId,
   isDeadline,
 }) => {
+  const { t } = useTranslation('common');
   // 主に groupCategoryId を使って判断するように変更
   const {
     form,
@@ -50,7 +52,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   if (isLoading) {
     return (
       <div className="w-full py-4 text-center">
-        <p>データを読み込み中です...</p>
+        <p>{t('applications.rentItems.loading')}</p>
       </div>
     );
   }
@@ -58,9 +60,11 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   if (hasError) {
     return (
       <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-        <strong className="font-bold">エラー：</strong>
+        <strong className="font-bold">
+          {t('applications.rentItems.errors.fetchTitle')}
+        </strong>
         <span className="block sm:inline">
-          データの取得に失敗しました。ページを再読込してください。
+          {t('applications.rentItems.errors.fetchDescription')}
         </span>
       </div>
     );
@@ -72,8 +76,12 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
       <div className="w-full text-font">
         <div className="flex w-full flex-col gap-10 rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
           <div className="mb-4">
-            <p className="text-xs">物品申請は不要（登録済み）</p>
-            <p>学校から借用する備品はありません。</p>
+            <p className="text-xs">
+              {t('applications.rentItems.summary.noApplication.label')}
+            </p>
+            <p>
+              {t('applications.rentItems.summary.noApplication.description')}
+            </p>
           </div>
           {isDeadline && (
             <div className="mt-4 flex w-full items-center justify-center gap-4">
@@ -84,7 +92,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                 icon="pencil"
                 onClick={openEditMode}
               >
-                修正
+                {t('form.actions.edit')}
               </Button>
             </div>
           )}
@@ -100,17 +108,17 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         {!hideLocationTypeSelect && ( // 特殊団体でない場合のみ表示
           <div className="mb-4">
             <p className="font-bold">
-              第一希望：
+              {t('applications.rentItems.location.displayLabel')}
               {form.getValues('locationType') === LOCATION_TYPES.INDOOR
-                ? '屋内'
-                : '屋外'}
+                ? t('applications.rentItems.location.options.indoor')
+                : t('applications.rentItems.location.options.outdoor')}
             </p>
           </div>
         )}
         {isFoodSellingGroup && (
           <div className="mb-4">
             <p className="font-bold text-alert">
-              ※食品販売団体は屋外での出店のみとなります
+              {t('applications.rentItems.location.notes.foodOnlyOutdoor')}
             </p>
           </div>
         )}
@@ -131,7 +139,9 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     )?.name || ''}
                   </p>
                   <p className="text-sm text-font">
-                    {form.getValues(`items.${index}.count`)} 個
+                    {t('applications.rentItems.summary.count', {
+                      value: form.getValues(`items.${index}.count`),
+                    })}
                   </p>
                 </div>
               </div>
@@ -148,7 +158,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
               icon="pencil"
               onClick={openEditMode}
             >
-              修正
+              {t('form.actions.edit')}
             </Button>
           </div>
         )}
@@ -163,17 +173,21 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
       onSubmit={handleFormSubmit}
     >
       <div>
-        <p className="mb-[4px] text-sm text-alert">
-          {!hideLocationTypeSelect && '会場申請を先に申請してください。'}
-          {isFoodSellingGroup && '※食品販売団体は屋外での出店のみとなります'}
-        </p>
+        <div className="mb-[4px] text-sm text-alert">
+          {!hideLocationTypeSelect && (
+            <p>{t('applications.rentItems.location.notes.preApplication')}</p>
+          )}
+          {isFoodSellingGroup && (
+            <p>{t('applications.rentItems.location.notes.foodOnlyOutdoor')}</p>
+          )}
+        </div>
         <br />
         <Controller
           name="hasItems"
           control={control}
           render={({ field }) => (
             <Radio
-              label="物品申請を行いますか？"
+              label={t('applications.rentItems.radio.question')}
               value={field.value ? '1' : '0'}
               onChange={(value: string) => {
                 field.onChange(value === '1');
@@ -181,8 +195,14 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
               }}
               required
               options={[
-                { id: 1, name: 'はい' },
-                { id: 0, name: 'いいえ' },
+                {
+                  id: 1,
+                  name: t('applications.rentItems.radio.options.yes'),
+                },
+                {
+                  id: 0,
+                  name: t('applications.rentItems.radio.options.no'),
+                },
               ]}
               error={errors.hasItems?.message?.toString()}
             />
@@ -205,7 +225,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                 }
               }}
             >
-              登録
+              {t('form.actions.register')}
             </Button>
           </div>
         </>
@@ -221,7 +241,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                 control={control}
                 render={({ field }) => (
                   <Radio
-                    label="会場申請の第一希望はどちらですか？"
+                    label={t('applications.rentItems.location.radioQuestion')}
                     value={field.value}
                     onChange={(value: string) => {
                       // 新しい値でupdateLocationTypeを呼び出す
@@ -229,8 +249,18 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     }}
                     required
                     options={[
-                      { id: 1, name: '屋内' },
-                      { id: 2, name: '屋外' },
+                      {
+                        id: 1,
+                        name: t(
+                          'applications.rentItems.location.options.indoor'
+                        ),
+                      },
+                      {
+                        id: 2,
+                        name: t(
+                          'applications.rentItems.location.options.outdoor'
+                        ),
+                      },
                     ]}
                     error={errors.locationType?.message}
                   />
@@ -242,7 +272,11 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             <div key={field.id} className="mx-auto flex w-full justify-center">
               <FormContainer>
                 <div className="mb-4">
-                  <h3 className="mb-4 font-bold text-font">物品 {index + 1}</h3>
+                  <h3 className="mb-4 font-bold text-font">
+                    {t('applications.rentItems.fields.section', {
+                      index: index + 1,
+                    })}
+                  </h3>
                   <Controller
                     name={`items.${index}.itemId`}
                     control={control}
@@ -262,7 +296,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
 
                       return (
                         <Selector
-                          label="物品名"
+                          label={t('applications.rentItems.fields.item')}
                           value={field.value}
                           onChange={(value) => {
                             field.onChange(value);
@@ -302,7 +336,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
 
                       return (
                         <Selector
-                          label="個数"
+                          label={t('applications.rentItems.fields.count')}
                           value={field.value.toString()}
                           onChange={(value) => {
                             const numValue = parseInt(value, 10);
@@ -333,14 +367,14 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     }}
                   />
                   <p className="text-xs text-sub">
-                    ※必要最低限の数だけ申請してください
+                    {t('applications.rentItems.notes.minRequest')}
                   </p>
                 </div>
                 <div className="w-full">
                   <p className="text-xs text-font">
-                    使用する個数が20個以上の場合はメールをお送りください
+                    {t('applications.rentItems.notes.contactLimit')}
                     <br />
-                    nutfes.soumu@gmail.com
+                    {t('applications.rentItems.notes.contactEmail')}
                   </p>
                 </div>
                 {fields.length > 1 && (
@@ -355,7 +389,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     >
                       <div className="flex items-center">
                         <RiDeleteBinLine size={18} className="mr-1" />
-                        削除
+                        {t('form.actions.delete')}
                       </div>
                     </MultiItemFormButton>
                   </div>
@@ -373,14 +407,18 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
 
           {errors.root?.message && (
             <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              {errors.root.message.toString()}
+              {t(errors.root.message.toString(), {
+                defaultValue: errors.root.message.toString(),
+              })}
             </div>
           )}
 
           {/* フォームバリデーションエラーがあれば表示（アイテム制限関連のエラーも含む） */}
           {errors.items?.message && (
             <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              {errors.items.message.toString()}
+              {t(errors.items.message.toString(), {
+                defaultValue: errors.items.message.toString(),
+              })}
             </div>
           )}
 
@@ -394,11 +432,14 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
               }}
             >
               <div className="flex items-center">
-                <span className="mr-1 text-lg">+</span> 物品の追加
+                <span className="mr-1 text-lg">+</span>{' '}
+                {t('applications.rentItems.buttons.addItem')}
               </div>
             </MultiItemFormButton>
             <Button type="submit" size="pc" color="main" isDisable={!isValid}>
-              {hasExisting ? '更新' : '登録'}
+              {hasExisting
+                ? t('form.actions.edit')
+                : t('form.actions.register')}
             </Button>
           </div>
         </>
