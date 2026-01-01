@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 type TextBoxProps = {
@@ -22,6 +23,7 @@ const TextBox: FC<TextBoxProps> = ({
   error,
   type,
 }) => {
+  const { t } = useTranslation('common');
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
 
@@ -38,7 +40,9 @@ const TextBox: FC<TextBoxProps> = ({
       <label>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && <p className="text-xs text-alert">※必須</p>}
+          {required && (
+            <p className="text-xs text-alert">※{t('form.required')}</p>
+          )}
         </div>
         <div className="relative">
           <input
@@ -61,7 +65,9 @@ const TextBox: FC<TextBoxProps> = ({
         <p className="mt-[4px] max-w-[400px] break-words text-xs text-sub">
           {note}
         </p>
-        <p className="text-xs text-alert">{error}</p>
+        <p className="text-xs text-alert">
+          {error ? t(error, { defaultValue: error }) : ''}
+        </p>
       </label>
     </>
   );
