@@ -1,5 +1,5 @@
-import { FC, useRef } from 'react';
-import { DepartmentList, GradeList } from '@/utils/list';
+import { FC, useMemo, useRef } from 'react';
+import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
@@ -110,13 +110,8 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     handleSubmit
   );
 
-  const selectPlaceholder = t('registerCarousel.placeholders.select');
-  // 選択肢のオプション
-  const gradeOptions = [{ id: 0, name: selectPlaceholder }, ...GradeList];
-  const departmentOptions = [
-    { id: 0, name: selectPlaceholder },
-    ...DepartmentList,
-  ];
+  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
+  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
 
   // フォーム参照の作成
   const formRef = useRef<HTMLFormElement>(null);
@@ -326,8 +321,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
                       <div className="text-base font-medium text-font">
                         {
-                          GradeList.find((grade) => grade.id === values.gradeId)
-                            ?.name
+                          gradeOptions.find(
+                            (grade) => grade.id === values.gradeId
+                          )?.name
                         }
                       </div>
                     </div>
@@ -341,7 +337,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     <div className="inline-flex h-[65px] w-[298px] items-center justify-start">
                       <div className="text-base font-medium text-font">
                         {
-                          DepartmentList.find(
+                          departmentOptions.find(
                             (department) =>
                               department.id === values.departmentId
                           )?.name
