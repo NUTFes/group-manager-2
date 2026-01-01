@@ -1,19 +1,41 @@
 import { FC } from 'react';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button/Button';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
 import { Device, PowerSummaryViewProps } from '../types';
 
 // デバイス情報からフォームアイテムを作成する関数
-export const createFormItemsForDevice = (device: Device): FormItem[] => {
+export const createFormItemsForDevice = (
+  device: Device,
+  t: TFunction<'common'>
+): FormItem[] => {
   const items: FormItem[] = [];
-  items.push({ label: '製品名', content: device.productName });
-  items.push({ label: 'メーカー名', content: device.manufacturer });
-  items.push({ label: '型番', content: device.model });
+  items.push({
+    label: t('applications.power.summary.fields.productName'),
+    content: device.productName,
+  });
+  items.push({
+    label: t('applications.power.summary.fields.manufacturer'),
+    content: device.manufacturer,
+  });
+  items.push({
+    label: t('applications.power.summary.fields.model'),
+    content: device.model,
+  });
   if (device.url) {
-    items.push({ label: '製品URL', content: device.url });
+    items.push({
+      label: t('applications.power.summary.fields.url'),
+      content: device.url,
+    });
   }
-  items.push({ label: '消費電力[W]', content: `${device.maxPower}W` });
+  items.push({
+    label: t('applications.power.summary.fields.maxPower'),
+    content: t('applications.power.summary.powerValue', {
+      value: device.maxPower,
+    }),
+  });
   return items;
 };
 
@@ -23,12 +45,14 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
   onDeleteDevice,
   isDeadline,
 }) => {
+  const { t } = useTranslation('common');
+
   return (
     <div className="flex flex-col gap-6">
       {devices.map((device, index) => (
         <div key={`device-${index}`} className="mb-4">
           <FormList
-            items={createFormItemsForDevice(device)}
+            items={createFormItemsForDevice(device, t)}
             onEdit={isDeadline ? undefined : onEdit}
             isDelete={isDeadline}
             onDelete={device.id ? () => onDeleteDevice(device.id!) : undefined}
@@ -45,7 +69,7 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
             icon="pencil"
             onClick={onEdit}
           >
-            修正
+            {t('form.actions.edit')}
           </Button>
         </div>
       )}

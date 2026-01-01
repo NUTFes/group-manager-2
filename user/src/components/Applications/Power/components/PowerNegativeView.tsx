@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
+import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import FormList from '@/components/FormList/FormList';
@@ -18,10 +19,19 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   onCancel,
   isDeadline,
 }) => {
+  const { t } = useTranslation('common');
+  const translatedRadioOptions = useMemo(
+    () =>
+      radioOptions.map((option) => ({
+        id: option.id,
+        name: t(option.labelKey),
+      })),
+    [radioOptions, t]
+  );
   const noApplicationItems: FormItem[] = [
     {
-      label: '電力申請は不要（登録済み）',
-      content: '電力が必要な機器は使用しません。',
+      label: t('applications.power.summary.noApplication.label'),
+      content: t('applications.power.summary.noApplication.description'),
     },
   ];
 
@@ -30,11 +40,11 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
       {isEdit && (
         <>
           <Radio
-            label="電力申請を行いますか？"
+            label={t('applications.power.radio.question')}
             value={radioValue}
             onChange={onRadioChange}
             required
-            options={radioOptions}
+            options={translatedRadioOptions}
           />
           {onCancel && (
             <div className="flex justify-center">
@@ -45,7 +55,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
                 variant
                 onClick={onCancel}
               >
-                キャンセル
+                {t('form.actions.cancel')}
               </Button>
             </div>
           )}
@@ -64,7 +74,9 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
         <div className="flex flex-col items-center gap-4">
           {submitError && (
             <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              <strong className="font-bold">エラー：</strong>
+              <strong className="font-bold">
+                {t('applications.power.errors.submitTitle')}
+              </strong>
               <span className="block sm:inline">{submitError}</span>
             </div>
           )}
@@ -74,7 +86,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
             color="main"
             onClick={onNegativeSubmit}
           >
-            登録
+            {t('form.actions.register')}
           </Button>
         </div>
       )}

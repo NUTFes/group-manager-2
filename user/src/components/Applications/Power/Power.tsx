@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
@@ -13,6 +14,8 @@ type PowerProps = {
 };
 
 const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
+  const { t } = useTranslation('common');
+
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
     state,
@@ -142,7 +145,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
 
   return (
     <AccordionMenu
-      title={'電力申請'}
+      title={t('applications.power.title')}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
