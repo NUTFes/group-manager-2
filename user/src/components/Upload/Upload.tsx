@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import { MdUploadFile } from 'react-icons/md';
 
 // NOTE: 箇条書きで列挙できるようにnoteを配列で定義
@@ -19,6 +20,8 @@ const Upload: FC<UploadProps> = ({
   error = '',
   required = false,
 }) => {
+  const { t } = useTranslation('common');
+
   return (
     <button
       type="button"
@@ -29,7 +32,9 @@ const Upload: FC<UploadProps> = ({
       <div className="inline-flex items-baseline justify-start gap-6 self-stretch">
         <div className="text-base font-medium text-font">{title}</div>
         {required && (
-          <div className="text-center text-xs text-alert">※必須</div>
+          <div className="text-center text-xs text-alert">
+            ※{t('form.required')}
+          </div>
         )}
       </div>
       <div
@@ -42,7 +47,7 @@ const Upload: FC<UploadProps> = ({
           <MdUploadFile className="size-[40px] text-main" />
         </div>
         <div className="text-center text-[26px] font-bold text-main">
-          アップロード
+          {t('form.actions.upload')}
         </div>
       </div>
       <ul className="list-inside list-disc text-left text-xs text-sub">
@@ -51,7 +56,7 @@ const Upload: FC<UploadProps> = ({
         ))}
       </ul>
       <div className="max-w-[402px] break-words text-xs text-alert">
-        {error}
+        {error ? t(error, { defaultValue: error }) : ''}
       </div>
     </button>
   );
