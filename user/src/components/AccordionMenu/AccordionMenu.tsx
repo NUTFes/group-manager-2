@@ -8,6 +8,7 @@ type AccordionMenuProps = {
   children: React.ReactNode;
   isEdit: boolean | undefined;
   isExist: boolean | undefined;
+  isRegistered?: boolean;
   required: boolean;
   note?: string;
 };
@@ -17,12 +18,20 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   children,
   isEdit,
   isExist,
+  isRegistered,
   required,
   note,
 }) => {
   const receptionStatus = isEdit ? 'open' : 'closed';
 
-  const registerStatus = isExist ? 'registered' : 'unregistered';
+  const registerStatus =
+    isRegistered === undefined
+      ? isExist
+        ? 'registered'
+        : 'unregistered'
+      : isRegistered
+        ? 'registered'
+        : 'unregistered';
 
   const [isOpen, setIsOpen] = useState(false);
 

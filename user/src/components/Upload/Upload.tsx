@@ -8,6 +8,7 @@ type UploadProps = {
   onClick: () => void;
   idDisable: boolean;
   error?: string;
+  required?: boolean;
 };
 
 const Upload: FC<UploadProps> = ({
@@ -16,6 +17,7 @@ const Upload: FC<UploadProps> = ({
   onClick,
   idDisable,
   error = '',
+  required = false,
 }) => {
   return (
     <button
@@ -26,7 +28,9 @@ const Upload: FC<UploadProps> = ({
     >
       <div className="inline-flex items-baseline justify-start gap-6 self-stretch">
         <div className="text-base font-medium text-font">{title}</div>
-        <div className="text-center text-xs text-alert">※必須</div>
+        {required && (
+          <div className="text-center text-xs text-alert">※必須</div>
+        )}
       </div>
       <div
         className={`inline-flex h-[72px] items-center justify-center gap-4 overflow-hidden rounded-[10px] border
@@ -41,7 +45,7 @@ const Upload: FC<UploadProps> = ({
           アップロード
         </div>
       </div>
-      <ul className="list-inside list-disc text-left text-xs text-font">
+      <ul className="list-inside list-disc text-left text-xs text-sub">
         {note.map((line, idx) => (
           <li key={idx}>{line}</li>
         ))}

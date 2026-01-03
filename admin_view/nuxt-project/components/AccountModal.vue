@@ -7,10 +7,9 @@
           <Row justify="start">
             <slot></slot>
           </Row>
-          <h6 v-if="user.role_id == 1" class="developer">Developer</h6>
-          <h6 v-if="user.role_id == 2" class="manager">Manager</h6>
-          <h6 v-if="user.role_id == 3" class="staff">Staff</h6>
-          <h6 v-if="user.role_id == 4" class="user">User</h6>
+          <h6 v-if="user.role_id == 1" class="manager">Manager</h6>
+          <h6 v-if="user.role_id == 2" class="staff">Staff</h6>
+          <h6 v-if="user.role_id == 3" class="user">User</h6>
           <h3>{{ user.name }}</h3>
           <p>{{ user.email }}</p>
           <IconButton icon_name="edit" :on_click="openEditModal" />
@@ -85,10 +84,10 @@ export default {
       isOpenEditModal: false,
       departmentList: [
         { id: 1,  name: "機械工学分野/機械創造工学課程" },
-        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学過程" },
-        { id: 3,  name: "物質生物工学分野/物質材料工学過程/生物機能工学過程" },
-        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学過程" },
-        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学過程" },
+        { id: 2,  name: "電気電子情報工学分野/電気電子情報工学課程" },
+        { id: 3,  name: "物質生物工学分野/物質材料工学課程/生物機能工学課程" },
+        { id: 4,  name: "環境社会基盤工学分野/環境社会基盤工学課程" },
+        { id: 5,  name: "情報・経営システム工学分野/情報・経営システム工学課程" },
         { id: 6,  name: "機械工学分野/機械創造工学専攻" },
         { id: 7,  name: "電気電子情報工学分野/電気電子情報工学専攻" },
         { id: 8,  name: "物質生物工学分野/物質材料工学専攻/生物機能工学専攻" },

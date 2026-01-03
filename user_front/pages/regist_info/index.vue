@@ -122,6 +122,7 @@ interface PurchaseList {
   shop_id: number;
   shop: string;
   year: number;
+  remark?: string;
 }
 
 interface Food {

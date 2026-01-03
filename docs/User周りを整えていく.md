@@ -42,14 +42,13 @@ Role.seed( :id,
 )
 ```
 
-新 Role(2024/11/20~)
+新 Role(2025/5/13~)
 
 ```ruby
 Role.seed( :id,
-  { id: 1, name: 'developer' },
-  { id: 2, name: 'manager' },
-  { id: 3, name: 'staff' },
-  { id: 4, name: 'user' },
+  { id: 1, name: 'manager' },
+  { id: 2, name: 'staff' },
+  { id: 3, name: 'user' },
 )
 ```
 

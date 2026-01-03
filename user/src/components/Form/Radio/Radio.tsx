@@ -13,6 +13,7 @@ type RadioProps = {
   note?: string;
   error?: string;
   options: Option[];
+  name?: string;
 };
 
 const Radio: FC<RadioProps> = ({
@@ -23,6 +24,7 @@ const Radio: FC<RadioProps> = ({
   note,
   error,
   options,
+  name,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
@@ -40,7 +42,7 @@ const Radio: FC<RadioProps> = ({
             <label key={option.id} className="flex items-center gap-2">
               <input
                 type="radio"
-                name={label}
+                name={name || label}
                 value={option.id}
                 checked={value === option.id.toString()}
                 onChange={handleChange}

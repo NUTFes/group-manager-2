@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_04_22_125908) do
+ActiveRecord::Schema.define(version: 2025_06_10_212842) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 2025_04_22_125908) do
     t.boolean "pre_open_kitchen", default: false, null: false
     t.boolean "during_open_kitchen", default: false, null: false
     t.text "tent"
+    t.bigint "food_product_id", null: false
+    t.index ["food_product_id"], name: "index_cooking_process_orders_on_food_product_id"
     t.index ["group_id"], name: "index_cooking_process_orders_on_group_id"
   end
 
@@ -124,6 +126,7 @@ ActiveRecord::Schema.define(version: 2025_04_22_125908) do
     t.integer "second_day_num"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_alcohol"
   end
 
   create_table "grades", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -249,6 +252,7 @@ ActiveRecord::Schema.define(version: 2025_04_22_125908) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "purchase_date"
     t.string "url"
+    t.string "remark"
   end
 
   create_table "rentable_items", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -461,6 +465,7 @@ ActiveRecord::Schema.define(version: 2025_04_22_125908) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
   add_foreign_key "un_registered_groups", "groups"

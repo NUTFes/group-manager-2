@@ -6,9 +6,6 @@
     <div class="users-card-content">
       <h1>{{ dashboardData.all_user_num }}</h1>
       <Row>
-        <Tag primaryColor="#FF7070" secondaryColor="#E38AD5"
-          >{{ dashboardData.developer_num }} Developers</Tag
-        >
         <Tag primaryColor="#8FEE8D" secondaryColor="#E3D08A" width="auto"
           >{{ dashboardData.manager_num }} Managers</Tag
         >

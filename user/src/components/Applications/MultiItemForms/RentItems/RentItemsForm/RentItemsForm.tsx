@@ -1,7 +1,7 @@
 // src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
 import { Controller } from 'react-hook-form';
-import { RiDeleteBinLine, RiEdit2Line } from 'react-icons/ri';
+import { RiDeleteBinLine } from 'react-icons/ri';
 import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
@@ -76,17 +76,16 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             <p>学校から借用する備品はありません。</p>
           </div>
           {isDeadline && (
-            <div className="mt-4 flex justify-center">
-              <MultiItemFormButton
-                type="button"
+            <div className="mt-4 flex w-full items-center justify-center gap-4">
+              <Button
                 size="pc"
-                color="edit"
+                color="main"
+                type="button"
+                icon="pencil"
                 onClick={openEditMode}
               >
-                <div className="flex items-center">
-                  <RiEdit2Line size={18} className="mr-1" /> 修正
-                </div>
-              </MultiItemFormButton>
+                修正
+              </Button>
             </div>
           )}
         </div>
@@ -141,17 +140,16 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         </div>
 
         {isDeadline && (
-          <div className="mt-6 text-center">
-            <MultiItemFormButton
-              type="button"
+          <div className="mt-4 flex w-full items-center justify-center gap-4">
+            <Button
               size="pc"
-              color="edit"
+              color="main"
+              type="button"
+              icon="pencil"
               onClick={openEditMode}
             >
-              <div className="flex items-center">
-                <RiEdit2Line size={18} className="mr-1" /> 修正
-              </div>
-            </MultiItemFormButton>
+              修正
+            </Button>
           </div>
         )}
       </div>

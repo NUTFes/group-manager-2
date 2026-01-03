@@ -3,7 +3,7 @@ externalDocs:
   description: ''
   url: ''
 info:
-  title: OAS API Document Title
+  title: Group Manager API
   description: |-
     This is a sample server Petstore server.  You can find out more about
                 Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,
@@ -18,6 +18,10 @@ info:
     url: ''
   version: 1.0.0
 openapi: 3.0.0
+security:
+- DeviseAuth: []
+  ClientAuth: []
+  UidAuth: []
 servers:
 - url: http://localhost:3000
   description: localhost
@@ -4458,6 +4462,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/CookingProcessOrder"
+  "/cooking_process_orders/group/{group_id}":
+    get:
+      tags:
+      - cooking_process_order
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '404':
+          description: cooking_process_order description
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/cooking_process_orders/{id}":
     get:
       tags:
@@ -5374,6 +5407,23 @@ paths:
         schema:
           type: integer
   "/food_products":
+    patch:
+      tags:
+      - food_product
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: food_product description
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FoodProduct"
     get:
       tags:
       - food_product
@@ -5393,6 +5443,79 @@ paths:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
       deprecated: false
+    post:
+      tags:
+      - food_product
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FoodProduct"
+  "/food_products/bulk_upsert":
+    post:
+      tags:
+      - food_product
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FoodProduct"
+  "/food_products/group/{group_id}":
+    get:
+      tags:
+      - food_product
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+        '404':
+          description: food_product description
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/food_products/upsert":
     post:
       tags:
       - food_product
@@ -10842,9 +10965,12 @@ components:
     devisetokenauth.Session:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        email:
+          type: string
+          description: nutfes-taro@email.com
+        password:
+          type: string
+          description: password
     devisetokenauth.TokenValidation:
       type: object
       properties:
@@ -11460,3 +11586,19 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/VenueMap"
+  securitySchemes:
+    ClientAuth:
+      type: apiKey
+      in: header
+      name: client
+      description: Devise認証用のクライアントID
+    DeviseAuth:
+      type: apiKey
+      in: header
+      name: access-token
+      description: Devise認証用のアクセストークン
+    UidAuth:
+      type: apiKey
+      in: header
+      name: uid
+      description: Devise認証用のユーザーID

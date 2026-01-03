@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class EmployeesControllerTest < ActionDispatch::IntegrationTest
@@ -5,34 +7,34 @@ class EmployeesControllerTest < ActionDispatch::IntegrationTest
     @employee = employees(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get employees_url, as: :json
     assert_response :success
   end
 
-  test "should create employee" do
+  test 'should create employee' do
     assert_difference('Employee.count') do
       post employees_url, params: { employee: { employee_category_id: @employee.employee_category_id, group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id } }, as: :json
     end
 
-    assert_response 201
+    assert_response :created
   end
 
-  test "should show employee" do
+  test 'should show employee' do
     get employee_url(@employee), as: :json
     assert_response :success
   end
 
-  test "should update employee" do
+  test 'should update employee' do
     patch employee_url(@employee), params: { employee: { employee_category_id: @employee.employee_category_id, group_id: @employee.group_id, name: @employee.name, student_id: @employee.student_id } }, as: :json
-    assert_response 200
+    assert_response :ok
   end
 
-  test "should destroy employee" do
+  test 'should destroy employee' do
     assert_difference('Employee.count', -1) do
       delete employee_url(@employee), as: :json
     end
 
-    assert_response 204
+    assert_response :no_content
   end
 end

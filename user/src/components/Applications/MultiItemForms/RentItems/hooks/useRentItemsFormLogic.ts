@@ -10,6 +10,7 @@ import {
   useRentalOrdersByGroupId,
 } from '@/api/rentItemsApi';
 import { useGetPlaceOrder } from '@/api/venueApplication';
+import { GROUP_CATEGORY } from '@/utils/constants';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useAuthenticatedGet } from '@/hooks/useApi';
@@ -19,13 +20,6 @@ import {
   RentItemsFormData,
   rentItemsFormResolver,
 } from '../RentItemsForm/schema';
-
-// Constants for group category IDs
-const GROUP_CATEGORY = {
-  FOOD_SELLING: 1,
-  STAGE: 3,
-  COMMITTEE: 6,
-};
 
 // Constants for venue place choice
 const VENUE_PLACE = {
@@ -86,7 +80,7 @@ export const useRentItemsFormLogic = (
   const autoChangingLocationType = useRef(false);
 
   // 食品販売団体かどうかを判定（groupCategoryId === GROUP_CATEGORY.FOOD_SELLING）
-  const isFoodSellingGroup = groupCategoryId === GROUP_CATEGORY.FOOD_SELLING;
+  const isFoodSellingGroup = groupCategoryId === GROUP_CATEGORY.FOOD_SALES;
 
   // フォーム送信ハンドラー（FormEventを処理）
   const handleFormSubmit = (e: FormEvent) => {
