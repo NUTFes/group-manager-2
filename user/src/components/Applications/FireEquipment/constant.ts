@@ -9,7 +9,7 @@ export enum fireEquipmentFormFields {
 
 export const FIRE_EQUIPMENT_INSTRUCTIONS = {
   TAKEAWAY_NOTICE:
-      '火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。\n火気はテント内に残す行為は火事の原因になります。',
+    '火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。\n火気はテント内に残す行為は火事の原因になります。',
   REMARK_NOTICE: 'いいえを押した場合は火気の備考欄に理由を記載して下さい。',
 };
 

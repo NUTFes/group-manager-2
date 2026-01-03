@@ -8,9 +8,9 @@ import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
 import {
-  fireEquipmentFormFields,
-  FIRE_EQUIPMENT_INSTRUCTIONS,
   FIRE_EQUIPMENT_FUEL_PLACEHOLDER_ID,
+  FIRE_EQUIPMENT_INSTRUCTIONS,
+  fireEquipmentFormFields,
 } from '../constant';
 import { convertToBoolToString } from './hooks';
 import { FireEquipmentFormValues } from './schema';
@@ -105,12 +105,12 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
           />
           <p className="-mt-10 max-w-[400px] break-words text-xs text-[#484848]">
             {FIRE_EQUIPMENT_INSTRUCTIONS.TAKEAWAY_NOTICE.split('\n').map(
-                (line, index) => (
-                    <span key={index}>
-                {line}
-                      {index === 0 && <br />}
-              </span>
-                )
+              (line, index) => (
+                <span key={index}>
+                  {line}
+                  {index === 0 && <br />}
+                </span>
+              )
             )}
           </p>
           <p className="max-w-[400px] break-words text-xs text-[#484848]">

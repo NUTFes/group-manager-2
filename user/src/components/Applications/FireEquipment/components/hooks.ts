@@ -5,15 +5,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import './schema';
 import {
-  FireEquipmentSchema,
   FireEquipmentFormValues,
-  UnregisteredFireEquipmentSchema,
+  FireEquipmentSchema,
   UnregisteredFireEquipmentFormValues,
+  UnregisteredFireEquipmentSchema,
 } from './schema';
 
 export const useFireEquipmentOrder = (
-    groupId: number,
-    fireEquipmentData?: FireEquipmentResponse
+  groupId: number,
+  fireEquipmentData?: FireEquipmentResponse
 ) => {
   const {
     handleSubmit: handleSubmitUnregistered,
@@ -54,13 +54,13 @@ export const useFireEquipmentOrder = (
   const isRegister = valuesUnregistered.isRegister;
   const isRegisterValue = isRegister ? YES_ID_STRING : NO_ID_STRING;
   const setIsRegisterValue = (
-      value: typeof YES_ID_STRING | typeof NO_ID_STRING
+    value: typeof YES_ID_STRING | typeof NO_ID_STRING
   ) => {
     setValueUnregistered('isRegister', value === YES_ID_STRING);
   };
 
   const onSubmitUnregistered = async (
-      formData: UnregisteredFireEquipmentFormValues
+    formData: UnregisteredFireEquipmentFormValues
   ) => {
     if (formData.isRegister) {
       // trueの場合は、未登録には登録しないのでreturn
@@ -71,7 +71,7 @@ export const useFireEquipmentOrder = (
     toast.success('火気申請を行わない登録が完了しました');
   };
   const submitUnregisteredHandler =
-      handleSubmitUnregistered(onSubmitUnregistered);
+    handleSubmitUnregistered(onSubmitUnregistered);
 
   const values = watch();
 
@@ -81,12 +81,12 @@ export const useFireEquipmentOrder = (
     }
 
     return (
-        defaultValues.name === values.name &&
-        defaultValues.quantity === values.quantity &&
-        defaultValues.fuel === values.fuel &&
-        defaultValues.usage === values.usage &&
-        defaultValues.isTakeaway === values.isTakeaway &&
-        defaultValues.remarks === values.remarks
+      defaultValues.name === values.name &&
+      defaultValues.quantity === values.quantity &&
+      defaultValues.fuel === values.fuel &&
+      defaultValues.usage === values.usage &&
+      defaultValues.isTakeaway === values.isTakeaway &&
+      defaultValues.remarks === values.remarks
     );
   };
 
