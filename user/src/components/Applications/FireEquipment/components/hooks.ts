@@ -6,22 +6,22 @@ import { toast } from 'react-toastify';
 import './schema';
 import {
   FireEquipmentSchema,
-  FireEquipmentSchemaForm,
-  UnRegisteredFireEquipmentSchema,
-  UnRegisteredFireEquipmentSchemaForm,
+  FireEquipmentFormValues,
+  UnregisteredFireEquipmentSchema,
+  UnregisteredFireEquipmentFormValues,
 } from './schema';
 
 export const useFireEquipmentOrder = (
-  groupId: number,
-  fireEquipmentData?: FireEquipmentResponse
+    groupId: number,
+    fireEquipmentData?: FireEquipmentResponse
 ) => {
   const {
     handleSubmit: handleSubmitUnregistered,
     formState: { errors: errorsUnregistered },
     setValue: setValueUnregistered,
     watch: watchUnregistered,
-  } = useForm<UnRegisteredFireEquipmentSchemaForm>({
-    resolver: zodResolver(UnRegisteredFireEquipmentSchema),
+  } = useForm<UnregisteredFireEquipmentFormValues>({
+    resolver: zodResolver(UnregisteredFireEquipmentSchema),
     defaultValues: {
       groupId: groupId,
       isRegister: true,
@@ -31,7 +31,7 @@ export const useFireEquipmentOrder = (
   // 既存の火気申請データがある場合は、編集モードにする
   const isEditing = !!fireEquipmentData;
 
-  const defaultValues: FireEquipmentSchemaForm = {
+  const defaultValues: FireEquipmentFormValues = {
     name: fireEquipmentData?.name || '',
     quantity: fireEquipmentData?.quantity || 0,
     fuel: fireEquipmentData?.fuel || 0,
@@ -45,7 +45,7 @@ export const useFireEquipmentOrder = (
     formState: { errors },
     setValue,
     watch,
-  } = useForm<FireEquipmentSchemaForm>({
+  } = useForm<FireEquipmentFormValues>({
     resolver: zodResolver(FireEquipmentSchema),
     defaultValues: defaultValues,
   });
@@ -54,13 +54,13 @@ export const useFireEquipmentOrder = (
   const isRegister = valuesUnregistered.isRegister;
   const isRegisterValue = isRegister ? YES_ID_STRING : NO_ID_STRING;
   const setIsRegisterValue = (
-    value: typeof YES_ID_STRING | typeof NO_ID_STRING
+      value: typeof YES_ID_STRING | typeof NO_ID_STRING
   ) => {
     setValueUnregistered('isRegister', value === YES_ID_STRING);
   };
 
   const onSubmitUnregistered = async (
-    formData: UnRegisteredFireEquipmentSchemaForm
+      formData: UnregisteredFireEquipmentFormValues
   ) => {
     if (formData.isRegister) {
       // trueの場合は、未登録には登録しないのでreturn
@@ -71,7 +71,7 @@ export const useFireEquipmentOrder = (
     toast.success('火気申請を行わない登録が完了しました');
   };
   const submitUnregisteredHandler =
-    handleSubmitUnregistered(onSubmitUnregistered);
+      handleSubmitUnregistered(onSubmitUnregistered);
 
   const values = watch();
 
@@ -81,16 +81,16 @@ export const useFireEquipmentOrder = (
     }
 
     return (
-      defaultValues.name === values.name &&
-      defaultValues.quantity === values.quantity &&
-      defaultValues.fuel === values.fuel &&
-      defaultValues.usage === values.usage &&
-      defaultValues.isTakeaway === values.isTakeaway &&
-      defaultValues.remarks === values.remarks
+        defaultValues.name === values.name &&
+        defaultValues.quantity === values.quantity &&
+        defaultValues.fuel === values.fuel &&
+        defaultValues.usage === values.usage &&
+        defaultValues.isTakeaway === values.isTakeaway &&
+        defaultValues.remarks === values.remarks
     );
   };
 
-  const onSubmitFireEquipment = async (formData: FireEquipmentSchemaForm) => {
+  const onSubmitFireEquipment = async (formData: FireEquipmentFormValues) => {
     console.log('Submitted Data:', formData);
     toast.success('火気申請が送信されました！');
   };

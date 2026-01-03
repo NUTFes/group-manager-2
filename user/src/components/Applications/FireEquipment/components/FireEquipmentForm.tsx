@@ -7,14 +7,18 @@ import Selector from '@/components/Form/Selector/Selector';
 import TextArea from '@/components/Form/TextArea/TextArea';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
-import { fireEquipmentFormFields } from '../constant';
+import {
+  fireEquipmentFormFields,
+  FIRE_EQUIPMENT_INSTRUCTIONS,
+  FIRE_EQUIPMENT_FUEL_PLACEHOLDER_ID,
+} from '../constant';
 import { convertToBoolToString } from './hooks';
-import { FireEquipmentSchemaForm } from './schema';
+import { FireEquipmentFormValues } from './schema';
 
 type FireEquipmentFormProps = {
-  values: FireEquipmentSchemaForm;
-  errors: FieldErrors<FireEquipmentSchemaForm>;
-  setValue: UseFormSetValue<FireEquipmentSchemaForm>;
+  values: FireEquipmentFormValues;
+  errors: FieldErrors<FireEquipmentFormValues>;
+  setValue: UseFormSetValue<FireEquipmentFormValues>;
   isEditing: boolean;
   handleEditCancel?: () => void;
   validate?: () => boolean;
@@ -53,7 +57,7 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             required
             options={[
               {
-                id: 0,
+                id: FIRE_EQUIPMENT_FUEL_PLACEHOLDER_ID,
                 name: '選択してください',
                 disabled: true,
               },
@@ -99,13 +103,18 @@ const FireEquipmentForm: FC<FireEquipmentFormProps> = ({
             required
             error={errors.isTakeaway?.message}
           />
-          <p className="max-w-[400px] break-words text-xs text-[#484848]">
-            火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。
-            <br />
-            火気はテント内に残す行為は火事の原因になります。
+          <p className="-mt-10 max-w-[400px] break-words text-xs text-[#484848]">
+            {FIRE_EQUIPMENT_INSTRUCTIONS.TAKEAWAY_NOTICE.split('\n').map(
+                (line, index) => (
+                    <span key={index}>
+                {line}
+                      {index === 0 && <br />}
+              </span>
+                )
+            )}
           </p>
           <p className="max-w-[400px] break-words text-xs text-[#484848]">
-            いいえを押した場合は火気の備考欄に理由を記載して下さい。
+            {FIRE_EQUIPMENT_INSTRUCTIONS.REMARK_NOTICE}
           </p>
           <TextArea
             label={fireEquipmentFormFields.REMARK}

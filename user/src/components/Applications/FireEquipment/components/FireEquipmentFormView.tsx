@@ -49,7 +49,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
           電気ホットプレートとIHは含まれません。
         </p>
         {!isRegister && (
-          <div className="flex flex-col items-center gap-4">
+          <div className="mt-8 flex flex-col items-center gap-4">
             <Button type="submit" size="pc" color="main">
               登録
             </Button>
