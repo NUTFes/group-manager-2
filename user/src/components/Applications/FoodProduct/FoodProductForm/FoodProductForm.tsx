@@ -1,6 +1,5 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { ApiResponse } from '@/api/api';
-import { useTranslation } from 'next-i18next';
 import { KeyedMutator } from 'swr';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
@@ -47,7 +46,6 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
   isViewMode = false,
   mutateCheckAllRegisteredGroups,
 }) => {
-  const { t } = useTranslation('common');
   const {
     handleSubmit,
     errors,
@@ -56,43 +54,26 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
     isMutating,
     handleAlcoholChange,
     handleHasLicenseChange,
-    alcoholOptions,
-    licenseOptions,
     onSubmit,
     addProduct,
     removeProduct,
     products,
+    foodProductFormTexts,
   } = useFoodProductFormHooks(
     groupId,
     foodProducts,
     addFoodProducts,
     setFoodProductsData
   );
-  const alcoholRadioOptions = useMemo(
-    () =>
-      alcoholOptions.map((option) => ({
-        id: option.id,
-        name: t(option.labelKey),
-      })),
-    [alcoholOptions, t]
-  );
-  const cookingRadioOptions = useMemo(
-    () =>
-      licenseOptions.map((option) => ({
-        id: option.id,
-        name: t(option.labelKey),
-      })),
-    [licenseOptions, t]
-  );
+  const alcoholRadioOptions = foodProductFormTexts.form.radio.alcohol.options;
+  const cookingRadioOptions = foodProductFormTexts.form.radio.cooking.options;
 
   // ビューモード（登録済みデータをカード表示）
   if (isViewMode) {
     if (!foodProducts || foodProducts.length === 0) {
       return (
         <div className="flex flex-col items-center gap-4">
-          <p className="text-gray-500">
-            {t('applications.foodProduct.view.empty')}
-          </p>
+          <p className="text-gray-500">{foodProductFormTexts.view.empty}</p>
           <Button
             type="button"
             size="pc"
@@ -100,7 +81,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             onClick={toEdit}
             icon="plus"
           >
-            {t('applications.foodProduct.view.addButton')}
+            {foodProductFormTexts.view.addButton}
           </Button>
         </div>
       );
@@ -111,27 +92,27 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
         {foodProducts.map((product) => {
           const items: FormItem[] = [
             {
-              label: t('applications.foodProduct.summary.labels.name'),
+              label: foodProductFormTexts.view.summaryLabels.name,
               content: product.name ?? '-',
             },
             {
-              label: t('applications.foodProduct.summary.labels.alcohol'),
+              label: foodProductFormTexts.view.summaryLabels.alcohol,
               content: product.isAlcohol
-                ? t('applications.foodProduct.radio.alcohol.options.yes')
-                : t('applications.foodProduct.radio.alcohol.options.no'),
+                ? foodProductFormTexts.view.radio.alcohol.yes
+                : foodProductFormTexts.view.radio.alcohol.no,
             },
             {
-              label: t('applications.foodProduct.summary.labels.cooking'),
+              label: foodProductFormTexts.view.summaryLabels.cooking,
               content: product.isCooking
-                ? t('applications.foodProduct.radio.cooking.options.yes')
-                : t('applications.foodProduct.radio.cooking.options.no'),
+                ? foodProductFormTexts.view.radio.cooking.yes
+                : foodProductFormTexts.view.radio.cooking.no,
             },
             {
-              label: t('applications.foodProduct.summary.labels.day1'),
+              label: foodProductFormTexts.view.summaryLabels.day1,
               content: product.day1Quantity || '0',
             },
             {
-              label: t('applications.foodProduct.summary.labels.day2'),
+              label: foodProductFormTexts.view.summaryLabels.day2,
               content: product.day2Quantity || '0',
             },
           ];
@@ -159,7 +140,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             icon="pencil"
             onClick={toEdit}
           >
-            {t('form.actions.edit')}
+            {foodProductFormTexts.buttons.edit}
           </Button>
         </div>
       </div>
@@ -173,7 +154,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
         <div className="flex items-center justify-center py-8">
           <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
           <span className="ml-2">
-            {t('applications.foodProduct.notes.processing')}
+            {foodProductFormTexts.statuses.processing}
           </span>
         </div>
       ) : (
@@ -201,7 +182,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                 <div className="flex w-full flex-col items-start justify-center gap-6">
                   <div className="relative w-96">
                     <TextBox
-                      label={t('applications.foodProduct.fields.name')}
+                      label={foodProductFormTexts.form.fields.name}
                       value={product.name || ''}
                       onChange={(value) =>
                         setValue(`products.${index}.name`, value)
@@ -212,19 +193,19 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   </div>
                   <div className="flex flex-col items-start justify-start gap-6">
                     <Radio
-                      label={t('applications.foodProduct.radio.alcohol.label')}
+                      label={foodProductFormTexts.form.radio.alcohol.label}
                       name={`alcohol_${index}`}
                       value={product.isAlcohol ? '1' : '0'}
                       onChange={(value) => handleAlcoholChange(index, value)}
                       required
-                      note={t('applications.foodProduct.radio.alcohol.note')}
+                      note={foodProductFormTexts.form.radio.alcohol.note}
                       options={alcoholRadioOptions}
                       error={errors.products?.[index]?.isAlcohol?.message}
                     />
                   </div>
                   <div className="flex flex-col items-start justify-start gap-6">
                     <Radio
-                      label={t('applications.foodProduct.radio.cooking.label')}
+                      label={foodProductFormTexts.form.radio.cooking.label}
                       name={`license_${index}`}
                       value={product.isCooking ? '1' : '0'}
                       onChange={(value) => handleHasLicenseChange(index, value)}
@@ -235,26 +216,26 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   </div>
                   <div className="relative w-96">
                     <TextBox
-                      label={t('applications.foodProduct.fields.day1')}
+                      label={foodProductFormTexts.form.fields.day1}
                       value={product.day1Quantity || ''}
                       onChange={(value) =>
                         setValue(`products.${index}.day1Quantity`, value)
                       }
                       required
-                      note={t('applications.foodProduct.notes.quantity')}
+                      note={foodProductFormTexts.form.notes.quantity}
                       error={errors.products?.[index]?.day1Quantity?.message}
                       type="number"
                     />
                   </div>
                   <div className="relative w-96">
                     <TextBox
-                      label={t('applications.foodProduct.fields.day2')}
+                      label={foodProductFormTexts.form.fields.day2}
                       value={product.day2Quantity || ''}
                       onChange={(value) =>
                         setValue(`products.${index}.day2Quantity`, value)
                       }
                       required
-                      note={t('applications.foodProduct.notes.quantity')}
+                      note={foodProductFormTexts.form.notes.quantity}
                       error={errors.products?.[index]?.day2Quantity?.message}
                       type="number"
                     />
@@ -269,7 +250,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                         onClick={() => removeProduct(index)}
                         icon="delete"
                       >
-                        {t('form.actions.delete')}
+                        {foodProductFormTexts.buttons.delete}
                       </Button>
                     </div>
                   )}
@@ -286,7 +267,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   onClick={addProduct}
                   icon="plus"
                 >
-                  {t('applications.foodProduct.buttons.add')}
+                  {foodProductFormTexts.buttons.add}
                 </Button>
               </div>
               <div className="flex w-full items-center justify-center">
@@ -300,8 +281,8 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   }
                 >
                   {foodProducts && foodProducts.length > 0
-                    ? t('form.actions.save')
-                    : t('form.actions.register')}
+                    ? foodProductFormTexts.buttons.save
+                    : foodProductFormTexts.buttons.register}
                 </Button>
               </div>
             </div>

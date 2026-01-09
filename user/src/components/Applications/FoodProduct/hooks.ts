@@ -51,6 +51,18 @@ export const useFoodProductHooks = (groupId: number) => {
 
   const hasError = !!error;
 
+  const foodProductViewTexts = {
+    title: t('applications.foodProduct.title'),
+    loading: t('applications.foodProduct.loading'),
+    errors: {
+      fetch: t('applications.foodProduct.errors.fetch'),
+    },
+    deadline: {
+      title: t('applications.foodProduct.deadline.title'),
+      description: t('applications.foodProduct.deadline.description'),
+    },
+  };
+
   const formItem: FormItem[] = [
     {
       label: t('applications.foodProduct.view.summaryLabel'),
@@ -341,5 +353,6 @@ export const useFoodProductHooks = (groupId: number) => {
     setFoodProductsData,
     mutate: refetchData,
     refetchData,
+    foodProductViewTexts,
   };
 };
