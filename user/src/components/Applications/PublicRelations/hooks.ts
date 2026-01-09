@@ -12,38 +12,52 @@ export const usePublicRelationsHooks = (groupId: number) => {
     isLoading: prIsLoading,
     mutate: prMutate,
   } = usePublicRelationData(groupId || 0);
+  const summaryLabels = publicRelationLabels.map((labelKey) => t(labelKey));
+  const publicRelationsTexts = {
+    title: t('applications.publicRelations.title'),
+    loading: t('general.loading'),
+    errors: {
+      fetch: t('general.errors.fetch'),
+    },
+    announce: {
+      yes: t('applications.publicRelations.options.announce.yes'),
+      no: t('applications.publicRelations.options.announce.no'),
+    },
+    states: {
+      notSet: t('applications.publicRelations.state.notSet'),
+      missingText: t('applications.publicRelations.state.missingText'),
+    },
+    summaryLabels,
+  };
 
   // アナウンスステータスを決定
   // publicRelationsのisAnnouncementRequestedフィールドに基づいて状態を決定
   const getAnnounceStatus = () => {
     if (publicRelation?.isAnnouncementRequested) {
-      return t('applications.publicRelations.options.announce.yes');
+      return publicRelationsTexts.announce.yes;
     } else if (publicRelation) {
-      return t('applications.publicRelations.options.announce.no');
+      return publicRelationsTexts.announce.no;
     } else {
-      return t('applications.publicRelations.state.notSet');
+      return publicRelationsTexts.states.notSet;
     }
   };
 
   // モックデータのフォールバックなしでAPIベースのformItemsを作成
   const formItem: FormItem[] = [
     {
-      label: t(publicRelationLabels[0]),
+      label: publicRelationsTexts.summaryLabels[0],
       // APIは'blurb'フィールドでPRテキストを返す
-      content:
-        publicRelation?.blurb ||
-        t('applications.publicRelations.state.missingText'),
+      content: publicRelation?.blurb || publicRelationsTexts.states.missingText,
     },
     {
-      label: t(publicRelationLabels[1]),
+      label: publicRelationsTexts.summaryLabels[1],
       content: getAnnounceStatus(),
     },
     {
-      label: t(publicRelationLabels[2]),
+      label: publicRelationsTexts.summaryLabels[2],
       // APIからpictureNameを使用
       content:
-        publicRelation?.pictureName ||
-        t('applications.publicRelations.state.notSet'),
+        publicRelation?.pictureName || publicRelationsTexts.states.notSet,
     },
   ];
 
@@ -78,5 +92,6 @@ export const usePublicRelationsHooks = (groupId: number) => {
     formItem,
     mutate: refetchData,
     refetchData,
+    publicRelationsTexts,
   };
 };

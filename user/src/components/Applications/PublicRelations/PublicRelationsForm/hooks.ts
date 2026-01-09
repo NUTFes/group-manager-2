@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   PublicRelationResponse,
   useCreatePublicRelation,
@@ -23,6 +23,72 @@ export const usePublicRelationsFormHooks = (
     isLoading: isPrFetching,
     mutate: prMutate,
   } = usePublicRelationData(groupId || 0);
+  const uploadNotes = t('applications.publicRelations.notes.upload', {
+    returnObjects: true,
+  }) as string[];
+  const submitSuccessMessage = t(
+    'applications.publicRelations.messages.submitSuccess'
+  );
+  const submitFailedMessage = t(
+    'applications.publicRelations.messages.submitFailed'
+  );
+  const imgurMissingMessage = t(
+    'applications.publicRelations.messages.imgurMissing'
+  );
+  const imgurUploadFailedMessage = t(
+    'applications.publicRelations.messages.imgurUploadFailed'
+  );
+  const validationTexts = {
+    imageRequired: t('applications.publicRelations.validation.imageRequired'),
+    imageSquare: t('applications.publicRelations.validation.imageSquare'),
+    imageLoadFailed: t(
+      'applications.publicRelations.validation.imageLoadFailed'
+    ),
+  };
+  const publicRelationsFormTexts = {
+    general: {
+      loading: t('general.loading'),
+    },
+    fields: {
+      text: t('applications.publicRelations.fields.text'),
+      announce: t('applications.publicRelations.fields.announce'),
+      image: t('applications.publicRelations.fields.image'),
+    },
+    notes: {
+      text: t('applications.publicRelations.notes.text'),
+      existingImage: t('applications.publicRelations.notes.existingImage'),
+    },
+    upload: {
+      notes: uploadNotes,
+      status: (fileName: string) =>
+        t('applications.publicRelations.uploadStatus', {
+          fileName,
+        }),
+    },
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+    options: {
+      announce: [
+        {
+          id: 1,
+          name: t('applications.publicRelations.options.announce.yes'),
+        },
+        {
+          id: 0,
+          name: t('applications.publicRelations.options.announce.no'),
+        },
+      ],
+    },
+    messages: {
+      submitSuccess: submitSuccessMessage,
+      submitFailed: submitFailedMessage,
+      imgurMissing: imgurMissingMessage,
+      imgurUploadFailed: imgurUploadFailedMessage,
+    },
+  };
 
   const publicRelation = publicRelationProp || fetchedPublicRelation;
 
@@ -52,8 +118,7 @@ export const usePublicRelationsFormHooks = (
         errors.image &&
         typeof errors.image === 'object' &&
         errors.image.type === 'custom' &&
-        errors.image.message ===
-          'applications.publicRelations.validation.imageRequired'
+        errors.image.message === validationTexts.imageRequired
       ) {
         // 画像のエラーを削除
         delete errors.image;
@@ -63,7 +128,7 @@ export const usePublicRelationsFormHooks = (
       if (!values.image) {
         errors.image = {
           type: 'custom',
-          message: 'applications.publicRelations.validation.imageRequired',
+          message: validationTexts.imageRequired,
         };
       }
     }
@@ -144,7 +209,7 @@ export const usePublicRelationsFormHooks = (
         if (!isSquare) {
           setError('image', {
             type: 'manual',
-            message: 'applications.publicRelations.validation.imageSquare',
+            message: validationTexts.imageSquare,
           });
           return resolve(false);
         }
@@ -154,7 +219,7 @@ export const usePublicRelationsFormHooks = (
       img.onerror = () => {
         setError('image', {
           type: 'manual',
-          message: 'applications.publicRelations.validation.imageLoadFailed',
+          message: validationTexts.imageLoadFailed,
         });
         resolve(false);
       };
@@ -181,16 +246,7 @@ export const usePublicRelationsFormHooks = (
     input.click();
   };
 
-  const announceOptions = [
-    {
-      id: 1,
-      name: t('applications.publicRelations.options.announce.yes'),
-    },
-    {
-      id: 0,
-      name: t('applications.publicRelations.options.announce.no'),
-    },
-  ];
+  const announceOptions = publicRelationsFormTexts.options.announce;
 
   const handleAnnounceChange = (value: string) => {
     setValue('announce', parseInt(value) === 1 ? 'yes' : 'no');
@@ -219,7 +275,7 @@ export const usePublicRelationsFormHooks = (
     const imgurClientId = process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID;
 
     if (!imgurClientId) {
-      throw new Error(t('applications.publicRelations.messages.imgurMissing'));
+      throw new Error(imgurMissingMessage);
     }
     const base64 = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
 
@@ -241,16 +297,15 @@ export const usePublicRelationsFormHooks = (
       return data.data.link;
     } catch (error) {
       console.error('Imgur upload error:', error);
-      throw new Error(
-        t('applications.publicRelations.messages.imgurUploadFailed')
-      );
+      throw new Error(imgurUploadFailedMessage);
     }
   };
 
-  // エラー処理を直接行う（useEffectではなく）
-  if (createPrError || updatePrError) {
-    toast.error(t('applications.publicRelations.messages.submitFailed'));
-  }
+  useEffect(() => {
+    if (createPrError || updatePrError) {
+      toast.error(submitFailedMessage);
+    }
+  }, [createPrError, updatePrError, submitFailedMessage]);
 
   // 更新されたonSubmit実装
   const onSubmit = async (formData: PublicRelationsFormData) => {
@@ -302,11 +357,11 @@ export const usePublicRelationsFormHooks = (
       await prMutate();
       mutate(`check_all_registered/${groupId}`);
 
-      toast.success(t('applications.publicRelations.messages.submitSuccess'));
+      toast.success(submitSuccessMessage);
       return true; // 送信成功を返す
     } catch (error) {
       console.error('submission error:', error);
-      toast.error(t('applications.publicRelations.messages.submitFailed'));
+      toast.error(submitFailedMessage);
       return false; // 送信失敗を返す
     }
   };
@@ -327,5 +382,6 @@ export const usePublicRelationsFormHooks = (
     createError: createPrError,
     updateError: updatePrError,
     validateEdit,
+    publicRelationsFormTexts,
   };
 };

@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
-import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import PublicRelationsForm from '@/components/Applications/PublicRelations/PublicRelationsForm/PublicRelationsForm';
 import { usePublicRelationsHooks } from '@/components/Applications/PublicRelations/hooks';
@@ -22,6 +21,9 @@ type ContentProps = {
   publicRelation?: PublicRelationResponse | null;
   formItem: FormItem[];
   groupId: number;
+  publicRelationsTexts: ReturnType<
+    typeof usePublicRelationsHooks
+  >['publicRelationsTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -33,16 +35,16 @@ const Content: FC<ContentProps> = ({
   publicRelation,
   formItem,
   groupId,
+  publicRelationsTexts,
 }) => {
-  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div>{t('general.loading')}</div>;
+    return <div>{publicRelationsTexts.loading}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        {t('general.errors.fetch')}
+        {publicRelationsTexts.errors.fetch}
       </div>
     );
   }
@@ -69,13 +71,19 @@ const PublicRelations: FC<PublicRelationsProps> = ({
   isDeadline,
   isRegistered,
 }) => {
-  const { t } = useTranslation('common');
-  const { formItem, isEditing, toEdit, publicRelation, isLoading, hasError } =
-    usePublicRelationsHooks(groupId);
+  const {
+    formItem,
+    isEditing,
+    toEdit,
+    publicRelation,
+    isLoading,
+    hasError,
+    publicRelationsTexts,
+  } = usePublicRelationsHooks(groupId);
 
   return (
     <AccordionMenu
-      title={t('applications.publicRelations.title')}
+      title={publicRelationsTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -89,6 +97,7 @@ const PublicRelations: FC<PublicRelationsProps> = ({
         publicRelation={publicRelation}
         formItem={formItem}
         groupId={groupId}
+        publicRelationsTexts={publicRelationsTexts}
       />
     </AccordionMenu>
   );

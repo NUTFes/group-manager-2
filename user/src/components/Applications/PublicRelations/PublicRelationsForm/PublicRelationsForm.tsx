@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { PublicRelationResponse } from '@/api/publicRelationsApi';
-import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import TextArea from '@/components/Form/TextArea/TextArea';
@@ -19,8 +18,6 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
   publicRelation,
   toEdit,
 }) => {
-  const { t } = useTranslation('common');
-  // PublicRelationsForm receives toEdit as a required prop
   const {
     handleSubmit,
     errors,
@@ -34,15 +31,13 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
     announceOptions,
     onSubmit,
     validateEdit,
+    publicRelationsFormTexts,
   } = usePublicRelationsFormHooks(groupId, publicRelation);
-  const uploadNote = t('applications.publicRelations.notes.upload', {
-    returnObjects: true,
-  }) as string[];
 
   return (
     <FormContainer>
       {isFetching || isMutating ? (
-        <div>{t('general.loading')}</div>
+        <div>{publicRelationsFormTexts.general.loading}</div>
       ) : (
         <form
           className="w-full"
@@ -58,11 +53,11 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
             {/* PR文入力 */}
             <div className="relative h-44 w-96">
               <TextArea
-                label={t('applications.publicRelations.fields.text')}
+                label={publicRelationsFormTexts.fields.text}
                 value={values.prText || ''}
                 onChange={(value) => setValue('prText', value)}
                 required
-                note={t('applications.publicRelations.notes.text')}
+                note={publicRelationsFormTexts.notes.text}
                 error={errors.prText?.message}
               />
             </div>
@@ -70,7 +65,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
             {/* アナウンス選択 */}
             <div className="flex flex-col items-start justify-start gap-6">
               <Radio
-                label={t('applications.publicRelations.fields.announce')}
+                label={publicRelationsFormTexts.fields.announce}
                 value={
                   values.announce === 'yes'
                     ? '1'
@@ -88,22 +83,18 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
             {/* PR画像アップロード */}
             <div className="flex w-96 flex-col items-start justify-start gap-1">
               <Upload
-                title={t('applications.publicRelations.fields.image')}
-                note={uploadNote}
+                title={publicRelationsFormTexts.fields.image}
+                note={publicRelationsFormTexts.upload.notes}
                 onClick={handleImageUpload}
                 idDisable={false}
                 error={errors.image?.message}
               />
               {fileName && (
                 <div className="mt-2 text-sm text-font">
-                  <p>
-                    {t('applications.publicRelations.uploadStatus', {
-                      fileName,
-                    })}
-                  </p>
+                  <p>{publicRelationsFormTexts.upload.status(fileName)}</p>
                   {publicRelation && (
                     <p className="mt-1 text-gray-500">
-                      {t('applications.publicRelations.notes.existingImage')}
+                      {publicRelationsFormTexts.notes.existingImage}
                     </p>
                   )}
                 </div>
@@ -121,7 +112,7 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                     type="button"
                     onClick={toEdit}
                   >
-                    {t('form.actions.cancel')}
+                    {publicRelationsFormTexts.buttons.cancel}
                   </Button>
                 </div>
               )}
@@ -132,8 +123,8 @@ const PublicRelationsForm: FC<PublicRelationsFormProps> = ({
                 isDisable={isMutating || validateEdit()}
               >
                 {publicRelation
-                  ? t('form.actions.edit')
-                  : t('form.actions.register')}
+                  ? publicRelationsFormTexts.buttons.edit
+                  : publicRelationsFormTexts.buttons.register}
               </Button>
             </div>
           </div>
