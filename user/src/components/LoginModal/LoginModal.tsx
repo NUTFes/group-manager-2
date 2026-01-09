@@ -1,9 +1,8 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import TextBox from '@/components/Form/TextBox';
 import Button from '../Button';
 import Modal from '../Modal';
-import { useLoginModalHooks } from './hooks';
+import { useLoginModalHooks, useLoginModalTexts } from './hooks';
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -13,7 +12,7 @@ type LoginModalProps = {
 const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const { handleSignInSubmit, setValue, errors, email, password, isLoggingIn } =
     useLoginModalHooks();
-  const { t } = useTranslation('common');
+  const loginModalTexts = useLoginModalTexts();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -23,16 +22,16 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
       >
         <div className="flex w-96 flex-col items-center justify-center gap-12">
           <TextBox
-            label={t('loginModal.emailLabel')}
+            label={loginModalTexts.labels.email}
             type="email"
             value={email}
             onChange={(value) => setValue('email', value)}
             error={errors.email?.message}
             required
-            note={t('loginModal.emailNote')}
+            note={loginModalTexts.notes.email}
           />
           <TextBox
-            label={t('loginModal.passwordLabel')}
+            label={loginModalTexts.labels.password}
             type="password"
             value={password}
             onChange={(value) => setValue('password', value)}
@@ -46,7 +45,9 @@ const LoginModal: FC<LoginModalProps> = ({ isOpen, onClose }) => {
             type="submit"
             isDisable={isLoggingIn}
           >
-            {isLoggingIn ? t('loginModal.submitting') : t('loginModal.submit')}
+            {isLoggingIn
+              ? loginModalTexts.buttons.submitting
+              : loginModalTexts.buttons.submit}
           </Button>
         </div>
       </form>

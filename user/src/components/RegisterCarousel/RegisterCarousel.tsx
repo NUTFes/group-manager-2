@@ -1,10 +1,9 @@
-import { FC, useMemo, useRef } from 'react';
-import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
-import { useTranslation } from 'next-i18next';
+import { FC, useRef } from 'react';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
 import Modal from '@/components/Modal';
+import { useRegisterCarouselTexts } from './hooks';
 // 統合フックの代わりに3つの個別フックをインポート
 import { useCarousel } from './useCarousel';
 import { useRegisterForm } from './useRegisterForm';
@@ -15,13 +14,18 @@ type RegisterCarouselProps = {
   onClose: () => void;
 };
 
-type FormStepProps = {
-  step: number;
+type FormStepTexts = {
+  email: string;
+  representative: string;
+  confirm: string;
 };
 
-const FormStep: FC<FormStepProps> = ({ step }) => {
-  const { t } = useTranslation('common');
+type FormStepProps = {
+  step: number;
+  steps: FormStepTexts;
+};
 
+const FormStep: FC<FormStepProps> = ({ step, steps }) => {
   return (
     <div className="flex items-center justify-center">
       <div className="relative h-[81px] w-[388px]">
@@ -62,19 +66,15 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
           </div>
         </div>
         <div className="absolute left-0 top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px]">
-          <div className="text-center text-xs text-font">
-            {t('registerCarousel.steps.email')}
-          </div>
+          <div className="text-center text-xs text-font">{steps.email}</div>
         </div>
         <div className="absolute left-[153px] top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px] pl-[11.58px] pr-[12.42px]">
           <div className="text-center text-xs text-font">
-            {t('registerCarousel.steps.representative')}
+            {steps.representative}
           </div>
         </div>
         <div className="absolute left-[304px] top-[64px] inline-flex h-[17px] w-[84px] items-center justify-center pb-[3px]">
-          <div className="text-center text-xs text-font">
-            {t('registerCarousel.steps.confirm')}
-          </div>
+          <div className="text-center text-xs text-font">{steps.confirm}</div>
         </div>
       </div>
     </div>
@@ -82,7 +82,17 @@ const FormStep: FC<FormStepProps> = ({ step }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
-  const { t } = useTranslation('common');
+  const registerCarouselTexts = useRegisterCarouselTexts();
+  const {
+    steps,
+    labels,
+    notes,
+    review,
+    buttons,
+    options: carouselOptions,
+  } = registerCarouselTexts;
+  const gradeOptions = carouselOptions.grades;
+  const departmentOptions = carouselOptions.departments;
   // カルーセル関連のフック
   const {
     stepIndex,
@@ -109,9 +119,6 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     stepIndex,
     handleSubmit
   );
-
-  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
-  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
 
   // フォーム参照の作成
   const formRef = useRef<HTMLFormElement>(null);
@@ -157,7 +164,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSignUpSubmit} ref={formRef} noValidate>
         <section className="rounded-2xl bg-white px-60 py-10 shadow-md md:px-32 md:py-5">
-          <FormStep step={stepIndex} />
+          <FormStep step={stepIndex} steps={steps} />
           <div
             className="mx-auto max-h-[60vh] w-[450px] overflow-y-auto overflow-x-hidden pt-4"
             ref={emblaRef}
@@ -166,30 +173,30 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <div className="min-w-0 flex-none  basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
-                    label={t('registerCarousel.labels.email')}
+                    label={labels.email}
                     type="email"
                     value={values.mail}
-                    note={t('registerCarousel.notes.email')}
+                    note={notes.email}
                     required
                     error={errors.mail?.message}
                     onChange={(value: string) => setValue('mail', value)}
                     onBlur={() => trigger('mail')}
                   />
                   <TextBox
-                    label={t('registerCarousel.labels.password')}
+                    label={labels.password}
                     type="password"
                     value={values.password}
-                    note={t('registerCarousel.notes.password')}
+                    note={notes.password}
                     required
                     error={errors.password?.message}
                     onChange={(value: string) => setValue('password', value)}
                     onBlur={() => trigger('password')}
                   />
                   <TextBox
-                    label={t('registerCarousel.labels.passwordConfirm')}
+                    label={labels.passwordConfirm}
                     type="password"
                     value={values.passwordConfirm}
-                    note={t('registerCarousel.notes.passwordConfirm')}
+                    note={notes.passwordConfirm}
                     required
                     error={errors.passwordConfirm?.message}
                     onChange={(value: string) =>
@@ -202,34 +209,34 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
               <div className="min-w-0 flex-none basis-full p-4">
                 <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
                   <TextBox
-                    label={t('registerCarousel.labels.name')}
+                    label={labels.name}
                     value={values.name}
-                    note={t('registerCarousel.notes.name')}
+                    note={notes.name}
                     required
                     error={errors.name?.message}
                     onChange={(value: string) => setValue('name', value)}
                     onBlur={() => trigger('name')}
                   />
                   <TextBox
-                    label={t('registerCarousel.labels.tel')}
+                    label={labels.tel}
                     value={values.tel}
-                    note={t('registerCarousel.notes.tel')}
+                    note={notes.tel}
                     required
                     error={errors.tel?.message}
                     onChange={(value: string) => setValue('tel', value)}
                     onBlur={() => trigger('tel')}
                   />
                   <TextBox
-                    label={t('registerCarousel.labels.studentId')}
+                    label={labels.studentId}
                     value={values.studentId}
-                    note={t('registerCarousel.notes.studentId')}
+                    note={notes.studentId}
                     required
                     error={errors.studentId?.message}
                     onChange={(value: string) => setValue('studentId', value)}
                     onBlur={() => trigger('studentId')}
                   />
                   <Selector
-                    label={t('registerCarousel.labels.grade')}
+                    label={labels.grade}
                     required
                     onChange={(value: string) =>
                       setValue('gradeId', Number(value))
@@ -239,7 +246,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     error={errors.gradeId?.message}
                   />
                   <Selector
-                    label={t('registerCarousel.labels.department')}
+                    label={labels.department}
                     required
                     onChange={(value: string) =>
                       setValue('departmentId', Number(value))
@@ -255,7 +262,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex w-full items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.email')}
+                        {review.email}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -267,7 +274,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.password')}
+                        {review.password}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -279,7 +286,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.name')}
+                        {review.name}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -291,7 +298,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.tel')}
+                        {review.tel}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -303,7 +310,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.studentId')}
+                        {review.studentId}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -315,7 +322,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.grade')}
+                        {review.grade}
                       </div>
                     </div>
                     <div className="inline-flex h-[38px] w-[298px] items-center justify-start pr-[68px]">
@@ -331,7 +338,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                   <div className="inline-flex h-[63px] w-[298px] flex-col items-start justify-center gap-2">
                     <div className="inline-flex h-[17px] items-center justify-start pr-[81px]">
                       <div className="text-xs font-black text-font">
-                        {t('registerCarousel.review.department')}
+                        {review.department}
                       </div>
                     </div>
                     <div className="inline-flex h-[65px] w-[298px] items-center justify-start">
@@ -370,7 +377,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 icon="lessThan"
                 isDisable={isLoading}
               >
-                {t('registerCarousel.buttons.previous')}
+                {buttons.previous}
               </Button>
             )}
             {stepIndex === 2 ? (
@@ -381,7 +388,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 onClick={handleRegisterClick}
                 isDisable={isLoading}
               >
-                {t('registerCarousel.buttons.submit')}
+                {buttons.submit}
               </Button>
             ) : (
               <Button
@@ -391,7 +398,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                 onClick={handleNextClick}
                 isDisable={isLoading}
               >
-                {t('registerCarousel.buttons.next')}
+                {buttons.next}
               </Button>
             )}
           </div>

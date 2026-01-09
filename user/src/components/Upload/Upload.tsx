@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import { MdUploadFile } from 'react-icons/md';
+import { useUploadTexts } from './hooks';
 
 // NOTE: 箇条書きで列挙できるようにnoteを配列で定義
 type UploadProps = {
@@ -20,7 +20,7 @@ const Upload: FC<UploadProps> = ({
   error = '',
   required = false,
 }) => {
-  const { t } = useTranslation('common');
+  const uploadTexts = useUploadTexts();
 
   return (
     <button
@@ -33,7 +33,7 @@ const Upload: FC<UploadProps> = ({
         <div className="text-base font-medium text-font">{title}</div>
         {required && (
           <div className="text-center text-xs text-alert">
-            ※{t('form.required')}
+            ※{uploadTexts.labels.required}
           </div>
         )}
       </div>
@@ -47,7 +47,7 @@ const Upload: FC<UploadProps> = ({
           <MdUploadFile className="size-[40px] text-main" />
         </div>
         <div className="text-center text-[26px] font-bold text-main">
-          {t('form.actions.upload')}
+          {uploadTexts.labels.upload}
         </div>
       </div>
       <ul className="list-inside list-disc text-left text-xs text-sub">
@@ -56,7 +56,7 @@ const Upload: FC<UploadProps> = ({
         ))}
       </ul>
       <div className="max-w-[402px] break-words text-xs text-alert">
-        {error ? t(error, { defaultValue: error }) : ''}
+        {uploadTexts.translateError(error)}
       </div>
     </button>
   );

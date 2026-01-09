@@ -68,3 +68,20 @@ export const useLoginModalHooks = () => {
     isLoggingIn,
   };
 };
+
+export const useLoginModalTexts = () => {
+  const { t } = useTranslation('common');
+  return {
+    labels: {
+      email: t('loginModal.emailLabel'),
+      password: t('loginModal.passwordLabel'),
+    },
+    notes: {
+      email: t('loginModal.emailNote'),
+    },
+    buttons: {
+      submit: t('loginModal.submit'),
+      submitting: t('loginModal.submitting'),
+    },
+  };
+};

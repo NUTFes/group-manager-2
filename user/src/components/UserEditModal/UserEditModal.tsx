@@ -1,12 +1,10 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { UserInformation } from '@/api/useUserDetailApi';
-import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
-import { useTranslation } from 'next-i18next';
 import Button from '../Button';
 import Selector from '../Form/Selector';
 import TextBox from '../Form/TextBox';
 import Modal from '../Modal';
-import { useUserEditModalHooks } from './hooks';
+import { useUserEditModalHooks, useUserEditModalTexts } from './hooks';
 
 type UserEditModalProps = {
   isOpen: boolean;
@@ -21,9 +19,7 @@ const UserEditModal: FC<UserEditModalProps> = ({
   userInformation,
   mutate,
 }) => {
-  const { t } = useTranslation('common');
-  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
-  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  const userEditModalTexts = useUserEditModalTexts();
   const { errors, values, setValue, trigger, validateEdit, handleSubmitForm } =
     useUserEditModalHooks(userInformation, mutate);
   return (
@@ -33,57 +29,57 @@ const UserEditModal: FC<UserEditModalProps> = ({
           <div className="min-w-0 flex-none basis-full p-4">
             <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
               <TextBox
-                label={t('userEditModal.labels.name')}
+                label={userEditModalTexts.labels.name}
                 value={values.name || ''}
-                note={t('userEditModal.notes.name')}
+                note={userEditModalTexts.notes.name}
                 required
                 error={errors.name?.message}
                 onChange={(value: string) => setValue('name', value)}
                 onBlur={() => trigger('name')}
               />
               <TextBox
-                label={t('userEditModal.labels.email')}
+                label={userEditModalTexts.labels.email}
                 type="email"
                 value={values.mail || ''}
-                note={t('userEditModal.notes.email')}
+                note={userEditModalTexts.notes.email}
                 required
                 error={errors.mail?.message}
                 onChange={(value: string) => setValue('mail', value)}
                 onBlur={() => trigger('mail')}
               />
               <TextBox
-                label={t('userEditModal.labels.tel')}
+                label={userEditModalTexts.labels.tel}
                 value={String(values?.tel) || ''}
-                note={t('userEditModal.notes.tel')}
+                note={userEditModalTexts.notes.tel}
                 required
                 error={errors.tel?.message}
                 onChange={(value: string) => setValue('tel', value)}
                 onBlur={() => trigger('tel')}
               />
               <TextBox
-                label={t('userEditModal.labels.studentId')}
+                label={userEditModalTexts.labels.studentId}
                 value={String(values?.studentId) || ''}
-                note={t('userEditModal.notes.studentId')}
+                note={userEditModalTexts.notes.studentId}
                 required
                 error={errors.studentId?.message}
                 onChange={(value: string) => setValue('studentId', value)}
                 onBlur={() => trigger('studentId')}
               />
               <Selector
-                label={t('userEditModal.labels.grade')}
+                label={userEditModalTexts.labels.grade}
                 required
                 onChange={(value: string) => setValue('gradeId', Number(value))}
-                options={gradeOptions}
+                options={userEditModalTexts.gradeOptions}
                 value={values?.gradeId || 0}
                 error={errors.gradeId?.message}
               />
               <Selector
-                label={t('userEditModal.labels.department')}
+                label={userEditModalTexts.labels.department}
                 required
                 onChange={(value: string) =>
                   setValue('departmentId', Number(value))
                 }
-                options={departmentOptions}
+                options={userEditModalTexts.departmentOptions}
                 value={values?.departmentId || 0}
                 error={errors.departmentId?.message}
               />
@@ -93,7 +89,7 @@ const UserEditModal: FC<UserEditModalProps> = ({
                 color="main"
                 isDisable={validateEdit()}
               >
-                {t('form.actions.edit')}
+                {userEditModalTexts.actions.edit}
               </Button>
             </div>
           </div>

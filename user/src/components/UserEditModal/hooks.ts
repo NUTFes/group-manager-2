@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { UserInformation, useMutateUserDetails } from '@/api/useUserDetailApi';
+import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signOut } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
@@ -112,5 +113,32 @@ export const useUserEditModalHooks = (
     error, // エラーメッセージ
     handleSubmitForm, // フォームの送信処理
     validateEdit, // フォームのバリデーション処理
+  };
+};
+
+export const useUserEditModalTexts = () => {
+  const { t } = useTranslation('common');
+  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
+  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  return {
+    labels: {
+      name: t('userEditModal.labels.name'),
+      email: t('userEditModal.labels.email'),
+      tel: t('userEditModal.labels.tel'),
+      studentId: t('userEditModal.labels.studentId'),
+      grade: t('userEditModal.labels.grade'),
+      department: t('userEditModal.labels.department'),
+    },
+    notes: {
+      name: t('userEditModal.notes.name'),
+      email: t('userEditModal.notes.email'),
+      tel: t('userEditModal.notes.tel'),
+      studentId: t('userEditModal.notes.studentId'),
+    },
+    actions: {
+      edit: t('form.actions.edit'),
+    },
+    gradeOptions,
+    departmentOptions,
   };
 };

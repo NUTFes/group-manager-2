@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
+import { useFormFieldCommonTexts } from '@/components/Form/hooks';
 
 type Option = {
   id: number;
@@ -27,7 +27,7 @@ const Selector: FC<SelectorProps> = ({
   error,
   options = [],
 }) => {
-  const { t } = useTranslation('common');
+  const { required: requiredLabel, translateError } = useFormFieldCommonTexts();
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event.target.value);
   };
@@ -37,9 +37,7 @@ const Selector: FC<SelectorProps> = ({
       <label>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && (
-            <p className="text-xs text-alert">※{t('form.required')}</p>
-          )}
+          {required && <p className="text-xs text-alert">※{requiredLabel}</p>}
         </div>
         <select
           value={value}
@@ -59,9 +57,7 @@ const Selector: FC<SelectorProps> = ({
           ))}
         </select>
         <p className="max-w-[400px] break-words text-xs text-sub">{note}</p>
-        <p className="text-xs text-alert">
-          {error ? t(error, { defaultValue: error }) : ''}
-        </p>
+        <p className="text-xs text-alert">{translateError(error)}</p>
       </label>
     </>
   );

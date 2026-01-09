@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-i18next';
+import { StatusTranslationKey, useStatusTexts } from './hooks';
 
 type ValidStatus =
   | { statusType: 'reception'; status: 'open' | 'deadline' | 'closed' }
@@ -62,22 +62,11 @@ const STATUS_STYLE_MAP: Record<ValidStatus['status'], StyleDefinition> = {
   },
 } as const;
 
-const STATUS_TRANSLATION_KEY: Record<ValidStatus['status'], string> = {
-  open: 'status.reception.open',
-  deadline: 'status.reception.deadline',
-  closed: 'status.reception.closed',
-  registered: 'status.registration.registered',
-  unregistered: 'status.registration.unregistered',
-  not_required: 'status.progress.notRequired',
-  completed: 'status.progress.completed',
-  pending: 'status.progress.pending',
-};
-
 const Status = <T extends ValidStatus['statusType']>({
   statusType,
   status,
 }: StatusProps<T>) => {
-  const { t } = useTranslation('common');
+  const { getStatusLabel } = useStatusTexts();
   const statusInfo = STATUS_STYLE_MAP[status];
 
   const commonBgStyle =
@@ -104,7 +93,7 @@ const Status = <T extends ValidStatus['statusType']>({
       <div
         className={`${commonTextStyle} ${sizeStyles[statusType].text} ${statusInfo.textColor}`}
       >
-        {t(STATUS_TRANSLATION_KEY[status])}
+        {getStatusLabel(status as StatusTranslationKey)}
       </div>
     </div>
   );

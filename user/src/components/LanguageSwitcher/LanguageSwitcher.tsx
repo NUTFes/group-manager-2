@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
+import { useLanguageSwitcherTexts } from './hooks';
 
 const locales = ['ja', 'en'] as const;
 type Locale = (typeof locales)[number];
 
 const LanguageSwitcher = () => {
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { label, languages } = useLanguageSwitcherTexts();
   const currentLocale = (router.locale as Locale) ?? 'ja';
 
   const switchLocale = (locale: Locale) => {
@@ -16,7 +16,7 @@ const LanguageSwitcher = () => {
   return (
     <div
       className="flex items-center gap-2 text-sm text-white"
-      aria-label={t('languageSwitcher.label')}
+      aria-label={label}
     >
       {locales.map((locale) => (
         <button
@@ -28,9 +28,7 @@ const LanguageSwitcher = () => {
             currentLocale === locale ? 'bg-white text-main' : 'bg-transparent'
           }`}
         >
-          {locale === 'ja'
-            ? t('languageSwitcher.japanese')
-            : t('languageSwitcher.english')}
+          {locale === 'ja' ? languages.ja : languages.en}
         </button>
       ))}
     </div>

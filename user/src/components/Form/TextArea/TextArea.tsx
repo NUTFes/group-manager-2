@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
+import { useFormFieldCommonTexts } from '@/components/Form/hooks';
 
 type TextAreaProps = {
   label: string;
@@ -20,7 +20,7 @@ const TextArea: FC<TextAreaProps> = ({
   note,
   error,
 }) => {
-  const { t } = useTranslation('common');
+  const { required: requiredLabel, translateError } = useFormFieldCommonTexts();
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event.target.value);
   };
@@ -30,9 +30,7 @@ const TextArea: FC<TextAreaProps> = ({
       <label>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && (
-            <p className="text-xs text-alert">※{t('form.required')}</p>
-          )}
+          {required && <p className="text-xs text-alert">※{requiredLabel}</p>}
         </div>
         <textarea
           value={value}
@@ -43,9 +41,7 @@ const TextArea: FC<TextAreaProps> = ({
         <p className="max-w-[400px] whitespace-pre-wrap break-words text-xs text-sub">
           {note}
         </p>
-        <p className="text-xs text-alert">
-          {error ? t(error, { defaultValue: error }) : ''}
-        </p>
+        <p className="text-xs text-alert">{translateError(error)}</p>
       </label>
     </>
   );
