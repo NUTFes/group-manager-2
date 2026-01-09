@@ -1,14 +1,11 @@
 import { FC } from 'react';
 import { GroupResponse } from '@/api/groupApi';
-import { useTranslation } from 'next-i18next';
-import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
 import TextBox from '@/components/Form/TextBox';
 import FormContainer from '@/components/FormContainer';
-import { groupLabels } from '../../label';
 import { useGroupFormHooks } from './hooks';
 
 type GroupFormProps = {
@@ -30,18 +27,17 @@ const GroupForm: FC<GroupFormProps> = ({
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
-  const { t } = useTranslation('common');
   const {
     handleSubmit,
     errors,
     onSubmit,
     setValue,
-    createError,
     createIsMutating,
-    updateError,
     updateIsMutating,
     validateEdit,
     values,
+    formatRadioValue,
+    groupFormTexts,
   } = useGroupFormHooks(
     groups,
     userId,
@@ -49,10 +45,6 @@ const GroupForm: FC<GroupFormProps> = ({
     mutateCheckAllRegisteredGroups,
     mutateGroupByUserId
   );
-
-  if (createError || updateError) {
-    toast.error(t('form.messages.registerFailed'));
-  }
 
   return (
     <FormContainer>
@@ -62,54 +54,45 @@ const GroupForm: FC<GroupFormProps> = ({
       >
         <div className="flex flex-col space-y-10">
           <TextBox
-            label={t(groupLabels[0])}
+            label={groupFormTexts.fields.name}
             value={values.name}
             onChange={(value) => setValue('name', value)}
-            note={t('applications.group.notes.name')}
+            note={groupFormTexts.notes.name}
             required={true}
             error={errors.name?.message}
           ></TextBox>
           <TextBox
-            label={t(groupLabels[1])}
+            label={groupFormTexts.fields.projectName}
             value={values.projectName}
             onChange={(value) => setValue('projectName', value)}
-            note={t('applications.group.notes.projectName')}
+            note={groupFormTexts.notes.projectName}
             required={true}
             error={errors.projectName?.message}
           ></TextBox>
           <Radio
-            label={t(groupLabels[2])}
-            value={values.isInternational ? '1' : '0'}
+            label={groupFormTexts.fields.isInternational}
+            value={formatRadioValue(values.isInternational)}
             onChange={(value) => setValue('isInternational', value === '1')}
             required={true}
-            note={t('applications.group.notes.international')}
+            note={groupFormTexts.notes.international}
             error={errors.isInternational?.message}
-            options={[
-              { id: 0, name: t('applications.group.options.international.no') },
-              {
-                id: 1,
-                name: t('applications.group.options.international.yes'),
-              },
-            ]}
+            options={groupFormTexts.options.international}
           ></Radio>
           <Radio
-            label={t(groupLabels[3])}
-            value={values.isExternal ? '1' : '0'}
+            label={groupFormTexts.fields.isExternal}
+            value={formatRadioValue(values.isExternal)}
             onChange={(value) => setValue('isExternal', value === '1')}
             required={true}
-            note={t('applications.group.notes.external')}
+            note={groupFormTexts.notes.external}
             error={errors.isExternal?.message}
-            options={[
-              { id: 0, name: t('applications.group.options.external.no') },
-              { id: 1, name: t('applications.group.options.external.yes') },
-            ]}
+            options={groupFormTexts.options.external}
           ></Radio>
           <Selector
-            label={t(groupLabels[4])}
+            label={groupFormTexts.fields.groupCategory}
             value={values.groupCategoryId}
             onChange={(value) => setValue('groupCategoryId', parseInt(value))}
             required={true}
-            note={t('applications.group.notes.groupCategory')}
+            note={groupFormTexts.notes.groupCategory}
             error={errors.groupCategoryId?.message}
             options={
               groupCategories?.map((category) => ({
@@ -119,11 +102,11 @@ const GroupForm: FC<GroupFormProps> = ({
             }
           ></Selector>
           <TextArea
-            label={t(groupLabels[5])}
+            label={groupFormTexts.fields.activity}
             value={values.activity}
             onChange={(value) => setValue('activity', value)}
             required={true}
-            note={t('applications.group.notes.activity')}
+            note={groupFormTexts.notes.activity}
             error={errors.activity?.message}
           ></TextArea>
         </div>
@@ -137,7 +120,7 @@ const GroupForm: FC<GroupFormProps> = ({
                 type="button"
                 onClick={toEdit}
               >
-                {t('form.actions.cancel')}
+                {groupFormTexts.buttons.cancel}
               </Button>
             </div>
           )}
@@ -147,7 +130,9 @@ const GroupForm: FC<GroupFormProps> = ({
             type="submit"
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
-            {groups ? t('form.actions.edit') : t('form.actions.register')}
+            {groups
+              ? groupFormTexts.buttons.edit
+              : groupFormTexts.buttons.register}
           </Button>
         </div>
       </form>

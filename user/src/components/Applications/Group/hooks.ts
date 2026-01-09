@@ -8,31 +8,43 @@ export const useGroupHooks = (groupId: number) => {
   const { t } = useTranslation('common');
   const { groups, isLoading, hasError, mutateGroups } = useGetGroups(groupId);
   const { groupCategories } = useGetGroupCategories();
+  const groupTexts = {
+    title: t('applications.group.title'),
+    loading: t('applications.group.loading'),
+    errors: {
+      fetch: t('applications.group.errors.fetch'),
+    },
+    boolean: {
+      yes: t('applications.group.boolean.yes'),
+      no: t('applications.group.boolean.no'),
+    },
+    summaryLabels: groupLabels.map((labelKey) => t(labelKey)),
+  };
 
   // 団体申請のフォーム内容
   const formItem: FormItem[] = [
     {
-      label: t(groupLabels[0]),
+      label: groupTexts.summaryLabels[0],
       content: groups?.name,
     },
     {
-      label: t(groupLabels[1]),
+      label: groupTexts.summaryLabels[1],
       content: groups?.projectName,
     },
     {
-      label: t(groupLabels[2]),
+      label: groupTexts.summaryLabels[2],
       content: groups?.isInternational
-        ? t('applications.group.boolean.yes')
-        : t('applications.group.boolean.no'),
+        ? groupTexts.boolean.yes
+        : groupTexts.boolean.no,
     },
     {
-      label: t(groupLabels[3]),
+      label: groupTexts.summaryLabels[3],
       content: groups?.isExternal
-        ? t('applications.group.boolean.yes')
-        : t('applications.group.boolean.no'),
+        ? groupTexts.boolean.yes
+        : groupTexts.boolean.no,
     },
     {
-      label: t(groupLabels[4]),
+      label: groupTexts.summaryLabels[4],
       content: groups?.groupCategoryId
         ? groupCategories?.find(
             (category) => category.id === groups.groupCategoryId
@@ -40,7 +52,7 @@ export const useGroupHooks = (groupId: number) => {
         : '',
     },
     {
-      label: t(groupLabels[5]),
+      label: groupTexts.summaryLabels[5],
       content: groups?.activity,
     },
   ];
@@ -68,5 +80,6 @@ export const useGroupHooks = (groupId: number) => {
     formItem,
     groupCategories,
     mutateGroups,
+    groupTexts,
   };
 };

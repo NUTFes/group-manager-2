@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { GroupCategoryResponse, GroupResponse } from '@/api/groupApi';
-import { useTranslation } from 'next-i18next';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
 import AccordionMenu from '../../AccordionMenu';
@@ -29,6 +28,7 @@ type ContentProps = {
   mutateGroups: () => void;
   mutateCheckAllRegisteredGroups: () => void;
   mutateGroupByUserId: () => void;
+  groupTexts: ReturnType<typeof useGroupHooks>['groupTexts'];
 };
 
 // 表示画面を切り替えるコンポーネント
@@ -45,17 +45,17 @@ const Content: FC<ContentProps> = ({
   mutateGroups,
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
+  groupTexts,
 }) => {
-  const { t } = useTranslation('common');
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
-    return <div>{t('applications.group.loading')}</div>;
+    return <div>{groupTexts.loading}</div>;
   }
   // データ取得に失敗した場合に表示する画面
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        {t('applications.group.errors.fetch')}
+        {groupTexts.errors.fetch}
       </div>
     );
   }
@@ -90,7 +90,6 @@ const Group: FC<GroupProps> = ({
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
-  const { t } = useTranslation('common');
   const {
     formItem,
     isEditing,
@@ -100,10 +99,11 @@ const Group: FC<GroupProps> = ({
     hasError,
     groupCategories,
     mutateGroups,
+    groupTexts,
   } = useGroupHooks(groupId);
   return (
     <AccordionMenu
-      title={t('applications.group.title')}
+      title={groupTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
@@ -121,6 +121,7 @@ const Group: FC<GroupProps> = ({
         mutateGroups={mutateGroups}
         mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
         mutateGroupByUserId={mutateGroupByUserId}
+        groupTexts={groupTexts}
       />
     </AccordionMenu>
   );
