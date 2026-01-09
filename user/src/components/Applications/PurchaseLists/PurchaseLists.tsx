@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import Button from '@/components/Button';
 import FormList from '@/components/FormList/FormList';
@@ -9,6 +8,7 @@ import {
   usePurchaseListRowUpdater,
   usePurchaseListsForm,
   usePurchaseListsState,
+  usePurchaseListsViewTexts,
 } from './hooks';
 import { PurchaseItem } from './schema';
 
@@ -23,8 +23,8 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   isDeadline,
   isRegistered: initialIsRegistered,
 }) => {
-  const { t } = useTranslation('common');
-  const title = t('applications.purchaseLists.title');
+  const purchaseListsViewTexts = usePurchaseListsViewTexts();
+  const title = purchaseListsViewTexts.title;
 
   const {
     foodProducts,
@@ -69,7 +69,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         isEdit={!isDeadline}
         isExist={initialIsRegistered}
       >
-        <div>{t('applications.purchaseLists.loading')}</div>
+        <div>{purchaseListsViewTexts.loading}</div>
       </AccordionMenu>
     );
   }
@@ -83,7 +83,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         isExist={initialIsRegistered}
       >
         <div className="py-10 text-center text-red-500">
-          {t('applications.purchaseLists.errors.fetch')}
+          {purchaseListsViewTexts.errors.fetch}
         </div>
       </AccordionMenu>
     );
@@ -112,10 +112,10 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
               </svg>
             </div>
             <h3 className="mb-2 text-lg font-semibold text-gray-800">
-              {t('applications.purchaseLists.deadline.title')}
+              {purchaseListsViewTexts.deadline.title}
             </h3>
             <p className="text-sm text-gray-600">
-              {t('applications.purchaseLists.deadline.description')}
+              {purchaseListsViewTexts.deadline.description}
             </p>
           </div>
         </div>
@@ -189,7 +189,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
             icon="pencil"
             onClick={toggleEdit}
           >
-            {t('form.actions.edit')}
+            {purchaseListsViewTexts.buttons.edit}
           </Button>
         </div>
       )}

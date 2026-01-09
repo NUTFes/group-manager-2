@@ -1,5 +1,4 @@
-import { FC, useMemo } from 'react';
-import { useTranslation } from 'next-i18next';
+import { FC } from 'react';
 import {
   Control,
   Controller,
@@ -15,12 +14,12 @@ import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
 import {
   DEFAULT_PURCHASE_ITEM,
-  FRESH_OPTIONS,
   FRESH_TYPE_ID,
   NET_ORDER_SHOP_ID,
   OTHER_SHOP_ID,
   PurchaseItemFieldNames,
 } from '../constants';
+import { usePurchaseListsFormTexts } from '../hooks';
 import { PurchaseItem, PurchaseListsFormData } from '../schema';
 import { FoodProductOption } from '../types';
 
@@ -47,20 +46,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
   shopOptions,
   onFoodProductChange,
 }) => {
-  const { t } = useTranslation('common');
+  const purchaseListsFormTexts = usePurchaseListsFormTexts();
   // フォーム全体の値を監視
   const watchedFormValues = useWatch({
     control,
     name: 'purchaseLists',
   });
-  const freshOptions = useMemo(
-    () =>
-      FRESH_OPTIONS.map((option) => ({
-        id: option.id,
-        name: t(option.labelKey),
-      })),
-    [t]
-  );
+  const freshOptions = purchaseListsFormTexts.radio.options;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +78,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Selector
-                      label={t('applications.purchaseLists.fields.foodProduct')}
+                      label={purchaseListsFormTexts.fields.foodProduct}
                       value={controllerField.value}
                       onChange={(value) => {
                         controllerField.onChange(Number(value));
@@ -97,7 +89,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                       required
                       options={foodProductOptions}
                       error={fieldState.error?.message}
-                      note={t('applications.purchaseLists.notes.foodProduct')}
+                      note={purchaseListsFormTexts.notes.foodProduct}
                     />
                   )}
                 />
@@ -107,7 +99,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
-                      label={t('applications.purchaseLists.fields.items')}
+                      label={purchaseListsFormTexts.fields.items}
                       value={controllerField.value ?? ''}
                       onChange={controllerField.onChange}
                       required
@@ -121,7 +113,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Radio
-                      label={t('applications.purchaseLists.radio.label')}
+                      label={purchaseListsFormTexts.radio.label}
                       name={`isFresh-${index}`}
                       value={
                         controllerField.value
@@ -145,7 +137,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <Selector
-                      label={t('applications.purchaseLists.fields.shop')}
+                      label={purchaseListsFormTexts.fields.shop}
                       value={controllerField.value}
                       onChange={(value) =>
                         controllerField.onChange(Number(value))
@@ -153,7 +145,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                       required
                       options={shopOptions}
                       error={fieldState.error?.message}
-                      note={t('applications.purchaseLists.notes.shop')}
+                      note={purchaseListsFormTexts.notes.shop}
                     />
                   )}
                 />
@@ -163,15 +155,13 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextBox
-                      label={t(
-                        'applications.purchaseLists.fields.purchaseDate'
-                      )}
+                      label={purchaseListsFormTexts.fields.purchaseDate}
                       type="date"
                       value={controllerField.value}
                       onChange={controllerField.onChange}
                       required
                       error={fieldState.error?.message}
-                      note={t('applications.purchaseLists.notes.purchaseDate')}
+                      note={purchaseListsFormTexts.notes.purchaseDate}
                     />
                   )}
                 />
@@ -183,12 +173,12 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                     control={control}
                     render={({ field: controllerField, fieldState }) => (
                       <TextBox
-                        label={t('applications.purchaseLists.fields.url')}
+                        label={purchaseListsFormTexts.fields.url}
                         value={controllerField.value || ''}
                         onChange={controllerField.onChange}
                         required
                         error={fieldState.error?.message}
-                        note={t('applications.purchaseLists.notes.url')}
+                        note={purchaseListsFormTexts.notes.url}
                       />
                     )}
                   />
@@ -200,15 +190,15 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                   control={control}
                   render={({ field: controllerField, fieldState }) => (
                     <TextArea
-                      label={t('applications.purchaseLists.fields.remark')}
+                      label={purchaseListsFormTexts.fields.remark}
                       value={controllerField.value || ''}
                       onChange={controllerField.onChange}
                       required={currentShopId === OTHER_SHOP_ID}
                       error={fieldState.error?.message}
                       note={
                         currentShopId === OTHER_SHOP_ID
-                          ? t('applications.purchaseLists.notes.remarkOther')
-                          : t('applications.purchaseLists.notes.remarkDefault')
+                          ? purchaseListsFormTexts.notes.remark.other
+                          : purchaseListsFormTexts.notes.remark.default
                       }
                     />
                   )}
@@ -223,7 +213,7 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
                       onClick={() => remove(index)}
                       icon="cross"
                     >
-                      {t('form.actions.delete')}
+                      {purchaseListsFormTexts.buttons.delete}
                     </Button>
                   </div>
                 )}
@@ -240,10 +230,10 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
             icon="plus"
             onClick={() => append(DEFAULT_PURCHASE_ITEM as PurchaseItem)}
           >
-            {t('applications.purchaseLists.buttons.addItem')}
+            {purchaseListsFormTexts.buttons.addItem}
           </Button>
           <Button size="pc" color="main" type="submit">
-            {t('form.actions.register')}
+            {purchaseListsFormTexts.buttons.register}
           </Button>
         </div>
       </div>
@@ -251,16 +241,14 @@ const PurchaseListsForm: FC<PurchaseListsFormProps> = ({
       <div className="mt-10 flex w-full items-center justify-center space-x-4"></div>
       {errors.purchaseLists?.root?.message && (
         <p className="mt-2 text-center text-xs text-alert">
-          {t(errors.purchaseLists.root.message, {
-            defaultValue: errors.purchaseLists.root.message,
-          })}
+          {purchaseListsFormTexts.errors.format(
+            errors.purchaseLists.root.message
+          )}
         </p>
       )}
       {errors.purchaseLists?.message && (
         <p className="mt-2 text-center text-xs text-alert">
-          {t(errors.purchaseLists.message, {
-            defaultValue: errors.purchaseLists.message,
-          })}
+          {purchaseListsFormTexts.errors.format(errors.purchaseLists.message)}
         </p>
       )}
     </form>

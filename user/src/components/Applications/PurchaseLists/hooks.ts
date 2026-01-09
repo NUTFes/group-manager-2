@@ -249,6 +249,24 @@ export const usePurchaseListsState = (
   };
 };
 
+export const usePurchaseListsViewTexts = () => {
+  const { t } = useTranslation('common');
+  return {
+    title: t('applications.purchaseLists.title'),
+    loading: t('applications.purchaseLists.loading'),
+    errors: {
+      fetch: t('applications.purchaseLists.errors.fetch'),
+    },
+    deadline: {
+      title: t('applications.purchaseLists.deadline.title'),
+      description: t('applications.purchaseLists.deadline.description'),
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+    },
+  };
+};
+
 /**
  * 購入品リストのフォームの状態管理と送信処理を行うカスタムフック。
  * react-hook-formを利用して、動的なフォームの追加・削除、バリデーション、送信処理を責務に持つ。
@@ -377,6 +395,52 @@ export const usePurchaseListsForm = (
     errors: formState.errors,
     setValue,
     reset,
+  };
+};
+
+export const usePurchaseListsFormTexts = () => {
+  const { t } = useTranslation('common');
+
+  const freshOptions = FRESH_OPTIONS.map((option) => ({
+    id: option.id,
+    name: t(option.labelKey),
+  }));
+
+  const translateError = (message: string) =>
+    t(message, { defaultValue: message });
+
+  return {
+    fields: {
+      foodProduct: t('applications.purchaseLists.fields.foodProduct'),
+      items: t('applications.purchaseLists.fields.items'),
+      shop: t('applications.purchaseLists.fields.shop'),
+      purchaseDate: t('applications.purchaseLists.fields.purchaseDate'),
+      url: t('applications.purchaseLists.fields.url'),
+      remark: t('applications.purchaseLists.fields.remark'),
+    },
+    notes: {
+      foodProduct: t('applications.purchaseLists.notes.foodProduct'),
+      shop: t('applications.purchaseLists.notes.shop'),
+      purchaseDate: t('applications.purchaseLists.notes.purchaseDate'),
+      url: t('applications.purchaseLists.notes.url'),
+      remark: {
+        default: t('applications.purchaseLists.notes.remarkDefault'),
+        other: t('applications.purchaseLists.notes.remarkOther'),
+      },
+    },
+    radio: {
+      label: t('applications.purchaseLists.radio.label'),
+      options: freshOptions,
+    },
+    buttons: {
+      delete: t('form.actions.delete'),
+      addItem: t('applications.purchaseLists.buttons.addItem'),
+      register: t('form.actions.register'),
+      edit: t('form.actions.edit'),
+    },
+    errors: {
+      format: translateError,
+    },
   };
 };
 
