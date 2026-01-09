@@ -174,7 +174,7 @@ export const useEmployeesApiClient = (groupId: number) => {
  * @param callbacks - 成功・失敗時のコールバック関数
  * @returns ビジネスロジック操作のメソッド群
  */
-export const useEmployeesBusinessLogic = (
+export const useEmployeesBusinessHooks = (
   groupId: number,
   callbacks: {
     onSuccess?: (message: string) => void;
@@ -291,7 +291,7 @@ export const useEmployeesBusinessLogic = (
  * @param callbacks - 成功・失敗時のコールバック関数
  * @returns 未登録グループ操作のメソッド群
  */
-export const useUnregisteredGroupLogic = (
+export const useUnregisteredGroupHooks = (
   groupId: number,
   callbacks: {
     onSuccess?: (message: string) => void;
@@ -366,13 +366,14 @@ export const useUnregisteredGroupLogic = (
  * @param mutateCheckAllRegisteredGroups - グループ登録状況を更新するコールバック
  * @returns コンポーネントで必要なすべての状態とハンドラ
  */
-export const useEmployeesMainLogic = (
+export const useEmployeesApplicationHooks = (
   groupId: number,
   isDeadline?: boolean,
   mutateCheckAllRegisteredGroups?: () => void
 ) => {
   // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
+  const { t } = useTranslation('common');
 
   // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
@@ -385,15 +386,22 @@ export const useEmployeesMainLogic = (
   };
 
   // ビジネスロジック関連のhooks
-  const businessLogic = useEmployeesBusinessLogic(groupId, toastCallbacks);
-  const unregisteredLogic = useUnregisteredGroupLogic(groupId, toastCallbacks);
+  const employeesBusinessHooks = useEmployeesBusinessHooks(
+    groupId,
+    toastCallbacks
+  );
+  const unregisteredGroupHooks = useUnregisteredGroupHooks(
+    groupId,
+    toastCallbacks
+  );
 
   // フォーム関連のhooks（既存データがある場合はそれを、ない場合は空配列を初期値に設定）
   const form = useEmployeesForm(
-    businessLogic.getEmployeesData && businessLogic.getEmployeesData.length > 0
+    employeesBusinessHooks.getEmployeesData &&
+      employeesBusinessHooks.getEmployeesData.length > 0
       ? {
           needApplication: undefined,
-          employees: businessLogic.getEmployeesData,
+          employees: employeesBusinessHooks.getEmployeesData,
         }
       : { needApplication: undefined, employees: [] }
   );
@@ -403,9 +411,9 @@ export const useEmployeesMainLogic = (
 
   // フォーム操作のイベントハンドラ
   const formHandlers = useEmployeesFormHandlers(form, {
-    onEmployeeDelete: businessLogic.handleEmployeeDeleteWithToast,
+    onEmployeeDelete: employeesBusinessHooks.handleEmployeeDeleteWithToast,
     onMutateEmployees: async () => {
-      await businessLogic.mutateEmployees();
+      await employeesBusinessHooks.mutateEmployees();
     },
   });
 
@@ -417,7 +425,7 @@ export const useEmployeesMainLogic = (
    * 編集ボタンクリック時の処理
    */
   const handleEdit = async () => {
-    await formHandlers.handleEditStart(businessLogic.getEmployeesData);
+    await formHandlers.handleEditStart(employeesBusinessHooks.getEmployeesData);
     setEditing(true);
   };
 
@@ -427,7 +435,7 @@ export const useEmployeesMainLogic = (
   const handleRadioChange = async (value: string) => {
     await formHandlers.handleNeedApplicationChange(
       value,
-      businessLogic.getEmployeesData
+      employeesBusinessHooks.getEmployeesData
     );
     setEditing(true);
   };
@@ -443,7 +451,7 @@ export const useEmployeesMainLogic = (
    * 未登録グループ状態での編集ボタンクリック時の処理
    */
   const handleEditClick = async () => {
-    await unregisteredLogic.handleDeleteUnregisteredGroup();
+    await unregisteredGroupHooks.handleDeleteUnregisteredGroup();
     setEditing(true);
   };
 
@@ -452,8 +460,8 @@ export const useEmployeesMainLogic = (
    */
   const handleNoApplicationClick = async () => {
     try {
-      await businessLogic.handleNoApplicationSubmit();
-      await unregisteredLogic.handleRegisterUnregisteredGroup();
+      await employeesBusinessHooks.handleNoApplicationSubmit();
+      await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -467,15 +475,15 @@ export const useEmployeesMainLogic = (
     try {
       if (data.needApplication === NEED_APPLICATION.YES && data.employees) {
         // 従業員申請ありの場合
-        await unregisteredLogic.handleDeleteUnregisteredGroup();
-        await businessLogic.handleEmployeeApplicationSubmit({
+        await unregisteredGroupHooks.handleDeleteUnregisteredGroup();
+        await employeesBusinessHooks.handleEmployeeApplicationSubmit({
           needApplication: data.needApplication,
           employees: data.employees,
         });
       } else if (data.needApplication === NEED_APPLICATION.NO) {
         // 従業員申請なしの場合
-        await businessLogic.handleNoApplicationSubmit();
-        await unregisteredLogic.handleRegisterUnregisteredGroup();
+        await employeesBusinessHooks.handleNoApplicationSubmit();
+        await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
       }
       setEditing(false);
     } catch {
@@ -490,8 +498,8 @@ export const useEmployeesMainLogic = (
   /**
    * 申請しないデータがあるかどうか
    */
-  const isUnregisteredGroup = !!unregisteredLogic.unregisteredData;
-  const isEmployeesData = businessLogic.getEmployeesData?.length > 0;
+  const isUnregisteredGroup = !!unregisteredGroupHooks.unregisteredData;
+  const isEmployeesData = employeesBusinessHooks.getEmployeesData?.length > 0;
 
   /**
    * 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）
@@ -508,10 +516,43 @@ export const useEmployeesMainLogic = (
    * フォーム表示用のテーブルデータ
    */
   const tableData =
-    businessLogic.getEmployeesData?.map((i) => ({
+    employeesBusinessHooks.getEmployeesData?.map((i) => ({
       name: i.name,
       studentId: i.studentId,
     })) || [];
+
+  const texts = {
+    title: t('applications.employees.title'),
+    deadline: {
+      title: t('applications.employees.deadline.title'),
+      description: t('applications.employees.deadline.description'),
+    },
+    summary: {
+      noApplication: {
+        label: t('applications.employees.summary.noApplication.label'),
+        description: t(
+          'applications.employees.summary.noApplication.description'
+        ),
+      },
+      headers: {
+        name: t('applications.employees.summary.headers.name'),
+        studentId: t('applications.employees.summary.headers.studentId'),
+      },
+    },
+    radio: {
+      label: t('applications.employees.radio.label'),
+      options: [
+        { id: 1, name: t('applications.employees.radio.options.yes') },
+        { id: 2, name: t('applications.employees.radio.options.no') },
+      ],
+    },
+    buttons: {
+      addEmployee: t('applications.employees.buttons.addEmployee'),
+    },
+    formActions: {
+      register: t('form.actions.register'),
+    },
+  };
 
   return {
     // 状態
@@ -519,14 +560,15 @@ export const useEmployeesMainLogic = (
     isFormListMode,
     isDeadlineMode,
     tableData,
+    texts,
 
     // フォーム関連
     form,
     formState,
 
     // ビジネスロジック
-    businessLogic,
-    unregisteredLogic,
+    employeesBusinessHooks,
+    unregisteredGroupHooks,
 
     // イベントハンドラ
     handleEdit,

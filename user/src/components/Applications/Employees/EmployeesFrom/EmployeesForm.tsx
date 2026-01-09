@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import { Controller, useFormContext } from 'react-hook-form';
 import Button from '@/components/Button';
 import TextBox from '@/components/Form/TextBox';
 import FormContainer from '@/components/FormContainer';
+import { useEmployeeFormTexts } from './hooks';
 
 type Props = {
   index: number;
@@ -12,7 +12,7 @@ type Props = {
 
 export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
   const { control } = useFormContext();
-  const { t } = useTranslation('common');
+  const employeeFormTexts = useEmployeeFormTexts();
 
   return (
     <FormContainer>
@@ -21,13 +21,13 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
         name={`employees.${index}.name` as const}
         render={({ field, fieldState }) => (
           <TextBox
-            label={t('applications.employees.form.labels.name')}
+            label={employeeFormTexts.fields.name.label}
             required
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
-            note={t('applications.employees.form.notes.name')}
+            note={employeeFormTexts.fields.name.note}
           />
         )}
       />
@@ -36,13 +36,13 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
         name={`employees.${index}.studentId` as const}
         render={({ field, fieldState }) => (
           <TextBox
-            label={t('applications.employees.form.labels.studentId')}
+            label={employeeFormTexts.fields.studentId.label}
             required
             value={field.value}
             onChange={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
-            note={t('applications.employees.form.notes.studentId')}
+            note={employeeFormTexts.fields.studentId.note}
           />
         )}
       />
@@ -55,7 +55,7 @@ export const EmployeeForm: FC<Props> = ({ index, onDelete }) => {
           variant
           onClick={onDelete}
         >
-          {t('form.actions.delete')}
+          {employeeFormTexts.buttons.delete}
         </Button>
       </div>
     </FormContainer>
