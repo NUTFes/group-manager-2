@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { ViceRepresentativeResponse } from '@/api/viceRepresentativesApi';
-import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FormItem } from '@/components/FormList/type';
@@ -25,6 +24,9 @@ type ContentProps = {
   groupId: number;
   mutateViceRepresentative: () => void;
   mutateCheckAllRegisteredGroups: () => void;
+  viceRepresentativeTexts: ReturnType<
+    typeof useViceRepresentativeHook
+  >['viceRepresentativeTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -38,16 +40,16 @@ const Content: FC<ContentProps> = ({
   groupId,
   mutateViceRepresentative,
   mutateCheckAllRegisteredGroups,
+  viceRepresentativeTexts,
 }) => {
-  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div>{t('general.loading')}</div>;
+    return <div>{viceRepresentativeTexts.general.loading}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        {t('general.errors.fetch')}
+        {viceRepresentativeTexts.errors.fetch}
       </div>
     );
   }
@@ -77,7 +79,6 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
   groupId,
   mutateCheckAllRegisteredGroups,
 }) => {
-  const { t } = useTranslation('common');
   const {
     formItem,
     isEditing,
@@ -86,14 +87,15 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
     isLoading,
     hasError,
     mutateViceRepresentative,
+    viceRepresentativeTexts,
   } = useViceRepresentativeHook(groupId);
   return (
     <AccordionMenu
-      title={t('applications.viceRepresentative.title')}
+      title={viceRepresentativeTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
-      note={t('applications.viceRepresentative.note')}
+      note={viceRepresentativeTexts.note}
     >
       <Content
         isLoading={isLoading}
@@ -106,6 +108,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
         groupId={groupId}
         mutateViceRepresentative={mutateViceRepresentative}
         mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+        viceRepresentativeTexts={viceRepresentativeTexts}
       />
     </AccordionMenu>
   );

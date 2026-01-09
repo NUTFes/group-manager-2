@@ -10,10 +10,12 @@ import {
   useDeleteViceRepresentative,
   useUpdateViceRepresentative,
 } from '@/api/viceRepresentativesApi';
+import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { viceRepresentativeLabels } from '@/components/Applications/label';
 import { ViceRepresentativeForm, viceRepresentativeSchema } from './schema';
 
 export const useViceRepresentativeFormHook = (
@@ -123,20 +125,6 @@ export const useViceRepresentativeFormHook = (
       }
     });
 
-  const registerOrNotOption = useMemo(
-    () => [
-      {
-        id: 1,
-        name: t('applications.viceRepresentative.radio.options.individual'),
-      },
-      {
-        id: 0,
-        name: t('applications.viceRepresentative.radio.options.group'),
-      },
-    ],
-    [t]
-  );
-
   return {
     setValue,
     getValues,
@@ -144,9 +132,41 @@ export const useViceRepresentativeFormHook = (
     reset,
     watch,
     onSubmit,
-    registerOrNotOption,
     isIndividual,
     setIsIndividualById,
     values,
+  };
+};
+
+export const useViceRepresentativeFormTexts = () => {
+  const { t } = useTranslation('common');
+  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
+  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
+  const labels = viceRepresentativeLabels.map((labelKey) => t(labelKey));
+  const radioOptions = [
+    {
+      id: 1,
+      name: t('applications.viceRepresentative.radio.options.individual'),
+    },
+    {
+      id: 0,
+      name: t('applications.viceRepresentative.radio.options.group'),
+    },
+  ];
+
+  return {
+    labels,
+    notes: {
+      name: t('applications.viceRepresentative.notes.name'),
+      studentId: t('applications.viceRepresentative.notes.studentId'),
+      email: t('applications.viceRepresentative.notes.email'),
+      tel: t('applications.viceRepresentative.notes.tel'),
+    },
+    buttons: {
+      register: t('form.actions.register'),
+    },
+    radioOptions,
+    gradeOptions,
+    departmentOptions,
   };
 };

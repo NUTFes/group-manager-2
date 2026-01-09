@@ -20,6 +20,17 @@ export const useViceRepresentativeHook = (groupId: number) => {
     ORDER_TYPES.SUB_REP
   );
 
+  const viceRepresentativeTexts = {
+    title: t('applications.viceRepresentative.title'),
+    note: t('applications.viceRepresentative.note'),
+    general: {
+      loading: t('general.loading'),
+    },
+    errors: {
+      fetch: t('general.errors.fetch'),
+    },
+  };
+
   const formItem: FormItem[] = useMemo(() => {
     if (unregisteredData) {
       return [
@@ -90,5 +101,6 @@ export const useViceRepresentativeHook = (groupId: number) => {
     toEdit,
     formItem,
     mutateViceRepresentative,
+    viceRepresentativeTexts,
   };
 };
