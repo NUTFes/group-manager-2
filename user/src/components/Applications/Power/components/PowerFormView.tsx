@@ -1,8 +1,8 @@
-import { FC, useMemo } from 'react';
-import { useTranslation } from 'next-i18next';
+import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import { POWER_LIMIT } from '../constants';
+import { usePowerFormViewHooks } from '../hooks/usePowerFormViewHooks';
 import { PowerFormViewProps } from '../types';
 import PowerForm from './PowerForm';
 
@@ -20,25 +20,17 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
   onSubmit,
 }) => {
   const { handleSubmit } = formMethods;
-  const { t } = useTranslation('common');
-  const translatedRadioOptions = useMemo(
-    () =>
-      radioOptions.map((option) => ({
-        id: option.id,
-        name: t(option.labelKey),
-      })),
-    [radioOptions, t]
-  );
+  const { powerFormViewTexts } = usePowerFormViewHooks(radioOptions);
 
   return (
     <div className="flex flex-col gap-6">
       {/* ラジオボタン */}
       <Radio
-        label={t('applications.power.radio.question')}
+        label={powerFormViewTexts.radio.label}
         value={radioValue}
         onChange={onRadioChange}
         required
-        options={translatedRadioOptions}
+        options={powerFormViewTexts.radio.options}
       />
 
       {/* 申請する場合のフォーム */}
@@ -60,10 +52,10 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
             {totalPower > POWER_LIMIT && (
               <div className="mb-4 w-full text-center text-sm text-red-600">
                 <p>
-                  {t('applications.power.form.totalPowerWarning', {
-                    limit: POWER_LIMIT,
-                    value: totalPower,
-                  })}
+                  {powerFormViewTexts.warnings.totalPower(
+                    POWER_LIMIT,
+                    totalPower
+                  )}
                 </p>
               </div>
             )}
@@ -77,7 +69,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
                 variant
                 onClick={onAddDevice}
               >
-                {t('applications.power.form.addDevice')}
+                {powerFormViewTexts.actions.addDevice}
               </Button>
               <Button
                 type="submit"
@@ -85,7 +77,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
                 color="main"
                 isDisable={!isValid || totalPower > POWER_LIMIT}
               >
-                {t('form.actions.register')}
+                {powerFormViewTexts.actions.register}
               </Button>
             </div>
           </div>

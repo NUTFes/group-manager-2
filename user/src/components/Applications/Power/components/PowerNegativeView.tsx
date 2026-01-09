@@ -1,9 +1,8 @@
-import { FC, useMemo } from 'react';
-import { useTranslation } from 'next-i18next';
+import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import FormList from '@/components/FormList/FormList';
-import { FormItem } from '@/components/FormList/type';
+import { usePowerNegativeViewHooks } from '../hooks/usePowerNegativeViewHooks';
 import { PowerNegativeViewProps } from '../types';
 
 export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
@@ -19,32 +18,18 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   onCancel,
   isDeadline,
 }) => {
-  const { t } = useTranslation('common');
-  const translatedRadioOptions = useMemo(
-    () =>
-      radioOptions.map((option) => ({
-        id: option.id,
-        name: t(option.labelKey),
-      })),
-    [radioOptions, t]
-  );
-  const noApplicationItems: FormItem[] = [
-    {
-      label: t('applications.power.summary.noApplication.label'),
-      content: t('applications.power.summary.noApplication.description'),
-    },
-  ];
+  const { powerNegativeViewTexts } = usePowerNegativeViewHooks(radioOptions);
 
   return (
     <div className="flex w-full flex-col gap-6">
       {isEdit && (
         <>
           <Radio
-            label={t('applications.power.radio.question')}
+            label={powerNegativeViewTexts.radio.label}
             value={radioValue}
             onChange={onRadioChange}
             required
-            options={translatedRadioOptions}
+            options={powerNegativeViewTexts.radio.options}
           />
           {onCancel && (
             <div className="flex justify-center">
@@ -55,7 +40,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
                 variant
                 onClick={onCancel}
               >
-                {t('form.actions.cancel')}
+                {powerNegativeViewTexts.actions.cancel}
               </Button>
             </div>
           )}
@@ -64,7 +49,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
 
       {!isEdit && (
         <FormList
-          items={noApplicationItems}
+          items={powerNegativeViewTexts.summary.noApplicationItems}
           onEdit={isDeadline ? undefined : onEdit}
           isEdit={!isDeadline}
         />
@@ -75,7 +60,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
           {submitError && (
             <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
               <strong className="font-bold">
-                {t('applications.power.errors.submitTitle')}
+                {powerNegativeViewTexts.errors.submitTitle}
               </strong>
               <span className="block sm:inline">{submitError}</span>
             </div>
@@ -86,7 +71,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
             color="main"
             onClick={onNegativeSubmit}
           >
-            {t('form.actions.register')}
+            {powerNegativeViewTexts.actions.register}
           </Button>
         </div>
       )}

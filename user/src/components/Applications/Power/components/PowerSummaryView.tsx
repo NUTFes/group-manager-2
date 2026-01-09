@@ -1,43 +1,8 @@
 import { FC } from 'react';
-import { TFunction } from 'i18next';
-import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button/Button';
 import FormList from '@/components/FormList/FormList';
-import { FormItem } from '@/components/FormList/type';
-import { Device, PowerSummaryViewProps } from '../types';
-
-// デバイス情報からフォームアイテムを作成する関数
-export const createFormItemsForDevice = (
-  device: Device,
-  t: TFunction<'common'>
-): FormItem[] => {
-  const items: FormItem[] = [];
-  items.push({
-    label: t('applications.power.summary.fields.productName'),
-    content: device.productName,
-  });
-  items.push({
-    label: t('applications.power.summary.fields.manufacturer'),
-    content: device.manufacturer,
-  });
-  items.push({
-    label: t('applications.power.summary.fields.model'),
-    content: device.model,
-  });
-  if (device.url) {
-    items.push({
-      label: t('applications.power.summary.fields.url'),
-      content: device.url,
-    });
-  }
-  items.push({
-    label: t('applications.power.summary.fields.maxPower'),
-    content: t('applications.power.summary.powerValue', {
-      value: device.maxPower,
-    }),
-  });
-  return items;
-};
+import { usePowerSummaryViewHooks } from '../hooks/usePowerSummaryViewHooks';
+import { PowerSummaryViewProps } from '../types';
 
 export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
   devices,
@@ -45,14 +10,15 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
   onDeleteDevice,
   isDeadline,
 }) => {
-  const { t } = useTranslation('common');
+  const { createSummaryItemsForDevice, powerSummaryViewTexts } =
+    usePowerSummaryViewHooks();
 
   return (
     <div className="flex flex-col gap-6">
       {devices.map((device, index) => (
         <div key={`device-${index}`} className="mb-4">
           <FormList
-            items={createFormItemsForDevice(device, t)}
+            items={createSummaryItemsForDevice(device)}
             onEdit={isDeadline ? undefined : onEdit}
             isDelete={isDeadline}
             onDelete={device.id ? () => onDeleteDevice(device.id!) : undefined}
@@ -69,7 +35,7 @@ export const PowerSummaryView: FC<PowerSummaryViewProps> = ({
             icon="pencil"
             onClick={onEdit}
           >
-            {t('form.actions.edit')}
+            {powerSummaryViewTexts.actions.edit}
           </Button>
         </div>
       )}

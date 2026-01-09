@@ -1,10 +1,10 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import { Controller, FieldPath } from 'react-hook-form';
 import Button from '@/components/Button/Button';
 import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
 import { FIELD_NAMES, POWER_LIMIT } from '../constants';
+import { usePowerDeviceFormHooks } from '../hooks/usePowerDeviceFormHooks';
 import { PowerApplicationFormData } from '../schema';
 import { DeviceField, PowerFormFieldProps, PowerFormProps } from '../types';
 
@@ -51,7 +51,7 @@ const PowerFormField: FC<PowerFormFieldProps> = ({
 
 const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
   const { control, formState } = form;
-  const { t } = useTranslation('common');
+  const { powerDeviceFormTexts } = usePowerDeviceFormHooks();
 
   // エラーメッセージを取得 - DeviceField型を受け取るように修正
   const getErrorMessage = (name: DeviceField) => {
@@ -65,7 +65,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
         <div className="flex flex-col gap-10 text-[#484848]">
           <PowerFormField
             name={FIELD_NAMES.PRODUCT_NAME}
-            label={t('applications.power.form.fields.productName')}
+            label={powerDeviceFormTexts.fields.productName}
             control={control}
             index={index}
             required
@@ -74,7 +74,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
 
           <PowerFormField
             name={FIELD_NAMES.MANUFACTURER}
-            label={t('applications.power.form.fields.manufacturer')}
+            label={powerDeviceFormTexts.fields.manufacturer}
             control={control}
             index={index}
             required
@@ -83,7 +83,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
 
           <PowerFormField
             name={FIELD_NAMES.MODEL}
-            label={t('applications.power.form.fields.model')}
+            label={powerDeviceFormTexts.fields.model}
             control={control}
             index={index}
             required
@@ -92,34 +92,28 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
 
           <PowerFormField
             name={FIELD_NAMES.URL}
-            label={t('applications.power.form.fields.url')}
+            label={powerDeviceFormTexts.fields.url}
             control={control}
             index={index}
             required
-            note={t('applications.power.form.notes.url')}
+            note={powerDeviceFormTexts.notes.url}
             getErrorMessage={getErrorMessage}
           />
 
           <PowerFormField
             name={FIELD_NAMES.MAX_POWER}
-            label={t('applications.power.form.fields.maxPower')}
+            label={powerDeviceFormTexts.fields.maxPower}
             control={control}
             index={index}
             required
-            note={t('applications.power.form.notes.totalPower', {
-              limit: POWER_LIMIT,
-            })}
+            note={powerDeviceFormTexts.notes.totalPower(POWER_LIMIT)}
             getErrorMessage={getErrorMessage}
             type="number"
           />
 
           <div className="text-sm">
-            <p>
-              {t('applications.power.form.notes.emailWarning', {
-                limit: POWER_LIMIT,
-              })}
-            </p>
-            <p>{t('applications.power.form.notes.contactEmail')}</p>
+            <p>{powerDeviceFormTexts.notes.emailWarning(POWER_LIMIT)}</p>
+            <p>{powerDeviceFormTexts.notes.contactEmail}</p>
           </div>
 
           {index > 0 && !form.getValues().devices[index]?.productName && (
@@ -132,7 +126,7 @@ const PowerForm: FC<PowerFormProps> = ({ index, form, onRemove }) => {
                 variant
                 onClick={() => onRemove(index)}
               >
-                {t('form.actions.delete')}
+                {powerDeviceFormTexts.actions.delete}
               </Button>
             </div>
           )}

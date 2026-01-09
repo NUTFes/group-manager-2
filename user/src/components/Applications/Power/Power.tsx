@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import { PowerNegativeView, PowerSummaryView } from './components';
 import { PowerFormView } from './components/PowerFormView';
 import { RADIO_OPTIONS } from './constants';
+import { usePowerAccordionHooks } from './hooks/usePowerAccordionHooks';
 import { usePowerApplication } from './hooks/usePowerApplication';
 import { usePowerDisplay } from './hooks/usePowerDisplay';
 
@@ -14,7 +14,7 @@ type PowerProps = {
 };
 
 const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
-  const { t } = useTranslation('common');
+  const powerAccordionHooks = usePowerAccordionHooks();
 
   // 電力申請のカスタムフックから状態とロジックの取得
   const {
@@ -145,7 +145,7 @@ const Power: FC<PowerProps> = ({ isDeadline, isRegistered, groupId }) => {
 
   return (
     <AccordionMenu
-      title={t('applications.power.title')}
+      title={powerAccordionHooks.powerAccordionTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
