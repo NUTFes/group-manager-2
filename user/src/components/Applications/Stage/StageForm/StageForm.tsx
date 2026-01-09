@@ -1,6 +1,4 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
-import { stageLabels } from '@/components/Applications/label';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import Selector from '@/components/Form/Selector/Selector';
@@ -8,12 +6,12 @@ import TextBox from '@/components/Form/TextBox/TextBox';
 import FormContainer from '@/components/FormContainer';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
-import { useStageFormLogic } from '../hooks';
-import { useStageFormViewLogic } from '../hooks/useStageFormViewLogic';
+import { useStageFormHooks } from '../hooks';
+import { useStageFormViewHooks } from '../hooks/useStageFormViewHooks';
 
 type Props = { isDeadline?: boolean; groupId: number };
 const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
-  const { t } = useTranslation('common');
+  const stageFormHooks = useStageFormHooks(groupId);
   const {
     formState,
     updateField,
@@ -33,14 +31,16 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
     rainyStageOptions,
     getErrorMessage,
     resetForm,
-  } = useStageFormLogic(groupId);
+    stageFormTexts,
+  } = stageFormHooks;
 
-  const { isFormMode, toEdit, toCancel } = useStageFormViewLogic({
+  const stageFormViewHooks = useStageFormViewHooks({
     hasExisting,
     isDeadline,
     isLoadingAll,
     isSubmitted,
   });
+  const { isFormMode, toEdit, toCancel } = stageFormViewHooks;
 
   const {
     date,
@@ -56,46 +56,40 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
   const items: FormItem[] = [
     {
-      label: t(stageLabels[0]),
+      label: stageFormTexts.labels[0],
       content: dateOptions.find((o) => o.id === +date)?.name || '',
     },
     {
-      label: t(stageLabels[1]),
+      label: stageFormTexts.labels[1],
       content:
         sunnyStageOptions.find((o) => o.id === +sunnyFirstChoice)?.name || '',
     },
     {
-      label: t(stageLabels[2]),
+      label: stageFormTexts.labels[2],
       content:
         sunnyStageOptions.find((o) => o.id === +sunnySecondChoice)?.name || '',
     },
     {
-      label: t(stageLabels[3]),
+      label: stageFormTexts.labels[3],
       content:
         rainyStageOptions.find((o) => o.id === +rainyFirstChoice)?.name || '',
     },
     {
-      label: t(stageLabels[4]),
+      label: stageFormTexts.labels[4],
       content:
         rainyStageOptions.find((o) => o.id === +rainySecondChoice)?.name || '',
     },
     {
-      label: t(stageLabels[5]),
-      content: prepTime
-        ? t('applications.stage.minutes', { value: prepTime })
-        : '',
+      label: stageFormTexts.labels[5],
+      content: prepTime ? stageFormTexts.minutes(prepTime) : '',
     },
     {
-      label: t(stageLabels[6]),
-      content: performTime
-        ? t('applications.stage.minutes', { value: performTime })
-        : '',
+      label: stageFormTexts.labels[6],
+      content: performTime ? stageFormTexts.minutes(performTime) : '',
     },
     {
-      label: t(stageLabels[7]),
-      content: cleanupTime
-        ? t('applications.stage.minutes', { value: cleanupTime })
-        : '',
+      label: stageFormTexts.labels[7],
+      content: cleanupTime ? stageFormTexts.minutes(cleanupTime) : '',
     },
   ];
 
@@ -106,10 +100,10 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
           {hasError && (
             <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
               <strong className="font-bold">
-                {t('applications.stage.errors.fetchTitle')}
+                {stageFormTexts.errors.fetchTitle}
               </strong>
               <span className="block sm:inline">
-                {t('applications.stage.errors.fetchDescription')}
+                {stageFormTexts.errors.fetchDescription}
               </span>
             </div>
           )}
@@ -117,7 +111,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
           {submitError && (
             <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
               <strong className="font-bold">
-                {t('applications.stage.errors.submitTitle')}
+                {stageFormTexts.errors.submitTitle}
               </strong>
               <span className="block sm:inline">{submitError}</span>
             </div>
@@ -125,7 +119,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
           {isLoadingAll ? (
             <div className="w-[400px] py-4 text-center">
-              <p>{t('applications.stage.loading')}</p>
+              <p>{stageFormTexts.loading}</p>
             </div>
           ) : (
             <form
@@ -134,7 +128,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
             >
               <div>
                 <Radio
-                  label={t(stageLabels[0])}
+                  label={stageFormTexts.labels[0]}
                   value={date}
                   onChange={(value: string) => updateField('date', value)}
                   required
@@ -143,14 +137,14 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                 />
                 {!errors.date && (
                   <p className="text-xs text-[#484848]">
-                    {t('applications.stage.notes.select')}
+                    {stageFormTexts.notes.select}
                   </p>
                 )}
               </div>
 
               <div>
                 <Selector
-                  label={t(stageLabels[1])}
+                  label={stageFormTexts.labels[1]}
                   value={sunnyFirstChoice}
                   onChange={(value) => updateField('sunnyFirstChoice', value)}
                   required
@@ -161,7 +155,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <Selector
-                  label={t(stageLabels[2])}
+                  label={stageFormTexts.labels[2]}
                   value={sunnySecondChoice}
                   onChange={(value) => updateField('sunnySecondChoice', value)}
                   required
@@ -172,7 +166,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <Selector
-                  label={t(stageLabels[3])}
+                  label={stageFormTexts.labels[3]}
                   value={rainyFirstChoice}
                   onChange={(value) => updateField('rainyFirstChoice', value)}
                   required
@@ -183,7 +177,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <Selector
-                  label={t(stageLabels[4])}
+                  label={stageFormTexts.labels[4]}
                   value={rainySecondChoice}
                   onChange={(value) => updateField('rainySecondChoice', value)}
                   required
@@ -194,40 +188,40 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
               <div>
                 <TextBox
-                  label={`${t(stageLabels[5])}${t('applications.stage.notes.unit')}`}
+                  label={`${stageFormTexts.labels[5]}${stageFormTexts.notes.unit}`}
                   value={prepTime}
                   onChange={(value) => updateField('prepTime', value)}
                   required
-                  note={t('applications.stage.notes.prepTime')}
+                  note={stageFormTexts.notes.prepTime}
                   error={getErrorMessage('prepTime')}
                 />
               </div>
 
               <div>
                 <TextBox
-                  label={`${t(stageLabels[6])}${t('applications.stage.notes.unit')}`}
+                  label={`${stageFormTexts.labels[6]}${stageFormTexts.notes.unit}`}
                   value={performTime}
                   onChange={(value) => updateField('performTime', value)}
                   required
-                  note={t('applications.stage.notes.performTime')}
+                  note={stageFormTexts.notes.performTime}
                   error={getErrorMessage('performTime')}
                 />
               </div>
 
               <div>
                 <TextBox
-                  label={`${t(stageLabels[7])}${t('applications.stage.notes.unit')}`}
+                  label={`${stageFormTexts.labels[7]}${stageFormTexts.notes.unit}`}
                   value={cleanupTime}
                   onChange={(value) => updateField('cleanupTime', value)}
                   required
-                  note={t('applications.stage.notes.cleanupTime')}
+                  note={stageFormTexts.notes.cleanupTime}
                   error={getErrorMessage('cleanupTime')}
                 />
                 {getErrorMessage('totalTime') && (
                   <p className="text-xs text-[#FF0000]">
-                    {t(getErrorMessage('totalTime') ?? '', {
-                      defaultValue: getErrorMessage('totalTime') ?? '',
-                    })}
+                    {stageFormTexts.formatError(
+                      getErrorMessage('totalTime') ?? ''
+                    )}
                   </p>
                 )}
               </div>
@@ -241,7 +235,7 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                     variant
                     onClick={() => toCancel(resetForm)}
                   >
-                    {t('form.actions.cancel')}
+                    {stageFormTexts.buttons.cancel}
                   </Button>
                 )}
                 <Button
@@ -251,8 +245,8 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
                   isDisable={!isValid}
                 >
                   {hasExisting
-                    ? t('form.actions.edit')
-                    : t('form.actions.register')}
+                    ? stageFormTexts.buttons.edit
+                    : stageFormTexts.buttons.register}
                 </Button>
               </div>
             </form>

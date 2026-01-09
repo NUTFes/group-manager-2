@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { FieldError } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+import { stageLabels } from '@/components/Applications/label';
 import { useStageForm } from './useStageForm';
 import {
   useDateOptions,
@@ -17,7 +18,7 @@ import {
   useStageOptions,
 } from './useStageHelpers';
 
-export const useStageFormLogic = (groupId: number) => {
+export const useStageFormHooks = (groupId: number) => {
   const { t } = useTranslation('common');
   const [currentGroupId] = useState<number>(groupId);
   const [submitError, setSubmitError] = useState<string>('');
@@ -167,6 +168,30 @@ export const useStageFormLogic = (groupId: number) => {
   const isLoadingAll = isLoadingOrders || isLoadingFormData;
   const isValid = formState.isValid;
 
+  const stageFormTexts = {
+    labels: stageLabels.map((key) => t(key)),
+    notes: {
+      select: t('applications.stage.notes.select'),
+      unit: t('applications.stage.notes.unit'),
+      prepTime: t('applications.stage.notes.prepTime'),
+      performTime: t('applications.stage.notes.performTime'),
+      cleanupTime: t('applications.stage.notes.cleanupTime'),
+    },
+    errors: {
+      fetchTitle: t('applications.stage.errors.fetchTitle'),
+      fetchDescription: t('applications.stage.errors.fetchDescription'),
+      submitTitle: t('applications.stage.errors.submitTitle'),
+    },
+    loading: t('applications.stage.loading'),
+    minutes: (value: string) => t('applications.stage.minutes', { value }),
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+    formatError: (message: string) => t(message, { defaultValue: message }),
+  };
+
   return {
     formState,
     updateField,
@@ -186,5 +211,6 @@ export const useStageFormLogic = (groupId: number) => {
     rainyStageOptions,
     getErrorMessage,
     resetForm,
+    stageFormTexts,
   };
 };
