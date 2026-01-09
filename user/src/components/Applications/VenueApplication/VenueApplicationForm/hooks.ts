@@ -17,7 +17,7 @@ import {
   venueApplicationFormSchema,
 } from './schema';
 
-export const useVenueMapHooks = (
+export const useVenueApplicationFormHooks = (
   groupId: number,
   placeOrderMutate: KeyedMutator<ApiResponse<PlaceOrder>>,
   placeOrder?: PlaceOrder,
@@ -67,6 +67,21 @@ export const useVenueMapHooks = (
     values.second,
     values.third,
   ]);
+
+  const venueApplicationFormTexts = {
+    loading: t('applications.venue.loading'),
+    fields: {
+      firstChoice: t('applications.venue.fields.firstChoice'),
+      secondChoice: t('applications.venue.fields.secondChoice'),
+      thirdChoice: t('applications.venue.fields.thirdChoice'),
+      remark: t('applications.venue.fields.remark'),
+    },
+    actions: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+  };
 
   const submitHandler = async (formData: VenueApplicationType) => {
     if (isEdit) {
@@ -129,6 +144,7 @@ export const useVenueMapHooks = (
     handleSubmit,
     disableOptions,
     validateEdit,
+    venueApplicationFormTexts,
   };
 };
 

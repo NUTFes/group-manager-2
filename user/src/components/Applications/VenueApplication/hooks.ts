@@ -3,7 +3,7 @@ import { useGetPlaceOrder, usePlacesData } from '@/api/venueApplication';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 
-export const usePlaceOrdersHooks = (groupId: number) => {
+export const useVenueApplicationHooks = (groupId: number) => {
   const { t } = useTranslation('common');
   const {
     placeOrder,
@@ -16,27 +16,36 @@ export const usePlaceOrdersHooks = (groupId: number) => {
   const firstPlace = places.find((place) => place.id === placeOrder?.first);
   const secondPlace = places.find((place) => place.id === placeOrder?.second);
   const thirdPlace = places.find((place) => place.id === placeOrder?.third);
+  const venueApplicationTexts = {
+    title: t('applications.venue.title'),
+    loading: t('applications.venue.loading'),
+    fields: {
+      firstChoice: t('applications.venue.fields.firstChoice'),
+      secondChoice: t('applications.venue.fields.secondChoice'),
+      thirdChoice: t('applications.venue.fields.thirdChoice'),
+      remark: t('applications.venue.fields.remark'),
+    },
+  };
   const formItem: FormItem[] = placeOrder
     ? [
         {
-          label: t('applications.venue.fields.firstChoice'),
+          label: venueApplicationTexts.fields.firstChoice,
           content: firstPlace?.name || '',
         },
         {
-          label: t('applications.venue.fields.secondChoice'),
+          label: venueApplicationTexts.fields.secondChoice,
           content: secondPlace?.name || '',
         },
         {
-          label: t('applications.venue.fields.thirdChoice'),
+          label: venueApplicationTexts.fields.thirdChoice,
           content: thirdPlace?.name || '',
         },
         {
-          label: t('applications.venue.fields.remark'),
+          label: venueApplicationTexts.fields.remark,
           content: placeOrder?.remark || '',
         },
       ]
     : [];
-
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEditClick = () => {
@@ -51,6 +60,7 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     hasError,
     isEditing,
     formItem,
+    venueApplicationTexts,
     handleEditClick,
     placeOrderMutate,
   };

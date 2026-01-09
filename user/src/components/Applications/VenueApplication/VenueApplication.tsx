@@ -1,9 +1,8 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import FormList from '@/components/FormList';
 import AccordionMenu from '../../AccordionMenu';
 import VenueApplicationForm from './VenueApplicationForm';
-import { usePlaceOrdersHooks } from './hooks';
+import { useVenueApplicationHooks } from './hooks';
 
 type VenueApplicationProps = {
   isDeadline?: boolean;
@@ -16,21 +15,35 @@ const VenueApplication: FC<VenueApplicationProps> = ({
   isRegistered,
   groupId,
 }) => {
-  const { t } = useTranslation('common');
+  const venueApplicationHooks = useVenueApplicationHooks(groupId);
 
   return (
     <AccordionMenu
-      title={t('applications.venue.title')}
+      title={venueApplicationHooks.venueApplicationTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
     >
-      <Content isDeadline={isDeadline} groupId={groupId} />
+      <Content
+        isDeadline={isDeadline}
+        groupId={groupId}
+        venueApplicationHooks={venueApplicationHooks}
+      />
     </AccordionMenu>
   );
 };
 
-const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
+type ContentProps = {
+  isDeadline?: boolean;
+  groupId: number;
+  venueApplicationHooks: ReturnType<typeof useVenueApplicationHooks>;
+};
+
+const Content: FC<ContentProps> = ({
+  isDeadline,
+  groupId,
+  venueApplicationHooks,
+}) => {
   const {
     placeOrder,
     isLoading,
@@ -38,11 +51,11 @@ const Content: FC<VenueApplicationProps> = ({ isDeadline, groupId }) => {
     formItem,
     handleEditClick,
     placeOrderMutate,
-  } = usePlaceOrdersHooks(groupId);
-  const { t } = useTranslation('common');
+    venueApplicationTexts,
+  } = venueApplicationHooks;
 
   if (isLoading) {
-    return <div>{t('applications.venue.loading')}</div>;
+    return <div>{venueApplicationTexts.loading}</div>;
   }
 
   if (isDeadline) {
