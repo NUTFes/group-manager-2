@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
 import VenueMapForm from './VenueMapForm';
@@ -22,6 +21,7 @@ type ContentProps = {
   formItems: ReturnType<typeof useVenueMapHooks>['formItems'];
   groupId: number;
   handleFormSubmitted: () => void;
+  venueMapTexts: ReturnType<typeof useVenueMapHooks>['venueMapTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -34,16 +34,16 @@ const Content: FC<ContentProps> = ({
   formItems,
   groupId,
   handleFormSubmitted,
+  venueMapTexts,
 }) => {
-  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div className="py-10 text-center">{t('general.loading')}</div>;
+    return <div className="py-10 text-center">{venueMapTexts.loading}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        {t('general.errors.fetch')}
+        {venueMapTexts.errors.fetch}
       </div>
     );
   }
@@ -79,7 +79,7 @@ const Content: FC<ContentProps> = ({
 };
 
 const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
-  const { t } = useTranslation('common');
+  const venueMapHooks = useVenueMapHooks(groupId);
   const {
     venueMap,
     isLoading,
@@ -88,11 +88,12 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
     toEdit,
     formItems,
     handleFormSubmitted,
-  } = useVenueMapHooks(groupId);
+    venueMapTexts,
+  } = venueMapHooks;
 
   return (
     <AccordionMenu
-      title={t('applications.venueMap.title')}
+      title={venueMapTexts.title}
       isEdit={!isDeadline} // 締め切り前なら編集アイコン表示
       isExist={isRegistered}
       required // 必須項目であることを示す
@@ -107,6 +108,7 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
         formItems={formItems}
         groupId={groupId}
         handleFormSubmitted={handleFormSubmitted}
+        venueMapTexts={venueMapTexts}
       />
     </AccordionMenu>
   );

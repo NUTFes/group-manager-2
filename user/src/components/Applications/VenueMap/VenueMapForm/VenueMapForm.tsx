@@ -1,6 +1,5 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { VenueMapResponse } from '@/api/venueMapApi';
-import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button/Button';
 import Checkbox from '@/components/Form/CheckBox';
 import FormContainer from '@/components/FormContainer/FormContainer';
@@ -20,7 +19,11 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
   toEdit,
   onSubmitted,
 }) => {
-  const { t } = useTranslation('common');
+  const venueMapFormHooks = useVenueMapFormHooks(
+    groupId,
+    venueMap,
+    onSubmitted
+  );
   const {
     handleSubmit,
     errors,
@@ -32,48 +35,13 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
     handleImageUpload,
     onSubmit,
     isDirty,
-  } = useVenueMapFormHooks(groupId, venueMap, onSubmitted);
-
-  const checklistOptions = useMemo(
-    () => [
-      {
-        id: 'trashPosition',
-        name: t('applications.venueMap.checklist.options.trashPosition'),
-      },
-      {
-        id: 'foodStorage',
-        name: t('applications.venueMap.checklist.options.foodStorage'),
-      },
-      {
-        id: 'allItemsListed',
-        name: t('applications.venueMap.checklist.options.allItemsListed'),
-      },
-      {
-        id: 'fireHazardousMaterials',
-        name: t(
-          'applications.venueMap.checklist.options.fireHazardousMaterials'
-        ),
-      },
-      {
-        id: 'partitionPlacement',
-        name: t('applications.venueMap.checklist.options.partitionPlacement'),
-      },
-    ],
-    [t]
-  );
-
-  const uploadNotes = useMemo(
-    () =>
-      t('applications.venueMap.upload.note', {
-        returnObjects: true,
-      }) as string[],
-    [t]
-  );
+    venueMapFormTexts,
+  } = venueMapFormHooks;
 
   return (
     <FormContainer>
       {isFetching ? (
-        <div>{t('general.loading')}</div>
+        <div>{venueMapFormTexts.general.loading}</div>
       ) : (
         <form
           className="flex w-full flex-col gap-10"
@@ -83,49 +51,45 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
           <div className="flex flex-col gap-1">
             <div className="flex items-baseline gap-4">
               <div className="text-base font-medium text-font">
-                {t('applications.venueMap.fields.picture')}
+                {venueMapFormTexts.fields.picture}
               </div>
               <div className="text-xs font-light text-alert">
-                ※{t('form.required')}
+                ※{venueMapFormTexts.general.required}
               </div>
             </div>
             <Upload
               title=""
-              note={uploadNotes}
+              note={venueMapFormTexts.upload.notes}
               onClick={handleImageUpload}
               idDisable={isMutating}
               error={errors.image?.message as string | undefined}
             />
             {fileName && (
               <div className="mt-2 text-sm text-font">
-                {t('applications.venueMap.upload.uploaded', {
-                  fileName,
-                })}
+                {venueMapFormTexts.upload.uploaded(fileName)}
               </div>
             )}
             {venueMap?.picturePath && !values.image && (
               <div className="mt-1 text-xs text-gray-500">
-                {t('applications.venueMap.notes.existing')}
+                {venueMapFormTexts.notes.existing}
                 <br />
-                {t('applications.venueMap.notes.currentImage', {
-                  name:
-                    venueMap.pictureName ||
-                    t('applications.venueMap.notes.unknownFile'),
-                })}
+                {venueMapFormTexts.notes.currentImage(
+                  venueMap.pictureName || venueMapFormTexts.notes.unknownFile
+                )}
               </div>
             )}
           </div>
 
           {/* 平面図確認事項 */}
           <Checkbox
-            label={t('applications.venueMap.fields.checklist')}
-            options={checklistOptions}
+            label={venueMapFormTexts.fields.checklist}
+            options={venueMapFormTexts.checklist.options}
             value={values.checklist || []}
             onChange={(newValues) =>
               setValue('checklist', newValues, { shouldDirty: true })
             }
             error={errors.checklist?.message as string | undefined}
-            note={t('applications.venueMap.checklist.note')}
+            note={venueMapFormTexts.checklist.note}
             required
           />
 
@@ -139,7 +103,7 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
                 type="button"
                 variant
               >
-                {t('form.actions.cancel')}
+                {venueMapFormTexts.buttons.cancel}
               </Button>
             )}
             <Button
@@ -149,10 +113,10 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
               isDisable={isMutating || (venueMap ? !isDirty : false)}
             >
               {isMutating
-                ? t('applications.venueMap.buttons.submitting')
+                ? venueMapFormTexts.buttons.submitting
                 : venueMap
-                  ? t('form.actions.edit')
-                  : t('form.actions.register')}
+                  ? venueMapFormTexts.buttons.edit
+                  : venueMapFormTexts.buttons.register}
             </Button>
           </div>
         </form>

@@ -26,6 +26,66 @@ export const useVenueMapFormHooks = (
   } = useGetVenueMap(groupId || 0);
 
   const venueMap = venueMapProp || fetchedVenueMap;
+  const checklistOptions = [
+    {
+      id: 'trashPosition',
+      name: t('applications.venueMap.checklist.options.trashPosition'),
+    },
+    {
+      id: 'foodStorage',
+      name: t('applications.venueMap.checklist.options.foodStorage'),
+    },
+    {
+      id: 'allItemsListed',
+      name: t('applications.venueMap.checklist.options.allItemsListed'),
+    },
+    {
+      id: 'fireHazardousMaterials',
+      name: t('applications.venueMap.checklist.options.fireHazardousMaterials'),
+    },
+    {
+      id: 'partitionPlacement',
+      name: t('applications.venueMap.checklist.options.partitionPlacement'),
+    },
+  ];
+  const uploadNotes = t('applications.venueMap.upload.note', {
+    returnObjects: true,
+  }) as string[];
+  const venueMapFormTexts = {
+    general: {
+      loading: t('general.loading'),
+      required: t('form.required'),
+    },
+    fields: {
+      picture: t('applications.venueMap.fields.picture'),
+      checklist: t('applications.venueMap.fields.checklist'),
+    },
+    upload: {
+      notes: uploadNotes,
+      uploaded: (fileName: string) =>
+        t('applications.venueMap.upload.uploaded', {
+          fileName,
+        }),
+    },
+    notes: {
+      existing: t('applications.venueMap.notes.existing'),
+      currentImage: (name: string) =>
+        t('applications.venueMap.notes.currentImage', {
+          name,
+        }),
+      unknownFile: t('applications.venueMap.notes.unknownFile'),
+    },
+    checklist: {
+      options: checklistOptions,
+      note: t('applications.venueMap.checklist.note'),
+    },
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      submitting: t('applications.venueMap.buttons.submitting'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+  };
 
   const resolver = async (
     values: VenueMapFormData,
@@ -219,5 +279,6 @@ export const useVenueMapFormHooks = (
     onSubmit,
     isDirty,
     reset,
+    venueMapFormTexts,
   };
 };

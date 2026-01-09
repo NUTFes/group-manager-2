@@ -24,12 +24,23 @@ export const useVenueMapHooks = (groupId: number) => {
     setIsEditing(false);
   };
 
+  const venueMapTexts = {
+    title: t('applications.venueMap.title'),
+    loading: t('general.loading'),
+    errors: {
+      fetch: t('general.errors.fetch'),
+    },
+    summary: {
+      pictureLabel: t(venueMapLabels.pictureName),
+      notSet: t('applications.venueMap.summary.notSet'),
+    },
+  };
+
   const formItems: FormItem[] = venueMap
     ? [
         {
-          label: t(venueMapLabels.pictureName),
-          content:
-            venueMap.pictureName || t('applications.venueMap.summary.notSet'),
+          label: venueMapTexts.summary.pictureLabel,
+          content: venueMap.pictureName || venueMapTexts.summary.notSet,
         },
       ]
     : [];
@@ -43,5 +54,6 @@ export const useVenueMapHooks = (groupId: number) => {
     formItems,
     mutate: mutateVenueMap,
     handleFormSubmitted,
+    venueMapTexts,
   };
 };
