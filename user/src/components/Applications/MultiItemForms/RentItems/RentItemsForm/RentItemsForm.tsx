@@ -1,9 +1,8 @@
 // src/components/Applications/MultiItemForms/RentItems/RentItemsForm/RentItemsForm.tsx
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import { Controller } from 'react-hook-form';
 import { RiDeleteBinLine } from 'react-icons/ri';
-import { useRentItemsFormLogic } from '@/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic';
+import { useRentItemsFormHooks } from '@/components/Applications/MultiItemForms/RentItems/hooks';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import Selector from '@/components/Form/Selector';
@@ -22,8 +21,6 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
   groupCategoryId,
   isDeadline,
 }) => {
-  const { t } = useTranslation('common');
-  // 主に groupCategoryId を使って判断するように変更
   const {
     form,
     fields,
@@ -47,12 +44,13 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     hideLocationTypeSelect, // 会場タイプ選択を非表示にするフラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品ID別の最大個数を取得する関数
-  } = useRentItemsFormLogic(groupId, groupCategoryId);
+    rentItemsFormTexts,
+  } = useRentItemsFormHooks(groupId, groupCategoryId);
 
   if (isLoading) {
     return (
       <div className="w-full py-4 text-center">
-        <p>{t('applications.rentItems.loading')}</p>
+        <p>{rentItemsFormTexts.general.loading}</p>
       </div>
     );
   }
@@ -61,10 +59,10 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
     return (
       <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
         <strong className="font-bold">
-          {t('applications.rentItems.errors.fetchTitle')}
+          {rentItemsFormTexts.errors.fetch.title}
         </strong>
         <span className="block sm:inline">
-          {t('applications.rentItems.errors.fetchDescription')}
+          {rentItemsFormTexts.errors.fetch.description}
         </span>
       </div>
     );
@@ -77,11 +75,9 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         <div className="flex w-full flex-col gap-10 rounded-[20px] border border-[#b2b2b2] bg-baseColor p-6 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-20">
           <div className="mb-4">
             <p className="text-xs">
-              {t('applications.rentItems.summary.noApplication.label')}
+              {rentItemsFormTexts.summary.noApplication.label}
             </p>
-            <p>
-              {t('applications.rentItems.summary.noApplication.description')}
-            </p>
+            <p>{rentItemsFormTexts.summary.noApplication.description}</p>
           </div>
           {isDeadline && (
             <div className="mt-4 flex w-full items-center justify-center gap-4">
@@ -92,7 +88,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                 icon="pencil"
                 onClick={openEditMode}
               >
-                {t('form.actions.edit')}
+                {rentItemsFormTexts.buttons.edit}
               </Button>
             </div>
           )}
@@ -108,17 +104,17 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
         {!hideLocationTypeSelect && ( // 特殊団体でない場合のみ表示
           <div className="mb-4">
             <p className="font-bold">
-              {t('applications.rentItems.location.displayLabel')}
+              {rentItemsFormTexts.location.displayLabel}
               {form.getValues('locationType') === LOCATION_TYPES.INDOOR
-                ? t('applications.rentItems.location.options.indoor')
-                : t('applications.rentItems.location.options.outdoor')}
+                ? rentItemsFormTexts.location.options.indoor
+                : rentItemsFormTexts.location.options.outdoor}
             </p>
           </div>
         )}
         {isFoodSellingGroup && (
           <div className="mb-4">
             <p className="font-bold text-alert">
-              {t('applications.rentItems.location.notes.foodOnlyOutdoor')}
+              {rentItemsFormTexts.location.notes.foodOnlyOutdoor}
             </p>
           </div>
         )}
@@ -139,9 +135,9 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     )?.name || ''}
                   </p>
                   <p className="text-sm text-font">
-                    {t('applications.rentItems.summary.count', {
-                      value: form.getValues(`items.${index}.count`),
-                    })}
+                    {rentItemsFormTexts.summary.count(
+                      form.getValues(`items.${index}.count`)
+                    )}
                   </p>
                 </div>
               </div>
@@ -158,7 +154,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
               icon="pencil"
               onClick={openEditMode}
             >
-              {t('form.actions.edit')}
+              {rentItemsFormTexts.buttons.edit}
             </Button>
           </div>
         )}
@@ -175,10 +171,10 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
       <div>
         <div className="mb-[4px] text-sm text-alert">
           {!hideLocationTypeSelect && (
-            <p>{t('applications.rentItems.location.notes.preApplication')}</p>
+            <p>{rentItemsFormTexts.location.notes.preApplication}</p>
           )}
           {isFoodSellingGroup && (
-            <p>{t('applications.rentItems.location.notes.foodOnlyOutdoor')}</p>
+            <p>{rentItemsFormTexts.location.notes.foodOnlyOutdoor}</p>
           )}
         </div>
         <br />
@@ -187,7 +183,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
           control={control}
           render={({ field }) => (
             <Radio
-              label={t('applications.rentItems.radio.question')}
+              label={rentItemsFormTexts.radio.question}
               value={field.value ? '1' : '0'}
               onChange={(value: string) => {
                 field.onChange(value === '1');
@@ -197,11 +193,11 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
               options={[
                 {
                   id: 1,
-                  name: t('applications.rentItems.radio.options.yes'),
+                  name: rentItemsFormTexts.radio.options.yes,
                 },
                 {
                   id: 0,
-                  name: t('applications.rentItems.radio.options.no'),
+                  name: rentItemsFormTexts.radio.options.no,
                 },
               ]}
               error={errors.hasItems?.message?.toString()}
@@ -225,7 +221,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                 }
               }}
             >
-              {t('form.actions.register')}
+              {rentItemsFormTexts.buttons.register}
             </Button>
           </div>
         </>
@@ -241,7 +237,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                 control={control}
                 render={({ field }) => (
                   <Radio
-                    label={t('applications.rentItems.location.radioQuestion')}
+                    label={rentItemsFormTexts.location.radioQuestion}
                     value={field.value}
                     onChange={(value: string) => {
                       // 新しい値でupdateLocationTypeを呼び出す
@@ -251,15 +247,11 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     options={[
                       {
                         id: 1,
-                        name: t(
-                          'applications.rentItems.location.options.indoor'
-                        ),
+                        name: rentItemsFormTexts.location.options.indoor,
                       },
                       {
                         id: 2,
-                        name: t(
-                          'applications.rentItems.location.options.outdoor'
-                        ),
+                        name: rentItemsFormTexts.location.options.outdoor,
                       },
                     ]}
                     error={errors.locationType?.message}
@@ -273,9 +265,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
               <FormContainer>
                 <div className="mb-4">
                   <h3 className="mb-4 font-bold text-font">
-                    {t('applications.rentItems.fields.section', {
-                      index: index + 1,
-                    })}
+                    {rentItemsFormTexts.fields.sectionTitle(index + 1)}
                   </h3>
                   <Controller
                     name={`items.${index}.itemId`}
@@ -296,7 +286,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
 
                       return (
                         <Selector
-                          label={t('applications.rentItems.fields.item')}
+                          label={rentItemsFormTexts.fields.item}
                           value={field.value}
                           onChange={(value) => {
                             field.onChange(value);
@@ -336,7 +326,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
 
                       return (
                         <Selector
-                          label={t('applications.rentItems.fields.count')}
+                          label={rentItemsFormTexts.fields.count}
                           value={field.value.toString()}
                           onChange={(value) => {
                             const numValue = parseInt(value, 10);
@@ -367,14 +357,14 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     }}
                   />
                   <p className="text-xs text-sub">
-                    {t('applications.rentItems.notes.minRequest')}
+                    {rentItemsFormTexts.notes.minRequest}
                   </p>
                 </div>
                 <div className="w-full">
                   <p className="text-xs text-font">
-                    {t('applications.rentItems.notes.contactLimit')}
+                    {rentItemsFormTexts.notes.contactLimit}
                     <br />
-                    {t('applications.rentItems.notes.contactEmail')}
+                    {rentItemsFormTexts.notes.contactEmail}
                   </p>
                 </div>
                 {fields.length > 1 && (
@@ -389,7 +379,7 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
                     >
                       <div className="flex items-center">
                         <RiDeleteBinLine size={18} className="mr-1" />
-                        {t('form.actions.delete')}
+                        {rentItemsFormTexts.buttons.delete}
                       </div>
                     </MultiItemFormButton>
                   </div>
@@ -407,18 +397,18 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
 
           {errors.root?.message && (
             <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              {t(errors.root.message.toString(), {
-                defaultValue: errors.root.message.toString(),
-              })}
+              {rentItemsFormTexts.errors.translate(
+                errors.root.message.toString()
+              )}
             </div>
           )}
 
           {/* フォームバリデーションエラーがあれば表示（アイテム制限関連のエラーも含む） */}
           {errors.items?.message && (
             <div className="relative mt-4 w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              {t(errors.items.message.toString(), {
-                defaultValue: errors.items.message.toString(),
-              })}
+              {rentItemsFormTexts.errors.translate(
+                errors.items.message.toString()
+              )}
             </div>
           )}
 
@@ -433,13 +423,13 @@ const RentItemsForm: FC<RentItemsFormProps> = ({
             >
               <div className="flex items-center">
                 <span className="mr-1 text-lg">+</span>{' '}
-                {t('applications.rentItems.buttons.addItem')}
+                {rentItemsFormTexts.buttons.addItem}
               </div>
             </MultiItemFormButton>
             <Button type="submit" size="pc" color="main" isDisable={!isValid}>
               {hasExisting
-                ? t('form.actions.edit')
-                : t('form.actions.register')}
+                ? rentItemsFormTexts.buttons.edit
+                : rentItemsFormTexts.buttons.register}
             </Button>
           </div>
         </>

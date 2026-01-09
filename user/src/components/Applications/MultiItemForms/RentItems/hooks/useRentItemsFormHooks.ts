@@ -1,4 +1,4 @@
-// src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormLogic.ts
+// src/components/Applications/MultiItemForms/RentItems/hooks/useRentItemsFormHooks.ts
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ORDER_TYPES,
@@ -64,7 +64,7 @@ const TABLE_CHAIR_MAX_COUNT = {
   [LOCATION_TYPES.OUTDOOR]: 20, // 屋外: 20個
 };
 
-export const useRentItemsFormLogic = (
+export const useRentItemsFormHooks = (
   groupId: number,
   groupCategoryId?: number // 団体カテゴリID
 ) => {
@@ -719,6 +719,70 @@ export const useRentItemsFormLogic = (
     }
   };
 
+  const rentItemsFormTexts = {
+    general: {
+      loading: t('applications.rentItems.loading'),
+    },
+    errors: {
+      fetch: {
+        title: t('applications.rentItems.errors.fetchTitle'),
+        description: t('applications.rentItems.errors.fetchDescription'),
+      },
+      translate: (key?: string) =>
+        key ? t(key, { defaultValue: key }) : undefined,
+    },
+    summary: {
+      noApplication: {
+        label: t('applications.rentItems.summary.noApplication.label'),
+        description: t(
+          'applications.rentItems.summary.noApplication.description'
+        ),
+      },
+      count: (value: number | string) =>
+        t('applications.rentItems.summary.count', { value }),
+    },
+    location: {
+      displayLabel: t('applications.rentItems.location.displayLabel'),
+      radioQuestion: t('applications.rentItems.location.radioQuestion'),
+      notes: {
+        foodOnlyOutdoor: t(
+          'applications.rentItems.location.notes.foodOnlyOutdoor'
+        ),
+        preApplication: t(
+          'applications.rentItems.location.notes.preApplication'
+        ),
+      },
+      options: {
+        indoor: t('applications.rentItems.location.options.indoor'),
+        outdoor: t('applications.rentItems.location.options.outdoor'),
+      },
+    },
+    radio: {
+      question: t('applications.rentItems.radio.question'),
+      options: {
+        yes: t('applications.rentItems.radio.options.yes'),
+        no: t('applications.rentItems.radio.options.no'),
+      },
+    },
+    fields: {
+      sectionTitle: (index: number) =>
+        t('applications.rentItems.fields.section', { index }),
+      item: t('applications.rentItems.fields.item'),
+      count: t('applications.rentItems.fields.count'),
+    },
+    notes: {
+      minRequest: t('applications.rentItems.notes.minRequest'),
+      contactLimit: t('applications.rentItems.notes.contactLimit'),
+      contactEmail: t('applications.rentItems.notes.contactEmail'),
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+      delete: t('form.actions.delete'),
+      addItem: t('applications.rentItems.buttons.addItem'),
+    },
+  };
+
   return {
     form,
     fields,
@@ -744,5 +808,6 @@ export const useRentItemsFormLogic = (
     hideLocationTypeSelect, // 団体タイプに応じたUI表示制御フラグ
     isFoodSellingGroup, // 食品販売団体かどうかのフラグ
     getMaxCountByItemId, // 物品IDに基づいて最大個数を取得する関数
+    rentItemsFormTexts,
   };
 };
