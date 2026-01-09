@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
-import { useTranslation } from 'next-i18next';
 import AccordionMenu from '@/components/AccordionMenu';
 import StageOptionForm from '@/components/Applications/StageOptions/StageOptionForm';
 import { useStageOptionHooks } from '@/components/Applications/StageOptions/hooks';
@@ -22,6 +21,7 @@ type ContentProps = {
   stageOptions?: StageOptionResponse;
   formItem: FormItem[];
   groupId: number;
+  stageOptionTexts: ReturnType<typeof useStageOptionHooks>['stageOptionTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -33,16 +33,16 @@ const Content: FC<ContentProps> = ({
   stageOptions,
   formItem,
   groupId,
+  stageOptionTexts,
 }) => {
-  const { t } = useTranslation('common');
   if (isLoading) {
-    return <div>{t('general.loading')}</div>;
+    return <div>{stageOptionTexts.general.loading}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        {t('general.errors.fetch')}
+        {stageOptionTexts.errors.fetch}
       </div>
     );
   }
@@ -69,13 +69,19 @@ const StageOptions: FC<StageOptionsProps> = ({
   isRegistered,
   groupId,
 }) => {
-  const { t } = useTranslation('common');
-  const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
-    useStageOptionHooks(groupId);
+  const {
+    formItem,
+    isEditing,
+    toEdit,
+    stageOptions,
+    isLoading,
+    hasError,
+    stageOptionTexts,
+  } = useStageOptionHooks(groupId);
 
   return (
     <AccordionMenu
-      title={t('applications.stageOptions.title')}
+      title={stageOptionTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -89,6 +95,7 @@ const StageOptions: FC<StageOptionsProps> = ({
         stageOptions={stageOptions}
         formItem={formItem}
         groupId={groupId}
+        stageOptionTexts={stageOptionTexts}
       />
     </AccordionMenu>
   );

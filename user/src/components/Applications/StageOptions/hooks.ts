@@ -7,6 +7,18 @@ import { stageOptionLabels } from '../label';
 export const useStageOptionHooks = (groupId: number) => {
   const { t } = useTranslation('common');
   const { stageOptions, isLoading, hasError } = useGetStageOptions(groupId);
+  const stageOptionTexts = {
+    title: t('applications.stageOptions.title'),
+    general: {
+      loading: t('general.loading'),
+    },
+    errors: {
+      fetch: t('general.errors.fetch'),
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+    },
+  };
 
   const formItem: FormItem[] = [
     {
@@ -54,5 +66,6 @@ export const useStageOptionHooks = (groupId: number) => {
     isEditing,
     toEdit,
     formItem,
+    stageOptionTexts,
   };
 };

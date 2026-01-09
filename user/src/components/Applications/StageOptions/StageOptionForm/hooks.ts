@@ -8,6 +8,7 @@ import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
+import { stageOptionLabels } from '../../label';
 import { StageOptionForm, stageOptionSchema } from './schema';
 
 export const useStageOptionFormHooks = (
@@ -79,6 +80,21 @@ export const useStageOptionFormHooks = (
     { id: 1, name: t('applications.stageOptions.options.yes') },
     { id: 0, name: t('applications.stageOptions.options.no') },
   ];
+  const stageOptionFormTexts = {
+    labels: stageOptionLabels.map((labelKey) => t(labelKey)),
+    notes: {
+      select: t('applications.stageOptions.notes.select'),
+    },
+    options,
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+    messages: {
+      submitFailed: t('applications.stageOptions.messages.submitFailed'),
+    },
+  };
 
   const convertToBoolean = (value: string): boolean => {
     return value === '1' ? true : false;
@@ -109,9 +125,9 @@ export const useStageOptionFormHooks = (
     createIsMutating,
     updateError,
     updateIsMutating,
-    options,
     convertToBoolean,
     validateEdit,
     formatRadioValue,
+    stageOptionFormTexts,
   };
 };

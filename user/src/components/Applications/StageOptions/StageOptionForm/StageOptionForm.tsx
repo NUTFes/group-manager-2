@@ -1,11 +1,9 @@
 import { FC } from 'react';
 import { StageOptionResponse } from '@/api/stageOptionApi';
-import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormContainer from '@/components/FormContainer';
-import { stageOptionLabels } from '../../label';
 import { useStageOptionFormHooks } from './hooks';
 
 type StageOptionFormProps = {
@@ -19,7 +17,6 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
   toEdit,
   groupId,
 }) => {
-  const { t } = useTranslation('common');
   const {
     handleSubmit,
     errors,
@@ -29,15 +26,15 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
     createIsMutating,
     updateError,
     updateIsMutating,
-    options,
     convertToBoolean,
     validateEdit,
     formatRadioValue,
     values,
+    stageOptionFormTexts,
   } = useStageOptionFormHooks(stageOptions, groupId);
 
   if (createError || updateError) {
-    toast.error(t('applications.stageOptions.messages.submitFailed'));
+    toast.error(stageOptionFormTexts.messages.submitFailed);
   }
 
   return (
@@ -48,41 +45,41 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
       >
         <div className="flex flex-col space-y-10">
           <Radio
-            label={t(stageOptionLabels[0])}
-            note={t('applications.stageOptions.notes.select')}
+            label={stageOptionFormTexts.labels[0]}
+            note={stageOptionFormTexts.notes.select}
             onChange={(value) =>
               setValue('ownEquipment', convertToBoolean(value))
             }
-            options={options}
+            options={stageOptionFormTexts.options}
             required
             value={formatRadioValue(values.ownEquipment)}
             error={errors.ownEquipment?.message}
           />
           <Radio
-            label={t(stageOptionLabels[1])}
-            note={t('applications.stageOptions.notes.select')}
+            label={stageOptionFormTexts.labels[1]}
+            note={stageOptionFormTexts.notes.select}
             onChange={(value) => setValue('bgm', convertToBoolean(value))}
-            options={options}
+            options={stageOptionFormTexts.options}
             required
             value={formatRadioValue(values.bgm)}
             error={errors.bgm?.message}
           />
           <Radio
-            label={t(stageOptionLabels[2])}
-            note={t('applications.stageOptions.notes.select')}
+            label={stageOptionFormTexts.labels[2]}
+            note={stageOptionFormTexts.notes.select}
             onChange={(value) =>
               setValue('cameraPermission', convertToBoolean(value))
             }
-            options={options}
+            options={stageOptionFormTexts.options}
             required
             value={formatRadioValue(values.cameraPermission)}
             error={errors.cameraPermission?.message}
           />
           <Radio
-            label={t(stageOptionLabels[3])}
-            note={t('applications.stageOptions.notes.select')}
+            label={stageOptionFormTexts.labels[3]}
+            note={stageOptionFormTexts.notes.select}
             onChange={(value) => setValue('loudSound', convertToBoolean(value))}
-            options={options}
+            options={stageOptionFormTexts.options}
             required
             value={formatRadioValue(values.loudSound)}
             error={errors.loudSound?.message}
@@ -98,7 +95,7 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
                 type="button"
                 onClick={toEdit}
               >
-                {t('form.actions.cancel')}
+                {stageOptionFormTexts.buttons.cancel}
               </Button>
             </div>
           )}
@@ -108,7 +105,9 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
             type="submit"
             isDisable={createIsMutating || updateIsMutating || validateEdit()}
           >
-            {stageOptions ? t('form.actions.edit') : t('form.actions.register')}
+            {stageOptions
+              ? stageOptionFormTexts.buttons.edit
+              : stageOptionFormTexts.buttons.register}
           </Button>
         </div>
       </form>
