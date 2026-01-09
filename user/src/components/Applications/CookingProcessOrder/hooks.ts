@@ -19,6 +19,39 @@ export const useCookingProcessOrder = (
 ) => {
   const [isEditing, setIsEditing] = useState(false);
   const { t } = useTranslation('common');
+  const cookingProcessOrderTexts = {
+    title: t('applications.cookingProcessOrder.title'),
+    general: {
+      loading: t('general.loading'),
+    },
+    warning: t('applications.cookingProcessOrder.warning'),
+    summary: {
+      labels: {
+        foodProduct: t(
+          'applications.cookingProcessOrder.summary.labels.foodProduct'
+        ),
+        preOpen: t('applications.cookingProcessOrder.summary.labels.preOpen'),
+        duringOpen: t(
+          'applications.cookingProcessOrder.summary.labels.duringOpen'
+        ),
+        description: t(
+          'applications.cookingProcessOrder.summary.labels.description'
+        ),
+      },
+      status: {
+        use: t('applications.cookingProcessOrder.summary.status.use'),
+        notUse: t('applications.cookingProcessOrder.summary.status.notUse'),
+        notRegistered: t(
+          'applications.cookingProcessOrder.summary.status.notRegistered'
+        ),
+      },
+    },
+    buttons: {
+      save: t('form.actions.save'),
+      register: t('form.actions.register'),
+      edit: t('form.actions.edit'),
+    },
+  };
 
   const {
     cookingProcessOrders,
@@ -147,5 +180,6 @@ export const useCookingProcessOrder = (
     onSubmit,
     mergedData,
     shouldShowWarning,
+    cookingProcessOrderTexts,
   };
 };

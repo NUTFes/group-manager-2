@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
 import Button from '@/components/Button';
@@ -18,7 +17,6 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   groupId,
   isDeadline,
 }) => {
-  const { t } = useTranslation('common');
   const {
     methods,
     fields,
@@ -29,15 +27,16 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     onSubmit,
     mergedData,
     shouldShowWarning,
+    cookingProcessOrderTexts,
   } = useCookingProcessOrder(groupId, isDeadline);
 
   if (isLoading) {
-    return <div>{t('general.loading')}</div>;
+    return <div>{cookingProcessOrderTexts.general.loading}</div>;
   }
 
   return (
     <AccordionMenu
-      title={t('applications.cookingProcessOrder.title')}
+      title={cookingProcessOrderTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       isRegistered={isRegistered}
@@ -45,7 +44,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     >
       {shouldShowWarning ? (
         <p className="text-center text-alert">
-          {t('applications.cookingProcessOrder.warning')}
+          {cookingProcessOrderTexts.warning}
         </p>
       ) : (
         <FormProvider {...methods}>
@@ -73,8 +72,8 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                     icon={isExist ? 'save' : 'send'}
                   >
                     {isExist
-                      ? t('form.actions.save')
-                      : t('form.actions.register')}
+                      ? cookingProcessOrderTexts.buttons.save
+                      : cookingProcessOrderTexts.buttons.register}
                   </Button>
                 </div>
               </>
@@ -87,56 +86,48 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                         cookingProcessOrder
                           ? [
                               {
-                                label: t(
-                                  'applications.cookingProcessOrder.summary.labels.foodProduct'
-                                ),
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .foodProduct,
                                 content: foodProduct.name,
                               },
                               {
-                                label: t(
-                                  'applications.cookingProcessOrder.summary.labels.preOpen'
-                                ),
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .preOpen,
                                 content: cookingProcessOrder.preOpenKitchen
-                                  ? t(
-                                      'applications.cookingProcessOrder.summary.status.use'
-                                    )
-                                  : t(
-                                      'applications.cookingProcessOrder.summary.status.notUse'
-                                    ),
+                                  ? cookingProcessOrderTexts.summary.status.use
+                                  : cookingProcessOrderTexts.summary.status
+                                      .notUse,
                               },
                               {
-                                label: t(
-                                  'applications.cookingProcessOrder.summary.labels.duringOpen'
-                                ),
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .duringOpen,
                                 content: cookingProcessOrder.duringOpenKitchen
-                                  ? t(
-                                      'applications.cookingProcessOrder.summary.status.use'
-                                    )
-                                  : t(
-                                      'applications.cookingProcessOrder.summary.status.notUse'
-                                    ),
+                                  ? cookingProcessOrderTexts.summary.status.use
+                                  : cookingProcessOrderTexts.summary.status
+                                      .notUse,
                               },
                               {
-                                label: t(
-                                  'applications.cookingProcessOrder.summary.labels.description'
-                                ),
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .description,
                                 content: cookingProcessOrder.tent || '',
                               },
                             ]
                           : [
                               {
-                                label: t(
-                                  'applications.cookingProcessOrder.summary.labels.foodProduct'
-                                ),
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .foodProduct,
                                 content: foodProduct.name,
                               },
                               {
-                                label: t(
-                                  'applications.cookingProcessOrder.title'
-                                ),
-                                content: t(
-                                  'applications.cookingProcessOrder.summary.status.notRegistered'
-                                ),
+                                label: cookingProcessOrderTexts.title,
+                                content:
+                                  cookingProcessOrderTexts.summary.status
+                                    .notRegistered,
                               },
                             ]
                       }
@@ -154,7 +145,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                   icon="pencil"
                   onClick={handleEditClick}
                 >
-                  {t('form.actions.edit')}
+                  {cookingProcessOrderTexts.buttons.edit}
                 </Button>
               </div>
             )}

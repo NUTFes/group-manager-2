@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useTranslation } from 'next-i18next';
 import { useFormContext } from 'react-hook-form';
 import CheckBox from '../../../Form/CheckBox';
 import Radio from '../../../Form/Radio';
@@ -17,8 +16,8 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
   foodProductName,
 }) => {
   const { setValue } = useFormContext();
-  const { t } = useTranslation('common');
-  const { values, getError } = useCookingProcessOrderForm(index);
+  const { values, getError, cookingProcessOrderFormTexts } =
+    useCookingProcessOrderForm(index);
 
   // 調理場使用状況の定数
   const KITCHEN_USAGE = {
@@ -26,43 +25,29 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
     NOT_USE: 0,
   } as const;
 
-  const option = [
-    {
-      id: KITCHEN_USAGE.USE,
-      name: t('applications.cookingProcessOrder.options.kitchenUsage.use'),
-    },
-    {
-      id: KITCHEN_USAGE.NOT_USE,
-      name: t('applications.cookingProcessOrder.options.kitchenUsage.notUse'),
-    },
-  ];
-
-  const confirmCookingProcess = (
-    t('applications.cookingProcessOrder.checkbox.options', {
-      returnObjects: true,
-    }) as string[]
-  ).map((label, idx) => ({
-    id: String(idx + 1),
-    name: label,
-  }));
+  const option = cookingProcessOrderFormTexts.options.kitchenUsage;
+  const confirmCookingProcess =
+    cookingProcessOrderFormTexts.options.confirmCookingProcess;
 
   return (
     <FormContainer>
       <div className="flex flex-col gap-6">
         <div>
           <div className="text-xs font-bold text-font">
-            {t('applications.cookingProcessOrder.summary.labels.foodProduct')}
+            {cookingProcessOrderFormTexts.summaryLabels.foodProduct}
           </div>
           <div className="text-base text-font">{foodProductName}</div>
         </div>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">
-            {t('applications.cookingProcessOrder.fields.kitchenUsage')}
+            {cookingProcessOrderFormTexts.fields.kitchenUsage}
           </p>
-          <p className="text-xs text-alert">※{t('form.required')}</p>
+          <p className="text-xs text-alert">
+            ※{cookingProcessOrderFormTexts.general.required}
+          </p>
         </div>
         <Radio
-          label={t('applications.cookingProcessOrder.fields.preOpen')}
+          label={cookingProcessOrderFormTexts.fields.preOpen}
           name={`cookingProcessOrders.${index}.preOpenKitchen`}
           required
           value={
@@ -84,7 +69,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           error={getError('preOpenKitchen')}
         />
         <Radio
-          label={t('applications.cookingProcessOrder.fields.duringOpen')}
+          label={cookingProcessOrderFormTexts.fields.duringOpen}
           name={`cookingProcessOrders.${index}.duringOpenKitchen`}
           required
           value={
@@ -106,9 +91,9 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           error={getError('duringOpenKitchen')}
         />
         <TextArea
-          label={t('applications.cookingProcessOrder.fields.tent')}
+          label={cookingProcessOrderFormTexts.fields.tent}
           value={values.tent || ''}
-          placeholder={t('applications.cookingProcessOrder.placeholders.tent')}
+          placeholder={cookingProcessOrderFormTexts.placeholders.tent}
           onChange={(val) =>
             setValue(`cookingProcessOrders.${index}.tent`, val, {
               shouldValidate: true,
@@ -119,7 +104,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           required
         />
         <CheckBox
-          label={t('applications.cookingProcessOrder.fields.confirm')}
+          label={cookingProcessOrderFormTexts.fields.confirm}
           value={values.confirmCookingProcess}
           onChange={(val) => {
             setValue(
@@ -133,7 +118,7 @@ const CookingProcessOrderForm: FC<CookingProcessOrderFormProps> = ({
           }}
           options={confirmCookingProcess}
           error={getError('confirmCookingProcess')}
-          note={t('applications.cookingProcessOrder.notes.confirm')}
+          note={cookingProcessOrderFormTexts.notes.confirm}
           required
         />
       </div>
