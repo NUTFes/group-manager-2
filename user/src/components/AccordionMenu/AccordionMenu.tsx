@@ -1,8 +1,8 @@
 import React, { FC, useState } from 'react';
-import { useTranslation } from 'next-i18next';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
+import { useAccordionMenuTexts } from './hooks';
 
 type AccordionMenuProps = {
   title: string;
@@ -23,7 +23,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   required,
   note,
 }) => {
-  const { t } = useTranslation('common');
+  const { labels } = useAccordionMenuTexts();
   const receptionStatus = isEdit ? 'open' : 'closed';
 
   const registerStatus =
@@ -51,7 +51,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
           <div
             className={`w-6 text-center text-xs font-light ${required ? 'text-[#ff6752]' : 'text-[#474747]'}`}
           >
-            {required ? t('form.required') : t('form.optional')}
+            {required ? labels.required : labels.optional}
           </div>
         </div>
         <div className="py-2.5">
