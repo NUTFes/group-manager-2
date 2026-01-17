@@ -1,4 +1,5 @@
 // .storybook/preview.tsx
+import React from 'react';
 import type { Preview } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import { SessionProvider } from 'next-auth/react';
