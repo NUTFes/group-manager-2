@@ -1,22 +1,32 @@
-h1 {
+body {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .detail-area {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  h1 {
     text-align: center;
   }
 
   .attention, p, span {
-    margin-left: 5%;
+    margin-left: 0;
     margin-bottom: 0;
     margin-top: 0;
-  }
-
-  body {
-    width: 100%;
   }
 
   table {
     border-collapse: collapse;
     margin: auto;
-    width: 80%;
     table-layout: fixed;
+    width: 100%;
+  }
+
+  h3, h4, h5 {
+    margin-left: 15px;
   }
 
   th, td {
@@ -46,6 +56,6 @@ h1 {
     page-break-after: always;
   }
 
-  h1, th {
+  th {
     font-weight: normal;
   }

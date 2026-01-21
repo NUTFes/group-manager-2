@@ -52,9 +52,9 @@ class PrintPdfController < ApplicationController
     output_groups_with_categories('output_contact', 'output_contact_pdf', '連絡先リスト', 'Not Landscape')
   end
 
-  # 保健所提出書類（調理計画・従事者）の出力
+  # 保健所提出書類（調理計画・調理工程・従事者・平面図）の出力
   def output_health_office_documents_pdf
-    output_groups_of_health_office_document('output_health_office_documents', 'output_health_office_documents_pdf', '保健所提出書類（調理計画・従事者）', 'Not Landscape')
+    output_groups_of_health_office_document('output_health_office_documents', 'output_health_office_documents_pdf', '保健所提出書類（調理計画・調理工程・従事者・平面図）', 'Not Landscape')
   end
 
   # 全参加団体用
@@ -84,7 +84,7 @@ class PrintPdfController < ApplicationController
     if Group.exists?(fes_year_id: params[:fes_year_id])
       @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
       @fes_dates = FesDate.all
-      print_pdf(template_name, style_name, output_file_name, type)
+      print_pdf_with_header_footer(template_name, style_name, output_file_name, type)
     else
       render file: Rails.root.join('app/views/print_pdf/not_found.html').to_s, layout: false, content_type: 'text/html'
     end
@@ -122,6 +122,47 @@ class PrintPdfController < ApplicationController
               else
                 PDFKit.new(html, page_size: 'A4', encoding: 'UTF-8')
               end
+        pdf.stylesheets << Rails.root.join("app/views/print_pdf/#{style_name}.css").to_s
+
+        send_data pdf.to_pdf,
+                  filename: "#{output_file_name}.pdf",
+                  # disposition: "inline", # ダウンロードせず表示する
+                  type: 'application/pdf'
+      end
+    end
+  end
+
+  # ヘッダー・フッター付き印刷（保健所提出書類用）
+  def print_pdf_with_header_footer(template_name, style_name, output_file_name, type)
+    respond_to do |format|
+      format.pdf do
+        html = render_to_string template: "print_pdf/#{template_name}"
+        pdf_options = {
+          page_size: 'A4',
+          encoding: 'UTF-8',
+          margin_top: '25mm',
+          margin_bottom: '25mm',
+          margin_left: '10mm',
+          margin_right: '10mm',
+          header_spacing: 5,
+          footer_spacing: 5,
+          header_left: '技大祭実行委員会　総務局',
+          header_line: false,
+          footer_center: '[page] / [topage]',
+          footer_right: Time.now.getlocal('+09:00').strftime('%Y/%-m/%-d %-H:%M')+' Group Manager',
+          footer_line: false,
+          footer_font_size: 10,
+          header_font_size: 10,
+          outline: true
+        }
+
+        pdf = if type == 'Landscape'
+                pdf_options[:orientation] = 'Landscape'
+                PDFKit.new(html, pdf_options)
+              else
+                PDFKit.new(html, pdf_options)
+              end
+
         pdf.stylesheets << Rails.root.join("app/views/print_pdf/#{style_name}.css").to_s
 
         send_data pdf.to_pdf,
