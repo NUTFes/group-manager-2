@@ -114,7 +114,7 @@
           </td>
         </tr>
         <tr>
-          <td>保健所提出書類（調理計画・従事者）</td>
+          <td>保健所提出書類（調理計画・調理工程・従事者・平面図）</td>
           <td>
             <InTableButton
               iconName="file_download"
@@ -213,8 +213,8 @@ export default {
     },
     async downloadHealthOfficeDocumentsPDF() {
       const endpoint = `/print_pdf/health_office_documents/${this.currentYearID}/output.pdf`;
-      await downloadFile(this.$axios,endpoint, '保健所提出書類（調理計画・従事者）');
-      this.openSnackBar("保健所提出書類（調理計画・従事者）をダウンロードしました");
+      await downloadFile(this.$axios,endpoint, '保健所提出書類（調理計画・調理工程・従事者・平面図）');
+      this.openSnackBar("保健所提出書類（調理計画・調理工程・従事者・平面図）をダウンロードしました");
     },
     async downloadPowerCSV() {
       const endpoint = `/api/v1/get_power_orders_csv/${this.currentYearID}`;
