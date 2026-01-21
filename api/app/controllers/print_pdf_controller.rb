@@ -149,19 +149,15 @@ class PrintPdfController < ApplicationController
           header_left: '技大祭実行委員会　総務局',
           header_line: false,
           footer_center: '[page] / [topage]',
-          footer_right: Time.now.getlocal('+09:00').strftime('%Y/%-m/%-d %-H:%M')+' Group Manager',
+          footer_right: "#{Time.now.getlocal('+09:00').strftime('%Y/%-m/%-d %-H:%M')} Group Manager",
           footer_line: false,
           footer_font_size: 10,
           header_font_size: 10,
           outline: true
         }
 
-        pdf = if type == 'Landscape'
-                pdf_options[:orientation] = 'Landscape'
-                PDFKit.new(html, pdf_options)
-              else
-                PDFKit.new(html, pdf_options)
-              end
+        pdf_options[:orientation] = 'Landscape' if type == 'Landscape'
+        pdf = PDFKit.new(html, pdf_options)
 
         pdf.stylesheets << Rails.root.join("app/views/print_pdf/#{style_name}.css").to_s
 
