@@ -9,16 +9,15 @@ type NewsListProps = {
 
 const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
+  if (news == undefined) return [];
 
-  const sortedNews = news || [];
-
-  const formattedDates = sortedNews.map((item) => {
+  const formattedDates = news.map((item) => {
     const date = new Date(item.createdAt);
     const formattedDate = format(date, 'yyyy/MM/dd');
     return formattedDate;
   });
 
-  const newsList = sortedNews.map((item, index) => {
+  const newsList = news.map((item, index) => {
     const date = formattedDates[index] ?? 'お知らせはありません。';
 
     return (
