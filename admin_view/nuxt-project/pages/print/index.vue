@@ -222,7 +222,7 @@ export default {
       this.openSnackBar("物品貸し出し表まとめをダウンロードしました");
     },
     async downloadRentalItemsAllPDFen() {
-      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output_en.pdf`;
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?locale=en`;
       await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ（国際団体・英語版）');
       this.openSnackBar("物品貸し出し表まとめ（国際団体・英語版）をダウンロードしました");
     },

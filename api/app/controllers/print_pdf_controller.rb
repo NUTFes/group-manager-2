@@ -107,9 +107,12 @@ class PrintPdfController < ApplicationController
 
   # 印刷
   def print_pdf(template_name, style_name, output_file_name, type)
+    locale = params[:locale].presence&.to_sym || :ja
+
     respond_to do |format|
       format.pdf do
-        html = render_to_string template: "print_pdf/#{template_name}"
+        html = I18n.with_locale(locale) { render_to_string template: "print_pdf/#{template_name}" }
+
         pdf = if type == 'Landscape'
                 PDFKit.new(html,
                            page_size: 'A4',
