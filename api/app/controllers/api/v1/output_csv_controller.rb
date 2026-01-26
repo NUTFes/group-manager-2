@@ -14,7 +14,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年]
       csv << column_name
       @groups.each do |group|
@@ -42,11 +42,11 @@ class Api::V1::OutputCsvController < ApplicationController
       @assign_rental_items = AssignRentalItem.all
       filename_year = '全'
     else
-      @assign_rental_items = Group.where(fes_year_id: params[:fes_year_id])
+      @assign_rental_items = AssignRentalItem.joins(:group).where(groups: { fes_year_id: params[:fes_year_id] })
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       # column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量 貸出日 返却日 開催年)
       column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量]
       csv << column_name
@@ -82,7 +82,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 カテゴリー 名前 学科 学年 学籍番号 メールアドレス 電話番号 開催年]
       csv << column_name
       @sub_reps.each do |sub_rep|
@@ -115,7 +115,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 数 開催年]
       csv << column_name
       @rental_orders.each do |group|
@@ -151,7 +151,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 製品 URL 電力 メーカー 型番]
       csv << column_name
       @power_orders.each do |group|
@@ -189,7 +189,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 第1希望 第2希望 第3希望 備考]
       csv << column_name
       @place_orders.each do |place_order|
@@ -221,7 +221,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 カテゴリー 天気 日付 曜日 何日目 第1希望 第2希望 使用時間 準備時間 片付け時間 準備開始時刻 演目開始時刻 演目終了時刻 片付け終了時刻]
       csv << column_name
       @stage_orders.each do |group|
@@ -265,7 +265,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 所持機器の使用 音楽の使用 撮影許可 大きな音 内容]
       csv << column_name
       @stage_common_options.each do |stage_common_option|
@@ -296,7 +296,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 名前 学籍番号]
       csv << column_name
       groups.each do |group|
@@ -351,7 +351,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 名前 1日目の個数 2日目の個数 調理の有無]
       csv << column_name
       @food_products.each do |group|
@@ -385,7 +385,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 販売品 購入品 なまもの 購入店 購入日 曜日 何日目 URL 備考]
       csv << column_name
       @purchase_lists.each do |food_product|
@@ -431,7 +431,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
 
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体形式 団体番号 団体名 氏名 電話番号 メールアドレス 備考欄]
       csv << column_name
       @categories.each do |category|
@@ -470,7 +470,7 @@ class Api::V1::OutputCsvController < ApplicationController
   def output_announcements_csv
     @announcements = Announcement.all
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 アナウンス文]
       csv << column_name
       @announcements.each do |announcement|
@@ -487,7 +487,7 @@ class Api::V1::OutputCsvController < ApplicationController
   def output_cooking_process_orders_csv
     @cooking_process_orders = CookingProcessOrder.includes(:group, :food_product).all
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 販売品名 営業前:調理場 営業中:調理場 テント内]
       csv << column_name
       @cooking_process_orders.each do |cooking_process_order|
@@ -513,7 +513,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = bom + CSV.generate do |csv|
       column_name = %w[参加団体名 PR文 URL アナウンス有無]
       csv << column_name
       @public_relations.each do |public_relations|
