@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class UserDetail < ApplicationRecord
+  # 例外処理する学籍番号
+  # 学外
+  STUDENT_ID_EXTERNAL = 88888888
+  # 教職員
+  STUDENT_ID_STAFF = 99999999
+
   belongs_to :user
   belongs_to :department
   belongs_to :grade
