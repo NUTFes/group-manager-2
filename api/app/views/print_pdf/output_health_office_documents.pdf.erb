@@ -96,13 +96,7 @@
           <td class="Name"><%= group.user.name %></td>
           <td class="Category">
           <% student_id = (group.user.user_detail&.student_id || 0).to_i %>
-          <% if student_id == 88888888 %>
-            学外
-          <% elsif student_id == 99999999 %>
-            教職員
-          <% else %>
-            学生
-          <% end %>
+          <%= user_category_label(student_id) %>
           </td>
         </tr>
         <% if group.sub_rep %>
@@ -112,13 +106,7 @@
             <td class="Name"><%= group.sub_rep.name %></td>
             <td class="Category">
               <% sub_rep_student_id = (group.sub_rep&.student_id || 0).to_i %>
-              <% if sub_rep_student_id == 88888888 %>
-                学外
-              <% elsif sub_rep_student_id == 99999999 %>
-                教職員
-              <% else %>
-                学生
-              <% end %>
+              <%= user_category_label(sub_rep_student_id) %>
             </td>
           </tr>
         <% end %>
@@ -129,13 +117,7 @@
             <td class="Name"><%=employee.name %></td>
             <td class="Category">
               <% employee_student_id = (employee&.student_id || 0).to_i %>
-              <% if employee_student_id == 88888888 %>
-                学外
-              <% elsif employee_student_id == 99999999 %>
-                教職員
-              <% else %>
-                学生
-              <% end %>
+              <%= user_category_label(employee_student_id) %>
             </td>
           </tr>
         <% end %>
