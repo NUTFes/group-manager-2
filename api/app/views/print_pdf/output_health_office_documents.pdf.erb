@@ -5,7 +5,6 @@
   <title>保健所提出書類（調理計画・調理工程・従事者・平面図）</title>
 </head>
 <body>
-  <% if @groups.any? %>
     <% @groups.each do |group| %>
     <h1><%= group.name %></h1>
     <h2>1. 調理計画(※1)</h2>
@@ -138,6 +137,5 @@
     </div>
       <div class="page-break" style="page-break-after: always;"></div>
     <% end %>
-  <% end %>
 </body>
 </html>
