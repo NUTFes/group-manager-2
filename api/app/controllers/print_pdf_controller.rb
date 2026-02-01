@@ -81,8 +81,8 @@ class PrintPdfController < ApplicationController
 
   # 保健所提出書類（調理計画・従事者）
   def output_groups_of_health_office_document(template_name, style_name, output_file_name, type)
-    if Group.exists?(fes_year_id: params[:fes_year_id])
-      @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
+    @groups = Group.where(fes_year_id: params[:fes_year_id]).where(group_category_id: 1)
+    if @groups.exists?
       @fes_dates = FesDate.all
       print_pdf_with_header_footer(template_name, style_name, output_file_name, type)
     else
