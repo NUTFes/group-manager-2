@@ -1,19 +1,19 @@
 en:
   print_pdf:
     output_all_groups_rental_items:
-      title: "Participating Organization Information Management Chart"
+      title: "Rental Items List"
       sections:
         participating_org: "Participating Organizations"
-        rental_items: "List of loaned items"
+        rental_items: "Rental Items List"
       org:
-        number: "Organization ID Number"
+        number: "Organization ID"
         name: "Organization Name"
         category: "Classification"
         activity_time: "Activity Time"
         day1_label: " (Day 1)"
         day2_label: " (Day 2)"
         location: "Location"
-        power: "Electricity used"
+        power: "Power Consumption [W]"
       items_table:
         headers:
           item_name: "Item Name"
@@ -26,8 +26,8 @@ en:
         pickup_day_label: " (Preparation Day)"
         return_day_label: " (Cleanup Day)"
       precautions:
-        title: "Precautions"
+        title: "Important Notes"
         items:
-          - "Check in at the headquarters when returning items."
           - "Use the designated pickup and return locations."
-          - "Clean and organize all equipment before returning it."
+          - "Have items checked by staff at the pickup/return location when borrowing or returning."
+          - "Use equipment without soiling it, and return it clean."
