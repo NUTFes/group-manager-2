@@ -1,38 +1,38 @@
 <% @groups.each do |group| %>
 <div class="page-break">
-<h1><%= t('.title') %></h1>
+<h1><%= t('print_pdf.output_all_groups_rental_items.title') %></h1>
 
 <div class="padding-top">
-  <h2><%= t('.sections.participating_org') %></h2>
+  <h2><%= t('print_pdf.output_all_groups_rental_items.sections.participating_org') %></h2>
   <table class="info">
     <tbody>
       <tr>
-        <th><%= t('.org.number') %></th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.number') %></th>
         <td colspan=2><%= group.number %></td>
       </tr>
       <tr style="height:60px">
-        <th><%= t('.org.name') %></th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.name') %></th>
         <td colspan=2><%= group.name %></td>
       </tr>
       <tr>
-        <th><%= t('.org.category') %></th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.category') %></th>
         <td colspan=2><%= group.group_category.name %></td>
       </tr>
       <tr>
-        <th rowspan=2><%= t('.org.activity_time') %></th>
-        <td><%= group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 1).first.date %><%= t('.org.day1_label') %></td>
+        <th rowspan=2><%= t('print_pdf.output_all_groups_rental_items.org.activity_time') %></th>
+        <td><%= group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 1).first.date %><%= t('print_pdf.output_all_groups_rental_items.org.day1_label') %></td>
         <td>10:00-17:00</td>
       </tr>
       <tr>
-        <td><%= group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 2).first.date %><%= t('.org.day2_label') %></td>
+        <td><%= group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 2).first.date %><%= t('print_pdf.output_all_groups_rental_items.org.day2_label') %></td>
         <td>10:00-16:00</td>
       </tr>
       <tr>
-        <th><%= t('.org.location') %></th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.location') %></th>
         <td colspan=2><%= group.place %></td>
       </tr>
       <tr>
-        <th><%= t('.org.power') %></th>
+        <th><%= t('print_pdf.output_all_groups_rental_items.org.power') %></th>
         <td colspan=2><%= group.sum_power_orders %> [W]</td>
       </tr>
     </tbody>
@@ -40,24 +40,24 @@
 </div>
 
 <div class="padding-top">
-  <h2><%= t('.sections.rental_items') %></h2>
+  <h2><%= t('print_pdf.output_all_groups_rental_items.sections.rental_items') %></h2>
   <table class="items">
     <tr>
-      <th class = "large-box"><%= t('.items_table.headers.item_name') %></th>
-      <th class = "large-box"><%= t('.items_table.headers.pickup_location') %></th>
-      <th class = "small-box"><%= t('.items_table.headers.quantity') %></th>
-      <th class = "large-box"><%= t('.items_table.headers.pickup_date') %></th>
-      <th class = "large-box"><%= t('.items_table.headers.return_date') %></th>
-      <th class = "small-box"><%= t('.items_table.headers.pickup_confirmation') %></th>
-      <th class = "small-box"><%= t('.items_table.headers.return_confirmation') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.item_name') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_location') %></th>
+      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.quantity') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_date') %></th>
+      <th class = "large-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_date') %></th>
+      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.pickup_confirmation') %></th>
+      <th class = "small-box"><%= t('print_pdf.output_all_groups_rental_items.items_table.headers.return_confirmation') %></th>
     </tr>
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
       <td><%= assign_rental_item.rental_item.name %></td>
       <td><%= assign_rental_item.stocker_place.name %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= group.fes_year.fes_dates.find_by(days_num: 0)&.date %><%= t('.items_table.pickup_day_label') %></td>
-      <td><%= group.fes_year.fes_dates.find_by(days_num: 3)&.date %><%= t('.items_table.return_day_label') %></td>
+      <td><%= group.fes_year.fes_dates.find_by(days_num: 0)&.date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
+      <td><%= group.fes_year.fes_dates.find_by(days_num: 3)&.date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
       <td></td>
       <td></td>
     </tr>
@@ -66,8 +66,8 @@
 
   <br>
   <p>
-  <%= t('.precautions.title') %><br><br>
-  <% t('.precautions.items').each do |note| %>
+  <%= t('print_pdf.output_all_groups_rental_items.precautions.title') %><br><br>
+  <% Array(t('print_pdf.output_all_groups_rental_items.precautions.items')).each do |note| %>
     ● <%= note %><br>
   <% end %>
   </p>

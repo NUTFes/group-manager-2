@@ -10,8 +10,8 @@ en:
         name: "Organization Name"
         category: "Classification"
         activity_time: "Activity Time"
-        day1_label: " (Day 1)"
-        day2_label: " (Day 2)"
+        day1_label: "(Day 1)"
+        day2_label: "(Day 2)"
         location: "Location"
         power: "Power Consumption [W]"
       items_table:
@@ -23,8 +23,8 @@ en:
           return_date: "Return Date"
           pickup_confirmation: "Pickup Confirmation"
           return_confirmation: "Return Confirmation"
-        pickup_day_label: " (Preparation Day)"
-        return_day_label: " (Cleanup Day)"
+        pickup_day_label: "(Preparation Day)"
+        return_day_label: "(Cleanup Day)"
       precautions:
         title: "Important Notes"
         items:

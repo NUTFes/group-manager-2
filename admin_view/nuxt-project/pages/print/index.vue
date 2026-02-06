@@ -217,12 +217,12 @@ export default {
       this.openSnackBar("参加団体情報リストをダウンロードしました");
     },
     async downloadRentalItemsAllPDF() {
-      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf`;
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?render_locale=ja`;
       await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ');
       this.openSnackBar("物品貸し出し表まとめをダウンロードしました");
     },
     async downloadRentalItemsAllPDFen() {
-      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?locale=en`;
+      const endpoint = `/print_pdf/group_all/${this.currentYearID}/output.pdf?locale=en&render_locale=en`;
       await downloadFile(this.$axios,endpoint, '物品貸し出し表まとめ（国際団体・英語版）');
       this.openSnackBar("物品貸し出し表まとめ（国際団体・英語版）をダウンロードしました");
     },
