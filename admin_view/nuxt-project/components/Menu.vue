@@ -40,6 +40,30 @@
           </li>
         </ul>
       </nav>
+      <!-- 開発中メニュー -->
+       <!-- 開発中メニュー（親） -->
+       <div class="menu-header">
+        <li @click="devOpen = !devOpen" :class="{ open: devOpen }"class="dev-header">
+          <span class="material-icons">chevron_right</span>
+          <h4>開発中</h4>
+        </li>
+      </div>
+      <nav class="menu">
+      <ul>
+      <!-- 開発中メニュー（子） -->
+      <li
+      v-for="item in development_items"
+      :key="item.title"
+      v-show="devOpen"
+      class="dev-child"
+    >
+      <nuxt-link :to="item.click">
+        <span class="material-icons">{{ item.icon }}</span>
+        {{ item.title }}
+      </nuxt-link>
+      </li>
+      </ul>
+      </nav>
     </div>
   </div>
 </template>
@@ -179,12 +203,7 @@ export default {
           icon: "assignment_return",
           click: "/assign_items",
         },
-        { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
-        { title: "物品貸出 時間・人数調整", icon: "assignment_return", click: "/adjustment_rental_time"},
-        { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
-        { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
-        { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         { title: "書類印刷", icon: "print", click: "/print" },
         {
@@ -194,6 +213,15 @@ export default {
         },
       ],
       user: [],
+      //開発中
+      development_items: [
+        { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
+        { title: "物品貸出 時間・人数調整", icon: "assignment_return", click: "/adjustment_rental_time"},
+        { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
+        { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
+        { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
+      ],
+      devOpen: false
     };
   },
   mounted() {
@@ -309,5 +337,22 @@ export default {
   padding: 20px 20px;
   display: flex;
   letter-spacing: 1px;
+}
+.dev-header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dev-header .material-icons {
+  transition: transform 0.2s;
+}
+
+.dev-header.open .material-icons {
+  transform: rotate(90deg);
+}
+
+.dev-child {
+  padding-left: 20px;
 }
 </style>
