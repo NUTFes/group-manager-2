@@ -96,6 +96,11 @@ class Api::V1::FoodProductsApiController < ApplicationController
   def get_food_products_have_no_cooking_process_order
     @food_products = FoodProduct.where.missing(:cooking_process_order)
                                 .where(is_cooking: true)
-    render json: fmt(ok, @food_products.as_json(include: :group))
+    data = @food_products.map do |food_product|
+      food_product.as_json(include: :group).merge(
+        'translated_name' => translate_to_ja(food_product.name)
+      )
+    end
+    render json: fmt(ok, data)
   end
 end
