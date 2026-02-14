@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_10_212842) do
+ActiveRecord::Schema.define(version: 2026_01_21_093000) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -160,6 +160,18 @@ ActiveRecord::Schema.define(version: 2025_06_10_212842) do
     t.boolean "committee"
     t.boolean "is_international"
     t.boolean "is_external"
+    t.index ["fes_year_id", "group_category_id"], name: "index_groups_on_fes_year_and_category_for_order_status"
+    t.index ["fes_year_id", "group_category_id"], name: "index_groups_on_fes_year_id_and_group_category_id"
+    t.index ["fes_year_id", "is_external"], name: "index_groups_on_fes_year_and_external_for_order_status"
+    t.index ["fes_year_id", "is_external"], name: "index_groups_on_fes_year_id_and_is_external"
+    t.index ["fes_year_id"], name: "index_groups_on_fes_year_id"
+    t.index ["fes_year_id"], name: "index_groups_on_fes_year_id_for_order_status"
+    t.index ["group_category_id"], name: "index_groups_on_group_category_id"
+    t.index ["group_category_id"], name: "index_groups_on_group_category_id_for_order_status"
+    t.index ["is_external"], name: "index_groups_on_is_external"
+    t.index ["is_external"], name: "index_groups_on_is_external_for_order_status"
+    t.index ["is_international"], name: "index_groups_on_is_international"
+    t.index ["is_international"], name: "index_groups_on_is_international_for_order_status"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

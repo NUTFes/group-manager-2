@@ -21,6 +21,26 @@ class Group < ApplicationRecord
   has_many :un_registered_groups, dependent: :destroy
   has_many :fire_equipment_orders, dependent: :destroy
 
+  ORDER_STATUS_CHECK_INCLUDES = [
+    :user,
+    :group_category,
+    :fes_year,
+    :sub_rep,
+    :place_order,
+    :stage_orders,
+    :stage_common_option,
+    :power_orders,
+    :rental_orders,
+    :employees,
+    :public_relation,
+    :venue_map,
+    :announcement,
+    :cooking_process_order,
+    { food_products: :purchase_lists }
+  ].freeze
+
+  scope :with_order_status_check_relations, -> { includes(ORDER_STATUS_CHECK_INCLUDES) }
+
   ### group_category (参加団体カテゴリ)
 
   # 全てのgroupとそのgroup_categoryを取得する
