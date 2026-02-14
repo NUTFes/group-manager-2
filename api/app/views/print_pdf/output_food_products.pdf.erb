@@ -18,12 +18,12 @@
     <td rowspan=<%= group.count_purchase_lists %>><%= group.project_name %></td>
     <% if group.food_products.exists? %>
     <% group.food_products.each do |food_product| %>
-      <td rowspan=<%= food_product.purchase_lists.count %>><%= food_product.name %></td>
+      <td rowspan=<%= food_product.purchase_lists.count %>><%= translate_to_ja(food_product.name) %></td>
       <td rowspan=<%= food_product.purchase_lists.count %>><%= food_product.is_cooking ? "有" : "無" %></td>
       <% if food_product.purchase_lists.exists? %>
       <% food_product.purchase_lists.each do |purchase_list| %>
-      <td><%= purchase_list.items %></td>
-      <td><%= purchase_list.shop.name %></td>
+      <td><%= translate_to_ja(purchase_list.items) %></td>
+      <td><%= translate_to_ja(purchase_list.shop.name) %></td>
       <td><%= purchase_list.is_fresh ? "YES" : "NO" %></td>
     </tr>
       <% end %>
