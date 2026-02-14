@@ -39,6 +39,7 @@ if ENV['PLATFORM'] != 'arm64-darwin'
 end
 
 gem 'dotenv-rails'
+gem 'deepl-rb', require: 'deepl'
 gem 'slack-notifier'
 gem 'slack-ruby-client'
 
