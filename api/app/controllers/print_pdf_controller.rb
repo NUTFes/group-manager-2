@@ -2,6 +2,7 @@
 
 class PrintPdfController < ApplicationController
   include ActionController::MimeResponds
+
   helper_method :translate_to_ja
 
   before_action :authenticate_api_user!

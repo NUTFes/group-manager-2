@@ -38,8 +38,8 @@ if ENV['PLATFORM'] != 'arm64-darwin'
   gem 'wkhtmltopdf-binary'
 end
 
-gem 'dotenv-rails'
 gem 'deepl-rb', require: 'deepl'
+gem 'dotenv-rails'
 gem 'slack-notifier'
 gem 'slack-ruby-client'
 

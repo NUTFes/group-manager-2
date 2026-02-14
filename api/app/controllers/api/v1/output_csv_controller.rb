@@ -13,7 +13,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @groups = Group.where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 企画名 活動内容 代表者 メールアドレス カテゴリー 開催年]
       csv << column_name
@@ -45,7 +45,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @assign_rental_items = Group.where(fes_year_id: params[:fes_year_id])
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       # column_name = %w(識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量 貸出日 返却日 開催年)
       column_name = %w[識別番号 参加団体名 カテゴリー 活動場所 使用電力 貸出物品名 借りる場所 数量]
@@ -81,7 +81,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @sub_reps = Group.where(fes_year_id: params[:fes_year_id]).preload(:sub_rep).map(&:sub_rep)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 カテゴリー 名前 学科 学年 学籍番号 メールアドレス 電話番号 開催年]
       csv << column_name
@@ -114,7 +114,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @rental_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:rental_orders).map(&:rental_orders)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 物品名 数 開催年]
       csv << column_name
@@ -150,7 +150,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @power_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:power_orders).map(&:power_orders)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 製品 URL 電力 メーカー 型番]
       csv << column_name
@@ -188,7 +188,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @place_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:place_order).map(&:place_order)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 代表者 メールアドレス カテゴリー 第1希望 第2希望 第3希望 備考]
       csv << column_name
@@ -220,7 +220,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @stage_orders = Group.where(fes_year_id: params[:fes_year_id]).preload(:stage_orders).map(&:stage_orders)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 カテゴリー 天気 日付 曜日 何日目 第1希望 第2希望 使用時間 準備時間 片付け時間 準備開始時刻 演目開始時刻 演目終了時刻 片付け終了時刻]
       csv << column_name
@@ -264,7 +264,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @stage_common_options = Group.where(fes_year_id: params[:fes_year_id]).preload(:stage_common_option).map(&:stage_common_option)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 所持機器の使用 音楽の使用 撮影許可 大きな音 内容]
       csv << column_name
@@ -295,7 +295,7 @@ class Api::V1::OutputCsvController < ApplicationController
       groups = Group.where(fes_year_id: params[:fes_year_id], group_category_id: 1).preload(:employees, :sub_rep, user: :user_detail)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 名前 学籍番号]
       csv << column_name
@@ -350,7 +350,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @food_products = Group.where(fes_year_id: params[:fes_year_id]).preload(:food_products).map(&:food_products)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 名前 1日目の個数 2日目の個数 調理の有無]
       csv << column_name
@@ -384,7 +384,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @purchase_lists = FoodProduct.preload(:purchase_lists).map { |food_product| food_product.purchase_lists if food_product.group.fes_year_id == params[:fes_year_id] }
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 販売品 購入品 なまもの 購入店 購入日 曜日 何日目 URL 備考]
       csv << column_name
@@ -430,7 +430,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @categories << group
     end
 
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体形式 団体番号 団体名 氏名 電話番号 メールアドレス 備考欄]
       csv << column_name
@@ -469,7 +469,7 @@ class Api::V1::OutputCsvController < ApplicationController
 
   def output_announcements_csv
     @announcements = Announcement.all
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 アナウンス文]
       csv << column_name
@@ -486,7 +486,7 @@ class Api::V1::OutputCsvController < ApplicationController
 
   def output_cooking_process_orders_csv
     @cooking_process_orders = CookingProcessOrder.includes(:group, :food_product).all
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 販売品名 営業前:調理場 営業中:調理場 テント内]
       csv << column_name
@@ -512,7 +512,7 @@ class Api::V1::OutputCsvController < ApplicationController
       @public_relations = Group.where(fes_year_id: params[:fes_year_id]).preload(:public_relation).map(&:public_relation)
       filename_year = FesYear.find(params[:fes_year_id]).year_num
     end
-    bom = String.new("\uFEFF")
+    bom = +"\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
       column_name = %w[参加団体名 PR文 URL アナウンス有無]
       csv << column_name

@@ -45,7 +45,7 @@ class Api::V1::CookingProcessOrdersApiController < ApplicationController
 
   private
 
-  def  build_food_products_response_with_translations(food_products)
+  def build_food_products_response_with_translations(food_products)
     food_products.map do |food_product|
       json = food_product.as_json(include: %i[group cooking_process_order])
       json['translated_name'] = translate_to_ja(food_product.name)
