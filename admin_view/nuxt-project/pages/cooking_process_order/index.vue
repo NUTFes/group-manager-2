@@ -60,7 +60,7 @@
           >
             <td>{{ food_product.id }}</td>
             <td>{{ food_product.group.name }}</td>
-            <td>{{ food_product.name }}</td>
+            <td>{{ food_product.translated_name || food_product.name }}</td>
             <td>
               <div v-if="food_product.cooking_process_order">
                 登録済み
@@ -82,7 +82,7 @@
           <h3>販売品</h3>
           <select v-model="food_product_id">
             <option v-for="food_product in food_products_have_no_cooking_process_order" :key="food_product.id" :value="food_product.id">
-              {{ food_product.group.name }} - {{ food_product.name }}
+              {{ food_product.group.name }} - {{ food_product.translated_name || food_product.name }}
             </option>
           </select>
         </div>

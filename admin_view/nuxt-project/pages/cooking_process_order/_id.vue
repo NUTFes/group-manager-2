@@ -2,7 +2,7 @@
   <div class="main-content">
     <SubHeader
       v-if="cooking_process_order"
-      v-bind:pageTitle="`${cooking_process_order.group.name} - ${cooking_process_order.food_product.name}`"
+      v-bind:pageTitle="`${cooking_process_order.group.name} - ${cooking_process_order.food_product.translated_name || cooking_process_order.food_product.name}`"
       pageSubTitle="調理工程申請一覧"
     >
       <CommonButton
@@ -31,7 +31,7 @@
             </tr>
             <tr>
               <th colspan="2">販売品名</th>
-              <td>{{ cooking_process_order.food_product.name }}</td>
+              <td>{{ cooking_process_order.food_product.translated_name || cooking_process_order.food_product.name }}</td>
             </tr>
             <tr>
               <th colspan="2">参加団体</th>
@@ -68,7 +68,7 @@
                 </div>
                 <div v-else>
                   <div style="white-space: pre-line">
-                    {{ cooking_process_order.cooking_process_order.tent }}
+                    {{ cooking_process_order.cooking_process_order.translated_tent || cooking_process_order.cooking_process_order.tent }}
                   </div>
                 </div>
               </td>
