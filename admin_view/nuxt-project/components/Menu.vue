@@ -40,29 +40,26 @@
           </li>
         </ul>
       </nav>
-      <!-- 開発中メニュー -->
-       <!-- 開発中メニュー（親） -->
-       <div class="menu-header">
-        <li @click="devOpen = !devOpen" :class="{ open: devOpen }"class="dev-header">
+      <!-- 開発中メニュー（親） -->
+        <div class="menu-header">
+         <li @click="isOpened = !isOpened" :class="{ open: isOpened }"class="sidebar-accordion">
           <span class="material-icons">chevron_right</span>
-          <h4>開発中</h4>
-        </li>
-      </div>
+           <h4>開発中</h4>
+         </li>
+        </div>
       <nav class="menu">
-      <ul>
-      <!-- 開発中メニュー（子） -->
-      <li
-      v-for="item in development_items"
-      :key="item.title"
-      v-show="devOpen"
-      class="dev-child"
-    >
-      <nuxt-link :to="item.click">
-        <span class="material-icons">{{ item.icon }}</span>
-        {{ item.title }}
-      </nuxt-link>
-      </li>
-      </ul>
+        <ul>
+          <!-- 開発中メニュー（子） -->
+          <li v-for="item in development_items"
+              :key="item.title"
+              v-show="isOpened"
+              class="accordion-child" >
+            <nuxt-link :to="item.click">
+             <span class="material-icons">{{ item.icon }}</span>
+             {{ item.title }}
+            </nuxt-link>
+          </li>
+        </ul>
       </nav>
     </div>
   </div>
@@ -221,7 +218,7 @@ export default {
         { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
         { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
       ],
-      devOpen: false
+      isOpened: false
     };
   },
   mounted() {
@@ -338,21 +335,22 @@ export default {
   display: flex;
   letter-spacing: 1px;
 }
-.dev-header {
+
+.sidebar-accordion {
   cursor: pointer;
   display: flex;
   align-items: center;
 }
 
-.dev-header .material-icons {
+.sidebar-accordion .material-icons {
   transition: transform 0.2s;
 }
 
-.dev-header.open .material-icons {
+.sidebar-accordion.open .material-icons {
   transform: rotate(90deg);
 }
 
-.dev-child {
+.accordion-child {
   padding-left: 20px;
 }
 </style>
