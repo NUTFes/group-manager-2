@@ -59,7 +59,7 @@
             <td><%= food_product.is_cooking ? '' : '◯' %></td>
             <td><%= (food_product.first_day_num + food_product.second_day_num) / 2 %></td>
             <td><%= translate_to_ja(purchase_list.items) %></td>
-            <td><%= translate_to_ja(Shop.find(purchase_list.shop_id).name) %></td>
+            <td><%= translate_to_ja(purchase_list.shop.name) %></td>
             <td>
               <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 0 }.each do |fes_date| %>
                 <%= fes_date.date %><br>
