@@ -1,58 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>保健所提出書類（調理計画・調理工程・従事者・平面図）</title>
+</head>
 <body>
-  <% @groups.each do |group| %>
-    <h1>従　事　者　名　簿　(※)</h1>
-    <table>
-      <tr>
-        <th class="first No">No.</th>
-        <th class="first Belonging">所属（クラス等）</th>
-        <th class="first Name">氏名</th>
-        <th class="first Category">保護者、生徒等の区分</th>
-      </tr>
-      <tr>
-        <td class="No">1</td>
-        <td class="Belonging"><%= group.name %></td>
-        <td class="Name"><%= group.user.name %></td>
-        <td class="Category">生徒</td>
-      </tr>
-      <% if group.sub_rep %>
+    <% @groups.each do |group| %>
+    <h1><%= group.name %></h1>
+    <h2>1. 調理計画(※1)</h2>
+    <div class="detail-area">
+      <table>
         <tr>
-          <td class="No">2</td>
-          <td class="Belonging"><%= group.name %></td>
-          <td class="Name"><%= group.sub_rep.name %></td>
-          <td class="Category">生徒</td>
+          <th rowspan="2">販売品名</th>
+          <th colspan="2">食品区分(※2)</br>(該当に◯)</th>
+          <th rowspan="2">提供予定</br>数量</th>
+          <th colspan="3">原材料の仕入状況</th>
+          <th rowspan="2">調理開始</br>日時</th>
         </tr>
-      <% end %>
-      <% group.employees.each_with_index do |employee, index| %>
         <tr>
-          <td class="No"><%= group.sub_rep ? index +3 : index +2 %></td>
-          <td class="Belonging"><%=group.name %></td>
-          <td class="Name"><%=employee.name %></td>
-          <td class="Category">生徒</td>
+          <td>加熱調理</br>食品</td>
+          <td>既製食品</td>
+          <td>原材料名</td>
+          <td>仕入先</td>
+          <td>仕入日</td>
         </tr>
-      <% end %>
-    </table>
-    <div class="attention">
-      <p>※  食品を管理する人についてのみ記入すること。</p>
+        <% group.food_products.each do |food_product| %>
+          <% food_product.purchase_lists.each do |purchase_list| %>
+            <tr>
+              <td><%= food_product.name %></td>
+              <td><%= food_product.is_cooking ? '◯' : '' %></td>
+              <td><%= food_product.is_cooking ? '' : '◯' %></td>
+              <td><%= (food_product.first_day_num + food_product.second_day_num) / 2 %></td>
+              <td><%= purchase_list.items %></td>
+              <td><%= purchase_list.shop&.name %></td>
+              <td>
+                <% pd = purchase_list.purchase_date %>
+                <% formatted_pd = if pd.respond_to?(:strftime)
+                  pd.strftime("%-m/%-d")
+                elsif pd.present?
+                  begin
+                    Date.parse(pd.to_s).strftime("%-m/%-d")
+                  rescue
+                    pd.to_s
+                  end
+                else
+                  ""
+                end %>
+                <%= formatted_pd %>
+              </td>
+              <td>
+                <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
+                  <%= fes_date.date %><br>
+                <% end %>
+                <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 2 }.each do |fes_date| %>
+                  <%= fes_date.date %><br>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
+      <div class="attention">
+        <p>※1  バザーが2日以上の場合は1日ごとに記載すること。</p>
+        <p>※2  現地で加熱調理するものは「加熱調理食品」欄に◯を記入</p>
+        <span>営業許可施設で調理された既製食品を現地で盛り付けるものは、「既製食品」欄に◯を記入</span>
+      </div>
     </div>
-    <div class="page-break"></div>
-    <h1>調理計画(※1)</h1>
-    <table>
-      <tr>
-        <th rowspan="2">販売品名</th>
-        <th colspan="2">食品区分(※2)</br>(該当に◯)</th>
-        <th rowspan="2">提供予定</br>数量</th>
-        <th colspan="3">原材料の仕入状況</th>
-        <th rowspan="2">調理開始</br>日時</th>
-      </tr>
-      <tr>
-        <td>加熱調理</br>食品</td>
-        <td>既製食品</td>
-        <td>原材料名</td>
-        <td>仕入先</td>
-        <td>仕入日</td>
-      </tr>
-      <% group.food_products.each do |food_product| %>
-        <% food_product.purchase_lists.each do |purchase_list| %>
+    <h2>2. 調理工程</h2>
+      <% if group.food_products.any? %>
+        <% group.food_products.each do |fp| %>
+          <% cpo = fp.cooking_process_order %>
+            <h3><%= fp.name %></h3>
+            <div class="detail-area">
+              <% if cpo %>
+                <%= cpo.tent.present? ? simple_format(cpo.tent) : '調理工程が未登録です。' %><br>
+              <% else %>
+                <span>（調理工程未登録）</span>
+              <% end %>
+            </div>
+        <% end %>
+      <% end %>
+    <h2>3. 従事者名簿(※)</h2>
+    <div class="detail-area">
+      <table>
+        <tr>
+          <th class="first No">No.</th>
+          <th class="first Belonging">所属（クラス等）</th>
+          <th class="first Name">氏名</th>
+          <th class="first Category">保護者、生徒等の区分</th>
+        </tr>
+        <tr>
+          <td class="No">1</td>
+          <td class="Belonging"><%= group.name %></td>
+          <td class="Name"><%= group.user.name %></td>
+          <td class="Category">
+          <% student_id = (group.user.user_detail&.student_id || 0).to_i %>
+          <%= user_category_label(student_id) %>
+          </td>
+        </tr>
+        <% if group.sub_rep %>
           <tr>
             <td><%= translate_to_ja(food_product.name) %></td>
             <td><%= food_product.is_cooking ? '◯' : '' %></td>
@@ -78,13 +124,33 @@
             </td>
           </tr>
         <% end %>
-      <% end %>
-    </table>
-    <div class="attention">
-      <p>※1  バザーが2日以上の場合は1日ごとに記載すること。</p>
-      <p>※2  現地で加熱調理するものは「加熱調理食品」欄に◯を記入</p>
-      <span>営業許可施設で調理された既製食品を現地で盛り付けるものは、「既製食品」欄に◯を記入</span>
+        <% group.employees.each_with_index do |employee, index| %>
+          <tr>
+            <td class="No"><%= group.sub_rep ? index +3 : index +2 %></td>
+            <td class="Belonging"><%=group.name %></td>
+            <td class="Name"><%=employee.name %></td>
+            <td class="Category">
+              <% employee_student_id = (employee&.student_id || 0).to_i %>
+              <%= user_category_label(employee_student_id) %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <div class="attention">
+        <p>※  食品を管理する人についてのみ記入すること。</p>
+      </div>
     </div>
-    <div class="page-break"></div>
-  <% end %>
+    <h2>4. 平面図</h2>
+    <div class="detail-area">
+      <% if group.venue_map && group.venue_map.picture_path.present? %>
+        <% path = group.venue_map.picture_path %>
+        <% src = path.start_with?("http") ? path : "#{request.base_url}#{path}" %>
+        <div class="layout-image" style="page-break-inside: avoid; width: 100%;">
+          <%= image_tag src, alt: "#{group.name} 平面図", style: "width: 100%; height: auto; border: 1px solid #ccc;" %>
+        </div>
+      <% end %>
+    </div>
+      <div class="page-break" style="page-break-after: always;"></div>
+    <% end %>
 </body>
+</html>
