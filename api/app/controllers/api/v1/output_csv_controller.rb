@@ -533,7 +533,7 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(ID 団体名 火気の名称 火気の台数 燃料 使用用途 備考)
+      column_name = %w(ID 団体名 火気の名称 火気の台数 燃料 使用用途 持ち帰り 備考)
       csv << column_name
       @fire_equipment_orders.each do |order|
         next if order.nil?
@@ -545,6 +545,7 @@ class Api::V1::OutputCsvController < ApplicationController
           order.quantity,
           order.fuel_japanese,
           order.usage,
+          order.is_takeaway ? "はい" : "いいえ",
           order.remark,
         ]
         csv << column_values
