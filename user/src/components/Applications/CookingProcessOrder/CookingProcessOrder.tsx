@@ -87,13 +87,13 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                                 content: foodProduct.name,
                               },
                               {
-                                label: '調理場の仕様有無(営業前)',
+                                label: '調理場の使用有無(営業前)',
                                 content: cookingProcessOrder.preOpenKitchen
                                   ? '使用する'
                                   : '使用しない',
                               },
                               {
-                                label: '調理場の仕様有無(営業中)',
+                                label: '調理場の使用有無(営業中)',
                                 content: cookingProcessOrder.duringOpenKitchen
                                   ? '使用する'
                                   : '使用しない',
@@ -117,12 +117,13 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
               </>
             )}
             {!isEditing && isExist && !isDeadline && (
-              <div className="flex justify-center">
+              <div className="mt-4 flex w-full items-center justify-center gap-4">
                 <Button
-                  type="button"
-                  onClick={handleEditClick}
                   size="pc"
                   color="main"
+                  type="button"
+                  icon="pencil"
+                  onClick={handleEditClick}
                 >
                   修正
                 </Button>

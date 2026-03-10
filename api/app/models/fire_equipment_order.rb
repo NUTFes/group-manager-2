@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FireEquipmentOrder < ApplicationRecord
   belongs_to :group
   # enum gas_bottle: ガスボンベ、lp_gas: LPガス、charcoal: 炭

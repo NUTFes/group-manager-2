@@ -1,21 +1,38 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
   # status
-  def ok; return { code: 200, message: 'Success' } end
-  def created; return { code: 201, message: 'Created'} end
-  def not_found; return { code: 404, message: 'Not Found' } end
-  def internal_server_error; return { code: 500, message: 'Internal Server Error' } end
-  def undefined; return { code: 999, message: 'Undefined' } end
-  def unprocessable_entity; return { code: 422, message: 'Unprocessable Entity' } end
+  def ok
+    return { code: 200, message: 'Success' }
+  end
+
+  def created
+    return { code: 201, message: 'Created' }
+  end
+
+  def not_found
+    return { code: 404, message: 'Not Found' }
+  end
+
+  def internal_server_error
+    return { code: 500, message: 'Internal Server Error' }
+  end
+
+  def undefined
+    return { code: 999, message: 'Undefined' }
+  end
+
+  def unprocessable_entity
+    return { code: 422, message: 'Unprocessable Entity' }
+  end
 
   # 出力するAPIのフォーマット
-  def fmt(status=undefined, data=[], option="")
+  def fmt(status = undefined, data = [], option = '')
     # メッセージを追加したいときに使う
-    if option != ""
-      status.store("option", option)
-    end
+    status.store('option', option) if option != ''
     return { status: status, data: data }
-    #return { status: status, path: request.fullpath, data: data } // fullpathいるかな？
+    # return { status: status, path: request.fullpath, data: data } // fullpathいるかな？
   end
 end

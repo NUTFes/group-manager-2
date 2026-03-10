@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class FoodProductsController < ApplicationController
-  before_action :set_food_product, only: [:show, :destroy]
+  before_action :set_food_product, only: %i[show destroy]
 
   # GET /food_products
   def index
@@ -32,15 +34,15 @@ class FoodProductsController < ApplicationController
   # POST /food_products/upsert
   # 複数レコード作成・更新 (upsert_all使用)
   def upsert
-    keys = [:id, :group_id, :name, :is_cooking, :first_day_num, :second_day_num, :created_at, :updated_at, :is_alcohol]
+    keys = %i[id group_id name is_cooking first_day_num second_day_num created_at updated_at is_alcohol]
     now = Time.current
 
-    upserts = params[:food_products].map do |foodProduct|
+    upserts = params[:food_products].map do |food_product|
       attrs = ActionController::Parameters
-        .new(foodProduct.to_unsafe_h)
-        .permit(*keys)
-        .to_h
-        .symbolize_keys
+              .new(food_product.to_unsafe_h)
+              .permit(*keys)
+              .to_h
+              .symbolize_keys
       keys.each { |k| attrs[k] = nil unless attrs.key?(k) }
       attrs[:created_at] ||= now
       attrs[:updated_at] = now
@@ -50,20 +52,21 @@ class FoodProductsController < ApplicationController
     FoodProduct.upsert_all(upserts)
 
     # 更新／挿入されたレコードを取得して返却
-    processed = upserts.map do |attrs|
-      if attrs["id"].present?
-        FoodProduct.where(id: attrs["id"])
+    scopes = upserts.map do |attrs|
+      if attrs[:id].present?
+        FoodProduct.where(id: attrs[:id])
       else
         FoodProduct.where(
-          group_id: attrs["group_id"],
-          name: attrs["name"],
-          is_cooking: attrs["is_cooking"],
-          first_day_num: attrs["first_day_num"],
-          second_day_num: attrs["second_day_num"],
-          is_alcohol: attrs["is_alcohol"]
+          group_id: attrs[:group_id],
+          name: attrs[:name],
+          is_cooking: attrs[:is_cooking],
+          first_day_num: attrs[:first_day_num],
+          second_day_num: attrs[:second_day_num],
+          is_alcohol: attrs[:is_alcohol]
         )
       end
-    end.reduce { |acc, scope| acc.or(scope) }
+    end
+    processed = scopes.reduce(FoodProduct.none, &:or)
 
     render json: fmt(ok, processed)
   rescue ActiveRecord::RecordInvalid => e
@@ -77,10 +80,11 @@ class FoodProductsController < ApplicationController
     if @food_product&.update(food_product_params)
       render json: fmt(ok, @food_product, "Updated food_product id = #{params[:id]}")
     else
-      render json: fmt(unprocessable_entity, [], @food_product&.errors&.full_messages&.join(', ') || "Not found"), status: :unprocessable_entity
+      error = @food_product&.errors
+      errors_text = error&.full_messages&.join(', ') || 'Not found'
+      render json: fmt(unprocessable_entity, [], errors_text), status: :unprocessable_entity
     end
   end
-
 
   # DELETE /food_products/1
   def destroy
@@ -90,14 +94,15 @@ class FoodProductsController < ApplicationController
 
   private
 
-    def set_food_product
-      @food_product = FoodProduct.find_by(id: params[:id])
-      return if @food_product
-      render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
-    end
+  def set_food_product
+    @food_product = FoodProduct.find_by(id: params[:id])
+    return if @food_product
 
-    # 単一レコード用 Strong Parameters
-    def food_product_params
-      params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num, :is_alcohol)
-    end
+    render json: fmt(not_found, [], "Not found food_product id=#{params[:id]}"), status: :not_found
+  end
+
+  # 単一レコード用 Strong Parameters
+  def food_product_params
+    params.permit(:group_id, :name, :is_cooking, :first_day_num, :second_day_num, :is_alcohol)
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VenueMap < ApplicationRecord
   belongs_to :group
 
@@ -8,7 +10,7 @@ class VenueMap < ApplicationRecord
       picture_name: picture_name,
       picture_path: picture_path,
       created_at: created_at,
-      updated_at: updated_at,
+      updated_at: updated_at
     }
   end
 end

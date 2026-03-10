@@ -1,4 +1,12 @@
+# frozen_string_literal: true
+
 class UserDetail < ApplicationRecord
+  # 例外処理する学籍番号
+  # 学外
+  STUDENT_ID_EXTERNAL = 88888888
+  # 教職員
+  STUDENT_ID_STAFF = 99999999
+
   belongs_to :user
   belongs_to :department
   belongs_to :grade
@@ -38,12 +46,12 @@ class UserDetail < ApplicationRecord
   # ユーザー詳細の情報の日本語をハッシュにして返す
   def to_info_h
     return {
-      "student_id": self.student_id,
-      "department_id": self.department.id,
-      "department": self.department.name,
-      "grade_id": self.grade_id,
-      "grade": self.grade.name,
-      "tel": self.tel
+      student_id: student_id,
+      department_id: department.id,
+      department: department.name,
+      grade_id: grade_id,
+      grade: grade.name,
+      tel: tel
     }
   end
 end

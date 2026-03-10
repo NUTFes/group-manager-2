@@ -13,7 +13,7 @@ export const createFormItemsForDevice = (device: Device): FormItem[] => {
   if (device.url) {
     items.push({ label: '製品URL', content: device.url });
   }
-  items.push({ label: '電力量(W)', content: `${device.maxPower}W` });
+  items.push({ label: '消費電力[W]', content: `${device.maxPower}W` });
   return items;
 };
 
