@@ -517,14 +517,13 @@ class Api::V1::OutputCsvController < ApplicationController
       column_name = %w[参加団体名 PR文 URL アナウンス有無]
       csv << column_name
       @public_relations.each do |public_relation|
-        if public_relation.nil?
-          next
-        end
+        next if public_relation.nil?
+
         column_values = [
           public_relation.group.name,
           public_relation.blurb,
           public_relation.picture_path,
-          public_relation.is_announcement_requested ? "有" : "無",
+          public_relation.is_announcement_requested ? '有' : '無'
         ]
         csv << column_values
       end
@@ -535,7 +534,7 @@ class Api::V1::OutputCsvController < ApplicationController
   def output_fire_equipment_orders_csv
     if params[:fes_year_id].to_i == 0
       @fire_equipment_orders = FireEquipmentOrder.all
-      filename_year = "全"
+      filename_year = '全'
     else
       fes_year = FesYear.find(params[:fes_year_id])
       @fire_equipment_orders = FireEquipmentOrder.joins(:group).where(groups: { fes_year_id: fes_year.id })
@@ -543,11 +542,12 @@ class Api::V1::OutputCsvController < ApplicationController
     end
     bom = "\uFEFF"
     csv_data = CSV.generate(bom) do |csv|
-      column_name = %w(ID 団体名 火気の名称 火気の台数 燃料 使用用途 持ち帰り 備考)
+      column_name = %w[ID 団体名 火気の名称 火気の台数 燃料 使用用途 持ち帰り 備考]
       csv << column_name
       @fire_equipment_orders.each do |order|
         next if order.nil?
-        group_name = order.group&.name || ""
+
+        group_name = order.group&.name || ''
         column_values = [
           order.id,
           group_name,
@@ -555,13 +555,12 @@ class Api::V1::OutputCsvController < ApplicationController
           order.quantity,
           order.fuel_japanese,
           order.usage,
-          order.is_takeaway ? "はい" : "いいえ",
-          order.remark,
+          order.is_takeaway ? 'はい' : 'いいえ',
+          order.remark
         ]
         csv << column_values
       end
     end
     send_data(csv_data, filename: "火気使用申請_#{filename_year}年度.csv")
   end
-
 end

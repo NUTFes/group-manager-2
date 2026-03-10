@@ -12,7 +12,7 @@ class FireEquipmentOrder < ApplicationRecord
   }.freeze
 
   def fuel_japanese
-    FUEL_TRANSLATIONS[self.fuel] || self.fuel.to_s
+    FUEL_TRANSLATIONS[fuel] || fuel.to_s
   end
 
   def self.fuel_options_for_select

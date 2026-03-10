@@ -246,7 +246,7 @@ Rails.application.routes.draw do
       get 'get_groups_have_no_cooking_process_order' => 'groups_api#get_groups_have_no_cooking_process_order'
 
       #---火気使用申請
-      get "get_groups_for_fire_equipment_order" => "groups_api#get_groups_for_fire_equipment_order"
+      get 'get_groups_for_fire_equipment_order' => 'groups_api#get_groups_for_fire_equipment_order'
 
       #---実行委員担当者申請ページ
       get 'get_contact_person_index_for_admin_view' => 'contact_persons_api#get_contact_person_index_for_admin_view'
@@ -277,27 +277,27 @@ Rails.application.routes.draw do
       get 'get_stage_rentable_items' => 'rental_items_api#get_stage_rentable_items'
 
       #---CSV出力
-      get "get_groups_csv/:fes_year_id" => "output_csv#output_groups_csv"
-      get "get_sub_reps_csv/:fes_year_id" => "output_csv#output_sub_reps_csv"
-      get "get_rental_orders_csv/:fes_year_id" => "output_csv#output_rental_orders_csv"
-      get "get_power_orders_csv/:fes_year_id" => "output_csv#output_power_orders_csv"
-      get "get_place_orders_csv/:fes_year_id" => "output_csv#output_place_orders_csv"
-      get "get_stage_orders_csv/:fes_year_id" => "output_csv#output_stage_orders_csv"
-      get "get_stage_common_options_csv/:fes_year_id" => "output_csv#output_stage_common_options_csv"
-      get "get_employees_csv/:fes_year_id" => "output_csv#output_employees_csv"
-      get "get_food_products_csv/:fes_year_id" => "output_csv#output_food_products_csv"
-      get "get_purchase_lists_csv/:fes_year_id" => "output_csv#output_purchase_lists_csv"
-      get "get_users_csv/:fes_year_id" => "output_csv#output_users_csv"
-      get "get_assign_rental_items_csv/:fes_year_id" => "output_csv#output_assign_rental_items_csv"
-      get "get_announcements_csv" => "output_csv#output_announcements_csv"
-      get "get_cooking_process_orders_csv" => "output_csv#output_cooking_process_orders_csv"
-      get "get_public_relations_csv/:fes_year_id" => "output_csv#output_public_relations_csv"
-      get "get_fire_equipment_orders_csv/:fes_year_id" => "output_csv#output_fire_equipment_orders_csv"
+      get 'get_groups_csv/:fes_year_id' => 'output_csv#output_groups_csv'
+      get 'get_sub_reps_csv/:fes_year_id' => 'output_csv#output_sub_reps_csv'
+      get 'get_rental_orders_csv/:fes_year_id' => 'output_csv#output_rental_orders_csv'
+      get 'get_power_orders_csv/:fes_year_id' => 'output_csv#output_power_orders_csv'
+      get 'get_place_orders_csv/:fes_year_id' => 'output_csv#output_place_orders_csv'
+      get 'get_stage_orders_csv/:fes_year_id' => 'output_csv#output_stage_orders_csv'
+      get 'get_stage_common_options_csv/:fes_year_id' => 'output_csv#output_stage_common_options_csv'
+      get 'get_employees_csv/:fes_year_id' => 'output_csv#output_employees_csv'
+      get 'get_food_products_csv/:fes_year_id' => 'output_csv#output_food_products_csv'
+      get 'get_purchase_lists_csv/:fes_year_id' => 'output_csv#output_purchase_lists_csv'
+      get 'get_users_csv/:fes_year_id' => 'output_csv#output_users_csv'
+      get 'get_assign_rental_items_csv/:fes_year_id' => 'output_csv#output_assign_rental_items_csv'
+      get 'get_announcements_csv' => 'output_csv#output_announcements_csv'
+      get 'get_cooking_process_orders_csv' => 'output_csv#output_cooking_process_orders_csv'
+      get 'get_public_relations_csv/:fes_year_id' => 'output_csv#output_public_relations_csv'
+      get 'get_fire_equipment_orders_csv/:fes_year_id' => 'output_csv#output_fire_equipment_orders_csv'
 
       #---pdf出力
-      get "output_pdf/rental_items" => "print_pdf#rental_items_pdf"
-      get "output_pdf/power_orders" => "print_pdf#power_orders_pdf"
-      get "get_project_check_list_pdf/:group_id" => "output_pdf#output_project_check_list_pdf"
+      get 'output_pdf/rental_items' => 'print_pdf#rental_items_pdf'
+      get 'output_pdf/power_orders' => 'print_pdf#power_orders_pdf'
+      get 'get_project_check_list_pdf/:group_id' => 'output_pdf#output_project_check_list_pdf'
 
       # ダッシュボード
       get 'dashboard' => 'dashboard_api#get_dashboard_info'
