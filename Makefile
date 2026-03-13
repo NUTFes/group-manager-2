@@ -39,17 +39,17 @@ build db:
 
 prod-build:
 	docker compose -f compose.prod.yml build
-	docker compose -f compose.prod.yml run --rm user npm install
+	docker compose -f compose.prod.yml run --rm user pnpm install
 	docker compose -f compose.prod.yml run --rm admin_view npm install
-	docker compose -f compose.prod.yml run --rm user npm run build
+	docker compose -f compose.prod.yml run --rm user pnpm run build
 	docker compose -f compose.prod.yml run --rm admin_view npm run build
 	docker compose -f compose.prod.yml run --rm api rails db:migrate
 
 prod-build-seed:
 	docker compose -f compose.prod.yml build
-	docker compose -f compose.prod.yml run --rm user npm install
+	docker compose -f compose.prod.yml run --rm user pnpm install
 	docker compose -f compose.prod.yml run --rm admin_view npm install
-	docker compose -f compose.prod.yml run --rm user npm run build
+	docker compose -f compose.prod.yml run --rm user pnpm run build
 	docker compose -f compose.prod.yml run --rm admin_view npm build
 	docker compose -f compose.prod.yml run --rm api rails db:migrate
 	docker compose -f compose.prod.yml run --rm api rails db:seed_fu FIXTURE_PATH=db/fixtures/production
