@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -8,10 +8,20 @@ import { DepartmentList, GradeList } from '@/utils/list';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
 
-export const useViceRepresentativeHook = (groupId: number) => {
-  const { viceRepresentative, isLoading, hasError, mutateViceRepresentative } =
-    useGetViceRepresentatives(groupId);
-  const { unregisteredData } = useGetUnregisteredGroup(
+export const useViceRepresentativeHook = (
+  groupId: number,
+  isRegistered?: boolean
+) => {
+  const {
+    viceRepresentative,
+    isLoading: isViceRepresentativeLoading,
+    hasError,
+    mutateViceRepresentative,
+  } = useGetViceRepresentatives(groupId);
+  const {
+    unregisteredData,
+    isLoading: isUnregisteredLoading,
+  } = useGetUnregisteredGroup(
     groupId,
     ORDER_TYPES.SUB_REP
   );
@@ -59,20 +69,33 @@ export const useViceRepresentativeHook = (groupId: number) => {
     ];
   }, [viceRepresentative, unregisteredData]);
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState<boolean | null>(null);
+  const hasInitializedEditing = useRef(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const isLoading = isViceRepresentativeLoading || isUnregisteredLoading;
+
   useEffect(() => {
-    if (viceRepresentative || unregisteredData) {
-      setIsEditing(false);
+    if (!isLoading) {
+      setHasLoadedOnce(true);
     }
-  }, [viceRepresentative, unregisteredData]);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (hasInitializedEditing.current || isRegistered === undefined) {
+      return;
+    }
+
+    setIsEditing(!isRegistered);
+    hasInitializedEditing.current = true;
+  }, [isRegistered]);
 
   const toEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   return {
     viceRepresentative,
-    isLoading,
+    isLoading: isLoading && !hasLoadedOnce,
     hasError,
     isEditing,
     toEdit,

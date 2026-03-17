@@ -17,7 +17,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   viceRepresentative?: ViceRepresentativeResponse;
   formItem: FormItem[];
@@ -39,6 +39,10 @@ const Content: FC<ContentProps> = ({
   mutateCheckAllRegisteredGroups,
 }) => {
   if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isEditing === null) {
     return <div>Loading...</div>;
   }
 
@@ -83,7 +87,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
     isLoading,
     hasError,
     mutateViceRepresentative,
-  } = useViceRepresentativeHook(groupId);
+  } = useViceRepresentativeHook(groupId, isRegistered);
   return (
     <AccordionMenu
       title="副代表申請"

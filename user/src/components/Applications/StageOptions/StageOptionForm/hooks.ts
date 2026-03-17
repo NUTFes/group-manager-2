@@ -57,8 +57,10 @@ export const useStageOptionFormHooks = (
         mutate(`/stage_common_options/group/${formData.groupId}`);
 
         toast.success('送信しました');
+        return true;
       } catch {
         toast.error('送信に失敗しました。');
+        return false;
       }
     } else {
       try {
@@ -66,10 +68,12 @@ export const useStageOptionFormHooks = (
         mutate(`/stage_common_options/group/${formData.groupId}`);
         mutate(`/check_all_registered/${formData.groupId}`);
         toast.success('送信しました');
+        reset();
+        return true;
       } catch {
         toast.error('送信に失敗しました。');
+        return false;
       }
-      reset();
     }
   };
 

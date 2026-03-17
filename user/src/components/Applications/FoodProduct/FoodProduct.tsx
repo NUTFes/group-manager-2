@@ -19,7 +19,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
@@ -43,6 +43,15 @@ const Content: FC<ContentProps> = ({
   setFoodProductsData,
 }) => {
   if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
+        <span className="ml-2">Loading...</span>
+      </div>
+    );
+  }
+
+  if (isEditing === null) {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
@@ -136,7 +145,7 @@ const FoodProduct: FC<FoodProductProps> = ({
     addFoodProducts,
     removeFoodProduct,
     setFoodProductsData,
-  } = useFoodProductHooks(groupId);
+  } = useFoodProductHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu

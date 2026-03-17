@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetPlaceOrder, usePlacesData } from '@/api/venueApplication';
 import { FormItem } from '@/components/FormList/type';
 
@@ -36,6 +36,7 @@ export const usePlaceOrdersHooks = (groupId: number) => {
     : [];
 
   const [isEditing, setIsEditing] = useState(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
@@ -43,9 +44,15 @@ export const usePlaceOrdersHooks = (groupId: number) => {
 
   const isLoading = isPlaceOrderLoading || isPlacesLoading;
 
+  useEffect(() => {
+    if (!isLoading) {
+      setHasLoadedOnce(true);
+    }
+  }, [isLoading]);
+
   return {
     placeOrder,
-    isLoading,
+    isLoading: isLoading && !hasLoadedOnce,
     hasError,
     isEditing,
     formItem,

@@ -25,7 +25,6 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
     values,
     setValue,
     fileName,
-    isFetching,
     isMutating,
     handleImageUpload,
     onSubmit,
@@ -57,82 +56,78 @@ const VenueMapForm: FC<VenueMapFormProps> = ({
 
   return (
     <FormContainer>
-      {isFetching ? (
-        <div>Loading...</div>
-      ) : (
-        <form
-          className="flex w-full flex-col gap-10"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          {/* 模擬店平面図画像 */}
-          <div className="flex flex-col gap-1">
-            <div className="flex items-baseline gap-4">
-              <div className="text-base font-medium text-font">
-                模擬店平面図画像
-              </div>
-              <div className="text-xs font-light text-alert">※必須</div>
+      <form
+        className="flex w-full flex-col gap-10"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {/* 模擬店平面図画像 */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-baseline gap-4">
+            <div className="text-base font-medium text-font">
+              模擬店平面図画像
             </div>
-            <Upload
-              title=""
-              note={[
-                '机、椅子、使用機器などの配置が分かるように',
-                'ファイル形式：png、jpeg',
-                'ファイルサイズ：20MB',
-              ]}
-              onClick={handleImageUpload}
-              idDisable={isMutating}
-              error={errors.image?.message as string | undefined}
-            />
-            {fileName && (
-              <div className="mt-2 text-sm text-font">
-                アップロード済み: {fileName}
-              </div>
-            )}
-            {venueMap?.picturePath && !values.image && (
-              <div className="mt-1 text-xs text-gray-500">
-                ※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます。
-                <br />
-                現在の画像: {venueMap.pictureName || 'ファイル名不明'}
-              </div>
-            )}
+            <div className="text-xs font-light text-alert">※必須</div>
           </div>
-
-          {/* 平面図確認事項 */}
-          <Checkbox
-            label="平面図確認事項"
-            options={checklistOptions}
-            value={values.checklist || []}
-            onChange={(newValues) =>
-              setValue('checklist', newValues, { shouldDirty: true })
-            }
-            error={errors.checklist?.message as string | undefined}
-            required
+          <Upload
+            title=""
+            note={[
+              '机、椅子、使用機器などの配置が分かるように',
+              'ファイル形式：png、jpeg',
+              'ファイルサイズ：20MB',
+            ]}
+            onClick={handleImageUpload}
+            idDisable={isMutating}
+            error={errors.image?.message as string | undefined}
           />
+          {fileName && (
+            <div className="mt-2 text-sm text-font">
+              アップロード済み: {fileName}
+            </div>
+          )}
+          {venueMap?.picturePath && !values.image && (
+            <div className="mt-1 text-xs text-gray-500">
+              ※新しい画像をアップロードしない場合、既存の画像がそのまま使用されます。
+              <br />
+              現在の画像: {venueMap.pictureName || 'ファイル名不明'}
+            </div>
+          )}
+        </div>
 
-          {/* ボタン */}
-          <div className="mt-6 flex w-full items-center justify-center gap-4">
-            {venueMap && (
-              <Button
-                size="pc"
-                color="main"
-                onClick={toEdit}
-                type="button"
-                variant
-              >
-                キャンセル
-              </Button>
-            )}
+        {/* 平面図確認事項 */}
+        <Checkbox
+          label="平面図確認事項"
+          options={checklistOptions}
+          value={values.checklist || []}
+          onChange={(newValues) =>
+            setValue('checklist', newValues, { shouldDirty: true })
+          }
+          error={errors.checklist?.message as string | undefined}
+          required
+        />
+
+        {/* ボタン */}
+        <div className="mt-6 flex w-full items-center justify-center gap-4">
+          {venueMap && (
             <Button
               size="pc"
-              type="submit"
               color="main"
-              isDisable={isMutating || (venueMap ? !isDirty : false)}
+              onClick={toEdit}
+              type="button"
+              variant
             >
-              {isMutating ? '送信中...' : venueMap ? '修正' : '登録する'}
+              キャンセル
             </Button>
-          </div>
-        </form>
-      )}
+          )}
+          <Button
+            size="pc"
+            type="submit"
+            color="main"
+            isDisable={isMutating || (venueMap ? !isDirty : false)}
+          >
+            {isMutating ? '送信中...' : venueMap ? '修正' : '登録する'}
+          </Button>
+        </div>
+      </form>
     </FormContainer>
   );
 };

@@ -77,23 +77,27 @@ export const useGroupFormHooks = (
     if (groups) {
       try {
         await update({ query: formData });
-        mutateGroups();
+        await mutateGroups();
         toast.success('送信しました');
+        return true;
       } catch {
         toast.error('送信に失敗しました。');
+        return false;
       }
       // 団体申請がない場合は新規作成
     } else {
       try {
         await create({ query: formData });
-        mutateGroups();
-        mutateCheckAllRegisteredGroups();
-        mutateGroupByUserId();
+        await mutateGroups();
+        await mutateCheckAllRegisteredGroups();
+        await mutateGroupByUserId();
         toast.success('送信しました');
+        reset();
+        return true;
       } catch {
         toast.error('送信に失敗しました。');
+        return false;
       }
-      reset();
     }
   };
 

@@ -294,10 +294,15 @@ const GroupCategoryContent = ({
 export default function HomePage() {
   const { user } = useUser();
   const userId = user?.id;
-  const { groupUserIdAndGroupCategoryId, mutateGroupByUserId } =
+  const {
+    groupUserIdAndGroupCategoryId,
+    mutateGroupByUserId,
+    isLoading: isLoadingGroupByUserId,
+  } =
     useGetGroupByUserId(userId);
   const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
+  const isGroupResolved = userId !== undefined && !isLoadingGroupByUserId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
     useGetCheckAllRegisteredGroups(groupId);
@@ -311,6 +316,7 @@ export default function HomePage() {
           isRegistered={checkAllRegisteredGroups?.group}
           groupId={groupId}
           userId={userId || 0}
+          isGroupResolved={isGroupResolved}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           mutateGroupByUserId={mutateGroupByUserId}
         />

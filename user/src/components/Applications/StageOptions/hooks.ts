@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGetStageOptions } from '@/api/stageOptionApi';
 import { FormItem } from '@/components/FormList/type';
 import { stageOptionLabels } from '../label';
 
-export const useStageOptionHooks = (groupId: number) => {
+export const useStageOptionHooks = (
+  groupId: number,
+  isRegistered?: boolean
+) => {
   const { stageOptions, isLoading, hasError } = useGetStageOptions(groupId);
 
   const formItem: FormItem[] = [
@@ -25,21 +28,32 @@ export const useStageOptionHooks = (groupId: number) => {
     },
   ];
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState<boolean | null>(null);
+  const hasInitializedEditing = useRef(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const toEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   useEffect(() => {
-    if (stageOptions) {
-      setIsEditing(false);
+    if (!isLoading) {
+      setHasLoadedOnce(true);
     }
-  }, [stageOptions]);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (hasInitializedEditing.current || isRegistered === undefined) {
+      return;
+    }
+
+    setIsEditing(!isRegistered);
+    hasInitializedEditing.current = true;
+  }, [isRegistered]);
 
   return {
     stageOptions,
-    isLoading,
+    isLoading: isLoading && !hasLoadedOnce,
     hasError,
     isEditing,
     toEdit,

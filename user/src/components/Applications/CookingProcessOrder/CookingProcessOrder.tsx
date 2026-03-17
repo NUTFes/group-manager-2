@@ -21,17 +21,14 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     methods,
     fields,
     isLoading,
+    isMutating,
     isEditing,
     isExist,
     handleEditClick,
     onSubmit,
     mergedData,
     shouldShowWarning,
-  } = useCookingProcessOrder(groupId, isDeadline);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  } = useCookingProcessOrder(groupId, isDeadline, isRegistered);
 
   return (
     <AccordionMenu
@@ -41,7 +38,9 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
       isRegistered={isRegistered}
       required
     >
-      {shouldShowWarning ? (
+      {isLoading || isEditing === null ? (
+        <div>Loading...</div>
+      ) : shouldShowWarning ? (
         <p className="text-center text-alert">
           販売品申請を先に申請してください
         </p>
@@ -66,6 +65,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                     isDisable={
                       !methods.formState.isValid ||
                       methods.formState.isSubmitting ||
+                      isMutating ||
                       isDeadline
                     }
                     icon={isExist ? 'save' : 'send'}

@@ -41,7 +41,12 @@ const StageOptionForm: FC<StageOptionFormProps> = ({
   return (
     <FormContainer>
       <form
-        onSubmit={handleSubmit(onSubmit, (err) => console.table(err))}
+        onSubmit={handleSubmit(async (formData) => {
+          const isSuccess = await onSubmit(formData);
+          if (isSuccess) {
+            toEdit?.();
+          }
+        }, (err) => console.table(err))}
         className="w-full"
       >
         <div className="flex flex-col space-y-10">

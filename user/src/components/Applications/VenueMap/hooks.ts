@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
@@ -12,6 +12,7 @@ export const useVenueMapHooks = (groupId: number) => {
   } = useGetVenueMap(groupId);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
@@ -21,6 +22,12 @@ export const useVenueMapHooks = (groupId: number) => {
   const handleFormSubmitted = () => {
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    if (!isFetching) {
+      setHasLoadedOnce(true);
+    }
+  }, [isFetching]);
 
   const formItems: FormItem[] = venueMap
     ? [
@@ -33,7 +40,7 @@ export const useVenueMapHooks = (groupId: number) => {
 
   return {
     venueMap,
-    isLoading: isFetching,
+    isLoading: isFetching && !hasLoadedOnce,
     hasError: !!fetchError,
     isEditing,
     toEdit,

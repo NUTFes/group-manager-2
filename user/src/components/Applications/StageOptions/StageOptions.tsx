@@ -16,7 +16,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   stageOptions?: StageOptionResponse;
   formItem: FormItem[];
@@ -34,6 +34,10 @@ const Content: FC<ContentProps> = ({
   groupId,
 }) => {
   if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isEditing === null) {
     return <div>Loading...</div>;
   }
 
@@ -68,7 +72,7 @@ const StageOptions: FC<StageOptionsProps> = ({
   groupId,
 }) => {
   const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
-    useStageOptionHooks(groupId);
+    useStageOptionHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu

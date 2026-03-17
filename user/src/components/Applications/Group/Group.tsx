@@ -11,6 +11,7 @@ type GroupProps = {
   isRegistered?: boolean | undefined;
   groupId: number;
   userId: number;
+  isGroupResolved: boolean;
   mutateCheckAllRegisteredGroups: () => void;
   mutateGroupByUserId: () => void;
 };
@@ -19,7 +20,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   groups?: GroupResponse;
   formItem: FormItem[];
@@ -47,6 +48,9 @@ const Content: FC<ContentProps> = ({
 }) => {
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (isEditing === null) {
     return <div>Loading...</div>;
   }
   // データ取得に失敗した場合に表示する画面
@@ -85,6 +89,7 @@ const Group: FC<GroupProps> = ({
   isRegistered,
   groupId,
   userId,
+  isGroupResolved,
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
 }) => {
@@ -97,7 +102,7 @@ const Group: FC<GroupProps> = ({
     hasError,
     groupCategories,
     mutateGroups,
-  } = useGroupHooks(groupId);
+  } = useGroupHooks(groupId, isRegistered, isGroupResolved);
   return (
     <AccordionMenu
       title="団体申請"
