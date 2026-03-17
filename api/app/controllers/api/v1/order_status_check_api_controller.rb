@@ -42,23 +42,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     is_international = params[:is_international].to_i
     is_external = params[:is_external].to_i # 0: 指定なし(ALL) 1: true 2: false
 
-    @groups = Group.includes(
-      :user,
-      :group_category,
-      :fes_year,
-      :sub_rep,
-      :place_order,
-      :stage_orders,
-      :stage_common_option,
-      :power_orders,
-      :rental_orders,
-      :employees,
-      :public_relation,
-      :venue_map,
-      :announcement,
-      :cooking_process_order,
-      food_products: :purchase_lists
-    )
+    @groups = Group.with_order_status_check_relations
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
@@ -74,23 +58,9 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
   # あいまい検索機能
   def get_search_order_status_check
     word = params[:word]
-    @groups = Group.includes(
-      :user,
-      :group_category,
-      :fes_year,
-      :sub_rep,
-      :place_order,
-      :stage_orders,
-      :stage_common_option,
-      :power_orders,
-      :rental_orders,
-      :employees,
-      :public_relation,
-      :venue_map,
-      :announcement,
-      :cooking_process_order,
-      food_products: :purchase_lists
-    ).where('name LIKE ?', "%#{word}%")
+    sanitized_word = Group.sanitize_sql_like(word)
+    @groups = Group.with_order_status_check_relations
+                   .where('name LIKE ?', "%#{sanitized_word}%")
 
     if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
