@@ -139,11 +139,7 @@ export const useCookingProcessOrder = (
       return;
     }
 
-    if (
-      !isRegistered &&
-      cookingTargetFoodProducts.length > 0 &&
-      !isDeadline
-    ) {
+    if (!isRegistered && cookingTargetFoodProducts.length > 0 && !isDeadline) {
       setIsEditing(true);
     } else {
       setIsEditing(false);

@@ -18,13 +18,8 @@ export const useViceRepresentativeHook = (
     hasError,
     mutateViceRepresentative,
   } = useGetViceRepresentatives(groupId);
-  const {
-    unregisteredData,
-    isLoading: isUnregisteredLoading,
-  } = useGetUnregisteredGroup(
-    groupId,
-    ORDER_TYPES.SUB_REP
-  );
+  const { unregisteredData, isLoading: isUnregisteredLoading } =
+    useGetUnregisteredGroup(groupId, ORDER_TYPES.SUB_REP);
 
   const formItem: FormItem[] = useMemo(() => {
     if (unregisteredData) {

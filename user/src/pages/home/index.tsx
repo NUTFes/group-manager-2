@@ -298,8 +298,7 @@ export default function HomePage() {
     groupUserIdAndGroupCategoryId,
     mutateGroupByUserId,
     isLoading: isLoadingGroupByUserId,
-  } =
-    useGetGroupByUserId(userId);
+  } = useGetGroupByUserId(userId);
   const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const isGroupResolved = userId !== undefined && !isLoadingGroupByUserId;
