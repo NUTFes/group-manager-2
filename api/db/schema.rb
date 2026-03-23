@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_10_212842) do
+ActiveRecord::Schema.define(version: 2026_03_24_000002) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 2025_06_10_212842) do
     t.string "time_point_end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "commentable_type", null: false
+    t.bigint "commentable_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
   end
 
   create_table "contact_people", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -160,6 +169,16 @@ ActiveRecord::Schema.define(version: 2025_06_10_212842) do
     t.boolean "committee"
     t.boolean "is_international"
     t.boolean "is_external"
+  end
+
+  create_table "health_center_submission_statuses", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "group_id", null: false
+    t.integer "application_type", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["group_id", "application_type"], name: "index_health_center_submission_statuses_on_group_and_type", unique: true
+    t.index ["group_id"], name: "index_health_center_submission_statuses_on_group_id"
   end
 
   create_table "item_adjustments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -468,6 +487,7 @@ ActiveRecord::Schema.define(version: 2025_06_10_212842) do
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
+  add_foreign_key "health_center_submission_statuses", "groups"
   add_foreign_key "un_registered_groups", "groups"
   add_foreign_key "user_details", "users"
 end

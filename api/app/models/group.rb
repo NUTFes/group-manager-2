@@ -20,6 +20,7 @@ class Group < ApplicationRecord
   has_one :cooking_process_order, dependent: :destroy
   has_many :un_registered_groups, dependent: :destroy
   has_many :fire_equipment_orders, dependent: :destroy
+  has_many :health_center_submission_statuses, dependent: :destroy
 
   ### group_category (参加団体カテゴリ)
 
