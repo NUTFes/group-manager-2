@@ -1,9 +1,9 @@
 import '@globals';
-import { Meta, StoryContext, StoryFn, StoryObj } from '@storybook/react';
+import { Decorator, Meta, StoryObj } from '@storybook/react';
 import { FormProvider, useForm } from 'react-hook-form';
 import CookingProcessOrderForm from './CookingProcessOrderForm';
 
-const FormProviderDecorator = (Story: StoryFn, context: StoryContext) => {
+const FormProviderDecorator: Decorator = (Story) => {
   const methods = useForm({
     defaultValues: {
       cookingProcessOrders: [
@@ -19,7 +19,7 @@ const FormProviderDecorator = (Story: StoryFn, context: StoryContext) => {
 
   return (
     <FormProvider {...methods}>
-      <Story {...context} />
+      <Story />
     </FormProvider>
   );
 };

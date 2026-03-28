@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { LiaLessThanSolid } from 'react-icons/lia';
 import { RxCross2 } from 'react-icons/rx';
@@ -14,7 +14,7 @@ export const Loading: FC<{ colorClass: string }> = ({ colorClass }) => (
   </div>
 );
 
-const Icons: { [key: string]: JSX.Element } = {
+const Icons: { [key: string]: ReactElement } = {
   pencil: <SlPencil />,
   cross: <RxCross2 />,
   plus: <FiPlus />,
