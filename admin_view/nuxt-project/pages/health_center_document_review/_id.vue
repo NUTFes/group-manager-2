@@ -6,7 +6,7 @@
       <Column width="100%" align="start" justify="start" gap="8px">
         <p>企画名: {{ group.group.project_name }}</p>
         <p>代表者: {{ group.user.name }}</p>
-        <p>メール: <a :href="'mailto:' + group.user.email">{{ group.user.email }}</a></p>
+        <p>メール: <a class="mail-link" :href="'mailto:' + group.user.email">{{ group.user.email }}</a></p>
       </Column>
     </Row>
 
@@ -14,122 +14,100 @@
       <Column width="70%" height="800px" align="start" justify="start">
         <Card width="100%" style="overflow: scroll; align-items: flex-start;">
           <h2>調理工程申請</h2>
-          <VerticalTable>
+          <VerticalTable v-for="order in cookingProcessOrders" :key="order.id">
             <tr>
-              <th colspan="3">たこやき</th>
+              <th colspan="3">{{ getFoodProductName(order.food_product_id) }}</th>
             </tr>
             <tr>
               <th>調理場</th>
-              <td>営業前：使用する</td>
-              <td>営業後：使用しない</td>
+              <td>営業前：{{ order.pre_open_kitchen ? "使用する" : "使用しない" }}</td>
+              <td>営業中：{{ order.during_open_kitchen ? "使用する" : "使用しない" }}</td>
             </tr>
             <tr>
               <th>調理工程</th>
-              <td colspan="2">1. たこを捌く<br />2. たこを焼く</td>
+              <td colspan="2">
+                <div style="white-space: pre-line">{{ order.tent || "未入力" }}</div>
+              </td>
             </tr>
           </VerticalTable>
-          <VerticalTable>
-            <tr>
-              <th colspan="3">たこやき</th>
-            </tr>
-            <tr>
-              <th>調理場</th>
-              <td>営業前：使用する</td>
-              <td>営業後：使用しない</td>
-            </tr>
-            <tr>
-              <th>調理工程</th>
-              <td colspan="2">1. たこを捌く<br />2. たこを焼く</td>
-            </tr>
-          </VerticalTable>
+          <p v-if="cookingProcessOrders.length === 0">未登録</p>
           <HorizontalRule />
 
           <h2>販売品申請</h2>
-          <VerticalTable>
+          <VerticalTable v-if="foodProducts.length > 0">
             <tr>
               <th>品目</th>
               <th>1日目</th>
               <th>2日目</th>
             </tr>
-            <tr>
-              <td>明太子たこ焼き</td>
-              <td>100個</td>
-              <td>100個</td>
-            </tr>
-            <tr>
-              <td>チーズたこ焼き</td>
-              <td>100個</td>
-              <td>100個</td>
+            <tr v-for="foodProduct in foodProducts" :key="foodProduct.id">
+              <td>{{ foodProduct.name }}</td>
+              <td>{{ foodProduct.first_day_num }}</td>
+              <td>{{ foodProduct.second_day_num }}</td>
             </tr>
           </VerticalTable>
+          <p v-else>未登録</p>
           <HorizontalRule />
 
           <h2>購入品申請</h2>
-          <VerticalTable>
+          <VerticalTable
+            v-for="purchaseGroup in purchaseListsByFoodProduct"
+            :key="purchaseGroup.foodProductId"
+          >
+            <tr>
+              <th colspan="5">{{ purchaseGroup.foodProductName }}</th>
+            </tr>
             <tr>
               <th>品目</th>
               <th>購入日</th>
               <th>なまもの</th>
               <th>購入先</th>
+              <th>備考</th>
             </tr>
-            <tr>
-              <td>たこ</td>
-              <td>2026-02-02</td>
-              <td>〇</td>
-              <td>築地市場</td>
-            </tr>
-            <tr>
-              <td>チーズ</td>
-              <td>2026-02-02</td>
-              <td>×</td>
-              <td>チーズ専門店</td>
+            <tr v-for="purchaseList in purchaseGroup.items" :key="purchaseList.id">
+              <td>{{ purchaseList.items }}</td>
+              <td>{{ purchaseList.purchase_date }}</td>
+              <td>{{ purchaseList.is_fresh ? "〇" : "×" }}</td>
+              <td>{{ getShopName(purchaseList.shop_id) }}</td>
+              <td>{{ purchaseList.remark || "-" }}</td>
             </tr>
           </VerticalTable>
+          <p v-if="purchaseListsByFoodProduct.length === 0">未登録</p>
           <HorizontalRule />
 
           <h2>従業員申請</h2>
-          <VerticalTable>
+          <VerticalTable v-if="employees.length > 0">
             <tr>
               <th>氏名</th>
               <th>学籍番号</th>
               <th>検便</th>
             </tr>
-            <tr>
-              <td>山田太郎</td>
-              <td>12345678</td>
-              <td>〇</td>
-            </tr>
-            <tr>
-              <td>山田花子</td>
-              <td>12345678</td>
-              <td>×</td>
-            </tr>
-            <tr>
-              <td>山田次郎</td>
-              <td>12345678</td>
-              <td>〇</td>
+            <tr v-for="employee in employees" :key="employee.id">
+              <td>{{ employee.name }}</td>
+              <td>{{ employee.student_id }}</td>
+              <td>{{ formatStoolTest(employee.stool_test_status) }}</td>
             </tr>
           </VerticalTable>
+          <p v-else>未登録</p>
           <HorizontalRule />
 
           <h2>平面図申請</h2>
+          <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
+          <p v-else>未登録</p>
           <HorizontalRule />
 
           <h2>物品申請</h2>
-          <VerticalTable>
+          <VerticalTable v-if="rentalOrders.length > 0">
             <tr>
               <th>品目</th>
               <th>数量</th>
             </tr>
-            <tr>
-              <td>テント</td>
-              <td>2張</td>
-            </tr>
-            <tr>
-              <td>テーブル</td>
-              <td>10台</td>
+            <tr v-for="rentalOrder in rentalOrders" :key="rentalOrder.id">
+              <td>{{ getRentalItemName(rentalOrder.rental_item_id) }}</td>
+              <td>{{ rentalOrder.num }}</td>
             </tr>
           </VerticalTable>
+          <p v-else>未登録</p>
         </Card>
       </Column>
       <Column width="30%" height="800px" align="start" justify="start">
@@ -221,7 +199,6 @@
 <script>
 import { mapState } from "vuex";
 import { downloadFile } from '~/utils/download-file';
-import HorizontalRule from "../../components/HorizontalRule.vue";
 
 
 export default {
@@ -231,6 +208,14 @@ export default {
       data: [],
       detail_data: [],
       group: [],
+      foodProducts: [],
+      purchaseLists: [],
+      cookingProcessOrders: [],
+      employees: [],
+      venueMap: null,
+      rentalOrders: [],
+      shops: [],
+      rentalItems: [],
 
       // v-model
       groupName: "",
@@ -261,9 +246,34 @@ export default {
       selfRoleId: (state) => state.users.role,
       roleID: (state) => state.users.role,
     }),
+    purchaseListsByFoodProduct() {
+      const groups = this.purchaseLists.reduce((acc, purchaseList) => {
+        const foodProductID = purchaseList.food_product_id;
+        if (!acc[foodProductID]) {
+          acc[foodProductID] = [];
+        }
+        acc[foodProductID].push(purchaseList);
+        return acc;
+      }, {});
+
+      return Object.keys(groups).map((foodProductID) => ({
+        foodProductId: Number(foodProductID),
+        foodProductName: this.getFoodProductName(Number(foodProductID)),
+        items: groups[foodProductID],
+      }));
+    },
   },
   async asyncData({ $axios, route }) {
     const routeId = route.params.id;
+
+    const getOrEmpty = async (url, fallbackValue) => {
+      try {
+        const res = await $axios.$get(url);
+        return res.data;
+      } catch (error) {
+        return fallbackValue;
+      }
+    };
 
     const groupUrl = "/api/v1/get_group_show_for_admin_view/" + routeId;
     const groupRes = await $axios.$get(groupUrl);
@@ -286,8 +296,54 @@ export default {
         console.error("Error fetching contact persons: ", error);
       });
 
+    const [
+      foodProducts,
+      cookingProcessOrders,
+      employees,
+      venueMap,
+      rentalOrders,
+      shops,
+      rentalItems,
+    ] = await Promise.all([
+      getOrEmpty(`/food_products/group/${routeId}`, []),
+      getOrEmpty(`/cooking_process_orders/group/${routeId}`, []),
+      getOrEmpty(`/employees/group/${routeId}`, []),
+      getOrEmpty(`/venue_maps/group/${routeId}`, null),
+      getOrEmpty(`/rental_orders/group/${routeId}`, []),
+      getOrEmpty(`/shops`, []),
+      getOrEmpty(`/rental_items`, []),
+    ]);
+
+    const purchaseListsNested = await Promise.all(
+      foodProducts.map((foodProduct) =>
+        getOrEmpty(`/purchase_lists/food_product?food_product_ids=${foodProduct.id}`, [])
+      )
+    );
+    const purchaseLists = purchaseListsNested.flat();
+
+    const employeesWithStoolTest = await Promise.all(
+      employees.map(async (employee) => {
+        const employeeDetail = await getOrEmpty(
+          `/api/v1/get_employee_show_for_admin_view/${employee.id}`,
+          null
+        );
+        return {
+          ...employee,
+          stool_test_status: employeeDetail?.stool_test?.status || null,
+        };
+      })
+    );
+
     return {
       group: groupRes.data,
+      foodProducts: foodProducts,
+      purchaseLists: purchaseLists,
+      cookingProcessOrders: cookingProcessOrders,
+      employees: employeesWithStoolTest,
+      venueMap: venueMap,
+      rentalOrders: rentalOrders,
+      shops: shops,
+      rentalItems: rentalItems,
       committee: groupRes.data.committee,
       groupName: groupRes.data.group.name,
       projectName: groupRes.data.group.project_name,
@@ -392,6 +448,23 @@ export default {
       await downloadFile(this.$axios, url, this.group.group.name + "_PDF");
       this.openSnackBar("物品貸し出し表のPDFをダウンロードしました");
     },
+    getShopName(shopID) {
+      const shop = this.shops.find((item) => item.id === shopID);
+      return shop ? shop.name : "-";
+    },
+    getRentalItemName(rentalItemID) {
+      const rentalItem = this.rentalItems.find((item) => item.id === rentalItemID);
+      return rentalItem ? rentalItem.name : "-";
+    },
+    getFoodProductName(foodProductID) {
+      const foodProduct = this.foodProducts.find((item) => item.id === foodProductID);
+      return foodProduct ? foodProduct.name : "販売品";
+    },
+    formatStoolTest(stoolTestStatus) {
+      if (stoolTestStatus === "検便有") return "〇";
+      if (stoolTestStatus === "検便無") return "×";
+      return stoolTestStatus || "未登録";
+    },
   },
 };
 </script>
@@ -439,5 +512,19 @@ export default {
 .modal-textarea:focus {
   outline: none;
   border-color: var(--button-primary);
+}
+
+.venue-map-image {
+  display: block;
+  width: min(100%, 560px);
+  height: auto;
+  object-fit: contain;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+}
+
+.mail-link {
+  color: var(--accent-7);
+  text-decoration: underline;
 }
 </style>

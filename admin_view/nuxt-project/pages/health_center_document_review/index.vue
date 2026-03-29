@@ -138,7 +138,7 @@ export default {
       refYears: "Years",
       refYearID: 0,
       refGroupCategories: "ALL",
-      refCategoryID: 0,
+      refCategoryID: 1,
       refInternational: "ALL",
       refInternationalID: 0,
       refExternal: "ALL",
@@ -187,11 +187,12 @@ export default {
     const unregisteredGroupsRes = await $axios.$get("/un_registered_groups");
 
     return {
-      groups: groupsRes.data,
+      groups: groupsRes.data.filter((group) => group.group_category === 1),
       unregisteredGroups: unregisteredGroupsRes.data,
       groupCategories: groupCategoryRes.data,
       yearList: yearsRes.data,
       refYearID: currentYearRes.data.fes_year_id,
+      refCategoryID: 1,
       refYears: currentYears[0].year_num,
     };
   },
@@ -342,9 +343,7 @@ export default {
           throw error;
         }
       }
-      for (const res of refRes.data) {
-        this.groups.push(res);
-      }
+      this.groups = refRes.data.filter((group) => group.group_category === 1);
 
       // 申請しないデータも再取得
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
@@ -381,9 +380,7 @@ export default {
           throw error;
         }
       }
-      for (const res of refRes.data) {
-        this.groups.push(res);
-      }
+      this.groups = refRes.data.filter((group) => group.group_category === 1);
 
       // 検索時も申請しないデータを再取得
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
@@ -430,6 +427,7 @@ export default {
   background-color: red !important;
   color: white;
   background: none; /* 線形グラデーションを上書きして無効にします */
+  background-clip: initial;
   -webkit-background-clip: initial !important; /* デフォルトの状態に戻します */
   -webkit-text-fill-color: black !important;
 }
