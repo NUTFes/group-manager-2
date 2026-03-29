@@ -2,11 +2,7 @@
   <div class="sub-header-container" :style="SubHeader">
     <div v-if="pageSubTitle !== ''" class="sub-header-link">
       <button
-        @click="
-          () => {
-            this.$router.go(-1);
-          }
-        "
+        @click="onSubHeaderBack"
       >
         <span class="material-icons">arrow_back</span>
         {{ pageSubTitle }}
@@ -52,6 +48,20 @@ export default {
       return {
         "--sub-header-height": this.height,
       };
+    },
+  },
+  methods: {
+    resolveIndexPath() {
+      const segments = this.$route.path.split("/").filter(Boolean);
+      if (segments.length <= 1) return "/";
+      return `/${segments.slice(0, -1).join("/")}`;
+    },
+    onSubHeaderBack() {
+      if (this.parentPageLink) {
+        this.$router.push(this.parentPageLink);
+        return;
+      }
+      this.$router.push(this.resolveIndexPath());
     },
   },
 };
