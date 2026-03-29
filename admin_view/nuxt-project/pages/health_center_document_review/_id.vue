@@ -10,13 +10,43 @@
       </Column>
     </Row>
 
+    <div class="side-nav side-nav-left">
+      <button
+        type="button"
+        class="side-nav-button"
+        :disabled="!prevGroupId"
+        aria-label="前の食販団体へ移動"
+        @click="onPrevGroup"
+      >
+        <span class="side-nav-icon">&lt;</span>
+      </button>
+    </div>
+    <div class="side-nav side-nav-right">
+      <button
+        type="button"
+        class="side-nav-button"
+        :disabled="!nextGroupId"
+        aria-label="次の食販団体へ移動"
+        @click="onNextGroup"
+      >
+        <span class="side-nav-icon">&gt;</span>
+      </button>
+    </div>
+
     <Row wrap="nowrap" align="start" justify="space-between">
       <Column width="70%" height="800px" align="start" justify="start">
         <Card width="100%" style="overflow: scroll; align-items: flex-start;">
           <h2>調理工程申請</h2>
           <VerticalTable v-for="order in cookingProcessOrders" :key="order.id">
             <tr>
-              <th colspan="3">{{ getFoodProductName(order.food_product_id) }}</th>
+              <th colspan="3">
+                <div class="section-title-with-button">
+                  <span>{{ getFoodProductName(order.food_product_id) }}</span>
+                  <CommonButton iconName="edit" :on_click="() => onCookingProcessAction(order)">
+                    編集
+                  </CommonButton>
+                </div>
+              </th>
             </tr>
             <tr>
               <th>調理場</th>
@@ -34,13 +64,23 @@
           <HorizontalRule />
 
           <h2>販売品申請</h2>
-          <VerticalTable v-if="foodProducts.length > 0">
+          <VerticalTable
+            v-if="foodProducts.length > 0"
+            class="row-interactive-table"
+            :class="{ 'row-interactive-table--on': enableInteractiveRows }"
+          >
             <tr>
               <th>品目</th>
               <th>1日目</th>
               <th>2日目</th>
             </tr>
-            <tr v-for="foodProduct in foodProducts" :key="foodProduct.id">
+            <tr
+              v-for="foodProduct in foodProducts"
+              :key="foodProduct.id"
+              class="selectable-row"
+              :class="{ 'selected-row': selectedFoodProductId === foodProduct.id }"
+              @click="onFoodProductAction(foodProduct)"
+            >
               <td>{{ foodProduct.name }}</td>
               <td>{{ foodProduct.first_day_num }}</td>
               <td>{{ foodProduct.second_day_num }}</td>
@@ -53,6 +93,8 @@
           <VerticalTable
             v-for="purchaseGroup in purchaseListsByFoodProduct"
             :key="purchaseGroup.foodProductId"
+            class="row-interactive-table"
+            :class="{ 'row-interactive-table--on': enableInteractiveRows }"
           >
             <tr>
               <th colspan="5">{{ purchaseGroup.foodProductName }}</th>
@@ -64,7 +106,13 @@
               <th>購入先</th>
               <th>備考</th>
             </tr>
-            <tr v-for="purchaseList in purchaseGroup.items" :key="purchaseList.id">
+            <tr
+              v-for="purchaseList in purchaseGroup.items"
+              :key="purchaseList.id"
+              class="selectable-row"
+              :class="{ 'selected-row': selectedPurchaseListId === purchaseList.id }"
+              @click="onPurchaseListAction(purchaseList)"
+            >
               <td>{{ purchaseList.items }}</td>
               <td>{{ purchaseList.purchase_date }}</td>
               <td>{{ purchaseList.is_fresh ? "〇" : "×" }}</td>
@@ -76,13 +124,23 @@
           <HorizontalRule />
 
           <h2>従業員申請</h2>
-          <VerticalTable v-if="employees.length > 0">
+          <VerticalTable
+            v-if="employees.length > 0"
+            class="row-interactive-table"
+            :class="{ 'row-interactive-table--on': enableInteractiveRows }"
+          >
             <tr>
               <th>氏名</th>
               <th>学籍番号</th>
               <th>検便</th>
             </tr>
-            <tr v-for="employee in employees" :key="employee.id">
+            <tr
+              v-for="employee in employees"
+              :key="employee.id"
+              class="selectable-row"
+              :class="{ 'selected-row': selectedEmployeeId === employee.id }"
+              @click="onEmployeeAction(employee)"
+            >
               <td>{{ employee.name }}</td>
               <td>{{ employee.student_id }}</td>
               <td>{{ formatStoolTest(employee.stool_test_status) }}</td>
@@ -91,18 +149,33 @@
           <p v-else>未登録</p>
           <HorizontalRule />
 
-          <h2>平面図申請</h2>
+          <div class="section-header-with-button">
+            <h2>平面図申請</h2>
+            <CommonButton iconName="edit" :on_click="onVenueMapAction">
+              編集
+            </CommonButton>
+          </div>
           <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
           <p v-else>未登録</p>
           <HorizontalRule />
 
           <h2>物品申請</h2>
-          <VerticalTable v-if="rentalOrders.length > 0">
+          <VerticalTable
+            v-if="rentalOrders.length > 0"
+            class="row-interactive-table"
+            :class="{ 'row-interactive-table--on': enableInteractiveRows }"
+          >
             <tr>
               <th>品目</th>
               <th>数量</th>
             </tr>
-            <tr v-for="rentalOrder in rentalOrders" :key="rentalOrder.id">
+            <tr
+              v-for="rentalOrder in rentalOrders"
+              :key="rentalOrder.id"
+              class="selectable-row"
+              :class="{ 'selected-row': selectedRentalOrderId === rentalOrder.id }"
+              @click="onRentalOrderAction(rentalOrder)"
+            >
               <td>{{ getRentalItemName(rentalOrder.rental_item_id) }}</td>
               <td>{{ rentalOrder.num }}</td>
             </tr>
@@ -112,101 +185,26 @@
       </Column>
       <Column width="30%" height="800px" align="start" justify="start">
         <Card width="100%" style="overflow: scroll; align-items: flex-start;">
-          <form class="comment-form">
+          <form class="comment-form" @submit.prevent="onSubmitComment">
             <textarea class="comment-textarea" placeholder="メールで送信するコメント"></textarea>
-            <input type="submit" value="送信" />
+            <CommonButton iconName="send" :on_click="onSubmitComment">送信</CommonButton>
           </form>
         </Card>
       </Column>
     </Row>
 
-    <EditModal @close="closeEditModal" v-if="isOpenEditModal" title="参加団体申請の編集">
-      <template v-slot:form>
-        <div>
-          <h3>団体名</h3>
-          <input v-model="groupName" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>申請者</h3>
-          <select v-model="committee">
-            <option disabled value="">選択してください</option>
-            <option v-for="applicant in applicantList" :key="applicant.id" :value="applicant.bool">
-              {{ applicant.value }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>カテゴリー</h3>
-          <select v-model="groupCategoryId">
-            <option disabled value="">選択してください</option>
-            <option v-for="category in groupCategories" :key="category.id" :value="category.id">
-              {{ category.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <h3>国際</h3>
-          <input type="checkbox" v-model="international" />
-        </div>
-        <div>
-          <h3>学外</h3>
-          <input type="checkbox" v-model="external" />
-        </div>
-        <div v-if="external">
-          <h3>実行委員担当者</h3>
-          <input v-model="contactPersonName" placeholder="入力してください" />
-        </div>
-        <div v-if="external">
-          <h3>実行委員担当者メールアドレス</h3>
-          <input v-model="contactPersonEmail" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>企画名</h3>
-          <input v-model="projectName" placeholder="入力してください" />
-        </div>
-        <div class="textarea-container">
-          <h3>活動内容</h3>
-          <textarea v-model="activity" class="modal-textarea" placeholder="入力してください" />
-        </div>
-        <div>
-          <h3>開催年</h3>
-          <select v-model="fesYearId">
-            <option disabled value="">選択してください</option>
-            <option v-for="year in yearList" :key="year.id" :value="year.id">
-              {{ year.year_num }}
-            </option>
-          </select>
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :on_click="editGroup">登録</CommonButton>
-      </template>
-    </EditModal>
-
-    <DeleteModal @close="closeDeleteModal" v-if="isOpenDeleteModal" title="参加団体申請の削除">
-      <template v-slot:method>
-        <YesButton iconName="delete" :on_click="deleteGroup">はい</YesButton>
-        <NoButton iconName="close" :on_click="closeDeleteModal">いいえ</NoButton>
-      </template>
-    </DeleteModal>
-
-    <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
-      {{ message }}
-    </SnackBar>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { downloadFile } from '~/utils/download-file';
-
+const HEALTH_CENTER_REFINEMENT_ENDPOINT =
+  "/api/v1/get_refinement_health_center_document_status";
+const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
 
 export default {
   watchQuery: ["page"],
   data() {
     return {
-      data: [],
-      detail_data: [],
       group: [],
       foodProducts: [],
       purchaseLists: [],
@@ -216,36 +214,31 @@ export default {
       rentalOrders: [],
       shops: [],
       rentalItems: [],
-
-      // v-model
-      groupName: "",
-      projectName: [],
-      activity: [],
-      groupCategoryId: "",
-      fesYearId: "",
-      committee: "",
-      international: false,
-      external: false,
-      contactPersonName: "",
-      contactPersonEmail: "",
-
-      isOpenEditModal: false,
-      isOpenDeleteModal: false,
-      isOpenSnackBar: false,
-
-      groupCategories: [],
-      yearList: [],
-      applicantList: [
-        { id: 1, value: "実行委員", bool: true },
-        { id: 2, value: "参加団体", bool: false },
-      ],
+      enableInteractiveRows: true,
+      selectedFoodProductId: null,
+      selectedPurchaseListId: null,
+      selectedEmployeeId: null,
+      selectedRentalOrderId: null,
+      foodSalesGroupIds: [],
     };
   },
   computed: {
-    ...mapState({
-      selfRoleId: (state) => state.users.role,
-      roleID: (state) => state.users.role,
-    }),
+    currentGroupId() {
+      const id = Number(this.$route.params.id);
+      return Number.isNaN(id) ? null : id;
+    },
+    currentGroupIndex() {
+      if (!this.currentGroupId) return -1;
+      return this.foodSalesGroupIds.indexOf(this.currentGroupId);
+    },
+    prevGroupId() {
+      if (this.currentGroupIndex <= 0) return null;
+      return this.foodSalesGroupIds[this.currentGroupIndex - 1];
+    },
+    nextGroupId() {
+      if (this.currentGroupIndex < 0) return null;
+      return this.foodSalesGroupIds[this.currentGroupIndex + 1] || null;
+    },
     purchaseListsByFoodProduct() {
       const groups = this.purchaseLists.reduce((acc, purchaseList) => {
         const foodProductID = purchaseList.food_product_id;
@@ -277,24 +270,30 @@ export default {
 
     const groupUrl = "/api/v1/get_group_show_for_admin_view/" + routeId;
     const groupRes = await $axios.$get(groupUrl);
-    console.log(groupRes.data);
 
-    const catUrl = "/group_categories";
-    const catRes = await $axios.$get(catUrl);
-
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-
-    const contactPersonUrl = "/contact_persons";
-    let contactPersonRes = null;
-    await $axios.get(contactPersonUrl)
-      .then((response) => {
-        const contactPersons = response.data;
-        contactPersonRes = contactPersons.find((cp) => cp.group_id == parseInt(routeId));
-      })
-      .catch((error) => {
-        console.error("Error fetching contact persons: ", error);
-      });
+    const currentYearRes = await $axios.$get("/user_page_settings/1");
+    const refinementUrl =
+      HEALTH_CENTER_REFINEMENT_ENDPOINT +
+      "?fes_year_id=" +
+      currentYearRes.data.fes_year_id;
+    let foodSalesGroupsRes;
+    try {
+      foodSalesGroupsRes = await $axios.$post(refinementUrl);
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        const legacyUrl =
+          LEGACY_REFINEMENT_ENDPOINT +
+          "?fes_year_id=" +
+          currentYearRes.data.fes_year_id;
+        foodSalesGroupsRes = await $axios.$post(legacyUrl);
+      } else {
+        throw error;
+      }
+    }
+    const foodSalesGroupIds = foodSalesGroupsRes.data
+      .filter((item) => item.group_category === 1)
+      .map((item) => item.group.id)
+      .sort((a, b) => a - b);
 
     const [
       foodProducts,
@@ -344,109 +343,51 @@ export default {
       rentalOrders: rentalOrders,
       shops: shops,
       rentalItems: rentalItems,
-      committee: groupRes.data.committee,
-      groupName: groupRes.data.group.name,
-      projectName: groupRes.data.group.project_name,
-      international: groupRes.data.group.is_international,
-      external: groupRes.data.group.is_external,
-      contactPersonName: contactPersonRes ? contactPersonRes.name : "",
-      contactPersonEmail: contactPersonRes ? contactPersonRes.email : "",
-      activity: groupRes.data.group.activity,
-      groupCategoryId: groupRes.data.group.group_category_id,
-      fesYearId: groupRes.data.group.fes_year_id,
-      groupCategories: catRes.data,
-      yearList: yearsRes.data,
-      groupUrl: groupUrl,
+      foodSalesGroupIds,
     };
   },
   mounted() {
     window.scrollTo(0, 0);
   },
   methods: {
-    openEditModal() {
-      this.isOpenEditModal = false;
-      this.isOpenEditModal = true;
+    onPrevGroup() {
+      if (!this.prevGroupId) return;
+      this.$router.push(`/health_center_document_review/${this.prevGroupId}`);
     },
-    closeEditModal() {
-      this.isOpenEditModal = false;
+    onNextGroup() {
+      if (!this.nextGroupId) return;
+      this.$router.push(`/health_center_document_review/${this.nextGroupId}`);
     },
-    openDeleteModal() {
-      this.isOpenDeleteModal = false;
-      this.isOpenDeleteModal = true;
+    onSubmitComment() {
+      // TODO: コメント送信API連携時に処理を実装する
     },
-    closeDeleteModal() {
-      this.isOpenDeleteModal = false;
+    onFoodProductAction(foodProduct) {
+      if (!foodProduct?.id) return;
+      this.selectedFoodProductId = foodProduct.id;
+      this.$router.push(`/food_products/${foodProduct.id}`);
     },
-    openSnackBar(message) {
-      this.message = message;
-      this.isOpenSnackBar = true;
-      setTimeout(this.closeSnackBar, 2000);
+    onPurchaseListAction(purchaseList) {
+      if (!purchaseList?.id) return;
+      this.selectedPurchaseListId = purchaseList.id;
+      this.$router.push(`/purchase_lists/${purchaseList.id}`);
     },
-    closeSnackBar() {
-      this.isOpenSnackBar = false;
+    onEmployeeAction(employee) {
+      if (!employee?.id) return;
+      this.selectedEmployeeId = employee.id;
+      this.$router.push(`/employees/${employee.id}`);
     },
-    async reload() {
-      const reUrl = this.groupUrl;
-      const reGroupRes = await this.$axios.$get(reUrl);
-      this.group = reGroupRes.data;
+    onRentalOrderAction(rentalOrder) {
+      if (!rentalOrder?.id) return;
+      this.selectedRentalOrderId = rentalOrder.id;
+      this.$router.push(`/rental_orders/${rentalOrder.id}`);
     },
-    async editGroup() {
-      const putGroupUrl =
-        "/groups/" +
-        this.group.group.id +
-        "?name=" +
-        this.groupName +
-        "&committee=" +
-        this.committee +
-        "&project_name=" +
-        this.projectName +
-        "&group_category_id=" +
-        this.groupCategoryId +
-        "&activity=" +
-        this.activity +
-        "&fes_year_id=" +
-        this.fesYearId +
-        "&is_international=" +
-        this.international +
-        "&is_external=" +
-        this.external;
-
-      await this.$axios.$put(putGroupUrl).then((response) => {
-        this.openSnackBar(this.groupName + "を編集しました");
-        this.groupName = "";
-        this.committee = "";
-        this.projectName = "";
-        this.activity = "";
-        this.groupCategoryId = "";
-        this.fesYearId = "";
-        this.international = false;
-        this.external = false;
-        this.reload();
-        this.closeEditModal();
-      });
+    onCookingProcessAction(order) {
+      if (!order?.id) return;
+      this.$router.push(`/cooking_process_order/${order.id}`);
     },
-    async deleteGroup() {
-      const delUrl = "/groups/" + this.$route.params.id;
-      const delRes = await this.$axios.$delete(delUrl);
-      this.$router.push("/groups");
-    },
-    async printPDF() {
-      const url =
-        this.$config.apiURL +
-        "/print_pdf/group_info/" +
-        this.group.group.id +
-        "/output.pdf";
-      await downloadFile(this.$axios, url, this.group.group.name + "_PDF");
-      this.openSnackBar("参加団体情報のPDFをダウンロードしました");
-    },
-    async printRentalItemsPDF() {
-      const url =
-        this.$config.apiURL +
-        "/print_pdf/group/" +
-        this.group.group.id +
-        "/output.pdf";
-      await downloadFile(this.$axios, url, this.group.group.name + "_PDF");
-      this.openSnackBar("物品貸し出し表のPDFをダウンロードしました");
+    onVenueMapAction() {
+      if (!this.group?.group?.id) return;
+      this.$router.push(`/venue_maps/${this.group.group.id}`);
     },
     getShopName(shopID) {
       const shop = this.shops.find((item) => item.id === shopID);
@@ -470,6 +411,66 @@ export default {
 </script>
 
 <style scoped>
+.main-content {
+  position: relative;
+}
+
+.side-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+.side-nav-left {
+  left: -56px;
+}
+
+.side-nav-right {
+  right: -56px;
+}
+
+.side-nav-button {
+  min-width: 20px;
+  width: 20px;
+  height: 56px;
+  padding: 0;
+  letter-spacing: 0;
+  gap: 0;
+  font-size: 10px;
+  border-radius: 10px;
+  border: 1px solid #c9ccd1;
+  box-shadow: none;
+  backdrop-filter: none;
+  color: #6b7280;
+  background: #ffffff;
+  opacity: 0.9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.side-nav-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.side-nav-button:hover {
+  background: #f3f4f6;
+  border-color: #b8bcc2;
+  color: #4b5563;
+  opacity: 1;
+}
+
+.side-nav-button:disabled {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
 .comment-form {
   width: 100%;
   padding: 0;
@@ -497,23 +498,6 @@ export default {
   width: 100%;
 }
 
-.modal-textarea {
-  width: 100%;
-  height: 120px;
-  padding: 12px;
-  border: 1px solid var(--accent-2);
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-  box-sizing: border-box;
-}
-
-.modal-textarea:focus {
-  outline: none;
-  border-color: var(--button-primary);
-}
-
 .venue-map-image {
   display: block;
   width: min(100%, 560px);
@@ -526,5 +510,53 @@ export default {
 .mail-link {
   color: var(--accent-7);
   text-decoration: underline;
+}
+
+.section-title-with-button,
+.section-header-with-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.row-interactive-table--on .selectable-row {
+  cursor: pointer;
+}
+
+.row-interactive-table--on .selectable-row td {
+  transition: 0.2s;
+}
+
+.row-interactive-table--on .selectable-row:hover td {
+  transform: translateY(-1px);
+  background-color: white;
+  box-shadow: 5px 5px 14px #f0f0f0, -5px -5px 14px #fafafa;
+}
+
+.row-interactive-table--on .selectable-row.selected-row td {
+  background-color: var(--accent-1);
+}
+
+@media (max-width: 900px) {
+  .side-nav-left {
+    left: -12px;
+  }
+
+  .side-nav-right {
+    right: -12px;
+  }
+
+  .side-nav-button {
+    min-width: 18px;
+    width: 18px;
+    height: 46px;
+    border-radius: 8px;
+  }
+
+  .side-nav-icon {
+    font-size: 12px;
+  }
 }
 </style>
