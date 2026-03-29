@@ -56,7 +56,8 @@
           </th>
         </template>
         <template v-slot:table-body>
-          <tr v-for="(group, index) in groups" :key="index">
+          <tr v-for="(group, index) in groups" :key="index"
+            @click="() => $router.push({ path: `/health_center_document_review/` + group.group.id })">
             <td>{{ group.group.id }}</td>
             <td>{{ group.group.name }}</td>
             <td :class="{ unregistered: !isHealthCenterDocumentComplete(group) }">
@@ -103,6 +104,14 @@
 
 <script>
 import { mapState } from "vuex";
+
+const HEALTH_CENTER_REFINEMENT_ENDPOINT =
+  "/api/v1/get_refinement_health_center_document_status";
+const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
+const HEALTH_CENTER_SEARCH_ENDPOINT =
+  "/api/v1/get_search_health_center_document_status";
+const LEGACY_SEARCH_ENDPOINT = "/api/v1/get_search_order_status_check";
+
 export default {
   watchQuery: ["page"],
   data() {
@@ -151,9 +160,23 @@ export default {
     const currentYearRes = await $axios.$get(currentYearUrl);
     const groupCategoryRes = await $axios.$get("/group_categories");
     const url =
-      "/api/v1/get_refinement_health_center_document_status?fes_year_id=" +
+      HEALTH_CENTER_REFINEMENT_ENDPOINT +
+      "?fes_year_id=" +
       currentYearRes.data.fes_year_id;
-    const groupsRes = await $axios.$post(url);
+    let groupsRes;
+    try {
+      groupsRes = await $axios.$post(url);
+    } catch (error) {
+      if (error?.response?.status === 404) {
+        const legacyUrl =
+          LEGACY_REFINEMENT_ENDPOINT +
+          "?fes_year_id=" +
+          currentYearRes.data.fes_year_id;
+        groupsRes = await $axios.$post(legacyUrl);
+      } else {
+        throw error;
+      }
+    }
     const yearsUrl = "/fes_years";
     const yearsRes = await $axios.$get(yearsUrl);
     const currentYears = yearsRes.data.filter(function (element) {
@@ -290,7 +313,8 @@ export default {
     async fetchFilteredData() {
       this.groups = [];
       const refUrl =
-        "/api/v1/get_refinement_health_center_document_status?fes_year_id=" +
+        HEALTH_CENTER_REFINEMENT_ENDPOINT +
+        "?fes_year_id=" +
         this.refYearID +
         "&group_category_id=" +
         this.refCategoryID +
@@ -298,7 +322,26 @@ export default {
         this.refInternationalID +
         "&is_external=" +
         this.refExternalID;
-      const refRes = await this.$axios.$post(refUrl);
+      let refRes;
+      try {
+        refRes = await this.$axios.$post(refUrl);
+      } catch (error) {
+        if (error?.response?.status === 404) {
+          const legacyRefUrl =
+            LEGACY_REFINEMENT_ENDPOINT +
+            "?fes_year_id=" +
+            this.refYearID +
+            "&group_category_id=" +
+            this.refCategoryID +
+            "&is_international=" +
+            this.refInternationalID +
+            "&is_external=" +
+            this.refExternalID;
+          refRes = await this.$axios.$post(legacyRefUrl);
+        } else {
+          throw error;
+        }
+      }
       for (const res of refRes.data) {
         this.groups.push(res);
       }
@@ -325,8 +368,19 @@ export default {
       localStorage.setItem(this.$route.path + "SearchText", this.searchText);
       this.groups = [];
       const searchUrl =
-        "/api/v1/get_search_health_center_document_status?word=" + this.searchText;
-      const refRes = await this.$axios.$post(searchUrl);
+        HEALTH_CENTER_SEARCH_ENDPOINT + "?word=" + this.searchText;
+      let refRes;
+      try {
+        refRes = await this.$axios.$post(searchUrl);
+      } catch (error) {
+        if (error?.response?.status === 404) {
+          const legacySearchUrl =
+            LEGACY_SEARCH_ENDPOINT + "?word=" + this.searchText;
+          refRes = await this.$axios.$post(legacySearchUrl);
+        } else {
+          throw error;
+        }
+      }
       for (const res of refRes.data) {
         this.groups.push(res);
       }
