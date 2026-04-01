@@ -34,32 +34,42 @@
     </div>
 
     <Row wrap="nowrap" align="start" justify="space-between">
-      <Column width="70%" height="800px" align="start" justify="start">
-        <Card width="100%" style="overflow: scroll; align-items: flex-start;">
+      <Column width="70%" align="start" justify="start">
+        <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
           <h2>調理工程申請</h2>
-          <VerticalTable v-for="order in cookingProcessOrders" :key="order.id">
-            <tr>
-              <th colspan="3">
-                <div class="section-title-with-button">
-                  <span>{{ getFoodProductName(order.food_product_id) }}</span>
-                  <CommonButton iconName="edit" :on_click="() => onCookingProcessAction(order)">
-                    編集
-                  </CommonButton>
-                </div>
-              </th>
-            </tr>
-            <tr>
-              <th>調理場</th>
-              <td>営業前：{{ order.pre_open_kitchen ? "使用する" : "使用しない" }}</td>
-              <td>営業中：{{ order.during_open_kitchen ? "使用する" : "使用しない" }}</td>
-            </tr>
-            <tr>
-              <th>調理工程</th>
-              <td colspan="2">
-                <div style="white-space: pre-line">{{ order.tent || "未入力" }}</div>
-              </td>
-            </tr>
-          </VerticalTable>
+          <Card
+            width="100%"
+            style="align-items: flex-start;"
+            v-for="order in cookingProcessOrders"
+            :key="order.id"
+            class="selectable-card"
+            :class="{ 'row-interactive-card--on': enableInteractiveRows }"
+          >
+            <div class="selectable-card-body" @click="onCookingProcessAction(order)">
+              <VerticalTable>
+                <tr>
+                  <th colspan="3">
+                    <div class="section-title-with-button">
+                      <h2>
+                        <span>{{ getFoodProductName(order.food_product_id) }}</span>
+                      </h2>
+                    </div>
+                  </th>
+                </tr>
+                <tr>
+                  <th>調理場</th>
+                  <td>営業前：{{ order.pre_open_kitchen ? "使用する" : "使用しない" }}</td>
+                  <td>営業中：{{ order.during_open_kitchen ? "使用する" : "使用しない" }}</td>
+                </tr>
+                <tr>
+                  <th>調理工程</th>
+                  <td colspan="2">
+                    <div style="white-space: pre-line">{{ order.tent || "未入力" }}</div>
+                  </td>
+                </tr>
+              </VerticalTable>
+            </div>
+          </Card>
           <p v-if="cookingProcessOrders.length === 0">未登録</p>
           <HorizontalRule />
 
@@ -97,7 +107,7 @@
             :class="{ 'row-interactive-table--on': enableInteractiveRows }"
           >
             <tr>
-              <th colspan="5">{{ purchaseGroup.foodProductName }}</th>
+              <th colspan="5"><h2>{{ purchaseGroup.foodProductName }}</h2></th>
             </tr>
             <tr>
               <th>品目</th>
@@ -183,8 +193,8 @@
           <p v-else>未登録</p>
         </Card>
       </Column>
-      <Column width="30%" height="800px" align="start" justify="start">
-        <Card width="100%" style="overflow: scroll; align-items: flex-start;">
+      <Column width="30%" align="start" justify="start" class="sticky-right-column">
+        <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
           <form class="comment-form" @submit.prevent="onSubmitComment">
             <textarea class="comment-textarea" placeholder="メールで送信するコメント"></textarea>
             <CommonButton iconName="send" :on_click="onSubmitComment">送信</CommonButton>
@@ -539,7 +549,35 @@ export default {
   background-color: var(--accent-1);
 }
 
+.selectable-card {
+  transition: 0.2s;
+}
+
+.selectable-card-body {
+  width: 100%;
+}
+
+.row-interactive-card--on {
+  cursor: pointer;
+}
+
+.row-interactive-card--on:hover {
+  transform: translateY(-1px);
+  background-color: white;
+  box-shadow: 5px 5px 14px #f0f0f0, -5px -5px 14px #fafafa;
+}
+
+.sticky-right-column {
+  position: sticky;
+  top: 16px;
+}
+
 @media (max-width: 900px) {
+  .sticky-right-column {
+    position: static;
+    top: auto;
+  }
+
   .side-nav-left {
     left: -12px;
   }
