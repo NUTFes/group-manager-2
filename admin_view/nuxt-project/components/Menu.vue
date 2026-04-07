@@ -200,6 +200,7 @@ export default {
           icon: "assignment_return",
           click: "/assign_items",
         },
+        { title: "新物品割り当て", icon: "assignment_return", click: "/assign_items_develop" },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         { title: "書類印刷", icon: "print", click: "/print" },
