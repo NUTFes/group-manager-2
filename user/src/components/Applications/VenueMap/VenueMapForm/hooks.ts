@@ -6,6 +6,7 @@ import {
   usePatchVenueMap,
 } from '@/api/venueMapApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { ResolverOptions, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { mutate } from 'swr';
@@ -16,6 +17,7 @@ export const useVenueMapFormHooks = (
   venueMapProp?: VenueMapResponse | null,
   onSubmitted?: () => void
 ) => {
+  const { t } = useTranslation('common');
   const {
     venueMap: fetchedVenueMap,
     error: fetchError,
@@ -24,6 +26,66 @@ export const useVenueMapFormHooks = (
   } = useGetVenueMap(groupId || 0);
 
   const venueMap = venueMapProp || fetchedVenueMap;
+  const checklistOptions = [
+    {
+      id: 'trashPosition',
+      name: t('applications.venueMap.checklist.options.trashPosition'),
+    },
+    {
+      id: 'foodStorage',
+      name: t('applications.venueMap.checklist.options.foodStorage'),
+    },
+    {
+      id: 'allItemsListed',
+      name: t('applications.venueMap.checklist.options.allItemsListed'),
+    },
+    {
+      id: 'fireHazardousMaterials',
+      name: t('applications.venueMap.checklist.options.fireHazardousMaterials'),
+    },
+    {
+      id: 'partitionPlacement',
+      name: t('applications.venueMap.checklist.options.partitionPlacement'),
+    },
+  ];
+  const uploadNotes = t('applications.venueMap.upload.note', {
+    returnObjects: true,
+  }) as string[];
+  const venueMapFormTexts = {
+    general: {
+      loading: t('general.loading'),
+      required: t('form.required'),
+    },
+    fields: {
+      picture: t('applications.venueMap.fields.picture'),
+      checklist: t('applications.venueMap.fields.checklist'),
+    },
+    upload: {
+      notes: uploadNotes,
+      uploaded: (fileName: string) =>
+        t('applications.venueMap.upload.uploaded', {
+          fileName,
+        }),
+    },
+    notes: {
+      existing: t('applications.venueMap.notes.existing'),
+      currentImage: (name: string) =>
+        t('applications.venueMap.notes.currentImage', {
+          name,
+        }),
+      unknownFile: t('applications.venueMap.notes.unknownFile'),
+    },
+    checklist: {
+      options: checklistOptions,
+      note: t('applications.venueMap.checklist.note'),
+    },
+    buttons: {
+      cancel: t('form.actions.cancel'),
+      submitting: t('applications.venueMap.buttons.submitting'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+  };
 
   const resolver = async (
     values: VenueMapFormData,
@@ -51,7 +113,7 @@ export const useVenueMapFormHooks = (
       if (!values.image) {
         errors.image = {
           type: 'custom',
-          message: '模擬店平面図画像をアップロードしてください。',
+          message: 'applications.venueMap.validation.imageRequired',
         };
       }
     }
@@ -132,9 +194,7 @@ export const useVenueMapFormHooks = (
     const imgurClientId = process.env.NEXT_PUBLIC_IMGUR_CLIENT_ID;
 
     if (!imgurClientId) {
-      throw new Error(
-        'Imgur Client IDが設定されていません。環境変数を確認してください。'
-      );
+      throw new Error(t('applications.venueMap.messages.imgurMissing'));
     }
     const base64 = base64Image.replace(/^data:image\/[a-z]+;base64,/, '');
 
@@ -156,15 +216,15 @@ export const useVenueMapFormHooks = (
       return data.data.link;
     } catch (error) {
       console.error('Imgurアップロードエラー:', error);
-      throw new Error('画像のアップロードに失敗しました');
+      throw new Error(t('applications.venueMap.messages.imgurUploadFailed'));
     }
   };
 
   useEffect(() => {
     if (createError || updateError) {
-      toast.error('送信に失敗しました。時間を置いて再度お試しください。');
+      toast.error(t('applications.venueMap.messages.submitFailed'));
     }
-  }, [createError, updateError]);
+  }, [createError, updateError, t]);
 
   const onSubmit = async (formData: VenueMapFormData) => {
     try {
@@ -194,13 +254,13 @@ export const useVenueMapFormHooks = (
       await venueMapMutate();
       mutate(`check_all_registered/${groupId}`);
 
-      toast.success(venueMap ? '修正しました' : '登録しました');
+      toast.success(t('applications.venueMap.messages.submitSuccess'));
       reset({ ...formData, image: undefined }); // 送信後は image フィールドをクリア
       onSubmitted?.();
       return true;
     } catch (error) {
       console.error('送信エラー:', error);
-      toast.error('送信に失敗しました。時間を置いて再度お試しください。');
+      toast.error(t('applications.venueMap.messages.submitFailed'));
       return false;
     }
   };
@@ -219,5 +279,6 @@ export const useVenueMapFormHooks = (
     onSubmit,
     isDirty,
     reset,
+    venueMapFormTexts,
   };
 };

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
 import FormList from '@/components/FormList/FormList';
-import { FormItem } from '@/components/FormList/type';
+import { usePowerNegativeViewHooks } from '../hooks/usePowerNegativeViewHooks';
 import { PowerNegativeViewProps } from '../types';
 
 export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
@@ -18,23 +18,18 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
   onCancel,
   isDeadline,
 }) => {
-  const noApplicationItems: FormItem[] = [
-    {
-      label: '電力申請は不要（登録済み）',
-      content: '電力が必要な機器は使用しません。',
-    },
-  ];
+  const { powerNegativeViewTexts } = usePowerNegativeViewHooks(radioOptions);
 
   return (
     <div className="flex w-full flex-col gap-6">
       {isEdit && (
         <>
           <Radio
-            label="電力申請を行いますか？"
+            label={powerNegativeViewTexts.radio.label}
             value={radioValue}
             onChange={onRadioChange}
             required
-            options={radioOptions}
+            options={powerNegativeViewTexts.radio.options}
           />
           {onCancel && (
             <div className="flex justify-center">
@@ -45,7 +40,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
                 variant
                 onClick={onCancel}
               >
-                キャンセル
+                {powerNegativeViewTexts.actions.cancel}
               </Button>
             </div>
           )}
@@ -54,7 +49,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
 
       {!isEdit && (
         <FormList
-          items={noApplicationItems}
+          items={powerNegativeViewTexts.summary.noApplicationItems}
           onEdit={isDeadline ? undefined : onEdit}
           isEdit={!isDeadline}
         />
@@ -64,7 +59,9 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
         <div className="flex flex-col items-center gap-4">
           {submitError && (
             <div className="relative w-full rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
-              <strong className="font-bold">エラー：</strong>
+              <strong className="font-bold">
+                {powerNegativeViewTexts.errors.submitTitle}
+              </strong>
               <span className="block sm:inline">{submitError}</span>
             </div>
           )}
@@ -74,7 +71,7 @@ export const PowerNegativeView: FC<PowerNegativeViewProps> = ({
             color="main"
             onClick={onNegativeSubmit}
           >
-            登録
+            {powerNegativeViewTexts.actions.register}
           </Button>
         </div>
       )}

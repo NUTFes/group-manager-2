@@ -7,6 +7,7 @@ import {
   useUpdatePlacesOrderMutations,
 } from '@/api/venueApplication';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { KeyedMutator, mutate } from 'swr';
@@ -16,12 +17,13 @@ import {
   venueApplicationFormSchema,
 } from './schema';
 
-export const useVenueMapHooks = (
+export const useVenueApplicationFormHooks = (
   groupId: number,
   placeOrderMutate: KeyedMutator<ApiResponse<PlaceOrder>>,
   placeOrder?: PlaceOrder,
   handleClose?: () => void
 ) => {
+  const { t } = useTranslation('common');
   const first = placeOrder?.first ?? DEFAULT_ID;
   const second = placeOrder?.second ?? DEFAULT_ID;
   const third = placeOrder?.third ?? DEFAULT_ID;
@@ -66,6 +68,21 @@ export const useVenueMapHooks = (
     values.third,
   ]);
 
+  const venueApplicationFormTexts = {
+    loading: t('applications.venue.loading'),
+    fields: {
+      firstChoice: t('applications.venue.fields.firstChoice'),
+      secondChoice: t('applications.venue.fields.secondChoice'),
+      thirdChoice: t('applications.venue.fields.thirdChoice'),
+      remark: t('applications.venue.fields.remark'),
+    },
+    actions: {
+      cancel: t('form.actions.cancel'),
+      edit: t('form.actions.edit'),
+      register: t('form.actions.register'),
+    },
+  };
+
   const submitHandler = async (formData: VenueApplicationType) => {
     if (isEdit) {
       await updateTrigger({
@@ -81,13 +98,13 @@ export const useVenueMapHooks = (
   const onSubmit = async (formData: VenueApplicationType) => {
     if (errors.first || errors.second || errors.third || errors.remark) {
       console.error(errors);
-      toast.error('入力エラーがあります。');
+      toast.error(t('form.validation.inputError'));
       return;
     }
 
     try {
       await submitHandler(formData);
-      toast.success('登録しました。');
+      toast.success(t('form.messages.registerSuccess'));
       if (placeOrderMutate) {
         placeOrderMutate();
       }
@@ -98,7 +115,7 @@ export const useVenueMapHooks = (
     } catch {
       console.error(error);
       console.error(updateError);
-      toast.error('登録に失敗しました。');
+      toast.error(t('form.messages.registerFailed'));
     }
   };
 
@@ -127,6 +144,7 @@ export const useVenueMapHooks = (
     handleSubmit,
     disableOptions,
     validateEdit,
+    venueApplicationFormTexts,
   };
 };
 
