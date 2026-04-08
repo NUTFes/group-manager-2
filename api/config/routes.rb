@@ -136,9 +136,10 @@ Rails.application.routes.draw do
     collection do
       get 'group/:group_id', to: 'health_center_submission_statuses#get_by_group_id'
     end
-    resources :comments, only: %i[index create]
+    resources :comments,
+              controller: 'health_center_submission_status_comments',
+              only: %i[index show create update destroy]
   end
-  resources :comments, only: %i[show update destroy]
   resources :fire_equipment_orders do
     collection do
       get 'group/:group_id', to: 'fire_equipment_orders#get_by_group_id'

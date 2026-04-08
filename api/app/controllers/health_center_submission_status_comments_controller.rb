@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class CommentsController < ApplicationController
-  before_action :set_health_center_submission_status, only: %i[index create]
+class HealthCenterSubmissionStatusCommentsController < ApplicationController
+  before_action :set_health_center_submission_status
   before_action :set_comment, only: %i[show update destroy]
 
   # GET /health_center_submission_statuses/:health_center_submission_status_id/comments
@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
     render json: fmt(ok, comments), status: :ok
   end
 
-  # GET /comments/1
+  # GET /health_center_submission_statuses/:health_center_submission_status_id/comments/:id
   def show
     render json: fmt(ok, @comment), status: :ok
   end
@@ -26,7 +26,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /comments/1
+  # PATCH/PUT /health_center_submission_statuses/:health_center_submission_status_id/comments/:id
   def update
     if @comment.update(comment_params)
       render json: fmt(ok, @comment, "Updated comment id = #{params[:id]}"), status: :ok
@@ -35,7 +35,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  # DELETE /comments/1
+  # DELETE /health_center_submission_statuses/:health_center_submission_status_id/comments/:id
   def destroy
     @comment.destroy
     render json: fmt(ok, [], "Deleted comment = #{params[:id]}"), status: :ok
@@ -53,7 +53,7 @@ class CommentsController < ApplicationController
   end
 
   def set_comment
-    @comment = Comment.find_by(id: params[:id])
+    @comment = @health_center_submission_status.comments.find_by(id: params[:id])
     return if @comment
 
     render json: fmt(not_found, [], "Not found comment id = #{params[:id]}"), status: :not_found
