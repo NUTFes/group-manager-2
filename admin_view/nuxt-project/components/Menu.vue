@@ -196,9 +196,9 @@ export default {
       operation_items: [
         { title: "ダッシュボード", icon: "dashboard", click: "/dashboard" },
         {
-          title: "物品割り当て",
+          title: "在庫登録",
           icon: "assignment_return",
-          click: "/assign_items",
+          click: "/stock_items",
         },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
