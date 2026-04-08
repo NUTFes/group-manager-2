@@ -67,38 +67,12 @@
       </Card>
     </Row>
 
-    <EditModal
-      @close="closeEditModal"
+    <EditModalsVenueMapEditModal
       v-if="isOpenEditModal"
-      title="模擬店平面図の編集"
-    >
-      <template v-slot:form>
-        <div>
-          <h3>団体名</h3>
-          <input
-            v-model="venue_map.group.name"
-            placeholder="入力してください"
-          />
-        </div>
-        <div>
-          <h3>模擬店平面図</h3>
-          <label>
-            <input type="file" accept=".png, .jpg" @change="fileUpload" />
-            <div v-if="isInvalidFile === true" style="color: red">
-              ファイル形式は[.pngか.jpeg又は.jpg]にしてください
-            </div>
-            <div v-else-if="isFileCheck === true" style="color: red">
-              ファイル名は「参加形式_団体名」の形式で入力してください
-            </div>
-          </label>
-        </div>
-      </template>
-      <template v-slot:method>
-        <CommonButton iconName="edit" :disabled="!isFile" :on_click="edit">{{
-          buttonState
-        }}</CommonButton>
-      </template>
-    </EditModal>
+      :venue-map="venue_map"
+      @close="closeEditModal"
+      @saved="reload"
+    />
 
     <DeleteModal
       @close="closeDeleteModal"
@@ -119,8 +93,8 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { mapState } from "vuex";
 export default {
   watchQuery: ["page"],
   data() {

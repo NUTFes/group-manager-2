@@ -45,7 +45,7 @@
             class="selectable-card"
             :class="{ 'row-interactive-card--on': enableInteractiveRows }"
           >
-            <div class="selectable-card-body" @click="onCookingProcessAction(order)">
+            <div class="selectable-card-body" @click="openCookingProcessOrderModal(order)">
               <VerticalTable>
                 <tr>
                   <th colspan="3">
@@ -89,7 +89,7 @@
               :key="foodProduct.id"
               class="selectable-row"
               :class="{ 'selected-row': selectedFoodProductId === foodProduct.id }"
-              @click="onFoodProductAction(foodProduct)"
+              @click="openFoodProductModal(foodProduct)"
             >
               <td>{{ foodProduct.name }}</td>
               <td>{{ foodProduct.first_day_num }}</td>
@@ -121,7 +121,7 @@
               :key="purchaseList.id"
               class="selectable-row"
               :class="{ 'selected-row': selectedPurchaseListId === purchaseList.id }"
-              @click="onPurchaseListAction(purchaseList)"
+              @click="openPurchaseListModal(purchaseList)"
             >
               <td>{{ purchaseList.items }}</td>
               <td>{{ purchaseList.purchase_date }}</td>
@@ -149,7 +149,7 @@
               :key="employee.id"
               class="selectable-row"
               :class="{ 'selected-row': selectedEmployeeId === employee.id }"
-              @click="onEmployeeAction(employee)"
+              @click="openEmployeeModal(employee)"
             >
               <td>{{ employee.name }}</td>
               <td>{{ employee.student_id }}</td>
@@ -161,7 +161,7 @@
 
           <div class="section-header-with-button">
             <h2>平面図申請</h2>
-            <CommonButton iconName="edit" :on_click="onVenueMapAction">
+            <CommonButton iconName="edit" :on_click="openVenueMapModal">
               編集
             </CommonButton>
           </div>
@@ -184,7 +184,7 @@
               :key="rentalOrder.id"
               class="selectable-row"
               :class="{ 'selected-row': selectedRentalOrderId === rentalOrder.id }"
-              @click="onRentalOrderAction(rentalOrder)"
+              @click="openRentalOrderModal(rentalOrder)"
             >
               <td>{{ getRentalItemName(rentalOrder.rental_item_id) }}</td>
               <td>{{ rentalOrder.num }}</td>
@@ -203,6 +203,51 @@
       </Column>
     </Row>
 
+    <EditModalsFoodProductEditModal
+      v-if="isOpenEditModal && activeEditType === 'food_product' && selectedFoodProduct"
+      :food-product="selectedFoodProduct"
+      @close="closeEditModal"
+      @saved="onEditorSaved"
+    />
+
+    <EditModalsPurchaseListEditModal
+      v-if="isOpenEditModal && activeEditType === 'purchase_list' && selectedPurchaseList"
+      :purchase-list="selectedPurchaseList"
+      :shops="shops"
+      @close="closeEditModal"
+      @saved="onEditorSaved"
+    />
+
+    <EditModalsEmployeeEditModal
+      v-if="isOpenEditModal && activeEditType === 'employee' && selectedEmployee"
+      :employee="selectedEmployee"
+      @close="closeEditModal"
+      @saved="onEditorSaved"
+    />
+
+    <EditModalsVenueMapEditModal
+      v-if="isOpenEditModal && activeEditType === 'venue_map' && venueMap"
+      :venue-map="venueMap"
+      @close="closeEditModal"
+      @saved="onEditorSaved"
+    />
+
+    <EditModalsRentalOrderEditModal
+      v-if="isOpenEditModal && activeEditType === 'rental_order' && selectedRentalOrder"
+      :rental-order="selectedRentalOrder"
+      :rental-items="rentalItems"
+      @close="closeEditModal"
+      @saved="onEditorSaved"
+    />
+
+    <EditModalsCookingProcessOrderEditModal
+      v-if="isOpenEditModal && activeEditType === 'cooking_process_order' && selectedCookingProcessOrder"
+      :cooking-process-order="selectedCookingProcessOrder"
+      @close="closeEditModal"
+      @saved="onEditorSaved"
+      @error="openEditError"
+    />
+
   </div>
 </template>
 
@@ -210,6 +255,95 @@
 const HEALTH_CENTER_REFINEMENT_ENDPOINT =
   "/api/v1/get_refinement_health_center_document_status";
 const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
+
+async function fetchHealthCenterDocumentReviewData($axios, routeId) {
+  const getOrEmpty = async (url, fallbackValue) => {
+    try {
+      const res = await $axios.$get(url);
+      return res.data;
+    } catch (error) {
+      return fallbackValue;
+    }
+  };
+
+  const groupUrl = "/api/v1/get_group_show_for_admin_view/" + routeId;
+  const groupRes = await $axios.$get(groupUrl);
+
+  const currentYearRes = await $axios.$get("/user_page_settings/1");
+  const refinementUrl =
+    HEALTH_CENTER_REFINEMENT_ENDPOINT +
+    "?fes_year_id=" +
+    currentYearRes.data.fes_year_id;
+  let foodSalesGroupsRes;
+  try {
+    foodSalesGroupsRes = await $axios.$post(refinementUrl);
+  } catch (error) {
+    if (error?.response?.status === 404) {
+      const legacyUrl =
+        LEGACY_REFINEMENT_ENDPOINT +
+        "?fes_year_id=" +
+        currentYearRes.data.fes_year_id;
+      foodSalesGroupsRes = await $axios.$post(legacyUrl);
+    } else {
+      throw error;
+    }
+  }
+  const foodSalesGroupIds = foodSalesGroupsRes.data
+    .filter((item) => item.group_category === 1)
+    .map((item) => item.group.id)
+    .sort((a, b) => a - b);
+
+  const [
+    foodProducts,
+    cookingProcessOrders,
+    employees,
+    venueMap,
+    rentalOrders,
+    shops,
+    rentalItems,
+  ] = await Promise.all([
+    getOrEmpty(`/food_products/group/${routeId}`, []),
+    getOrEmpty(`/cooking_process_orders/group/${routeId}`, []),
+    getOrEmpty(`/employees/group/${routeId}`, []),
+    getOrEmpty(`/venue_maps/group/${routeId}`, null),
+    getOrEmpty(`/rental_orders/group/${routeId}`, []),
+    getOrEmpty(`/shops`, []),
+    getOrEmpty(`/rental_items`, []),
+  ]);
+
+  const purchaseListsNested = await Promise.all(
+    foodProducts.map((foodProduct) =>
+      getOrEmpty(`/purchase_lists/food_product?food_product_ids=${foodProduct.id}`, [])
+    )
+  );
+  const purchaseLists = purchaseListsNested.flat();
+
+  const employeesWithStoolTest = await Promise.all(
+    employees.map(async (employee) => {
+      const employeeDetail = await getOrEmpty(
+        `/api/v1/get_employee_show_for_admin_view/${employee.id}`,
+        null
+      );
+      return {
+        ...employee,
+        stool_test_status: employeeDetail?.stool_test?.status || null,
+      };
+    })
+  );
+
+  return {
+    group: groupRes.data,
+    foodProducts,
+    purchaseLists,
+    cookingProcessOrders,
+    employees: employeesWithStoolTest,
+    venueMap,
+    rentalOrders,
+    shops,
+    rentalItems,
+    foodSalesGroupIds,
+  };
+}
 
 export default {
   watchQuery: ["page"],
@@ -230,6 +364,13 @@ export default {
       selectedEmployeeId: null,
       selectedRentalOrderId: null,
       foodSalesGroupIds: [],
+      selectedFoodProduct: null,
+      selectedPurchaseList: null,
+      selectedEmployee: null,
+      selectedRentalOrder: null,
+      selectedCookingProcessOrder: null,
+      activeEditType: null,
+      isOpenEditModal: false,
     };
   },
   computed: {
@@ -267,99 +408,19 @@ export default {
     },
   },
   async asyncData({ $axios, route }) {
-    const routeId = route.params.id;
-
-    const getOrEmpty = async (url, fallbackValue) => {
-      try {
-        const res = await $axios.$get(url);
-        return res.data;
-      } catch (error) {
-        return fallbackValue;
-      }
-    };
-
-    const groupUrl = "/api/v1/get_group_show_for_admin_view/" + routeId;
-    const groupRes = await $axios.$get(groupUrl);
-
-    const currentYearRes = await $axios.$get("/user_page_settings/1");
-    const refinementUrl =
-      HEALTH_CENTER_REFINEMENT_ENDPOINT +
-      "?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    let foodSalesGroupsRes;
-    try {
-      foodSalesGroupsRes = await $axios.$post(refinementUrl);
-    } catch (error) {
-      if (error?.response?.status === 404) {
-        const legacyUrl =
-          LEGACY_REFINEMENT_ENDPOINT +
-          "?fes_year_id=" +
-          currentYearRes.data.fes_year_id;
-        foodSalesGroupsRes = await $axios.$post(legacyUrl);
-      } else {
-        throw error;
-      }
-    }
-    const foodSalesGroupIds = foodSalesGroupsRes.data
-      .filter((item) => item.group_category === 1)
-      .map((item) => item.group.id)
-      .sort((a, b) => a - b);
-
-    const [
-      foodProducts,
-      cookingProcessOrders,
-      employees,
-      venueMap,
-      rentalOrders,
-      shops,
-      rentalItems,
-    ] = await Promise.all([
-      getOrEmpty(`/food_products/group/${routeId}`, []),
-      getOrEmpty(`/cooking_process_orders/group/${routeId}`, []),
-      getOrEmpty(`/employees/group/${routeId}`, []),
-      getOrEmpty(`/venue_maps/group/${routeId}`, null),
-      getOrEmpty(`/rental_orders/group/${routeId}`, []),
-      getOrEmpty(`/shops`, []),
-      getOrEmpty(`/rental_items`, []),
-    ]);
-
-    const purchaseListsNested = await Promise.all(
-      foodProducts.map((foodProduct) =>
-        getOrEmpty(`/purchase_lists/food_product?food_product_ids=${foodProduct.id}`, [])
-      )
-    );
-    const purchaseLists = purchaseListsNested.flat();
-
-    const employeesWithStoolTest = await Promise.all(
-      employees.map(async (employee) => {
-        const employeeDetail = await getOrEmpty(
-          `/api/v1/get_employee_show_for_admin_view/${employee.id}`,
-          null
-        );
-        return {
-          ...employee,
-          stool_test_status: employeeDetail?.stool_test?.status || null,
-        };
-      })
-    );
-
-    return {
-      group: groupRes.data,
-      foodProducts: foodProducts,
-      purchaseLists: purchaseLists,
-      cookingProcessOrders: cookingProcessOrders,
-      employees: employeesWithStoolTest,
-      venueMap: venueMap,
-      rentalOrders: rentalOrders,
-      shops: shops,
-      rentalItems: rentalItems,
-      foodSalesGroupIds,
-    };
+    return await fetchHealthCenterDocumentReviewData($axios, route.params.id);
   },
   mounted() {
     window.scrollTo(0, 0);
   },
   methods: {
+    async reloadPageData() {
+      const freshData = await fetchHealthCenterDocumentReviewData(
+        this.$axios,
+        this.$route.params.id
+      );
+      Object.assign(this, freshData);
+    },
     onPrevGroup() {
       if (!this.prevGroupId) return;
       this.$router.push(`/health_center_document_review/${this.prevGroupId}`);
@@ -371,33 +432,58 @@ export default {
     onSubmitComment() {
       // TODO: コメント送信API連携時に処理を実装する
     },
-    onFoodProductAction(foodProduct) {
+    openFoodProductModal(foodProduct) {
       if (!foodProduct?.id) return;
       this.selectedFoodProductId = foodProduct.id;
-      this.$router.push(`/food_products/${foodProduct.id}`);
+      this.selectedFoodProduct = foodProduct;
+      this.activeEditType = "food_product";
+      this.isOpenEditModal = true;
     },
-    onPurchaseListAction(purchaseList) {
+    openPurchaseListModal(purchaseList) {
       if (!purchaseList?.id) return;
       this.selectedPurchaseListId = purchaseList.id;
-      this.$router.push(`/purchase_lists/${purchaseList.id}`);
+      this.selectedPurchaseList = purchaseList;
+      this.activeEditType = "purchase_list";
+      this.isOpenEditModal = true;
     },
-    onEmployeeAction(employee) {
+    openEmployeeModal(employee) {
       if (!employee?.id) return;
       this.selectedEmployeeId = employee.id;
-      this.$router.push(`/employees/${employee.id}`);
+      this.selectedEmployee = employee;
+      this.activeEditType = "employee";
+      this.isOpenEditModal = true;
     },
-    onRentalOrderAction(rentalOrder) {
+    openRentalOrderModal(rentalOrder) {
       if (!rentalOrder?.id) return;
       this.selectedRentalOrderId = rentalOrder.id;
-      this.$router.push(`/rental_orders/${rentalOrder.id}`);
+      this.selectedRentalOrder = rentalOrder;
+      this.activeEditType = "rental_order";
+      this.isOpenEditModal = true;
     },
-    onCookingProcessAction(order) {
+    openCookingProcessOrderModal(order) {
       if (!order?.id) return;
-      this.$router.push(`/cooking_process_order/${order.id}`);
+      this.selectedCookingProcessOrder = order;
+      this.activeEditType = "cooking_process_order";
+      this.isOpenEditModal = true;
     },
-    onVenueMapAction() {
+    openVenueMapModal() {
       if (!this.group?.group?.id) return;
-      this.$router.push(`/venue_maps/${this.group.group.id}`);
+      this.activeEditType = "venue_map";
+      this.isOpenEditModal = true;
+    },
+    closeEditModal() {
+      this.isOpenEditModal = false;
+      this.activeEditType = null;
+    },
+    async onEditorSaved() {
+      await this.reloadPageData();
+    },
+    openEditError(message) {
+      // TODO: 既存のコメント欄に依存せず、必要なら snackbar を追加する
+      // 一旦は alert 相当の最低限の通知に留める
+      if (message) {
+        window.alert(message);
+      }
     },
     getShopName(shopID) {
       const shop = this.shops.find((item) => item.id === shopID);
@@ -426,18 +512,18 @@ export default {
 }
 
 .side-nav {
-  position: absolute;
-  top: 50%;
+  position: fixed;
+  top: 50vh;
   transform: translateY(-50%);
   z-index: 20;
 }
 
 .side-nav-left {
-  left: -56px;
+  left: calc(260px + 60px - 56px);
 }
 
 .side-nav-right {
-  right: -56px;
+  right: calc(60px - 56px);
 }
 
 .side-nav-button {
@@ -579,11 +665,11 @@ export default {
   }
 
   .side-nav-left {
-    left: -12px;
+    left: 8px;
   }
 
   .side-nav-right {
-    right: -12px;
+    right: 8px;
   }
 
   .side-nav-button {
