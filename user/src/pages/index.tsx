@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import type { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import LoginModal from '@/components/LoginModal';
 import NewsList from '@/components/NewsList';
 import RegisterCarousel from '@/components/RegisterCarousel';
@@ -42,3 +44,9 @@ export default function Home() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'ja', ['common'])),
+  },
+});

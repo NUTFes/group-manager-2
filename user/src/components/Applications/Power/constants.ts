@@ -1,9 +1,11 @@
 import { RadioOption } from './types';
 
+export const POWER_LIMIT = 1500;
+
 // ラジオボタンの選択肢
 export const RADIO_OPTIONS: RadioOption[] = [
-  { id: 1, name: 'はい' },
-  { id: 2, name: 'いいえ' },
+  { id: 1, labelKey: 'applications.power.radio.options.yes' },
+  { id: 2, labelKey: 'applications.power.radio.options.no' },
 ];
 
 // デフォルトのデバイス情報
@@ -26,13 +28,13 @@ export const FIELD_NAMES = {
 
 // バリデーションメッセージの定数
 export const VALIDATION_MESSAGES = {
-  REQUIRED_PRODUCT_NAME: '製品名を入力してください',
-  REQUIRED_MANUFACTURER: 'メーカー名を入力してください',
-  REQUIRED_MODEL: '型番を入力してください',
-  INVALID_URL: '有効なURLを入力してください',
-  INVALID_NUMBER: '数値を入力してください',
-  MIN_POWER: '1W以上で入力してください',
-  MAX_POWER: '1500W以下で入力してください',
-  MIN_DEVICES: '少なくとも1つの機器を登録してください',
-  TOTAL_POWER_LIMIT: '合計消費電力は1500W以下にしてください',
+  REQUIRED_PRODUCT_NAME: 'applications.power.validation.productNameRequired',
+  REQUIRED_MANUFACTURER: 'applications.power.validation.manufacturerRequired',
+  REQUIRED_MODEL: 'applications.power.validation.modelRequired',
+  INVALID_URL: 'applications.power.validation.invalidUrl',
+  INVALID_NUMBER: 'applications.power.validation.invalidNumber',
+  MIN_POWER: 'applications.power.validation.minPower',
+  MAX_POWER: 'applications.power.validation.maxPower',
+  MIN_DEVICES: 'applications.power.validation.minDevices',
+  TOTAL_POWER_LIMIT: 'applications.power.validation.totalPowerLimit',
 };

@@ -54,25 +54,26 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
     isMutating,
     handleAlcoholChange,
     handleHasLicenseChange,
-    alcoholOptions,
-    licenseOptions,
     onSubmit,
     addProduct,
     removeProduct,
     products,
+    foodProductFormTexts,
   } = useFoodProductFormHooks(
     groupId,
     foodProducts,
     addFoodProducts,
     setFoodProductsData
   );
+  const alcoholRadioOptions = foodProductFormTexts.form.radio.alcohol.options;
+  const cookingRadioOptions = foodProductFormTexts.form.radio.cooking.options;
 
   // ビューモード（登録済みデータをカード表示）
   if (isViewMode) {
     if (!foodProducts || foodProducts.length === 0) {
       return (
         <div className="flex flex-col items-center gap-4">
-          <p className="text-gray-500">販売品が登録されていません</p>
+          <p className="text-gray-500">{foodProductFormTexts.view.empty}</p>
           <Button
             type="button"
             size="pc"
@@ -80,7 +81,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             onClick={toEdit}
             icon="plus"
           >
-            販売品を追加
+            {foodProductFormTexts.view.addButton}
           </Button>
         </div>
       );
@@ -90,21 +91,28 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
       <div className="flex flex-col gap-6">
         {foodProducts.map((product) => {
           const items: FormItem[] = [
-            { label: '販売品名', content: product.name ?? '-' },
             {
-              label: '酒類ですか？',
-              content: product.isAlcohol ? 'はい' : 'いいえ',
+              label: foodProductFormTexts.view.summaryLabels.name,
+              content: product.name ?? '-',
             },
             {
-              label: '調理の有無',
-              content: product.isCooking ? '有り' : '無し',
+              label: foodProductFormTexts.view.summaryLabels.alcohol,
+              content: product.isAlcohol
+                ? foodProductFormTexts.view.radio.alcohol.yes
+                : foodProductFormTexts.view.radio.alcohol.no,
             },
             {
-              label: '1日目の販売予定数',
+              label: foodProductFormTexts.view.summaryLabels.cooking,
+              content: product.isCooking
+                ? foodProductFormTexts.view.radio.cooking.yes
+                : foodProductFormTexts.view.radio.cooking.no,
+            },
+            {
+              label: foodProductFormTexts.view.summaryLabels.day1,
               content: product.day1Quantity || '0',
             },
             {
-              label: '2日目の販売予定数',
+              label: foodProductFormTexts.view.summaryLabels.day2,
               content: product.day2Quantity || '0',
             },
           ];
@@ -132,7 +140,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
             icon="pencil"
             onClick={toEdit}
           >
-            修正
+            {foodProductFormTexts.buttons.edit}
           </Button>
         </div>
       </div>
@@ -145,7 +153,9 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
       {isFetching || isMutating ? (
         <div className="flex items-center justify-center py-8">
           <div className="size-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
-          <span className="ml-2">処理中...</span>
+          <span className="ml-2">
+            {foodProductFormTexts.statuses.processing}
+          </span>
         </div>
       ) : (
         <form
@@ -172,7 +182,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                 <div className="flex w-full flex-col items-start justify-center gap-6">
                   <div className="relative w-96">
                     <TextBox
-                      label="販売品名"
+                      label={foodProductFormTexts.form.fields.name}
                       value={product.name || ''}
                       onChange={(value) =>
                         setValue(`products.${index}.name`, value)
@@ -183,49 +193,49 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   </div>
                   <div className="flex flex-col items-start justify-start gap-6">
                     <Radio
-                      label="酒類ですか？"
+                      label={foodProductFormTexts.form.radio.alcohol.label}
                       name={`alcohol_${index}`}
                       value={product.isAlcohol ? '1' : '0'}
                       onChange={(value) => handleAlcoholChange(index, value)}
                       required
-                      note="「はい」を選択すると、自動的に「調理あり」になります。"
-                      options={alcoholOptions}
+                      note={foodProductFormTexts.form.radio.alcohol.note}
+                      options={alcoholRadioOptions}
                       error={errors.products?.[index]?.isAlcohol?.message}
                     />
                   </div>
                   <div className="flex flex-col items-start justify-start gap-6">
                     <Radio
-                      label="調理の有無"
+                      label={foodProductFormTexts.form.radio.cooking.label}
                       name={`license_${index}`}
                       value={product.isCooking ? '1' : '0'}
                       onChange={(value) => handleHasLicenseChange(index, value)}
                       required
-                      options={licenseOptions}
+                      options={cookingRadioOptions}
                       error={errors.products?.[index]?.isCooking?.message}
                     />
                   </div>
                   <div className="relative w-96">
                     <TextBox
-                      label="1日目販売予定数"
+                      label={foodProductFormTexts.form.fields.day1}
                       value={product.day1Quantity || ''}
                       onChange={(value) =>
                         setValue(`products.${index}.day1Quantity`, value)
                       }
                       required
-                      note="半角数字"
+                      note={foodProductFormTexts.form.notes.quantity}
                       error={errors.products?.[index]?.day1Quantity?.message}
                       type="number"
                     />
                   </div>
                   <div className="relative w-96">
                     <TextBox
-                      label="2日目販売予定数"
+                      label={foodProductFormTexts.form.fields.day2}
                       value={product.day2Quantity || ''}
                       onChange={(value) =>
                         setValue(`products.${index}.day2Quantity`, value)
                       }
                       required
-                      note="半角数字"
+                      note={foodProductFormTexts.form.notes.quantity}
                       error={errors.products?.[index]?.day2Quantity?.message}
                       type="number"
                     />
@@ -240,7 +250,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                         onClick={() => removeProduct(index)}
                         icon="delete"
                       >
-                        削除
+                        {foodProductFormTexts.buttons.delete}
                       </Button>
                     </div>
                   )}
@@ -257,7 +267,7 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                   onClick={addProduct}
                   icon="plus"
                 >
-                  販売品の追加
+                  {foodProductFormTexts.buttons.add}
                 </Button>
               </div>
               <div className="flex w-full items-center justify-center">
@@ -270,7 +280,9 @@ const FoodProductForm: FC<FoodProductFormProps> = ({
                     foodProducts && foodProducts.length > 0 ? 'save' : 'send'
                   }
                 >
-                  {foodProducts && foodProducts.length > 0 ? '更新' : '登録'}
+                  {foodProducts && foodProducts.length > 0
+                    ? foodProductFormTexts.buttons.save
+                    : foodProductFormTexts.buttons.register}
                 </Button>
               </div>
             </div>

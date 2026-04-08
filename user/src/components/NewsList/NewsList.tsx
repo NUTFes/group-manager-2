@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import { useGetNews } from '@/api/newsApi';
+import { News, useGetNews } from '@/api/newsApi';
 import { format } from 'date-fns';
 import FormContainer from '@/components/FormContainer';
+import { useNewsListTexts } from './hooks';
 
 type NewsListProps = {
   isLoginPage: boolean;
@@ -9,16 +10,18 @@ type NewsListProps = {
 
 const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
-  if (news == undefined) return [];
+  const newsListTexts = useNewsListTexts();
 
-  const formattedDates = news.map((item) => {
+  const sortedNews: News[] = [...(news ?? [])].sort((a, b) => a.id - b.id);
+
+  const formattedDates = sortedNews.map((item: News) => {
     const date = new Date(item.createdAt);
     const formattedDate = format(date, 'yyyy/MM/dd');
     return formattedDate;
   });
 
-  const newsList = news.map((item, index) => {
-    const date = formattedDates[index] ?? 'お知らせはありません。';
+  const newsList = sortedNews.map((item: News, index: number) => {
+    const date = formattedDates[index] ?? newsListTexts.none;
 
     return (
       <div key={item.id} className="flex flex-col gap-2">
@@ -34,13 +37,15 @@ const NewsList: FC<NewsListProps> = () => {
     <div className="flex w-full max-w-[497px] items-center justify-center px-4">
       <FormContainer>
         <div className="mb-10 w-full max-w-[497px]">
-          <div className="text-4xl font-bold text-main">お知らせ</div>
+          <div className="text-4xl font-bold text-main">
+            {newsListTexts.title}
+          </div>
         </div>
         <div className="flex flex-col gap-4">
           {isLoading ? (
-            <div className="text-base text-font">読み込み中...</div>
+            <div className="text-base text-font">{newsListTexts.loading}</div>
           ) : error ? (
-            <div className="text-base text-font">エラーが発生しました</div>
+            <div className="text-base text-font">{newsListTexts.error}</div>
           ) : (
             newsList
           )}

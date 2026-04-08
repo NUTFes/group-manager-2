@@ -18,7 +18,7 @@ export type PowerApplicationOption = 'yes' | 'no' | 'undecided';
 
 export type RadioOption = {
   id: number;
-  name: string;
+  labelKey: string;
 };
 
 export type DeviceField = keyof Device;
