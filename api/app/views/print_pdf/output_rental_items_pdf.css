@@ -3,10 +3,11 @@ h1 {
 }
 
 .page-break {
-  page-break-after:always;
-  &:last-child {
-    page-break-after: avoid;
-  }
+  page-break-after: always;
+}
+
+.page-break:last-child {
+  page-break-after: avoid;
 }
 
 table {
