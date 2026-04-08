@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useGetNews } from '@/api/newsApi';
+import { News, useGetNews } from '@/api/newsApi';
 import { format } from 'date-fns';
 import FormContainer from '@/components/FormContainer';
 import { useNewsListTexts } from './hooks';
@@ -12,13 +12,15 @@ const NewsList: FC<NewsListProps> = () => {
   const { news, error, isLoading } = useGetNews();
   const newsListTexts = useNewsListTexts();
 
-  const formattedDates = news.map((item) => {
+  const sortedNews: News[] = [...(news ?? [])].sort((a, b) => a.id - b.id);
+
+  const formattedDates = sortedNews.map((item: News) => {
     const date = new Date(item.createdAt);
     const formattedDate = format(date, 'yyyy/MM/dd');
     return formattedDate;
   });
 
-  const newsList = sortedNews.map((item, index) => {
+  const newsList = sortedNews.map((item: News, index: number) => {
     const date = formattedDates[index] ?? newsListTexts.none;
 
     return (
