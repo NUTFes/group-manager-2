@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class HealthCenterSubmissionStatusCommentsController < ApplicationController
+  before_action :authenticate_api_user!
   before_action :set_health_center_submission_status
   before_action :set_comment, only: %i[show update destroy]
 
@@ -17,7 +18,8 @@ class HealthCenterSubmissionStatusCommentsController < ApplicationController
 
   # POST /health_center_submission_statuses/:health_center_submission_status_id/comments
   def create
-    comment = @health_center_submission_status.comments.build(comment_params)
+    # 投稿者はログイン中ユーザーとして扱い、その users.id を comments.author_id に保存する
+    comment = @health_center_submission_status.comments.build(comment_params.merge(author_id: current_api_user.id))
 
     if comment.save
       render json: fmt(created, comment), status: :created
