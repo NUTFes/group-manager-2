@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_24_000002) do
+ActiveRecord::Schema.define(version: 2026_04_09_031500) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -51,6 +51,8 @@ ActiveRecord::Schema.define(version: 2026_03_24_000002) do
     t.text "body", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "author_id", null: false, comment: "current_api_user.id を保存するカラム"
+    t.index ["author_id"], name: "index_comments_on_author_id"
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
   end
 
@@ -484,6 +486,7 @@ ActiveRecord::Schema.define(version: 2026_03_24_000002) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "cooking_process_orders", "food_products"
   add_foreign_key "cooking_process_orders", "groups"
   add_foreign_key "fire_equipment_orders", "groups"
