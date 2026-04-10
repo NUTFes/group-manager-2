@@ -261,6 +261,13 @@ Rails.application.routes.draw do
       post 'get_refinement_order_status_check' => 'order_status_check_api#get_refinement_order_status_check'
       post 'get_search_order_status_check' => 'order_status_check_api#get_search_order_status_check'
 
+      #---保健所提出確認画面
+      get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'
+      get 'get_health_center_submission_status_show_for_admin_view/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_show_for_admin_view'
+      get 'get_health_center_submission_status_counts/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_counts'
+      put 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
+      post 'create_health_center_submission_status_comment' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment'
+
       #---開催日
       get 'get_refinement_fes_date_by_fes_year/:fes_year_id' => 'fes_dates_api#get_refinement_fes_date_by_fes_year'
       get 'get_current_fes_dates' => 'fes_dates_api#get_current_fes_dates'
