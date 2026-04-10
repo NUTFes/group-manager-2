@@ -45,6 +45,17 @@ services:
       - VUE_APP_URL=http://localhost:3000
       - VUE_APP_API_URL=http://api:3000
 
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: "ADMIN"
+    volumes: [./admin:/app]
+    ports:
+      - "8004:3000"
+
+    command: pnpm run dev
+
   user_front:
     build: ./user_front
     container_name: "GM2-USER-FRONT"
