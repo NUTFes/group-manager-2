@@ -29,10 +29,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   def get_health_center_submission_status_counts
     @statuses = HealthCenterSubmissionStatus.where(group_id: params[:group_id])
     render json: fmt(ok, {
-      approved: @statuses.approved.count,
-      waiting_resubmission: @statuses.waiting_resubmission.count,
-      unapproved: @statuses.unapproved.count
-    })
+                       approved: @statuses.approved.count,
+                       waiting_resubmission: @statuses.waiting_resubmission.count,
+                       unapproved: @statuses.unapproved.count
+                     })
   end
 
   # 4. メモ（コメント）保存
@@ -61,9 +61,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     submissions = build_submissions_data(group)
 
     render json: fmt(ok, {
-      group: group,
-      submissions: submissions
-    })
+                       group: group,
+                       submissions: submissions
+                     })
   end
 
   private
