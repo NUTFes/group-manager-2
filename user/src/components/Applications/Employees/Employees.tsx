@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import Radio from '@/components/Form/Radio';
 import FormList from '@/components/FormList';
 import { EmployeeForm } from './EmployeesFrom/EmployeesForm';
-import { useEmployeesMainLogic } from './hooks';
+import { useEmployeesApplicationHooks } from './hooks';
 
 type EmployeesProps = {
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
@@ -24,44 +24,41 @@ export const Employees: FC<EmployeesProps> = ({
   groupId,
   mutateCheckAllRegisteredGroups,
 }) => {
+  const employeesApplicationHook = useEmployeesApplicationHooks(
+    groupId,
+    isDeadline,
+    mutateCheckAllRegisteredGroups
+  );
   return (
     <AccordionMenu
-      title="従業員申請"
+      title={employeesApplicationHook.texts.title}
       isEdit={!isDeadline} // 期限内（isDeadline=false）の場合のみ編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
     >
       <Content
-        groupId={groupId}
-        isDeadline={isDeadline} // 期限切れ状態をそのまま渡す
-        mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+        employeesApplicationHook={employeesApplicationHook}
+        isDeadline={isDeadline}
       />
     </AccordionMenu>
   );
 };
 
 type ContentProps = {
-  groupId: number;
+  employeesApplicationHook: ReturnType<typeof useEmployeesApplicationHooks>;
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
-  mutateCheckAllRegisteredGroups: () => void;
 };
 /**
  * 従業員申請のコンテンツ部分
  */
 const Content: FC<ContentProps> = ({
-  groupId,
+  employeesApplicationHook,
   isDeadline,
-  mutateCheckAllRegisteredGroups,
 }) => {
-  // すべてのロジックをhookに委譲
-  const logic = useEmployeesMainLogic(
-    groupId,
-    isDeadline,
-    mutateCheckAllRegisteredGroups
-  );
+  const { texts } = employeesApplicationHook;
 
   // 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）の場合の表示
-  if (logic.isDeadlineMode) {
+  if (employeesApplicationHook.isDeadlineMode) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
         <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
@@ -82,41 +79,41 @@ const Content: FC<ContentProps> = ({
             </svg>
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-800">
-            申請期限が過ぎています
+            {texts.deadline.title}
           </h3>
-          <p className="text-sm text-gray-600">
-            従業員申請の締切期限が過ぎているため、新規申請はできません。
-          </p>
+          <p className="text-sm text-gray-600">{texts.deadline.description}</p>
         </div>
       </div>
     );
   }
 
   // 「申請しない」を登録した場合のリスト表示（onEditとidEditで期限内・期限外のボタン表示を切り替える）
-  if (logic.isUnregisteredGroup) {
+  if (employeesApplicationHook.isUnregisteredGroup) {
     return (
       <FormList
         items={[
           {
-            label: '従業員申請は不要(登録済み)',
-            content: '代表と副代表だけで活動します。',
+            label: texts.summary.noApplication.label,
+            content: texts.summary.noApplication.description,
           },
         ]}
-        onEdit={!isDeadline ? logic.handleEditClick : undefined} // 期限内の場合のみ編集可能
+        onEdit={
+          !isDeadline ? employeesApplicationHook.handleEditClick : undefined
+        } // 期限内の場合のみ編集可能
         isEdit={!isDeadline} // 期限内の場合のみ編集可能
       />
     );
   }
 
   // 従業員登録後のフォームリスト表示（onEditとidEditで期限内・期限外のボタン表示を切り替える）
-  if (logic.isFormListMode) {
+  if (employeesApplicationHook.isFormListMode) {
     return (
       <FormList
-        items={logic.tableData}
-        headers={['従業員名', '学籍番号']}
+        items={employeesApplicationHook.tableData}
+        headers={[texts.summary.headers.name, texts.summary.headers.studentId]}
         keys={['name', 'studentId']}
         tableMode
-        onEdit={!isDeadline ? logic.handleEdit : undefined} // 期限内の場合のみ編集可能
+        onEdit={!isDeadline ? employeesApplicationHook.handleEdit : undefined} // 期限内の場合のみ編集可能
         isEdit={!isDeadline} // 期限内の場合のみ編集可能
       />
     );
@@ -124,45 +121,50 @@ const Content: FC<ContentProps> = ({
 
   // 期限前・修正可能な状態での表示
   return (
-    <FormProvider {...logic.form}>
-      <form onSubmit={logic.handleSubmit}>
+    <FormProvider {...employeesApplicationHook.form}>
+      <form onSubmit={employeesApplicationHook.handleSubmit}>
         <Radio
-          label="「代表」と「副代表」以外の従業員申請を行いますか？"
+          label={texts.radio.label}
           required
           value={
-            logic.formState.needApplication === NEED_APPLICATION.YES
+            employeesApplicationHook.formState.needApplication ===
+            NEED_APPLICATION.YES
               ? RADIO_VALUE.YES
-              : logic.formState.needApplication === NEED_APPLICATION.NO
+              : employeesApplicationHook.formState.needApplication ===
+                  NEED_APPLICATION.NO
                 ? RADIO_VALUE.NO
                 : ''
           }
-          onChange={logic.handleRadioChange}
-          options={[
-            { id: 1, name: 'はい' },
-            { id: 2, name: 'いいえ' },
-          ]}
+          onChange={employeesApplicationHook.handleRadioChange}
+          options={texts.radio.options}
         />
 
         {/* 未選択時：無効化された送信ボタン */}
-        {logic.form.watch('needApplication') === undefined && (
+        {employeesApplicationHook.form.watch('needApplication') ===
+          undefined && (
           <div className="mt-6 flex w-full items-center justify-center">
             <Button size="pc" color="main" type="submit" isDisable>
-              登録
+              {texts.formActions.register}
             </Button>
           </div>
         )}
 
         {/* 「はい」選択時：従業員入力フォーム表示 */}
-        {logic.form.watch('needApplication') === NEED_APPLICATION.YES && (
+        {employeesApplicationHook.form.watch('needApplication') ===
+          NEED_APPLICATION.YES && (
           <>
             <div className="flex w-full flex-col gap-10">
-              {logic.form.fieldArray.fields.map((field, idx) => (
-                <EmployeeForm
-                  key={`${field.fieldId}-${idx}`}
-                  index={idx}
-                  onDelete={() => logic.handleEmployeeDelete(field, idx)}
-                />
-              ))}
+              {employeesApplicationHook.form.fieldArray.fields.map(
+                (field, idx) => (
+                  <EmployeeForm
+                    key={`${field.fieldId}-${idx}`}
+                    index={idx}
+                    onDelete={() =>
+                      employeesApplicationHook.handleEmployeeDelete(field, idx)
+                    }
+                  />
+                )
+              )}
               <div className="flex justify-center gap-4">
                 <Button
                   type="button"
@@ -170,21 +172,22 @@ const Content: FC<ContentProps> = ({
                   color="main"
                   icon="plus"
                   variant
-                  onClick={logic.form.appendEmpty}
+                  onClick={employeesApplicationHook.form.appendEmpty}
                 >
-                  従業員の追加
+                  {texts.buttons.addEmployee}
                 </Button>
                 <Button
                   size="pc"
                   color="main"
                   type="submit"
                   isDisable={
-                    logic.formState.isSubmitDisabled ||
-                    logic.businessLogic.isCreating ||
-                    logic.businessLogic.isUpserting
+                    employeesApplicationHook.formState.isSubmitDisabled ||
+                    employeesApplicationHook.employeesBusinessHooks
+                      .isCreating ||
+                    employeesApplicationHook.employeesBusinessHooks.isUpserting
                   }
                 >
-                  登録
+                  {texts.formActions.register}
                 </Button>
               </div>
             </div>
@@ -192,15 +195,16 @@ const Content: FC<ContentProps> = ({
         )}
 
         {/* 「いいえ」選択時：代表・副代表のみで活動 */}
-        {logic.formState.needApplication === NEED_APPLICATION.NO && (
+        {employeesApplicationHook.formState.needApplication ===
+          NEED_APPLICATION.NO && (
           <div className="mt-6 flex w-full items-center justify-center">
             <Button
               size="pc"
               color="main"
               type="button"
-              onClick={logic.handleNoApplicationClick}
+              onClick={employeesApplicationHook.handleNoApplicationClick}
             >
-              登録
+              {texts.formActions.register}
             </Button>
           </div>
         )}

@@ -1,31 +1,33 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
+import type { TFunction } from 'i18next';
 import { signIn } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import type { UseFormHandleSubmit } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import type { RegisterFormSchema } from './schema';
 
 type ApiErrors = Record<string, string[]>;
 
-const ERROR_MESSAGES: Record<string, Record<string, string>> = {
+const ERROR_MESSAGE_KEYS: Record<string, Record<string, string>> = {
   email: {
-    'has already been taken': 'このメールアドレスは既に登録されています。',
-    default: 'メールアドレスに誤りがあります。',
+    'has already been taken': 'registerCarousel.errors.emailTaken',
+    default: 'registerCarousel.errors.emailDefault',
   },
   password: {
-    'is too short': 'パスワードは6文字以上である必要があります。',
-    default: 'パスワードに誤りがあります。',
+    'is too short': 'registerCarousel.errors.passwordShort',
+    default: 'registerCarousel.errors.passwordDefault',
   },
   password_confirmation: {
-    "doesn't match Password": 'パスワードが一致しません。',
-    default: 'パスワード確認に誤りがあります。',
+    "doesn't match Password": 'registerCarousel.errors.passwordConfirmMismatch',
+    default: 'registerCarousel.errors.passwordConfirmDefault',
   },
   user_details: {
-    tel: '電話番号に誤りがあります。',
-    student_id: '学籍番号に誤りがあります。',
-    grade_id: '学年に誤りがあります。',
-    department_id: '学科に誤りがあります。',
-    default: 'ユーザー詳細情報に誤りがあります。',
+    tel: 'registerCarousel.errors.telInvalid',
+    student_id: 'registerCarousel.errors.studentIdInvalid',
+    grade_id: 'registerCarousel.errors.gradeInvalid',
+    department_id: 'registerCarousel.errors.departmentInvalid',
+    default: 'registerCarousel.errors.userDetailsDefault',
   },
 };
 
@@ -39,22 +41,23 @@ const STEP_FIELDS: Record<number, string[]> = {
  * @param errors APIから返されたエラー情報
  * @returns 対応するエラーメッセージ（なければ空文字）
  */
-function mapErrorMessage(errors: ApiErrors = {}): string {
+function mapErrorMessage(
+  errors: ApiErrors = {},
+  t: TFunction<'common'>
+): string {
   for (const [field, msgs] of Object.entries(errors)) {
-    // 各フィールドに対応するエラーメッセージのマッピングを取得
-    const mapping = ERROR_MESSAGES[field] || {};
-    for (const key of Object.keys(mapping)) {
-      // キーワードが一致するエラーメッセージを返す
+    const mapping = ERROR_MESSAGE_KEYS[field];
+    if (!mapping) continue;
+
+    for (const [key, translationKey] of Object.entries(mapping)) {
       if (key !== 'default' && msgs.some((m) => m.includes(key))) {
-        return mapping[key];
+        return t(translationKey);
       }
     }
-    // デフォルトメッセージがあればそれを返す
     if (mapping.default) {
-      return mapping.default;
+      return t(mapping.default);
     }
   }
-  // 該当するメッセージがない場合は空文字を返す
   return '';
 }
 
@@ -92,6 +95,7 @@ export const useRegistration = (
   const [isLoading, setIsLoading] = useState(false); // ローディング状態
   const [displayError, setDisplayError] = useState<string>(); // 表示するエラーメッセージ
   const router = useRouter(); // ルーターオブジェクト
+  const { t } = useTranslation('common');
 
   /**
    * APIエラー発生時に対応するステップに移動
@@ -149,8 +153,8 @@ export const useRegistration = (
 
       if (result.status === 'success') {
         // 登録成功時の処理
-        toast.success('登録が完了しました。');
-        toast.info('自動でログインします。そのままお待ちください。');
+        toast.success(t('registerCarousel.toasts.registrationSuccess'));
+        toast.info(t('registerCarousel.toasts.autoLogin'));
 
         await signIn('credentials', {
           redirect: false,
@@ -158,28 +162,28 @@ export const useRegistration = (
           password: data.password,
         })
           .then(() => {
-            toast.success('ログインしました。');
+            toast.success(t('registerCarousel.toasts.loginSuccess'));
             router.push('/home'); // ホーム画面にリダイレクト
           })
           .catch((error) => {
             console.error('Login error:', error); // ログインエラーをログ出力
-            toast.error('ログインに失敗しました。');
-            toast.info('再度ログインしてください。');
+            toast.error(t('registerCarousel.toasts.loginFailed'));
+            toast.info(t('registerCarousel.toasts.retryLogin'));
             router.push('/'); // トップページにリダイレクト
           });
         return;
       } else {
         // エラー時の処理
         const message =
-          mapErrorMessage(result.errors) ||
+          mapErrorMessage(result.errors, t) ||
           result.message ||
-          '通信エラーが発生しました。';
+          t('registerCarousel.errors.requestError');
         setDisplayError(message); // エラーメッセージを設定
         navigateToStep(result.errors); // エラーが発生したステップに移動
       }
     } catch {
       // 通信エラー時の処理
-      setDisplayError('通信に失敗しました。時間をおいて再度お試しください。');
+      setDisplayError(t('registerCarousel.errors.requestFailed'));
     } finally {
       setIsLoading(false); // 最終的にローディング状態を終了
     }

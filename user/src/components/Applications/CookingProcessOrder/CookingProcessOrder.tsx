@@ -27,15 +27,16 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     onSubmit,
     mergedData,
     shouldShowWarning,
+    cookingProcessOrderTexts,
   } = useCookingProcessOrder(groupId, isDeadline);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{cookingProcessOrderTexts.general.loading}</div>;
   }
 
   return (
     <AccordionMenu
-      title="調理工程申請"
+      title={cookingProcessOrderTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       isRegistered={isRegistered}
@@ -43,7 +44,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     >
       {shouldShowWarning ? (
         <p className="text-center text-alert">
-          販売品申請を先に申請してください
+          {cookingProcessOrderTexts.warning}
         </p>
       ) : (
         <FormProvider {...methods}>
@@ -70,7 +71,9 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                     }
                     icon={isExist ? 'save' : 'send'}
                   >
-                    {isExist ? '更新' : '登録'}
+                    {isExist
+                      ? cookingProcessOrderTexts.buttons.save
+                      : cookingProcessOrderTexts.buttons.register}
                   </Button>
                 </div>
               </>
@@ -83,32 +86,49 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                         cookingProcessOrder
                           ? [
                               {
-                                label: '販売品名',
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .foodProduct,
                                 content: foodProduct.name,
                               },
                               {
-                                label: '調理場の使用有無(営業前)',
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .preOpen,
                                 content: cookingProcessOrder.preOpenKitchen
-                                  ? '使用する'
-                                  : '使用しない',
+                                  ? cookingProcessOrderTexts.summary.status.use
+                                  : cookingProcessOrderTexts.summary.status
+                                      .notUse,
                               },
                               {
-                                label: '調理場の使用有無(営業中)',
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .duringOpen,
                                 content: cookingProcessOrder.duringOpenKitchen
-                                  ? '使用する'
-                                  : '使用しない',
+                                  ? cookingProcessOrderTexts.summary.status.use
+                                  : cookingProcessOrderTexts.summary.status
+                                      .notUse,
                               },
                               {
-                                label: '調理内容',
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .description,
                                 content: cookingProcessOrder.tent || '',
                               },
                             ]
                           : [
                               {
-                                label: '販売品名',
+                                label:
+                                  cookingProcessOrderTexts.summary.labels
+                                    .foodProduct,
                                 content: foodProduct.name,
                               },
-                              { label: '調理工程', content: '未登録' },
+                              {
+                                label: cookingProcessOrderTexts.title,
+                                content:
+                                  cookingProcessOrderTexts.summary.status
+                                    .notRegistered,
+                              },
                             ]
                       }
                     />
@@ -125,7 +145,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                   icon="pencil"
                   onClick={handleEditClick}
                 >
-                  修正
+                  {cookingProcessOrderTexts.buttons.edit}
                 </Button>
               </div>
             )}
