@@ -7,82 +7,82 @@ import FireEquipmentForm from './FireEquipmentForm';
 import { useFireEquipmentOrder } from './hooks';
 
 type FireEquipmentFormViewProps = {
-    groupId: number;
-    fireEquipmentData?: FireEquipmentResponse;
-    handleEditCancel?: () => void;
-    submitLabel?: string;
-    disableValidate?: boolean;
+  groupId: number;
+  fireEquipmentData?: FireEquipmentResponse;
+  handleEditCancel?: () => void;
+  submitLabel?: string;
+  disableValidate?: boolean;
 };
 
 export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
-                                                                          groupId,
-                                                                          fireEquipmentData,
-                                                                          handleEditCancel,
-                                                                          submitLabel,
-                                                                          disableValidate = false,
-                                                                      }) => {
-    const {
-        isRegister,
-        submitUnregisteredHandler,
-        errorsUnregistered,
-        isRegisterValue,
-        setIsRegisterValue,
-        values,
-        errors,
-        setValue,
-        submitHandler,
-        isEditing,
-        validate,
-    } = useFireEquipmentOrder(groupId, fireEquipmentData, handleEditCancel);
+  groupId,
+  fireEquipmentData,
+  handleEditCancel,
+  submitLabel,
+  disableValidate = false,
+}) => {
+  const {
+    isRegister,
+    submitUnregisteredHandler,
+    errorsUnregistered,
+    isRegisterValue,
+    setIsRegisterValue,
+    values,
+    errors,
+    setValue,
+    submitHandler,
+    isEditing,
+    validate,
+  } = useFireEquipmentOrder(groupId, fireEquipmentData, handleEditCancel);
 
-    return (
-        <div className="flex flex-col gap-6">
-            {/* 火気使用有無の選択 */}
-            <div>
-                <Radio
-                    label="火気申請を使用しますか？"
-                    value={isRegisterValue}
-                    onChange={(value) => {
-                        setIsRegisterValue(
-                            value as typeof YES_ID_STRING | typeof NO_ID_STRING
-                        );
-                    }}
-                    required
-                    options={RADIO_OPTIONS}
-                    error={errorsUnregistered.isRegister?.message}
-                />
-                <p className="max-w-[400px] break-words text-xs text-[#484848]">
-                    電気ホットプレートとIHは含まれません。
-                </p>
-            </div>
+  return (
+    <div className="flex flex-col gap-6">
+      {/* 火気使用有無の選択 */}
+      <div>
+        <Radio
+          label="火気申請を使用しますか？"
+          value={isRegisterValue}
+          onChange={(value) => {
+            setIsRegisterValue(
+              value as typeof YES_ID_STRING | typeof NO_ID_STRING
+            );
+          }}
+          required
+          options={RADIO_OPTIONS}
+          error={errorsUnregistered.isRegister?.message}
+        />
+        <p className="max-w-[400px] break-words text-xs text-[#484848]">
+          電気ホットプレートとIHは含まれません。
+        </p>
+      </div>
 
-            {/* 火気不使用として登録するボタン */}
-            {!isRegister && (
-                <form onSubmit={submitUnregisteredHandler}>
-                    <div className="mt-8 flex flex-col items-center gap-4">
-                        <Button type="submit" size="pc" color="main">
-                            登録
-                        </Button>
-                    </div>
-                </form>
-            )}
+      {/* 火気不使用として登録するボタン */}
+      {!isRegister && (
+        <form onSubmit={submitUnregisteredHandler}>
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <Button type="submit" size="pc" color="main">
+              登録
+            </Button>
+          </div>
+        </form>
+      )}
 
-            {/* 火気申請フォーム */}
-            {isRegister && (
-                <form onSubmit={submitHandler}>
-                    <div className="flex w-full flex-col gap-10">
-                        <FireEquipmentForm
-                            values={values}
-                            errors={errors}
-                            setValue={setValue}
-                            isEditing={isEditing}
-                            handleEditCancel={handleEditCancel}
-                            validate={disableValidate ? undefined : validate}
-                            submitLabel={submitLabel}
-                        />
-                    </div>
-                </form>
-            )}
-        </div>
-    );
+      {/* 火気申請フォーム */}
+      {isRegister && (
+        <form onSubmit={submitHandler}>
+          <div className="flex w-full flex-col gap-10">
+            <FireEquipmentForm
+              values={values}
+              errors={errors}
+              setValue={setValue}
+              isEditing={isEditing}
+              handleEditCancel={handleEditCancel}
+              validate={disableValidate ? undefined : validate}
+              submitLabel={submitLabel}
+            />
+          </div>
+        </form>
+      )}
+    </div>
+  );
 };
