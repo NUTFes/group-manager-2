@@ -22,7 +22,7 @@ const TextArea: FC<TextAreaProps> = ({
   note,
   error,
 }) => {
-  const { required: requiredMessage, translateError } = useFormFieldCommonTexts();
+  const { translateError } = useFormFieldCommonTexts();
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event.target.value);
   };
