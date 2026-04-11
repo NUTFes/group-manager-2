@@ -58,7 +58,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       { health_center_submission_statuses: :comments }
     ).find(params[:group_id])
 
-    # TODO(human): 各申請タイプの詳細データを組み立てるロジックを実装してください
     submissions = build_submissions_data(group)
 
     render json: fmt(ok, {
