@@ -18,6 +18,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   # 2. ステータス変更
   def update_health_center_submission_status
     @submission_status = HealthCenterSubmissionStatus.find(params[:id])
+    unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+      return render json: fmt(unprocessable_entity, [], 'Invalid status')
+    end
     if @submission_status.update(status: params[:status])
       render json: fmt(ok, @submission_status)
     else
