@@ -56,6 +56,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       :food_products,
       :employees,
       :venue_map,
+      :fire_equipment_orders,
       { food_products: :purchase_lists },
       { food_products: :cooking_process_order },
       { health_center_submission_statuses: :comments }
