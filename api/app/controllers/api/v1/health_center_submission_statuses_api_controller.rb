@@ -9,25 +9,15 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     create_health_center_submission_status_comment
   ]
 
-  # 1. 全グループの保健所提出ステータス一覧取得
+  #---取得（GET）
+
+  # 全グループの保健所提出ステータス一覧取得
   def get_health_center_submission_status_index_for_admin_view
     @groups = Group.preload(:health_center_submission_statuses, :group_category, :fes_year)
     render json: fmt(ok, fit_index_for_admin_view(@groups))
   end
 
-  # 2. ステータス変更
-  def update_health_center_submission_status
-    @submission_status = HealthCenterSubmissionStatus.find(params[:id])
-    return render json: fmt(unprocessable_entity, [], 'Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
-
-    if @submission_status.update(status: params[:status])
-      render json: fmt(ok, @submission_status)
-    else
-      render json: fmt(unprocessable_entity, [], @submission_status.errors.full_messages.join(', '))
-    end
-  end
-
-  # 3. 承認済・再提出・未確認の件数取得
+  # 承認済・再提出・未確認の件数取得
   def get_health_center_submission_status_counts
     @statuses = HealthCenterSubmissionStatus.where(group_id: params[:group_id])
     render json: fmt(ok, {
@@ -37,18 +27,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
                      })
   end
 
-  # 4. メモ（コメント）保存
-  def create_health_center_submission_status_comment
-    @submission_status = HealthCenterSubmissionStatus.find(params[:health_center_submission_status_id])
-    @comment = @submission_status.comments.build(body: params[:body])
-    if @comment.save
-      render json: fmt(created, @comment)
-    else
-      render json: fmt(unprocessable_entity, [], @comment.errors.full_messages.join(', '))
-    end
-  end
-
-  # 5. グループの全申請詳細取得（矢印切替用）
+  # グループの全申請詳細取得（矢印切替用）
   def get_health_center_submission_status_show_for_admin_view
     group = Group.preload(
       :health_center_submission_statuses,
@@ -67,6 +46,42 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
                        group: group,
                        submissions: submissions
                      })
+  end
+
+  #---更新（PATCH）
+
+  # ステータス変更
+  def update_health_center_submission_status
+    @submission_status = HealthCenterSubmissionStatus.find(params[:id])
+    return render json: fmt(unprocessable_entity, [], 'Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+
+    if @submission_status.update(status: params[:status])
+      render json: fmt(ok, {
+        id: @submission_status.id,
+        application_type: @submission_status.application_type,
+        status: @submission_status.status
+      })
+    else
+      render json: fmt(unprocessable_entity, [], @submission_status.errors.full_messages.join(', '))
+    end
+  end
+
+  #---作成（POST）
+
+  # メモ（コメント）保存
+  def create_health_center_submission_status_comment
+    @submission_status = HealthCenterSubmissionStatus.find(params[:health_center_submission_status_id])
+    @comment = @submission_status.comments.build(body: params[:body])
+    if @comment.save
+      render json: fmt(created, {
+        id: @comment.id,
+        body: @comment.body,
+        commentable_type: @comment.commentable_type,
+        commentable_id: @comment.commentable_id
+      })
+    else
+      render json: fmt(unprocessable_entity, [], @comment.errors.full_messages.join(', '))
+    end
   end
 
   private

@@ -265,7 +265,7 @@ Rails.application.routes.draw do
       get 'get_health_center_submission_status_index_for_admin_view' => 'health_center_submission_statuses_api#get_health_center_submission_status_index_for_admin_view'
       get 'get_health_center_submission_status_show_for_admin_view/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_show_for_admin_view'
       get 'get_health_center_submission_status_counts/:group_id' => 'health_center_submission_statuses_api#get_health_center_submission_status_counts'
-      put 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
+      patch 'update_health_center_submission_status/:id' => 'health_center_submission_statuses_api#update_health_center_submission_status'
       post 'create_health_center_submission_status_comment' => 'health_center_submission_statuses_api#create_health_center_submission_status_comment'
 
       #---開催日
