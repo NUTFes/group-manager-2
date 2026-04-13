@@ -57,10 +57,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
 
     if @submission_status.update(status: params[:status])
       render json: fmt(ok, {
-        id: @submission_status.id,
-        application_type: @submission_status.application_type,
-        status: @submission_status.status
-      })
+                         id: @submission_status.id,
+                         application_type: @submission_status.application_type,
+                         status: @submission_status.status
+                       })
     else
       render json: fmt(unprocessable_entity, [], @submission_status.errors.full_messages.join(', '))
     end
@@ -74,11 +74,11 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     @comment = @submission_status.comments.build(body: params[:body])
     if @comment.save
       render json: fmt(created, {
-        id: @comment.id,
-        body: @comment.body,
-        commentable_type: @comment.commentable_type,
-        commentable_id: @comment.commentable_id
-      })
+                         id: @comment.id,
+                         body: @comment.body,
+                         commentable_type: @comment.commentable_type,
+                         commentable_id: @comment.commentable_id
+                       })
     else
       render json: fmt(unprocessable_entity, [], @comment.errors.full_messages.join(', '))
     end
