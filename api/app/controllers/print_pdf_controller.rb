@@ -13,8 +13,9 @@ class PrintPdfController < ApplicationController
   # 物品貸し出し書類をまとめて出力
   def output_all_groups_rental_items_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id]).order(:group_category_id)
-    ## 今後の実装によってprint_pdfにocaleの引数を持たせる
+    # 今後の実装によってprint_pdfにlocaleの引数を持たせる
     locale = params[:locale].presence&.to_sym || :ja
+    @use_english_name_for_pdf = locale == :en
     @groups = @groups.where(is_international: true) if locale == :en
     print_pdf('output_all_groups_rental_items', 'output_rental_items_pdf', '物品貸出表', 'Not Landscape')
   end
