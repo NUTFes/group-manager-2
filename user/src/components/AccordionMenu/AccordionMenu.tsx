@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
+import { useAccordionMenuTexts } from './hooks';
 
 type AccordionMenuProps = {
   title: string;
@@ -22,6 +23,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   required,
   note,
 }) => {
+  const { labels } = useAccordionMenuTexts();
   const receptionStatus = isEdit ? 'open' : 'closed';
 
   const registerStatus =
@@ -40,29 +42,35 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   };
 
   return (
-    <div className="w-full max-w-[560px] border-t border-[#b2b2b2]">
+    <div className="w-full max-w-[720px] border-t border-[#b2b2b2]">
       <button
         onClick={toggleAccordion}
-        className="mb-10 flex h-20 w-full max-w-[560px] cursor-pointer items-center gap-6 overflow-hidden"
+        className="mb-10 grid min-h-20 w-full max-w-[720px] grid-cols-[auto,minmax(0,1fr),auto,auto,auto] items-center gap-x-6 gap-y-1 py-4"
       >
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center self-stretch">
           <div
-            className={`w-6 text-center text-xs font-light ${required ? 'text-[#ff6752]' : 'text-[#474747]'}`}
+            className={`whitespace-nowrap text-center text-xs font-light ${required ? 'text-[#ff6752]' : 'text-[#474747]'}`}
           >
-            {required ? '必須' : '任意'}
+            {required ? labels.required : labels.optional}
           </div>
         </div>
-        <div className="py-2.5">
+        <div className="min-w-0 py-2.5">
           <div
-            className={`w-full font-bold md:w-52 ${isEdit === false ? 'text-sub' : 'text-black'}`}
+            className={`w-full min-w-0 font-bold ${isEdit === false ? 'text-sub' : 'text-black'}`}
           >
-            <Textfit mode="single" max={40}>
+            <Textfit
+              mode="single"
+              max={40}
+              className="min-w-0 [&>div]:max-h-[2.75em] [&>div]:overflow-hidden [&>div]:!whitespace-normal [&>div]:break-words [&>div]:leading-snug"
+            >
               {title}
             </Textfit>
           </div>
         </div>
         <Status statusType="reception" status={receptionStatus} />
-        <Status statusType="registration" status={registerStatus} />
+        <div className="shrink-0 [&>div>div]:!w-auto [&>div>div]:whitespace-nowrap [&>div]:!w-auto [&>div]:min-w-[86px] [&>div]:!px-3">
+          <Status statusType="registration" status={registerStatus} />
+        </div>
         <div
           className={`text-main transition-transform duration-300 ${isOpen ? `rotate-180` : ``}`}
         >

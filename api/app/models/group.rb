@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 class Group < ApplicationRecord
+  ORDER_STATUS_CHECK_INCLUDES = [
+    :user,
+    :group_category,
+    :fes_year,
+    :sub_rep,
+    :place_order,
+    :stage_orders,
+    :stage_common_option,
+    :power_orders,
+    :rental_orders,
+    :employees,
+    :public_relation,
+    :venue_map,
+    :announcement,
+    :cooking_process_order,
+    { food_products: :purchase_lists }
+  ].freeze
+
   belongs_to :user
   belongs_to :fes_year
   belongs_to :group_category
@@ -20,6 +38,9 @@ class Group < ApplicationRecord
   has_one :cooking_process_order, dependent: :destroy
   has_many :un_registered_groups, dependent: :destroy
   has_many :fire_equipment_orders, dependent: :destroy
+  has_many :health_center_submission_statuses, dependent: :destroy
+
+  scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
 
   ORDER_STATUS_CHECK_INCLUDES = [
     :user,
@@ -433,70 +454,6 @@ class Group < ApplicationRecord
         cooking_process_order: group.cooking_process_order&.id
       }
     return @record
-  end
-
-  # 指定したfes_yearに対応するgroupとそれが持つorderを取得する
-  def self.with_order_status_check_narrow_down_by_fes_year(fes_year_id)
-    @record = Group.where(groups: { fes_year_id: fes_year_id })
-                   .map  do |group|
-      {
-        group: group,
-        user: group.user&.id,
-        group_category: group.group_category&.id,
-        fes_year: group.fes_year&.id,
-        sub_rep: group.sub_rep&.id,
-        place_order: group.place_order&.id,
-        stage_orders: group.stage_orders.none? ? nil : group.stage_orders[0].id,
-        stage_common_option: group.stage_common_option&.id,
-        power_orders: group.power_orders.none? ? nil : group.power_orders[0].id,
-        rental_orders: group.rental_orders.none? ? nil : group.rental_orders[0].id,
-        employees: group.employees.none? ? nil : group.employees[0].id,
-        food_products: if group.food_products.empty?
-                         nil
-                       else
-                         {
-                           food_product: group.food_products.first&.id,
-                           purchase_lists: group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
-                         }
-                       end,
-        public_relation: group.public_relation&.id,
-        venue_map: group.venue_map&.id,
-        announcement: group.announcement&.id,
-        cooking_process_order: group.cooking_process_order&.id
-      }
-    end
-  end
-
-  # 検索ワードに対応するgroupとそれが持つorderを取得する
-  def self.with_order_status_check_narrow_down_by_search_word(word)
-    @record = Group.where('name like ?', "%#{word}%")
-                   .map  do |group|
-      {
-        group: group,
-        user: group.user&.id,
-        group_category: group.group_category&.id,
-        fes_year: group.fes_year&.id,
-        sub_rep: group.sub_rep&.id,
-        place_order: group.place_order&.id,
-        stage_orders: group.stage_orders.none? ? nil : group.stage_orders[0].id,
-        stage_common_option: group.stage_common_option&.id,
-        power_orders: group.power_orders.none? ? nil : group.power_orders[0].id,
-        rental_orders: group.rental_orders.none? ? nil : group.rental_orders[0].id,
-        employees: group.employees.none? ? nil : group.employees[0].id,
-        food_products: if group.food_products.empty?
-                         nil
-                       else
-                         {
-                           food_product: group.food_products.first&.id,
-                           purchase_lists: group.food_products.first.nil? || group.food_products.first.purchase_lists.empty? ? nil : group.food_products.first.purchase_lists[0].id
-                         }
-                       end,
-        public_relation: group.public_relation&.id,
-        venue_map: group.venue_map&.id,
-        announcement: group.announcement&.status,
-        cooking_process_order: group.cooking_process_order&.id
-      }
-    end
   end
 
   ### sub rep (副代表)

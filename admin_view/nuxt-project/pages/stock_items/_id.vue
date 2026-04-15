@@ -32,7 +32,7 @@
               <tr
                 v-for="(stockerItem, index) in stockerItems"
                 :key="index"
-                @click="() => $router.push({ path: `/assign_items/` + id})"
+                @click="() => $router.push({ path: `/stock_items/` + id})"
               >
                 <td>{{ stockerItem.rental_item.name }}</td>
                 <td>{{ stockerItem.stocker_item.num }}</td>
@@ -63,7 +63,7 @@
               <tr
                 v-for="(assignRentalItem, index) in assignRentalItems"
                 :key="index"
-                @click="() => $router.push({ path: '/assign_items/' + id})"
+                @click="() => $router.push({ path: '/stock_items/' + id})"
               >
                 <td>{{ assignRentalItem.group.name}}</td>
                 <td>{{ assignRentalItem.rental_item.name }}</td>
@@ -338,16 +338,14 @@
 </template>
 
 <script>
-import axios from "axios";
 import { mapState } from "vuex";
-import moment from "moment";
 
 export default {
   watchQuery: ["page"],
   data() {
     return {
       warningStatus: {},
-      isWarning: false, 
+      isWarning: false,
       assignRentalItemId: null,
       stockerItemId: null,
       stockerItemDeleteId: null,
@@ -516,7 +514,7 @@ export default {
 
       await this.$axios.$put(placeUrl).then((response) => {
         this.closePlaceEditModal();
-        this.$router.push("/assign_items")
+        this.$router.push("/stock_items")
       })
       .catch(error => {
         console.log(error)
@@ -526,7 +524,7 @@ export default {
     async deletePlace() {
       const delPlaceUrl = "/stocker_places/" + this.id;
       const delPlaceRes = await this.$axios.$delete(delPlaceUrl);
-      this.$router.push("/assign_items");
+      this.$router.push("/stock_items");
     },
 
     async submitItem() {
@@ -714,7 +712,7 @@ export default {
     closeAssignDeleteModal() {
       this.isOpenAssignDeleteModal = false;
     },
-    
+
     sorted_assignRentalItems(index) {
       console.log(index);
       if(index == 0){
@@ -749,7 +747,7 @@ export default {
           }
           return 0;
         });
-        
+
         return this.assignRentalItems;
       } else {
         return this.assignRentalItems;
@@ -764,7 +762,7 @@ export default {
   text-align: center;
   vertical-align: middle;
   padding: 25px;
-  background-color: #ffac5d; 
+  background-color: #ffac5d;
 }
 .normal-table td.warning:hover {
   background-color: #ffac5d !important;
