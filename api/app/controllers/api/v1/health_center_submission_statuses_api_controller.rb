@@ -23,7 +23,8 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     render json: fmt(ok, {
                        approved: @statuses.approved.count,
                        waiting_resubmission: @statuses.waiting_resubmission.count,
-                       unapproved: @statuses.unapproved.count
+                       unapproved: @statuses.unapproved.count,
+                       unsubmitted: @statuses.unsubmitted.count
                      })
   end
 

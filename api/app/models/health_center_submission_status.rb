@@ -16,7 +16,8 @@ class HealthCenterSubmissionStatus < ApplicationRecord
   enum status: {
     unapproved: 0,
     waiting_resubmission: 1,
-    approved: 2
+    approved: 2,
+    unsubmitted: 3
   }
 
   validates :application_type, presence: true, uniqueness: { scope: :group_id }
