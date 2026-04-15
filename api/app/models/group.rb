@@ -42,7 +42,6 @@ class Group < ApplicationRecord
 
   scope :with_order_status_check_relations, -> { includes(*ORDER_STATUS_CHECK_INCLUDES) }
 
-
   ### group_category (参加団体カテゴリ)
 
   # 全てのgroupとそのgroup_categoryを取得する
