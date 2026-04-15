@@ -21,6 +21,9 @@ type ContentProps = {
   publicRelation?: PublicRelationResponse | null;
   formItem: FormItem[];
   groupId: number;
+  publicRelationsTexts: ReturnType<
+    typeof usePublicRelationsHooks
+  >['publicRelationsTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -32,15 +35,16 @@ const Content: FC<ContentProps> = ({
   publicRelation,
   formItem,
   groupId,
+  publicRelationsTexts,
 }) => {
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{publicRelationsTexts.loading}</div>;
   }
 
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {publicRelationsTexts.errors.fetch}
       </div>
     );
   }
@@ -67,12 +71,19 @@ const PublicRelations: FC<PublicRelationsProps> = ({
   isDeadline,
   isRegistered,
 }) => {
-  const { formItem, isEditing, toEdit, publicRelation, isLoading, hasError } =
-    usePublicRelationsHooks(groupId);
+  const {
+    formItem,
+    isEditing,
+    toEdit,
+    publicRelation,
+    isLoading,
+    hasError,
+    publicRelationsTexts,
+  } = usePublicRelationsHooks(groupId);
 
   return (
     <AccordionMenu
-      title="PR文申請"
+      title={publicRelationsTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -86,6 +97,7 @@ const PublicRelations: FC<PublicRelationsProps> = ({
         publicRelation={publicRelation}
         formItem={formItem}
         groupId={groupId}
+        publicRelationsTexts={publicRelationsTexts}
       />
     </AccordionMenu>
   );

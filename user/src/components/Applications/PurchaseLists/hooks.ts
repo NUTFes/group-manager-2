@@ -9,6 +9,7 @@ import {
 } from '@/api/purchaseListsApi';
 import { useGetShops } from '@/api/shopApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { UseFormSetValue, useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
@@ -70,6 +71,7 @@ export const useDateFormatters = () => {
  * @returns 食品リスト、セレクトボックス用オプション、ローディング状態、エラー状態。
  */
 export const useFoodProducts = (groupId: number) => {
+  const { t } = useTranslation('common');
   const { foodProducts, isLoading, error } = useGetFoodProducts(groupId);
 
   const memoizedFoodProducts = useMemo(
@@ -79,7 +81,7 @@ export const useFoodProducts = (groupId: number) => {
 
   const foodProductOptions = useMemo((): FoodProductOption[] => {
     const initialOptions: FoodProductOption[] = [
-      { id: 0, name: '選択してください' },
+      { id: 0, name: t('form.validation.select') },
     ];
 
     if (!memoizedFoodProducts) {
@@ -90,7 +92,7 @@ export const useFoodProducts = (groupId: number) => {
       name: p.name,
     }));
     return [...initialOptions, ...fetchedOptions];
-  }, [memoizedFoodProducts]);
+  }, [memoizedFoodProducts, t]);
 
   return {
     foodProducts: memoizedFoodProducts,
@@ -113,6 +115,7 @@ export const usePurchaseListsState = (
   foodProductOptions: FoodProductOption[],
   isRegistered: boolean | undefined
 ) => {
+  const { t } = useTranslation('common');
   // 食品IDリストを最適化
   const foodProductIds = useMemo(
     () => foodProducts.map((p) => p.id),
@@ -130,8 +133,8 @@ export const usePurchaseListsState = (
 
   // ショップ情報を取得し、セレクトボックス用のオプションを生成
   const shopOptions = useMemo(
-    () => [{ id: 0, name: '選択してください' }, ...shops],
-    [shops]
+    () => [{ id: 0, name: t('form.validation.select') }, ...shops],
+    [shops, t]
   );
 
   const toggleEdit = useCallback(() => setIsEditing((prev) => !prev), []);
@@ -141,17 +144,19 @@ export const usePurchaseListsState = (
       if (!purchaseLists || !itemId) return;
       try {
         await deletePurchaseList(itemId);
-        toast.success('購入品が削除されました');
+        toast.success(
+          t('applications.purchaseLists.messages.itemDeleteSuccess')
+        );
         await mutatePurchaseLists();
         // 最後のアイテムを削除した場合は、新規登録ができるよう編集モードに切り替える
         if (purchaseLists.length === 1) {
           setIsEditing(true);
         }
       } catch {
-        toast.error('削除に失敗しました。');
+        toast.error(t('applications.purchaseLists.messages.itemDeleteFailed'));
       }
     },
-    [purchaseLists, deletePurchaseList, mutatePurchaseLists]
+    [purchaseLists, deletePurchaseList, mutatePurchaseLists, t]
   );
 
   const { formatDateForInput, formatDateForDisplay } = useDateFormatters();
@@ -166,27 +171,48 @@ export const usePurchaseListsState = (
           foodProductOptions.find(
             (product) => product.id === item.foodProductId
           )?.name || '';
-        const freshName =
-          FRESH_OPTIONS.find(
-            (opt) =>
-              opt.id ===
-              (item.isFresh ? FRESH_TYPE_ID.FRESH : FRESH_TYPE_ID.PROCESSED)
-          )?.name || '';
+        const freshOption = FRESH_OPTIONS.find(
+          (opt) =>
+            opt.id ===
+            (item.isFresh ? FRESH_TYPE_ID.FRESH : FRESH_TYPE_ID.PROCESSED)
+        );
+        const freshName = freshOption ? t(freshOption.labelKey) : '';
 
         const singleItemForm: FormItem[] = [
-          { label: '販売品名', content: foodProductName },
-          { label: '食材・材料', content: item.items },
-          { label: '商品の種類', content: freshName },
-          { label: '購入場所', content: shopName },
-          { label: '購入日', content: formatDateForDisplay(item.purchaseDate) },
-          { label: '備考', content: item.remark || '' },
+          {
+            label: t('applications.purchaseLists.summary.labels.foodProduct'),
+            content: foodProductName,
+          },
+          {
+            label: t('applications.purchaseLists.summary.labels.items'),
+            content: item.items,
+          },
+          {
+            label: t('applications.purchaseLists.summary.labels.type'),
+            content: freshName,
+          },
+          {
+            label: t('applications.purchaseLists.summary.labels.shop'),
+            content: shopName,
+          },
+          {
+            label: t('applications.purchaseLists.summary.labels.date'),
+            content: formatDateForDisplay(item.purchaseDate),
+          },
+          {
+            label: t('applications.purchaseLists.summary.labels.remark'),
+            content: item.remark || '',
+          },
         ];
         if (item.url) {
-          singleItemForm.push({ label: 'URL', content: item.url });
+          singleItemForm.push({
+            label: t('applications.purchaseLists.summary.labels.url'),
+            content: item.url,
+          });
         }
         return singleItemForm;
       }) || [],
-    [purchaseLists, shopOptions, foodProductOptions, formatDateForDisplay]
+    [purchaseLists, shopOptions, foodProductOptions, formatDateForDisplay, t]
   );
 
   // フォーム送信成功後は表示モードに切り替え
@@ -223,6 +249,24 @@ export const usePurchaseListsState = (
   };
 };
 
+export const usePurchaseListsViewTexts = () => {
+  const { t } = useTranslation('common');
+  return {
+    title: t('applications.purchaseLists.title'),
+    loading: t('applications.purchaseLists.loading'),
+    errors: {
+      fetch: t('applications.purchaseLists.errors.fetch'),
+    },
+    deadline: {
+      title: t('applications.purchaseLists.deadline.title'),
+      description: t('applications.purchaseLists.deadline.description'),
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+    },
+  };
+};
+
 /**
  * 購入品リストのフォームの状態管理と送信処理を行うカスタムフック。
  * react-hook-formを利用して、動的なフォームの追加・削除、バリデーション、送信処理を責務に持つ。
@@ -236,6 +280,7 @@ export const usePurchaseListsForm = (
   initialData: PurchaseItem[] | undefined,
   onSuccess: () => void
 ) => {
+  const { t } = useTranslation('common');
   const { trigger: createPurchaseList } = useCreatePurchaseList();
   const { trigger: updatePurchaseList } = useUpdatePurchaseList()();
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
@@ -286,10 +331,12 @@ export const usePurchaseListsForm = (
     if (item && item.id) {
       try {
         await deletePurchaseList(item.id);
-        toast.success('購入品が削除されました');
+        toast.success(
+          t('applications.purchaseLists.messages.itemDeleteSuccess')
+        );
         remove(index);
       } catch {
-        toast.error('削除に失敗しました。');
+        toast.error(t('applications.purchaseLists.messages.itemDeleteFailed'));
       }
     } else {
       // 新規追加されただけのアイテムは、フォームの状態から削除するだけ
@@ -311,7 +358,9 @@ export const usePurchaseListsForm = (
           })),
         };
         await upsertPurchaseLists({ body: requestBody });
-        toast.success('複数の購入品申請が登録されました');
+        toast.success(
+          t('applications.purchaseLists.messages.bulkCreateSuccess')
+        );
       } else {
         // 単体の場合は個別のAPIを使用
         const item = formData.purchaseLists[0];
@@ -323,17 +372,17 @@ export const usePurchaseListsForm = (
             id: item.id,
             body: itemWithFesDateId,
           });
-          toast.success('購入品申請が更新されました');
+          toast.success(t('applications.purchaseLists.messages.updateSuccess'));
         } else {
           // 新規作成
           await createPurchaseList({ body: itemWithFesDateId });
-          toast.success('購入品申請が登録されました');
+          toast.success(t('applications.purchaseLists.messages.createSuccess'));
         }
       }
       onSuccess();
       reset(formData); // 送信後もフォーム内容は維持
     } catch {
-      toast.error('登録に失敗しました');
+      toast.error(t('applications.purchaseLists.messages.submitFailed'));
     }
   };
 
@@ -346,6 +395,52 @@ export const usePurchaseListsForm = (
     errors: formState.errors,
     setValue,
     reset,
+  };
+};
+
+export const usePurchaseListsFormTexts = () => {
+  const { t } = useTranslation('common');
+
+  const freshOptions = FRESH_OPTIONS.map((option) => ({
+    id: option.id,
+    name: t(option.labelKey),
+  }));
+
+  const translateError = (message: string) =>
+    t(message, { defaultValue: message });
+
+  return {
+    fields: {
+      foodProduct: t('applications.purchaseLists.fields.foodProduct'),
+      items: t('applications.purchaseLists.fields.items'),
+      shop: t('applications.purchaseLists.fields.shop'),
+      purchaseDate: t('applications.purchaseLists.fields.purchaseDate'),
+      url: t('applications.purchaseLists.fields.url'),
+      remark: t('applications.purchaseLists.fields.remark'),
+    },
+    notes: {
+      foodProduct: t('applications.purchaseLists.notes.foodProduct'),
+      shop: t('applications.purchaseLists.notes.shop'),
+      purchaseDate: t('applications.purchaseLists.notes.purchaseDate'),
+      url: t('applications.purchaseLists.notes.url'),
+      remark: {
+        default: t('applications.purchaseLists.notes.remarkDefault'),
+        other: t('applications.purchaseLists.notes.remarkOther'),
+      },
+    },
+    radio: {
+      label: t('applications.purchaseLists.radio.label'),
+      options: freshOptions,
+    },
+    buttons: {
+      delete: t('form.actions.delete'),
+      addItem: t('applications.purchaseLists.buttons.addItem'),
+      register: t('form.actions.register'),
+      edit: t('form.actions.edit'),
+    },
+    errors: {
+      format: translateError,
+    },
   };
 };
 

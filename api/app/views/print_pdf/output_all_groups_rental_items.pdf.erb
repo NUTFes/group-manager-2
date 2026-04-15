@@ -1,4 +1,9 @@
 <% @groups.each do |group| %>
+<% fes_dates_by_day_num = group.fes_year.fes_dates.index_by(&:days_num) %>
+<% day1_date = fes_dates_by_day_num[1]&.date %>
+<% day2_date = fes_dates_by_day_num[2]&.date %>
+<% pickup_date = fes_dates_by_day_num[0]&.date %>
+<% return_date = fes_dates_by_day_num[3]&.date %>
 <div class="page-break">
 <h1><%= t('print_pdf.output_all_groups_rental_items.title') %></h1>
 
@@ -20,11 +25,11 @@
       </tr>
       <tr>
         <th rowspan=2><%= t('print_pdf.output_all_groups_rental_items.org.activity_time') %></th>
-        <td><%= group.fes_year.fes_dates.where(days_num: 1).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 1).first.date %><%= t('print_pdf.output_all_groups_rental_items.org.day1_label') %></td>
+        <td><%= day1_date %><%= t('print_pdf.output_all_groups_rental_items.org.day1_label') %></td>
         <td>10:00-17:00</td>
       </tr>
       <tr>
-        <td><%= group.fes_year.fes_dates.where(days_num: 2).first.nil? ? nil : group.fes_year.fes_dates.where(days_num: 2).first.date %><%= t('print_pdf.output_all_groups_rental_items.org.day2_label') %></td>
+        <td><%= day2_date %><%= t('print_pdf.output_all_groups_rental_items.org.day2_label') %></td>
         <td>10:00-16:00</td>
       </tr>
       <tr>
@@ -56,8 +61,8 @@
       <td><%= @use_english_name_for_pdf && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
       <td><%= @use_english_name_for_pdf && assign_rental_item.stocker_place.name_en.present? ? assign_rental_item.stocker_place.name_en : assign_rental_item.stocker_place.name %></td>
       <td><%= assign_rental_item.num %></td>
-      <td><%= group.fes_year.fes_dates.find_by(days_num: 0)&.date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
-      <td><%= group.fes_year.fes_dates.find_by(days_num: 3)&.date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
+      <td><%= pickup_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
+      <td><%= return_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>
       <td></td>
       <td></td>
     </tr>

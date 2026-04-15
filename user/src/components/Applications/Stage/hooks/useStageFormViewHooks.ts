@@ -7,7 +7,7 @@ interface Props {
   isSubmitted: boolean;
 }
 
-export const useStageFormViewLogic = ({
+export const useStageFormViewHooks = ({
   hasExisting,
   isDeadline,
   isLoadingAll,

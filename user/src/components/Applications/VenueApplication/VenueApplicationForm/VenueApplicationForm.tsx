@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextArea from '@/components/Form/TextArea';
 import FormContainer from '@/components/FormContainer';
-import { useVenueMapHooks } from './hooks';
+import { useVenueApplicationFormHooks } from './hooks';
 
 type VenueApplicationFormProps = {
   groupId: number;
@@ -32,9 +32,15 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
     handleSubmit,
     disableOptions,
     validateEdit,
-  } = useVenueMapHooks(groupId, placeOrderMutate, placeOrder, handleEditClick);
+    venueApplicationFormTexts,
+  } = useVenueApplicationFormHooks(
+    groupId,
+    placeOrderMutate,
+    placeOrder,
+    handleEditClick
+  );
   if (placesLoading || isLoading) {
-    return <div>loading...</div>;
+    return <div>{venueApplicationFormTexts.loading}</div>;
   }
 
   return (
@@ -43,7 +49,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
         <div className="flex flex-col space-y-10"></div>
         <div className="flex w-full flex-col items-center justify-center gap-10">
           <Selector
-            label="第一希望"
+            label={venueApplicationFormTexts.fields.firstChoice}
             options={options}
             disableOptions={disableOptions}
             value={values.first}
@@ -51,7 +57,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.first?.message}
           />
           <Selector
-            label="第二希望"
+            label={venueApplicationFormTexts.fields.secondChoice}
             options={options}
             disableOptions={disableOptions}
             value={values.second}
@@ -59,7 +65,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.second?.message}
           />
           <Selector
-            label="第三希望"
+            label={venueApplicationFormTexts.fields.thirdChoice}
             options={options}
             disableOptions={disableOptions}
             value={values.third}
@@ -67,7 +73,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
             error={errors.third?.message}
           />
           <TextArea
-            label="備考"
+            label={venueApplicationFormTexts.fields.remark}
             value={values.remark ?? ''}
             onChange={(value) => setValue('remark', value)}
             error={errors.remark?.message}
@@ -82,7 +88,7 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
                   type="button"
                   onClick={handleEditClick}
                 >
-                  キャンセル
+                  {venueApplicationFormTexts.actions.cancel}
                 </Button>
               </div>
             )}
@@ -92,7 +98,9 @@ const VenueApplicationForm: FC<VenueApplicationFormProps> = ({
               type="submit"
               isDisable={validateEdit()}
             >
-              {placeOrder ? '修正' : '登録'}
+              {placeOrder
+                ? venueApplicationFormTexts.actions.edit
+                : venueApplicationFormTexts.actions.register}
             </Button>
           </div>
         </div>

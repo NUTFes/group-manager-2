@@ -5,9 +5,11 @@ import { z } from 'zod';
 // 物品申請フォームのスキーマ定義
 export const rentItemSchema = z.object({
   itemId: z.string().refine((val) => val !== '' && val !== '0', {
-    message: '物品を選択してください',
+    message: 'applications.rentItems.validation.selectItem',
   }),
-  count: z.number().min(1, '1つ以上選択してください'),
+  count: z
+    .number()
+    .min(1, { message: 'applications.rentItems.validation.minCount' }),
 });
 
 // 物品IDの定数
@@ -33,7 +35,7 @@ export const rentItemsFormSchema = z
     hasItems: z.boolean(),
     locationType: z
       .string()
-      .min(1, '会場タイプを選択してください')
+      .min(1, { message: 'applications.rentItems.validation.selectLocation' })
       .default('1'),
     items: z.array(rentItemSchema).optional().default([]),
   })
@@ -46,7 +48,7 @@ export const rentItemsFormSchema = z
       return true;
     },
     {
-      message: '会場タイプを選択してください',
+      message: 'applications.rentItems.validation.selectLocation',
       path: ['locationType'],
     }
   )
@@ -59,7 +61,7 @@ export const rentItemsFormSchema = z
       return true;
     },
     {
-      message: '少なくとも1つの物品を追加してください',
+      message: 'applications.rentItems.validation.addOneItem',
       path: ['items'],
     }
   )
@@ -79,7 +81,7 @@ export const rentItemsFormSchema = z
       return true;
     },
     {
-      message: 'すべての物品情報を正しく入力してください',
+      message: 'applications.rentItems.validation.fillAllFields',
       path: ['items'],
     }
   )
@@ -93,7 +95,7 @@ export const rentItemsFormSchema = z
       return true;
     },
     {
-      message: '同じ物品を複数回追加することはできません',
+      message: 'applications.rentItems.validation.noDuplicates',
       path: ['items'],
     }
   )
@@ -106,7 +108,7 @@ export const rentItemsFormSchema = z
       return !tentItem || tentItem.count <= 1;
     },
     {
-      message: 'テントは1個までしか申請できません',
+      message: 'applications.rentItems.validation.tentLimit',
       path: ['items'],
     }
   )
@@ -125,7 +127,7 @@ export const rentItemsFormSchema = z
       return !(hasPartition && hasDisplayBoard);
     },
     {
-      message: 'パーテーションと掲示板はどちらか一方のみ申請できます',
+      message: 'applications.rentItems.validation.partitionDisplayExclusive',
       path: ['items'],
     }
   )
@@ -140,7 +142,7 @@ export const rentItemsFormSchema = z
       return !longTableItem || longTableItem.count <= 1;
     },
     {
-      message: '長机は1個までしか申請できません',
+      message: 'applications.rentItems.validation.longTableLimit',
       path: ['items'],
     }
   )
@@ -161,7 +163,7 @@ export const rentItemsFormSchema = z
       return data.locationType !== '2' || tableItem.count <= 20;
     },
     {
-      message: '屋外団体は机を20個までしか申請できません',
+      message: 'applications.rentItems.validation.tableOutdoorLimit',
       path: ['items'],
     }
   )
@@ -182,7 +184,7 @@ export const rentItemsFormSchema = z
       return data.locationType !== '2' || chairItem.count <= 20;
     },
     {
-      message: '屋外団体は椅子を20個までしか申請できません',
+      message: 'applications.rentItems.validation.chairOutdoorLimit',
       path: ['items'],
     }
   );

@@ -1,27 +1,49 @@
 import { useEffect, useState } from 'react';
 import { useGetStageOptions } from '@/api/stageOptionApi';
+import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { stageOptionLabels } from '../label';
 
 export const useStageOptionHooks = (groupId: number) => {
+  const { t } = useTranslation('common');
   const { stageOptions, isLoading, hasError } = useGetStageOptions(groupId);
+  const stageOptionTexts = {
+    title: t('applications.stageOptions.title'),
+    general: {
+      loading: t('general.loading'),
+    },
+    errors: {
+      fetch: t('general.errors.fetch'),
+    },
+    buttons: {
+      edit: t('form.actions.edit'),
+    },
+  };
 
   const formItem: FormItem[] = [
     {
-      label: stageOptionLabels[0],
-      content: stageOptions?.ownEquipment ? 'はい' : 'いいえ',
+      label: t(stageOptionLabels[0]),
+      content: stageOptions?.ownEquipment
+        ? t('applications.stageOptions.options.yes')
+        : t('applications.stageOptions.options.no'),
     },
     {
-      label: stageOptionLabels[1],
-      content: stageOptions?.bgm ? 'はい' : 'いいえ',
+      label: t(stageOptionLabels[1]),
+      content: stageOptions?.bgm
+        ? t('applications.stageOptions.options.yes')
+        : t('applications.stageOptions.options.no'),
     },
     {
-      label: stageOptionLabels[2],
-      content: stageOptions?.cameraPermission ? 'はい' : 'いいえ',
+      label: t(stageOptionLabels[2]),
+      content: stageOptions?.cameraPermission
+        ? t('applications.stageOptions.options.yes')
+        : t('applications.stageOptions.options.no'),
     },
     {
-      label: stageOptionLabels[3],
-      content: stageOptions?.loudSound ? 'はい' : 'いいえ',
+      label: t(stageOptionLabels[3]),
+      content: stageOptions?.loudSound
+        ? t('applications.stageOptions.options.yes')
+        : t('applications.stageOptions.options.no'),
     },
   ];
 
@@ -44,5 +66,6 @@ export const useStageOptionHooks = (groupId: number) => {
     isEditing,
     toEdit,
     formItem,
+    stageOptionTexts,
   };
 };

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { MdUploadFile } from 'react-icons/md';
+import { useUploadTexts } from './hooks';
 
 // NOTE: 箇条書きで列挙できるようにnoteを配列で定義
 type UploadProps = {
@@ -19,6 +20,8 @@ const Upload: FC<UploadProps> = ({
   error = '',
   required = false,
 }) => {
+  const uploadTexts = useUploadTexts();
+
   return (
     <button
       type="button"
@@ -29,7 +32,9 @@ const Upload: FC<UploadProps> = ({
       <div className="inline-flex items-baseline justify-start gap-6 self-stretch">
         <div className="text-base font-medium text-font">{title}</div>
         {required && (
-          <div className="text-center text-xs text-alert">※必須</div>
+          <div className="text-center text-xs text-alert">
+            ※{uploadTexts.labels.required}
+          </div>
         )}
       </div>
       <div
@@ -42,7 +47,7 @@ const Upload: FC<UploadProps> = ({
           <MdUploadFile className="size-[40px] text-main" />
         </div>
         <div className="text-center text-[26px] font-bold text-main">
-          アップロード
+          {uploadTexts.labels.upload}
         </div>
       </div>
       <ul className="list-inside list-disc text-left text-xs text-sub">
@@ -51,7 +56,7 @@ const Upload: FC<UploadProps> = ({
         ))}
       </ul>
       <div className="max-w-[402px] break-words text-xs text-alert">
-        {error}
+        {uploadTexts.translateError(error)}
       </div>
     </button>
   );

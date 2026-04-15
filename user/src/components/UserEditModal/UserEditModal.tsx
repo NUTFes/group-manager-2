@@ -1,11 +1,10 @@
 import { FC } from 'react';
 import { UserInformation } from '@/api/useUserDetailApi';
-import { DepartmentList, GradeList } from '@/utils/list';
 import Button from '../Button';
 import Selector from '../Form/Selector';
 import TextBox from '../Form/TextBox';
 import Modal from '../Modal';
-import { useUserEditModalHooks } from './hooks';
+import { useUserEditModalHooks, useUserEditModalTexts } from './hooks';
 
 type UserEditModalProps = {
   isOpen: boolean;
@@ -20,6 +19,7 @@ const UserEditModal: FC<UserEditModalProps> = ({
   userInformation,
   mutate,
 }) => {
+  const userEditModalTexts = useUserEditModalTexts();
   const { errors, values, setValue, trigger, validateEdit, handleSubmitForm } =
     useUserEditModalHooks(userInformation, mutate);
   return (
@@ -29,57 +29,57 @@ const UserEditModal: FC<UserEditModalProps> = ({
           <div className="min-w-0 flex-none basis-full p-4">
             <div className="flex flex-col items-center justify-center space-y-6 rounded-lg bg-baseColor">
               <TextBox
-                label="名前"
+                label={userEditModalTexts.labels.name}
                 value={values.name || ''}
-                note="例：長岡 太郎"
+                note={userEditModalTexts.notes.name}
                 required
                 error={errors.name?.message}
                 onChange={(value: string) => setValue('name', value)}
                 onBlur={() => trigger('name')}
               />
               <TextBox
-                label="メールアドレス"
+                label={userEditModalTexts.labels.email}
                 type="email"
                 value={values.mail || ''}
-                note="例：s123456@stn.nagaokaut.ac.jp"
+                note={userEditModalTexts.notes.email}
                 required
                 error={errors.mail?.message}
                 onChange={(value: string) => setValue('mail', value)}
                 onBlur={() => trigger('mail')}
               />
               <TextBox
-                label="電話番号"
+                label={userEditModalTexts.labels.tel}
                 value={String(values?.tel) || ''}
-                note="例：09012345678"
+                note={userEditModalTexts.notes.tel}
                 required
                 error={errors.tel?.message}
                 onChange={(value: string) => setValue('tel', value)}
                 onBlur={() => trigger('tel')}
               />
               <TextBox
-                label="学籍番号"
+                label={userEditModalTexts.labels.studentId}
                 value={String(values?.studentId) || ''}
-                note="例：12345678"
+                note={userEditModalTexts.notes.studentId}
                 required
                 error={errors.studentId?.message}
                 onChange={(value: string) => setValue('studentId', value)}
                 onBlur={() => trigger('studentId')}
               />
               <Selector
-                label="学年"
+                label={userEditModalTexts.labels.grade}
                 required
                 onChange={(value: string) => setValue('gradeId', Number(value))}
-                options={GradeList}
+                options={userEditModalTexts.gradeOptions}
                 value={values?.gradeId || 0}
                 error={errors.gradeId?.message}
               />
               <Selector
-                label="学科"
+                label={userEditModalTexts.labels.department}
                 required
                 onChange={(value: string) =>
                   setValue('departmentId', Number(value))
                 }
-                options={DepartmentList}
+                options={userEditModalTexts.departmentOptions}
                 value={values?.departmentId || 0}
                 error={errors.departmentId?.message}
               />
@@ -89,7 +89,7 @@ const UserEditModal: FC<UserEditModalProps> = ({
                 color="main"
                 isDisable={validateEdit()}
               >
-                修正
+                {userEditModalTexts.actions.edit}
               </Button>
             </div>
           </div>

@@ -1,5 +1,18 @@
 import { z } from 'zod';
 
+const VALIDATION_MESSAGES = {
+  NAME: 'applications.foodProduct.validation.name',
+  IS_ALCOHOL: 'applications.foodProduct.validation.isAlcohol',
+  IS_COOKING: 'applications.foodProduct.validation.isCooking',
+  DAY1: 'applications.foodProduct.validation.day1',
+  DAY2: 'applications.foodProduct.validation.day2',
+  NUMBER: 'applications.foodProduct.validation.number',
+  MIN_VALUE: 'applications.foodProduct.validation.minValue',
+  ALCOHOL_REQUIRES_COOKING:
+    'applications.foodProduct.validation.alcoholRequiresCooking',
+  MIN_PRODUCTS: 'applications.foodProduct.validation.minProducts',
+};
+
 // ベースとなる商品スキーマ
 const baseProductSchema = z.object({
   id: z.string().optional(),
@@ -16,32 +29,32 @@ const productSchema = z
     id: z.string().optional(),
     name: z
       .string({
-        required_error: '販売品名を入力してください',
+        required_error: VALIDATION_MESSAGES.NAME,
       })
-      .min(1, { message: '販売品名を入力してください' }),
+      .min(1, { message: VALIDATION_MESSAGES.NAME }),
     isAlcohol: z.boolean({
-      required_error: '酒類かどうかを選択してください',
+      required_error: VALIDATION_MESSAGES.IS_ALCOHOL,
     }),
     isCooking: z.boolean({
-      required_error: '調理の有無を選択してください',
+      required_error: VALIDATION_MESSAGES.IS_COOKING,
     }),
     day1Quantity: z
       .string({
-        required_error: '1日目の販売予定数を入力してください',
+        required_error: VALIDATION_MESSAGES.DAY1,
       })
-      .min(1, { message: '1日目の販売予定数を入力してください' })
-      .regex(/^\d+$/, { message: '半角数字で入力してください' })
+      .min(1, { message: VALIDATION_MESSAGES.DAY1 })
+      .regex(/^\d+$/, { message: VALIDATION_MESSAGES.NUMBER })
       .refine((val) => parseInt(val) > 0, {
-        message: '1以上の数値を入力してください',
+        message: VALIDATION_MESSAGES.MIN_VALUE,
       }),
     day2Quantity: z
       .string({
-        required_error: '2日目の販売予定数を入力してください',
+        required_error: VALIDATION_MESSAGES.DAY2,
       })
-      .min(1, { message: '2日目の販売予定数を入力してください' })
-      .regex(/^\d+$/, { message: '半角数字で入力してください' })
+      .min(1, { message: VALIDATION_MESSAGES.DAY2 })
+      .regex(/^\d+$/, { message: VALIDATION_MESSAGES.NUMBER })
       .refine((val) => parseInt(val) > 0, {
-        message: '1以上の数値を入力してください',
+        message: VALIDATION_MESSAGES.MIN_VALUE,
       }),
   })
   .refine(
@@ -49,7 +62,7 @@ const productSchema = z
       return !(data.isAlcohol && !data.isCooking);
     },
     {
-      message: '酒類を販売する場合は調理の有無を「有り」にしてください',
+      message: VALIDATION_MESSAGES.ALCOHOL_REQUIRES_COOKING,
       path: ['isCooking'],
     }
   );
@@ -66,7 +79,7 @@ export const productInputSchema = baseProductSchema;
 export const foodProductSchema = z.object({
   products: z
     .array(productSchema)
-    .min(1, { message: '少なくとも1つの販売品を登録してください' }),
+    .min(1, { message: VALIDATION_MESSAGES.MIN_PRODUCTS }),
 });
 
 // 型の自動生成
