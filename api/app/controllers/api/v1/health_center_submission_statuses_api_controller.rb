@@ -8,6 +8,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     get_health_center_submission_status_counts
     create_health_center_submission_status_comment
   ]
+  before_action :require_group_id, only: [:get_health_center_submission_status_counts]
 
   #---取得（GET）
 
@@ -86,6 +87,10 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   end
 
   private
+
+  def require_group_id
+    return render json: fmt(bad_request, "group_id is required") if params[:group_id].blank?
+  end
 
   # 一覧画面用のデータ整形
   def fit_index_for_admin_view(groups)
