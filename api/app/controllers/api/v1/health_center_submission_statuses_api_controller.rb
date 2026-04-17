@@ -9,7 +9,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     create_health_center_submission_status_comment
   ]
 
-  before_action :reqire_group_id, only: %i[
+  before_action :require_group_id, only: %i[
     get_health_center_submission_status_counts
     get_health_center_submission_status_show_for_admin_view
   ]
@@ -143,5 +143,6 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   end
 
   def require_group_id
-    return render json; fmt(bad_request, "group_id id required") if params[:group_id].blank?
+    return render json: fmt(unprocessable_entity, [], 'group_id is required') if params[:group_id].blank?
+  end
 end
