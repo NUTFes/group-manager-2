@@ -9,6 +9,11 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     create_health_center_submission_status_comment
   ]
 
+  before_action :reqire_group_id, only: %i[
+    get_health_center_submission_status_counts
+    get_health_center_submission_status_show_for_admin_view
+  ]
+
   #---取得（GET）
 
   # 全グループの保健所提出ステータス一覧取得
@@ -136,4 +141,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       group.fire_equipment_orders
     end
   end
+
+  def require_group_id
+    return render json; fmt(bad_request, "group_id id required") if params[:group_id].blank?
 end
