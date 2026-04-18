@@ -10,24 +10,28 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
   def fit_group_index_for_admin_view(groups)
     groups.map do |group|
       {
-        "group": group,
-        "user": group.user.nil? ? nil : group.user.id,
-        "group_category": group.group_category.nil? ? nil : group.group_category.id,
-        "fes_year": group.fes_year.nil? ? nil : group.fes_year.id,
-        "sub_rep": group.sub_rep.nil? ? nil : group.sub_rep.id,
-        "place_order": group.place_order.nil? ? nil : group.place_order.id,
-        "stage_orders": group.stage_orders.count == 0 ? nil : group.stage_orders[0].id,
-        "stage_common_option": group.stage_common_option.nil? ? nil : group.stage_common_option.id,
-        "power_orders": group.power_orders.count == 0 ? nil : group.power_orders[0].id,
-        "rental_orders": group.rental_orders.count == 0 ? nil : group.rental_orders[0].id,
-        "employees": group.employees.count == 0 ? nil : group.employees[0].id,
-        "food_product": group.food_products.empty? ? nil : true,
-        "purchase_list": group.food_products.empty? ? nil : group.food_products.any? { |food_product| !food_product.purchase_lists.empty? } ? true : nil,
-        "public_relation": group.public_relation.nil? ? nil : group.public_relation.id,
-        "venue_map": group.venue_map.nil? ? nil : group.venue_map.id,
-        "announcement": group.announcement.nil? ? nil : group.announcement.status,
-        "cooking_process_order": group.cooking_process_order.nil? ? nil : group.cooking_process_order.id,
-        "fire_equipment_order": group.fire_equipment_orders.count == 0 ? nil : group.fire_equipment_orders[0].status
+        group: group,
+        user: group.user&.id,
+        group_category: group.group_category&.id,
+        fes_year: group.fes_year&.id,
+        sub_rep: group.sub_rep&.id,
+        place_order: group.place_order&.id,
+        stage_orders: group.stage_orders.none? ? nil : group.stage_orders[0].id,
+        stage_common_option: group.stage_common_option&.id,
+        power_orders: group.power_orders.none? ? nil : group.power_orders[0].id,
+        rental_orders: group.rental_orders.none? ? nil : group.rental_orders[0].id,
+        employees: group.employees.none? ? nil : group.employees[0].id,
+        food_product: group.food_products.empty? ? nil : true,
+        purchase_list: if group.food_products.empty?
+                         nil
+                       else
+                         group.food_products.any? { |food_product| !food_product.purchase_lists.empty? } ? true : nil
+                       end,
+        public_relation: group.public_relation&.id,
+        venue_map: group.venue_map&.id,
+        announcement: group.announcement&.status,
+        cooking_process_order: group.cooking_process_order&.id,
+        fire_equipment_order: group.fire_equipment_orders.none? ? nil : group.fire_equipment_orders[0].status
       }
     end
   end
