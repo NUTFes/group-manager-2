@@ -1,0 +1,17 @@
+# Enable Mergiraf for file types officially supported and used in this repository.
+*.rb merge=mergiraf
+Gemfile linguist-language=ruby merge=mergiraf
+Rakefile linguist-language=ruby merge=mergiraf
+Makefile merge=mergiraf
+
+*.js merge=mergiraf
+*.jsx merge=mergiraf
+*.mjs merge=mergiraf
+*.ts merge=mergiraf
+*.tsx merge=mergiraf
+
+*.json merge=mergiraf
+*.yml merge=mergiraf
+*.yaml merge=mergiraf
+*.toml merge=mergiraf
+*.html merge=mergiraf
