@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import CorporateIcon from '../../../public/corporate_logo.svg';
 import ProfileIcon from '../../../public/profile_icon.svg';
 import UserModal from '../UserModal';
@@ -20,14 +21,17 @@ const Header: FC<HeaderProps> = () => {
       <Link href="/home">
         <CorporateIcon height="60" />
       </Link>
-      {showUserModal && (
-        <>
-          <button onClick={() => setIsOpen(true)}>
-            <ProfileIcon height="56" />
-          </button>
-          <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
-        </>
-      )}
+      <div className="flex items-center gap-4">
+        <LanguageSwitcher />
+        {showUserModal && (
+          <>
+            <button onClick={() => setIsOpen(true)}>
+              <ProfileIcon height="56" />
+            </button>
+            <UserModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          </>
+        )}
+      </div>
     </div>
   );
 };

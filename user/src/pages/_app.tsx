@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
+import { appWithTranslation } from 'next-i18next';
 import { ToastContainer } from 'react-toastify';
 import AuthGuard from '@/components/AuthGuard';
 import Layout from '@/components/Layout';
@@ -11,7 +12,7 @@ type CustomAppProps = AppProps<{
   session: Session;
 }>;
 
-export default function App({
+function App({
   Component,
   pageProps: { session, ...pageProps },
 }: CustomAppProps) {
@@ -40,3 +41,5 @@ export default function App({
     </div>
   );
 }
+
+export default appWithTranslation(App);

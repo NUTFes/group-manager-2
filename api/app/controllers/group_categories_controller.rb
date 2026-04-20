@@ -40,6 +40,6 @@ class GroupCategoriesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def group_params
-    params.permit(:name)
+    params.permit(:name, :name_en)
   end
 end

@@ -1,6 +1,6 @@
 export type RadioOption = {
   id: number;
-  name: string;
+  labelKey: string;
 };
 
 export type ShopOption = {

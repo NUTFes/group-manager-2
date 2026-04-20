@@ -1125,6 +1125,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.ContactPersonsApi"
+  "/api/v1/get_cooking_process_order_by_food_product_id/{food_product_id}":
+    get:
+      tags:
+      - api/v1/cooking_process_orders_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/cooking_process_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+        '404':
+          description: api/v1/cooking_process_orders_api description
+        '422':
+          description: api/v1/cooking_process_orders_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.CookingProcessOrdersApi"
+      deprecated: false
+      parameters:
+      - name: food_product_id
+        in: path
+        description: food_product_id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_cooking_process_order_for_admin_view/{id}":
     get:
       tags:
@@ -1622,6 +1651,26 @@ paths:
         required: true
         schema:
           type: integer
+  "/api/v1/get_food_products_have_no_cooking_process_order":
+    get:
+      tags:
+      - api/v1/food_products_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/food_products_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+        '422':
+          description: api/v1/food_products_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.FoodProductsApi"
+      deprecated: false
   "/api/v1/get_refinement_food_products":
     post:
       tags:
@@ -1888,6 +1937,133 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/api.v1.GroupsApi"
+  "/api/v1/create_health_center_submission_status_comment":
+    post:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+  "/api/v1/get_health_center_submission_status_counts/{group_id}":
+    get:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/get_health_center_submission_status_index_for_admin_view":
+    get:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+  "/api/v1/get_health_center_submission_status_show_for_admin_view/{group_id}":
+    get:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/api/v1/update_health_center_submission_status/{id}":
+    patch:
+      tags:
+      - api/v1/health_center_submission_statuses_api
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: api/v1/health_center_submission_statuses_api description
+        '404':
+          description: api/v1/health_center_submission_statuses_api description
+        '422':
+          description: api/v1/health_center_submission_statuses_api description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/api.v1.HealthCenterSubmissionStatusesApi"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/api.v1.HealthCenterSubmissionStatusesApi"
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        schema:
+          type: integer
   "/api/v1/get_order_info_for_admin_view/{id}":
     get:
       tags:
@@ -4491,6 +4667,28 @@ paths:
         required: true
         schema:
           type: integer
+  "/cooking_process_orders/upsert":
+    post:
+      tags:
+      - cooking_process_order
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+        '422':
+          description: cooking_process_order description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CookingProcessOrder"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/CookingProcessOrder"
   "/cooking_process_orders/{id}":
     get:
       tags:
@@ -4797,6 +4995,57 @@ paths:
               schema:
                 "$ref": "#/components/schemas/Employee"
       deprecated: false
+    post:
+      tags:
+      - employee
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+        '422':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/Employee"
+  "/employees/group/{group_id}":
+    get:
+      tags:
+      - employee
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+        '404':
+          description: employee description
+        '422':
+          description: employee description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Employee"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
+  "/employees/upsert":
     post:
       tags:
       - employee
@@ -5407,23 +5656,6 @@ paths:
         schema:
           type: integer
   "/food_products":
-    patch:
-      tags:
-      - food_product
-      summary: patch summary
-      description: patch description
-      responses:
-        '204':
-          description: food_product description
-        '422':
-          description: food_product description
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/FoodProduct"
-      deprecated: false
-      requestBody:
-        "$ref": "#/components/requestBodies/FoodProduct"
     get:
       tags:
       - food_product
@@ -5455,6 +5687,23 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/FoodProduct"
+        '422':
+          description: food_product description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/FoodProduct"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/FoodProduct"
+    patch:
+      tags:
+      - food_product
+      summary: patch summary
+      description: patch description
+      responses:
+        '204':
+          description: food_product description
         '422':
           description: food_product description
           content:
@@ -7607,12 +7856,18 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
         '422':
           description: purchase_list description
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/PurchaseList"
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
       deprecated: false
     post:
       tags:
@@ -7635,38 +7890,81 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/PurchaseList"
-        "/purchase_lists/group/{group_id}":
-  get:
-    tags:
+  "/purchase_lists/food_product":
+    get:
+      tags:
       - purchase_list
-    summary: Get purchase lists by group ID
-    description: Returns a list of purchase lists associated with the specified group_id.
-    parameters:
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+  "/purchase_lists/group/{group_id}":
+    get:
+      tags:
+      - purchase_list
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+        '404':
+          description: purchase_list description
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+      parameters:
       - name: group_id
         in: path
-        description: ID of the group to fetch purchase lists for
+        description: group_id
         required: true
         schema:
           type: integer
-    responses:
-      '200':
-        description: Successful response with list of purchase lists
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/PurchaseList"
-      '404':
-        description: No purchase lists found for the specified group_id
-      '422':
-        description: Invalid group_id provided
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Error"
-    deprecated: false
-
+  "/purchase_lists/upsert":
+    post:
+      tags:
+      - purchase_list
+      summary: post summary
+      description: post description
+      responses:
+        '201':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+        '422':
+          description: purchase_list description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PurchaseList"
+      deprecated: false
+      requestBody:
+        "$ref": "#/components/requestBodies/PurchaseList"
   "/purchase_lists/{id}":
     get:
       tags:
@@ -10557,6 +10855,35 @@ paths:
       deprecated: false
       requestBody:
         "$ref": "#/components/requestBodies/VenueMap"
+  "/venue_maps/group/{group_id}":
+    get:
+      tags:
+      - venue_map
+      summary: get summary
+      description: get description
+      responses:
+        '200':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VenueMap"
+        '404':
+          description: venue_map description
+        '422':
+          description: venue_map description
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/VenueMap"
+      deprecated: false
+      parameters:
+      - name: group_id
+        in: path
+        description: group_id
+        required: true
+        schema:
+          type: integer
   "/venue_maps/{id}":
     get:
       tags:
@@ -10812,6 +11139,7 @@ components:
         id:
           type: integer
           format: int64
+    api.v1.HealthCenterSubmissionStatusesApi: {}
     api.v1.OrderInfosApi:
       type: object
       properties:
@@ -11296,6 +11624,7 @@ components:
         application/json:
           schema:
             "$ref": "#/components/schemas/api.v1.GroupsApi"
+    api.v1.HealthCenterSubmissionStatusesApi: {}
     api.v1.OrderInfosApi:
       content:
         application/json:

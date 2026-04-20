@@ -95,4 +95,14 @@ class Api::V1::GroupsApiController < ApplicationController
       render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
   end
+
+  def get_groups_for_fire_equipment_order
+    fes_year_id = params[:fes_year_id]
+    @groups = if fes_year_id.present? && fes_year_id.to_i != 0
+                Group.where(fes_year_id: fes_year_id).order(:id)
+              else
+                Group.order(:id)
+              end
+    render json: { data: @groups }
+  end
 end

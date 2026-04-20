@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Button from '../Button';
+import { useWelcomeBoxTexts } from './hooks';
 
 type WelcomeBoxProps = {
   handleRegisterClick?: () => void;
@@ -10,6 +11,8 @@ const WelcomeBox: FC<WelcomeBoxProps> = ({
   handleLoginClick,
   handleRegisterClick,
 }) => {
+  const welcomeBoxTexts = useWelcomeBoxTexts();
+
   return (
     <div className="flex w-full max-w-[400px] flex-col items-center justify-center gap-12 rounded-[30px] bg-secondary p-4 shadow-[4px_4px_4px_0px_rgba(0,0,0,0.25)] md:p-8">
       <div className="flex flex-col items-center gap-2">
@@ -19,18 +22,18 @@ const WelcomeBox: FC<WelcomeBoxProps> = ({
           color="main"
           onClick={handleRegisterClick}
         >
-          新規登録
+          {welcomeBoxTexts.buttons.register}
         </Button>
         <p className="text-center text-base font-medium text-font">
-          初めての方はこちら
+          {welcomeBoxTexts.descriptions.register}
         </p>
       </div>
       <div className="flex flex-col items-center gap-2">
         <Button type="button" size="pc" color="main" onClick={handleLoginClick}>
-          ログイン
+          {welcomeBoxTexts.buttons.login}
         </Button>
         <p className="text-center text-base font-medium text-font">
-          すでにアカウントをお持ちの方はこちら
+          {welcomeBoxTexts.descriptions.login}
         </p>
       </div>
     </div>
