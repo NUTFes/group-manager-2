@@ -83,6 +83,10 @@
                 <td class="caption">{{ stocker_place }}</td>
               </tr>
               <tr>
+                <th>貸出場所：</th>
+                <td class="caption">{{ pickup_place }}</td>
+              </tr>
+              <tr>
                 <th>登録日時：</th>
                 <td class="caption">
                   {{ assign_rental_item.created_at | formatDate }}
@@ -146,8 +150,16 @@
                     :rules="[rules.required]"
                   />
                   <v-select
-                    label="場所"
-                    v-model="place_id"
+                    label="在庫場所"
+                    v-model="stocker_place_id"
+                    :items="places"
+                    item-text="name"
+                    item-value="id"
+                    outlined
+                  />
+                  <v-select
+                    label="貸出場所"
+                    v-model="rental_place_id"
                     :items="places"
                     item-text="name"
                     item-value="id"
@@ -230,15 +242,16 @@ export default {
       item: [],
       item_id: [],
       item_list: [],
-      place: [],
       places: [],
-      place_id: [],
+      stocker_place_id: [],
+      rental_place_id: [],
       stocker_place: [],
-      stocker_item: [],
+      pickup_place: [],
       num: [],
       expand: false,
       edit_dialog: false,
       delete_dialog: false,
+      success_snackbar: false,
       rules: {
         required: (value) => !!value || "入力してください",
       },
@@ -249,10 +262,10 @@ export default {
       selfRoleId: (state) => state.users.role,
     }),
   },
-  
+
   mounted() {
     window.scrollTo(0, 0);
-    
+
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/stocker_places", {
@@ -290,20 +303,26 @@ export default {
         },
       })
       .then((response) => {
-        this.data = response.data;
-        this.assign_rental_item = response.data.assign_rental_item;
-        this.id = response.data.assign_rental_item.id;
-        this.group = response.data.group;
-        this.group_id = response.data.assign_rental_item.group_id;
-        this.place = response.data.place;
-        this.place_id = response.data.assign_rental_item.stocker_place_id;
-        this.item = response.data.item;
-        this.item_id = response.data.assign_rental_item.rental_item_id;
-        this.num = response.data.assign_rental_item.num;
-        this.stocker_place = response.data.stocker_place;
+        this.applyAssignRentalItemResponse(response.data);
       });
   },
   methods: {
+    applyAssignRentalItemResponse(data) {
+      this.data = data;
+      this.assign_rental_item = data.assign_rental_item;
+      this.id = data.assign_rental_item.id;
+      this.group = data.group ? data.group.name : "";
+      this.group_id = data.assign_rental_item.group_id;
+      this.stocker_place_id = data.assign_rental_item.stocker_place_id;
+      this.rental_place_id =
+        data.assign_rental_item.rental_place_id ||
+        data.assign_rental_item.stocker_place_id;
+      this.item = data.rental_item ? data.rental_item.name : "";
+      this.item_id = data.assign_rental_item.rental_item_id;
+      this.num = data.assign_rental_item.num;
+      this.stocker_place = data.stocker_place;
+      this.pickup_place = data.pickup_place;
+    },
     reload: function () {
       console.log("reload");
       const url = "/api/v1/get_assign_rental_item/" + this.$route.params.id;
@@ -314,17 +333,7 @@ export default {
           },
         })
         .then((response) => {
-          this.data = response.data;
-          this.assign_rental_item = response.data.assign_rental_item;
-          this.id = response.data.assign_rental_item.id;
-          this.group = response.data.group;
-          this.group_id = response.data.assign_rental_item.group_id;
-          this.place = response.data.place;
-          this.place_id = response.data.assign_rental_item.stocker_place_id;
-          this.item = response.data.item;
-          this.item_id = response.data.assign_rental_item.rental_item_id;
-          this.num = response.data.assign_rental_item.num;
-          this.stocker_place = response.data.stocker_place;
+          this.applyAssignRentalItemResponse(response.data);
         });
     },
     edit_dialog_open: function () {
@@ -337,7 +346,9 @@ export default {
         "?group_id=" +
         this.group_id +
         "&stocker_place_id=" +
-        this.place_id +
+        this.stocker_place_id +
+        "&rental_place_id=" +
+        (this.rental_place_id || this.stocker_place_id) +
         "&num=" +
         this.num +
         "&rental_item_id=" +

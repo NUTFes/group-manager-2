@@ -106,7 +106,7 @@
   <% group.assign_rental_items.each do |item| %>
   <tr>
     <td><%= item.rental_item.name %></td>
-    <td><%= item.stocker_place.name %></td>
+    <td><%= item.pickup_place_name %></td>
     <td><%= item.num %></td>
   </tr>
   <% end %>

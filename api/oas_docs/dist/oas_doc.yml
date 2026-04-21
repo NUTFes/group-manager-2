@@ -11260,6 +11260,22 @@ components:
         id:
           type: integer
           format: int64
+        group_id:
+          type: integer
+          format: int64
+        rental_item_id:
+          type: integer
+          format: int64
+        num:
+          type: integer
+          format: int64
+        stocker_place_id:
+          type: integer
+          format: int64
+        rental_place_id:
+          type: integer
+          format: int64
+          nullable: true
     AssignStage:
       type: object
       properties:

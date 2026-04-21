@@ -85,6 +85,14 @@
                     item-value="id"
                     outlined
                   ></v-select>
+                  <v-select
+                    label="貸出場所"
+                    v-model="rentalPlaceId"
+                    :items="places"
+                    item-text="name"
+                    item-value="id"
+                    outlined
+                  ></v-select>
                 </v-form>
               </v-col>
             </v-row>
@@ -148,14 +156,17 @@ export default {
       itemId: [],
       foodProductId: [],
       placeId: [],
+      rentalPlaceId: [],
+      places: [],
       item: [],
       item_list: [],
       headers: [
         { text: "ID", value: "assign_rental_item.id" },
-        { text: "参加団体", value: "group" },
-        { text: "物品", value: "item" },
+        { text: "参加団体", value: "group.name" },
+        { text: "物品", value: "rental_item.name" },
         { text: "個数", value: "assign_rental_item.num" },
         { text: "在庫場所", value: "stocker_place" },
+        { text: "貸出場所", value: "pickup_place" },
         { text: "日時", value: "assign_rental_item.created_at" },
         { text: "編集日時", value: "assign_rental_item.updated_at" },
       ],
@@ -168,7 +179,7 @@ export default {
   },
   mounted() {
     window.scrollTo(0, 0);
-    
+
     this.$store.dispatch("users/getUser");
     this.$axios
       .get("/api/v1/get_assign_rental_items", {
@@ -233,6 +244,7 @@ export default {
       params.append("rental_item_id", this.itemId);
       params.append("num", this.num);
       params.append("stocker_place_id", this.placeId);
+      params.append("rental_place_id", this.rentalPlaceId || this.placeId);
       this.$axios.post("/assign_rental_items", params).then((response) => {
         console.log(response);
         this.dialog = false;
@@ -241,6 +253,7 @@ export default {
         this.itemId = "";
         this.num = "";
         this.placeId = "";
+        this.rentalPlaceId = "";
       });
     },
   },

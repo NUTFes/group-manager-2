@@ -59,7 +59,7 @@
     <% group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
       <td><%= @use_english_name_for_pdf && assign_rental_item.rental_item.name_en.present? ? assign_rental_item.rental_item.name_en : assign_rental_item.rental_item.name %></td>
-      <td><%= @use_english_name_for_pdf && assign_rental_item.stocker_place.name_en.present? ? assign_rental_item.stocker_place.name_en : assign_rental_item.stocker_place.name %></td>
+      <td><%= @use_english_name_for_pdf && assign_rental_item.pickup_place_name_en.present? ? assign_rental_item.pickup_place_name_en : assign_rental_item.pickup_place_name %></td>
       <td><%= assign_rental_item.num %></td>
       <td><%= pickup_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.pickup_day_label') %></td>
       <td><%= return_date %><%= t('print_pdf.output_all_groups_rental_items.items_table.return_day_label') %></td>

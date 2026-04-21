@@ -52,11 +52,7 @@ class Api::V1::AssignRentalItemsApiController < ApplicationController
 
   def fit_assign_rental_item_index_for_admin_view(assign_rental_items)
     assign_rental_items.map do |assign_rental_item|
-      {
-        assign_rental_item: assign_rental_item,
-        rental_item: assign_rental_item.rental_item,
-        group: assign_rental_item.group
-      }
+      AssignRentalItem.build_with_relations(assign_rental_item)
     end
   end
 
@@ -64,9 +60,9 @@ class Api::V1::AssignRentalItemsApiController < ApplicationController
   def get_refinement_assign_rental_item
     stocker_place_id = params[:stocker_place_id].to_i
     @assign_rental_items = if stocker_place_id == 0
-                             AssignRentalItem.all
+                             AssignRentalItem.includes(:group, :rental_item, :stocker_place, :rental_place)
                            else
-                             AssignRentalItem.where(stocker_place_id: stocker_place_id)
+                             AssignRentalItem.includes(:group, :rental_item, :stocker_place, :rental_place).where(stocker_place_id: stocker_place_id)
                            end
 
     if @assign_rental_items.none?

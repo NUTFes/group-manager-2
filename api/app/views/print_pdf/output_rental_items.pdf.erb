@@ -56,7 +56,7 @@
     <% @group.assign_rental_items.each do |assign_rental_item| %>
     <tr>
       <td><%= assign_rental_item.rental_item.name %></td>
-      <td><%= assign_rental_item.stocker_place.name %></td>
+      <td><%= assign_rental_item.pickup_place_name %></td>
       <td><%= assign_rental_item.num %></td>
       <td><%= pickup_date %>(準備日)</td>
       <td><%= return_date %>(片付け日)</td>
