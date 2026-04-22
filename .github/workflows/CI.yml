@@ -52,6 +52,10 @@ jobs:
         run: |
           printf '%s' "${{ secrets.USER_ENV }}" > user/.env
 
+      - name: Export user env to GitHub Actions
+        run: |
+          grep -v '^[[:space:]]*#' user/.env | sed '/^[[:space:]]*$/d' >> "$GITHUB_ENV"
+
       - name: Create admin_view .env
         run: |
           printf '%s' "${{ secrets.ADMIN_VIEW_ENV }}" > admin_view/.env
@@ -73,6 +77,13 @@ jobs:
           push: true
           tags: ${{ secrets.HARBOR_REG }}/group-manager/user:latest
           cache-from: type=gha
+          build-args: |
+            NODE_ENV=${{ env.NODE_ENV }}
+            APP_ENV=${{ env.APP_ENV }}
+            NEXT_PUBLIC_IMGUR_CLIENT_ID=${{ env.NEXT_PUBLIC_IMGUR_CLIENT_ID }}
+            IMGUR_CLIENT_SECRET=${{ env.IMGUR_CLIENT_SECRET }}
+            NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}
 
       - name: Build and Push Admin View
         uses: docker/build-push-action@v5
