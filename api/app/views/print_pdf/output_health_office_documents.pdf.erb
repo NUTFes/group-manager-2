@@ -100,27 +100,12 @@
         </tr>
         <% if group.sub_rep %>
           <tr>
-            <td><%= translate_to_ja(food_product.name) %></td>
-            <td><%= food_product.is_cooking ? '◯' : '' %></td>
-            <td><%= food_product.is_cooking ? '' : '◯' %></td>
-            <td><%= (food_product.first_day_num + food_product.second_day_num) / 2 %></td>
-            <td><%= translate_to_ja(purchase_list.items) %></td>
-            <td><%= translate_to_ja(purchase_list.shop.name) %></td>
-            <td>
-              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 0 }.each do |fes_date| %>
-                <%= fes_date.date %><br>
-              <% end %>
-              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
-                <%= fes_date.date %><br>
-              <% end %>
-            </td>
-            <td>
-              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 1 }.each do |fes_date| %>
-                <%= fes_date.date %><br>
-              <% end %>
-              <% @fes_dates.select { |fes_date| fes_date.fes_year_id == group.fes_year_id && fes_date.days_num == 2 }.each do |fes_date| %>
-                <%= fes_date.date %><br>
-              <% end %>
+            <td class="No">2</td>
+            <td class="Belonging"><%= group.name %></td>
+            <td class="Name"><%= group.sub_rep.name %></td>
+            <td class="Category">
+              <% sub_rep_student_id = (group.sub_rep&.student_id || 0).to_i %>
+              <%= user_category_label(sub_rep_student_id) %>
             </td>
           </tr>
         <% end %>
