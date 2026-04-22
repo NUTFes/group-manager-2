@@ -6,6 +6,7 @@ import { GROUP_CATEGORY } from '@/utils/constants';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import CookingProcessOrder from '@/components/Applications/CookingProcessOrder';
 import Employees from '@/components/Applications/Employees/Employees';
+import FireEquipment from '@/components/Applications/FireEquipment';
 import FoodProduct from '@/components/Applications/FoodProduct';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
@@ -287,6 +288,10 @@ export default function HomePage() {
               mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             />
             <GroupCategoryContent />
+            <FireEquipment
+              groupId={groupId}
+              isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+            />
           </>
         )}
       </div>
