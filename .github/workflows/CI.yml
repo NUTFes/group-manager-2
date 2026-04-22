@@ -93,3 +93,8 @@ jobs:
           push: true
           tags: ${{ secrets.HARBOR_REG }}/group-manager/admin:latest
           cache-from: type=gha
+
+  trigger-cd:
+    needs: build-and-push
+    uses: ./.github/workflows/CD.yml
+    secrets: inherit

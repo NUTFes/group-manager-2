@@ -1,0 +1,29 @@
+name: CD
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Add deploy host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.CONTAINER_IP }}" >> ~/.ssh/known_hosts
+
+      - name: SSH and Deploy
+        run: |
+          ssh deploy-user@${{ secrets.CONTAINER_IP }} << 'EOF'
+            set -e
+            cd /home/deploy-user/group-manager-2
+            git config --global --add safe.directory /home/deploy-user/group-manager-2
+            git fetch origin feat/mitomen/2031/CI-CD-pipeline
+            git reset --hard origin/feat/mitomen/2031/CI-CD-pipeline
+            git checkout -B feat/mitomen/2031/CI-CD-pipeline origin/feat/mitomen/2031/CI-CD-pipeline
+            echo '${{ secrets.HARBOR_PASS }}' | docker login '${{ secrets.HARBOR_REG }}' -u '${{ secrets.HARBOR_USERNAME }}' --password-stdin
+            docker compose -f compose.cd.yml pull
+            docker compose -f compose.cd.yml up -d
+            docker image prune -f
+          EOF
