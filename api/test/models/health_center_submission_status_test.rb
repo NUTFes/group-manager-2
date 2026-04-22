@@ -17,4 +17,24 @@ class HealthCenterSubmissionStatusTest < ActiveSupport::TestCase
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:application_type], 'has already been taken'
   end
+
+  test 'ensure_for_group_and_application_type creates or updates status' do
+    status = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: groups(:two).id,
+      application_type: :employee,
+      status: :unsubmitted
+    )
+
+    assert_equal 'employee', status.application_type
+    assert_equal 'unsubmitted', status.status
+
+    updated = HealthCenterSubmissionStatus.ensure_for_group_and_application_type!(
+      group_id: groups(:two).id,
+      application_type: :employee,
+      status: :approved
+    )
+
+    assert_equal status.id, updated.id
+    assert_equal 'approved', updated.status
+  end
 end

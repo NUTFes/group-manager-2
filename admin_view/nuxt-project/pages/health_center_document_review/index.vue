@@ -48,6 +48,26 @@
       </template>
     </SubSubHeader>
 
+    <div class="status-icon-guide">
+      <span class="status-icon-guide__title">アイコン凡例:</span>
+      <span class="status-icon-guide__item">
+        <span class="material-icons status-badge__icon status-badge--unapproved">notification_important</span>
+        未確認
+      </span>
+      <span class="status-icon-guide__item">
+        <span class="material-icons status-badge__icon status-badge--waiting-resubmission">autorenew</span>
+        再提出待ち
+      </span>
+      <span class="status-icon-guide__item">
+        <span class="material-icons status-badge__icon status-badge--approved">check</span>
+        承認済み
+      </span>
+      <span class="status-icon-guide__item">
+        <span class="material-icons status-badge__icon status-badge--unsubmitted">close</span>
+        未提出
+      </span>
+    </div>
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -64,35 +84,83 @@
               <div v-if="isHealthCenterDocumentComplete(group)">◯</div>
               <div v-else>✖️</div>
             </td>
-            <td :class="{ unregistered: !group.food_product && (group.group_category === 1 || group.group_category === 2) }">
-              <div v-if="group.food_product">◯</div>
-              <div v-else-if="group.group_category !== 1 && group.group_category !== 2">ー</div>
-              <div v-else>✖️</div>
+            <td>
+              <div v-if="getGroupCategoryId(group) !== 1">ー</div>
+              <div
+                v-else
+                class="status-badge"
+                :class="getStatusMeta(normalizeStatus(group.cooking_process_order)).className"
+                :title="getStatusMeta(normalizeStatus(group.cooking_process_order)).label"
+              >
+                <span class="material-icons status-badge__icon">
+                  {{ getStatusMeta(normalizeStatus(group.cooking_process_order)).icon }}
+                </span>
+              </div>
             </td>
-            <td :class="{ unregistered: !group.purchase_list && group.group_category === 1 }">
-              <div v-if="group.purchase_list">◯</div>
-              <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else>✖️</div>
+            <td>
+              <div v-if="getGroupCategoryId(group) !== 1 && getGroupCategoryId(group) !== 2">ー</div>
+              <div
+                v-else
+                class="status-badge"
+                :class="getStatusMeta(normalizeStatus(group.food_product)).className"
+                :title="getStatusMeta(normalizeStatus(group.food_product)).label"
+              >
+                <span class="material-icons status-badge__icon">
+                  {{ getStatusMeta(normalizeStatus(group.food_product)).icon }}
+                </span>
+              </div>
             </td>
-            <td :class="{ unregistered: !group.cooking_process_order && group.group_category === 1 }">
-              <div v-if="group.cooking_process_order">◯</div>
-              <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else>✖️</div>
+            <td>
+              <div v-if="getGroupCategoryId(group) !== 1">ー</div>
+              <div
+                v-else
+                class="status-badge"
+                :class="getStatusMeta(normalizeStatus(group.purchase_list)).className"
+                :title="getStatusMeta(normalizeStatus(group.purchase_list)).label"
+              >
+                <span class="material-icons status-badge__icon">
+                  {{ getStatusMeta(normalizeStatus(group.purchase_list)).icon }}
+                </span>
+              </div>
             </td>
-            <td :class="{ unregistered: !group.employees && group.group_category === 1 }">
-              <div v-if="group.employees">◯</div>
-              <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else>✖️</div>
+            <td>
+              <div v-if="getGroupCategoryId(group) !== 1">ー</div>
+              <div
+                v-else
+                class="status-badge"
+                :class="getStatusMeta(normalizeStatus(group.employee)).className"
+                :title="getStatusMeta(normalizeStatus(group.employee)).label"
+              >
+                <span class="material-icons status-badge__icon">
+                  {{ getStatusMeta(normalizeStatus(group.employee)).icon }}
+                </span>
+              </div>
             </td>
-            <td :class="{ unregistered: !group.venue_map && group.group_category === 1 }">
-              <div v-if="group.venue_map">◯</div>
-              <div v-else-if="group.group_category !== 1">ー</div>
-              <div v-else>✖️</div>
+            <td>
+              <div v-if="getGroupCategoryId(group) !== 1">ー</div>
+              <div
+                v-else
+                class="status-badge"
+                :class="getStatusMeta(normalizeStatus(group.venue_map)).className"
+                :title="getStatusMeta(normalizeStatus(group.venue_map)).label"
+              >
+                <span class="material-icons status-badge__icon">
+                  {{ getStatusMeta(normalizeStatus(group.venue_map)).icon }}
+                </span>
+              </div>
             </td>
-            <td :class="{ unregistered: !group.rental_orders && !isUnregistered(group.group.id, 'rental_item_order') }">
-              <div v-if="group.rental_orders">◯</div>
-              <div v-else-if="isUnregistered(group.group.id, 'rental_item_order')">ー</div>
-              <div v-else>✖️</div>
+            <td>
+              <div v-if="isUnregistered(group.group.id, 'rental_item_order')">ー</div>
+              <div
+                v-else
+                class="status-badge"
+                :class="getStatusMeta(normalizeStatus(group.equipment)).className"
+                :title="getStatusMeta(normalizeStatus(group.equipment)).label"
+              >
+                <span class="material-icons status-badge__icon">
+                  {{ getStatusMeta(normalizeStatus(group.equipment)).icon }}
+                </span>
+              </div>
             </td>
           </tr>
         </template>
@@ -106,11 +174,7 @@
 import { mapState } from "vuex";
 
 const HEALTH_CENTER_REFINEMENT_ENDPOINT =
-  "/api/v1/get_refinement_health_center_document_status";
-const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
-const HEALTH_CENTER_SEARCH_ENDPOINT =
-  "/api/v1/get_search_health_center_document_status";
-const LEGACY_SEARCH_ENDPOINT = "/api/v1/get_search_order_status_check";
+  "/api/v1/get_health_center_submission_status_index_for_admin_view";
 
 export default {
   watchQuery: ["page"],
@@ -120,13 +184,14 @@ export default {
         "ID",
         "参加団体",
         "結果",
+        "調理工程申請",
         "販売品申請",
         "購入品申請",
-        "調理工程申請",
         "従業員申請",
         "平面図申請",
         "物品申請",
       ],
+      allGroups: [],
       groups: [],
       unregisteredGroups: [],
       group_categories: [],
@@ -144,6 +209,7 @@ export default {
       refExternal: "ALL",
       refExternalID: 0,
       groupCategories: [],
+      yearList: [],
       searchText: "",
       internationalList: [
         { id: 1, value: "国際", bool: true },
@@ -155,54 +221,15 @@ export default {
       ],
     };
   },
-  async asyncData({ $axios }) {
-    const currentYearUrl = "/user_page_settings/1";
-    const currentYearRes = await $axios.$get(currentYearUrl);
-    const groupCategoryRes = await $axios.$get("/group_categories");
-    const url =
-      HEALTH_CENTER_REFINEMENT_ENDPOINT +
-      "?fes_year_id=" +
-      currentYearRes.data.fes_year_id;
-    let groupsRes;
-    try {
-      groupsRes = await $axios.$post(url);
-    } catch (error) {
-      if (error?.response?.status === 404) {
-        const legacyUrl =
-          LEGACY_REFINEMENT_ENDPOINT +
-          "?fes_year_id=" +
-          currentYearRes.data.fes_year_id;
-        groupsRes = await $axios.$post(legacyUrl);
-      } else {
-        throw error;
-      }
-    }
-    const yearsUrl = "/fes_years";
-    const yearsRes = await $axios.$get(yearsUrl);
-    const currentYears = yearsRes.data.filter(function (element) {
-      return element.id == currentYearRes.data.fes_year_id;
-    });
-
-    // 申請しないデータを取得
-    const unregisteredGroupsRes = await $axios.$get("/un_registered_groups");
-
-    return {
-      groups: groupsRes.data.filter((group) => group.group_category === 1),
-      unregisteredGroups: unregisteredGroupsRes.data,
-      groupCategories: groupCategoryRes.data,
-      yearList: yearsRes.data,
-      refYearID: currentYearRes.data.fes_year_id,
-      refCategoryID: 1,
-      refYears: currentYears[0].year_num,
-    };
-  },
   computed: {
     ...mapState({
       roleID: (state) => state.users.role,
     }),
   },
-  mounted() {
-    console.log(this.groups)
+  async mounted() {
+    const initialized = await this.fetchInitialData();
+    if (!initialized) return;
+
     const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
 
     if (storedYearID) {
@@ -250,6 +277,53 @@ export default {
     window.addEventListener("scroll", this.saveScrollPosition);
   },
   methods: {
+    async fetchInitialData() {
+      try {
+        const [
+          currentYearRes,
+          groupCategoryRes,
+          groupsRes,
+          yearsRes,
+          unregisteredGroupsRes,
+        ] = await Promise.all([
+          this.$axios.$get("/user_page_settings/1"),
+          this.$axios.$get("/group_categories"),
+          this.$axios.$get(HEALTH_CENTER_REFINEMENT_ENDPOINT),
+          this.$axios.$get("/fes_years"),
+          this.$axios.$get("/un_registered_groups"),
+        ]);
+
+        const currentYearId = currentYearRes.data.fes_year_id;
+        const currentYear = yearsRes.data.find((element) => element.id === currentYearId);
+
+        const filteredGroups = groupsRes.data.filter((group) => {
+          const categoryId =
+            typeof group.group_category === "number"
+              ? group.group_category
+              : group.group_category?.id;
+          const yearId = group.group?.fes_year_id || group.fes_year?.id;
+
+          return categoryId === 1 && yearId === currentYearId;
+        });
+
+        this.allGroups = groupsRes.data;
+        this.groups = filteredGroups;
+        this.unregisteredGroups = unregisteredGroupsRes.data;
+        this.groupCategories = groupCategoryRes.data;
+        this.yearList = yearsRes.data;
+        this.refYearID = currentYearId;
+        this.refCategoryID = 1;
+        this.refYears = currentYear ? currentYear.year_num : "Year";
+
+        return true;
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.$router.push("/");
+          return false;
+        }
+        throw error;
+      }
+    },
     saveScrollPosition() {
       localStorage.setItem(
         "scrollPosition-" + this.$route.path,
@@ -312,38 +386,7 @@ export default {
       }
     },
     async fetchFilteredData() {
-      this.groups = [];
-      const refUrl =
-        HEALTH_CENTER_REFINEMENT_ENDPOINT +
-        "?fes_year_id=" +
-        this.refYearID +
-        "&group_category_id=" +
-        this.refCategoryID +
-        "&is_international=" +
-        this.refInternationalID +
-        "&is_external=" +
-        this.refExternalID;
-      let refRes;
-      try {
-        refRes = await this.$axios.$post(refUrl);
-      } catch (error) {
-        if (error?.response?.status === 404) {
-          const legacyRefUrl =
-            LEGACY_REFINEMENT_ENDPOINT +
-            "?fes_year_id=" +
-            this.refYearID +
-            "&group_category_id=" +
-            this.refCategoryID +
-            "&is_international=" +
-            this.refInternationalID +
-            "&is_external=" +
-            this.refExternalID;
-          refRes = await this.$axios.$post(legacyRefUrl);
-        } else {
-          throw error;
-        }
-      }
-      this.groups = refRes.data.filter((group) => group.group_category === 1);
+      this.groups = this.filterGroups(this.searchText);
 
       // 申請しないデータも再取得
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
@@ -365,22 +408,7 @@ export default {
     },
     async searchGroups() {
       localStorage.setItem(this.$route.path + "SearchText", this.searchText);
-      this.groups = [];
-      const searchUrl =
-        HEALTH_CENTER_SEARCH_ENDPOINT + "?word=" + this.searchText;
-      let refRes;
-      try {
-        refRes = await this.$axios.$post(searchUrl);
-      } catch (error) {
-        if (error?.response?.status === 404) {
-          const legacySearchUrl =
-            LEGACY_SEARCH_ENDPOINT + "?word=" + this.searchText;
-          refRes = await this.$axios.$post(legacySearchUrl);
-        } else {
-          throw error;
-        }
-      }
-      this.groups = refRes.data.filter((group) => group.group_category === 1);
+      this.groups = this.filterGroups(this.searchText);
 
       // 検索時も申請しないデータを再取得
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
@@ -392,18 +420,86 @@ export default {
         item.group_id === groupId && item.order_type === orderType
       );
     },
+    getGroupCategoryId(group) {
+      if (typeof group.group_category === "number") {
+        return group.group_category;
+      }
+      return group.group_category?.id;
+    },
+    getGroupYearId(group) {
+      return group.group?.fes_year_id || group.fes_year?.id;
+    },
+    normalizeStatus(value) {
+      if (value === true || value === "submitted") return "approved";
+      if (value === false || value === null || value === undefined || value === "") {
+        return "unsubmitted";
+      }
+      return value;
+    },
+    getStatusMeta(status) {
+      const statusMap = {
+        unapproved: {
+          label: "未確認",
+          icon: "notification_important",
+          className: "status-badge--unapproved",
+        },
+        waiting_resubmission: {
+          label: "再提出待ち",
+          icon: "autorenew",
+          className: "status-badge--waiting-resubmission",
+        },
+        approved: {
+          label: "承認済み",
+          icon: "check",
+          className: "status-badge--approved",
+        },
+        unsubmitted: {
+          label: "未提出",
+          icon: "close",
+          className: "status-badge--unsubmitted",
+        },
+      };
+      return statusMap[this.normalizeStatus(status)] || statusMap.unapproved;
+    },
+    toSubmitted(value) {
+      return this.normalizeStatus(value) !== "unsubmitted";
+    },
+    filterGroups(word = "") {
+      const normalizedWord = word.trim().toLowerCase();
+
+      return this.allGroups.filter((group) => {
+        const categoryId = this.getGroupCategoryId(group);
+        const yearId = this.getGroupYearId(group);
+        const isInternational = group.group?.is_international;
+        const isExternal = group.group?.is_external;
+        const matchedWord =
+          normalizedWord.length === 0 ||
+          group.group?.name?.toLowerCase().includes(normalizedWord);
+
+        return (
+          categoryId === 1 &&
+          (this.refYearID === 0 || yearId === this.refYearID) &&
+          (this.refInternationalID === 0 ||
+            isInternational === this.internationalList[this.refInternationalID - 1]?.bool) &&
+          (this.refExternalID === 0 ||
+            isExternal === this.externalList[this.refExternalID - 1]?.bool) &&
+          matchedWord
+        );
+      });
+    },
     // 保健所提出書類に必要な項目が全て満たされているかを判定
     isHealthCenterDocumentComplete(group) {
+      const categoryId = this.getGroupCategoryId(group);
       const foodProductOk =
-        !!group.food_product ||
-        (group.group_category !== 1 && group.group_category !== 2);
-      const purchaseListOk = !!group.purchase_list || group.group_category !== 1;
+        this.toSubmitted(group.food_product) ||
+        (categoryId !== 1 && categoryId !== 2);
+      const purchaseListOk = this.toSubmitted(group.purchase_list) || categoryId !== 1;
       const cookingProcessOk =
-        !!group.cooking_process_order || group.group_category !== 1;
-      const employeesOk = !!group.employees || group.group_category !== 1;
-      const venueMapOk = !!group.venue_map || group.group_category !== 1;
-      const rentalOrdersOk =
-        !!group.rental_orders ||
+        this.toSubmitted(group.cooking_process_order) || categoryId !== 1;
+      const employeesOk = this.toSubmitted(group.employee) || categoryId !== 1;
+      const venueMapOk = this.toSubmitted(group.venue_map) || categoryId !== 1;
+      const equipmentOk =
+        this.toSubmitted(group.equipment) ||
         this.isUnregistered(group.group.id, "rental_item_order");
 
       return (
@@ -412,7 +508,7 @@ export default {
         cookingProcessOk &&
         employeesOk &&
         venueMapOk &&
-        rentalOrdersOk
+        equipmentOk
       );
     },
   },
@@ -423,6 +519,73 @@ export default {
   background-color: red;
   color: white;
 }
+
+.status-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid transparent;
+}
+
+.status-badge__icon {
+  font-size: 18px;
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
+}
+
+.status-badge--unapproved {
+  background: #e53935;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
+.status-badge--waiting-resubmission {
+  background: #2e7d32;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
+.status-badge--approved {
+  background: #ffffff;
+  color: #2e7d32;
+  border-color: #2e7d32;
+  -webkit-text-fill-color: #2e7d32;
+}
+
+.status-badge--unsubmitted {
+  background: #1e88e5;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
+.normal-table td:hover .status-badge__icon {
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.status-icon-guide {
+  margin: 8px 0 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.status-icon-guide__title {
+  font-weight: 700;
+}
+
+.status-icon-guide__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .normal-table td.unregistered:hover {
   background-color: red !important;
   color: white;

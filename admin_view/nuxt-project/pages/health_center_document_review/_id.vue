@@ -7,6 +7,7 @@
         <p>企画名: {{ group.group.project_name }}</p>
         <p>代表者: {{ group.user.name }}</p>
         <p>メール: <a class="mail-link" :href="'mailto:' + group.user.email">{{ group.user.email }}</a></p>
+        <p>未承認{{ unapprovedSubmissionCount }}件</p>
       </Column>
     </Row>
 
@@ -36,7 +37,28 @@
     <Row wrap="nowrap" align="start" justify="space-between">
       <Column width="70%" align="start" justify="start">
         <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
-          <h2>調理工程申請</h2>
+          <div class="section-header-with-button">
+            <h2>調理工程申請</h2>
+            <div class="status-select-with-icon">
+              <span class="material-icons status-icon">
+                {{ getStatusMeta(getSubmissionStatusValue('cooking_process_order')).icon }}
+              </span>
+              <select
+                class="status-select"
+                :value="getSubmissionStatusValue('cooking_process_order')"
+                @change="onStatusChange('cooking_process_order', $event.target.value)"
+              >
+                <option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :disabled="option.value === 'unsubmitted'"
+                >
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
           <Card
             width="100%"
             style="align-items: flex-start;"
@@ -73,7 +95,28 @@
           <p v-if="cookingProcessOrders.length === 0">未登録</p>
           <HorizontalRule />
 
-          <h2>販売品申請</h2>
+          <div class="section-header-with-button">
+            <h2>販売品申請</h2>
+            <div class="status-select-with-icon">
+              <span class="material-icons status-icon">
+                {{ getStatusMeta(getSubmissionStatusValue('food_product')).icon }}
+              </span>
+              <select
+                class="status-select"
+                :value="getSubmissionStatusValue('food_product')"
+                @change="onStatusChange('food_product', $event.target.value)"
+              >
+                <option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :disabled="option.value === 'unsubmitted'"
+                >
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
           <VerticalTable
             v-if="foodProducts.length > 0"
             class="row-interactive-table"
@@ -99,7 +142,28 @@
           <p v-else>未登録</p>
           <HorizontalRule />
 
-          <h2>購入品申請</h2>
+          <div class="section-header-with-button">
+            <h2>購入品申請</h2>
+            <div class="status-select-with-icon">
+              <span class="material-icons status-icon">
+                {{ getStatusMeta(getSubmissionStatusValue('purchase_list')).icon }}
+              </span>
+              <select
+                class="status-select"
+                :value="getSubmissionStatusValue('purchase_list')"
+                @change="onStatusChange('purchase_list', $event.target.value)"
+              >
+                <option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :disabled="option.value === 'unsubmitted'"
+                >
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
           <VerticalTable
             v-for="purchaseGroup in purchaseListsByFoodProduct"
             :key="purchaseGroup.foodProductId"
@@ -133,7 +197,28 @@
           <p v-if="purchaseListsByFoodProduct.length === 0">未登録</p>
           <HorizontalRule />
 
-          <h2>従業員申請</h2>
+          <div class="section-header-with-button">
+            <h2>従業員申請</h2>
+            <div class="status-select-with-icon">
+              <span class="material-icons status-icon">
+                {{ getStatusMeta(getSubmissionStatusValue('employee')).icon }}
+              </span>
+              <select
+                class="status-select"
+                :value="getSubmissionStatusValue('employee')"
+                @change="onStatusChange('employee', $event.target.value)"
+              >
+                <option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :disabled="option.value === 'unsubmitted'"
+                >
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
           <VerticalTable
             v-if="employees.length > 0"
             class="row-interactive-table"
@@ -161,15 +246,57 @@
 
           <div class="section-header-with-button">
             <h2>平面図申請</h2>
-            <CommonButton iconName="edit" :on_click="openVenueMapModal">
-              編集
-            </CommonButton>
+            <div class="section-actions">
+              <CommonButton iconName="edit" :on_click="openVenueMapModal">
+                編集
+              </CommonButton>
+              <div class="status-select-with-icon">
+                <span class="material-icons status-icon">
+                  {{ getStatusMeta(getSubmissionStatusValue('venue_map')).icon }}
+                </span>
+                <select
+                  class="status-select"
+                  :value="getSubmissionStatusValue('venue_map')"
+                  @change="onStatusChange('venue_map', $event.target.value)"
+                >
+                  <option
+                    v-for="option in statusOptions"
+                    :key="option.value"
+                    :value="option.value"
+                    :disabled="option.value === 'unsubmitted'"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
           </div>
           <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
           <p v-else>未登録</p>
           <HorizontalRule />
 
-          <h2>物品申請</h2>
+          <div class="section-header-with-button">
+            <h2>物品申請</h2>
+            <div class="status-select-with-icon">
+              <span class="material-icons status-icon">
+                {{ getStatusMeta(getSubmissionStatusValue('equipment')).icon }}
+              </span>
+              <select
+                class="status-select"
+                :value="getSubmissionStatusValue('equipment')"
+                @change="onStatusChange('equipment', $event.target.value)"
+              >
+                <option
+                  v-for="option in statusOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :disabled="option.value === 'unsubmitted'"
+                >
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+          </div>
           <VerticalTable
             v-if="rentalOrders.length > 0"
             class="row-interactive-table"
@@ -195,10 +322,32 @@
       </Column>
       <Column width="30%" align="start" justify="start" class="sticky-right-column">
         <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
-          <form class="comment-form" @submit.prevent="onSubmitComment">
-            <textarea class="comment-textarea" placeholder="メールで送信するコメント"></textarea>
+          <div class="comment-header">
+            <h3>メッセージ</h3>
+          </div>
+          <div class="comment-form">
+            <textarea
+              class="comment-textarea"
+              placeholder="メールで送信するコメント"
+              v-model="commentBody"
+            ></textarea>
             <CommonButton iconName="send" :on_click="onSubmitComment">送信</CommonButton>
-          </form>
+          </div>
+
+          <div class="comment-history">
+            <h4>送信履歴</h4>
+            <details
+              v-for="comment in sortedComments"
+              :key="comment.id"
+              class="comment-accordion"
+            >
+              <summary>
+                {{ formatCommentTimestamp(comment.created_at) }}
+              </summary>
+              <p class="comment-body">{{ comment.body }}</p>
+            </details>
+            <p v-if="sortedComments.length === 0">送信履歴はまだありません</p>
+          </div>
         </Card>
       </Column>
     </Row>
@@ -253,8 +402,15 @@
 
 <script>
 const HEALTH_CENTER_REFINEMENT_ENDPOINT =
-  "/api/v1/get_refinement_health_center_document_status";
+  "/api/v1/get_health_center_submission_status_index_for_admin_view";
 const LEGACY_REFINEMENT_ENDPOINT = "/api/v1/get_refinement_order_status_check";
+const HEALTH_CENTER_SHOW_ENDPOINT =
+  "/api/v1/get_health_center_submission_status_show_for_admin_view/";
+const HEALTH_CENTER_STATUS_UPDATE_ENDPOINT =
+  "/api/v1/upsert_health_center_submission_status";
+const HEALTH_CENTER_COMMENT_CREATE_ENDPOINT =
+  "/api/v1/create_health_center_submission_status_comment";
+const BULK_MESSAGE_APPLICATION_TYPE = "food_product";
 
 async function fetchHealthCenterDocumentReviewData($axios, routeId) {
   const getOrEmpty = async (url, fallbackValue) => {
@@ -268,15 +424,14 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
 
   const groupUrl = "/api/v1/get_group_show_for_admin_view/" + routeId;
   const groupRes = await $axios.$get(groupUrl);
+  const submissionStatusRes = await $axios.$get(
+    HEALTH_CENTER_SHOW_ENDPOINT + routeId
+  );
 
   const currentYearRes = await $axios.$get("/user_page_settings/1");
-  const refinementUrl =
-    HEALTH_CENTER_REFINEMENT_ENDPOINT +
-    "?fes_year_id=" +
-    currentYearRes.data.fes_year_id;
   let foodSalesGroupsRes;
   try {
-    foodSalesGroupsRes = await $axios.$post(refinementUrl);
+    foodSalesGroupsRes = await $axios.$get(HEALTH_CENTER_REFINEMENT_ENDPOINT);
   } catch (error) {
     if (error?.response?.status === 404) {
       const legacyUrl =
@@ -289,7 +444,15 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     }
   }
   const foodSalesGroupIds = foodSalesGroupsRes.data
-    .filter((item) => item.group_category === 1)
+    .filter((item) => {
+      const categoryId =
+        typeof item.group_category === "number"
+          ? item.group_category
+          : item.group_category?.id;
+      const yearId = item.group?.fes_year_id || item.fes_year?.id;
+
+      return categoryId === 1 && yearId === currentYearRes.data.fes_year_id;
+    })
     .map((item) => item.group.id)
     .sort((a, b) => a - b);
 
@@ -342,6 +505,7 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     shops,
     rentalItems,
     foodSalesGroupIds,
+    submissions: submissionStatusRes.data?.submissions || [],
   };
 }
 
@@ -371,6 +535,14 @@ export default {
       selectedCookingProcessOrder: null,
       activeEditType: null,
       isOpenEditModal: false,
+      submissions: [],
+      statusOptions: [
+        { value: "unapproved", label: "未確認" },
+        { value: "waiting_resubmission", label: "再提出待ち" },
+        { value: "approved", label: "承認済み" },
+        { value: "unsubmitted", label: "未提出" },
+      ],
+      commentBody: "",
     };
   },
   computed: {
@@ -406,6 +578,20 @@ export default {
         items: groups[foodProductID],
       }));
     },
+    sortedComments() {
+      return this.submissions
+        .flatMap((submission) =>
+          (submission.comments || []).map((comment) => ({
+            ...comment,
+            application_type: submission.application_type,
+          }))
+        )
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    },
+    unapprovedSubmissionCount() {
+      return this.submissions.filter((submission) => submission.status !== "approved")
+        .length;
+    },
   },
   async asyncData({ $axios, route }) {
     return await fetchHealthCenterDocumentReviewData($axios, route.params.id);
@@ -429,8 +615,88 @@ export default {
       if (!this.nextGroupId) return;
       this.$router.push(`/health_center_document_review/${this.nextGroupId}`);
     },
-    onSubmitComment() {
-      // TODO: コメント送信API連携時に処理を実装する
+    getSubmission(applicationType) {
+      return this.submissions.find(
+        (submission) => submission.application_type === applicationType
+      );
+    },
+    getSubmissionStatusValue(applicationType) {
+      return this.getSubmission(applicationType)?.status || "unapproved";
+    },
+    getStatusMeta(status) {
+      const statusMap = {
+        unapproved: {
+          icon: "notification_important",
+          label: "未確認",
+        },
+        waiting_resubmission: {
+          icon: "autorenew",
+          label: "再提出待ち",
+        },
+        approved: {
+          icon: "check",
+          label: "承認済み",
+        },
+        unsubmitted: {
+          icon: "close",
+          label: "未提出",
+        },
+      };
+
+      return statusMap[status] || statusMap.unapproved;
+    },
+    async onStatusChange(applicationType, status) {
+      const submission = this.getSubmission(applicationType);
+      const payload = {
+        group_id: this.group.group.id,
+        application_type: applicationType,
+        status,
+      };
+
+      if (submission?.id) {
+        payload.health_center_submission_status_id = submission.id;
+      }
+
+      const response = await this.$axios.$post(
+        HEALTH_CENTER_STATUS_UPDATE_ENDPOINT,
+        payload
+      );
+
+      const savedSubmission = this.getSubmission(applicationType);
+      if (savedSubmission) {
+        savedSubmission.id = response.data.id;
+        savedSubmission.status = response.data.status;
+      }
+    },
+    async onSubmitComment() {
+      const submission = this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
+      const body = this.commentBody.trim();
+
+      if (!body) return;
+
+      const commentRes = await this.$axios.$post(
+        HEALTH_CENTER_COMMENT_CREATE_ENDPOINT,
+        {
+          group_id: this.group.group.id,
+          application_type: BULK_MESSAGE_APPLICATION_TYPE,
+          body,
+        }
+      );
+
+      if (submission && !submission.id && commentRes.data?.commentable_id) {
+        submission.id = commentRes.data.commentable_id;
+      }
+
+      const targetSubmission = submission || this.getSubmission(BULK_MESSAGE_APPLICATION_TYPE);
+      if (targetSubmission) {
+        targetSubmission.comments = [
+          ...(targetSubmission.comments || []),
+          {
+            ...commentRes.data,
+          },
+        ];
+      }
+      this.commentBody = "";
     },
     openFoodProductModal(foodProduct) {
       if (!foodProduct?.id) return;
@@ -501,6 +767,18 @@ export default {
       if (stoolTestStatus === "検便有") return "〇";
       if (stoolTestStatus === "検便無") return "×";
       return stoolTestStatus || "未登録";
+    },
+    formatCommentTimestamp(timestamp) {
+      if (!timestamp) return "送信日時不明";
+      const date = new Date(timestamp);
+      if (Number.isNaN(date.getTime())) return "送信日時不明";
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const hh = String(date.getHours()).padStart(2, "0");
+      const mi = String(date.getMinutes()).padStart(2, "0");
+      const ss = String(date.getSeconds()).padStart(2, "0");
+      return `${yyyy}/${mm}/${dd} ${hh}:${mi}:${ss}`;
     },
   },
 };
@@ -573,6 +851,39 @@ export default {
   margin: 0;
 }
 
+.comment-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.comment-history {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.comment-accordion {
+  width: 100%;
+  border: 1px solid var(--accent-2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  background: #fff;
+}
+
+.comment-accordion summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.comment-body {
+  white-space: pre-wrap;
+  margin: 10px 0 4px;
+}
+
 .comment-textarea {
   width: 100%;
   height: 300px;
@@ -615,6 +926,47 @@ export default {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-select-with-icon {
+  min-width: 170px;
+  height: 34px;
+  border: 1px solid var(--accent-2);
+  border-radius: 4px;
+  padding: 0 8px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-icon {
+  font-size: 18px;
+  color: var(--accent-7);
+}
+
+.status-select {
+  min-width: 130px;
+  height: 34px;
+  border: none;
+  padding: 0 2px;
+  background: transparent;
+  color: #222 !important;
+  -webkit-text-fill-color: #222;
+}
+
+.status-select:focus {
+  outline: none;
+}
+
+.status-select option {
+  color: #222;
 }
 
 .row-interactive-table--on .selectable-row {

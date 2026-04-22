@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationController
+  APPLICATION_TYPES = HealthCenterSubmissionStatus.application_types.keys.freeze
+
   before_action :authenticate_api_user!, only: %i[
     get_health_center_submission_status_index_for_admin_view
     get_health_center_submission_status_show_for_admin_view
     update_health_center_submission_status
+    upsert_health_center_submission_status
     get_health_center_submission_status_counts
     create_health_center_submission_status_comment
   ]
@@ -59,29 +62,40 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   # ステータス変更
   def update_health_center_submission_status
     @submission_status = HealthCenterSubmissionStatus.find(params[:id])
-    return render json: fmt(unprocessable_entity, [], 'Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+    save_submission_status(@submission_status)
+  end
 
-    if @submission_status.update(status: params[:status])
-      render json: fmt(ok, {
-                         id: @submission_status.id,
-                         application_type: @submission_status.application_type,
-                         status: @submission_status.status
-                       })
-    else
-      render json: fmt(unprocessable_entity, [], @submission_status.errors.full_messages.join(', '))
-    end
+  # ステータス変更（未作成ならINSERT）
+  def upsert_health_center_submission_status
+    return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
+
+    @submission_status = resolve_submission_status
+    return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
+
+    save_submission_status(@submission_status)
   end
 
   #---作成（POST）
 
   # メモ（コメント）保存
   def create_health_center_submission_status_comment
-    @submission_status = HealthCenterSubmissionStatus.find(params[:health_center_submission_status_id])
+    return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
+
+    @submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+    return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
+
+    begin
+      @submission_status.save! if @submission_status.new_record?
+    rescue ActiveRecord::RecordNotUnique
+      @submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+    end
+
     @comment = @submission_status.comments.build(body: params[:body])
     if @comment.save
       render json: fmt(created, {
                          id: @comment.id,
                          body: @comment.body,
+                         created_at: @comment.created_at,
                          commentable_type: @comment.commentable_type,
                          commentable_id: @comment.commentable_id
                        })
@@ -91,6 +105,41 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
   end
 
   private
+
+  def save_submission_status(submission_status)
+    return render json: fmt(unprocessable_entity, [], 'Invalid status') unless HealthCenterSubmissionStatus.statuses.key?(params[:status].to_s)
+
+    submission_status.status = params[:status]
+
+    if submission_status.save
+      render json: fmt(ok, {
+                         id: submission_status.id,
+                         group_id: submission_status.group_id,
+                         application_type: submission_status.application_type,
+                         status: submission_status.status
+                       })
+    else
+      render json: fmt(unprocessable_entity, [], submission_status.errors.full_messages.join(', '))
+    end
+  end
+
+  def resolve_submission_status(default_status: nil)
+    if params[:health_center_submission_status_id].present?
+      HealthCenterSubmissionStatus.find(params[:health_center_submission_status_id])
+    elsif params[:group_id].present? && params[:application_type].present?
+      status = params[:status].presence || default_status || HealthCenterSubmissionStatus::DEFAULT_STATUS
+      HealthCenterSubmissionStatus.find_or_initialize_by(
+        group_id: params[:group_id],
+        application_type: params[:application_type]
+      ).tap do |submission_status|
+        submission_status.status = status if submission_status.new_record? || params[:status].present?
+      end
+    end
+  end
+
+  def valid_application_type?(application_type)
+    HealthCenterSubmissionStatus.application_types.key?(application_type)
+  end
 
   # 一覧画面用のデータ整形
   def fit_index_for_admin_view(groups)
@@ -112,15 +161,16 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
 
   # 各申請タイプの詳細データを組み立てる
   def build_submissions_data(group)
-    statuses = group.health_center_submission_statuses.includes(:comments)
+    statuses = group.health_center_submission_statuses.includes(:comments).index_by(&:application_type)
 
-    statuses.map do |submission_status|
+    APPLICATION_TYPES.map do |application_type|
+      submission_status = statuses[application_type]
       {
-        id: submission_status.id,
-        application_type: submission_status.application_type,
-        status: submission_status.status,
-        comments: submission_status.comments,
-        detail: fetch_detail_for(group, submission_status.application_type)
+        id: submission_status&.id,
+        application_type: application_type,
+        status: submission_status&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        comments: submission_status&.comments || [],
+        detail: fetch_detail_for(group, application_type)
       }
     end
   end
