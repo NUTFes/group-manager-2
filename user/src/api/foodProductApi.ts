@@ -25,7 +25,9 @@ const API_ENDPOINTS = {
 
 export const useGetFoodProducts = (groupId: number | null) => {
   const endpoint =
-    groupId !== null ? `${API_ENDPOINTS.FOOD_PRODUCTS_GROUP}/${groupId}` : null;
+    groupId && groupId > 0
+      ? `${API_ENDPOINTS.FOOD_PRODUCTS_GROUP}/${groupId}`
+      : null;
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<FoodProductResponse[]>>(endpoint);
 

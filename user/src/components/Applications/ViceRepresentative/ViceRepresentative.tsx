@@ -47,7 +47,7 @@ const Content: FC<ContentProps> = ({
   }
 
   if (isEditing === null) {
-    return <div>Loading...</div>;
+    return <div>{viceRepresentativeTexts.general.loading}</div>;
   }
 
   if (hasError) {

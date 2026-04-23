@@ -40,7 +40,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
       required
     >
       {isLoading || isEditing === null ? (
-        <div>Loading...</div>
+        <div>{cookingProcessOrderTexts.general.loading}</div>
       ) : shouldShowWarning ? (
         <p className="text-center text-alert">
           {cookingProcessOrderTexts.warning}

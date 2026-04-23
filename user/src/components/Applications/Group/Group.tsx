@@ -53,7 +53,7 @@ const Content: FC<ContentProps> = ({
     return <div>{groupTexts.loading}</div>;
   }
   if (isEditing === null) {
-    return <div>Loading...</div>;
+    return <div>{groupTexts.loading}</div>;
   }
   // データ取得に失敗した場合に表示する画面
   if (hasError) {

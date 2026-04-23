@@ -42,7 +42,7 @@ const Content: FC<ContentProps> = ({
   }
 
   if (isEditing === null) {
-    return <div>Loading...</div>;
+    return <div>{publicRelationsTexts.loading}</div>;
   }
 
   if (hasError) {
