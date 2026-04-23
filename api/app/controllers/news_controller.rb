@@ -6,7 +6,7 @@ class NewsController < ApplicationController
   # GET /news
   # GET /news.json
   def index
-    @news = News.order(id: 'DESC')
+    @news = News.order(updated_at: :desc)
     render json: @news
   end
 

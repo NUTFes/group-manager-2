@@ -21,6 +21,7 @@ type ContentProps = {
   stageOptions?: StageOptionResponse;
   formItem: FormItem[];
   groupId: number;
+  stageOptionTexts: ReturnType<typeof useStageOptionHooks>['stageOptionTexts'];
 };
 
 const Content: FC<ContentProps> = ({
@@ -32,9 +33,10 @@ const Content: FC<ContentProps> = ({
   stageOptions,
   formItem,
   groupId,
+  stageOptionTexts,
 }) => {
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{stageOptionTexts.general.loading}</div>;
   }
 
   if (isEditing === null) {
@@ -44,7 +46,7 @@ const Content: FC<ContentProps> = ({
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {stageOptionTexts.errors.fetch}
       </div>
     );
   }
@@ -71,12 +73,19 @@ const StageOptions: FC<StageOptionsProps> = ({
   isRegistered,
   groupId,
 }) => {
-  const { formItem, isEditing, toEdit, stageOptions, isLoading, hasError } =
-    useStageOptionHooks(groupId, isRegistered);
+  const {
+    formItem,
+    isEditing,
+    toEdit,
+    stageOptions,
+    isLoading,
+    hasError,
+    stageOptionTexts,
+  } = useStageOptionHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu
-      title="ステージオプション申請"
+      title={stageOptionTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
@@ -90,6 +99,7 @@ const StageOptions: FC<StageOptionsProps> = ({
         stageOptions={stageOptions}
         formItem={formItem}
         groupId={groupId}
+        stageOptionTexts={stageOptionTexts}
       />
     </AccordionMenu>
   );

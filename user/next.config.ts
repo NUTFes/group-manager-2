@@ -2,6 +2,9 @@
 import type { NextConfig } from 'next';
 import type { RuleSetRule } from 'webpack';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { i18n } = require('./next-i18next.config');
+
 const apiConfig: {
   [key: string]: {
     SSR_API_URL: string;
@@ -34,6 +37,7 @@ const nextConfig: NextConfig = {
     SSR_API_URL,
     NEXT_PUBLIC_API_URL,
   },
+  i18n,
   experimental: {
     turbo: {
       rules: {

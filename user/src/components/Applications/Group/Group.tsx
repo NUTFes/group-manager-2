@@ -29,6 +29,7 @@ type ContentProps = {
   mutateGroups: () => void;
   mutateCheckAllRegisteredGroups: () => void;
   mutateGroupByUserId: () => void;
+  groupTexts: ReturnType<typeof useGroupHooks>['groupTexts'];
 };
 
 // 表示画面を切り替えるコンポーネント
@@ -45,10 +46,11 @@ const Content: FC<ContentProps> = ({
   mutateGroups,
   mutateCheckAllRegisteredGroups,
   mutateGroupByUserId,
+  groupTexts,
 }) => {
   // データ取得中など，ロード中に表示する画面
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{groupTexts.loading}</div>;
   }
   if (isEditing === null) {
     return <div>Loading...</div>;
@@ -57,7 +59,7 @@ const Content: FC<ContentProps> = ({
   if (hasError) {
     return (
       <div className="py-10 text-center text-red-500">
-        データの取得に失敗しました。
+        {groupTexts.errors.fetch}
       </div>
     );
   }
@@ -102,10 +104,11 @@ const Group: FC<GroupProps> = ({
     hasError,
     groupCategories,
     mutateGroups,
+    groupTexts,
   } = useGroupHooks(groupId, isRegistered, isGroupResolved);
   return (
     <AccordionMenu
-      title="団体申請"
+      title={groupTexts.title}
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
@@ -123,6 +126,7 @@ const Group: FC<GroupProps> = ({
         mutateGroups={mutateGroups}
         mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
         mutateGroupByUserId={mutateGroupByUserId}
+        groupTexts={groupTexts}
       />
     </AccordionMenu>
   );

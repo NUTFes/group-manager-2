@@ -13,6 +13,10 @@ class PrintPdfController < ApplicationController
   # 物品貸し出し書類をまとめて出力
   def output_all_groups_rental_items_pdf
     @groups = Group.where(fes_year_id: params[:fes_year_id]).order(:group_category_id)
+    # 今後の実装によってprint_pdfにlocaleの引数を持たせる
+    locale = params[:locale].presence&.to_sym || :ja
+    @use_english_name_for_pdf = locale == :en
+    @groups = @groups.where(is_international: true) if locale == :en
     print_pdf('output_all_groups_rental_items', 'output_rental_items_pdf', '物品貸出表', 'Not Landscape')
   end
 
@@ -107,9 +111,14 @@ class PrintPdfController < ApplicationController
 
   # 印刷
   def print_pdf(template_name, style_name, output_file_name, type)
+    # Allow caller to specify a rendering locale separate from filter locale.
+    # Use `params[:render_locale]` if provided, otherwise fall back to `params[:locale]` or :ja.
+    locale = params[:render_locale].presence&.to_sym || params[:locale].presence&.to_sym || :ja
+
     respond_to do |format|
       format.pdf do
-        html = render_to_string template: "print_pdf/#{template_name}"
+        html = I18n.with_locale(locale) { render_to_string template: "print_pdf/#{template_name}" }
+
         pdf = if type == 'Landscape'
                 PDFKit.new(html,
                            page_size: 'A4',

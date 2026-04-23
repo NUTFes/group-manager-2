@@ -4,7 +4,8 @@ import {
   useGetUnregisteredGroup,
 } from '@/api/unRegisteredGroupApi';
 import { useGetViceRepresentatives } from '@/api/viceRepresentativesApi';
-import { DepartmentList, GradeList } from '@/utils/list';
+import { getDepartmentOptions, getGradeOptions } from '@/utils/list';
+import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
 
@@ -12,6 +13,9 @@ export const useViceRepresentativeHook = (
   groupId: number,
   isRegistered?: boolean
 ) => {
+  const { t } = useTranslation('common');
+  const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
+  const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
   const {
     viceRepresentative,
     isLoading: isViceRepresentativeLoading,
@@ -21,48 +25,67 @@ export const useViceRepresentativeHook = (
   const { unregisteredData, isLoading: isUnregisteredLoading } =
     useGetUnregisteredGroup(groupId, ORDER_TYPES.SUB_REP);
 
+  const viceRepresentativeTexts = {
+    title: t('applications.viceRepresentative.title'),
+    note: t('applications.viceRepresentative.note'),
+    general: {
+      loading: t('general.loading'),
+    },
+    errors: {
+      fetch: t('general.errors.fetch'),
+    },
+  };
+
   const formItem: FormItem[] = useMemo(() => {
     if (unregisteredData) {
       return [
         {
-          label: '副代表申請は不要（登録済み）',
-          content: 'あなたは１人での参加です',
+          label: t('applications.viceRepresentative.summary.individual.label'),
+          content: t(
+            'applications.viceRepresentative.summary.individual.description'
+          ),
         },
       ];
     }
 
     return [
       {
-        label: viceRepresentativeLabels[1],
+        label: t(viceRepresentativeLabels[1]),
         content: viceRepresentative?.name ?? '',
       },
       {
-        label: viceRepresentativeLabels[2],
+        label: t(viceRepresentativeLabels[2]),
         content: viceRepresentative?.studentId ?? '',
       },
       {
-        label: viceRepresentativeLabels[3],
+        label: t(viceRepresentativeLabels[3]),
         content:
-          GradeList.find((opt) => opt.id === viceRepresentative?.gradeId)
+          gradeOptions.find((opt) => opt.id === viceRepresentative?.gradeId)
             ?.name ?? '',
       },
       {
-        label: viceRepresentativeLabels[4],
+        label: t(viceRepresentativeLabels[4]),
         content:
-          DepartmentList.find(
+          departmentOptions.find(
             (opt) => opt.id === viceRepresentative?.departmentId
           )?.name ?? '',
       },
       {
-        label: viceRepresentativeLabels[5],
+        label: t(viceRepresentativeLabels[5]),
         content: viceRepresentative?.email ?? '',
       },
       {
-        label: viceRepresentativeLabels[6],
+        label: t(viceRepresentativeLabels[6]),
         content: viceRepresentative?.tel ?? '',
       },
     ];
-  }, [viceRepresentative, unregisteredData]);
+  }, [
+    viceRepresentative,
+    unregisteredData,
+    t,
+    gradeOptions,
+    departmentOptions,
+  ]);
 
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const hasInitializedEditing = useRef(false);
@@ -96,5 +119,6 @@ export const useViceRepresentativeHook = (
     toEdit,
     formItem,
     mutateViceRepresentative,
+    viceRepresentativeTexts,
   };
 };

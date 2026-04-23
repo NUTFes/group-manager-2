@@ -36,6 +36,11 @@ module Myapp
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # Default locale for PDF rendering and API responses.
+    config.i18n.default_locale = :ja
+    config.i18n.available_locales = %i[ja en]
+    config.i18n.load_path += Rails.root.glob('config/locales/**/*.{rb,yml}')
+
     # CORSが効かなくなるため無効化
     # config.action_dispatch.default_headers = {
     #   'Access-Control-Allow-Credentials' => 'true',

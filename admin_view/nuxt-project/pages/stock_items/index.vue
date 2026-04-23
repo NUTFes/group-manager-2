@@ -2,10 +2,10 @@
   <div class="main-content" v-if="this.$role(roleID).stocker_places.read">
     <SubHeader pageTitle="在庫場所">
       <CommonButton v-if="this.$role(roleID).stocker_places.create" iconName="add_circle" :on_click="openAddModal">
-        追加   
+        追加
       </CommonButton>
     </SubHeader>
-    
+
     <Card width="100%">
       <Table>
         <template v-slot:table-header>
@@ -16,8 +16,8 @@
         <template v-slot:table-body>
           <tr
             v-for="(stocker_place, index) in stockerPlaces"
-            @click="() => $router.push({ path: `/assign_items/` + stocker_place.id})"
-            :key="index" 
+            @click="() => $router.push({ path: `/stock_items/` + stocker_place.id})"
+            :key="index"
           >
             <td>{{ stocker_place.id }}</td>
             <td>{{ stocker_place.name }}</td>
@@ -64,7 +64,7 @@
             </option>
           </select>
         </div> -->
-      </template>  
+      </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
           >登録</CommonButton
@@ -141,10 +141,10 @@ export default {
         this.stocker_place.data.push(response.data);
         console.log(response)
       })
-      .catch(error => 
+      .catch(error =>
       {
         console.log(error)
-      }) 
+      })
       ;
       console.log(this.stocker_place)
     },

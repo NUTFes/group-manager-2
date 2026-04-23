@@ -1,9 +1,12 @@
+import type { GetStaticProps } from 'next';
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import CookingProcessOrder from '@/components/Applications/CookingProcessOrder';
 import Employees from '@/components/Applications/Employees/Employees';
+import FireEquipment from '@/components/Applications/FireEquipment';
 import FoodProduct from '@/components/Applications/FoodProduct';
 import Group from '@/components/Applications/Group';
 import RentItems from '@/components/Applications/MultiItemForms/RentItems';
@@ -48,6 +51,7 @@ type CheckAllRegisteredGroups = {
   stageOption?: boolean;
   group?: boolean;
   subRep?: boolean;
+  fireEquipmentOrder?: boolean;
 };
 
 type GroupCategoryContentProps = {
@@ -116,7 +120,10 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
           groupId={groupId}
         />
-        {/* TODO: 火器使用申請コンポーネントを追加予定 */}
+        <FireEquipment
+          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+          groupId={groupId}
+        />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.GOODS_SALES) {
@@ -154,7 +161,10 @@ const GroupCategoryContent = ({
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
-        {/* TODO: 火器使用申請コンポーネントを追加予定 */}
+        <FireEquipment
+          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+          groupId={groupId}
+        />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.STAGE) {
@@ -219,7 +229,10 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
         />
-        {/* TODO: 火器使用申請コンポーネントを追加予定 */}
+        <FireEquipment
+          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+          groupId={groupId}
+        />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.EXHIBITION) {
@@ -252,7 +265,10 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
         />
-        {/* TODO: 火器使用申請コンポーネントを追加予定 */}
+        <FireEquipment
+          isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
+          groupId={groupId}
+        />
       </>
     );
   } else if (groupCategoryId === GROUP_CATEGORY.COMMITTEE) {
@@ -345,3 +361,9 @@ export default function HomePage() {
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'ja', ['common'])),
+  },
+});

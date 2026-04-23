@@ -30,7 +30,8 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
         public_relation: group.public_relation&.id,
         venue_map: group.venue_map&.id,
         announcement: group.announcement&.status,
-        cooking_process_order: group.cooking_process_order&.id
+        cooking_process_order: group.cooking_process_order&.id,
+        fire_equipment_order: group.fire_equipment_orders.none? ? nil : group.fire_equipment_orders[0].status
       }
     end
   end
@@ -42,7 +43,7 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
     is_international = params[:is_international].to_i
     is_external = params[:is_external].to_i # 0: 指定なし(ALL) 1: true 2: false
 
-    @groups = Group.all
+    @groups = Group.with_order_status_check_relations
     @groups = @groups.where(fes_year_id: fes_year_id) unless fes_year_id == 0
     @groups = @groups.where(group_category_id: group_category_id) unless group_category_id == 0
     @groups = @groups.where(is_international: is_international == 1) unless is_international == 0
@@ -58,11 +59,12 @@ class Api::V1::OrderStatusCheckApiController < ApplicationController
   # あいまい検索機能
   def get_search_order_status_check
     word = params[:word]
-    @groups = Group.with_order_status_check_narrow_down_by_search_word(word)
+    @groups = Group.with_order_status_check_relations.where('name LIKE ?', "%#{word}%")
+
     if @groups.none?
       render json: fmt(not_found, [], 'Not found groups')
     else
-      render json: fmt(ok, @groups)
+      render json: fmt(ok, fit_group_index_for_admin_view(@groups))
     end
   end
 end

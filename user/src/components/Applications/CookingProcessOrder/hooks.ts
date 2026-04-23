@@ -5,6 +5,7 @@ import {
 } from '@/api/cookingProcessOrderApi';
 import { useGetFoodProducts } from '@/api/foodProductApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import {
@@ -20,6 +21,40 @@ export const useCookingProcessOrder = (
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const hasInitializedEditing = useRef(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const { t } = useTranslation('common');
+  const cookingProcessOrderTexts = {
+    title: t('applications.cookingProcessOrder.title'),
+    general: {
+      loading: t('general.loading'),
+    },
+    warning: t('applications.cookingProcessOrder.warning'),
+    summary: {
+      labels: {
+        foodProduct: t(
+          'applications.cookingProcessOrder.summary.labels.foodProduct'
+        ),
+        preOpen: t('applications.cookingProcessOrder.summary.labels.preOpen'),
+        duringOpen: t(
+          'applications.cookingProcessOrder.summary.labels.duringOpen'
+        ),
+        description: t(
+          'applications.cookingProcessOrder.summary.labels.description'
+        ),
+      },
+      status: {
+        use: t('applications.cookingProcessOrder.summary.status.use'),
+        notUse: t('applications.cookingProcessOrder.summary.status.notUse'),
+        notRegistered: t(
+          'applications.cookingProcessOrder.summary.status.notRegistered'
+        ),
+      },
+    },
+    buttons: {
+      save: t('form.actions.save'),
+      register: t('form.actions.register'),
+      edit: t('form.actions.edit'),
+    },
+  };
 
   const {
     cookingProcessOrders,
@@ -122,11 +157,13 @@ export const useCookingProcessOrder = (
       });
 
       await mutateCookingProcessOrders();
-      toast.success('調理工程を更新しました');
+      toast.success(
+        t('applications.cookingProcessOrder.messages.updateSuccess')
+      );
       setIsEditing(false);
     } catch (e) {
       console.error(e);
-      toast.error('調理工程の更新に失敗しました');
+      toast.error(t('applications.cookingProcessOrder.messages.updateFailed'));
     }
   });
 
@@ -160,5 +197,6 @@ export const useCookingProcessOrder = (
     onSubmit,
     mergedData,
     shouldShowWarning,
+    cookingProcessOrderTexts,
   };
 };

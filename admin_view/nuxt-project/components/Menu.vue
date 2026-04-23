@@ -40,6 +40,27 @@
           </li>
         </ul>
       </nav>
+      <!-- 開発中メニュー（親） -->
+        <div class="menu-header">
+         <li @click="isOpened = !isOpened" :class="{ open: isOpened }"class="sidebar-accordion">
+          <span class="material-icons">chevron_right</span>
+           <h4>開発中</h4>
+         </li>
+        </div>
+      <nav class="menu">
+        <ul>
+          <!-- 開発中メニュー（子） -->
+          <li v-for="item in development_items"
+              :key="item.title"
+              v-show="isOpened"
+              class="accordion-child" >
+            <nuxt-link :to="item.click">
+             <span class="material-icons">{{ item.icon }}</span>
+             {{ item.title }}
+            </nuxt-link>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
@@ -169,22 +190,22 @@ export default {
           title: "調理工程申請",
           icon: "restaurant",
           click: "/cooking_process_order",
+        },
+        {
+          title: "火気使用申請",
+          icon: "local_fire_department",
+          click: "/fire_equipment_orders",
         }
       ],
       // 操作系
       operation_items: [
         { title: "ダッシュボード", icon: "dashboard", click: "/dashboard" },
         {
-          title: "物品割り当て",
+          title: "在庫登録",
           icon: "assignment_return",
-          click: "/assign_items",
+          click: "/stock_items",
         },
-        { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
-        { title: "物品貸出 時間・人数調整", icon: "assignment_return", click: "/adjustment_rental_time"},
-        { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
         { title: "識別番号", icon: "format_list_numbered", click: "/group_identify" },
-        { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
-        { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
         { title: "お知らせ作成", icon: "newspaper", click: "/news" },
         { title: "書類印刷", icon: "print", click: "/print" },
         {
@@ -194,6 +215,15 @@ export default {
         },
       ],
       user: [],
+      //開発中
+      development_items: [
+        { title: "物品申請数調整", icon: "stadium", click: "/adjustment_order_items" },
+        { title: "物品貸出 時間・人数調整", icon: "assignment_return", click: "/adjustment_rental_time"},
+        { title: "物品移動計画", icon: "swap_horiz", click: "/assign_item_movements" },
+        { title: "会場割り当て", icon: "event_seat", click: "/assign_places" },
+        { title: "ステージ割り当て", icon: "stadium", click: "/assign_stages" },
+      ],
+      isOpened: false
     };
   },
   mounted() {
@@ -309,5 +339,23 @@ export default {
   padding: 20px 20px;
   display: flex;
   letter-spacing: 1px;
+}
+
+.sidebar-accordion {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-accordion .material-icons {
+  transition: transform 0.2s;
+}
+
+.sidebar-accordion.open .material-icons {
+  transform: rotate(90deg);
+}
+
+.accordion-child {
+  padding-left: 20px;
 }
 </style>
