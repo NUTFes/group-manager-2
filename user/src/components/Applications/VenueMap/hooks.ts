@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetVenueMap } from '@/api/venueMapApi';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
@@ -14,6 +14,7 @@ export const useVenueMapHooks = (groupId: number) => {
   } = useGetVenueMap(groupId);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const toEdit = () => {
     setIsEditing(!isEditing);
@@ -23,6 +24,12 @@ export const useVenueMapHooks = (groupId: number) => {
   const handleFormSubmitted = () => {
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    if (!isFetching) {
+      setHasLoadedOnce(true);
+    }
+  }, [isFetching]);
 
   const venueMapTexts = {
     title: t('applications.venueMap.title'),
@@ -47,7 +54,7 @@ export const useVenueMapHooks = (groupId: number) => {
 
   return {
     venueMap,
-    isLoading: isFetching,
+    isLoading: isFetching && !hasLoadedOnce,
     hasError: !!fetchError,
     isEditing,
     toEdit,

@@ -128,23 +128,27 @@ export const useGroupFormHooks = (
     if (groups) {
       try {
         await update({ query: formData });
-        mutateGroups();
+        await mutateGroups();
         toast.success(groupFormTexts.messages.updateSuccess);
+        return true;
       } catch {
         toast.error(groupFormTexts.messages.updateFailed);
+        return false;
       }
       // 団体申請がない場合は新規作成
     } else {
       try {
         await create({ query: formData });
-        mutateGroups();
-        mutateCheckAllRegisteredGroups();
-        mutateGroupByUserId();
+        await mutateGroups();
+        await mutateCheckAllRegisteredGroups();
+        await mutateGroupByUserId();
         toast.success(groupFormTexts.messages.registerSuccess);
+        reset();
+        return true;
       } catch {
         toast.error(groupFormTexts.messages.registerFailed);
+        return false;
       }
-      reset();
     }
   };
 

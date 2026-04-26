@@ -60,8 +60,10 @@ export const useStageOptionFormHooks = (
         mutate(`/stage_common_options/group/${formData.groupId}`);
 
         toast.success(t('applications.stageOptions.messages.submitSuccess'));
+        return true;
       } catch {
         toast.error(t('applications.stageOptions.messages.submitFailed'));
+        return false;
       }
     } else {
       try {
@@ -69,10 +71,12 @@ export const useStageOptionFormHooks = (
         mutate(`/stage_common_options/group/${formData.groupId}`);
         mutate(`/check_all_registered/${formData.groupId}`);
         toast.success(t('applications.stageOptions.messages.submitSuccess'));
+        reset();
+        return true;
       } catch {
         toast.error(t('applications.stageOptions.messages.submitFailed'));
+        return false;
       }
-      reset();
     }
   };
 

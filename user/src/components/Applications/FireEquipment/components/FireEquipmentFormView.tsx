@@ -57,7 +57,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
       </div>
 
       {/* 火気不使用として登録するボタン */}
-      {!isRegister && (
+      <div style={{ display: isRegister ? 'none' : 'block' }}>
         <form onSubmit={submitUnregisteredHandler}>
           <div className="mt-8 flex flex-col items-center gap-4">
             <Button type="submit" size="pc" color="main">
@@ -65,10 +65,10 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
             </Button>
           </div>
         </form>
-      )}
+      </div>
 
       {/* 火気申請フォーム */}
-      {isRegister && (
+      <div style={{ display: isRegister ? 'block' : 'none' }}>
         <form onSubmit={submitHandler}>
           <div className="flex w-full flex-col gap-10">
             <FireEquipmentForm
@@ -82,7 +82,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
             />
           </div>
         </form>
-      )}
+      </div>
     </div>
   );
 };

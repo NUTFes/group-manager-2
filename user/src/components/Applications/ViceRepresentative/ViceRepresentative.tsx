@@ -17,7 +17,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   viceRepresentative?: ViceRepresentativeResponse;
   formItem: FormItem[];
@@ -43,6 +43,10 @@ const Content: FC<ContentProps> = ({
   viceRepresentativeTexts,
 }) => {
   if (isLoading) {
+    return <div>{viceRepresentativeTexts.general.loading}</div>;
+  }
+
+  if (isEditing === null) {
     return <div>{viceRepresentativeTexts.general.loading}</div>;
   }
 
@@ -88,7 +92,7 @@ const ViceRepresentative: FC<ViceRepresentativeProps> = ({
     hasError,
     mutateViceRepresentative,
     viceRepresentativeTexts,
-  } = useViceRepresentativeHook(groupId);
+  } = useViceRepresentativeHook(groupId, isRegistered);
   return (
     <AccordionMenu
       title={viceRepresentativeTexts.title}

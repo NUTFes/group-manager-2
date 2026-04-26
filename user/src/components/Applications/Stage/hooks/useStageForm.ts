@@ -77,7 +77,7 @@ export const useStageForm = (
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     reset,
     trigger,
     watch,
@@ -89,14 +89,14 @@ export const useStageForm = (
 
   // データが変更された場合はリセット
   useEffect(() => {
-    if (existingSunnyOrder || existingRainyOrder) {
+    if ((existingSunnyOrder || existingRainyOrder) && !isDirty) {
       const values = createInitialValues(
         existingSunnyOrder,
         existingRainyOrder
       );
       reset(values);
     }
-  }, [existingSunnyOrder, existingRainyOrder, reset]);
+  }, [existingSunnyOrder, existingRainyOrder, isDirty, reset]);
 
   // フォームフィールドの更新
   const updateField = (field: FormField, value: string) => {

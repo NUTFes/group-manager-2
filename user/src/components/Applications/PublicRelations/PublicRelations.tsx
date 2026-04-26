@@ -16,7 +16,7 @@ type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
   isDeadline: boolean | undefined;
-  isEditing: boolean;
+  isEditing: boolean | null;
   toEdit: () => void;
   publicRelation?: PublicRelationResponse | null;
   formItem: FormItem[];
@@ -38,6 +38,10 @@ const Content: FC<ContentProps> = ({
   publicRelationsTexts,
 }) => {
   if (isLoading) {
+    return <div>{publicRelationsTexts.loading}</div>;
+  }
+
+  if (isEditing === null) {
     return <div>{publicRelationsTexts.loading}</div>;
   }
 
@@ -79,7 +83,7 @@ const PublicRelations: FC<PublicRelationsProps> = ({
     isLoading,
     hasError,
     publicRelationsTexts,
-  } = usePublicRelationsHooks(groupId);
+  } = usePublicRelationsHooks(groupId, isRegistered);
 
   return (
     <AccordionMenu

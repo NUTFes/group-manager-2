@@ -21,6 +21,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     methods,
     fields,
     isLoading,
+    isMutating,
     isEditing,
     isExist,
     handleEditClick,
@@ -28,11 +29,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     mergedData,
     shouldShowWarning,
     cookingProcessOrderTexts,
-  } = useCookingProcessOrder(groupId, isDeadline);
-
-  if (isLoading) {
-    return <div>{cookingProcessOrderTexts.general.loading}</div>;
-  }
+  } = useCookingProcessOrder(groupId, isDeadline, isRegistered);
 
   return (
     <AccordionMenu
@@ -42,7 +39,9 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
       isRegistered={isRegistered}
       required
     >
-      {shouldShowWarning ? (
+      {isLoading || isEditing === null ? (
+        <div>{cookingProcessOrderTexts.general.loading}</div>
+      ) : shouldShowWarning ? (
         <p className="text-center text-alert">
           {cookingProcessOrderTexts.warning}
         </p>
@@ -67,6 +66,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                     isDisable={
                       !methods.formState.isValid ||
                       methods.formState.isSubmitting ||
+                      isMutating ||
                       isDeadline
                     }
                     icon={isExist ? 'save' : 'send'}

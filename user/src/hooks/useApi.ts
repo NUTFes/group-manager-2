@@ -106,7 +106,15 @@ export const useAuthenticatedGet = <T>(
   const { data: session, status } = useSession();
   const key =
     status === 'authenticated' && url ? ([url, session!] as const) : null;
-  return useSWR<T, ApiError>(key, authenticatedGetFetcher, options);
+  const swrOptions: SWRConfiguration = {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    keepPreviousData: true,
+    dedupingInterval: 10000,
+    ...options,
+  };
+
+  return useSWR<T, ApiError>(key, authenticatedGetFetcher, swrOptions);
 };
 
 export const useUnauthenticatedGet = <T>(
