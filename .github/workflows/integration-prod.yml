@@ -48,18 +48,6 @@ jobs:
           username: ${{ secrets.HARBOR_USERNAME }}
           password: ${{ secrets.HARBOR_PASS }}
 
-      - name: Create user .env
-        run: |
-          printf '%s' "${{ secrets.USER_ENV }}" > user/.env
-
-      - name: Export user env to GitHub Actions
-        run: |
-          grep -v '^[[:space:]]*#' user/.env | sed '/^[[:space:]]*$/d' >> "$GITHUB_ENV"
-
-      - name: Create admin_view .env
-        run: |
-          printf '%s' "${{ secrets.ADMIN_VIEW_ENV }}" > admin_view/.env
-
       - name: Build and Push API
         uses: docker/build-push-action@v5
         with:
@@ -78,12 +66,12 @@ jobs:
           tags: ${{ secrets.HARBOR_REG }}/group-manager/user:latest
           cache-from: type=gha
           build-args: |
-            NODE_ENV=${{ env.NODE_ENV }}
-            APP_ENV=${{ env.APP_ENV }}
-            NEXT_PUBLIC_IMGUR_CLIENT_ID=${{ env.NEXT_PUBLIC_IMGUR_CLIENT_ID }}
-            IMGUR_CLIENT_SECRET=${{ env.IMGUR_CLIENT_SECRET }}
-            NEXTAUTH_URL=${{ env.NEXTAUTH_URL }}
-            NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }}
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            APP_ENV=${{ secrets.APP_ENV }}
+            NEXT_PUBLIC_IMGUR_CLIENT_ID=${{ secrets.NEXT_PUBLIC_IMGUR_CLIENT_ID }}
+            IMGUR_CLIENT_SECRET=${{ secrets.IMGUR_CLIENT_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
 
       - name: Build and Push Admin View
         uses: docker/build-push-action@v5
@@ -93,6 +81,9 @@ jobs:
           push: true
           tags: ${{ secrets.HARBOR_REG }}/group-manager/admin:latest
           cache-from: type=gha
+          build-args: |
+            VUE_APP_URL=${{ secrets.VUE_APP_URL }}
+            VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }}
 
   trigger-cd:
     needs: build-and-push

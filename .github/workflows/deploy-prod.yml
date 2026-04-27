@@ -11,7 +11,8 @@ jobs:
       - name: Add deploy host key
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H "${{ secrets.CONTAINER_IP }}" >> ~/.ssh/known_hosts
+          ssh-keygen -R "${{ secrets.CONTAINER_IP }}" 2>/dev/null || true
+          echo "${{ secrets.DEPLOY_HOST_KEY }}" >> ~/.ssh/known_hosts
 
       - name: SSH and Deploy
         run: |
