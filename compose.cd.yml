@@ -9,7 +9,6 @@ services:
   api:
     image: ${HARBOR_REG}/group-manager/api:latest
     container_name: prod-api
-    volumes: [./api:/myapp]
     env_file: [.env]
 
   user:
