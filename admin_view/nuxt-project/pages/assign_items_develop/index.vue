@@ -44,10 +44,12 @@
               </td>
               <td>{{ item.name }}</td>
               <td>
-                <select v-model="modalSettings[item.id].rule" :disabled="!modalSettings[item.id].selected">
-                  <option value="requested">申請数</option>
-                  <option value="fixed">固定値</option>
-                </select>
+                <DropDown
+                  :nameList="ruleOptions"
+                  :on_click="(id) => modalSettings[item.id].rule = id"
+                  value="label">
+                  {{ modalSettings[item.id].rule === 'fixed' ? '固定値' : '申請数' }}
+                </DropDown>
               </td>
               <td>
                 <input 
@@ -152,15 +154,15 @@
               class="assignment-item"
             >
               <div class="assign-group-name">{{ getGroupName(assign.groupId) }}</div>
-                 <div class="assign-inputs">
-                  <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
-                    <span class="input-label">{{ getItemName(itemId) }}</span>
-                    <span class="num-input highlight">
+              <div class="assign-inputs">
+                <div v-for="itemId in activeItemIds" :key="itemId" class="assign-input-group">
+                  <span class="input-label">{{ getItemName(itemId) }}</span>
+                  <span class="num-input highlight">
                     {{ assign.assigned[itemId] !== undefined ? assign.assigned[itemId] : 0 }}
                     </span>
-                  </div>
-                 <button class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
                 </div>
+                <button class="btn-delete"  @click="openAssignDeleteModal(assign.id)">✕</button>
+              </div>
           </div>
         </div>
       </div>
@@ -205,6 +207,10 @@ export default {
       refYears: "Year",
       refCategoryID: 0,
       refGroupCategories: "ALL",
+      ruleOptions: [
+      { id: 'requested', label: '申請数' },
+      { id: 'fixed', label: '固定値' }
+      ],
     };
   },
 
@@ -780,6 +786,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  scrollbar-width: thin;
 }
 .group-card {
   padding: 10px;
