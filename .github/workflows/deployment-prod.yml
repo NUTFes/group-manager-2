@@ -20,7 +20,11 @@ jobs:
           HARBOR_REG: ${{ secrets.HARBOR_REG }}
           HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
         run: |
-          ssh deploy-user@${{ secrets.CONTAINER_IP }} -T bash -s << 'EOF'
+          ssh deploy-user@${{ secrets.CONTAINER_IP }} -T \
+            -o SendEnv=HARBOR_PASS \
+            -o SendEnv=HARBOR_REG \
+            -o SendEnv=HARBOR_USERNAME \
+            bash -s << 'EOF'
             set -e
             cd /home/deploy-user/group-manager-2
             git fetch origin feat/mitomen/2031/CI-CD-pipeline
