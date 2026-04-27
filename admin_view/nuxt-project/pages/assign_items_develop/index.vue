@@ -44,12 +44,12 @@
               </td>
               <td>{{ item.name }}</td>
               <td>
-                <DropDown
+                <AssignModeDropDown
                   :nameList="ruleOptions"
                   :on_click="(id) => modalSettings[item.id].rule = id"
                   value="label">
                   {{ modalSettings[item.id].rule === 'fixed' ? '固定値' : '申請数' }}
-                </DropDown>
+                </AssignModeDropDown>
               </td>
               <td>
                 <input 
