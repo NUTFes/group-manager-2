@@ -19,17 +19,23 @@ class AssignRentalItemsController < ApplicationController
   # POST /assign_rental_items
   # POST /assign_rental_items.json
   def create
-    ActiveRecord::Base.transaction do
-      @assign_rental_items = assign_rental_items_params[:items].map do |item_params|
-        AssignRentalItem.create!(
-          group_id: item_params[:group_id],
-          rental_item_id: assign_rental_items_params[:rentalItemId],
-          num: item_params[:num],
-          stocker_place_id: assign_rental_items_params[:stockerPlaceId]
-        )
+    if assign_rental_items_params[:items].present?
+      ActiveRecord::Base.transaction do
+        @assign_rental_items = assign_rental_items_params[:items].map do |item_params|
+          AssignRentalItem.create!(
+            group_id: item_params[:group_id],
+            rental_item_id: assign_rental_item_params[:rental_item_id],
+            num: item_params[:num],
+            stocker_place_id: assign_rental_item_params[:stocker_place_id],
+            rental_place_id: assign_rental_item_params[:rental_place_id]
+          )
+        end
       end
+      render json: fmt(created, @assign_rental_items)
+    else
+      @assign_rental_item = AssignRentalItem.create!(assign_rental_item_params)
+      render json: fmt(created, @assign_rental_item)
     end
-    render json: fmt(created, @assign_rental_items)
   rescue ActiveRecord::RecordInvalid => e
     render json: fmt(internal_server_error, [], e.message)
   end
@@ -61,6 +67,15 @@ class AssignRentalItemsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assign_rental_items_params
-    params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num])
+    params.permit(:rentalItemId, :stockerPlaceId, :rentalPlaceId, items: %i[group_id num])
+  end
+
+  def assign_rental_item_params
+    source = params[:assign_rental_item].present? ? params.require(:assign_rental_item) : params
+    permitted = source.permit(:group_id, :rental_item_id, :num, :stocker_place_id, :rental_place_id)
+    permitted[:rental_item_id] ||= source[:rentalItemId]
+    permitted[:stocker_place_id] ||= source[:stockerPlaceId]
+    permitted[:rental_place_id] ||= source[:rentalPlaceId]
+    permitted
   end
 end

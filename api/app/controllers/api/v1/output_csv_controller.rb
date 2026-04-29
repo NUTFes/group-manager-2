@@ -37,7 +37,7 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_assign_rental_items_csv
-    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, group: :group_category)
+    assign_rental_items_scope = AssignRentalItem.includes(:rental_item, :stocker_place, :rental_place, group: :group_category)
 
     if params[:fes_year_id].to_i == 0
       # 全件選択
@@ -63,7 +63,7 @@ class Api::V1::OutputCsvController < ApplicationController
           assign_rental_item.group.place,
           assign_rental_item.group.sum_power_orders,
           assign_rental_item.rental_item.name,
-          assign_rental_item.stocker_place.name,
+          assign_rental_item.pickup_place_name,
           assign_rental_item.num
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 0).first.date,
           # assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).nil? ? nil : assign_rental_item.group.fes_year.fes_dates.where(days_num: 3).first.date,

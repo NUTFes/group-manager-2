@@ -37,7 +37,7 @@
           <% group.assign_rental_items.each_with_index do |assign_rental_item, index| %>
             <% if index > 0 %><tr><% end %>
             <td><%= assign_rental_item.rental_item.name %></td>
-            <td><%= assign_rental_item.stocker_place.name %></td>
+            <td><%= assign_rental_item.pickup_place_name %></td>
             <td><%= assign_rental_item.num %></td>
             <td></td>
             </tr>

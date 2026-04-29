@@ -1,13 +1,18 @@
 <template>
   <div class="main-content">
-    <SubHeader
-      v-bind:pageTitle="placeName.name"
-      pageSubTitle="物品申請"
-    >
-      <CommonButton v-if="this.$role(roleID).stocker_places.update" iconName="edit" :on_click="openPlaceEditModal">
+    <SubHeader v-bind:pageTitle="placeName.name" pageSubTitle="物品申請">
+      <CommonButton
+        v-if="this.$role(roleID).stocker_places.update"
+        iconName="edit"
+        :on_click="openPlaceEditModal"
+      >
         編集
       </CommonButton>
-      <CommonButton v-if="this.$role(roleID).stocker_places.delete" iconName="delete" :on_click="openPlaceDeleteModal">
+      <CommonButton
+        v-if="this.$role(roleID).stocker_places.delete"
+        iconName="delete"
+        :on_click="openPlaceDeleteModal"
+      >
         削除
       </CommonButton>
     </SubHeader>
@@ -16,7 +21,11 @@
       <Column width="100%">
         <Card width="100%">
           <SubHeader pageTitle="在庫物品">
-            <CommonButton v-if="this.$role(this.roleID).rental_items.create" iconName="add_circle" :on_click="openItemAddModal">
+            <CommonButton
+              v-if="this.$role(this.roleID).rental_items.create"
+              iconName="add_circle"
+              :on_click="openItemAddModal"
+            >
               追加
             </CommonButton>
           </SubHeader>
@@ -32,28 +41,55 @@
               <tr
                 v-for="(stockerItem, index) in stockerItems"
                 :key="index"
-                @click="() => $router.push({ path: `/stock_items/` + id})"
+                @click="() => $router.push({ path: `/stock_items/` + id })"
               >
                 <td>{{ stockerItem.rental_item.name }}</td>
                 <td>{{ stockerItem.stocker_item.num }}</td>
-                <td :class="{ warning: warningStatus[index], 'no-hover': warningStatus[index] }">
-                    {{ calculateDifference(stockerItem, index) }}
+                <td
+                  :class="{
+                    warning: warningStatus[index],
+                    'no-hover': warningStatus[index],
+                  }"
+                >
+                  {{ calculateDifference(stockerItem, index) }}
                 </td>
-                <td><btn  @click="openItemEditModal(stockerItem.stocker_item.id, stockerItem.stocker_item.num)">編集</btn></td>
-                <td><btn  @click="openItemDeleteModal(stockerItem.stocker_item.id)">削除</btn></td>
+                <td>
+                  <btn
+                    @click="
+                      openItemEditModal(
+                        stockerItem.stocker_item.id,
+                        stockerItem.stocker_item.num
+                      )
+                    "
+                    >編集</btn
+                  >
+                </td>
+                <td>
+                  <btn @click="openItemDeleteModal(stockerItem.stocker_item.id)"
+                    >削除</btn
+                  >
+                </td>
               </tr>
             </template>
           </Table>
         </Card>
         <Card width="100%">
           <SubHeader pageTitle="割り当て">
-            <CommonButton v-if="this.$role(roleID).assign_items.create" iconName="add_circle" :on_click="openAssignAddModal">
+            <CommonButton
+              v-if="this.$role(roleID).assign_items.create"
+              iconName="add_circle"
+              :on_click="openAssignAddModal"
+            >
               追加
             </CommonButton>
           </SubHeader>
           <Table>
             <template v-slot:table-header>
-              <th v-for="(header, index) in stocker_headers" v-bind:key="index" @click = "sorted_assignRentalItems(index)">
+              <th
+                v-for="(header, index) in stocker_headers"
+                v-bind:key="index"
+                @click="sorted_assignRentalItems(index)"
+              >
                 {{ header }}
               </th>
               <th>編集</th>
@@ -63,13 +99,35 @@
               <tr
                 v-for="(assignRentalItem, index) in assignRentalItems"
                 :key="index"
-                @click="() => $router.push({ path: '/stock_items/' + id})"
+                @click="() => $router.push({ path: '/stock_items/' + id })"
               >
-                <td>{{ assignRentalItem.group.name}}</td>
+                <td>{{ assignRentalItem.group.name }}</td>
                 <td>{{ assignRentalItem.rental_item.name }}</td>
+                <td>{{ assignRentalItem.pickup_place }}</td>
                 <td>{{ assignRentalItem.assign_rental_item.num }}</td>
-                <td><btn  @click="openAssignEditModal(assignRentalItem.assign_rental_item.id, assignRentalItem.assign_rental_item.num)">編集</btn></td>
-                <td><btn  @click="openAssignDeleteModal(assignRentalItem.assign_rental_item.id)">削除</btn></td>
+                <td>
+                  <btn
+                    @click="
+                      openAssignEditModal(
+                        assignRentalItem.assign_rental_item.id,
+                        assignRentalItem.assign_rental_item.num,
+                        assignRentalItem.assign_rental_item.rental_place_id ||
+                          id
+                      )
+                    "
+                    >編集</btn
+                  >
+                </td>
+                <td>
+                  <btn
+                    @click="
+                      openAssignDeleteModal(
+                        assignRentalItem.assign_rental_item.id
+                      )
+                    "
+                    >削除</btn
+                  >
+                </td>
               </tr>
             </template>
           </Table>
@@ -110,35 +168,33 @@
           <h3>物品名</h3>
           <select v-model="stockerItemName">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="i in allRentableItems"
-              :key="i.id"
-              :value="i.id"
-            >
+            <option v-for="i in allRentableItems" :key="i.id" :value="i.id">
               {{ i.name }}
             </option>
           </select>
         </div>
         <div>
           <h3>個数</h3>
-          <input v-model="stockerItemNum" type="number" placeholder="入力してください" />
+          <input
+            v-model="stockerItemNum"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
         <div>
           <h3>開催年</h3>
           <select v-model="itemFesYear">
             <option disabled value="">選択してください</option>
-            <option
-              v-for="year in itemYear"
-              :key="year.id"
-              :value="year.id"
-            >
+            <option v-for="year in itemYear" :key="year.id" :value="year.id">
               {{ year.year_num }}
             </option>
           </select>
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submitItem">登録</CommonButton>
+        <CommonButton iconName="add_circle" :on_click="submitItem"
+          >登録</CommonButton
+        >
       </template>
     </AddModal>
 
@@ -150,10 +206,7 @@
       <template v-slot:form>
         <div class="assign-item-name-container">
           <h3>物品名</h3>
-          <select
-            class="assign-item-name-select"
-            v-model="assignItemName"
-          >
+          <select class="assign-item-name-select" v-model="assignItemName">
             <option disabled value="">選択してください</option>
             <option
               v-for="i in stockerItems"
@@ -165,6 +218,22 @@
           </select>
         </div>
         <div v-if="assignItemName" class="assign-item-list-wrapper">
+          <div class="assign-item-name-container">
+            <h3>貸出場所</h3>
+            <select
+              class="assign-item-name-select"
+              v-model="assignRentalPlaceId"
+            >
+              <option disabled value="">選択してください</option>
+              <option
+                v-for="place in stockerPlaces"
+                :key="place.id"
+                :value="place.id"
+              >
+                {{ place.name }}
+              </option>
+            </select>
+          </div>
           <div
             v-for="(assign, index) in assignItemsNumAndGroup"
             :key="index"
@@ -173,17 +242,26 @@
             <div class="assign-item-list-container">
               <!-- 団体名のセレクトボックス -->
               <div class="assign-item-list-group">
-                <div v-if="index === 0" class="assign-item-list-label-group-label">
+                <div
+                  v-if="index === 0"
+                  class="assign-item-list-label-group-label"
+                >
                   <h3>団体名</h3>
                 </div>
-                <select v-model="assign.group" class="assign-item-list-group-select">
+                <select
+                  v-model="assign.group"
+                  class="assign-item-list-group-select"
+                >
                   <option disabled value="">選択してください</option>
                   <!-- 団体名を重複して選択できないようにする -->
                   <option
                     v-for="group in groups"
                     :key="group.id"
                     :value="group.id"
-                    v-if="!getSelectedGroupIds().includes(group.id) || assign.group === group.id"
+                    v-if="
+                      !getSelectedGroupIds().includes(group.id) ||
+                      assign.group === group.id
+                    "
                   >
                     {{ group.name }}
                   </option>
@@ -203,14 +281,22 @@
               </div>
               <!-- 削除ボタン -->
               <div class="assign-item-list-delete">
-                <button class="assign-item-list-delete-btn delete-btn-effect" @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)">
+                <button
+                  class="assign-item-list-delete-btn delete-btn-effect"
+                  @click.prevent="() => assignItemsNumAndGroup.splice(index, 1)"
+                >
                   <span class="material-icons"> delete </span>
                 </button>
               </div>
             </div>
           </div>
           <div>
-            <button class="assign-item-list-add-btn add-btn-effect" @click.prevent="addAssignItem">団体を追加</button>
+            <button
+              class="assign-item-list-add-btn add-btn-effect"
+              @click.prevent="addAssignItem"
+            >
+              団体を追加
+            </button>
           </div>
         </div>
       </template>
@@ -271,7 +357,11 @@
       <template v-slot:form>
         <div>
           <h3>個数</h3>
-          <input v-model="stockerItemNum" type="number" placeholder="入力してください" />
+          <input
+            v-model="stockerItemNum"
+            type="number"
+            placeholder="入力してください"
+          />
         </div>
       </template>
       <template v-slot:method>
@@ -287,7 +377,24 @@
       <template v-slot:form>
         <div>
           <h3>個数</h3>
-          <input v-model="assignItemNum" type="number" placeholder="入力してください" />
+          <input
+            v-model="assignItemNum"
+            type="number"
+            placeholder="入力してください"
+          />
+        </div>
+        <div>
+          <h3>貸出場所</h3>
+          <select v-model="assignRentalPlaceId">
+            <option disabled value="">選択してください</option>
+            <option
+              v-for="place in stockerPlaces"
+              :key="place.id"
+              :value="place.id"
+            >
+              {{ place.name }}
+            </option>
+          </select>
         </div>
       </template>
       <template v-slot:method>
@@ -310,7 +417,9 @@
 
     <DeleteModal
       @close="closeItemDeleteModal"
-      v-if="isOpenItemDeleteModal && this.$role(this.roleID).rental_items.delete"
+      v-if="
+        isOpenItemDeleteModal && this.$role(this.roleID).rental_items.delete
+      "
       title="在庫物品の削除"
     >
       <template v-slot:method>
@@ -333,7 +442,6 @@
         >
       </template>
     </DeleteModal>
-
   </div>
 </template>
 
@@ -352,6 +460,7 @@ export default {
       assignRentalItemDeleteId: null,
       assignItemName: "",
       assignItemNum: null,
+      assignRentalPlaceId: "",
       assignItemsNumAndGroup: [{ group: "", num: 0 }], // 物品割当の団体名と個数
       stockerItemName: "",
       stockerItemNum: null,
@@ -367,16 +476,8 @@ export default {
       roomName: null,
       refRole: [],
       id: this.$route.params.id,
-      rental_headers: [
-        "物品名",
-        "個数",
-        "残数",
-      ],
-      stocker_headers: [
-        "団体名",
-        "物品",
-        "個数",
-      ],
+      rental_headers: ["物品名", "個数", "残数"],
+      stocker_headers: ["団体名", "物品", "貸出場所", "個数"],
       stockItemStatus: [],
       stockItemStatusList: [
         { id: 1, name: "未登録" },
@@ -421,27 +522,25 @@ export default {
       rules: {
         required: (value) => !!value || "入力してください",
       },
-      clicked_index:-1,
-      sort_key_1:"",
-      sort_key_2:"",
+      clicked_index: -1,
+      sort_key_1: "",
+      sort_key_2: "",
       sort_asc: true,
     };
   },
 
   //部屋ごとの物品、割当状況を出力
-  async asyncData({ $axios, params}) {
+  async asyncData({ $axios, params }) {
     const stockerItemsUrl =
-      "/api/v1/get_refinement_stocker_item?stocker_place_id=" +
-      params.id;
+      "/api/v1/get_refinement_stocker_item?stocker_place_id=" + params.id;
     const stockerItemsRes = await $axios.$post(stockerItemsUrl);
 
     const assignRentalItemsUrl =
-      "/api/v1/get_refinement_assign_rental_item?stocker_place_id=" +
-      params.id;
+      "/api/v1/get_refinement_assign_rental_item?stocker_place_id=" + params.id;
     const assignRentalItemsRes = await $axios.$post(assignRentalItemsUrl);
 
     const stockerPlacesUrl = "/stocker_places";
-    const stockerPlacesRes = await $axios.$get(stockerPlacesUrl)
+    const stockerPlacesRes = await $axios.$get(stockerPlacesUrl);
 
     const groupsUrl = "/groups";
     const groupsRes = await $axios.$get(groupsUrl);
@@ -486,20 +585,20 @@ export default {
   },
   methods: {
     calculateDifference(stockerItem, index) {
-        const matchingAssignRentalItems = this.assignRentalItems.filter(
-            item => item.rental_item.name === stockerItem.rental_item.name
+      const matchingAssignRentalItems = this.assignRentalItems.filter(
+        (item) => item.rental_item.name === stockerItem.rental_item.name
+      );
+      let difference = stockerItem.stocker_item.num;
+      if (matchingAssignRentalItems.length > 0) {
+        const totalAssignedNum = matchingAssignRentalItems.reduce(
+          (total, item) => total + item.assign_rental_item.num,
+          0
         );
-        let difference = stockerItem.stocker_item.num;
-        if (matchingAssignRentalItems.length > 0) {
-            const totalAssignedNum = matchingAssignRentalItems.reduce(
-                (total, item) => total + item.assign_rental_item.num,
-                0
-            );
-            difference = stockerItem.stocker_item.num - totalAssignedNum;
-        }
-        this.$set(this.warningStatus, index, difference < 0);
-        return difference;
-      },
+        difference = stockerItem.stocker_item.num - totalAssignedNum;
+      }
+      this.$set(this.warningStatus, index, difference < 0);
+      return difference;
+    },
 
     async editPlace() {
       const placeUrl =
@@ -512,13 +611,15 @@ export default {
         "&assign_item_status=" +
         this.assignItemStatus;
 
-      await this.$axios.$put(placeUrl).then((response) => {
-        this.closePlaceEditModal();
-        this.$router.push("/stock_items")
-      })
-      .catch(error => {
-        console.log(error)
-      });
+      await this.$axios
+        .$put(placeUrl)
+        .then((response) => {
+          this.closePlaceEditModal();
+          this.$router.push("/stock_items");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     async deletePlace() {
@@ -538,18 +639,20 @@ export default {
         this.itemFesYear +
         "&stocker_place_id=" +
         this.id;
-      console.log(submitItemUrl)
-      await this.$axios.$post(submitItemUrl).then((response) => {
-        this.stockerItemName = "";
-        this.itemFesYear = "";
-        this.stockerItemNum = null;
-        this.id;
-        this.closeItemAddModal();
-        location.reload();
-      })
-      .catch(error => {
-        console.log(error)
-      });
+      console.log(submitItemUrl);
+      await this.$axios
+        .$post(submitItemUrl)
+        .then((response) => {
+          this.stockerItemName = "";
+          this.itemFesYear = "";
+          this.stockerItemNum = null;
+          this.id;
+          this.closeItemAddModal();
+          location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     async editItem() {
@@ -562,17 +665,19 @@ export default {
         this.id;
 
       await this.$axios.$put(itemUrl).then((response) => {
-          location.reload();
-          this.closeItemEditModal();
+        location.reload();
+        this.closeItemEditModal();
       });
     },
 
     async deleteItem() {
       const delItemUrl = "/stocker_items/" + this.stockerItemDeleteId;
-      const delItemRes = await this.$axios.$delete(delItemUrl).then((response) => {
-        location.reload();
-        this.closeItemEditModal();
-      });
+      const delItemRes = await this.$axios
+        .$delete(delItemUrl)
+        .then((response) => {
+          location.reload();
+          this.closeItemEditModal();
+        });
     },
     getSelectedGroupIds() {
       return this.assignItemsNumAndGroup.map((assign) => assign.group);
@@ -582,48 +687,51 @@ export default {
     },
     async submitAssign() {
       const assignUrl = "/assign_rental_items";
-          // バリデーションフラグ
+      // バリデーションフラグ
       let isValid = true;
       // バリデーションメッセージ
       let validationMessages = [];
 
       // アイテムごとのバリデーション
-      this.assignItemsNumAndGroup.forEach(item => {
-      if (!item.group) {
-        validationMessages.push("団体名が選択されていません。");
-        isValid = false;
+      this.assignItemsNumAndGroup.forEach((item) => {
+        if (!item.group) {
+          validationMessages.push("団体名が選択されていません。");
+          isValid = false;
+        }
+        if (!item.num || isNaN(item.num) || item.num <= 0) {
+          validationMessages.push("個数は正の数である必要があります。");
+          isValid = false;
+        }
+      });
+      if (!isValid) {
+        // バリデーションメッセージを表示
+        alert(validationMessages.join("\n"));
+        return; // ここで処理を終了し、リセットせずにモーダルをそのまま表示
       }
-      if (!item.num || isNaN(item.num) || item.num <= 0) {
-        validationMessages.push("個数は正の数である必要があります。");
-        isValid = false;
+      try {
+        const payload = {
+          items: this.assignItemsNumAndGroup.map((item) => ({
+            group_id: item.group,
+            num: item.num,
+          })),
+          rentalItemId: this.assignItemName,
+          stockerPlaceId: this.id,
+          rentalPlaceId: this.assignRentalPlaceId || this.id,
+        };
+        const response = await this.$axios.$post(assignUrl, payload);
+        console.log(response.data);
+        // バリデーションに成功したら、ここでデータをリセット
+        this.assignItemsNumAndGroup = [{ group: "", num: 0 }];
+        this.assignItemName = "";
+        this.assignItemNum = null;
+        this.assignRentalPlaceId = this.id;
+        this.id;
+        location.reload();
+        this.closeAssignAddModal();
+      } catch (error) {
+        console.error(error);
+        alert("登録処理中にエラーが発生しました。");
       }
-    });
-    if (!isValid) {
-      // バリデーションメッセージを表示
-      alert(validationMessages.join("\n"));
-      return; // ここで処理を終了し、リセットせずにモーダルをそのまま表示
-    }
-    try {
-      const payload = {
-        items: this.assignItemsNumAndGroup.map(item => ({
-          group_id: item.group,
-          num: item.num
-        })),
-        rentalItemId: this.assignItemName,
-        stockerPlaceId: this.id,
-      };
-      const response = await this.$axios.$post(assignUrl, payload);
-      console.log(response.data);
-      // バリデーションに成功したら、ここでデータをリセット
-      this.assignItemsNumAndGroup = [{ group: "", num: 0 }];
-      this.assignItemName = "";
-      this.assignItemNum = null;
-      this.id;
-      location.reload();
-      this.closeAssignAddModal();
-    } catch (error) {
-      console.error(error);
-      alert('登録処理中にエラーが発生しました。')};
     },
 
     async editAssign() {
@@ -633,7 +741,9 @@ export default {
         "?num=" +
         this.assignItemNum +
         "&stocker_place_id=" +
-        this.id;
+        this.id +
+        "&rental_place_id=" +
+        (this.assignRentalPlaceId || this.id);
       await this.$axios.$put(assignUrl).then((response) => {
         location.reload();
         this.closeAssignEditModal();
@@ -641,7 +751,8 @@ export default {
     },
 
     async deleteAssign() {
-      const delAssignUrl = "/assign_rental_items/" + this.assignRentalItemDeleteId;
+      const delAssignUrl =
+        "/assign_rental_items/" + this.assignRentalItemDeleteId;
       const delAssignRes = await this.$axios.$delete(delAssignUrl);
       location.reload();
       this.closeAssignEditModal();
@@ -655,6 +766,7 @@ export default {
     },
     openAssignAddModal() {
       this.itemFesYear = this.refYearID;
+      this.assignRentalPlaceId = this.id;
       this.isOpenAssignAddModal = false;
       this.isOpenAssignAddModal = true;
     },
@@ -662,9 +774,9 @@ export default {
       this.isOpenAssignAddModal = false;
     },
     openPlaceEditModal() {
-      this.roomName = this.placeName.name
-      this.stockItemStatus = this.placeName.stock_item_status
-      this.assignItemStatus = this.placeName.assign_item_status
+      this.roomName = this.placeName.name;
+      this.stockItemStatus = this.placeName.stock_item_status;
+      this.assignItemStatus = this.placeName.assign_item_status;
       this.isOpenPlaceEditModal = false;
       this.isOpenPlaceEditModal = true;
     },
@@ -680,9 +792,10 @@ export default {
     closeItemEditModal() {
       this.isOpenItemEditModal = false;
     },
-    openAssignEditModal(id, num) {
+    openAssignEditModal(id, num, rentalPlaceId) {
       this.assignRentalItemId = id;
       this.assignItemNum = num;
+      this.assignRentalPlaceId = rentalPlaceId || this.id;
       this.isOpenAssignEditModal = false;
       this.isOpenAssignEditModal = true;
     },
@@ -715,23 +828,23 @@ export default {
 
     sorted_assignRentalItems(index) {
       console.log(index);
-      if(index == 0){
+      if (index == 0) {
         this.sort_key_1 = "group";
         this.sort_key_2 = "name";
-        if(this.clicked_index == index){
+        if (this.clicked_index == index) {
           this.sort_asc = !this.sort_asc;
-        } else{
+        } else {
           this.sort_asc = true;
         }
-      } else if(index == 1){
+      } else if (index == 1) {
         this.sort_key_1 = "rental_item";
         this.sort_key_2 = "name";
-        if(this.clicked_index == index){
+        if (this.clicked_index == index) {
           this.sort_asc = !this.sort_asc;
-        } else{
+        } else {
           this.sort_asc = true;
         }
-      } else{
+      } else {
         this.sort_key = "";
       }
       this.clicked_index = index;
@@ -739,11 +852,17 @@ export default {
         let set = 1;
         this.sort_asc ? (set = 1) : (set = -1);
         this.assignRentalItems.sort((a, b) => {
-          if (a[this.sort_key_1][this.sort_key_2] < b[this.sort_key_1][this.sort_key_2]) {
-            return -1*set;
+          if (
+            a[this.sort_key_1][this.sort_key_2] <
+            b[this.sort_key_1][this.sort_key_2]
+          ) {
+            return -1 * set;
           }
-          if (a[this.sort_key_1][this.sort_key_2] > b[this.sort_key_1][this.sort_key_2]) {
-            return 1*set;
+          if (
+            a[this.sort_key_1][this.sort_key_2] >
+            b[this.sort_key_1][this.sort_key_2]
+          ) {
+            return 1 * set;
           }
           return 0;
         });
@@ -766,9 +885,9 @@ export default {
 }
 .normal-table td.warning:hover {
   background-color: #ffac5d !important;
-  background: none;  /* 線形グラデーションを上書きして無効にします */
-  -webkit-background-clip: initial !important;  /* デフォルトの状態に戻します */
-  -webkit-text-fill-color: black !important;    /* テキストの色を黒に設定します */
+  background: none; /* 線形グラデーションを上書きして無効にします */
+  -webkit-background-clip: initial !important; /* デフォルトの状態に戻します */
+  -webkit-text-fill-color: black !important; /* テキストの色を黒に設定します */
 }
 .assign-item-name-container {
   display: flex;

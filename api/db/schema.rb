@@ -9,7 +9,8 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 2026_03_24_000002) do
+
+ActiveRecord::Schema.define(version: 2026_04_20_000001) do
 
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "group_id"
@@ -33,6 +34,7 @@ ActiveRecord::Schema.define(version: 2026_03_24_000002) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "stocker_place_id"
+    t.integer "rental_place_id"
   end
 
   create_table "assign_stages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
