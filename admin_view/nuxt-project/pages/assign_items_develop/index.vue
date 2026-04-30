@@ -252,12 +252,12 @@ export default {
   mounted() {
     // ローカルストレージから絞り込み状態を復元
     const storedYearID = localStorage.getItem(this.$route.path + "RefYear");
-    if (storedYearID) {
+    if (storedYearID !== null) {
       this.refYearID = Number(storedYearID);
       this.updateFilters(this.refYearID, this.yearList);
     }
     const storedCategoryID = localStorage.getItem(this.$route.path + "RefCategory");
-    if (storedCategoryID) {
+    if (storedCategoryID !== null) {
       this.refCategoryID = Number(storedCategoryID);
       this.updateFilters(this.refCategoryID, this.groupCategories);
     }
