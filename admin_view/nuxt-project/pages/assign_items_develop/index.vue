@@ -175,7 +175,7 @@
 
     <DeleteModal
       @close="closeAssignDeleteModal"
-      v-if="isOpenAssignDeleteModal && this.$role(roleID).assign_items.delete"
+      v-if="isOpenAssignDeleteModal && $role(roleID).assign_items.delete"
       title="割当の削除"
     >
       <template v-slot:method>
