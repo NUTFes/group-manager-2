@@ -107,8 +107,8 @@
     },
     "notes": {
       "email": "e.g., s123456@stn.nagaokaut.ac.jp",
-      "password": "At least 8 alphanumeric characters",
-      "passwordConfirm": "At least 8 alphanumeric characters",
+      "password": "At least 8 characters",
+      "passwordConfirm": "At least 8 characters",
       "name": "e.g., Taro Nagaoka",
       "tel": "e.g., 09012345678",
       "studentId": "e.g., 12345678"
@@ -128,13 +128,17 @@
       "next": "Next"
     },
     "errors": {
+      "nameRequired": "Name is required.",
       "emailTaken": "This email address is already registered.",
+      "emailInvalid": "Please enter a valid email address.",
       "emailDefault": "There is an issue with the email address.",
-      "passwordShort": "Password must be at least 6 characters.",
+      "passwordShort": "Password must be at least 8 characters.",
       "passwordDefault": "There is an issue with the password.",
       "passwordConfirmMismatch": "Passwords do not match.",
       "passwordConfirmDefault": "There is an issue with the password confirmation.",
       "telInvalid": "There is an issue with the phone number.",
+      "telShort": "The phone number is too short.",
+      "telLong": "The phone number is too long.",
       "studentIdInvalid": "There is an issue with the student ID.",
       "gradeInvalid": "There is an issue with the grade selection.",
       "departmentInvalid": "There is an issue with the department selection.",
