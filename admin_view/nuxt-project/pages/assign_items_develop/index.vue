@@ -441,24 +441,39 @@ export default {
       this.assignments.push(newAssignment);
 
       try {
-        const postPromises = this.activeItemIds.map(itemId => {
+        const postRequests = this.activeItemIds.map(itemId => {
           const assignedNum = newAssignment.assigned[itemId];
           if (assignedNum > 0) {
             const payload = {
-              items: [{ group_id: newAssignment.groupId, num: assignedNum, fes_year_id: this.refYearID }],
+              items: [{ group_id: newAssignment.groupId, num: assignedNum }],
               rentalItemId: Number(itemId),
               stockerPlaceId: newAssignment.stockId
             };
-            return this.$axios.$post('/assign_rental_items', payload);
+            return this.$axios.$post('/assign_rental_items', payload)
+             .then(res => ({ itemId, res: res.data}));
           }
         }).filter(p => p !== undefined);
 
-        if (postPromises.length > 0) {
-          await Promise.all(postPromises);
-        } else {
+        if (postRequests.length === 0) {
           this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
+          return;
         }
+
+       const results = await Promise.all(postRequests);
+       //バックエンドの作成結果からdbIdsを埋める
+       newAssignment.dbIds = [];
+       results.forEach(({ itemId, res }) => {
+        (Array.isArray(res) ? res : [res]).forEach(record => {
+          if (record && record.id) {
+            newAssignment.dbIds.push({ id: record.id, itemId: Number(itemId) });
+          }
+        });
+       });
+       //temp idから確定idに置き換え
+       newAssignment.id = `${newAssignment.groupId}_${newAssignment.stockId}`;
       } catch (error) {
+        //部分成功への配慮：Dbを再取得して同期する
+        await this.fetchDataFromDB();
         this.assignments = this.assignments.filter(a => a.id !== newAssignment.id);
       }
     },
