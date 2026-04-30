@@ -9,7 +9,7 @@
     </button>
     <transition name="fade">
       <div class="drop-down" v-show="$data.showContent">
-        <div class="drop-down__container" @click.self="closeModal">
+        <div class="drop-down__container" @click.self="showContent = false">
           <div class="drop-down__box">
             <button
               class="drop-down-button"
