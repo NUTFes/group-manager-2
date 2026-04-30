@@ -1,4 +1,5 @@
 import { FC, useRef } from 'react';
+import { useTranslation } from 'next-i18next';
 import Button from '@/components/Button';
 import Selector from '@/components/Form/Selector';
 import TextBox from '@/components/Form/TextBox';
@@ -82,6 +83,7 @@ const FormStep: FC<FormStepProps> = ({ step, steps }) => {
 };
 
 const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation('common');
   const registerCarouselTexts = useRegisterCarouselTexts();
   const {
     steps,
@@ -122,6 +124,9 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
 
   // フォーム参照の作成
   const formRef = useRef<HTMLFormElement>(null);
+
+  const getErrorMessage = (message?: string) =>
+    message ? t(message) : undefined;
 
   // 登録ボタンのクリックハンドラ
   const handleRegisterClick = async (e?: React.MouseEvent) => {
@@ -178,7 +183,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.mail}
                     note={notes.email}
                     required
-                    error={errors.mail?.message}
+                    error={getErrorMessage(errors.mail?.message)}
                     onChange={(value: string) => setValue('mail', value)}
                     onBlur={() => trigger('mail')}
                   />
@@ -188,7 +193,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.password}
                     note={notes.password}
                     required
-                    error={errors.password?.message}
+                    error={getErrorMessage(errors.password?.message)}
                     onChange={(value: string) => setValue('password', value)}
                     onBlur={() => trigger('password')}
                   />
@@ -198,7 +203,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.passwordConfirm}
                     note={notes.passwordConfirm}
                     required
-                    error={errors.passwordConfirm?.message}
+                    error={getErrorMessage(errors.passwordConfirm?.message)}
                     onChange={(value: string) =>
                       setValue('passwordConfirm', value)
                     }
@@ -213,7 +218,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.name}
                     note={notes.name}
                     required
-                    error={errors.name?.message}
+                    error={getErrorMessage(errors.name?.message)}
                     onChange={(value: string) => setValue('name', value)}
                     onBlur={() => trigger('name')}
                   />
@@ -222,7 +227,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.tel}
                     note={notes.tel}
                     required
-                    error={errors.tel?.message}
+                    error={getErrorMessage(errors.tel?.message)}
                     onChange={(value: string) => setValue('tel', value)}
                     onBlur={() => trigger('tel')}
                   />
@@ -231,7 +236,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     value={values.studentId}
                     note={notes.studentId}
                     required
-                    error={errors.studentId?.message}
+                    error={getErrorMessage(errors.studentId?.message)}
                     onChange={(value: string) => setValue('studentId', value)}
                     onBlur={() => trigger('studentId')}
                   />
@@ -243,7 +248,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     }
                     options={gradeOptions}
                     value={values.gradeId}
-                    error={errors.gradeId?.message}
+                    error={getErrorMessage(errors.gradeId?.message)}
                   />
                   <Selector
                     label={labels.department}
@@ -253,7 +258,7 @@ const Carousel: FC<RegisterCarouselProps> = ({ isOpen, onClose }) => {
                     }
                     options={departmentOptions}
                     value={values.departmentId}
-                    error={errors.departmentId?.message}
+                    error={getErrorMessage(errors.departmentId?.message)}
                   />
                 </div>
               </div>
