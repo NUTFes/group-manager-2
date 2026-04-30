@@ -762,7 +762,7 @@ export default {
 
 /* 左側：団体 */
 .order-group {
-  width: 320px;
+  width: 40%;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -883,6 +883,7 @@ export default {
 }
 .stock-card {
   display: flex;
+  flex-direction: column;
   background-color: white;
   border-radius: 12px;
   border: 1px solid #999999;
@@ -890,14 +891,14 @@ export default {
   height: auto;
 }
 .stock-info {
-  width: 200px;
+  width: 100%;
   background-color: #ebebeb;
   padding: 12px;
   border-right: 1px solid #e0e7ff;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
 }
 .stock-info h3 {
   margin: 0 0 10px 0;
@@ -910,6 +911,7 @@ export default {
   gap: 12px;
 }
 .inventory-item {
+  max-width: 300px;
   display: flex;
   justify-content: space-between;
   align-items: center;
