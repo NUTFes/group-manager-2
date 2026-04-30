@@ -107,8 +107,8 @@
     },
     "notes": {
       "email": "例：s123456@stn.nagaokaut.ac.jp",
-      "password": "英数字8文字以上",
-      "passwordConfirm": "英数字8文字以上",
+      "password": "8文字以上",
+      "passwordConfirm": "8文字以上",
       "name": "例：長岡 太郎",
       "tel": "例：09012345678",
       "studentId": "例：12345678"
@@ -130,7 +130,7 @@
     "errors": {
       "emailTaken": "このメールアドレスは既に登録されています。",
       "emailDefault": "メールアドレスに誤りがあります。",
-      "passwordShort": "パスワードは6文字以上である必要があります。",
+      "passwordShort": "パスワードは8文字以上である必要があります。",
       "passwordDefault": "パスワードに誤りがあります。",
       "passwordConfirmMismatch": "パスワードが一致しません。",
       "passwordConfirmDefault": "パスワード確認に誤りがあります。",

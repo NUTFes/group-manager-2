@@ -15,13 +15,7 @@ export const RegisterSchema = z
     mail: z.string().email('有効なメールアドレスを入力してください'),
     departmentId: z.number().min(1, '学科を選択してください'),
     gradeId: z.number().min(1, '学年を選択してください'),
-    password: z
-      .string()
-      .min(8, '8文字以上で入力してください')
-      .regex(/[A-Z]/, '大文字を含めてください')
-      .regex(/[a-z]/, '小文字を含めてください')
-      .regex(/\d/, '数字を含めてください')
-      .regex(/[\W_]/, '記号を含めてください'),
+    password: z.string().min(8, '8文字以上で入力してください'),
     passwordConfirm: z.string(),
   })
   .refine((data) => data.password === data.passwordConfirm, {
