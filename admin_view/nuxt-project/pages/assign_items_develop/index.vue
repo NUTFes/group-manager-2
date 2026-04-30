@@ -321,23 +321,20 @@ export default {
       }
     },
 
-    formatGroups(rentalOrders, groups, items) {
-      if (!rentalOrders || !groups || !items) return [];
-      const groupMap = {};
-      rentalOrders.forEach(order => {
-        const groupId = order.group_id;
-        const groupInfo = groups.find(g => g.id === groupId);
-        
-        if (!groupInfo) return; 
-
-        if (!groupMap[groupId]) {
-          groupMap[groupId] = { id: groupId, name: groupInfo.name, requests: {} };
-        }
-        const itemKey = String(order.rental_item_id);
-        groupMap[groupId].requests[itemKey] = (groupMap[groupId].requests[itemKey] || 0) + order.num;
+     formatGroups(rentalOrders, groups, items) {
+       if (!groups || !items) return [];
+       const groupMap = {};
+       groups.forEach(g => {
+        groupMap[g.id] = { id: g.id, name: g.name, requests: {} };
+      });
+      (rentalOrders || []).forEach(order => {
+         const g = groupMap[order.group_id];
+         if (!g) return;
+         const itemKey = String(order.rental_item_id);
+         g.requests[itemKey] = (g.requests[itemKey] || 0) + order.num;    
       });
       return Object.values(groupMap);
-    },
+   },
 
     formatStocks(stockerItems, places, items) {
       const stockMap = {};
