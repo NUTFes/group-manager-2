@@ -102,9 +102,12 @@
 
            <div class="group-requests" v-if="!isGroupFulfilled(group)">
               <div v-for="itemId in activeItemIds" :key="itemId" class="request-badge">
-                <span class="badge-label">{{ getItemName(itemId) }}残</span>
+                <span class="badge-label">{{ getItemName(itemId) }}</span>
                 <span class="badge-value" :class="getUnassigned(group, itemId) > 0 ? 'text-danger' : 'text-success'">
                   {{ getUnassigned(group, itemId) }}
+                </span>
+                <span class="badge-total">
+                  / {{ group.requests[itemId] || 0 }}
                 </span>
               </div>
            </div>
@@ -836,9 +839,12 @@ export default {
   font-size: 12px;
 }
 .badge-value {
-  font-family: monospace;
   font-weight: bold;
   font-size: 12px;
+}
+.badge-total{
+  font-size: 12px;
+  color: #94a3b8;
 }
 .text-danger { color: #d33838; }
 .text-success { color: #16a34a; }
