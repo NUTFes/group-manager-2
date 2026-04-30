@@ -31,6 +31,10 @@
             <td>{{ rentalItem.name }}</td>
           </tr>
           <tr>
+            <th>英語名</th>
+            <td>{{ rentalItem.name_en }}</td>
+          </tr>
+          <tr>
             <th>屋内模擬店貸し出し</th>
             <td>{{ rentalItem.is_inside_shop_rentable }}</td>
           </tr>
@@ -63,6 +67,10 @@
         <div>
           <h3>物品名</h3>
           <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>英語名</h3>
+          <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
           <h3>屋内模擬店貸出可否</h3>
@@ -105,7 +113,7 @@
       <template v-slot:method>
         <YesButton iconName="delete" :on_click="destroy">はい</YesButton>
         <NoButton iconName="close" :on_click="closeDeleteModal"
-          >いいえ</NoButton
+        >いいえ</NoButton
         >
       </template>
     </DeleteModal>
@@ -129,6 +137,7 @@ export default {
       ],
       isOpenSnackBar: false,
       name: "",
+      nameEn: "",
     };
   },
   async asyncData({ $axios, route }) {
@@ -152,6 +161,7 @@ export default {
   methods: {
     openEditModal() {
       this.name = this.rentalItem.name;
+      this.nameEn = this.rentalItem.name_en;
       this.isInsideShopRentable = this.rentalItem.is_inside_shop_rentable;
       this.isOutsideShopRentable = this.rentalItem.is_outside_shop_rentable;
       this.isStageRentable = this.rentalItem.is_stage_rentable;
@@ -187,6 +197,8 @@ export default {
         this.routeId +
         "?name=" +
         this.name +
+        "&name_en=" +
+        this.nameEn +
         "&is_inside_shop_rentable=" +
         this.isInsideShopRentable +
         "&is_outside_shop_rentable=" +
@@ -194,11 +206,10 @@ export default {
         "&is_stage_rentable=" +
         this.isStageRentable;
 
-      console.log(url);
-
       await this.$axios.$put(url).then((response) => {
         this.openSnackBar(response.data.name + "を編集しました");
         this.name = "";
+        this.nameEn = "";
         this.isInsideShopRentable = "";
         this.isOutsideShopRentable = "";
         this.isStageRentable = "";
@@ -208,7 +219,7 @@ export default {
     },
     async destroy() {
       const url = "/rental_items/" + this.routeId;
-      const res = await this.$axios.$delete(url);
+      await this.$axios.$delete(url);
       this.$router.push("/rental_items");
     },
   },

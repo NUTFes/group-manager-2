@@ -29,6 +29,7 @@
           >
             <td>{{ rentalItem.id }}</td>
             <td>{{ rentalItem.name }}</td>
+            <td>{{ rentalItem.name_en }}</td>
             <td>{{ rentalItem.is_inside_shop_rentable }}</td>
             <td>{{ rentalItem.is_outside_shop_rentable }}</td>
             <td>{{ rentalItem.is_stage_rentable }}</td>
@@ -42,6 +43,10 @@
         <div>
           <h3>物品名</h3>
           <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <h3>英語名</h3>
+          <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
           <h3>屋内模擬店貸出可否</h3>
@@ -73,7 +78,7 @@
       </template>
       <template v-slot:method>
         <CommonButton iconName="add_circle" :on_click="submit"
-          >登録</CommonButton
+        >登録</CommonButton
         >
       </template>
     </AddModal>
@@ -92,6 +97,7 @@ export default {
       headers: [
         "ID",
         "名前",
+        "英語名",
         "屋内模擬店貸出",
         "屋外模擬店貸出",
         "ステージ貸出",
@@ -103,6 +109,7 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",
+      nameEn: "",
     };
   },
   async asyncData({ $axios }) {
@@ -156,6 +163,8 @@ export default {
         "/rental_items/" +
         "?name=" +
         this.name +
+        "&name_en=" +
+        this.nameEn +
         "&is_inside_shop_rentable=" +
         this.isInsideShopRentable +
         "&is_outside_shop_rentable=" +
@@ -166,6 +175,7 @@ export default {
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
+        this.nameEn = "";
         this.isInsideShopRentable = "";
         this.isOutsideShopRentable = "";
         this.isStageRentable = "";
