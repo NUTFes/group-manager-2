@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import useSWRMutation from 'swr/mutation';
 import { useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
@@ -34,6 +35,7 @@ export type GroupResponse = {
 export type GroupCategoryResponse = {
   id: number;
   name: string;
+  nameEn?: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -65,13 +67,23 @@ export const useGetGroups = (groupId: number | null) => {
 
 // 既存の参加形式を取得するフック
 export const useGetGroupCategories = () => {
+  const { i18n } = useTranslation('common');
   const endpoint = `${API_ENDPOINTS.GROUP_CATEGORIES}`;
 
   const { data, error, isLoading } =
     useAuthenticatedGet<ApiResponse<GroupCategoryResponse[]>>(endpoint);
 
   return {
-    groupCategories: data?.status.code === 200 ? data?.data : undefined,
+    groupCategories:
+      data?.status.code === 200
+        ? data.data.map((category) => ({
+            ...category,
+            name:
+              i18n.language.startsWith('en') && category.nameEn
+                ? category.nameEn
+                : category.name,
+          }))
+        : undefined,
     isLoading,
     hasError: !!error,
   };

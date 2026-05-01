@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useTranslation } from 'next-i18next';
 import CancelButton from '../CancelButton';
 import EditButton from '../EditButton';
 import LogoutButton from '../LogoutButton';
@@ -11,6 +12,7 @@ type UserModalProps = {
 };
 
 const UserModal: FC<UserModalProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation('common');
   const {
     userInformation,
     handleLogout,
@@ -32,10 +34,10 @@ const UserModal: FC<UserModalProps> = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center gap-12 rounded-[20px] bg-white p-6 shadow-2xl">
             <div className="flex w-80 flex-col items-center justify-center gap-6 py-4 md:w-[420px]">
               <p className="text-3xl font-bold text-font">
-                {userInformation?.user?.name || 'ゲスト'}
+                {userInformation?.user?.name || t('userModal.guest')}
               </p>
               <p className="text-base font-medium text-font">
-                {userInformation?.user?.email || 'メールアドレスなし'}
+                {userInformation?.user?.email || t('userModal.noEmail')}
               </p>
               <EditButton OnClick={handleEdit} />
               <LogoutButton onClick={handleLogout} />

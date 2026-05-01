@@ -5,9 +5,10 @@ import {
 } from '@/api/fireEquipmentApi';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
-import { fireEquipmentFormFields } from './constant';
+import { useFireEquipmentTexts } from './constant';
 
 export const useFireEquipmentHooks = (groupId: number) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
   const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
 
@@ -22,27 +23,29 @@ export const useFireEquipmentHooks = (groupId: number) => {
     fireEquipment && !hasUnregistered
       ? [
           {
-            label: fireEquipmentFormFields.NAME,
+            label: fireEquipmentTexts.fields.name,
             content: fireEquipment.name,
           },
           {
-            label: fireEquipmentFormFields.QUANTITY,
+            label: fireEquipmentTexts.fields.quantity,
             content: String(fireEquipment.quantity),
           },
           {
-            label: fireEquipmentFormFields.FUEL,
-            content: String(fireEquipment.fuel),
+            label: fireEquipmentTexts.fields.fuel,
+            content: fireEquipmentTexts.fuelLabel(fireEquipment.fuel),
           },
           {
-            label: fireEquipmentFormFields.USAGE,
+            label: fireEquipmentTexts.fields.usage,
             content: fireEquipment.usage,
           },
           {
-            label: fireEquipmentFormFields.IS_TAKEAWAY,
-            content: fireEquipment.is_takeaway ? 'はい' : 'いいえ',
+            label: fireEquipmentTexts.fields.isTakeaway,
+            content: fireEquipment.is_takeaway
+              ? fireEquipmentTexts.radio.options.yes
+              : fireEquipmentTexts.radio.options.no,
           },
           {
-            label: fireEquipmentFormFields.REMARK,
+            label: fireEquipmentTexts.fields.remark,
             content: fireEquipment.remark || '',
           },
         ]
@@ -58,17 +61,17 @@ export const useFireEquipmentHooks = (groupId: number) => {
     try {
       await deleteFireEquipmentOrder(fireEquipment.id);
       await mutateFireEquipmentOrder();
-      toast.success('火気申請を削除しました');
+      toast.success(fireEquipmentTexts.messages.deleteSuccess);
     } catch (error) {
       console.error('火気申請削除エラー:', error);
-      toast.error('削除に失敗しました。もう一度お試しください。');
+      toast.error(fireEquipmentTexts.messages.deleteFailed);
     }
   };
 
   const noApplicationItems: FormItem[] = [
     {
-      label: '火気申請は不要（登録済み）',
-      content: '火気は使用しません。',
+      label: fireEquipmentTexts.summary.noApplicationLabel,
+      content: fireEquipmentTexts.summary.noApplicationDescription,
     },
   ];
 

@@ -1,4 +1,5 @@
 // src/api/rentItemsApi.ts
+import { useTranslation } from 'next-i18next';
 import { useApiMutations, useAuthenticatedGet } from '@/hooks/useApi';
 import { legacyPatchFetcher, legacyPostFetcher } from './api';
 
@@ -21,6 +22,7 @@ const API_ENDPOINTS = {
 export type RentalItem = {
   id: number;
   name: string;
+  nameEn?: string;
   is_inside_shop_rentable: boolean;
   is_outside_shop_rentable: boolean;
   is_stage_rentable: boolean;
@@ -63,6 +65,7 @@ type ApiResponse<T> = {
 
 // 団体タイプに応じた物品一覧を取得するフック (API実装不要)
 export const useRentableItemsByType = (locationType: string) => {
+  const { i18n } = useTranslation('common');
   // 会場タイプに応じてエンドポイントを選択
   const endpoint =
     locationType === '1'
@@ -76,7 +79,14 @@ export const useRentableItemsByType = (locationType: string) => {
   } = useAuthenticatedGet<ApiResponse<RentalItem[]>>(endpoint);
 
   return {
-    items: response?.data || [],
+    items:
+      response?.data.map((item) => ({
+        ...item,
+        name:
+          i18n.language.startsWith('en') && item.nameEn
+            ? item.nameEn
+            : item.name,
+      })) || [],
     itemsError: error,
     itemsLoading: isLoading,
   };
@@ -84,6 +94,7 @@ export const useRentableItemsByType = (locationType: string) => {
 
 // 全ての貸出物品を取得するフック (実行委員会用を含む)
 export const useAllRentableItems = () => {
+  const { i18n } = useTranslation('common');
   const {
     data: response,
     error,
@@ -93,7 +104,14 @@ export const useAllRentableItems = () => {
   );
 
   return {
-    items: response?.data || [],
+    items:
+      response?.data.map((item) => ({
+        ...item,
+        name:
+          i18n.language.startsWith('en') && item.nameEn
+            ? item.nameEn
+            : item.name,
+      })) || [],
     itemsError: error,
     itemsLoading: isLoading,
   };

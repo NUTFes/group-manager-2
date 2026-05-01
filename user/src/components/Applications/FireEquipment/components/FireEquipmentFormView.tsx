@@ -3,6 +3,7 @@ import { FireEquipmentResponse } from '@/api/fireEquipmentApi';
 import { NO_ID_STRING, RADIO_OPTIONS, YES_ID_STRING } from '@/utils/constant';
 import Button from '@/components/Button/Button';
 import Radio from '@/components/Form/Radio/Radio';
+import { useFireEquipmentTexts } from '../constant';
 import FireEquipmentForm from './FireEquipmentForm';
 import { useFireEquipmentOrder } from './hooks';
 
@@ -21,6 +22,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
   submitLabel,
   disableValidate = false,
 }) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
   const {
     isRegister,
     submitUnregisteredHandler,
@@ -40,7 +42,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
       {/* 火気使用有無の選択 */}
       <div>
         <Radio
-          label="火気申請を使用しますか？"
+          label={fireEquipmentTexts.radio.question}
           value={isRegisterValue}
           onChange={(value) => {
             setIsRegisterValue(
@@ -48,11 +50,17 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
             );
           }}
           required
-          options={RADIO_OPTIONS}
+          options={RADIO_OPTIONS.map((option) => ({
+            ...option,
+            name:
+              option.id.toString() === YES_ID_STRING
+                ? fireEquipmentTexts.radio.options.yes
+                : fireEquipmentTexts.radio.options.no,
+          }))}
           error={errorsUnregistered.isRegister?.message}
         />
         <p className="max-w-[400px] break-words text-xs text-[#484848]">
-          電気ホットプレートとIHは含まれません。
+          {fireEquipmentTexts.notes.excludedItems}
         </p>
       </div>
 
@@ -61,7 +69,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
         <form onSubmit={submitUnregisteredHandler}>
           <div className="mt-8 flex flex-col items-center gap-4">
             <Button type="submit" size="pc" color="main">
-              登録
+              {fireEquipmentTexts.buttons.register}
             </Button>
           </div>
         </form>

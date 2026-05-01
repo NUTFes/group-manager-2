@@ -22,11 +22,11 @@ const TextArea: FC<TextAreaProps> = ({
   note,
   error,
 }) => {
-  const { translateError } = useFormFieldCommonTexts();
+  const { required: requiredLabel, translateError } = useFormFieldCommonTexts();
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event.target.value);
   };
-  const requiredMessage = requireMessage ? `※${requireMessage}` : '※必須';
+  const requiredMessage = requireMessage ?? requiredLabel;
   return (
     <>
       <label>
