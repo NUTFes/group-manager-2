@@ -20,6 +20,7 @@ export default {
         font: 'var(--font-color)',
         alert: 'var(--alert-color)',
         sub: 'var(--sub-color)',
+        re: 'var(--re-color)',
         // fix: text-baseが元々あるから渋々変更
         baseColor: 'var(--base-color)',
       },
