@@ -32,6 +32,7 @@ export type UserPageSettings = {
   isEditPublicRelation: boolean;
   isEditVenueMap: boolean;
   isEditCookingProcess: boolean;
+  isEditFireEquipmentOrder: boolean;
   addStageOrder: boolean;
 };
 

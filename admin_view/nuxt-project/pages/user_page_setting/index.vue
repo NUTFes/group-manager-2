@@ -256,6 +256,18 @@
             <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_cooking_process" :isOn="is_edit_cooking_process" :on_click="() => {this.is_edit_cooking_process = !this.is_edit_cooking_process}" />
           </td>
         </tr>
+        <!--火気使用申請-->
+        <tr>
+          <th rowspan="1">火気使用申請</th>
+          <td>登録・編集</td>
+          <td>
+            <p v-if="is_edit_fire_equipment_order === true">募集中</p>
+            <p v-else>募集締め切り</p>
+          </td>
+          <td>
+            <SwitchButton v-if="this.$role(roleID).user_page_setting.update" v-model="is_edit_fire_equipment_order" :isOn="is_edit_fire_equipment_order" :on_click="() => {this.is_edit_fire_equipment_order = !this.is_edit_fire_equipment_order}" />
+          </td>
+        </tr>
         <!--開催年-->
         <tr>
           <td>開催年</td>
@@ -306,6 +318,7 @@ export default {
       is_edit_public_relation: false,
       is_edit_venue_map: false,
       is_edit_cooking_process: false,
+      is_edit_fire_equipment_order: false,
       add_power_order: false,
       add_rental_order: false,
       add_stage_order: false,
@@ -346,6 +359,7 @@ export default {
         this.is_edit_public_relation = response.data.data.is_edit_public_relation;
         this.is_edit_venue_map = response.data.data.is_edit_venue_map;
         this.is_edit_cooking_process = response.data.data.is_edit_cooking_process;
+        this.is_edit_fire_equipment_order = response.data.data.is_edit_fire_equipment_order;
         this.add_power_order = response.data.data.add_power_order;
         this.add_rental_order = response.data.data.add_rental_order;
         this.add_stage_order = response.data.data.add_stage_order;
@@ -393,6 +407,7 @@ export default {
       params.append("is_edit_public_relation", this.is_edit_public_relation);
       params.append("is_edit_venue_map", this.is_edit_venue_map);
       params.append("is_edit_cooking_process", this.is_edit_cooking_process);
+      params.append("is_edit_fire_equipment_order", this.is_edit_fire_equipment_order);
       params.append("add_power_order", this.add_power_order);
       params.append("add_rental_order", this.add_rental_order);
       params.append("add_stage_order", this.add_stage_order);

@@ -31,6 +31,7 @@ type UserPageSettings = {
   isEditFoodProduct?: boolean;
   isEditPurchaseList?: boolean;
   isEditCookingProcess?: boolean;
+  isEditFireEquipmentOrder?: boolean;
   isEditStageOrder?: boolean;
   isEditStageCommonOption?: boolean;
   isRegistGroup?: boolean;
@@ -121,6 +122,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -162,6 +164,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
         <FireEquipment
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -230,6 +233,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -266,6 +270,7 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          isDeadline={!userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />

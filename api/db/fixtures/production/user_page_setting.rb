@@ -25,4 +25,5 @@ UserPageSetting.seed(:id,
                        is_edit_public_relation: true,
                        is_edit_venue_map: true,
                        is_edit_cooking_process: true,
+                       is_edit_fire_equipment_order: true,
                        add_stage_order: true })
