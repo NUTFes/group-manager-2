@@ -2,7 +2,10 @@ import { StatusTranslationKey, useStatusTexts } from './hooks';
 
 type ValidStatus =
   | { statusType: 'reception'; status: 'open' | 'deadline' | 'closed' }
-  | { statusType: 'registration'; status: 'registered' | 'unregistered' }
+  | {
+      statusType: 'registration';
+      status: 'registered' | 'unregistered' | 'resubmission';
+    }
   | {
       statusType: 'progress';
       status: 'not_required' | 'completed' | 'pending';
@@ -43,6 +46,11 @@ const STATUS_STYLE_MAP: Record<ValidStatus['status'], StyleDefinition> = {
   unregistered: {
     statusType: 'registration',
     backgroundColor: 'bg-alert border-alert',
+    textColor: 'text-baseColor',
+  },
+  resubmission: {
+    statusType: 'registration',
+    backgroundColor: 'bg-re border-re',
     textColor: 'text-baseColor',
   },
   not_required: {
