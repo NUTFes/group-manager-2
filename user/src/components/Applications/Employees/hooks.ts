@@ -364,15 +364,17 @@ export const useUnregisteredGroupHooks = (
  * @param groupId - 対象のグループID
  * @param isDeadline - 申請期限が過ぎているかどうか
  * @param mutateCheckAllRegisteredGroups - グループ登録状況を更新するコールバック
+ * @param status - 申請のステータス（APPLICATION_STATUSの値）
  * @returns コンポーネントで必要なすべての状態とハンドラ
  */
 export const useEmployeesApplicationHooks = (
   groupId: number,
   isDeadline?: boolean,
-  mutateCheckAllRegisteredGroups?: () => void
+  mutateCheckAllRegisteredGroups?: () => void,
+  status?: number
 ) => {
   // 編集モードの状態管理
-  const [isEditing, setEditing] = useState(false);
+  const [isEditing, setEditing] = useState(status === 1 ? true : false); // statusが1（申請中）の場合は編集不可、そうでない場合は編集モード未初期化
   const { t } = useTranslation('common');
 
   // トースト通知とステータス更新のコールバック
@@ -510,7 +512,8 @@ export const useEmployeesApplicationHooks = (
    * フォームリスト表示状態かどうか
    * 期限内かつ、従業員データがあり、非編集モードの場合
    */
-  const isFormListMode = isEmployeesData && !isEditing;
+  const isFormListMode =
+    (isEmployeesData && !isEditing) || (isEmployeesData && !(status === 1));
 
   /**
    * フォーム表示用のテーブルデータ

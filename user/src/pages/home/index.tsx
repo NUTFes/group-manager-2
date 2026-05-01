@@ -1,6 +1,7 @@
 import type { GetStaticProps } from 'next';
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
+import { useGetHealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -54,12 +55,22 @@ type CheckAllRegisteredGroups = {
   fireEquipmentOrder?: boolean;
 };
 
+type HealthCenterSubmissionStatusInfo = {
+  id: number;
+  group_id: number;
+  application_type: string;
+  status: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type GroupCategoryContentProps = {
   groupCategoryId: number | undefined;
   userPageSettings: UserPageSettings | undefined;
   checkAllRegisteredGroups: CheckAllRegisteredGroups;
   groupId: number;
   mutateCheckAllRegisteredGroups: () => void;
+  healthCenterSubmissionStatus: HealthCenterSubmissionStatusInfo | undefined;
 };
 
 const GroupCategoryContent = ({
@@ -68,6 +79,7 @@ const GroupCategoryContent = ({
   checkAllRegisteredGroups,
   groupId,
   mutateCheckAllRegisteredGroups,
+  healthCenterSubmissionStatus,
 }: GroupCategoryContentProps) => {
   if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
     // 🍙 食品販売: 会場申請、物品申請、電力申請、PR文申請、従業員申請、模擬店平面図申請、販売品申請、購入品申請、調理工程申請、火器使用申請
@@ -99,6 +111,7 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.employee}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           groupId={groupId}
+          status={healthCenterSubmissionStatus?.status}
         />
         <VenueMap
           isDeadline={!userPageSettings?.isEditVenueMap}
@@ -321,6 +334,8 @@ export default function HomePage() {
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
     useGetCheckAllRegisteredGroups(groupId);
+  const healthCenterSubmissionStatus =
+    useGetHealthCenterSubmissionStatus(groupId);
 
   return (
     <div className="m-4 flex flex-col gap-10 lg:mx-10 lg:my-16 lg:flex-row lg:gap-0">
@@ -352,6 +367,9 @@ export default function HomePage() {
             checkAllRegisteredGroups={checkAllRegisteredGroups}
             groupId={groupId}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
+            healthCenterSubmissionStatus={
+              healthCenterSubmissionStatus.healthCenterSubmissionStatus
+            }
           />
         )}
       </div>

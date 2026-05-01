@@ -13,6 +13,7 @@ type EmployeesProps = {
   isRegistered?: boolean; // 既に登録済みかどうか
   groupId: number; // 対象のグループID
   mutateCheckAllRegisteredGroups: () => void;
+  status?: number; // 申請のステータス（APPLICATION_STATUSの値）
 };
 
 /**
@@ -23,11 +24,13 @@ export const Employees: FC<EmployeesProps> = ({
   isRegistered,
   groupId,
   mutateCheckAllRegisteredGroups,
+  status,
 }) => {
   const employeesApplicationHook = useEmployeesApplicationHooks(
     groupId,
     isDeadline,
-    mutateCheckAllRegisteredGroups
+    mutateCheckAllRegisteredGroups,
+    status
   );
   return (
     <AccordionMenu
@@ -35,10 +38,12 @@ export const Employees: FC<EmployeesProps> = ({
       isEdit={!isDeadline} // 期限内（isDeadline=false）の場合のみ編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
+      status={status} // 申請のステータスを渡す
     >
       <Content
         employeesApplicationHook={employeesApplicationHook}
         isDeadline={isDeadline}
+        status={status}
       />
     </AccordionMenu>
   );
@@ -47,6 +52,7 @@ export const Employees: FC<EmployeesProps> = ({
 type ContentProps = {
   employeesApplicationHook: ReturnType<typeof useEmployeesApplicationHooks>;
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
+  status?: number; // 申請のステータス（APPLICATION_STATUSの値）
 };
 /**
  * 従業員申請のコンテンツ部分
@@ -54,8 +60,10 @@ type ContentProps = {
 const Content: FC<ContentProps> = ({
   employeesApplicationHook,
   isDeadline,
+  status,
 }) => {
   const { texts } = employeesApplicationHook;
+  const isSubmission = status === 1; // 申請中の状態かどうか
 
   // 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）の場合の表示
   if (employeesApplicationHook.isDeadlineMode) {
@@ -100,7 +108,7 @@ const Content: FC<ContentProps> = ({
         onEdit={
           !isDeadline ? employeesApplicationHook.handleEditClick : undefined
         } // 期限内の場合のみ編集可能
-        isEdit={!isDeadline} // 期限内の場合のみ編集可能
+        isEdit={!isDeadline || !isSubmission} // 期限内の場合のみ編集可能
       />
     );
   }
@@ -114,7 +122,7 @@ const Content: FC<ContentProps> = ({
         keys={['name', 'studentId']}
         tableMode
         onEdit={!isDeadline ? employeesApplicationHook.handleEdit : undefined} // 期限内の場合のみ編集可能
-        isEdit={!isDeadline} // 期限内の場合のみ編集可能
+        isEdit={!isDeadline || !isSubmission} // 期限内の場合のみ編集可能
       />
     );
   }
