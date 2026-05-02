@@ -12,7 +12,25 @@ export type ApiResponse<T> = {
   data: T;
 };
 
-// Health Center Submission Statusデータベースから取得したデータの構造
+// Rails enum status の文字列→数値マッピング
+const STATUS_MAP: Record<string, number> = {
+  unapproved: 0,
+  waiting_resubmission: 1,
+  approved: 2,
+  unsubmitted: 3,
+};
+
+type SubmissionItem = {
+  id: number;
+  application_type: string;
+  status: string; // Rails enum は文字列で返る
+};
+
+type ApiResponseData = {
+  group: unknown;
+  submissions: SubmissionItem[];
+};
+
 export type HelthCenterSubmissionStatusResponse = {
   id: number;
   group_id: number;
@@ -33,13 +51,27 @@ export const useGetHealthCenterSubmissionStatus = (groupId: number | null) => {
     error,
     isLoading,
     mutate: mutateHelthCenterSubmissionStatus,
-  } = useAuthenticatedGet<ApiResponse<HelthCenterSubmissionStatusResponse>>(
-    endpoint
-  );
+  } = useAuthenticatedGet<ApiResponse<ApiResponseData>>(endpoint);
+
+  const employeeSubmission =
+    data?.status.code === 200
+      ? data.data.submissions.find((s) => s.application_type === 'employee')
+      : undefined;
+
+  const healthCenterSubmissionStatus: HelthCenterSubmissionStatusResponse | undefined =
+    employeeSubmission
+      ? {
+          id: employeeSubmission.id,
+          group_id: groupId!,
+          application_type: employeeSubmission.application_type,
+          status: STATUS_MAP[employeeSubmission.status] ?? -1,
+          createdAt: '',
+          updatedAt: '',
+        }
+      : undefined;
 
   return {
-    healthCenterSubmissionStatus:
-      data?.status.code === 200 ? data?.data : undefined,
+    healthCenterSubmissionStatus,
     isLoading,
     hasError: !!error,
     mutateHelthCenterSubmissionStatus,
