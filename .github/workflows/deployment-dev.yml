@@ -1,0 +1,63 @@
+name: CD Dev
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: "Branch to deploy to dev"
+        required: false
+        default: "gm3/develop"
+        type: string
+      image_tag:
+        description: "Docker image tag to deploy to dev"
+        required: false
+        default: "dev-latest"
+        type: string
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy to dev"
+        required: true
+        default: "gm3/develop"
+        type: string
+      image_tag:
+        description: "Docker image tag to deploy to dev"
+        required: true
+        default: "dev-latest"
+        type: string
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Add deploy host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keygen -R "${{ secrets.DEV_CONTAINER_IP }}" 2>/dev/null || true
+          echo "${{ secrets.DEV_DEPLOY_HOST_KEY }}" >> ~/.ssh/known_hosts
+
+      - name: SSH and Deploy
+        env:
+          DEPLOY_BRANCH: ${{ inputs.branch }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+          HARBOR_PASS: ${{ secrets.HARBOR_PASS }}
+          HARBOR_REG: ${{ secrets.HARBOR_REG }}
+          HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+        run: |
+          ssh deploy-user@${{ secrets.DEV_CONTAINER_IP }} -T \
+            -o SendEnv=DEPLOY_BRANCH \
+            -o SendEnv=IMAGE_TAG \
+            -o SendEnv=HARBOR_PASS \
+            -o SendEnv=HARBOR_REG \
+            -o SendEnv=HARBOR_USERNAME \
+            bash -s << 'EOF'
+            set -e
+            cd /home/deploy-user/group-manager-2
+            git fetch origin "$DEPLOY_BRANCH"
+            git reset --hard "origin/$DEPLOY_BRANCH"
+            git checkout -B "$DEPLOY_BRANCH" "origin/$DEPLOY_BRANCH"
+            printf '%s' "$HARBOR_PASS" | docker login "$HARBOR_REG" -u "$HARBOR_USERNAME" --password-stdin
+            docker compose -p group-manager-dev -f compose.dev.cd.yml pull
+            docker compose -p group-manager-dev -f compose.dev.cd.yml up -d
+            docker image prune -f
+          EOF
