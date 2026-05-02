@@ -374,7 +374,7 @@ export const useEmployeesApplicationHooks = (
   status?: number
 ) => {
   // 編集モードの状態管理
-  const [isEditing, setEditing] = useState(status === 1 ? true : false); // statusが1（申請中）の場合は編集不可、そうでない場合は編集モード未初期化
+  const [isEditing, setEditing] = useState(false);
   const { t } = useTranslation('common');
 
   // トースト通知とステータス更新のコールバック
@@ -512,8 +512,7 @@ export const useEmployeesApplicationHooks = (
    * フォームリスト表示状態かどうか
    * 期限内かつ、従業員データがあり、非編集モードの場合
    */
-  const isFormListMode =
-    (isEmployeesData && !isEditing) || (isEmployeesData && !(status === 1));
+  const isFormListMode = isEmployeesData && !isEditing;
 
   /**
    * フォーム表示用のテーブルデータ

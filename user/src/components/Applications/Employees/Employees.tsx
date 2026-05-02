@@ -35,7 +35,7 @@ export const Employees: FC<EmployeesProps> = ({
   return (
     <AccordionMenu
       title={employeesApplicationHook.texts.title}
-      isEdit={!isDeadline} // 期限内（isDeadline=false）の場合のみ編集可能
+      isEdit={!isDeadline || status === 1} // 期限内または再提出待ちの場合に編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
       status={status} // 申請のステータスを渡す
@@ -63,7 +63,7 @@ const Content: FC<ContentProps> = ({
   status,
 }) => {
   const { texts } = employeesApplicationHook;
-  const isSubmission = status === 1; // 申請中の状態かどうか
+  const isResubmission = status === 1; // 再提出待ちの状態かどうか
 
   // 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）の場合の表示
   if (employeesApplicationHook.isDeadlineMode) {
@@ -106,9 +106,11 @@ const Content: FC<ContentProps> = ({
           },
         ]}
         onEdit={
-          !isDeadline ? employeesApplicationHook.handleEditClick : undefined
-        } // 期限内の場合のみ編集可能
-        isEdit={!isDeadline || !isSubmission} // 期限内の場合のみ編集可能
+          !isDeadline || isResubmission
+            ? employeesApplicationHook.handleEditClick
+            : undefined
+        }
+        isEdit={!isDeadline || isResubmission}
       />
     );
   }
@@ -121,8 +123,12 @@ const Content: FC<ContentProps> = ({
         headers={[texts.summary.headers.name, texts.summary.headers.studentId]}
         keys={['name', 'studentId']}
         tableMode
-        onEdit={!isDeadline ? employeesApplicationHook.handleEdit : undefined} // 期限内の場合のみ編集可能
-        isEdit={!isDeadline || !isSubmission} // 期限内の場合のみ編集可能
+        onEdit={
+          !isDeadline || isResubmission
+            ? employeesApplicationHook.handleEdit
+            : undefined
+        }
+        isEdit={!isDeadline || isResubmission}
       />
     );
   }
