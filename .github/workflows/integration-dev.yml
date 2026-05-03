@@ -1,0 +1,98 @@
+name: dev-CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Deploy target branch"
+        required: true
+        default: "develop"
+    
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch }}
+      
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:ci
+
+      - name: Configure Insecure Registry
+        run: |
+          sudo service docker stop
+          echo "{\"insecure-registries\": [\"${{ secrets.HARBOR_REG }}\"]}" | sudo tee /etc/docker/daemon.json
+          sudo service docker start
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
+          buildkitd-config-inline: |
+            [registry."${{ secrets.HARBOR_REG }}"]
+              http = true
+              insecure = true
+
+      - name: Log in to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.HARBOR_REG }}
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASS }}
+      
+      - name: Set image tags
+        run: |
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            SAFE_BRANCH=$(echo "${{ inputs.branch }}" | sed 's#[^a-zA-Z0-9_.-]#-#g')
+            echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+            echo "BRANCH_TAG=dev-$SAFE_BRANCH" >> $GITHUB_ENV
+            
+      - name: Build and Push API
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          file: ./api/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.HARBOR_REG }}/group-manager/api:dev-${{ env.SHORT_SHA }}
+            ${{ secrets.HARBOR_REG }}/group-manager/api:${{ env.BRANCH_TAG }}
+          cache-from: type=gha
+
+      - name: Build and Push User
+        uses: docker/build-push-action@v5
+        with:
+          context: ./user
+          file: ./user/prod.Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.HARBOR_REG }}/group-manager/user:dev-${{ env.SHORT_SHA }}
+            ${{ secrets.HARBOR_REG }}/group-manager/user:${{ env.BRANCH_TAG }}
+          cache-from: type=gha
+          build-args: |
+            NODE_ENV=${{ secrets.NODE_ENV }}
+            APP_ENV=${{ secrets.APP_ENV }}
+            NEXT_PUBLIC_IMGUR_CLIENT_ID=${{ secrets.NEXT_PUBLIC_IMGUR_CLIENT_ID }}
+            IMGUR_CLIENT_SECRET=${{ secrets.IMGUR_CLIENT_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+
+      - name: Build and Push Admin View
+        uses: docker/build-push-action@v5
+        with:
+          context: ./admin_view
+          file: ./admin_view/prod.Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.HARBOR_REG }}/group-manager/admin:dev-${{ env.SHORT_SHA }}
+            ${{ secrets.HARBOR_REG }}/group-manager/admin:${{ env.BRANCH_TAG }}
+          cache-from: type=gha
+          build-args: |
+            VUE_APP_URL=${{ secrets.VUE_APP_URL }}
+            VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }}
