@@ -2,7 +2,7 @@ import { useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   HELTH_CENTER_SUBMISSION_STASTUS:
-    'api/v1/get_health_center_submission_status_show_for_admin_view',
+    '/api/v1/get_health_center_submission_status_show_for_admin_view',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -22,8 +22,8 @@ const STATUS_MAP: Record<string, number> = {
 
 type SubmissionItem = {
   id: number;
-  application_type: string;
-  status: string; // Rails enum は文字列で返る
+  applicationType: string; // camelcaseKeys により application_type → applicationType に変換される
+  status: string; // Rails enum は文字列で返るが、値は変換されない
 };
 
 type ApiResponseData = {
@@ -55,7 +55,7 @@ export const useGetHealthCenterSubmissionStatus = (groupId: number | null) => {
 
   const employeeSubmission =
     data?.status.code === 200
-      ? data.data.submissions.find((s) => s.application_type === 'employee')
+      ? data.data.submissions.find((s) => s.applicationType === 'employee')
       : undefined;
 
   const healthCenterSubmissionStatus:
@@ -64,7 +64,7 @@ export const useGetHealthCenterSubmissionStatus = (groupId: number | null) => {
     ? {
         id: employeeSubmission.id,
         group_id: groupId!,
-        application_type: employeeSubmission.application_type,
+        application_type: employeeSubmission.applicationType,
         status: STATUS_MAP[employeeSubmission.status] ?? -1,
         createdAt: '',
         updatedAt: '',
