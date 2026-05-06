@@ -45,7 +45,10 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>英語名</h3>
+          <div class="h3-with-button">
+            <h3>英語名</h3>
+            <CommonButton iconName="translate" :disabled="isTranslating || !name" :on_click="autoTranslate">{{ isTranslating ? "翻訳中..." : "自動翻訳" }}</CommonButton>
+          </div>
           <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
@@ -77,9 +80,7 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
-        >登録</CommonButton
-        >
+        <CommonButton iconName="add_circle" :on_click="submit">登録</CommonButton>
       </template>
     </AddModal>
     <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
@@ -110,6 +111,7 @@ export default {
       isOpenSnackBar: false,
       name: "",
       nameEn: "",
+      isTranslating: false,
     };
   },
   async asyncData({ $axios }) {
@@ -158,6 +160,18 @@ export default {
         this.rentalItems.push(response.data);
       });
     },
+    async autoTranslate() {
+      if (!this.name) return;
+      this.isTranslating = true;
+      try {
+        const response = await this.$axios.$post("/rental_items/translate?text=" + this.name);
+        this.nameEn = response.data.name_en;
+      } catch (e) {
+        this.openSnackBar("自動翻訳に失敗しました");
+      } finally {
+        this.isTranslating = false;
+      }
+    },
     async submit() {
       const url =
         "/rental_items/" +
@@ -186,3 +200,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.h3-with-button {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 12px;
+}
+</style>

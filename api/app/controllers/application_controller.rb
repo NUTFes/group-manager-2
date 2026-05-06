@@ -66,9 +66,6 @@ class ApplicationController < ActionController::API
   end
 
   def request_deepl_translation(text, target_lang)
-    DeepL.configure do |config|
-      config.auth_key = deepl_api_key
-    end
     translation = DeepL.translate(text, nil, target_lang)
     translation&.text.presence || text
   rescue DeepL::Exceptions::RequestError => e

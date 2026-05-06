@@ -29,6 +29,11 @@ class RentalItemsController < ApplicationController
     render json: fmt(ok, [], "Deleted rental_item = #{params[:id]}")
   end
 
+  def translate
+    translated = translate_to_en(params[:text])
+    render json: fmt(ok, { name_en: translated })
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

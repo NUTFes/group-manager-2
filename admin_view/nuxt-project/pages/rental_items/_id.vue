@@ -69,7 +69,10 @@
           <input v-model="name" placeholder="入力してください" />
         </div>
         <div>
-          <h3>英語名</h3>
+          <div class="h3-with-button">
+            <h3>英語名</h3>
+            <CommonButton iconName="translate" :disabled="isTranslating || !name" :on_click="autoTranslate">{{ isTranslating ? "翻訳中..." : "自動翻訳" }}</CommonButton>
+          </div>
           <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
@@ -138,6 +141,7 @@ export default {
       isOpenSnackBar: false,
       name: "",
       nameEn: "",
+      isTranslating: false,
     };
   },
   async asyncData({ $axios, route }) {
@@ -186,6 +190,18 @@ export default {
     closeSnackBar() {
       this.isOpenSnackBar = false;
     },
+    async autoTranslate() {
+      if (!this.name) return;
+      this.isTranslating = true;
+      try {
+        const response = await this.$axios.$post("/rental_items/translate?text=" + this.name);
+        this.nameEn = response.data.name_en;
+      } catch (e) {
+        this.openSnackBar("自動翻訳に失敗しました");
+      } finally {
+        this.isTranslating = false;
+      }
+    },
     async reload(id) {
       const url = "/rental_items/" + id;
       const res = await this.$axios.$get(url);
@@ -232,5 +248,11 @@ td {
 }
 th {
   width: 30%;
+}
+.h3-with-button {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 12px;
 }
 </style>
