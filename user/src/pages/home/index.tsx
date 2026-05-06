@@ -1,7 +1,10 @@
 import type { GetStaticProps } from 'next';
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
-import { useGetHealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
+import {
+  HealthCenterSubmissionStatusResponse,
+  useGetHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -55,22 +58,15 @@ type CheckAllRegisteredGroups = {
   fireEquipmentOrder?: boolean;
 };
 
-type HealthCenterSubmissionStatusInfo = {
-  id: number;
-  group_id: number;
-  application_type: string;
-  status: number;
-  createdAt: string;
-  updatedAt: string;
-};
-
 type GroupCategoryContentProps = {
   groupCategoryId: number | undefined;
   userPageSettings: UserPageSettings | undefined;
   checkAllRegisteredGroups: CheckAllRegisteredGroups;
   groupId: number;
   mutateCheckAllRegisteredGroups: () => void;
-  healthCenterSubmissionStatus: HealthCenterSubmissionStatusInfo | undefined;
+  healthCenterSubmissionStatus:
+    | HealthCenterSubmissionStatusResponse
+    | undefined;
 };
 
 const GroupCategoryContent = ({
@@ -83,6 +79,38 @@ const GroupCategoryContent = ({
 }: GroupCategoryContentProps) => {
   if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
     // 🍙 食品販売: 会場申請、物品申請、電力申請、PR文申請、従業員申請、模擬店平面図申請、販売品申請、購入品申請、調理工程申請、火器使用申請
+    const employeeSubmission = healthCenterSubmissionStatus?.find(
+      (s) => s.applicationType === 'employee'
+    );
+    const foodProductsSubmission =
+      data?.status.code === 200
+        ? data.data.submissions.find(
+            (s) => s.applicationType === 'food_product'
+          )
+        : undefined;
+    const purchaseListsSubmission =
+      data?.status.code === 200
+        ? data.data.submissions.find(
+            (s) => s.applicationType === 'purchase_list'
+          )
+        : undefined;
+    const venueMapSubmission =
+      data?.status.code === 200
+        ? data.data.submissions.find((s) => s.applicationType === 'venue_map')
+        : undefined;
+    const cookingProcessOrderSubmission =
+      data?.status.code === 200
+        ? data.data.submissions.find(
+            (s) => s.applicationType === 'cooking_process_order'
+          )
+        : undefined;
+    const fireEquipmentSubmission =
+      data?.status.code === 200
+        ? data.data.submissions.find(
+            (s) => s.applicationType === 'fire_equipment'
+          )
+        : undefined;
+
     return (
       <>
         <VenueApplications

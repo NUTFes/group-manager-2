@@ -1,4 +1,4 @@
-import { useAuthenticatedGet } from '@/hooks/useApi';
+import useSWR from 'swr';
 
 const API_ENDPOINTS = {
   HELTH_CENTER_SUBMISSION_STASTUS:
@@ -13,29 +13,38 @@ export type ApiResponse<T> = {
 };
 
 // Rails enum status の文字列→数値マッピング
-const STATUS_MAP: Record<string, number> = {
-  unapproved: 0,
-  waiting_resubmission: 1,
-  approved: 2,
-  unsubmitted: 3,
-};
+// type STATUS_MAP = {
+//   unapproved: 0;
+//   waiting_resubmission: 1;
+//   approved: 2;
+//   unsubmitted: 3;
+// };
 
-type SubmissionItem = {
-  id: number;
-  applicationType: string; // camelcaseKeys により application_type → applicationType に変換される
-  status: string; // Rails enum は文字列で返るが、値は変換されない
-};
+// type APPLICATION_TYPE = {
+//   FOOD_PRODUCT: 0;
+//   PURCHASE_LIST: 1;
+//   COOKING_PROCESS_ORDER: 2;
+//   EMPLOYEE: 3;
+//   VENUE_MAP: 4;
+//   EQUIPMENT: 5;
+// };
 
-type ApiResponseData = {
-  group: unknown;
-  submissions: SubmissionItem[];
-};
+// type SubmissionItem = {
+//   id: number;
+//   applicationType: string; // camelcaseKeys により application_type → applicationType に変換される
+//   status: string; // Rails enum は文字列で返るが、値は変換されない
+// };
 
-export type HelthCenterSubmissionStatusResponse = {
+// type ApiResponseData = {
+//   group: unknown;
+//   submissions: SubmissionItem[];
+// };
+
+export type HealthCenterSubmissionStatusResponse = {
   id: number;
   group_id: number;
   application_type: string;
-  status: number;
+  status: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -51,33 +60,15 @@ export const useGetHealthCenterSubmissionStatus = (groupId: number | null) => {
     error,
     isLoading,
     mutate: mutateHelthCenterSubmissionStatus,
-  } = useAuthenticatedGet<ApiResponse<ApiResponseData>>(endpoint);
+  } = useSWR(endpoint);
 
-  const employeeSubmission =
-    data?.status.code === 200
-      ? data.data.submissions.find((s) => s.applicationType === 'employee')
-      : undefined;
-
-  const healthCenterSubmissionStatus:
-    | HelthCenterSubmissionStatusResponse
-    | undefined = employeeSubmission
-    ? {
-        id: employeeSubmission.id,
-        group_id: groupId!,
-        application_type: employeeSubmission.applicationType,
-        status: STATUS_MAP[employeeSubmission.status] ?? -1,
-        createdAt: '',
-        updatedAt: '',
-      }
-    : undefined;
+  const healthCenterSubmissionStatus: HealthCenterSubmissionStatusResponse =
+    data;
 
   return {
     healthCenterSubmissionStatus,
+    error,
     isLoading,
-    hasError: !!error,
     mutateHelthCenterSubmissionStatus,
   };
 };
-
-export type HealthCenterSubmissionStatusInfo =
-  HelthCenterSubmissionStatusResponse;

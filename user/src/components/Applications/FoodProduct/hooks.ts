@@ -19,7 +19,8 @@ const API_ENDPOINTS = {
 
 export const useFoodProductHooks = (
   groupId: number,
-  isRegistered?: boolean
+  isRegistered?: boolean,
+  status?: number
 ) => {
   const { t } = useTranslation('common');
   const [isEditing, setIsEditing] = useState<boolean | null>(null);

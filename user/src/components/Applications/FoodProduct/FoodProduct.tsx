@@ -13,8 +13,8 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
+  status?: number;
 };
-
 type ContentProps = {
   isLoading: boolean;
   hasError: boolean;
@@ -138,6 +138,7 @@ const FoodProduct: FC<FoodProductProps> = ({
   groupId,
   isDeadline,
   isRegistered,
+  status,
 }) => {
   const {
     formItem,
@@ -150,7 +151,7 @@ const FoodProduct: FC<FoodProductProps> = ({
     removeFoodProduct,
     setFoodProductsData,
     foodProductViewTexts,
-  } = useFoodProductHooks(groupId, isRegistered);
+  } = useFoodProductHooks(groupId, isRegistered, status);
 
   return (
     <AccordionMenu

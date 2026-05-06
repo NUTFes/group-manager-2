@@ -13,7 +13,7 @@ type EmployeesProps = {
   isRegistered?: boolean; // 既に登録済みかどうか
   groupId: number; // 対象のグループID
   mutateCheckAllRegisteredGroups: () => void;
-  status?: number; // 申請のステータス（APPLICATION_STATUSの値）
+  status?: string; // 申請のステータス（APPLICATION_STATUSの値）
 };
 
 /**
