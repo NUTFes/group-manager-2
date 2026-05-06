@@ -8,9 +8,10 @@ type FireEquipmentProps = {
   isDeadline?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: number;
 };
 
-const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline }) => {
+const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
   const {
     isEditing,
     handleEditClick,
@@ -19,14 +20,15 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline }) => {
     hasUnregistered,
     noApplicationItems,
     isLoading,
-  } = useFireEquipmentHooks(groupId);
+    isResubmission,
+  } = useFireEquipmentHooks(groupId, status);
 
   if (isLoading) {
     return <p className="text-sm text-gray-400">読み込み中...</p>;
   }
 
   // 締め切り後
-  if (isDeadline) {
+  if (isDeadline || !isResubmission) {
     return <FormList items={formItem} />;
   }
 

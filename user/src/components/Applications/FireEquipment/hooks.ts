@@ -7,7 +7,10 @@ import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
 import { fireEquipmentFormFields } from './constant';
 
-export const useFireEquipmentHooks = (groupId: number) => {
+export const useFireEquipmentHooks = (
+  groupId: number,
+  status: number | undefined
+) => {
   const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
 
@@ -49,6 +52,7 @@ export const useFireEquipmentHooks = (groupId: number) => {
       : [];
 
   const [isEditing, setIsEditing] = useState(false);
+  const isResubmission = status === 1;
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };
@@ -82,5 +86,6 @@ export const useFireEquipmentHooks = (groupId: number) => {
     fireEquipment,
     isLoading,
     mutateFireEquipmentOrder,
+    isResubmission,
   };
 };

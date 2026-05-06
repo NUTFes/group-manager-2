@@ -136,6 +136,7 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
@@ -177,6 +178,7 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
@@ -245,6 +247,7 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
@@ -281,6 +284,7 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
+          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
