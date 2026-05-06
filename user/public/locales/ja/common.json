@@ -52,7 +52,8 @@
     },
     "registration": {
       "registered": "登録済",
-      "unregistered": "未登録"
+      "unregistered": "未登録",
+      "resubmission": "再提出"
     },
     "progress": {
       "notRequired": "不要",
