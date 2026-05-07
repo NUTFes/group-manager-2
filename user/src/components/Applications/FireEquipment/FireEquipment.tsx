@@ -8,7 +8,7 @@ type FireEquipmentProps = {
   isDeadline?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
-  status?: number;
+  status?: string;
 };
 
 const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {

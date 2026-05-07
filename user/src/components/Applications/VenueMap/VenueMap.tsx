@@ -8,6 +8,7 @@ type VenueMapProps = {
   groupId: number;
   isDeadline?: boolean;
   isRegistered?: boolean;
+  status?: string;
 };
 
 // Content コンポーネントの props 型定義を修正
@@ -78,7 +79,12 @@ const Content: FC<ContentProps> = ({
   );
 };
 
-const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
+const VenueMap: FC<VenueMapProps> = ({
+  groupId,
+  isDeadline,
+  isRegistered,
+  status,
+}) => {
   const venueMapHooks = useVenueMapHooks(groupId);
   const {
     venueMap,
@@ -97,6 +103,7 @@ const VenueMap: FC<VenueMapProps> = ({ groupId, isDeadline, isRegistered }) => {
       isEdit={!isDeadline} // 締め切り前なら編集アイコン表示
       isExist={isRegistered}
       required // 必須項目であることを示す
+      status={status} // 申請のステータスを渡す
     >
       <Content
         isLoading={isLoading}

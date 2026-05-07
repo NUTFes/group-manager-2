@@ -13,7 +13,7 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
-  status?: number;
+  status?: string;
 };
 type ContentProps = {
   isLoading: boolean;

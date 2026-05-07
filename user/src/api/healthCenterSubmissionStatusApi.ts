@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 
 const API_ENDPOINTS = {
-  HELTH_CENTER_SUBMISSION_STASTUS:
+  HEALTH_CENTER_SUBMISSION_STATUS:
     '/api/v1/get_health_center_submission_status_show_for_admin_view',
 };
 
@@ -35,11 +35,6 @@ export type ApiResponse<T> = {
 //   status: string; // Rails enum は文字列で返るが、値は変換されない
 // };
 
-// type ApiResponseData = {
-//   group: unknown;
-//   submissions: SubmissionItem[];
-// };
-
 export type HealthCenterSubmissionStatusResponse = {
   id: number;
   group_id: number;
@@ -49,26 +44,32 @@ export type HealthCenterSubmissionStatusResponse = {
   updatedAt: string;
 };
 
+export type HealthCenterSubmissionStatusApiResponse = ApiResponse<{
+  submissions: HealthCenterSubmissionStatusResponse[];
+}>;
+
 // 既存の団体申請を取得するフック
-export const useGetHealthCenterSubmissionStatus = (groupId: number | null) => {
+export const useGetHealthCenterSubmissionStatus = (
+  groupId: number | undefined
+) => {
   const endpoint = groupId
-    ? `${API_ENDPOINTS.HELTH_CENTER_SUBMISSION_STASTUS}/${groupId}`
+    ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}/${groupId}`
     : null;
 
   const {
     data,
     error,
     isLoading,
-    mutate: mutateHelthCenterSubmissionStatus,
+    mutate: mutateHealthCenterSubmissionStatus,
   } = useSWR(endpoint);
 
-  const healthCenterSubmissionStatus: HealthCenterSubmissionStatusResponse =
+  const healthCenterSubmissionStatus: HealthCenterSubmissionStatusResponse[] =
     data;
 
   return {
     healthCenterSubmissionStatus,
     error,
     isLoading,
-    mutateHelthCenterSubmissionStatus,
+    mutateHealthCenterSubmissionStatus,
   };
 };

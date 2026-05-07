@@ -371,11 +371,12 @@ export const useEmployeesApplicationHooks = (
   groupId: number,
   isDeadline?: boolean,
   mutateCheckAllRegisteredGroups?: () => void,
-  status?: number
+  status?: string
 ) => {
   // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
   const { t } = useTranslation('common');
+  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
 
   // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
@@ -582,5 +583,6 @@ export const useEmployeesApplicationHooks = (
 
     // UI用プロパティ
     isDeadline,
+    isResubmission,
   };
 };

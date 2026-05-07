@@ -10,12 +10,14 @@ type CookingProcessOrderProps = {
   isRegistered: boolean | undefined;
   groupId: number;
   isDeadline: boolean;
+  status?: string;
 };
 
 const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   isRegistered,
   groupId,
   isDeadline,
+  status,
 }) => {
   const {
     methods,
@@ -38,6 +40,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
       isExist={isRegistered}
       isRegistered={isRegistered}
       required
+      status={status}
     >
       {isLoading || isEditing === null ? (
         <div>{cookingProcessOrderTexts.general.loading}</div>

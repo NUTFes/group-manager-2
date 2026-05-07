@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import { APPLICATION_STATUS } from '@/utils/constants';
 import { RiArrowDownWideLine } from 'react-icons/ri';
 import { Textfit } from 'react-textfitfix';
 import Status from '@/components/Status';
@@ -13,7 +12,7 @@ type AccordionMenuProps = {
   isRegistered?: boolean;
   required: boolean;
   note?: string;
-  status?: number;
+  status?: string;
 };
 
 const AccordionMenu: FC<AccordionMenuProps> = ({
@@ -30,7 +29,7 @@ const AccordionMenu: FC<AccordionMenuProps> = ({
   const receptionStatus = isEdit ? 'open' : 'closed';
 
   const registerStatus =
-    status === APPLICATION_STATUS.WAITING_SUBMISSION
+    status === 'waiting_resubmission'
       ? 'resubmission'
       : isRegistered === undefined
         ? isExist
