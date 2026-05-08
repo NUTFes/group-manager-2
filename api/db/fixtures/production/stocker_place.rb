@@ -33,11 +33,16 @@ stocker_places = [
   { id: 31, name: '施設課', name_en: 'Facilities Division', stock_item_status: 1, assign_item_status: 1 },
   { id: 32, name: '電気棟事務室', name_en: 'Electrical Building Office', stock_item_status: 1, assign_item_status: 1 },
   { id: 33, name: '機械棟事務室', name_en: 'Mechanical Building Office', stock_item_status: 1, assign_item_status: 1 },
-  { id: 34, name: '体育館', name_en: 'Gymnasium', stock_item_status: 1, assign_item_status: 1 }
+  { id: 34, name: '体育館', name_en: 'Gymnasium', stock_item_status: 1, assign_item_status: 1 },
   { id: 35, name: '物材院講210', name_en: 'Materials Science Lecture Room 210', stock_item_status: 1, assign_item_status: 1 },
   { id: 36, name: '機械棟101', name_en: 'Mechanical Engineering Building 101', stock_item_status: 1, assign_item_status: 1 },
-  { id: 37, name: '機械棟103', name_en: 'Mechanical Engineering BUilding 103', stock_item_status: 1, assign_item_status: 1 },
-
+  { id: 37, name: '機械棟103', name_en: 'Mechanical Engineering Building 103', stock_item_status: 1, assign_item_status: 1 },
+  { id: 38, name: 'A講義室', name_en: 'Lecture Room A', stock_item_status: 1, assign_item_status: 1 },
+  { id: 39, name: 'B講義室', name_en: 'Lecture Room B', stock_item_status: 1, assign_item_status: 1 },
+  { id: 40, name: 'C講義室', name_en: 'Lecture Room C', stock_item_status: 1, assign_item_status: 1 },
+  { id: 41, name: 'D講義室', name_en: 'Lecture Room D', stock_item_status: 1, assign_item_status: 1 },
+  { id: 42, name: 'E講義室', name_en: 'Lecture Room E', stock_item_status: 1, assign_item_status: 1 },
+  { id: 43, name: 'F講義室', name_en: 'Lecture Room F', stock_item_status: 1, assign_item_status: 1 }
 ]
 
 stocker_places.each do |place|
