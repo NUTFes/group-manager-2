@@ -11,20 +11,20 @@
         >
           {{ refYears }}
         </SearchDropDown>
+        <!--
         <SearchDropDown
           :nameList="groupCategories"
           :on_click="refinementGroups"
           value="name"
         >
-        <!-- 食販だけだから不要
           {{ refGroupCategories }}
         </SearchDropDown>
+        -->
         <SearchDropDown
           :nameList="internationalList"
           :on_click="refinementGroups"
           value="value"
         >
-      -->
           {{ refInternational }}
         </SearchDropDown>
         <SearchDropDown
@@ -349,37 +349,37 @@ export default {
     },
     updateFilters(item_id, name_list) {
       // fes_yearで絞り込むとき
-      if (name_list.toString() == this.yearList.toString()) {
+      if (name_list === this.yearList) {
         this.refYearID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refYears = "ALL";
+          this.refYears = "Year: ALL";
         } else {
           this.refYears = name_list[item_id - 1].year_num;
         }
-      } else if (name_list.toString() == this.groupCategories.toString()) {
+      } else if (name_list === this.groupCategories) {
         this.refCategoryID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refGroupCategories = "ALL";
+          this.refGroupCategories = "カテゴリ: ALL";
         } else {
           this.refGroupCategories = name_list[item_id - 1].name;
         }
         // internationalで絞り込むとき
-      } else if (Object.is(name_list, this.internationalList)) {
+      } else if (name_list === this.internationalList) {
         this.refInternationalID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refInternational = "ALL";
+          this.refInternational = "International: ALL";
         } else {
           this.refInternational = name_list[item_id - 1].value;
         }
         // externalで絞り込む時
-      } else if (Object.is(name_list, this.externalList)) {
+      } else if (name_list === this.externalList) {
         this.refExternalID = item_id;
         // ALLの時
         if (item_id == 0) {
-          this.refExternal = "ALL";
+          this.refExternal = "External: ALL";
         } else {
           this.refExternal = name_list[item_id - 1].value;
         }
@@ -480,9 +480,11 @@ export default {
           categoryId === 1 &&
           (this.refYearID === 0 || yearId === this.refYearID) &&
           (this.refInternationalID === 0 ||
-            isInternational === this.internationalList[this.refInternationalID - 1]?.bool) &&
+            (this.refInternationalID === 1 && isInternational === true) ||
+            (this.refInternationalID === 2 && !isInternational)) &&
           (this.refExternalID === 0 ||
-            isExternal === this.externalList[this.refExternalID - 1]?.bool) &&
+            (this.refExternalID === 1 && isExternal === true) ||
+            (this.refExternalID === 2 && !isExternal)) &&
           matchedWord
         );
       });
