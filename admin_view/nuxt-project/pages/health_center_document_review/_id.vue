@@ -7,7 +7,31 @@
         <p>企画名: {{ group.group.project_name }}</p>
         <p>代表者: {{ group.user.name }}</p>
         <p>メール: <a class="mail-link" :href="'mailto:' + group.user.email">{{ group.user.email }}</a></p>
-        <p>未承認{{ unapprovedSubmissionCount }}件</p>
+        <div class="submission-summary" role="status" aria-live="polite">
+          <template v-if="unapprovedSubmissionCount > 0">
+            <div class="submission-summary-main">未承認 <span class="submission-count">{{ unapprovedSubmissionCount }}</span> 件</div>
+            <div class="submission-breakdown">
+              <div class="submission-summary-item">
+                <span class="submission-label">再提出</span>
+                <span class="submission-count">{{ reSubmissionCount }}</span>
+                <span class="submission-suffix">件,</span>
+              </div>
+              <div class="submission-summary-item">
+                <span class="submission-label">未確認</span>
+                <span class="submission-count">{{ unconfirmedCount }}</span>
+                <span class="submission-suffix">件,</span>
+              </div>
+              <div class="submission-summary-item">
+                <span class="submission-label">未提出</span>
+                <span class="submission-count">{{ unsubmittedCount }}</span>
+                <span class="submission-suffix">件</span>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="submission-only-approved">承認済み</div>
+          </template>
+        </div>
       </Column>
     </Row>
 
@@ -39,24 +63,32 @@
         <Card width="100%" height="800px" style="overflow-y: auto; align-items: flex-start;">
           <div class="section-header-with-button">
             <h2>調理工程申請</h2>
-            <div class="status-select-with-icon">
+            <div
+              class="status-select-with-icon"
+              :class="getStatusSelectClass(getSubmissionStatusValue('cooking_process_order'))"
+            >
               <span class="material-icons status-icon">
                 {{ getStatusMeta(getSubmissionStatusValue('cooking_process_order')).icon }}
               </span>
-              <select
-                class="status-select"
-                :value="getSubmissionStatusValue('cooking_process_order')"
-                @change="onStatusChange('cooking_process_order', $event.target.value)"
-              >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                  :disabled="option.value === 'unsubmitted'"
+              <div class="select-wrapper">
+                <select
+                  class="status-select"
+                  :class="getStatusSelectClass(getSubmissionStatusValue('cooking_process_order'))"
+                  :value="getSubmissionStatusValue('cooking_process_order')"
+                  @change="onStatusChange('cooking_process_order', $event.target.value)"
+                  aria-label="調理工程申請のステータス"
                 >
-                  {{ option.label }}
-                </option>
-              </select>
+                  <option
+                    v-for="option in statusOptions"
+                    :key="option.value"
+                    :value="option.value"
+                    :disabled="option.value === 'unsubmitted'"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+              </div>
             </div>
           </div>
           <Card
@@ -97,24 +129,32 @@
 
           <div class="section-header-with-button">
             <h2>販売品申請</h2>
-            <div class="status-select-with-icon">
+            <div
+              class="status-select-with-icon"
+              :class="getStatusSelectClass(getSubmissionStatusValue('food_product'))"
+            >
               <span class="material-icons status-icon">
                 {{ getStatusMeta(getSubmissionStatusValue('food_product')).icon }}
               </span>
-              <select
-                class="status-select"
-                :value="getSubmissionStatusValue('food_product')"
-                @change="onStatusChange('food_product', $event.target.value)"
-              >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                  :disabled="option.value === 'unsubmitted'"
+              <div class="select-wrapper">
+                <select
+                  class="status-select"
+                  :class="getStatusSelectClass(getSubmissionStatusValue('food_product'))"
+                  :value="getSubmissionStatusValue('food_product')"
+                  @change="onStatusChange('food_product', $event.target.value)"
+                  aria-label="販売品申請のステータス"
                 >
-                  {{ option.label }}
-                </option>
-              </select>
+                  <option
+                    v-for="option in statusOptions"
+                    :key="option.value"
+                    :value="option.value"
+                    :disabled="option.value === 'unsubmitted'"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+              </div>
             </div>
           </div>
           <VerticalTable
@@ -144,25 +184,33 @@
 
           <div class="section-header-with-button">
             <h2>購入品申請</h2>
-            <div class="status-select-with-icon">
-              <span class="material-icons status-icon">
-                {{ getStatusMeta(getSubmissionStatusValue('purchase_list')).icon }}
-              </span>
-              <select
-                class="status-select"
-                :value="getSubmissionStatusValue('purchase_list')"
-                @change="onStatusChange('purchase_list', $event.target.value)"
+              <div
+                class="status-select-with-icon"
+                :class="getStatusSelectClass(getSubmissionStatusValue('purchase_list'))"
               >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                  :disabled="option.value === 'unsubmitted'"
-                >
-                  {{ option.label }}
-                </option>
-              </select>
-            </div>
+                <span class="material-icons status-icon">
+                  {{ getStatusMeta(getSubmissionStatusValue('purchase_list')).icon }}
+                </span>
+                <div class="select-wrapper">
+                  <select
+                    class="status-select"
+                    :class="getStatusSelectClass(getSubmissionStatusValue('purchase_list'))"
+                    :value="getSubmissionStatusValue('purchase_list')"
+                    @change="onStatusChange('purchase_list', $event.target.value)"
+                    aria-label="購入品申請のステータス"
+                  >
+                    <option
+                      v-for="option in statusOptions"
+                      :key="option.value"
+                      :value="option.value"
+                      :disabled="option.value === 'unsubmitted'"
+                    >
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                </div>
+              </div>
           </div>
           <VerticalTable
             v-for="purchaseGroup in purchaseListsByFoodProduct"
@@ -199,24 +247,32 @@
 
           <div class="section-header-with-button">
             <h2>従業員申請</h2>
-            <div class="status-select-with-icon">
+            <div
+              class="status-select-with-icon"
+              :class="getStatusSelectClass(getSubmissionStatusValue('employee'))"
+            >
               <span class="material-icons status-icon">
                 {{ getStatusMeta(getSubmissionStatusValue('employee')).icon }}
               </span>
-              <select
-                class="status-select"
-                :value="getSubmissionStatusValue('employee')"
-                @change="onStatusChange('employee', $event.target.value)"
-              >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                  :disabled="option.value === 'unsubmitted'"
+              <div class="select-wrapper">
+                <select
+                  class="status-select"
+                  :class="getStatusSelectClass(getSubmissionStatusValue('employee'))"
+                  :value="getSubmissionStatusValue('employee')"
+                  @change="onStatusChange('employee', $event.target.value)"
+                  aria-label="従業員申請のステータス"
                 >
-                  {{ option.label }}
-                </option>
-              </select>
+                  <option
+                    v-for="option in statusOptions"
+                    :key="option.value"
+                    :value="option.value"
+                    :disabled="option.value === 'unsubmitted'"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+              </div>
             </div>
           </div>
           <VerticalTable
@@ -246,18 +302,59 @@
 
           <div class="section-header-with-button">
             <h2>平面図申請</h2>
-            <div class="section-actions">
+              <div class="section-actions">
               <CommonButton iconName="edit" :on_click="openVenueMapModal">
                 編集
               </CommonButton>
-              <div class="status-select-with-icon">
+              <div
+                class="status-select-with-icon"
+                :class="getStatusSelectClass(getSubmissionStatusValue('venue_map'))"
+              >
                 <span class="material-icons status-icon">
                   {{ getStatusMeta(getSubmissionStatusValue('venue_map')).icon }}
                 </span>
+                <div class="select-wrapper">
+                  <select
+                    class="status-select"
+                    :class="getStatusSelectClass(getSubmissionStatusValue('venue_map'))"
+                    :value="getSubmissionStatusValue('venue_map')"
+                    @change="onStatusChange('venue_map', $event.target.value)"
+                    aria-label="平面図申請のステータス"
+                  >
+                    <option
+                      v-for="option in statusOptions"
+                      :key="option.value"
+                      :value="option.value"
+                      :disabled="option.value === 'unsubmitted'"
+                    >
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
+          <p v-else>未登録</p>
+          <HorizontalRule />
+
+          <div class="section-header-with-button">
+            <h2>物品申請</h2>
+            <div
+              class="status-select-with-icon"
+              :class="getStatusSelectClass(getSubmissionStatusValue('equipment'))"
+            >
+              <span class="material-icons status-icon">
+                {{ getStatusMeta(getSubmissionStatusValue('equipment')).icon }}
+              </span>
+              <div class="select-wrapper">
                 <select
                   class="status-select"
-                  :value="getSubmissionStatusValue('venue_map')"
-                  @change="onStatusChange('venue_map', $event.target.value)"
+                  :class="getStatusSelectClass(getSubmissionStatusValue('equipment'))"
+                  :value="getSubmissionStatusValue('equipment')"
+                  @change="onStatusChange('equipment', $event.target.value)"
+                  aria-label="物品申請のステータス"
                 >
                   <option
                     v-for="option in statusOptions"
@@ -268,33 +365,8 @@
                     {{ option.label }}
                   </option>
                 </select>
+                <span class="material-icons select-caret" aria-hidden="true">expand_more</span>
               </div>
-            </div>
-          </div>
-          <img v-if="venueMap && venueMap.picture_path" :src="venueMap.picture_path" alt="平面図" class="venue-map-image" />
-          <p v-else>未登録</p>
-          <HorizontalRule />
-
-          <div class="section-header-with-button">
-            <h2>物品申請</h2>
-            <div class="status-select-with-icon">
-              <span class="material-icons status-icon">
-                {{ getStatusMeta(getSubmissionStatusValue('equipment')).icon }}
-              </span>
-              <select
-                class="status-select"
-                :value="getSubmissionStatusValue('equipment')"
-                @change="onStatusChange('equipment', $event.target.value)"
-              >
-                <option
-                  v-for="option in statusOptions"
-                  :key="option.value"
-                  :value="option.value"
-                  :disabled="option.value === 'unsubmitted'"
-                >
-                  {{ option.label }}
-                </option>
-              </select>
             </div>
           </div>
           <VerticalTable
@@ -513,7 +585,17 @@ export default {
   watchQuery: ["page"],
   data() {
     return {
-      group: [],
+      group: {
+        group: {
+          id: null,
+          name: "",
+          project_name: "",
+        },
+        user: {
+          name: "",
+          email: "",
+        },
+      },
       foodProducts: [],
       purchaseLists: [],
       cookingProcessOrders: [],
@@ -544,6 +626,13 @@ export default {
       ],
       commentBody: "",
     };
+  },
+  watch: {
+    "$route.params.id": {
+      async handler() {
+        await this.reloadPageData();
+      },
+    },
   },
   computed: {
     currentGroupId() {
@@ -592,20 +681,38 @@ export default {
       return this.submissions.filter((submission) => submission.status !== "approved")
         .length;
     },
+    reSubmissionCount() {
+      return this.submissions.filter((submission) => submission.status === "waiting_resubmission").length;
+    },
+    unconfirmedCount() {
+      return this.submissions.filter((submission) => submission.status === "unapproved").length;
+    },
+    unsubmittedCount() {
+      return this.submissions.filter((submission) => submission.status === "unsubmitted").length;
+    },
+    approvedCount() {
+      return this.submissions.filter((submission) => submission.status === "approved").length;
+    },
   },
-  async asyncData({ $axios, route }) {
-    return await fetchHealthCenterDocumentReviewData($axios, route.params.id);
-  },
-  mounted() {
+  async mounted() {
+    await this.reloadPageData();
     window.scrollTo(0, 0);
   },
   methods: {
     async reloadPageData() {
-      const freshData = await fetchHealthCenterDocumentReviewData(
-        this.$axios,
-        this.$route.params.id
-      );
-      Object.assign(this, freshData);
+      try {
+        const freshData = await fetchHealthCenterDocumentReviewData(
+          this.$axios,
+          this.$route.params.id
+        );
+        Object.assign(this, freshData);
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.$router.push("/");
+          return;
+        }
+        throw error;
+      }
     },
     onPrevGroup() {
       if (!this.prevGroupId) return;
@@ -644,6 +751,16 @@ export default {
       };
 
       return statusMap[status] || statusMap.unapproved;
+    },
+    getStatusSelectClass(value) {
+      const classMap = {
+        unapproved: "status-select--unapproved",
+        waiting_resubmission: "status-select--waiting-resubmission",
+        approved: "status-select--approved",
+        unsubmitted: "status-select--unsubmitted",
+      };
+
+      return classMap[value] || classMap.unapproved;
     },
     async onStatusChange(applicationType, status) {
       const submission = this.getSubmission(applicationType);
@@ -967,6 +1084,160 @@ export default {
 
 .status-select option {
   color: #222;
+  background: #ffffff;
+}
+
+.status-select-with-icon.status-select--unapproved {
+  background: #e53935 !important;
+  color: #fff !important;
+}
+
+.status-select-with-icon.status-select--waiting-resubmission {
+  background: #2e7d32 !important;
+  color: #fff !important;
+}
+
+.status-select-with-icon.status-select--approved {
+  /* approved: no background (transparent) to use default container look) */
+  background: transparent !important;
+  color: #111827 !important;
+}
+
+.status-select-with-icon.status-select--unsubmitted {
+  background: #1e88e5 !important;
+  color: #fff !important;
+}
+
+/* セレクト内の文字色をコンテナの色に合わせる（オプションは除く） */
+.status-select-with-icon.status-select--unapproved .status-select {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+.status-select-with-icon.status-select--waiting-resubmission .status-select {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+.status-select-with-icon.status-select--unsubmitted .status-select {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+.status-select-with-icon.status-select--approved .status-select {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  background: transparent !important;
+}
+
+/* カスタムセレクトの矢印とレイアウト */
+.select-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.select-wrapper .status-select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 20px; /* 矢印分の余白 */
+}
+
+.select-caret {
+  position: absolute;
+  right: 6px;
+  pointer-events: none;
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.select-wrapper:hover .select-caret {
+  background: #e6e9ee;
+  color: #374151;
+}
+
+/* セレクトの状態に合わせて矢印アイコンも同じ配色にする */
+.status-select-with-icon.status-select--unapproved .select-caret,
+.status-select-with-icon.status-select--unapproved .status-icon {
+  background: transparent !important;
+  color: #fff !important;
+}
+
+.status-select-with-icon.status-select--waiting-resubmission .select-caret,
+.status-select-with-icon.status-select--waiting-resubmission .status-icon {
+  background: transparent !important;
+  color: #fff !important;
+}
+
+.status-select-with-icon.status-select--unsubmitted .select-caret,
+.status-select-with-icon.status-select--unsubmitted .status-icon {
+  background: transparent !important;
+  color: #fff !important;
+}
+
+.status-select-with-icon.status-select--approved .select-caret,
+.status-select-with-icon.status-select--approved .status-icon {
+  background: transparent !important;
+  color: #111827 !important;
+}
+
+/* 未承認サマリーのスタイル（横並びで見やすく） */
+.submission-summary {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  margin-top: 8px;
+  align-items: baseline;
+}
+
+.submission-summary-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.submission-label {
+  font-size: 14px;
+  color: #374151;
+}
+
+.submission-count {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.submission-suffix {
+  font-size: 14px;
+  color: #374151;
+}
+
+.submission-breakdown {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-left: 8px;
+}
+
+.submission-only-approved {
+  font-size: 16px;
+  color: #065f46; /* 落ち着いた緑で承認済を示す */
+  font-weight: 700;
+}
+
+/* 未承認メインの件数を赤にする */
+.submission-summary-main .submission-count {
+  color: #b91c1c;
+}
+
+/* 未承認ヘッダ全体を赤にする */
+.submission-summary-main {
+  color: #b91c1c;
+  font-weight: 700;
 }
 
 .row-interactive-table--on .selectable-row {
