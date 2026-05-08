@@ -728,7 +728,17 @@ export default {
       );
     },
     getSubmissionStatusValue(applicationType) {
-      return this.getSubmission(applicationType)?.status || "unapproved";
+      const submission = this.getSubmission(applicationType);
+      const status = submission?.status;
+      // statusが null, undefined, または空文字列の場合は「未提出」を返す
+      return this.normalizeStatus(status);
+    },
+    normalizeStatus(value) {
+      if (value === true || value === "submitted") return "approved";
+      if (value === false || value === null || value === undefined || value === "") {
+        return "unsubmitted";
+      }
+      return value;
     },
     getStatusMeta(status) {
       const statusMap = {
@@ -1104,7 +1114,7 @@ export default {
 }
 
 .status-select-with-icon.status-select--unsubmitted {
-  background: #1e88e5 !important;
+  background: #ffb300 !important;
   color: #fff !important;
 }
 

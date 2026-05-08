@@ -544,13 +544,13 @@ export default {
 
 .status-badge--approved {
   background: #ffffff;
-  color: #2e7d32;
-  border-color: #2e7d32;
-  -webkit-text-fill-color: #2e7d32;
+  color: #1e88e5;
+  border-color: #1e88e5;
+  -webkit-text-fill-color: #1e88e5;
 }
 
 .status-badge--unsubmitted {
-  background: #1e88e5;
+  background: #ffb300;
   color: #fff;
   -webkit-text-fill-color: #fff;
 }

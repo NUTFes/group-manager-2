@@ -4,7 +4,7 @@ class HealthCenterSubmissionStatus < ApplicationRecord
   belongs_to :group
   has_many :comments, as: :commentable, dependent: :destroy
 
-  DEFAULT_STATUS = 'unapproved'
+  DEFAULT_STATUS = 'unsubmitted'
 
   enum application_type: {
     food_product: 0,

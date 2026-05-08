@@ -168,7 +168,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       {
         id: submission_status&.id,
         application_type: application_type,
-        status: submission_status&.status || HealthCenterSubmissionStatus::DEFAULT_STATUS,
+        status: submission_status&.status,
         comments: submission_status&.comments || [],
         detail: fetch_detail_for(group, application_type)
       }
