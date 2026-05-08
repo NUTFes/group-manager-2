@@ -489,26 +489,17 @@ export default {
     },
     // 保健所提出書類に必要な項目が全て満たされているかを判定
     isHealthCenterDocumentComplete(group) {
-      const categoryId = this.getGroupCategoryId(group);
-      const foodProductOk =
-        this.toSubmitted(group.food_product) ||
-        (categoryId !== 1 && categoryId !== 2);
-      const purchaseListOk = this.toSubmitted(group.purchase_list) || categoryId !== 1;
-      const cookingProcessOk =
-        this.toSubmitted(group.cooking_process_order) || categoryId !== 1;
-      const employeesOk = this.toSubmitted(group.employee) || categoryId !== 1;
-      const venueMapOk = this.toSubmitted(group.venue_map) || categoryId !== 1;
-      const equipmentOk =
-        this.toSubmitted(group.equipment) ||
-        this.isUnregistered(group.group.id, "rental_item_order");
+      const statuses = [
+        group.cooking_process_order,
+        group.food_product,
+        group.purchase_list,
+        group.employee,
+        group.venue_map,
+        group.equipment,
+      ];
 
-      return (
-        foodProductOk &&
-        purchaseListOk &&
-        cookingProcessOk &&
-        employeesOk &&
-        venueMapOk &&
-        equipmentOk
+      return statuses.every(
+        (status) => this.normalizeStatus(status) === "approved"
       );
     },
   },
