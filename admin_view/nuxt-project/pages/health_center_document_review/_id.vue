@@ -179,7 +179,10 @@
               <td>{{ foodProduct.second_day_num }}</td>
             </tr>
           </VerticalTable>
-          <p v-else>未登録</p>
+          <template v-else>
+            <p v-if="hasEquipmentApplication">未登録</p>
+            <p v-else>物品申請は行わない</p>
+          </template>
           <HorizontalRule />
 
           <div class="section-header-with-button">
@@ -297,7 +300,10 @@
               <td>{{ formatStoolTest(employee.stool_test_status) }}</td>
             </tr>
           </VerticalTable>
-          <p v-else>未登録</p>
+          <template v-else>
+            <p v-if="hasEquipmentApplication">未登録</p>
+            <p v-else>物品申請は行わない</p>
+          </template>
           <HorizontalRule />
 
           <div class="section-header-with-button">
@@ -389,7 +395,10 @@
               <td>{{ rentalOrder.num }}</td>
             </tr>
           </VerticalTable>
-          <p v-else>未登録</p>
+          <template v-else>
+            <p v-if="hasEquipmentApplication">未登録</p>
+            <p v-else>物品申請は行わない</p>
+          </template>
         </Card>
       </Column>
       <Column width="30%" align="start" justify="start" class="sticky-right-column">
@@ -536,6 +545,7 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     rentalOrders,
     shops,
     rentalItems,
+    unRegisteredGroupsRes,
   ] = await Promise.all([
     getOrEmpty(`/food_products/group/${routeId}`, []),
     getOrEmpty(`/cooking_process_orders/group/${routeId}`, []),
@@ -544,6 +554,7 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     getOrEmpty(`/rental_orders/group/${routeId}`, []),
     getOrEmpty(`/shops`, []),
     getOrEmpty(`/rental_items`, []),
+    getOrEmpty(`/un_registered_groups?group_id=${routeId}`, []),
   ]);
 
   const purchaseListsNested = await Promise.all(
@@ -576,6 +587,7 @@ async function fetchHealthCenterDocumentReviewData($axios, routeId) {
     rentalOrders,
     shops,
     rentalItems,
+    unRegisteredGroups: unRegisteredGroupsRes,
     foodSalesGroupIds,
     submissions: submissionStatusRes.data?.submissions || [],
   };
@@ -604,6 +616,7 @@ export default {
       rentalOrders: [],
       shops: [],
       rentalItems: [],
+      unRegisteredGroups: [],
       enableInteractiveRows: true,
       selectedFoodProductId: null,
       selectedPurchaseListId: null,
@@ -689,6 +702,9 @@ export default {
     },
     unsubmittedCount() {
       return this.submissions.filter((submission) => submission.status === "unsubmitted").length;
+    },
+    hasEquipmentApplication() {
+      return this.unRegisteredGroups.some((item) => item.order_type === 0);
     },
     approvedCount() {
       return this.submissions.filter((submission) => submission.status === "approved").length;

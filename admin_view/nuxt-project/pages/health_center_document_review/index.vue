@@ -48,24 +48,36 @@
       </template>
     </SubSubHeader>
 
-    <div class="status-icon-guide">
-      <span class="status-icon-guide__title">アイコン凡例:</span>
-      <span class="status-icon-guide__item">
-        <span class="material-icons status-badge__icon status-badge--unapproved">notification_important</span>
-        未確認
-      </span>
-      <span class="status-icon-guide__item">
-        <span class="material-icons status-badge__icon status-badge--waiting-resubmission">autorenew</span>
-        再提出待ち
-      </span>
-      <span class="status-icon-guide__item">
-        <span class="material-icons status-badge__icon status-badge--approved">check</span>
-        承認済み
-      </span>
-      <span class="status-icon-guide__item">
-        <span class="material-icons status-badge__icon status-badge--unsubmitted">close</span>
-        未提出
-      </span>
+    <div class="status-guide-with-button">
+      <div class="status-icon-guide">
+        <span class="status-icon-guide__title">アイコン凡例:</span>
+        <span class="status-icon-guide__item">
+          <span class="material-icons status-badge__icon status-badge--unapproved">notification_important</span>
+          未確認
+        </span>
+        <span class="status-icon-guide__item">
+          <span class="material-icons status-badge__icon status-badge--waiting-resubmission">autorenew</span>
+          再提出待ち
+        </span>
+        <span class="status-icon-guide__item">
+          <span class="material-icons status-badge__icon status-badge--approved">check</span>
+          承認済み
+        </span>
+        <span class="status-icon-guide__item">
+          <span class="material-icons status-badge__icon status-badge--unsubmitted">close</span>
+          未提出
+        </span>
+      </div>
+
+      <div class="sync-button-container">
+        <CommonButton
+          iconName="sync"
+          :on_click="onSyncSubmissionStatus"
+          :disabled="isSyncing"
+        >
+          {{ isSyncing ? '同期中...' : 'ステータス更新' }}
+        </CommonButton>
+      </div>
     </div>
 
     <Card width="100%">
@@ -219,6 +231,7 @@ export default {
         { id: 1, value: "学外", bool: true },
         { id: 2, value: "学内", bool: false },
       ],
+      isSyncing: false,
     };
   },
   computed: {
@@ -414,6 +427,37 @@ export default {
       const unregisteredRes = await this.$axios.$get("/un_registered_groups");
       this.unregisteredGroups = unregisteredRes.data;
     },
+    async onSyncSubmissionStatus() {
+      this.isSyncing = true;
+      try {
+        const res = await this.$axios.$post("/api/v1/sync_health_center_submission_statuses");
+
+        // 同期完了後、データを再取得
+        const updatedGroups = res.data.groups;
+        this.allGroups = updatedGroups.map(group => ({
+          group: group.group,
+          group_category: group.group_category,
+          fes_year: group.fes_year,
+          cooking_process_order: group.cooking_process_order,
+          food_product: group.food_product,
+          purchase_list: group.purchase_list,
+          employee: group.employee,
+          venue_map: group.venue_map,
+          equipment: group.equipment,
+        }));
+
+        this.groups = this.filterGroups(this.searchText);
+        alert(`申請ステータスを更新しました（${res.data.synced_count}件）`);
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.$router.push("/");
+          return;
+        }
+        alert("申請ステータスの更新に失敗しました");
+      } finally {
+        this.isSyncing = false;
+      }
+    },
     // 申請しないデータかどうかを判定するメソッド
     isUnregistered(groupId, orderType) {
       return this.unregisteredGroups.some(item =>
@@ -560,8 +604,19 @@ export default {
   -webkit-text-fill-color: currentColor !important;
 }
 
+.status-guide-with-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0 16px;
+  gap: 20px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
 .status-icon-guide {
-  margin: 8px 0 12px;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -570,7 +625,7 @@ export default {
 }
 
 .status-icon-guide__title {
-  font-weight: 700;
+  font-weight: 1000;
 }
 
 .status-icon-guide__item {
@@ -586,5 +641,11 @@ export default {
   background-clip: initial;
   -webkit-background-clip: initial !important; /* デフォルトの状態に戻します */
   -webkit-text-fill-color: black !important;
+}
+
+.sync-button-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 </style>

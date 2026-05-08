@@ -10,6 +10,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     upsert_health_center_submission_status
     get_health_center_submission_status_counts
     create_health_center_submission_status_comment
+    sync_health_center_submission_statuses
   ]
 
   before_action :require_group_id, only: %i[
@@ -43,7 +44,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
       :food_products,
       :employees,
       :venue_map,
-      :fire_equipment_orders,
+      :rental_orders,
       { food_products: :purchase_lists },
       { food_products: :cooking_process_order },
       { health_center_submission_statuses: :comments }
@@ -102,6 +103,53 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     else
       render json: fmt(unprocessable_entity, [], @comment.errors.full_messages.join(', '))
     end
+  end
+
+  # 申請状況を同期する（提出状況に基づいてステータスを自動作成）
+  def sync_health_center_submission_statuses
+    groups = Group.preload(
+      :health_center_submission_statuses,
+      :food_products,
+      :employees,
+      :venue_map,
+      :rental_orders,
+      :un_registered_groups,
+      { food_products: :purchase_lists },
+      { food_products: :cooking_process_order }
+    )
+
+    sync_count = 0
+    groups.each do |group|
+      APPLICATION_TYPES.each do |application_type|
+        existing_status = group.health_center_submission_statuses.find_by(application_type: application_type)
+
+        # 提出データが存在するかチェック
+        has_submission = check_has_submission(group, application_type)
+
+        # ステータスを決定
+        status = has_submission ? 'unapproved' : 'unsubmitted'
+
+        if existing_status.present?
+          next unless existing_status.unsubmitted? || existing_status.unapproved?
+          next if existing_status.status == status
+
+          existing_status.update!(status: status)
+          sync_count += 1
+        else
+          # 新規作成
+          group.health_center_submission_statuses.create(
+            application_type: application_type,
+            status: status
+          )
+          sync_count += 1
+        end
+      end
+    end
+
+    render json: fmt(ok, {
+                       synced_count: sync_count,
+                       groups: fit_index_for_admin_view(groups)
+                     })
   end
 
   private
@@ -188,11 +236,31 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     when 'venue_map'
       group.venue_map
     when 'equipment'
-      group.fire_equipment_orders
+      group.rental_orders
     end
   end
 
   def require_group_id
     return render json: fmt(unprocessable_entity, [], 'group_id is required') if params[:group_id].blank?
+  end
+
+  def check_has_submission(group, application_type)
+    case application_type
+    when 'food_product'
+      group.food_products.any?
+    when 'purchase_list'
+      group.food_products.any? && group.food_products.flat_map(&:purchase_lists).any?
+    when 'cooking_process_order'
+      group.food_products.any? && group.food_products.filter_map(&:cooking_process_order).any?
+    when 'employee'
+      group.employees.any?
+    when 'venue_map'
+      group.venue_map.present?
+    when 'equipment'
+      # 物品申請：通常の申請データか、「申請しない」回答のどちらかがあれば未確認にする
+      group.rental_orders.any? || group.un_registered_groups.rental_item_order.exists?
+    else
+      false
+    end
   end
 end
