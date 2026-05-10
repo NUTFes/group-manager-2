@@ -27,6 +27,8 @@ export const useFoodProductHooks = (
   const hasInitializedEditing = useRef(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
+  const isResubmission = status === 'waiting_resubmission';
+
   // API呼び出し
   const {
     foodProducts: apiFoodProducts,
@@ -349,5 +351,6 @@ export const useFoodProductHooks = (
     mutate: refetchData,
     refetchData,
     foodProductViewTexts,
+    isResubmission,
   };
 };
