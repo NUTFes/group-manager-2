@@ -162,9 +162,7 @@
               </div>
             </td>
             <td>
-              <div v-if="isUnregistered(group.group.id, 'rental_item_order')">ー</div>
               <div
-                v-else
                 class="status-badge"
                 :class="getStatusMeta(normalizeStatus(group.equipment)).className"
                 :title="getStatusMeta(normalizeStatus(group.equipment)).label"
