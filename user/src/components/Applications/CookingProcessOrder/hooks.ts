@@ -4,6 +4,10 @@ import {
   useUpsertCookingProcessOrders,
 } from '@/api/cookingProcessOrderApi';
 import { useGetFoodProducts } from '@/api/foodProductApi';
+import {
+  useGetHealthCenterSubmissionStatus,
+  useUpdateHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -16,7 +20,8 @@ import {
 export const useCookingProcessOrder = (
   groupId: number | undefined,
   isDeadline: boolean,
-  isRegistered?: boolean
+  isRegistered?: boolean,
+  status?: string
 ) => {
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
   const hasInitializedEditing = useRef(false);
@@ -137,6 +142,29 @@ export const useCookingProcessOrder = (
     }
   }, [isDataLoading]);
 
+  //ステータス変更処理
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger: patchHealthCenterSubmissionStatus } =
+    useUpdateHealthCenterSubmissionStatus()();
+
+  const updateStatus = async (status: 'unapproved') => {
+    const cookingProcessOrderSubmission = healthCenterSubmissionStatus.find(
+      (submission) => submission.applicationType === 'cooking_process_order'
+    );
+
+    if (!cookingProcessOrderSubmission?.id) {
+      throw new Error('Cooking process order submission status id not found');
+    }
+
+    await patchHealthCenterSubmissionStatus({
+      id: cookingProcessOrderSubmission.id,
+      body: { status },
+    });
+
+    await mutateHealthCenterSubmissionStatus();
+  };
+
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };
@@ -151,6 +179,12 @@ export const useCookingProcessOrder = (
         during_open_kitchen: order.duringOpenKitchen,
         tent: order.tent,
       }));
+
+      // 再提出完了時
+      if (status === 'waiting_resubmission') {
+        // status更新処理
+        await updateStatus('unapproved');
+      }
 
       await upsertCookingProcessOrders({
         body: { cooking_process_orders: payload },

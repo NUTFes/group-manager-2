@@ -31,7 +31,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     mergedData,
     shouldShowWarning,
     cookingProcessOrderTexts,
-  } = useCookingProcessOrder(groupId, isDeadline, isRegistered);
+  } = useCookingProcessOrder(groupId, isDeadline, isRegistered, status);
 
   return (
     <AccordionMenu
