@@ -81,11 +81,17 @@ export default {
         tent: this.tent,
       };
 
-      if (this.cookingProcessOrder?.cooking_process_order || cookingProcessOrder.id) {
-        const editUrl = `/cooking_process_orders/${cookingProcessOrder.id}`;
-        await this.$axios.$put(editUrl, { cooking_process_order: cookingProcessOrderData });
-      } else {
-        await this.$axios.$post(`/cooking_process_orders`, { cooking_process_order: cookingProcessOrderData });
+      try {
+        if (this.cookingProcessOrder?.cooking_process_order || cookingProcessOrder.id) {
+          const editUrl = `/cooking_process_orders/${cookingProcessOrder.id}`;
+          await this.$axios.$put(editUrl, { cooking_process_order: cookingProcessOrderData });
+        } else {
+          await this.$axios.$post(`/cooking_process_orders`, { cooking_process_order: cookingProcessOrderData });
+        }
+      } catch (error) {
+        const errorMessage = error?.response?.data?.message ?? error?.message ?? "不明なエラーが発生しました";
+        this.$emit("error", `エラーが発生しました: ${errorMessage}`);
+        return;
       }
 
       this.$emit("saved", this.food_product_id);
