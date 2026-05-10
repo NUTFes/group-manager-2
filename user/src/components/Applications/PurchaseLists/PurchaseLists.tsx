@@ -52,7 +52,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   );
 
   const { control, fields, append, remove, triggerSubmit, errors, setValue } =
-    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
+    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess, status);
 
   const updateRowBySelector = usePurchaseListRowUpdater(
     purchaseLists,
