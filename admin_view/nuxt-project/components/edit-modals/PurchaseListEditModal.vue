@@ -104,23 +104,16 @@ export default {
     },
     async edit() {
       const purchaseList = this.getPurchaseList();
-      const url =
-        "/purchase_lists/" +
-        purchaseList.id +
-        "?food_product_id=" +
-        purchaseList.food_product_id +
-        "&shop_id=" +
-        this.shopID +
-        "&purchase_date=" +
-        this.purchase_date +
-        "&items=" +
-        this.items +
-        "&is_fresh=" +
-        this.isFresh +
-        "&url=" +
-        this.url +
-        "&remark=" +
-        this.remark;
+      const query = new URLSearchParams({
+        food_product_id: String(purchaseList.food_product_id ?? ""),
+        shop_id: String(this.shopID ?? ""),
+        purchase_date: String(this.purchase_date ?? ""),
+        items: String(this.items ?? ""),
+        is_fresh: String(this.isFresh ?? ""),
+        url: String(this.url ?? ""),
+        remark: String(this.remark ?? ""),
+      }).toString();
+      const url = `/purchase_lists/${purchaseList.id}?${query}`;
 
       await this.$axios.$put(url).then((response) => {
         this.$emit("saved", response.data.id);
