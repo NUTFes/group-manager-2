@@ -70,7 +70,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                       !methods.formState.isValid ||
                       methods.formState.isSubmitting ||
                       isMutating ||
-                      isDeadline
+                      (status !== 'waiting_resubmission' && isDeadline)
                     }
                     icon={isExist ? 'save' : 'send'}
                   >
@@ -140,6 +140,19 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
               </>
             )}
             {!isEditing && isExist && !isDeadline && (
+              <div className="mt-4 flex w-full items-center justify-center gap-4">
+                <Button
+                  size="pc"
+                  color="main"
+                  type="button"
+                  icon="pencil"
+                  onClick={handleEditClick}
+                >
+                  {cookingProcessOrderTexts.buttons.edit}
+                </Button>
+              </div>
+            )}
+            {status === 'waiting_resubmission' && !isEditing && isDeadline && (
               <div className="mt-4 flex w-full items-center justify-center gap-4">
                 <Button
                   size="pc"
