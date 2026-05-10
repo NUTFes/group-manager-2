@@ -133,6 +133,36 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
     );
   }
 
+  //締め切り後でデータがあり、再提出の場合
+  if (
+    isDeadline &&
+    purchaseLists &&
+    purchaseLists.length > 0 &&
+    status === 'waiting_resubmission'
+  ) {
+    return (
+      <AccordionMenu
+        title={title}
+        required
+        isEdit={false}
+        isExist={true}
+        status={status}
+      >
+        <PurchaseListsForm
+          control={control}
+          fields={fields}
+          append={(item) => append(item as PurchaseItem)}
+          remove={remove}
+          onSubmit={triggerSubmit}
+          errors={errors}
+          foodProductOptions={foodProductOptions}
+          shopOptions={shopOptions}
+          onFoodProductChange={handleFoodProductChange}
+        />
+      </AccordionMenu>
+    );
+  }
+
   // 締め切り後で、データがある場合 (表示のみ)
   if (isDeadline && purchaseLists && purchaseLists.length > 0) {
     return (
