@@ -95,7 +95,7 @@ const GroupCategoryContent = ({
       (s) => s.applicationType === 'cooking_process_order'
     );
     const fireEquipmentSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.applicationType === 'fire_equipment'
+      (s) => s.applicationType === 'equipment'
     );
 
     return (
