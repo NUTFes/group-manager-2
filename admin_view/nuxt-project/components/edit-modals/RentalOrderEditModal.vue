@@ -81,10 +81,14 @@ export default {
         "&num=" +
         this.num;
 
-      await this.$axios.$put(url).then((response) => {
+      try {
+        const response = await this.$axios.$put(url);
         this.$emit("saved", response.data.id);
         this.$emit("close");
-      });
+      } catch (e) {
+        // TODO: surface error to user (e.g. emit an "error" event or show a snackbar)
+        console.error("物品申請の編集に失敗しました", e);
+      }
     },
   },
 };
