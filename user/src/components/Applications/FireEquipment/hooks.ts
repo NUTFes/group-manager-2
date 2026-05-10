@@ -3,6 +3,10 @@ import {
   useFireEquipmentMutations,
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
+import {
+  useGetHealthCenterSubmissionStatus,
+  useUpdateHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
 import { fireEquipmentFormFields } from './constant';
@@ -53,7 +57,37 @@ export const useFireEquipmentHooks = (
 
   const [isEditing, setIsEditing] = useState(false);
   const isResubmission = status === 'waiting_resubmission';
-  const handleEditClick = () => {
+
+  //ステータス変更処理
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger: patchHealthCenterSubmissionStatus } =
+    useUpdateHealthCenterSubmissionStatus()();
+
+  const updateStatus = async (status: 'unapproved') => {
+    const fireEquipmentSubmission = healthCenterSubmissionStatus.find(
+      (submission) => submission.applicationType === 'fire_equipment'
+    );
+
+    if (!fireEquipmentSubmission?.id) {
+      throw new Error('Fire equipment submission status id not found');
+    }
+
+    await patchHealthCenterSubmissionStatus({
+      id: fireEquipmentSubmission.id,
+      body: { status },
+    });
+
+    await mutateHealthCenterSubmissionStatus();
+  };
+
+  const handleEditClick = async () => {
+    // 再提出完了時
+    if (status === 'waiting_resubmission') {
+      // status更新処理
+      await updateStatus('unapproved');
+    }
+
     setIsEditing((prev) => !prev);
   };
 
