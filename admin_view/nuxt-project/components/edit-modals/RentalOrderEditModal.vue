@@ -45,8 +45,8 @@ export default {
       immediate: true,
       handler() {
         const rentalOrder = this.getRentalOrder();
-        this.rentalItemID = rentalOrder.rental_item_id || null;
-        this.num = rentalOrder.num || null;
+        this.rentalItemID = rentalOrder.rental_item_id ?? null;
+        this.num = rentalOrder.num ?? null;
       },
     },
     rentalItems: {
