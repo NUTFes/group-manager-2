@@ -134,15 +134,14 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
           next if existing_status.status == status
 
           existing_status.update!(status: status)
-          sync_count += 1
         else
           # 新規作成
           group.health_center_submission_statuses.create(
             application_type: application_type,
             status: status
           )
-          sync_count += 1
         end
+        sync_count += 1
       end
     end
 
