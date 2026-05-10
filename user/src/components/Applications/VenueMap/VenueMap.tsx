@@ -23,6 +23,7 @@ type ContentProps = {
   groupId: number;
   handleFormSubmitted: () => void;
   venueMapTexts: ReturnType<typeof useVenueMapHooks>['venueMapTexts'];
+  isResubmission?: boolean;
 };
 
 const Content: FC<ContentProps> = ({
@@ -36,6 +37,7 @@ const Content: FC<ContentProps> = ({
   groupId,
   handleFormSubmitted,
   venueMapTexts,
+  isResubmission,
 }) => {
   if (isLoading) {
     return <div className="py-10 text-center">{venueMapTexts.loading}</div>;
@@ -46,6 +48,17 @@ const Content: FC<ContentProps> = ({
       <div className="py-10 text-center text-red-500">
         {venueMapTexts.errors.fetch}
       </div>
+    );
+  }
+
+  if (isResubmission) {
+    return (
+      <VenueMapForm
+        groupId={groupId}
+        venueMap={venueMapData}
+        toEdit={toEdit} // フォーム側でキャンセル時に使用
+        onSubmitted={handleFormSubmitted}
+      />
     );
   }
 
@@ -85,7 +98,7 @@ const VenueMap: FC<VenueMapProps> = ({
   isRegistered,
   status,
 }) => {
-  const venueMapHooks = useVenueMapHooks(groupId);
+  const venueMapHooks = useVenueMapHooks(groupId, status);
   const {
     venueMap,
     isLoading,
@@ -95,6 +108,7 @@ const VenueMap: FC<VenueMapProps> = ({
     formItems,
     handleFormSubmitted,
     venueMapTexts,
+    isResubmission,
   } = venueMapHooks;
 
   return (
@@ -116,6 +130,7 @@ const VenueMap: FC<VenueMapProps> = ({
         groupId={groupId}
         handleFormSubmitted={handleFormSubmitted}
         venueMapTexts={venueMapTexts}
+        isResubmission={isResubmission}
       />
     </AccordionMenu>
   );

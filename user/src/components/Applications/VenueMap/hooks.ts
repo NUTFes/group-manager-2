@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
 
-export const useVenueMapHooks = (groupId: number) => {
+export const useVenueMapHooks = (groupId: number, status?: string) => {
   const { t } = useTranslation('common');
   const {
     venueMap,
@@ -15,6 +15,8 @@ export const useVenueMapHooks = (groupId: number) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+
+  const isResubmission = status === 'waiting_resubmission';
 
   const toEdit = () => {
     setIsEditing(!isEditing);
@@ -62,5 +64,6 @@ export const useVenueMapHooks = (groupId: number) => {
     mutate: mutateVenueMap,
     handleFormSubmitted,
     venueMapTexts,
+    isResubmission,
   };
 };
