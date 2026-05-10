@@ -4,6 +4,10 @@ import {
   useGetFoodProducts,
   useUpsertFoodProducts,
 } from '@/api/foodProductApi';
+import {
+  useGetHealthCenterSubmissionStatus,
+  useUpdateHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
 import { useTranslation } from 'next-i18next';
 import { toast } from 'react-toastify';
 import {
@@ -85,6 +89,29 @@ export const useFoodProductHooks = (
     setIsEditing((prev) => !prev);
   };
 
+  //ステータス変更処理
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger: patchHealthCenterSubmissionStatus } =
+    useUpdateHealthCenterSubmissionStatus()();
+
+  const updateStatus = async (status: 'unapproved') => {
+    const foodProductsSubmission = healthCenterSubmissionStatus.find(
+      (submission) => submission.applicationType === 'food_product'
+    );
+
+    if (!foodProductsSubmission?.id) {
+      throw new Error('Food products submission status id not found');
+    }
+
+    await patchHealthCenterSubmissionStatus({
+      id: foodProductsSubmission.id,
+      body: { status },
+    });
+
+    await mutateHealthCenterSubmissionStatus();
+  };
+
   // 販売品データを完全に置き換える関数（更新時に使用）
   const setFoodProductsData = async (products: ProductInput[]) => {
     try {
@@ -135,6 +162,12 @@ export const useFoodProductHooks = (
       setTimeout(async () => {
         await mutateFoodProducts();
       }, 500);
+
+      // 再提出完了時
+      if (status === 'waiting_resubmission') {
+        // status更新処理
+        await updateStatus('unapproved');
+      }
 
       // 成功時のみビューモードに戻す
       setIsEditing(false);
