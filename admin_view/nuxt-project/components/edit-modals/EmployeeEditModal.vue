@@ -75,17 +75,13 @@ export default {
     },
     async edit() {
       const employee = this.getEmployee();
-      const url =
-        "/employees/" +
-        employee.id +
-        "?group_id=" +
-        this.groupId +
-        "&name=" +
-        this.name +
-        "&student_id=" +
-        this.studentId +
-        "&stool_test_id=" +
-        this.stoolTestID;
+      const params = new URLSearchParams({
+        group_id: String(this.groupId ?? ""),
+        name: this.name ?? "",
+        student_id: this.studentId ?? "",
+        stool_test_id: String(this.stoolTestID ?? ""),
+      });
+      const url = `/employees/${employee.id}?${params.toString()}`;
 
       await this.$axios.$put(url).then((response) => {
         this.$emit("saved", response.data.id);
