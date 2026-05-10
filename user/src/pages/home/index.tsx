@@ -80,22 +80,22 @@ const GroupCategoryContent = ({
   if (groupCategoryId === GROUP_CATEGORY.FOOD_SALES) {
     // 🍙 食品販売: 会場申請、物品申請、電力申請、PR文申請、従業員申請、模擬店平面図申請、販売品申請、購入品申請、調理工程申請、火器使用申請
     const employeeSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.application_type === 'employee'
+      (s) => s.applicationType === 'employee'
     );
     const foodProductsSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.application_type === 'food_product'
+      (s) => s.applicationType === 'food_product'
     );
     const purchaseListsSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.application_type === 'purchase_list'
+      (s) => s.applicationType === 'purchase_list'
     );
     const venueMapSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.application_type === 'venue_map'
+      (s) => s.applicationType === 'venue_map'
     );
     const cookingProcessOrderSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.application_type === 'cooking_process_order'
+      (s) => s.applicationType === 'cooking_process_order'
     );
     const fireEquipmentSubmission = healthCenterSubmissionStatus?.find(
-      (s) => s.application_type === 'fire_equipment'
+      (s) => s.applicationType === 'fire_equipment'
     );
 
     return (
@@ -364,7 +364,7 @@ export default function HomePage() {
         <Group
           isDeadline={!userPageSettings?.isRegistGroup}
           isRegistered={checkAllRegisteredGroups?.group}
-          groupId={groupId}
+          groupId={groupId || 0}
           userId={userId || 0}
           isGroupResolved={isGroupResolved}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
@@ -375,7 +375,7 @@ export default function HomePage() {
           <ViceRepresentative
             isDeadline={!userPageSettings?.isEditSubRep}
             isRegistered={checkAllRegisteredGroups?.subRep}
-            groupId={groupId}
+            groupId={groupId || 0}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           />
         )}
@@ -385,7 +385,7 @@ export default function HomePage() {
             groupCategoryId={groupCategoryId}
             userPageSettings={userPageSettings}
             checkAllRegisteredGroups={checkAllRegisteredGroups}
-            groupId={groupId}
+            groupId={groupId || 0}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             healthCenterSubmissionStatus={healthCenterSubmissionStatus}
           />

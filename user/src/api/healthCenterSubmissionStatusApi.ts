@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import { useAuthenticatedGet } from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   HEALTH_CENTER_SUBMISSION_STATUS:
@@ -38,7 +38,7 @@ export type ApiResponse<T> = {
 export type HealthCenterSubmissionStatusResponse = {
   id: number;
   group_id: number;
-  application_type: string;
+  applicationType: string;
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -61,10 +61,10 @@ export const useGetHealthCenterSubmissionStatus = (
     error,
     isLoading,
     mutate: mutateHealthCenterSubmissionStatus,
-  } = useSWR(endpoint);
+  } = useAuthenticatedGet<HealthCenterSubmissionStatusApiResponse>(endpoint);
 
   const healthCenterSubmissionStatus: HealthCenterSubmissionStatusResponse[] =
-    data;
+    data?.data.submissions ?? [];
 
   return {
     healthCenterSubmissionStatus,
