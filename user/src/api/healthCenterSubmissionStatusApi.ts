@@ -1,8 +1,13 @@
-import { useAuthenticatedGet } from '@/hooks/useApi';
+import {
+  useAuthenticatedGet,
+  useAuthenticatedPatchWithId,
+} from '@/hooks/useApi';
 
 const API_ENDPOINTS = {
   HEALTH_CENTER_SUBMISSION_STATUS:
     '/api/v1/get_health_center_submission_status_show_for_admin_view',
+  UPDATE_HEALTH_CENTER_SUBMISSION_STATUS:
+    '/api/v1/update_health_center_submission_status',
 };
 
 type ApiStatus = { code: number; message: string };
@@ -47,6 +52,12 @@ export type HealthCenterSubmissionStatusResponse = {
 export type HealthCenterSubmissionStatusApiResponse = ApiResponse<{
   submissions: HealthCenterSubmissionStatusResponse[];
 }>;
+
+export const useUpdateHealthCenterSubmissionStatus = () => {
+  return useAuthenticatedPatchWithId(
+    API_ENDPOINTS.UPDATE_HEALTH_CENTER_SUBMISSION_STATUS
+  );
+};
 
 // 既存の団体申請を取得するフック
 export const useGetHealthCenterSubmissionStatus = (
