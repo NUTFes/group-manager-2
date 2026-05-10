@@ -19,7 +19,7 @@
       </div>
     </template>
     <template v-slot:method>
-      <CommonButton iconName="edit" :disabled="!isFile" :on_click="edit">{{ buttonState }}</CommonButton>
+      <CommonButton iconName="edit" :disabled="isPush.disabled || !isFile" :on_click="edit">{{ buttonState }}</CommonButton>
     </template>
   </EditModal>
 </template>
@@ -90,6 +90,9 @@ export default {
       }
     },
     edit() {
+      if (!this.files || this.files.length === 0) return;
+      this.isPush.disabled = true;
+      this.buttonState = "待機";
       for (const file of this.files) {
         const storageRef = ref(this.$storage, file.name);
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -116,36 +119,59 @@ export default {
           }
         },
         (error) => {
-          console.log(error);
+          console.error(error);
+          this.isPush.disabled = false;
+          this.buttonState = "登録";
+          this.$emit("error", error?.message || "ファイルのアップロードに失敗しました");
         },
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const venueMap = this.getVenueMap();
-            const groupId = venueMap.group_id || venueMap.group?.id;
-            const data = {
-              group_id: groupId,
-              picture_name: uploadTask.snapshot.ref.name,
-              picture_path: downloadURL,
-            };
+          getDownloadURL(uploadTask.snapshot.ref)
+            .then((downloadURL) => {
+              const venueMap = this.getVenueMap();
+              const groupId = venueMap.group_id || venueMap.group?.id;
+              const data = {
+                group_id: groupId,
+                picture_name: uploadTask.snapshot.ref.name,
+                picture_path: downloadURL,
+              };
 
-            if (this.venueMap?.venue_map || venueMap.id) {
-              const editUrl = `/venue_maps/${venueMap.id}`;
-              this.$axios.$put(editUrl, data).then((response) => {
-                this.$emit("saved", response.data.group_id);
-                this.$emit("close");
+              const handleAxiosError = (err) => {
+                console.error(err);
                 this.isPush.disabled = false;
-                this.files = null;
-              });
-            } else {
-              const postUrl = `/venue_maps?group_id=${groupId}`;
-              this.$axios.$post(postUrl, data).then((response) => {
-                this.$emit("saved", response.data.group_id);
-                this.$emit("close");
-                this.isPush.disabled = false;
-                this.files = null;
-              });
-            }
-          });
+                this.buttonState = "登録";
+                this.$emit("error", err?.response?.data?.message || err?.message || "保存に失敗しました");
+              };
+
+              if (this.venueMap?.venue_map || venueMap.id) {
+                const editUrl = `/venue_maps/${venueMap.id}`;
+                this.$axios
+                  .$put(editUrl, data)
+                  .then((response) => {
+                    this.$emit("saved", response.data.group_id);
+                    this.$emit("close");
+                    this.isPush.disabled = false;
+                    this.files = null;
+                  })
+                  .catch(handleAxiosError);
+              } else {
+                const postUrl = `/venue_maps?group_id=${groupId}`;
+                this.$axios
+                  .$post(postUrl, data)
+                  .then((response) => {
+                    this.$emit("saved", response.data.group_id);
+                    this.$emit("close");
+                    this.isPush.disabled = false;
+                    this.files = null;
+                  })
+                  .catch(handleAxiosError);
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              this.isPush.disabled = false;
+              this.buttonState = "登録";
+              this.$emit("error", err?.message || "ダウンロードURLの取得に失敗しました");
+            });
         }
       );
     },
