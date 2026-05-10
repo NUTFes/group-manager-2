@@ -3,7 +3,7 @@
     <template v-slot:form>
       <div>
         <h3>団体名</h3>
-        <input v-model="groupName" placeholder="入力してください" />
+        <input v-model="groupName" placeholder="入力してください" readonly />
       </div>
       <div>
         <h3>模擬店平面図</h3>
