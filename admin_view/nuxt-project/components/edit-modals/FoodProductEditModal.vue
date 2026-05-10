@@ -67,19 +67,16 @@ export default {
     },
     async edit() {
       const foodProduct = this.getFoodProduct();
-      const url =
-        "/food_products/" +
-        foodProduct.id +
-        "?group_id=" +
-        foodProduct.group_id +
-        "&name=" +
-        this.name +
-        "&is_cooking=" +
-        this.isCooking +
-        "&first_day_num=" +
-        this.first +
-        "&second_day_num=" +
-        this.second;
+      const query = [
+        ["group_id", foodProduct.group_id],
+        ["name", this.name],
+        ["is_cooking", this.isCooking],
+        ["first_day_num", this.first],
+        ["second_day_num", this.second],
+      ]
+        .map(([k, v]) => `${k}=${encodeURIComponent(v ?? "")}`)
+        .join("&");
+      const url = `/food_products/${foodProduct.id}?${query}`;
 
       await this.$axios.$put(url).then((response) => {
         this.$emit("saved", response.data.id);
