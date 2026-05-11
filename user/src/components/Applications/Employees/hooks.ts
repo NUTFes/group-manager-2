@@ -396,7 +396,7 @@ export const useEmployeesApplicationHooks = (
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
   const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
+    useUpdateHealthCenterSubmissionStatus();
 
   const updateStatus = async (status: 'unapproved') => {
     const employeeSubmission = healthCenterSubmissionStatus.find(
@@ -519,7 +519,12 @@ export const useEmployeesApplicationHooks = (
       // 再提出完了時
       if (status === 'waiting_resubmission') {
         // status更新処理
+        try{
         await updateStatus('unapproved');
+        }catch(error){
+          console.error('Failed to update submission status:', error);
+          toast.error(t('applications.employees.messages.statusUpdateFailed'));
+          throw error; // Re-throw to prevent setEditing(false) on failure
       }
 
       setEditing(false);

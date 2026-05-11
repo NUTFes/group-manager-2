@@ -295,7 +295,7 @@ export const usePurchaseListsForm = (
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
   const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
+    useUpdateHealthCenterSubmissionStatus();
 
   const updateStatus = async (status: 'unapproved') => {
     const purchaseListsSubmission = healthCenterSubmissionStatus.find(
@@ -407,11 +407,12 @@ export const usePurchaseListsForm = (
           toast.success(t('applications.purchaseLists.messages.createSuccess'));
         }
       }
-      onSuccess();
 
       if (status === 'waiting_resubmission') {
         await updateStatus('unapproved');
       }
+
+      onSuccess();
 
       reset(formData); // 送信後もフォーム内容は維持
     } catch {

@@ -146,7 +146,7 @@ export const useCookingProcessOrder = (
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
   const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus()();
+    useUpdateHealthCenterSubmissionStatus();
 
   const updateStatus = async (status: 'unapproved') => {
     const cookingProcessOrderSubmission = healthCenterSubmissionStatus.find(
@@ -180,15 +180,15 @@ export const useCookingProcessOrder = (
         tent: order.tent,
       }));
 
+      await upsertCookingProcessOrders({
+        body: { cooking_process_orders: payload },
+      });
+
       // 再提出完了時
       if (status === 'waiting_resubmission') {
         // status更新処理
         await updateStatus('unapproved');
       }
-
-      await upsertCookingProcessOrders({
-        body: { cooking_process_orders: payload },
-      });
 
       await mutateCookingProcessOrders();
       toast.success(

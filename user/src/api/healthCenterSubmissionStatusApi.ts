@@ -63,9 +63,10 @@ export const useUpdateHealthCenterSubmissionStatus = () => {
 export const useGetHealthCenterSubmissionStatus = (
   groupId: number | undefined
 ) => {
-  const endpoint = groupId
-    ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}/${groupId}`
-    : null;
+  const endpoint =
+    groupId != null
+      ? `${API_ENDPOINTS.HEALTH_CENTER_SUBMISSION_STATUS}/${groupId}`
+      : null;
 
   const {
     data,
