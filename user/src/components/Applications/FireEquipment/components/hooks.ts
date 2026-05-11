@@ -8,6 +8,7 @@ import { NO_ID_STRING, YES_ID_STRING } from '@/utils/constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useFireEquipmentTexts } from '../constant';
 import {
   FireEquipmentFormValues,
   FireEquipmentSchema,
@@ -20,6 +21,7 @@ export const useFireEquipmentOrder = (
   fireEquipmentData?: FireEquipmentResponse,
   handleEditCancel?: () => void
 ) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
   const { mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
 
@@ -103,12 +105,12 @@ export const useFireEquipmentOrder = (
         });
       }
       await mutateFireEquipmentOrder();
-      toast.success('火気申請を行わない登録が完了しました');
+      toast.success(fireEquipmentTexts.messages.noApplicationSuccess);
       handleEditCancel?.();
     } catch (error) {
       console.error('火気不使用登録エラー:', error);
       const message = error instanceof Error ? error.message : String(error);
-      toast.error(`登録に失敗しました: ${message}`);
+      toast.error(fireEquipmentTexts.messages.submitFailed(message));
     }
   };
   const submitUnregisteredHandler =
@@ -146,10 +148,10 @@ export const useFireEquipmentOrder = (
     try {
       if (isEditing && fireEquipmentData?.id !== undefined) {
         await patchFireEquipmentOrder(fireEquipmentData.id, payload);
-        toast.success('火気申請を更新しました！');
+        toast.success(fireEquipmentTexts.messages.updateSuccess);
       } else {
         await postFireEquipmentOrder(payload);
-        toast.success('火気申請が完了しました！');
+        toast.success(fireEquipmentTexts.messages.registerSuccess);
       }
       await mutateFireEquipmentOrder();
       // 成功後に編集モードを終了
@@ -157,7 +159,7 @@ export const useFireEquipmentOrder = (
     } catch (error) {
       console.error('火気申請送信エラー:', error);
       const message = error instanceof Error ? error.message : String(error);
-      toast.error(`送信に失敗しました: ${message}`);
+      toast.error(fireEquipmentTexts.messages.submitFailed(message));
     }
   };
 
