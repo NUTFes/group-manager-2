@@ -71,9 +71,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
     @submission_status = resolve_submission_status
-    if params[:health_center_submission_status_id].present? && @submission_status.nil?
-      return render json: fmt(not_found, [], 'health_center_submission_status not found')
-    end
+    return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
     save_submission_status(@submission_status)
@@ -86,9 +84,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
     @submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
-    if params[:health_center_submission_status_id].present? && @submission_status.nil?
-      return render json: fmt(not_found, [], 'health_center_submission_status not found')
-    end
+    return render json: fmt(not_found, [], 'health_center_submission_status not found') if params[:health_center_submission_status_id].present? && @submission_status.nil?
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
     begin
