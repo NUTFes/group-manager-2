@@ -3,14 +3,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Meta, StoryFn } from '@storybook/react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import {
-  DEFAULT_PURCHASE_ITEM,
-  NET_ORDER_SHOP_ID,
-  OTHER_SHOP_ID,
+    DEFAULT_PURCHASE_ITEM,
+    NET_ORDER_SHOP_ID,
+    OTHER_SHOP_ID,
 } from '../constants';
 import {
-  PurchaseItem,
-  PurchaseListsFormData,
-  purchaseListsFormSchema,
+    PurchaseItem,
+    PurchaseListsFormData,
+    purchaseListsFormSchema,
 } from '../schema';
 import PurchaseListsForm, { PurchaseListsFormProps } from './PurchaseListsForm';
 
