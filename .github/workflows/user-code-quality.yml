@@ -43,7 +43,6 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: |
-            ./user/package.json
             ./user/pnpm-lock.yaml
 
       # pnpmで依存関係をインストール
