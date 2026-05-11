@@ -71,6 +71,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
     @submission_status = resolve_submission_status
+    if params[:health_center_submission_status_id].present? && @submission_status.nil?
+      return render json: fmt(not_found, [], 'health_center_submission_status not found')
+    end
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
     save_submission_status(@submission_status)
@@ -83,6 +86,9 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
     return render json: fmt(unprocessable_entity, [], 'Invalid application_type') unless valid_application_type?(params[:application_type].to_s)
 
     @submission_status = resolve_submission_status(default_status: HealthCenterSubmissionStatus::DEFAULT_STATUS)
+    if params[:health_center_submission_status_id].present? && @submission_status.nil?
+      return render json: fmt(not_found, [], 'health_center_submission_status not found')
+    end
     return render json: fmt(unprocessable_entity, [], 'group_id and application_type are required') if @submission_status.nil?
 
     begin
@@ -172,7 +178,7 @@ class Api::V1::HealthCenterSubmissionStatusesApiController < ApplicationControll
 
   def resolve_submission_status(default_status: nil)
     if params[:health_center_submission_status_id].present?
-      HealthCenterSubmissionStatus.find(params[:health_center_submission_status_id])
+      HealthCenterSubmissionStatus.find_by(id: params[:health_center_submission_status_id])
     elsif params[:group_id].present? && params[:application_type].present?
       status = params[:status].presence || default_status || HealthCenterSubmissionStatus::DEFAULT_STATUS
       HealthCenterSubmissionStatus.find_or_initialize_by(

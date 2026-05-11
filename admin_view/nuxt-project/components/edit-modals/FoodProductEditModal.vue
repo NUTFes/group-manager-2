@@ -67,15 +67,13 @@ export default {
     },
     async edit() {
       const foodProduct = this.getFoodProduct();
-      const query = [
-        ["group_id", foodProduct.group_id],
-        ["name", this.name],
-        ["is_cooking", this.isCooking],
-        ["first_day_num", this.first],
-        ["second_day_num", this.second],
-      ]
-        .map(([k, v]) => `${k}=${encodeURIComponent(v ?? "")}`)
-        .join("&");
+      const query = new URLSearchParams({
+        group_id: String(foodProduct.group_id ?? ""),
+        name: String(this.name ?? ""),
+        is_cooking: String(this.isCooking ?? ""),
+        first_day_num: String(this.first ?? ""),
+        second_day_num: String(this.second ?? ""),
+      }).toString();
       const url = `/food_products/${foodProduct.id}?${query}`;
 
       await this.$axios.$put(url).then((response) => {

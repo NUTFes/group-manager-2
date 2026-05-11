@@ -5,7 +5,7 @@ class FoodProduct < ApplicationRecord
   has_many :purchase_lists, dependent: :destroy
   has_one :cooking_process_order, dependent: :destroy
 
-  after_create_commit :ensure_health_center_submission_status
+  after_create :ensure_health_center_submission_status
 
   def self.with_groups
     @record = FoodProduct.preload(:group)

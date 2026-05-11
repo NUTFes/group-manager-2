@@ -533,14 +533,19 @@ export default {
     },
     // 保健所提出書類に必要な項目が全て満たされているかを判定
     isHealthCenterDocumentComplete(group) {
+      const groupId = group.group?.id;
+      const isEquipmentRequired = !this.isUnregistered(groupId, "rental_item_order");
       const statuses = [
         group.cooking_process_order,
         group.food_product,
         group.purchase_list,
         group.employee,
         group.venue_map,
-        group.equipment,
       ];
+
+      if (isEquipmentRequired) {
+        statuses.push(group.equipment);
+      }
 
       return statuses.every(
         (status) => this.normalizeStatus(status) === "approved"
