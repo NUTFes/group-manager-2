@@ -3,7 +3,7 @@
     <div class="body"></div>
     <div class="grad"></div>
     <div class="header">
-      <div><img :src="image_src" alt="logo-type.png" class="logo-image" /></div>
+      <div><img :src="image_src" alt="Group Manager" class="logo-image" /></div>
     </div>
     <br />
     <div class="login">
