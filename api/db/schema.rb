@@ -448,6 +448,7 @@ ActiveRecord::Schema.define(version: 2026_05_01_000001) do
     t.boolean "is_edit_venue_map"
     t.boolean "is_edit_cooking_process"
     t.boolean "add_stage_order"
+    t.boolean "add_fire_equipment_order", default: true
     t.boolean "is_edit_fire_equipment_order", default: true
   end
 
