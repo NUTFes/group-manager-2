@@ -10,5 +10,4 @@ User.seed(:id,
             email: 'user@example.com',
             password: 'gidaifes',
             password_confirmation: 'gidaifes',
-            role_id: 3 },
-          )
+            role_id: 3 })

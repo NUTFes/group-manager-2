@@ -10,5 +10,4 @@ UserDetail.seed(:id,
                   grade_id: 1,
                   department_id: 1,
                   user_id: 1,
-                  student_id: 22222222 }
-                )
+                  student_id: 22222222 })
