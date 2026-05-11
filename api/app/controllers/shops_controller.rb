@@ -13,7 +13,7 @@ class ShopsController < ApplicationController
   end
 
   def create
-    @shop = Shop.create(shop_params)
+    @shop = Shop.create(shop_params.to_h.merge(id: Shop.next_regular_id))
     render json: fmt(created, @shop)
   end
 

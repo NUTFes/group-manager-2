@@ -2,7 +2,11 @@ import '@globals';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Meta, StoryFn } from '@storybook/react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { DEFAULT_PURCHASE_ITEM } from '../constants';
+import {
+  DEFAULT_PURCHASE_ITEM,
+  NET_ORDER_SHOP_ID,
+  OTHER_SHOP_ID,
+} from '../constants';
 import {
   PurchaseItem,
   PurchaseListsFormData,
@@ -135,7 +139,7 @@ WithNetOrder.args = {
         foodProductId: 3,
         items: 'チョコレート、バナナ',
         isFresh: true,
-        shopId: 29, // ネット注文
+        shopId: NET_ORDER_SHOP_ID, // ネット注文
         purchaseDate: '2025/6/20',
         url: 'https://example.com/chocolate-banana',
         remark: 'ネット注文で購入',
@@ -154,7 +158,7 @@ WithOtherShop.args = {
         foodProductId: 4,
         items: 'たこ焼き粉、たこ',
         isFresh: true,
-        shopId: 30, // その他
+        shopId: OTHER_SHOP_ID, // その他
         purchaseDate: '2025/6/18',
         remark:
           'ローカル商店\n住所: 長岡市○○町\n電話: 0258-XX-XXXX\n営業時間: 9:00-18:00',
