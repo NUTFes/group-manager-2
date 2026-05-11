@@ -750,7 +750,6 @@ export default {
       return this.normalizeStatus(status);
     },
     normalizeStatus(value) {
-      if (value === true || value === "submitted") return "approved";
       if (value === false || value === null || value === undefined || value === "") {
         return "unsubmitted";
       }

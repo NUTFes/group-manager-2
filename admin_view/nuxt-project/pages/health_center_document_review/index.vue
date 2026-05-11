@@ -472,7 +472,6 @@ export default {
       return group.group?.fes_year_id || group.fes_year?.id;
     },
     normalizeStatus(value) {
-      if (value === true || value === "submitted") return "approved";
       if (value === false || value === null || value === undefined || value === "") {
         return "unsubmitted";
       }
