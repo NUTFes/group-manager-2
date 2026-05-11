@@ -26,10 +26,10 @@ export const FRESH_OPTIONS: RadioOption[] = [
 ];
 
 // ネット注文のショップID
-export const NET_ORDER_SHOP_ID = 29;
+export const NET_ORDER_SHOP_ID = 998;
 
 // その他のショップID
-export const OTHER_SHOP_ID = 30;
+export const OTHER_SHOP_ID = 999;
 
 // フォームフィールド名
 export const PurchaseItemFieldNames = {

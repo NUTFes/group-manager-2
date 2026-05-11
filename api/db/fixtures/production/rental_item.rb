@@ -2,11 +2,11 @@
 
 rental_items = [
   { id: 1, name: '机', name_en: 'Desk', is_inside_shop_rentable: true, is_outside_shop_rentable: true, is_stage_rentable: true },
-  { id: 2, name: '長机', name_en: 'Long Desk', is_inside_shop_rentable: false, is_outside_shop_rentable: true, is_stage_rentable: false },
+  { id: 2, name: '長机', name_en: 'Long Table', is_inside_shop_rentable: false, is_outside_shop_rentable: true, is_stage_rentable: false },
   { id: 3, name: '椅子', name_en: 'Chair', is_inside_shop_rentable: true, is_outside_shop_rentable: true, is_stage_rentable: true },
   { id: 4, name: 'パーテーション', name_en: 'Partition', is_inside_shop_rentable: true, is_outside_shop_rentable: true, is_stage_rentable: false },
   { id: 5, name: 'パーテーション足', name_en: 'Partition Base', is_inside_shop_rentable: true, is_outside_shop_rentable: true, is_stage_rentable: false },
-  { id: 6, name: '掲示板', name_en: 'Notice Board', is_inside_shop_rentable: true, is_outside_shop_rentable: true, is_stage_rentable: false },
+  { id: 6, name: '掲示板', name_en: 'Bulletin Board', is_inside_shop_rentable: true, is_outside_shop_rentable: true, is_stage_rentable: false },
   { id: 7, name: 'テント', name_en: 'Tent', is_inside_shop_rentable: false, is_outside_shop_rentable: true, is_stage_rentable: false },
   { id: 8, name: '小テント', name_en: 'Small Tent', is_inside_shop_rentable: false, is_outside_shop_rentable: true, is_stage_rentable: false },
   { id: 9, name: 'テント足', name_en: 'Tent Leg', is_inside_shop_rentable: false, is_outside_shop_rentable: true, is_stage_rentable: false },
