@@ -40,11 +40,17 @@ export type ApiResponse<T> = {
 //   status: string; // Rails enum は文字列で返るが、値は変換されない
 // };
 
+export type HealthCenterSubmissionStatus =
+  | 'unapproved'
+  | 'waiting_resubmission'
+  | 'approved'
+  | 'unsubmitted';
+
 export type HealthCenterSubmissionStatusResponse = {
   id: number;
   group_id: number;
   applicationType: string;
-  status: string;
+  status: HealthCenterSubmissionStatus;
   createdAt: string;
   updatedAt: string;
 };

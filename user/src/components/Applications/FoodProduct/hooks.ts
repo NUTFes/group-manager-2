@@ -163,12 +163,6 @@ export const useFoodProductHooks = (
         await mutateFoodProducts();
       }, 500);
 
-      // 再提出完了時
-      if (status === 'waiting_resubmission') {
-        // status更新処理
-        await updateStatus('unapproved');
-      }
-
       // 成功時のみビューモードに戻す
       setIsEditing(false);
 
@@ -176,6 +170,14 @@ export const useFoodProductHooks = (
         position: 'top-right',
         autoClose: 3000,
       });
+
+      if (status === 'waiting_resubmission') {
+        try {
+          await updateStatus('unapproved');
+        } catch (statusError) {
+          console.error('販売品ステータス更新エラー:', statusError);
+        }
+      }
     } catch (error) {
       console.error('販売品更新エラー:', error);
 

@@ -108,6 +108,12 @@ export const useFireEquipmentOrder = (
         });
       }
       await mutateFireEquipmentOrder();
+
+      if (status === 'waiting_resubmission') {
+        // status更新処理
+        await updateStatus('unapproved');
+      }
+
       toast.success('火気申請を行わない登録が完了しました');
       handleEditCancel?.();
     } catch (error) {
