@@ -67,19 +67,43 @@ export default {
     },
     async edit() {
       const foodProduct = this.getFoodProduct();
+      const name = this.name?.trim();
+
+      if (!foodProduct.group_id) {
+        this.$emit("error", "団体情報が取得できませんでした");
+        return;
+      }
+
+      if (!name) {
+        this.$emit("error", "食品名を入力してください");
+        return;
+      }
+
       const query = new URLSearchParams({
         group_id: String(foodProduct.group_id ?? ""),
-        name: String(this.name ?? ""),
+        name,
         is_cooking: String(this.isCooking ?? ""),
         first_day_num: String(this.first ?? ""),
         second_day_num: String(this.second ?? ""),
       }).toString();
       const url = `/food_products/${foodProduct.id}?${query}`;
 
-      await this.$axios.$put(url).then((response) => {
-        this.$emit("saved", response.data.id);
+      try {
+        const response = await this.$axios.$put(url);
+        const savedId = response?.data?.id;
+
+        if (typeof savedId === "undefined") {
+          console.error("販売品申請の保存レスポンスに id がありませんでした", response);
+          this.$emit("error", "保存に失敗しました");
+          return;
+        }
+
+        this.$emit("saved", savedId);
         this.$emit("close");
-      });
+      } catch (error) {
+        console.error("販売品申請の編集に失敗しました", error);
+        this.$emit("error", error?.response?.data?.message || error?.message || "保存に失敗しました");
+      }
     },
   },
 };
