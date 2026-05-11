@@ -33,7 +33,8 @@ const API_ENDPOINTS = {
 };
 
 export const useGetCheckAllRegisteredGroups = (groupId: number | undefined) => {
-  const endpoint = `${API_ENDPOINTS.CHECK_ALL_REGISTERED}/${groupId}`;
+  const endpoint =
+    groupId != null ? `${API_ENDPOINTS.CHECK_ALL_REGISTERED}/${groupId}` : null;
 
   const { data, error, isLoading, mutate } =
     useAuthenticatedGet<ApiResponse<RegistrationStatus>>(endpoint);

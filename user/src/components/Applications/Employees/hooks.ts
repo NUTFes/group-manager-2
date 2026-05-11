@@ -20,6 +20,10 @@ import {
   useUpsertEmployees,
 } from '@/api/employeesApi';
 import {
+  useGetHealthCenterSubmissionStatus,
+  useUpdateHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
+import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
   useMutateUnregisteredGroup,
@@ -371,11 +375,12 @@ export const useEmployeesApplicationHooks = (
   groupId: number,
   isDeadline?: boolean,
   mutateCheckAllRegisteredGroups?: () => void,
-  status?: number
+  status?: string
 ) => {
   // 編集モードの状態管理
   const [isEditing, setEditing] = useState(false);
   const { t } = useTranslation('common');
+  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
 
   // トースト通知とステータス更新のコールバック
   const toastCallbacks = {
@@ -385,6 +390,29 @@ export const useEmployeesApplicationHooks = (
       mutateCheckAllRegisteredGroups?.();
     },
     onError: (message: string) => toast.error(message),
+  };
+
+  //ステータス変更処理
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger: patchHealthCenterSubmissionStatus } =
+    useUpdateHealthCenterSubmissionStatus()();
+
+  const updateStatus = async (status: 'unapproved') => {
+    const employeeSubmission = healthCenterSubmissionStatus.find(
+      (submission) => submission.applicationType === 'employee'
+    );
+
+    if (!employeeSubmission?.id) {
+      throw new Error('Employee submission status id not found');
+    }
+
+    await patchHealthCenterSubmissionStatus({
+      id: employeeSubmission.id,
+      body: { status },
+    });
+
+    await mutateHealthCenterSubmissionStatus();
   };
 
   // ビジネスロジック関連のhooks
@@ -487,6 +515,13 @@ export const useEmployeesApplicationHooks = (
         await employeesBusinessHooks.handleNoApplicationSubmit();
         await unregisteredGroupHooks.handleRegisterUnregisteredGroup();
       }
+
+      // 再提出完了時
+      if (status === 'waiting_resubmission') {
+        // status更新処理
+        await updateStatus('unapproved');
+      }
+
       setEditing(false);
     } catch {
       // エラーハンドリングはhook内で処理済み
@@ -579,8 +614,10 @@ export const useEmployeesApplicationHooks = (
     handleEditClick,
     handleNoApplicationClick,
     handleSubmit,
+    updateStatus,
 
     // UI用プロパティ
     isDeadline,
+    isResubmission,
   };
 };

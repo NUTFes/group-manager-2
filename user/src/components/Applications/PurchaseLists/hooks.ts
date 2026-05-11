@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FoodProductResponse, useGetFoodProducts } from '@/api/foodProductApi';
 import {
+  useGetHealthCenterSubmissionStatus,
+  useUpdateHealthCenterSubmissionStatus,
+} from '@/api/healthCenterSubmissionStatusApi';
+import {
   useCreatePurchaseList,
   useDeletePurchaseList,
   useGetPurchaseListsByFoodProduct,
@@ -278,13 +282,37 @@ export const usePurchaseListsViewTexts = () => {
 export const usePurchaseListsForm = (
   groupId: number,
   initialData: PurchaseItem[] | undefined,
-  onSuccess: () => void
+  onSuccess: () => void,
+  status?: string
 ) => {
   const { t } = useTranslation('common');
   const { trigger: createPurchaseList } = useCreatePurchaseList();
   const { trigger: updatePurchaseList } = useUpdatePurchaseList()();
   const { trigger: upsertPurchaseLists } = useUpsertPurchaseLists();
   const { trigger: deletePurchaseList } = useDeletePurchaseList()();
+
+  //ステータス変更処理
+  const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
+    useGetHealthCenterSubmissionStatus(groupId);
+  const { trigger: patchHealthCenterSubmissionStatus } =
+    useUpdateHealthCenterSubmissionStatus()();
+
+  const updateStatus = async (status: 'unapproved') => {
+    const purchaseListsSubmission = healthCenterSubmissionStatus.find(
+      (submission) => submission.applicationType === 'purchase_list'
+    );
+
+    if (!purchaseListsSubmission?.id) {
+      throw new Error('Purchase lists submission status id not found');
+    }
+
+    await patchHealthCenterSubmissionStatus({
+      id: purchaseListsSubmission.id,
+      body: { status },
+    });
+
+    await mutateHealthCenterSubmissionStatus();
+  };
 
   const formMethods = useForm<PurchaseListsFormData>({
     resolver: zodResolver(purchaseListsFormSchema),
@@ -380,6 +408,11 @@ export const usePurchaseListsForm = (
         }
       }
       onSuccess();
+
+      if (status === 'waiting_resubmission') {
+        await updateStatus('unapproved');
+      }
+
       reset(formData); // 送信後もフォーム内容は維持
     } catch {
       toast.error(t('applications.purchaseLists.messages.submitFailed'));

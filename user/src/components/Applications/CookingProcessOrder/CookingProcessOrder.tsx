@@ -10,12 +10,14 @@ type CookingProcessOrderProps = {
   isRegistered: boolean | undefined;
   groupId: number;
   isDeadline: boolean;
+  status?: string;
 };
 
 const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
   isRegistered,
   groupId,
   isDeadline,
+  status,
 }) => {
   const {
     methods,
@@ -29,7 +31,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
     mergedData,
     shouldShowWarning,
     cookingProcessOrderTexts,
-  } = useCookingProcessOrder(groupId, isDeadline, isRegistered);
+  } = useCookingProcessOrder(groupId, isDeadline, isRegistered, status);
 
   return (
     <AccordionMenu
@@ -38,6 +40,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
       isExist={isRegistered}
       isRegistered={isRegistered}
       required
+      status={status}
     >
       {isLoading || isEditing === null ? (
         <div>{cookingProcessOrderTexts.general.loading}</div>
@@ -67,7 +70,7 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
                       !methods.formState.isValid ||
                       methods.formState.isSubmitting ||
                       isMutating ||
-                      isDeadline
+                      (status !== 'waiting_resubmission' && isDeadline)
                     }
                     icon={isExist ? 'save' : 'send'}
                   >
@@ -137,6 +140,19 @@ const CookingProcessOrder: FC<CookingProcessOrderProps> = ({
               </>
             )}
             {!isEditing && isExist && !isDeadline && (
+              <div className="mt-4 flex w-full items-center justify-center gap-4">
+                <Button
+                  size="pc"
+                  color="main"
+                  type="button"
+                  icon="pencil"
+                  onClick={handleEditClick}
+                >
+                  {cookingProcessOrderTexts.buttons.edit}
+                </Button>
+              </div>
+            )}
+            {status === 'waiting_resubmission' && !isEditing && isDeadline && (
               <div className="mt-4 flex w-full items-center justify-center gap-4">
                 <Button
                   size="pc"

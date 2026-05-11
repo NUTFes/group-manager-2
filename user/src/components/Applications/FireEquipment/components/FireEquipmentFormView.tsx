@@ -12,6 +12,7 @@ type FireEquipmentFormViewProps = {
   handleEditCancel?: () => void;
   submitLabel?: string;
   disableValidate?: boolean;
+  status?: string;
 };
 
 export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
@@ -20,6 +21,7 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
   handleEditCancel,
   submitLabel,
   disableValidate = false,
+  status,
 }) => {
   const {
     isRegister,
@@ -33,7 +35,12 @@ export const FireEquipmentFormView: FC<FireEquipmentFormViewProps> = ({
     submitHandler,
     isEditing,
     validate,
-  } = useFireEquipmentOrder(groupId, fireEquipmentData, handleEditCancel);
+  } = useFireEquipmentOrder(
+    groupId,
+    fireEquipmentData,
+    handleEditCancel,
+    status
+  );
 
   return (
     <div className="flex flex-col gap-6">

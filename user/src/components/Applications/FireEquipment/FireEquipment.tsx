@@ -8,7 +8,7 @@ type FireEquipmentProps = {
   isDeadline?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
-  status?: number;
+  status?: string;
 };
 
 const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
@@ -28,8 +28,21 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
   }
 
   // 締め切り後
-  if (isDeadline || !isResubmission) {
+  if (isDeadline && !isResubmission) {
     return <FormList items={formItem} />;
+  }
+
+  if (isDeadline && isResubmission) {
+    return (
+      <FireEquipmentFormView
+        groupId={groupId}
+        fireEquipmentData={fireEquipment}
+        handleEditCancel={handleEditClick}
+        submitLabel="更新"
+        disableValidate
+        status={status}
+      />
+    );
   }
 
   // 火気不使用として登録済み・編集モード：登録フォームを表示
@@ -41,6 +54,7 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
         handleEditCancel={handleEditClick}
         submitLabel="更新"
         disableValidate
+        status={status}
       />
     );
   }
@@ -58,7 +72,7 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
 
   // 未登録の場合は、フォームを表示
   if (!fireEquipment && !hasUnregistered) {
-    return <FireEquipmentFormView groupId={groupId} />;
+    return <FireEquipmentFormView groupId={groupId} status={status} />;
   }
 
   // 編集モードの場合はフォームを表示
@@ -68,6 +82,7 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
         groupId={groupId}
         fireEquipmentData={fireEquipment}
         handleEditCancel={handleEditClick}
+        status={status}
       />
     );
   }
@@ -80,6 +95,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   groupId,
   isDeadline,
   isRegistered,
+  status,
 }) => {
   return (
     <AccordionMenu
@@ -87,8 +103,9 @@ const FireEquipment: FC<FireEquipmentProps> = ({
       isEdit={!isDeadline}
       isExist={isRegistered}
       required={true}
+      status={status}
     >
-      <Content groupId={groupId} isDeadline={isDeadline} />
+      <Content groupId={groupId} isDeadline={isDeadline} status={status} />
     </AccordionMenu>
   );
 };

@@ -16,12 +16,14 @@ export type PurchaseListsProps = {
   isDeadline: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
+  status?: string;
 };
 
 const PurchaseLists: FC<PurchaseListsProps> = ({
   groupId,
   isDeadline,
   isRegistered: initialIsRegistered,
+  status,
 }) => {
   const purchaseListsViewTexts = usePurchaseListsViewTexts();
   const title = purchaseListsViewTexts.title;
@@ -50,7 +52,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   );
 
   const { control, fields, append, remove, triggerSubmit, errors, setValue } =
-    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess);
+    usePurchaseListsForm(groupId, initialFormData, handleFormSuccess, status);
 
   const updateRowBySelector = usePurchaseListRowUpdater(
     purchaseLists,
@@ -68,6 +70,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         required
         isEdit={!isDeadline}
         isExist={initialIsRegistered}
+        status={status}
       >
         <div>{purchaseListsViewTexts.loading}</div>
       </AccordionMenu>
@@ -81,6 +84,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
         required
         isEdit={!isDeadline}
         isExist={initialIsRegistered}
+        status={status}
       >
         <div className="py-10 text-center text-red-500">
           {purchaseListsViewTexts.errors.fetch}
@@ -92,7 +96,13 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
   // 締め切り後で、かつデータがない（未登録）場合
   if (isDeadline && (!purchaseLists || purchaseLists.length === 0)) {
     return (
-      <AccordionMenu title={title} required isEdit={false} isExist={false}>
+      <AccordionMenu
+        title={title}
+        required
+        isEdit={false}
+        isExist={false}
+        status={status}
+      >
         <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
           <div className="rounded-lg border border-gray-300 bg-gray-50 p-6">
             <div className="mb-4">
@@ -119,6 +129,36 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
             </p>
           </div>
         </div>
+      </AccordionMenu>
+    );
+  }
+
+  //締め切り後でデータがあり、再提出の場合
+  if (
+    isDeadline &&
+    purchaseLists &&
+    purchaseLists.length > 0 &&
+    status === 'waiting_resubmission'
+  ) {
+    return (
+      <AccordionMenu
+        title={title}
+        required
+        isEdit={false}
+        isExist={true}
+        status={status}
+      >
+        <PurchaseListsForm
+          control={control}
+          fields={fields}
+          append={(item) => append(item as PurchaseItem)}
+          remove={remove}
+          onSubmit={triggerSubmit}
+          errors={errors}
+          foodProductOptions={foodProductOptions}
+          shopOptions={shopOptions}
+          onFoodProductChange={handleFoodProductChange}
+        />
       </AccordionMenu>
     );
   }
@@ -167,6 +207,7 @@ const PurchaseLists: FC<PurchaseListsProps> = ({
       required
       isEdit={!isDeadline}
       isExist={initialIsRegistered}
+      status={status}
     >
       {formItems.map((items, index) => {
         const currentItem = purchaseLists?.[index];

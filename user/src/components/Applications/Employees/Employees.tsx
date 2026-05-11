@@ -35,7 +35,7 @@ export const Employees: FC<EmployeesProps> = ({
   return (
     <AccordionMenu
       title={employeesApplicationHook.texts.title}
-      isEdit={!isDeadline || status === 1} // 期限内または再提出待ちの場合に編集可能
+      isEdit={!isDeadline} // 期限内または再提出待ちの場合に編集可能
       isExist={isRegistered} // 登録済みの場合に表示
       required={true} // 必須項目として表示
       status={status} // 申請のステータスを渡す
@@ -52,7 +52,7 @@ export const Employees: FC<EmployeesProps> = ({
 type ContentProps = {
   employeesApplicationHook: ReturnType<typeof useEmployeesApplicationHooks>;
   isDeadline?: boolean; // 申請期限が過ぎているかどうか（true: 期限外、false: 期限内）
-  status?: number; // 申請のステータス（APPLICATION_STATUSの値）
+  status?: string; // 申請のステータス（APPLICATION_STATUSの値）
 };
 /**
  * 従業員申請のコンテンツ部分
@@ -63,7 +63,7 @@ const Content: FC<ContentProps> = ({
   status,
 }) => {
   const { texts } = employeesApplicationHook;
-  const isResubmission = status === 1; // 再提出待ちの状態かどうか
+  const isResubmission = status === 'waiting_resubmission'; // 再提出待ちの状態かどうか
 
   // 申請期限切れかつ、未登録状態（従業員データと申請しないデータが無い）の場合の表示
   if (employeesApplicationHook.isDeadlineMode) {

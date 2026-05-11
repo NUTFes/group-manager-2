@@ -65,7 +65,7 @@ type GroupCategoryContentProps = {
   groupId: number;
   mutateCheckAllRegisteredGroups: () => void;
   healthCenterSubmissionStatus:
-    | HealthCenterSubmissionStatusResponse
+    | HealthCenterSubmissionStatusResponse[]
     | undefined;
 };
 
@@ -82,34 +82,21 @@ const GroupCategoryContent = ({
     const employeeSubmission = healthCenterSubmissionStatus?.find(
       (s) => s.applicationType === 'employee'
     );
-    const foodProductsSubmission =
-      data?.status.code === 200
-        ? data.data.submissions.find(
-            (s) => s.applicationType === 'food_product'
-          )
-        : undefined;
-    const purchaseListsSubmission =
-      data?.status.code === 200
-        ? data.data.submissions.find(
-            (s) => s.applicationType === 'purchase_list'
-          )
-        : undefined;
-    const venueMapSubmission =
-      data?.status.code === 200
-        ? data.data.submissions.find((s) => s.applicationType === 'venue_map')
-        : undefined;
-    const cookingProcessOrderSubmission =
-      data?.status.code === 200
-        ? data.data.submissions.find(
-            (s) => s.applicationType === 'cooking_process_order'
-          )
-        : undefined;
-    const fireEquipmentSubmission =
-      data?.status.code === 200
-        ? data.data.submissions.find(
-            (s) => s.applicationType === 'fire_equipment'
-          )
-        : undefined;
+    const foodProductsSubmission = healthCenterSubmissionStatus?.find(
+      (s) => s.applicationType === 'food_product'
+    );
+    const purchaseListsSubmission = healthCenterSubmissionStatus?.find(
+      (s) => s.applicationType === 'purchase_list'
+    );
+    const venueMapSubmission = healthCenterSubmissionStatus?.find(
+      (s) => s.applicationType === 'venue_map'
+    );
+    const cookingProcessOrderSubmission = healthCenterSubmissionStatus?.find(
+      (s) => s.applicationType === 'cooking_process_order'
+    );
+    const fireEquipmentSubmission = healthCenterSubmissionStatus?.find(
+      (s) => s.applicationType === 'equipment'
+    );
 
     return (
       <>
@@ -139,32 +126,36 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.employee}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           groupId={groupId}
-          status={healthCenterSubmissionStatus?.status}
+          status={employeeSubmission?.status}
         />
         <VenueMap
           isDeadline={!userPageSettings?.isEditVenueMap}
           isRegistered={checkAllRegisteredGroups?.venueMap}
           groupId={groupId}
+          status={venueMapSubmission?.status}
         />
         <FoodProduct
           groupId={groupId}
           isDeadline={!userPageSettings?.isEditFoodProduct}
           isRegistered={checkAllRegisteredGroups?.foodProduct}
+          status={foodProductsSubmission?.status}
         />
         <PurchaseLists
           isDeadline={!userPageSettings?.isEditPurchaseList}
           isRegistered={checkAllRegisteredGroups?.purchaseList}
           groupId={groupId}
+          status={purchaseListsSubmission?.status}
         />
         <CookingProcessOrder
           isDeadline={!userPageSettings?.isEditCookingProcess}
           isRegistered={checkAllRegisteredGroups?.cookingProcessOrder}
           groupId={groupId}
+          status={cookingProcessOrderSubmission?.status}
         />
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={healthCenterSubmissionStatus?.status}
+          status={fireEquipmentSubmission?.status}
         />
       </>
     );
@@ -206,7 +197,6 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
@@ -275,7 +265,6 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
@@ -312,7 +301,6 @@ const GroupCategoryContent = ({
         <FireEquipment
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
-          status={healthCenterSubmissionStatus?.status}
         />
       </>
     );
@@ -360,13 +348,13 @@ export default function HomePage() {
     mutateGroupByUserId,
     isLoading: isLoadingGroupByUserId,
   } = useGetGroupByUserId(userId);
-  const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
+  const groupId = groupUserIdAndGroupCategoryId?.id ?? undefined;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const isGroupResolved = userId !== undefined && !isLoadingGroupByUserId;
   const { userPageSettings } = useGetUserPageSettings();
   const { checkAllRegisteredGroups, mutateCheckAllRegisteredGroups } =
     useGetCheckAllRegisteredGroups(groupId);
-  const healthCenterSubmissionStatus =
+  const { healthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
 
   return (
@@ -376,7 +364,7 @@ export default function HomePage() {
         <Group
           isDeadline={!userPageSettings?.isRegistGroup}
           isRegistered={checkAllRegisteredGroups?.group}
-          groupId={groupId}
+          groupId={groupId || 0}
           userId={userId || 0}
           isGroupResolved={isGroupResolved}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
@@ -387,7 +375,7 @@ export default function HomePage() {
           <ViceRepresentative
             isDeadline={!userPageSettings?.isEditSubRep}
             isRegistered={checkAllRegisteredGroups?.subRep}
-            groupId={groupId}
+            groupId={groupId || 0}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           />
         )}
@@ -397,11 +385,9 @@ export default function HomePage() {
             groupCategoryId={groupCategoryId}
             userPageSettings={userPageSettings}
             checkAllRegisteredGroups={checkAllRegisteredGroups}
-            groupId={groupId}
+            groupId={groupId || 0}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
-            healthCenterSubmissionStatus={
-              healthCenterSubmissionStatus.healthCenterSubmissionStatus
-            }
+            healthCenterSubmissionStatus={healthCenterSubmissionStatus}
           />
         )}
       </div>

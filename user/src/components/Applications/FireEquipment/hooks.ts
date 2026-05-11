@@ -9,7 +9,7 @@ import { fireEquipmentFormFields } from './constant';
 
 export const useFireEquipmentHooks = (
   groupId: number,
-  status: number | undefined
+  status: string | undefined
 ) => {
   const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);
@@ -52,7 +52,8 @@ export const useFireEquipmentHooks = (
       : [];
 
   const [isEditing, setIsEditing] = useState(false);
-  const isResubmission = status === 1;
+  const isResubmission = status === 'waiting_resubmission';
+
   const handleEditClick = () => {
     setIsEditing((prev) => !prev);
   };

@@ -13,7 +13,7 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
-  status?: number;
+  status?: string;
 };
 type ContentProps = {
   isLoading: boolean;
@@ -24,6 +24,7 @@ type ContentProps = {
   foodProducts: RegisteredProduct[] | null;
   formItem: FormItem[];
   groupId: number;
+  isResubmission: boolean;
   addFoodProducts: (products: ProductInput[]) => Promise<void>;
   removeFoodProduct: (id: string) => Promise<void>;
   setFoodProductsData: (products: ProductInput[]) => Promise<void>;
@@ -45,6 +46,7 @@ const Content: FC<ContentProps> = ({
   removeFoodProduct,
   setFoodProductsData,
   foodProductViewTexts,
+  isResubmission,
 }) => {
   if (isLoading) {
     return (
@@ -104,6 +106,19 @@ const Content: FC<ContentProps> = ({
     );
   }
 
+  if (isResubmission) {
+    return (
+      <FoodProductForm
+        groupId={groupId}
+        toEdit={toEdit}
+        foodProducts={foodProducts}
+        addFoodProducts={addFoodProducts}
+        removeFoodProduct={removeFoodProduct}
+        setFoodProductsData={setFoodProductsData}
+      />
+    );
+  }
+
   if (isDeadline) {
     return <FormList items={formItem} />;
   }
@@ -151,6 +166,7 @@ const FoodProduct: FC<FoodProductProps> = ({
     removeFoodProduct,
     setFoodProductsData,
     foodProductViewTexts,
+    isResubmission,
   } = useFoodProductHooks(groupId, isRegistered, status);
 
   return (
@@ -159,6 +175,7 @@ const FoodProduct: FC<FoodProductProps> = ({
       isEdit={!isDeadline}
       isExist={isRegistered}
       required
+      status={status}
     >
       <Content
         isLoading={isLoading}
@@ -166,6 +183,7 @@ const FoodProduct: FC<FoodProductProps> = ({
         isDeadline={isDeadline}
         isEditing={isEditing}
         toEdit={toEdit}
+        isResubmission={isResubmission}
         foodProducts={foodProducts}
         formItem={formItem}
         groupId={groupId}
