@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FireEquipmentFormView } from './components';
@@ -8,7 +9,7 @@ type FireEquipmentProps = {
   isDeadline?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
-  status?: string;
+  status?: HealthCenterSubmissionStatus;
 };
 
 const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
@@ -39,7 +40,7 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline, status }) => {
         fireEquipmentData={fireEquipment}
         handleEditCancel={handleEditClick}
         submitLabel="更新"
-        disableValidate
+        disableValidate // 再提出時は変更検知バリデーションを無効化（スキーマ検証は有効）
         status={status}
       />
     );

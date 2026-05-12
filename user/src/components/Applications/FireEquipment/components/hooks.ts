@@ -5,6 +5,7 @@ import {
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
 import {
+  HealthCenterSubmissionStatus,
   useGetHealthCenterSubmissionStatus,
   useUpdateHealthCenterSubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
@@ -23,7 +24,7 @@ export const useFireEquipmentOrder = (
   groupId: number,
   fireEquipmentData?: FireEquipmentResponse,
   handleEditCancel?: () => void,
-  status?: string
+  status?: HealthCenterSubmissionStatus
 ) => {
   const { mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);

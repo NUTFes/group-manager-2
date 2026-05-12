@@ -5,6 +5,7 @@ import {
   useUpsertFoodProducts,
 } from '@/api/foodProductApi';
 import {
+  HealthCenterSubmissionStatus,
   useGetHealthCenterSubmissionStatus,
   useUpdateHealthCenterSubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
@@ -24,7 +25,7 @@ const API_ENDPOINTS = {
 export const useFoodProductHooks = (
   groupId: number,
   isRegistered?: boolean,
-  status?: string
+  status?: HealthCenterSubmissionStatus
 ) => {
   const { t } = useTranslation('common');
   const [isEditing, setIsEditing] = useState<boolean | null>(null);

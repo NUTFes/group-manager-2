@@ -3,13 +3,14 @@ import {
   useFireEquipmentMutations,
   useGetFireEquipmentOrderByGroupId,
 } from '@/api/fireEquipmentApi';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { toast } from 'react-toastify';
 import { FormItem } from '@/components/FormList/type';
 import { fireEquipmentFormFields } from './constant';
 
 export const useFireEquipmentHooks = (
   groupId: number,
-  status: string | undefined
+  status?: HealthCenterSubmissionStatus
 ) => {
   const { fireEquipmentOrder, isLoading, mutateFireEquipmentOrder } =
     useGetFireEquipmentOrderByGroupId(groupId);

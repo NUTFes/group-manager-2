@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import { NEED_APPLICATION, RADIO_VALUE } from '@/utils/constants';
 import { FormProvider } from 'react-hook-form';
 import AccordionMenu from '@/components/AccordionMenu';
@@ -13,7 +14,7 @@ type EmployeesProps = {
   isRegistered?: boolean; // 既に登録済みかどうか
   groupId: number; // 対象のグループID
   mutateCheckAllRegisteredGroups: () => void;
-  status?: string; // 申請のステータス（APPLICATION_STATUSの値）
+  status?: HealthCenterSubmissionStatus; // 申請のステータス
 };
 
 /**

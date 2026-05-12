@@ -146,7 +146,7 @@ export const useCookingProcessOrder = (
   const { healthCenterSubmissionStatus, mutateHealthCenterSubmissionStatus } =
     useGetHealthCenterSubmissionStatus(groupId);
   const { trigger: patchHealthCenterSubmissionStatus } =
-    useUpdateHealthCenterSubmissionStatus();
+    useUpdateHealthCenterSubmissionStatus()();
 
   const updateStatus = async (status: 'unapproved') => {
     const cookingProcessOrderSubmission = healthCenterSubmissionStatus.find(

@@ -6,6 +6,7 @@ import {
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { useFoodProductHooks } from '@/components/Applications/FoodProduct/hooks';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
 
@@ -13,7 +14,7 @@ type FoodProductProps = {
   groupId: number;
   isDeadline: boolean | undefined;
   isRegistered: boolean | undefined;
-  status?: string;
+  status?: HealthCenterSubmissionStatus;
 };
 type ContentProps = {
   isLoading: boolean;

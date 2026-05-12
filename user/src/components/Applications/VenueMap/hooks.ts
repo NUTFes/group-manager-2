@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  HealthCenterSubmissionStatus,
   useGetHealthCenterSubmissionStatus,
   useUpdateHealthCenterSubmissionStatus,
 } from '@/api/healthCenterSubmissionStatusApi';
@@ -8,7 +9,10 @@ import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { venueMapLabels } from '../label';
 
-export const useVenueMapHooks = (groupId: number, status?: string) => {
+export const useVenueMapHooks = (
+  groupId: number,
+  status?: HealthCenterSubmissionStatus
+) => {
   const { t } = useTranslation('common');
   const {
     venueMap,
@@ -52,8 +56,13 @@ export const useVenueMapHooks = (groupId: number, status?: string) => {
   // フォーム送信が成功したら表示モードに切り替え
   const handleFormSubmitted = async () => {
     if (status === 'waiting_resubmission') {
-      // status更新処理
-      await updateStatus('unapproved');
+      try {
+        // status更新処理
+        await updateStatus('unapproved');
+      } catch (error) {
+        console.error('Failed to update submission status:', error);
+        // Consider showing a user-facing error message
+      }
     }
 
     setIsEditing(false);

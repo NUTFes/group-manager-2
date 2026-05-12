@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FormList from '@/components/FormList/FormList';
 import VenueMapForm from './VenueMapForm';
@@ -8,7 +9,7 @@ type VenueMapProps = {
   groupId: number;
   isDeadline?: boolean;
   isRegistered?: boolean;
-  status?: string;
+  status?: HealthCenterSubmissionStatus;
 };
 
 // Content コンポーネントの props 型定義を修正

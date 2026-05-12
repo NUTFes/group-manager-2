@@ -348,7 +348,7 @@ export default function HomePage() {
     mutateGroupByUserId,
     isLoading: isLoadingGroupByUserId,
   } = useGetGroupByUserId(userId);
-  const groupId = groupUserIdAndGroupCategoryId?.id ?? undefined;
+  const groupId = groupUserIdAndGroupCategoryId?.id ?? 0;
   const groupCategoryId = groupUserIdAndGroupCategoryId?.groupCategoryId;
   const isGroupResolved = userId !== undefined && !isLoadingGroupByUserId;
   const { userPageSettings } = useGetUserPageSettings();
@@ -364,7 +364,7 @@ export default function HomePage() {
         <Group
           isDeadline={!userPageSettings?.isRegistGroup}
           isRegistered={checkAllRegisteredGroups?.group}
-          groupId={groupId || 0}
+          groupId={groupId}
           userId={userId || 0}
           isGroupResolved={isGroupResolved}
           mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
@@ -375,7 +375,7 @@ export default function HomePage() {
           <ViceRepresentative
             isDeadline={!userPageSettings?.isEditSubRep}
             isRegistered={checkAllRegisteredGroups?.subRep}
-            groupId={groupId || 0}
+            groupId={groupId}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
           />
         )}
@@ -385,7 +385,7 @@ export default function HomePage() {
             groupCategoryId={groupCategoryId}
             userPageSettings={userPageSettings}
             checkAllRegisteredGroups={checkAllRegisteredGroups}
-            groupId={groupId || 0}
+            groupId={groupId}
             mutateCheckAllRegisteredGroups={mutateCheckAllRegisteredGroups}
             healthCenterSubmissionStatus={healthCenterSubmissionStatus}
           />
