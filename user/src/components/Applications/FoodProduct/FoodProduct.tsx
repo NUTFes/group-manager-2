@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import AccordionMenu from '@/components/AccordionMenu/AccordionMenu';
 import FoodProductForm from '@/components/Applications/FoodProduct/FoodProductForm/FoodProductForm';
 import {
@@ -6,7 +7,6 @@ import {
   RegisteredProduct,
 } from '@/components/Applications/FoodProduct/FoodProductForm/schema';
 import { useFoodProductHooks } from '@/components/Applications/FoodProduct/hooks';
-import { HealthCenterSubmissionStatus } from '@/api/healthCenterSubmissionStatusApi';
 import FormList from '@/components/FormList/FormList';
 import { FormItem } from '@/components/FormList/type';
 
