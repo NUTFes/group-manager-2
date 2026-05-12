@@ -84,6 +84,10 @@
     "toasts": {
       "loginFailed": "ログインに失敗しました",
       "loginSuccess": "ログインに成功しました"
+    },
+    "validation": {
+      "required": "入力してください",
+      "email": "有効なメールアドレスを入力してください"
     }
   },
   "registerCarousel": {
@@ -107,8 +111,8 @@
     },
     "notes": {
       "email": "例：s123456@stn.nagaokaut.ac.jp",
-      "password": "英数字8文字以上",
-      "passwordConfirm": "英数字8文字以上",
+      "password": "8文字以上",
+      "passwordConfirm": "8文字以上",
       "name": "例：長岡 太郎",
       "tel": "例：09012345678",
       "studentId": "例：12345678"
@@ -128,13 +132,17 @@
       "next": "次へ"
     },
     "errors": {
+      "nameRequired": "名前は必須です。",
       "emailTaken": "このメールアドレスは既に登録されています。",
+      "emailInvalid": "有効なメールアドレスを入力してください。",
       "emailDefault": "メールアドレスに誤りがあります。",
-      "passwordShort": "パスワードは6文字以上である必要があります。",
+      "passwordShort": "パスワードは8文字以上である必要があります。",
       "passwordDefault": "パスワードに誤りがあります。",
       "passwordConfirmMismatch": "パスワードが一致しません。",
       "passwordConfirmDefault": "パスワード確認に誤りがあります。",
       "telInvalid": "電話番号に誤りがあります。",
+      "telShort": "電話番号が短すぎます。",
+      "telLong": "電話番号が長すぎます。",
       "studentIdInvalid": "学籍番号に誤りがあります。",
       "gradeInvalid": "学年に誤りがあります。",
       "departmentInvalid": "学科に誤りがあります。",
@@ -881,10 +889,69 @@
         "fileType": "ファイル形式はpngまたはjpegにしてください",
         "checklist": "すべての項目を確認してください。"
       }
+    },
+    "fireEquipment": {
+      "title": "火気使用申請",
+      "fields": {
+        "name": "火気の名称",
+        "quantity": "火気の台数",
+        "fuel": "燃料",
+        "usage": "使用用途",
+        "isTakeaway": "火気を毎日テントから持ち帰ることができますか？",
+        "remark": "備考"
+      },
+      "fuel": {
+        "gasBottle": "カセットガス",
+        "lpGas": "LPガス",
+        "charcoal": "炭"
+      },
+      "radio": {
+        "question": "火気を使用しますか？",
+        "options": {
+          "yes": "はい",
+          "no": "いいえ"
+        }
+      },
+      "notes": {
+        "quantity": "半角数字のみ",
+        "takeaway": "火気は毎日持って帰ることができない場合を除き、基本的に持ち帰ってください。\n火気はテント内に残す行為は火事の原因になります。",
+        "remark": "いいえを押した場合は火気の備考欄に理由を記載して下さい。",
+        "remarkRequired": "いいえを押した場合必須",
+        "excludedItems": "電気ホットプレートとIHは含まれません。"
+      },
+      "summary": {
+        "noApplication": {
+          "label": "火気申請は不要（登録済み）",
+          "description": "火気は使用しません。"
+        }
+      },
+      "messages": {
+        "deleteSuccess": "火気申請を削除しました",
+        "deleteFailed": "削除に失敗しました。もう一度お試しください。",
+        "noApplicationSuccess": "火気申請を行わない登録が完了しました",
+        "registerSuccess": "火気申請が完了しました。",
+        "updateSuccess": "火気申請を更新しました。",
+        "submitFailed": "送信に失敗しました: {{message}}"
+      },
+      "validation": {
+        "required": "入力してください",
+        "quantity": "1以上の数字を入力してください",
+        "fuel": "燃料を選択してください",
+        "remarkRequired": "持ち帰りが「いいえ」の場合、備考欄は必須です",
+        "group": "グループを選択してください"
+      }
     }
   },
   "auth": {
     "logout": "ログアウト"
+  },
+  "userModal": {
+    "guest": "ゲスト",
+    "noEmail": "メールアドレスなし",
+    "toasts": {
+      "logoutSuccess": "ログアウトしました",
+      "logoutFailed": "ログアウトに失敗しました"
+    }
   },
   "footer": {
     "copyright": "Copyright © {{year}} NUTMEG. All Rights Reserved."

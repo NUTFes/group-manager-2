@@ -29,6 +29,7 @@
           >
             <td>{{ rentalItem.id }}</td>
             <td>{{ rentalItem.name }}</td>
+            <td>{{ rentalItem.name_en }}</td>
             <td>{{ rentalItem.is_inside_shop_rentable }}</td>
             <td>{{ rentalItem.is_outside_shop_rentable }}</td>
             <td>{{ rentalItem.is_stage_rentable }}</td>
@@ -42,6 +43,10 @@
         <div>
           <h3>物品名</h3>
           <input v-model="name" placeholder="入力してください" />
+        </div>
+        <div>
+          <div><h3>英語名</h3><CommonButton iconName="translate" :disabled="isTranslating || !name" :on_click="autoTranslate">{{ isTranslating ? "翻訳中..." : "自動翻訳" }}</CommonButton></div>
+          <input v-model="nameEn" placeholder="入力してください" />
         </div>
         <div>
           <h3>屋内模擬店貸出可否</h3>
@@ -72,9 +77,10 @@
         </div>
       </template>
       <template v-slot:method>
-        <CommonButton iconName="add_circle" :on_click="submit"
-          >登録</CommonButton
-        >
+        <div class="modal-method">
+          <CommonButton iconName="translate" :disabled="isTranslating || !name" :on_click="autoTranslate">{{ isTranslating ? "翻訳中..." : "自動翻訳" }}</CommonButton>
+          <CommonButton iconName="add_circle" :on_click="submit">登録</CommonButton>
+        </div>
       </template>
     </AddModal>
     <SnackBar v-if="isOpenSnackBar" @close="closeSnackBar">
@@ -92,6 +98,7 @@ export default {
       headers: [
         "ID",
         "名前",
+        "英語名",
         "屋内模擬店貸出",
         "屋外模擬店貸出",
         "ステージ貸出",
@@ -103,6 +110,8 @@ export default {
       isOpenAddModal: false,
       isOpenSnackBar: false,
       name: "",
+      nameEn: "",
+      isTranslating: false,
     };
   },
   async asyncData({ $axios }) {
@@ -151,11 +160,25 @@ export default {
         this.rentalItems.push(response.data);
       });
     },
+    async autoTranslate() {
+      if (!this.name) return;
+      this.isTranslating = true;
+      try {
+        const response = await this.$axios.$post("/rental_items/translate", { text: this.name });
+        this.nameEn = response.data.name_en;
+      } catch (e) {
+        this.openSnackBar("自動翻訳に失敗しました");
+      } finally {
+        this.isTranslating = false;
+      }
+    },
     async submit() {
       const url =
         "/rental_items/" +
         "?name=" +
         this.name +
+        "&name_en=" +
+        this.nameEn +
         "&is_inside_shop_rentable=" +
         this.isInsideShopRentable +
         "&is_outside_shop_rentable=" +
@@ -166,6 +189,7 @@ export default {
       this.$axios.$post(url).then((response) => {
         this.openSnackBar(response.data.name + "を追加しました");
         this.name = "";
+        this.nameEn = "";
         this.isInsideShopRentable = "";
         this.isOutsideShopRentable = "";
         this.isStageRentable = "";
@@ -176,3 +200,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.modal-method {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px;
+  justify-content: center;
+}
+</style>

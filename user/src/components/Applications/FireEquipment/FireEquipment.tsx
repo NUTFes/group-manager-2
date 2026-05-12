@@ -2,6 +2,7 @@ import { FC } from 'react';
 import AccordionMenu from '@/components/AccordionMenu';
 import FormList from '@/components/FormList';
 import { FireEquipmentFormView } from './components';
+import { useFireEquipmentTexts } from './constant';
 import { useFireEquipmentHooks } from './hooks';
 
 type FireEquipmentProps = {
@@ -27,10 +28,13 @@ const Content: FC<ContentProps> = ({
   noApplicationItems,
   isLoading,
 }) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
   const readOnlyItems = hasUnregistered ? noApplicationItems : formItem;
 
   if (isLoading) {
-    return <p className="text-sm text-gray-400">読み込み中...</p>;
+    return (
+      <p className="text-sm text-gray-400">{fireEquipmentTexts.loading}</p>
+    );
   }
 
   // 締め切り後
@@ -45,7 +49,7 @@ const Content: FC<ContentProps> = ({
         groupId={groupId}
         fireEquipmentData={fireEquipment}
         handleEditCancel={handleEditClick}
-        submitLabel="更新"
+        submitLabel={fireEquipmentTexts.buttons.update}
         disableValidate
       />
     );
@@ -88,6 +92,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
   canEdit,
   isRegistered,
 }) => {
+  const fireEquipmentTexts = useFireEquipmentTexts();
   const fireEquipmentHooks = useFireEquipmentHooks(groupId);
   const hasFireEquipmentOrder =
     fireEquipmentHooks.fireEquipment !== undefined ||
@@ -99,7 +104,7 @@ const FireEquipment: FC<FireEquipmentProps> = ({
 
   return (
     <AccordionMenu
-      title={'火気使用申請'}
+      title={fireEquipmentTexts.title}
       isEdit={canSubmit}
       isExist={isExist}
       required={true}

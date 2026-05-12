@@ -52,7 +52,11 @@ Rails.application.routes.draw do
   end
   resources :assign_rental_items
   resources :rentable_items
-  resources :rental_items
+  resources :rental_items do
+    collection do
+      post :translate
+    end
+  end
   resources :rental_item_allow_lists
   resources :stocker_items
   resources :stocker_places
