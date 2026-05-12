@@ -430,7 +430,7 @@
       }
     },
     "foodProduct": {
-      "title": "Food product application",
+      "title": "Product for sales application",
       "loading": "Loading...",
       "errors": {
         "fetch": "Failed to fetch data."
