@@ -1,7 +1,10 @@
 import type { GetStaticProps } from 'next';
 import { useGetCheckAllRegisteredGroups } from '@/api/checkAllRegisteredApi';
 import { useGetGroupByUserId } from '@/api/groupApi';
-import { useGetUserPageSettings } from '@/api/userPageSettingAPI';
+import {
+  type UserPageSettings,
+  useGetUserPageSettings,
+} from '@/api/userPageSettingAPI';
 import { GROUP_CATEGORY } from '@/utils/constants';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import CookingProcessOrder from '@/components/Applications/CookingProcessOrder';
@@ -20,22 +23,6 @@ import VenueMap from '@/components/Applications/VenueMap';
 import ViceRepresentative from '@/components/Applications/ViceRepresentative';
 import NewsList from '@/components/NewsList';
 import { useUser } from '@/hooks/useUser';
-
-type UserPageSettings = {
-  isEditPlace?: boolean;
-  isEditRentalOrder?: boolean;
-  isEditPowerOrder?: boolean;
-  isEditPublicRelation?: boolean;
-  isEditEmployee?: boolean;
-  isEditVenueMap?: boolean;
-  isEditFoodProduct?: boolean;
-  isEditPurchaseList?: boolean;
-  isEditCookingProcess?: boolean;
-  isEditStageOrder?: boolean;
-  isEditStageCommonOption?: boolean;
-  isRegistGroup?: boolean;
-  isEditSubRep?: boolean;
-};
 
 type CheckAllRegisteredGroups = {
   placeOrder?: boolean;
@@ -121,6 +108,8 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -162,6 +151,8 @@ const GroupCategoryContent = ({
           isRegistered={checkAllRegisteredGroups?.foodProduct}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -230,6 +221,8 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />
@@ -266,6 +259,8 @@ const GroupCategoryContent = ({
           groupId={groupId}
         />
         <FireEquipment
+          canAdd={userPageSettings?.addFireEquipmentOrder}
+          canEdit={userPageSettings?.isEditFireEquipmentOrder}
           isRegistered={checkAllRegisteredGroups?.fireEquipmentOrder}
           groupId={groupId}
         />

@@ -6,22 +6,30 @@ import { useFireEquipmentTexts } from './constant';
 import { useFireEquipmentHooks } from './hooks';
 
 type FireEquipmentProps = {
-  isDeadline?: boolean;
+  canAdd?: boolean;
+  canEdit?: boolean;
   isRegistered?: boolean | undefined;
   groupId: number;
 };
 
-const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline }) => {
+type ContentProps = ReturnType<typeof useFireEquipmentHooks> & {
+  groupId: number;
+  canSubmit: boolean;
+};
+
+const Content: FC<ContentProps> = ({
+  groupId,
+  canSubmit,
+  isEditing,
+  handleEditClick,
+  formItem,
+  fireEquipment,
+  hasUnregistered,
+  noApplicationItems,
+  isLoading,
+}) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
-  const {
-    isEditing,
-    handleEditClick,
-    formItem,
-    fireEquipment,
-    hasUnregistered,
-    noApplicationItems,
-    isLoading,
-  } = useFireEquipmentHooks(groupId);
+  const readOnlyItems = hasUnregistered ? noApplicationItems : formItem;
 
   if (isLoading) {
     return (
@@ -30,8 +38,8 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline }) => {
   }
 
   // 締め切り後
-  if (isDeadline) {
-    return <FormList items={formItem} />;
+  if (!canSubmit) {
+    return <FormList items={readOnlyItems} />;
   }
 
   // 火気不使用として登録済み・編集モード：登録フォームを表示
@@ -80,18 +88,32 @@ const Content: FC<FireEquipmentProps> = ({ groupId, isDeadline }) => {
 
 const FireEquipment: FC<FireEquipmentProps> = ({
   groupId,
-  isDeadline,
+  canAdd,
+  canEdit,
   isRegistered,
 }) => {
   const fireEquipmentTexts = useFireEquipmentTexts();
+  const fireEquipmentHooks = useFireEquipmentHooks(groupId);
+  const hasFireEquipmentOrder =
+    fireEquipmentHooks.fireEquipment !== undefined ||
+    fireEquipmentHooks.hasUnregistered;
+  const canSubmit = hasFireEquipmentOrder ? !!canEdit : !!canAdd;
+  const isExist = fireEquipmentHooks.isLoading
+    ? isRegistered
+    : hasFireEquipmentOrder;
+
   return (
     <AccordionMenu
       title={fireEquipmentTexts.title}
-      isEdit={!isDeadline}
-      isExist={isRegistered}
+      isEdit={canSubmit}
+      isExist={isExist}
       required={true}
     >
-      <Content groupId={groupId} isDeadline={isDeadline} />
+      <Content
+        groupId={groupId}
+        canSubmit={canSubmit}
+        {...fireEquipmentHooks}
+      />
     </AccordionMenu>
   );
 };
