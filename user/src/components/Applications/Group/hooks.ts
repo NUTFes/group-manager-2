@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGetGroupCategories, useGetGroups } from '@/api/groupApi';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { groupLabels } from '../label';
 
-export const useGroupHooks = (groupId: number) => {
+export const useGroupHooks = (
+  groupId: number,
+  isRegistered?: boolean | undefined,
+  isGroupResolved?: boolean
+) => {
   const { t } = useTranslation('common');
   const { groups, isLoading, hasError, mutateGroups } = useGetGroups(groupId);
   const { groupCategories } = useGetGroupCategories();
@@ -58,22 +62,37 @@ export const useGroupHooks = (groupId: number) => {
   ];
 
   // 編集状態の管理
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState<boolean | null>(null);
+  const hasInitializedEditing = useRef(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const toEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
-  // groupsが存在する場合，内容確認画面を表示させる（編集状態はfalse）
   useEffect(() => {
-    if (groups) {
-      setIsEditing(false);
+    if (!isLoading) {
+      setHasLoadedOnce(true);
     }
-  }, [groups]);
+  }, [isLoading]);
+
+  // 初回だけ登録状態に応じて編集モードを決め、再取得時は維持する
+  useEffect(() => {
+    if (
+      hasInitializedEditing.current ||
+      !isGroupResolved ||
+      isRegistered === undefined
+    ) {
+      return;
+    }
+
+    setIsEditing(!isRegistered);
+    hasInitializedEditing.current = true;
+  }, [isRegistered, isGroupResolved]);
 
   // 変数と関数を返す
   return {
     groups,
-    isLoading,
+    isLoading: isLoading && !hasLoadedOnce,
     hasError,
     isEditing,
     toEdit,

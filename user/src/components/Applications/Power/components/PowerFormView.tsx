@@ -34,7 +34,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
       />
 
       {/* 申請する場合のフォーム */}
-      {showForm && (
+      <div style={{ display: showForm ? 'block' : 'none' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex w-full flex-col gap-10">
             {fields.map((field, index) => (
@@ -82,7 +82,7 @@ export const PowerFormView: FC<PowerFormViewProps> = ({
             </div>
           </div>
         </form>
-      )}
+      </div>
     </div>
   );
 };

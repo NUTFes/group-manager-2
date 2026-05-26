@@ -7,6 +7,7 @@ type TextAreaProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   required?: boolean;
+  requireMessage?: string;
   note?: string;
   error?: string;
 };
@@ -17,6 +18,7 @@ const TextArea: FC<TextAreaProps> = ({
   onChange,
   placeholder,
   required,
+  requireMessage,
   note,
   error,
 }) => {
@@ -24,13 +26,13 @@ const TextArea: FC<TextAreaProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event.target.value);
   };
-
+  const requiredMessage = requireMessage ?? requiredLabel;
   return (
     <>
       <label>
         <div className="mb-[4px] flex items-center gap-6">
           <p className="text-base text-font">{label}</p>
-          {required && <p className="text-xs text-alert">※{requiredLabel}</p>}
+          {required && <p className="text-xs text-alert">※{requiredMessage}</p>}
         </div>
         <textarea
           value={value}

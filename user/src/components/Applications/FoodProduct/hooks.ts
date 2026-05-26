@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   FoodProductResponse,
   useGetFoodProducts,
@@ -17,10 +17,14 @@ const API_ENDPOINTS = {
   FOOD_PRODUCTS: '/food_products',
 } as const;
 
-export const useFoodProductHooks = (groupId: number) => {
+export const useFoodProductHooks = (
+  groupId: number,
+  isRegistered?: boolean
+) => {
   const { t } = useTranslation('common');
-  const [isEditing, setIsEditing] = useState(true);
-  const [hasInitialized, setHasInitialized] = useState(false);
+  const [isEditing, setIsEditing] = useState<boolean | null>(null);
+  const hasInitializedEditing = useRef(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   // API呼び出し
   const {
@@ -75,7 +79,7 @@ export const useFoodProductHooks = (groupId: number) => {
   ];
 
   const toEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   // 販売品データを完全に置き換える関数（更新時に使用）
@@ -308,33 +312,23 @@ export const useFoodProductHooks = (groupId: number) => {
     }
   };
 
-  // 初回データ読み込み時のみ編集状態を設定
   useEffect(() => {
-    // ローディング完了後かつ初期化前の場合のみ実行
-    if (!isLoading && !hasInitialized) {
-      if (apiFoodProducts && apiFoodProducts.length > 0) {
-        setIsEditing(false);
-      } else {
-        setIsEditing(true);
-      }
-      setHasInitialized(true);
+    if (!isLoading) {
+      setHasLoadedOnce(true);
     }
-  }, [apiFoodProducts, isLoading, hasInitialized]);
+  }, [isLoading]);
 
-  // データが更新された時にフォームの編集状態をリセット
   useEffect(() => {
-    if (!isLoading && hasInitialized) {
-      // データが存在する場合はビューモードに、ない場合は編集モードに
-      if (apiFoodProducts && apiFoodProducts.length > 0) {
-        setIsEditing(false);
-      } else {
-        setIsEditing(true);
-      }
+    if (hasInitializedEditing.current || isRegistered === undefined) {
+      return;
     }
-  }, [apiFoodProducts, isLoading, hasInitialized]);
+
+    setIsEditing(!isRegistered);
+    hasInitializedEditing.current = true;
+  }, [isRegistered]);
 
   // ローディング状態はAPIとMutationを考慮
-  const isLoadingWithMutation = isLoading || isMutating;
+  const isLoadingWithMutation = (isLoading && !hasLoadedOnce) || isMutating;
 
   // フォーム送信後にデータを再取得するための関数
   const refetchData = async () => {

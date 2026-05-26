@@ -95,7 +95,11 @@ const StageForm: FC<Props> = ({ isDeadline, groupId }) => {
 
   return (
     <>
-      {isFormMode ? (
+      {isFormMode === null ? (
+        <div className="w-[400px] py-4 text-center">
+          <p>{stageFormTexts.loading}</p>
+        </div>
+      ) : isFormMode ? (
         <FormContainer>
           {hasError && (
             <div className="relative w-[400px] rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">

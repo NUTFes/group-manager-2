@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   hasExisting: boolean;
@@ -13,13 +13,17 @@ export const useStageFormViewHooks = ({
   isLoadingAll,
   isSubmitted,
 }: Props) => {
-  const [isFormMode, setIsFormMode] = useState(true);
+  const [isFormMode, setIsFormMode] = useState<boolean | null>(null);
+  const hasInitializedMode = useRef(false);
 
   // 初期表示のモード切替
   useEffect(() => {
-    if (!isLoadingAll) {
-      setIsFormMode(!(hasExisting || !!isDeadline));
+    if (hasInitializedMode.current || isLoadingAll) {
+      return;
     }
+
+    setIsFormMode(!(hasExisting || !!isDeadline));
+    hasInitializedMode.current = true;
   }, [isLoadingAll, hasExisting, isDeadline]);
 
   // 送信後は一覧モードへ

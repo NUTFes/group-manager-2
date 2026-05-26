@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetPowerOrders, useMutatePowerOrders } from '@/api/powerApi';
 import {
   ORDER_TYPES,
@@ -60,7 +60,14 @@ export const usePowerApplication = (groupId: number) => {
   const { submitPowerOrders, deletePowerOrder } = useMutatePowerOrders();
 
   // フォーム管理
-  const powerForm = usePowerForm(hasExisting ? { devices } : undefined);
+  const initialDefaultValues = useMemo(() => {
+    if (!hasExisting) return undefined;
+
+    return {
+      devices: devices.map((d) => ({ ...d })),
+    };
+  }, [hasExisting, devices]);
+  const powerForm = usePowerForm(initialDefaultValues);
   const { formMethods } = powerForm;
 
   // 状態更新のヘルパー関数

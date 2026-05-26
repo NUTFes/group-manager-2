@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePublicRelationData } from '@/api/publicRelationsApi';
 import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { publicRelationLabels } from '../label';
 
-export const usePublicRelationsHooks = (groupId: number) => {
+export const usePublicRelationsHooks = (
+  groupId: number,
+  isRegistered?: boolean
+) => {
   const { t } = useTranslation('common');
   const {
     publicRelation,
@@ -61,21 +64,31 @@ export const usePublicRelationsHooks = (groupId: number) => {
     },
   ];
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState<boolean | null>(null);
+  const hasInitializedEditing = useRef(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   const toEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
-  // データが読み込まれたら編集状態をリセット
   useEffect(() => {
-    if (publicRelation) {
-      setIsEditing(false);
+    if (!prIsLoading) {
+      setHasLoadedOnce(true);
     }
-  }, [publicRelation]);
+  }, [prIsLoading]);
+
+  useEffect(() => {
+    if (hasInitializedEditing.current || isRegistered === undefined) {
+      return;
+    }
+
+    setIsEditing(!isRegistered);
+    hasInitializedEditing.current = true;
+  }, [isRegistered]);
 
   // ローディング状態とエラー状態はpublicRelationのみを参照する
-  const isLoading = prIsLoading;
+  const isLoading = prIsLoading && !hasLoadedOnce;
   const hasError = prError;
 
   // フォーム送信後にデータを再取得するための関数

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 import PurchaseLists from './PurchaseLists';
-import { FES_DATE_ID } from './constants';
+import { FES_DATE_ID, NET_ORDER_SHOP_ID } from './constants';
 import { PurchaseItem } from './schema';
 
 const getStorageKey = (groupId: number) =>
@@ -116,7 +116,7 @@ export const WithExistingData: Story = {
           foodProductId: 2,
           items: '冷凍シーフードミックス, パスタソース',
           isFresh: false,
-          shopId: 29,
+          shopId: NET_ORDER_SHOP_ID,
           purchaseDate: '2025/07/10',
           fesDateId: FES_DATE_ID,
           url: 'https://example.com/seafood-mix',

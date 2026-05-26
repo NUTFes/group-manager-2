@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'next-i18next';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -55,7 +54,6 @@ export const useFoodProductFormHooks = (
     setValue,
     watch,
     control,
-    reset,
   } = useForm<FoodProductFormData>({
     mode: 'onSubmit',
     resolver: zodResolver(foodProductSchema),
@@ -63,14 +61,6 @@ export const useFoodProductFormHooks = (
       products: createDefaultProducts(foodProductsProp),
     },
   });
-
-  // foodProductsPropが変更された時にフォームをリセット
-  useEffect(() => {
-    const newProducts = createDefaultProducts(foodProductsProp);
-    reset({
-      products: newProducts,
-    });
-  }, [foodProductsProp, reset]);
 
   const { fields, append, remove, replace } = useFieldArray({
     control,

@@ -47,7 +47,9 @@ const API_ENDPOINTS = {
 // PR情報を取得するためのカスタムフック
 export const usePublicRelationData = (groupId: number) => {
   // 特定のgroup_idに関連する公開関係情報を取得するエンドポイント
-  const endpoint = `${API_ENDPOINTS.PUBLIC_RELATIONS}/group/${groupId}`;
+  const endpoint = groupId
+    ? `${API_ENDPOINTS.PUBLIC_RELATIONS}/group/${groupId}`
+    : null;
 
   const {
     data: response,

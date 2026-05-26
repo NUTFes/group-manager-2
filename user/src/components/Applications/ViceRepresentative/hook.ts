@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ORDER_TYPES,
   useGetUnregisteredGroup,
@@ -9,16 +9,21 @@ import { useTranslation } from 'next-i18next';
 import { FormItem } from '@/components/FormList/type';
 import { viceRepresentativeLabels } from '../label';
 
-export const useViceRepresentativeHook = (groupId: number) => {
+export const useViceRepresentativeHook = (
+  groupId: number,
+  isRegistered?: boolean
+) => {
   const { t } = useTranslation('common');
   const gradeOptions = useMemo(() => getGradeOptions(t), [t]);
   const departmentOptions = useMemo(() => getDepartmentOptions(t), [t]);
-  const { viceRepresentative, isLoading, hasError, mutateViceRepresentative } =
-    useGetViceRepresentatives(groupId);
-  const { unregisteredData } = useGetUnregisteredGroup(
-    groupId,
-    ORDER_TYPES.SUB_REP
-  );
+  const {
+    viceRepresentative,
+    isLoading: isViceRepresentativeLoading,
+    hasError,
+    mutateViceRepresentative,
+  } = useGetViceRepresentatives(groupId);
+  const { unregisteredData, isLoading: isUnregisteredLoading } =
+    useGetUnregisteredGroup(groupId, ORDER_TYPES.SUB_REP);
 
   const viceRepresentativeTexts = {
     title: t('applications.viceRepresentative.title'),
@@ -82,20 +87,33 @@ export const useViceRepresentativeHook = (groupId: number) => {
     departmentOptions,
   ]);
 
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState<boolean | null>(null);
+  const hasInitializedEditing = useRef(false);
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  const isLoading = isViceRepresentativeLoading || isUnregisteredLoading;
+
   useEffect(() => {
-    if (viceRepresentative || unregisteredData) {
-      setIsEditing(false);
+    if (!isLoading) {
+      setHasLoadedOnce(true);
     }
-  }, [viceRepresentative, unregisteredData]);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (hasInitializedEditing.current || isRegistered === undefined) {
+      return;
+    }
+
+    setIsEditing(!isRegistered);
+    hasInitializedEditing.current = true;
+  }, [isRegistered]);
 
   const toEdit = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   return {
     viceRepresentative,
-    isLoading,
+    isLoading: isLoading && !hasLoadedOnce,
     hasError,
     isEditing,
     toEdit,

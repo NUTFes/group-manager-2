@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useFormFieldCommonTexts } from '@/components/Form/hooks';
 
-type Option = {
+export type Option = {
   id: number;
   name: string;
 };
