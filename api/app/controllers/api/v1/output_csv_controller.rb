@@ -458,8 +458,8 @@ class Api::V1::OutputCsvController < ApplicationController
             remark = '同一団体内で2重登録（非表示で対応）'
           end
         else
-          if group_dup_names[current_group_id].include?(p[:normalized_key])
-            remark = '同一団体内で2重登録（非表示で対応）
+          if group_dup_names[current_group_id].include?(p[:normalized_name])
+            remark = '同一団体内で2重登録（非表示で対応）'
           end
         end
 
