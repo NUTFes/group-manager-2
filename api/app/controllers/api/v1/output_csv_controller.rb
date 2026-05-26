@@ -341,6 +341,7 @@ class Api::V1::OutputCsvController < ApplicationController
       # 従業員 — 同一団体内で代表/副代表と学籍番号または正規化氏名が一致する場合はスキップ
       (group.employees || []).each do |employee|
         next if employee.nil?
+
         emp_name = employee.name.to_s
         emp_norm = emp_name.gsub(/[[:space:]\u3000]+/, '')
         emp_student = employee.student_id
@@ -355,16 +356,16 @@ class Api::V1::OutputCsvController < ApplicationController
         end
 
         skip = false
-        if rep && (rep_student.present? && emp_student.present? && rep_student == emp_student)
+        if rep && rep_student.present? && emp_student.present? && rep_student == emp_student
           skip = true
           group_dup_student_ids[group.id] << emp_student if emp_student.present?
-        elsif sub_rep && (sub_rep_student.present? && emp_student.present? && sub_rep_student == emp_student)
+        elsif sub_rep && sub_rep_student.present? && emp_student.present? && sub_rep_student == emp_student
           skip = true
           group_dup_student_ids[group.id] << emp_student if emp_student.present?
-        elsif rep && (rep_norm.present? && emp_norm.present? && rep_norm == emp_norm)
+        elsif rep && rep_norm.present? && emp_norm.present? && rep_norm == emp_norm
           skip = true
           group_dup_names[group.id] << emp_norm
-        elsif sub_rep && (sub_rep_norm.present? && emp_norm.present? && sub_rep_norm == emp_norm)
+        elsif sub_rep && sub_rep_norm.present? && emp_norm.present? && sub_rep_norm == emp_norm
           skip = true
           group_dup_names[group.id] << emp_norm
         end
@@ -383,26 +384,26 @@ class Api::V1::OutputCsvController < ApplicationController
       # 半角スペースと全角スペースを削除して正規化
       p[:normalized_name] = p[:name].gsub(/[[:space:]\u3000]+/, '')
       p[:normalized_key] = p[:normalized_name].downcase
-      if p[:student_id].present?
-        p[:is_student] = (user_category_label(p[:student_id]) == '学生')
-      else
-        p[:is_student] = false
-      end
+      p[:is_student] = if p[:student_id].present?
+                         (user_category_label(p[:student_id]) == '学生')
+                       else
+                         false
+                       end
     end
 
     # 学籍番号で集計（学生のみ）: student_id => [{group_id, group_name}]
     student_map = Hash.new { |h, k| h[k] = [] }
     persons.each do |p|
       next unless p[:is_student] && p[:student_id].present?
+
       student_map[p[:student_id]] << { group_id: p[:group_id], group: p[:group], roles: Array(p[:roles]) }
     end
 
     # 氏名で集計（学籍番号で既にまとめられた人物は除外）: normalized_key => [{group_id, group_name}]
     name_map = Hash.new { |h, k| h[k] = [] }
     persons.each do |p|
-      if p[:is_student] && p[:student_id].present? && student_map[p[:student_id]].any?
-        next
-      end
+      next if p[:is_student] && p[:student_id].present? && student_map[p[:student_id]].any?
+
       key = p[:normalized_key]
       name_map[key] << { group_id: p[:group_id], group: p[:group], student_id: p[:student_id], roles: Array(p[:roles]) }
     end
@@ -431,36 +432,29 @@ class Api::V1::OutputCsvController < ApplicationController
 
         # 重複先を決定
         duplicates = []
-        if p[:is_student] && p[:student_id].present?
-          entries = student_map[p[:student_id]] || []
-          entries.each do |e|
-            next if e[:group_id] == current_group_id
-            duplicates << e[:group]
-          end
-        else
-          entries = name_map[p[:normalized_key]] || []
-          entries.each do |e|
-            next if e[:group_id] == current_group_id
-            duplicates << e[:group]
-          end
+        entries = if p[:is_student] && p[:student_id].present?
+                    student_map[p[:student_id]] || []
+                  else
+                    name_map[p[:normalized_key]] || []
+                  end
+        entries.each do |e|
+          next if e[:group_id] == current_group_id
+
+          duplicates << e[:group]
         end
 
-        duplicates_str = duplicates.sort_by { |gname|
+        duplicates_str = duplicates.sort_by do |gname|
           # sort duplicates by group id: find id from persons (slow but dataset small)
           found = persons.find { |pp| pp[:group] == gname }
           found ? found[:group_id] : 0
-        }.join(',')
+        end.join(',')
 
         # 同一団体内で同一人物が2重登録されているかチェック（スキップされた重複を group_dup_maps で判定）
         remark = ''
         if p[:is_student] && p[:student_id].present?
-          if group_dup_student_ids[current_group_id].include?(p[:student_id])
-            remark = '同一団体内で2重登録（非表示で対応）'
-          end
-        else
-          if group_dup_names[current_group_id].include?(p[:normalized_name])
-            remark = '同一団体内で2重登録（非表示で対応）'
-          end
+          remark = '同一団体内で2重登録（非表示で対応）' if group_dup_student_ids[current_group_id].include?(p[:student_id])
+        elsif group_dup_names[current_group_id].include?(p[:normalized_name])
+          remark = '同一団体内で2重登録（非表示で対応）'
         end
 
         csv << [current_group, name, student_id, roles_str, duplicates_str, remark]
