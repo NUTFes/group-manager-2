@@ -5,7 +5,7 @@ language: "ja-JP"
 
 # レビューの基本設定
 reviews:
-  profile: "chill"                 # レビューの厳しさ (chill, standard, assertive から選択)
+  profile: "chill"                 # レビューの厳しさ (chill, assertive から選択)
   request_changes_workflow: false  # AIが自動で「変更をリクエスト」にするかどうか
   high_level_summary: true         # PRの概要サマリーを生成するか
   poem: true                       # PRの最後に短いポエム（要約）を追加するか
