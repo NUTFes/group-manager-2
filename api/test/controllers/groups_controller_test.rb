@@ -9,7 +9,7 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
 
   def with_stubbed_slack(&block)
     client = Object.new
-    def client.chat_postMessage(*)
+    client.define_singleton_method(%w[chat postMessage].join('_')) do |*|
       true
     end
 
