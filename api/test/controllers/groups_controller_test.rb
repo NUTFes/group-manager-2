@@ -7,13 +7,13 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
     @group = groups(:one)
   end
 
-  def with_stubbed_slack
+  def with_stubbed_slack(&block)
     client = Object.new
     def client.chat_postMessage(*)
       true
     end
 
-    Slack::Web::Client.stub(:new, client) { yield }
+    Slack::Web::Client.stub(:new, client, &block)
   end
 
   test 'should get index' do

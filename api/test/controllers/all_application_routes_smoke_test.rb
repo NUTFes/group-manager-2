@@ -85,8 +85,8 @@ class AllApplicationRoutesSmokeTest < ActionDispatch::IntegrationTest
   end
 
   def auth_env_headers
-    @auth_headers.each_with_object({}) do |(key, value), headers|
-      headers["HTTP_#{key.upcase.tr('-', '_')}"] = value
+    @auth_headers.transform_keys do |key|
+      "HTTP_#{key.upcase.tr('-', '_')}"
     end
   end
 
