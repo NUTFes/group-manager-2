@@ -76,7 +76,7 @@ class Api::V1::OutputCsvController < ApplicationController
   end
 
   def output_sub_reps_csv
-    if params[:fes_year_id].to_id == 0
+    if params[:fes_year_id].to_i == 0
       @sub_reps = Group.preload(:sub_rep).map(&:sub_rep)
       filename_year = '全'
     else
@@ -498,7 +498,7 @@ class Api::V1::OutputCsvController < ApplicationController
           cooking_process_order.food_product.name,
           cooking_process_order.pre_open_kitchen ? '申請する' : '申請しない',
           cooking_process_order.during_open_kitchen ? '申請する' : '申請しない',
-          cooking_process_order.tent
+          cooking_process_order.tent_for_submission
         ]
         csv << column_values
       end
@@ -543,7 +543,7 @@ class Api::V1::OutputCsvController < ApplicationController
       filename_year = fes_year.year_num
     end
     bom = "\uFEFF"
-    csv_data = CSV.generate(bom) do |csv|
+    csv_data = CSV.generate(bom.dup) do |csv|
       column_name = %w[ID 団体名 火気の名称 火気の台数 燃料 使用用途 持ち帰り 備考]
       csv << column_name
       @fire_equipment_orders.each do |order|

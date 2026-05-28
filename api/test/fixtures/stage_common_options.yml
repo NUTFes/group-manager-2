@@ -1,6 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   group_id: 1
   own_equipment: false
   bgm: false
@@ -8,6 +9,7 @@ one:
   loud_sound: false
 
 two:
+  id: 2
   group_id: 1
   own_equipment: false
   bgm: false

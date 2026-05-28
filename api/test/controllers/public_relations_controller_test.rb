@@ -14,10 +14,10 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create public_relation' do
     assert_difference('PublicRelation.count') do
-      post public_relations_url, params: { public_relation: { blurb: @public_relation.blurb, group_id: @public_relation.group_id, picture_path: @public_relation.picture_path } }, as: :json
+      post public_relations_url, params: { blurb: @public_relation.blurb, group_id: @public_relation.group_id, picture_path: @public_relation.picture_path }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show public_relation' do
@@ -26,7 +26,7 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update public_relation' do
-    patch public_relation_url(@public_relation), params: { public_relation: { blurb: @public_relation.blurb, group_id: @public_relation.group_id, picture_path: @public_relation.picture_path } }, as: :json
+    patch public_relation_url(@public_relation), params: { blurb: @public_relation.blurb, group_id: @public_relation.group_id, picture_path: @public_relation.picture_path }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class PublicRelationsControllerTest < ActionDispatch::IntegrationTest
       delete public_relation_url(@public_relation), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

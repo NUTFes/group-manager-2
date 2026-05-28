@@ -776,6 +776,22 @@ class Group < ApplicationRecord
     @records = Group.eager_load(:announcement).where(groups: { fes_year_id: fes_year_id }).select { |group| group.announcement.nil? }
   end
 
+  # cooking_process_orderが存在しないgroupのみ取得する
+  def self.have_no_cooking_process_order(fes_year_id)
+    Group.eager_load(:cooking_process_order).where(groups: { fes_year_id: fes_year_id }).select { |group| group.cooking_process_order.nil? }
+  end
+
+  # 指定したIDのgroupとそのcooking_process_orderを取得する
+  def self.with_cooking_process_order(group_id)
+    Group.eager_load(:cooking_process_order).where(groups: { id: group_id })
+         .map do |group|
+      {
+        group: group,
+        cooking_process_order: group.cooking_process_order
+      }
+    end
+  end
+
   # 指定したfes_yearに対応するgroupとそのannouncementを取得する
   def self.with_announcement_narrow_down_by_fes_year(fes_year_id)
     @record = Group.eager_load(:announcement).where(groups: { fes_year_id: fes_year_id })

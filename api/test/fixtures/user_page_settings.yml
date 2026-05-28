@@ -1,6 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   is_regist_group: false
   is_regist_food_product: false
   is_edit_group: false
@@ -12,8 +13,10 @@ one:
   is_edit_employee: false
   is_edit_food_product: false
   is_edit_purchase_list: false
+  fes_year_id: 1
 
 two:
+  id: 2
   is_regist_group: false
   is_regist_food_product: false
   is_edit_group: false
@@ -25,3 +28,4 @@ two:
   is_edit_employee: false
   is_edit_food_product: false
   is_edit_purchase_list: false
+  fes_year_id: 2

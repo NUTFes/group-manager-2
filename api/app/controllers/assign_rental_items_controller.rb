@@ -63,4 +63,8 @@ class AssignRentalItemsController < ApplicationController
   def assign_rental_items_params
     params.permit(:rentalItemId, :stockerPlaceId, items: %i[group_id num])
   end
+
+  def assign_rental_item_params
+    params.permit(:group_id, :rental_item_id, :num, :stocker_place_id)
+  end
 end

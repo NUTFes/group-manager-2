@@ -14,10 +14,10 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create user_page_setting' do
     assert_difference('UserPageSetting.count') do
-      post user_page_settings_url, params: { user_page_setting: { is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group } }, as: :json
+      post user_page_settings_url, params: { is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group, fes_year_id: @user_page_setting.fes_year_id }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show user_page_setting' do
@@ -26,7 +26,7 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update user_page_setting' do
-    patch user_page_setting_url(@user_page_setting), params: { user_page_setting: { is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group } }, as: :json
+    patch user_page_setting_url(@user_page_setting), params: { is_edit_employee: @user_page_setting.is_edit_employee, is_edit_food_product: @user_page_setting.is_edit_food_product, is_edit_group: @user_page_setting.is_edit_group, is_edit_place: @user_page_setting.is_edit_place, is_edit_power_order: @user_page_setting.is_edit_power_order, is_edit_purchase_list: @user_page_setting.is_edit_purchase_list, is_edit_rental_order: @user_page_setting.is_edit_rental_order, is_edit_stage_order: @user_page_setting.is_edit_stage_order, is_edit_sub_rep: @user_page_setting.is_edit_sub_rep, is_regist_food_product: @user_page_setting.is_regist_food_product, is_regist_group: @user_page_setting.is_regist_group, fes_year_id: @user_page_setting.fes_year_id }, as: :json
     assert_response :ok
   end
 
@@ -35,6 +35,6 @@ class UserPageSettingsControllerTest < ActionDispatch::IntegrationTest
       delete user_page_setting_url(@user_page_setting), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

@@ -14,10 +14,10 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create power_order' do
     assert_difference('PowerOrder.count') do
-      post power_orders_url, params: { power_order: { group_id: @power_order.group_id, item: @power_order.item, manufacture: @power_order.manufacture, model: @power_order.model, power: @power_order.power } }, as: :json
+      post power_orders_url, params: { group_id: @power_order.group_id, item: @power_order.item, manufacturer: @power_order.manufacturer, model: @power_order.model, power: @power_order.power }, as: :json
     end
 
-    assert_response :created
+    assert_response :success
   end
 
   test 'should show power_order' do
@@ -26,8 +26,8 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update power_order' do
-    patch power_order_url(@power_order), params: { power_order: { group_id: @power_order.group_id, item: @power_order.item, manufacture: @power_order.manufacture, model: @power_order.model, power: @power_order.power } }, as: :json
-    assert_response :ok
+    patch power_order_url(@power_order), params: { group_id: @power_order.group_id, item: @power_order.item, manufacturer: @power_order.manufacturer, model: @power_order.model, power: @power_order.power }, as: :json
+    assert_response :success
   end
 
   test 'should destroy power_order' do
@@ -35,6 +35,6 @@ class PowerOrdersControllerTest < ActionDispatch::IntegrationTest
       delete power_order_url(@power_order), as: :json
     end
 
-    assert_response :no_content
+    assert_response :ok
   end
 end

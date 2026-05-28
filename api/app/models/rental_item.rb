@@ -9,7 +9,9 @@ class RentalItem < ApplicationRecord
   def to_info_h
     return {
       name: name,
-      is_rentable: is_rentable
+      is_inside_shop_rentable: is_inside_shop_rentable,
+      is_outside_shop_rentable: is_outside_shop_rentable,
+      is_stage_rentable: is_stage_rentable
     }
   end
 end
