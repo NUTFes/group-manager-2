@@ -498,7 +498,7 @@ class Api::V1::OutputCsvController < ApplicationController
           cooking_process_order.food_product.name,
           cooking_process_order.pre_open_kitchen ? '申請する' : '申請しない',
           cooking_process_order.during_open_kitchen ? '申請する' : '申請しない',
-          cooking_process_order.tent
+          cooking_process_order.tent_for_submission
         ]
         csv << column_values
       end
