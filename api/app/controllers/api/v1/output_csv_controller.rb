@@ -351,7 +351,7 @@ class Api::V1::OutputCsvController < ApplicationController
         ]
 
         # 学籍番号による重複チェック対象か（存在し、かつ外部/スタッフなどの特別値ではない）
-        student_id_dup_check_target = emp_student.present? && !common_student_ids.include?(emp_student)
+        student_id_dup_check_target = emp_student.present? && common_student_ids.exclude?(emp_student)
 
         # 重複判定: まず同一団体内で既に見た student_id / name と重複しているか
         if student_id_dup_check_target && group_seen_student_ids.include?(emp_student)
