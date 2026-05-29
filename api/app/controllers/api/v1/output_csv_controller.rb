@@ -362,23 +362,6 @@ class Api::V1::OutputCsvController < ApplicationController
           next
         end
 
-        skip = false
-        if rep && rep_student.present? && emp_student.present? && rep_student == emp_student
-          skip = true
-          group_dup_student_ids[group.id] << emp_student if emp_student.present?
-        elsif sub_rep && sub_rep_student.present? && emp_student.present? && sub_rep_student == emp_student
-          skip = true
-          group_dup_student_ids[group.id] << emp_student if emp_student.present?
-        elsif rep && rep_norm.present? && emp_norm.present? && rep_norm == emp_norm
-          skip = true
-          group_dup_names[group.id] << emp_norm
-        elsif sub_rep && sub_rep_norm.present? && emp_norm.present? && sub_rep_norm == emp_norm
-          skip = true
-          group_dup_names[group.id] << emp_norm
-        end
-
-        next if skip
-
         # 正常な従業員は persons に追加し、グループ内の既出に追加する
         persons << { group_id: group.id, group: group.name, name: emp_name, student_id: emp_student, roles: [] }
         group_seen_student_ids << emp_student if emp_student.present?
