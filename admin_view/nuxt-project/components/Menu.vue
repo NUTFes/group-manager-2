@@ -197,7 +197,7 @@ export default {
         { title: "ダッシュボード", icon: "dashboard", click: "/dashboard" },
         {
           title: "在庫登録",
-          icon: "assignment_return",
+          icon: "assignment_add",
           click: "/stock_items",
         },
         { 
