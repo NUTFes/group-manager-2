@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   useGetCookingProcessOrder,
   useUpsertCookingProcessOrders,
@@ -19,7 +19,7 @@ export const useCookingProcessOrder = (
   isRegistered?: boolean
 ) => {
   const [isEditing, setIsEditing] = useState<boolean | null>(null);
-  const hasInitializedEditing = useRef(false);
+  const [hasInitializedEditing, setHasInitializedEditing] = useState(false);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
   const { t } = useTranslation('common');
   const cookingProcessOrderTexts = {
@@ -168,22 +168,28 @@ export const useCookingProcessOrder = (
   });
 
   useEffect(() => {
+    if (!isExist) {
+      setHasInitializedEditing(false);
+    }
+  }, [isExist]);
+
+  useEffect(() => {
     if (
-      hasInitializedEditing.current ||
-      isRegistered === undefined ||
-      isDataLoading
+        hasInitializedEditing ||
+        isRegistered === undefined ||
+        isDataLoading
     ) {
       return;
     }
 
-    if (!isRegistered && cookingTargetFoodProducts.length > 0 && !isDeadline) {
+    if (!isExist && cookingTargetFoodProducts.length > 0 && !isDeadline) {
       setIsEditing(true);
     } else {
       setIsEditing(false);
     }
 
-    hasInitializedEditing.current = true;
-  }, [isRegistered, isDataLoading, cookingTargetFoodProducts, isDeadline]);
+    setHasInitializedEditing(true);
+  }, [isRegistered, isDataLoading, cookingTargetFoodProducts, isDeadline, isExist]);
 
   return {
     methods,
